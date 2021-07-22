@@ -1,0 +1,59 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.lik
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+SE-Owned/.vs/SE-Owned/v16/.suo
+*.db
+*.log
+*.tlog
+*.pdb
+*.iobj
+*.ipdb
+*.bat
+*.ipch
+SE-Owned/.vs/SE-Owned/v16/Browse.VC.opendb
+SE-Owned/TeamFortress2/Debug/vc142.idb
+SE-Owned/Debug/TeamFortress2.ilk
+SE-Owned/Debug/TeamFortress2.ilk
+*.idb
+*.ilk
+*.db-wal
+*.db-shm
+*.db-wal
+*.db-shm
+*.ilk
+*.idb
+*.idb
+*.txt
+*.idb
+*.recipe
+*.enc
