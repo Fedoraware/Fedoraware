@@ -1447,6 +1447,7 @@ void CMenu::Run()
 									{ 7, _(L"Shiny2") },
 									{ 8, _(L"Brick") } });
 								InputFloat(Vars::Chams::DME::HandsAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+
 								CheckBox(Vars::Chams::DME::HandsGlowOverlay, _(L"Hands glow overlay"));
 								ComboBox(Vars::Chams::DME::Weapon, {
 									{ 0, _(L"Original") },
@@ -1460,6 +1461,8 @@ void CMenu::Run()
 									{ 8, _(L"Brick") } });
 								InputFloat(Vars::Chams::DME::WeaponAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
 								CheckBox(Vars::Chams::DME::WeaponGlowOverlay, _(L"Weapon glow overlay"));
+								InputInt(Vars::Chams::DME::WeaponRimMultiplier, 1, 100);
+								InputInt(Vars::Chams::DME::HandsRimMultiplier, 1, 100);
 							}
 							GroupBoxEnd(_(L"DME"), 200);
 

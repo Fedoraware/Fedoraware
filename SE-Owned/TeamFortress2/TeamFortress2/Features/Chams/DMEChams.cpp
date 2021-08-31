@@ -180,6 +180,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				IMaterial* pMaterial = m_pMatScuffed;
 				bool found = false;
 				bool found2 = false;
+				bool found3 = false;
 				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 				if (found) {
 					pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
@@ -187,6 +188,10 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 				if (found2) {
 					pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+				}
+				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
+				if (found2) {
+					pVar3->SetIntValue(Vars::Chams::DME::HandsRimMultiplier.m_Var);
 				}
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
@@ -265,6 +270,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 					IMaterial* pMaterial = m_pMatScuffed;
 					bool found = false;
 					bool found2 = false;
+					bool found3 = false;
 					IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 					if (found) {
 						pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
@@ -272,6 +278,10 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 					if (found2) {
 						pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+					}
+					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
+					if (found2) {
+						pVar3->SetIntValue(Vars::Chams::DME::WeaponRimMultiplier.m_Var);
 					}
 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
