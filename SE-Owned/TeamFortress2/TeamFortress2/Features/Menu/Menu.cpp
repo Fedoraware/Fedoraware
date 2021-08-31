@@ -1282,6 +1282,7 @@ void CMenu::Run()
 								ComboBox(Vars::ESP::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
 								ComboBox(Vars::ESP::Players::IgnoreCloaked, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemies Only") } });
 								CheckBox(Vars::ESP::Players::Name, _(L"Draw player's name"));
+								CheckBox(Vars::ESP::Players::NameBox, _(L"Draw a background behind the name to make it stand out more"));
 								ComboBox(Vars::ESP::Players::Class, { { 0, _(L"Off") }, { 1, _(L"Icon") }, { 2, _(L"Text") }, { 3, _(L"Both") } });
 								CheckBox(Vars::ESP::Players::Health, _(L"Draw player's health"));
 								CheckBox(Vars::ESP::Players::Cond, _(L"Draw player's condition(s)"));
