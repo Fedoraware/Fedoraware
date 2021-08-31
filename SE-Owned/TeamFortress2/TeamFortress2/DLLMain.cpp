@@ -81,6 +81,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Interfaces.CVars->ConsoleColorPrintf({ 143, 5, 188, 255 }, _("Spook593, "));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 225, 46, 48, 255 }, _("OxyGodmode\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Based on SE-Owned Public Source!\n"));
+	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	//ConVar* skybox_set = new ConVar("skybox_set", "mr_04");
 	ConCommandBase* skybox_set = new ConVar("skybox_set", "mr_04", (int)EConVarFlags::FCVAR_NOTIFY);
