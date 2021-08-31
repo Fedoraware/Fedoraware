@@ -265,11 +265,11 @@ namespace Vars
 
 			inline CVar<int> Hands{ 0, L"Hands" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
 			inline CVar<float> HandsAlpha{ 1.0f, L"Hands Alpha" };
-			inline CVar<bool> HandsGlowOverlay{ false, L"Active" };
+			inline CVar<bool> HandsGlowOverlay{ false, L"Hands Glow" };
 
 			inline CVar<int> Weapon{ 0, L"Weapon" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
 			inline CVar<float> WeaponAlpha{ 1.0f, L"Weapon Alpha" };
-			inline CVar<bool> WeaponGlowOverlay{ false, L"Active" };
+			inline CVar<bool> WeaponGlowOverlay{ false, L"Weapon Glow" };
 		}
 	}
 
