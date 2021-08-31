@@ -7,7 +7,7 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
-#include "../../Features/NewWindow/NewWindow.h"
+#include "../../Features/PlayerList/PlayerList.h"
 #include "../../Features/Console/Console.h"
 #include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
@@ -189,7 +189,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpyWarning.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_NewWindow.Run();
+			g_PlayerList.Run();
 			g_Console.Run();
 			g_Menu.Run();
 		}	

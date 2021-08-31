@@ -1,4 +1,4 @@
-#include "NewWindow.h"
+#include "PlayerList.h"
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 #include "../Menu/ConfigManager/ConfigManager.h"
@@ -13,7 +13,7 @@ constexpr Color_t clrBlack = { 0, 0, 0, 255 };
 constexpr Color_t clrWhite = { 255, 255, 255, 255 };
 
 
-void CNewWindow::Run()
+void CPlayerList::Run()
 {
 	if (!ShouldRun())
 		return;
@@ -29,7 +29,7 @@ void CNewWindow::Run()
 struct Playerlist_t { std::wstring m_sName; std::wstring m_sMode; bool m_bIsFriend; int m_nTeam; int m_nIndex; };
 std::vector<Playerlist_t> m_vecPlayers;
 
-bool CNewWindow::DrawKickButton(const wchar_t* label, int x, int y, int w, int h) {//, bool &buttonClick) {
+bool CPlayerList::DrawKickButton(const wchar_t* label, int x, int y, int w, int h) {//, bool &buttonClick) {
 	bool callback = false;
 	int mousex, mousey;
 	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
@@ -65,7 +65,7 @@ bool CNewWindow::DrawKickButton(const wchar_t* label, int x, int y, int w, int h
 
 
 
-void CNewWindow::DrawPlayerNames()
+void CPlayerList::DrawPlayerNames()
 {
 	playerIndex = 0;
 	for (int i = 0; i < 32; i++) {
@@ -152,7 +152,7 @@ void CNewWindow::DrawPlayerNames()
 	}
 }
 
-void CNewWindow::DrawNewWindow()
+void CPlayerList::DrawNewWindow()
 {
 	//If the menu is open, check for input and draw the titlebar.
 	//The titlebar also indicates where we can drag / move the radar.
@@ -196,7 +196,7 @@ void CNewWindow::DrawNewWindow()
 	}
 }
 
-bool CNewWindow::ShouldRun()
+bool CPlayerList::ShouldRun()
 {
 	//If in game
 	if (g_Interfaces.EngineVGui->IsGameUIVisible())
@@ -205,7 +205,7 @@ bool CNewWindow::ShouldRun()
 	return true;
 }
 
-void CNewWindow::DragNewWindow()
+void CPlayerList::DragNewWindow()
 {
 	int mousex, mousey;
 	g_Interfaces.Surface->GetCursorPos(mousex, mousey);

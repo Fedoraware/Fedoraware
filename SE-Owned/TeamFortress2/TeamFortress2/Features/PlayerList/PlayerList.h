@@ -4,7 +4,7 @@
 #include <fstream>
 #include <filesystem>
 
-class CNewWindow
+class CPlayerList
 {
 public:
 	void Run();
@@ -22,4 +22,4 @@ private:
 	int playerIndex;
 };
 
-inline CNewWindow g_NewWindow;
+inline CPlayerList g_PlayerList;
