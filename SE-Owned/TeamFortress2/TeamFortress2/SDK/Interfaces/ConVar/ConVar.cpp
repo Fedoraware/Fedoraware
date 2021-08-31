@@ -1,4 +1,5 @@
 #include "ConVar.h"
+#include "../Interfaces.h"
 
 ConCommandBase *ConCommandBase::s_pConCommandBases = nullptr;
 static int	s_nCVarFlag = 0;
@@ -10,9 +11,9 @@ class CDefaultAccessor : public IConCommandBaseAccessor
 public:
 	virtual bool RegisterConCommandBase(ConCommandBase *pVar)
 	{
-		/*gInts.cvar->RegisterConCommand(pVar);
-		return true;*/
-		return false;
+		g_Interfaces.CVars->RegisterConCommand(pVar);
+		return true;
+		//return false;
 	}
 };
 
@@ -21,11 +22,11 @@ IConCommandBaseAccessor *ConCommandBase::s_pAccessor = &s_DefaultAccessor;
 
 void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor *pAccessor)
 {
-	/*if (s_bRegistered)
+	if (s_bRegistered)
 		return;
 	s_bRegistered = true;
 	s_nCVarFlag = nCVarFlag;
-	s_nDLLIdentifier = gInts.cvar->AllocateDLLIdentifier();
+	s_nDLLIdentifier = g_Interfaces.CVars->AllocateDLLIdentifier();
 	ConCommandBase *pCur, *pNext;
 	ConCommandBase::s_pAccessor = pAccessor ? pAccessor : &s_DefaultAccessor;
 	pCur = ConCommandBase::s_pConCommandBases;
@@ -36,7 +37,7 @@ void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor *pAccessor)
 		pCur->Init();
 		pCur = pNext;
 	}
-	ConCommandBase::s_pConCommandBases = NULL;*/
+	ConCommandBase::s_pConCommandBases = NULL;
 }
 
 ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags)

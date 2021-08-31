@@ -4,6 +4,7 @@
 struct ConVars_t
 {
 	ConVar* cl_interp						= nullptr;
+	ConVar* cl_sidespeed					= nullptr;
 	ConVar* cl_interp_ratio					= nullptr;
 	ConVar* cl_updaterate					= nullptr;
 	ConVar* tf_crit_cap						= nullptr;

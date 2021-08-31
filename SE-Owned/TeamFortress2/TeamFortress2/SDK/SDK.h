@@ -13,6 +13,7 @@
 #define TICK_INTERVAL		( g_Interfaces.GlobalVars->interval_per_tick )
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
+#define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
 
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include "../Utils/CRC/CRC.h"
@@ -74,8 +75,11 @@ namespace Colors
 	inline Color_t TeamRed =				{ 255, 100, 87, 255 };
 	inline Color_t TeamBlu =				{ 30, 144, 255, 255 };
 	inline Color_t Hands =					{ 30, 144, 255, 255 };
+	inline Color_t HandsOverlay =			{ 255, 127, 0, 255 };
 	inline Color_t Weapon =					{ 30, 144, 255, 255 };
+	inline Color_t WeaponOverlay =			{ 255, 127, 0, 255 };
 	inline Color_t WorldModulation =		{ 255, 255, 255, 255 };
+	inline Color_t SkyModulation =			{ 255, 255, 255, 255 };
 	inline Color_t StaticPropModulation =	{ 255, 255, 255, 255 };
 	inline Color_t FOVCircle =				{ 255, 255, 255, 255 };
 	inline Color_t Bones =					{ 255, 255, 255, 255 };
@@ -411,14 +415,15 @@ namespace Utils
 		switch (pWeapon->GetWeaponID())
 		{
 			case TF_WEAPON_ROCKETLAUNCHER:
+			case 109:
 			case TF_WEAPON_GRENADELAUNCHER:
 			case TF_WEAPON_FLAREGUN:
 			case TF_WEAPON_COMPOUND_BOW:
-			case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
+			case TF_WEAPON_DIRECTHIT:
 			case TF_WEAPON_CROSSBOW:
 			case TF_WEAPON_PARTICLE_CANNON:
 			case TF_WEAPON_DRG_POMSON:
-			case TF_WEAPON_FLAREGUN_REVENGE:
+			case TF_WEAPON_RAYGUN_REVENGE:
 			case TF_WEAPON_CANNON:
 			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
@@ -427,8 +432,7 @@ namespace Utils
 				return EWeaponType::PROJECTILE;
 			}
 
-			case TF_WEAPON_PIPEBOMBLAUNCHER:
-			case 109: //dragon's fury
+			case TF_WEAPON_PIPEBOMBLAUNCHER://dragon's fury
 			{
 				//broken Idk
 				return EWeaponType::UNKNOWN;

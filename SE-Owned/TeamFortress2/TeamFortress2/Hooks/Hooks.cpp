@@ -1,4 +1,5 @@
 #include "Hooks.h"
+#include "../SDK/SDK.h"
 
 inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
 	return static_cast<uintptr_t>((*static_cast<int **>(pBaseClass))[nIndex]);
@@ -6,7 +7,7 @@ inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
 
 void CHooks::Init()
 {
-	if (MH_Initialize() != MH_STATUS::MH_OK) {
+	if ( MH_Initialize() != MH_STATUS::MH_OK) {
 		WinAPI::MessageBoxW(0, _(L"MH failed to initialize!"), _(L"ERROR!"), MB_ICONERROR);
 		return;
 	}

@@ -2,6 +2,7 @@
 
 #pragma warning (disable : 6031)
 
+
 bool CKeyValUtils::LoadFromBuffer(KeyValues *key_value, char const *resource_name, const char *buffer, void *file_system, const char *path_id)
 {
 	using FN = int(__thiscall *)(KeyValues *, char const *, const char *, void *, const char *);

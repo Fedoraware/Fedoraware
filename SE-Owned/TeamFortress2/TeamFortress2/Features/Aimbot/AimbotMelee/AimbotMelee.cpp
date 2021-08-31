@@ -219,6 +219,11 @@ void CAimbotMelee::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd
 		if (ShouldSwing(pLocal, pWeapon, pCmd, Target))
 			pCmd->buttons |= IN_ATTACK;
 
+		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+		{
+			g_GlobalInfo.m_bShouldShift = true;
+		}
+
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
 		if (bIsAttacking)

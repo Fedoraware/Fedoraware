@@ -405,9 +405,10 @@ public:
 	CTFWeaponInfo();
 	~CTFWeaponInfo();
 
-	virtual void Parse(void *pKeyValuesData, const char *szWeaponName);
+	virtual void Parse(void* pKeyValuesData, const char* szWeaponName);
 
-	WeaponData_t const &GetWeaponData(int iWeapon) const { return m_WeaponData[iWeapon]; }
+	WeaponData_t const& GetWeaponData(int iWeapon) const { return m_WeaponData[iWeapon]; }
+
 
 public:
 

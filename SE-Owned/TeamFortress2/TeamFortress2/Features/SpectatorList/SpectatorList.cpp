@@ -57,7 +57,7 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 	static POINT delta;
 	static bool drag = false;
 	static bool move = false;
-	bool held = GetAsyncKeyState(VK_LBUTTON);
+	bool held = GetKey(VK_LBUTTON);
 
 	if ((mousex > x && mousex < x + w && mousey > y - offsety && mousey < y - offsety + h) && held)
 	{
@@ -135,7 +135,16 @@ void CSpectatorList::DrawClassic()
 		if (!pLocal->IsAlive() || !GetSpectators(pLocal))
 			return;
 
-		int nDrawY = (g_ScreenSize.h / 2) + 50;
+		int nDrawY = (g_ScreenSize.h / 2) - 300;
+		int centerr = g_ScreenSize.c;
+		int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall;
+
+		g_Draw.String(
+			FONT_ESP_NAME_OUTLINED,
+			centerr, nDrawY - addyy,
+			{ 255,255,255,255 },
+			ALIGN_CENTERHORIZONTAL,
+			L"Spectating you");
 
 		for (const auto& Spectator : m_vecSpectators)
 		{
@@ -153,7 +162,7 @@ void CSpectatorList::DrawClassic()
 				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.m_nIndex, &pi))
 					continue;
 
-				g_Draw.Avatar(nDrawX, nDrawY, 24, 24, pi.friendsID);
+				g_Draw.Avatar(nDrawX -w, nDrawY, 24, 24, pi.friendsID);
 				nDrawY += 6;
 
 				nAddX = 25;
@@ -162,7 +171,7 @@ void CSpectatorList::DrawClassic()
 
 			g_Draw.String(
 				FONT_ESP_NAME_OUTLINED,
-				nDrawX + nAddX, nDrawY,
+				nDrawX + nAddX - w, nDrawY,
 				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam),
 				ALIGN_DEFAULT,
 				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());

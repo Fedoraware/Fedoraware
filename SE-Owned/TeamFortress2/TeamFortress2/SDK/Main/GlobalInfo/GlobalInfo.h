@@ -2,8 +2,9 @@
 
 #include "../BaseEntity/BaseEntity.h"
 
-#define MAX_NEW_COMMANDS 15
-#define DT_WAIT_CALLS 26
+#define MAX_NEW_COMMANDS 20
+#define MAX_NEW_COMMANDS_HEAVY 24
+#define DT_WAIT_CALLS 24
 
 struct GlobalInfo_t
 {
@@ -23,6 +24,7 @@ struct GlobalInfo_t
 	bool m_bLocalSpectated				= false;
 	bool m_bRollExploiting			    = false;
 	bool m_bAttacking			 	    = false;
+	bool fast_stop						= false;
 	bool m_bModulateWorld				= true;
 	bool m_bShouldShift                 = false;
 	bool m_bRecharging                  = false;

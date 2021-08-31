@@ -7,7 +7,17 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
+#include "../../Features/NewWindow/NewWindow.h"
+#include "../../Features/Console/Console.h"
 #include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
+#include "../../Features/Visuals/Visuals.h"
+#include "../../Features/Aimbot/AimbotProjectile/AimbotProjectile.h"
+
+int ticksChoked = 0;
+
+
+
+
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -95,20 +105,64 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					{
 						if (pLocal->GetLifeState() == LIFE_ALIVE)
 						{
+
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
-							if (g_GlobalInfo.m_nShifted)
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Recharge! (%i / %i)"), g_GlobalInfo.m_nShifted, MAX_NEW_COMMANDS);
-							else if (!g_GlobalInfo.m_nShifted && g_GlobalInfo.m_nWaitForShift)
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Wait! (%i / %i)"), g_GlobalInfo.m_nWaitForShift, DT_WAIT_CALLS);
-							else if (!g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift && pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY && !pLocal->GetVecVelocity().IsZero())
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Stop!"));
-							else
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Shift ready!"));
+							int ticks;
+
+							if (pLocal->GetClassNum() == CLASS_HEAVY) {
+
+								for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
+									//printf("i: %d\n", i);
+									for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
+										//printf("j: %d\n", j);
+										ticksChoked = j;
+										break;
+									}
+								}
+								ticks = MAX_NEW_COMMANDS_HEAVY;
+							}
+							else {
+								for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
+									//printf("i: %d\n", i);
+									for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
+										//printf("j: %d\n", j);
+										ticksChoked = j;
+										break;
+									}
+								}
+								ticks = MAX_NEW_COMMANDS;
+							}
+
+							//g_AimbotProjectile.DrawTrace(Trace);
+
+							Color_t color1 = g_GlobalInfo.m_nWaitForShift ? Color_t{ 255, 192, 81, 180 } : Color_t{ 106, 255, 131, 180 };
+							Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Color_t{ 255, 134, 81, 180 } : Color_t{ 106, 255, 250, 180 };
+							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ticks Choked: %i "), ticksChoked);
+							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());
+							int tickWidth = 8;
+							int barWidth = (tickWidth * ticks) + 2;
+							g_Draw.OutlinedRect( // Outline of bar
+								g_ScreenSize.c - (barWidth / 2), // get center of screen, then subtract the width of the bar divided by 2 (to start  the bar)
+								nY + 80, // vertical center + 80px
+								barWidth, // width of outlined rect
+								12, // height (hardcoded)
+								{ 30, 30, 30, 180 } // color
+							);
+							g_Draw.GradientRect(
+								g_ScreenSize.c - (barWidth / 2) + 1, // the bar
+								nY + 81,
+								(g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * ticksChoked,
+								nY + 81 + 10,
+								color1,
+								color2,
+								true
+							);
+
 						}
 					}
 				}
-
+				
 				//Current Active Aimbot FOV
 				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
 				{
@@ -135,6 +189,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpyWarning.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
+			g_NewWindow.Run();
+			g_Console.Run();
 			g_Menu.Run();
 		}	
 		FinishDrawing(g_Interfaces.Surface);

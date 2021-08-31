@@ -632,6 +632,16 @@ namespace Math
 		return std::remainder(ang, 360.0f);
 	}
 
+	inline float NormalizeYaw(float value)
+	{
+		while (value > 180)
+			value -= 360.f;
+
+		while (value < -180)
+			value += 360.f;
+		return value;
+	}
+
 	inline void ClampAngles(Vec3& v)
 	{
 		v.x = std::max(-89.0f, std::min(89.0f, NormalizeAngle(v.x)));

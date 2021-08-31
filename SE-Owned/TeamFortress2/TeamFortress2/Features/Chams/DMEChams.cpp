@@ -13,6 +13,58 @@ bool CDMEChams::ShouldRun()
 
 void CDMEChams::Init()
 {
+	m_pMatFlat2 = Utils::CreateMaterial({
+	_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$bumpmap\" \"vgui/white_additive\"\
+		\n\t\"$color2\" \"[10 10 10]\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$selfillumfresnel\" \"1\"\
+		\n\t\"$selfillumfresnelminmaxexp\" \"[0.1 0.2 0.3]\"\
+		\n\t\"$selfillumtint\" \"[0 0 0]\"\
+		\n}\n")
+	});
+
+	m_pMatGlow = Utils::CreateMaterial({
+	_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"brick/brickwall031b\"\
+		\n\t\"$bumpmap\" \"vgui/white_additive\"\
+		\n\t\"$color2\" \"[10 10 10]\"\
+		\n\t\"$additive\" \"1\"\
+		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
+		\n\t\"$envmapfresnel\" \"1\"\
+		\n\t\"$envmaptint\" \"[4 4 0]\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$rimlight\" \"1\"\
+		\n\t\"$rimlightboost\" \"10\"\
+		\n")
+	});
+
+	m_pMatNone = Utils::CreateMaterial({
+	_("")
+	});
+
+	m_pMatScuffed = Utils::CreateMaterial({
+	_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"models/player/shared/ice_player\"\
+		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
+		\n\t\"$additive\" \"1\"\
+		\n\t\"$phong\" \"1\"\
+		\n\t\"$phongfresnelranges\" \"[0 0.5 10]\"\
+		\n\t\"$phongtint\" \"[0 0 0]\"\
+		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
+		\n\t\"$envmapfresnel\" \"1\"\
+		\n\t\"$envmaptint\" \"[0 0 0]\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$selfillumtint\" \"[0 0 0]\"\
+		\n\t\"$rimlight\" \"1\"\
+		\n\t\"$rimlightboost\" \"10\"\
+		\n")
+	});
+
 	m_pMatShaded = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
 		\n{\
@@ -96,29 +148,58 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 				{
 					switch (Vars::Chams::DME::Hands.m_Var) {
+						
 						case 1: { bMatWasForced = true; return m_pMatShaded; }
 						case 2: { bMatWasForced = true; return m_pMatShiny; }
 						case 3: { bMatWasForced = true; return m_pMatFlat; }
 						case 4: { bMatWasForced = true; return m_pMatWFShaded; }
 						case 5: { bMatWasForced = true; return m_pMatWFShiny; }
 						case 6: { bMatWasForced = true; return m_pMatWFFlat; }
+						case 7: { bMatWasForced = true; return m_pMatFlat2; }
+						case 8: { bMatWasForced = true; return m_pMatGlow; }
 						default: return nullptr;
 					}
 				}());
+
 			}
 
-			if (bMatWasForced)
+			if (bMatWasForced) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
+			}
 
 			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
 				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha.m_Var);
 
+
+
 			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
 				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+			bMatWasForced = true;
+
+			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced) { // Overlay
+				IMaterial* pMaterial = m_pMatScuffed;
+				bool found = false;
+				bool found2 = false;
+				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
+				if (found) {
+					pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+				}
+				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
+				if (found2) {
+					pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+				}
+
+				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
+					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+			}
+
 
 			if (bMatWasForced) {
 				g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+
 			}
 
 			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
@@ -147,32 +228,60 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 
 				bool bMatWasForced = false;
 
+				int _case = 0;
+
 				if (Vars::Chams::DME::Weapon.m_Var)
 				{
 					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial *
 					{
 						switch (Vars::Chams::DME::Weapon.m_Var) {
-							case 1: { bMatWasForced = true; return m_pMatShaded; }
-							case 2: { bMatWasForced = true; return m_pMatShiny; }
-							case 3: { bMatWasForced = true; return m_pMatFlat; }
-							case 4: { bMatWasForced = true; return m_pMatWFShaded; }
-							case 5: { bMatWasForced = true; return m_pMatWFShiny; }
-							case 6: { bMatWasForced = true; return m_pMatWFFlat; }
-							default: return nullptr;
+							//case 0: { bMatWasForced = true; _case = 9; return nullptr; }
+							case 1: { bMatWasForced = true; _case = 1; return m_pMatShaded; }
+							case 2: { bMatWasForced = true; _case = 2; return m_pMatShiny; }
+							case 3: { bMatWasForced = true; _case = 3; return m_pMatFlat; }
+							case 4: { bMatWasForced = true; _case = 4; return m_pMatWFShaded; }
+							case 5: { bMatWasForced = true; _case = 5; return m_pMatWFShiny; }
+							case 6: { bMatWasForced = true; _case = 6; return m_pMatWFFlat; }
+							case 7: { bMatWasForced = true; _case = 7; return m_pMatFlat2; }
+							case 8: { bMatWasForced = true; _case = 8; return m_pMatGlow; }
+							default: { return nullptr; }
+							//default: { bMatWasForced = true; _case = 100;  return nullptr; }
 						}
 					}());
 				}
 
-				if (bMatWasForced)
+				if (bMatWasForced) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
+				}
 
 				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
 					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponAlpha.m_Var);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index) // base
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				bMatWasForced = true;
+
+				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced) {
+					IMaterial* pMaterial = m_pMatScuffed;
+					bool found = false;
+					bool found2 = false;
+					IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
+					if (found) {
+						pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+					}
+					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
+					if (found2) {
+						pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+					}
+
+					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+
+					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index) //overlay
+						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				}
 
 				if (bMatWasForced) {
+
 					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}

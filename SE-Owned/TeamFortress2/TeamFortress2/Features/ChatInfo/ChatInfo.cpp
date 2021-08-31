@@ -34,23 +34,47 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
 		{
 			int nLocalTeam = pLocal->GetTeamNum();
+			/*
+			const char* CathookName = pEvent->GetName();
+			int CathookLine = pEvent->GetInt(_("line"), -1);
+			int CathookPanel = pEvent->GetInt(_("panel"), -1);
+			float CathookX = pEvent->GetFloat(_("x"), -1.f);
+			float CathookY = pEvent->GetFloat(_("y"), -1.f);
+
+			if (strstr(CathookName, _("cl_drawline"))) {
+				if (CathookLine == 0 && CathookPanel == 2) {
+					if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f) {
+						if (const auto& pEntity = GET_PLAYER_USERID(pEvent->GetInt(_("userid")))) {
+							int nIndex = pEntity->GetIndex();
+							PlayerInfo_t pi;
+							g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
+							char szBuff[255];
+							sprintf(szBuff, _("\x4[Cathook Identifier]\x3%s is a CAT"), pi.name);
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, szBuff);
+						}
+					}
+				}
+			}*/
 
 			if (!szEvent.compare(_("player_changeclass")))
 			{
 				if (const auto& pEntity = GET_PLAYER_USERID(pEvent->GetInt(_("userid"))))
 				{
-					if (pEntity->GetTeamNum() != nLocalTeam)
-					{
+
+					/*if (pEntity->GetTeamNum() != nLocalTeam)
+					{*/
 						int nIndex = pEntity->GetIndex();
 
 						PlayerInfo_t pi;
 						if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
 						{
-							char szBuff[85];
-							sprintf(szBuff, _("\x3%s is now %s"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
+							char szBuff[255];
+							sprintf(szBuff, _("\x4[SEO] \x3%s is now %s"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
+							//sprintf(szBuff, _("\x0x0\x1x1\x2x2\x3x3\x4x4\x5x5\x6x6\x7x7\x8x8\x9x9\x10x10\x11x11\x12x12\x13x13\x14x14\x15x15"));//, pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
+							//sprintf(szBuff, _("\x1x1\n\x2x2\n\x3x3\n\x4x4\n\x5x5\n\x6x6\n\x7x7\n\x8x8\n\x9x9"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, szBuff);
 						}
-					}
+					/*}*/
 				}
 
 				return;

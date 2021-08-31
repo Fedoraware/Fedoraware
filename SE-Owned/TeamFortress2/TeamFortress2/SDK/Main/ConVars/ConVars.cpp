@@ -3,6 +3,7 @@
 void ConVars_t::Init()
 {
 	cl_interp						= g_Interfaces.CVars->FindVar(_("cl_interp"));
+	cl_sidespeed					= g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
 	cl_interp_ratio					= g_Interfaces.CVars->FindVar(_("cl_interp_ratio"));
 	cl_updaterate					= g_Interfaces.CVars->FindVar(_("cl_updaterate"));
 	tf_crit_cap						= g_Interfaces.CVars->FindVar(_("tf_weapon_criticals_bucket_cap"));

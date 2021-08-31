@@ -68,7 +68,7 @@ void CAimbot::Run(CUserCmd* pCmd)
 		if (!ShouldRun(pLocal, pWeapon))
 			return;
 
-		switch (g_GlobalInfo.m_WeaponType)
+		switch (g_GlobalInfo.m_WeaponType) 
 		{
 			case EWeaponType::HITSCAN: {
 				g_AimbotHitscan.Run(pLocal, pWeapon, pCmd);

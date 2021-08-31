@@ -204,6 +204,7 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3 &vLocalPos, const Vec3 &vTarget
 	return true;
 }
 
+
 bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd, Predictor_t &Predictor, const ProjectileInfo_t &ProjInfo, Solution_t &out)
 {
 	INetChannelInfo *pNetChannel = reinterpret_cast<INetChannelInfo *>(g_Interfaces.Engine->GetNetChannelInfo());
@@ -234,6 +235,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 		{
 			case TF_WEAPON_GRENADELAUNCHER:
 			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
 				Vec3 vDelta = (vPredictedPos - vLocalPos);
 				float fRange = Math::VectorNormalize(vDelta);
@@ -256,13 +259,17 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 
 		Utils::TraceHull(Predictor.m_vPosition, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2), MASK_SOLID_BRUSHONLY, &TraceFilter, &Trace);
 
-		if (Trace.DidHit())
+		if (Trace.DidHit()) {
+
 			vPredictedPos.z = Trace.vEndPos.z;
+		}
 
 		switch (pWeapon->GetWeaponID())
 		{
 			case TF_WEAPON_GRENADELAUNCHER:
 			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
 				Vec3 vecOffset(16.0f, 8.0f, -6.0f);
 				Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
@@ -282,9 +289,13 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 			switch (pWeapon->GetWeaponID())
 			{
 				case TF_WEAPON_ROCKETLAUNCHER:
-				case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
+				//case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
+				case TF_WEAPON_DIRECTHIT:
+					// dragons furry
+				case 109:
 				case TF_WEAPON_FLAREGUN:
-				case TF_WEAPON_FLAREGUN_REVENGE:
+				//case TF_WEAPON_FLAREGUN_REVENGE:
+				case TF_WEAPON_RAYGUN_REVENGE:
 				case TF_WEAPON_COMPOUND_BOW:
 				case TF_WEAPON_SYRINGEGUN_MEDIC:
 				{
@@ -303,6 +314,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 
 				case TF_WEAPON_GRENADELAUNCHER:
 				case TF_WEAPON_PIPEBOMBLAUNCHER:
+				case TF_WEAPON_STICKBOMB:
+				case TF_WEAPON_STICKY_BALL_LAUNCHER:
 				{
 					Vec3 vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 					Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);
@@ -350,7 +363,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity *pLocal, CBaseEntity *pEntity)
 					Vec3 vToEnt = pEntity->GetAbsOrigin() - pLocal->GetAbsOrigin();
 					vToEnt.NormalizeInPlace();
 
-					if (vToEnt.Dot(vEntForward) > 0.1071f)
+					if (vToEnt.Dot(vEntForward) > 0.1071f || (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4))
 						vPos.z += 5.0f;
 
 					return vPos;
@@ -605,6 +618,11 @@ void CAimbotProjectile::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUs
 		if (ShouldFire(pCmd))
 		{
 			pCmd->buttons |= IN_ATTACK;
+
+			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+			{
+				g_GlobalInfo.m_bShouldShift = true;
+			}
 
 			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{

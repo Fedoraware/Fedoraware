@@ -4,7 +4,7 @@
 class CChams
 {
 private:
-	IMaterial *m_pMatShaded, *m_pMatFlat, *m_pMatShiny;
+	IMaterial *m_pMatShaded, *m_pMatFlat, *m_pMatShiny, *m_pMatGlow, *m_pMatFlat2, *m_pMatScuffedRed, * m_pMatScuffedBlue, *m_pMatScuffed;
 	std::map<CBaseEntity *, bool> m_DrawnEntities;
 
 private:
@@ -25,7 +25,7 @@ public:
 	}
 
 	inline bool IsChamsMaterial(IMaterial *pMat) {
-		return (pMat == m_pMatShaded || pMat == m_pMatFlat || pMat == m_pMatShiny);
+		return (pMat == m_pMatShaded || pMat == m_pMatFlat || pMat == m_pMatShiny || pMat == m_pMatGlow || pMat == m_pMatFlat2);
 	}
 
 public:

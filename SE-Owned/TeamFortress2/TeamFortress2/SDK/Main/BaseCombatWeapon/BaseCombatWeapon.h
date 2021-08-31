@@ -2,6 +2,8 @@
 
 #include "../BaseEntity/BaseEntity.h"
 
+
+
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars

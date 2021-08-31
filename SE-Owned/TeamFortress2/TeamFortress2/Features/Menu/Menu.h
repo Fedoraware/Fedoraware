@@ -10,12 +10,14 @@ private:
 
 	void Separator();
 	bool CheckBox(CVar<bool> &Var, const wchar_t* const szToolTip);
-	bool Button(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
+
 	bool ComboBox(CVar<int> &Var, const std::vector<CVar<int>> &List);
 	bool InputFloat(CVar<float> &Var, float Min, float Max, float Step = 1.0f, const wchar_t* Fmt = L"%f");
 	bool InputInt(CVar<int> &Var, int Min, int Max, int Step = 1);
 	bool InputColor(Color_t &Var, const wchar_t *Label);
 	bool InputString(const wchar_t *Label, std::wstring &output);
+	bool InputConstChar(const wchar_t *Label, std::string &output);
+	bool InputCString(const wchar_t *Label, std::string &output);
 	bool InputKey(CVar<int> &output, bool bAllowNone = true);
 	void GroupBoxStart();
 	void GroupBoxEnd(const wchar_t *Label, int Width);
@@ -26,6 +28,7 @@ private:
 	std::wstring m_szCurTip = L"";
 
 public:
+	bool Button(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
 	float m_flFadeAlpha		= 0.0f;
 	float m_flFadeElapsed	= 0.0f;
 	float m_flFadeDuration	= 0.1f;

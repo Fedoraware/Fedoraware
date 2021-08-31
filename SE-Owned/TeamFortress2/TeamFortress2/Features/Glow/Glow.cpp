@@ -301,9 +301,11 @@ void CGlowEffect::Render()
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer2);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer1);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 		}
 		pRenderContext->PopRenderTargetAndViewport();
 

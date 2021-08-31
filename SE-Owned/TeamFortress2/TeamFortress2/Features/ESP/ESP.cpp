@@ -219,7 +219,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 			if (Vars::ESP::Players::Health.m_Var)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor, ALIGN_DEFAULT, L"%d", nHealth);
+				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
 
@@ -537,7 +537,7 @@ void CESP::DrawWorld()
 		return;
 	
 	Vec3 vScreen = {};
-	size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_PICKUPS_OUTLINED : FONT_ESP_PICKUPS);
+	size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_PICKUPS_OUTLINED : FONT_ESP_COND);
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
 
@@ -546,7 +546,7 @@ void CESP::DrawWorld()
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH)) 
 		{
 			if (Utils::W2S(Health->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"health"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"HEALTH"));
 		}
 	}
 
@@ -555,7 +555,7 @@ void CESP::DrawWorld()
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
 			if (Utils::W2S(Ammo->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"ammo"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"AMMO"));
 		}
 	}
 
@@ -566,24 +566,30 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 {
 	std::wstring szCond = L"";
 	int nCond = pEntity->GetCond(), nCondEx = pEntity->GetCondEx(), nCondEx2 = pEntity->GetCondEx2();
+	int nFlag = pEntity->GetFlags();
 
 	if (nCond & TFCond_Slowed)
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-				szCond += _(L"REV ");
+				szCond += _(L"REV  ");
 		}
+	}
+
+	if (nFlag & FL_DUCKING)
+	{
+		szCond += _(L"DUCKING ");
 	}
 
 	if (nCondEx2 & TFCondEx2_BlastImmune)
 		szCond += _(L"BLAST IMMUNE ");
 
 	if (nCondEx2 & TFCondEx2_BulletImmune)
-		szCond += _(L"BUlLET IMMUNE");
+		szCond += _(L"BUlLET IMMUNE ");
 
 	if (nCondEx2 & TFCondEx2_FireImmune)
-		szCond += _(L"FIRE IMMUNE");
+		szCond += _(L"FIRE IMMUNE ");
 
 	if ((nCond & TFCond_Ubercharged) || (nCond & TFCondEx_PhlogUber))
 		szCond += _(L"UBER ");

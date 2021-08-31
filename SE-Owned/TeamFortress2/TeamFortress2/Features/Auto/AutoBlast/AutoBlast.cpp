@@ -8,7 +8,12 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 	if (!Vars::Triggerbot::Blast::Active.m_Var || !g_GlobalInfo.m_bWeaponCanSecondaryAttack)
 		return;
 
-	if (pWeapon->GetWeaponID() != TF_WEAPON_FLAMETHROWER || g_GlobalInfo.m_nCurItemDefIndex == Pyro_m_ThePhlogistinator)
+	id = pWeapon->GetWeaponID();
+
+	if (id != TF_WEAPON_FLAMETHROWER && id != TF_WEAPON_FLAME_BALL)
+		return;
+
+	if (g_GlobalInfo.m_nCurItemDefIndex == Pyro_m_ThePhlogistinator)
 		return;
 
 	if (const auto &pNet = g_Interfaces.Engine->GetNetChannelInfo())

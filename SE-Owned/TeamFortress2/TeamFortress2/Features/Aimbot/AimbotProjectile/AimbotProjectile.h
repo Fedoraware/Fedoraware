@@ -41,7 +41,6 @@ private:
 	void Aim(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon, Vec3 &vAngle);
 	bool ShouldFire(CUserCmd *pCmd);
 	bool IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon);
-
 	bool m_bIsFlameThrower;
 
 public:

@@ -20,10 +20,22 @@ class CHooks
 {
 private:
 	HWND m_hwWindow = 0;
+	void* m_pOriginal;
 
 public:
 	void Init();
 	void Release();
+	void Create(void* pSrc, void* pDst)
+	{
+		if (MH_CreateHook(pSrc, pDst, &m_pOriginal) != MH_STATUS::MH_OK)
+			return;
+	}
+
+	template <typename FN>
+	inline FN CallOriginal()
+	{
+		return reinterpret_cast<FN>(m_pOriginal);
+	}
 };
 
 inline CHooks g_Hooks;

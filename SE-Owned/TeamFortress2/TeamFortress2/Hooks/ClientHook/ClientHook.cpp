@@ -40,6 +40,8 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 			}
 
 			g_Visuals.ThirdPerson();
+			g_Visuals.SkyboxChanger();
+
 			break;
 		}
 

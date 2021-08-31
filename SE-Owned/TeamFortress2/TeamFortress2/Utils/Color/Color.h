@@ -2,7 +2,7 @@
 
 #include "../Math/Math.h"
 
-//#define DEVELOPER_BUILD
+#define DEVELOPER_BUILD
 
 using byte = unsigned char;
 
