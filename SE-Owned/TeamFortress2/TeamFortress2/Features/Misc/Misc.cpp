@@ -272,15 +272,19 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			float speed = pLocal->GetVelocity().Lenght2D();
 
 
-			if (g_GlobalInfo.fast_stop && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-				if (speed > pLocal->GetPlayerMaxVelocity() * 0.1) {
-					pCmd->forwardmove = 0;
-					pCmd->sidemove = 0.0;
-				}
-				else {
+			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+				if (speed > 5.f) {
+					if (pLocal->GetMaxSpeed() < 240)
+					{
+						pCmd->forwardmove = 0.f;
+					}
+					else {
+						pCmd->forwardmove = -pCmd->forwardmove / 4;
+					}
+					pCmd->sidemove = 0.f;
+				} else {
 					g_GlobalInfo.fast_stop = false;
 				}
-
 			}
 			currentspeed = speed;
 			currentmaxspeed = pLocal->GetMaxSpeed();

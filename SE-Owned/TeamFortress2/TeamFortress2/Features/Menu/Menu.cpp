@@ -1108,6 +1108,7 @@ void CMenu::Run()
 				case EMainTabs::TAB_TRIGGERBOT:
 				{
 					static ETriggerTabs Tab = ETriggerTabs::TAB_MAIN;
+					/*
 					{
 						Rect_t checkpoint_line = m_LastWidget;
 						checkpoint_line.x -= Vars::Menu::SpacingX;
@@ -1122,7 +1123,7 @@ void CMenu::Run()
 						checkpoint_line.x += Vars::Menu::SpacingX;
 						checkpoint_line.y += Vars::Menu::SpacingY;
 						m_LastWidget = checkpoint_line;
-					}
+					}*/
 
 					switch (Tab) {
 						case ETriggerTabs::TAB_MAIN:

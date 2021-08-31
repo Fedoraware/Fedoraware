@@ -10,10 +10,13 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 {
 	if (Vars::Misc::CL_Move::Enabled.m_Var)
 	{
+		g_GlobalInfo.fast_stop = false;
 		if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && !g_GlobalInfo.m_nShifted) //teleport
 		{
+			g_GlobalInfo.fast_stop = false;
 			while (g_GlobalInfo.m_nShifted < MAX_NEW_COMMANDS_HEAVY)
 			{
+				g_GlobalInfo.fast_stop = false;
 				g_GlobalInfo.m_nShifted++;
 				Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (MAX_NEW_COMMANDS_HEAVY - 1))); //this teleports you
 				//g_GlobalInfo.m_nShifted++;
@@ -22,18 +25,23 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			return;
 		}
 
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) //recharge key
+		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {//recharge key
+			g_GlobalInfo.fast_stop = false;
 			g_GlobalInfo.m_bRecharging = true;
+		}
 	}
 
 	if (g_GlobalInfo.m_bRecharging && g_GlobalInfo.m_nShifted) //recharge
 	{
+		g_GlobalInfo.fast_stop = false;
 		g_GlobalInfo.m_nShifted--; //goes from 15 to 0
 		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		return;
 	}
-	else
+	else {
+		g_GlobalInfo.fast_stop = false;
 		g_GlobalInfo.m_bRecharging = false;
+	}
 
 
 
@@ -42,6 +50,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	if (g_GlobalInfo.m_nWaitForShift)
 	{
+		g_GlobalInfo.fast_stop = false;
 		g_GlobalInfo.m_nWaitForShift--;
 		return;
 	}
@@ -73,11 +82,14 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 						g_GlobalInfo.m_nShifted++;
 					}
 					else {
+						g_GlobalInfo.fast_stop = false;
 						return;
 					}
 				}
 			}
+			g_GlobalInfo.fast_stop = false;
 		}
+		g_GlobalInfo.fast_stop = false;
 
 		g_GlobalInfo.m_bShouldShift = false;
 	}
