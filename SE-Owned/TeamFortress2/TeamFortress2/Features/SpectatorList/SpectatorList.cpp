@@ -156,24 +156,26 @@ void CSpectatorList::DrawClassic()
 			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall;
 			if (Vars::Visuals::SpectatorList.m_Var == 3)
 			{
-				nDrawX -= 55;
+				//nDrawX -= 55;
+
+
 
 				PlayerInfo_t pi;
 				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.m_nIndex, &pi))
 					continue;
 
-				g_Draw.Avatar(nDrawX -w, nDrawY, 24, 24, pi.friendsID);
+				g_Draw.Avatar(nDrawX -w - 25, nDrawY, 24, 24, pi.friendsID);
 				nDrawY += 6;
 
-				nAddX = 25;
-				nAddY = 14;
+				//nAddX = 25;
+				//nAddY = 14;
 			}
 
 			g_Draw.String(
 				FONT_ESP_NAME_OUTLINED,
-				nDrawX + nAddX - w, nDrawY,
+				nDrawX, nDrawY,
 				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam),
-				ALIGN_DEFAULT,
+				ALIGN_CENTER,
 				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());
 
 			nDrawY += nAddY;
