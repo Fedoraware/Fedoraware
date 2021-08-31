@@ -1,0 +1,3 @@
+# SEOwnedPublic
+
+yes
