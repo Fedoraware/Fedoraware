@@ -1,5 +1,5 @@
-# SEOwnedPublic
-
+# Fedoraware (SE-Owned Public but awesome
+)
 Press HOME to open the menu
 
 ## Differences to original SE-Owned:
