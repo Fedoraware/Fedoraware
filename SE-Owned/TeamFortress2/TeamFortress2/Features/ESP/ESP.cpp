@@ -269,8 +269,10 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 						g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = DrawColor;
 						LineColor.a = 180;
-						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
-						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
+						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
+						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, { 0,0,0,180 });
+						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
+						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 2, wideth + 10, 2, LineColor);
 					}
 					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
 				}
