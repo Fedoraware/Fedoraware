@@ -164,7 +164,7 @@ void CSpectatorList::DrawClassic()
 				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.m_nIndex, &pi))
 					continue;
 
-				g_Draw.Avatar(nDrawX -w - 25, nDrawY, 24, 24, pi.friendsID);
+				g_Draw.Avatar(nDrawX - (w / 2), nDrawY, 24, 24, pi.friendsID); // center - half the width of the string
 				nDrawY += 6;
 
 				//nAddX = 25;
@@ -173,7 +173,7 @@ void CSpectatorList::DrawClassic()
 
 			g_Draw.String(
 				FONT_ESP_NAME_OUTLINED,
-				nDrawX, nDrawY,
+				nDrawX + 25, nDrawY,
 				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam),
 				ALIGN_CENTERHORIZONTAL,
 				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());
