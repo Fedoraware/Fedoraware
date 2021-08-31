@@ -15,7 +15,7 @@ Press HOME to open the menu
 - other weird type of cham (also very cool)
 - Cathook identifier (havent figured out how to find out if others are cathook users yet though)
 - nullcore style useful buttons panel (thanks oxygodmode)
-- input normal std::strings
+- input normal std::strings (kinda)
 - directional autostrafe
 - fakelag
 - working nopush
