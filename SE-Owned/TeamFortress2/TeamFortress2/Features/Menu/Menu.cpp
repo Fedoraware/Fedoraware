@@ -8,6 +8,7 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <sstream>
 
 int StringToWString2(std::wstring& ws, const std::string& s)
 {
