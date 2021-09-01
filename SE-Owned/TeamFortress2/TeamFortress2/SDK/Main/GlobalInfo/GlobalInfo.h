@@ -3,8 +3,8 @@
 #include "../BaseEntity/BaseEntity.h"
 
 #define MAX_NEW_COMMANDS 20
-#define MAX_NEW_COMMANDS_HEAVY 24
-#define DT_WAIT_CALLS 24
+#define MAX_NEW_COMMANDS_HEAVY 23
+#define DT_WAIT_CALLS 26
 
 struct GlobalInfo_t
 {

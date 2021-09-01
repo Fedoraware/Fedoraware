@@ -47,6 +47,10 @@ namespace Vars
 			inline Color_t Widget				= { 20, 20, 20, 255 };
 			inline Color_t WidgetActive			= { 70, 70, 70, 255 };
 			inline Color_t OutlineMenu			= { 255, 255, 255, 20 };
+			inline Color_t FeatureOn			= { 255, 255, 255, 0 };
+			inline Color_t FeatureOff			= { 255, 255, 255, 0 };
+			inline Color_t FeatureBackground	= { 255, 255, 255, 0 };
+			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
 		}
 	}
 
@@ -384,6 +388,8 @@ namespace Vars
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
+		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
 
 		namespace Skins
 		{

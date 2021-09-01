@@ -172,10 +172,20 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			if (pLocal->IsAlive())
 			{
 				auto netchan = g_Interfaces.Engine->GetNetChannelInfo();
-				if ((Vars::Misc::CL_Move::Fakelag.m_Var && netchan->m_nChokedPackets < (int)Vars::Misc::CL_Move::FakelagValue.m_Var) || pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))
-					*pSendPacket = false;
-				else
+
+				if ((Vars::Misc::CL_Move::Fakelag.m_Var && netchan->m_nChokedPackets < (int)Vars::Misc::CL_Move::FakelagValue.m_Var) || pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) {
+					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var) {
+						if (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)) {
+							*pSendPacket = false;
+						}
+					}
+					else {
+						*pSendPacket = false;
+					}
+				}
+				else {
 					*pSendPacket = true;
+				}
 			}
 		}
 	}

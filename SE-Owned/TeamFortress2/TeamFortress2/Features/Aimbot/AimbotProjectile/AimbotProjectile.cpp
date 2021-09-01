@@ -385,6 +385,13 @@ ESortMethod CAimbotProjectile::GetSortMethod()
 	}
 }
 
+void projectileTracer(CBaseEntity* pLocal, Target_t Target) {
+	Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : Target.m_vPos;
+	//Color_t Color = (Utils::Rainbow());
+	Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(pLocal->GetShootPos(), vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
+}
+
 bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 {
 	ESortMethod SortMethod = GetSortMethod();
@@ -639,8 +646,14 @@ void CAimbotProjectile::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUs
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking)
+		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
+			if (Vars::Visuals::BulletTracer.m_Var) {
+				projectileTracer(pLocal, Target);
+			}
+
+			//g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, g_GlobalInfo.m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
+		}
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
 		{

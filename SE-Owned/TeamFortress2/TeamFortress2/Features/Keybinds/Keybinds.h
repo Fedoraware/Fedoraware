@@ -13,7 +13,9 @@ private:
 	bool ShouldRun();
 	void DragNewWindow();
 	void DrawNewWindow();
-	bool DrawButton(const wchar_t* label, int x, int y, int w, int h);//, bool &buttonClick);
+	bool DrawButton(const wchar_t* label, int x, int y, int w, int h);
+	void DrawFeature(const wchar_t* label, int x, int y, int w, int h, bool active);
+	//, bool &buttonClick);
 	bool buttonPressed = false;
 
 	int m_nKeybindsSize;

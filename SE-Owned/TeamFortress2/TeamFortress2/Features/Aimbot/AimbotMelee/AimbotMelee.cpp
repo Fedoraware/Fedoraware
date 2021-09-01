@@ -226,8 +226,9 @@ void CAimbotMelee::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking)
+		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
+		}
 
 		if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)
 		{

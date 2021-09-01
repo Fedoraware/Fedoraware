@@ -261,6 +261,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 			PlayerInfo_t pi;
 			if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
 			{
+				int middle = (x + (w / 2));
 				if (Vars::ESP::Players::Name.m_Var)
 				{
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
@@ -270,11 +271,11 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 						Color_t LineColor = DrawColor;
 						LineColor.a = 180;
 						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
-						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, { 0,0,0,180 });
+						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, { 0,0,0,180 });
 						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
-						g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 2, wideth + 10, 2, LineColor);
+						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset - 2, wideth + 10, 2, LineColor);
 					}
-					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
+					g_Draw.String(FONT_NAME, middle, (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
 				}
 
 				if (Vars::ESP::Players::GUID.m_Var)

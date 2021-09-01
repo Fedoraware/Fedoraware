@@ -9,6 +9,7 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/PlayerList/PlayerList.h"
 #include "../../Features/Console/Console.h"
+#include "../../Features/Keybinds/Keybinds.h"
 #include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Aimbot/AimbotProjectile/AimbotProjectile.h"
@@ -140,6 +141,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Color_t{ 255, 134, 81, 180 } : Color_t{ 106, 255, 250, 180 };
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ticks Choked: %i "), ticksChoked);
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());
+							int chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu = g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets;
+							g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, std::to_string(chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu).data());
 							int tickWidth = 8;
 							int barWidth = (tickWidth * ticks) + 2;
 							g_Draw.OutlinedRect( // Outline of bar
@@ -190,6 +193,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpectatorList.Run();
 			g_Radar.Run();
 			g_PlayerList.Run();
+			//g_Keybinds.Run();
 			g_Console.Run();
 			g_Menu.Run();
 		}	

@@ -62,7 +62,9 @@ enum EFonts
 	FONT_ESP_PICKUPS_OUTLINED,
 
 	FONT_MENU,
-	FONT_DEBUG
+	FONT_DEBUG,
+
+	FONT_FEATURE
 };
 
 inline Draw_t g_Draw;

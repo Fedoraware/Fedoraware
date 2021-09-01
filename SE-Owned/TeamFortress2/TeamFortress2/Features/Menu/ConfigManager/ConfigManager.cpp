@@ -8,6 +8,7 @@
 #include "../../SpectatorList/SpectatorList.h"
 #include "../../PlayerList/PlayerList.h"
 #include "../../Console/Console.h"
+#include "../../Keybinds/Keybinds.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
@@ -441,6 +442,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
+			SAVE_VAR(Vars::Visuals::BulletTracer);
+			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
+			
 
 #ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
@@ -472,6 +476,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
@@ -496,6 +502,10 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Menu::Colors::Widget);
 			SAVE_OTHER(Vars::Menu::Colors::WidgetActive);
 			SAVE_OTHER(Vars::Menu::Colors::OutlineMenu);
+			SAVE_OTHER(Vars::Menu::Colors::FeatureOn);
+			SAVE_OTHER(Vars::Menu::Colors::FeatureOff);
+			SAVE_OTHER(Vars::Menu::Colors::FeatureBackground);
+			SAVE_OTHER(Vars::Menu::Colors::FeatureOutline);
 
 			SAVE_OTHER(Colors::OutlineESP);
 			SAVE_OTHER(Colors::Cond);
@@ -528,6 +538,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_PlayerList.m_nNewWindowY);
 			SAVE_OTHER(g_Console.m_nConsoleX);
 			SAVE_OTHER(g_Console.m_nConsoleY);
+			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
+			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
 		}
 
 		m_Write.close();
@@ -865,6 +877,9 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 			LOAD_VAR(Vars::Visuals::SkyboxChanger);
+
+			LOAD_VAR(Vars::Visuals::BulletTracer);
+			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
@@ -896,6 +911,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
@@ -920,6 +937,11 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Menu::Colors::Widget);
 			LOAD_OTHER(Vars::Menu::Colors::WidgetActive);
 			LOAD_OTHER(Vars::Menu::Colors::OutlineMenu);
+			LOAD_OTHER(Vars::Menu::Colors::FeatureOn);
+			LOAD_OTHER(Vars::Menu::Colors::FeatureOff);
+			LOAD_OTHER(Vars::Menu::Colors::FeatureBackground);
+			LOAD_OTHER(Vars::Menu::Colors::FeatureOutline);
+
 
 			LOAD_OTHER(Colors::OutlineESP);
 			LOAD_OTHER(Colors::Cond);
@@ -943,6 +965,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::FOVCircle);
 			LOAD_OTHER(Colors::Bones);
 
+
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);
 
@@ -954,6 +977,9 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_Console.m_nConsoleX);
 			LOAD_OTHER(g_Console.m_nConsoleY);
+
+			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
+			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
 		}
 
 		m_Read.close();

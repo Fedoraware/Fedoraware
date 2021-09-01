@@ -481,6 +481,12 @@ bool CAimbotHitscan::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 	return ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack);
 }
 
+void bulletTracer(CBaseEntity* pLocal, Target_t Target) {
+	Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : Target.m_vPos;
+	//Color_t Color = (Utils::Rainbow());
+	Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(pLocal->GetShootPos(), vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
+}
 
 
 void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
@@ -574,8 +580,14 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking)
+		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
+			if (Vars::Visuals::BulletTracer.m_Var) {
+				for (int i = 0; i < pWeapon->GetWeaponData().m_nBulletsPerShot; i++) {
+					bulletTracer(pLocal, Target);
+				}
+			}
+		}
 
 		if (Vars::Misc::DisableInterpolation.m_Var && Target.m_TargetType == ETargetType::PLAYER && bIsAttacking) {
 			pCmd->tick_count = TIME_TO_TICKS(Target.m_pEntity->GetSimulationTime() +

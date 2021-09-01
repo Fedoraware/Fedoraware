@@ -8,8 +8,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	AutoStrafe(pCmd);
 	NoiseMakerSpam();
 	ChatSpam();
-	CritHack(pCmd);
-	//StopFast(pCmd);
+	StopFast(pCmd);
 	NoPush();
 	CathookIdentify();
 }
@@ -119,10 +118,6 @@ void CMisc::NoPush() {
 	else {
 		if (noPush->GetInt() == 0) noPush->SetValue(1);
 	}
-}
-
-void CMisc::CritHack(CUserCmd* pCmd) {
-
 }
 
 void CMisc::AutoJump(CUserCmd *pCmd)
@@ -264,9 +259,13 @@ void CMisc::CathookIdentify() {
 	};
 }
 
-void CMisc::AutoStrafe(CUserCmd* pCmd)
-{
-	
+void CMisc::StopFast(CUserCmd* pCmd) {
+
+	if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && Vars::Misc::CL_Move::DoubletapKey.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+	{
+		g_GlobalInfo.m_bShouldShift = true;
+	}
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (pLocal->IsOnGround()) {
 			float speed = pLocal->GetVelocity().Lenght2D();
@@ -282,16 +281,17 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 						pCmd->forwardmove = -pCmd->forwardmove / 4;
 					}
 					pCmd->sidemove = 0.f;
-				} else {
+				}
+				else {
 					g_GlobalInfo.fast_stop = false;
 				}
 			}
-			currentspeed = speed;
-			currentmaxspeed = pLocal->GetMaxSpeed();
-			currentcommandforwardmove = pCmd->forwardmove;
-			currentcommandsidemove = pCmd->sidemove;
 		}
 	}
+}
+
+void CMisc::AutoStrafe(CUserCmd* pCmd)
+{
 
 	if (Vars::Misc::AutoStrafe.m_Var && !Vars::Misc::Directional.m_Var)
 	{

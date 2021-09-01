@@ -1566,6 +1566,8 @@ void CMenu::Run()
 								CheckBox(Vars::Misc::DisableInterpolation, _(L"Disable interpolation"));
 								CheckBox(Vars::Visuals::RemoveDisguises, _(L"Remove disguises from spies"));
 								CheckBox(Vars::Visuals::RemoveTaunts, _(L"Remove taunts from enemy players"));
+								CheckBox(Vars::Visuals::BulletTracer, _(L"Enable bullet tracers"));
+								CheckBox(Vars::Visuals::BulletTracerRainbow, _(L"Bullet tracers have rainbow colour"));
 								//InputCString(_(L"Skybox name"), XorStr(Vars::Skybox::SkyboxName));
 								InputConstChar(_(L"Skybox name"), Vars::Skybox::SkyboxName);
 							}
@@ -1626,6 +1628,10 @@ void CMenu::Run()
 								InputColor(Vars::Menu::Colors::Widget, _(L"Widget"));
 								InputColor(Vars::Menu::Colors::WidgetActive, _(L"Widget Active"));
 								InputColor(Vars::Menu::Colors::OutlineMenu, _(L"Outline Menu"));
+								InputColor(Vars::Menu::Colors::FeatureBackground, _(L"Feature Background"));
+								InputColor(Vars::Menu::Colors::FeatureOff, _(L"Feature Off"));
+								InputColor(Vars::Menu::Colors::FeatureOn, _(L"Feature On"));
+								InputColor(Vars::Menu::Colors::FeatureOutline, _(L"Feature Outline"));
 							}
 							GroupBoxEnd(_(L"Menu"), 250);
 
@@ -1655,6 +1661,7 @@ void CMenu::Run()
 								InputColor(Colors::StaticPropModulation, _(L"Prop Color"));
 								InputColor(Colors::FOVCircle, _(L"FOV Circle"));
 								InputColor(Colors::Bones, _(L"Bone color"));
+								InputColor(Colors::BulletTracer, _(L"Bone color"));
 							}
 							GroupBoxEnd(_(L"Others"), 250);
 

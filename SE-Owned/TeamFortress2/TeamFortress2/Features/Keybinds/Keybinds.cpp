@@ -20,7 +20,7 @@ void CKeybinds::Run()
 
 	// Set window size, could maybe use a variable for this wink wink
 
-	m_nKeybindsSize = 300;
+	m_nKeybindsSize = 120;
 
 	// Draw background, handle input.
 	DrawNewWindow();
@@ -60,6 +60,12 @@ bool CKeybinds::DrawButton(const wchar_t* label, int x, int y, int w, int h) {
 	return callback;
 }
 
+void CKeybinds::DrawFeature(const wchar_t* label, int x, int y, int w, int h, bool active) {
+	g_Draw.OutlinedRect(x -2, y -2, w + 4, h + 4, Vars::Menu::Colors::FeatureOutline);
+	g_Draw.Rect(x, y, w, h, Vars::Menu::Colors::FeatureBackground);
+	g_Draw.String(FONT_FEATURE, x + (w / 2), y + (h / 2), active ? Vars::Menu::Colors::FeatureOn : Vars::Menu::Colors::FeatureOff, ALIGN_CENTER, label);
+}
+
 
 
 void CKeybinds::DrawNewWindow()
@@ -72,20 +78,25 @@ void CKeybinds::DrawNewWindow()
 
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
 		g_Draw.Rect(m_nKeybindsX - m_nKeybindsSize, m_nKeybindsY - m_nKeybindsSize - 20, m_nKeybindsSize, 20, Vars::Menu::Colors::TitleBar);
-		g_Draw.String(FONT_MENU, m_nKeybindsX - (m_nKeybindsSize / 2), m_nKeybindsY - m_nKeybindsSize - 10, { 255, 255, 255, 255 }, ALIGN_CENTER, "Playerlist");
+		g_Draw.String(FONT_MENU, m_nKeybindsX - (m_nKeybindsSize / 2), m_nKeybindsY - m_nKeybindsSize - 10, { 255, 255, 255, 255 }, ALIGN_CENTER, "Features");
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
 		//Build the bg color
 		Color_t clrBack = Vars::Menu::Colors::WindowBackground;
 
-		g_Draw.Rect(m_nKeybindsX - m_nKeybindsSize, m_nKeybindsY - m_nKeybindsSize, m_nKeybindsSize, m_nKeybindsSize, clrBack);
-		g_Draw.OutlinedRect(m_nKeybindsX - m_nKeybindsSize, m_nKeybindsY - m_nKeybindsSize, m_nKeybindsSize, m_nKeybindsSize, clrBack);
+		//g_Draw.Rect(m_nKeybindsX - m_nKeybindsSize, m_nKeybindsY - m_nKeybindsSize, m_nKeybindsSize, m_nKeybindsSize, clrBack);
+		//g_Draw.OutlinedRect(m_nKeybindsX - m_nKeybindsSize, m_nKeybindsY - m_nKeybindsSize, m_nKeybindsSize, m_nKeybindsSize, clrBack);
 		//g_Draw.OutlinedRect(m_nNewWindowX - m_nNewWindowSize, m_nNewWindowY - m_nNewWindowSize, m_nNewWindowSize, m_nNewWindowSize, Vars::Menu::Colors::OutlineMenu);
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
-		
-
 	}
+	int height = g_Draw.m_vecFonts[FONT_FEATURE].nTall;
+	DrawFeature(_(L"Aimbot"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10, 100, height, GetAsyncKeyState(Vars::Aimbot::Global::AimKey.m_Var) ? true : false);
+	DrawFeature(_(L"Trigger"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10 + 21, 100, height, GetAsyncKeyState(Vars::Triggerbot::Global::TriggerKey.m_Var) ? true : false);
+	DrawFeature(_(L"Fakelag"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10 + (21 * 2), 100, height, Vars::Misc::CL_Move::FakelagOnKey.m_Var ? GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) : Vars::Misc::CL_Move::Fakelag.m_Var);
+	DrawFeature(_(L"Doubletap"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10 + (21 * 3), 100, height, GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var) ? true : false);
+	DrawFeature(_(L"Recharge"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10 + (21 * 4), 100, height, GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var) ? true : false);
+	DrawFeature(_(L"Thirdperson"), m_nKeybindsX - (m_nKeybindsSize / 2) - 50, m_nKeybindsY - m_nKeybindsSize + 10 + (21 * 5), 100, height, Vars::Visuals::ThirdPerson.m_Var ? true : false);
 }
 
 bool CKeybinds::ShouldRun()

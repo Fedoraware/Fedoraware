@@ -70,7 +70,10 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("DejaVu Sans"), 16, 200, FONTFLAG_ANTIALIAS},
 
 		//FONT_DEBUG
-		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE }
+		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE },
+
+		//FONT_FEATURE
+		{ 0x0, _("Verdana"), 16, 800, FONTFLAG_OUTLINE }
 		});
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));

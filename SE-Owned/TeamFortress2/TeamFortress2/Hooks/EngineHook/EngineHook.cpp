@@ -69,7 +69,9 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
 			while (g_GlobalInfo.m_nShifted < dtTicks)
 			{
-
+				if (!g_GlobalInfo.m_bShouldShift) {
+					return;
+				}
 				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
 					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
 					g_GlobalInfo.m_nShifted++;

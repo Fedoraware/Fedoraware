@@ -7,9 +7,9 @@ class CMisc
 private:
 	void AutoJump(CUserCmd *pCmd);
 	void AutoStrafe(CUserCmd* pCmd);
+	void StopFast(CUserCmd* pCmd);
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
-	void CritHack(CUserCmd* pCmd);
 	void ChatSpam();
 	void CathookIdentify();
 
