@@ -1663,7 +1663,7 @@ void CMenu::Run()
 								InputColor(Colors::StaticPropModulation, _(L"Prop Color"));
 								InputColor(Colors::FOVCircle, _(L"FOV Circle"));
 								InputColor(Colors::Bones, _(L"Bone color"));
-								InputColor(Colors::BulletTracer, _(L"Bone color"));
+								InputColor(Colors::BulletTracer, _(L"Bullet Tracer color"));
 							}
 							GroupBoxEnd(_(L"Others"), 250);
 

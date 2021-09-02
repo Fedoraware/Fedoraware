@@ -419,8 +419,15 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 				if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
 					continue;
 
-				if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
-					continue;
+				if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked()) {
+					int nCond = Player->GetCond();
+					if (nCond & TFCond_Milked || nCond & TFCond_Jarated) {
+						//pass
+					}
+					else {
+						continue;
+					}
+				}
 
 				if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
 					continue;
