@@ -66,7 +66,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
+			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked() && !Player->IsInMilk() && !Player->IsInJarate() && !Player->IsInWater())
 				continue;
 
 			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())

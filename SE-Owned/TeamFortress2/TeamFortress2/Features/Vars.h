@@ -391,6 +391,7 @@ namespace Vars
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
+		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
 
 		namespace Skins
 		{

@@ -445,6 +445,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
+			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			
 
 #ifdef DEVELOPER_BUILD
@@ -882,6 +883,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
+			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);

@@ -27,45 +27,7 @@ void CChams::Init()
 		\n}\n")
 	});
 
-	m_pMatScuffedRed = Utils::CreateMaterial({
-_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"models/player/shared/ice_player\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 0.5 10]\"\
-		\n\t\"$phongtint\" \"[4 1 1]\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$envmaptint\" \"[4 2 0]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"10\"\
-		\n")
-		});
-
-	m_pMatScuffedBlue = Utils::CreateMaterial({
-_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"models/player/shared/ice_player\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 0.5 10]\"\
-		\n\t\"$phongtint\" \"[4 1 1]\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$envmaptint\" \"[4 2 0]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"10\"\
-		\n")
-		});
-
-	m_pMatFlat2 = Utils::CreateMaterial({
+	m_pMatFresnel = Utils::CreateMaterial({
 		_("\"VertexLitGeneric\"\
 		\n{\
 		\n\t\"$basetexture\" \"vgui/white_additive\"\
@@ -78,7 +40,7 @@ _("\"VertexLitGeneric\"\
 		\n}\n")
 	});
 
-	m_pMatGlow = Utils::CreateMaterial({
+	m_pMatBrick = Utils::CreateMaterial({
 		_("\"VertexLitGeneric\"\
 		\n{\
 		\n\t\"$basetexture\" \"brick/brickwall031b\"\
@@ -93,25 +55,6 @@ _("\"VertexLitGeneric\"\
 		\n\t\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\
 		\n")
 	});
-
-	m_pMatScuffed = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"models/player/shared/ice_player\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 0.5 10]\"\
-		\n\t\"$phongtint\" \"[0 0 0]\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$envmaptint\" \"[0 0 0]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"10\"\
-		\n")
-		});
 
 
 	m_pMatShiny = Utils::CreateMaterial({
@@ -189,8 +132,8 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
-				case 4: { bMatWasForced = true; return m_pMatGlow; }
-				case 5: { bMatWasForced = true; return m_pMatFlat2; }
+				case 4: { bMatWasForced = true; return m_pMatBrick; }
+				case 5: { bMatWasForced = true; return m_pMatFresnel; }
 				default: return nullptr;
 			}
 		}());
@@ -262,8 +205,6 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 		}
 	}
 
-
-
 	if (bMatWasForced) {
 		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
@@ -274,8 +215,6 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 
 	if (Vars::Chams::Players::IgnoreZ.m_Var)
 		pRenderContext->DepthRange(0.0f, 1.0f);
-
-	bMatWasForced = true;
 
 
 }
@@ -300,8 +239,8 @@ void CChams::RenderBuildings(CBaseEntity *pLocal, IMatRenderContext *pRenderCont
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
-				case 4: { bMatWasForced = true; return m_pMatGlow; }
-				case 5: { bMatWasForced = true; return m_pMatFlat2; }
+				case 4: { bMatWasForced = true; return m_pMatBrick; }
+				case 5: { bMatWasForced = true; return m_pMatFresnel; }
 				default: return nullptr;
 			}
 		}());
@@ -362,8 +301,8 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
-				case 4: { bMatWasForced = true; return m_pMatGlow; }
-				case 5: { bMatWasForced = true; return m_pMatFlat2; }
+				case 4: { bMatWasForced = true; return m_pMatBrick; }
+				case 5: { bMatWasForced = true; return m_pMatFresnel; }
 				default: return nullptr;
 			}
 		}());

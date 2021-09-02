@@ -166,6 +166,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
+    <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
+    <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />

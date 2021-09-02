@@ -4,6 +4,7 @@
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/SpectatorList/SpectatorList.h"
 #include "../../Features/SpyWarning/SpyWarning.h"
+#include "../../Features/PlayerArrows/PlayerArrows.h"
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
@@ -191,6 +192,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Misc.BypassPure();
 			g_ESP.Run();
 			g_SpyWarning.Run();
+			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
 			g_PlayerList.Run();

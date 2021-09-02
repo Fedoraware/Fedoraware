@@ -1405,7 +1405,7 @@ void CMenu::Run()
 								ComboBox(Vars::Chams::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1,_(L"All") }, { 2, _(L"Keep Friends") } });
 								CheckBox(Vars::Chams::Players::Wearables, _(L"Draw chams on hats etc."));
 								CheckBox(Vars::Chams::Players::Weapons, _(L"Draw chams on weapons"));
-								ComboBox(Vars::Chams::Players::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Glow") }, { 5, _(L"Flat2") } });
+								ComboBox(Vars::Chams::Players::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
 								CheckBox(Vars::Chams::Players::IgnoreZ, _(L"Chams visible trough walls"));
 								CheckBox(Vars::Chams::Players::GlowOverlay, _(L"Glow chams"));
 								InputFloat(Vars::Chams::Players::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
@@ -1416,7 +1416,7 @@ void CMenu::Run()
 							{
 								CheckBox(Vars::Chams::Buildings::Active, _(L"Building master switch"));
 								CheckBox(Vars::Chams::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
-								ComboBox(Vars::Chams::Buildings::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Glow") }, { 5, _(L"Flat2") } });
+								ComboBox(Vars::Chams::Buildings::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
 								CheckBox(Vars::Chams::Buildings::IgnoreZ, _(L"Chams visible trough walls"));
 								InputFloat(Vars::Chams::Buildings::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
 							}
@@ -1569,6 +1569,7 @@ void CMenu::Run()
 								CheckBox(Vars::Visuals::RemoveTaunts, _(L"Remove taunts from enemy players"));
 								CheckBox(Vars::Visuals::BulletTracer, _(L"Enable bullet tracers"));
 								CheckBox(Vars::Visuals::BulletTracerRainbow, _(L"Bullet tracers have rainbow colour"));
+								CheckBox(Vars::Visuals::OutOfFOVArrows, _(L"Show arrows to players outside of FOV"));
 								//InputCString(_(L"Skybox name"), XorStr(Vars::Skybox::SkyboxName));
 								InputConstChar(_(L"Skybox name"), Vars::Skybox::SkyboxName);
 							}

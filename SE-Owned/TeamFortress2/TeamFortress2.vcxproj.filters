@@ -67,6 +67,7 @@
     <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
     <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
+    <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -440,5 +441,6 @@
     <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
     <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
+    <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
   </ItemGroup>
 </Project>
