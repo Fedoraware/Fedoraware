@@ -544,6 +544,9 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 			if (nWeaponID == TF_WEAPON_MINIGUN)
 				pCmd->buttons |= IN_ATTACK2;
 
+			if (g_GlobalInfo.m_nCurItemDefIndex == Engi_s_TheWrangler || g_GlobalInfo.m_nCurItemDefIndex == Engi_s_FestiveWrangler)
+				pCmd->buttons |= IN_ATTACK2;
+
 			pCmd->buttons |= IN_ATTACK;
 
 			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
@@ -583,9 +586,7 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
 			if (Vars::Visuals::BulletTracer.m_Var) {
-				for (int i = 0; i < pWeapon->GetWeaponData().m_nBulletsPerShot; i++) {
-					bulletTracer(pLocal, Target);
-				}
+				bulletTracer(pLocal, Target);
 			}
 		}
 

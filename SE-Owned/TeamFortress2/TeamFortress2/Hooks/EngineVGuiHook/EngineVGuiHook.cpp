@@ -143,6 +143,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());
 							//int chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu = g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets;
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, std::to_string(chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu).data());
+							// pWeapon->GetWeaponData().m_nBulletsPerShot
 							int tickWidth = 8;
 							int barWidth = (tickWidth * ticks) + 2;
 							g_Draw.OutlinedRect( // Outline of bar

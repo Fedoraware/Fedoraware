@@ -457,7 +457,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 				}
 
 				nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-				g_Draw.String(FONT, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL, szName);
+				g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL, szName);
 			}
 
 			if (Vars::ESP::Buildings::Owner.m_Var && !Building->GetMapPlaced())
@@ -476,20 +476,20 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 			float flConstructed = Building->GetConstructed() * 100.0f;
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"), flConstructed);
-				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+				g_Draw.String(FONT_NAME, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"), flConstructed);
+				nTextOffset += g_Draw.m_vecFonts[FONT_NAME].nTall;
 			}
 
 			if (Vars::ESP::Buildings::Health.m_Var)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), HealthColor, ALIGN_DEFAULT, L"%d", nHealth);
-				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+				g_Draw.String(FONT_NAME, nTextX, (y + nTextOffset), HealthColor, ALIGN_DEFAULT, L"%d", nHealth);
+				nTextOffset += g_Draw.m_vecFonts[FONT_NAME].nTall;
 			}
 
 			if (Vars::ESP::Buildings::Level.m_Var && !bIsMini)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, L"%d/3", Building->GetLevel());
-				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+				g_Draw.String(FONT_NAME, x + (w / 2), (y + h + nTextOffset), DrawColor, ALIGN_CENTERHORIZONTAL, L"%d/3", Building->GetLevel());
+				nTextOffset += g_Draw.m_vecFonts[FONT_NAME].nTall;
 			}
 
 			if (Vars::ESP::Buildings::Cond.m_Var)
