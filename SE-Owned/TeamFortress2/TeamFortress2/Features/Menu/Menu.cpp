@@ -1308,6 +1308,7 @@ void CMenu::Run()
 								CheckBox(Vars::ESP::Buildings::Active, _(L"Building master switch"));
 								CheckBox(Vars::ESP::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
 								CheckBox(Vars::ESP::Buildings::Name, _(L"Draw building's name"));
+								CheckBox(Vars::ESP::Buildings::NameBox, _(L"Draw a background behind the name to make it stand out more"));
 								CheckBox(Vars::ESP::Buildings::Health, _(L"Draw building's health"));
 								CheckBox(Vars::ESP::Buildings::Level, _(L"Draw building's level"));
 								CheckBox(Vars::ESP::Buildings::Cond, _(L"Draw building's condition(s)"));

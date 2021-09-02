@@ -176,7 +176,6 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoShoot\AutoShoot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Tracer\Tracer.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
@@ -244,7 +243,6 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoShoot\AutoShoot.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
-    <ClInclude Include="TeamFortress2\Features\Tracer\Tracer.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />

@@ -203,6 +203,7 @@ namespace Vars
 			inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<bool> IgnoreTeammates	{ true, L"Ignore Teammates" };
 			inline CVar<bool> Name				{ true, L"Name" };
+			inline CVar<bool> NameBox				{ true, L"Name box" };
 			inline CVar<bool> Health			{ false, L"Health" };
 			inline CVar<bool> Owner             { false, L"Owner" };
 			inline CVar<bool> Level				{ true, L"Level" };

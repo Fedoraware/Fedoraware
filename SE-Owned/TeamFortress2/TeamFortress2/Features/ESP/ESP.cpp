@@ -457,6 +457,18 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 				}
 
 				nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
+				if (Vars::ESP::Buildings::NameBox.m_Var) {
+					int wideth, heighth;
+					int middle = (x + (w / 2));
+					g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
+					Color_t LineColor = DrawColor;
+					LineColor.a = 180;
+					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
+					g_Draw.Rect((middle - (wideth / 2)) - 5, y - nTextTopOffset, wideth + 10, heighth + 2, { 0,0,0,180 });
+					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
+					g_Draw.Rect((middle - (wideth / 2)) - 5, y - nTextTopOffset - 2, wideth + 10, 2, LineColor);
+				}
+
 				g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL, szName);
 			}
 

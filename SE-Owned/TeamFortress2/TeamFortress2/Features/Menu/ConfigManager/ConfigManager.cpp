@@ -265,6 +265,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Buildings::Active);
 				SAVE_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Buildings::Name);
+				SAVE_VAR(Vars::ESP::Buildings::NameBox);
 				SAVE_VAR(Vars::ESP::Buildings::Health);
 				SAVE_VAR(Vars::ESP::Buildings::Owner);
 				SAVE_VAR(Vars::ESP::Buildings::Level);
@@ -700,6 +701,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Buildings::Active);
 				LOAD_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Buildings::Name);
+				LOAD_VAR(Vars::ESP::Buildings::NameBox);
 				LOAD_VAR(Vars::ESP::Buildings::Health);
 				LOAD_VAR(Vars::ESP::Buildings::Owner);
 				LOAD_VAR(Vars::ESP::Buildings::Level);
