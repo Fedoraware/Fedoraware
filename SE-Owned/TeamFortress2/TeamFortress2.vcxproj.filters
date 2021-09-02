@@ -68,6 +68,16 @@
     <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
     <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -442,5 +452,34 @@
     <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
     <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imconfig.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_internal.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_textedit.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_truetype.h" />
+    <ClInclude Include="TeamFortress2\Features\What\What.h" />
+    <ClInclude Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shape.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9xof.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
+    <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
   </ItemGroup>
 </Project>

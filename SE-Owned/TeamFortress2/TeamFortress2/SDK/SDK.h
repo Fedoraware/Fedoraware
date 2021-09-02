@@ -9,6 +9,7 @@
 #include "Main/ConVars/ConVars.h"
 #include "Main/KeyValues/KeyValues.h"
 #include "Main/TraceFilters/TraceFilters.h"
+#include "DirectX/DirectX.h"
 
 #define TICK_INTERVAL		( g_Interfaces.GlobalVars->interval_per_tick )
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )

@@ -15,6 +15,8 @@
 #include "InCondHook/InCondHook.h"
 #include "DrawStaticPropsHook/DrawStaticPropsHook.h"
 #include "EngineHook/EngineHook.h"
+#include "EndSceneHook/EndSceneHook.h"
+#include "Reset/Reset.h"
 
 class CHooks
 {

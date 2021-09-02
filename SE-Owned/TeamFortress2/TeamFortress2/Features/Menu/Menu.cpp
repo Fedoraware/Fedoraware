@@ -19,7 +19,7 @@ int StringToWString2(std::wstring& ws, const std::string& s)
 	return 0;
 }
 
-void CMenu::DrawTooltip() 
+void CMenu::DrawTooltip()
 {
 	if (m_szCurTip.empty() || !Vars::Visuals::ToolTips.m_Var)
 		return;
@@ -47,7 +47,7 @@ void CMenu::Separator()
 	m_LastWidget.h = h;
 }
 
-bool CMenu::CheckBox(CVar<bool> &Var, const wchar_t* const szToolTip)
+bool CMenu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
 {
 	bool callback = false;
 
@@ -123,11 +123,11 @@ bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int Hei
 	return callback;
 }
 
-bool CMenu::ComboBox(CVar<int> &Var, const std::vector<CVar<int>> &List)
+bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
 {
 	auto FindCurItemName = [&]() -> const wchar_t*
 	{
-		for (const auto &Item : List)
+		for (const auto& Item : List)
 		{
 			if (Item.m_Var == Var.m_Var)
 				return Item.m_szDisplayName;
@@ -154,8 +154,8 @@ bool CMenu::ComboBox(CVar<int> &Var, const std::vector<CVar<int>> &List)
 	int w = Vars::Menu::ComboBoxW;
 	int h = Vars::Menu::ComboBoxH;
 
-	static std::map<CVar<int> *, int> indexes = {};
-	static std::map<CVar<int> *, bool> inits = {};
+	static std::map<CVar<int>*, int> indexes = {};
+	static std::map<CVar<int>*, bool> inits = {};
 
 	if (!inits[&Var] || m_bReopened) {
 		indexes[&Var] = FindCurItemIndex();
@@ -200,7 +200,7 @@ bool CMenu::ComboBox(CVar<int> &Var, const std::vector<CVar<int>> &List)
 	return callback;
 }
 
-bool CMenu::InputFloat(CVar<float> &Var, float Min, float Max, float Step, const wchar_t* Fmt)
+bool CMenu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const wchar_t* Fmt)
 {
 	bool callback = false;
 
@@ -249,7 +249,7 @@ bool CMenu::InputFloat(CVar<float> &Var, float Min, float Max, float Step, const
 	return callback;
 }
 
-bool CMenu::InputInt(CVar<int> &Var, int Min, int Max, int Step)
+bool CMenu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 {
 	bool callback = false;
 
@@ -298,7 +298,7 @@ bool CMenu::InputInt(CVar<int> &Var, int Min, int Max, int Step)
 	return callback;
 }
 
-bool CMenu::InputColor(Color_t &Var, const wchar_t *Label)
+bool CMenu::InputColor(Color_t& Var, const wchar_t* Label)
 {
 	bool callback = false;
 
@@ -463,7 +463,7 @@ bool CMenu::InputColor(Color_t &Var, const wchar_t *Label)
 	return callback;
 }
 
-bool CMenu::InputString(const wchar_t *Label, std::wstring &output)
+bool CMenu::InputString(const wchar_t* Label, std::wstring& output)
 {
 	bool callback = false;
 
@@ -557,7 +557,7 @@ std::string narrow(const std::wstring& str)
 	return stm.str();
 }
 
-bool CMenu::InputConstChar(const wchar_t* Label, std::string &output)
+bool CMenu::InputConstChar(const wchar_t* Label, std::string& output)
 {
 	bool callback = false;
 
@@ -741,18 +741,18 @@ bool CMenu::InputCString(const wchar_t* Label, std::string& output)
 	return callback;
 }
 
-bool CMenu::InputKey(CVar<int> &output, bool bAllowNone)
+bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 {
 	auto VK2STR = [&](const short key) -> std::wstring {
 		switch (key) {
-			case VK_LBUTTON: return _(L"LButton");
-			case VK_RBUTTON: return _(L"RButton");
-			case VK_MBUTTON: return _(L"MButton");
-			case VK_XBUTTON1: return _(L"XButton1");
-			case VK_XBUTTON2: return _(L"XButton2");
-			case VK_SPACE: return _(L"Space");
-			case 0x0: return _(L"None");
-			default: break;
+		case VK_LBUTTON: return _(L"LButton");
+		case VK_RBUTTON: return _(L"RButton");
+		case VK_MBUTTON: return _(L"MButton");
+		case VK_XBUTTON1: return _(L"XButton1");
+		case VK_XBUTTON2: return _(L"XButton2");
+		case VK_SPACE: return _(L"Space");
+		case 0x0: return _(L"None");
+		default: break;
 		}
 
 		WCHAR output[16] = { L"\0" };
@@ -831,8 +831,8 @@ bool CMenu::InputKey(CVar<int> &output, bool bAllowNone)
 	else
 	{
 		//time_notactive = g_Interfaces.Engine->Time();
-		if (curr==nullptr)
-		time_notactive = g_Interfaces.Engine->Time(); 
+		if (curr == nullptr)
+			time_notactive = g_Interfaces.Engine->Time();
 		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output.m_Var).c_str());
 	}
 
@@ -856,7 +856,7 @@ void CMenu::GroupBoxStart()
 	m_LastWidget.y += Vars::Menu::SpacingY * 2;
 }
 
-void CMenu::GroupBoxEnd(const wchar_t *Label, int Width)
+void CMenu::GroupBoxEnd(const wchar_t* Label, int Width)
 {
 	int h = m_LastWidget.y - m_LastGroupBox.y + m_LastWidget.h + Vars::Menu::SpacingY;
 
@@ -877,132 +877,133 @@ void CMenu::GroupBoxEnd(const wchar_t *Label, int Width)
 	m_LastWidget.x -= Vars::Menu::SpacingX;
 	m_LastWidget.y += Vars::Menu::SpacingY * 2;
 	m_LastGroupBox.h = h;
-} 
+}
 
 void CMenu::Run()
 {
-	m_bReopened = false;
-	m_bTyping = false;
+	if (Vars::Menu::LegacyMenu.m_Var) {
+		m_bReopened = false;
+		m_bTyping = false;
 
-	static bool bOldOpen = m_bOpen;
+		static bool bOldOpen = m_bOpen;
 
-	if (bOldOpen != m_bOpen)
-	{
-		bOldOpen = m_bOpen;
-
-		if (m_bOpen)
-			m_bReopened = true;
-	}
-
-	/*
-	if (g_Interfaces.Engine->IsDrawingLoadingImage()) {
-		m_bOpen = false;
-		return;
-	}*/
-
-	static float flTimeOnChange = 0.0f;
-
-
-
-	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
-		//
-		g_Interfaces.Surface->SetCursorAlwaysVisible(m_bOpen = !m_bOpen);
-		flTimeOnChange = g_Interfaces.Engine->Time();
-	}
-	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
-	
-	if (m_flFadeElapsed < m_flFadeDuration) {
-		m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
-	}
-
-	if (m_bOpen || m_flFadeElapsed < m_flFadeDuration)
-	{
-
-		/*g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
-		g_Draw.Rect(0, 0, g_ScreenSize.w, g_ScreenSize.h, { 0, 0, 0, 200});
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);*/
-
-		m_szCurTip = L"";
-		g_InputHelper.Update();
-
-		//Do the Watermark
+		if (bOldOpen != m_bOpen)
 		{
-			g_Draw.Rect(g_ScreenSize.w - 220, 25, 220, 5, Vars::Menu::Colors::TitleBar);
-			g_Draw.Rect(g_ScreenSize.w - 220, 30, 220, (g_Draw.m_vecFonts[FONT_MENU].nTall * 1) + 5, Vars::Menu::Colors::WindowBackground);
-			g_Draw.String(FONT_MENU, g_ScreenSize.w - 220, 32, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Fedoraware (" __DATE__ ")"));
-			//g_Draw.String(FONT_MENU, g_ScreenSize.w - 300, 32 + g_Draw.m_vecFonts[FONT_MENU].nTall, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Build: " __DATE__));
-			//g_Draw.String(FONT_MENU, g_ScreenSize.w - 300, 32 + g_Draw.m_vecFonts[FONT_MENU].nTall, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Developers: M-FeD, spook953, Lak3"));
+			bOldOpen = m_bOpen;
+
+			if (m_bOpen)
+				m_bReopened = true;
 		}
 
-		//Do the Window
-		{
-			g_InputHelper.Drag(
-				g_InputHelper.m_nMouseX,
-				g_InputHelper.m_nMouseY,
-				Vars::Menu::Position.x,
-				Vars::Menu::Position.y,
-				Vars::Menu::Position.w,
-				Vars::Menu::TitleBarH,
-				Vars::Menu::TitleBarH);
+		/*
+		if (g_Interfaces.Engine->IsDrawingLoadingImage()) {
+			m_bOpen = false;
+			return;
+		}*/
 
-			g_Draw.Rect(
-				Vars::Menu::Position.x,
-				Vars::Menu::Position.y,
-				Vars::Menu::Position.w,
-				Vars::Menu::Position.h,
-				Vars::Menu::Colors::WindowBackground);
+		static float flTimeOnChange = 0.0f;
 
-			g_Draw.Rect(
-				Vars::Menu::Position.x,
-				Vars::Menu::Position.y - Vars::Menu::TitleBarH,
-				Vars::Menu::Position.w,
-				Vars::Menu::TitleBarH,
-				Vars::Menu::Colors::TitleBar);
 
-			g_Draw.String(FONT_MENU,
-				Vars::Menu::Position.x + (Vars::Menu::Position.w / 2),
-				Vars::Menu::Position.y - (Vars::Menu::TitleBarH / 2),
-				Vars::Menu::Colors::Text,
-				ALIGN_CENTER,
-				"%ls", _(L"Fedoraware"));
+
+		if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
+			//
+			g_Interfaces.Surface->SetCursorAlwaysVisible(m_bOpen = !m_bOpen);
+			flTimeOnChange = g_Interfaces.Engine->Time();
+		}
+		m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
+
+		if (m_flFadeElapsed < m_flFadeDuration) {
+			m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
+			g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
 		}
 
-		//Do the Widgets
+		if (m_bOpen || m_flFadeElapsed < m_flFadeDuration)
 		{
-			enum struct EMainTabs	 { TAB_AIM, TAB_TRIGGERBOT, TAB_VISUALS, TAB_MISC, TAB_CONFIGS };
-			enum struct EAimTabs	 { TAB_AIMBOT, TAB_OTHER };
-			enum struct ETriggerTabs { TAB_MAIN };
-			enum struct EVisualsTabs { TAB_ESP, TAB_RADAR, TAB_CHAMS, TAB_GLOW, TAB_OTHER, TAB_SKINS, TAB_COLORS };
-			enum struct EMiscTabs	 { TAB_TELEPORT, TAB_RECHARGE, TAB_DOUBLETAP, TAB_HVH, TAB_MAIN };
 
-			m_LastWidget = { Vars::Menu::Position.x + Vars::Menu::SpacingX, Vars::Menu::Position.y, 0, 0 };
+			/*g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+			g_Draw.Rect(0, 0, g_ScreenSize.w, g_ScreenSize.h, { 0, 0, 0, 200});
+			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);*/
 
-			static EMainTabs Tab = EMainTabs::TAB_AIM;
+			m_szCurTip = L"";
+			g_InputHelper.Update();
+
+			//Do the Watermark
 			{
-				if (Button(_(L"Aim"), Tab == EMainTabs::TAB_AIM))
-					Tab = EMainTabs::TAB_AIM;
-
-				if (Button(_(L"Triggerbot"), Tab == EMainTabs::TAB_TRIGGERBOT))
-					Tab = EMainTabs::TAB_TRIGGERBOT;
-
-				if (Button(_(L"Visuals"), Tab == EMainTabs::TAB_VISUALS))
-					Tab = EMainTabs::TAB_VISUALS;
-
-				if (Button(_(L"Misc"), Tab == EMainTabs::TAB_MISC))
-					Tab = EMainTabs::TAB_MISC;
-
-				if (Button(_(L"Configs"), Tab == EMainTabs::TAB_CONFIGS))
-					Tab = EMainTabs::TAB_CONFIGS;
+				g_Draw.Rect(g_ScreenSize.w - 220, 25, 220, 5, Vars::Menu::Colors::TitleBar);
+				g_Draw.Rect(g_ScreenSize.w - 220, 30, 220, (g_Draw.m_vecFonts[FONT_MENU].nTall * 1) + 5, Vars::Menu::Colors::WindowBackground);
+				g_Draw.String(FONT_MENU, g_ScreenSize.w - 220, 32, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Fedoraware (" __DATE__ ")"));
+				//g_Draw.String(FONT_MENU, g_ScreenSize.w - 300, 32 + g_Draw.m_vecFonts[FONT_MENU].nTall, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Build: " __DATE__));
+				//g_Draw.String(FONT_MENU, g_ScreenSize.w - 300, 32 + g_Draw.m_vecFonts[FONT_MENU].nTall, Vars::Menu::Colors::Text, ALIGN_DEFAULT, _("Developers: M-FeD, spook953, Lak3"));
 			}
 
-			Separator();
-
-			switch (Tab)
+			//Do the Window
 			{
+				g_InputHelper.Drag(
+					g_InputHelper.m_nMouseX,
+					g_InputHelper.m_nMouseY,
+					Vars::Menu::Position.x,
+					Vars::Menu::Position.y,
+					Vars::Menu::Position.w,
+					Vars::Menu::TitleBarH,
+					Vars::Menu::TitleBarH);
+
+				g_Draw.Rect(
+					Vars::Menu::Position.x,
+					Vars::Menu::Position.y,
+					Vars::Menu::Position.w,
+					Vars::Menu::Position.h,
+					Vars::Menu::Colors::WindowBackground);
+
+				g_Draw.Rect(
+					Vars::Menu::Position.x,
+					Vars::Menu::Position.y - Vars::Menu::TitleBarH,
+					Vars::Menu::Position.w,
+					Vars::Menu::TitleBarH,
+					Vars::Menu::Colors::TitleBar);
+
+				g_Draw.String(FONT_MENU,
+					Vars::Menu::Position.x + (Vars::Menu::Position.w / 2),
+					Vars::Menu::Position.y - (Vars::Menu::TitleBarH / 2),
+					Vars::Menu::Colors::Text,
+					ALIGN_CENTER,
+					"%ls", _(L"Fedoraware"));
+			}
+
+			//Do the Widgets
+			{
+				enum struct EMainTabs { TAB_AIM, TAB_TRIGGERBOT, TAB_VISUALS, TAB_MISC, TAB_CONFIGS };
+				enum struct EAimTabs { TAB_AIMBOT, TAB_OTHER };
+				enum struct ETriggerTabs { TAB_MAIN };
+				enum struct EVisualsTabs { TAB_ESP, TAB_RADAR, TAB_CHAMS, TAB_GLOW, TAB_OTHER, TAB_SKINS, TAB_COLORS };
+				enum struct EMiscTabs { TAB_TELEPORT, TAB_RECHARGE, TAB_DOUBLETAP, TAB_HVH, TAB_MAIN };
+
+				m_LastWidget = { Vars::Menu::Position.x + Vars::Menu::SpacingX, Vars::Menu::Position.y, 0, 0 };
+
+				static EMainTabs Tab = EMainTabs::TAB_AIM;
+				{
+					if (Button(_(L"Aim"), Tab == EMainTabs::TAB_AIM))
+						Tab = EMainTabs::TAB_AIM;
+
+					if (Button(_(L"Triggerbot"), Tab == EMainTabs::TAB_TRIGGERBOT))
+						Tab = EMainTabs::TAB_TRIGGERBOT;
+
+					if (Button(_(L"Visuals"), Tab == EMainTabs::TAB_VISUALS))
+						Tab = EMainTabs::TAB_VISUALS;
+
+					if (Button(_(L"Misc"), Tab == EMainTabs::TAB_MISC))
+						Tab = EMainTabs::TAB_MISC;
+
+					if (Button(_(L"Configs"), Tab == EMainTabs::TAB_CONFIGS))
+						Tab = EMainTabs::TAB_CONFIGS;
+				}
+
+				Separator();
+
+				switch (Tab)
+				{
 				case EMainTabs::TAB_AIM:
 				{
-					
+
 					static EAimTabs Tab = EAimTabs::TAB_AIMBOT;
 					/*{
 						Rect_t checkpoint_line = m_LastWidget;
@@ -1013,7 +1014,7 @@ void CMenu::Run()
 						/*
 						if (Button(_(L"Aimbot"), Tab == EAimTabs::TAB_AIMBOT, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 							Tab = EAimTabs::TAB_AIMBOT;
-						
+
 						checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::SpacingX;
 						m_LastWidget = checkpoint_move;
 
@@ -1029,78 +1030,78 @@ void CMenu::Run()
 
 					switch (Tab)
 					{
-						case EAimTabs::TAB_AIMBOT:
+					case EAimTabs::TAB_AIMBOT:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Aimbot::Global::Active, _(L"Aimbot master switch"));
-								InputKey(Vars::Aimbot::Global::AimKey);
-								CheckBox(Vars::Aimbot::Global::AutoShoot, _(L"Automatically shoot when target is found"));
-								CheckBox(Vars::Aimbot::Global::AimPlayers, _(L"Aim at players"));
-								CheckBox(Vars::Aimbot::Global::AimBuildings, _(L"Aim at buildings"));
-								CheckBox(Vars::Aimbot::Global::IgnoreInvlunerable, _(L"Ignore players who can't be damaged"));
-								CheckBox(Vars::Aimbot::Global::IgnoreCloaked, _(L"Ignore cloaked spies"));
-								CheckBox(Vars::Aimbot::Global::IgnoreFriends, _(L"Ignore Steam friends"));
-								CheckBox(Vars::Aimbot::Global::IgnoreTaunting, _(L"Ignore taunting players"));
-							}
-							GroupBoxEnd(_(L"Global"), 160);
-
-							checkpoint.x += 160 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Aimbot::Hitscan::Active, _(L"Hitscan master switch"));
-								ComboBox(Vars::Aimbot::Hitscan::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
-								ComboBox(Vars::Aimbot::Hitscan::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Smooth") }, { 2, _(L"Silent") } });
-								ComboBox(Vars::Aimbot::Hitscan::AimHitbox, { { 0, _(L"Head") }, { 1, _(L"Body") }, { 2, _(L"Auto") } });
-								InputFloat(Vars::Aimbot::Hitscan::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
-								InputFloat(Vars::Aimbot::Hitscan::SmoothingAmount, 1.0f, 10.0f, 1.0f, L"%.0f");
-								ComboBox(Vars::Aimbot::Hitscan::TapFire, { { 0, _(L"Off") } , { 1, _(L"Distance") }, { 2, _(L"Always") } });
-								CheckBox(Vars::Aimbot::Hitscan::AutoRev, _(L"Automatically rev minigun when aimbot active"));
-								CheckBox(Vars::Aimbot::Hitscan::ScanHitboxes, _(L"Scan body edges"));
-								CheckBox(Vars::Aimbot::Hitscan::ScanHead, _(L"Scan head edges"));
-								CheckBox(Vars::Aimbot::Hitscan::ScanBuildings, _(L"Scan building edges"));
-								CheckBox(Vars::Aimbot::Hitscan::WaitForHeadshot, _(L"Wait untill weapon can headshot"));
-								CheckBox(Vars::Aimbot::Hitscan::WaitForCharge, _(L"Wait untill sniper can one shot target"));
-								CheckBox(Vars::Aimbot::Hitscan::SpectatedSmooth, _(L"Toggle smooth aim when spectated"));
-								CheckBox(Vars::Aimbot::Hitscan::ScopedOnly, _(L"Sniper only aims when scoped"));
-								CheckBox(Vars::Aimbot::Hitscan::AutoScope, _(L"Sniper automatically scopes when target found"));
-								CheckBox(Vars::Misc::CL_Move::Doubletap, _(L"Shift tickbase while aimbotting when it's possible. Check the misc tab for more."));
-							}
-							GroupBoxEnd(_(L"Hitscan"), 215);
-
-							checkpoint.x += 215 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Aimbot::Projectile::Active, _(L"Projectile master switch"));
-								CheckBox(Vars::Aimbot::Projectile::PerformanceMode, _(L"Only target enemy closest to crosshair"));
-								ComboBox(Vars::Aimbot::Projectile::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
-								ComboBox(Vars::Aimbot::Projectile::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Silent") } });
-								ComboBox(Vars::Aimbot::Projectile::AimPosition, { { 0, _(L"Body") }, { 1, _(L"Feet") }, { 2, _(L"Auto") } });
-								InputFloat(Vars::Aimbot::Projectile::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
-							}
-							GroupBoxEnd(_(L"Projectile"), 215);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Aimbot::Melee::Active, _(L"Melee master switch"));
-								ComboBox(Vars::Aimbot::Melee::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
-								ComboBox(Vars::Aimbot::Melee::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Smooth") }, { 2, _(L"Silent") } });
-								InputFloat(Vars::Aimbot::Melee::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
-								InputFloat(Vars::Aimbot::Melee::SmoothingAmount, 1.0f, 10.0f, 0.5f, L"%.0f");
-								CheckBox(Vars::Aimbot::Melee::RangeCheck, _(L"Only aim when target in range"));
-								CheckBox(Vars::Aimbot::Melee::PredictSwing, _(L"Predict melee attack"));
-								CheckBox(Vars::Aimbot::Melee::WhipTeam, _(L"Hit teammates when holding the Disciplinary action"));
-							}
-							GroupBoxEnd(_(L"Melee"), 215);
-
-							break;
+							CheckBox(Vars::Aimbot::Global::Active, _(L"Aimbot master switch"));
+							InputKey(Vars::Aimbot::Global::AimKey);
+							CheckBox(Vars::Aimbot::Global::AutoShoot, _(L"Automatically shoot when target is found"));
+							CheckBox(Vars::Aimbot::Global::AimPlayers, _(L"Aim at players"));
+							CheckBox(Vars::Aimbot::Global::AimBuildings, _(L"Aim at buildings"));
+							CheckBox(Vars::Aimbot::Global::IgnoreInvlunerable, _(L"Ignore players who can't be damaged"));
+							CheckBox(Vars::Aimbot::Global::IgnoreCloaked, _(L"Ignore cloaked spies"));
+							CheckBox(Vars::Aimbot::Global::IgnoreFriends, _(L"Ignore Steam friends"));
+							CheckBox(Vars::Aimbot::Global::IgnoreTaunting, _(L"Ignore taunting players"));
 						}
+						GroupBoxEnd(_(L"Global"), 160);
+
+						checkpoint.x += 160 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Aimbot::Hitscan::Active, _(L"Hitscan master switch"));
+							ComboBox(Vars::Aimbot::Hitscan::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
+							ComboBox(Vars::Aimbot::Hitscan::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Smooth") }, { 2, _(L"Silent") } });
+							ComboBox(Vars::Aimbot::Hitscan::AimHitbox, { { 0, _(L"Head") }, { 1, _(L"Body") }, { 2, _(L"Auto") } });
+							InputFloat(Vars::Aimbot::Hitscan::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+							InputFloat(Vars::Aimbot::Hitscan::SmoothingAmount, 1.0f, 10.0f, 1.0f, L"%.0f");
+							ComboBox(Vars::Aimbot::Hitscan::TapFire, { { 0, _(L"Off") } , { 1, _(L"Distance") }, { 2, _(L"Always") } });
+							CheckBox(Vars::Aimbot::Hitscan::AutoRev, _(L"Automatically rev minigun when aimbot active"));
+							CheckBox(Vars::Aimbot::Hitscan::ScanHitboxes, _(L"Scan body edges"));
+							CheckBox(Vars::Aimbot::Hitscan::ScanHead, _(L"Scan head edges"));
+							CheckBox(Vars::Aimbot::Hitscan::ScanBuildings, _(L"Scan building edges"));
+							CheckBox(Vars::Aimbot::Hitscan::WaitForHeadshot, _(L"Wait untill weapon can headshot"));
+							CheckBox(Vars::Aimbot::Hitscan::WaitForCharge, _(L"Wait untill sniper can one shot target"));
+							CheckBox(Vars::Aimbot::Hitscan::SpectatedSmooth, _(L"Toggle smooth aim when spectated"));
+							CheckBox(Vars::Aimbot::Hitscan::ScopedOnly, _(L"Sniper only aims when scoped"));
+							CheckBox(Vars::Aimbot::Hitscan::AutoScope, _(L"Sniper automatically scopes when target found"));
+							CheckBox(Vars::Misc::CL_Move::Doubletap, _(L"Shift tickbase while aimbotting when it's possible. Check the misc tab for more."));
+						}
+						GroupBoxEnd(_(L"Hitscan"), 215);
+
+						checkpoint.x += 215 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Aimbot::Projectile::Active, _(L"Projectile master switch"));
+							CheckBox(Vars::Aimbot::Projectile::PerformanceMode, _(L"Only target enemy closest to crosshair"));
+							ComboBox(Vars::Aimbot::Projectile::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
+							ComboBox(Vars::Aimbot::Projectile::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Silent") } });
+							ComboBox(Vars::Aimbot::Projectile::AimPosition, { { 0, _(L"Body") }, { 1, _(L"Feet") }, { 2, _(L"Auto") } });
+							InputFloat(Vars::Aimbot::Projectile::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+						}
+						GroupBoxEnd(_(L"Projectile"), 215);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Aimbot::Melee::Active, _(L"Melee master switch"));
+							ComboBox(Vars::Aimbot::Melee::SortMethod, { { 0, _(L"FOV") }, { 1, _(L"Distance") } });
+							ComboBox(Vars::Aimbot::Melee::AimMethod, { { 0, _(L"Normal") }, { 1, _(L"Smooth") }, { 2, _(L"Silent") } });
+							InputFloat(Vars::Aimbot::Melee::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+							InputFloat(Vars::Aimbot::Melee::SmoothingAmount, 1.0f, 10.0f, 0.5f, L"%.0f");
+							CheckBox(Vars::Aimbot::Melee::RangeCheck, _(L"Only aim when target in range"));
+							CheckBox(Vars::Aimbot::Melee::PredictSwing, _(L"Predict melee attack"));
+							CheckBox(Vars::Aimbot::Melee::WhipTeam, _(L"Hit teammates when holding the Disciplinary action"));
+						}
+						GroupBoxEnd(_(L"Melee"), 215);
+
+						break;
+					}
 					}
 
 					break;
@@ -1127,93 +1128,93 @@ void CMenu::Run()
 					}*/
 
 					switch (Tab) {
-						case ETriggerTabs::TAB_MAIN:
+					case ETriggerTabs::TAB_MAIN:
+					{
+						Rect_t checkpoint = m_LastWidget;
+						Rect_t airblast = {}, autouber = {};
+
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
-							Rect_t airblast = {}, autouber = {};
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Global::Active, _(L"Triggerbot master switch"));
-								InputKey(Vars::Triggerbot::Global::TriggerKey);
-								CheckBox(Vars::Triggerbot::Global::IgnoreInvlunerable, _(L"Ignore players who can't be damaged"));
-								CheckBox(Vars::Triggerbot::Global::IgnoreCloaked, _(L"Ignore cloaked spies"));
-								CheckBox(Vars::Triggerbot::Global::IgnoreFriends, _(L"Ignore Steam friends"));
-							}
-							GroupBoxEnd(_(L"Global"), 170);
-
-							airblast = m_LastWidget;
-
-							checkpoint.x += 170 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Shoot::Active, _(L"Shoot master switch"));
-								CheckBox(Vars::Triggerbot::Shoot::TriggerPlayers, _(L"Shoot players"));
-								CheckBox(Vars::Triggerbot::Shoot::TriggerBuildings, _(L"Shoot buildings"));
-								CheckBox(Vars::Triggerbot::Shoot::HeadOnly, _(L"Only shoot when aiming at head"));
-								CheckBox(Vars::Triggerbot::Shoot::WaitForCharge, _(L"Sniper waits for enough charge"));
-								InputFloat(Vars::Triggerbot::Shoot::HeadScale, 0.5f, 1.0f, 0.1f, L"%.1f");
-							}
-							GroupBoxEnd(_(L"AutoShoot"), 170);
-
-							autouber = m_LastWidget;
-
-							checkpoint.x += 170 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Stab::Active, _(L"Stab master switch"));
-								CheckBox(Vars::Triggerbot::Stab::RageMode, _(L"Stabs always when possible, even behind"));
-								CheckBox(Vars::Triggerbot::Stab::Silent, _(L"Aim changes made by rage aren't visible"));
-								CheckBox(Vars::Triggerbot::Stab::Disguise, _(L"Apply last disguise after stab"));
-								CheckBox(Vars::Triggerbot::Stab::IgnRazor, _(L"Ignore snipers with Razorback"));
-								InputFloat(Vars::Triggerbot::Stab::Range, 0.5f, 1.0f, 0.1f, L"%.1f");
-							}
-							GroupBoxEnd(_(L"AutoStab"), 140);
-
-							checkpoint.x += 140 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Detonate::Active, _(L"Detonate master switch"));
-								CheckBox(Vars::Triggerbot::Detonate::Stickies, _(L"Detonate demoman stickies"));
-								CheckBox(Vars::Triggerbot::Detonate::Flares, _(L"Detonate pyro flares"));
-								InputFloat(Vars::Triggerbot::Detonate::RadiusScale, 0.5f, 1.0f, 0.1f, L"%.1f");
-							}
-							GroupBoxEnd(_(L"AutoDetonate"), 175);
-
-							m_LastWidget = airblast;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Blast::Active, _(L"Airblast master switch"));
-								CheckBox(Vars::Triggerbot::Blast::Rage, _(L"Blast always when possible, even behind"));
-								CheckBox(Vars::Triggerbot::Blast::Silent, _(L"Aim changes made by rage aren't visible"));
-								InputInt(Vars::Triggerbot::Blast::Fov, 1, 60, 1);
-							}
-							GroupBoxEnd(L"AutoAirblast", 170);
-
-							m_LastWidget = autouber;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Triggerbot::Uber::Active, _(L"Uber master switch"));
-								CheckBox(Vars::Triggerbot::Uber::OnlyFriends, _(L"Only pop uber on Steam friends"));
-								CheckBox(Vars::Triggerbot::Uber::PopLocal, _(L"Pop uber when local below selected health percentage"));
-								InputFloat(Vars::Triggerbot::Uber::HealthLeft, 1.0f, 99.0f, 1.0f, L"%.0f%%");
-							}
-							GroupBoxEnd(L"AutoUber", 170);
-
-							break;
+							CheckBox(Vars::Triggerbot::Global::Active, _(L"Triggerbot master switch"));
+							InputKey(Vars::Triggerbot::Global::TriggerKey);
+							CheckBox(Vars::Triggerbot::Global::IgnoreInvlunerable, _(L"Ignore players who can't be damaged"));
+							CheckBox(Vars::Triggerbot::Global::IgnoreCloaked, _(L"Ignore cloaked spies"));
+							CheckBox(Vars::Triggerbot::Global::IgnoreFriends, _(L"Ignore Steam friends"));
 						}
+						GroupBoxEnd(_(L"Global"), 170);
+
+						airblast = m_LastWidget;
+
+						checkpoint.x += 170 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Triggerbot::Shoot::Active, _(L"Shoot master switch"));
+							CheckBox(Vars::Triggerbot::Shoot::TriggerPlayers, _(L"Shoot players"));
+							CheckBox(Vars::Triggerbot::Shoot::TriggerBuildings, _(L"Shoot buildings"));
+							CheckBox(Vars::Triggerbot::Shoot::HeadOnly, _(L"Only shoot when aiming at head"));
+							CheckBox(Vars::Triggerbot::Shoot::WaitForCharge, _(L"Sniper waits for enough charge"));
+							InputFloat(Vars::Triggerbot::Shoot::HeadScale, 0.5f, 1.0f, 0.1f, L"%.1f");
+						}
+						GroupBoxEnd(_(L"AutoShoot"), 170);
+
+						autouber = m_LastWidget;
+
+						checkpoint.x += 170 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Triggerbot::Stab::Active, _(L"Stab master switch"));
+							CheckBox(Vars::Triggerbot::Stab::RageMode, _(L"Stabs always when possible, even behind"));
+							CheckBox(Vars::Triggerbot::Stab::Silent, _(L"Aim changes made by rage aren't visible"));
+							CheckBox(Vars::Triggerbot::Stab::Disguise, _(L"Apply last disguise after stab"));
+							CheckBox(Vars::Triggerbot::Stab::IgnRazor, _(L"Ignore snipers with Razorback"));
+							InputFloat(Vars::Triggerbot::Stab::Range, 0.5f, 1.0f, 0.1f, L"%.1f");
+						}
+						GroupBoxEnd(_(L"AutoStab"), 140);
+
+						checkpoint.x += 140 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Triggerbot::Detonate::Active, _(L"Detonate master switch"));
+							CheckBox(Vars::Triggerbot::Detonate::Stickies, _(L"Detonate demoman stickies"));
+							CheckBox(Vars::Triggerbot::Detonate::Flares, _(L"Detonate pyro flares"));
+							InputFloat(Vars::Triggerbot::Detonate::RadiusScale, 0.5f, 1.0f, 0.1f, L"%.1f");
+						}
+						GroupBoxEnd(_(L"AutoDetonate"), 175);
+
+						m_LastWidget = airblast;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Triggerbot::Blast::Active, _(L"Airblast master switch"));
+							CheckBox(Vars::Triggerbot::Blast::Rage, _(L"Blast always when possible, even behind"));
+							CheckBox(Vars::Triggerbot::Blast::Silent, _(L"Aim changes made by rage aren't visible"));
+							InputInt(Vars::Triggerbot::Blast::Fov, 1, 60, 1);
+						}
+						GroupBoxEnd(L"AutoAirblast", 170);
+
+						m_LastWidget = autouber;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Triggerbot::Uber::Active, _(L"Uber master switch"));
+							CheckBox(Vars::Triggerbot::Uber::OnlyFriends, _(L"Only pop uber on Steam friends"));
+							CheckBox(Vars::Triggerbot::Uber::PopLocal, _(L"Pop uber when local below selected health percentage"));
+							InputFloat(Vars::Triggerbot::Uber::HealthLeft, 1.0f, 99.0f, 1.0f, L"%.0f%%");
+						}
+						GroupBoxEnd(L"AutoUber", 170);
+
+						break;
+					}
 					}
 					break;
 				}
-				
+
 
 				case EMainTabs::TAB_VISUALS:
 				{
@@ -1266,409 +1267,409 @@ void CMenu::Run()
 
 					switch (Tab)
 					{
-						case EVisualsTabs::TAB_ESP:
+					case EVisualsTabs::TAB_ESP:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::ESP::Main::Active, _(L"ESP master switch"));
-								ComboBox(Vars::ESP::Main::Outline, { { 0, _(L"Off") }, { 1, _(L"Text Only") }, { 2, _(L"All") } });
-							}
-							GroupBoxEnd(_(L"Main"), 230);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::ESP::Players::Active, _(L"Player master switch"));
-								CheckBox(Vars::ESP::Players::ShowLocal, _(L"Draw ESP on local player"));
-								ComboBox(Vars::ESP::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
-								ComboBox(Vars::ESP::Players::IgnoreCloaked, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemies Only") } });
-								CheckBox(Vars::ESP::Players::Name, _(L"Draw player's name"));
-								CheckBox(Vars::ESP::Players::NameBox, _(L"Draw a background behind the name to make it stand out more"));
-								ComboBox(Vars::ESP::Players::Class, { { 0, _(L"Off") }, { 1, _(L"Icon") }, { 2, _(L"Text") }, { 3, _(L"Both") } });
-								CheckBox(Vars::ESP::Players::Health, _(L"Draw player's health"));
-								CheckBox(Vars::ESP::Players::Cond, _(L"Draw player's condition(s)"));
-								CheckBox(Vars::ESP::Players::HealthBar, _(L"Draw player's health with bar"));
-								ComboBox(Vars::ESP::Players::Uber, { { 0, _(L"Off") }, { 1, _(L"Text") }, { 2, _(L"Bar") } });
-								ComboBox(Vars::ESP::Players::Box, { { 0, _(L"Off") }, { 1, _(L"Simple") }, { 2, _(L"Corners") }, { 3, _(L"3D") } });
-								ComboBox(Vars::ESP::Players::Bones, { {0, _(L"Off")}, {1, _(L"Custom")}, {2, _(L"Health")} }); // Off / Custom / Health
-								CheckBox(Vars::ESP::Players::GUID, _(L"Draw player's GUID"));
-								CheckBox(Vars::ESP::Players::Lines, _(L"Draw line to player"));
-								CheckBox(Vars::ESP::Players::Dlights, _(L"Attach a light source to the player"));
-								InputFloat(Vars::ESP::Players::DlightRadius, 5.0f, 400.0f, 5.0f, L"%.f");
-								InputFloat(Vars::ESP::Players::Alpha, 0.05f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"Players"), 230);
-
-							checkpoint.x += 230 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::ESP::Buildings::Active, _(L"Building master switch"));
-								CheckBox(Vars::ESP::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
-								CheckBox(Vars::ESP::Buildings::Name, _(L"Draw building's name"));
-								CheckBox(Vars::ESP::Buildings::NameBox, _(L"Draw a background behind the name to make it stand out more"));
-								CheckBox(Vars::ESP::Buildings::Health, _(L"Draw building's health"));
-								CheckBox(Vars::ESP::Buildings::Level, _(L"Draw building's level"));
-								CheckBox(Vars::ESP::Buildings::Cond, _(L"Draw building's condition(s)"));
-								CheckBox(Vars::ESP::Buildings::HealthBar, _(L"Draw building's health with bar"));
-								CheckBox(Vars::ESP::Buildings::Owner, _(L"Draw building's owner's name"));
-								ComboBox(Vars::ESP::Buildings::Box, { { 0, _(L"Off") }, { 1, _(L"Simple") }, { 2, _(L"Corners") }, { 3, _(L"3D") } });
-								CheckBox(Vars::ESP::Buildings::Lines, _(L"Draw line to building"));
-								CheckBox(Vars::ESP::Buildings::Dlights, _(L"Attach a light source to the building"));
-								InputFloat(Vars::ESP::Buildings::DlightRadius, 5.0f, 400.0f, 5.0f, L"%.f");
-								InputFloat(Vars::ESP::Buildings::Alpha, 0.05f, 1.0f, 0.05f, L"%.f");
-							}
-							GroupBoxEnd(_(L"Buildings"), 200);
-
-							checkpoint.x += 200 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::ESP::World::Active, _(L"World ESP master switch"));
-								CheckBox(Vars::ESP::World::HealthText, _(L"Draw text on healthpacks"));
-								CheckBox(Vars::ESP::World::AmmoText, _(L"Draw text on ammopacks"));
-								InputFloat(Vars::ESP::World::Alpha, 0.05f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"World"), 175);
-
-							break;
+							CheckBox(Vars::ESP::Main::Active, _(L"ESP master switch"));
+							ComboBox(Vars::ESP::Main::Outline, { { 0, _(L"Off") }, { 1, _(L"Text Only") }, { 2, _(L"All") } });
 						}
+						GroupBoxEnd(_(L"Main"), 230);
 
-						case EVisualsTabs::TAB_RADAR:
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Radar::Main::Active, _(L"Radar master switch"));
-								InputInt(Vars::Radar::Main::Size, 20, 200, 1);
-								InputInt(Vars::Radar::Main::Range, 50, 3000, 50);
-								InputInt(Vars::Radar::Main::BackAlpha, 0, 255);
-							}
-							GroupBoxEnd(_(L"Main"), 210);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Radar::Players::Active, _(L"Player master switch"));
-								ComboBox(Vars::Radar::Players::IconType, { { 0, _(L"Scoreboard") }, { 1,_(L"Portraits") }, { 2, _(L"Avatar") } });
-								ComboBox(Vars::Radar::Players::BackGroundType, { { 0, _(L"Off") }, { 1, _(L"Rect") }, { 2, _(L"Texture") } });
-								CheckBox(Vars::Radar::Players::Outline, _(L"Draw outline"));
-								ComboBox(Vars::Radar::Players::IgnoreTeam, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
-								ComboBox(Vars::Radar::Players::IgnoreCloaked, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemies Only") } });
-								CheckBox(Vars::Radar::Players::Health, _(L"Draw player's healt with bar"));
-								InputInt(Vars::Radar::Players::IconSize, 12, 30, 1);
-							}
-							GroupBoxEnd(_(L"Players"), 210);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Radar::Buildings::Active, _(L"Building master switch"));
-								CheckBox(Vars::Radar::Buildings::Outline, _(L"Draw outline"));
-								CheckBox(Vars::Radar::Buildings::IgnoreTeam, _(L"Ignore team's buildings"));
-								CheckBox(Vars::Radar::Buildings::Health, _(L"Draw building's health with bar"));
-								InputInt(Vars::Radar::Buildings::IconSize, 12, 30, 1);
-							}
-							GroupBoxEnd(_(L"Buildings"), 210);
-
-							checkpoint.x += 210 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Radar::World::Active, _(L"Radar world master switch"));
-								CheckBox(Vars::Radar::World::Health, _(L"Draw health icons on healthpacks"));
-								CheckBox(Vars::Radar::World::Ammo, _(L"Draw ammo icons on ammopacks"));
-								InputInt(Vars::Radar::World::IconSize, 12, 30, 1);
-							}
-							GroupBoxEnd(_(L"World"), 100);
-
-							break;
+							CheckBox(Vars::ESP::Players::Active, _(L"Player master switch"));
+							CheckBox(Vars::ESP::Players::ShowLocal, _(L"Draw ESP on local player"));
+							ComboBox(Vars::ESP::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
+							ComboBox(Vars::ESP::Players::IgnoreCloaked, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemies Only") } });
+							CheckBox(Vars::ESP::Players::Name, _(L"Draw player's name"));
+							CheckBox(Vars::ESP::Players::NameBox, _(L"Draw a background behind the name to make it stand out more"));
+							ComboBox(Vars::ESP::Players::Class, { { 0, _(L"Off") }, { 1, _(L"Icon") }, { 2, _(L"Text") }, { 3, _(L"Both") } });
+							CheckBox(Vars::ESP::Players::Health, _(L"Draw player's health"));
+							CheckBox(Vars::ESP::Players::Cond, _(L"Draw player's condition(s)"));
+							CheckBox(Vars::ESP::Players::HealthBar, _(L"Draw player's health with bar"));
+							ComboBox(Vars::ESP::Players::Uber, { { 0, _(L"Off") }, { 1, _(L"Text") }, { 2, _(L"Bar") } });
+							ComboBox(Vars::ESP::Players::Box, { { 0, _(L"Off") }, { 1, _(L"Simple") }, { 2, _(L"Corners") }, { 3, _(L"3D") } });
+							ComboBox(Vars::ESP::Players::Bones, { {0, _(L"Off")}, {1, _(L"Custom")}, {2, _(L"Health")} }); // Off / Custom / Health
+							CheckBox(Vars::ESP::Players::GUID, _(L"Draw player's GUID"));
+							CheckBox(Vars::ESP::Players::Lines, _(L"Draw line to player"));
+							CheckBox(Vars::ESP::Players::Dlights, _(L"Attach a light source to the player"));
+							InputFloat(Vars::ESP::Players::DlightRadius, 5.0f, 400.0f, 5.0f, L"%.f");
+							InputFloat(Vars::ESP::Players::Alpha, 0.05f, 1.0f, 0.05f, L"%.2f");
 						}
+						GroupBoxEnd(_(L"Players"), 230);
 
-						case EVisualsTabs::TAB_CHAMS:
+						checkpoint.x += 230 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Chams::Main::Active, _(L"Chams master switch"));
-							}
-							GroupBoxEnd(_(L"Main"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Chams::Players::Active, _(L"Player master switch"));
-								CheckBox(Vars::Chams::Players::ShowLocal, _(L"Draw chams on local player"));
-								ComboBox(Vars::Chams::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1,_(L"All") }, { 2, _(L"Keep Friends") } });
-								CheckBox(Vars::Chams::Players::Wearables, _(L"Draw chams on hats etc."));
-								CheckBox(Vars::Chams::Players::Weapons, _(L"Draw chams on weapons"));
-								ComboBox(Vars::Chams::Players::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
-								CheckBox(Vars::Chams::Players::IgnoreZ, _(L"Chams visible trough walls"));
-								CheckBox(Vars::Chams::Players::GlowOverlay, _(L"Glow chams"));
-								InputFloat(Vars::Chams::Players::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"Players"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Chams::Buildings::Active, _(L"Building master switch"));
-								CheckBox(Vars::Chams::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
-								ComboBox(Vars::Chams::Buildings::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
-								CheckBox(Vars::Chams::Buildings::IgnoreZ, _(L"Chams visible trough walls"));
-								InputFloat(Vars::Chams::Buildings::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"Buildings"), 200);
-
-							checkpoint.x += 200 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Chams::World::Active, _(L"World master switch"));
-								CheckBox(Vars::Chams::World::Health, _(L"Draw chams on healthpacks"));
-								CheckBox(Vars::Chams::World::Ammo, _(L"Draw chams on ammopacks"));
-								ComboBox(Vars::Chams::World::Projectiles, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemy Only") } });
-								ComboBox(Vars::Chams::World::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Flat2") }, { 5, _(L"Glow") } });
-								CheckBox(Vars::Chams::World::IgnoreZ, _(L"Chams visible trough walls"));
-								InputFloat(Vars::Chams::World::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"World"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Chams::DME::Active, _(L"DME chams masterswitch"));
-								ComboBox(Vars::Chams::DME::Hands, {
-									{ 0, _(L"Original") },
-									{ 1, _(L"Shaded") },
-									{ 2, _(L"Shiny") },
-									{ 3, _(L"Flat") },
-									{ 4, _(L"WF-Shaded") },
-									{ 5, _(L"WF-Shiny") },
-									{ 6, _(L"WF-Flat") },
-									{ 7, _(L"Shiny2") },
-									{ 8, _(L"Brick") } });
-								InputFloat(Vars::Chams::DME::HandsAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
-
-								CheckBox(Vars::Chams::DME::HandsGlowOverlay, _(L"Hands glow overlay"));
-								ComboBox(Vars::Chams::DME::Weapon, {
-									{ 0, _(L"Original") },
-									{ 1, _(L"Shaded") },
-									{ 2, _(L"Shiny") },
-									{ 3, _(L"Flat") },
-									{ 4, _(L"WF-Shaded") },
-									{ 5, _(L"WF-Shiny") },
-									{ 6, _(L"WF-Flat") },
-									{ 7, _(L"Shiny2") },
-									{ 8, _(L"Brick") } });
-								InputFloat(Vars::Chams::DME::WeaponAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
-								CheckBox(Vars::Chams::DME::WeaponGlowOverlay, _(L"Weapon glow overlay"));
-								InputInt(Vars::Chams::DME::WeaponRimMultiplier, 1, 100);
-								InputInt(Vars::Chams::DME::HandsRimMultiplier, 1, 100);
-							}
-							GroupBoxEnd(_(L"DME"), 200);
-
-							break;
+							CheckBox(Vars::ESP::Buildings::Active, _(L"Building master switch"));
+							CheckBox(Vars::ESP::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
+							CheckBox(Vars::ESP::Buildings::Name, _(L"Draw building's name"));
+							CheckBox(Vars::ESP::Buildings::NameBox, _(L"Draw a background behind the name to make it stand out more"));
+							CheckBox(Vars::ESP::Buildings::Health, _(L"Draw building's health"));
+							CheckBox(Vars::ESP::Buildings::Level, _(L"Draw building's level"));
+							CheckBox(Vars::ESP::Buildings::Cond, _(L"Draw building's condition(s)"));
+							CheckBox(Vars::ESP::Buildings::HealthBar, _(L"Draw building's health with bar"));
+							CheckBox(Vars::ESP::Buildings::Owner, _(L"Draw building's owner's name"));
+							ComboBox(Vars::ESP::Buildings::Box, { { 0, _(L"Off") }, { 1, _(L"Simple") }, { 2, _(L"Corners") }, { 3, _(L"3D") } });
+							CheckBox(Vars::ESP::Buildings::Lines, _(L"Draw line to building"));
+							CheckBox(Vars::ESP::Buildings::Dlights, _(L"Attach a light source to the building"));
+							InputFloat(Vars::ESP::Buildings::DlightRadius, 5.0f, 400.0f, 5.0f, L"%.f");
+							InputFloat(Vars::ESP::Buildings::Alpha, 0.05f, 1.0f, 0.05f, L"%.f");
 						}
+						GroupBoxEnd(_(L"Buildings"), 200);
 
-						case EVisualsTabs::TAB_GLOW:
+						checkpoint.x += 200 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
 						{
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Glow::Main::Active, _(L"Glow master switch"));
-								InputInt(Vars::Glow::Main::Scale, 1, 10);
-							}
-							GroupBoxEnd(_(L"Main"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Glow::Players::Active, _(L"Player master switch"));
-								CheckBox(Vars::Glow::Players::ShowLocal, _(L"Draw glow on local player"));
-								ComboBox(Vars::Glow::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
-								CheckBox(Vars::Glow::Players::Wearables, _(L"Draw glow around hats etc."));
-								CheckBox(Vars::Glow::Players::Weapons, _(L"Draw glow around weapons"));
-								InputFloat(Vars::Glow::Players::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
-								ComboBox(Vars::Glow::Players::Color, { { 0, _(L"Default") }, { 1, _(L"Health") } });
-							}
-							GroupBoxEnd(_(L"Players"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Glow::Buildings::Active, _(L"Building master switch"));
-								CheckBox(Vars::Glow::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
-								InputFloat(Vars::Glow::Buildings::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
-								ComboBox(Vars::Glow::Buildings::Color, { { 0, _(L"Default") }, { 1, _(L"Health") } });
-							}
-							GroupBoxEnd(_(L"Buildings"), 200);
-
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Glow::World::Active, _(L"World master switch"));
-								CheckBox(Vars::Glow::World::Health, _(L"Draw glow on healthpacks"));
-								CheckBox(Vars::Glow::World::Ammo, _(L"Draw glow on ammopacks"));
-								ComboBox(Vars::Glow::World::Projectiles, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemy Only") } });
-								InputFloat(Vars::Glow::World::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
-							}
-							GroupBoxEnd(_(L"World"), 200);
-
-							break;
+							CheckBox(Vars::ESP::World::Active, _(L"World ESP master switch"));
+							CheckBox(Vars::ESP::World::HealthText, _(L"Draw text on healthpacks"));
+							CheckBox(Vars::ESP::World::AmmoText, _(L"Draw text on ammopacks"));
+							InputFloat(Vars::ESP::World::Alpha, 0.05f, 1.0f, 0.05f, L"%.2f");
 						}
+						GroupBoxEnd(_(L"World"), 175);
 
-						case EVisualsTabs::TAB_OTHER:
+						break;
+					}
+
+					case EVisualsTabs::TAB_RADAR:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
+							CheckBox(Vars::Radar::Main::Active, _(L"Radar master switch"));
+							InputInt(Vars::Radar::Main::Size, 20, 200, 1);
+							InputInt(Vars::Radar::Main::Range, 50, 3000, 50);
+							InputInt(Vars::Radar::Main::BackAlpha, 0, 255);
+						}
+						GroupBoxEnd(_(L"Main"), 210);
 
-							GroupBoxStart();
-							{
-								InputInt(Vars::Visuals::FieldOfView, 70, 140);
-								InputInt(Vars::Visuals::AimFOVAlpha, 0, 255);
-								CheckBox(Vars::Visuals::RemoveScope, _(L"Remove sniper's scope overlay"));
-								CheckBox(Vars::Visuals::RemoveZoom, _(L"Remove sniper's scope zoom"));
-								CheckBox(Vars::Visuals::RemovePunch, _(L"Remove visual punch/recoil"));
-								CheckBox(Vars::Visuals::CrosshairAimPos, _(L"Place crosshair at aimbot's aim position"));
-								CheckBox(Vars::Visuals::ChatInfo, _(L"Display enemy class changes on chat"));
-							}
-							GroupBoxEnd(_(L"Local"), 190);
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Radar::Players::Active, _(L"Player master switch"));
+							ComboBox(Vars::Radar::Players::IconType, { { 0, _(L"Scoreboard") }, { 1,_(L"Portraits") }, { 2, _(L"Avatar") } });
+							ComboBox(Vars::Radar::Players::BackGroundType, { { 0, _(L"Off") }, { 1, _(L"Rect") }, { 2, _(L"Texture") } });
+							CheckBox(Vars::Radar::Players::Outline, _(L"Draw outline"));
+							ComboBox(Vars::Radar::Players::IgnoreTeam, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
+							ComboBox(Vars::Radar::Players::IgnoreCloaked, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemies Only") } });
+							CheckBox(Vars::Radar::Players::Health, _(L"Draw player's healt with bar"));
+							InputInt(Vars::Radar::Players::IconSize, 12, 30, 1);
+						}
+						GroupBoxEnd(_(L"Players"), 210);
 
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Visuals::ThirdPerson, _(L"Thirdperson master switch"));
-								InputKey(Vars::Visuals::ThirdPersonKey);
-								CheckBox(Vars::Visuals::ThirdPersonSilentAngles, _(L"Show silent angles on thirdperson"));
-								CheckBox(Vars::Visuals::ThirdPersonInstantYaw, _(L"Set yaw instantly on thirdperson"));
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Radar::Buildings::Active, _(L"Building master switch"));
+							CheckBox(Vars::Radar::Buildings::Outline, _(L"Draw outline"));
+							CheckBox(Vars::Radar::Buildings::IgnoreTeam, _(L"Ignore team's buildings"));
+							CheckBox(Vars::Radar::Buildings::Health, _(L"Draw building's health with bar"));
+							InputInt(Vars::Radar::Buildings::IconSize, 12, 30, 1);
+						}
+						GroupBoxEnd(_(L"Buildings"), 210);
 
-							}
-							GroupBoxEnd(_(L"ThirdPerson"), 190);
+						checkpoint.x += 210 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Radar::World::Active, _(L"Radar world master switch"));
+							CheckBox(Vars::Radar::World::Health, _(L"Draw health icons on healthpacks"));
+							CheckBox(Vars::Radar::World::Ammo, _(L"Draw ammo icons on ammopacks"));
+							InputInt(Vars::Radar::World::IconSize, 12, 30, 1);
+						}
+						GroupBoxEnd(_(L"World"), 100);
+
+						break;
+					}
+
+					case EVisualsTabs::TAB_CHAMS:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Chams::Main::Active, _(L"Chams master switch"));
+						}
+						GroupBoxEnd(_(L"Main"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Chams::Players::Active, _(L"Player master switch"));
+							CheckBox(Vars::Chams::Players::ShowLocal, _(L"Draw chams on local player"));
+							ComboBox(Vars::Chams::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1,_(L"All") }, { 2, _(L"Keep Friends") } });
+							CheckBox(Vars::Chams::Players::Wearables, _(L"Draw chams on hats etc."));
+							CheckBox(Vars::Chams::Players::Weapons, _(L"Draw chams on weapons"));
+							ComboBox(Vars::Chams::Players::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
+							CheckBox(Vars::Chams::Players::IgnoreZ, _(L"Chams visible trough walls"));
+							CheckBox(Vars::Chams::Players::GlowOverlay, _(L"Glow chams"));
+							InputFloat(Vars::Chams::Players::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+						}
+						GroupBoxEnd(_(L"Players"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Chams::Buildings::Active, _(L"Building master switch"));
+							CheckBox(Vars::Chams::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
+							ComboBox(Vars::Chams::Buildings::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Brick") }, { 5, _(L"Fresnel") } });
+							CheckBox(Vars::Chams::Buildings::IgnoreZ, _(L"Chams visible trough walls"));
+							InputFloat(Vars::Chams::Buildings::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+						}
+						GroupBoxEnd(_(L"Buildings"), 200);
+
+						checkpoint.x += 200 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Chams::World::Active, _(L"World master switch"));
+							CheckBox(Vars::Chams::World::Health, _(L"Draw chams on healthpacks"));
+							CheckBox(Vars::Chams::World::Ammo, _(L"Draw chams on ammopacks"));
+							ComboBox(Vars::Chams::World::Projectiles, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemy Only") } });
+							ComboBox(Vars::Chams::World::Material, { { 0, _(L"None") }, { 1, _(L"Shaded") }, { 2, _(L"Shiny") }, { 3, _(L"Flat") }, { 4, _(L"Flat2") }, { 5, _(L"Glow") } });
+							CheckBox(Vars::Chams::World::IgnoreZ, _(L"Chams visible trough walls"));
+							InputFloat(Vars::Chams::World::Alpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+						}
+						GroupBoxEnd(_(L"World"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Chams::DME::Active, _(L"DME chams masterswitch"));
+							ComboBox(Vars::Chams::DME::Hands, {
+								{ 0, _(L"Original") },
+								{ 1, _(L"Shaded") },
+								{ 2, _(L"Shiny") },
+								{ 3, _(L"Flat") },
+								{ 4, _(L"WF-Shaded") },
+								{ 5, _(L"WF-Shiny") },
+								{ 6, _(L"WF-Flat") },
+								{ 7, _(L"Shiny2") },
+								{ 8, _(L"Brick") } });
+							InputFloat(Vars::Chams::DME::HandsAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+
+							CheckBox(Vars::Chams::DME::HandsGlowOverlay, _(L"Hands glow overlay"));
+							ComboBox(Vars::Chams::DME::Weapon, {
+								{ 0, _(L"Original") },
+								{ 1, _(L"Shaded") },
+								{ 2, _(L"Shiny") },
+								{ 3, _(L"Flat") },
+								{ 4, _(L"WF-Shaded") },
+								{ 5, _(L"WF-Shiny") },
+								{ 6, _(L"WF-Flat") },
+								{ 7, _(L"Shiny2") },
+								{ 8, _(L"Brick") } });
+							InputFloat(Vars::Chams::DME::WeaponAlpha, 0.0f, 1.0f, 0.05f, L"%.2f");
+							CheckBox(Vars::Chams::DME::WeaponGlowOverlay, _(L"Weapon glow overlay"));
+							InputInt(Vars::Chams::DME::WeaponRimMultiplier, 1, 100);
+							InputInt(Vars::Chams::DME::HandsRimMultiplier, 1, 100);
+						}
+						GroupBoxEnd(_(L"DME"), 200);
+
+						break;
+					}
+
+					case EVisualsTabs::TAB_GLOW:
+					{
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Glow::Main::Active, _(L"Glow master switch"));
+							InputInt(Vars::Glow::Main::Scale, 1, 10);
+						}
+						GroupBoxEnd(_(L"Main"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Glow::Players::Active, _(L"Player master switch"));
+							CheckBox(Vars::Glow::Players::ShowLocal, _(L"Draw glow on local player"));
+							ComboBox(Vars::Glow::Players::IgnoreTeammates, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Keep Friends") } });
+							CheckBox(Vars::Glow::Players::Wearables, _(L"Draw glow around hats etc."));
+							CheckBox(Vars::Glow::Players::Weapons, _(L"Draw glow around weapons"));
+							InputFloat(Vars::Glow::Players::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
+							ComboBox(Vars::Glow::Players::Color, { { 0, _(L"Default") }, { 1, _(L"Health") } });
+						}
+						GroupBoxEnd(_(L"Players"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Glow::Buildings::Active, _(L"Building master switch"));
+							CheckBox(Vars::Glow::Buildings::IgnoreTeammates, _(L"Ignore team's buildings"));
+							InputFloat(Vars::Glow::Buildings::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
+							ComboBox(Vars::Glow::Buildings::Color, { { 0, _(L"Default") }, { 1, _(L"Health") } });
+						}
+						GroupBoxEnd(_(L"Buildings"), 200);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Glow::World::Active, _(L"World master switch"));
+							CheckBox(Vars::Glow::World::Health, _(L"Draw glow on healthpacks"));
+							CheckBox(Vars::Glow::World::Ammo, _(L"Draw glow on ammopacks"));
+							ComboBox(Vars::Glow::World::Projectiles, { { 0, _(L"Off") }, { 1, _(L"All") }, { 2, _(L"Enemy Only") } });
+							InputFloat(Vars::Glow::World::Alpha, 0.1f, 1.0f, 0.05f, L"%.2f");
+						}
+						GroupBoxEnd(_(L"World"), 200);
+
+						break;
+					}
+
+					case EVisualsTabs::TAB_OTHER:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
+						{
+							InputInt(Vars::Visuals::FieldOfView, 70, 140);
+							InputInt(Vars::Visuals::AimFOVAlpha, 0, 255);
+							CheckBox(Vars::Visuals::RemoveScope, _(L"Remove sniper's scope overlay"));
+							CheckBox(Vars::Visuals::RemoveZoom, _(L"Remove sniper's scope zoom"));
+							CheckBox(Vars::Visuals::RemovePunch, _(L"Remove visual punch/recoil"));
+							CheckBox(Vars::Visuals::CrosshairAimPos, _(L"Place crosshair at aimbot's aim position"));
+							CheckBox(Vars::Visuals::ChatInfo, _(L"Display enemy class changes on chat"));
+						}
+						GroupBoxEnd(_(L"Local"), 190);
+
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Visuals::ThirdPerson, _(L"Thirdperson master switch"));
+							InputKey(Vars::Visuals::ThirdPersonKey);
+							CheckBox(Vars::Visuals::ThirdPersonSilentAngles, _(L"Show silent angles on thirdperson"));
+							CheckBox(Vars::Visuals::ThirdPersonInstantYaw, _(L"Set yaw instantly on thirdperson"));
+
+						}
+						GroupBoxEnd(_(L"ThirdPerson"), 190);
 
 
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Visuals::SpyWarning, _(L"Spywarning master switch"));
-								CheckBox(Vars::Visuals::SpyWarningAnnounce, _(L"Use voice command"));
-								CheckBox(Vars::Visuals::SpyWarningVisibleOnly, _(L"Ignore spies that are not visible"));
-								CheckBox(Vars::Visuals::SpyWarningIgnoreFriends, _(L"Ignore Steam friend spies"));
-								ComboBox(Vars::Visuals::SpyWarningStyle, { { 0, _(L"Indicator") }, { 1, _(L"Flash") } });
-							}
-							GroupBoxEnd(_(L"SpyWarning"), 190);
+						GroupBoxStart();
+						{
+							CheckBox(Vars::Visuals::SpyWarning, _(L"Spywarning master switch"));
+							CheckBox(Vars::Visuals::SpyWarningAnnounce, _(L"Use voice command"));
+							CheckBox(Vars::Visuals::SpyWarningVisibleOnly, _(L"Ignore spies that are not visible"));
+							CheckBox(Vars::Visuals::SpyWarningIgnoreFriends, _(L"Ignore Steam friend spies"));
+							ComboBox(Vars::Visuals::SpyWarningStyle, { { 0, _(L"Indicator") }, { 1, _(L"Flash") } });
+						}
+						GroupBoxEnd(_(L"SpyWarning"), 190);
 
-							checkpoint.x += 190 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
+						checkpoint.x += 190 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
 
-							GroupBoxStart();
-							{
-								ComboBox(Vars::Visuals::SpectatorList, { { 0, _(L"Off") }, { 1, _(L"Default") }, { 2, _(L"Classic") }, { 3, _(L"Classic Avatars") } });
-								CheckBox(Vars::Visuals::Snow, _(L"Enable / Disable snowrain on menu"));
-								CheckBox(Vars::Visuals::ToolTips, _(L"This is an example tooltip"));
-								CheckBox(Vars::Visuals::WorldModulation, _(L"Modulate world materials with custom color"));
-								CheckBox(Vars::Visuals::OverrideWorldTextures, _(L"Override world textures (funny nitro effect"));
-								CheckBox(Vars::Visuals::SkyboxChanger, _(L"Change skybox to mr_04"));
-								CheckBox(Vars::Misc::DisableInterpolation, _(L"Disable interpolation"));
-								CheckBox(Vars::Visuals::RemoveDisguises, _(L"Remove disguises from spies"));
-								CheckBox(Vars::Visuals::RemoveTaunts, _(L"Remove taunts from enemy players"));
-								CheckBox(Vars::Visuals::BulletTracer, _(L"Enable bullet tracers"));
-								CheckBox(Vars::Visuals::BulletTracerRainbow, _(L"Bullet tracers have rainbow colour"));
-								CheckBox(Vars::Visuals::OutOfFOVArrows, _(L"Show arrows to players outside of FOV"));
-								//InputCString(_(L"Skybox name"), XorStr(Vars::Skybox::SkyboxName));
-								InputConstChar(_(L"Skybox name"), Vars::Skybox::SkyboxName);
-							}
-							GroupBoxEnd(_(L"Other"), 200);
+						GroupBoxStart();
+						{
+							ComboBox(Vars::Visuals::SpectatorList, { { 0, _(L"Off") }, { 1, _(L"Default") }, { 2, _(L"Classic") }, { 3, _(L"Classic Avatars") } });
+							CheckBox(Vars::Visuals::Snow, _(L"Enable / Disable snowrain on menu"));
+							CheckBox(Vars::Visuals::ToolTips, _(L"This is an example tooltip"));
+							CheckBox(Vars::Visuals::WorldModulation, _(L"Modulate world materials with custom color"));
+							CheckBox(Vars::Visuals::OverrideWorldTextures, _(L"Override world textures (funny nitro effect"));
+							CheckBox(Vars::Visuals::SkyboxChanger, _(L"Change skybox to mr_04"));
+							CheckBox(Vars::Misc::DisableInterpolation, _(L"Disable interpolation"));
+							CheckBox(Vars::Visuals::RemoveDisguises, _(L"Remove disguises from spies"));
+							CheckBox(Vars::Visuals::RemoveTaunts, _(L"Remove taunts from enemy players"));
+							CheckBox(Vars::Visuals::BulletTracer, _(L"Enable bullet tracers"));
+							CheckBox(Vars::Visuals::BulletTracerRainbow, _(L"Bullet tracers have rainbow colour"));
+							CheckBox(Vars::Visuals::OutOfFOVArrows, _(L"Show arrows to players outside of FOV"));
+							//InputCString(_(L"Skybox name"), XorStr(Vars::Skybox::SkyboxName));
+							InputConstChar(_(L"Skybox name"), Vars::Skybox::SkyboxName);
+						}
+						GroupBoxEnd(_(L"Other"), 200);
 
 #ifdef DEVELOPER_BUILD
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Visuals::Skins::Enabled, _(L"Skins master switch"));
-								ComboBox(Vars::Visuals::Skins::Effect, {
-									{ 0  , L"None" },
-									{ 701, L"Hot" },
-									{ 702, L"Isotope" },
-									{ 703, L"Cool" },
-									{ 704, L"Energy Orb" } });
-								ComboBox(Vars::Visuals::Skins::Particle, {
-									{ 0  , L"None" },
-									{ 701, L"Hot" },
-									{ 702, L"Isotope" },
-									{ 703, L"Cool" },
-									{ 704, L"Energy Orb" } });
-								ComboBox(Vars::Visuals::Skins::Sheen, {
-									{ 0, L"None" },
-									{ 1, L"Team Shine" },
-									{ 2, L"Deadly Daffodil" },
-									{ 3, L"MannDarin" },
-									{ 4, L"Mean Green" },
-									{ 5, L"Agonizing Emerald" },
-									{ 6, L"Villainous Violet" },
-									{ 7, L"Hot Rod" } });
-								CheckBox(Vars::Visuals::Skins::Acient, _(L"Acient"));
-								CheckBox(Vars::Visuals::Skins::Override, _(L"Override"));
-
-								if (Button(L"Set Current"))
-									g_AttributeChanger.m_bSet = true;
-
-								if (Button(L"Save All"))
-									g_AttributeChanger.m_bSave = true;
-
-								if (Button(L"Load All"))
-									g_AttributeChanger.m_bLoad = true;
-
-							}
-							GroupBoxEnd(_(L"Weapon Attributes"), 150);
-#endif
-							break;
-						}
-
-						case EVisualsTabs::TAB_COLORS:
+						GroupBoxStart();
 						{
-							Rect_t checkpoint = m_LastWidget;
+							CheckBox(Vars::Visuals::Skins::Enabled, _(L"Skins master switch"));
+							ComboBox(Vars::Visuals::Skins::Effect, {
+								{ 0  , L"None" },
+								{ 701, L"Hot" },
+								{ 702, L"Isotope" },
+								{ 703, L"Cool" },
+								{ 704, L"Energy Orb" } });
+							ComboBox(Vars::Visuals::Skins::Particle, {
+								{ 0  , L"None" },
+								{ 701, L"Hot" },
+								{ 702, L"Isotope" },
+								{ 703, L"Cool" },
+								{ 704, L"Energy Orb" } });
+							ComboBox(Vars::Visuals::Skins::Sheen, {
+								{ 0, L"None" },
+								{ 1, L"Team Shine" },
+								{ 2, L"Deadly Daffodil" },
+								{ 3, L"MannDarin" },
+								{ 4, L"Mean Green" },
+								{ 5, L"Agonizing Emerald" },
+								{ 6, L"Villainous Violet" },
+								{ 7, L"Hot Rod" } });
+							CheckBox(Vars::Visuals::Skins::Acient, _(L"Acient"));
+							CheckBox(Vars::Visuals::Skins::Override, _(L"Override"));
 
-							GroupBoxStart();
-							{
-								InputColor(Vars::Menu::Colors::WindowBackground, _(L"Window Background"));
-								InputColor(Vars::Menu::Colors::TitleBar, _(L"Title Bar"));
-								InputColor(Vars::Menu::Colors::Text, _(L"Text"));
-								InputColor(Vars::Menu::Colors::Widget, _(L"Widget"));
-								InputColor(Vars::Menu::Colors::WidgetActive, _(L"Widget Active"));
-								InputColor(Vars::Menu::Colors::OutlineMenu, _(L"Outline Menu"));
-								InputColor(Vars::Menu::Colors::FeatureBackground, _(L"Feature Background"));
-								InputColor(Vars::Menu::Colors::FeatureOff, _(L"Feature Off"));
-								InputColor(Vars::Menu::Colors::FeatureOn, _(L"Feature On"));
-								InputColor(Vars::Menu::Colors::FeatureOutline, _(L"Feature Outline"));
-							}
-							GroupBoxEnd(_(L"Menu"), 250);
+							if (Button(L"Set Current"))
+								g_AttributeChanger.m_bSet = true;
 
-							checkpoint.x += 250 + Vars::Menu::SpacingX;
-							m_LastWidget = checkpoint;
+							if (Button(L"Save All"))
+								g_AttributeChanger.m_bSave = true;
 
-							GroupBoxStart();
-							{
-								InputColor(Colors::OutlineESP, _(L"Outline ESP"));
-								InputColor(Colors::Cond, _(L"Cond"));
-								InputColor(Colors::Target, _(L"Target"));
-								InputColor(Colors::Invuln, _(L"Invuln"));
-								InputColor(Colors::Cloak, _(L"Cloak"));
-								InputColor(Colors::Friend, _(L"Friend"));
-								InputColor(Colors::Overheal, _(L"Overheal"));
-								InputColor(Colors::Health, _(L"Health"));
-								InputColor(Colors::Ammo, _(L"Ammo"));
-								InputColor(Colors::UberColor, _(L"Uber"));
-								InputColor(Colors::TeamRed, _(L"Team RED"));
-								InputColor(Colors::TeamBlu, _(L"Team BLU"));
-								InputColor(Colors::Hands, _(L"Hands"));
-								InputColor(Colors::HandsOverlay, _(L"Hands Glow"));
-								InputColor(Colors::Weapon, _(L"Weapon"));
-								InputColor(Colors::WeaponOverlay, _(L"Weapon Glow"));
-								InputColor(Colors::WorldModulation, _(L"World Color"));
-								InputColor(Colors::SkyModulation, _(L"Sky Color"));
-								InputColor(Colors::StaticPropModulation, _(L"Prop Color"));
-								InputColor(Colors::FOVCircle, _(L"FOV Circle"));
-								InputColor(Colors::Bones, _(L"Bone color"));
-								InputColor(Colors::BulletTracer, _(L"Bullet Tracer color"));
-							}
-							GroupBoxEnd(_(L"Others"), 250);
+							if (Button(L"Load All"))
+								g_AttributeChanger.m_bLoad = true;
 
-							break;
 						}
+						GroupBoxEnd(_(L"Weapon Attributes"), 150);
+#endif
+						break;
+					}
+
+					case EVisualsTabs::TAB_COLORS:
+					{
+						Rect_t checkpoint = m_LastWidget;
+
+						GroupBoxStart();
+						{
+							InputColor(Vars::Menu::Colors::WindowBackground, _(L"Window Background"));
+							InputColor(Vars::Menu::Colors::TitleBar, _(L"Title Bar"));
+							InputColor(Vars::Menu::Colors::Text, _(L"Text"));
+							InputColor(Vars::Menu::Colors::Widget, _(L"Widget"));
+							InputColor(Vars::Menu::Colors::WidgetActive, _(L"Widget Active"));
+							InputColor(Vars::Menu::Colors::OutlineMenu, _(L"Outline Menu"));
+							InputColor(Vars::Menu::Colors::FeatureBackground, _(L"Feature Background"));
+							InputColor(Vars::Menu::Colors::FeatureOff, _(L"Feature Off"));
+							InputColor(Vars::Menu::Colors::FeatureOn, _(L"Feature On"));
+							InputColor(Vars::Menu::Colors::FeatureOutline, _(L"Feature Outline"));
+						}
+						GroupBoxEnd(_(L"Menu"), 250);
+
+						checkpoint.x += 250 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							InputColor(Colors::OutlineESP, _(L"Outline ESP"));
+							InputColor(Colors::Cond, _(L"Cond"));
+							InputColor(Colors::Target, _(L"Target"));
+							InputColor(Colors::Invuln, _(L"Invuln"));
+							InputColor(Colors::Cloak, _(L"Cloak"));
+							InputColor(Colors::Friend, _(L"Friend"));
+							InputColor(Colors::Overheal, _(L"Overheal"));
+							InputColor(Colors::Health, _(L"Health"));
+							InputColor(Colors::Ammo, _(L"Ammo"));
+							InputColor(Colors::UberColor, _(L"Uber"));
+							InputColor(Colors::TeamRed, _(L"Team RED"));
+							InputColor(Colors::TeamBlu, _(L"Team BLU"));
+							InputColor(Colors::Hands, _(L"Hands"));
+							InputColor(Colors::HandsOverlay, _(L"Hands Glow"));
+							InputColor(Colors::Weapon, _(L"Weapon"));
+							InputColor(Colors::WeaponOverlay, _(L"Weapon Glow"));
+							InputColor(Colors::WorldModulation, _(L"World Color"));
+							InputColor(Colors::SkyModulation, _(L"Sky Color"));
+							InputColor(Colors::StaticPropModulation, _(L"Prop Color"));
+							InputColor(Colors::FOVCircle, _(L"FOV Circle"));
+							InputColor(Colors::Bones, _(L"Bone color"));
+							InputColor(Colors::BulletTracer, _(L"Bullet Tracer color"));
+						}
+						GroupBoxEnd(_(L"Others"), 250);
+
+						break;
+					}
 					}
 
 					break;
@@ -1719,89 +1720,89 @@ void CMenu::Run()
 
 					switch (Tab)
 					{
-						case EMiscTabs::TAB_MAIN:
+					case EMiscTabs::TAB_MAIN:
+					{
+						GroupBoxStart();
 						{
-							GroupBoxStart();
-							{
-								CheckBox(Vars::Misc::AutoJump, _(L"Automatically bunnyhop"));
-								CheckBox(Vars::Misc::AutoStrafe, _(L"Automatically strafe"));
-								CheckBox(Vars::Misc::Directional, _(L"Directionally autostrafe"));
-								CheckBox(Vars::Misc::EdgeJump, _(L"Jump before falling from an edge"));
-								CheckBox(Vars::Misc::TauntSlide, _(L"Allow user input during taunts"));
-								CheckBox(Vars::Misc::TauntControl, _(L"Gives better control with taunt slide"));
-								CheckBox(Vars::Misc::BypassPure, _(L"Bypass sv_pure"));
-								CheckBox(Vars::Misc::MedalFlip, _(L"Make menu medal flip always when clicked"));
-								CheckBox(Vars::Misc::NoisemakerSpam, _(L"Spam noisemaker"));
-								CheckBox(Vars::Misc::AutoRocketJump, _(L"Automatically rocketjump when mouse2 held"));
-								CheckBox(Vars::Misc::ChatSpam, _(L"Advertise a free cheat, will ya? x)"));
-								CheckBox(Vars::Misc::NoPush, _(L"Prevent players from pushing you"));
-								ComboBox(Vars::Misc::Roll, { {0,L"Off"} ,{1,L"Normal"} ,{2,L"Fake Forward"} });
-							}
-							GroupBoxEnd(_(L"Main"), 210);
-
-							GroupBoxStart();
-							{
-
-								CheckBox(Vars::Misc::CL_Move::Enabled, _(L"Master switch to enable / disable all tickbase exploits."));
-								InputKey(Vars::Misc::CL_Move::RechargeKey, false);
-								InputKey(Vars::Misc::CL_Move::DoubletapKey, false);
-								InputKey(Vars::Misc::CL_Move::TeleportKey, false);
-								CheckBox(Vars::Misc::CL_Move::WaitForDT, _(L"Wait for DT."));
-								CheckBox(Vars::Misc::CL_Move::NotInAir, _(L"Doesn't DT in air."));
-							}
-							GroupBoxEnd(_(L"Tickbase exploits"), 210);
-
-							break;
+							CheckBox(Vars::Misc::AutoJump, _(L"Automatically bunnyhop"));
+							CheckBox(Vars::Misc::AutoStrafe, _(L"Automatically strafe"));
+							CheckBox(Vars::Misc::Directional, _(L"Directionally autostrafe"));
+							CheckBox(Vars::Misc::EdgeJump, _(L"Jump before falling from an edge"));
+							CheckBox(Vars::Misc::TauntSlide, _(L"Allow user input during taunts"));
+							CheckBox(Vars::Misc::TauntControl, _(L"Gives better control with taunt slide"));
+							CheckBox(Vars::Misc::BypassPure, _(L"Bypass sv_pure"));
+							CheckBox(Vars::Misc::MedalFlip, _(L"Make menu medal flip always when clicked"));
+							CheckBox(Vars::Misc::NoisemakerSpam, _(L"Spam noisemaker"));
+							CheckBox(Vars::Misc::AutoRocketJump, _(L"Automatically rocketjump when mouse2 held"));
+							CheckBox(Vars::Misc::ChatSpam, _(L"Advertise a free cheat, will ya? x)"));
+							CheckBox(Vars::Misc::NoPush, _(L"Prevent players from pushing you"));
+							ComboBox(Vars::Misc::Roll, { {0,L"Off"} ,{1,L"Normal"} ,{2,L"Fake Forward"} });
 						}
+						GroupBoxEnd(_(L"Main"), 210);
 
-						case EMiscTabs::TAB_HVH:
+						GroupBoxStart();
 						{
-							GroupBoxStart();
-							{
-								CheckBox(Vars::AntiHack::AntiAim::Active, _(L"Anti-Aim master switch"));
-								ComboBox(Vars::AntiHack::AntiAim::Pitch, { { 0, _(L"None") }, { 1, _(L"Up") }, { 2, _(L"Down") }, { 3, _(L"Fake Up") }, { 4, _(L"Fake Down") } });
-								ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, _(L"None") }, { 1, _(L"Left") }, { 2, _(L"Right") }, { 3, _(L"Backwards") } });
-								ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, _(L"None") }, { 1, _(L"Left") }, { 2, _(L"Right") }, { 3, _(L"Backwards") } });
-							}
-							GroupBoxEnd(_(L"AntiAim"), 180);
-							GroupBoxStart();
-							{
 
-								CheckBox(Vars::Misc::CL_Move::Fakelag, _(L"Fakelag"));
-								CheckBox(Vars::Misc::CL_Move::FakelagOnKey, _(L"Fakelag on key"));
-								InputKey(Vars::Misc::CL_Move::FakelagKey, _(L"Fakelag key"));
-								InputInt(Vars::Misc::CL_Move::FakelagValue, 1, 14);
-							}
-							GroupBoxEnd(_(L"Fakelag"), 210);
-
-							break;
+							CheckBox(Vars::Misc::CL_Move::Enabled, _(L"Master switch to enable / disable all tickbase exploits."));
+							InputKey(Vars::Misc::CL_Move::RechargeKey, false);
+							InputKey(Vars::Misc::CL_Move::DoubletapKey, false);
+							InputKey(Vars::Misc::CL_Move::TeleportKey, false);
+							CheckBox(Vars::Misc::CL_Move::WaitForDT, _(L"Wait for DT."));
+							CheckBox(Vars::Misc::CL_Move::NotInAir, _(L"Doesn't DT in air."));
 						}
-						
-						/*
-						case EMiscTabs::TAB_RECHARGE:
-							GroupBoxStart();
-							{
+						GroupBoxEnd(_(L"Tickbase exploits"), 210);
 
-							}
-							GroupBoxEnd(_(L"Recharge Key"), 210);
-							break;
+						break;
+					}
 
-						case EMiscTabs::TAB_DOUBLETAP:
-							GroupBoxStart();
-							{
+					case EMiscTabs::TAB_HVH:
+					{
+						GroupBoxStart();
+						{
+							CheckBox(Vars::AntiHack::AntiAim::Active, _(L"Anti-Aim master switch"));
+							ComboBox(Vars::AntiHack::AntiAim::Pitch, { { 0, _(L"None") }, { 1, _(L"Up") }, { 2, _(L"Down") }, { 3, _(L"Fake Up") }, { 4, _(L"Fake Down") } });
+							ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, _(L"None") }, { 1, _(L"Left") }, { 2, _(L"Right") }, { 3, _(L"Backwards") } });
+							ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, _(L"None") }, { 1, _(L"Left") }, { 2, _(L"Right") }, { 3, _(L"Backwards") } });
+						}
+						GroupBoxEnd(_(L"AntiAim"), 180);
+						GroupBoxStart();
+						{
 
-							}
-							GroupBoxEnd(_(L"Recharge Key"), 210);
-							break;
+							CheckBox(Vars::Misc::CL_Move::Fakelag, _(L"Fakelag"));
+							CheckBox(Vars::Misc::CL_Move::FakelagOnKey, _(L"Fakelag on key"));
+							InputKey(Vars::Misc::CL_Move::FakelagKey, _(L"Fakelag key"));
+							InputInt(Vars::Misc::CL_Move::FakelagValue, 1, 14);
+						}
+						GroupBoxEnd(_(L"Fakelag"), 210);
 
-						case EMiscTabs::TAB_TELEPORT:
-							GroupBoxStart();
-							{
+						break;
+					}
 
-							}
-							GroupBoxEnd(_(L"Recharge Key"), 210);
-							break;
-							*/
+					/*
+					case EMiscTabs::TAB_RECHARGE:
+						GroupBoxStart();
+						{
+
+						}
+						GroupBoxEnd(_(L"Recharge Key"), 210);
+						break;
+
+					case EMiscTabs::TAB_DOUBLETAP:
+						GroupBoxStart();
+						{
+
+						}
+						GroupBoxEnd(_(L"Recharge Key"), 210);
+						break;
+
+					case EMiscTabs::TAB_TELEPORT:
+						GroupBoxStart();
+						{
+
+						}
+						GroupBoxEnd(_(L"Recharge Key"), 210);
+						break;
+						*/
 					}
 
 					break;
@@ -1813,14 +1814,14 @@ void CMenu::Run()
 					static std::wstring selected = {};
 					int config_count = 0;
 
-					for (const auto &entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+					for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
 					{
 						if (std::string(std::filesystem::path(entry).filename().string()).find(_(".seo")) == std::string_view::npos)
 							continue;
 
 						config_count++;
 					}
-					
+
 					GroupBoxStart();
 					{
 						if (config_count < 15)
@@ -1861,7 +1862,7 @@ void CMenu::Run()
 
 					GroupBoxStart();
 					{
-						for (const auto &entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+						for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
 						{
 							if (std::string(std::filesystem::path(entry).filename().string()).find(_(".seo")) == std::string_view::npos)
 								continue;
@@ -1879,91 +1880,92 @@ void CMenu::Run()
 				}
 
 				default: break;
+				}
+			}
+
+			DrawTooltip();
+
+			if (Vars::Visuals::Snow.m_Var)
+			{
+				struct SnowFlake_t {
+					float x = 0.0f, y = 0.0f, fall = 0.0f, drift = 0.0f;
+					int size = 1;
+				};
+
+				static std::vector<SnowFlake_t> SnowFlakes;
+				static const int Count = 500;
+				static bool Init = false;
+
+				if (!Init)
+				{
+					for (int n = 0; n < Count; n++)
+					{
+						SnowFlake_t Flake = {};
+						Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
+						Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
+						Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
+						Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
+						Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
+						SnowFlakes.push_back(Flake);
+					}
+
+					Init = true;
+				}
+
+				for (auto& Flake : SnowFlakes)
+				{
+					Flake.x += ((sinf(g_Interfaces.GlobalVars->curtime) * Flake.drift) * g_Interfaces.GlobalVars->interval_per_tick);
+					Flake.y += (Flake.fall * g_Interfaces.GlobalVars->interval_per_tick);
+
+					float Alpha = Math::MapFloat(Flake.y, 0.0f, static_cast<float>(g_ScreenSize.h - 200), 1.0f, 0.0f);
+
+					if (Alpha <= 0.0f)
+					{
+						Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
+						Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
+						Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
+						Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
+						Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
+					}
+
+					Color_t Color = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
+					g_Draw.Rect(static_cast<int>(Flake.x), static_cast<int>(Flake.y), Flake.size, Flake.size, Color);
+				}
 			}
 		}
 
-		DrawTooltip();
+		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
-		if (Vars::Visuals::Snow.m_Var)
-		{
-			struct SnowFlake_t {
-				float x = 0.0f, y = 0.0f, fall = 0.0f, drift = 0.0f;
-				int size = 1;
-			};
+		if (m_bOpen) {
+			//g_Draw.CornerRect(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, 5, 5, 1, 1, { 0, 0, 0, 255 });
 
-			static std::vector<SnowFlake_t> SnowFlakes;
-			static const int Count = 500;
-			static bool Init = false;
+			//Filling
+			g_Draw.Line(g_InputHelper.m_nMouseX + 1, g_InputHelper.m_nMouseY + 2, g_InputHelper.m_nMouseX + 1, g_InputHelper.m_nMouseY + 14, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 3, g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 13, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 4, g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 12, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 5, g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 13, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 6, g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 15, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 7, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 8, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 9, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 9, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 9, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 16, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 0, 0, 0, 255 });
 
-			if (!Init)
-			{
-				for (int n = 0; n < Count; n++)
-				{
-					SnowFlake_t Flake = {};
-					Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
-					Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
-					Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
-					Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
-					Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
-					SnowFlakes.push_back(Flake);
-				}
-
-				Init = true;
-			}
-
-			for (auto &Flake : SnowFlakes)
-			{
-				Flake.x += ((sinf(g_Interfaces.GlobalVars->curtime) * Flake.drift) * g_Interfaces.GlobalVars->interval_per_tick);
-				Flake.y += (Flake.fall * g_Interfaces.GlobalVars->interval_per_tick);
-
-				float Alpha = Math::MapFloat(Flake.y, 0.0f, static_cast<float>(g_ScreenSize.h - 200), 1.0f, 0.0f);
-
-				if (Alpha <= 0.0f)
-				{
-					Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
-					Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
-					Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
-					Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
-					Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
-				}
-
-				Color_t Color = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
-				g_Draw.Rect(static_cast<int>(Flake.x), static_cast<int>(Flake.y), Flake.size, Flake.size, Color);
-			}
+			//Outline
+			g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY + 15, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, g_InputHelper.m_nMouseX + 10, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 12, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 14, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 16, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 14, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 11, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 12, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 16, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 19, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 255, 255, 255, 255 });
+			g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 10, g_InputHelper.m_nMouseX + 11, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
 		}
-	}
-
-	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
-
-	if (m_bOpen) {
-		//g_Draw.CornerRect(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, 5, 5, 1, 1, { 0, 0, 0, 255 });
-
-		//Filling
-		g_Draw.Line(g_InputHelper.m_nMouseX + 1, g_InputHelper.m_nMouseY + 2, g_InputHelper.m_nMouseX + 1, g_InputHelper.m_nMouseY + 14, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 3, g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 13, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 4, g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 12, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 5, g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 13, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 6, g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 15, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 7, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 8, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 9, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 2, g_InputHelper.m_nMouseY + 9, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 9, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 17, { 0, 0, 0, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 16, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 0, 0, 0, 255 });
-
-		//Outline
-		g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY + 15, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, g_InputHelper.m_nMouseX + 10, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 3, g_InputHelper.m_nMouseY + 12, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 4, g_InputHelper.m_nMouseY + 14, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 5, g_InputHelper.m_nMouseY + 16, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 13, g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 14, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 11, g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 12, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 15, g_InputHelper.m_nMouseX + 8, g_InputHelper.m_nMouseY + 16, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 19, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 255, 255, 255, 255 });
-		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 10, g_InputHelper.m_nMouseX + 11, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
 	}
 }
 

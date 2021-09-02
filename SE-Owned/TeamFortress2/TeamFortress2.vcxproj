@@ -178,9 +178,18 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.cpp" />
@@ -191,6 +200,7 @@
     <ClCompile Include="TeamFortress2\Hooks\PanelHook\PanelHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
@@ -247,9 +257,19 @@
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imconfig.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_internal.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_textedit.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_truetype.h" />
+    <ClInclude Include="TeamFortress2\Features\What\What.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.h" />
@@ -260,9 +280,21 @@
     <ClInclude Include="TeamFortress2\Hooks\PanelHook\PanelHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shape.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9xof.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Classes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
@@ -577,6 +609,7 @@
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\pstdint.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\table32.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\table64.h" />
+    <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\MinHook.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\trampoline.h" />
     <ClInclude Include="TeamFortress2\Utils\Pattern\Pattern.h" />
@@ -586,6 +619,12 @@
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
     <ClInclude Include="TeamFortress2\Utils\WinAPI\WinAPI.h" />
     <ClInclude Include="TeamFortress2\Utils\XorStr\XorStr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

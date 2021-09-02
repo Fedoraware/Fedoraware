@@ -7,9 +7,9 @@ inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
 
 void CHooks::Init()
 {
-	if ( MH_Initialize() != MH_STATUS::MH_OK) {
-		WinAPI::MessageBoxW(0, _(L"MH failed to initialize!"), _(L"ERROR!"), MB_ICONERROR);
-		return;
+	MH_Initialize();
+	{
+		EndSceneHook::Init();
 	}
 
 	if (g_Interfaces.Client)
@@ -116,6 +116,8 @@ void CHooks::Init()
 
 		}
 	}
+
+	//EndSceneHook::Init();
 
 	//GetDrawPosition
 	{
