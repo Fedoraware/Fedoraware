@@ -183,6 +183,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 		ImGuiStyle* style = &ImGui::GetStyle();
 		ImVec4* colors = style->Colors;
+		auto& io = ImGui::GetIO();
 
 		colors[ImGuiCol_Text] = ImVec4(0.92f, 0.92f, 0.92f, 1.00f);
 		colors[ImGuiCol_TextDisabled] = ImVec4(0.44f, 0.44f, 0.44f, 1.00f);
@@ -249,6 +250,13 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		style->WindowMenuButtonPosition = ImGuiDir_Right;
 
 		style->DisplaySafeAreaPadding = ImVec2(4, 4);
+
+		auto m_font_config = ImFontConfig();
+		m_font_config.OversampleH = 1;
+		m_font_config.OversampleV = 1;
+		m_font_config.PixelSnapH = true;
+
+		Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 
 		/*
 		colors[ImGuiCol_Text] = mColor(Vars::Menu::Colors::Text); //ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
@@ -427,7 +435,45 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 				}
 				if (SettingsTab == 1) {
+					ImGui::BeginChild("Trigger");
+					{
+						ImGui::Columns(4);
+						{
+							ImGui::SetColumnWidth(0, 210);
+							ImGui::TextUnformatted("Global");
+							ImGui::Checkbox("Global###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
+							InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
+							ImGui::Checkbox("Ignore invulnerable###gTriggerIgnoreInvuln", &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The triggerbot will ignore targets who can't be damaged");
+							ImGui::Checkbox("Ignore cloaked###gTriggerIgnoreCloak", &Vars::Triggerbot::Global::IgnoreCloaked.m_Var); HelpMarker("The triggerbot will ignore spies who are cloaked");
+							ImGui::Checkbox("Ignore friend###gTriggerIgnoreFriend", &Vars::Triggerbot::Global::IgnoreFriends.m_Var); HelpMarker("The triggerbot will ignore steam friends");
 
+
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("Auto Airblast");
+
+						}
+						ImGui::NextColumn();
+						{
+							ImGui::SetColumnWidth(0, 210);
+							ImGui::TextUnformatted("Autoshoot");
+							ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); 
+							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
+							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
+							ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the triggerbot will try to shoot the targets head");
+							ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
+						}
+						ImGui::NextColumn();
+						{
+
+						}
+						ImGui::NextColumn();
+						{
+
+						}
+					}
+					ImGui::EndChild();
 				}
 				if (SettingsTab == 2) {
 

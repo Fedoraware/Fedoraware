@@ -5,6 +5,8 @@
 
 class CWhat
 {
+private:
+	ImFont* Normal;
 public:
 	bool menuOpen = false;
 	bool menuUnload = false;
