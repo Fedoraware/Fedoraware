@@ -324,7 +324,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
+		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_HorizontalScrollbar ))
 		{
 			ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(870, 540), ImGuiCond_Once);
@@ -359,8 +359,14 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				ImGui::PopStyleColor();
 				ImGui::Spacing();
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
-				if (ImGui::Button("Config", ImVec2(140 - 15, 29))) {
+				if (ImGui::Button("Colors", ImVec2(140 - 15, 29))) {
 					SettingsTab = 4;
+				}
+				ImGui::PopStyleColor();
+				ImGui::Spacing();
+				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
+				if (ImGui::Button("Config", ImVec2(140 - 15, 29))) {
+					SettingsTab = 5;
 				}
 				ImGui::PopStyleColor();
 				ImGui::Spacing();
@@ -378,7 +384,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Aimbot###Aim bot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 							ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
-							InputKeybind("Aimkey", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
+							InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 							ImGui::Checkbox("Aim at players", &Vars::Aimbot::Global::AimPlayers.m_Var); HelpMarker("The aimbot will aim at players");
 							ImGui::Checkbox("Aim at buildings", &Vars::Aimbot::Global::AimBuildings.m_Var); HelpMarker("The aimbot will aim at buildings");
 							ImGui::Checkbox("Ignore invulnerable", &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The aimbot will ignore players who can't be damaged");
@@ -437,11 +443,11 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				if (SettingsTab == 1) {
 					ImGui::BeginChild("Trigger");
 					{
-						ImGui::Columns(4);
+						ImGui::Columns(3);
 						{
-							ImGui::SetColumnWidth(0, 210);
+							ImGui::SetColumnWidth(0, 230);
 							ImGui::TextUnformatted("Global");
-							ImGui::Checkbox("Global###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
+							ImGui::Checkbox("Triggerbot###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
 							InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
 							ImGui::Checkbox("Ignore invulnerable###gTriggerIgnoreInvuln", &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The triggerbot will ignore targets who can't be damaged");
 							ImGui::Checkbox("Ignore cloaked###gTriggerIgnoreCloak", &Vars::Triggerbot::Global::IgnoreCloaked.m_Var); HelpMarker("The triggerbot will ignore spies who are cloaked");
@@ -450,33 +456,66 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Auto Airblast");
+							ImGui::TextUnformatted("Auto airblast");
+							ImGui::Checkbox("Active###gAAB", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
+							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
+							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Airblast FoV###gAABFoV", &Vars::Triggerbot::Blast::Fov.m_Var, 1, 60, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees the auto airblast's FoV will have");
 
 						}
 						ImGui::NextColumn();
 						{
-							ImGui::SetColumnWidth(0, 210);
-							ImGui::TextUnformatted("Autoshoot");
-							ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); 
-							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
-							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
-							ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the triggerbot will try to shoot the targets head");
-							ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
-						}
-						ImGui::NextColumn();
-						{
+							ImGui::SetColumnWidth(1, 210);
+							ImGui::TextUnformatted("Auto shoot"); 
+							ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
+							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var); HelpMarker("Auto shoot will target players");
+							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var); HelpMarker("Auto shoot will target buildings");
+							ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
+							ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
 
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("Auto detonate");
+							ImGui::Checkbox("Active###gAD", &Vars::Triggerbot::Detonate::Active.m_Var); HelpMarker("Auto detonate master switch");
+							ImGui::Checkbox("Stickybombs###gADs", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs");
+							ImGui::Checkbox("Detonator flares###gADd", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
 						}
 						ImGui::NextColumn();
-						{
+						{	
+							ImGui::TextUnformatted("Auto backstab");
+							ImGui::Checkbox("Active###gABS", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
+							ImGui::Checkbox("Rage mode###gABSr", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
+							ImGui::Checkbox("Silent###gABSs", &Vars::Triggerbot::Stab::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+							ImGui::Checkbox("Disguise after stab###gABSd", &Vars::Triggerbot::Stab::Disguise.m_Var); HelpMarker("Will apply the previous disguise after stabbing");
+							ImGui::Checkbox("Ignore razorback###gABSig", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Stab range", &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The range at which auto backstab will attempt to stab");
+
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("Auto uber");
+							ImGui::Checkbox("Active###gAU", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
+							ImGui::Checkbox("Only on friends###gAUf", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
+							ImGui::Checkbox("Uber self###gAUs", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Health left (%)###gAUhp", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); ImGui::PopItemWidth(); HelpMarker("The amount of health the heal target must be below to actiavte");
 
 						}
 					}
 					ImGui::EndChild();
 				}
 				if (SettingsTab == 2) {
-
+					ImGui::BeginChild("Visuals");
+					{
+						const auto draw_list_size = ImVec2(310, 260);
+						const char* items[] = { "AAAA",    "BBBB", "CCCC", "DDDD",  "EEEE", "FFFF",  "GGGG",  "HHHH", "IIII",   "JJJJ", "KKKK",
+											   "LLLLLLL", "MMMM", "NNNN", "OOOOO", "PPP",  "QQQQQ", "RRRRR", "SSSS", "TTTTTT", "UUU" };
+						int selectedItem = 4;
+						ImGui::PushItemWidth(100); 
+						ImGui::Combo("letters", &selectedItem, items, IM_ARRAYSIZE(items), 3); 
+						ImGui::PopItemWidth();
+					}
+					ImGui::EndChild();
 				}
 				if (SettingsTab == 3) {
 
