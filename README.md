@@ -25,3 +25,12 @@ Press HOME to open the menu
 - added a buggy dev textures thing that u need to rejoin to make work and half the time it crashes you
 - doubletap shifts 24 ticks if heavy, 20 if not
 - color chooser in menu now shows the color as the background of the color chooser
+
+![screenshot](https://i.imgur.com/Bhmsdqt.jpg)
+
+### Credits to:
+  - Spook953
+  - Lak3
+  - Me
+  - OxyGodmode
+  - JagneMK
