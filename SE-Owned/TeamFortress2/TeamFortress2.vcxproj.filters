@@ -477,9 +477,9 @@
     <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
+    <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
+    <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
   </ItemGroup>
 </Project>
