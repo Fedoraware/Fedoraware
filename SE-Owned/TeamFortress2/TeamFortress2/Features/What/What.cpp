@@ -158,6 +158,7 @@ ImVec4 to_vec4(float r, float g, float b, float a)
 	return ImVec4(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 }
 
+
 int SettingsTab = 0;
 
 ImVec4 mColor(Color_t color) {
@@ -171,6 +172,29 @@ Color_t vColor(ImVec4 color) {
 		(byte)(color.z * 255.0f),
 		(byte)(color.w * 255.0f)
 	};
+}
+
+void ColorPicker(const char* label, Color_t& color) {
+	ImVec4 FUCKOFF = mColor(color);
+	ImGui::PushItemWidth(150);
+	if (ImGui::ColorEdit4(label, &FUCKOFF.x)) {
+		color = vColor(FUCKOFF);
+	}
+	ImGui::PopItemWidth();
+}
+
+Color_t *vpColor(ImVec4 color) {
+	Color_t col = { (byte)(color.x * 255.0f),
+		(byte)(color.y * 255.0f),
+		(byte)(color.z * 255.0f),
+		(byte)(color.w * 255.0f) };
+	return &col;
+}
+
+float *cColor(ImVec4 color, Color_t &out) {
+	out = *vpColor(color);
+
+	return &color.x;
 }
 
 void CWhat::Render(IDirect3DDevice9* pDevice) {
@@ -518,10 +542,49 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					ImGui::EndChild();
 				}
 				if (SettingsTab == 3) {
+					//Misc
+					ImGui::BeginChild("Misc");
+					{
 
+					}
+					ImGui::EndChild();
 				}
 				if (SettingsTab == 4) {
+					//Colors
+					ImGui::BeginChild("Colors");
+					{
+						ColorPicker("Outline ESP", Colors::OutlineESP);
+						ColorPicker("Conditions", Colors::Cond);
+						ColorPicker("Target", Colors::Target);
+						ColorPicker("Invulnerable", Colors::Invuln);
+						ColorPicker("Cloaked", Colors::Cloak);
+						ColorPicker("Friend", Colors::Friend);
+						ColorPicker("Overheal", Colors::Overheal);
+						ColorPicker("Health pack", Colors::Health);
+						ColorPicker("Ammo pack", Colors::Ammo);
+						ColorPicker("Ubercharged", Colors::UberColor);
+						ColorPicker("RED team", Colors::TeamRed);
+						ColorPicker("BLU team", Colors::TeamBlu);
+						ColorPicker("Hand chams", Colors::Hands);
+						ColorPicker("Hand glow chams", Colors::HandsOverlay);
+						ColorPicker("Weapon chams", Colors::Weapon);
+						ColorPicker("Weapon glow chams", Colors::WeaponOverlay);
+						ColorPicker("World modulation", Colors::WorldModulation);
+						ColorPicker("Sky modulation", Colors::SkyModulation);
+						ColorPicker("Static prop modulation", Colors::StaticPropModulation);
+						ColorPicker("FoV circle", Colors::FOVCircle);
+						ColorPicker("Bone color", Colors::Bones);
+						ColorPicker("Bullet tracer", Colors::BulletTracer);
+					}
+					ImGui::EndChild();
+				}
+				if (SettingsTab == 5) {
+					//Config
+					ImGui::BeginChild("Config");
+					{
 
+					}
+					ImGui::EndChild();
 				}
 			}
 			ImGui::End();
