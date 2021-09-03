@@ -770,11 +770,6 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 	int w = Vars::Menu::InputBoxW;
 	int h = Vars::Menu::InputBoxH;
 
-	/*static bool active = false, old_active = active;
-	static float time = g_Interfaces.Engine->Time();
-	float elapsed = g_Interfaces.Engine->Time() - time;
-
-	if (old_active != active) {*/
 	static float time = g_Interfaces.Engine->Time();
 	float elapsed = g_Interfaces.Engine->Time() - time;
 	static CVar<int>* curr = nullptr, * prevv = curr;
@@ -783,13 +778,8 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 		prevv = curr;
 	}
 
-	//if (!active && elapsed > 0.1f && g_InputHelper.IsPressed(VK_LBUTTON))
 	if (curr == nullptr && elapsed > 0.1f && g_InputHelper.IsPressed(VK_LBUTTON))
 	{
-		/*if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h) {
-			active = true;
-			g_InputHelper.NullKey(VK_LBUTTON);
-		}*/
 		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h) {
 			curr = &output;
 			g_InputHelper.NullKey(VK_LBUTTON);
@@ -830,7 +820,6 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 
 	else
 	{
-		//time_notactive = g_Interfaces.Engine->Time();
 		if (curr == nullptr)
 			time_notactive = g_Interfaces.Engine->Time();
 		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output.m_Var).c_str());
