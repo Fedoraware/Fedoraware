@@ -2,7 +2,7 @@
 #include "../Vars.h"
 #include "ImGui/imgui_internal.h"
 #include "../Menu/InputHelper/InputHelper.h"
-
+#include "ImGui/imgui_stdlib.h"
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
 
@@ -531,13 +531,31 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				if (SettingsTab == 2) {
 					ImGui::BeginChild("Visuals");
 					{
-						const auto draw_list_size = ImVec2(310, 260);
-						const char* items[] = { "AAAA",    "BBBB", "CCCC", "DDDD",  "EEEE", "FFFF",  "GGGG",  "HHHH", "IIII",   "JJJJ", "KKKK",
-											   "LLLLLLL", "MMMM", "NNNN", "OOOOO", "PPP",  "QQQQQ", "RRRRR", "SSSS", "TTTTTT", "UUU" };
-						int selectedItem = 4;
-						ImGui::PushItemWidth(100); 
-						ImGui::Combo("letters", &selectedItem, items, IM_ARRAYSIZE(items), 3); 
-						ImGui::PopItemWidth();
+						ImGui::Columns(3);
+						{
+							ImGui::TextUnformatted("Players");
+							ImGui::Checkbox("Player ESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
+							static const char* textOutline[]{ "Off", "Text Only", "All" }; ImGui::PushItemWidth(100); ImGui::Combo("Text outline", &Vars::ESP::Main::Outline.m_Var, textOutline, IM_ARRAYSIZE(textOutline)); ImGui::PopItemWidth(); HelpMarker("Choose when to use an outline on elements drawn by ESP");
+							ImGui::Checkbox("Local ESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
+							static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates#ESPteam", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeammatesEsp, IM_ARRAYSIZE(ignoreTeammatesEsp)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
+							static const char* ignoreCloakedEsp[]{ "Off", "All", "Enemies only" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked#ESPcloak", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakedEsp, IM_ARRAYSIZE(ignoreCloakedEsp)); ImGui::PopItemWidth(); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
+							ImGui::Checkbox("Player name", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
+							ImGui::Checkbox("Name box", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
+							static const char* classEsp[]{ "Off", "Icon", "Text" }; ImGui::PushItemWidth(100); ImGui::Combo("Player class", &Vars::ESP::Players::Class.m_Var, classEsp, IM_ARRAYSIZE(classEsp)); ImGui::PopItemWidth(); HelpMarker("Will draw the class the player is");
+							ImGui::Checkbox("Player health", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
+							ImGui::Checkbox("Player health bar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
+							ImGui::Checkbox("Player conditions", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
+							static const char* uberESP
+
+						}
+						ImGui::NextColumn();
+						{
+							ImGui::TextUnformatted("Buildings");
+						}
+						ImGui::NextColumn();
+						{
+							ImGui::TextUnformatted("World");
+						}
 					}
 					ImGui::EndChild();
 				}
@@ -545,7 +563,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					//Misc
 					ImGui::BeginChild("Misc");
 					{
-
+						ImGui::InputText("Skybox", &Vars::Skybox::SkyboxName);
+						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var);
 					}
 					ImGui::EndChild();
 				}

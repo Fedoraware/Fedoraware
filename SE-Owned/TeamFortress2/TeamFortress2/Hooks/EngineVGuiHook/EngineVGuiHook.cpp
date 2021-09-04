@@ -177,7 +177,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
 							/ tanf(DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var) ? 30.0f : flFOV) / 2.0f) * g_ScreenSize.w;
 						Color_t clr = Colors::FOVCircle;
-						clr.a = static_cast<byte>(Vars::Visuals::AimFOVAlpha.m_Var);
 						g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
 					}
 				}

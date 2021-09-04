@@ -421,6 +421,7 @@ namespace Vars
 		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
+		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 
 		namespace CL_Move
@@ -455,5 +456,6 @@ namespace Vars
 	{
 		
 		inline std::string SkyboxName = "mr_04";
+		inline std::string nigger = "hello hello :)";
 	}
 }

@@ -313,7 +313,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			bool is_jumping = pCmd->buttons & IN_JUMP;
 		
 
-			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping))
+			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
 				if (!pLocal || !pLocal->IsAlive())
 					return;

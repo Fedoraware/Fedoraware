@@ -183,6 +183,7 @@
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_draw.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_tables.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_internal.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_rectpack.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_truetype.h" />

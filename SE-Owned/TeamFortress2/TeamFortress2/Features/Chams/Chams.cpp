@@ -3,7 +3,7 @@
 
 bool CChams::ShouldRun()
 {
-	return Vars::Chams::Main::Active.m_Var && !g_Interfaces.EngineVGui->IsGameUIVisible();
+	return /*Vars::Chams::Main::Active.m_Var && */!g_Interfaces.EngineVGui->IsGameUIVisible();
 }
 
 void CChams::DrawModel(CBaseEntity *pEntity)
@@ -92,8 +92,8 @@ void CChams::Render()
 		if (const auto &pRenderContext = g_Interfaces.MatSystem->GetRenderContext())
 		{
 			//Let's do this in advance if Glow is enabled.
-			if (Vars::Glow::Main::Active.m_Var)
-			{
+			/*if (Vars::Glow::Main::Active.m_Var)
+			{*/
 				ShaderStencilState_t StencilState = {};
 				StencilState.m_bEnable = true;
 				StencilState.m_nReferenceValue = 1;
@@ -103,7 +103,7 @@ void CChams::Render()
 				StencilState.m_ZFailOp = STENCILOPERATION_REPLACE;
 				StencilState.SetStencilState(pRenderContext);
 				m_bHasSetStencil = true;
-			}
+			//}
 
 			RenderPlayers(pLocal, pRenderContext);
 			RenderBuildings(pLocal, pRenderContext);

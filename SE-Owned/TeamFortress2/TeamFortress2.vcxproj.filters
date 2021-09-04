@@ -78,6 +78,7 @@
     <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
+    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -475,6 +476,7 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
     <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
+    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
