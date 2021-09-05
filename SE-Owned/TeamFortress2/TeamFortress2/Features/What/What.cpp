@@ -1,11 +1,11 @@
 #include "What.h"
 #include "../Vars.h"
+#include "../Visuals/Visuals.h"
 #include "ImGui/imgui_internal.h"
 #include "../Menu/InputHelper/InputHelper.h"
 #include "ImGui/imgui_stdlib.h"
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
-
 static void HelpMarker(const char* desc)
 {
 	ImGui::SameLine();
@@ -19,7 +19,8 @@ static void HelpMarker(const char* desc)
 		ImGui::EndTooltip();
 	}
 }
-
+ImVec4 whatthefuck = { 1.0f, 1.0f, 1.0f, 1.0f };
+int skyName = 0;
 bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 {
 	bool active = false;
@@ -152,28 +153,27 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 
 	return true;
 }
-
+void combo(const char * label, int * current_item, const char *const * items, int items_count, int popup_max_height_in_items = -1) {
+	ImGui::PushItemWidth(100);
+	ImGui::Combo(label, current_item, items, items_count, popup_max_height_in_items);
+	ImGui::PopItemWidth();
+}
 ImVec4 to_vec4(float r, float g, float b, float a)
 {
 	return ImVec4(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 }
-
-
 int SettingsTab = 0;
-
 ImVec4 mColor(Color_t color) {
 	return ImVec4(Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a));
 }
-
 Color_t vColor(ImVec4 color) {
 	return {
-		(byte)(color.x * 255.0f),
-		(byte)(color.y * 255.0f),
-		(byte)(color.z * 255.0f),
-		(byte)(color.w * 255.0f)
+		(byte)(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
+		(byte)(color.y * 256.0f > 255 ? 255 : color.y * 256.0f),
+		(byte)(color.z * 256.0f > 255 ? 255 : color.z * 256.0f),
+		(byte)(color.w * 256.0f > 255 ? 255 : color.w * 256.0f)
 	};
 }
-
 void ColorPicker(const char* label, Color_t& color) {
 	ImVec4 FUCKOFF = mColor(color);
 	ImGui::PushItemWidth(150);
@@ -182,7 +182,6 @@ void ColorPicker(const char* label, Color_t& color) {
 	}
 	ImGui::PopItemWidth();
 }
-
 Color_t *vpColor(ImVec4 color) {
 	Color_t col = { (byte)(color.x * 255.0f),
 		(byte)(color.y * 255.0f),
@@ -190,20 +189,22 @@ Color_t *vpColor(ImVec4 color) {
 		(byte)(color.w * 255.0f) };
 	return &col;
 }
-
 float *cColor(ImVec4 color, Color_t &out) {
 	out = *vpColor(color);
 
 	return &color.x;
 }
-
 void CWhat::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
+	static bool bColumnsWidthened = false;
+	bool modified_custom_style = false;
 
 	if (!bInitImGui) {
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(FindWindowA(0, "Team Fortress 2"));
 		ImGui_ImplDX9_Init(pDevice);
+
+		ImGui::SetColorEditOptions(ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_Uint8);	
 
 		ImGuiStyle* style = &ImGui::GetStyle();
 		ImVec4* colors = style->Colors;
@@ -337,8 +338,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		bInitImGui = true;
 	}
 
-	if (GetAsyncKeyState(VK_INSERT) & 1)
+	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
+	}
+
 
 	if (menuOpen)
 	{
@@ -348,10 +351,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_HorizontalScrollbar ))
+		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::PopStyleColor();
-			ImGui::SetWindowSize(ImVec2(870, 540), ImGuiCond_Once);
+			ImGui::SetWindowSize(ImVec2(950, 600), ImGuiCond_Once);
 
 			ImGui::Columns(2);
 			ImGui::SetColumnOffset(1, 140);
@@ -469,7 +472,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(3);
 						{
-							ImGui::SetColumnWidth(0, 230);
+							ImGui::SetColumnWidth(1, 230);
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Triggerbot###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
 							InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
@@ -533,28 +536,120 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(3);
 						{
+							ImGui::SetColumnWidth(0, 270);
 							ImGui::TextUnformatted("Players");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("ESP");
 							ImGui::Checkbox("Player ESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Player ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
 							static const char* textOutline[]{ "Off", "Text Only", "All" }; ImGui::PushItemWidth(100); ImGui::Combo("Text outline", &Vars::ESP::Main::Outline.m_Var, textOutline, IM_ARRAYSIZE(textOutline)); ImGui::PopItemWidth(); HelpMarker("Choose when to use an outline on elements drawn by ESP");
 							ImGui::Checkbox("Local ESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
-							static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates#ESPteam", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeammatesEsp, IM_ARRAYSIZE(ignoreTeammatesEsp)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
-							static const char* ignoreCloakedEsp[]{ "Off", "All", "Enemies only" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked#ESPcloak", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakedEsp, IM_ARRAYSIZE(ignoreCloakedEsp)); ImGui::PopItemWidth(); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
+							static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###ESPteam", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeammatesEsp, IM_ARRAYSIZE(ignoreTeammatesEsp)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
+							static const char* ignoreCloakedEsp[]{ "Off", "All", "Enemies only" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###ESPcloak", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakedEsp, IM_ARRAYSIZE(ignoreCloakedEsp)); ImGui::PopItemWidth(); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
 							ImGui::Checkbox("Player name", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
 							ImGui::Checkbox("Name box", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
 							static const char* classEsp[]{ "Off", "Icon", "Text" }; ImGui::PushItemWidth(100); ImGui::Combo("Player class", &Vars::ESP::Players::Class.m_Var, classEsp, IM_ARRAYSIZE(classEsp)); ImGui::PopItemWidth(); HelpMarker("Will draw the class the player is");
 							ImGui::Checkbox("Player health", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
 							ImGui::Checkbox("Player health bar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
 							ImGui::Checkbox("Player conditions", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
-							//static const char* uberESP
+							static const char* uberESP[]{ "Off", "Text", "Bar" }; ImGui::PushItemWidth(100); ImGui::Combo("Player ubercharge", &Vars::ESP::Players::Uber.m_Var, uberESP, IM_ARRAYSIZE(uberESP)); ImGui::PopItemWidth(); HelpMarker("Will draw how much ubercharge a medic has");
+							static const char* boxESP[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Player box", &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on players");
+							static const char* bonesESP[]{ "Off", "Custom color", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player bones", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
+							ImGui::Checkbox("Player GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
+							ImGui::Checkbox("Player lines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
+							ImGui::Checkbox("Player Dlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius", &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Chams");
+							ImGui::Checkbox("Player chams", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
+							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the player");
+							ImGui::Checkbox("Local chams", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Will draw chams on local player (thirdperson");
+							static const char* ignoreTeammatesChams[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###chamsteam", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeammatesChams, IM_ARRAYSIZE(ignoreTeammatesChams)); ImGui::PopItemWidth(); HelpMarker("Which teammates the chams will ignore drawing on");
+							ImGui::Checkbox("Chams on cosmetics", &Vars::Chams::Players::Wearables.m_Var); HelpMarker("Will draw chams on player cosmetics");
+							ImGui::Checkbox("Chams on weapons", &Vars::Chams::Players::Weapons.m_Var); HelpMarker("Will draw chams on player weapons");
+							ImGui::Checkbox("Chams through walls", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Will draw chams on the player regardless of if the player is actually visible");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Player chams opacity", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Glow");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
+							ImGui::Checkbox("Player glow", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
+							ImGui::Checkbox("Local rainbow glow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Local player glow is rainbow coloured");
+							static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
+							ImGui::Checkbox("Glow on cosmetics", &Vars::Glow::Players::Wearables.m_Var); HelpMarker("Will draw glow on player cosmetics");
+							ImGui::Checkbox("Glow on weapons", &Vars::Glow::Players::Weapons.m_Var); HelpMarker("Will draw glow on player weapons");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Player glow opacity", &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+							static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player glow color", &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+
 
 						}
 						ImGui::NextColumn();
 						{
+							ImGui::SetColumnWidth(1, 270);
 							ImGui::TextUnformatted("Buildings");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("ESP");
+							ImGui::Checkbox("Building ESP", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building ESP Opacity", &Vars::ESP::Buildings::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+							ImGui::Checkbox("Ignore team buildings###ESPbuildingsteam", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
+							ImGui::Checkbox("Building name", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
+							ImGui::Checkbox("Name box###buildingnamebox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
+							ImGui::Checkbox("Building health", &Vars::ESP::Buildings::Health.m_Var); HelpMarker("Will draw the building's health, as well as its max health");
+							ImGui::Checkbox("Building health bar", &Vars::ESP::Buildings::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the building has");
+							ImGui::Checkbox("Building conditions", &Vars::ESP::Buildings::Cond.m_Var); HelpMarker("Will draw what conditions the building is under");
+							ImGui::Checkbox("Building level", &Vars::ESP::Buildings::Level.m_Var); HelpMarker("Will draw what level the building is");
+							ImGui::Checkbox("Building owner", &Vars::ESP::Buildings::Owner.m_Var); HelpMarker("Shows who built the building");
+							static const char* boxESPb[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Building box", &Vars::ESP::Buildings::Box.m_Var, boxESPb, IM_ARRAYSIZE(boxESPb)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on buildings");
+							ImGui::Checkbox("Building lines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
+							ImGui::Checkbox("Building Dlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius###buildingsdlights", &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Chams");
+							ImGui::Checkbox("Building chams", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
+							static const char* pchamsbMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsbMaterials, IM_ARRAYSIZE(pchamsbMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the player");
+							ImGui::Checkbox("Ignore team buildings###Chamsbuildingsteam", &Vars::Chams::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw chams on your teams buildings");
+							ImGui::Checkbox("Chams through walls###buildingsignorez", &Vars::Chams::Buildings::IgnoreZ.m_Var); HelpMarker("Will draw chams on the building regardless of if the building is actually visible");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building chams opacity", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Glow");
+							ImGui::Checkbox("Building glow", &Vars::Glow::Buildings::Active.m_Var); HelpMarker("Player glow master switch");
+							ImGui::Checkbox("Ignore team buildings###glowbuildingsteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw glow on your teams buildings");
+							//static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+							static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow color", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
 						}
 						ImGui::NextColumn();
 						{
+							const char* skyNames[] = {
+								"Custom",
+								"sky_tf2_04",
+								"sky_upward",
+								"sky_dustbowl_01",
+								"sky_goldrush_01",
+								"sky_granary_01",
+								"sky_well_01",
+								"sky_gravel_01",
+								"sky_badlands_01",
+								"sky_hydro_01",
+								"sky_night_01",
+								"sky_nightfall_01",
+								"sky_trainyard_01",
+								"sky_stormfront_01",
+								"sky_morningsnow_01",
+								"sky_alpinestorm_01",
+								"sky_harvest_01",
+								"sky_harvest_night_01",
+								"sky_halloween",
+								"sky_halloween_night_01",
+								"sky_halloween_night2014_01",
+								"sky_island_01",
+								"sky_rainbow_01"
+							};
 							ImGui::TextUnformatted("World");
+
+
+							ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
+							ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
+							ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
 						}
 					}
 					ImGui::EndChild();
@@ -563,7 +658,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					//Misc
 					ImGui::BeginChild("Misc");
 					{
-						ImGui::InputText("Skybox", &Vars::Skybox::SkyboxName);
 						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var);
 					}
 					ImGui::EndChild();
@@ -572,6 +666,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					//Colors
 					ImGui::BeginChild("Colors");
 					{
+						if (ImGui::ColorEdit4("what the fuck", &whatthefuck.x)) {
+							whatthefuck = whatthefuck;
+						}
 						ColorPicker("Outline ESP", Colors::OutlineESP);
 						ColorPicker("Conditions", Colors::Cond);
 						ColorPicker("Target", Colors::Target);
@@ -594,6 +691,72 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("FoV circle", Colors::FOVCircle);
 						ColorPicker("Bone color", Colors::Bones);
 						ColorPicker("Bullet tracer", Colors::BulletTracer);
+						ImVec4* const colors = ImGui::GetCurrentContext()->Style.Colors;
+						ImGui::PushItemWidth(150);
+						if (ImGui::ColorEdit4("Background", &colors[ImGuiCol_WindowBg].x)) {
+							Vars::Menu::Colors::WindowBackground = vColor(colors[ImGuiCol_WindowBg]);
+							modified_custom_style = true;
+						}
+						if (ImGui::ColorEdit4("Item background", &colors[ImGuiCol_FrameBg].x)) {
+							Vars::Menu::Colors::WindowBackground = vColor(colors[ImGuiCol_FrameBg]);
+							modified_custom_style = true;
+						}
+						if (ImGui::ColorEdit4("Text", &colors[ImGuiCol_Text].x)) {
+							Vars::Menu::Colors::WindowBackground = vColor(colors[ImGuiCol_Text]);
+							modified_custom_style = true;
+						}
+						if (ImGui::ColorEdit4("Active item", &colors[ImGuiCol_ButtonActive].x)) {
+							Vars::Menu::Colors::WindowBackground = vColor(colors[ImGuiCol_ButtonActive]);
+							modified_custom_style = true;
+						}
+						if (ImGui::ColorEdit4("Title bar", &colors[ImGuiCol_TitleBg].x)) {
+							Vars::Menu::Colors::WindowBackground = vColor(colors[ImGuiCol_TitleBg]);
+							modified_custom_style = true;
+						}
+						ColorPicker("Outline", Vars::Menu::Colors::OutlineMenu);
+						ImGui::PopItemWidth();
+
+						// Change all colors using the above as base
+						if (modified_custom_style)
+						{
+							colors[ImGuiCol_PopupBg] = colors[ImGuiCol_WindowBg]; //colors[ImGuiCol_PopupBg].w = 0.92f;
+							colors[ImGuiCol_ChildBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ChildBg].w = 0.00f;
+							colors[ImGuiCol_MenuBarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_MenuBarBg].w = 0.57f;
+							colors[ImGuiCol_ScrollbarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ScrollbarBg].w = 1.00f;
+							colors[ImGuiCol_TextDisabled] = colors[ImGuiCol_Text]; colors[ImGuiCol_TextDisabled].w = 0.58f;
+							colors[ImGuiCol_Border] = colors[ImGuiCol_Text]; colors[ImGuiCol_Border].w = 0.30f;
+							colors[ImGuiCol_SeparatorActive] = colors[ImGuiCol_Text]; colors[ImGuiCol_SeparatorActive].w = 1.00f;
+							colors[ImGuiCol_PlotLines] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotLines].w = 0.63f;
+							colors[ImGuiCol_PlotHistogram] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotHistogram].w = 0.63f;
+							colors[ImGuiCol_FrameBgHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgHovered].w = 0.68f;
+							colors[ImGuiCol_FrameBgActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgActive].w = 1.00f;
+							colors[ImGuiCol_TitleBg] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBg].w = 0.45f;
+							colors[ImGuiCol_TitleBgCollapsed] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgCollapsed].w = 0.35f;
+							colors[ImGuiCol_TitleBgActive] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgActive].w = 0.58f;
+							colors[ImGuiCol_ScrollbarGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrab].w = 0.31f;
+							colors[ImGuiCol_ScrollbarGrabHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabHovered].w = 0.78f;
+							colors[ImGuiCol_ScrollbarGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabActive].w = 1.00f;
+							colors[ImGuiCol_CheckMark] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_CheckMark].w = 0.80f;
+							colors[ImGuiCol_SliderGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrab].w = 0.24f;
+							colors[ImGuiCol_SliderGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrabActive].w = 1.00f;
+							colors[ImGuiCol_Button] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Button].w = 0.44f;
+							colors[ImGuiCol_ButtonHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ButtonHovered].w = 0.86f;
+							colors[ImGuiCol_Header] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Header].w = 0.76f;
+							colors[ImGuiCol_HeaderHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderHovered].w = 0.86f;
+							colors[ImGuiCol_HeaderActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderActive].w = 1.00f;
+							colors[ImGuiCol_ResizeGrip] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGrip].w = 0.20f;
+							colors[ImGuiCol_ResizeGripHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripHovered].w = 0.78f;
+							colors[ImGuiCol_ResizeGripActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripActive].w = 1.00f;
+							colors[ImGuiCol_PlotLinesHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotLinesHovered].w = 1.00f;
+							colors[ImGuiCol_PlotHistogramHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotHistogramHovered].w = 1.00f;
+							colors[ImGuiCol_TextSelectedBg] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_TextSelectedBg].w = 0.43f;
+
+							colors[ImGuiCol_Tab] = colors[ImGuiCol_Button];
+							colors[ImGuiCol_TabActive] = colors[ImGuiCol_ButtonActive];
+							colors[ImGuiCol_TabHovered] = colors[ImGuiCol_ButtonHovered];
+							colors[ImGuiCol_TabUnfocused] = ImLerp(colors[ImGuiCol_Tab], colors[ImGuiCol_TitleBg], 0.80f);
+							colors[ImGuiCol_TabUnfocusedActive] = ImLerp(colors[ImGuiCol_TabActive], colors[ImGuiCol_TitleBg], 0.40f);
+						}
 					}
 					ImGui::EndChild();
 				}

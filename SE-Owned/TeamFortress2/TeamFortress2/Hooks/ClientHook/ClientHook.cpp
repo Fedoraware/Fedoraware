@@ -97,7 +97,10 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		}
 
 		case EClientFrameStage::FRAME_RENDER_START: {
-			g_Visuals.UpdateWorldModulation();
+			if (!g_GlobalInfo.unloadWndProcHook) {
+				g_Visuals.UpdateWorldModulation();
+				g_Visuals.UpdateSkyModulation();
+			}
 			break;
 		}
 

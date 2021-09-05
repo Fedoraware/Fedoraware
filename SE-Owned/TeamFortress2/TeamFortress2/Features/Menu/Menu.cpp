@@ -1592,6 +1592,7 @@ void CMenu::Run()
 								{ 7, L"Hot Rod" } });
 							CheckBox(Vars::Visuals::Skins::Acient, _(L"Acient"));
 							CheckBox(Vars::Visuals::Skins::Override, _(L"Override"));
+							CheckBox(Vars::Visuals::Skins::Australium, _(L"Aussie"));
 
 							if (Button(L"Set Current"))
 								g_AttributeChanger.m_bSet = true;

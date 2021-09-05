@@ -295,6 +295,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> ShowLocal{ true, L"Show Local" };
+			inline CVar<bool> LocalRainbow{ true, L"Local player is rainbow" };
 			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<bool> Wearables{ true, L"Render Wearables" };
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
@@ -391,6 +392,7 @@ namespace Vars
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
 		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
@@ -403,6 +405,7 @@ namespace Vars
 			inline CVar<int> Particle				{ 0, L"Particle" };
 			inline CVar<bool> Acient				{ false, L"Ancient" };
 			inline CVar<bool> Override				{ false, L"Style Override" };
+			inline CVar<bool> Australium				{ false, L"Australium" };
 		}
 	}
 
@@ -454,7 +457,7 @@ namespace Vars
 
 	namespace Skybox
 	{
-		
+		inline int skyboxnum = 0;
 		inline std::string SkyboxName = "mr_04";
 		inline std::string nigger = "hello hello :)";
 	}

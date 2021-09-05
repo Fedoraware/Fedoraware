@@ -372,6 +372,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::Glow::Players::Active);
 				SAVE_VAR(Vars::Glow::Players::ShowLocal);
+				SAVE_VAR(Vars::Glow::Players::LocalRainbow);
 				SAVE_VAR(Vars::Glow::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::Glow::Players::Wearables);
 				SAVE_VAR(Vars::Glow::Players::Weapons);
@@ -499,9 +500,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
 		}
@@ -810,6 +811,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::Glow::Players::Active);
 				LOAD_VAR(Vars::Glow::Players::ShowLocal);
+				LOAD_VAR(Vars::Glow::Players::LocalRainbow);
 				LOAD_VAR(Vars::Glow::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::Glow::Players::Wearables);
 				LOAD_VAR(Vars::Glow::Players::Weapons);
@@ -938,9 +940,9 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
 		}

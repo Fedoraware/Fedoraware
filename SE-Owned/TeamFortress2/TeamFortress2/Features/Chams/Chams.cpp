@@ -27,19 +27,6 @@ void CChams::Init()
 		\n}\n")
 	});
 
-	m_pMatFresnel = Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$color2\" \"[10 10 10]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[0.1 0.2 0.3]\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n}\n")
-	});
-
 	m_pMatBrick = Utils::CreateMaterial({
 		_("\"VertexLitGeneric\"\
 		\n{\
@@ -75,6 +62,10 @@ void CChams::Init()
 		\n\t\"$basetexture\" \"vgui/white_additive\"\
 		\n}\n")
 	});
+
+
+	m_pMatBlur		= g_Interfaces.MatSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
+
 }
 
 void CChams::Render()
@@ -133,7 +124,7 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
 				case 4: { bMatWasForced = true; return m_pMatBrick; }
-				case 5: { bMatWasForced = true; return m_pMatFresnel; }
+				case 5: { bMatWasForced = true; return m_pMatBlur; }
 				default: return nullptr;
 			}
 		}());
@@ -175,6 +166,7 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 
 		if (bMatWasForced) {
 			Color_t DrawColor = Utils::GetEntityDrawColor(Player);
+			//Color_t DrawColor = Utils::Rainbow();
 			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 		}
 
@@ -240,7 +232,7 @@ void CChams::RenderBuildings(CBaseEntity *pLocal, IMatRenderContext *pRenderCont
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
 				case 4: { bMatWasForced = true; return m_pMatBrick; }
-				case 5: { bMatWasForced = true; return m_pMatFresnel; }
+				case 5: { bMatWasForced = true; return m_pMatBlur; }
 				default: return nullptr;
 			}
 		}());
@@ -302,7 +294,7 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
 				case 4: { bMatWasForced = true; return m_pMatBrick; }
-				case 5: { bMatWasForced = true; return m_pMatFresnel; }
+				case 5: { bMatWasForced = true; return m_pMatBlur; }
 				default: return nullptr;
 			}
 		}());

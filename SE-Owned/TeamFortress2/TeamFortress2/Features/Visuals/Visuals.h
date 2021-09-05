@@ -14,6 +14,7 @@ public:
 	void ThirdPerson();
 	void ModulateWorld();
 	void UpdateWorldModulation();
+	void UpdateSkyModulation();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
 	void SkyboxChanger();

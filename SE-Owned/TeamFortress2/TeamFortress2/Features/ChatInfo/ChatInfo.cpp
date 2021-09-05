@@ -34,27 +34,16 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
 		{
 			int nLocalTeam = pLocal->GetTeamNum();
-			/*
 			const char* CathookName = pEvent->GetName();
-			int CathookLine = pEvent->GetInt(_("line"), -1);
-			int CathookPanel = pEvent->GetInt(_("panel"), -1);
-			float CathookX = pEvent->GetFloat(_("x"), -1.f);
-			float CathookY = pEvent->GetFloat(_("y"), -1.f);
+			int CathookLine = pEvent->GetInt("line", -1);
+			int CathookPanel = pEvent->GetInt("panel", -1);
+			float CathookX = pEvent->GetFloat("x", -1.f);
+			float CathookY = pEvent->GetFloat("y", -1.f);
 
-			if (strstr(CathookName, _("cl_drawline"))) {
-				if (CathookLine == 0 && CathookPanel == 2) {
-					if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f) {
-						if (const auto& pEntity = GET_PLAYER_USERID(pEvent->GetInt(_("userid")))) {
-							int nIndex = pEntity->GetIndex();
-							PlayerInfo_t pi;
-							g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
-							char szBuff[255];
-							sprintf(szBuff, _("\x4[Cathook Identifier]\x3%s is a CAT"), pi.name);
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, szBuff);
-						}
-					}
-				}
-			}*/
+			if (strstr(CathookName, "cl_drawline"))
+				if (CathookLine == 0 && CathookPanel == 2)
+					if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f)
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");
 
 			if (!szEvent.compare(_("player_changeclass")))
 			{

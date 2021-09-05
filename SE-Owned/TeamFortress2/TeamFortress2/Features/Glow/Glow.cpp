@@ -147,10 +147,22 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Players::Color.m_Var == 0)
-					DrawColor = Utils::GetEntityDrawColor(Player);
-
-				else DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
+				if (Vars::Glow::Players::Color.m_Var == 0) {
+					if (Vars::Glow::Players::LocalRainbow.m_Var) {
+						if (bIsLocal) {
+							DrawColor = Utils::Rainbow();
+						}
+						else {
+							DrawColor = Utils::GetEntityDrawColor(Player);
+						}
+					}
+					else {
+						DrawColor = Utils::GetEntityDrawColor(Player);
+					}
+				}
+				else {
+					DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
+				}
 
 				m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha.m_Var });
 

@@ -105,6 +105,9 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 					if (pLocal && pWeapon)
 					{
+						/*const int nInsex = pWeapon->GetItemDefIndex();
+						g_Draw.String(FONT_MENU, g_ScreenSize.c, g_ScreenSize.h / 2, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, std::to_string(nInsex).data());
+						*/
 						if (pLocal->GetLifeState() == LIFE_ALIVE)
 						{
 

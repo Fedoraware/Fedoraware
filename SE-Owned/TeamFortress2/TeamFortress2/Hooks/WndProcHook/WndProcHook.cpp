@@ -7,10 +7,6 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 LONG __stdcall WndProcHook::Hook(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (g_GlobalInfo.unloadWndProcHook) {
-		return 0;
-	}
-
 	if (g_What.menuOpen) {
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		return 1;
