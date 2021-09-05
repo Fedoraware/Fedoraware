@@ -1,6 +1,7 @@
 #include "ChatInfo.h"
 
 #include "../Vars.h"
+#include "../Misc/Misc.h"
 
 #define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
 #define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
@@ -15,6 +16,7 @@ void CChatInfo::AddListeners()
 	g_Interfaces.GameEvent->AddListener(this, _("player_activate"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("player_disconnect"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("player_connect"), true);
+	g_Interfaces.GameEvent->AddListener(this, _("vote_cast"), true);
 }
 
 void CChatInfo::RemoveListeners()
@@ -28,6 +30,8 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 
 	if (pEvent)
 	{
+		g_Misc.VoteRevealer(*pEvent);
+
 		const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
 		const std::string_view szEvent(pEvent->GetName());
 
@@ -58,7 +62,7 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 						if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
 						{
 							char szBuff[255];
-							sprintf(szBuff, _("\x4[SEO] \x3%s is now %s"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
+							sprintf(szBuff, _("\x4[FeD] \x3%s is now %s"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
 							//sprintf(szBuff, _("\x0x0\x1x1\x2x2\x3x3\x4x4\x5x5\x6x6\x7x7\x8x8\x9x9\x10x10\x11x11\x12x12\x13x13\x14x14\x15x15"));//, pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
 							//sprintf(szBuff, _("\x1x1\n\x2x2\n\x3x3\n\x4x4\n\x5x5\n\x6x6\n\x7x7\n\x8x8\n\x9x9"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, szBuff);

@@ -79,6 +79,7 @@
     <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

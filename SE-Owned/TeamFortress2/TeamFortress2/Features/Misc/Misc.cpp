@@ -120,6 +120,29 @@ void CMisc::NoPush() {
 	}
 }
 
+void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
+{
+	if (Vars::Misc::VoteRevealer.m_Var) {
+		const auto entity = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("entityid"));
+		if (!entity || !entity->IsPlayer())
+			return;
+		const auto votedYes = pEvent.GetInt("vote_option") == 0;
+		const auto isLocal = g_EntityCache.m_pLocal;
+		PlayerInfo_t pi;
+		g_Interfaces.Engine->GetPlayerInfo(entity->GetIndex(), &pi);
+		char szBuff[255];
+		sprintf(szBuff, _("\x4[FeD] \x3%s voted %s"), pi.name, votedYes ? "F1" : "F2");
+		if (Vars::Misc::VotesInChat.m_Var) {
+			const char* sayCmd = "say_party ";
+			char buffer[256];
+			strncpy(buffer, sayCmd, sizeof(buffer));
+			strncat(buffer, szBuff, sizeof(buffer));
+			g_Interfaces.Engine->ClientCmd_Unrestricted(buffer);
+		}
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, szBuff);
+	}
+}
+
 void CMisc::AutoJump(CUserCmd *pCmd)
 {
 	if (const auto &pLocal = g_EntityCache.m_pLocal)

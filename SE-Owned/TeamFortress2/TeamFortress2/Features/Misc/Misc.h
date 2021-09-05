@@ -19,6 +19,7 @@ public:
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);
 	void NoPush();
+	void VoteRevealer(CGameEvent& event) noexcept;
 	float currentcommandforwardmove = 0.0f;
 	float currentcommandsidemove = 0.0f;
 	float currentspeed = 0.0f;

@@ -425,6 +425,8 @@ namespace Vars
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
+		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
+		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 
 		namespace CL_Move

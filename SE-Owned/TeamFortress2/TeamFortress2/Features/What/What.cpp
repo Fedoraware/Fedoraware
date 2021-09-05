@@ -644,12 +644,38 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								"sky_island_01",
 								"sky_rainbow_01"
 							};
-							ImGui::TextUnformatted("World");
+							ImGui::TextUnformatted("Pickups");
+							ImGui::TextUnformatted("ESP");
+							ImGui::Checkbox("Pickups ESP", &Vars::ESP::World::Active.m_Var); HelpMarker("Pickup ESP master switch");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickups ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+							ImGui::Checkbox("Healthpack ESP", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
+							ImGui::Checkbox("Ammopack ESP", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammo packs");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Chams");
+							ImGui::Checkbox("Pickup chams", &Vars::Chams::World::Active.m_Var); HelpMarker("Pickup chams master switch");
+							ImGui::Checkbox("Healthpack chams", &Vars::Chams::World::Health.m_Var); HelpMarker("Will draw chams on health packs");
+							ImGui::Checkbox("Ammopack chams", &Vars::Chams::World::Ammo.m_Var); HelpMarker("Will draw chams on ammo packs");
+							static const char* projectilesTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile chams", &Vars::Chams::World::Projectiles.m_Var, projectilesTeam, IM_ARRAYSIZE(projectilesTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw chams on projectiles");
+							//Gui::Checkbox("", &Vars::Chams::World::Projectiles.m_Var);
+							static const char* pchamspMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Pickup chams material", &Vars::Chams::World::Material.m_Var, pchamspMaterials, IM_ARRAYSIZE(pchamspMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the pickups");
+							//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
+							ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
+							ImGui::Spacing();
+							ImGui::TextUnformatted("Glow");
+							ImGui::Checkbox("Pickup glow", &Vars::Glow::World::Active.m_Var); HelpMarker("Pickup glow master switch");
+							ImGui::Checkbox("Healthpack glow", &Vars::Glow::World::Health.m_Var); HelpMarker("Will draw glow on health packs");
+							ImGui::Checkbox("Ammopack glow", &Vars::Glow::World::Ammo.m_Var); HelpMarker("Will draw glow on ammo packs");
+							static const char* projectilesgTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow", &Vars::Glow::World::Projectiles.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup glow opacity", &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 
-
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("Misc");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Aimbot FoV circle alpha", &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("How opaque the aimbot's FoV circle is");
 							ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 							ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
-							ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
+							ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
 						}
 					}
 					ImGui::EndChild();
@@ -666,9 +692,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					//Colors
 					ImGui::BeginChild("Colors");
 					{
-						if (ImGui::ColorEdit4("what the fuck", &whatthefuck.x)) {
-							whatthefuck = whatthefuck;
-						}
 						ColorPicker("Outline ESP", Colors::OutlineESP);
 						ColorPicker("Conditions", Colors::Cond);
 						ColorPicker("Target", Colors::Target);
