@@ -41,6 +41,8 @@ void CRadar::DrawRadar()
 	//Build the bg color with the wanted alpha.
 	Color_t clrBack = { 30, 30, 30, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
 
+
+
 	//Background
 	g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrBack);
 
