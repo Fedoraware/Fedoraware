@@ -354,7 +354,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::PopStyleColor();
-			ImGui::SetWindowSize(ImVec2(950, 600), ImGuiCond_Once);
+			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);
 
 			ImGui::Columns(2);
 			ImGui::SetColumnOffset(1, 140);
@@ -538,8 +538,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						{
 							ImGui::SetColumnWidth(0, 270);
 							ImGui::TextUnformatted("Players");
-							ImGui::Spacing();
-							if (ImGui::CollapsingHeader("ESP"))
+							if (ImGui::CollapsingHeader("ESP###playerESp", ImGuiTreeNodeFlags_DefaultOpen))
 							{
 								//ImGui::TextUnformatted("ESP");
 								ImGui::Checkbox("Player ESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
@@ -562,7 +561,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Player Dlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius", &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
 							}
-							if (ImGui::CollapsingHeader("Chams")) {
+							if (ImGui::CollapsingHeader("Chams###playerChamss")) {
 								ImGui::Checkbox("Player chams", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
 								static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the player");
 								ImGui::Checkbox("Local chams", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Will draw chams on local player (thirdperson");
@@ -572,7 +571,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Chams through walls", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Will draw chams on the player regardless of if the player is actually visible");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player chams opacity", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
 							}
-							if (ImGui::CollapsingHeader("Glow")) {
+							if (ImGui::CollapsingHeader("Glow###playerGloww")) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
 								ImGui::Checkbox("Player glow", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
 								ImGui::Checkbox("Local rainbow glow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Local player glow is rainbow coloured");
@@ -588,36 +587,36 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						{
 							ImGui::SetColumnWidth(1, 270);
 							ImGui::TextUnformatted("Buildings");
-							ImGui::Spacing();
-							ImGui::TextUnformatted("ESP");
-							ImGui::Checkbox("Building ESP", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building ESP Opacity", &Vars::ESP::Buildings::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
-							ImGui::Checkbox("Ignore team buildings###ESPbuildingsteam", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
-							ImGui::Checkbox("Building name", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
-							ImGui::Checkbox("Name box###buildingnamebox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
-							ImGui::Checkbox("Building health", &Vars::ESP::Buildings::Health.m_Var); HelpMarker("Will draw the building's health, as well as its max health");
-							ImGui::Checkbox("Building health bar", &Vars::ESP::Buildings::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the building has");
-							ImGui::Checkbox("Building conditions", &Vars::ESP::Buildings::Cond.m_Var); HelpMarker("Will draw what conditions the building is under");
-							ImGui::Checkbox("Building level", &Vars::ESP::Buildings::Level.m_Var); HelpMarker("Will draw what level the building is");
-							ImGui::Checkbox("Building owner", &Vars::ESP::Buildings::Owner.m_Var); HelpMarker("Shows who built the building");
-							static const char* boxESPb[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Building box", &Vars::ESP::Buildings::Box.m_Var, boxESPb, IM_ARRAYSIZE(boxESPb)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on buildings");
-							ImGui::Checkbox("Building lines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
-							ImGui::Checkbox("Building Dlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius###buildingsdlights", &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
-							ImGui::Spacing();
-							ImGui::TextUnformatted("Chams");
-							ImGui::Checkbox("Building chams", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
-							static const char* pchamsbMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsbMaterials, IM_ARRAYSIZE(pchamsbMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the player");
-							ImGui::Checkbox("Ignore team buildings###Chamsbuildingsteam", &Vars::Chams::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw chams on your teams buildings");
-							ImGui::Checkbox("Chams through walls###buildingsignorez", &Vars::Chams::Buildings::IgnoreZ.m_Var); HelpMarker("Will draw chams on the building regardless of if the building is actually visible");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building chams opacity", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
-							ImGui::Spacing();
-							ImGui::TextUnformatted("Glow");
-							ImGui::Checkbox("Building glow", &Vars::Glow::Buildings::Active.m_Var); HelpMarker("Player glow master switch");
-							ImGui::Checkbox("Ignore team buildings###glowbuildingsteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw glow on your teams buildings");
-							//static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
-							static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow color", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+							if (ImGui::CollapsingHeader("ESP###buildingESP", ImGuiTreeNodeFlags_DefaultOpen)) {
+								ImGui::Checkbox("Building ESP", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building ESP Opacity", &Vars::ESP::Buildings::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+								ImGui::Checkbox("Ignore team buildings###ESPbuildingsteam", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
+								ImGui::Checkbox("Building name", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
+								ImGui::Checkbox("Name box###buildingnamebox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
+								ImGui::Checkbox("Building health", &Vars::ESP::Buildings::Health.m_Var); HelpMarker("Will draw the building's health, as well as its max health");
+								ImGui::Checkbox("Building health bar", &Vars::ESP::Buildings::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the building has");
+								ImGui::Checkbox("Building conditions", &Vars::ESP::Buildings::Cond.m_Var); HelpMarker("Will draw what conditions the building is under");
+								ImGui::Checkbox("Building level", &Vars::ESP::Buildings::Level.m_Var); HelpMarker("Will draw what level the building is");
+								ImGui::Checkbox("Building owner", &Vars::ESP::Buildings::Owner.m_Var); HelpMarker("Shows who built the building");
+								static const char* boxESPb[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Building box", &Vars::ESP::Buildings::Box.m_Var, boxESPb, IM_ARRAYSIZE(boxESPb)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on buildings");
+								ImGui::Checkbox("Building lines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
+								ImGui::Checkbox("Building Dlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius###buildingsdlights", &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
+							}
+							if (ImGui::CollapsingHeader("Chams###buildingchamss")) {
+								ImGui::Checkbox("Building chams", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
+								static const char* pchamsbMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsbMaterials, IM_ARRAYSIZE(pchamsbMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the player");
+								ImGui::Checkbox("Ignore team buildings###Chamsbuildingsteam", &Vars::Chams::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw chams on your teams buildings");
+								ImGui::Checkbox("Chams through walls###buildingsignorez", &Vars::Chams::Buildings::IgnoreZ.m_Var); HelpMarker("Will draw chams on the building regardless of if the building is actually visible");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building chams opacity", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+							}
+							if (ImGui::CollapsingHeader("Glow###buildinggloww")) {
+								ImGui::Checkbox("Building glow", &Vars::Glow::Buildings::Active.m_Var); HelpMarker("Player glow master switch");
+								ImGui::Checkbox("Ignore team buildings###glowbuildingsteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw glow on your teams buildings");
+								//static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow color", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+							}
 						}
 						ImGui::NextColumn();
 						{
@@ -646,50 +645,49 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								"sky_island_01",
 								"sky_rainbow_01"
 							};
-							ImGui::TextUnformatted("Pickups");
-							ImGui::TextUnformatted("ESP");
-							ImGui::Checkbox("Pickups ESP", &Vars::ESP::World::Active.m_Var); HelpMarker("Pickup ESP master switch");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickups ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
-							ImGui::Checkbox("Healthpack ESP", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
-							ImGui::Checkbox("Ammopack ESP", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammo packs");
-							ImGui::Spacing();
-							ImGui::TextUnformatted("Chams");
-							ImGui::Checkbox("Pickup chams", &Vars::Chams::World::Active.m_Var); HelpMarker("Pickup chams master switch");
-							ImGui::Checkbox("Healthpack chams", &Vars::Chams::World::Health.m_Var); HelpMarker("Will draw chams on health packs");
-							ImGui::Checkbox("Ammopack chams", &Vars::Chams::World::Ammo.m_Var); HelpMarker("Will draw chams on ammo packs");
-							static const char* projectilesTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile chams", &Vars::Chams::World::Projectiles.m_Var, projectilesTeam, IM_ARRAYSIZE(projectilesTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw chams on projectiles");
-							//Gui::Checkbox("", &Vars::Chams::World::Projectiles.m_Var);
-							static const char* pchamspMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Pickup chams material", &Vars::Chams::World::Material.m_Var, pchamspMaterials, IM_ARRAYSIZE(pchamspMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the pickups");
-							//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
-							ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
-							ImGui::Spacing();
-							ImGui::TextUnformatted("Glow");
-							ImGui::Checkbox("Pickup glow", &Vars::Glow::World::Active.m_Var); HelpMarker("Pickup glow master switch");
-							ImGui::Checkbox("Healthpack glow", &Vars::Glow::World::Health.m_Var); HelpMarker("Will draw glow on health packs");
-							ImGui::Checkbox("Ammopack glow", &Vars::Glow::World::Ammo.m_Var); HelpMarker("Will draw glow on ammo packs");
-							static const char* projectilesgTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow", &Vars::Glow::World::Projectiles.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup glow opacity", &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+							ImGui::TextUnformatted("World");
+							if (ImGui::CollapsingHeader("ESP###worldesp", ImGuiTreeNodeFlags_DefaultOpen)) {
+								ImGui::Checkbox("Pickups ESP", &Vars::ESP::World::Active.m_Var); HelpMarker("Pickup ESP master switch");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickups ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+								ImGui::Checkbox("Healthpack ESP", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
+								ImGui::Checkbox("Ammopack ESP", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammo packs");
+							}
+							if (ImGui::CollapsingHeader("Chams###chamsworld")) {
+								ImGui::Checkbox("Pickup chams", &Vars::Chams::World::Active.m_Var); HelpMarker("Pickup chams master switch");
+								ImGui::Checkbox("Healthpack chams", &Vars::Chams::World::Health.m_Var); HelpMarker("Will draw chams on health packs");
+								ImGui::Checkbox("Ammopack chams", &Vars::Chams::World::Ammo.m_Var); HelpMarker("Will draw chams on ammo packs");
+								static const char* projectilesTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile chams", &Vars::Chams::World::Projectiles.m_Var, projectilesTeam, IM_ARRAYSIZE(projectilesTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw chams on projectiles");
+								//Gui::Checkbox("", &Vars::Chams::World::Projectiles.m_Var);
+								static const char* pchamspMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Pickup chams material", &Vars::Chams::World::Material.m_Var, pchamspMaterials, IM_ARRAYSIZE(pchamspMaterials)); ImGui::PopItemWidth(); HelpMarker("Which material the chams will apply to the pickups");
+								//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
+								ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
+							}
+							if (ImGui::CollapsingHeader("Glow###glowworldd")) {
+								ImGui::Checkbox("Pickup glow", &Vars::Glow::World::Active.m_Var); HelpMarker("Pickup glow master switch");
+								ImGui::Checkbox("Healthpack glow", &Vars::Glow::World::Health.m_Var); HelpMarker("Will draw glow on health packs");
+								ImGui::Checkbox("Ammopack glow", &Vars::Glow::World::Ammo.m_Var); HelpMarker("Will draw glow on ammo packs");
+								static const char* projectilesgTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow", &Vars::Glow::World::Projectiles.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup glow opacity", &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+							}
 
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Misc");
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Aimbot FoV circle alpha", &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("How opaque the aimbot's FoV circle is");
-							ImGui::Checkbox("Remove scope", &Vars::Visuals::RemoveScope.m_Var); HelpMarker("Will remove the scope overlay on sniper rifles");
-							ImGui::Checkbox("Remove zoom", &Vars::Visuals::RemoveZoom.m_Var); HelpMarker("Will make scoping not affect your FoV");
-							ImGui::Checkbox("Remove punch", &Vars::Visuals::RemovePunch.m_Var); HelpMarker("Will remove visual punch/recoil");
-							ImGui::Checkbox("Remove disguises", &Vars::Visuals::RemoveDisguises.m_Var); HelpMarker("Will remove disguises from spies, making them appear normally and improving aimbot accuracy");
-							ImGui::Checkbox("Remove taunts", &Vars::Visuals::RemoveTaunts.m_Var); HelpMarker("Will remove taunts on players, making them appear still and improving aimbot accuracy");
-							ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
-							ImGui::Spacing();
-							ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
-							InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
-							ImGui::Checkbox("Thirdperson show silent angles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your silent angles on thirdperson (not what others see)");
-							ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
-
-							ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
-							ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
-							ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
+							if (ImGui::CollapsingHeader("Miscellaneous")) {
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Aimbot FoV circle alpha", &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("How opaque the aimbot's FoV circle is");
+								ImGui::Checkbox("Remove scope", &Vars::Visuals::RemoveScope.m_Var); HelpMarker("Will remove the scope overlay on sniper rifles");
+								ImGui::Checkbox("Remove zoom", &Vars::Visuals::RemoveZoom.m_Var); HelpMarker("Will make scoping not affect your FoV");
+								ImGui::Checkbox("Remove punch", &Vars::Visuals::RemovePunch.m_Var); HelpMarker("Will remove visual punch/recoil");
+								ImGui::Checkbox("Remove disguises", &Vars::Visuals::RemoveDisguises.m_Var); HelpMarker("Will remove disguises from spies, making them appear normally and improving aimbot accuracy");
+								ImGui::Checkbox("Remove taunts", &Vars::Visuals::RemoveTaunts.m_Var); HelpMarker("Will remove taunts on players, making them appear still and improving aimbot accuracy");
+								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
+								ImGui::Spacing();
+								ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
+								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
+								ImGui::Checkbox("Thirdperson show silent angles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your silent angles on thirdperson (not what others see)");
+								ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
+								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
+								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
+								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
+							}
 							
 						}
 					}
