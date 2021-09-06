@@ -95,7 +95,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								Colors::OutlineESP);
 						}
 					}
-				}
+				}	
 
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.m_Var)
