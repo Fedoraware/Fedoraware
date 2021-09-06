@@ -16,6 +16,19 @@ void CChams::DrawModel(CBaseEntity *pEntity)
 
 void CChams::Init()
 {
+	m_pMatFlat2 = Utils::CreateMaterial({
+	_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$bumpmap\" \"vgui/white_additive\"\
+		\n\t\"$color2\" \"[10 10 10]\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$selfillumfresnel\" \"1\"\
+		\n\t\"$selfillumfresnelminmaxexp\" \"[0.1 0.2 0.3]\"\
+		\n\t\"$selfillumtint\" \"[0 0 0]\"\
+		\n}\n")
+	});
+
 	m_pMatShaded = Utils::CreateMaterial({
 		_("\"VertexLitGeneric\"\
 		\n{\
@@ -125,6 +138,7 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
 				case 4: { bMatWasForced = true; return m_pMatBrick; }
 				case 5: { bMatWasForced = true; return m_pMatBlur; }
+				case 6: { bMatWasForced = true; return m_pMatFlat2; }
 				default: return nullptr;
 			}
 		}());

@@ -19,10 +19,19 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
 	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
-				pCmd->buttons |= IN_JUMP;
+		if (Vars::Misc::EdgeJumpKey.m_Var == 0x0){
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+					pCmd->buttons |= IN_JUMP;
+			}
+		}
+		else {
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming() && GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+					pCmd->buttons |= IN_JUMP;
+			}
 		}
 	}
 }
