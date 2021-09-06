@@ -132,14 +132,18 @@ public: //Everything else, lol
 			}
 		}
 
-		return (GetNextPrimaryAttack() < pLocal->GetTickBase() * g_Interfaces.GlobalVars->interval_per_tick);
+		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * g_Interfaces.GlobalVars->interval_per_tick;
+
+		return GetNextPrimaryAttack() <= flCurTime && pLocal->GetNextAttack() <= flCurTime;
 	}
 
 	__inline bool CanSecondaryAttack(CBaseEntity* pLocal) {
 		if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart())
 			return false;
 
-		return (GetNextSecondaryAttack() < (static_cast<float>(pLocal->GetTickBase()) * g_Interfaces.GlobalVars->interval_per_tick));
+		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * g_Interfaces.GlobalVars->interval_per_tick;
+
+		return GetNextSecondaryAttack() <= flCurTime && pLocal->GetNextAttack() <= flCurTime;
 	}
 
 	__inline bool IsInReload() {

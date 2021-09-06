@@ -103,16 +103,22 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(std::chrono::milliseconds(420));
+
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
-	g_ChatInfo.RemoveListeners();
 	g_Menu.m_bOpen = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
-	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	
+	g_ChatInfo.RemoveListeners();
 	g_Hooks.Release();
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
 	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
 
 	WinAPI::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 	return EXIT_SUCCESS;

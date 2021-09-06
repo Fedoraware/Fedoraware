@@ -99,7 +99,7 @@ void CPlayerArrows::Run()
 				continue;*/
 
 			Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-			Vec3 viewangless = pLocal->GetEyeAngles();
+			Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
 			viewangless.x = 0;
 			float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
 
