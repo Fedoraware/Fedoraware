@@ -220,15 +220,14 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 
-	float fInterp = g_ConVars.cl_interp->GetFloat();
-	float fLatency = (pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING));
+	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
 
 	float MAX_TIME = ProjInfo.m_flMaxTime;
 	float TIME_STEP = (MAX_TIME / 128.0f);
 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
-		float fCorrectTime = (fPredTime + fInterp + fLatency);
+		float fCorrectTime = (fPredTime + fLatency);
 		Vec3 vPredictedPos = Predictor.Extrapolate(fCorrectTime);
 
 		switch (pWeapon->GetWeaponID())
@@ -516,7 +515,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapo
 {
 	if (!GetTargets(pLocal, pWeapon))
 		return false;
-
+	
 	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
 	{
 		Target_t Target = g_AimbotGlobal.GetBestTarget(GetSortMethod());
@@ -532,6 +531,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapo
 	{
 		g_AimbotGlobal.SortTargets(GetSortMethod());
 
+		//instead of this just limit to like 4-6 targets, should save perf without any noticeable changes in functionality
 		for (auto &Target : g_AimbotGlobal.m_vecTargets)
 		{
 			if (!VerifyTarget(pLocal, pWeapon, pCmd, Target))
@@ -603,6 +603,9 @@ bool CAimbotProjectile::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 			}
 		}
 
+		//pssst..
+		//Dragon's Fury has a gauge (seen on the weapon model) maybe it would help for pSilent hmm..
+
 		else
 		{
 			if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack)
@@ -615,6 +618,8 @@ bool CAimbotProjectile::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 
 void CAimbotProjectile::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
 {
+	static int nLastTracerTick = pCmd->tick_count;
+
 	m_bIsFlameThrower = false;
 
 	if (!Vars::Aimbot::Projectile::Active.m_Var)
@@ -657,8 +662,9 @@ void CAimbotProjectile::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUs
 
 		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
-			if (Vars::Visuals::BulletTracer.m_Var) {
+			if (Vars::Visuals::BulletTracer.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
 				projectileTracer(pLocal, Target);
+				nLastTracerTick = pCmd->tick_count;
 			}
 
 			//g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, g_GlobalInfo.m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos

@@ -4,6 +4,9 @@
 
 #include "../MinHook/MinHook.h"
 
+#pragma warning (push)
+#pragma warning (disable : 26812) //unscoped enum
+
 namespace SEOHook
 {
 	//PURPOSE: Hooking VFuncs via a Detour
@@ -84,3 +87,5 @@ namespace SEOHook
 		}
 	};
 }
+
+#pragma warning (pop)

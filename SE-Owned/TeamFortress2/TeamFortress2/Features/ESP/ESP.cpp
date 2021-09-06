@@ -274,6 +274,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, { 0,0,0,180 });
 						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset - 2, wideth + 10, 2, LineColor);
+						offset -= 1;
 					}
 					g_Draw.String(FONT_NAME, middle, (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
 				}
@@ -290,6 +291,10 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				if (Vars::ESP::Players::Class.m_Var == 1 || Vars::ESP::Players::Class.m_Var == 3)
 				{
 					int offset = (Vars::ESP::Players::Name.m_Var ? g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall * 0.3f) : 0);
+
+					if (offset && Vars::ESP::Players::NameBox.m_Var)
+						offset += 2;
+
 					static const int nSize = 18;
 					g_Draw.Texture((x + (w / 2) - (nSize / 2)), ((y - offset) - nSize), nSize, nSize, Colors::White, nClassNum);
 				}
