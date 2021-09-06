@@ -63,12 +63,14 @@ void CPlayerArrows::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos, Co
 	float cx = static_cast<float>(g_ScreenSize.w / 2);
 	float cy = static_cast<float>(g_ScreenSize.h / 2);
 
-	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 400.0f, 200.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-	Color_t HeatColor = { 255, 0, 0, static_cast<byte>(fMap * 255.0f) };
+	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
+	Color_t HeatColor = color; 
+	HeatColor.a = static_cast<byte>(fMap * 255.0f);
 
-	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, color);
-	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, color);
-	g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, color);
+	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
+	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
+	g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, HeatColor);
+	//g_Draw.
 }
 
 void CPlayerArrows::Run()
@@ -97,12 +99,23 @@ void CPlayerArrows::Run()
 				continue;*/
 
 			Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-			float fFovToEnemy = Math::CalcFov(pLocal->GetEyeAngles(), vAngleToEnemy);
+			Vec3 viewangless = pLocal->GetEyeAngles();
+			viewangless.x = 0;
+			float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
+
+			/*
+			Vec3 vEntForward = {};
+			Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
+			Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
+			vToEnt.NormalizeInPlace();
+
+			if (vEntForward.Dot(vToEnt) < 0.5071f)
+				continue;*/
 
 			if (fFovToEnemy < Vars::Visuals::FieldOfView.m_Var)
 				continue;
 
-			if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
+			/*if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
 			{
 				CGameTrace Trace = {};
 				CTraceFilterWorldAndPropsOnly Filter = {};
@@ -111,7 +124,7 @@ void CPlayerArrows::Run()
 
 				if (Trace.flFraction < 1.0f)
 					continue;
-			}
+			}*/
 
 			m_vecPlayers.push_back(vEnemyPos);
 		}

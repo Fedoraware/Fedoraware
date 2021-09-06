@@ -52,6 +52,8 @@ namespace Vars
 			inline Color_t FeatureBackground	= { 255, 255, 255, 0 };
 			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
 		}
+
+		inline CVar<bool> LegacyMenu{ true, L"Legacy menu" };
 	}
 
 	namespace Aimbot
@@ -293,6 +295,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> ShowLocal{ true, L"Show Local" };
+			inline CVar<bool> LocalRainbow{ true, L"Local player is rainbow" };
 			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<bool> Wearables{ true, L"Render Wearables" };
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
@@ -389,6 +392,7 @@ namespace Vars
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
 		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
@@ -401,13 +405,14 @@ namespace Vars
 			inline CVar<int> Particle				{ 0, L"Particle" };
 			inline CVar<bool> Acient				{ false, L"Ancient" };
 			inline CVar<bool> Override				{ false, L"Style Override" };
+			inline CVar<bool> Australium				{ false, L"Australium" };
 		}
 	}
 
 	namespace Misc
 	{
 		inline CVar<bool> AutoJump				{ true, L"Auto Jump" };
-		inline CVar<bool> AutoStrafe			{ false, L"Auto Strafe" };
+		inline CVar<int> AutoStrafe				{ 0, L"Auto Strafe" };
 		inline CVar<bool> Directional			{ false, L"Directional" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
@@ -419,6 +424,9 @@ namespace Vars
 		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
+		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
+		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
+		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 
 		namespace CL_Move
@@ -451,7 +459,8 @@ namespace Vars
 
 	namespace Skybox
 	{
-		
+		inline int skyboxnum = 0;
 		inline std::string SkyboxName = "mr_04";
+		inline std::string nigger = "hello hello :)";
 	}
 }

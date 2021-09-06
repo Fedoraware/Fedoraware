@@ -127,6 +127,8 @@ void CAttributChanger::LoadConfig()
 
 void CAttributChanger::SetAttribute()
 {
+	static std::array<int, 46> australium_table{ 4, 7, 13, 14, 15, 16, 18, 19, 20, 21, 29, 36, 38, 45, 61, 132, 141, 194, 197, 200, 201, 202, 203, 205, 206, 207, 208, 211, 228, 424, 654, 658, 659, 662, 663, 664, 665, 669, 1000, 1004, 1006, 1007, 1078, 1082, 1085, 1149 };
+	static std::array<std::pair<int, int>, 12> redirects{ std::pair{ 264, 1071 }, std::pair{ 18, 205 }, std::pair{ 13, 200 }, std::pair{ 21, 208 }, std::pair{ 19, 206 }, std::pair{ 20, 207 }, std::pair{ 15, 202 }, std::pair{ 7, 197 }, std::pair{ 29, 211 }, std::pair{ 14, 201 }, std::pair{ 16, 203 }, std::pair{ 4, 194 } };
 	typedef void(__thiscall* fn)(CClientState*);
 	fn ForceFullUpdate = (fn)g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D"));
 

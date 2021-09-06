@@ -13,6 +13,9 @@
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
 
+#define SAVE_STRING(x) Save(_(L#x), x)
+#define LOAD_STRING(x) Load(_(L#x), x)
+
 #define SAVE_OTHER(x) Save(_(L#x), x)
 #define LOAD_OTHER(x) Load(_(L#x), x)
 
@@ -35,10 +38,19 @@ bool CConfigManager::Find(const wchar_t *name, std::wstring &output)
 	return false;
 }
 
+//int cum = XorStr("hello").Encrypt();
+
 void CConfigManager::Save(const wchar_t *name, bool val)
 {
 	char buffer[64];
 	sprintf_s(buffer, "%ls: %d", name, val);
+	m_Write << buffer << "\n";
+}
+
+void CConfigManager::Save(const wchar_t* name, std::string val)
+{
+	char buffer[128];
+	sprintf_s(buffer, "%ls: %s", name, val.c_str());
 	m_Write << buffer << "\n";
 }
 
@@ -61,6 +73,14 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	char buffer[64];
 	sprintf_s(buffer, "%ls: %d %d %d %d", name, val.r, val.g, val.b, val.a);
 	m_Write << buffer << "\n";
+}
+
+void CConfigManager::Load(const wchar_t* name, std::string& val)
+{
+	std::wstring line = {};
+
+	if (Find(name, line))
+		swscanf_s(line.c_str(), L"%*ls %s", name, &val);
 }
 
 void CConfigManager::Load(const wchar_t *name, bool &val)
@@ -352,6 +372,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::Glow::Players::Active);
 				SAVE_VAR(Vars::Glow::Players::ShowLocal);
+				SAVE_VAR(Vars::Glow::Players::LocalRainbow);
 				SAVE_VAR(Vars::Glow::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::Glow::Players::Wearables);
 				SAVE_VAR(Vars::Glow::Players::Weapons);
@@ -468,6 +489,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AutoStrafe);
 			SAVE_VAR(Vars::Misc::Directional);
 			SAVE_VAR(Vars::Misc::EdgeJump);
+			SAVE_VAR(Vars::Misc::AntiAFK);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -478,9 +500,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
 		}
@@ -542,6 +564,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
+			SAVE_STRING(Vars::Skybox::SkyboxName);
 		}
 
 		m_Write.close();
@@ -788,6 +811,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::Glow::Players::Active);
 				LOAD_VAR(Vars::Glow::Players::ShowLocal);
+				LOAD_VAR(Vars::Glow::Players::LocalRainbow);
 				LOAD_VAR(Vars::Glow::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::Glow::Players::Wearables);
 				LOAD_VAR(Vars::Glow::Players::Weapons);
@@ -905,6 +929,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::Directional);
+			SAVE_VAR(Vars::Misc::AntiAFK);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -915,9 +940,9 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
 		}
@@ -984,6 +1009,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
+			LOAD_STRING(Vars::Skybox::SkyboxName);
 		}
 
 		m_Read.close();

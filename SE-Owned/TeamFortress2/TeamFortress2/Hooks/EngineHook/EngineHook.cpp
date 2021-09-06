@@ -67,6 +67,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			dtTicks = MAX_NEW_COMMANDS;
 		}
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+			g_GlobalInfo.fast_stop = true;
 			while (g_GlobalInfo.m_nShifted < dtTicks)
 			{
 				if (!g_GlobalInfo.m_bShouldShift) {
@@ -79,7 +80,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 
 					if (pLocal->IsOnGround()) {
-						g_GlobalInfo.fast_stop = true;
 						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
 						g_GlobalInfo.m_nShifted++;
 					}

@@ -362,9 +362,11 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity *pLocal, CBaseEntity *pEntity)
 					Math::AngleVectors(pEntity->GetEyeAngles(), &vEntForward);
 					Vec3 vToEnt = pEntity->GetAbsOrigin() - pLocal->GetAbsOrigin();
 					vToEnt.NormalizeInPlace();
-                                        //reduced to 6.0f due to dumb misses on heavies TODO: make this better
+
+
+          //reduced to 6.0f due to dumb misses on heavies TODO: make this better
 					//if (vToEnt.Dot(vEntForward) > 0.1071f || (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4))
-						vPos.z += 6.0f;
+					vPos.z += 6.0f;
 
 					return vPos;
 				}

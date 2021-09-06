@@ -8,6 +8,7 @@
 #include "Features/Vars.h"
 
 #include "Features/Menu/Menu.h"
+#include "Features/What/What.h"
 
 #include "Features/Menu/InputHelper/InputHelper.h"
 #include "Features/Menu/ConfigManager/ConfigManager.h"
@@ -39,6 +40,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Chams.Init();
 	g_DMEChams.Init();
 	g_Visuals.Init();
+	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();
 	g_ChatInfo.AddListeners();
@@ -101,6 +103,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(std::chrono::milliseconds(420));
+	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
+	g_GlobalInfo.unloadWndProcHook = true;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	g_ChatInfo.RemoveListeners();
 	g_Menu.m_bOpen = false;

@@ -83,7 +83,7 @@ void CGlowEffect::Render()
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;
 
-		if (!Vars::Glow::Main::Active.m_Var || w < 1 || h < 1 || w > 4096 || h > 2160)
+		if (/*!Vars::Glow::Main::Active.m_Var ||*/ w < 1 || h < 1 || w > 4096 || h > 2160)
 			return;
 
 		if (g_Interfaces.EngineVGui->IsGameUIVisible())
@@ -147,10 +147,22 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Players::Color.m_Var == 0)
-					DrawColor = Utils::GetEntityDrawColor(Player);
-
-				else DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
+				if (Vars::Glow::Players::Color.m_Var == 0) {
+					if (Vars::Glow::Players::LocalRainbow.m_Var) {
+						if (bIsLocal) {
+							DrawColor = Utils::Rainbow();
+						}
+						else {
+							DrawColor = Utils::GetEntityDrawColor(Player);
+						}
+					}
+					else {
+						DrawColor = Utils::GetEntityDrawColor(Player);
+					}
+				}
+				else {
+					DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
+				}
 
 				m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha.m_Var });
 

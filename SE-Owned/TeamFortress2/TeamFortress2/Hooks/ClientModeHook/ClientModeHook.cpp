@@ -31,6 +31,7 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 }
 
 int chIdentify = 0;
+int antiAfk = 0;
 
 auto CathookMessage = []() -> void
 {
@@ -117,6 +118,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				{
 					if (pWeapon->GetClip1() == 0)
 						g_GlobalInfo.m_bWeaponCanAttack = false;
+				}
+			}
+		}
+	}
+
+	if (Vars::Misc::AntiAFK.m_Var) {
+		if (const auto& pLocal = g_EntityCache.m_pLocal) {
+			if (pLocal->IsAlive() && pLocal->GetVelocity().Lenght2D() == 0) {
+				antiAfk += 1;
+				if (antiAfk == 1000) {
+					pCmd->buttons |= IN_JUMP;
+					antiAfk = 0;
 				}
 			}
 		}

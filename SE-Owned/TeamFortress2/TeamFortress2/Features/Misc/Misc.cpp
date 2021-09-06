@@ -120,6 +120,29 @@ void CMisc::NoPush() {
 	}
 }
 
+void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
+{
+	if (Vars::Misc::VoteRevealer.m_Var) {
+		const auto entity = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("entityid"));
+		if (!entity || !entity->IsPlayer())
+			return;
+		const auto votedYes = pEvent.GetInt("vote_option") == 0;
+		const auto isLocal = g_EntityCache.m_pLocal;
+		PlayerInfo_t pi;
+		g_Interfaces.Engine->GetPlayerInfo(entity->GetIndex(), &pi);
+		char szBuff[255];
+		sprintf(szBuff, _("\x4[FeD] \x3%s voted %s"), pi.name, votedYes ? "F1" : "F2");
+		if (Vars::Misc::VotesInChat.m_Var) {
+			const char* sayCmd = "say_party ";
+			char buffer[256];
+			strncpy(buffer, sayCmd, sizeof(buffer));
+			strncat(buffer, szBuff, sizeof(buffer));
+			g_Interfaces.Engine->ClientCmd_Unrestricted(buffer);
+		}
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, szBuff);
+	}
+}
+
 void CMisc::AutoJump(CUserCmd *pCmd)
 {
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
@@ -259,6 +282,10 @@ void CMisc::CathookIdentify() {
 	};
 }
 
+bool pda = false;
+bool pda2 = false;
+bool pda3 = false;
+
 void CMisc::StopFast(CUserCmd* pCmd) {
 
 	if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && Vars::Misc::CL_Move::DoubletapKey.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
@@ -266,23 +293,38 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 		g_GlobalInfo.m_bShouldShift = true;
 	}
 
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (pLocal->IsOnGround()) {
 			float speed = pLocal->GetVelocity().Lenght2D();
 
-
 			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-				if (speed > 5.f) {
+				if (speed > 1.f) {
+					if (!pda) {
+						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 1");
+						pda = true;
+					}
 					if (pLocal->GetMaxSpeed() < 240)
 					{
 						pCmd->forwardmove = 0.f;
+
 					}
 					else {
 						pCmd->forwardmove = -pCmd->forwardmove / 4;
 					}
 					pCmd->sidemove = 0.f;
+					if (!pda2) {
+						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
+						pda2 = true;
+					}
 				}
 				else {
+					if (!pda3) {
+						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
+						pda3 = true;
+					}
+					pda = false;
+					pda2 = false;
 					g_GlobalInfo.fast_stop = false;
 				}
 			}
@@ -293,7 +335,7 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
 
-	if (Vars::Misc::AutoStrafe.m_Var && !Vars::Misc::Directional.m_Var)
+	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
@@ -302,7 +344,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
 		}
 	}
-	if (Vars::Misc::AutoStrafe.m_Var && Vars::Misc::Directional.m_Var)
+	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
@@ -313,7 +355,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			bool is_jumping = pCmd->buttons & IN_JUMP;
 		
 
-			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping))
+			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
 				if (!pLocal || !pLocal->IsAlive())
 					return;

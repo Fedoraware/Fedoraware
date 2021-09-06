@@ -3,6 +3,7 @@
 Press HOME to open the menu
 
 ## Differences to original SE-Owned:
+- ImGui menu
 - Pretty much every font changed
 - DUCKING flag added to ESP
 - Default config (default.seo)

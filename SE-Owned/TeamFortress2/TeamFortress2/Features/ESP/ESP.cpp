@@ -3,7 +3,7 @@
 
 bool CESP::ShouldRun()
 {
-	if (!Vars::ESP::Main::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (/*!Vars::ESP::Main::Active.m_Var ||*/ g_Interfaces.EngineVGui->IsGameUIVisible())
 		return false;
 
 	return true;

@@ -78,23 +78,28 @@ void CPlayerList::DrawPlayerNames()
 				int team = pEntity->GetTeamNum(); // spec = 1, red = 2, blu = 3
 				int classNum = pEntity->GetClassNum();
 				//Color_t teamColor = team ? Colors::TeamBlu : Colors::TeamRed;
-				switch (team) {
-				case 1:
-					//Spectator
-					teamColor = { 255, 255, 255, 255 };
-					break;
-				case 2:
-					//Red
-					teamColor = Colors::TeamRed;
-					break;
-				case 3:
-					//Blue
-					teamColor = Colors::TeamBlu;
-					break;
-				default:
-					//Unknown team
-					teamColor = { 0, 0, 0, 255 };
-					break;
+				if (!g_EntityCache.Friends[i]) {
+					switch (team) {
+						case 1:
+							//Spectator
+							teamColor = { 255, 255, 255, 255 };
+							break;
+						case 2:
+							//Red
+							teamColor = Colors::TeamRed;
+							break;
+						case 3:
+							//Blue
+							teamColor = Colors::TeamBlu;
+							break;
+						default:
+							//Unknown team
+							teamColor = { 0, 0, 0, 255 };
+							break;
+					}
+				}
+				else {
+					teamColor = Colors::Friend;
 				}
 
 				int nTexture = pEntity->GetClassNum();

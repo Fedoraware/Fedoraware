@@ -453,7 +453,7 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon,
 		CTraceFilterHitscan filter = { };
 		filter.pSkip = pLocal;
 
-		Utils::Trace(vTraceStart, vTraceEnd, (MASK_SHOT | CONTENTS_GRATE), &filter, &trace);
+		Utils::Trace(vTraceStart, vTraceEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
 
 		if (trace.entity != Target.m_pEntity)
 			return false;
@@ -492,7 +492,9 @@ void bulletTracer(CBaseEntity* pLocal, Target_t Target) {
 	Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : Target.m_vPos;
 	//Color_t Color = (Utils::Rainbow());
 	Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
-	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(pLocal->GetShootPos(), vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
+	Vec3 shootPos = pLocal->GetShootPos();
+	shootPos.z -= 5.0f;
+	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
 }
 
 

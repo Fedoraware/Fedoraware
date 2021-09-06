@@ -280,7 +280,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 						pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
 					}
 					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-					if (found2) {
+					if (found3) {
 						pVar3->SetIntValue(Vars::Chams::DME::WeaponRimMultiplier.m_Var);
 					}
 
