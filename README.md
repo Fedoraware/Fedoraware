@@ -3,6 +3,7 @@
 Press HOME to open the menu
 
 ## Differences to original SE-Owned:
+- ImGui menu
 - Pretty much every font changed
 - DUCKING flag added to ESP
 - Default config (default.seo)
@@ -25,3 +26,16 @@ Press HOME to open the menu
 - added a buggy dev textures thing that u need to rejoin to make work and half the time it crashes you
 - doubletap shifts 24 ticks if heavy, 20 if not
 - color chooser in menu now shows the color as the background of the color chooser
+![screenshot](https://i.imgur.com/Bhmsdqt.jpg)
+
+### Credits to:
+  - Spook953
+  - Lak3
+  - M-FeD (Me)
+  - OxyGodmode
+  - JAGNEmk
+
+### Some videos of the cheat:
+  - [TF2/FEDORAware] Best TF2 Paste? (by c1R) https://www.youtube.com/watch?v=7gDLPRXtdw8
+  - [TF2/FEDORAWARE] The Crew (by Josep) https://www.youtube.com/watch?v=7I44S9sSOcc
+  - [TF2] Casual Highlights #1 (by macedoniaN) https://www.youtube.com/watch?v=W3Gbv7uiImU
