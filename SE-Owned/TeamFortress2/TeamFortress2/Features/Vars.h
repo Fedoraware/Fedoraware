@@ -412,7 +412,7 @@ namespace Vars
 	namespace Misc
 	{
 		inline CVar<bool> AutoJump				{ true, L"Auto Jump" };
-		inline CVar<bool> AutoStrafe			{ false, L"Auto Strafe" };
+		inline CVar<int> AutoStrafe				{ 0, L"Auto Strafe" };
 		inline CVar<bool> Directional			{ false, L"Directional" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };

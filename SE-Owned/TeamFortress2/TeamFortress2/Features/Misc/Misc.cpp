@@ -335,7 +335,7 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
 
-	if (Vars::Misc::AutoStrafe.m_Var && !Vars::Misc::Directional.m_Var)
+	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
@@ -344,7 +344,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
 		}
 	}
-	if (Vars::Misc::AutoStrafe.m_Var && Vars::Misc::Directional.m_Var)
+	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
