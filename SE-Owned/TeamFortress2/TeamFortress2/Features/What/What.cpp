@@ -330,31 +330,26 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					SettingsTab = 0;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Triggerbot", ImVec2(140 - 15, 29))) {
 					SettingsTab = 1;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Visuals", ImVec2(140 - 15, 29))) {
 					SettingsTab = 2;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Misc", ImVec2(140 - 15, 29))) {
 					SettingsTab = 3;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Colours", ImVec2(140 - 15, 29))) {
 					SettingsTab = 4;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();
 				/*ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Config", ImVec2(140 - 15, 29))) {
 					SettingsTab = 5;
@@ -426,9 +421,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::Button("Load")) {
 						g_CFG.Load(selected.c_str());
 						selected.clear();
-						{
-						}
-
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Remove")) {
@@ -445,7 +437,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				if (SettingsTab == 0) {
 					ImGui::BeginChild("Global");
 					{
-						
 						ImGui::Columns(3);
 						{
 							ImGui::SetColumnWidth(0, 210);
@@ -758,6 +749,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								}
 								//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
 								ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup chams opacity", &Vars::Chams::World::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+							
 							}
 							if (ImGui::CollapsingHeader("Glow###glowworldd")) {
 								ImGui::Checkbox("Pickup glow", &Vars::Glow::World::Active.m_Var); HelpMarker("Pickup glow master switch");
@@ -779,7 +772,13 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
+								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Out of FoV arrows", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var,	 5.f, 180.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
+								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far until the arrows will not show");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How close until the arrows will be fully opaque");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
@@ -820,6 +819,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
 							ImGui::Checkbox("Votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
 							ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and again so you don't get kicked for idling");
+							ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 							ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
 							ImGui::Checkbox("Old menu", &Vars::Menu::LegacyMenu.m_Var); HelpMarker("Enable the old menu (home key)");
 						}

@@ -215,9 +215,6 @@ void CVisuals::ModulateWorld()
 	if (!Vars::Visuals::WorldModulation.m_Var)
 		return;
 
-	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
-	if (sv_cheats->GetInt() == 0) sv_cheats->SetValue(1);
-
 	ApplyModulation(Colors::WorldModulation);
 	ApplySkyboxModulation(Colors::SkyModulation);
 }

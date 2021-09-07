@@ -45,8 +45,10 @@ void CPlayerArrows::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos, Co
 	const float x2 = ((g_ScreenSize.w * 0.15) + 15.0f) * xrot;
 	const float y2 = ((g_ScreenSize.w * 0.15) + 15.0f) * yrot;
 
-	constexpr float arrow_angle = DEG2RAD(60.0f);
-	constexpr float arrow_lenght = 20.0f;
+	//constexpr float arrow_angle = DEG2RAD(60.0f);
+	float arrow_angle = DEG2RAD(Vars::Visuals::ArrowAngle.m_Var);
+	//constexpr float arrow_lenght = 20.0f;
+	float arrow_lenght = Vars::Visuals::ArrowLength.m_Var;
 
 	const Vec3 line{ x2 - x1, y2 - y1, 0.0f };
 	const float length = line.Lenght();
@@ -63,7 +65,8 @@ void CPlayerArrows::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos, Co
 	float cx = static_cast<float>(g_ScreenSize.w / 2);
 	float cy = static_cast<float>(g_ScreenSize.h / 2);
 
-	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
+	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
+	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var, Vars::Visuals::MinDist.m_Var, 0.0f, 1.0f), 0.0f, 1.0f);
 	Color_t HeatColor = color; 
 	HeatColor.a = static_cast<byte>(fMap * 255.0f);
 

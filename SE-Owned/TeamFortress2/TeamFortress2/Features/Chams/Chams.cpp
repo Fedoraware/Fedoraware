@@ -238,10 +238,10 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 				IMaterialVar* pVar2 = m_pMatFresnel->FindVar(_("$envmaptint"), &found2);
 				if (found2) {
 					if (bIsLocal && Vars::Glow::Players::LocalRainbow.m_Var) {
-						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) /* * 4 */, Color::TOFLOAT(Utils::Rainbow().g) /* * 4 */, Color::TOFLOAT(Utils::Rainbow().b) /* * 4 */);
 					}
 					else {
-						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) * 4, Color::TOFLOAT(DrawColor.g) * 4, Color::TOFLOAT(DrawColor.b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */, Color::TOFLOAT(DrawColor.g) /* * 4 */, Color::TOFLOAT(DrawColor.b) /* * 4 */);
 					}
 				}
 			}
@@ -366,7 +366,7 @@ void CChams::RenderBuildings(CBaseEntity *pLocal, IMatRenderContext *pRenderCont
 				}
 				IMaterialVar* pVar2 = m_pMatFresnel->FindVar(_("$envmaptint"), &found2);
 				if (found2) {
-					pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) * 4, Color::TOFLOAT(DrawColor.g) * 4, Color::TOFLOAT(DrawColor.b) * 4);
+					pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */, Color::TOFLOAT(DrawColor.g) /* * 4 */, Color::TOFLOAT(DrawColor.b) /* * 4 */);
 				}
 			}
 		}
@@ -457,7 +457,7 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 					}
 					IMaterialVar* pVar2 = m_pMatFresnel->FindVar(_("$envmaptint"), &found2);
 					if (found2) {
-						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) * 4, Color::TOFLOAT(DrawColor.g) * 4, Color::TOFLOAT(DrawColor.b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */, Color::TOFLOAT(DrawColor.g) /* * 4 */, Color::TOFLOAT(DrawColor.b) /* * 4 */);
 					}
 				}
 			}
@@ -492,7 +492,7 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 					}
 					IMaterialVar* pVar2 = m_pMatFresnel->FindVar(_("$envmaptint"), &found2);
 					if (found2) {
-						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) * 4, Color::TOFLOAT(DrawColor.g) * 4, Color::TOFLOAT(DrawColor.b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */, Color::TOFLOAT(DrawColor.g) /* * 4 */, Color::TOFLOAT(DrawColor.b) /* * 4 */);
 					}
 				}
 			}
@@ -535,7 +535,7 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 					}
 					IMaterialVar* pVar2 = m_pMatFresnel->FindVar(_("$envmaptint"), &found2);
 					if (found2) {
-						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) * 4, Color::TOFLOAT(DrawColor.g) * 4, Color::TOFLOAT(DrawColor.b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */, Color::TOFLOAT(DrawColor.g) /* * 4 */, Color::TOFLOAT(DrawColor.b) /* * 4 */);
 					}
 				}
 			}
