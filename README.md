@@ -13,20 +13,18 @@ Press home to open the old menu (has some things i haven't added to the new one 
 - Doubletap bar
 - Dragons fury added to projectile aimbot
 - "Glow" style overlay chams for viewmodels (weapon/arm)
-- brick chams (very cool)
-- other weird type of cham (also very cool)
+- Brick chams (very cool)
+- Other weird type of cham (also very cool)
 - Cathook identifier (havent figured out how to find out if others are cathook users yet though)
-- nullcore style useful buttons panel (thanks oxygodmode)
-- input normal std::strings (kinda)
-- directional autostrafe
-- fakelag
-- working nopush
-- kinda working fast stop for doubletap (in function autostrafe because i couldnt be bothered to put it somewhere else, so turn that on lol)
-- duck speed
-- changed world modulation to not affect the skybox
-- added a buggy dev textures thing that u need to rejoin to make work and half the time it crashes you
-- doubletap shifts 24 ticks if heavy, 20 if not
-- color chooser in menu now shows the color as the background of the color chooser
+- Nullcore style useful buttons panel (thanks oxygodmode)
+- Directional autostrafe
+- Fakelag
+- Working nopush
+- Kinda working fast stop for doubletap (in function autostrafe because i couldnt be bothered to put it somewhere else, so turn that on lol)
+- Duck speed
+- Changed world modulation to not affect the skybox
+- Added a buggy dev textures thing that u need to rejoin to make work and half the time it crashes you
+- Doubletap shifts 23 ticks if heavy, 20 if not
 ![screenshot](https://i.imgur.com/Bhmsdqt.jpg)
 
 ### Credits to:
