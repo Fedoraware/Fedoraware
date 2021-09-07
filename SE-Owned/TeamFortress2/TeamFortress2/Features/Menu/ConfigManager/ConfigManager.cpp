@@ -467,7 +467,15 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
-			
+			SAVE_VAR(Vars::Visuals::ArrowLength);
+			SAVE_VAR(Vars::Visuals::ArrowAngle);
+			SAVE_VAR(Vars::Visuals::MaxDist);
+			SAVE_VAR(Vars::Visuals::MinDist);
+				
+				
+				
+				
+
 
 #ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
@@ -491,6 +499,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
 			SAVE_VAR(Vars::Misc::AntiAFK);
+			SAVE_VAR(Vars::Misc::CheatsBypass);
+			SAVE_VAR(Vars::Misc::VoteRevealer);
+			SAVE_VAR(Vars::Misc::VotesInChat);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -553,6 +564,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::StaticPropModulation);
 			SAVE_OTHER(Colors::FOVCircle);
 			SAVE_OTHER(Colors::Bones);
+			SAVE_OTHER(Colors::BulletTracer);
+			SAVE_OTHER(Colors::FresnelBase);
+			SAVE_OTHER(Colors::FresnelTop);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -909,6 +923,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
+			LOAD_VAR(Vars::Visuals::ArrowLength);
+			LOAD_VAR(Vars::Visuals::ArrowAngle);
+			LOAD_VAR(Vars::Visuals::MaxDist);
+			LOAD_VAR(Vars::Visuals::MinDist);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
@@ -931,7 +949,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::EdgeJumpKey);
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::Directional);
-			SAVE_VAR(Vars::Misc::AntiAFK);
+			LOAD_VAR(Vars::Misc::AntiAFK);
+			LOAD_VAR(Vars::Misc::CheatsBypass);
+			LOAD_VAR(Vars::Misc::VoteRevealer);
+			LOAD_VAR(Vars::Misc::VotesInChat);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -995,7 +1016,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::StaticPropModulation);
 			LOAD_OTHER(Colors::FOVCircle);
 			LOAD_OTHER(Colors::Bones);
-
+			LOAD_OTHER(Colors::BulletTracer);
+			LOAD_OTHER(Colors::FresnelBase);
+			LOAD_OTHER(Colors::FresnelTop);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

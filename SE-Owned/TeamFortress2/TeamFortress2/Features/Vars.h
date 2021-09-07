@@ -396,6 +396,11 @@ namespace Vars
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
 		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
+		inline CVar<float> ArrowLength{ 20.f, L"Out of FOV arrow length" };
+		inline CVar<float> ArrowAngle{ 60.f, L"Out of FOV arrow angle" };
+		inline CVar<float> MaxDist{ 1000.f, L"How far until the arrows are no longer visible" };
+		inline CVar<float> MinDist{ 200.f, L"How many units till the arrows are fully opaque" };
+
 
 		namespace Skins
 		{
@@ -428,6 +433,7 @@ namespace Vars
 		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 
 		namespace CL_Move

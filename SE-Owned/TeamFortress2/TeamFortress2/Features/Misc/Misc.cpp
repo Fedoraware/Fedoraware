@@ -8,12 +8,23 @@ void CMisc::Run(CUserCmd* pCmd)
 	AutoStrafe(pCmd);
 	NoiseMakerSpam();
 	ChatSpam();
+	CheatsBypass();
 	StopFast(pCmd);
 	NoPush();
 	CathookIdentify();
 }
 
 static bool push = true;
+
+void CMisc::CheatsBypass() {
+	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
+	if (Vars::Misc::CheatsBypass.m_Var) {
+		if (sv_cheats->GetInt() == 0) sv_cheats->SetValue(1);
+	}
+	else {
+		sv_cheats->SetValue(1);
+	}
+}
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {

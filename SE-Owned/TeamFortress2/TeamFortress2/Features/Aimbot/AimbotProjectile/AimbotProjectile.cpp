@@ -605,6 +605,9 @@ bool CAimbotProjectile::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 
 		//pssst..
 		//Dragon's Fury has a gauge (seen on the weapon model) maybe it would help for pSilent hmm..
+		/*
+		if (pWeapon->GetWeaponID() == 109) {
+		}*/
 
 		else
 		{
