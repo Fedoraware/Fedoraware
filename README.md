@@ -33,6 +33,7 @@ Press home to open the old menu (has some things i haven't added to the new one 
   - M-FeD (Me)
   - OxyGodmode
   - JAGNEmk
+  - r00t
 
 ### Some videos of the cheat:
   - [TF2/FEDORAware] Best TF2 Paste? (by c1R) https://www.youtube.com/watch?v=7gDLPRXtdw8
