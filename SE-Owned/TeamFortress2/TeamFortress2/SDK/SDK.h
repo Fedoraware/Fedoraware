@@ -123,6 +123,8 @@ namespace Colors
 	inline Color_t FOVCircle =				{ 255, 255, 255, 255 };
 	inline Color_t Bones =					{ 255, 255, 255, 255 };
 	inline Color_t BulletTracer =			{ 255, 255, 255, 255 };
+	inline Color_t FresnelBase =			{ 0,0,0,255 };
+	inline Color_t FresnelTop = { 0,255,0,255 };
 }
 
 namespace Utils

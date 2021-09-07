@@ -4,7 +4,7 @@
 class CChams
 {
 private:
-	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny, * m_pMatBrick, * m_pMatFlat2;
+	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny, * m_pMatBrick, * m_pMatFresnelHDR0, * m_pMatFresnelHDR1, * m_pMatFresnel;;
 	IMaterial *m_pMatBlur;
 
 	std::map<CBaseEntity *, bool> m_DrawnEntities;
