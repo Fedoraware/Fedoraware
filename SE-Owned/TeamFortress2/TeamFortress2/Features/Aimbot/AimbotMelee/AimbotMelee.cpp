@@ -209,7 +209,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 
 void CAimbotMelee::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
 {
-	if (!Vars::Aimbot::Melee::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning)
+	if (!Vars::Aimbot::Melee::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 		return;
 
 	Target_t Target = { };

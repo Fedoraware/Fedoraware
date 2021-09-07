@@ -614,10 +614,13 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 		szCond += _(L"BLAST IMMUNE ");
 
 	if (nCondEx2 & TFCondEx2_BulletImmune)
-		szCond += _(L"BUlLET IMMUNE ");
+		szCond += _(L"BULLET IMMUNE ");
 
 	if (nCondEx2 & TFCondEx2_FireImmune)
 		szCond += _(L"FIRE IMMUNE ");
+
+	if (pEntity->GetHealth() > pEntity->GetMaxHealth())
+		szCond += _(L"HP+ ");
 
 	if ((nCond & TFCond_Ubercharged) || (nCond & TFCondEx_PhlogUber))
 		szCond += _(L"UBER ");
@@ -644,7 +647,7 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 		szCond += _(L"TAUNT ");
 
 	if (nCond & TFCond_Disguised)
-		szCond += _(L"DISGUISE ");
+		szCond += _(L"DISG ");
 
 	if (nCond & TFCond_Milked)
 		szCond += _(L"MILK ");
