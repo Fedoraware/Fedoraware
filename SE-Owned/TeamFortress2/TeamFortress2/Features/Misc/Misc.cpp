@@ -22,7 +22,7 @@ void CMisc::CheatsBypass() {
 		if (sv_cheats->GetInt() == 0) sv_cheats->SetValue(1);
 	}
 	else {
-		sv_cheats->SetValue(1);
+		sv_cheats->SetValue(0);
 	}
 }
 

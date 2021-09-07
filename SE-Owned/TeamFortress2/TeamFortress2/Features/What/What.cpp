@@ -926,7 +926,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							const char* realYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to look horizontally");
 							const char* fakeYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to appear to look horizontally");
 							ImGui::Checkbox("Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var); HelpMarker("Fakelag master switch");
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 21, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
 							ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
 							InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
 						}

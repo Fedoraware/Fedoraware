@@ -91,8 +91,9 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
-				continue;
+			// But why?
+			/*if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
+				continue;*/ 
 
 			Vec3 vPos = Player->GetHitboxPos(HITBOX_BODY);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
