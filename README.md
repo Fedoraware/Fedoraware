@@ -1,7 +1,10 @@
 # Fedoraware (SE-Owned Public but awesome)
 
 Press insert to open the imgui menu
+
 Press home to open the old menu (has some things i haven't added to the new one yet)
+
+Build in release x86, debug crashes a LOT more
 
 ## Differences to original SE-Owned:
 - ImGui menu
