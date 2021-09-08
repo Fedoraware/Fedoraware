@@ -75,7 +75,13 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::Load(const wchar_t* name, std::string& val)
+{
+	std::wstring line = {};
 
+	if (Find(name, line))
+		swscanf_s(line.c_str(), L"%*ls %s", name, &val);
+}
 
 void CConfigManager::Load(const wchar_t *name, bool &val)
 {
@@ -109,37 +115,6 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
-	}
-}
-
-std::wstring widenn(const std::string& str)
-{
-	std::wostringstream wstm;
-	const std::ctype<wchar_t>& ctfacet =
-		std::use_facet< std::ctype<wchar_t> >(wstm.getloc());
-	for (size_t i = 0; i < str.size(); ++i)
-		wstm << ctfacet.widen(str[i]);
-	return wstm.str();
-}
-
-std::string narroww(const std::wstring& str)
-{
-	std::ostringstream stm;
-	const std::ctype<char>& ctfacet =
-		std::use_facet< std::ctype<char> >(stm.getloc());
-	for (size_t i = 0; i < str.size(); ++i)
-		stm << ctfacet.narrow(str[i], 0);
-	return stm.str();
-}
-
-void CConfigManager::Load(const wchar_t* name, std::string& val)
-{
-	// THIS CRASHES IN DEBUG MODE AND I DON'T KNOW WHY
-	std::wstring line = {};
-	std::string lines = {};
-	if (Find(name, line)) {
-		lines = narroww(line);
-		sscanf_s(lines.c_str(), "%*s %s", &val);
 	}
 }
 
