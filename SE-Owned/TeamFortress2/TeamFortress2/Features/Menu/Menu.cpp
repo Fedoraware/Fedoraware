@@ -889,7 +889,7 @@ void CMenu::Run()
 		return;
 	}*/
 
-	static float flTimeOnChange = 0.0f;
+	flTimeOnChange = 0.0f;
 
 
 
