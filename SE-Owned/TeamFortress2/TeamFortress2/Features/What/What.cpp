@@ -14,8 +14,8 @@ bool tooltips = true;
 static void HelpMarker(const char* desc)
 {
 	if (tooltips) {
-		ImGui::SameLine();
-		ImGui::TextDisabled("(?)");
+		//ImGui::SameLine();
+		//ImGui::TextDisabled("(?)");
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::BeginTooltip();
@@ -26,10 +26,14 @@ static void HelpMarker(const char* desc)
 		}
 	}
 }
-ImVec4 whatthefuck = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 int skyName = 0;
+
 int unu1 = 0;
 int unu2 = 0;
+
+int ticksChocked = 0;
+
 bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 {
 	bool active = false;
@@ -162,19 +166,24 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 
 	return true;
 }
+
 void combo(const char * label, int * current_item, const char *const * items, int items_count, int popup_max_height_in_items = -1) {
 	ImGui::PushItemWidth(100);
 	ImGui::Combo(label, current_item, items, items_count, popup_max_height_in_items);
 	ImGui::PopItemWidth();
 }
+
 ImVec4 to_vec4(float r, float g, float b, float a)
 {
 	return ImVec4(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 }
+
 int SettingsTab = 0;
+
 ImVec4 mColor(Color_t color) {
 	return ImVec4(Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a));
 }
+
 Color_t vColor(ImVec4 color) {
 	return {
 		(byte)(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
@@ -183,6 +192,7 @@ Color_t vColor(ImVec4 color) {
 		(byte)(color.w * 256.0f > 255 ? 255 : color.w * 256.0f)
 	};
 }
+
 void ColorPicker(const char* label, Color_t& color) {
 	ImVec4 FUCKOFF = mColor(color);
 	ImGui::PushItemWidth(150);
@@ -191,6 +201,7 @@ void ColorPicker(const char* label, Color_t& color) {
 	}
 	ImGui::PopItemWidth();
 }
+
 Color_t *vpColor(ImVec4 color) {
 	Color_t col = { (byte)(color.x * 255.0f),
 		(byte)(color.y * 255.0f),
@@ -198,11 +209,26 @@ Color_t *vpColor(ImVec4 color) {
 		(byte)(color.w * 255.0f) };
 	return &col;
 }
+
 float *cColor(ImVec4 color, Color_t &out) {
 	out = *vpColor(color);
 
 	return &color.x;
 }
+
+void CWhat::TextCenter(std::string text) {
+	ImGui::PushFont(DT);
+	float font_size = ImGui::CalcTextSize(text.c_str()).x;
+	//float font_size = ImGui::GetFontSize() * text.size() / 2;
+	ImGui::SameLine(
+		ImGui::GetWindowSize().x / 2 -
+		font_size + (font_size / 2)
+	);
+
+	ImGui::Text(text.c_str());
+	ImGui::PopFont();
+}
+
 void CWhat::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
 	static bool bColumnsWidthened = false;
@@ -213,67 +239,12 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		ImGui_ImplWin32_Init(FindWindowA(0, "Team Fortress 2"));
 		ImGui_ImplDX9_Init(pDevice);
 
-		ImGui::SetColorEditOptions(ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_Uint8);	
+		ImGui::SetColorEditOptions(ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_Uint8);
 
 		ImGuiStyle* style = &ImGui::GetStyle();
 		auto& io = ImGui::GetIO();
-		/*colors[ImGuiCol_WindowBg] = mColor(Vars::Menu::Colors::WindowBackground);
-		colors[ImGuiCol_FrameBg] = mColor(Vars::Menu::Colors::Widget);
-		colors[ImGuiCol_Text] = mColor(Vars::Menu::Colors::Text);
-		colors[ImGuiCol_ButtonActive] = mColor(Vars::Menu::Colors::WidgetActive);
-		colors[ImGuiCol_TitleBg] = mColor(Vars::Menu::Colors::TitleBar);
-		colors[ImGuiCol_Separator] = ImVec4(0, 0, 0, 0);*/
-		// Change all colors using the above as base
-		/*
-		ImVec4* colors = ImGui::GetStyle().Colors;
-		colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
-		colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
-		colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-		colors[ImGuiCol_ChildBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
-		colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-		colors[ImGuiCol_Border] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
-		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		colors[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
-		colors[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
-		colors[ImGuiCol_TitleBg] = ImVec4(0.09f, 0.12f, 0.14f, 0.65f);
-		colors[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
-		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-		colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
-		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.39f);
-		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
-		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.09f, 0.21f, 0.31f, 1.00f);
-		colors[ImGuiCol_CheckMark] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
-		colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
-		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.61f, 1.00f, 1.00f);
-		colors[ImGuiCol_Button] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-		colors[ImGuiCol_ButtonHovered] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
-		colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
-		colors[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.29f, 0.55f);
-		colors[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-		colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-		colors[ImGuiCol_Separator] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
-		colors[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
-		colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
-		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
-		colors[ImGuiCol_Tab] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-		colors[ImGuiCol_TabHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-		colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
-		colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-		colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-		colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
-		colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-		colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);*/
+		ImGui::StyleColorsDark();
+		style->Colors[ImGuiCol_Separator].w = 0;
 
 		style->FramePadding = ImVec2(4, 2);
 		style->ItemSpacing = ImVec2(10, 2);
@@ -297,6 +268,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		m_font_config.PixelSnapH = true;
 
 		Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
+		DT = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahoma.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 
 		bInitImGui = true;
 	}
@@ -305,18 +277,16 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
 	}
 
+	ImGui_ImplDX9_NewFrame();
+	ImGui_ImplWin32_NewFrame();
 
+	ImGui::NewFrame();
 	if (menuOpen)
 	{
-
-
-		ImGui_ImplDX9_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
+		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
 		if (ImGui::Begin("FEDORAware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::PopStyleColor();
+			//ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);
 
 			ImGui::Columns(2);
@@ -438,7 +408,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(3);
 						{
-							ImGui::SetColumnWidth(0, 210);
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Aimbot###Aim bot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 							ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
@@ -452,7 +421,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::NextColumn();
 						{
-							ImGui::SetColumnWidth(1, 250);
 							ImGui::TextUnformatted("Hitscan");
 							ImGui::Checkbox("Active###Hit scan", &Vars::Aimbot::Hitscan::Active.m_Var); HelpMarker("Hitscan aimbot master switch");
 							static const char* hitscanSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###hitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, hitscanSortMethod, IM_ARRAYSIZE(hitscanSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
@@ -503,7 +471,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(3);
 						{
-							ImGui::SetColumnWidth(1, 230);
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Triggerbot###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
 							InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
@@ -523,8 +490,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::NextColumn();
 						{
-							ImGui::SetColumnWidth(1, 210);
-							ImGui::TextUnformatted("Auto shoot"); 
+							ImGui::TextUnformatted("Auto shoot");
 							ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
 							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var); HelpMarker("Auto shoot will target players");
 							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var); HelpMarker("Auto shoot will target buildings");
@@ -541,7 +507,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
 						}
 						ImGui::NextColumn();
-						{	
+						{
 							ImGui::TextUnformatted("Auto backstab");
 							ImGui::Checkbox("Active###gABS", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
 							ImGui::Checkbox("Rage mode###gABSr", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
@@ -567,7 +533,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(3);
 						{
-							ImGui::SetColumnWidth(0, 270);
 							ImGui::TextUnformatted("Players");
 							if (ImGui::CollapsingHeader("ESP###playerESp", ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -662,7 +627,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::NextColumn();
 						{
-							ImGui::SetColumnWidth(1, 270);
 							ImGui::TextUnformatted("Buildings");
 							if (ImGui::CollapsingHeader("ESP###buildingESP", ImGuiTreeNodeFlags_DefaultOpen)) {
 								ImGui::Checkbox("Building ESP", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
@@ -749,7 +713,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
 								ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup chams opacity", &Vars::Chams::World::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
-							
+
 							}
 							if (ImGui::CollapsingHeader("Glow###glowworldd")) {
 								ImGui::Checkbox("Pickup glow", &Vars::Glow::World::Active.m_Var); HelpMarker("Pickup glow master switch");
@@ -775,7 +739,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Out of FoV arrows", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var,	 5.f, 180.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
 								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far until the arrows will not show");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How close until the arrows will be fully opaque");
@@ -791,7 +755,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								//ImGui::PushItemWidth(100); ImGui::InputText("nigger", &Vars::Skybox::nigger); ImGui::PopItemWidth(); HelpMarker("fuck all niggers");
 
 							}
-							
+
 						}
 					}
 					ImGui::EndChild();
@@ -833,7 +797,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Shifts ticks when shooting for a rapid-fire effect");
 							ImGui::Checkbox("Wait for DT", &Vars::Misc::CL_Move::WaitForDT.m_Var); HelpMarker("While the doubletap key is held and ticks are fully charged, it will wait until doubletap is ready to shoot");
 							ImGui::Checkbox("Don't DT in air", &Vars::Misc::CL_Move::NotInAir.m_Var); HelpMarker("When enabled, doubletap will not work if you are mid-air as to avoid movement being uncontrollable");
-
+							const char* dtBarStyles[]{ "Off", "Default", "Nitro" }; ImGui::PushItemWidth(100); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
 							if (ImGui::CollapsingHeader("Attribute changer")) {
 								ImGui::Checkbox("Active", &Vars::Visuals::Skins::Enabled.m_Var); HelpMarker("Attribute changer master switch");
 								const char* unuEffects[]{
@@ -846,23 +810,23 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100);
 								if (ImGui::Combo("Unusual effect 1", &unu1, unuEffects, IM_ARRAYSIZE(unuEffects))) {
 									switch (unu1) {
-										case 0:
-											Vars::Visuals::Skins::Effect.m_Var = 0;
-											break;
-										case 1:
-											Vars::Visuals::Skins::Effect.m_Var = 701;
-											break;
-										case 2:
-											Vars::Visuals::Skins::Effect.m_Var = 702;
-											break;
-										case 3:
-											Vars::Visuals::Skins::Effect.m_Var = 703;
-											break;
-										case 4:
-											Vars::Visuals::Skins::Effect.m_Var = 704;
-											break;
-										default:
-												break;
+									case 0:
+										Vars::Visuals::Skins::Effect.m_Var = 0;
+										break;
+									case 1:
+										Vars::Visuals::Skins::Effect.m_Var = 701;
+										break;
+									case 2:
+										Vars::Visuals::Skins::Effect.m_Var = 702;
+										break;
+									case 3:
+										Vars::Visuals::Skins::Effect.m_Var = 703;
+										break;
+									case 4:
+										Vars::Visuals::Skins::Effect.m_Var = 704;
+										break;
+									default:
+										break;
 									}
 								}
 								ImGui::PopItemWidth();
@@ -870,23 +834,23 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100);
 								if (ImGui::Combo("Unusual effect 2", &unu2, unuEffects, IM_ARRAYSIZE(unuEffects))) {
 									switch (unu2) {
-										case 0:
-											Vars::Visuals::Skins::Effect.m_Var = 0;
-											break;
-										case 1:
-											Vars::Visuals::Skins::Effect.m_Var = 701;
-											break;
-										case 2:
-											Vars::Visuals::Skins::Effect.m_Var = 702;
-											break;
-										case 3:
-											Vars::Visuals::Skins::Effect.m_Var = 703;
-											break;
-										case 4:
-											Vars::Visuals::Skins::Effect.m_Var = 704;
-											break;
-										default:
-											break;
+									case 0:
+										Vars::Visuals::Skins::Effect.m_Var = 0;
+										break;
+									case 1:
+										Vars::Visuals::Skins::Effect.m_Var = 701;
+										break;
+									case 2:
+										Vars::Visuals::Skins::Effect.m_Var = 702;
+										break;
+									case 3:
+										Vars::Visuals::Skins::Effect.m_Var = 703;
+										break;
+									case 4:
+										Vars::Visuals::Skins::Effect.m_Var = 704;
+										break;
+									default:
+										break;
 									}
 								}
 								ImGui::PopItemWidth();
@@ -943,7 +907,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					{
 						ImGui::Columns(2);
 						{
-							ImGui::SetColumnWidth(0, 300);
 							ImGui::TextDisabled("Cheat colours");
 							ColorPicker("Outline ESP", Colors::OutlineESP);
 							ColorPicker("Conditions", Colors::Cond);
@@ -988,48 +951,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							if (ImGui::CollapsingHeader("ImGui Style")) {
 								ImGui::ShowStyleEditor();
 							}
-							/*
-							// Change all colors using the above as base
-							if (modified_custom_style)
-							{
-								colors[ImGuiCol_PopupBg] = colors[ImGuiCol_WindowBg]; //colors[ImGuiCol_PopupBg].w = 0.92f;
-								colors[ImGuiCol_ChildBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ChildBg].w = 0.00f;
-								colors[ImGuiCol_MenuBarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_MenuBarBg].w = 0.57f;
-								colors[ImGuiCol_ScrollbarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ScrollbarBg].w = 1.00f;
-								colors[ImGuiCol_TextDisabled] = colors[ImGuiCol_Text]; colors[ImGuiCol_TextDisabled].w = 0.58f;
-								colors[ImGuiCol_Border] = colors[ImGuiCol_Text]; colors[ImGuiCol_Border].w = 0.30f;
-								colors[ImGuiCol_SeparatorActive] = colors[ImGuiCol_Text]; colors[ImGuiCol_SeparatorActive].w = 1.00f;
-								colors[ImGuiCol_PlotLines] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotLines].w = 0.63f;
-								colors[ImGuiCol_PlotHistogram] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotHistogram].w = 0.63f;
-								colors[ImGuiCol_FrameBgHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgHovered].w = 0.68f;
-								colors[ImGuiCol_FrameBgActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgActive].w = 1.00f;
-								colors[ImGuiCol_TitleBg] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBg].w = 0.45f;
-								colors[ImGuiCol_TitleBgCollapsed] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgCollapsed].w = 0.35f;
-								colors[ImGuiCol_TitleBgActive] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgActive].w = 0.58f;
-								colors[ImGuiCol_ScrollbarGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrab].w = 0.31f;
-								colors[ImGuiCol_ScrollbarGrabHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabHovered].w = 0.78f;
-								colors[ImGuiCol_ScrollbarGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabActive].w = 1.00f;
-								colors[ImGuiCol_CheckMark] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_CheckMark].w = 0.80f;
-								colors[ImGuiCol_SliderGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrab].w = 0.24f;
-								colors[ImGuiCol_SliderGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrabActive].w = 1.00f;
-								colors[ImGuiCol_Button] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Button].w = 0.44f;
-								colors[ImGuiCol_ButtonHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ButtonHovered].w = 0.86f;
-								colors[ImGuiCol_Header] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Header].w = 0.76f;
-								colors[ImGuiCol_HeaderHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderHovered].w = 0.86f;
-								colors[ImGuiCol_HeaderActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderActive].w = 1.00f;
-								colors[ImGuiCol_ResizeGrip] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGrip].w = 0.20f;
-								colors[ImGuiCol_ResizeGripHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripHovered].w = 0.78f;
-								colors[ImGuiCol_ResizeGripActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripActive].w = 1.00f;
-								colors[ImGuiCol_PlotLinesHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotLinesHovered].w = 1.00f;
-								colors[ImGuiCol_PlotHistogramHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotHistogramHovered].w = 1.00f;
-								colors[ImGuiCol_TextSelectedBg] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_TextSelectedBg].w = 0.43f;
-
-								colors[ImGuiCol_Tab] = colors[ImGuiCol_Button];
-								colors[ImGuiCol_TabActive] = colors[ImGuiCol_ButtonActive];
-								colors[ImGuiCol_TabHovered] = colors[ImGuiCol_ButtonHovered];
-								colors[ImGuiCol_TabUnfocused] = ImLerp(colors[ImGuiCol_Tab], colors[ImGuiCol_TitleBg], 0.80f);
-								colors[ImGuiCol_TabUnfocusedActive] = ImLerp(colors[ImGuiCol_TabActive], colors[ImGuiCol_TitleBg], 0.40f);
-							}*/
 						}
 					}
 					ImGui::EndChild();
@@ -1044,8 +965,72 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 			}
 			ImGui::End();
 		}
-		ImGui::EndFrame();
-		ImGui::Render();
-		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 	}
+
+	if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || menuOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
+		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+		if (ImGui::Begin("Doubletap bar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | (menuOpen ? 0 : ImGuiWindowFlags_NoDecoration) | (menuOpen ? 0 : ImGuiWindowFlags_NoTitleBar)))
+		{
+			ImGui::SetWindowSize(ImVec2(180, 30));
+
+			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+
+				int ticks = 0;
+
+				if (pLocal->GetClassNum() == CLASS_HEAVY) {
+
+					for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
+						//printf("i: %d\n", i);
+						for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
+							//printf("j: %d\n", j);
+							ticksChocked = j;
+							break;
+						}
+					}
+					ticks = MAX_NEW_COMMANDS_HEAVY;
+				}
+				else {
+					for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
+						//printf("i: %d\n", i);
+						for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
+							//printf("j: %d\n", j);
+							ticksChocked = j;
+							break;
+						}
+					}
+					ticks = MAX_NEW_COMMANDS;
+				}
+				if (ticksChocked < 0) {
+					ticksChocked = 0;
+				}
+				std::string dtstring = "Doubletap (";
+				dtstring = dtstring + std::to_string(ticksChocked) + "/" + std::to_string(ticks) + ")";
+				if (ticksChocked == ticks) {
+					if (!g_GlobalInfo.m_nWaitForShift) {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
+						TextCenter(dtstring);
+						ImGui::PopStyleColor();
+					}
+					else {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
+						TextCenter(dtstring);
+						ImGui::PopStyleColor();
+					}
+				}
+				else {
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
+					TextCenter(dtstring);
+					ImGui::PopStyleColor();
+				}
+			}
+
+		}
+		ImGui::End();
+		ImGui::PopStyleColor(2);
+	}
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
 }

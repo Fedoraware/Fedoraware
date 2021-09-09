@@ -445,6 +445,7 @@ namespace Vars
 			inline CVar<int> TeleportKey	{ 0x52, L"Teleport Key" }; //R
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
 			inline CVar<int> DoubletapKey	{ 0x56, L"Doubletap Key" }; //V
+			inline CVar<int> DTBarStyle{ 0, L"Doubletap bar style" };
 
 			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
 			inline CVar<bool> Fakelag{ true, L"Fakelag" };

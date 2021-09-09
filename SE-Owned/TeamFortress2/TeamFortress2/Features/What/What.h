@@ -7,9 +7,11 @@ class CWhat
 {
 private:
 	ImFont* Normal;
+	ImFont* DT;
 public:
 	bool menuOpen = false;
 	bool menuUnload = false;
+	void TextCenter(std::string text);
 	void Render(IDirect3DDevice9* pDevice);
 };
 

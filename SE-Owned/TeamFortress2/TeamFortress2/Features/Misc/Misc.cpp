@@ -300,6 +300,10 @@ void CMisc::CathookIdentify() {
 
 		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 	};
+
+	/*if (GetAsyncKeyState(0x56)) {
+		CathookMessage();
+	}*/
 }
 
 bool pda = false;
