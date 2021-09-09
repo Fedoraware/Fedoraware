@@ -12,10 +12,7 @@ Press home to open the old menu (has some things i haven't added to the new one 
 - Doubletap key
 - Doubletap bar
 - Dragons fury added to projectile aimbot
-- "Glow" style overlay chams for viewmodels (weapon/arm)
-- Brick chams (very cool)
-- Other weird type of cham (also very cool)
-- Cathook identifier (havent figured out how to find out if others are cathook users yet though)
+- More chams
 - Nullcore style useful buttons panel (thanks oxygodmode)
 - Directional autostrafe
 - Fakelag
