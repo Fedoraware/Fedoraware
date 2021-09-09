@@ -297,7 +297,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		m_font_config.OversampleV = 1;
 		m_font_config.PixelSnapH = true;
 
-		//Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
+		Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 
 		bInitImGui = true;
 	}
