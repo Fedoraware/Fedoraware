@@ -476,6 +476,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
 			SAVE_VAR(Vars::Visuals::MaxDist);
 			SAVE_VAR(Vars::Visuals::MinDist);
+			SAVE_VAR(Vars::Visuals::AimPosSquare);
 				
 				
 				
@@ -572,6 +573,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::BulletTracer);
 			SAVE_OTHER(Colors::FresnelBase);
 			SAVE_OTHER(Colors::FresnelTop);
+			SAVE_OTHER(Colors::AimSquareCol);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -933,6 +935,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
 			LOAD_VAR(Vars::Visuals::MaxDist);
 			LOAD_VAR(Vars::Visuals::MinDist);
+			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
@@ -1025,6 +1028,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::BulletTracer);
 			LOAD_OTHER(Colors::FresnelBase);
 			LOAD_OTHER(Colors::FresnelTop);
+			LOAD_OTHER(Colors::AimSquareCol);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

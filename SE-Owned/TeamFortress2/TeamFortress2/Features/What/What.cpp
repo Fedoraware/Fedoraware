@@ -770,6 +770,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Remove taunts", &Vars::Visuals::RemoveTaunts.m_Var); HelpMarker("Will remove taunts on players, making them appear still and improving aimbot accuracy");
 								ImGui::Checkbox("Remove interpolation", &Vars::Misc::DisableInterpolation.m_Var); HelpMarker("Will remove interpolation on players, can improve accuracy");
 								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
+								ImGui::Checkbox("Aimbot prediction", &Vars::Visuals::AimPosSquare.m_Var); HelpMarker("Will show a rough estimate of where the aimbot is going to aim at");
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
 								ImGui::TextUnformatted("");
@@ -965,9 +966,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Sky modulation", Colors::SkyModulation);
 							ColorPicker("Static prop modulation", Colors::StaticPropModulation);
 							ColorPicker("FoV circle", Colors::FOVCircle);
-							ColorPicker("Bone color", Colors::Bones);
+							ColorPicker("Bones", Colors::Bones);
 							ColorPicker("Bullet tracer", Colors::BulletTracer);
 							ColorPicker("Fresnel chams base", Colors::FresnelBase);
+							ColorPicker("Aimbot prediction", Colors::AimSquareCol);
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}
 						ImGui::NextColumn();

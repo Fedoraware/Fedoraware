@@ -395,6 +395,7 @@ namespace Vars
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
+		inline CVar<bool> AimPosSquare{ true, L"Aim position square" };
 		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
 		inline CVar<float> ArrowLength{ 20.f, L"Out of FOV arrow length" };
 		inline CVar<float> ArrowAngle{ 60.f, L"Out of FOV arrow angle" };

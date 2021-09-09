@@ -76,23 +76,26 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 						if (Utils::W2S(g_GlobalInfo.m_vPredictedPos, vecScreen))
 						{
-							g_Draw.OutlinedRect(
-								static_cast<int>(vecScreen.x - (size / 2)),
-								static_cast<int>(vecScreen.y - (size / 2)),
-								size, size,
-								{ 0, 255, 0, 255 });
-
-							g_Draw.OutlinedRect(
-								static_cast<int>(vecScreen.x - (size / 2)) - 1,
-								static_cast<int>(vecScreen.y - (size / 2)) - 1,
-								size + 2, size + 2,
-								Colors::OutlineESP);
-
-							g_Draw.OutlinedRect(
-								static_cast<int>(vecScreen.x - (size / 2)) + 1,
-								static_cast<int>(vecScreen.y - (size / 2)) + 1,
-								size - 2, size - 2,
-								Colors::OutlineESP);
+							if (Vars::Visuals::AimPosSquare.m_Var) {
+								// color
+								g_Draw.OutlinedRect(
+									static_cast<int>(vecScreen.x - (size / 2)),
+									static_cast<int>(vecScreen.y - (size / 2)),
+									size, size,
+									Colors::AimSquareCol);
+								// outer
+								g_Draw.OutlinedRect(
+									static_cast<int>(vecScreen.x - (size / 2)) - 1,
+									static_cast<int>(vecScreen.y - (size / 2)) - 1,
+									size + 2, size + 2,
+									Colors::OutlineESP);
+								//inner
+								g_Draw.OutlinedRect(
+									static_cast<int>(vecScreen.x - (size / 2)) + 1,
+									static_cast<int>(vecScreen.y - (size / 2)) + 1,
+									size - 2, size - 2,
+									Colors::OutlineESP);
+							}
 						}
 					}
 				}	
