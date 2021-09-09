@@ -287,8 +287,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		style->GrabRounding = 4;
 		style->TabRounding = 4;
 
-		style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
-		style->WindowMenuButtonPosition = ImGuiDir_Left;
+		style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
 
 		style->DisplaySafeAreaPadding = ImVec2(4, 4);
 
@@ -315,7 +314,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
+		if (ImGui::Begin("FEDORAware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);

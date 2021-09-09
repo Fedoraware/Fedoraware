@@ -33,7 +33,12 @@ void CVisuals::SkyboxChanger() {
 	};
 	if (Vars::Visuals::SkyboxChanger.m_Var) {
 		if (Vars::Skybox::skyboxnum == 0) {
-			LoadSkys(Vars::Skybox::SkyboxName.c_str());
+			if (Vars::Misc::BypassPure.m_Var) {
+				LoadSkys(Vars::Skybox::SkyboxName.c_str());
+			}
+			else {
+				LoadSkys(g_Interfaces.CVars->FindVar("sv_skyname")->GetString());
+			}
 		}
 		else {
 			LoadSkys(skybNames[Vars::Skybox::skyboxnum]);
