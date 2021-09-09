@@ -79,8 +79,13 @@ void CConfigManager::Load(const wchar_t* name, std::string& val)
 {
 	std::wstring line = {};
 
-	if (Find(name, line))
-		swscanf_s(line.c_str(), L"%*ls %s", name, &val);
+	if (Find(name, line)) {
+		//swscanf_s(line.c_str(), L"%*ls:");
+		std::wstring delimiter = L": ";
+		std::wstring svalue = line.substr(line.find(L": ") + 2, sizeof(line));
+		std::string stringvalue(svalue.begin(), svalue.end());
+		val = stringvalue;
+	}
 }
 
 void CConfigManager::Load(const wchar_t *name, bool &val)
@@ -579,6 +584,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
+			//SAVE_STRING(Vars::Skybox::nigger);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 		}
 
@@ -1034,6 +1040,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
+			//LOAD_STRING(Vars::Skybox::nigger);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 		}
 

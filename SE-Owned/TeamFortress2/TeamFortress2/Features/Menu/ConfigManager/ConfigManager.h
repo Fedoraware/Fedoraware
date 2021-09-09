@@ -21,11 +21,9 @@ private:
 	void Save(const wchar_t *name, float val);
 	void Save(const wchar_t *name, Color_t val);
 
-	void Load(const wchar_t* name, std::string*& val);
+	void Load(const char* name, std::string& val);
 
 	void Load(const wchar_t* name, std::string& val);
-
-	void Load(const wchar_t* name, const char*& val);
 
 	void Load(const wchar_t *name, bool &val);
 	void Load(const wchar_t *name, int &val);

@@ -297,7 +297,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		m_font_config.OversampleV = 1;
 		m_font_config.PixelSnapH = true;
 
-		Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
+		//Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 
 		bInitImGui = true;
 	}
@@ -425,7 +425,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					ImGui::SameLine();
 					if (ImGui::Button("Remove")) {
 						g_CFG.Remove(selected.c_str());
-						selected.c_str();
+						selected.clear();
 					}
 					ImGui::PopStyleVar();
 					ImGui::PopItemWidth();
@@ -788,6 +788,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
+								//ImGui::PushItemWidth(100); ImGui::InputText("nigger", &Vars::Skybox::nigger); ImGui::PopItemWidth(); HelpMarker("fuck all niggers");
 
 							}
 							
