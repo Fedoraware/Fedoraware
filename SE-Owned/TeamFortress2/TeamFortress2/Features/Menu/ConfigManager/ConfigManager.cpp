@@ -75,7 +75,18 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::Load(const wchar_t* name, std::string& val)
+{
+	std::wstring line = {};
 
+	if (Find(name, line)) {
+		//swscanf_s(line.c_str(), L"%*ls:");
+		std::wstring delimiter = L": ";
+		std::wstring svalue = line.substr(line.find(L": ") + 2, sizeof(line));
+		std::string stringvalue(svalue.begin(), svalue.end());
+		val = stringvalue;
+	}
+}
 
 void CConfigManager::Load(const wchar_t *name, bool &val)
 {
@@ -109,37 +120,6 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
-	}
-}
-
-std::wstring widenn(const std::string& str)
-{
-	std::wostringstream wstm;
-	const std::ctype<wchar_t>& ctfacet =
-		std::use_facet< std::ctype<wchar_t> >(wstm.getloc());
-	for (size_t i = 0; i < str.size(); ++i)
-		wstm << ctfacet.widen(str[i]);
-	return wstm.str();
-}
-
-std::string narroww(const std::wstring& str)
-{
-	std::ostringstream stm;
-	const std::ctype<char>& ctfacet =
-		std::use_facet< std::ctype<char> >(stm.getloc());
-	for (size_t i = 0; i < str.size(); ++i)
-		stm << ctfacet.narrow(str[i], 0);
-	return stm.str();
-}
-
-void CConfigManager::Load(const wchar_t* name, std::string& val)
-{
-	// THIS CRASHES IN DEBUG MODE AND I DON'T KNOW WHY
-	std::wstring line = {};
-	std::string lines = {};
-	if (Find(name, line)) {
-		lines = narroww(line);
-		sscanf_s(lines.c_str(), "%*s %s", &val);
 	}
 }
 
@@ -496,6 +476,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
 			SAVE_VAR(Vars::Visuals::MaxDist);
 			SAVE_VAR(Vars::Visuals::MinDist);
+			SAVE_VAR(Vars::Visuals::AimPosSquare);
 				
 				
 				
@@ -592,6 +573,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::BulletTracer);
 			SAVE_OTHER(Colors::FresnelBase);
 			SAVE_OTHER(Colors::FresnelTop);
+			SAVE_OTHER(Colors::AimSquareCol);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -604,6 +586,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
+			//SAVE_STRING(Vars::Skybox::nigger);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 		}
 
@@ -952,6 +935,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
 			LOAD_VAR(Vars::Visuals::MaxDist);
 			LOAD_VAR(Vars::Visuals::MinDist);
+			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
@@ -1044,6 +1028,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::BulletTracer);
 			LOAD_OTHER(Colors::FresnelBase);
 			LOAD_OTHER(Colors::FresnelTop);
+			LOAD_OTHER(Colors::AimSquareCol);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);
@@ -1059,6 +1044,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
+			//LOAD_STRING(Vars::Skybox::nigger);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 		}
 

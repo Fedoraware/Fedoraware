@@ -61,3 +61,6 @@ SE-Owned/.vs/SE-Owned/v17/.suo
 SE-Owned/Release/sound.wav
 *.bin
 SE-Owned/Debug/sound.wav
+*.sarif
+*.xml
+*.lastcodeanalysissucceeded

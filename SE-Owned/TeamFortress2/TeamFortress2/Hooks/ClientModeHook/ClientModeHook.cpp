@@ -33,32 +33,37 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 int chIdentify = 0;
 int antiAfk = 0;
 
-auto CathookMessage = []() -> void
-{
-	auto CathookMessage = Utils::CreateKeyVals({
-		_("\"cl_drawline\"\
+void *CathookMessage = Utils::CreateKeyVals({
+	_("\"cl_drawline\"\
 			\n{\
 			\n\t\"panel\" \"2\"\
 			\n\t\"line\" \"0\"\
 			\n\t\"x\" \"0xCA7\"\
 			\n\t\"y\" \"1234567.f\"\
 			\n}\n")
-		});
+	});
 
-	g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 
-	auto CathookMessage2 = Utils::CreateKeyVals({
-		_("\"cl_drawline\"\
+void *CathookMessage2 = Utils::CreateKeyVals({
+	_("\"cl_drawline\"\
 			\n{\
 			\n\t\"panel\" \"2\"\
 			\n\t\"line\" \"0\"\
 			\n\t\"x\" \"0xCA8\"\
 			\n\t\"y\" \"1234567.f\"\
 			\n}\n")
-		});
+	});
+
+/*
+auto CathookMessage = []() -> void
+{
+
+
+	g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
+
 
 	g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage2);
-};
+};*/
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -88,7 +93,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 
 	if (chIdentify == 0) {
-		CathookMessage();
+		//g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
+		//g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage2);
 	}
 
 

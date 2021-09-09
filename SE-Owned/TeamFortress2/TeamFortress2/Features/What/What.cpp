@@ -287,8 +287,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		style->GrabRounding = 4;
 		style->TabRounding = 4;
 
-		style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
-		style->WindowMenuButtonPosition = ImGuiDir_Left;
+		style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
 
 		style->DisplaySafeAreaPadding = ImVec2(4, 4);
 
@@ -315,7 +314,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
+		if (ImGui::Begin("FEDORAware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);
@@ -425,7 +424,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					ImGui::SameLine();
 					if (ImGui::Button("Remove")) {
 						g_CFG.Remove(selected.c_str());
-						selected.c_str();
+						selected.clear();
 					}
 					ImGui::PopStyleVar();
 					ImGui::PopItemWidth();
@@ -770,6 +769,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Remove taunts", &Vars::Visuals::RemoveTaunts.m_Var); HelpMarker("Will remove taunts on players, making them appear still and improving aimbot accuracy");
 								ImGui::Checkbox("Remove interpolation", &Vars::Misc::DisableInterpolation.m_Var); HelpMarker("Will remove interpolation on players, can improve accuracy");
 								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
+								ImGui::Checkbox("Aimbot prediction", &Vars::Visuals::AimPosSquare.m_Var); HelpMarker("Will show a rough estimate of where the aimbot is going to aim at");
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
 								ImGui::TextUnformatted("");
@@ -788,6 +788,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
+								//ImGui::PushItemWidth(100); ImGui::InputText("nigger", &Vars::Skybox::nigger); ImGui::PopItemWidth(); HelpMarker("fuck all niggers");
 
 							}
 							
@@ -964,9 +965,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Sky modulation", Colors::SkyModulation);
 							ColorPicker("Static prop modulation", Colors::StaticPropModulation);
 							ColorPicker("FoV circle", Colors::FOVCircle);
-							ColorPicker("Bone color", Colors::Bones);
+							ColorPicker("Bones", Colors::Bones);
 							ColorPicker("Bullet tracer", Colors::BulletTracer);
 							ColorPicker("Fresnel chams base", Colors::FresnelBase);
+							ColorPicker("Aimbot prediction", Colors::AimSquareCol);
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}
 						ImGui::NextColumn();
@@ -986,6 +988,48 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							if (ImGui::CollapsingHeader("ImGui Style")) {
 								ImGui::ShowStyleEditor();
 							}
+							/*
+							// Change all colors using the above as base
+							if (modified_custom_style)
+							{
+								colors[ImGuiCol_PopupBg] = colors[ImGuiCol_WindowBg]; //colors[ImGuiCol_PopupBg].w = 0.92f;
+								colors[ImGuiCol_ChildBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ChildBg].w = 0.00f;
+								colors[ImGuiCol_MenuBarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_MenuBarBg].w = 0.57f;
+								colors[ImGuiCol_ScrollbarBg] = colors[ImGuiCol_FrameBg]; colors[ImGuiCol_ScrollbarBg].w = 1.00f;
+								colors[ImGuiCol_TextDisabled] = colors[ImGuiCol_Text]; colors[ImGuiCol_TextDisabled].w = 0.58f;
+								colors[ImGuiCol_Border] = colors[ImGuiCol_Text]; colors[ImGuiCol_Border].w = 0.30f;
+								colors[ImGuiCol_SeparatorActive] = colors[ImGuiCol_Text]; colors[ImGuiCol_SeparatorActive].w = 1.00f;
+								colors[ImGuiCol_PlotLines] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotLines].w = 0.63f;
+								colors[ImGuiCol_PlotHistogram] = colors[ImGuiCol_Text]; colors[ImGuiCol_PlotHistogram].w = 0.63f;
+								colors[ImGuiCol_FrameBgHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgHovered].w = 0.68f;
+								colors[ImGuiCol_FrameBgActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_FrameBgActive].w = 1.00f;
+								colors[ImGuiCol_TitleBg] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBg].w = 0.45f;
+								colors[ImGuiCol_TitleBgCollapsed] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgCollapsed].w = 0.35f;
+								colors[ImGuiCol_TitleBgActive] = colors[ImGuiCol_TitleBg]; colors[ImGuiCol_TitleBgActive].w = 0.58f;
+								colors[ImGuiCol_ScrollbarGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrab].w = 0.31f;
+								colors[ImGuiCol_ScrollbarGrabHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabHovered].w = 0.78f;
+								colors[ImGuiCol_ScrollbarGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ScrollbarGrabActive].w = 1.00f;
+								colors[ImGuiCol_CheckMark] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_CheckMark].w = 0.80f;
+								colors[ImGuiCol_SliderGrab] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrab].w = 0.24f;
+								colors[ImGuiCol_SliderGrabActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_SliderGrabActive].w = 1.00f;
+								colors[ImGuiCol_Button] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Button].w = 0.44f;
+								colors[ImGuiCol_ButtonHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ButtonHovered].w = 0.86f;
+								colors[ImGuiCol_Header] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_Header].w = 0.76f;
+								colors[ImGuiCol_HeaderHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderHovered].w = 0.86f;
+								colors[ImGuiCol_HeaderActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_HeaderActive].w = 1.00f;
+								colors[ImGuiCol_ResizeGrip] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGrip].w = 0.20f;
+								colors[ImGuiCol_ResizeGripHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripHovered].w = 0.78f;
+								colors[ImGuiCol_ResizeGripActive] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_ResizeGripActive].w = 1.00f;
+								colors[ImGuiCol_PlotLinesHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotLinesHovered].w = 1.00f;
+								colors[ImGuiCol_PlotHistogramHovered] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_PlotHistogramHovered].w = 1.00f;
+								colors[ImGuiCol_TextSelectedBg] = colors[ImGuiCol_ButtonActive]; colors[ImGuiCol_TextSelectedBg].w = 0.43f;
+
+								colors[ImGuiCol_Tab] = colors[ImGuiCol_Button];
+								colors[ImGuiCol_TabActive] = colors[ImGuiCol_ButtonActive];
+								colors[ImGuiCol_TabHovered] = colors[ImGuiCol_ButtonHovered];
+								colors[ImGuiCol_TabUnfocused] = ImLerp(colors[ImGuiCol_Tab], colors[ImGuiCol_TitleBg], 0.80f);
+								colors[ImGuiCol_TabUnfocusedActive] = ImLerp(colors[ImGuiCol_TabActive], colors[ImGuiCol_TitleBg], 0.40f);
+							}*/
 						}
 					}
 					ImGui::EndChild();
