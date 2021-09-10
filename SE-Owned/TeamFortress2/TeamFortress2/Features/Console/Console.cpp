@@ -2,7 +2,7 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-// Credits to OxyGodmode
+// Credits to oxyGodmode
 
 constexpr Color_t clrBlack = { 0, 0, 0, 255 };
 constexpr Color_t clrWhite = { 255, 255, 255, 255 };
