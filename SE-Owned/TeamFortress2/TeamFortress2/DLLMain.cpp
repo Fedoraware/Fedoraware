@@ -102,9 +102,10 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
-	Vars::Visuals::SkyboxChanger.m_Var = false;
-
 	g_Menu.m_bOpen = false;
+	g_What.menuOpen = false;
+	Vars::Visuals::SkyboxChanger.m_Var = false;
+	Vars::Visuals::ThirdPerson.m_Var = false;
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	

@@ -156,7 +156,11 @@ void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
 			const char* sayCmd = "say_party ";
 			char buffer[256];
 			strncpy(buffer, sayCmd, sizeof(buffer));
+#pragma warning (push)
+#pragma warning (disable : 6053)
+#pragma warning (disable : 6059)
 			strncat(buffer, szBuff, sizeof(buffer));
+#pragma warning (pop)
 			g_Interfaces.Engine->ClientCmd_Unrestricted(buffer);
 		}
 		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, szBuff);

@@ -422,7 +422,7 @@ namespace Vars
 		inline CVar<bool> Directional			{ false, L"Directional" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
-		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
+		inline CVar<bool> BypassPure            { true, L"Bypass Pure" };
 		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
 		inline CVar<bool> MedalFlip				{ true, L"Medal Flip" };
