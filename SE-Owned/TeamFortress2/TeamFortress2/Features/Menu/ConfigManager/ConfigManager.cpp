@@ -477,7 +477,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::MaxDist);
 			SAVE_VAR(Vars::Visuals::MinDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
-			SAVE_VAR(Vars::Visuals::AlwaysSnow);
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
@@ -969,7 +968,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::CheatsBypass);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);
-			LOAD_VAR(Vars::Visuals::AlwaysSnow);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled

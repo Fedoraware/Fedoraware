@@ -382,7 +382,6 @@ namespace Vars
 		inline CVar<bool> SpyWarningIgnoreFriends	{ true, L"Ignore Friends" };
 
 		inline CVar<bool> Snow{ true, L"Menu Snow" };
-		inline CVar<bool> AlwaysSnow{ true, L"Always Snow" };
 		inline CVar<bool> ToolTips{ false, L"Menu tooltips" };
 
 		inline CVar<bool> ThirdPerson				{ false, L"Active" };

@@ -9,7 +9,6 @@
 #include <codecvt>
 #include <string>
 #include <sstream>
-#include "../What/What.h"
 
 void CMenu::DrawTooltip()
 {
@@ -1662,60 +1661,58 @@ void CMenu::Run()
 
 		DrawTooltip();
 
+		if (Vars::Visuals::Snow.m_Var)
+		{
+			struct SnowFlake_t {
+				float x = 0.0f, y = 0.0f, fall = 0.0f, drift = 0.0f;
+				int size = 1;
+			};
+
+			static std::vector<SnowFlake_t> SnowFlakes;
+			static const int Count = 500;
+			static bool Init = false;
+
+			if (!Init)
+			{
+				for (int n = 0; n < Count; n++)
+				{
+					SnowFlake_t Flake = {};
+					Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
+					Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
+					Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
+					Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
+					Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
+					SnowFlakes.push_back(Flake);
+				}
+
+				Init = true;
+			}
+
+			for (auto& Flake : SnowFlakes)
+			{
+				Flake.x += ((sinf(g_Interfaces.GlobalVars->curtime) * Flake.drift) * g_Interfaces.GlobalVars->interval_per_tick);
+				Flake.y += (Flake.fall * g_Interfaces.GlobalVars->interval_per_tick);
+
+				float Alpha = Math::MapFloat(Flake.y, 0.0f, static_cast<float>(g_ScreenSize.h - 200), 1.0f, 0.0f);
+
+				if (Alpha <= 0.0f)
+				{
+					Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
+					Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
+					Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
+					Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
+					Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
+				}
+
+				Color_t Color = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
+				g_Draw.Rect(static_cast<int>(Flake.x), static_cast<int>(Flake.y), Flake.size, Flake.size, Color);
+			}
+		}
 	}
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
-
-	if (Vars::Visuals::Snow.m_Var && (m_bOpen || g_What.menuOpen) || Vars::Visuals::AlwaysSnow.m_Var)
-	{
-		struct SnowFlake_t {
-			float x = 0.0f, y = 0.0f, fall = 0.0f, drift = 0.0f;
-			int size = 1;
-		};
-
-		static std::vector<SnowFlake_t> SnowFlakes;
-		static const int Count = 500;
-		static bool Init = false;
-
-		if (!Init)
-		{
-			for (int n = 0; n < Count; n++)
-			{
-				SnowFlake_t Flake = {};
-				Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
-				Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
-				Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
-				Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
-				Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
-				SnowFlakes.push_back(Flake);
-			}
-
-			Init = true;
-		}
-
-		for (auto& Flake : SnowFlakes)
-		{
-			Flake.x += ((sinf(g_Interfaces.GlobalVars->curtime) * Flake.drift) * g_Interfaces.GlobalVars->interval_per_tick);
-			Flake.y += (Flake.fall * g_Interfaces.GlobalVars->interval_per_tick);
-
-			float Alpha = Math::MapFloat(Flake.y, 0.0f, static_cast<float>(g_ScreenSize.h - 200), 1.0f, 0.0f);
-
-			if (Alpha <= 0.0f)
-			{
-				Flake.x = static_cast<float>(Utils::RandIntSimple(0, g_ScreenSize.w));
-				Flake.y = -static_cast<float>(Utils::RandIntSimple(50, 500));
-				Flake.fall = static_cast<float>(Utils::RandIntSimple(50, 100));
-				Flake.drift = static_cast<float>(Utils::RandIntSimple(5, 20));
-				Flake.size = Utils::RandIntSimple(1, 4) == 4 ? 2 : 1;
-			}
-
-			Color_t Color = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
-			g_Draw.Rect(static_cast<int>(Flake.x), static_cast<int>(Flake.y), Flake.size, Flake.size, Color);
-		}
-	}
-
-	/*if (m_bOpen) {
+	if (m_bOpen) {
 		//g_Draw.CornerRect(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, 5, 5, 1, 1, { 0, 0, 0, 255 });
 
 		//Filling
@@ -1744,7 +1741,7 @@ void CMenu::Run()
 		g_Draw.Line(g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
 		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 19, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 255, 255, 255, 255 });
 		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 10, g_InputHelper.m_nMouseX + 11, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
-	}*/
+	}
 }
 
 
