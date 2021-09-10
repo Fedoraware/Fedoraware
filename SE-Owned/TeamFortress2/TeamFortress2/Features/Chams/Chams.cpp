@@ -76,7 +76,7 @@ void CChams::Init()
 		\n\t\"$rimlight\" \"1\"\
 		\n\t\"$rimlightboost\" \"100\"\
 		\n\t\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\
-		\n")
+		\n}\n")
 	});
 
 

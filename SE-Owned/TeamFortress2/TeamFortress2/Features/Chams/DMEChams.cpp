@@ -13,7 +13,7 @@ bool CDMEChams::ShouldRun()
 
 void CDMEChams::Init()
 {
-	m_pMatFlat2 = Utils::CreateMaterial({
+	m_pMatFresnel = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
 		\n{\
 		\n\t\"$basetexture\" \"vgui/white_additive\"\
@@ -26,7 +26,7 @@ void CDMEChams::Init()
 		\n}\n")
 	});
 
-	m_pMatGlow = Utils::CreateMaterial({
+	m_pMatBrick = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
 		\n{\
 		\n\t\"$basetexture\" \"brick/brickwall031b\"\
@@ -39,7 +39,7 @@ void CDMEChams::Init()
 		\n\t\"$selfillum\" \"1\"\
 		\n\t\"$rimlight\" \"1\"\
 		\n\t\"$rimlightboost\" \"10\"\
-		\n")
+		\n}\n")
 	});
 
 	m_pMatNone = Utils::CreateMaterial({
@@ -62,7 +62,7 @@ void CDMEChams::Init()
 		\n\t\"$selfillumtint\" \"[0 0 0]\"\
 		\n\t\"$rimlight\" \"1\"\
 		\n\t\"$rimlightboost\" \"10\"\
-		\n")
+		\n}\n")
 	});
 
 	m_pMatShaded = Utils::CreateMaterial({
@@ -155,8 +155,8 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 						case 4: { bMatWasForced = true; return m_pMatWFShaded; }
 						case 5: { bMatWasForced = true; return m_pMatWFShiny; }
 						case 6: { bMatWasForced = true; return m_pMatWFFlat; }
-						case 7: { bMatWasForced = true; return m_pMatFlat2; }
-						case 8: { bMatWasForced = true; return m_pMatGlow; }
+						case 7: { bMatWasForced = true; return m_pMatFresnel; }
+						case 8: { bMatWasForced = true; return m_pMatBrick; }
 						default: return nullptr;
 					}
 				}());
@@ -247,8 +247,8 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 							case 4: { bMatWasForced = true; _case = 4; return m_pMatWFShaded; }
 							case 5: { bMatWasForced = true; _case = 5; return m_pMatWFShiny; }
 							case 6: { bMatWasForced = true; _case = 6; return m_pMatWFFlat; }
-							case 7: { bMatWasForced = true; _case = 7; return m_pMatFlat2; }
-							case 8: { bMatWasForced = true; _case = 8; return m_pMatGlow; }
+							case 7: { bMatWasForced = true; _case = 7; return m_pMatFresnel; }
+							case 8: { bMatWasForced = true; _case = 8; return m_pMatBrick; }
 							default: { return nullptr; }
 							//default: { bMatWasForced = true; _case = 100;  return nullptr; }
 						}
