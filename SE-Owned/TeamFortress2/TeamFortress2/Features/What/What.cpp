@@ -8,6 +8,8 @@
 #include <filesystem>
 #include "../AttributeChanger/AttributeChanger.h"
 #include "../Menu/Menu.h"
+#include "../Glow/Glow.h"
+#include "../Chams/Chams.h"
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
 bool tooltips = true;
@@ -267,6 +269,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		m_font_config.OversampleH = 1;
 		m_font_config.OversampleV = 1;
 		m_font_config.PixelSnapH = true;
+
+		drawList = ImGui::GetBackgroundDrawList();
 
 		Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 		DT = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahoma.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
@@ -577,6 +581,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Chams on weapons", &Vars::Chams::Players::Weapons.m_Var); HelpMarker("Will draw chams on player weapons");
 								ImGui::Checkbox("Chams through walls", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Will draw chams on the player regardless of if the player is actually visible");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player chams opacity", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+								if (ImGui::Button("Fix chams")) {
+									g_Chams.Init();
+								}
 							}
 							if (ImGui::CollapsingHeader("Glow###playerGloww")) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
@@ -587,6 +594,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Glow on weapons", &Vars::Glow::Players::Weapons.m_Var); HelpMarker("Will draw glow on player weapons");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player glow opacity", &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player glow color", &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+								if (ImGui::Button("Fix glow")) {
+									g_Glow.Init();
+								}
 							}
 							if (ImGui::CollapsingHeader("DME chams")) {
 								ImGui::Checkbox("DME chams###dmeactive", &Vars::Chams::DME::Active.m_Var); HelpMarker("DME chams master switch");
@@ -627,6 +637,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Weapon opacity", &Vars::Chams::DME::WeaponAlpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
 								ImGui::Checkbox("Weapon glow overlay", &Vars::Chams::DME::WeaponGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Weapon glow boost", &Vars::Chams::DME::WeaponRimMultiplier.m_Var, 1, 100, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
+
 							}
 
 						}
@@ -1002,6 +1013,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ColorPicker("Widget active", Vars::Menu::Colors::WidgetActive);
 								ColorPicker("Menu outline", Vars::Menu::Colors::OutlineMenu);
 								ColorPicker("Text", Vars::Menu::Colors::Text);
+								//drawList->AddRect(ImVec2(0, 0), ImVec2(g_ScreenSize.w, g_ScreenSize.h), ImColor(255, 0, 0, 255));
 								ImGui::PopItemWidth();
 							}
 
