@@ -18,7 +18,7 @@ void CChatInfo::AddListeners()
 	g_Interfaces.GameEvent->AddListener(this, _("player_disconnect"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("player_connect"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("vote_cast"), true);
-	g_Interfaces.GameEvent->AddListener(this, _("cl_drawline"), true);
+	//g_Interfaces.GameEvent->AddListener(this, _("cl_drawline"), true);
 }
 
 void CChatInfo::RemoveListeners()

@@ -174,29 +174,40 @@ void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
 
 void CMisc::HitLog(CGameEvent& pEvent) noexcept
 {
-	if (strstr(pEvent.GetName(), "player_hurt")) {
-		if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent.GetInt("userid")))) {
-			PlayerInfo_t li; 
-			if (g_Interfaces.Engine->GetPlayerInfo(g_EntityCache.m_pLocal->GetIndex(), &li)) {
-				if (const auto localUserId = li.userID; pEvent.GetInt("attacker") != localUserId || pEvent.GetInt("userid") == localUserId)
+	if (Vars::Visuals::damageLogger.m_Var) {
+		if (strstr(pEvent.GetName(), "player_hurt")) {
+			if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent.GetInt("userid")))) {
+				const auto attacker = pEvent.GetInt("attacker");
+				const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
+				PlayerInfo_t pPlayerInfo;
+				if (!g_Interfaces.Engine->GetPlayerInfo(nLocal, &pPlayerInfo)) {
 					return;
-			}
-			int nIndex = pEntity->GetIndex();
-			//const auto user = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("userid"));
-			const auto health = pEvent.GetInt("health");
-			const auto damage = pEvent.GetInt("damageamount");
-			const auto crit = pEvent.GetBool("crit");
-			PlayerInfo_t pi;
-			if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
-			{
-				const auto maxHealth = pEntity->GetMaxHealth();
-				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(damage) + (crit ? " (crit) " : " ") + "(" + std::to_string(health) + "/" + std::to_string(maxHealth) + ")";
-				if (Vars::Visuals::damageLogger.m_Var == 1) {
-					char logBuff[255];
-					sprintf(logBuff, "\x4[FeD]\x3 %s", attackString.c_str());
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
 				}
-				strings.push_back(attackString);
+				if (attacker != pPlayerInfo.userID) {
+					return;
+				}
+				else {
+					int nIndex = pEntity->GetIndex();
+					//const auto user = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("userid"));
+					const auto health = pEvent.GetInt("health");
+					const auto damage = pEvent.GetInt("damageamount");
+					const auto crit = pEvent.GetBool("crit");
+					PlayerInfo_t pi;
+					if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
+					{
+						const auto maxHealth = pEntity->GetMaxHealth();
+						std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(damage) + (crit ? " (crit) " : " ") + "(" + std::to_string(health) + "/" + std::to_string(maxHealth) + ")";
+						if (Vars::Visuals::damageLogger.m_Var == 1) {
+							char logBuff[255];
+							sprintf(logBuff, "\x4[FeD]\x3 %s", attackString.c_str());
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
+						}
+						if (Vars::Visuals::damageLogger.m_Var == 2) {
+							strings.push_back(attackString);
+						}
+					}
+				}
+				
 			}
 		}
 	}
@@ -340,9 +351,9 @@ void CMisc::CathookIdentify() {
 		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 	};
 
-	if (GetAsyncKeyState(0x56)) {
+	/*if (GetAsyncKeyState(0x56)) {
 		CathookMessage();
-	}
+	}*/
 }
 
 void CMisc::StopFast(CUserCmd* pCmd) {
