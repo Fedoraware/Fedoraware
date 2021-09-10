@@ -488,8 +488,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Auto airblast");
 							ImGui::Checkbox("Active###gAAB", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
-							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
-							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
+							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Airblast FoV###gAABFoV", &Vars::Triggerbot::Blast::Fov.m_Var, 1, 60, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees the auto airblast's FoV will have");
 
 						}
