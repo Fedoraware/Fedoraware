@@ -2,6 +2,9 @@
 
 #include "../Vars.h"
 
+
+//#define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
+
 void CMisc::Run(CUserCmd* pCmd)
 {
 	AutoJump(pCmd);
@@ -167,6 +170,38 @@ void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
 	}
 }
 
+
+
+void CMisc::HitLog(CGameEvent& pEvent) noexcept
+{
+	if (strstr(pEvent.GetName(), "player_hurt")) {
+		if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent.GetInt("userid")))) {
+			PlayerInfo_t li; 
+			if (g_Interfaces.Engine->GetPlayerInfo(g_EntityCache.m_pLocal->GetIndex(), &li)) {
+				if (const auto localUserId = li.userID; pEvent.GetInt("attacker") != localUserId || pEvent.GetInt("userid") == localUserId)
+					return;
+			}
+			int nIndex = pEntity->GetIndex();
+			//const auto user = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("userid"));
+			const auto health = pEvent.GetInt("health");
+			const auto damage = pEvent.GetInt("damageamount");
+			const auto crit = pEvent.GetBool("crit");
+			PlayerInfo_t pi;
+			if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
+			{
+				const auto maxHealth = pEntity->GetMaxHealth();
+				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(damage) + (crit ? " (crit) " : " ") + "(" + std::to_string(health) + "/" + std::to_string(maxHealth) + ")";
+				if (Vars::Visuals::damageLogger.m_Var == 1) {
+					char logBuff[255];
+					sprintf(logBuff, "\x4[FeD]\x3 %s", attackString.c_str());
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
+				}
+				strings.push_back(attackString);
+			}
+		}
+	}
+}
+
 void CMisc::AutoJump(CUserCmd *pCmd)
 {
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
@@ -305,9 +340,9 @@ void CMisc::CathookIdentify() {
 		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 	};
 
-	/*if (GetAsyncKeyState(0x56)) {
+	if (GetAsyncKeyState(0x56)) {
 		CathookMessage();
-	}*/
+	}
 }
 
 void CMisc::StopFast(CUserCmd* pCmd) {

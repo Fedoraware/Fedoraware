@@ -33,4 +33,5 @@ namespace ClientModeHook
 		using fn = bool(__thiscall *)(CClientModeShared *, const CViewSetup *);
 		bool __stdcall Hook(const CViewSetup *pSetup);
 	}
+
 }

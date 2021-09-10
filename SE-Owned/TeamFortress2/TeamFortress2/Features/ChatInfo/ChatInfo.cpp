@@ -11,12 +11,14 @@ void CChatInfo::AddListeners()
 	//Client
 	g_Interfaces.GameEvent->AddListener(this, _("player_changeclass"), false);
 	g_Interfaces.GameEvent->AddListener(this, _("flagstatus_update"), false);
+	g_Interfaces.GameEvent->AddListener(this, _("player_hurt"), false);
 
 	//Server
 	g_Interfaces.GameEvent->AddListener(this, _("player_activate"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("player_disconnect"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("player_connect"), true);
 	g_Interfaces.GameEvent->AddListener(this, _("vote_cast"), true);
+	g_Interfaces.GameEvent->AddListener(this, _("cl_drawline"), true);
 }
 
 void CChatInfo::RemoveListeners()
@@ -31,23 +33,25 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 	if (pEvent)
 	{
 		g_Misc.VoteRevealer(*pEvent);
+		g_Misc.HitLog(*pEvent);
 
 		const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
 		const std::string_view szEvent(pEvent->GetName());
 
+		const char* CathookName = pEvent->GetName();
+		int CathookLine = pEvent->GetInt("line", -1);
+		int CathookPanel = pEvent->GetInt("panel", -1);
+		float CathookX = pEvent->GetFloat("x", -1.f);
+		float CathookY = pEvent->GetFloat("y", -1.f);
+
+		if (strstr(CathookName, "cl_drawline"))
+			if (CathookLine == 0 && CathookPanel == 2)
+				if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f)
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");
+
 		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
 		{
 			int nLocalTeam = pLocal->GetTeamNum();
-			const char* CathookName = pEvent->GetName();
-			int CathookLine = pEvent->GetInt("line", -1);
-			int CathookPanel = pEvent->GetInt("panel", -1);
-			float CathookX = pEvent->GetFloat("x", -1.f);
-			float CathookY = pEvent->GetFloat("y", -1.f);
-
-			if (strstr(CathookName, "cl_drawline"))
-				if (CathookLine == 0 && CathookPanel == 2)
-					if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f)
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");
 
 			if (!szEvent.compare(_("player_changeclass")))
 			{

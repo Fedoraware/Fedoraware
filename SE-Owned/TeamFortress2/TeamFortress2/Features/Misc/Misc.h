@@ -21,12 +21,14 @@ public:
 	void AutoRocketJump(CUserCmd *pCmd);
 	void NoPush();
 	void VoteRevealer(CGameEvent& event) noexcept;
+	void HitLog(CGameEvent& pEvent) noexcept;
 	float currentcommandforwardmove = 0.0f;
 	float currentcommandsidemove = 0.0f;
 	float currentspeed = 0.0f;
 	float currentmaxspeed = 0.0f;
 	bool goback = false;
 	bool stop = false;
+	std::vector<std::string> strings;
 };
 
 inline CMisc g_Misc;

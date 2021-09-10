@@ -478,7 +478,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::MinDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 				
-				
+			SAVE_VAR(Vars::Visuals::despawnTime);
+			SAVE_VAR(Vars::Visuals::damageLogger);
+
 				
 				
 
@@ -938,6 +940,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::MinDist);
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Menu::LegacyMenu);
+			LOAD_VAR(Vars::Visuals::despawnTime);
+			LOAD_VAR(Vars::Visuals::damageLogger);
 			
 #ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
