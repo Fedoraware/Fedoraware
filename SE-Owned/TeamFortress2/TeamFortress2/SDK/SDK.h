@@ -134,7 +134,8 @@ namespace Utils
 	{
 		static int nCreatedMats = 0;
 		char szOut[512];
-		sprintf_s(szOut, sizeof(szOut), _("SEO_material%i.vmt"), nCreatedMats++);
+		//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, szVars);
+		sprintf_s(szOut, sizeof(szOut), _("SEO_material_%i.vmt"), nCreatedMats++);
 
 		char szMaterial[512];
 		sprintf_s(szMaterial, sizeof(szMaterial), szVars);

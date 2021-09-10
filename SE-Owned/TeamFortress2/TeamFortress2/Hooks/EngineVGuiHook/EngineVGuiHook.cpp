@@ -153,22 +153,24 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							// pWeapon->GetWeaponData().m_nBulletsPerShot
 							int tickWidth = 8;
 							int barWidth = (tickWidth * ticks) + 2;
-							g_Draw.OutlinedRect( // Outline of bar
-								g_ScreenSize.c - (barWidth / 2), // get center of screen, then subtract the width of the bar divided by 2 (to start  the bar)
-								nY + 80, // vertical center + 80px
-								barWidth, // width of outlined rect
-								12, // height (hardcoded)
-								{ 30, 30, 30, 180 } // color
-							);
-							g_Draw.GradientRect(
-								g_ScreenSize.c - (barWidth / 2) + 1, // the bar
-								nY + 81,
-								(g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * ticksChoked,
-								nY + 81 + 10,
-								color1,
-								color2,
-								true
-							);
+							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+								g_Draw.OutlinedRect( // Outline of bar
+									g_ScreenSize.c - (barWidth / 2), // get center of screen, then subtract the width of the bar divided by 2 (to start  the bar)
+									nY + 80, // vertical center + 80px
+									barWidth, // width of outlined rect
+									12, // height (hardcoded)
+									{ 30, 30, 30, 180 } // color
+								);
+								g_Draw.GradientRect(
+									g_ScreenSize.c - (barWidth / 2) + 1, // the bar
+									nY + 81,
+									(g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * ticksChoked,
+									nY + 81 + 10,
+									color1,
+									color2,
+									true
+								);
+							}
 
 						}
 					}

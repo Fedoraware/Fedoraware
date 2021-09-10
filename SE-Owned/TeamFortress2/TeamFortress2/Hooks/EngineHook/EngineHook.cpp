@@ -59,28 +59,27 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		int nClass = pLocal->GetClassNum();
-		int dtTicks;
 		if (nClass == CLASS_HEAVY) {
-			dtTicks = MAX_NEW_COMMANDS_HEAVY;
+			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS_HEAVY;
 		}
 		else {
-			dtTicks = MAX_NEW_COMMANDS;
+			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
 		}
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
 			g_GlobalInfo.fast_stop = true;
-			while (g_GlobalInfo.m_nShifted < dtTicks)
+			while (g_GlobalInfo.m_nShifted < g_GlobalInfo.dtTicks)
 			{
 				if (!g_GlobalInfo.m_bShouldShift) {
 					return;
 				}
 				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
-					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
+					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (g_GlobalInfo.dtTicks - 1))); //this doubletaps
 					g_GlobalInfo.m_nShifted++;
 				}
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 
 					if (pLocal->IsOnGround()) {
-						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
+						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (g_GlobalInfo.dtTicks - 1))); //this doubletaps
 						g_GlobalInfo.m_nShifted++;
 					}
 					else {

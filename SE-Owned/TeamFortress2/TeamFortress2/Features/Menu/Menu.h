@@ -32,7 +32,7 @@ public:
 	float m_flFadeAlpha		= 0.0f;
 	float m_flFadeElapsed	= 0.0f;
 	float m_flFadeDuration	= 0.1f;
-
+	float flTimeOnChange = 0.0f;
 public:
 	bool m_bOpen = false;
 	bool m_bTyping = false;

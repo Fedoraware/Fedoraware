@@ -138,6 +138,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					antiAfk = 0;
 				}
 			}
+			else {
+				antiAfk = 0;
+			}
 		}
 	}
 

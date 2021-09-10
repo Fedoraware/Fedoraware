@@ -156,7 +156,11 @@ void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
 			const char* sayCmd = "say_party ";
 			char buffer[256];
 			strncpy(buffer, sayCmd, sizeof(buffer));
+#pragma warning (push)
+#pragma warning (disable : 6053)
+#pragma warning (disable : 6059)
 			strncat(buffer, szBuff, sizeof(buffer));
+#pragma warning (pop)
 			g_Interfaces.Engine->ClientCmd_Unrestricted(buffer);
 		}
 		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, szBuff);
@@ -300,11 +304,11 @@ void CMisc::CathookIdentify() {
 
 		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 	};
-}
 
-bool pda = false;
-bool pda2 = false;
-bool pda3 = false;
+	/*if (GetAsyncKeyState(0x56)) {
+		CathookMessage();
+	}*/
+}
 
 void CMisc::StopFast(CUserCmd* pCmd) {
 
@@ -320,10 +324,10 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 
 			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
 				if (speed > 1.f) {
-					if (!pda) {
+					/*if (!pda) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 1");
 						pda = true;
-					}
+					}*/
 					if (pLocal->GetMaxSpeed() < 240)
 					{
 						pCmd->forwardmove = 0.f;
@@ -333,18 +337,18 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 						pCmd->forwardmove = -pCmd->forwardmove / 4;
 					}
 					pCmd->sidemove = 0.f;
-					if (!pda2) {
+					/*if (!pda2) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
 						pda2 = true;
-					}
+					}*/
 				}
 				else {
-					if (!pda3) {
+					/*if (!pda3) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
 						pda3 = true;
 					}
 					pda = false;
-					pda2 = false;
+					pda2 = false;*/
 					g_GlobalInfo.fast_stop = false;
 				}
 			}

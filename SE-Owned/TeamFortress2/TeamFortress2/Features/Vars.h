@@ -422,7 +422,7 @@ namespace Vars
 		inline CVar<bool> Directional			{ false, L"Directional" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
-		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
+		inline CVar<bool> BypassPure            { true, L"Bypass Pure" };
 		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
 		inline CVar<bool> MedalFlip				{ true, L"Medal Flip" };
@@ -445,6 +445,7 @@ namespace Vars
 			inline CVar<int> TeleportKey	{ 0x52, L"Teleport Key" }; //R
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
 			inline CVar<int> DoubletapKey	{ 0x56, L"Doubletap Key" }; //V
+			inline CVar<int> DTBarStyle{ 0, L"Doubletap bar style" };
 
 			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
 			inline CVar<bool> Fakelag{ true, L"Fakelag" };
