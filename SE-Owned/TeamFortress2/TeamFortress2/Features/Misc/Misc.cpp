@@ -306,10 +306,6 @@ void CMisc::CathookIdentify() {
 	}*/
 }
 
-bool pda = false;
-bool pda2 = false;
-bool pda3 = false;
-
 void CMisc::StopFast(CUserCmd* pCmd) {
 
 	if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && Vars::Misc::CL_Move::DoubletapKey.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
@@ -324,10 +320,10 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 
 			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
 				if (speed > 1.f) {
-					if (!pda) {
+					/*if (!pda) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 1");
 						pda = true;
-					}
+					}*/
 					if (pLocal->GetMaxSpeed() < 240)
 					{
 						pCmd->forwardmove = 0.f;
@@ -337,18 +333,18 @@ void CMisc::StopFast(CUserCmd* pCmd) {
 						pCmd->forwardmove = -pCmd->forwardmove / 4;
 					}
 					pCmd->sidemove = 0.f;
-					if (!pda2) {
+					/*if (!pda2) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
 						pda2 = true;
-					}
+					}*/
 				}
 				else {
-					if (!pda3) {
+					/*if (!pda3) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
 						pda3 = true;
 					}
 					pda = false;
-					pda2 = false;
+					pda2 = false;*/
 					g_GlobalInfo.fast_stop = false;
 				}
 			}
