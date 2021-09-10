@@ -1,7 +1,6 @@
-# Fedoraware (SE-Owned Public but awesome)
-
-Press insert to open the imgui menu
-Press home to open the old menu (has some things i haven't added to the new one yet)
+# Fedoraware, a SE-Owned fork.
+- NOTE: It's still very __*early*__ in development and there are a lot of issues!
+- __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
 
 ## Differences to original SE-Owned:
 - ImGui menu
@@ -24,15 +23,16 @@ Press home to open the old menu (has some things i haven't added to the new one 
 - Doubletap shifts 23 ticks if heavy, 20 if not
 ![screenshot](https://i.imgur.com/Bhmsdqt.jpg)
 
+## Some videos of the cheat:
+- [[TF2/FEDORAware] Best TF2 Paste? (by c1R)](https://www.youtube.com/watch?v=7gDLPRXtdw8)
+- [[TF2/FEDORAWARE] The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
+- [[TF2] Casual Highlights #1 (by macedoniaN)](https://www.youtube.com/watch?v=W3Gbv7uiImU)
+
 ### Credits to:
-  - Spook953
+  - spook953
   - Lak3
   - M-FeD (Me)
-  - OxyGodmode
+  - oxyGodmode
   - JAGNEmk
   - r00t
-
-### Some videos of the cheat:
-  - [TF2/FEDORAware] Best TF2 Paste? (by c1R) https://www.youtube.com/watch?v=7gDLPRXtdw8
-  - [TF2/FEDORAWARE] The Crew (by Josep) https://www.youtube.com/watch?v=7I44S9sSOcc
-  - [TF2] Casual Highlights #1 (by macedoniaN) https://www.youtube.com/watch?v=W3Gbv7uiImU
+ 
