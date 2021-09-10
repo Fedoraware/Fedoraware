@@ -44,10 +44,10 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 		float CathookX = pEvent->GetFloat("x", -1.f);
 		float CathookY = pEvent->GetFloat("y", -1.f);
 
-		if (strstr(CathookName, "cl_drawline"))
+		/*if (strstr(CathookName, "cl_drawline"))
 			if (CathookLine == 0 && CathookPanel == 2)
 				if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f)
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");*/
 
 		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
 		{
