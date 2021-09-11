@@ -340,9 +340,7 @@ public: //Everything else, lol.
 	}
 
 	__inline Vec3 GetShootPos() {
-		static auto Weapon_ShootPositionFn = reinterpret_cast<float* (__thiscall*)(PVOID, Vec3*)>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 56 8B 75 08 57 8B F9 56 8B 07 FF 90")));
-		Vec3 vOut = Vec3();
-		Weapon_ShootPositionFn(this, &vOut);
+		Vec3 vOut = GetVecOrigin() + GetViewOffset();
 		return vOut;
 	}
 

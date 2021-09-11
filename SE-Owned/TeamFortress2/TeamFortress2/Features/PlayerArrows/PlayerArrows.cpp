@@ -136,11 +136,16 @@ void CPlayerArrows::Run()
 
 		for (const auto& Player : m_vecPlayers) {
 			Color_t teamColor;
-			if (pLocal->GetTeamNum() == 2) {
-				teamColor = Colors::TeamBlu;
+			if (!Vars::ESP::Main::EnableTeamEnemyColors.m_Var) {
+				if (pLocal->GetTeamNum() == 2) {
+					teamColor = Colors::TeamBlu;
+				}
+				else {
+					teamColor = Colors::TeamRed;
+				}
 			}
 			else {
-				teamColor = Colors::TeamRed;
+				teamColor = Colors::Enemy;
 			}
 			DrawArrowTo(vLocalPos, Player, teamColor);
 		}

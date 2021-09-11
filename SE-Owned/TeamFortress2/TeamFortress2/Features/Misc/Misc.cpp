@@ -12,9 +12,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	NoiseMakerSpam();
 	ChatSpam();
 	CheatsBypass();
-	StopFast(pCmd);
 	NoPush();
-	CathookIdentify();
 }
 
 static bool push = true;
@@ -33,7 +31,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
 	{
-		if (Vars::Misc::EdgeJumpKey.m_Var == 0x0){
+		if (Vars::Misc::EdgeJumpKey.m_Var == 0x0) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
@@ -96,41 +94,6 @@ QAngle VectorToQAngle(Vector in)
 	return *(QAngle*)&in;
 }
 
-void FastStop(CUserCmd* pCmd) {
-	Vector vel;
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		vel = pLocal->GetVecVelocity();
-
-		static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
-		static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
-
-		auto speed = vel.Lenght2D();
-		auto friction = sv_friction->GetFloat() * (DWORD)pLocal + 0x12b8;
-		auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
-		auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
-
-		if (speed > drop - 1.0f)
-		{
-			Vector velocity = vel;
-			Vector direction;
-			VectorAngles(vel, direction);
-			float speed = velocity.Lenght();
-
-			direction.y = pCmd->viewangles.y - direction.y;
-
-			Vector forward;
-			AngleVectors2(VectorToQAngle(direction), &forward);
-			Vector negated_direction = forward * -speed;
-
-			pCmd->forwardmove = negated_direction.x;
-			pCmd->sidemove = negated_direction.y;
-		}
-		else {
-			pCmd->forwardmove = pCmd->sidemove = 0.0f;
-		}
-	}
-}
-
 const int nY = (g_ScreenSize.h / 2) + 20;
 
 void CMisc::NoPush() {
@@ -170,8 +133,6 @@ void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
 	}
 }
 
-
-
 void CMisc::HitLog(CGameEvent& pEvent) noexcept
 {
 	if (Vars::Visuals::damageLogger.m_Var) {
@@ -203,19 +164,24 @@ void CMisc::HitLog(CGameEvent& pEvent) noexcept
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
 						}
 						if (Vars::Visuals::damageLogger.m_Var == 2) {
-							strings.push_back(attackString);
+							if (static_cast<int>(strings.size()) > 8) {
+								strings.clear();
+							}
+							else {
+								strings.push_back(attackString);
+							}
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
 }
 
-void CMisc::AutoJump(CUserCmd *pCmd)
+void CMisc::AutoJump(CUserCmd* pCmd)
 {
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (!Vars::Misc::AutoJump.m_Var
 			|| !pLocal->IsAlive()
@@ -228,69 +194,20 @@ void CMisc::AutoJump(CUserCmd *pCmd)
 
 		if (pCmd->buttons & IN_JUMP)
 		{
-			if (!bJumpState && !pLocal->IsOnGround())
+			if (!bJumpState && !pLocal->IsOnGround()) {
 				pCmd->buttons &= ~IN_JUMP;
+			}
 
-			else if (bJumpState)
+			else if (bJumpState) {
 				bJumpState = false;
+			}
 		}
 
-		else if (!bJumpState)
-bJumpState = true;
-	}
-}
-/*
-void CMisc::AutoStrafe(CUserCmd* pCmd)
-{
-
-}
-void CMisc::AutoStrafe(CUserCmd* pCmd)
-{
-	if (Vars::Misc::AutoStrafe.m_Var)
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-
-			if (pLocal->GetFlags() & FL_ONGROUND)
-				return;
-
-			float speed = pLocal->GetVelocity().Lenght2D();
-			Vec3 velocity = pLocal->GetVelocity();
-
-			float yawVelocity = RAD2DEG(atan2(velocity.y, velocity.x));
-			float velocityDelta = Math::NormalizeYaw(pCmd->viewangles.y - yawVelocity);
-			static float sideSpeed = g_ConVars.cl_sidespeed->GetFloat();
-
-			if (fabsf(pCmd->mousedx > 2)) {
-
-				pCmd->sidemove = (pCmd->mousedx < 0.f) ? -sideSpeed : sideSpeed;
-				return;
-			}
-
-			if (pCmd->buttons & IN_BACK)
-				pCmd->viewangles.y -= 180.f;
-			else if (pCmd->buttons & IN_MOVELEFT)
-				pCmd->viewangles.y += 90.f;
-			else if (pCmd->buttons & IN_MOVERIGHT)
-				pCmd->viewangles.y -= 90.f;
-
-			if ((!speed > 0.5f) || (!speed == NAN) || (!speed == INFINITE)) {
-				pCmd->forwardmove = 450.f;
-				return;
-			}
-
-			pCmd->forwardmove = std::clamp(5850.f / speed, -450.f, 450.f);
-
-			if ((pCmd->forwardmove < -450.f || pCmd->forwardmove > 450.f))
-				pCmd->forwardmove = 0.f;
-
-			pCmd->sidemove = (velocityDelta > 0.0f) ? -sideSpeed : sideSpeed;
-			pCmd->viewangles.y = Math::NormalizeYaw(pCmd->viewangles.y - velocityDelta);
-
-			pCmd->viewangles = vAngle;
+		else if (!bJumpState) {
+			bJumpState = true;
 		}
 	}
-}*/
+}
 
 float fclamp(float d, float min, float max) {
 	const float t = d < min ? min : d;
@@ -350,57 +267,8 @@ void CMisc::CathookIdentify() {
 
 		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
 	};
-
-	/*if (GetAsyncKeyState(0x56)) {
-		CathookMessage();
-	}*/
 }
 
-void CMisc::StopFast(CUserCmd* pCmd) {
-
-	if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && Vars::Misc::CL_Move::DoubletapKey.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
-	{
-		g_GlobalInfo.m_bShouldShift = true;
-	}
-
-
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (pLocal->IsOnGround()) {
-			float speed = pLocal->GetVelocity().Lenght2D();
-
-			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-				if (speed > 1.f) {
-					/*if (!pda) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 1");
-						pda = true;
-					}*/
-					if (pLocal->GetMaxSpeed() < 240)
-					{
-						pCmd->forwardmove = 0.f;
-
-					}
-					else {
-						pCmd->forwardmove = -pCmd->forwardmove / 4;
-					}
-					pCmd->sidemove = 0.f;
-					/*if (!pda2) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
-						pda2 = true;
-					}*/
-				}
-				else {
-					/*if (!pda3) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
-						pda3 = true;
-					}
-					pda = false;
-					pda2 = false;*/
-					g_GlobalInfo.fast_stop = false;
-				}
-			}
-		}
-	}
-}
 
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
@@ -423,7 +291,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 #
 			static bool was_jumping = false;
 			bool is_jumping = pCmd->buttons & IN_JUMP;
-		
+
 
 			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
@@ -472,7 +340,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 					pCmd->sidemove = -sinf(moveDir) * 450.f;
 				}
 
-				
+
 			}
 			was_jumping = is_jumping;
 		}
@@ -485,22 +353,22 @@ void CMisc::InitSpamKV(void* pKV)
 	typedef int(__cdecl* HashFunc_t)(const char*, bool);
 
 	static DWORD dwHashFunctionLocation = g_Pattern.Find(_(L"client.dll"), _(L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6"));
-	static HashFunc_t SymbForString = (HashFunc_t)* *(PDWORD*)(dwHashFunctionLocation + 0x2);
+	static HashFunc_t SymbForString = (HashFunc_t) * *(PDWORD*)(dwHashFunctionLocation + 0x2);
 
 	int nAddr = 0;
 	while (nAddr < 29)
 	{
 		switch (nAddr)
 		{
-			case 0:
-				*(PDWORD)((DWORD)pKV + nAddr) = SymbForString(chCommand, true);
-				break;
-			case 16:
-				*(PDWORD)((DWORD)pKV + nAddr) = 0x10000;
-				break;
-			default:
-				*(PDWORD)((DWORD)pKV + nAddr) = 0;
-				break;
+		case 0:
+			*(PDWORD)((DWORD)pKV + nAddr) = SymbForString(chCommand, true);
+			break;
+		case 16:
+			*(PDWORD)((DWORD)pKV + nAddr) = 0x10000;
+			break;
+		default:
+			*(PDWORD)((DWORD)pKV + nAddr) = 0;
+			break;
 		}
 
 		nAddr += 4;
@@ -555,11 +423,11 @@ std::string GetSpam(const int nIndex) {
 
 	switch (nIndex)
 	{
-		case 0: str = XorStr("say SEOwned - Available for free @ unknowncheats.me!").str(); break;
-		case 1: str = XorStr("say SEOwned - Better than 20$ Darkstorm!").str(); break;
-		case 2: str = XorStr("say SEOwned - Go get yours now from unknowncheats.me!").str(); break;
-		case 3: str = XorStr("say SEOwned - Premium cheat by spook953 and Lak3, but it's free!").str(); break;
-		default: str = XorStr("say SEOwned - See you @ unknowncheats.me!").str(); break;
+	case 0: str = XorStr("say SEOwned - Available for free @ unknowncheats.me!").str(); break;
+	case 1: str = XorStr("say SEOwned - Better than 20$ Darkstorm!").str(); break;
+	case 2: str = XorStr("say SEOwned - Go get yours now from unknowncheats.me!").str(); break;
+	case 3: str = XorStr("say SEOwned - Premium cheat by spook953 and Lak3, but it's free!").str(); break;
+	default: str = XorStr("say SEOwned - See you @ unknowncheats.me!").str(); break;
 	}
 
 	return str;
@@ -570,7 +438,7 @@ void CMisc::ChatSpam()
 	if (!Vars::Misc::ChatSpam.m_Var)
 		return;
 
-	float flCurTime = g_Interfaces.Engine->Time(); 
+	float flCurTime = g_Interfaces.Engine->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend) {
@@ -579,7 +447,7 @@ void CMisc::ChatSpam()
 	}
 }
 
-void CMisc::AutoRocketJump(CUserCmd *pCmd)
+void CMisc::AutoRocketJump(CUserCmd* pCmd)
 {
 	if (!Vars::Misc::AutoRocketJump.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
 		return;
@@ -587,12 +455,12 @@ void CMisc::AutoRocketJump(CUserCmd *pCmd)
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return;
 
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
 			return;
 
-		if (const auto &pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 		{
 			if (pWeapon->IsInReload()) {
 				pCmd->buttons |= IN_ATTACK;

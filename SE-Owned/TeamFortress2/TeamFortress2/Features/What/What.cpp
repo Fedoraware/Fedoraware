@@ -293,7 +293,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 	if (g_Menu.m_bOpen)
 	{
 		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("FEDORAware", nullptr, ImGuiWindowFlags_NoCollapse))
+		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			//ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);
@@ -492,8 +492,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Auto airblast");
 							ImGui::Checkbox("Active###gAAB", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
-							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
-							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
+							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Airblast FoV###gAABFoV", &Vars::Triggerbot::Blast::Fov.m_Var, 1, 60, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees the auto airblast's FoV will have");
 
 						}
@@ -543,6 +543,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Columns(3);
 						{
 							ImGui::TextUnformatted("Players");
+							ImGui::Checkbox("Enable Team/Enemy colors", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 							if (ImGui::CollapsingHeader("ESP###playerESp", ImGuiTreeNodeFlags_DefaultOpen))
 							{
 								//ImGui::TextUnformatted("ESP");
@@ -935,6 +936,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Radar size", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth(); HelpMarker("The size of the radar window");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Radar range", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth(); HelpMarker("The range of the radar");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Radar background alpha", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("The background alpha of the radar");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Radar lines alpha", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("The line alpha of the radar");
 								if (ImGui::CollapsingHeader("Players###radarplayers")) {
 									ImGui::Checkbox("Active###radarp", &Vars::Radar::Players::Active.m_Var); HelpMarker("Will show players on the radar");
 									const char* iconPlayersRadar[]{ "Scoreboard", "Portraits", "Avatar" }; ImGui::PushItemWidth(100); ImGui::Combo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar)); ImGui::PopItemWidth(); HelpMarker("What sort of icon to represent players with");
@@ -987,8 +989,14 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Health pack", Colors::Health);
 							ColorPicker("Ammo pack", Colors::Ammo);
 							ColorPicker("Ubercharged", Colors::UberColor);
-							ColorPicker("RED team", Colors::TeamRed);
-							ColorPicker("BLU team", Colors::TeamBlu);
+							if (!Vars::ESP::Main::EnableTeamEnemyColors.m_Var) {
+								ColorPicker("RED team", Colors::TeamRed);
+								ColorPicker("BLU team", Colors::TeamBlu);
+							}
+							else {
+								ColorPicker("Enemy", Colors::Enemy);
+								ColorPicker("Team", Colors::Team);
+							}
 							ColorPicker("Hand chams", Colors::Hands);
 							ColorPicker("Hand glow chams", Colors::HandsOverlay);
 							ColorPicker("Weapon chams", Colors::Weapon);

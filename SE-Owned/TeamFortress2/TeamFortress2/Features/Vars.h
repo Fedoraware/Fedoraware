@@ -176,6 +176,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active	{ true, L"Active" };
 			inline CVar<int> Outline	{ 2, L"Outline" }; //0 - OFF, 1 - Text Only, 2 - All
+			inline CVar<bool> EnableTeamEnemyColors	{ false, L"Enable team/enemy colors"};
 		}
 
 		namespace Players
@@ -327,6 +328,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<int>  BackAlpha{ 128, L"Back Alpha" };
+			inline CVar<int>  LineAlpha{ 255, L"Line Alpha" };
 			inline CVar<int>  Size{ 100, L"Size" };
 			inline CVar<int>  Range{ 1500, L"Range" };
 		}

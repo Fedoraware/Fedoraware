@@ -40,6 +40,7 @@ void CRadar::DrawRadar()
 
 	//Build the bg color with the wanted alpha.
 	Color_t clrBack = { 30, 30, 30, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
+	Color_t clrLines = { Vars::Menu::Colors::TitleBar.r, Vars::Menu::Colors::TitleBar.g, Vars::Menu::Colors::TitleBar.b, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) };
 
 
 
@@ -47,11 +48,11 @@ void CRadar::DrawRadar()
 	g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, Vars::Menu::Colors::TitleBar);
+	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrLines);
 
 	//Center lines
-	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, Vars::Menu::Colors::TitleBar);
-	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, Vars::Menu::Colors::TitleBar);
+	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, clrLines);
+	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, clrLines);
 }
 
 bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)
@@ -154,7 +155,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				int nX = -1, nY = -1;
 				if (GetDrawPosition(nX, nY, pObject))
 				{
-					Color_t clrDraw = Utils::GetEntityDrawColor(Building);
+					Color_t clrDraw = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 					const int nSize = Vars::Radar::Buildings::IconSize.m_Var;
 					nX -= (nSize / 2), nY -= (nSize / 2);
@@ -247,7 +248,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				const int nSize = Vars::Radar::Players::IconSize.m_Var;
 				nX -= (nSize / 2), nY -= (nSize / 2);
 
-				Color_t clrDraw = Utils::GetEntityDrawColor(Player);
+				Color_t clrDraw = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 				//Background
 				//Just a filled rect or a bit better looking texture RN
