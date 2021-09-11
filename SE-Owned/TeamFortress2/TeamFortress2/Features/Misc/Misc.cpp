@@ -48,51 +48,6 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 	}
 }
 
-void VectorAngles(Vector& forward, Vector& angles)
-{
-	float tmp, yaw, pitch;
-
-	if (forward[1] == 0 && forward[0] == 0)
-	{
-		yaw = 0;
-		if (forward[2] > 0)
-			pitch = 270;
-		else
-			pitch = 90;
-	}
-	else
-	{
-		yaw = (atan2(forward[1], forward[0]) * 180 / PI);
-		if (yaw < 0)
-			yaw += 360;
-
-		tmp = sqrt((forward[0] * forward[0] + forward[1] * forward[1]));
-		pitch = (atan2(-forward[2], tmp) * 180 / PI);
-		if (pitch < 0)
-			pitch += 360;
-	}
-
-	angles[0] = pitch;
-	angles[1] = yaw;
-	angles[2] = 0;
-}
-
-void AngleVectors2(const QAngle& angles, Vector* forward)
-{
-	float sp, sy, cp, cy;
-
-	Math::SinCos(DEG2RAD(angles.x), &sy, &cy);
-	Math::SinCos(DEG2RAD(angles.y), &sp, &cp);
-
-	forward->x = cp * cy;
-	forward->y = cp * sy;
-	forward->z = -sp;
-}
-
-QAngle VectorToQAngle(Vector in)
-{
-	return *(QAngle*)&in;
-}
 
 const int nY = (g_ScreenSize.h / 2) + 20;
 
