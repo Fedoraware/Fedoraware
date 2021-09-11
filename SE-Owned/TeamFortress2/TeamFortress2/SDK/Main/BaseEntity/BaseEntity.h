@@ -340,8 +340,7 @@ public: //Everything else, lol.
 	}
 
 	__inline Vec3 GetShootPos() {
-		Vec3 vOut = GetVecOrigin() + GetViewOffset();
-		return vOut;
+		return  GetVecOrigin() + GetViewOffset();
 	}
 
 	__inline int GetNumOfHitboxes() {
