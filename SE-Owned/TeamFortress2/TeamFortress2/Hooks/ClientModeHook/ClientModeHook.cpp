@@ -87,14 +87,32 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	chIdentify++;
-	if (chIdentify > 1000) {
-		chIdentify = 0;
-	}
+	//Bless your beautiful soul reestart/kris
 
-	if (chIdentify == 0) {
-		//g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
-		//g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage2);
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
+		int shiftcheck = g_GlobalInfo.m_nShifted; //grab shifted.
+
+		if (shiftcheck < 19)
+		{
+			if (shiftcheck < 5)
+			{
+				cmd->forwardmove = -cmd->forwardmove;
+				cmd->sidemove = -cmd->sidemove;
+			}
+			else
+			{
+				cmd->forwardmove = 0;
+				cmd->sidemove = 0;
+			}
+		}
+		else {
+			g_GlobalInfo.fast_stop = false;
+		}
+	};
+
+	if (g_GlobalInfo.fast_stop) {
+		AntiWarp(pCmd);
 	}
 
 
@@ -135,6 +153,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				antiAfk += 1;
 				if (antiAfk == 1000) {
 					pCmd->buttons |= IN_JUMP;
+					pCmd->forwardmove = 1.f;
+					pCmd->sidemove = 1.f;
 					antiAfk = 0;
 				}
 			}
@@ -184,9 +204,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
-	//Cathook Identify
-	//Cathook Identify/ 
-
 	//fakelag
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
@@ -226,23 +243,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 	}
-	
-	/*
-	auto ShouldNoPush = [&]() -> bool
-	{
-		if (const auto &pLocal = g_EntityCache.m_pLocal)
-		{
-			if (!Vars::Misc::NoPush.m_Var)
-				return false;
-
-			if (pLocal->IsTaunting() || pLocal->IsInBumperKart())
-				return false;
-
-			return true;
-		}
-
-		return false;
-	};*/
 
 	static bool bWasSet = false;
 
