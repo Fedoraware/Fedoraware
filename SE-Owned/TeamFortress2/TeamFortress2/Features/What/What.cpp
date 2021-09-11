@@ -293,7 +293,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 	if (g_Menu.m_bOpen)
 	{
 		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
-		if (ImGui::Begin("FEDORAware", nullptr, ImGuiWindowFlags_NoCollapse))
+		if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		{
 			//ImGui::PopStyleColor();
 			ImGui::SetWindowSize(ImVec2(1020, 600), ImGuiCond_Once);
