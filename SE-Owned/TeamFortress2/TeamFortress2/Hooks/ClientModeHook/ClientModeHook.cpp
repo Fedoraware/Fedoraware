@@ -11,6 +11,7 @@
 
 #include "../../Features/Vars.h"
 #include "../../Features/Menu/Menu.h"
+#include "../../SDK/Timer.h"
 
 void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
@@ -30,40 +31,28 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
 }
 
-int chIdentify = 0;
-int antiAfk = 0;
+Timer AntiAfkTimer{  };
+int last_buttons{ 0 };
 
-void *CathookMessage = Utils::CreateKeyVals({
-	_("\"cl_drawline\"\
-			\n{\
-			\n\t\"panel\" \"2\"\
-			\n\t\"line\" \"0\"\
-			\n\t\"x\" \"0xCA7\"\
-			\n\t\"y\" \"1234567.f\"\
-			\n}\n")
-	});
-
-
-void *CathookMessage2 = Utils::CreateKeyVals({
-	_("\"cl_drawline\"\
-			\n{\
-			\n\t\"panel\" \"2\"\
-			\n\t\"line\" \"0\"\
-			\n\t\"x\" \"0xCA8\"\
-			\n\t\"y\" \"1234567.f\"\
-			\n}\n")
-	});
-
-/*
-auto CathookMessage = []() -> void
+static void updateAntiAfk(CUserCmd *pCmd)
 {
-
-
-	g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
-
-
-	g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage2);
-};*/
+	if (pCmd->buttons != last_buttons) {
+		AntiAfkTimer.update();
+		last_buttons = pCmd->buttons;
+	}
+	else {
+		if (g_ConVars.afkTimer->GetInt() != 0 && AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 - 10000)) {
+			bool flip = false;
+			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
+			flip = !flip;
+			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
+			{
+				AntiAfkTimer.update();
+			}
+		}
+		last_buttons = pCmd->buttons;
+	}
+}
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -148,20 +137,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 
 	if (Vars::Misc::AntiAFK.m_Var) {
-		if (const auto& pLocal = g_EntityCache.m_pLocal) {
-			if (pLocal->IsAlive() && pLocal->GetVelocity().Lenght2D() == 0) {
-				antiAfk += 1;
-				if (antiAfk == 1000) {
-					pCmd->buttons |= IN_JUMP;
-					pCmd->forwardmove = 1.f;
-					pCmd->sidemove = 1.f;
-					antiAfk = 0;
-				}
-			}
-			else {
-				antiAfk = 0;
-			}
-		}
+		updateAntiAfk(pCmd);
 	}
 
 	if (Vars::Misc::Roll.m_Var && pCmd->buttons & IN_DUCK) {

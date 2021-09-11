@@ -552,6 +552,7 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XInput.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xma2defs.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xnamath.h" />
+    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

@@ -16,4 +16,5 @@ void ConVars_t::Init()
 	glow_outline_effect_enable		= g_Interfaces.CVars->FindVar(_("glow_outline_effect_enable"));
 	r_drawspecificstaticprop        = g_Interfaces.CVars->FindVar(_("r_drawspecificstaticprop"));
 	sv_namechange_cooldown_seconds  = g_Interfaces.CVars->FindVar(_("sv_namechange_cooldown_seconds"));
+	afkTimer = g_Interfaces.CVars->FindVar(_("mp_idlemaxtime"));
 }

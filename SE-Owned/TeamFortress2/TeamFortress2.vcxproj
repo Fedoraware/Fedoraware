@@ -675,6 +675,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
+    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
