@@ -153,11 +153,11 @@ void CGlowEffect::Render()
 							DrawColor = Utils::Rainbow();
 						}
 						else {
-							DrawColor = Utils::GetEntityDrawColor(Player);
+							DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 						}
 					}
 					else {
-						DrawColor = Utils::GetEntityDrawColor(Player);
+						DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 					}
 				}
 				else {
@@ -219,7 +219,7 @@ void CGlowEffect::Render()
 				Color_t DrawColor = {};
 
 				if (Vars::Glow::Buildings::Color.m_Var == 0)
-					DrawColor = Utils::GetEntityDrawColor(Building);
+					DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 				else DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
 
@@ -275,7 +275,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Projectile))
 						continue;
 
-					m_vecGlowEntities.push_back({ Projectile, Utils::GetTeamColor(nTeam), Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({ Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var), Vars::Glow::World::Alpha.m_Var });
 
 					if (!g_Chams.HasDrawn(Projectile))
 						DrawModel(Projectile, STUDIO_RENDER, true);
