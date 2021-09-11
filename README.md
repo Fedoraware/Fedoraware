@@ -2,6 +2,10 @@
 - NOTE: It's still very __*early*__ in development and there are a lot of issues!
 - __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
 
+## Guide:
+- [How to compile and use a FEDORAware](https://www.youtube.com/watch?v=3OaAkfsikrE)
+- __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)
+
 ## Differences to original SE-Owned:
 - ImGui menu
 - Pretty much every font changed
