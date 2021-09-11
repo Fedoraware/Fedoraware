@@ -174,7 +174,7 @@ void CSpectatorList::DrawClassic()
 			g_Draw.String(
 				FONT_ESP_NAME_OUTLINED,
 				nDrawX, nDrawY,
-				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam),
+				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
 				ALIGN_CENTERHORIZONTAL,
 				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());
 

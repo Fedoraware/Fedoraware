@@ -261,6 +261,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::ESP::Main::Active);
 				SAVE_VAR(Vars::ESP::Main::Outline);
+				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
 			}
 
 			//Players
@@ -409,6 +410,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::Radar::Main::Active);
 				SAVE_VAR(Vars::Radar::Main::BackAlpha);
+				SAVE_VAR(Vars::Radar::Main::LineAlpha);
 				SAVE_VAR(Vars::Radar::Main::Size);
 				SAVE_VAR(Vars::Radar::Main::Range);
 			}
@@ -564,6 +566,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::UberColor);
 			SAVE_OTHER(Colors::TeamRed);
 			SAVE_OTHER(Colors::TeamBlu);
+			SAVE_OTHER(Colors::Enemy);
+			SAVE_OTHER(Colors::Team);
 			SAVE_OTHER(Colors::Hands);
 			SAVE_OTHER(Colors::Weapon);
 			SAVE_OTHER(Colors::HandsOverlay);
@@ -722,6 +726,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::ESP::Main::Active);
 				LOAD_VAR(Vars::ESP::Main::Outline);
+				LOAD_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
 			}
 
 			//Players
@@ -869,6 +874,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::Radar::Main::Active);
 				LOAD_VAR(Vars::Radar::Main::BackAlpha);
+				LOAD_VAR(Vars::Radar::Main::LineAlpha);
 				LOAD_VAR(Vars::Radar::Main::Size);
 				LOAD_VAR(Vars::Radar::Main::Range);
 			}
@@ -1022,6 +1028,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::UberColor);
 			LOAD_OTHER(Colors::TeamRed);
 			LOAD_OTHER(Colors::TeamBlu);
+			LOAD_OTHER(Colors::Enemy);
+			LOAD_OTHER(Colors::Team);
 			LOAD_OTHER(Colors::Hands);
 			LOAD_OTHER(Colors::HandsOverlay);
 			LOAD_OTHER(Colors::Weapon);

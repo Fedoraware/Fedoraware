@@ -48,6 +48,7 @@
 #include "Main/KeyValues/KeyValues.h"
 #include "Main/TraceFilters/TraceFilters.h"
 #include "DirectX/DirectX.h"
+#include "../Features/Vars.h"
 
 #define TICK_INTERVAL		( g_Interfaces.GlobalVars->interval_per_tick )
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
@@ -113,6 +114,8 @@ namespace Colors
 	inline Color_t UberColor =				{ 224, 86, 253, 255 };
 	inline Color_t TeamRed =				{ 255, 100, 87, 255 };
 	inline Color_t TeamBlu =				{ 30, 144, 255, 255 };
+	inline Color_t Enemy =					{ 255, 100, 87, 255 };
+	inline Color_t Team =					{ 30, 144, 255, 255 };
 	inline Color_t Hands =					{ 30, 144, 255, 255 };
 	inline Color_t HandsOverlay =			{ 255, 127, 0, 255 };
 	inline Color_t Weapon =					{ 30, 144, 255, 255 };
@@ -225,19 +228,32 @@ namespace Utils
 		return InitKeyValues(32);
 	}
 
-	__inline Color_t GetTeamColor(int nTeamNum)
+	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
 	{
-		switch (nTeamNum)
-		{
+		if (otherColors) {
+			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+				// Enemy/Team based colors
+				auto lPlayerTeam = pLocal->GetTeamNum();
+				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::Team;
+				else if (lPlayerTeam == 3 && nTeamNum == 3) return Colors::Team;
+				else if (lPlayerTeam == 2 && nTeamNum == 3) return Colors::Enemy;
+				else if (lPlayerTeam == 3 && nTeamNum == 2) return Colors::Enemy;
+				else return Colors::White;
+			}
+		}
+		else {
+			switch (nTeamNum)
+			{
 			case 2: return Colors::TeamRed;
 			case 3: return Colors::TeamBlu;
 			default: return Colors::White;
+			}
 		}
 	}
 
-	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity)
+	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)
 	{
-		Color_t out = GetTeamColor(pEntity->GetTeamNum());
+		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
 
 		if (pEntity->IsPlayer())
 		{
