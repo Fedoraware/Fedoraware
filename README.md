@@ -4,7 +4,7 @@
 
 ## Guide:
 - [How to compile and use a FEDORAware](https://www.youtube.com/watch?v=3OaAkfsikrE)
-- __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)
+- __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
 
 ## Differences to original SE-Owned:
 - ImGui menu
