@@ -65,7 +65,9 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		else {
 			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
 		}
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var) || Vars::Misc::CL_Move::AlwaysDT.m_Var) {
+		if ((Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
+			(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
+			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var))) {
 			g_GlobalInfo.fast_stop = true;
 			while (g_GlobalInfo.m_nShifted < g_GlobalInfo.dtTicks)
 			{
