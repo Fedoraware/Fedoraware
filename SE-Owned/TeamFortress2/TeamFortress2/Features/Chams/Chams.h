@@ -4,8 +4,10 @@
 class CChams
 {
 private:
-	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny, * m_pMatBrick, * m_pMatFresnelHDR0, * m_pMatFresnelHDR1, * m_pMatFresnel;;
+	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny, * m_pMatBrick, * m_pMatFresnelHDR, * m_pMatFresnel;
 	IMaterial *m_pMatBlur;
+
+	IMaterialVar *m_pMatFresnelHDRSelfillumTint, *m_pMatFresnelHDREnvmapTint;
 
 	std::map<CBaseEntity *, bool> m_DrawnEntities;
 
@@ -28,7 +30,8 @@ public:
 
 	inline bool IsChamsMaterial(IMaterial *pMat) {
 		return (pMat == m_pMatShaded || pMat == m_pMatFlat || 
-				pMat == m_pMatShiny || pMat == m_pMatBrick || pMat == m_pMatBlur);
+			pMat == m_pMatShiny || pMat == m_pMatBrick || pMat == m_pMatBlur
+			|| pMat == m_pMatFresnelHDR || pMat == m_pMatFresnel);
 	}
 
 public:
