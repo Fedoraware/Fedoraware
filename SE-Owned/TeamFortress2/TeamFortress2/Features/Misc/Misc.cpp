@@ -164,7 +164,12 @@ void CMisc::HitLog(CGameEvent& pEvent) noexcept
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
 						}
 						if (Vars::Visuals::damageLogger.m_Var == 2) {
-							strings.push_back(attackString);
+							if (static_cast<int>(strings.size()) > 8) {
+								strings.clear();
+							}
+							else {
+								strings.push_back(attackString);
+							}
 						}
 					}
 				}

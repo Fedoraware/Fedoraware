@@ -40,7 +40,7 @@ void CRadar::DrawRadar()
 
 	//Build the bg color with the wanted alpha.
 	Color_t clrBack = { 30, 30, 30, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
-	Color_t clrLines = { Vars::Menu::Colors::TitleBar.r, Vars::Menu::Colors::TitleBar.g, Vars::Menu::Colors::TitleBar.b, Vars::Radar::Main::LineAlpha.m_Var };
+	Color_t clrLines = { Vars::Menu::Colors::TitleBar.r, Vars::Menu::Colors::TitleBar.g, Vars::Menu::Colors::TitleBar.b, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) };
 
 
 

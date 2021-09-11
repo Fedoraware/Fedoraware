@@ -389,7 +389,9 @@ void projectileTracer(CBaseEntity* pLocal, Target_t Target) {
 	Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : Target.m_vPos;
 	//Color_t Color = (Utils::Rainbow());
 	Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
-	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(pLocal->GetShootPos(), vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
+	Vec3 shootPos = pLocal->GetShootPos();
+	shootPos.z -= 5.0f;
+	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, Color.r, Color.g, Color.b, Color.a, true, 5);
 }
 
 bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
