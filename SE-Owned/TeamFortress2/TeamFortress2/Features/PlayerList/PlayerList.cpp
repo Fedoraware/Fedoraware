@@ -165,16 +165,16 @@ void CPlayerList::DrawNewWindow()
 	{
 		DragNewWindow();
 
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
 		g_Draw.Rect(m_nNewWindowX - m_nNewWindowSize, m_nNewWindowY - m_nNewWindowSize - 20, m_nNewWindowSize, 20, Vars::Menu::Colors::TitleBar);
 		g_Draw.String(FONT_MENU, m_nNewWindowX - (m_nNewWindowSize / 2), m_nNewWindowY - m_nNewWindowSize - 10, { 255, 255, 255, 255 }, ALIGN_CENTER, "Playerlist");
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
 		//Build the bg color
 		Color_t clrBack = Vars::Menu::Colors::WindowBackground;
 
 		//Background
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
 		if (playerIndex > 280) {
 			g_Draw.Rect(m_nNewWindowX - m_nNewWindowSize, m_nNewWindowY - m_nNewWindowSize, m_nNewWindowSize, playerIndex + margin, clrBack);
 		}
@@ -192,7 +192,7 @@ void CPlayerList::DrawNewWindow()
 
 		}
 		//g_Draw.OutlinedRect(m_nNewWindowX - m_nNewWindowSize, m_nNewWindowY - m_nNewWindowSize, m_nNewWindowSize, m_nNewWindowSize, Vars::Menu::Colors::OutlineMenu);
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
 		
 

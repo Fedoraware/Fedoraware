@@ -682,7 +682,7 @@ void CMenu::Run()
 
 	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
 		//
-		g_Interfaces.Surface->SetCursorAlwaysVisible(m_bOpen = !m_bOpen);
+		//g_Interfaces.Surface->SetCursorAlwaysVisible(m_bOpen = !m_bOpen);
 		flTimeOnChange = g_Interfaces.Engine->Time();
 	}
 	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;

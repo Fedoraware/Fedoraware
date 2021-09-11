@@ -2,7 +2,7 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-// Credits to OxyGodmode
+// Credits to oxyGodmode
 
 constexpr Color_t clrBlack = { 0, 0, 0, 255 };
 constexpr Color_t clrWhite = { 255, 255, 255, 255 };
@@ -120,16 +120,16 @@ void CConsole::DrawNewWindow()
 	{
 		DragNewWindow();
 
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
 		g_Draw.Rect(m_nConsoleX - m_nConsoleSize, m_nConsoleY - m_nConsoleSize - 20, m_nConsoleSize, 20, Vars::Menu::Colors::TitleBar);
 		g_Draw.String(FONT_MENU, m_nConsoleX - (m_nConsoleSize / 2), m_nConsoleY - m_nConsoleSize - 10, { 255, 255, 255, 255 }, ALIGN_CENTER, "Settings");
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
 		//Build the bg color
 		Color_t clrBack = Vars::Menu::Colors::WindowBackground;
 
 		//Background
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
 		if (playerIndex > 280) {
 			g_Draw.Rect(m_nConsoleX - m_nConsoleSize, m_nConsoleY - m_nConsoleSize, m_nConsoleSize, playerIndex + margin, clrBack);
 		}
@@ -147,7 +147,7 @@ void CConsole::DrawNewWindow()
 
 		}
 		//g_Draw.OutlinedRect(m_nConsoleX - m_nConsoleSize, m_nConsoleY - m_nConsoleSize, m_nConsoleSize, m_nConsoleSize, Vars::Menu::Colors::OutlineMenu);
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+		//g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
 
 

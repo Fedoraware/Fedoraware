@@ -275,6 +275,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		if (nChoked > 14)
 			*pSendPacket = true;
 	}
+	if (static_cast<int>(g_Misc.strings.size()) > 0) {
+		g_GlobalInfo.tickCounter++;
+
+		if (g_GlobalInfo.tickCounter > Vars::Visuals::despawnTime.m_Var) {
+			g_GlobalInfo.tickCounter = 0;
+
+			g_Misc.strings.pop_back();
+		}
+	}
+	else {
+		g_GlobalInfo.tickCounter = 0;
+	}
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

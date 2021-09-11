@@ -13,6 +13,7 @@ struct GlobalInfo_t
 	int m_nWaitForShift                 = 0;
 	int m_nShifted                      = MAX_NEW_COMMANDS;
 	int dtTicks = MAX_NEW_COMMANDS;
+	int tickCounter = 0;
 	bool m_bWeaponCanHeadShot			= false;
 	bool m_bWeaponCanAttack				= false;
 	bool m_bWeaponCanSecondaryAttack	= false;

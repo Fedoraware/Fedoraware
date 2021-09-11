@@ -8,6 +8,7 @@ class CWhat
 private:
 	ImFont* Normal;
 	ImFont* DT;
+	ImDrawList* drawList;
 public:
 	bool menuOpen = false;
 	bool menuUnload = false;
