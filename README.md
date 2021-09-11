@@ -10,13 +10,13 @@
 - Skybox Changer
 - Doubletap key
 - Doubletap bar
-- Dragons fury added to projectile aimbot
+- Anti-warp
+- Dragons fury added to projectile aimbot (not pSilent)
 - More chams
 - Nullcore style useful buttons panel (thanks oxygodmode)
 - Directional autostrafe
 - Fakelag
 - Working nopush
-- Kinda working fast stop for doubletap (in function autostrafe because i couldnt be bothered to put it somewhere else, so turn that on lol)
 - Duck speed
 - Changed world modulation to not affect the skybox
 - Added a buggy dev textures thing that u need to rejoin to make work and half the time it crashes you
