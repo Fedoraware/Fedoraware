@@ -214,7 +214,7 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 			continue;
 
 		if (bMatWasForced) {
-			Color_t DrawColor = Utils::GetEntityDrawColor(Player);
+			Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 			//Color_t DrawColor = Utils::Rainbow();
 			if (Vars::Chams::Players::Material.m_Var != 6) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
@@ -348,7 +348,7 @@ void CChams::RenderBuildings(CBaseEntity *pLocal, IMatRenderContext *pRenderCont
 			continue;
 
 		if (bMatWasForced) {
-			Color_t DrawColor = Utils::GetEntityDrawColor(Building);
+			Color_t DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 			if (Vars::Chams::Players::Material.m_Var != 6) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 			}
@@ -517,7 +517,7 @@ void CChams::RenderWorld(CBaseEntity *pLocal, IMatRenderContext *pRenderContext)
 				continue;
 
 			if (bMatWasForced) {
-				Color_t DrawColor = Utils::GetTeamColor(nTeam);
+				Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 				if (Vars::Chams::Players::Material.m_Var != 6) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 				}

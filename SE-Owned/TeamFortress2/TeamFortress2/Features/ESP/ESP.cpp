@@ -147,7 +147,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				continue;
 		}
 
-		Color_t DrawColor = Utils::GetEntityDrawColor(Player);
+		Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 		if (Vars::ESP::Players::Dlights.m_Var)
 			CreateDLight(nIndex, DrawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.m_Var);
@@ -366,7 +366,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 
 		const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
 
-		Color_t DrawColor = Utils::GetEntityDrawColor(Building);
+		Color_t DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 		if (Vars::ESP::Buildings::Dlights.m_Var)
 			CreateDLight(Building->GetIndex(), DrawColor, Building->GetAbsOrigin(), Vars::ESP::Buildings::DlightRadius.m_Var);
