@@ -469,6 +469,10 @@ namespace Vars
 			inline CVar<int> YawReal	{ 0, L"Yaw Real" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 			inline CVar<int> YawFake	{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 		}
+		namespace Resolver
+		{
+			inline CVar<bool> PitchResolver			{ false, L"Pitch Resolver" };
+		}
 	}
 
 	namespace Skybox
