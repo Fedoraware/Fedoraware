@@ -345,14 +345,22 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity *pLocal, CBaseEntity *pEntity)
 {
 	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
 	{
-		case 0: return pEntity->GetWorldSpaceCenter();
-		case 1: return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
-		case 2:
+		case 0: return pEntity->GetWorldSpaceCenter(); //body
+		case 1: return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f); //feet
+		case 2: //auto
 		{
 			switch (pLocal->GetClassNum())
 			{
-				case CLASS_SOLDIER: return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
-
+				//case CLASS_SOLDIER: 
+				case CLASS_SOLDIER: //soldier just aims at legs
+				{
+					return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
+				}
+				case CLASS_DEMOMAN:
+				{
+					if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->GetFlags() & FL_ONGROUND) return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
+					else return pEntity->GetWorldSpaceCenter();
+				}
 				case CLASS_SNIPER:
 				{
 					Vec3 vPos = pEntity->GetHitboxPos(HITBOX_HEAD);
