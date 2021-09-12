@@ -3,7 +3,7 @@
 - __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
 
 ## Guide:
-- [How to compile and use a FEDORAware](https://www.youtube.com/watch?v=3OaAkfsikrE)
+- [How to compile and use a Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
 - __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
 
 ## Differences to original SE-Owned:
