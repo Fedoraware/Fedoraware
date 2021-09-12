@@ -478,7 +478,6 @@ namespace Vars
 	namespace Skybox
 	{
 		inline int skyboxnum = 0;
-		inline std::string nigger = "hello hello :)";
 		inline std::string SkyboxName = "mr_04";
 	}
 }

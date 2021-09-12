@@ -597,7 +597,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
-			//SAVE_STRING(Vars::Skybox::nigger);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 		}
 
@@ -1066,7 +1065,6 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
-			//LOAD_STRING(Vars::Skybox::nigger);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 		}
 
