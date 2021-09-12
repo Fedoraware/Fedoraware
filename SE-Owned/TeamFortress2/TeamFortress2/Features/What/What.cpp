@@ -278,6 +278,11 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		bInitImGui = true;
 	}
 
+	pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
+	pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
+
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		g_Interfaces.Surface->SetCursorAlwaysVisible(g_Menu.m_bOpen = !g_Menu.m_bOpen);
 		menuOpen = !menuOpen;
@@ -458,7 +463,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							static const char* projectileAimMethod[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###projectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, projectileAimMethod, IM_ARRAYSIZE(projectileAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
 							static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###projectileAimPosition", &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aim FoV###projectileFoV", &Vars::Aimbot::Projectile::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
-							ImGui::Separator();
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Melee");
