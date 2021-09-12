@@ -210,7 +210,12 @@ void CChams::RenderPlayers(CBaseEntity *pLocal, IMatRenderContext *pRenderContex
 			}
 			if (Vars::Chams::Players::Material.m_Var == 6) {
 				m_pMatFresnelHDRSelfillumTint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
-				m_pMatFresnelHDREnvmapTint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
+				if (bIsLocal && Vars::Glow::Players::LocalRainbow.m_Var) {
+					m_pMatFresnelHDREnvmapTint->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r), Color::TOFLOAT(Utils::Rainbow().g), Color::TOFLOAT(Utils::Rainbow().b));	
+				}
+				else {
+					m_pMatFresnelHDREnvmapTint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
+				}
 			}
 		}
 

@@ -1112,5 +1112,5 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
+	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, true);
 }
