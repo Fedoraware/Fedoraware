@@ -13,6 +13,36 @@ bool CDMEChams::ShouldRun()
 
 void CDMEChams::Init()
 {
+	m_pMatShaded = Utils::CreateMaterial({
+_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$bumpmap\" \"vgui/white_additive\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$selfillumfresnel\" \"1\"\
+		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
+		\n}\n")
+		});
+
+	m_pMatShiny = Utils::CreateMaterial({
+_("\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$bumpmap\" \"vgui/white_additive\"\
+		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$selfillumfresnel\" \"1\"\
+		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
+		\n}\n")
+		});
+
+	m_pMatFlat = Utils::CreateMaterial({
+	_("\"UnlitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n}\n")
+		});
+
 	m_pMatFresnel = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
 		\n{\
@@ -24,7 +54,7 @@ void CDMEChams::Init()
 		\n\t\"$selfillumfresnelminmaxexp\" \"[0.1 0.2 0.3]\"\
 		\n\t\"$selfillumtint\" \"[0 0 0]\"\
 		\n}\n")
-	});
+		});
 
 	m_pMatBrick = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
@@ -40,11 +70,7 @@ void CDMEChams::Init()
 		\n\t\"$rimlight\" \"1\"\
 		\n\t\"$rimlightboost\" \"10\"\
 		\n}\n")
-	});
-
-	m_pMatNone = Utils::CreateMaterial({
-	_("")
-	});
+		});
 
 	m_pMatScuffed = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
@@ -63,37 +89,7 @@ void CDMEChams::Init()
 		\n\t\"$rimlight\" \"1\"\
 		\n\t\"$rimlightboost\" \"10\"\
 		\n}\n")
-	});
-
-	m_pMatShaded = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-	});
-
-	m_pMatShiny = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-	});
-
-	m_pMatFlat = Utils::CreateMaterial({
-		_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n}\n")
-	});
+		});
 
 	m_pMatWFShaded = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
@@ -105,7 +101,7 @@ void CDMEChams::Init()
 		\n\t\"$selfillumfresnel\" \"1\"\
 		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
 		\n}\n")
-	});
+		});
 
 	m_pMatWFShiny = Utils::CreateMaterial({
 	_("\"VertexLitGeneric\"\
@@ -118,7 +114,7 @@ void CDMEChams::Init()
 		\n\t\"$selfillumfresnel\" \"1\"\
 		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
 		\n}\n")
-	});
+		});
 
 	m_pMatWFFlat = Utils::CreateMaterial({
 	_("\"UnlitGeneric\"\
@@ -126,10 +122,10 @@ void CDMEChams::Init()
 		\n\t\"$wireframe\" \"1\"\
 		\n\t\"$basetexture\" \"vgui/white_additive\"\
 		\n}\n")
-	});
+		});
 }
 
-bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &pInfo, matrix3x4 *pBoneToWorld)
+bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	m_bRendering = false;
 
@@ -137,7 +133,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 	{
 		m_bRendering = true;
 
-		CBaseEntity *pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
+		CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 		if (pEntity && pEntity->GetClassID() == ETFClassID::CTFViewModel)
 		{
@@ -146,9 +142,9 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 			if (Vars::Chams::DME::Hands.m_Var)
 			{
 				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-				{
-					switch (Vars::Chams::DME::Hands.m_Var) {
-						
+					{
+						switch (Vars::Chams::DME::Hands.m_Var) {
+
 						case 1: { bMatWasForced = true; return m_pMatShaded; }
 						case 2: { bMatWasForced = true; return m_pMatShiny; }
 						case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -158,8 +154,8 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 						case 7: { bMatWasForced = true; return m_pMatFresnel; }
 						case 8: { bMatWasForced = true; return m_pMatBrick; }
 						default: return nullptr;
-					}
-				}());
+						}
+					}());
 
 			}
 
@@ -237,10 +233,10 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 
 				if (Vars::Chams::DME::Weapon.m_Var)
 				{
-					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial *
-					{
-						switch (Vars::Chams::DME::Weapon.m_Var) {
-							//case 0: { bMatWasForced = true; _case = 9; return nullptr; }
+					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+						{
+							switch (Vars::Chams::DME::Weapon.m_Var) {
+								//case 0: { bMatWasForced = true; _case = 9; return nullptr; }
 							case 1: { bMatWasForced = true; _case = 1; return m_pMatShaded; }
 							case 2: { bMatWasForced = true; _case = 2; return m_pMatShiny; }
 							case 3: { bMatWasForced = true; _case = 3; return m_pMatFlat; }
@@ -250,9 +246,9 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 							case 7: { bMatWasForced = true; _case = 7; return m_pMatFresnel; }
 							case 8: { bMatWasForced = true; _case = 8; return m_pMatBrick; }
 							default: { return nullptr; }
-							//default: { bMatWasForced = true; _case = 100;  return nullptr; }
-						}
-					}());
+								   //default: { bMatWasForced = true; _case = 100;  return nullptr; }
+							}
+						}());
 				}
 
 				if (bMatWasForced) {
