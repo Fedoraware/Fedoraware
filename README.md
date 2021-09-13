@@ -1,6 +1,7 @@
 # Fedoraware, a SE-Owned fork.
 - NOTE: It's still very __*early*__ in development and there are a lot of issues!
 - __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
+- You will have issues with injecting if you are on Windows 10 upgraded from Windows 7.
 
 ## Guide:
 - [How to compile and use a Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
