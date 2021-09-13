@@ -699,7 +699,6 @@
     <ClInclude Include="TeamFortress2\Utils\XorStr\XorStr.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX10math.inl" />
     <None Include="TeamFortress2\SDK\DirectX\Include\d3dx9math.inl" />

@@ -49,19 +49,6 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
-void CVisuals::Init() {
-
-}
-
-/*
-CVisualsm_pMatDev = Utils::CreateMaterial({
-	_("\"LightmappedGeneric\"\
-			\n{\
-			\n\t\"$basetexture\" \"dev/dev_measuregeneric01b\"\
-			\n}\n")
-	}
-);*/
-
 bool CVisuals::RemoveScope(int nPanel)
 {
 	if (!m_nHudZoom && Hash::IsHudScope(g_Interfaces.Panel->GetName(nPanel)))

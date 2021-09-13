@@ -38,6 +38,10 @@
 #define VK_Y              0x59
 #define VK_Z              0x5A
 
+#define TEAM_NONE		  1
+#define TEAM_RED		  2
+#define TEAM_BLU		  3
+
 #include "Main/BaseEntity/BaseEntity.h"
 #include "Main/BaseCombatWeapon/BaseCombatWeapon.h"
 #include "Main/BaseObject/BaseObject.h"
@@ -249,6 +253,7 @@ namespace Utils
 			default: return Colors::White;
 			}
 		}
+		return Colors::White;
 	}
 
 	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)

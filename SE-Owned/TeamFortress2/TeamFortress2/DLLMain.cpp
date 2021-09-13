@@ -39,7 +39,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Glow.Init();
 	g_Chams.Init();
 	g_DMEChams.Init();
-	g_Visuals.Init();
 	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();

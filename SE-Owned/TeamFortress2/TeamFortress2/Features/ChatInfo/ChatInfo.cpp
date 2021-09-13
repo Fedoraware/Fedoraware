@@ -37,17 +37,17 @@ void CChatInfo::FireGameEvent(CGameEvent* pEvent)
 
 		const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
 		const std::string_view szEvent(pEvent->GetName());
-
+		/*
 		const char* CathookName = pEvent->GetName();
 		int CathookLine = pEvent->GetInt("line", -1);
 		int CathookPanel = pEvent->GetInt("panel", -1);
 		float CathookX = pEvent->GetFloat("x", -1.f);
 		float CathookY = pEvent->GetFloat("y", -1.f);
 
-		/*if (strstr(CathookName, "cl_drawline"))
+		if (strstr(CathookName, "cl_drawline"))
 			if (CathookLine == 0 && CathookPanel == 2)
-				if ((CathookX == 0xCA8 || CathookX == 0xCA7) && CathookY == 1234567.f)
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "yep i got one");*/
+				if ((CathookX == 0xCA7) && CathookY == 1234567.f)
+					g_Interfaces.Engine->ServerCmdKeyValues(reply);*/
 
 		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
 		{
