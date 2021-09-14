@@ -800,7 +800,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
 								ImGui::Checkbox("Votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
 								const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(100); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth(); HelpMarker("Will log any damage you deal to players");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 10, 180); ImGui::PopItemWidth(); HelpMarker("How many ticks the damage logger text will stay");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How many ticks the damage logger text will stay");
 								ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and again so you don't get kicked for idling");
 								ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");

@@ -54,7 +54,7 @@ public:
 	Notify() : m_notify_text{} {}
 
 	
-	__forceinline void Add(const std::string& text, Color_t color = { 255, 255, 255, 255 }, float time = 8.f) { m_notify_text.push_back(std::make_shared< NotifyText >(text, color, time)); }
+	__forceinline void Add(const std::string& text, Color_t color = { 255, 255, 255, 255 }, float time = Vars::Visuals::despawnTime.m_Var) { m_notify_text.push_back(std::make_shared< NotifyText >(text, color, time)); }
 	void Think();
 };
 
