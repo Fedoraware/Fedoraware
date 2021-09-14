@@ -26,7 +26,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 			}
 
 			if (uNameHash == FNV1A::HashConst("player_changeclass")) {
-				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("userid"))) {
+				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")))) {
 					int nIndex = pEntity->GetIndex();
 
 					PlayerInfo_t pi;
