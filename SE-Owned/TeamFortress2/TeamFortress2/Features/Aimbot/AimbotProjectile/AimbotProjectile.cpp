@@ -220,7 +220,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 
-	float fInterp = g_ConVars.cl_interp->GetFloat();
 	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
 
 	float MAX_TIME = ProjInfo.m_flMaxTime;
@@ -228,7 +227,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity *pLocal, CBaseCombatWeapon *
 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
-		float fCorrectTime = (fPredTime + fInterp + fLatency);
+		float fCorrectTime = (fPredTime + fLatency);
 		Vec3 vPredictedPos = Predictor.Extrapolate(fCorrectTime);
 
 		switch (pWeapon->GetWeaponID())
