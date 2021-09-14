@@ -16,6 +16,8 @@
 
 #include "SDK/Includes/Enums.h"
 
+#include "Utils/Events/Events.h"
+
 int StringToWString(std::wstring& ws, const std::string& s)
 {
 	std::wstring wsTmp(s.begin(), s.end());
@@ -42,7 +44,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();
-	g_ChatInfo.AddListeners();
 	g_Draw.InitFonts
 	({
 		//FONT_ESP
@@ -77,6 +78,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Verdana"), 16, 800, FONTFLAG_OUTLINE }
 		});
 
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "cl_drawline" });
+
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 127, 0, 255 }, _("M-FeD, "));
@@ -108,7 +111,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	
-	g_ChatInfo.RemoveListeners();
+	g_Events.Destroy();
 	g_Hooks.Release();
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));

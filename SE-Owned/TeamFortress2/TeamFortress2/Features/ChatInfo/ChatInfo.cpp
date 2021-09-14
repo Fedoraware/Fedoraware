@@ -6,84 +6,88 @@
 #define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
 #define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
 
-void CChatInfo::AddListeners()
-{
-	//Client
-	g_Interfaces.GameEvent->AddListener(this, _("player_changeclass"), false);
-	g_Interfaces.GameEvent->AddListener(this, _("flagstatus_update"), false);
-	g_Interfaces.GameEvent->AddListener(this, _("player_hurt"), false);
+void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
+	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
+		return;
 
-	//Server
-	g_Interfaces.GameEvent->AddListener(this, _("player_activate"), true);
-	g_Interfaces.GameEvent->AddListener(this, _("player_disconnect"), true);
-	g_Interfaces.GameEvent->AddListener(this, _("player_connect"), true);
-	g_Interfaces.GameEvent->AddListener(this, _("vote_cast"), true);
-	//g_Interfaces.GameEvent->AddListener(this, _("cl_drawline"), true);
-}
-
-void CChatInfo::RemoveListeners()
-{
-	g_Interfaces.GameEvent->RemoveListener(this);
-}
-
-void CChatInfo::FireGameEvent(CGameEvent* pEvent)
-{
-	const auto& pLocal = g_EntityCache.m_pLocal;
-
-	if (pEvent)
-	{
-		g_Misc.VoteRevealer(*pEvent);
-		g_Misc.HitLog(*pEvent);
-
-		const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
-		const std::string_view szEvent(pEvent->GetName());
-		/*
-		const char* CathookName = pEvent->GetName();
-		int CathookLine = pEvent->GetInt("line", -1);
-		int CathookPanel = pEvent->GetInt("panel", -1);
-		float CathookX = pEvent->GetFloat("x", -1.f);
-		float CathookY = pEvent->GetFloat("y", -1.f);
-
-		if (strstr(CathookName, "cl_drawline"))
-			if (CathookLine == 0 && CathookPanel == 2)
-				if ((CathookX == 0xCA7) && CathookY == 1234567.f)
-					g_Interfaces.Engine->ServerCmdKeyValues(reply);*/
-
-		if (pLocal && Vars::Visuals::ChatInfo.m_Var)
-		{
-			int nLocalTeam = pLocal->GetTeamNum();
-
-			if (!szEvent.compare(_("player_changeclass")))
-			{
-				if (const auto& pEntity = GET_PLAYER_USERID(pEvent->GetInt(_("userid"))))
-				{
-
-					/*if (pEntity->GetTeamNum() != nLocalTeam)
-					{*/
-						int nIndex = pEntity->GetIndex();
-
-						PlayerInfo_t pi;
-						if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
-						{
-							char szBuff[255];
-							sprintf(szBuff, _("\x4[FeD] \x3%s is now %s"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
-							//sprintf(szBuff, _("\x0x0\x1x1\x2x2\x3x3\x4x4\x5x5\x6x6\x7x7\x8x8\x9x9\x10x10\x11x11\x12x12\x13x13\x14x14\x15x15"));//, pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
-							//sprintf(szBuff, _("\x1x1\n\x2x2\n\x3x3\n\x4x4\n\x5x5\n\x6x6\n\x7x7\n\x8x8\n\x9x9"), pi.name, Utils::GetClassByIndex(pEvent->GetInt(XorStr("class").c_str())));
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, szBuff);
-						}
-					/*}*/
+	if (const auto pLocal = g_EntityCache.m_pLocal) {
+		if (Vars::Visuals::ChatInfo.m_Var) {
+			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast")) {
+				const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
+				if (pEntity && pEntity->IsPlayer()) {
+					const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
+					PlayerInfo_t pi;
+					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD] \x3%s voted %s", pi.name, bVotedYes ? "Yes" : "No").c_str());
+					if (Vars::Misc::VotesInChat.m_Var) {
+						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
+					}
 				}
-
-				return;
 			}
 
-			// :(
-			if (!szEvent.compare(_("player_connect")))
-			{
-				char szBuff[255];
-				sprintf(szBuff, _("\x3%s connected. (%s)"), pEvent->GetString(_("name")), pEvent->GetString(_("address")));
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
-				return;
+			if (uNameHash == FNV1A::HashConst("player_changeclass")) {
+				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("userid"))) {
+					int nIndex = pEntity->GetIndex();
+
+					PlayerInfo_t pi;
+					g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
+
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("\x4[FeD] \x3%s\x1 is now a \x3%s\x1!", pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
+				}
+			}
+
+			if (uNameHash == FNV1A::HashConst("player_connect")) {
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), tfm::format("\x3%s\x1 connected. (%s)", pEvent->GetString("name"), pEvent->GetString("address")).c_str());
+			}
+		}
+
+		if (Vars::Visuals::damageLogger.m_Var && uNameHash == FNV1A::HashConst("player_hurt")) {
+			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")))) {
+				const auto nAttacker = pEvent->GetInt("attacker");
+				const auto nHealth = pEvent->GetInt("health");
+				const auto nDamage = pEvent->GetInt("damageamount");
+				const auto bCrit = pEvent->GetBool("crit");
+				const int  nIndex = pEntity->GetIndex();
+
+				PlayerInfo_t pi;
+
+				{
+					g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &pi);
+					if (nAttacker != pi.userID)
+						return;
+				}
+
+				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
+
+				const auto maxHealth = pEntity->GetMaxHealth();
+				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";
+
+				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var)
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD]\x3 %s", attackString.c_str()).c_str());
+
+				if (Vars::Visuals::damageLogger.m_Var == 2)
+					g_notify.Add(attackString);
+			}
+		}
+
+		if (uNameHash == FNV1A::HashConst("cl_drawline")) {
+			const int nPlayer	= pEvent->GetInt("player", 0xDEAD);
+			const int nLine		= pEvent->GetInt("line");
+			const int nPanel	= pEvent->GetInt("panel");
+			const float flX		= pEvent->GetFloat("x");
+			const float flY		= pEvent->GetFloat("y");
+
+			if (nPlayer != 0xDEAD && nLine == 0 && nPanel == 2) {
+				if ((flX == 0xCA8 || flX == 0xCA7) && flY == 1234567.f) {
+					PlayerInfo_t info;
+					if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
+						if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
+							if (Vars::Visuals::ChatInfo.m_Var)
+								g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nPlayer, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
+							m_known_bots[info.friendsID] = true;
+						}
+					}
+				}
 			}
 		}
 	}
