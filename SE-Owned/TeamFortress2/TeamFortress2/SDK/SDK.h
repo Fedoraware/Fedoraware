@@ -143,7 +143,11 @@ namespace Utils
 		char szOut[512];
 		//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, szVars);
 		sprintf_s(szOut, sizeof(szOut), _("SEO_material_%i.vmt"), nCreatedMats++);
-
+#ifdef _DEBUG
+		std::string matName = "SEO_material_" + std::to_string(nCreatedMats - 1) + ".vmt\n";
+		g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, matName.c_str());
+		g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, szVars);
+#endif // DEBUG
 		char szMaterial[512];
 		sprintf_s(szMaterial, sizeof(szMaterial), szVars);
 
