@@ -924,4 +924,9 @@ namespace Math
 
 		return C + (D - C) * cVal;
 	}
+
+	template < typename t >
+	__forceinline void Clamp(t& n, const t& lower, const t& upper) {
+		n = std::max(lower, std::min(n, upper));
+	}
 }

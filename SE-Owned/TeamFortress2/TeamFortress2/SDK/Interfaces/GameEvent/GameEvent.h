@@ -26,23 +26,32 @@ class CGameEventListener
 public:
 	virtual ~CGameEventListener(void) {};
 
-	virtual void FireGameEvent(CGameEvent* pEvent) = 0;
+	virtual void FireGameEvent(CGameEvent* pEvent) = 0; 
+	virtual int GetEventDebugID() { return m_nDebug; }
+
+private:
+	int m_nDebug;
 };
 
+class CSVCMsg_GameEvent;
 class CGameEventManager
 {
 public:
-	bool AddListener(CGameEventListener* pListener, const char* szName, bool ServerSide) 
-	{
-		typedef bool(__thiscall* FN)(void*, CGameEventListener*, const char*, bool);
-		return GetVFunc<FN>(this, 3)(this, pListener, szName, ServerSide);
-	}
-
-	void RemoveListener(CGameEventListener* pListener)
-	{
-		typedef bool(__thiscall* FN)(void*, CGameEventListener*);
-		GetVFunc<FN>(this, 5)(this, pListener);
-	}
+	virtual				~CGameEventManager() { }
+	virtual int			LoadEventsFromFile(const char* szFileName) = 0;
+	virtual void		Reset() = 0;
+	virtual bool		AddListener(CGameEventListener* pListener, const char* szName, bool bServerSide) = 0;
+	virtual bool		FindListener(CGameEventListener* pListener, const char* szName) = 0;
+	virtual void		RemoveListener(CGameEventListener* pListener) = 0;
+	virtual void		AddListenerGlobal(CGameEventListener* pListener, bool bServerSide) = 0;
+	virtual CGameEvent* CreateNewEvent(const char* szName, bool bForce = false, int* unknown = nullptr) = 0;
+	virtual bool		FireEvent(CGameEvent* pEvent, bool bDontBroadcast = false) = 0;
+	virtual bool		FireEventClientSide(CGameEvent* pEvent) = 0;
+	virtual CGameEvent* DuplicateEvent(CGameEvent* pEvent) = 0;
+	virtual void		FreeEvent(CGameEvent* pEvent) = 0;
+	virtual bool		SerializeEvent(CGameEvent* pEvent, CSVCMsg_GameEvent* pEventMsg) = 0;
+	virtual CGameEvent* UnserializeEvent(const CSVCMsg_GameEvent& eventMsg) = 0;
+	virtual void* GetEventDataTypes(CGameEvent* pEvent) = 0;
 };
 
 #define GAMEEVENTSMANAGER_ENGINE_INTERFACE "GAMEEVENTSMANAGER002"

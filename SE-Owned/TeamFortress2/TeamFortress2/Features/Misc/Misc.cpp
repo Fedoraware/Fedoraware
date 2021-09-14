@@ -455,3 +455,51 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 		}
 	}
 }
+
+void Notify::Think() {
+	int		x{ 8 }, y{ 5 }, size{ 17 };
+	Color_t	color;
+	float	left;
+
+	if (m_notify_text.size() > (MAX_NOTIFY_SIZE + 1))
+		m_notify_text.erase(m_notify_text.begin());
+
+	for (size_t i{}; i < m_notify_text.size(); ++i) {
+		auto notify = m_notify_text[i];
+
+		notify->m_time -= g_Interfaces.GlobalVars->absoluteframetime;
+
+		if (notify->m_time <= 0.f) {
+			m_notify_text.erase(m_notify_text.begin() + i);
+			continue;
+		}
+	}
+
+	if (m_notify_text.empty())
+		return;
+
+	for (size_t i{}; i < m_notify_text.size(); ++i) {
+		auto notify = m_notify_text[i];
+
+		left = notify->m_time;
+		color = notify->m_color;
+
+		if (left < .5f) {
+			float f = left;
+			Math::Clamp(f, 0.f, .5f);
+
+			f /= .5f;
+
+			color.a = (int)(f * 255.f);
+
+			if (i == 0 && f < 0.2f)
+				y -= size * (1.f - f / 0.2f);
+		}
+
+		else
+			color.a = 255;
+
+		g_Draw.String(FONT_DEBUG, x, y, color, ALIGN_DEFAULT, notify->m_text.c_str());
+		y += size;
+	}
+}

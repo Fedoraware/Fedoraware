@@ -9,6 +9,9 @@
 #include "Hash/Hash.h"
 #include "XorStr/XorStr.h"
 
+#include "Hash/FNV1A.h"
+#include "TFM/tfm.h"
+
 #include <Windows.h>
 #include <unordered_map>
 #include <memory>
