@@ -72,21 +72,13 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 
 		if (uNameHash == FNV1A::HashConst("cl_drawline")) {
 			const int nPlayer	= pEvent->GetInt("player", 0xDEAD);
-			const int nLine		= pEvent->GetInt("line");
-			const int nPanel	= pEvent->GetInt("panel");
-			const float flX		= pEvent->GetFloat("x");
-			const float flY		= pEvent->GetFloat("y");
 
-			if (nPlayer != 0xDEAD && nLine == 0 && nPanel == 2) {
-				if ((flX == 0xCA8 || flX == 0xCA7) && flY == 1234567.f) {
-					PlayerInfo_t info;
-					if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
-						if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
-							if (Vars::Visuals::ChatInfo.m_Var)
-								g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nPlayer, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
-							m_known_bots[info.friendsID] = true;
-						}
-					}
+			PlayerInfo_t info;
+			if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
+				if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
+					if (Vars::Visuals::ChatInfo.m_Var)
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nPlayer, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
+					m_known_bots[info.friendsID] = true;
 				}
 			}
 		}
