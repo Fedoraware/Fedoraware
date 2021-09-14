@@ -101,13 +101,10 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 
 				//g_Draw.String(FONT_DEBUG, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::to_string(g_GlobalInfo.tickCounter).data());
-				if (Vars::Visuals::damageLogger.m_Var == 2) {
-					if (static_cast<int>(g_Misc.strings.size()) > 0) {
-						for (int i = 0; i < static_cast<int>(g_Misc.strings.size()); i++) {
-							g_Draw.String(FONT_DEBUG, 0, 0 + (14 * i), { 255,255,255,255 }, ALIGN_DEFAULT, g_Misc.strings[i].c_str());
-						}
-					}
-				}
+				
+				// for damage logger. 
+				// you can use it for more, i'm sure. - myzarfin
+				g_notify.Think();
 
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.m_Var)
