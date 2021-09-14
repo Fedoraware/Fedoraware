@@ -378,11 +378,11 @@ std::string GetSpam(const int nIndex) {
 
 	switch (nIndex)
 	{
-	case 0: str = XorStr("say SEOwned - Available for free @ unknowncheats.me!").str(); break;
-	case 1: str = XorStr("say SEOwned - Better than 20$ Darkstorm!").str(); break;
-	case 2: str = XorStr("say SEOwned - Go get yours now from unknowncheats.me!").str(); break;
-	case 3: str = XorStr("say SEOwned - Premium cheat by spook953 and Lak3, but it's free!").str(); break;
-	default: str = XorStr("say SEOwned - See you @ unknowncheats.me!").str(); break;
+	case 0: str = XorStr("say Fedoraware - https://github.com/M-FeD/Fedoraware").str(); break;
+	case 1: str = XorStr("say Fedoraware - Best free and open-source cheat!").str(); break;
+	case 2: str = XorStr("say Fedoraware - One tip ahead of the game!").str(); break;
+	case 3: str = XorStr("say Fedoraware - Now available @ github.com/M-FeD!").str(); break;
+	default: str = XorStr("say Fedoraware - Based on SEOwned public source!").str(); break;
 	}
 
 	return str;
