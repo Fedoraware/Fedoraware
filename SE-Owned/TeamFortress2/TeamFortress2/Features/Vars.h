@@ -451,13 +451,13 @@ namespace Vars
 			inline CVar<int> TeleportKey	{ 0x52, L"Teleport Key" }; //R
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
 			inline CVar<int> DoubletapKey	{ 0x56, L"Doubletap Key" }; //V
-			inline CVar<int> DTBarStyle{ 0, L"Doubletap bar style" };
-
-			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
-			inline CVar<bool> Fakelag{ true, L"Fakelag" };
-			inline CVar<bool> FakelagOnKey{ true, L"Fakelag On Key" };
-			inline CVar<int> FakelagKey	{ 0x54, L"Fakelag Key" }; //T
-			inline CVar<int> FakelagValue{ 1, L"Fakelag value" };
+			inline CVar<int> DTBarStyle     { 0, L"Doubletap bar style" };
+			inline CVar<int> DTMode		    { 0, L"DT Mode" }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
+			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
+			inline CVar<bool> Fakelag       { true, L"Fakelag" };
+			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" };
+			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
+			inline CVar<int> FakelagValue   { 1, L"Fakelag value" };
 		}
 	}
 
