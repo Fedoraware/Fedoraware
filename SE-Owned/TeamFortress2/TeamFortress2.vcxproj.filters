@@ -81,6 +81,8 @@
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -557,6 +559,8 @@
     <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
     <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
+    <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

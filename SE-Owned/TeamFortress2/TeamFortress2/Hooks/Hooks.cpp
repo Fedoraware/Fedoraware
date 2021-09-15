@@ -10,6 +10,8 @@ void CHooks::Init()
 	MH_Initialize();
 	{
 		EndSceneHook::Init();
+		//Scoreboard::KeyValues::Init();
+		Scoreboard::IsPlayerDominated::Init();
 	}
 
 	if (g_Interfaces.Client)

@@ -21,8 +21,6 @@ public: //Netvars
 		M_OFFSETGET(UberCharge, float, 0xC6C) //DT_WeaponMedigun -> NonLocalTFWeaponMedigundata -> m_flChargeLevel
 		//M_OFFSETGET(HealingTarget, int, 0xC48) //DT_WeaponMedigun -> m_hHealingTarget
 		M_OFFSETGET(Healing, int, 0xC51) //DT_WeaponMedigun -> m_bHealing
-
-			// pretty srue these are all wrong but i have no idea how to do the thing to find out what they are
 		M_OFFSETGET(CritBucket, float, 0xA38)
 		M_OFFSETGET(WeaponSeed, int, 0xB3C)
 		M_OFFSETGET(Unknown1, int, 0xB30)

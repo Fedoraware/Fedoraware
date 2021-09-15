@@ -11,4 +11,3 @@ void EndSceneHook::Init()
 	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 42));
 	Hook.Create(reinterpret_cast<void*>(FN), reinterpret_cast<void*>(Func));
 }
-

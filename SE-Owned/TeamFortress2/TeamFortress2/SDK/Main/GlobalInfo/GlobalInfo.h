@@ -40,6 +40,7 @@ struct GlobalInfo_t
 	Vec3 m_vFakeViewAngles				= {};
 	Vec3 m_vPunchAngles					= {};
 	EWeaponType m_WeaponType			= {};
+	CUserCmd* lateUserCmd{ nullptr };
 };
 
 inline GlobalInfo_t g_GlobalInfo;

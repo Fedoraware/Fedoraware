@@ -84,10 +84,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 		if (shiftcheck < 19)
 		{
-			if (shiftcheck < 5)
+			if (shiftcheck < 6)
 			{
-				cmd->forwardmove = -cmd->forwardmove;
-				cmd->sidemove = -cmd->sidemove;
+				cmd->forwardmove *= -1;
+				cmd->sidemove *= -1;
 			}
 			else
 			{
@@ -100,6 +100,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	};
 
+
 	if (g_GlobalInfo.fast_stop) {
 		AntiWarp(pCmd);
 	}
@@ -107,6 +108,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		if (GetAsyncKeyState(0x56)) {
+			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Velocity: %.2f %.2f %2.f\n", pLocal->GetVecVelocity().x, pLocal->GetVecVelocity().y, pLocal->GetVecVelocity().z);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Ticks: %d\n", g_GlobalInfo.m_nShifted);
+		}
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
@@ -263,6 +268,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	else {
 		g_GlobalInfo.tickCounter = 0;
 	}
+
+	g_GlobalInfo.lateUserCmd = pCmd;
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

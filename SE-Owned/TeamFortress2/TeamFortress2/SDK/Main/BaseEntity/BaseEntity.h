@@ -483,4 +483,5 @@ public: //Everything else, lol.
 	__inline CCollisionProperty *GetCollision() {
 		return reinterpret_cast<CCollisionProperty *>(this + 0x1C8);
 	}
+
 };

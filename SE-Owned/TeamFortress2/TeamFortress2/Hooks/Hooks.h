@@ -17,6 +17,7 @@
 #include "EngineHook/EngineHook.h"
 #include "EndSceneHook/EndSceneHook.h"
 #include "Reset/Reset.h"
+#include "Scoreboard/Scoreboard.h"
 
 class CHooks
 {

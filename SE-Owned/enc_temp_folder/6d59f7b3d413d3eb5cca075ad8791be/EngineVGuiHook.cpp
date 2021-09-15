@@ -124,7 +124,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							/*if (wepon == EWeaponType::MELEE) {*/
 								//float critChance = pWeapon->GetObservedCritChance();
 
-							//g_Crits.DrawInfo();
+							g_Crits.DrawInfo();
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
 							int ticks;
