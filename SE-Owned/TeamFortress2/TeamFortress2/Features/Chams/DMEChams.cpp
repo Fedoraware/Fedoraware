@@ -13,116 +13,107 @@ bool CDMEChams::ShouldRun()
 
 void CDMEChams::Init()
 {
-	m_pMatShaded = Utils::CreateMaterial({
-_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShaded = g_Interfaces.MatSystem->Create("m_pMatShaded", kv);
+	}
 
-	m_pMatShiny = Utils::CreateMaterial({
-_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShiny = g_Interfaces.MatSystem->Create("m_pMatShiny", kv);
+	}
 
-	m_pMatFlat = Utils::CreateMaterial({
-	_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("UnlitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatFlat = g_Interfaces.MatSystem->Create("m_pMatFlat", kv);
+	}
 
-	m_pMatFresnel = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$color2\" \"[10 10 10]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[0.1 0.2 0.3]\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$color2", "[10 10 10]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[0.1 0.2 0.3]");
+		kv->SetString("$selfillumtint", "[0 0 0]");
+		m_pMatFresnel = g_Interfaces.MatSystem->Create("m_pMatFresnel", kv);
+	}
 
-	m_pMatBrick = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"brick/brickwall031b\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$color2\" \"[10 10 10]\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$envmaptint\" \"[4 4 0]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"10\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "brick/brickwall031b");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$color2", "[10 10 10]");
+		kv->SetString("$additive", "1");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$envmaptint", "[4 4 0]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$rimlight", "1");
+		kv->SetString("$rimlightboost", "10");
+		m_pMatBrick = g_Interfaces.MatSystem->Create("m_pMatBrick", kv);
+	}
 
-	m_pMatScuffed = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"models/player/shared/ice_player\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 0.5 10]\"\
-		\n\t\"$phongtint\" \"[0 0 0]\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$envmaptint\" \"[0 0 0]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"10\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "models/player/shared/ice_player");
+		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$additive", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelranges", "[0 0.5 10]");
+		kv->SetString("$phongtint", "[0 0 0]");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$envmaptint", "[0 0 0]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumtint", "[0 0 0]");
+		kv->SetString("$rimlight", "1");
+		kv->SetString("$rimlightboost", "10");
+		m_pMatScuffed = g_Interfaces.MatSystem->Create("m_pMatScuffed", kv);
+	}
 
-	m_pMatWFShaded = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$wireframe\" \"1\"\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$wireframe", "1");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatWFShaded = g_Interfaces.MatSystem->Create("m_pMatWFShaded", kv);
+	}
 
-	m_pMatWFShiny = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$wireframe\" \"1\"\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$wireframe", "1");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatWFShiny = g_Interfaces.MatSystem->Create("m_pMatWFShiny", kv);
+	}
 
-	m_pMatWFFlat = Utils::CreateMaterial({
-	_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$wireframe\" \"1\"\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("UnlitGeneric");
+		kv->SetString("$wireframe", "1");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatWFFlat = g_Interfaces.MatSystem->Create("m_pMatWFFlat", kv);
+	}
 }
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)

@@ -578,30 +578,6 @@ protected:
 	virtual int				VectorSizeInternal() const = 0;
 };
 
-class KeyValues
-{
-public:
-	int m_iKeyName;
-	char *m_sValue;
-	wchar_t *m_wsValue;
-
-	union {
-		int m_iValue;
-		float m_flValue;
-		void *m_pValue;
-		unsigned char m_Color[4];
-	};
-
-	char m_iDataType;
-	char m_bHasEscapeSequences;
-	char m_bEvaluateConditionals;
-	char unused[1];
-
-	KeyValues *m_pPeer;
-	KeyValues *m_pSub;
-	KeyValues *m_pChain;
-};
-
 enum ParticleAttachment_t
 {
 	PATTACH_ABSORIGIN = 0,			// Create at absorigin, but don't follow

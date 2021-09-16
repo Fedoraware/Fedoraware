@@ -192,36 +192,25 @@ static float angleDiffRad(float a1, float a2) noexcept
 }
 
 void CMisc::CathookIdentify() {
-	auto CathookMessage = []() -> void
-	{
-		void* CathookMessage = nullptr;
+	KeyValues* identify = new KeyValues("cl_drawline");
+	KeyValues* mark		= new KeyValues("cl_drawline");
 
-		CathookMessage = Utils::CreateKeyVals({
-				_("\"cl_drawline\"\
-				\n{\
-				\n\t\"panel\" \"1\"\
-				\n\t\"line\" \"0\"\
-				\n\t\"x\" \"0xCA7\"\
-				\n\t\"y\" \"1234567.f\"\
-				\n}\n")
-			}
-		);
+	identify->SetInt("panel", 1);
+	mark->SetInt("panel", 1);
 
-		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
+	identify->SetInt("line", 0);
+	mark->SetInt("line", 0);
 
-		CathookMessage = Utils::CreateKeyVals({
-				_("\"cl_drawline\"\
-				\n{\
-				\n\t\"panel\" \"1\"\
-				\n\t\"line\" \"0\"\
-				\n\t\"x\" \"0xCA8\"\
-				\n\t\"y\" \"1234567.f\"\
-				\n}\n")
-			}
-		);
+	identify->SetFloat("x", 0xCA7);
+	mark->SetFloat("x", 0xCA8);
 
-		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
-	};
+	// some bots change this, youtube bots are a prime
+	// example, they set it to like 3058 or something dumb.
+	identify->SetFloat("y", 1234567.0f);
+	mark->SetFloat("y", 1234567.0f);
+
+	g_Interfaces.Engine->ServerCmdKeyValues(identify);
+	g_Interfaces.Engine->ServerCmdKeyValues(mark);
 }
 
 

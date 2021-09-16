@@ -215,14 +215,10 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::OverrideWorldTextures()
 {
-	void* kv = nullptr;
+	KeyValues* kv = nullptr;
 	if (!kv) {
-		kv = Utils::CreateKeyVals({
-		_("\"LightmappedGeneric\"\
-			\n{\
-			\n\t\"$basetexture\" \"dev/dev_measuregeneric01b\"\
-			\n}\n") 
-		});
+		kv = new KeyValues("LightmappedGeneric");
+		kv->SetString("$basetexture", "dev/dev_measuregeneric01b");
 	}
 
 	if (Vars::Visuals::OverrideWorldTextures.m_Var) {

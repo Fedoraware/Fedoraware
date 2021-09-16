@@ -16,124 +16,80 @@ void CChams::DrawModel(CBaseEntity *pEntity)
 
 void CChams::Init()
 {
-	/*static auto mat_hdr_level = g_Interfaces.CVars->FindVar("mat_hdr_level");
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelranges", "[0 1.5 2]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
+		kv->SetString("$selfillumtint", "[0 0 0]");
+		kv->SetString("$envmaptint", "[0 1 0]");
+		m_pMatFresnelHDR0 = g_Interfaces.MatSystem->Create("m_pMatFresnelHDR0", kv);
+	}
 
-	m_pMatFresnelHDR = mat_hdr_level->GetInt() > 1 ? Utils::CreateMaterial({
-			_("\"VertexLitGeneric\"\
-			\n{\
-			\n\t\"$basetexture\" \"vgui/white_additive\"\
-			\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-			\n\t\"$envmap\" \"skybox/sky_dustbowl_01\"\
-			\n\t\"$envmapfresnel\" \"1\"\
-			\n\t\"$phong\" \"1\"\
-			\n\t\"$phongfresnelranges\" \"[0 0.05 0.1]\"\
-			\n\t\"$selfillum\" \"1\"\
-			\n\t\"$selfillumfresnel\" \"1\"\
-			\n\t\"$selfillumfresnelminmaxexp\" \"[0.5 0.5 0]\"\
-			\n\t\"$selfillumtint\" \"[0 0 0]\"\
-			\n\t\"$envmaptint\" \"[0 0 0]\"\
-			\n}\n")
-		}) :
-		Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-			\n{\
-			\n\t\"$basetexture\" \"vgui/white_additive\"\
-			\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-			\n\t\"$envmap\" \"skybox/sky_dustbowl_01\"\
-			\n\t\"$envmapfresnel\" \"1\"\
-			\n\t\"$phong\" \"1\"\
-			\n\t\"$phongfresnelranges\" \"[0 1.5 2]\"\
-			\n\t\"$selfillum\" \"1\"\
-			\n\t\"$selfillumfresnel\" \"1\"\
-			\n\t\"$selfillumfresnelminmaxexp\" \"[0.5 0.5 0]\"\
-			\n\t\"$selfillumtint\" \"[0 0 0]\"\
-			\n\t\"$envmaptint\" \"[0 0 0]\"\
-			\n}\n")
-	});
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
+		kv->SetString("$selfillumtint", "[0 0 0]");
+		kv->SetString("$envmaptint", "[0 1 0]");
+		m_pMatFresnelHDR1 = g_Interfaces.MatSystem->Create("m_pMatFresnelHDR1", kv);
+	}
+
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShaded = g_Interfaces.MatSystem->Create("m_pMatShaded", kv);
+	}
+
+	{
+		auto kv = new  KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "brick/brickwall031b");
+		kv->SetString("$additive", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelrangse", "[0 0.5 10]");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$rimlight", "1");
+		kv->SetString("$rimlightboost", "100");
+		kv->SetString("$envmapfresnelminmaxexp", "[0 1 2]");
+		m_pMatBrick = g_Interfaces.MatSystem->Create("m_pMatBrick", kv);
+	}
+
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "vgui/white_additive");
+		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShiny = g_Interfaces.MatSystem->Create("m_pMatShiny", kv);
+	}
 	
-	// Spooky code crashes me and gives nigga chams >:(
 
-	m_pMatFresnelHDRSelfillumTint = m_pMatFresnelHDR->FindVar("$selfillumtint", nullptr);
-	m_pMatFresnelHDREnvmapTint = m_pMatFresnelHDR->FindVar("$envmaptint", nullptr);
-	*/
-	m_pMatFresnelHDR0 = Utils::CreateMaterial({
-	_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$envmap\" \"skybox/sky_dustbowl_01\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 1.5 2]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[0.5 0.5 0]\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$envmaptint\" \"[0 1 0]\"\
-		\n}\n")
-		});
-	m_pMatFresnelHDR1 = Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"models/player/shared/shared_normal\"\
-		\n\t\"$envmap\" \"skybox/sky_dustbowl_01\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelranges\" \"[0 0.05 0.1]\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[0.5 0.5 0]\"\
-		\n\t\"$selfillumtint\" \"[0 0 0]\"\
-		\n\t\"$envmaptint\" \"[0 1 0]\"\
-		\n}\n")
-		});
-
-	m_pMatShaded = Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-	});
-
-	m_pMatBrick = Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"brick/brickwall031b\"\
-		\n\t\"$additive\" \"1\"\
-		\n\t\"$phong\" \"1\"\
-		\n\t\"$phongfresnelrangse\" \"[0 0.5 10]\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$envmapfresnel\" \"1\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$rimlight\" \"1\"\
-		\n\t\"$rimlightboost\" \"100\"\
-		\n\t\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\
-		\n}\n")
-	});
-
-	m_pMatShiny = Utils::CreateMaterial({
-		_("\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$bumpmap\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"cubemaps/cubemap_sheen001\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$selfillumfresnel\" \"1\"\
-		\n\t\"$selfillumfresnelminmaxexp\" \"[-0.25 1 1]\"\
-		\n}\n")
-	});
-
-	m_pMatFlat = Utils::CreateMaterial({
-		_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n}\n")
-	});
+	{
+		auto kv = new KeyValues("UnlitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatFlat = g_Interfaces.MatSystem->Create("m_pMatFlat", kv);
+	}
 
 	m_pMatBlur = g_Interfaces.MatSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
 }
