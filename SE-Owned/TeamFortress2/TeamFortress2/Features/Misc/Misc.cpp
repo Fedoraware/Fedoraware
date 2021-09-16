@@ -210,7 +210,9 @@ void CMisc::CathookIdentify() {
 	mark->SetFloat("y", 1234567.0f);
 
 	g_Interfaces.Engine->ServerCmdKeyValues(identify);
-	g_Interfaces.Engine->ServerCmdKeyValues(mark);
+	if (Vars::Misc::BeCat.m_Var) {
+		g_Interfaces.Engine->ServerCmdKeyValues(mark);
+	}
 }
 
 
