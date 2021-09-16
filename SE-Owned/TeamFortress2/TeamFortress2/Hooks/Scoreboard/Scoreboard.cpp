@@ -1,17 +1,13 @@
 #include "Scoreboard.h"
-
-/*void __fastcall Scoreboard::KeyValues::Hook(void* ecx, void* edx, const char* keyName, int value)
+void __fastcall Scoreboard::KeyValues::Hook(void* ecx, void* edx, const char* keyName, int value)
 {
-    //Table.Original<fn>(0)(ecx, edx, keyName, value);
     Func.Original<fn>()(ecx, edx, keyName, value);
 
     static DWORD dwDesired = g_Pattern.Find(L"client.dll", L"8B 03 8B CB 56 57 FF 90 ? ? ? ? 6A");
     static DWORD dwJump = g_Pattern.Find(L"client.dll", L"89 45 BC E8 ? ? ? ? 3B C7 75 1D 80 7D F8 00 75 17 8B 4D C0");
 
-    if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwDesired && std::string_view(keyName).find("nemesis") != std::string_view::npos) {
-        uintptr_t returnAdress = reinterpret_cast<uintptr_t>(_AddressOfReturnAddress());
-        returnAdress = dwJump;
-    }
+    if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwDesired && std::string_view(keyName).find("nemesis") != std::string_view::npos)
+        *reinterpret_cast<uintptr_t*>(_AddressOfReturnAddress()) = dwJump;
 }
 
 void Scoreboard::KeyValues::Init()
@@ -20,9 +16,7 @@ void Scoreboard::KeyValues::Init()
         L"client.dll",
         L"55 8B EC 6A 01 FF 75 08 E8 ? ? ? ? 85 C0 74 0A 8B 4D 0C 89 48 0C C6 40 10 02"));
     Func.Hook(FN, Hook);
-}*/
-
-
+}
 
 bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int index)
 {
