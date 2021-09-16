@@ -194,7 +194,7 @@ static float angleDiffRad(float a1, float a2) noexcept
 void CMisc::CathookIdentify() {
 	auto CathookMessage = []() -> void
 	{
-		void* CathookMessage = nullptr;
+		/*void* CathookMessage = nullptr;
 
 		CathookMessage = Utils::CreateKeyVals({
 				_("\"cl_drawline\"\
@@ -220,7 +220,7 @@ void CMisc::CathookIdentify() {
 			}
 		);
 
-		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
+		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);*/
 	};
 }
 

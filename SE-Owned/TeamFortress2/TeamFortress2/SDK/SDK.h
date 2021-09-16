@@ -137,43 +137,6 @@ namespace Colors
 
 namespace Utils
 {
-	__inline IMaterial *CreateMaterial(const char *szVars)
-	{
-		static int nCreatedMats = 0;
-		char szOut[512];
-		//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, szVars);
-		sprintf_s(szOut, sizeof(szOut), _("SEO_material_%i.vmt"), nCreatedMats++);
-#ifdef _DEBUG
-		std::string matName = "SEO_material_" + std::to_string(nCreatedMats - 1) + ".vmt\n";
-		g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, matName.c_str());
-		g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, szVars);
-#endif // DEBUG
-		char szMaterial[512];
-		sprintf_s(szMaterial, sizeof(szMaterial), szVars);
-
-		KeyValues *pVals = new KeyValues;
-		g_KeyValUtils.Initialize(pVals, (char *)szOut);
-		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szMaterial);
-
-		IMaterial *pCreated = g_Interfaces.MatSystem->Create(szOut, pVals);
-		pCreated->IncrementReferenceCount();
-
-		return pCreated;
-	}
-
-	__inline void *CreateKeyVals(const char *szVars)
-	{
-		static int nCreatedKeyVals = 0;
-		char szOut[512];
-		sprintf_s(szOut, sizeof(szOut), _("SEO_keyvals%i.vmt"), nCreatedKeyVals++);
-
-		KeyValues *pVals = new KeyValues;
-		g_KeyValUtils.Initialize(pVals, (char *)szOut);
-		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szVars);
-
-		return pVals;
-	}
-
 	__inline bool W2S(const Vec3 &vOrigin, Vec3 &m_vScreen)
 	{
 		const matrix3x4 &worldToScreen = g_GlobalInfo.m_WorldToProjection.As3x4();

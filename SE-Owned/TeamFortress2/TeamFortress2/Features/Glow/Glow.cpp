@@ -44,30 +44,24 @@ void CGlowEffect::Init()
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
-	m_pMatBlurX = Utils::CreateMaterial
-	({
-		_("\"BlurFilterX\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_1\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("BlurFilterX");
+		kv->SetString("$basetexture", "glow_buffer_1");
+		kv->SetString("$additive", "1");
+		m_pMatHaloAddToScreen = g_Interfaces.MatSystem->Create("outline_material", kv);
+	}
 
-	m_pMatBlurY = Utils::CreateMaterial
-	({
-		_("\"BlurFilterY\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_2\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("BlurFilterY");
+		kv->SetString("$basetexture", "glow_buffer_2");
+		m_pMatBlurX = g_Interfaces.MatSystem->Create("outline_material_blurx", kv);
+	}
 
-	m_pMatHaloAddToScreen = Utils::CreateMaterial
-	({
-		_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_1\"\
-		\n\t\"$additive\" \"1\"\
-		\n}\n")
-		});
+	{
+		auto kv = new KeyValues("UnlitGeneric");
+		kv->SetString("$basetexture", "glow_buffer_1");
+		m_pMatBlurY = g_Interfaces.MatSystem->Create("outline_material_blury", kv);
+	}
 }
 
 void CGlowEffect::Render()
