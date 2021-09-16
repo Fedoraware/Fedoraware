@@ -15,7 +15,7 @@ void Scoreboard::KeyValues::Init()
     fn FN = reinterpret_cast<fn>(g_Pattern.Find(
         L"client.dll",
         L"55 8B EC 6A 01 FF 75 08 E8 ? ? ? ? 85 C0 74 0A 8B 4D 0C 89 48 0C C6 40 10 02"));
-    Func.Hook(FN, Hook);
+    Func.Hook(FN, Hook); 
 }
 
 bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int index)
