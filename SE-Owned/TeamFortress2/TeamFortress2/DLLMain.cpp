@@ -14,6 +14,8 @@
 #include "Features/Menu/ConfigManager/ConfigManager.h"
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
 
+#include "Features/PlayerList/PlayerList.h"
+
 #include "SDK/Includes/Enums.h"
 
 #include "Utils/Events/Events.h"
