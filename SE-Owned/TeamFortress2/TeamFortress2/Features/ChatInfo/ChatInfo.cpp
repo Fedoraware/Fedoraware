@@ -69,19 +69,5 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					g_notify.Add(attackString);
 			}
 		}
-
-		if (uNameHash == FNV1A::HashConst("cl_drawline")) {
-			const int nPlayer	= pEvent->GetInt("player", 0xDEAD);
-
-			PlayerInfo_t info;
-			if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
-				if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
-					if (Vars::Visuals::ChatInfo.m_Var)
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nPlayer, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
-					m_known_bots[info.friendsID] = true;
-				}
-			}
-			CMisc::CathookIdentify();
-		}
 	}
 }

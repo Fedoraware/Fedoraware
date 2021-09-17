@@ -793,27 +793,39 @@ namespace detail {
             case 'X':
                 out.setf(std::ios::uppercase);
                 // Falls through
+#pragma warning (push)
+#pragma warning ( disable : 26819)
             case 'x': case 'p':
+#pragma warning (pop)
                 out.setf(std::ios::hex, std::ios::basefield);
                 intConversion = true;
                 break;
             case 'E':
                 out.setf(std::ios::uppercase);
                 // Falls through
+#pragma warning (push)
+#pragma warning ( disable : 26819)
             case 'e':
+#pragma warning (pop)
                 out.setf(std::ios::scientific, std::ios::floatfield);
                 out.setf(std::ios::dec, std::ios::basefield);
                 break;
             case 'F':
                 out.setf(std::ios::uppercase);
                 // Falls through
+#pragma warning (push)
+#pragma warning ( disable : 26819)
             case 'f':
+#pragma warning (pop)
                 out.setf(std::ios::fixed, std::ios::floatfield);
                 break;
             case 'A':
                 out.setf(std::ios::uppercase);
                 // Falls through
+#pragma warning (push)
+#pragma warning ( disable : 26819)
             case 'a':
+#pragma warning (pop)
 #           ifdef _MSC_VER
                 // Workaround https://developercommunity.visualstudio.com/content/problem/520472/hexfloat-stream-output-does-not-ignore-precision-a.html
                 // by always setting maximum precision on MSVC to avoid precision
@@ -825,7 +837,10 @@ namespace detail {
             case 'G':
                 out.setf(std::ios::uppercase);
                 // Falls through
+#pragma warning (push)
+#pragma warning ( disable : 26819)
             case 'g':
+#pragma warning (pop)
                 out.setf(std::ios::dec, std::ios::basefield);
                 // As in boost::format, let stream decide float format.
                 out.flags(out.flags() & ~std::ios::floatfield);

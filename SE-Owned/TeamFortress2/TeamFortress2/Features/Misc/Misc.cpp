@@ -61,79 +61,6 @@ void CMisc::NoPush() {
 	}
 }
 
-void CMisc::VoteRevealer(CGameEvent& pEvent) noexcept
-{
-	if (Vars::Misc::VoteRevealer.m_Var) {
-		const auto entity = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("entityid"));
-		if (!entity || !entity->IsPlayer())
-			return;
-		const auto votedYes = pEvent.GetInt("vote_option") == 0;
-		const auto isLocal = g_EntityCache.m_pLocal;
-		PlayerInfo_t pi;
-		g_Interfaces.Engine->GetPlayerInfo(entity->GetIndex(), &pi);
-		char szBuff[255];
-		sprintf(szBuff, _("\x4[FeD] \x3%s voted %s"), pi.name, votedYes ? "F1" : "F2");
-		if (Vars::Misc::VotesInChat.m_Var) {
-			const char* sayCmd = "say_party ";
-			char buffer[256];
-			strncpy(buffer, sayCmd, sizeof(buffer));
-#pragma warning (push)
-#pragma warning (disable : 6053)
-#pragma warning (disable : 6059)
-			strncat(buffer, szBuff, sizeof(buffer));
-#pragma warning (pop)
-			g_Interfaces.Engine->ClientCmd_Unrestricted(buffer);
-		}
-		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, szBuff);
-	}
-}
-
-void CMisc::HitLog(CGameEvent& pEvent) noexcept
-{
-	if (Vars::Visuals::damageLogger.m_Var) {
-		if (strstr(pEvent.GetName(), "player_hurt")) {
-			if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent.GetInt("userid")))) {
-				const auto attacker = pEvent.GetInt("attacker");
-				const int nLocal = g_Interfaces.Engine->GetLocalPlayer();
-				PlayerInfo_t pPlayerInfo;
-				if (!g_Interfaces.Engine->GetPlayerInfo(nLocal, &pPlayerInfo)) {
-					return;
-				}
-				if (attacker != pPlayerInfo.userID) {
-					return;
-				}
-				else {
-					int nIndex = pEntity->GetIndex();
-					//const auto user = g_Interfaces.EntityList->GetClientEntity(pEvent.GetInt("userid"));
-					const auto health = pEvent.GetInt("health");
-					const auto damage = pEvent.GetInt("damageamount");
-					const auto crit = pEvent.GetBool("crit");
-					PlayerInfo_t pi;
-					if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
-					{
-						const auto maxHealth = pEntity->GetMaxHealth();
-						std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(damage) + (crit ? " (crit) " : " ") + "(" + std::to_string(health) + "/" + std::to_string(maxHealth) + ")";
-						if (Vars::Visuals::damageLogger.m_Var == 1) {
-							char logBuff[255];
-							sprintf(logBuff, "\x4[FeD]\x3 %s", attackString.c_str());
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, logBuff);
-						}
-						if (Vars::Visuals::damageLogger.m_Var == 2) {
-							if (static_cast<int>(strings.size()) > 8) {
-								strings.clear();
-							}
-							else {
-								strings.push_back(attackString);
-							}
-						}
-					}
-				}
-
-			}
-		}
-	}
-}
-
 void CMisc::AutoJump(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -191,49 +118,18 @@ static float angleDiffRad(float a1, float a2) noexcept
 	return delta;
 }
 
-void CMisc::CathookIdentify() {
-	KeyValues* identify = new KeyValues("cl_drawline");
-	KeyValues* mark		= new KeyValues("cl_drawline");
-
-	identify->SetInt("panel", 1);
-	mark->SetInt("panel", 1);
-
-	identify->SetInt("line", 0);
-	mark->SetInt("line", 0);
-
-	identify->SetFloat("x", 0xCA7);
-	mark->SetFloat("x", 0xCA8);
-
-	// some bots change this, youtube bots are a prime
-	// example, they set it to like 3058 or something dumb.
-	identify->SetFloat("y", 1234567.0f);
-	mark->SetFloat("y", 1234567.0f);
-
-	g_Interfaces.Engine->ServerCmdKeyValues(identify);
-	if (Vars::Misc::BeCat.m_Var) {
-		g_Interfaces.Engine->ServerCmdKeyValues(mark);
-	}
-}
-
-
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
-
-	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+		if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
 		{
 			if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->mousedx < -1))
 
 				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
 		}
-	}
-	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
 		{
-			if (!pLocal)
-				return;
+
 #
 			static bool was_jumping = false;
 			bool is_jumping = pCmd->buttons & IN_JUMP;
@@ -241,8 +137,6 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 
 			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
-				if (!pLocal || !pLocal->IsAlive())
-					return;
 
 				const float speed = pLocal->GetVelocity().Lenght2D();
 				auto vel = pLocal->GetVelocity();
