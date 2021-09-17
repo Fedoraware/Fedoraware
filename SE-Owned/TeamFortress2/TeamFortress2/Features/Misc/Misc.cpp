@@ -244,9 +244,6 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 				if (!pLocal || !pLocal->IsAlive())
 					return;
 
-				if (pLocal->GetMoveType() & (MOVETYPE_LADDER | MOVETYPE_NOCLIP))
-					return;
-
 				const float speed = pLocal->GetVelocity().Lenght2D();
 				auto vel = pLocal->GetVelocity();
 
