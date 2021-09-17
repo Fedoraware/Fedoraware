@@ -81,6 +81,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					m_known_bots[info.friendsID] = true;
 				}
 			}
+			CMisc::CathookIdentify();
 		}
 	}
 }

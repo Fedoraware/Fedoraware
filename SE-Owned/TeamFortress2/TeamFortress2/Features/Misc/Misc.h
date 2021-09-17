@@ -11,11 +11,12 @@ private:
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
-	void CathookIdentify();
+	
 
 public:
 	void Run(CUserCmd *pCmd);
 	void CheatsBypass();
+	static void CathookIdentify();
 	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);

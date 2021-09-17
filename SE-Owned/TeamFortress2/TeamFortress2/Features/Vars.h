@@ -442,7 +442,7 @@ namespace Vars
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
-		inline CVar<int> BeCat					{ false, L"Be marked as a cat" };
+		inline CVar<bool> BeCat					{ false, L"Be marked as a cat" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
