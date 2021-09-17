@@ -512,6 +512,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
+			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VoteRevealer);
 			SAVE_VAR(Vars::Misc::VotesInChat);
 			SAVE_VAR(Vars::Menu::LegacyMenu);
@@ -979,6 +980,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::Directional);
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
+			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);
 			// CL_Move
