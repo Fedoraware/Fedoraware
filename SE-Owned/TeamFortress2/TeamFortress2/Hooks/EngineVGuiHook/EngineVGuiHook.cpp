@@ -18,10 +18,6 @@
 
 int ticksChoked = 0;
 
-
-
-
-
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
 	static auto StartDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(_(L"vguimatsurface.dll"), _(L"55 8B EC 64 A1 ? ? ? ? 6A FF 68 ? ? ? ? 50 64 89 25 ? ? ? ? 83 EC 14")));
@@ -213,8 +209,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_PlayerList.Run();
-			//g_Keybinds.Run();
+			//g_settings.Think();
+			g_playerlist.Think();
 			g_Console.Run();
 			g_Menu.Run();
 		}	

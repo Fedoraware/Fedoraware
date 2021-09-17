@@ -168,7 +168,6 @@
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />

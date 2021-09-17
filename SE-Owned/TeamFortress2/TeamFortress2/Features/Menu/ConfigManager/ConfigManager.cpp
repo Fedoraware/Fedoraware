@@ -595,8 +595,8 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
-			SAVE_OTHER(g_PlayerList.m_nNewWindowX);
-			SAVE_OTHER(g_PlayerList.m_nNewWindowY);
+			//SAVE_OTHER(g_PlayerList.m_nNewWindowX);
+			//SAVE_OTHER(g_PlayerList.m_nNewWindowY);
 			SAVE_OTHER(g_Console.m_nConsoleX);
 			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
@@ -1064,8 +1064,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
-			LOAD_OTHER(g_PlayerList.m_nNewWindowX);
-			LOAD_OTHER(g_PlayerList.m_nNewWindowY);
+			//LOAD_OTHER(g_PlayerList.m_nNewWindowX);
+			//LOAD_OTHER(g_PlayerList.m_nNewWindowY);
 
 			LOAD_OTHER(g_Console.m_nConsoleX);
 			LOAD_OTHER(g_Console.m_nConsoleY);
