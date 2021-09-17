@@ -45,7 +45,7 @@ void CGlowEffect::Init()
 	m_pRenderBuffer2->IncrementReferenceCount();
 
 	{
-		auto kv = new KeyValues("BlurFilterX");
+		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "glow_buffer_1");
 		kv->SetString("$additive", "1");
 		m_pMatHaloAddToScreen = g_Interfaces.MatSystem->Create("outline_material", kv);
@@ -58,7 +58,7 @@ void CGlowEffect::Init()
 	}
 
 	{
-		auto kv = new KeyValues("UnlitGeneric");
+		auto kv = new KeyValues("BlurFilterX");
 		kv->SetString("$basetexture", "glow_buffer_1");
 		m_pMatBlurY = g_Interfaces.MatSystem->Create("outline_material_blury", kv);
 	}
