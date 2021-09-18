@@ -54,7 +54,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		g_GlobalInfo.m_nWaitForShift--;
 		return;
 	}
-	g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift ? true : g_GlobalInfo.m_bAttacking;
+	g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift ? true : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 	if (g_GlobalInfo.m_bShouldShift)
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;

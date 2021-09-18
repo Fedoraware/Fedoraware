@@ -57,7 +57,7 @@ static void updateAntiAfk(CUserCmd *pCmd)
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
 	g_GlobalInfo.m_bSilentTime = false;
-	g_GlobalInfo.m_bAttacking = pCmd->buttons & IN_ATTACK;
+	g_GlobalInfo.m_bAttacking = false;
 
 	fn OriginalFn = Table.Original<fn>(index);
 
