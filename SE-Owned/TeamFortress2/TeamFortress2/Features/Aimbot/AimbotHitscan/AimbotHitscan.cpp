@@ -238,17 +238,6 @@ bool CAimbotHitscan::ScanBuildings(CBaseEntity *pLocal, Target_t &Target)
 	return false;
 }
 
-int CalculateTick(int simTicks, CBaseEntity* player)
-{
-	int clockcorrect = TIME_TO_TICKS(0.06f); //sv_clockcorrectmsecs
-	int nIdealFinalTick = g_Interfaces.GlobalVars->tickcount + TIME_TO_TICKS(g_Interfaces.Engine->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
-	int EstimatedFinal = player->GetTickBase() + simTicks;
-	int fast = nIdealFinalTick + clockcorrect;
-	int slow = nIdealFinalTick - clockcorrect;
-	if (EstimatedFinal > fast || EstimatedFinal < slow)
-		return nIdealFinalTick - simTicks;
-}
-
 bool CAimbotHitscan::VerifyTarget(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, Target_t &Target)
 {
 	switch (Target.m_TargetType)
@@ -611,10 +600,6 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 				bulletTracer(pLocal, Target);
 				nLastTracerTick = pCmd->tick_count;
 			}
-		}
-
-		if (int tickbasefix = CalculateTick(10, pLocal)) {
-			pCmd->tick_count = tickbasefix;
 		}
 
 		if (Vars::Misc::DisableInterpolation.m_Var && Target.m_TargetType == ETargetType::PLAYER && bIsAttacking) {
