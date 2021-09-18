@@ -48,7 +48,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
-	if (g_GlobalInfo.lateUserCmd)
+	if (g_GlobalInfo.m_nWaitForShift)
 	{
 		g_GlobalInfo.fast_stop = false;
 		g_GlobalInfo.m_nWaitForShift--;
