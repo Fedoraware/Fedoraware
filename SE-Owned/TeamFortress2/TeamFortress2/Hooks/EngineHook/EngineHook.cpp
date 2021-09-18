@@ -48,13 +48,13 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
-	if (g_GlobalInfo.m_nWaitForShift)
+	if (g_GlobalInfo.lateUserCmd)
 	{
 		g_GlobalInfo.fast_stop = false;
 		g_GlobalInfo.m_nWaitForShift--;
 		return;
 	}
-	if (g_GlobalInfo.m_bShouldShift != nullptr) {
+	if (g_GlobalInfo.lateUserCmd != nullptr) {
 		g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift ? true : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 	}
 	
