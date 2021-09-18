@@ -80,7 +80,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Verdana"), 16, 800, FONTFLAG_OUTLINE }
 		});
 
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt" });
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));

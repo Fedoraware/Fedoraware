@@ -1513,6 +1513,7 @@ void CMenu::Run()
 						CheckBox(Vars::Misc::ChatSpam, _(L"Advertise a free cheat, will ya? x)"));
 						CheckBox(Vars::Misc::NoPush, _(L"Prevent players from pushing you"));
 						ComboBox(Vars::Misc::Roll, { {0,L"Off"} ,{1,L"Normal"} ,{2,L"Fake Forward"} });
+						CheckBox(Vars::Misc::BeCat, _(L"Be marked by catbots."));
 					}
 					GroupBoxEnd(_(L"Main"), 210);
 

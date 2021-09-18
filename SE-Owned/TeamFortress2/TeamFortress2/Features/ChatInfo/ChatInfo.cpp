@@ -69,5 +69,34 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					g_notify.Add(attackString);
 			}
 		}
+
+		if (uNameHash == FNV1A::HashConst("achievement_earned")) {
+			const int player = pEvent->GetInt("player", 0xDEAD);
+			const int achievement = pEvent->GetInt("achievement", 0xDEAD);
+
+			// 0xCA7 is an identify and mark request.
+			// 0xCA8 is a mark request.
+
+			PlayerInfo_t info;
+			if (g_Interfaces.Engine->GetPlayerInfo(player, &info) && (achievement == 0xCA7 || achievement == 0xCA8) && !(pLocal->GetIndex() != player)) {
+				if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
+					if (Vars::Visuals::ChatInfo.m_Var)
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(player, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
+					
+					{ // marked by other bots. r.i.p cl_drawline :(
+						// this will be detected by fedoraware and lmaobox easily.
+						// use 0xCA7 if you want to make more bots do the thing,
+						// most only care about being marked.
+						if (Vars::Misc::BeCat.m_Var) {
+							KeyValues* kv = new KeyValues("AchievementEarned");
+							kv->SetInt("achievementID", 0xCA8);
+							g_Interfaces.Engine->ServerCmdKeyValues(kv);
+						}
+					}
+					
+					m_known_bots[info.friendsID] = true;
+				}
+			}
+		}
 	}
 }
