@@ -20,6 +20,8 @@
 
 #include "Utils/Events/Events.h"
 
+#include "SDK/Discord/include/discord_rpc.h"
+
 int StringToWString(std::wstring& ws, const std::string& s)
 {
 	std::wstring wsTmp(s.begin(), s.end());
@@ -27,6 +29,13 @@ int StringToWString(std::wstring& ws, const std::string& s)
 	ws = wsTmp;
 
 	return 0;
+}
+
+inline void SetupDiscord()
+{
+	DiscordEventHandlers handlers;
+	memset(&handlers, 0, sizeof(handlers));
+	Discord_Initialize("889495873183154226", &handlers, 0, "");
 }
 
 DWORD WINAPI MainThread(LPVOID lpParam)
@@ -81,6 +90,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		});
 
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
+
+	SetupDiscord();
+	Discord_ClearPresence();
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));

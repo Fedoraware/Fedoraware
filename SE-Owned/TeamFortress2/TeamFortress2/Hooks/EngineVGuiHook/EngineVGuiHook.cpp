@@ -15,11 +15,15 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Crits/Crits.h"
 #include "../../Features/Aimbot/AimbotProjectile/AimbotProjectile.h"
+#include "../../Features/Discord/Discord.h"
 
 int ticksChoked = 0;
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
+	//its kinda stupid to call it here but it works soooo...
+	g_DiscordRPC.vFunc();
+
 	static auto StartDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(_(L"vguimatsurface.dll"), _(L"55 8B EC 64 A1 ? ? ? ? 6A FF 68 ? ? ? ? 50 64 89 25 ? ? ? ? 83 EC 14")));
 	static auto FinishDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(_(L"vguimatsurface.dll"), _(L"55 8B EC 6A FF 68 ? ? ? ? 64 A1 ? ? ? ? 50 64 89 25 ? ? ? ? 51 56 6A 00")));
 
