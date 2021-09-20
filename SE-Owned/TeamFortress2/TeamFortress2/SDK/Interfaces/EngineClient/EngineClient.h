@@ -149,6 +149,12 @@ public:
 		typedef ISpatialQuery *(__thiscall *FN)(PVOID);
 		return GetVFunc<FN>(this, 42)(this);
 	}
+
+	char const* GetLevelName()
+	{
+		typedef char const* (__thiscall* FN)(PVOID);
+		return GetVFunc<FN>(this, 51)(this);
+	}
 };
 
 #define VENGINE_CLIENT_INTERFACE_VERSION_13	"VEngineClient013"

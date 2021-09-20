@@ -82,6 +82,12 @@
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\rpc_connection.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -560,6 +566,50 @@
     <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
     <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_register.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_rpc.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\en.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\error.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\itoa.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\meta.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\pow10.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\regex.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\stack.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strtod.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\swap.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\allocators.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\document.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodedstream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodings.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filereadstream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filewritestream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\fwd.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorybuffer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorystream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\pointer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\prettywriter.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\rapidjson.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\reader.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\schema.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stringbuffer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\writer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\backoff.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\connection.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\msg_queue.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rpc_connection.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
+    <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

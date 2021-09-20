@@ -37,62 +37,62 @@ int unu2 = 0;
 
 int ticksChocked = 0;
 
-bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
+bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 {
 	bool active = false;
 
 	auto VK2STR = [&](const short key) -> const char* {
 		switch (key) {
-			case VK_LBUTTON: return "Mouse1";
-			case VK_RBUTTON: return "Mouse2";
-			case VK_MBUTTON: return "Mouse3";
-			case VK_XBUTTON1: return "Mouse4";
-			case VK_XBUTTON2: return "Mouse5";
-			case VK_SPACE: return "Space";
-			case 0x0: return "None";
-			case VK_A: return "A";
-			case VK_B: return "B";
-			case VK_C: return "C";
-			case VK_D: return "D";
-			case VK_E: return "E";
-			case VK_F: return "F";
-			case VK_G: return "G";
-			case VK_H: return "H";
-			case VK_I: return "I";
-			case VK_J: return "J";
-			case VK_K: return "K";
-			case VK_L: return "L";
-			case VK_M: return "M";
-			case VK_N: return "N";
-			case VK_O: return "O";
-			case VK_P: return "P";
-			case VK_Q: return "Q";
-			case VK_R: return "R";
-			case VK_S: return "S";
-			case VK_T: return "T";
-			case VK_U: return "U";
-			case VK_V: return "V";
-			case VK_W: return "W";
-			case VK_X: return "X";
-			case VK_Y: return "Y";
-			case VK_Z: return "Z";
-			case VK_0: return "0";
-			case VK_1: return "1";
-			case VK_2: return "2";
-			case VK_3: return "3";
-			case VK_4: return "4";
-			case VK_5: return "5";
-			case VK_6: return "6";
-			case VK_7: return "7";
-			case VK_8: return "8";
-			case VK_9: return "9";
-			case VK_ESCAPE: return "Escape";
-			case VK_SHIFT: return "Shift";
-			case VK_LSHIFT: return "Shift";
-			case VK_RSHIFT: return "Shift";
-			case VK_CONTROL: return "Control";
-			case VK_MENU: return "LAlt";
-			default: break;
+		case VK_LBUTTON: return "Mouse1";
+		case VK_RBUTTON: return "Mouse2";
+		case VK_MBUTTON: return "Mouse3";
+		case VK_XBUTTON1: return "Mouse4";
+		case VK_XBUTTON2: return "Mouse5";
+		case VK_SPACE: return "Space";
+		case 0x0: return "None";
+		case VK_A: return "A";
+		case VK_B: return "B";
+		case VK_C: return "C";
+		case VK_D: return "D";
+		case VK_E: return "E";
+		case VK_F: return "F";
+		case VK_G: return "G";
+		case VK_H: return "H";
+		case VK_I: return "I";
+		case VK_J: return "J";
+		case VK_K: return "K";
+		case VK_L: return "L";
+		case VK_M: return "M";
+		case VK_N: return "N";
+		case VK_O: return "O";
+		case VK_P: return "P";
+		case VK_Q: return "Q";
+		case VK_R: return "R";
+		case VK_S: return "S";
+		case VK_T: return "T";
+		case VK_U: return "U";
+		case VK_V: return "V";
+		case VK_W: return "W";
+		case VK_X: return "X";
+		case VK_Y: return "Y";
+		case VK_Z: return "Z";
+		case VK_0: return "0";
+		case VK_1: return "1";
+		case VK_2: return "2";
+		case VK_3: return "3";
+		case VK_4: return "4";
+		case VK_5: return "5";
+		case VK_6: return "6";
+		case VK_7: return "7";
+		case VK_8: return "8";
+		case VK_9: return "9";
+		case VK_ESCAPE: return "Escape";
+		case VK_SHIFT: return "Shift";
+		case VK_LSHIFT: return "Shift";
+		case VK_RSHIFT: return "Shift";
+		case VK_CONTROL: return "Control";
+		case VK_MENU: return "LAlt";
+		default: break;
 		}
 
 		WCHAR output[16] = { L"\0" };
@@ -101,7 +101,7 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 			sprintf(outputt, "%ws", output);
 			return outputt;
 		}
-		
+
 		return "VK2STR_FAILED";
 	};
 
@@ -127,7 +127,7 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 
 		if (curr == nullptr && elapsed > 0.1f) {
 			for (short n = 0; n < 256; n++) {
-				if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU ) {
+				if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
 					if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
 						ImGui::ClearActiveID();
 						break;
@@ -161,7 +161,7 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 		if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0]))
 			ImGui::ClearActiveID();
 	}
-	else if (ImGui::Button(VK2STR(output.m_Var), ImVec2(100,17))) {
+	else if (ImGui::Button(VK2STR(output.m_Var), ImVec2(100, 17))) {
 		ImGui::SetActiveID(id, ImGui::GetCurrentWindow());
 	}
 
@@ -170,7 +170,7 @@ bool InputKeybind(const char * label, CVar<int>& output, bool bAllowNone = true)
 	return true;
 }
 
-void combo(const char * label, int * current_item, const char *const * items, int items_count, int popup_max_height_in_items = -1) {
+void combo(const char* label, int* current_item, const char* const* items, int items_count, int popup_max_height_in_items = -1) {
 	ImGui::PushItemWidth(100);
 	ImGui::Combo(label, current_item, items, items_count, popup_max_height_in_items);
 	ImGui::PopItemWidth();
@@ -205,7 +205,7 @@ void ColorPicker(const char* label, Color_t& color) {
 	ImGui::PopItemWidth();
 }
 
-Color_t *vpColor(ImVec4 color) {
+Color_t* vpColor(ImVec4 color) {
 	Color_t col = { (byte)(color.x * 255.0f),
 		(byte)(color.y * 255.0f),
 		(byte)(color.z * 255.0f),
@@ -213,7 +213,7 @@ Color_t *vpColor(ImVec4 color) {
 	return &col;
 }
 
-float *cColor(ImVec4 color, Color_t &out) {
+float* cColor(ImVec4 color, Color_t& out) {
 	out = *vpColor(color);
 
 	return &color.x;
@@ -825,6 +825,14 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.m_Var); HelpMarker("Will ignore spies who are on your friends list");
 								const char* spyWmodes[]{ "Arrow", "Flash" }; ImGui::PushItemWidth(100); ImGui::Combo("Warning style", &Vars::Visuals::SpyWarningStyle.m_Var, spyWmodes, IM_ARRAYSIZE(spyWmodes)); ImGui::PopItemWidth();
 							}
+
+							if (ImGui::CollapsingHeader("Discord")) {
+								ImGui::Checkbox("Enable Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
+								ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var); HelpMarker("Should Discord Rich Presence contain current map name?");
+								ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var); HelpMarker("Should Discord Rich Presence contain current class?");
+								ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var); HelpMarker("Should time since you started playing TF2 be included?");
+								const char* imagething[]{ "Big fedora, small TF2", "Small TF2, big fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth(); HelpMarker("Which image should be big and which small");
+							}
 						}
 						ImGui::NextColumn();
 						{
@@ -968,7 +976,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 									ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Active.m_Var); HelpMarker("Will show health icons where health packs are");
 									ImGui::Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Active.m_Var); HelpMarker("Will show ammo icons where ammo packs are");
 									ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth(); HelpMarker("The icon size of pickups on the radar");
-								
+
 								}
 
 							}

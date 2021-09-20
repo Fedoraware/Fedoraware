@@ -459,6 +459,15 @@ namespace Vars
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
 			inline CVar<int> FakelagValue   { 1, L"Fakelag value" };
 		}
+		
+		namespace Discord
+		{
+			inline CVar<bool>EnableRPC				{ true, L"Enable Discord RPC" };
+			inline CVar<bool>IncludeClass			{ true, L"Include class" };
+			inline CVar<bool>IncludeMap				{ true, L"Include map name" };
+			inline CVar<bool>IncludeTimestamp		{ true, L"Include timestamp" };
+			inline CVar<int>WhatImagesShouldBeUsed	{ 0, L"Image Options" }; // 0 - Big fedora, small TF2 logo; 1 - Big TF2 logo, small fedora
+		}
 	}
 
 	namespace AntiHack

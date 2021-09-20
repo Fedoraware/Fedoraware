@@ -532,6 +532,14 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 			}
+			//Discord
+			{
+				SAVE_VAR(Vars::Misc::Discord::EnableRPC);
+				SAVE_VAR(Vars::Misc::Discord::IncludeMap);
+				SAVE_VAR(Vars::Misc::Discord::IncludeClass);
+				SAVE_VAR(Vars::Misc::Discord::IncludeTimestamp);
+				SAVE_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+			}
 		}
 
 		//AntiHack
@@ -998,6 +1006,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+			}
+			//Discord
+			{
+				LOAD_VAR(Vars::Misc::Discord::EnableRPC);
+				LOAD_VAR(Vars::Misc::Discord::IncludeMap);
+				LOAD_VAR(Vars::Misc::Discord::IncludeClass);
+				LOAD_VAR(Vars::Misc::Discord::IncludeTimestamp);
+				LOAD_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
 			}
 		}
 
