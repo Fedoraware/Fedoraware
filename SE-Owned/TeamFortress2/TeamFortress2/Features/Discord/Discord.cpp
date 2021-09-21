@@ -14,81 +14,93 @@ inline const char* lol(int nClassNum)
 
 void CDiscordRPC::vFunc()
 {
-	if (!Vars::Misc::Discord::EnableRPC.m_Var)
-		return;
-
-	static int64_t StartTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	DiscordRichPresence discordPresence;
-	memset(&discordPresence, 0, sizeof(discordPresence));
-
-	if (g_Interfaces.Engine->IsInGame())
+	if (Vars::Misc::Discord::EnableRPC.m_Var)
 	{
-		if (Vars::Misc::Discord::IncludeMap.m_Var)
+
+		static int64_t StartTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		DiscordRichPresence discordPresence;
+		memset(&discordPresence, 0, sizeof(discordPresence));
+
+		if (g_Interfaces.Engine->IsInGame())
 		{
-			char mapName[256];
-			const char* cLevelName = g_Interfaces.Engine->GetLevelName();
-
-			if (cLevelName != NULL)
+			if (Vars::Misc::Discord::IncludeMap.m_Var)
 			{
-				std::string sLevelName;
-				sLevelName.append(cLevelName);
+				char mapName[256];
+				const char* cLevelName = g_Interfaces.Engine->GetLevelName();
 
-
-				if (sLevelName.substr(sLevelName.find_last_of(".") + 1) == "bsp")
+				if (cLevelName != NULL)
 				{
-					std::string sLevelNameFinal = sLevelName.substr(sLevelName.find_last_of("/") + 1);
-					sLevelNameFinal.erase(sLevelNameFinal.length() - 4);
+					std::string sLevelName;
+					sLevelName.append(cLevelName);
 
-					sprintf_s(mapName, "%s", sLevelNameFinal.c_str());
 
-					discordPresence.details = mapName;
+					if (sLevelName.substr(sLevelName.find_last_of(".") + 1) == "bsp")
+					{
+						std::string sLevelNameFinal = sLevelName.substr(sLevelName.find_last_of("/") + 1);
+						sLevelNameFinal.erase(sLevelNameFinal.length() - 4);
+
+						sprintf_s(mapName, "%s", sLevelNameFinal.c_str());
+
+						discordPresence.details = mapName;
+					}
+				}
+			}
+			else
+			{
+				discordPresence.details = NULL;
+			}
+
+			if (auto pLocal = g_EntityCache.m_pLocal)
+			{
+				if (Vars::Misc::Discord::IncludeClass.m_Var)
+				{
+					if (pLocal->IsAlive())
+					{
+						char ClassNum[256];
+						sprintf_s(ClassNum, "%s", lol(pLocal->GetClassNum()));
+						discordPresence.state = ClassNum;
+					}
+				}
+				else
+				{
+					discordPresence.state = NULL;
 				}
 			}
 		}
-
-		if (auto pLocal = g_EntityCache.m_pLocal)
+		else
 		{
-			//this caused some issues with it being in the if statement above, too lazy to bother fixing them
-			if (!Vars::Misc::Discord::IncludeClass.m_Var)
-				return;
-				
-			if (pLocal->IsAlive())
-			{
-				char ClassNum[256];
-				sprintf_s(ClassNum, "%s", lol(pLocal->GetClassNum()));
-				discordPresence.state = ClassNum;
-			}
+			discordPresence.state = "Main Menu";
 		}
+
+		if (Vars::Misc::Discord::IncludeTimestamp.m_Var)
+			discordPresence.startTimestamp = StartTime;
+		else
+			discordPresence.startTimestamp = NULL;
+
+		discordPresence.endTimestamp = NULL;
+
+		switch (Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var)
+		{
+		case 0:
+			discordPresence.smallImageKey = "tf2";
+			discordPresence.largeImageKey = "fedora";
+			discordPresence.smallImageText = "Team Fortress 2";
+			discordPresence.largeImageText = "Fedoraware";
+			break;
+		case 1:
+			discordPresence.smallImageKey = "fedora";
+			discordPresence.largeImageKey = "tf2";
+			discordPresence.smallImageText = "Fedoraware";
+			discordPresence.largeImageText = "Team Fortress 2";
+			break;
+		}
+
+		discordPresence.instance = 1;
+
+		Discord_UpdatePresence(&discordPresence);
 	}
 	else
 	{
-		discordPresence.state = "Main Menu";
+		Discord_ClearPresence();
 	}
-
-	if (Vars::Misc::Discord::IncludeTimestamp.m_Var)
-		discordPresence.startTimestamp = StartTime;
-	else
-		discordPresence.startTimestamp = NULL;
-
-	discordPresence.endTimestamp = NULL;
-
-	switch (Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var)
-	{
-	case 0:
-		discordPresence.smallImageKey = "tf2";
-		discordPresence.largeImageKey = "fedora";
-		discordPresence.smallImageText = "Team Fortress 2";
-		discordPresence.largeImageText = "Fedoraware";
-		break;
-	case 1:
-		discordPresence.smallImageKey = "fedora";
-		discordPresence.largeImageKey = "tf2";
-		discordPresence.smallImageText = "Fedoraware";
-		discordPresence.largeImageText = "Team Fortress 2";
-		break;
-	}
-
-	discordPresence.instance = 1;
-
-	Discord_UpdatePresence(&discordPresence);
 }
