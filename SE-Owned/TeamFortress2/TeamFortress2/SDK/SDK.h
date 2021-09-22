@@ -131,8 +131,12 @@ namespace Colors
 	inline Color_t Bones =					{ 255, 255, 255, 255 };
 	inline Color_t BulletTracer =			{ 255, 255, 255, 255 };
 	inline Color_t FresnelBase =			{ 0,0,0,255 };
-	inline Color_t FresnelTop = { 0,255,0,255 };
-	inline Color_t AimSquareCol = { 0,255,0,255 };
+	inline Color_t FresnelTop = 			{ 0,255,0,255 };
+	inline Color_t AimSquareCol = 			{ 0,255,0,255 };
+	inline Color_t DtGradientChargingLeft =	{ 255, 192, 81, 180};
+	inline Color_t DtGradientChargingRight ={ 255, 134, 81, 180};
+	inline Color_t DtGradientChargedLeft =	{ 106, 255, 131, 180};
+	inline Color_t DtGradientChargedRight =	{ 106, 255, 250, 180};
 }
 
 namespace Utils

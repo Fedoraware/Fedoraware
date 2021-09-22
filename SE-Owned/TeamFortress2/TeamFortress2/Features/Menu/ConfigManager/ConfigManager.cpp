@@ -597,6 +597,11 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::FresnelBase);
 			SAVE_OTHER(Colors::FresnelTop);
 			SAVE_OTHER(Colors::AimSquareCol);
+			SAVE_OTHER(Colors::DtGradientChargedLeft);
+			SAVE_OTHER(Colors::DtGradientChargedRight);
+			SAVE_OTHER(Colors::DtGradientChargingLeft);
+			SAVE_OTHER(Colors::DtGradientChargingRight);
+
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -1073,6 +1078,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::FresnelBase);
 			LOAD_OTHER(Colors::FresnelTop);
 			LOAD_OTHER(Colors::AimSquareCol);
+			LOAD_OTHER(Colors::DtGradientChargedLeft);
+			LOAD_OTHER(Colors::DtGradientChargedRight);
+			LOAD_OTHER(Colors::DtGradientChargingLeft);
+			LOAD_OTHER(Colors::DtGradientChargingRight);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);
