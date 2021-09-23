@@ -994,6 +994,12 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Columns(2);
 						{
 							ImGui::TextDisabled("Cheat colours");
+							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+								ColorPicker("Dt bar chargin left", Colors::DtGradientChargingLeft);
+								ColorPicker("Dt bar chargin right", Colors::DtChargingRight);
+								ColorPicker("Dt bar charged left", Colors::DtChargingLeft);
+								//ColorPicker("Dt bar chargin right", Colors::DtGradientChargedRight); //TODO: Issue with this ... FIX IT
+							}
 							ColorPicker("Outline ESP", Colors::OutlineESP);
 							ColorPicker("Conditions", Colors::Cond);
 							ColorPicker("Target", Colors::Target);
@@ -1024,13 +1030,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Bullet tracer", Colors::BulletTracer);
 							ColorPicker("Fresnel chams base", Colors::FresnelBase);
 							ColorPicker("Aimbot prediction", Colors::AimSquareCol);
-							if(Vars::Misc::CL_Move::DTBarStyle.m_Var == 1){
-								ColorPicker("Doubletap bar chargin left", Colors::DtGradientChargingLeft);
-								ColorPicker("Doubletap bar chargin right", Colors::DtGradientChargingRight);
-								ColorPicker("Doubletap bar charged left", Colors::DtGradientChargedLeft);
-								ColorPicker("Doubletap bar chargin right", Colors::DtGradientChargedRight);
-
-							}
+							
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}
 						ImGui::NextColumn();
