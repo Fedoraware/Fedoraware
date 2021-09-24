@@ -155,8 +155,19 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 							//g_AimbotProjectile.DrawTrace(Trace);
 
-							Color_t color1 = g_GlobalInfo.m_nWaitForShift ? Colors::DtGradientChargingLeft : Colors::DtChargingLeft;
-							Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Colors::DtChargingRight : Colors::DtGradientChargedRight;
+							//Color_t color1 = g_GlobalInfo.m_nWaitForShift ? Colors::DtGradientChargingLeft : Colors::DtChargingLeft;
+							//Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Colors::DtChargingRight : Colors::DtGradientChargedRight;
+
+							Color_t color1, color2;
+
+							if (g_GlobalInfo.m_nWaitForShift) {
+								color1 = Colors::DtChargingLeft;
+								color2 = Colors::DtChargingRight;
+							}
+							else {
+								color1 = Colors::DtChargedLeft;
+								color2 = Colors::DtChargedRight;
+							}
 							
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ticks Choked: %i "), ticksChoked);
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());

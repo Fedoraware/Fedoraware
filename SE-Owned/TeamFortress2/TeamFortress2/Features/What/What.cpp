@@ -995,10 +995,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						{
 							ImGui::TextDisabled("Cheat colours");
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-								ColorPicker("Dt bar chargin left", Colors::DtGradientChargingLeft);
+								ColorPicker("Dt bar chargin left", Colors::DtChargingLeft);
 								ColorPicker("Dt bar chargin right", Colors::DtChargingRight);
-								ColorPicker("Dt bar charged left", Colors::DtChargingLeft);
-								//ColorPicker("Dt bar chargin right", Colors::DtGradientChargedRight); //TODO: Issue with this ... FIX IT
+								ColorPicker("Dt bar charged left", Colors::DtChargedLeft);
+								ColorPicker("Dt bar charged right", Colors::DtChargedRight); //TODO: Issue with this ... FIX IT
 							}
 							ColorPicker("Outline ESP", Colors::OutlineESP);
 							ColorPicker("Conditions", Colors::Cond);
