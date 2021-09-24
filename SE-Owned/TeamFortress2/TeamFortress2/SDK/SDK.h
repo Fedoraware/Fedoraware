@@ -137,6 +137,7 @@ namespace Colors
 	inline Color_t DtChargingRight =		{ 255, 134, 81, 180};
 	inline Color_t DtChargedLeft =			{ 106, 255, 131, 180};
 	inline Color_t DtChargedRight =			{ 106, 255, 250, 180 };
+	inline Color_t DtOutline =				{ 30, 30, 30, 180 };
 }
 
 namespace Utils

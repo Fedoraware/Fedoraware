@@ -527,6 +527,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				SAVE_VAR(Vars::Misc::CL_Move::DTMode);
+				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
+				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
@@ -601,6 +603,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DtChargingRight);
 			SAVE_OTHER(Colors::DtChargedLeft);
 			SAVE_OTHER(Colors::DtChargedRight);
+			SAVE_OTHER(Colors::DtOutline);
 
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
@@ -1007,6 +1010,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
+				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
+				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
@@ -1082,6 +1087,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DtChargingRight);
 			LOAD_OTHER(Colors::DtChargedLeft);
 			LOAD_OTHER(Colors::DtChargedRight);
+			LOAD_OTHER(Colors::DtOutline);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);
