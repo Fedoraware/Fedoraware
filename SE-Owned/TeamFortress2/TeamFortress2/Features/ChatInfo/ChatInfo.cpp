@@ -18,6 +18,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
+					// TODO: Add colors and possibly OTHER TEAM? 
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD] \x3%s voted %s", pi.name, bVotedYes ? "Yes" : "No").c_str());
 					if (Vars::Misc::VotesInChat.m_Var) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());

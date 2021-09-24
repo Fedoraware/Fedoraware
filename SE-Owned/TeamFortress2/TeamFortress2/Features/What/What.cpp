@@ -845,6 +845,10 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Don't DT in air", &Vars::Misc::CL_Move::NotInAir.m_Var); HelpMarker("When enabled, doubletap will not work if you are mid-air as to avoid movement being uncontrollable");
 								const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth(); HelpMarker("How should DT behave");
 								const char* dtBarStyles[]{ "Off", "Default", "Nitro" }; ImGui::PushItemWidth(100); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
+								if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+									ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+									ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+								}
 
 							}
 							if (ImGui::CollapsingHeader("Attribute changer")) {
@@ -994,6 +998,13 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Columns(2);
 						{
 							ImGui::TextDisabled("Cheat colours");
+							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+								ColorPicker("Dt bar chargin left", Colors::DtChargingLeft);
+								ColorPicker("Dt bar chargin right", Colors::DtChargingRight);
+								ColorPicker("Dt bar charged left", Colors::DtChargedLeft);
+								ColorPicker("Dt bar charged right", Colors::DtChargedRight);
+								ColorPicker("Dt bar outline", Colors::DtOutline);
+							}
 							ColorPicker("Outline ESP", Colors::OutlineESP);
 							ColorPicker("Conditions", Colors::Cond);
 							ColorPicker("Target", Colors::Target);
@@ -1024,6 +1035,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Bullet tracer", Colors::BulletTracer);
 							ColorPicker("Fresnel chams base", Colors::FresnelBase);
 							ColorPicker("Aimbot prediction", Colors::AimSquareCol);
+							
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}
 						ImGui::NextColumn();

@@ -215,34 +215,39 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::OverrideWorldTextures()
 {
-	KeyValues* kv = nullptr;
-	if (!kv) {
-		kv = new KeyValues("LightmappedGeneric");
-		kv->SetString("$basetexture", "dev/dev_measuregeneric01b");
-	}
-
-	if (Vars::Visuals::OverrideWorldTextures.m_Var) {
-		for (auto h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h)) {
-			IMaterial* pMaterial = g_Interfaces.MatSystem->Get(h);
-
-			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached()
-				|| pMaterial->IsTranslucent() || pMaterial->IsSpriteCard()
-				|| std::string_view(pMaterial->GetTextureGroupName()).find("World") == std::string_view::npos)
-				continue;
-
-			std::string_view sName = std::string_view(pMaterial->GetName());
-
-			if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
-				|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
-				|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
-				|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
-				|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
-				|| sName.find("hay") != std::string_view::npos)
-				continue;
-
-			pMaterial->SetShaderAndParams(kv);
+	
+		static KeyValues *kv = nullptr;
+		if (!kv) {
+			kv = new KeyValues("LightmappedGeneric");
+			kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
+			//kv->SetString("$basetexture", "vgui/white_additive"); //flat 
+			//kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
 		}
-	}
+
+		if (Vars::Visuals::OverrideWorldTextures.m_Var) {
+			for (auto h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h)) {
+				IMaterial* pMaterial = g_Interfaces.MatSystem->Get(h);
+
+				if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached()
+					|| pMaterial->IsTranslucent() || pMaterial->IsSpriteCard()
+					|| std::string_view(pMaterial->GetTextureGroupName()).find("World") == std::string_view::npos)
+					continue;
+
+				std::string_view sName = std::string_view(pMaterial->GetName());
+
+				if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
+					|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
+					|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
+					|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
+					|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
+					|| sName.find("hay") != std::string_view::npos)
+					continue;
+
+				pMaterial->SetShaderAndParams(kv);
+			}
+		}
+	
+
 }
 
 void CVisuals::UpdateWorldModulation()

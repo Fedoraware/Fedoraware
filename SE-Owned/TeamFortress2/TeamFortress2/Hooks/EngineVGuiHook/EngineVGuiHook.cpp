@@ -155,28 +155,40 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 							//g_AimbotProjectile.DrawTrace(Trace);
 
-							Color_t color1 = g_GlobalInfo.m_nWaitForShift ? Color_t{ 255, 192, 81, 180 } : Color_t{ 106, 255, 131, 180 };
-							Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Color_t{ 255, 134, 81, 180 } : Color_t{ 106, 255, 250, 180 };
+							//Color_t color1 = g_GlobalInfo.m_nWaitForShift ? Colors::DtGradientChargingLeft : Colors::DtChargingLeft;
+							//Color_t color2 = g_GlobalInfo.m_nWaitForShift ? Colors::DtChargingRight : Colors::DtGradientChargedRight;
+
+							Color_t color1, color2;
+
+							if (g_GlobalInfo.m_nWaitForShift) {
+								color1 = Colors::DtChargingLeft;
+								color2 = Colors::DtChargingRight;
+							}
+							else {
+								color1 = Colors::DtChargedLeft;
+								color2 = Colors::DtChargedRight;
+							}
+							
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ticks Choked: %i "), ticksChoked);
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());
 							//int chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu = g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets;
 							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, std::to_string(chokemelikeyouhatemebutyoulovemelowkeywannadatemewhenyoufuckmeuwu).data());
 							// pWeapon->GetWeaponData().m_nBulletsPerShot
-							int tickWidth = 8;
+							int tickWidth = Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
 							int barWidth = (tickWidth * ticks) + 2;
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
 								g_Draw.OutlinedRect( // Outline of bar
 									g_ScreenSize.c - (barWidth / 2), // get center of screen, then subtract the width of the bar divided by 2 (to start  the bar)
 									nY + 80, // vertical center + 80px
 									barWidth, // width of outlined rect
-									12, // height (hardcoded)
-									{ 30, 30, 30, 180 } // color
+									Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, // height (hardcoded)
+									Colors::DtOutline // color
 								);
 								g_Draw.GradientRect(
 									g_ScreenSize.c - (barWidth / 2) + 1, // the bar
 									nY + 81,
 									(g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * ticksChoked,
-									nY + 81 + 10,
+									nY + 81 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var - 2, //+ 10
 									color1,
 									color2,
 									true
