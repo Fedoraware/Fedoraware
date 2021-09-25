@@ -33,4 +33,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
        name: Fedoraware
-       path: ${{env.SOLUTION_FILE_PATH)/TeamFortress2/Release/Fware(Release).dll
+       path: ${{env.SOLUTION_FILE_PATH}}/TeamFortress2/Release/Fware(Release).dll
