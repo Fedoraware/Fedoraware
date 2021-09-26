@@ -260,7 +260,7 @@ std::string GetSpam(const int nIndex) {
 
 	switch (nIndex)
 	{
-	case 0: str = XorStr("say Fedoraware - https://github.com/M-FeD/Fedoraware").str(); break;
+	case 0: str = XorStr("say Fedoraware - github.com/M-FeD/Fedoraware").str(); break;
 	case 1: str = XorStr("say Fedoraware - Best free and open-source cheat!").str(); break;
 	case 2: str = XorStr("say Fedoraware - One tip ahead of the game!").str(); break;
 	case 3: str = XorStr("say Fedoraware - Now available @ github.com/M-FeD!").str(); break;
