@@ -9,7 +9,9 @@ void CHooks::Init()
 {
 	MH_Initialize();
 	{
-		EndSceneHook::Init();
+		if (g_Interfaces.CVars->FindVar("mat_dxlevel")->GetInt() >= 90) {
+			EndSceneHook::Init();
+		}
 		//Scoreboard::KeyValues::Init();
 		Scoreboard::IsPlayerDominated::Init();
 	}
