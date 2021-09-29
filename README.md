@@ -2,6 +2,7 @@
 - NOTE: It's still very __*early*__ in development and there are a lot of issues!
 - __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
 - You will have issues with injecting if you are on Windows 10 upgraded from Windows 7.
+- Use dxlevel 90+
 
 - [Join our official Discord Server!](https://discord.gg/HjYjAG8YG2)
 
