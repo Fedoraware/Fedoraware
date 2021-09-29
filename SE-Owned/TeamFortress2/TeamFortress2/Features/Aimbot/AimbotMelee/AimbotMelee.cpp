@@ -80,20 +80,17 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 
 			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked()) {
 				int nCond = Player->GetCond();
-				if (nCond & TFCond_Milked || nCond & TFCond_Jarated) {
-					//pass
-				}
-				else {
+				if (!(nCond & TFCond_Milked || nCond & TFCond_Jarated)) {
 					continue;
 				}
 			}
 
 			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
 				continue;
-
-			// But why?
-			/*if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
-				continue;*/ 
+			
+			// Ignore when ignore friends is on but only when friend on da enemy team
+			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
+				continue;
 
 			Vec3 vPos = Player->GetHitboxPos(HITBOX_BODY);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
