@@ -60,11 +60,11 @@ void CAimbot::Run(CUserCmd* pCmd)
 	g_GlobalInfo.m_bProjectileSilentActive = false;
 	g_GlobalInfo.m_vAimPos = Vec3();
 
-	auto pLocal = g_EntityCache.m_pLocal;
-	auto pWeapon = g_EntityCache.m_pLocalWeapon;
+	auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
 
-	if (pLocal && pWeapon)
+	if (pLocal)
 	{
+		auto pWeapon = pLocal->GetActiveWeapon();
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, ShouldRun(pLocal, pWeapon) ? "aimbot running" : "aimbot not running");
 		if (!ShouldRun(pLocal, pWeapon))
 			return;

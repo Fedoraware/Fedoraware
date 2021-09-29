@@ -680,7 +680,7 @@ void CMenu::Run()
 
 
 
-	if (Utils::IsGameWindowInFocus() && (g_Interfaces.CVars->FindVar("mat_dxlevel")->GetInt() < 90) ? (GetAsyncKeyState(VK_HOME) & 1) : (GetAsyncKeyState(VK_INSERT) & 1)) {
+	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
 		//
 		//g_Interfaces.Surface->SetCursorAlwaysVisible(m_bOpen = !m_bOpen);
 		flTimeOnChange = g_Interfaces.Engine->Time();

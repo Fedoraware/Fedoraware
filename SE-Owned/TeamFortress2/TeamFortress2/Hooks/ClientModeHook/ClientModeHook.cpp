@@ -145,10 +145,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		updateAntiAfk(pCmd);
 	}
 
-	if (g_Interfaces.CVars->FindVar("mat_dxlevel")->GetInt() < 90 && Vars::Menu::LegacyMenu.m_Var == false) {
-		Vars::Menu::LegacyMenu.m_Var = true;
-	}
-
 	if (Vars::Misc::Roll.m_Var && pCmd->buttons & IN_DUCK) {
 
 		Vec3 ang = vOldAngles;
