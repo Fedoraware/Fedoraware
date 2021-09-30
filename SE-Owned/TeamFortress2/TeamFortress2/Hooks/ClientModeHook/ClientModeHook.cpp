@@ -11,7 +11,6 @@
 
 #include "../../Features/Vars.h"
 #include "../../Features/Menu/Menu.h"
-#include "../../SDK/Timer.h"
 
 void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
@@ -31,28 +30,22 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
 }
 
-Timer AntiAfkTimer{  };
-int last_buttons{ 0 };
-
 static void updateAntiAfk(CUserCmd *pCmd)
 {
-	if (pCmd->buttons != last_buttons) {
-		AntiAfkTimer.update();
-		last_buttons = pCmd->buttons;
-	}
-	else {
-		if (g_ConVars.afkTimer->GetInt() != 0 && AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 - 10000)) {
-			bool flip = false;
-			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
-			flip = !flip;
-			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
-			{
-				AntiAfkTimer.update();
-			}
+	if (Vars::Misc::AntiAFK.m_Var && g_ConVars.afkTimer->GetInt() != 0) {
+		static float last_time = 0.0f;
+		static int buttones = 0;
+
+		if (pCmd->buttons != buttones) {
+			last_time = g_Interfaces.GlobalVars->curtime;
+			buttones = pCmd->buttons;
 		}
-		last_buttons = pCmd->buttons;
+		else if (g_Interfaces.GlobalVars->curtime - last_time > (g_ConVars.afkTimer->GetInt() * 60) - 1) {
+			pCmd->buttons |= IN_FORWARD;
+		}
 	}
 }
+
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -108,10 +101,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (GetAsyncKeyState(0x56)) {
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Velocity: %.2f %.2f %2.f\n", pLocal->GetVecVelocity().x, pLocal->GetVecVelocity().y, pLocal->GetVecVelocity().z);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Ticks: %d\n", g_GlobalInfo.m_nShifted);
-		}
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
@@ -141,9 +130,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	if (Vars::Misc::AntiAFK.m_Var) {
-		updateAntiAfk(pCmd);
-	}
+	updateAntiAfk(pCmd);
 
 	if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
 		if (const auto& pLocal = g_EntityCache.m_pLocal) {
@@ -210,6 +197,16 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+			if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+				*pSendPacket = ((g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) || 
+				(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) && pLocal->IsAlive() ? Vars::Misc::CL_Move::FakelagOnKey.m_Var && 
+				GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) ? false : false : true;
+			}
+		}
+	}
+
+	/*if (const auto& pLocal = g_EntityCache.m_pLocal) {
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
 			if (pLocal->IsAlive())
 			{
 				auto netchan = g_Interfaces.Engine->GetNetChannelInfo();
@@ -229,7 +226,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				}
 			}
 		}
-	}
+	}*/
 
 
 	if (Vars::Misc::TauntSlide.m_Var)
