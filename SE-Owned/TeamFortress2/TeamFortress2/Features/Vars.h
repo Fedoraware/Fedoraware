@@ -452,6 +452,8 @@ namespace Vars
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
 			inline CVar<int> DoubletapKey	{ 0x56, L"Doubletap Key" }; //V
 			inline CVar<int> DTBarStyle     { 0, L"Doubletap bar style" };
+			inline CVar<bool> RechargeWhileDead	{ false, L"Recharge While Dead" };
+			inline CVar<bool> AutoRecharge	{ false, L"AutoRecharge" }; //H
 			inline CVar<int> DTMode		    { 0, L"DT Mode" }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
 			inline CVar<int> DtbarOutlineHeight	{ 12, L"Dt default bar height" };
 			inline CVar<int> DtbarOutlineWidth	{ 8, L"Dt default bar width" };

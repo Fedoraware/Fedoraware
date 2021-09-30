@@ -132,23 +132,25 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	updateAntiAfk(pCmd);
 
-	if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
-		if (const auto& pLocal = g_EntityCache.m_pLocal) {
-			if (pLocal->GetVecVelocity().Lenght2D() < 5.0f
-				&&	!(
-						pCmd->buttons & IN_MOVELEFT ||
-						pCmd->buttons & IN_MOVERIGHT ||
-						pCmd->buttons & IN_FORWARD ||
-						pCmd->buttons & IN_BACK ||
-						pCmd->buttons & IN_JUMP ||
-						pCmd->buttons & IN_MOVELEFT ||
-						pCmd->buttons & IN_ATTACK ||
-						pCmd->buttons & IN_ATTACK2 ||
-						pCmd->buttons & IN_ATTACK3
-					)
-				) 
-			{
-				g_GlobalInfo.m_bRecharging = true;
+	if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var) {
+    	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+        	if (!pLocal->IsAlive() && g_GlobalInfo.m_nShifted) {
+            	g_GlobalInfo.m_bRecharging = true;
+        	}
+		}
+    }
+
+	if (Vars::Misc::CL_Move::AutoRecharge.m_Var) {
+		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
+			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f
+					&&	!(
+							pCmd->buttons = 0
+						)
+					) 
+				{
+					g_GlobalInfo.m_bRecharging = true;
+				}
 			}
 		}
 	}

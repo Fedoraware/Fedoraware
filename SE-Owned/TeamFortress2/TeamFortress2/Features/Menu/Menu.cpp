@@ -1522,6 +1522,8 @@ void CMenu::Run()
 
 						CheckBox(Vars::Misc::CL_Move::Enabled, _(L"Master switch to enable / disable all tickbase exploits."));
 						InputKey(Vars::Misc::CL_Move::RechargeKey, false);
+						CheckBox(Vars::Misc::CL_Move::RechargeWhileDead, _(L"Recharge your DoubleTap bar while you're dead"));
+						CheckBox(Vars::Misc::CL_Move::AutoRecharge, _(L"Recharge your DoubleTap bar if you are doing nothing"));
 						InputKey(Vars::Misc::CL_Move::DoubletapKey, false);
 						InputKey(Vars::Misc::CL_Move::TeleportKey, false);
 						CheckBox(Vars::Misc::CL_Move::WaitForDT, _(L"Wait for DT."));
