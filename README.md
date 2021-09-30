@@ -1,14 +1,13 @@
 # Fedoraware, a SE-Owned fork.
-- NOTE: It's still very __*early*__ in development and there are a lot of issues!
-- __Crashes/Performance issues/Bugs are inevitable in this stage, please feel free to report them!__
 - You will have issues with injecting if you are on Windows 10 upgraded from Windows 7.
 - Use dxlevel 90+
-
 - [Join our official Discord Server!](https://discord.gg/HjYjAG8YG2)
 
+## VAC Status
+- The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass)
 
 ## Guide:
-- [How to compile and use a Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
+- [How to compile and use Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
 - __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
 
 ## Differences to original SE-Owned:
