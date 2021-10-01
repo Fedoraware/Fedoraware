@@ -7,7 +7,7 @@
 <h1 align="center" style="margin-top: 0px;">Fedoraware is a fork of SE-Owned, a public cheat made by Lak3 and spook953. This fork has a lot of changes to the code, including bug fixes, new features, refactoring of certain parts of the code, and it is also constantly maintained</h1>
 <p align="center">
 <a href="https://github.com/M-FeD/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/M-FeD/Fedoraware"></a>  
-<a href="https://github.com/M-FeD/Fedoraware/stargazers"><img alt="Fedoraware's Official Discord Server" src="https://img.shields.io/discord/887358113840250920?label=Discord&logo=Discord"></a>  
+<a href="https://discord.gg/GVT5CBqbCa"><img alt="Fedoraware's Official Discord Server" src="https://img.shields.io/discord/887358113840250920?label=Discord&logo=Discord"></a>  
 <a href="https://github.com/M-FeD/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/M-FeD/Fedoraware/MSBuild"></a>
 <a href="https://github.com/M-FeD/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/M-FeD/Fedoraware"></a>
 </p>  
