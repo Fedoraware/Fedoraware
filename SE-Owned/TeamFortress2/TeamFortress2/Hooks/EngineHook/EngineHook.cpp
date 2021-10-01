@@ -43,9 +43,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		g_GlobalInfo.m_bRecharging = false;
 	}
 
-
-
-
 	Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
 	if (g_GlobalInfo.m_nWaitForShift)
