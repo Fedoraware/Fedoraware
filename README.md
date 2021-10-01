@@ -1,8 +1,6 @@
-<!---I would add the Fedoraware logo in here, but M-FeD doesn't have it :^)
 <p align="center" style="margin-bottom: 0px !important;">
-  <img width="200" src="here should be the logo for fedoraware, upload it on the .github/assets/ folder and then copy the link of it and paste it over here" alt="Fedoraware logo." align="center">
+  <img width="200" src="https://raw.githubusercontent.com/M-FeD/Fedoraware/main/.github/assets/fedora.png" alt="Fedoraware logo." align="center">
 </p>
--->
 <h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
 <h1 align="center" style="margin-top: 0px;">Fedoraware is a fork of SE-Owned, a public cheat made by Lak3 and spook953. This fork has a lot of changes to the code, including bug fixes, new features, refactoring of certain parts of the code, and it is also constantly maintained</h1>
 <p align="center">
