@@ -156,6 +156,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 			}
 
 			//Hitscan
@@ -176,6 +177,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
+				
 			}
 
 			//Projectile
@@ -645,6 +647,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 			}
 
 			//Hitscan
@@ -665,6 +668,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoRev);
+				
 			}
 
 			//Projectile

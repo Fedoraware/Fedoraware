@@ -82,6 +82,20 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 				continue;
 
+			if (Vars::Aimbot::Global::BAimLethal.m_Var) {
+				if (pWeapon->GetChargeDamage() >= Player->GetHealth()) {
+					nHitbox = HITBOX_PELVIS;
+				}
+
+				if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex == Spy_m_FestiveAmbassador) {
+					if (pWeapon->GetWeaponData().m_nDamage >= Player->GetHealth()) {
+						nHitbox = HITBOX_PELVIS;
+					}
+				}
+
+				
+			}
+
 			Vec3 vPos = Player->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
@@ -537,6 +551,8 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 			if (g_GlobalInfo.m_nWaitForShift && !g_GlobalInfo.m_nShifted && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
 				return;
 		}
+
+
 
 		g_GlobalInfo.m_nCurrentTargetIdx = Target.m_pEntity->GetIndex();
 		g_GlobalInfo.m_bHitscanRunning = true;

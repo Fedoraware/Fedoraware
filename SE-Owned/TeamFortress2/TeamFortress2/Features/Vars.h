@@ -69,6 +69,7 @@ namespace Vars
 			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
 			inline CVar<bool> IgnoreFriends			{ true, L"Ignore Friends" };
 			inline CVar<bool> IgnoreTaunting		{ true, L"Ignore Taunting" };
+			inline CVar<bool> BAimLethal{ false, L"Body aim if lethal" }; // This is in global cause i remmebered hunterman exists
 		}
 
 		namespace Hitscan
@@ -89,6 +90,7 @@ namespace Vars
 			inline CVar<bool> ScopedOnly		{ false, L"Scoped Only" };
 			inline CVar<bool> AutoScope			{ false, L"Auto Scope" };
 			inline CVar<bool> AutoRev			{ false, L"Auto Rev" };
+			
 		}
 
 		namespace Projectile
