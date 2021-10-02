@@ -363,7 +363,15 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity *pLocal, CBaseEntity *pEntity)
 				}
 				case CLASS_SNIPER:
 				{
+					CBaseCombatWeapon* wep = pLocal->GetActiveWeapon();
 					Vec3 vPos = pEntity->GetHitboxPos(HITBOX_HEAD);
+					if (wep != nullptr) {
+						if (wep->GetChargeDamage() >= pEntity->GetHealth()) {
+							vPos = pEntity->GetHitboxPos(HITBOX_PELVIS);
+						}
+					}
+
+					
 
 					Vec3 vEntForward = {};
 					Math::AngleVectors(pEntity->GetEyeAngles(), &vEntForward);

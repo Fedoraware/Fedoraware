@@ -432,6 +432,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Ignore cloaked", &Vars::Aimbot::Global::IgnoreCloaked.m_Var); HelpMarker("The aimbot will ignore spies who are cloaked");
 							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
 							ImGui::Checkbox("Ignore taunting", &Vars::Aimbot::Global::IgnoreTaunting.m_Var); HelpMarker("The aimbot will ignore taunting players");
+							ImGui::Checkbox("BAim when lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
 						}
 						ImGui::NextColumn();
 						{
