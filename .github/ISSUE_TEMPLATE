@@ -7,11 +7,11 @@ assignees: ''
 ---
 <!-- This template was pasted from https://github.com/nullworks/cathook, an amazing cheat made for Linux :) -->
 
-**Fedoraware Version:**  
+**Fedoraware Version Date:**  
 
 ## Config used:
-<!-- Add the .seo file you were using from "Team Fortress 2/SEOConfigs" -->
-<!-- Drag and drop the file here. -->
+<!-- Please upload your "Team Fortress 2/SEOConfigs/<your config name>.seo" file to a file hosting service. We recommend https://catbox.moe/-->
+<!-- Drag and drop the link here. -->
 
 ## Description:  
 <!-- Please provide a clear and concise description of what the bug is. -->
@@ -32,4 +32,4 @@ Steps to reproduce the behavior:
 ## Screenshot of cheats enabled  
 <!-- Even if you don't think it could effect what happened, sometimes some cheats may break others. We don't know! We may never know, if you don't show us what cheats are enabled. -->
 
-- [ ] I have included the steps to reproduce and my logs to the best I am able to share.
+- [ ] I have included the steps to reproduce to the best I am able to share.
