@@ -53,7 +53,7 @@ namespace Vars
 			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
 		}
 
-		inline CVar<bool> LegacyMenu{ true, L"Legacy menu" };
+		inline CVar<bool> LegacyMenu{ false, L"Legacy menu" };
 	}
 
 	namespace Aimbot
