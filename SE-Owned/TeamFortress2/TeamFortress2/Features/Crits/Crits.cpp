@@ -646,10 +646,6 @@ void Crits::Frame()
 
 		int wide = (bucket / 3.75 - bucket * .1) - 1;
 
-		CUserCmd* nig = g_Interfaces.Input->GetUserCmd(LastUserCmd);
-		if (GetAsyncKeyState(Vars::Crits::CritKey.m_Var) && nig->buttons & IN_ATTACK) {
-			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 30, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, "Trying to crit");
-		}
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 10, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, CritStatus2.c_str());
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 30, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 50, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("cmdnum: ") + std::to_string(LastUserCmd)).c_str());
