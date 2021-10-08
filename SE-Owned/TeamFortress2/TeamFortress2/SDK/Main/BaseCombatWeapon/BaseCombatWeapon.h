@@ -89,6 +89,11 @@ public: //Everything else, lol
 		return reinterpret_cast<bool(__thiscall*)(decltype(this))>(dwCalcIsAttackCritical);
 	}
 
+	__inline bool CalcIsAttackCritical() {
+		typedef bool(__thiscall* OriginalFn)(CBaseCombatWeapon*);
+		static DWORD dwFunc = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
+		return ((OriginalFn)dwFunc)(this);
+	}
 	__inline bool DoSwingTrace(CGameTrace& Trace) {
 		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 453)(Trace);
 	}

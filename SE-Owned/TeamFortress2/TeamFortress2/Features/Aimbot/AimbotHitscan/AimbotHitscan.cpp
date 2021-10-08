@@ -47,7 +47,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 	ESortMethod SortMethod = GetSortMethod();
 
 	if (SortMethod == ESortMethod::FOV)
-		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Hitscan::AimFOV.m_Var;
+		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 
 	g_AimbotGlobal.m_vecTargets.clear();
 	
@@ -101,7 +101,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox });
@@ -119,7 +119,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
@@ -516,7 +516,7 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 {
 	static int nLastTracerTick = pCmd->tick_count;
 
-	if (!Vars::Aimbot::Hitscan::Active.m_Var)
+	if (!Vars::Aimbot::Global::Active.m_Var)
 		return;
 
 	Target_t Target = { };

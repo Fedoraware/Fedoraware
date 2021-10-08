@@ -36,6 +36,12 @@ void CHooks::Init()
 		Table.Hook(DoPostScreenSpaceEffects::index, &DoPostScreenSpaceEffects::Hook);
 	}
 
+	if (g_Interfaces.Input) {
+		using namespace InputHook;
+		Table.Init(g_Interfaces.Input);
+		Table.Hook(GetUserCmd::index, &GetUserCmd::Hook);
+	}
+
 	if (g_Interfaces.Prediction)
 	{
 		using namespace PredictionHook;

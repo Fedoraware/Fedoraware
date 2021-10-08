@@ -7,6 +7,7 @@
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
+#include "../../Features/Crits/Crits.h"
 
 
 #include "../../Features/Vars.h"
@@ -184,6 +185,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 
 	g_Misc.Run(pCmd);
+	g_Crits.Tick(pCmd);
 	g_EnginePrediction.Start(pCmd);
 	{
 		g_Aimbot.Run(pCmd);
@@ -199,11 +201,25 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
-			if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+			if (g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) {
+				if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)) {
+						*pSendPacket = false;
+					}
+					else {
+						*pSendPacket = false;
+					}
+				}
+				*pSendPacket = true;
+			}
+			/*if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+				//*pSendPacket = 
+			}*/
+			/*if (Vars::Misc::CL_Move::Fakelag.m_Var) {
 				*pSendPacket = ((g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) || 
 				(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) && pLocal->IsAlive() ? Vars::Misc::CL_Move::FakelagOnKey.m_Var && 
 				GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) ? false : false : true;
-			}
+			}*/
 		}
 	}
 

@@ -14,6 +14,11 @@ ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
 bool tooltips = true;
 
+void AlignRight(int offset) {
+	ImGui::SameLine(ImGui::GetContentRegionMax().x - offset);
+	ImGui::SetNextItemWidth(offset);
+}
+
 static void HelpMarker(const char* desc)
 {
 	if (tooltips) {
@@ -232,6 +237,7 @@ void CWhat::TextCenter(std::string text) {
 	ImGui::PopFont();
 }
 
+
 void CWhat::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
 	static bool bColumnsWidthened = false;
@@ -246,19 +252,84 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 		ImGuiStyle* style = &ImGui::GetStyle();
 		auto& io = ImGui::GetIO();
-		ImGui::StyleColorsDark();
-		style->Colors[ImGuiCol_Separator].w = 0;
+		ImVec4* colors = ImGui::GetStyle().Colors;
+		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+		colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+		colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
+		colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
+		colors[ImGuiCol_FrameBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
+		colors[ImGuiCol_TitleBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
+		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
+		colors[ImGuiCol_CheckMark] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
+		colors[ImGuiCol_SliderGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
+		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
+		colors[ImGuiCol_Button] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
+		colors[ImGuiCol_ButtonHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
+		colors[ImGuiCol_ButtonActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
+		colors[ImGuiCol_Header] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
+		colors[ImGuiCol_Separator] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
+		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
+		colors[ImGuiCol_SeparatorActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
+		colors[ImGuiCol_ResizeGrip] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
+		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
+		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
+		colors[ImGuiCol_Tab] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
+		colors[ImGuiCol_TabHovered] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
+		colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
+		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		//colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
+		//colors[ImGuiCol_DockingEmptyBg] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotHistogram] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_TableHeaderBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
+		colors[ImGuiCol_TableBorderStrong] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
+		colors[ImGuiCol_TableBorderLight] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
+		colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
+		colors[ImGuiCol_DragDropTarget] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
+		colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
+		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
 
-		style->FramePadding = ImVec2(4, 2);
-		style->ItemSpacing = ImVec2(10, 2);
-		style->IndentSpacing = 12;
-		style->ScrollbarSize = 10;
-
-		style->WindowRounding = 4;
-		style->FrameRounding = 4;
+		style->WindowPadding = ImVec2(8.00f, 8.00f);
+		style->FramePadding = ImVec2(5.00f, 2.00f);
+		style->CellPadding = ImVec2(6.00f, 6.00f);
+		style->ItemSpacing = ImVec2(6.00f, 6.00f);
+		style->ItemInnerSpacing = ImVec2(6.00f, 6.00f);
+		style->TouchExtraPadding = ImVec2(0.00f, 0.00f);
+		style->IndentSpacing = 25;
+		style->ScrollbarSize = 15;
+		style->GrabMinSize = 10;
+		style->WindowBorderSize = 1;
+		style->ChildBorderSize = 1;
+		style->PopupBorderSize = 1;
+		style->FrameBorderSize = 1;
+		style->TabBorderSize = 1;
+		style->WindowRounding = 7;
+		style->ChildRounding = 4;
+		style->FrameRounding = 3;
 		style->PopupRounding = 4;
-		style->ScrollbarRounding = 6;
-		style->GrabRounding = 4;
+		style->ScrollbarRounding = 9;
+		style->GrabRounding = 3;
+		style->LogSliderDeadzone = 4;
 		style->TabRounding = 4;
 
 		style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
@@ -295,6 +366,79 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 	ImGui_ImplWin32_NewFrame();
 
 	ImGui::NewFrame();
+	/*ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+	if (g_Menu.m_bOpen) {
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		if (ImGui::Begin(" ##poop"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize) {
+			ImGui::SetWindowSize(ImVec2(g_ScreenSize.w, 50));
+			ImGui::PopStyleVar();
+			ImGui::TextUnformatted("Hello");
+		}
+		ImGui::End();
+	}*/
+
+	if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || g_Menu.m_bOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
+		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+		if (ImGui::Begin("Doubletap bar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoDecoration) | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoTitleBar)))
+		{
+			ImGui::SetWindowSize(ImVec2(180, 30));
+
+			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+
+				int ticks = 0;
+
+				if (pLocal->GetClassNum() == CLASS_HEAVY) {
+
+					for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
+						//printf("i: %d\n", i);
+						for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
+							//printf("j: %d\n", j);
+							ticksChocked = j;
+							break;
+						}
+					}
+					ticks = MAX_NEW_COMMANDS_HEAVY;
+				}
+				else {
+					for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
+						//printf("i: %d\n", i);
+						for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
+							//printf("j: %d\n", j);
+							ticksChocked = j;
+							break;
+						}
+					}
+					ticks = MAX_NEW_COMMANDS;
+				}
+				if (ticksChocked < 0) {
+					ticksChocked = 0;
+				}
+				std::string dtstring = "Doubletap (";
+				dtstring = dtstring + std::to_string(ticksChocked) + "/" + std::to_string(ticks) + ")";
+				if (ticksChocked == ticks) {
+					if (!g_GlobalInfo.m_nWaitForShift) {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
+						TextCenter(dtstring);
+						ImGui::PopStyleColor();
+					}
+					else {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
+						TextCenter(dtstring);
+						ImGui::PopStyleColor();
+					}
+				}
+				else {
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
+					TextCenter(dtstring);
+					ImGui::PopStyleColor();
+				}
+			}
+
+		}
+		ImGui::End();
+		ImGui::PopStyleColor(2);
+	}
 	if (g_Menu.m_bOpen)
 	{
 		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
@@ -425,6 +569,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Aimbot###Aim bot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 							ImGui::Checkbox("AutoShoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 							ImGui::Checkbox("Aim at players", &Vars::Aimbot::Global::AimPlayers.m_Var); HelpMarker("The aimbot will aim at players");
 							ImGui::Checkbox("Aim at buildings", &Vars::Aimbot::Global::AimBuildings.m_Var); HelpMarker("The aimbot will aim at buildings");
@@ -433,15 +578,18 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
 							ImGui::Checkbox("Ignore taunting", &Vars::Aimbot::Global::IgnoreTaunting.m_Var); HelpMarker("The aimbot will ignore taunting players");
 							ImGui::Checkbox("BAim when lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+							ImGui::TextUnformatted("");
+							ImGui::TextUnformatted("Crithack");
+							ImGui::Checkbox("Active###critsactive", &Vars::Crits::Active.m_Var); HelpMarker("Crit hack - this is the worst fucking crit hack known to man and I'm sorry for adding it");
+							InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Crit key, self explanatory");
 						}
 						ImGui::NextColumn();
 						{
 							ImGui::TextUnformatted("Hitscan");
-							ImGui::Checkbox("Active###Hit scan", &Vars::Aimbot::Hitscan::Active.m_Var); HelpMarker("Hitscan aimbot master switch");
+							//ImGui::Checkbox("Active###Hit scan", &Vars::Aimbot::Hitscan::Active.m_Var); HelpMarker("Hitscan aimbot master switch");
 							static const char* hitscanSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###hitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, hitscanSortMethod, IM_ARRAYSIZE(hitscanSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 							static const char* hitscanAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###hitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, hitscanAimMethod, IM_ARRAYSIZE(hitscanAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
 							static const char* hitscanAimHitbox[]{ "Head", "Body", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###hitscanAimPosition", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, hitscanAimHitbox, IM_ARRAYSIZE(hitscanAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Hitscan::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							static const char* hitscanTapFire[]{ "Off", "Distance", "Always" }; ImGui::PushItemWidth(100); ImGui::Combo("Tap-fire", &Vars::Aimbot::Hitscan::TapFire.m_Var, hitscanTapFire, IM_ARRAYSIZE(hitscanTapFire)); ImGui::PopItemWidth(); HelpMarker("When to tap-fire with inaccurate rapid-fire weapons");
 							ImGui::Checkbox("Minigun rev up", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
@@ -458,20 +606,16 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						ImGui::NextColumn();
 						{
 							ImGui::TextUnformatted("Projectile");
-							ImGui::Checkbox("Active###Project ile", &Vars::Aimbot::Projectile::Active.m_Var); HelpMarker("Projectile aimbot master switch");
 							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only taget enemy closest to the crosshair");
 							static const char* projectileSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###projectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, projectileSortMethod, IM_ARRAYSIZE(projectileSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 							static const char* projectileAimMethod[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###projectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, projectileAimMethod, IM_ARRAYSIZE(projectileAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
 							static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###projectileAimPosition", &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
 							ImGui::Checkbox("Aim at feet if on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("If true, aimbot will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aim FoV###projectileFoV", &Vars::Aimbot::Projectile::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Melee");
-							ImGui::Checkbox("Active###Mele e", &Vars::Aimbot::Melee::Active.m_Var); HelpMarker("Melee aimbot master switch");
 							static const char* meleeSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###meleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 							static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###meleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, meleeAimMethod, IM_ARRAYSIZE(meleeAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aim FoV###meleeFoV", &Vars::Aimbot::Melee::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor###meleeSmooth", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
 							ImGui::Checkbox("Melee prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
@@ -1075,68 +1219,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 		}
 	}
 
-	if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || g_Menu.m_bOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
-		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-		if (ImGui::Begin("Doubletap bar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoDecoration) | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoTitleBar)))
-		{
-			ImGui::SetWindowSize(ImVec2(180, 30));
-
-			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-
-				int ticks = 0;
-
-				if (pLocal->GetClassNum() == CLASS_HEAVY) {
-
-					for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
-						//printf("i: %d\n", i);
-						for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
-							//printf("j: %d\n", j);
-							ticksChocked = j;
-							break;
-						}
-					}
-					ticks = MAX_NEW_COMMANDS_HEAVY;
-				}
-				else {
-					for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
-						//printf("i: %d\n", i);
-						for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
-							//printf("j: %d\n", j);
-							ticksChocked = j;
-							break;
-						}
-					}
-					ticks = MAX_NEW_COMMANDS;
-				}
-				if (ticksChocked < 0) {
-					ticksChocked = 0;
-				}
-				std::string dtstring = "Doubletap (";
-				dtstring = dtstring + std::to_string(ticksChocked) + "/" + std::to_string(ticks) + ")";
-				if (ticksChocked == ticks) {
-					if (!g_GlobalInfo.m_nWaitForShift) {
-						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
-						TextCenter(dtstring);
-						ImGui::PopStyleColor();
-					}
-					else {
-						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
-						TextCenter(dtstring);
-						ImGui::PopStyleColor();
-					}
-				}
-				else {
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
-					TextCenter(dtstring);
-					ImGui::PopStyleColor();
-				}
-			}
-
-		}
-		ImGui::End();
-		ImGui::PopStyleColor(2);
-	}
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());

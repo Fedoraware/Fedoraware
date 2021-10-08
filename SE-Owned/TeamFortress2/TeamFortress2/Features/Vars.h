@@ -56,12 +56,19 @@ namespace Vars
 		inline CVar<bool> LegacyMenu{ false, L"Legacy menu" };
 	}
 
+	namespace Crits
+	{
+		inline CVar<bool> Active{ false, L"nigger" };
+		inline CVar<int> CritKey{ VK_SHIFT, L"nigger" };
+	}
+
 	namespace Aimbot
 	{
 		namespace Global
 		{
 			inline CVar<bool> Active				{ true, L"Active" };
 			inline CVar<int> AimKey					{ VK_LSHIFT, L"Aim Key" };
+			inline CVar<float> AimFOV{ 15.0f, L"Aim FOV" };
 			inline CVar<bool> AutoShoot				{ true, L"Auto Shoot" };
 			inline CVar<bool> AimPlayers			{ true, L"Aim Players" };
 			inline CVar<bool> AimBuildings			{ true, L"Aim Buildings" };
@@ -74,11 +81,10 @@ namespace Vars
 
 		namespace Hitscan
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
+			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox			{ 2, L"Aim Hitbox" };	//0 - Head,		1 - Body,	2 - Auto
-			inline CVar<float> AimFOV			{ 15.0f, L"Aim FOV" };
 			inline CVar<float> SmoothingAmount	{ 4.0f, L"Smoothing Amount" };
 			inline CVar<int> TapFire			{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
 			inline CVar<bool> ScanHitboxes		{ true, L"Scan Body" };
@@ -95,21 +101,21 @@ namespace Vars
 
 		namespace Projectile
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
+			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<bool> PerformanceMode	{ true, L"Performance Mode" };
 			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Silent
 			inline CVar<int> AimPosition		{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
-			inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
+			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround	{ false, L"Aim at feet if target is on the ground." };
 		}
 
 		namespace Melee
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
+			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<int> SortMethod			{ 1, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
-			inline CVar<float> AimFOV			{ 45.0f, L"Aim FOV" };
+			//inline CVar<float> AimFOV			{ 45.0f, L"Aim FOV" };
 			inline CVar<float> SmoothingAmount	{ 8.0f, L"Smoothing Amount" };
 			inline CVar<bool> RangeCheck		{ true, L"Range Check" };
 			inline CVar<bool> PredictSwing		{ true, L"Predict Swing" };

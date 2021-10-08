@@ -16,6 +16,7 @@
 #include "../../Features/Crits/Crits.h"
 #include "../../Features/Aimbot/AimbotProjectile/AimbotProjectile.h"
 #include "../../Features/Discord/Discord.h"
+#include "../../Features/Crits/Crits.h"
 
 int ticksChoked = 0;
 
@@ -225,6 +226,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
+			g_Crits.Frame();
 			//g_settings.Think();
 			g_playerlist.Think();
 			g_Console.Run();

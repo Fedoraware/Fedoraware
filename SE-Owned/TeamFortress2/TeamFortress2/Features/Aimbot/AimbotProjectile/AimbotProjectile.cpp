@@ -416,7 +416,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 	ESortMethod SortMethod = GetSortMethod();
 
 	if (SortMethod == ESortMethod::FOV)
-		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Projectile::AimFOV.m_Var;
+		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 
 	g_AimbotGlobal.m_vecTargets.clear();
 
@@ -460,7 +460,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 			float flFOVTo = (SortMethod == ESortMethod::FOV) ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = (SortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Projectile::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo });
@@ -481,7 +481,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Projectile::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Building, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
@@ -643,7 +643,7 @@ void CAimbotProjectile::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUs
 
 	m_bIsFlameThrower = false;
 
-	if (!Vars::Aimbot::Projectile::Active.m_Var)
+	if (!Vars::Aimbot::Global::Active.m_Var)
 		return;
 
 	Target_t Target = {};

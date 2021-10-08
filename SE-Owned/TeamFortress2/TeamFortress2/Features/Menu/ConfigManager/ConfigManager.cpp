@@ -159,13 +159,18 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 			}
 
+			{
+				SAVE_VAR(Vars::Crits::Active);
+				SAVE_VAR(Vars::Crits::CritKey);
+			}
+
 			//Hitscan
 			{
-				SAVE_VAR(Vars::Aimbot::Hitscan::Active);
+				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
-				SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
+				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
@@ -182,21 +187,21 @@ void CConfigManager::Save(const wchar_t *name)
 
 			//Projectile
 			{
-				SAVE_VAR(Vars::Aimbot::Projectile::Active);
+				//SAVE_VAR(Vars::Aimbot::Projectile::Active);
 				SAVE_VAR(Vars::Aimbot::Projectile::PerformanceMode);
 				SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
-				SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
+				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
 			//Melee
 			{
-				SAVE_VAR(Vars::Aimbot::Melee::Active);
+				//SAVE_VAR(Vars::Aimbot::Melee::Active);
 				SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
-				SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
+				//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Melee::RangeCheck);
 				SAVE_VAR(Vars::Aimbot::Melee::PredictSwing);
@@ -650,13 +655,18 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 			}
 
+			{
+				LOAD_VAR(Vars::Crits::Active);
+				LOAD_VAR(Vars::Crits::CritKey);
+			}
+
 			//Hitscan
 			{
-				LOAD_VAR(Vars::Aimbot::Hitscan::Active);
+				//LOAD_VAR(Vars::Aimbot::Hitscan::Active);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimHitbox);
-				LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);
+				//LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
@@ -673,21 +683,21 @@ void CConfigManager::Load(const wchar_t *name)
 
 			//Projectile
 			{
-				LOAD_VAR(Vars::Aimbot::Projectile::Active);
+				//LOAD_VAR(Vars::Aimbot::Projectile::Active);
 				LOAD_VAR(Vars::Aimbot::Projectile::PerformanceMode);
 				LOAD_VAR(Vars::Aimbot::Projectile::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimPosition);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
-				LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
+				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
 			//Melee
 			{
-				LOAD_VAR(Vars::Aimbot::Melee::Active);
+				//LOAD_VAR(Vars::Aimbot::Melee::Active);
 				LOAD_VAR(Vars::Aimbot::Melee::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Melee::AimMethod);
-				LOAD_VAR(Vars::Aimbot::Melee::AimFOV);
+				//LOAD_VAR(Vars::Aimbot::Melee::AimFOV);
 				LOAD_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Melee::RangeCheck);
 				LOAD_VAR(Vars::Aimbot::Melee::PredictSwing);

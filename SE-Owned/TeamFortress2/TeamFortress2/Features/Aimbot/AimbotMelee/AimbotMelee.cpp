@@ -59,7 +59,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 	ESortMethod SortMethod = GetSortMethod();
 
 	if (SortMethod == ESortMethod::FOV)
-		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Melee::AimFOV.m_Var;
+		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 
 	g_AimbotGlobal.m_vecTargets.clear();
 
@@ -96,7 +96,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Melee::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo });
@@ -115,7 +115,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Melee::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Building, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
@@ -206,7 +206,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 
 void CAimbotMelee::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
 {
-	if (!Vars::Aimbot::Melee::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
+	if (!Vars::Aimbot::Global::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 		return;
 
 	Target_t Target = { };
