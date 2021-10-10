@@ -582,6 +582,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
 							ImGui::Checkbox("Ignore taunting", &Vars::Aimbot::Global::IgnoreTaunting.m_Var); HelpMarker("The aimbot will ignore taunting players");
 							ImGui::Checkbox("BAim when lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+							ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Doubletap.m_Var); HelpMarker("When enough ticks are choked, the aimbot will shoot them all at once in a burst, leading to a rapid-fire effect");
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Crithack");
 							ImGui::Checkbox("Active###critsactive", &Vars::Crits::Active.m_Var); HelpMarker("Crit hack - this is the worst fucking crit hack known to man and I'm sorry for adding it");
@@ -605,7 +606,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
 							ImGui::Checkbox("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var); HelpMarker("The aimbot will only shoot if scoped");
 							ImGui::Checkbox("Scope automatically", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
-							ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Doubletap.m_Var); HelpMarker("When enough ticks are choked, the aimbot will shoot them all at once in a burst, leading to a rapid-fire effect");
 						}
 						ImGui::NextColumn();
 						{
@@ -616,6 +616,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###projectileAimPosition", &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
 							ImGui::Checkbox("Aim at feet if on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("If true, aimbot will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
 							ImGui::TextUnformatted("");
+							ImGui::Checkbox("Manual Z Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Manual Z Adjust for projectiles");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Manual Z Adjust amount", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.0f, 10.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("Note: Higher values may cause inaccuracy");
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("Melee");
 							static const char* meleeSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###meleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
@@ -658,7 +660,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var); HelpMarker("Auto shoot will target players");
 							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var); HelpMarker("Auto shoot will target buildings");
 							ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
 							ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
 
 							ImGui::TextUnformatted("");
@@ -667,7 +669,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Active###gAD", &Vars::Triggerbot::Detonate::Active.m_Var); HelpMarker("Auto detonate master switch");
 							ImGui::Checkbox("Stickybombs###gADs", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs");
 							ImGui::Checkbox("Detonator flares###gADd", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
 						}
 						ImGui::NextColumn();
 						{
@@ -677,7 +679,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Silent###gABSs", &Vars::Triggerbot::Stab::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
 							ImGui::Checkbox("Disguise after stab###gABSd", &Vars::Triggerbot::Stab::Disguise.m_Var); HelpMarker("Will apply the previous disguise after stabbing");
 							ImGui::Checkbox("Ignore razorback###gABSig", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Stab range", &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The range at which auto backstab will attempt to stab");
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Stab range", &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The range at which auto backstab will attempt to stab");
 
 							ImGui::TextUnformatted("");
 							ImGui::TextUnformatted("");
@@ -702,7 +704,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							{
 								//ImGui::TextUnformatted("ESP");
 								ImGui::Checkbox("Player ESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
 								static const char* textOutline[]{ "Off", "Text Only", "All" }; ImGui::PushItemWidth(100); ImGui::Combo("Text outline", &Vars::ESP::Main::Outline.m_Var, textOutline, IM_ARRAYSIZE(textOutline)); ImGui::PopItemWidth(); HelpMarker("Choose when to use an outline on elements drawn by ESP");
 								ImGui::Checkbox("Local ESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
 								static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###ESPteam", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeammatesEsp, IM_ARRAYSIZE(ignoreTeammatesEsp)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
@@ -719,7 +721,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Player GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
 								ImGui::Checkbox("Player lines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
 								ImGui::Checkbox("Player Dlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius", &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius", &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, "%.0f"); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
 							}
 							if (ImGui::CollapsingHeader("Chams###playerChamss")) {
 								ImGui::Checkbox("Player chams", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
@@ -735,19 +737,19 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Chams on cosmetics", &Vars::Chams::Players::Wearables.m_Var); HelpMarker("Will draw chams on player cosmetics");
 								ImGui::Checkbox("Chams on weapons", &Vars::Chams::Players::Weapons.m_Var); HelpMarker("Will draw chams on player weapons");
 								ImGui::Checkbox("Chams through walls", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Will draw chams on the player regardless of if the player is actually visible");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player chams opacity", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player chams opacity", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
 								if (ImGui::Button("Fix chams")) {
 									g_Chams.Init();
 								}
 							}
 							if (ImGui::CollapsingHeader("Glow###playerGloww")) {
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d"); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
 								ImGui::Checkbox("Player glow", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
 								ImGui::Checkbox("Local rainbow glow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Local player glow is rainbow coloured");
 								static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
 								ImGui::Checkbox("Glow on cosmetics", &Vars::Glow::Players::Wearables.m_Var); HelpMarker("Will draw glow on player cosmetics");
 								ImGui::Checkbox("Glow on weapons", &Vars::Glow::Players::Weapons.m_Var); HelpMarker("Will draw glow on player weapons");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player glow opacity", &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player glow opacity", &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player glow color", &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
 							}
 							if (ImGui::CollapsingHeader("DME chams")) {
@@ -767,9 +769,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Combo("Arm material", &Vars::Chams::DME::Hands.m_Var, handsMaterial, IM_ARRAYSIZE(handsMaterial));
 								ImGui::PopItemWidth();
 								HelpMarker("What material to put on your viewmodels arms/hands");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arm opacity", &Vars::Chams::DME::HandsAlpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arm opacity", &Vars::Chams::DME::HandsAlpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
 								ImGui::Checkbox("Arm glow overlay", &Vars::Chams::DME::HandsGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Arm glow boost", &Vars::Chams::DME::HandsRimMultiplier.m_Var, 1, 100, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Arm glow boost", &Vars::Chams::DME::HandsRimMultiplier.m_Var, 1, 100, "%d"); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
 
 								static const char* weaponMaterial[]{
 									"Original",
@@ -786,9 +788,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Combo("Weapon material", &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));
 								ImGui::PopItemWidth();
 								HelpMarker("What material to put on your viewmodels weapon");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Weapon opacity", &Vars::Chams::DME::WeaponAlpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Weapon opacity", &Vars::Chams::DME::WeaponAlpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
 								ImGui::Checkbox("Weapon glow overlay", &Vars::Chams::DME::WeaponGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Weapon glow boost", &Vars::Chams::DME::WeaponRimMultiplier.m_Var, 1, 100, "%d", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Weapon glow boost", &Vars::Chams::DME::WeaponRimMultiplier.m_Var, 1, 100, "%d"); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
 
 							}
 
@@ -798,7 +800,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("Buildings");
 							if (ImGui::CollapsingHeader("ESP###buildingESP", ImGuiTreeNodeFlags_DefaultOpen)) {
 								ImGui::Checkbox("Building ESP", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building ESP Opacity", &Vars::ESP::Buildings::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building ESP Opacity", &Vars::ESP::Buildings::Alpha.m_Var, 0.05f, 1.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
 								ImGui::Checkbox("Ignore team buildings###ESPbuildingsteam", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
 								ImGui::Checkbox("Building name", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
 								ImGui::Checkbox("Name box###buildingnamebox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
@@ -810,7 +812,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								static const char* boxESPb[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Building box", &Vars::ESP::Buildings::Box.m_Var, boxESPb, IM_ARRAYSIZE(boxESPb)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on buildings");
 								ImGui::Checkbox("Building lines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
 								ImGui::Checkbox("Building Dlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius###buildingsdlights", &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, "%.0f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Dlight radius###buildingsdlights", &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, "%.0f"); ImGui::PopItemWidth(); HelpMarker("How far the Dlight will illuminate");
 							}
 							if (ImGui::CollapsingHeader("Chams###buildingchamss")) {
 								ImGui::Checkbox("Building chams", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
@@ -822,13 +824,13 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								}
 								ImGui::Checkbox("Ignore team buildings###Chamsbuildingsteam", &Vars::Chams::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw chams on your teams buildings");
 								ImGui::Checkbox("Chams through walls###buildingsignorez", &Vars::Chams::Buildings::IgnoreZ.m_Var); HelpMarker("Will draw chams on the building regardless of if the building is actually visible");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building chams opacity", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building chams opacity", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
 							}
 							if (ImGui::CollapsingHeader("Glow###buildinggloww")) {
 								ImGui::Checkbox("Building glow", &Vars::Glow::Buildings::Active.m_Var); HelpMarker("Player glow master switch");
 								ImGui::Checkbox("Ignore team buildings###glowbuildingsteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw glow on your teams buildings");
 								//static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow color", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
 							}
 						}
@@ -862,7 +864,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("World");
 							if (ImGui::CollapsingHeader("ESP###worldesp", ImGuiTreeNodeFlags_DefaultOpen)) {
 								ImGui::Checkbox("Pickups ESP", &Vars::ESP::World::Active.m_Var); HelpMarker("Pickup ESP master switch");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickups ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickups ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
 								ImGui::Checkbox("Healthpack ESP", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
 								ImGui::Checkbox("Ammopack ESP", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammo packs");
 							}
@@ -880,7 +882,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								}
 								//ImGui::Checkbox("", &Vars::Chams::World::Material.m_Var);
 								ImGui::Checkbox("Chams through walls###pickupsignorez", &Vars::Chams::World::IgnoreZ.m_Var); HelpMarker("Will draw chams on pickups through walls");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup chams opacity", &Vars::Chams::World::Alpha.m_Var, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup chams opacity", &Vars::Chams::World::Alpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the chams are");
 
 							}
 							if (ImGui::CollapsingHeader("Glow###glowworldd")) {
@@ -888,7 +890,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Healthpack glow", &Vars::Glow::World::Health.m_Var); HelpMarker("Will draw glow on health packs");
 								ImGui::Checkbox("Ammopack glow", &Vars::Glow::World::Ammo.m_Var); HelpMarker("Will draw glow on ammo packs");
 								static const char* projectilesgTeam[]{ "Off", "All", "Enemy Only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow", &Vars::Glow::World::Projectiles.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup glow opacity", &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Pickup glow opacity", &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 							}
 
 							if (ImGui::CollapsingHeader("Miscellaneous")) {
@@ -949,7 +951,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
 								ImGui::Checkbox("Votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
 								const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(100); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth(); HelpMarker("Will log any damage you deal to players");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How many ticks the damage logger text will stay");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("How many ticks the damage logger text will stay");
 								ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and again so you don't get kicked for idling");
 								ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 								ImGui::Checkbox("Be marked as a cat", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
@@ -960,9 +962,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {
 								ImGui::Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
-								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f", ImGuiSliderFlags_Logarithmic); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
+								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far until the arrows will not show");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How close until the arrows will be fully opaque");
 							}
