@@ -477,12 +477,16 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					SettingsTab = 4;
 				}
 				ImGui::PopStyleColor();
-				/*ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
-				if (ImGui::Button("Config", ImVec2(140 - 15, 29))) {
+				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
+				if (ImGui::Button("Shortcuts", ImVec2(140 - 15, 29))) {
 					SettingsTab = 5;
 				}
 				ImGui::PopStyleColor();
-				ImGui::Spacing();*/
+				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
+				if (ImGui::Button("Playerlist", ImVec2(140 - 15, 29))) {
+					SettingsTab = 6;
+				}
+				ImGui::PopStyleColor();
 				static std::wstring selected = {};
 				int nConfig = 0;
 
@@ -931,7 +935,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								if (Vars::Misc::EdgeJump.m_Var) {
 									InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey); HelpMarker("Edge jump bind, leave as None for always on");
 								}
-								const char* specModes[]{ "Off", "Default", "Classic", "Classic + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth(); HelpMarker("Will show who is currently spectating you");
+								const char* specModes[]{ "Off", "Draggable", "Static", "Static + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth(); HelpMarker("Will show who is currently spectating you");
 								ImGui::Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
 								ImGui::Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var); HelpMarker("Gives full control if enabled with taunt slide");
 								ImGui::Checkbox("Bypass pure", &Vars::Misc::BypassPure.m_Var); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
@@ -1208,9 +1212,56 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					ImGui::EndChild();
 				}
 				if (SettingsTab == 5) {
-					//Config
-					ImGui::BeginChild("Config");
+					ImGui::BeginChild("Shortcuts");
 					{
+						// This looks dumb LOL
+						if (ImGui::Button("Full Update")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+						}
+						if (ImGui::Button("Restart sound system")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+						}
+						if (ImGui::Button("Stop sound")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+						}
+						if (ImGui::Button("Status")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+						}
+						if (ImGui::Button("Ping")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+						}
+						if (ImGui::Button("Retry")) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+						}
+					}
+					ImGui::EndChild();
+				}
+				if (SettingsTab == 6) {
+					ImGui::BeginChild("Playerlist");
+					{
+						if (!g_Interfaces.Engine->IsInGame()) {
+							ImGui::TextUnformatted("You're not in game, noob!");
+						} else {
+							ImGui::TextUnformatted("Players");
+							ImGui::Separator();
+						}
+						int n;
+						PlayerInfo_t pi;
+						for (n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
+						{
+							if (g_Interfaces.Engine->GetPlayerInfo(n, &pi)) {
+								ImGui::TextUnformatted(pi.name);
+								ImGui::SameLine();
+								if (ImGui::Button(tfm::format("Profile##%i", n).c_str())) {
+									g_SteamInterfaces.Friends015->ActivateGameOverlayToUser("steamid", CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+								}
+								ImGui::SameLine();
+								if (ImGui::Button(tfm::format("Kick##%i", n).c_str())) {
+									g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", pi.userID).c_str());
+								}
+								ImGui::Separator();
+							}
+						}
 					}
 					ImGui::EndChild();
 				}

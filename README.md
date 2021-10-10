@@ -1,5 +1,5 @@
 <p align="center" style="margin-bottom: 0px !important;">
-  <img width="200" src="https://raw.githubusercontent.com/M-FeD/Fedoraware/main/.github/assets/fedora.png" alt="Fedoraware logo." align="center">
+  <img width="200" src="https://raw.githubusercontent.com/M-FeD/Fedoraware/main/.github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
 <h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
 <h1 align="center" style="margin-top: 0px;">SE-Owned but awesome</h1>
@@ -18,7 +18,7 @@
 ## Guide:
 - [How to compile and use Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
 - If you are lazy and you just want a compiled .dll file, go to the [Actions](https://github.com/M-FeD/Fedoraware/actions) tab of this repo and select the latest workflow, and then select the Fedoraware button under the Artifacts category. This will download a zip file which you'll need to extract, after that you will get the .dll file.
-- To inject Fedoraware into TF2, you'll have to also use an injector like [GameOwner](https://www.unknowncheats.me/forum/pc-software/105007-gameowner-simple-dll-injector.html) to inject it into TF2.
+- To inject Fedoraware into TF2, you'll have to also use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject it into TF2.
 - __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
 
 ## Differences to original SE-Owned:

@@ -8,8 +8,6 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
-#include "../../Features/PlayerList/PlayerList.h"
-#include "../../Features/Console/Console.h"
 #include "../../Features/Keybinds/Keybinds.h"
 #include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
@@ -227,9 +225,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpectatorList.Run();
 			g_Radar.Run();
 			g_Crits.Frame();
-			//g_settings.Think();
-			g_playerlist.Think();
-			g_Console.Run();
 			g_Menu.Run();
 		}	
 		FinishDrawing(g_Interfaces.Surface);
