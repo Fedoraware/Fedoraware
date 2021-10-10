@@ -1,33 +1,20 @@
-#include "keyvalues.h"
-#include "../../../Utils/Pattern/Pattern.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "KeyValues.h"
+#include "../../SDK.h"
 
 #pragma warning (disable : 6031)
-#pragma warning (disable : 4244)
 
-#define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
-
-int UnicodeToUTF8(const wchar_t* unicode, char* ansi, int ansiBufferSize)
+bool CKeyValUtils::LoadFromBuffer(KeyValues* key_value, char const* resource_name, const char* buffer, void* file_system, const char* path_id)
 {
-	int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, NULL, NULL);
-	ansi[ansiBufferSize - 1] = 0;
-	return result;
+	using FN = int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*);
+	static FN load_from_the_buffer = (FN)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 83 EC 38 53 8B 5D 0C"));
+	return load_from_the_buffer(key_value, resource_name, buffer, file_system, path_id);
 }
 
-int UTF8ToUnicode(const char* ansi, wchar_t* unicode, int unicodeBufferSizeInBytes)
+KeyValues* CKeyValUtils::Initialize(KeyValues* key_value, char* name)
 {
-	int chars = MultiByteToWideChar(CP_UTF8, 0, ansi, -1, unicode, unicodeBufferSizeInBytes / sizeof(wchar_t));
-	unicode[(unicodeBufferSizeInBytes / sizeof(wchar_t)) - 1] = 0;
-	return chars;
-}
-
-
-bool KeyValues::LoadFromBuffer(char const* resource_name, const char* buffer, void* file_system, const char* path_id)
-{
-	using fn = int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 38 53 8B 5D 0C"));
-	return FN(this, resource_name, buffer, file_system, path_id);
+	using FN = KeyValues * (__thiscall*)(KeyValues*, char*);
+	static FN initialize = (FN)(g_Pattern.Find(_(L"engine.dll"), _(L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6")) - 0x42);
+	return initialize(key_value, name);
 }
 
 void KeyValues::Initialize(char* name)
@@ -50,7 +37,6 @@ KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
 	return FN(this, keyName, bCreate);
 }
-
 
 int KeyValues::GetInt(const char* keyName, int defaultValue)
 {
@@ -152,7 +138,7 @@ const char* KeyValues::GetString(const char* keyName, const char* defaultValue)
 		case TYPE_WSTRING:
 		{
 			char wideBuf[512];
-			int result = UnicodeToUTF8(dat->m_wsValue, wideBuf, 512);
+			int result = Utils::UnicodeToUTF8(dat->m_wsValue, wideBuf, 512);
 			if (result)
 			{
 				SetString(keyName, wideBuf);
@@ -207,7 +193,7 @@ const wchar_t* KeyValues::GetWString(const char* keyName, const wchar_t* default
 		{
 			int bufSize = strlen(dat->m_sValue) + 1;
 			wchar_t* pWBuf = new wchar_t[bufSize];
-			int result = UTF8ToUnicode(dat->m_sValue, pWBuf, bufSize * sizeof(wchar_t));
+			int result = Utils::UTF8ToUnicode(dat->m_sValue, pWBuf, bufSize * sizeof(wchar_t));
 			if (result >= 0)
 			{
 				SetWString(keyName, pWBuf);

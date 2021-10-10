@@ -58,6 +58,7 @@
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
 #define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
+#define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include "../Utils/CRC/CRC.h"
@@ -142,6 +143,46 @@ namespace Colors
 
 namespace Utils
 {
+	__inline IMaterial* CreateMaterial(const char* szVars)
+	{
+		static int nCreatedMats = 0;
+		char szOut[512];
+		sprintf_s(szOut, sizeof(szOut), _("SEO_material%i.vmt"), nCreatedMats++);
+
+		char szMaterial[512];
+		sprintf_s(szMaterial, sizeof(szMaterial), szVars);
+
+		KeyValues* pVals = new KeyValues(_("matvalsxd"));
+		g_KeyValUtils.Initialize(pVals, (char*)szOut);
+		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szMaterial);
+
+		IMaterial* pCreated = g_Interfaces.MatSystem->Create(szOut, pVals);
+		pCreated->IncrementReferenceCount();
+
+		return pCreated;
+	}
+
+	static std::random_device RandomDevice;
+	static std::mt19937 Engine{ RandomDevice() };
+	__inline float RandFloatRange(float min, float max)
+	{
+		std::uniform_real_distribution<float> Random(min, max);
+		return Random(Engine);
+	}
+
+	__inline void* CreateKeyVals(const char* szVars)
+	{
+		static int nCreatedKeyVals = 0;
+		char szOut[512];
+		sprintf_s(szOut, sizeof(szOut), _("SEO_keyvals%i.vmt"), nCreatedKeyVals++);
+
+		KeyValues* pVals = new KeyValues(_("keyvalssmh"));
+		g_KeyValUtils.Initialize(pVals, (char*)szOut);
+		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szVars);
+
+		return pVals;
+	}
+
 	__inline bool W2S(const Vec3 &vOrigin, Vec3 &m_vScreen)
 	{
 		const matrix3x4 &worldToScreen = g_GlobalInfo.m_WorldToProjection.As3x4();
@@ -333,6 +374,20 @@ namespace Utils
 
 		pCmd->forwardmove = (cos(fYaw) * fSpeed);
 		pCmd->sidemove = (sin(fYaw) * fSpeed);
+	}
+
+	__inline int UnicodeToUTF8(const wchar_t* unicode, char* ansi, int ansiBufferSize)
+	{
+		int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, NULL, NULL);
+		ansi[ansiBufferSize - 1] = 0;
+		return result;
+	}
+
+	__inline int UTF8ToUnicode(const char* ansi, wchar_t* unicode, int unicodeBufferSizeInBytes)
+	{
+		int chars = MultiByteToWideChar(CP_UTF8, 0, ansi, -1, unicode, unicodeBufferSizeInBytes / sizeof(wchar_t));
+		unicode[(unicodeBufferSizeInBytes / sizeof(wchar_t)) - 1] = 0;
+		return chars;
 	}
 
 	__inline std::wstring ConvertUtf8ToWide(const std::string_view& str)
