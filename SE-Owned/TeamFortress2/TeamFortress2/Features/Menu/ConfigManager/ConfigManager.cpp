@@ -7,8 +7,6 @@
 #include "../../../SDK/SDK.h"
 #include "../../Radar/Radar.h"
 #include "../../SpectatorList/SpectatorList.h"
-#include "../../PlayerList/PlayerList.h"
-#include "../../Console/Console.h"
 #include "../../Keybinds/Keybinds.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
@@ -620,10 +618,6 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
-			//SAVE_OTHER(g_PlayerList.m_nNewWindowX);
-			//SAVE_OTHER(g_PlayerList.m_nNewWindowY);
-			SAVE_OTHER(g_Console.m_nConsoleX);
-			SAVE_OTHER(g_Console.m_nConsoleY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
@@ -1113,11 +1107,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
-			//LOAD_OTHER(g_PlayerList.m_nNewWindowX);
-			//LOAD_OTHER(g_PlayerList.m_nNewWindowY);
-
-			LOAD_OTHER(g_Console.m_nConsoleX);
-			LOAD_OTHER(g_Console.m_nConsoleY);
 
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
