@@ -64,3 +64,12 @@ public:
 	void SetColor(const char* keyName, Color_t value);
 	void SetBool(const char* keyName, bool value) { SetInt(keyName, value ? 1 : 0); }
 };
+
+class CKeyValUtils
+{
+public:
+	bool LoadFromBuffer(KeyValues* key_value, char const* resource_name, const char* buffer, void* file_system = 0, const char* path_id = 0);
+	KeyValues* Initialize(KeyValues* key_value, char* name);
+};
+
+inline CKeyValUtils g_KeyValUtils;

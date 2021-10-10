@@ -2,7 +2,7 @@
 #include "../Vars.h"
 #include "../Chams/Chams.h"
 
-void CGlowEffect::DrawModel(CBaseEntity *pEntity, int nFlags, bool bIsDrawingModels)
+void CGlowEffect::DrawModel(CBaseEntity* pEntity, int nFlags, bool bIsDrawingModels)
 {
 	m_bRendering = true;
 
@@ -22,7 +22,7 @@ void CGlowEffect::DrawModel(CBaseEntity *pEntity, int nFlags, bool bIsDrawingMod
 
 void CGlowEffect::SetScale(int nScale)
 {
-	static IMaterialVar *pVar = nullptr;
+	static IMaterialVar* pVar = nullptr;
 	static bool bFound = false;
 
 	if (!bFound)
@@ -44,24 +44,30 @@ void CGlowEffect::Init()
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
-	{
-		auto kv = new KeyValues("UnlitGeneric");
-		kv->SetString("$basetexture", "glow_buffer_1");
-		kv->SetString("$additive", "1");
-		m_pMatHaloAddToScreen = g_Interfaces.MatSystem->Create("outline_material", kv);
-	}
+	m_pMatBlurX = Utils::CreateMaterial
+	({
+		_("\"BlurFilterX\"\
+		\n{\
+		\n\t\"$basetexture\" \"glow_buffer_1\"\
+		\n}\n")
+		});
 
-	{
-		auto kv = new KeyValues("BlurFilterY");
-		kv->SetString("$basetexture", "glow_buffer_2");
-		m_pMatBlurX = g_Interfaces.MatSystem->Create("outline_material_blurx", kv);
-	}
+	m_pMatBlurY = Utils::CreateMaterial
+	({
+		_("\"BlurFilterY\"\
+		\n{\
+		\n\t\"$basetexture\" \"glow_buffer_2\"\
+		\n}\n")
+		});
 
-	{
-		auto kv = new KeyValues("BlurFilterX");
-		kv->SetString("$basetexture", "glow_buffer_1");
-		m_pMatBlurY = g_Interfaces.MatSystem->Create("outline_material_blury", kv);
-	}
+	m_pMatHaloAddToScreen = Utils::CreateMaterial
+	({
+		_("\"UnlitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"glow_buffer_1\"\
+		\n\t\"$additive\" \"1\"\
+		\n}\n")
+		});
 }
 
 void CGlowEffect::Render()
@@ -72,7 +78,7 @@ void CGlowEffect::Render()
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
 
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;
@@ -83,7 +89,7 @@ void CGlowEffect::Render()
 		if (g_Interfaces.EngineVGui->IsGameUIVisible())
 			return;
 
-		IMatRenderContext *pRenderContext = g_Interfaces.MatSystem->GetRenderContext();
+		IMatRenderContext* pRenderContext = g_Interfaces.MatSystem->GetRenderContext();
 
 		if (!pRenderContext)
 			return;
@@ -114,7 +120,7 @@ void CGlowEffect::Render()
 
 		if (Vars::Glow::Players::Active.m_Var)
 		{
-			for (const auto &Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+			for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
@@ -124,9 +130,9 @@ void CGlowEffect::Render()
 				if (!bIsLocal)
 				{
 					switch (Vars::Glow::Players::IgnoreTeammates.m_Var) {
-						case 0: break;
-						case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
-						case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->GetIndex()]) { continue; } break; }
+					case 0: break;
+					case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
+					case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->GetIndex()]) { continue; } break; }
 					}
 				}
 
@@ -165,7 +171,7 @@ void CGlowEffect::Render()
 
 				if (Vars::Glow::Players::Wearables.m_Var)
 				{
-					CBaseEntity *pAttachment = Player->FirstMoveChild();
+					CBaseEntity* pAttachment = Player->FirstMoveChild();
 
 					for (int n = 0; n < 10; n++)
 					{
@@ -186,7 +192,7 @@ void CGlowEffect::Render()
 
 				if (Vars::Glow::Players::Weapons.m_Var)
 				{
-					if (const auto &pWeapon = Player->GetActiveWeapon())
+					if (const auto& pWeapon = Player->GetActiveWeapon())
 					{
 						m_vecGlowEntities.push_back({ pWeapon, DrawColor, Vars::Glow::Players::Alpha.m_Var });
 
@@ -199,7 +205,7 @@ void CGlowEffect::Render()
 
 		if (Vars::Glow::Buildings::Active.m_Var)
 		{
-			for (const auto &Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
+			for (const auto& Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
 			{
 				if (!Building->IsAlive())
 					continue;
@@ -228,7 +234,7 @@ void CGlowEffect::Render()
 		{
 			if (Vars::Glow::World::Health.m_Var)
 			{
-				for (const auto &Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
+				for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 				{
 					if (!Utils::IsOnScreen(pLocal, Health))
 						continue;
@@ -242,7 +248,7 @@ void CGlowEffect::Render()
 
 			if (Vars::Glow::World::Ammo.m_Var)
 			{
-				for (const auto &Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
+				for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 				{
 					if (!Utils::IsOnScreen(pLocal, Ammo))
 						continue;
@@ -256,9 +262,9 @@ void CGlowEffect::Render()
 
 			if (Vars::Glow::World::Projectiles.m_Var)
 			{
-				for (const auto &Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+				for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 				{
-					if (*reinterpret_cast<byte *>(Projectile + 0x7C) & EF_NODRAW)
+					if (*reinterpret_cast<byte*>(Projectile + 0x7C) & EF_NODRAW)
 						continue;
 
 					int nTeam = Projectile->GetTeamNum();
@@ -291,7 +297,7 @@ void CGlowEffect::Render()
 			pRenderContext->ClearColor4ub(0, 0, 0, 0);
 			pRenderContext->ClearBuffers(true, false, false);
 
-			for (const auto &GlowEntity : m_vecGlowEntities) {
+			for (const auto& GlowEntity : m_vecGlowEntities) {
 				g_Interfaces.RenderView->SetBlend(GlowEntity.m_flAlpha);
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(GlowEntity.m_Color.r), Color::TOFLOAT(GlowEntity.m_Color.g), Color::TOFLOAT(GlowEntity.m_Color.b));
 				DrawModel(GlowEntity.m_pEntity, STUDIO_RENDER | STUDIO_NOSHADOWS, false);
