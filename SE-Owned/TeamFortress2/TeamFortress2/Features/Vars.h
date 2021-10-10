@@ -58,8 +58,8 @@ namespace Vars
 
 	namespace Crits
 	{
-		inline CVar<bool> Active{ false, L"nigger" };
-		inline CVar<int> CritKey{ VK_SHIFT, L"nigger" };
+		inline CVar<bool> Active				{ false, L"Active" };
+		inline CVar<int> CritKey				{ VK_SHIFT, L"Crit Key" };
 	}
 
 	namespace Aimbot
@@ -67,15 +67,15 @@ namespace Vars
 		namespace Global
 		{
 			inline CVar<bool> Active				{ true, L"Active" };
-			inline CVar<int> AimKey					{ VK_LSHIFT, L"Aim Key" };
+			inline CVar<int> AimKey				{ VK_LSHIFT, L"Aim Key" };
 			inline CVar<float> AimFOV{ 15.0f, L"Aim FOV" };
-			inline CVar<bool> AutoShoot				{ true, L"Auto Shoot" };
-			inline CVar<bool> AimPlayers			{ true, L"Aim Players" };
-			inline CVar<bool> AimBuildings			{ true, L"Aim Buildings" };
-			inline CVar<bool> IgnoreInvlunerable	{ true, L"Ignore Invulnerable" };
-			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
-			inline CVar<bool> IgnoreFriends			{ true, L"Ignore Friends" };
-			inline CVar<bool> IgnoreTaunting		{ true, L"Ignore Taunting" };
+			inline CVar<bool> AutoShoot			{ true, L"Auto Shoot" };
+			inline CVar<bool> AimPlayers		{ true, L"Aim Players" };
+			inline CVar<bool> AimBuildings		{ true, L"Aim Buildings" };
+			inline CVar<bool> IgnoreInvlunerable{ true, L"Ignore Invulnerable" };
+			inline CVar<bool> IgnoreCloaked		{ false, L"Ignore Cloaked" };
+			inline CVar<bool> IgnoreFriends		{ true, L"Ignore Friends" };
+			inline CVar<bool> IgnoreTaunting	{ true, L"Ignore Taunting" };
 			inline CVar<bool> BAimLethal{ false, L"Body aim if lethal" }; // This is in global cause i remmebered hunterman exists
 		}
 
@@ -108,6 +108,8 @@ namespace Vars
 			inline CVar<int> AimPosition		{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround	{ false, L"Aim at feet if target is on the ground." };
+			inline CVar<bool> ManualZAdjust		{ true, L"Toggle for manual z adjust on projectile prediction." };
+			inline CVar<float> ZAdjustAmount	{ 5.5f, L"Z Adjust factor." };
 		}
 
 		namespace Melee
