@@ -23,7 +23,9 @@
 
 ## Differences to original SE-Owned:
 - An ImGui menu
+- Manual projectile aim z-adjust
 - New fonts
+- A playerlist
 - A DUCKING flag added to ESP
 - A default config ready to use out of the box
 - A Skybox Changer
@@ -42,7 +44,6 @@
 ## Media:  
 - [[TF2/FEDORAware] Best TF2 Paste? (by c1R)](https://www.youtube.com/watch?v=7gDLPRXtdw8)
 - [[TF2/FEDORAWARE] The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
-- [[TF2] Casual Highlights #1 (by macedoniaN)](https://www.youtube.com/watch?v=W3Gbv7uiImU)
 
 ### Credits to:
   - spook953
@@ -55,4 +56,3 @@
   - km-ch
   - HutchyBean
   - SinnerTF2
-  
