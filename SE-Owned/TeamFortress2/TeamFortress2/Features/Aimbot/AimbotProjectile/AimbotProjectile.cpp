@@ -378,12 +378,18 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity *pLocal, CBaseEntity *pEntity)
 					Vec3 vToEnt = pEntity->GetAbsOrigin() - pLocal->GetAbsOrigin();
 					vToEnt.NormalizeInPlace();
 					
-					//no
-					if (vToEnt.Dot(vEntForward) > 0.1071f) {
-						vPos.z += 5.0f;
-					}
+					if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var) {
+							vPos.z += Vars::Aimbot::Projectile::ZAdjustAmount.m_Var;
 
-					return vPos;
+						return vPos;
+					}
+					else {
+						if (vToEnt.Dot(vEntForward) > 0.1071f) {
+							vPos.z += 5.0f;
+						}
+
+						return vPos;
+					}
 				}
 
 				default: return pEntity->GetWorldSpaceCenter();
