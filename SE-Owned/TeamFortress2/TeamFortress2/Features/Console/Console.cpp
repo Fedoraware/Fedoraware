@@ -63,24 +63,6 @@ bool ButtonPressed = false;
 
 void CConsole::DrawPlayerNames()
 {
-	/*if (DrawKickButton(_(L"CL_FullUpdate"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 10, 100, 20, &&!ButtonPressed)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
-	}
-	if (DrawKickButton(_(L"SND_Restart"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 30, 100, 20)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
-	}
-	if (DrawKickButton(_(L"StopSound"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 50, 100, 20)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
-	}
-	if (DrawKickButton(_(L"Status"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 70, 100, 20)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("status");
-	}
-	if (DrawKickButton(_(L"Ping"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 90, 100, 20)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
-	}
-	if (DrawKickButton(_(L"Retry"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 110, 100, 20)) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
-	}*/
 
 	if (DrawKickButton(_(L"CL_FullUpdate"), m_nConsoleX - m_nConsoleSize + 25, m_nConsoleY - m_nConsoleSize + 10, 100, 20) && !ButtonPressed) {
 		ButtonPressed = true;
