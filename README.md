@@ -44,6 +44,7 @@
 ## Media:  
 - [[TF2/FEDORAware] Best TF2 Paste? (by c1R)](https://www.youtube.com/watch?v=7gDLPRXtdw8)
 - [[TF2/FEDORAWARE] The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
+- [[TF2/Fedoraware] Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
 
 ### Credits to:
   - spook953
