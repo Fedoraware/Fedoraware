@@ -22,6 +22,7 @@ void __stdcall ClientHook::ShutDown::Hook()
 {
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_EntityCache.Clear();
+	std::fill_n(g_GlobalInfo.ignoredPlayers, 128, 0); // We wouldn't want some wog to get ignored randomly!
 }
 
 void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)

@@ -70,7 +70,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	//Bless your beautiful soul reestart/kris
+	// Bless your beautiful soul reestart/kris - someone else
+	
+	// This shit doesn't work half of the time too, btw. - jp4
 
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
