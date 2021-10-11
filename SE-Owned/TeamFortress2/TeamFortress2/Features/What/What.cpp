@@ -1244,24 +1244,25 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 						if (!g_Interfaces.Engine->IsInGame()) {
 							ImGui::TextUnformatted("You're not in game, noob!");
 						} else {
-							ImGui::TextUnformatted("Players");
-							ImGui::Separator();
-						}
-						int n;
-						PlayerInfo_t pi;
-						for (n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
-						{
-							if (g_Interfaces.Engine->GetPlayerInfo(n, &pi)) {
-								ImGui::TextUnformatted(pi.name);
-								ImGui::SameLine();
-								if (ImGui::Button(tfm::format("Profile##%i", n).c_str())) {
-									g_SteamInterfaces.Friends015->ActivateGameOverlayToUser("steamid", CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+							int n;
+							PlayerInfo_t pi;
+							bool checkboxPressed_Ignore = false;
+							for (n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
+							{
+								if (g_Interfaces.Engine->GetPlayerInfo(n, &pi)) {
+									ImGui::TextUnformatted(pi.name);
+									ImGui::SameLine();
+									if (ImGui::Button(tfm::format("Profile##%i", n).c_str())) {
+										g_SteamInterfaces.Friends015->ActivateGameOverlayToUser("steamid", CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+									}
+									ImGui::SameLine();
+									if (ImGui::Button(tfm::format("Kick##%i", n).c_str())) {
+										g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", pi.userID).c_str());
+									}
+									ImGui::SameLine();
+									ImGui::Checkbox(tfm::format("Ignore##%i", n).c_str(), &g_GlobalInfo.ignoredPlayers[n]);
+									ImGui::Separator();
 								}
-								ImGui::SameLine();
-								if (ImGui::Button(tfm::format("Kick##%i", n).c_str())) {
-									g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", pi.userID).c_str());
-								}
-								ImGui::Separator();
 							}
 						}
 					}

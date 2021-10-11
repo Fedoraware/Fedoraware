@@ -459,6 +459,9 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 
 				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
 					continue;
+
+				if (g_GlobalInfo.ignoredPlayers[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
+					continue;
 			}
 
 			Vec3 vPos = GetAimPos(pLocal, Player);

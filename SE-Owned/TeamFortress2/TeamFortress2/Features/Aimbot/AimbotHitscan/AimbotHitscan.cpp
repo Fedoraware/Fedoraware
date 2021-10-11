@@ -82,6 +82,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 				continue;
 
+			if (g_GlobalInfo.ignoredPlayers[Player->GetIndex()])
+				continue;
+
 			if (Vars::Aimbot::Global::BAimLethal.m_Var) {
 				if (pWeapon->GetChargeDamage() >= Player->GetHealth()) {
 					nHitbox = HITBOX_PELVIS;

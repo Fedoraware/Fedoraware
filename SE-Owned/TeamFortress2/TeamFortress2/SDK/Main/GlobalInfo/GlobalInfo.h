@@ -40,7 +40,8 @@ struct GlobalInfo_t
 	Vec3 m_vFakeViewAngles				= {};
 	Vec3 m_vPunchAngles					= {};
 	EWeaponType m_WeaponType			= {};
-	CUserCmd* lateUserCmd{ nullptr };
+	CUserCmd* lateUserCmd{nullptr};
+	bool ignoredPlayers [128] = {false};
 };
 
 inline GlobalInfo_t g_GlobalInfo;
