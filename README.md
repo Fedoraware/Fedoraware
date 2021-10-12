@@ -47,13 +47,14 @@
 - [[TF2/Fedoraware] Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
 
 ### Credits to:
-  - spook953
-  - Lak3
-  - M-FeD
-  - oxyGodmode
-  - JAGNEmk
-  - r00t
-  - lykanfox
-  - km-ch
-  - HutchyBean
-  - SinnerTF2
+  - [spook953](https://github.com/spook953)
+  - [Lak3](https://github.com/Lak3)
+  - [M-FeD](https://github.com/M-FeD)
+  - [oxyGodmode](https://github.com/oxyGodmode)
+  - [JAGNEmk](https://github.com/JAGNEmk)
+  - [r00t](https://github.com/l-r00t-l)
+  - [lykanfox](https://github.com/lykanfox)
+  - [km-ch](https://github.com/km-ch)
+  - [HutchyBean](https://github.com/HutchyBean)
+  - [SinnerTF2](https://github.com/SinnerTF2)
+  - [John Page The Fourth](https://github.com/relaxtakenotes)
