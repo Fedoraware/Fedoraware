@@ -16,7 +16,6 @@
 - The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
 
 ## Guide:
-- [How to compile and use Fedoraware](https://www.youtube.com/watch?v=3OaAkfsikrE)
 - If you are lazy and you just want a compiled .dll file, go to the [Actions](https://github.com/M-FeD/Fedoraware/actions) tab of this repo and select the latest workflow, and then select the Fedoraware button under the Artifacts category. This will download a zip file which you'll need to extract, after that you will get the .dll file.
 - To inject Fedoraware into TF2, you'll have to also use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject it into TF2.
 - __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
