@@ -33,7 +33,7 @@
 - Anti-warp
 - Dragons fury added to projectile aimbot (not pSilent)
 - More chams
-- A Nullcore style useful buttons panel (thanks oxygodmode)
+- A Nullcore style useful buttons panel
 - Directional autostrafe
 - Fakelag
 - Duck speed
