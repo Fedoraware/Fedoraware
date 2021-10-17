@@ -1354,7 +1354,6 @@ void CMenu::Run()
 #ifdef DEVELOPER_BUILD
 					GroupBoxStart();
 					{
-						CheckBox(Vars::Visuals::Skins::Enabled, _(L"Skins master switch"));
 						ComboBox(Vars::Visuals::Skins::Effect, {
 							{ 0  , L"None" },
 							{ 701, L"Hot" },

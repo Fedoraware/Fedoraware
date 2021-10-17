@@ -494,9 +494,7 @@ void CConfigManager::Save(const wchar_t *name)
 				
 
 
-#ifdef DEVELOPER_BUILD
-			SAVE_VAR(Vars::Visuals::Skins::Enabled);
-#endif
+
 		}
 
 		//Misc
@@ -983,9 +981,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
 			
-#ifdef DEVELOPER_BUILD
-			LOAD_VAR(Vars::Visuals::Skins::Enabled);
-#endif
 		}
 
 		//Misc

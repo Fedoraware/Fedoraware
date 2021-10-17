@@ -1005,7 +1005,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 							}
 							if (ImGui::CollapsingHeader("Attribute changer")) {
-								ImGui::Checkbox("Active", &Vars::Visuals::Skins::Enabled.m_Var); HelpMarker("Attribute changer master switch");
 								const char* unuEffects[]{
 									"None",
 									"Hot",

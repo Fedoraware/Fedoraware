@@ -7,7 +7,7 @@ constexpr int MAX_BUFFER = (MAX_PATH * 3);
 
 void CAttributChanger::Run()
 {
-	if (!Vars::Visuals::Skins::Enabled.m_Var|| !g_Interfaces.Engine->IsInGame())
+	if (!g_Interfaces.Engine->IsInGame())
 		return;
 
 	static auto dwItemDefOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
