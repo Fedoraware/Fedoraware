@@ -356,8 +356,6 @@ void ImGui::StyleColorsLight(ImGuiStyle* dst)
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 }
 
-
-}
 //-----------------------------------------------------------------------------
 // [SECTION] ImDrawList
 //-----------------------------------------------------------------------------
