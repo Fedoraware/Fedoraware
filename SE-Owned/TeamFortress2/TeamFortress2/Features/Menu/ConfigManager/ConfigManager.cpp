@@ -147,6 +147,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::Aimbot::Global::Active);
 				SAVE_VAR(Vars::Aimbot::Global::AimKey);
+				SAVE_VAR(Vars::Aimbot::Global::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
@@ -191,6 +192,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
+				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -637,6 +640,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::Aimbot::Global::Active);
 				LOAD_VAR(Vars::Aimbot::Global::AimKey);
+				LOAD_VAR(Vars::Aimbot::Global::AimFOV);
 				LOAD_VAR(Vars::Aimbot::Global::AutoShoot);
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
@@ -681,6 +685,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimPosition);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
+				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
