@@ -3,6 +3,9 @@
 #include "../Vars.h"
 #include "../Misc/Misc.h"
 
+int attackStringW;
+int attackStringH;
+
 #define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
 #define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
 
@@ -61,7 +64,11 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
 
 				const auto maxHealth = pEntity->GetMaxHealth();
-				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";
+				std::string attackString = "You hit " + std::string(pi.guid) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";
+
+				std::wstring wattackString = std::wstring(attackString.begin(), attackString.end());
+				const wchar_t* wcattackString = wattackString.c_str();
+				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_INDICATORS].dwFont, wcattackString, attackStringW, attackStringH);
 
 				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var)
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD]\x3 %s", attackString.c_str()).c_str());

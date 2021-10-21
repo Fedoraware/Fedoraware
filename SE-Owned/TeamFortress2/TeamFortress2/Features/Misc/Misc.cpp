@@ -1,9 +1,13 @@
 #include "Misc.h"
 
 #include "../Vars.h"
+#include "../ChatInfo/ChatInfo.h"
 
 
 //#define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
+
+extern int attackStringW;
+extern int attackStringH;
 
 void CMisc::Run(CUserCmd* pCmd)
 {
@@ -381,7 +385,10 @@ void Notify::Think() {
 		else
 			color.a = 255;
 
-		g_Draw.String(FONT_DEBUG, x, y, color, ALIGN_DEFAULT, notify->m_text.c_str());
+		g_Draw.Rect(x, y, attackStringW + 5, attackStringH + 2, { 30, 30, 30, color.a });
+		g_Draw.OutlinedRect(x, y, attackStringW + 5, attackStringH + 2, { 30, 30, 255, color.a });
+		g_Draw.String(FONT_INDICATORS, x + 5, y + 2, color, ALIGN_DEFAULT, notify->m_text.c_str());
+
 		y += size;
 	}
 }

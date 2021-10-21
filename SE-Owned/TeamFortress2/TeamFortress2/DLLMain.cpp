@@ -84,8 +84,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		//FONT_DEBUG
 		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE },
 
-		//FONT_FEATURE
-		{ 0x0, _("Verdana"), 16, 800, FONTFLAG_OUTLINE }
+		//FONT_INDICATORS
+		{ 0x0, _("Tahoma"), 13, 0, FONTFLAG_OUTLINE }
 		});
 
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
