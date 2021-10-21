@@ -215,13 +215,12 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::OverrideWorldTextures()
 {
-	
 		static KeyValues *kv = nullptr;
 		if (!kv) {
 			kv = new KeyValues("LightmappedGeneric");
-			kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
-			//kv->SetString("$basetexture", "vgui/white_additive"); //flat 
-			//kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
+			//kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
+			kv->SetString("$basetexture", "vgui/white_additive"); //flat 
+			kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
 		}
 
 		if (Vars::Visuals::OverrideWorldTextures.m_Var) {
@@ -246,8 +245,6 @@ void CVisuals::OverrideWorldTextures()
 				pMaterial->SetShaderAndParams(kv);
 			}
 		}
-	
-
 }
 
 void CVisuals::UpdateWorldModulation()

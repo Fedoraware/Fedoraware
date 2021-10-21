@@ -17,7 +17,7 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
-	//g_Visuals.OverrideWorldTextures();
+	g_Visuals.OverrideWorldTextures();
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()

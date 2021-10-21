@@ -917,6 +917,8 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
+								ImGui::TextUnformatted("");
+								ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
 
 							}
 
