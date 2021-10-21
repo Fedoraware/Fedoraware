@@ -139,6 +139,9 @@ namespace Colors
 	inline Color_t DtChargedLeft =			{ 106, 255, 131, 180};
 	inline Color_t DtChargedRight =			{ 106, 255, 250, 180 };
 	inline Color_t DtOutline =				{ 30, 30, 30, 180 };
+	inline Color_t DmgLoggerBackground =	{ 30, 30, 30, 255 };
+	inline Color_t DmgLoggerOutline =		{ 30, 30, 255, 255};
+	inline Color_t DmgLoggerText =			{ 255, 255, 255, 255 };
 }
 
 namespace Utils

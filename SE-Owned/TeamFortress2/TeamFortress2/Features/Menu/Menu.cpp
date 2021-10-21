@@ -1714,7 +1714,9 @@ void CMenu::Run()
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 
-	if (m_bOpen) {
+	//WTF IS THIS
+
+	/*if (m_bOpen) {
 		//g_Draw.CornerRect(g_InputHelper.m_nMouseX, g_InputHelper.m_nMouseY, 5, 5, 1, 1, { 0, 0, 0, 255 });
 
 		//Filling
@@ -1743,7 +1745,7 @@ void CMenu::Run()
 		g_Draw.Line(g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 17, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 18, { 255, 255, 255, 255 });
 		g_Draw.Line(g_InputHelper.m_nMouseX + 7, g_InputHelper.m_nMouseY + 19, g_InputHelper.m_nMouseX + 9, g_InputHelper.m_nMouseY + 19, { 255, 255, 255, 255 });
 		g_Draw.Line(g_InputHelper.m_nMouseX + 6, g_InputHelper.m_nMouseY + 10, g_InputHelper.m_nMouseX + 11, g_InputHelper.m_nMouseY + 10, { 255, 255, 255, 255 });
-	}
+	}*/
 }
 
 

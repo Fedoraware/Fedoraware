@@ -1189,6 +1189,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Bullet tracer", Colors::BulletTracer);
 							ColorPicker("Fresnel chams base", Colors::FresnelBase);
 							ColorPicker("Aimbot prediction", Colors::AimSquareCol);
+							ColorPicker("Damage logger background", Colors::DmgLoggerBackground);
+							ColorPicker("Damage logger outline", Colors::DmgLoggerOutline);
+							ColorPicker("Damage logger text", Colors::DmgLoggerText);
 							
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}

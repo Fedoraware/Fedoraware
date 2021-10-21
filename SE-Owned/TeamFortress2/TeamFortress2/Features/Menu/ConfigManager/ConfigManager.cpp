@@ -612,6 +612,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DtChargedLeft);
 			SAVE_OTHER(Colors::DtChargedRight);
 			SAVE_OTHER(Colors::DtOutline);
+			SAVE_OTHER(Colors::DmgLoggerBackground);
+			SAVE_OTHER(Colors::DmgLoggerOutline);
+			SAVE_OTHER(Colors::DmgLoggerText);
 
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
@@ -1101,6 +1104,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DtChargedLeft);
 			LOAD_OTHER(Colors::DtChargedRight);
 			LOAD_OTHER(Colors::DtOutline);
+			LOAD_OTHER(Colors::DmgLoggerBackground);
+			LOAD_OTHER(Colors::DmgLoggerOutline);
+			LOAD_OTHER(Colors::DmgLoggerText);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);
