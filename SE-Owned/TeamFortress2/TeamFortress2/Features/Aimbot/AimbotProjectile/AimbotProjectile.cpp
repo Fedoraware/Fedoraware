@@ -429,6 +429,8 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
+	PlayerInfo_t info{};
+
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nWeaponID = pWeapon->GetWeaponID();
@@ -437,6 +439,9 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 		for (const auto &Player : g_EntityCache.GetGroup(bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost() || Player == pLocal)
+				continue;
+
+			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
 				continue;
 
 			if (Player->GetTeamNum() != pLocal->GetTeamNum())
@@ -460,7 +465,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeap
 				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
 					continue;
 
-				if (g_GlobalInfo.ignoredPlayers[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
+				if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
 					continue;
 			}
 

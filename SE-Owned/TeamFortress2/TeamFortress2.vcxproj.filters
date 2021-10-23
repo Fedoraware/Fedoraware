@@ -89,6 +89,7 @@
     <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InputHook\InputHook.cpp" />
+    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -611,6 +612,7 @@
     <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Hooks\InputHook\InputHook.h" />
+    <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

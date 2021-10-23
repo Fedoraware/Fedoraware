@@ -66,6 +66,8 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
+	PlayerInfo_t info{};
+
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		const bool bWhipTeam = (pWeapon->GetItemDefIndex() == ETFWeapons::Soldier_t_TheDisciplinaryAction && Vars::Aimbot::Melee::WhipTeam.m_Var);
@@ -73,6 +75,9 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 		for (const auto &Player : g_EntityCache.GetGroup(bWhipTeam ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost())
+				continue;
+
+			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
 				continue;
 
 			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
@@ -91,7 +96,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
 				continue;
 
-			if (g_GlobalInfo.ignoredPlayers[Player->GetIndex()])
+			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
 				continue;
 
 			Vec3 vPos = Player->GetHitboxPos(HITBOX_BODY);

@@ -54,6 +54,8 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
+	PlayerInfo_t info{};
+
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
@@ -61,6 +63,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 		for (const auto &Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost())
+				continue;
+
+			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
 				continue;
 
 			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
@@ -82,7 +87,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 				continue;
 
-			if (g_GlobalInfo.ignoredPlayers[Player->GetIndex()])
+			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
 				continue;
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var) {
