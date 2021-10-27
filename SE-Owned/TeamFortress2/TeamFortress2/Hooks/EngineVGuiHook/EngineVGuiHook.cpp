@@ -71,17 +71,19 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				//Credits to JAGNEmk aka me x)
 				if (!g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
-					Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+					if (Vars::Visuals::AimPosSquare.m_Var){
+						Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
-					Utils::W2S(g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin, vProjAimStart);
-					Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd);
-					g_Draw.Line(
-						vProjAimStart.x,
-						vProjAimStart.y,
-						vProjAimEnd.x,
-						vProjAimEnd.y,
-						{ 255, 255, 255, 255 } //Set this to a var if u wantto idc
-					);
+						Utils::W2S(g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin, vProjAimStart);
+						Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd);
+						g_Draw.Line(
+							vProjAimStart.x,
+							vProjAimStart.y,
+							vProjAimEnd.x,
+							vProjAimEnd.y,
+							{ 255, 255, 255, 255 } //Set this to a var if u wantto idc
+						);
+					}
 				}
 
 				//g_Draw.String(FONT_DEBUG, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::to_string(g_GlobalInfo.tickCounter).data());
