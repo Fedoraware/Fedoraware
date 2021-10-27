@@ -76,7 +76,9 @@ void CPlayerList::Render()
   if (ImGui::Begin("Playerlist", &g_PlayerList.showWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
   {
     if (!g_Interfaces.Engine->IsInGame())
-      ImGui::TextUnformatted("You're not in game, noob!");
+        ImGui::TextUnformatted("You're not in game, noob!");
+    else if (g_Interfaces.Engine->IsInGame() && g_PlayerList.players.empty())
+        ImGui::TextUnformatted("You're all alone, again.");
     else if (g_Interfaces.Engine->IsInGame() && !g_PlayerList.players.empty())
     {       
       if (ImGui::BeginTable("playerlist", 2, ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersH))
