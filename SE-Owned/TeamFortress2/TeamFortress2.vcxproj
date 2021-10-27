@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\DLLMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />

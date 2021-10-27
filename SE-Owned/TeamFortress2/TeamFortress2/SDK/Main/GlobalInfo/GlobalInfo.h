@@ -41,7 +41,7 @@ struct GlobalInfo_t
 	Vec3 m_vPunchAngles					= {};
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
-	bool ignoredPlayers [128] = {false};
+	std::map<int, bool> ignoredPlayers;
 };
 
 inline GlobalInfo_t g_GlobalInfo;

@@ -10,6 +10,7 @@
 #include "../Menu/Menu.h"
 #include "../Glow/Glow.h"
 #include "../Chams/Chams.h"
+#include "../PlayerList/PlayerList.h"
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
 bool tooltips = true;
@@ -475,16 +476,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Colours", ImVec2(140 - 15, 29))) {
 					SettingsTab = 4;
-				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
-				if (ImGui::Button("Shortcuts", ImVec2(140 - 15, 29))) {
-					SettingsTab = 5;
-				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
-				if (ImGui::Button("Playerlist", ImVec2(140 - 15, 29))) {
-					SettingsTab = 6;
 				}
 				ImGui::PopStyleColor();
 				static std::wstring selected = {};
@@ -1192,7 +1183,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Damage logger background", Colors::DmgLoggerBackground);
 							ColorPicker("Damage logger outline", Colors::DmgLoggerOutline);
 							ColorPicker("Damage logger text", Colors::DmgLoggerText);
-							
+
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}
 						ImGui::NextColumn();
@@ -1217,60 +1208,36 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					}
 					ImGui::EndChild();
 				}
-				if (SettingsTab == 5) {
-					ImGui::BeginChild("Shortcuts");
+
+				if (ImGui::BeginMainMenuBar())
+				{
+					if (ImGui::BeginMenu("Shortcuts"))
 					{
-						// This looks dumb LOL
-						if (ImGui::Button("Full Update")) {
+						if (ImGui::MenuItem("Full Update"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
-						}
-						if (ImGui::Button("Restart sound system")) {
+						if (ImGui::MenuItem("Restart sound system"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
-						}
-						if (ImGui::Button("Stop sound")) {
+						if (ImGui::MenuItem("Stop sound"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
-						}
-						if (ImGui::Button("Status")) {
+						if (ImGui::MenuItem("Status"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("status");
-						}
-						if (ImGui::Button("Ping")) {
+						if (ImGui::MenuItem("Ping"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
-						}
-						if (ImGui::Button("Retry")) {
+						if (ImGui::MenuItem("Retry"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
-						}
+
+						ImGui::EndMenu();
 					}
-					ImGui::EndChild();
+
+					if (ImGui::MenuItem("Playerlist"))
+						g_PlayerList.showWindow = !g_PlayerList.showWindow;
+
+					ImGui::EndMainMenuBar();
 				}
-				if (SettingsTab == 6) {
-					ImGui::BeginChild("Playerlist");
-					{
-						if (!g_Interfaces.Engine->IsInGame()) {
-							ImGui::TextUnformatted("You're not in game, noob!");
-						} else {
-							int n;
-							PlayerInfo_t pi;
-							bool checkboxPressed_Ignore = false;
-							for (n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
-							{
-								if (g_Interfaces.Engine->GetPlayerInfo(n, &pi)) {
-									ImGui::TextUnformatted(pi.name);
-									ImGui::SameLine();
-									if (ImGui::Button(tfm::format("Profile##%i", n).c_str())) {
-										g_SteamInterfaces.Friends015->ActivateGameOverlayToUser("steamid", CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
-									}
-									ImGui::SameLine();
-									if (ImGui::Button(tfm::format("Kick##%i", n).c_str())) {
-										g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", pi.userID).c_str());
-									}
-									ImGui::SameLine();
-									ImGui::Checkbox(tfm::format("Ignore##%i", n).c_str(), &g_GlobalInfo.ignoredPlayers[n]);
-									ImGui::Separator();
-								}
-							}
-						}
-					}
-					ImGui::EndChild();
+
+				if (g_PlayerList.showWindow)
+				{
+					g_PlayerList.Render();
 				}
 			}
 			ImGui::End();

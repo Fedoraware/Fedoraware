@@ -4,6 +4,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
+#include "../../Features/PlayerList/PlayerList.h"
 
 void __stdcall ClientHook::PreEntity::Hook(char const *szMapName)
 {
@@ -22,7 +23,6 @@ void __stdcall ClientHook::ShutDown::Hook()
 {
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_EntityCache.Clear();
-	std::fill_n(g_GlobalInfo.ignoredPlayers, 128, 0); // We wouldn't want some wog to get ignored randomly!
 }
 
 void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
@@ -100,6 +100,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		case EClientFrameStage::FRAME_NET_UPDATE_END: 
 		{
 			g_EntityCache.Fill();
+			g_PlayerList.GetPlayers();
 
 			g_GlobalInfo.m_bLocalSpectated = false;
 
