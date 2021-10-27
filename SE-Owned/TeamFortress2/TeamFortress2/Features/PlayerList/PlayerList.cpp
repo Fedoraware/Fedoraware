@@ -108,7 +108,6 @@ void CPlayerList::Render()
             if (column == 1)
             {
               if (player.info.fakeplayer)
-                ImGui::TextUnformatted("Bot");
                 break;
 
               ImGui::PushID(player.info.userID);
