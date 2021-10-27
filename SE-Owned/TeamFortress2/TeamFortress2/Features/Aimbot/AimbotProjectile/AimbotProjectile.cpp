@@ -3,6 +3,8 @@
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
+	g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin = m_vPosition;
+
 	Vec3 vecOut = {};
 
 	if (m_pEntity->IsOnGround())

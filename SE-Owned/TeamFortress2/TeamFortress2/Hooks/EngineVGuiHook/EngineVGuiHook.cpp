@@ -66,38 +66,22 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				if (g_Interfaces.EngineVGui->IsGameUIVisible())
 					return;
 
-				//Projectile Aim's Predicted Position
+				//Proj aim line
+				//This could use alot of improvement, but still subjectively better than a flying rec
+				//Credits to JAGNEmk aka me x)
 				if (!g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
-					if (Vars::Visuals::CrosshairAimPos.m_Var ? g_GlobalInfo.m_vAimPos.IsZero() : true)
-					{
-						static const int size = 10;
-						Vec3 vecScreen = Vec3();
+					Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
-						if (Utils::W2S(g_GlobalInfo.m_vPredictedPos, vecScreen))
-						{
-							if (Vars::Visuals::AimPosSquare.m_Var) {
-								// color
-								g_Draw.OutlinedRect(
-									static_cast<int>(vecScreen.x - (size / 2)),
-									static_cast<int>(vecScreen.y - (size / 2)),
-									size, size,
-									Colors::AimSquareCol);
-								// outer
-								g_Draw.OutlinedRect(
-									static_cast<int>(vecScreen.x - (size / 2)) - 1,
-									static_cast<int>(vecScreen.y - (size / 2)) - 1,
-									size + 2, size + 2,
-									Colors::OutlineESP);
-								//inner
-								g_Draw.OutlinedRect(
-									static_cast<int>(vecScreen.x - (size / 2)) + 1,
-									static_cast<int>(vecScreen.y - (size / 2)) + 1,
-									size - 2, size - 2,
-									Colors::OutlineESP);
-							}
-						}
-					}
+					Utils::W2S(g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin, vProjAimStart);
+					Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd);
+					g_Draw.Line(
+						vProjAimStart.x,
+						vProjAimStart.y,
+						vProjAimEnd.x,
+						vProjAimEnd.y,
+						{ 255, 255, 255, 255 } //Set this to a var if u wantto idc
+					);
 				}
 
 				//g_Draw.String(FONT_DEBUG, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::to_string(g_GlobalInfo.tickCounter).data());
