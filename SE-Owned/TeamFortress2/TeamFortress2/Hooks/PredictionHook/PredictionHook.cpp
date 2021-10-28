@@ -30,16 +30,6 @@ void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity* pEntity, CUserCmd* 
 		return Table.Original<fn>(index)(g_Interfaces.Prediction, pEntity, pCmd, pMoveHelper);
 	}
 
-	auto AntiWarp = [](CUserCmd* cmd) -> void
-	{
-		if (g_GlobalInfo.m_bShouldShift) {
-			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-		}
-	};
-
-	AntiWarp(pCmd);
-
 	int BackupTick = pEntity->GetTickBase();
 	float CurtimeBackup = g_Interfaces.GlobalVars->curtime;
 

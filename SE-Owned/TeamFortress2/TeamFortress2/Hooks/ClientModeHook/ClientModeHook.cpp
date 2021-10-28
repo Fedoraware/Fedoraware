@@ -231,6 +231,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	// THIS SHIT SUUUUUCKS
 
 
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
+		if (g_GlobalInfo.m_bShouldShift) {
+			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+		}
+	};
+
+	AntiWarp(pCmd);
+
+
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
 		if (const auto &pLocal = g_EntityCache.m_pLocal)
