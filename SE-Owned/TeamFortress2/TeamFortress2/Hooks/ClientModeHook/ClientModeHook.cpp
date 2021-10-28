@@ -70,40 +70,16 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	// Bless your beautiful soul reestart/kris - someone else
-	
-	// This shit doesn't work half of the time too, btw. - jp4
-
-	auto AntiWarp = [](CUserCmd* cmd) -> void
-	{
-		int shiftcheck = g_GlobalInfo.m_nShifted; //grab shifted.
-
-		if (shiftcheck < 19)
-		{
-			if (shiftcheck < 6)
-			{
-				cmd->forwardmove *= -1;
-				cmd->sidemove *= -1;
-			}
-			else
-			{
-				cmd->forwardmove = 0;
-				cmd->sidemove = 0;
-			}
-		}
-		else {
-			g_GlobalInfo.fast_stop = false;
-		}
-	};
-
-
-	if (g_GlobalInfo.fast_stop) {
-		AntiWarp(pCmd);
-	}
-
-
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+
+		int classNum = pLocal->GetClassNum();
+		if (classNum == ETFClass::CLASS_HEAVY) {
+			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS_HEAVY;
+		}
+		else {
+			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
+		}
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
@@ -247,6 +223,23 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 	}*/
+
+	// Bless your beautiful soul reestart/kris - someone else
+
+	// This shit doesn't work half of the time too, btw. - jp4
+
+	// THIS SHIT SUUUUUCKS
+
+
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
+		if (g_GlobalInfo.m_bShouldShift) {
+			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+		}
+	};
+
+	AntiWarp(pCmd);
 
 
 	if (Vars::Misc::TauntSlide.m_Var)

@@ -90,8 +90,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
 
-	SetupDiscord();
-	Discord_ClearPresence();
+	//SetupDiscord();
+	//Discord_ClearPresence();
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));

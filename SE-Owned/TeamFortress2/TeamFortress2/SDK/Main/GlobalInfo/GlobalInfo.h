@@ -3,7 +3,7 @@
 #include "../BaseEntity/BaseEntity.h"
 
 #define MAX_NEW_COMMANDS 20
-#define MAX_NEW_COMMANDS_HEAVY 23
+#define MAX_NEW_COMMANDS_HEAVY 24
 #define DT_WAIT_CALLS 26
 
 struct GlobalInfo_t
@@ -11,8 +11,8 @@ struct GlobalInfo_t
 	int m_nCurrentTargetIdx				= 0;
 	int m_nCurItemDefIndex              = 0;
 	int m_nWaitForShift                 = 0;
-	int m_nShifted                      = MAX_NEW_COMMANDS;
-	int dtTicks = MAX_NEW_COMMANDS;
+	int m_nShifted                      = 0;
+	int dtTicks = MAX_NEW_COMMANDS; // how many to shift
 	int tickCounter = 0;
 	bool m_bWeaponCanHeadShot			= false;
 	bool m_bWeaponCanAttack				= false;

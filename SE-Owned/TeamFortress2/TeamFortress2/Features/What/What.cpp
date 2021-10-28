@@ -41,8 +41,6 @@ int skyName = 0;
 int unu1 = 0;
 int unu2 = 0;
 
-int ticksChocked = 0;
-
 bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 {
 	bool active = false;
@@ -387,37 +385,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
 
-				int ticks = 0;
-
-				if (pLocal->GetClassNum() == CLASS_HEAVY) {
-
-					for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
-						//printf("i: %d\n", i);
-						for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
-							//printf("j: %d\n", j);
-							ticksChocked = j;
-							break;
-						}
-					}
-					ticks = MAX_NEW_COMMANDS_HEAVY;
-				}
-				else {
-					for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
-						//printf("i: %d\n", i);
-						for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
-							//printf("j: %d\n", j);
-							ticksChocked = j;
-							break;
-						}
-					}
-					ticks = MAX_NEW_COMMANDS;
-				}
-				if (ticksChocked < 0) {
-					ticksChocked = 0;
-				}
 				std::string dtstring = "Doubletap (";
-				dtstring = dtstring + std::to_string(ticksChocked) + "/" + std::to_string(ticks) + ")";
-				if (ticksChocked == ticks) {
+				dtstring = dtstring + std::to_string(g_GlobalInfo.m_nShifted) + "/" + std::to_string(g_GlobalInfo.dtTicks) + ")";
+				if (g_GlobalInfo.dtTicks == g_GlobalInfo.m_nShifted) {
 					if (!g_GlobalInfo.m_nWaitForShift) {
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
 						TextCenter(dtstring);
