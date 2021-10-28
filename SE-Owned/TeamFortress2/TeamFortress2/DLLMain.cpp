@@ -19,6 +19,7 @@
 #include "Utils/Events/Events.h"
 
 #include "SDK/Discord/include/discord_rpc.h"
+#include "Features/Discord/Discord.h"
 
 int StringToWString(std::wstring& ws, const std::string& s)
 {
@@ -88,10 +89,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Tahoma"), 13, 0, FONTFLAG_OUTLINE }
 		});
 
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
-
 	SetupDiscord();
 	Discord_ClearPresence();
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));
@@ -111,8 +111,10 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		g_CFG.Load(s.c_str());
 	}
 
-	while (!GetAsyncKeyState(VK_F11))
-		std::this_thread::sleep_for(std::chrono::milliseconds(420));
+	while (!GetAsyncKeyState(VK_F11)) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		g_DiscordRPC.vFunc();
+	}
 
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
@@ -125,6 +127,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	
 	g_Events.Destroy();
 	g_Hooks.Release();
+	Discord_ClearPresence();
+	Discord_Shutdown();
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -138,9 +142,13 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
-	{
-		Utils::RemovePEH(hinstDLL);
+	{	
 
+#ifdef DEBUG
+		WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0);
+#endif
+
+		Utils::RemovePEH(hinstDLL);
 		if (auto hMainThread = WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0))
 			WinAPI::CloseHandle(hMainThread);
 	}

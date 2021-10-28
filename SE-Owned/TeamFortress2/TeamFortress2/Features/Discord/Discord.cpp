@@ -16,7 +16,6 @@ void CDiscordRPC::vFunc()
 {
 	if (Vars::Misc::Discord::EnableRPC.m_Var)
 	{
-
 		static int64_t StartTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		DiscordRichPresence discordPresence;
 		memset(&discordPresence, 0, sizeof(discordPresence));
@@ -32,7 +31,6 @@ void CDiscordRPC::vFunc()
 				{
 					std::string sLevelName;
 					sLevelName.append(cLevelName);
-
 
 					if (sLevelName.substr(sLevelName.find_last_of(".") + 1) == "bsp")
 					{
