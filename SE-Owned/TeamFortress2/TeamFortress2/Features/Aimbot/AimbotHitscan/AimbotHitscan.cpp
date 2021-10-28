@@ -556,7 +556,7 @@ void CAimbotHitscan::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 		}
 
 		if (Vars::Misc::CL_Move::WaitForDT.m_Var) {
-			if (g_GlobalInfo.m_nWaitForShift && !g_GlobalInfo.m_nShifted && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
+			if (g_GlobalInfo.m_nWaitForShift && g_GlobalInfo.m_nShifted && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
 				return;
 		}
 
