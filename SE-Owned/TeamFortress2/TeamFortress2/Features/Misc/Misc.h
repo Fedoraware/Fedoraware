@@ -10,7 +10,7 @@ private:
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
-	
+	bool steamCleared = false;	
 
 public:
 	void Run(CUserCmd *pCmd);
@@ -19,6 +19,7 @@ public:
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);
 	void NoPush();
+	void SteamRPC();
 	std::vector<std::string> strings;
 };
 
