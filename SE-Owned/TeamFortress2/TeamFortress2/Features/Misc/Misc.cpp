@@ -342,6 +342,99 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 	}
 }
 
+void CMisc::SteamRPC()
+{
+	if (!Vars::Misc::Steam::EnableRPC.m_Var)
+	{
+		if (steamCleared == false) //stupid way to return back to normal rpc
+		{
+			g_SteamInterfaces.Friends015->SetRichPresence("steam_display", ""); //this will only make it say "Team Fortress 2" until the player leaves/joins some server. its bad but its better than making 1000 checks to recreate the original
+			steamCleared = true;
+		}
+		return;
+	}
+
+	steamCleared = false;
+	g_SteamInterfaces.Friends015->SetRichPresence("steam_display", "#TF_RichPresence_Display");
+
+	/*
+	"TF_RichPresence_State_MainMenu"              "Main Menu"
+	"TF_RichPresence_State_SearchingGeneric"      "Searching for a Match"
+	"TF_RichPresence_State_SearchingMatchGroup"   "Searching - %matchgrouploc_token%"
+	"TF_RichPresence_State_PlayingGeneric"        "In Match - %currentmap%"
+	"TF_RichPresence_State_LoadingGeneric"        "Joining Match"
+	"TF_RichPresence_State_PlayingMatchGroup"     "%matchgrouploc_token% - %currentmap%" <--!!!! used
+	"TF_RichPresence_State_LoadingMatchGroup"     "Joining %matchgrouploc_token%"
+	"TF_RichPresence_State_PlayingCommunity"      "Community - %currentmap%"
+	"TF_RichPresence_State_LoadingCommunity"      "Joining Community Server"
+	*/
+	if (!g_Interfaces.Engine->IsInGame() && Vars::Misc::Steam::OverrideMenu.m_Var)
+		g_SteamInterfaces.Friends015->SetRichPresence("state", "MainMenu");
+	else
+	{
+		g_SteamInterfaces.Friends015->SetRichPresence("state", "PlayingMatchGroup");
+
+		switch (Vars::Misc::Steam::MatchGroup.m_Var)
+		{
+		case 0:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+			break;
+		case 1:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "MannUp");
+			break;
+		case 2:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Competitive6v6");
+			break;
+		case 3:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Casual");
+			break;
+		case 4:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "BootCamp");
+			break;
+		default:
+			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+			break;
+		}
+	}
+
+	/*
+	"TF_RichPresence_MatchGroup_Competitive6v6"   "Competitive"
+	"TF_RichPresence_MatchGroup_Casual"           "Casual"
+	"TF_RichPresence_MatchGroup_SpecialEvent"     "Special Event"
+	"TF_RichPresence_MatchGroup_MannUp"           "MvM Mann Up"
+	"TF_RichPresence_MatchGroup_BootCamp"         "MvM Boot Camp"
+	*/
+	switch (Vars::Misc::Steam::MapText.m_Var)
+	{
+	case 0:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+		break;
+	case 1:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "ChadAlphaMales.club");
+		break;
+	case 2:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
+		break;
+	case 3:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
+		break;
+	case 4:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
+		break;
+	case 5:
+		if (Vars::Misc::Steam::CustomText.empty())
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+		else
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.c_str());
+		break;
+	default:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+		break;
+	}
+
+	g_SteamInterfaces.Friends015->SetRichPresence("steam_player_group_size", std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
+}
+
 void Notify::Think() {
 	int		x{ 8 }, y{ 5 }, size{ 17 };
 	Color_t	color;
