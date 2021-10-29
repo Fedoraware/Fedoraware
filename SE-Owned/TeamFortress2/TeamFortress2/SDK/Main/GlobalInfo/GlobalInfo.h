@@ -39,7 +39,7 @@ struct GlobalInfo_t
 	Vec3 m_vRealViewAngles				= {};
 	Vec3 m_vFakeViewAngles				= {};
 	Vec3 m_vPunchAngles					= {};
-	Vec3 m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin = {};
+	Vec3 m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin = {}; //clubpenguin > tf2
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
