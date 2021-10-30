@@ -5,6 +5,7 @@
 #include "Features/Chams/DMEChams.h"
 #include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
+#include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
 #include "Features/Menu/Menu.h"
@@ -114,6 +115,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	while (!GetAsyncKeyState(VK_F11)) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		g_DiscordRPC.vFunc();
+		g_Misc.SteamRPC();
 	}
 
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
