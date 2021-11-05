@@ -13,7 +13,7 @@ void CConsole::Run()
 	/*if (!ShouldRun())
 		return;*/
 
-	// Set window size, could maybe use a variable for this wink wink
+		// Set window size, could maybe use a variable for this wink wink
 
 	m_nConsoleSize = 150;
 

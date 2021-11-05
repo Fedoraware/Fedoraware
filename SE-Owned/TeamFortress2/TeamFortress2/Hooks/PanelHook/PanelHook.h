@@ -9,7 +9,7 @@ namespace PanelHook
 	namespace PaintTraverse
 	{
 		const int index = 41;
-		using fn = void(__thiscall *)(CPanel*, unsigned int, bool, bool);
+		using fn = void(__thiscall*)(CPanel*, unsigned int, bool, bool);
 		void __stdcall Hook(unsigned int vgui_panel, bool force_repaint, bool allow_force);
 	}
 }

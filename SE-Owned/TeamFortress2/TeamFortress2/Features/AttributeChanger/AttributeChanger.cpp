@@ -51,7 +51,7 @@ void CAttributChanger::Run()
 				auto nIndex = reinterpret_cast<int*>(pWeapon + dwItemDefOff);
 
 				if (m_mapAttributes.find(*nIndex) != m_mapAttributes.end())
-				{			
+				{
 					if (m_mapAttributes[*nIndex].m_nEffect)
 						pList->Add(AttributeID::UnusualEffect, m_mapAttributes[*nIndex].m_nEffect);
 
@@ -84,13 +84,13 @@ void CAttributChanger::SaveConfig()
 		for (auto& Attribute : m_mapAttributes)
 		{
 			wchar_t szKey[85];
-			wsprintfW(szKey, L"%i",           Attribute.second.m_nItemDefIndex);
+			wsprintfW(szKey, L"%i", Attribute.second.m_nItemDefIndex);
 
-			SaveInt(szKey, L"Index",          Attribute.second.m_nItemDefIndex);
-			SaveInt(szKey, L"Effect",         Attribute.second.m_nEffect);
-			SaveInt(szKey, L"Particle",       Attribute.second.m_nParticle);
-			SaveInt(szKey, L"Sheen",          Attribute.second.m_nSheen);
-			SaveBool(szKey, L"Ancient",       Attribute.second.m_bAncient);
+			SaveInt(szKey, L"Index", Attribute.second.m_nItemDefIndex);
+			SaveInt(szKey, L"Effect", Attribute.second.m_nEffect);
+			SaveInt(szKey, L"Particle", Attribute.second.m_nParticle);
+			SaveInt(szKey, L"Sheen", Attribute.second.m_nSheen);
+			SaveBool(szKey, L"Ancient", Attribute.second.m_bAncient);
 			SaveBool(szKey, L"StyleOverride", Attribute.second.m_bStyleOverride);
 		}
 
@@ -138,8 +138,8 @@ void CAttributChanger::SetAttribute()
 		if (const auto& pWeapon = pLocal->GetActiveWeapon())
 		{
 			const int nIndex = pWeapon->GetItemDefIndex();
-			m_mapAttributes[nIndex] = { nIndex, Vars::Visuals::Skins::Effect.m_Var, 
-										Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var, 
+			m_mapAttributes[nIndex] = { nIndex, Vars::Visuals::Skins::Effect.m_Var,
+										Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var,
 										Vars::Visuals::Skins::Acient.m_Var,   Vars::Visuals::Skins::Override.m_Var };
 
 			ForceFullUpdate(g_Interfaces.ClientState);

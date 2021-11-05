@@ -6,12 +6,12 @@
 class CEntitySphereQuery
 {
 public:
-	CEntitySphereQuery(const Vec3 &center, const float radius, const int flagMask = 0, const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS) {
+	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0, const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS) {
 		static DWORD dwAddress = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 14 D9 45 0C"));
 		reinterpret_cast<void(__thiscall*)(void*, const Vec3&, float, int, int)>(dwAddress)(this, center, radius, flagMask, partitionMask);
 	}
 
-	CBaseEntity *GetCurrentEntity() {
+	CBaseEntity* GetCurrentEntity() {
 		return (m_nListIndex < m_nListCount) ? m_pList[m_nListIndex] : nullptr;
 	}
 
@@ -21,10 +21,10 @@ public:
 
 private:
 	int m_nListIndex, m_nListCount;
-	CBaseEntity *m_pList[MAX_SPHERE_QUERY];
+	CBaseEntity* m_pList[MAX_SPHERE_QUERY];
 };
 
-void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
+void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	if (!Vars::Triggerbot::Detonate::Active.m_Var)
 		return;
@@ -78,7 +78,7 @@ void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 	if (Vars::Triggerbot::Detonate::Flares.m_Var)
 	{
 		m_flRadius = 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var;
-		
+
 		//There should only be one in existance at the time
 		//Old flare will blow up / vanish before the slow shit reloads
 		for (const auto& pFlare : g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES))

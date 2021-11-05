@@ -132,6 +132,6 @@ namespace InCondHook
 	};
 
 	inline SEOHook::Func Func;
-	using fn = bool(__fastcall *)(void *, void *, ETFCond cond);
-	bool __fastcall Hook(void *ecx, void *edx, ETFCond cond);
+	using fn = bool(__fastcall*)(void*, void*, ETFCond cond);
+	bool __fastcall Hook(void* ecx, void* edx, ETFCond cond);
 }

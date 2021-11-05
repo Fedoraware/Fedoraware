@@ -190,6 +190,8 @@ namespace Vars
 			inline CVar<bool> EnableTeamEnemyColors	{ false, L"Enable team/enemy colors"};
 		}
 
+		
+
 		namespace Players
 		{
 			inline CVar<bool> Active			{ true, L"Active" };
@@ -210,6 +212,10 @@ namespace Vars
 			inline CVar<bool> Dlights			{ false, L"Dlights" };
 			inline CVar<float> DlightRadius		{ 200.0f, L"DLight Radius" };
 			inline CVar<float> Alpha			{ 1.0f, L"Alpha" };
+			inline CVar<bool> Funnybodypartslol{ false, L"nigger" };
+			inline CVar<float> Headscale		{ 1.0f, L"Alpha" };
+			inline CVar<float> Torsoscale		{ 1.0f, L"Alpha" };
+			inline CVar<float> Handscale		{ 1.0f, L"Alpha" };
 		}
 
 		namespace Buildings

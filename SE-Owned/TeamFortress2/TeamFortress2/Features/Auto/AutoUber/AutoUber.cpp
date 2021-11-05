@@ -5,8 +5,8 @@
 
 void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Uber::Active.m_Var                    || //Not enabled, return
-		pWeapon->GetWeaponID() != TF_WEAPON_MEDIGUN              || //Not medigun, return
+	if (!Vars::Triggerbot::Uber::Active.m_Var || //Not enabled, return
+		pWeapon->GetWeaponID() != TF_WEAPON_MEDIGUN || //Not medigun, return
 		g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheKritzkrieg || //Kritzkrieg,  return
 		pWeapon->GetUberCharge() < 1.0f)			                //Not charged, return
 		return;

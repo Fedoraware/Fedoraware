@@ -2,7 +2,7 @@
 
 #include "../../Vars.h"
 
-bool CAutoStab::CanBackstab(const Vec3 &vSrc, const Vec3 &vDst, Vec3 vWSCDelta)
+bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 {
 	vWSCDelta.z = 0;
 	vWSCDelta.NormalizeInPlace();
@@ -29,7 +29,7 @@ bool CAutoStab::CanBackstab(const Vec3 &vSrc, const Vec3 &vDst, Vec3 vWSCDelta)
 	return true;
 }
 
-bool CAutoStab::TraceMelee(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, const Vec3 &vViewAngles, CBaseEntity **pEntityOut)
+bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles, CBaseEntity** pEntityOut)
 {
 	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.m_Var);
 
@@ -57,7 +57,7 @@ bool CAutoStab::TraceMelee(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, cons
 	return false;
 }
 
-bool CAutoStab::IsEntityValid(CBaseEntity *pLocal, CBaseEntity *pEntity)
+bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
@@ -74,9 +74,9 @@ bool CAutoStab::IsEntityValid(CBaseEntity *pLocal, CBaseEntity *pEntity)
 	return true;
 }
 
-void CAutoStab::RunLegit(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
+void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	CBaseEntity *pEnemy = nullptr;
+	CBaseEntity* pEnemy = nullptr;
 
 	if (!TraceMelee(pLocal, pWeapon, pCmd->viewangles, &pEnemy))
 		return;
@@ -98,15 +98,15 @@ void CAutoStab::RunLegit(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 	}
 }
 
-void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
+void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	for (const auto &pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
 			pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 			continue;
 
-		CBaseEntity *pTraceEnemy = nullptr;
+		CBaseEntity* pTraceEnemy = nullptr;
 
 		Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pEnemy->GetHitboxPos(HITBOX_BODY));
 
@@ -135,7 +135,7 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 	}
 }
 
-void CAutoStab::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
+void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	if (!Vars::Triggerbot::Stab::Active.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE)
 		return;

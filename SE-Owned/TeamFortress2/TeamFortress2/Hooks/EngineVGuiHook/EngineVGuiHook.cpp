@@ -66,7 +66,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				// Fuck you.
 				if (!g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
-					if (Vars::Visuals::AimPosSquare.m_Var){
+					if (Vars::Visuals::AimPosSquare.m_Var) {
 						Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
 						Utils::W2S(g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin, vProjAimStart);
@@ -80,7 +80,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						);
 					}
 				}
-				
+
 				// for damage logger. 
 				// you can use it for more, i'm sure. - myzarfin
 				g_notify.Think();
@@ -88,7 +88,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.m_Var)
 				{
-					const auto& pLocal  = g_EntityCache.m_pLocal;
+					const auto& pLocal = g_EntityCache.m_pLocal;
 					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
 
 					if (pLocal && pWeapon)
@@ -107,11 +107,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								color1 = Colors::DtChargedLeft;
 								color2 = Colors::DtChargedRight;
 							}
-							
+
 							static int tickWidth = Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
 							int barWidth = (tickWidth * g_GlobalInfo.dtTicks) + 2;
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-								g_Draw.OutlinedRect( 
+								g_Draw.OutlinedRect(
 									g_ScreenSize.c - (barWidth / 2),
 									nY + 80,
 									barWidth,
@@ -132,11 +132,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						}
 					}
 				}
-				
+
 				//Current Active Aimbot FOV
 				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
 				{
-					if (const auto &pLocal = g_EntityCache.m_pLocal)
+					if (const auto& pLocal = g_EntityCache.m_pLocal)
 					{
 						float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
 						float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
@@ -155,7 +155,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Radar.Run();
 			g_Crits.Frame();
 			g_Menu.Run();
-		}	
+		}
 		FinishDrawing(g_Interfaces.Surface);
 	}
 }

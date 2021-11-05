@@ -294,6 +294,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::Bones);
 				SAVE_VAR(Vars::ESP::Players::Dlights);
 				SAVE_VAR(Vars::ESP::Players::DlightRadius);
+				SAVE_VAR(Vars::ESP::Players::Headscale);
+				SAVE_VAR(Vars::ESP::Players::Torsoscale);
+				SAVE_VAR(Vars::ESP::Players::Handscale);
 			}
 
 			//Buildings

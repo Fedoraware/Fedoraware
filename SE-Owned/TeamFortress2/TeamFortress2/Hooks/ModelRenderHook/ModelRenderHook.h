@@ -15,8 +15,8 @@ namespace ModelRenderHook
 
 	namespace ForcedMaterialOverride
 	{
-		using fn = void(__thiscall *)(CModelRender *, IMaterial *, EOverrideType);
+		using fn = void(__thiscall*)(CModelRender*, IMaterial*, EOverrideType);
 		constexpr int index = 1;
-		void __stdcall Hook(IMaterial *mat, EOverrideType type);
+		void __stdcall Hook(IMaterial* mat, EOverrideType type);
 	}
 }

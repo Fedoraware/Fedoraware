@@ -12,7 +12,7 @@
 class CBaseEntity
 {
 public: //Netvars & conditions
-		M_DYNVARGET(NextNoiseMakerTime, float, this, _("DT_TFPlayer"), _("m_Shared"), _("m_flNextNoiseMakerTime"))
+	M_DYNVARGET(NextNoiseMakerTime, float, this, _("DT_TFPlayer"), _("m_Shared"), _("m_flNextNoiseMakerTime"))
 		M_DYNVARGET(FeignDeathReady, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bFeignDeathReady"))
 		M_DYNVARGET(StepSize, float, this, _("DT_BasePlayer"), _("localdata"), _("m_flStepSize"))
 		M_DYNVARGET(ConveyorSpeed, float, this, _("DT_FuncConveyor"), _("m_flConveyorSpeed"))
@@ -81,7 +81,7 @@ public: //Netvars & conditions
 		M_CONDGET(FireImmune, GetCondEx2(), TFCondEx2_FireImmune)
 
 public: //Virtuals
-		M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
+	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
 		M_VIRTUALGET(MaxHealth, int, this, int(__thiscall*)(void*), 107)
 		M_VIRTUALGET(AbsAngles, const Vec3&, this, Vec3& (__thiscall*)(void*), 10)
 		M_VIRTUALGET(AbsOrigin, const Vec3&, this, Vec3& (__thiscall*)(void*), 9)
@@ -89,12 +89,12 @@ public: //Virtuals
 public: //Virtuals from renderable
 	__inline void* Renderable() { return reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(this) + 0x4)); }
 
-		M_VIRTUALGET(UpdateClientSideAnimation, void, Renderable(), void(__thiscall*)(void*), 3)
+	M_VIRTUALGET(UpdateClientSideAnimation, void, Renderable(), void(__thiscall*)(void*), 3)
 		M_VIRTUALGET(RenderAngles, const Vec3&, Renderable(), const Vec3& (__thiscall*)(void*), 2)
 		M_VIRTUALGET(Model, model_t*, Renderable(), model_t* (__thiscall*)(void*), 9)
 		M_VIRTUALGET(RgflCoordinateFrame, matrix3x4&, Renderable(), matrix3x4& (__thiscall*)(void*), 34)
 
-	__inline void GetRenderBounds(Vec3& vMins, Vec3& vMaxs) {
+		__inline void GetRenderBounds(Vec3& vMins, Vec3& vMaxs) {
 		const auto pRend = Renderable();
 		GetVFunc<void(__thiscall*)(void*, Vec3&, Vec3&)>(pRend, 20)(pRend, vMins, vMaxs);
 	}
@@ -113,14 +113,34 @@ public: //Virtuals from networkable
 	__inline void* Networkable() { return reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(this) + 0x8)); }
 
 	M_VIRTUALGET(ClientClass, CClientClass*, Networkable(), CClientClass* (__thiscall*)(void*), 2)
-	M_VIRTUALGET(Dormant, bool, Networkable(), bool(__thiscall*)(void*), 8)
-	M_VIRTUALGET(Index, int, Networkable(), int(__thiscall*)(void*), 9)
+		M_VIRTUALGET(Dormant, bool, Networkable(), bool(__thiscall*)(void*), 8)
+		M_VIRTUALGET(Index, int, Networkable(), int(__thiscall*)(void*), 9)
 
 public: //Everything else, lol.
 	__inline size_t* GetMyWeapons() {
 		static auto dwOff = g_NetVars.get_offset(_("DT_BaseCombatCharacter"), _("m_hMyWeapons"));
 		return reinterpret_cast<size_t*>(this + dwOff);
 	}
+
+	__inline bool* PDAman() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_bViewingCYOAPDA"));
+		return reinterpret_cast<bool*>(this + dwOff);
+		//M_DYNVARGET(ViewingCYOAPDA, bool, this, _("DT_TFPlayer"), _("m_bViewingCYOAPDA"))
+	}
+
+	__inline float* GetHeadScale() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flHeadScale"));
+		return reinterpret_cast<float*>(this + dwOff);
+	}
+	__inline float* GetTorsoScale() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flTorsoScale"));
+		return reinterpret_cast<float*>(this + dwOff);
+	}
+	__inline float* GetHandScale() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flHandScale"));
+		return reinterpret_cast<float*>(this + dwOff);
+	}
+
 
 	__inline CBaseEntity* GetGroundEntity() {
 		DYNVAR(pHandle, int, _("DT_BasePlayer"), _("m_hGroundEntity"));
@@ -276,10 +296,10 @@ public: //Everything else, lol.
 
 	__inline bool IsBuilding() {
 		switch (GetClassID()) {
-			case ETFClassID::CObjectDispenser:
-			case ETFClassID::CObjectSentrygun:
-			case ETFClassID::CObjectTeleporter: return true;
-			default: return false;
+		case ETFClassID::CObjectDispenser:
+		case ETFClassID::CObjectSentrygun:
+		case ETFClassID::CObjectTeleporter: return true;
+		default: return false;
 		}
 	}
 
@@ -361,16 +381,16 @@ public: //Everything else, lol.
 
 	__inline float GetPlayerMaxVelocity() {
 		switch (GetClassNum()) {
-			case ETFClass::CLASS_SCOUT: return 400.0f;
-			case ETFClass::CLASS_DEMOMAN: return 280.0f;
-			case ETFClass::CLASS_ENGINEER: return 300.0f;
-			case ETFClass::CLASS_HEAVY: return 230.0f; //110 when spinning minigun
-			case ETFClass::CLASS_MEDIC: return 320.0f;
-			case ETFClass::CLASS_PYRO: return 300.0f;
-			case ETFClass::CLASS_SNIPER: return 300.0f;
-			case ETFClass::CLASS_SOLDIER: return 240.0f;
-			case ETFClass::CLASS_SPY: return 320.0f;
-			default: return 1.0f;
+		case ETFClass::CLASS_SCOUT: return 400.0f;
+		case ETFClass::CLASS_DEMOMAN: return 280.0f;
+		case ETFClass::CLASS_ENGINEER: return 300.0f;
+		case ETFClass::CLASS_HEAVY: return 230.0f; //110 when spinning minigun
+		case ETFClass::CLASS_MEDIC: return 320.0f;
+		case ETFClass::CLASS_PYRO: return 300.0f;
+		case ETFClass::CLASS_SNIPER: return 300.0f;
+		case ETFClass::CLASS_SOLDIER: return 240.0f;
+		case ETFClass::CLASS_SPY: return 320.0f;
+		default: return 1.0f;
 		}
 	}
 
@@ -449,22 +469,22 @@ public: //Everything else, lol.
 
 	__inline void AddCond(const int nCond) {
 		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
-		*reinterpret_cast<DWORD *>(this + offset) |= nCond;
+		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
 	__inline void AddCondEx(const int nCond) {
 		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx"));
-		*reinterpret_cast<DWORD *>(this + offset) |= nCond;
+		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
 	__inline void RemoveCond(const int nCond) {
 		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
-		*reinterpret_cast<DWORD *>(this + offset) &= ~nCond;
+		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
 	__inline void RemoveCondEx(const int nCond) {
 		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx"));
-		*reinterpret_cast<DWORD *>(this + offset) &= ~nCond;
+		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
 	__inline void SetEyeAngles(const Vec3& vAngles) {
@@ -480,8 +500,8 @@ public: //Everything else, lol.
 		DYNVAR_SET(float, this, flAnimTime, _("DT_BaseEntity"), _("m_flAnimTime"));
 	}
 
-	__inline CCollisionProperty *GetCollision() {
-		return reinterpret_cast<CCollisionProperty *>(this + 0x1C8);
+	__inline CCollisionProperty* GetCollision() {
+		return reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
 	}
 
 };

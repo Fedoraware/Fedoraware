@@ -4,9 +4,9 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 
-void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t &pState, const ModelRenderInfo_t &pInfo, matrix3x4 *pBoneToWorld)
+void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	CBaseEntity *pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
+	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	if ((g_Chams.HasDrawn(pEntity) || g_Glow.HasDrawn(pEntity)) && !g_Glow.m_bDrawingGlow)
 		return;
@@ -17,7 +17,7 @@ void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t &p
 	Table.Original<fn>(index)(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 }
 
-void __stdcall ModelRenderHook::ForcedMaterialOverride::Hook(IMaterial *mat, EOverrideType type)
+void __stdcall ModelRenderHook::ForcedMaterialOverride::Hook(IMaterial* mat, EOverrideType type)
 {
 	if (!g_DMEChams.m_bRendering)
 	{

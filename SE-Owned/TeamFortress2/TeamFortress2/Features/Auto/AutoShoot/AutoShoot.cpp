@@ -1,7 +1,7 @@
 #include "AutoShoot.h"
 #include "../../Vars.h"
 
-bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity *pLocal, CUserCmd *pCmd, float *pSimTime)
+bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, float* pSimTime)
 {
 	CGameTrace Trace = {};
 	Vec3 vForward = {};
@@ -12,71 +12,71 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity *pLocal, CUserCmd *pCmd, floa
 	Filter.pSkip = pLocal;
 	Utils::Trace(vFrom, vTo, (MASK_SHOT | CONTENTS_GRATE), &Filter, &Trace);
 
-	if (const auto &pEntity = Trace.entity)
+	if (const auto& pEntity = Trace.entity)
 	{
 		switch (pEntity->GetClassID())
 		{
-			case ETFClassID::CTFPlayer:
+		case ETFClassID::CTFPlayer:
+		{
+			if (!pEntity->IsAlive())
+				return false;
+
+			if (!Vars::Triggerbot::Shoot::TriggerPlayers.m_Var)
+				return false;
+
+			if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+				return false;
+
+			if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
+				return false;
+
+			if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
+				return false;
+
+			if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
+				return false;
+
+			if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && g_GlobalInfo.m_bWeaponCanHeadShot && Trace.hitbox != HITBOX_HEAD)
+				return false;
+
+			if (Trace.hitbox == HITBOX_HEAD && Vars::Triggerbot::Shoot::HeadScale.m_Var < 1.0f)
 			{
-				if (!pEntity->IsAlive())
+				Vec3 vMins = {}, vMaxs = {}, vCenter = {};
+				matrix3x4 Matrix = {};
+
+				if (!pEntity->GetHitboxMinsAndMaxsAndMatrix(HITBOX_HEAD, vMins, vMaxs, Matrix, &vCenter))
 					return false;
 
-				if (!Vars::Triggerbot::Shoot::TriggerPlayers.m_Var)
+				vMins *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
+				vMaxs *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
+
+				if (!Math::RayToOBB(vFrom, vForward, vCenter, vMins, vMaxs, Matrix))
 					return false;
-
-				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
-					return false;
-
-				if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-					return false;
-
-				if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-					return false;
-
-				if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-					return false;
-
-				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && g_GlobalInfo.m_bWeaponCanHeadShot && Trace.hitbox != HITBOX_HEAD)
-					return false;
-
-				if (Trace.hitbox == HITBOX_HEAD && Vars::Triggerbot::Shoot::HeadScale.m_Var < 1.0f)
-				{
-					Vec3 vMins = {}, vMaxs = {}, vCenter = {};
-					matrix3x4 Matrix = {};
-
-					if (!pEntity->GetHitboxMinsAndMaxsAndMatrix(HITBOX_HEAD, vMins, vMaxs, Matrix, &vCenter))
-						return false;
-
-					vMins *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
-					vMaxs *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
-
-					if (!Math::RayToOBB(vFrom, vForward, vCenter, vMins, vMaxs, Matrix))
-						return false;
-				}
-
-				if (Vars::Misc::DisableInterpolation.m_Var)
-					*pSimTime = pEntity->GetSimulationTime();
-
-				break;
 			}
 
-			case ETFClassID::CObjectSentrygun:
-			case ETFClassID::CObjectDispenser:
-			case ETFClassID::CObjectTeleporter:
-			{
-				if (!pEntity->IsAlive())
-					return false;
+			if (Vars::Misc::DisableInterpolation.m_Var)
+				*pSimTime = pEntity->GetSimulationTime();
 
-				if (!Vars::Triggerbot::Shoot::TriggerBuildings.m_Var)
-					return false;
+			break;
+		}
 
-				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
-					return false;
+		case ETFClassID::CObjectSentrygun:
+		case ETFClassID::CObjectDispenser:
+		case ETFClassID::CObjectTeleporter:
+		{
+			if (!pEntity->IsAlive())
+				return false;
 
-				break;
-			}
+			if (!Vars::Triggerbot::Shoot::TriggerBuildings.m_Var)
+				return false;
 
-			default: return false;
+			if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+				return false;
+
+			break;
+		}
+
+		default: return false;
 		}
 
 		return true;
@@ -85,38 +85,38 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity *pLocal, CUserCmd *pCmd, floa
 	return false;
 }
 
-bool CAutoShoot::ShouldFire(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon)
+bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	if (Vars::Triggerbot::Shoot::WaitForCharge.m_Var)
 	{
 		switch (pLocal->GetClassNum()) {
-			case CLASS_SNIPER:
+		case CLASS_SNIPER:
+		{
+			if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped())
+				return false;
+
+			break;
+		}
+
+		case CLASS_SPY:
+		{
+			if (!g_GlobalInfo.m_bWeaponCanHeadShot)
 			{
-				if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped())
+				if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex == Spy_m_FestiveAmbassador)
 					return false;
-
-				break;
 			}
 
-			case CLASS_SPY:
-			{
-				if (!g_GlobalInfo.m_bWeaponCanHeadShot)
-				{
-					if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex == Spy_m_FestiveAmbassador)
-						return false;
-				}
+			break;
+		}
 
-				break;
-			}
-
-			default: break;
+		default: break;
 		}
 	}
 
 	return true;
 }
 
-void CAutoShoot::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
+void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	if (!Vars::Triggerbot::Shoot::Active.m_Var)
 		return;

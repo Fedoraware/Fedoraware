@@ -2,7 +2,7 @@
 
 #include "../../SDK/SDK.h"
 
-typedef LONG(WINAPI *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+typedef LONG(WINAPI* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 namespace WndProcHook
 {

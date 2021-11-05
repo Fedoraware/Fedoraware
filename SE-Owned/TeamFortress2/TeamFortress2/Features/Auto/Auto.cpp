@@ -8,7 +8,7 @@
 #include "AutoBlast/AutoBlast.h"
 #include "AutoUber/AutoUber.h"
 
-bool CAuto::ShouldRun(CBaseEntity *pLocal)
+bool CAuto::ShouldRun(CBaseEntity* pLocal)
 {
 	if (!Vars::Triggerbot::Global::Active.m_Var || !g_AutoGlobal.IsKeyDown())
 		return false;

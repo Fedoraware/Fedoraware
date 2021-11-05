@@ -61,7 +61,7 @@ bool CKeybinds::DrawButton(const wchar_t* label, int x, int y, int w, int h) {
 }
 
 void CKeybinds::DrawFeature(const wchar_t* label, int x, int y, int w, int h, bool active) {
-	g_Draw.OutlinedRect(x -2, y -2, w + 4, h + 4, Vars::Menu::Colors::FeatureOutline);
+	g_Draw.OutlinedRect(x - 2, y - 2, w + 4, h + 4, Vars::Menu::Colors::FeatureOutline);
 	g_Draw.Rect(x, y, w, h, Vars::Menu::Colors::FeatureBackground);
 	g_Draw.String(FONT_INDICATORS, x + (w / 2), y + (h / 2), active ? Vars::Menu::Colors::FeatureOn : Vars::Menu::Colors::FeatureOff, ALIGN_CENTER, label);
 }

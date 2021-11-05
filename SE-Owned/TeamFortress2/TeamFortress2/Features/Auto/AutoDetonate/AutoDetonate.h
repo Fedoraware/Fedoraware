@@ -4,7 +4,7 @@
 class CAutoDetonate
 {
 public:
-	void Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd);
+	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 
 private:
 	float m_flRadius;

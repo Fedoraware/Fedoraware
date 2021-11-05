@@ -1,7 +1,7 @@
 #include "SpyWarning.h"
 #include "../Vars.h"
 
-bool CSpyWarning::ShouldRun(CBaseEntity *pLocal)
+bool CSpyWarning::ShouldRun(CBaseEntity* pLocal)
 {
 	if (!Vars::Visuals::SpyWarning.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
 		return false;
@@ -15,9 +15,9 @@ bool CSpyWarning::ShouldRun(CBaseEntity *pLocal)
 	return true;
 }
 
-void CSpyWarning::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos)
+void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 {
-	auto GetClockwiseAngle = [&](const Vec3 &vecViewAngle, const Vec3 &vecAimAngle) -> float
+	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float
 	{
 		Vec3 vecAngle = Vec3();
 		Math::AngleVectors(vecViewAngle, &vecAngle);
@@ -76,7 +76,7 @@ void CSpyWarning::Run()
 {
 	static bool bAnnounce = false;
 
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (!ShouldRun(pLocal))
 			return;
@@ -85,7 +85,7 @@ void CSpyWarning::Run()
 
 		m_vecSpies.clear();
 
-		for (const auto &pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost())
 				continue;
@@ -139,7 +139,7 @@ void CSpyWarning::Run()
 			static const int size = 40;
 			g_Draw.Texture(((g_ScreenSize.w / 2) - (size / 2)), (((g_ScreenSize.h / 2) - 100) - (size / 2)), size, size, Colors::White, 8);
 
-			for (const auto &Spy : m_vecSpies)
+			for (const auto& Spy : m_vecSpies)
 				DrawArrowTo(vLocalPos, Spy);
 		}
 

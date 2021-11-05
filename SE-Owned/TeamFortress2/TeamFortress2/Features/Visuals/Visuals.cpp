@@ -49,6 +49,20 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
+void CVisuals::BigHeads(float headSize, float torsoSize, float handSize)
+{
+	if (Vars::ESP::Players::Funnybodypartslol.m_Var) {
+		for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+			float* headScale = Player->GetHeadScale();
+			float* torsoScale = Player->GetTorsoScale();
+			float* handScale = Player->GetHandScale();
+			*headScale = headSize;
+			*torsoScale = torsoSize;
+			*handScale = handSize;
+		}
+	}
+}
+
 bool CVisuals::RemoveScope(int nPanel)
 {
 	if (!m_nHudZoom && Hash::IsHudScope(g_Interfaces.Panel->GetName(nPanel)))

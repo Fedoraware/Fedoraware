@@ -410,7 +410,7 @@ void CMisc::SteamRPC()
 		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
 		break;
 	case 1:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "ChadAlphaMales.club");
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
 		break;
 	case 2:
 		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");

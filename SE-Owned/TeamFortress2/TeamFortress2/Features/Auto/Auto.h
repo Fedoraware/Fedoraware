@@ -4,7 +4,7 @@
 class CAuto
 {
 private:
-	bool ShouldRun(CBaseEntity *pLocal);
+	bool ShouldRun(CBaseEntity* pLocal);
 
 public:
 	void Run(CUserCmd* pCmd);

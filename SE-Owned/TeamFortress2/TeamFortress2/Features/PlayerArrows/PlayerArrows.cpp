@@ -1,7 +1,7 @@
 #include "PlayerArrows.h"
 #include "../Vars.h"
 
-bool CPlayerArrows::ShouldRun(CBaseEntity *pLocal)
+bool CPlayerArrows::ShouldRun(CBaseEntity* pLocal)
 {
 	if (!Vars::Visuals::OutOfFOVArrows.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
 		return false;
@@ -15,10 +15,10 @@ bool CPlayerArrows::ShouldRun(CBaseEntity *pLocal)
 	return true;
 }
 
-void CPlayerArrows::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos, Color_t color)
+void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Color_t color)
 {
 	color.a = 150;
-	auto GetClockwiseAngle = [&](const Vec3 &vecViewAngle, const Vec3 &vecAimAngle) -> float
+	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float
 	{
 		Vec3 vecAngle = Vec3();
 		Math::AngleVectors(vecViewAngle, &vecAngle);
@@ -67,7 +67,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos, Co
 
 	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
 	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var, Vars::Visuals::MinDist.m_Var, 0.0f, 1.0f), 0.0f, 1.0f);
-	Color_t HeatColor = color; 
+	Color_t HeatColor = color;
 	HeatColor.a = static_cast<byte>(fMap * 255.0f);
 
 	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);

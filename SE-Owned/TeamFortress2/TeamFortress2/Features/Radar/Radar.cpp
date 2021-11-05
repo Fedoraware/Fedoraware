@@ -107,7 +107,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
 	m_vLocalOrigin = pLocal->GetAbsOrigin();
 	m_flLocalYaw = g_Interfaces.Engine->GetViewAngles().y * (PI / 180.0f),
-	m_flRange = static_cast<float>(Vars::Radar::Main::Range.m_Var);
+		m_flRange = static_cast<float>(Vars::Radar::Main::Range.m_Var);
 	m_flLocalCos = cos(m_flLocalYaw), m_flLocalSin = sin(m_flLocalYaw);
 
 	if (Vars::Radar::World::Active.m_Var)
@@ -144,7 +144,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	if (Vars::Radar::Buildings::Active.m_Var)
 	{
 		const auto Buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.m_Var ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL);
-		
+
 		for (const auto& Building : Buildings)
 		{
 			if (const auto& pObject = reinterpret_cast<CBaseObject*>(Building))
@@ -162,39 +162,39 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 					switch (pObject->GetClassID())
 					{
-						case ETFClassID::CObjectSentrygun:
-						{
-							int nTexture = (pObject->GetLevel() + 40);
+					case ETFClassID::CObjectSentrygun:
+					{
+						int nTexture = (pObject->GetLevel() + 40);
 
-							if (Vars::Radar::Buildings::Outline.m_Var)
-								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
+						if (Vars::Radar::Buildings::Outline.m_Var)
+							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 
-							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
-							break;
-						}
-						case ETFClassID::CObjectDispenser:
-						{
-							if (Vars::Radar::Buildings::Outline.m_Var)
-								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, 44);
+						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
+						break;
+					}
+					case ETFClassID::CObjectDispenser:
+					{
+						if (Vars::Radar::Buildings::Outline.m_Var)
+							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, 44);
 
-							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, 44);
-							break;
-						}
-						case ETFClassID::CObjectTeleporter:
-						{
-							int nTexture = 46; //Exit texture ID
+						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, 44);
+						break;
+					}
+					case ETFClassID::CObjectTeleporter:
+					{
+						int nTexture = 46; //Exit texture ID
 
-							//If "m_flYawToExit" is not zero, it most like is an entrance
-							if (pObject->GetYawToExit())
-								nTexture -= 1; //In that case, -1 from "nTexture" so we get entrace texture ID
+						//If "m_flYawToExit" is not zero, it most like is an entrance
+						if (pObject->GetYawToExit())
+							nTexture -= 1; //In that case, -1 from "nTexture" so we get entrace texture ID
 
-							if (Vars::Radar::Buildings::Outline.m_Var)
-								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
+						if (Vars::Radar::Buildings::Outline.m_Var)
+							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 
-							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
-							break;
-						}
-						default: break;
+						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
+						break;
+					}
+					default: break;
 					}
 
 					if (Vars::Radar::Buildings::Health.m_Var)
@@ -228,18 +228,18 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 			switch (Vars::Radar::Players::IgnoreCloaked.m_Var)
 			{
-				case 0: { break; }
-				case 1: { if (Player->IsCloaked()) { continue; } break; }
-				case 2: { if (Player->IsCloaked() && nEntTeam != nLocalTeam) { continue; } break; }
+			case 0: { break; }
+			case 1: { if (Player->IsCloaked()) { continue; } break; }
+			case 2: { if (Player->IsCloaked() && nEntTeam != nLocalTeam) { continue; } break; }
 			}
 
 			bool bIsFriend = g_EntityCache.Friends[Player->GetIndex()];
 
 			switch (Vars::Radar::Players::IgnoreTeam.m_Var)
 			{
-				case 0: { break; }
-				case 1: { if (nEntTeam == nLocalTeam) { continue; } break; }
-				case 2: { if (nEntTeam == nLocalTeam && !bIsFriend) { continue; } break; }
+			case 0: { break; }
+			case 1: { if (nEntTeam == nLocalTeam) { continue; } break; }
+			case 2: { if (nEntTeam == nLocalTeam && !bIsFriend) { continue; } break; }
 			}
 
 			int nX = -1, nY = -1;
@@ -322,7 +322,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					float flRatio = (flHealth / flMaxHealth);
 
 					g_Draw.Rect(((nX - nWidth) - 1), nY, nWidth, nSize, Colors::OutlineESP);
-					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize* flRatio), clrHealth);
+					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize * flRatio), clrHealth);
 
 					if (flOverHeal > 0.0f)
 					{
@@ -359,8 +359,8 @@ void CRadar::DragRadar()
 		mousey < (m_nRadarY - m_nRadarSize)) && bHeld)
 	{
 		m_bDrag = true;
-		
-		if (!m_bMove) 
+
+		if (!m_bMove)
 		{
 			pCorrect.x = mousex - m_nRadarX;
 			pCorrect.y = mousey - (m_nRadarY - m_nRadarSize);
@@ -370,7 +370,7 @@ void CRadar::DragRadar()
 
 	if (m_bDrag)
 	{
-		m_nRadarX = (mousex + m_nRadarSize) - (m_nRadarSize) - pCorrect.x;
+		m_nRadarX = (mousex + m_nRadarSize) - (m_nRadarSize)-pCorrect.x;
 		m_nRadarY = (mousey + m_nRadarSize) - pCorrect.y;
 	}
 

@@ -4,7 +4,7 @@
 class CAimbot
 {
 private:
-	bool ShouldRun(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon);
+	bool ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 
 public:
 	void Run(CUserCmd* pCmd);

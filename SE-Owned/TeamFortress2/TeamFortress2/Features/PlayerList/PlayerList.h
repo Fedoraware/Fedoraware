@@ -3,19 +3,19 @@
 
 struct plistPlayer
 {
-  PlayerInfo_t info;
-  Color_t color;
-  int teamNum;
-  int index;
+	PlayerInfo_t info;
+	Color_t color;
+	int teamNum;
+	int index;
 };
 
 class CPlayerList
 {
 public:
-  bool showWindow;
-  void GetPlayers();
-  void Render();
-  std::vector<plistPlayer> players;
+	bool showWindow;
+	void GetPlayers();
+	void Render();
+	std::vector<plistPlayer> players;
 };
 
 inline CPlayerList g_PlayerList;

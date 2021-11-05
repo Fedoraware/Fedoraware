@@ -22,7 +22,7 @@ void CESP::Run()
 	}
 }
 
-bool CESP::GetDrawBounds(CBaseEntity *pEntity, Vec3* vTrans, int &x, int &y, int &w, int &h)
+bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h)
 {
 	int n;
 	bool bIsPlayer = false;
@@ -44,7 +44,7 @@ bool CESP::GetDrawBounds(CBaseEntity *pEntity, Vec3* vTrans, int &x, int &y, int
 
 	const matrix3x4& transform = pEntity->GetRgflCoordinateFrame();
 
-	Vec3 vPoints[] = 
+	Vec3 vPoints[] =
 	{
 		Vec3(vMins.x, vMins.y, vMins.z),
 		Vec3(vMins.x, vMaxs.y, vMins.z),
@@ -111,12 +111,12 @@ bool CESP::GetDrawBounds(CBaseEntity *pEntity, Vec3* vTrans, int &x, int &y, int
 	return false;
 }
 
-void CESP::DrawPlayers(CBaseEntity *pLocal)
+void CESP::DrawPlayers(CBaseEntity* pLocal)
 {
 	if (!Vars::ESP::Players::Active.m_Var)
 		return;
 
-	for (const auto &Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+	for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!Player->IsAlive() || Player->IsAGhost())
 			continue;
@@ -128,16 +128,16 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 		{
 			switch (Vars::ESP::Players::IgnoreCloaked.m_Var)
 			{
-				case 0: { break; }
-				case 1: { if (Player->IsCloaked()) { continue; } break; }
-				case 2: { if (Player->IsCloaked() && Player->GetTeamNum() != pLocal->GetTeamNum()) { continue; } break; }
+			case 0: { break; }
+			case 1: { if (Player->IsCloaked()) { continue; } break; }
+			case 2: { if (Player->IsCloaked() && Player->GetTeamNum() != pLocal->GetTeamNum()) { continue; } break; }
 			}
 
 			switch (Vars::ESP::Players::IgnoreTeammates.m_Var)
 			{
-				case 0: break;
-				case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
-				case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[nIndex]) { continue; } break; }
+			case 0: break;
+			case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
+			case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[nIndex]) { continue; } break; }
 			}
 		}
 
@@ -159,12 +159,12 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
 			size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
-				   FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME);
+				FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME);
 
 			int nTextX = ((x + w) + 3), nTextOffset = 0, nClassNum = Player->GetClassNum();
 
 			if (Vars::ESP::Players::Uber.m_Var == 2 && nClassNum == ETFClass::CLASS_MEDIC) {
-				if (const auto &pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
+				if (const auto& pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
 					nTextX += 5;
 			}
 
@@ -174,36 +174,36 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 			{
 				const Color_t clrBone = Vars::ESP::Players::Bones.m_Var == 1 ? Colors::Bones : HealthColor;
 
-				DrawBones(Player, { 8, 7, 6, 4 },	clrBone);
+				DrawBones(Player, { 8, 7, 6, 4 }, clrBone);
 				DrawBones(Player, { 11, 10, 9, 4 }, clrBone);
-				DrawBones(Player, { 0, 4, 1 },		clrBone);
-				DrawBones(Player, { 14, 13, 1 },	clrBone);
-				DrawBones(Player, { 17, 16, 1 },	clrBone);
+				DrawBones(Player, { 0, 4, 1 }, clrBone);
+				DrawBones(Player, { 14, 13, 1 }, clrBone);
+				DrawBones(Player, { 17, 16, 1 }, clrBone);
 			}
 
 			switch (Vars::ESP::Players::Box.m_Var) {
-				case 1: {
-					int height = (h + 1); //don't ask me /shrug
+			case 1: {
+				int height = (h + 1); //don't ask me /shrug
 
-					g_Draw.OutlinedRect(x, y, w, height, DrawColor);
-					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
+				g_Draw.OutlinedRect(x, y, w, height, DrawColor);
+				if (Vars::ESP::Main::Outline.m_Var == 2)
+					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
 
-					break;
-				}
-				case 2: {
-					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
-					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+				break;
+			}
+			case 2: {
+				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
+				if (Vars::ESP::Main::Outline.m_Var == 2)
+					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
 
-					break;
-				}
-				case 3: {
-					Draw3DBox(vTrans, DrawColor);
-					break;
-				}
-				default:
-					break;
+				break;
+			}
+			case 3: {
+				Draw3DBox(vTrans, DrawColor);
+				break;
+			}
+			default:
+				break;
 			}
 
 			if (Vars::ESP::Players::Lines.m_Var)
@@ -352,14 +352,14 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 	}
 }
 
-void CESP::DrawBuildings(CBaseEntity *pLocal)
+void CESP::DrawBuildings(CBaseEntity* pLocal)
 {
 	if (!Vars::ESP::Buildings::Active.m_Var)
 		return;
 
 	const auto Buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.m_Var ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL);
 
-	for (const auto &pBuilding : Buildings)
+	for (const auto& pBuilding : Buildings)
 	{
 		if (!pBuilding->IsAlive())
 			continue;
@@ -375,45 +375,45 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 		if (GetDrawBounds(Building, vTrans, x, y, w, h))
 		{
 			auto nHealth = Building->GetHealth(), nMaxHealth = Building->GetMaxHealth(),
-				 nTextX = ((x + w) + 3), nTextOffset = 0, nTextTopOffset = 0;
+				nTextX = ((x + w) + 3), nTextOffset = 0, nTextTopOffset = 0;
 
 			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
 			auto nType = EBuildingType(Building->GetType());
 
-			size_t FONT      = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
-				   FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME),
-				   FONT_COND = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_COND_OUTLINED : FONT_ESP_COND);
+			size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
+				FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME),
+				FONT_COND = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_COND_OUTLINED : FONT_ESP_COND);
 
 			bool bIsMini = Building->GetMiniBuilding();
 
 			g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.m_Var);
 
 			switch (Vars::ESP::Buildings::Box.m_Var) {
-				case 1: {
-					h += 1;
+			case 1: {
+				h += 1;
 
-					g_Draw.OutlinedRect(x, y, w, h, DrawColor);
+				g_Draw.OutlinedRect(x, y, w, h, DrawColor);
 
-					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (h + 2), Colors::OutlineESP);
+				if (Vars::ESP::Main::Outline.m_Var == 2)
+					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (h + 2), Colors::OutlineESP);
 
-					h -= 1;
-					break;
-				}
-				case 2: {
-					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
+				h -= 1;
+				break;
+			}
+			case 2: {
+				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
 
-					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
-					break;
-				}
-				case 3: {
-					Draw3DBox(vTrans, DrawColor);
-					break;
-				}
-				default:
-					break;
+				if (Vars::ESP::Main::Outline.m_Var == 2)
+					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+				break;
+			}
+			case 3: {
+				Draw3DBox(vTrans, DrawColor);
+				break;
+			}
+			default:
+				break;
 			}
 
 			if (Vars::ESP::Buildings::Lines.m_Var)
@@ -433,32 +433,32 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 
 				switch (nType)
 				{
-					case EBuildingType::SENTRY:
+				case EBuildingType::SENTRY:
+				{
+					if (bIsMini)
 					{
-						if (bIsMini)
-						{
-							szName = _(L"Mini Sentry");
-							break;
-						}
+						szName = _(L"Mini Sentry");
+						break;
+					}
 
-						szName = _(L"Sentry");
-						break;
-					}
-					case EBuildingType::DISPENSER:
-					{
-						szName = _(L"Dispenser");
-						break;
-					}
-					case EBuildingType::TELEPORTER:
-					{
-						szName = _(L"Teleporter");
-						break;
-					}
-					default:
-					{
-						szName = _(L"Unknown");
-						break;
-					}
+					szName = _(L"Sentry");
+					break;
+				}
+				case EBuildingType::DISPENSER:
+				{
+					szName = _(L"Dispenser");
+					break;
+				}
+				case EBuildingType::TELEPORTER:
+				{
+					szName = _(L"Teleporter");
+					break;
+				}
+				default:
+				{
+					szName = _(L"Unknown");
+					break;
+				}
 				}
 
 				nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
@@ -563,15 +563,15 @@ void CESP::DrawWorld()
 {
 	if (!Vars::ESP::World::Active.m_Var)
 		return;
-	
+
 	Vec3 vScreen = {};
 	size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_PICKUPS_OUTLINED : FONT_ESP_COND);
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
 
-	if (Vars::ESP::World::HealthText.m_Var) 
+	if (Vars::ESP::World::HealthText.m_Var)
 	{
-		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH)) 
+		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
 			if (Utils::W2S(Health->GetWorldSpaceCenter(), vScreen))
 				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"HEALTH"));
@@ -669,7 +669,7 @@ const wchar_t* CESP::GetPlayerClass(int nClassNum)
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
 }
 
-void CESP::CreateDLight(int nIndex, Color_t DrawColor, const Vec3 &vOrigin, float flRadius)
+void CESP::CreateDLight(int nIndex, Color_t DrawColor, const Vec3& vOrigin, float flRadius)
 {
 	auto pLight = g_Interfaces.EngineEffects->CL_AllocDlight(nIndex);
 	pLight->m_flDie = g_Interfaces.Engine->Time() + 0.5f;

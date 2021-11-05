@@ -2,7 +2,7 @@
 
 #include "../../Features/Vars.h"
 
-void __cdecl GetDrawPositionHook::Hook(float *pX, float *pY, bool *pbBehindCamera, Vec3 angleCrosshairOffset)
+void __cdecl GetDrawPositionHook::Hook(float* pX, float* pY, bool* pbBehindCamera, Vec3 angleCrosshairOffset)
 {
 	if (Vars::Visuals::CrosshairAimPos.m_Var && !g_GlobalInfo.m_vAimPos.IsZero())
 	{

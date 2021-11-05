@@ -3,14 +3,14 @@
 
 bool bDrawing = false;
 
-void __fastcall DrawStaticPropsHook::Hook(void *ecx, void *edx, IClientRenderable **pProps, int count, bool bShadowDepth, bool drawVCollideWireframe)
+void __fastcall DrawStaticPropsHook::Hook(void* ecx, void* edx, IClientRenderable** pProps, int count, bool bShadowDepth, bool drawVCollideWireframe)
 {
 	bDrawing = true;
 	Func.Original<fn>()(ecx, edx, pProps, count, bShadowDepth, drawVCollideWireframe);
 	bDrawing = false;
 }
 
-void __fastcall SetColorModulationHook::Hook(void *ecx, void *edx, float const *pColor)
+void __fastcall SetColorModulationHook::Hook(void* ecx, void* edx, float const* pColor)
 {
 	float custom[3] = {
 		Color::TOFLOAT(Colors::StaticPropModulation.r),

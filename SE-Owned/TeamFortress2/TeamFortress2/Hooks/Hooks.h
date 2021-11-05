@@ -19,7 +19,8 @@
 #include "Reset/Reset.h"
 #include "Scoreboard/Scoreboard.h"
 #include "InputHook/InputHook.h"
-
+#include "GameMovementHook/GameMovementHook.h"
+#include "FireBullets/FireBullets.h"
 class CHooks
 {
 private:

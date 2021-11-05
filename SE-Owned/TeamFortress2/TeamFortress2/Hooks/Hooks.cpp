@@ -12,6 +12,8 @@ void CHooks::Init()
 		EndSceneHook::Init();
 		//Scoreboard::KeyValues::Init();
 		Scoreboard::IsPlayerDominated::Init();
+		ResetHook::Init();
+		FireBullets::Init();
 	}
 
 	if (g_Interfaces.Client)
@@ -40,6 +42,13 @@ void CHooks::Init()
 		using namespace InputHook;
 		Table.Init(g_Interfaces.Input);
 		Table.Hook(GetUserCmd::index, &GetUserCmd::Hook);
+	}
+
+	if (g_Interfaces.GameMovement)
+	{
+		using namespace GameMovement;
+		Table.Init(g_Interfaces.GameMovement);
+		Table.Hook(ProcessMovement::index, &ProcessMovement::Hook);
 	}
 
 	if (g_Interfaces.Prediction)

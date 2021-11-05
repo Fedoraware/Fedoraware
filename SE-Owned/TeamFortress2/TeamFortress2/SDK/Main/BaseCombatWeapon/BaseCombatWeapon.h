@@ -7,7 +7,7 @@
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars
-		M_DYNVARGET(Clip1, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip1"))
+	M_DYNVARGET(Clip1, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip1"))
 		M_DYNVARGET(Clip2, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip2"))
 		M_DYNVARGET(ItemDefIndex, int, this, _("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"))
 		M_DYNVARGET(ChargeBeginTime, float, this, _("DT_WeaponPipebombLauncher"), _("PipebombLauncherLocalData"), _("m_flChargeBeginTime"))
@@ -39,10 +39,10 @@ public: //Netvars
 
 public: //Virtuals
 	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 377)
-	M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 327)
-	M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 378)
-	M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
-	M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3&(__thiscall*)(void*), 286)
+		M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 327)
+		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 378)
+		M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
+		M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3& (__thiscall*)(void*), 286)
 
 public: //Everything else, lol
 	__inline float GetSmackTime() {
@@ -97,6 +97,17 @@ public: //Everything else, lol
 	__inline bool DoSwingTrace(CGameTrace& Trace) {
 		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 453)(Trace);
 	}
+
+	__inline int LookupAttachment(const char* pAttachmentName)
+	{
+		const auto pRend = Renderable();
+		return GetVFunc<int(__thiscall*)(void*, const char*)>(pRend, 35)(pRend, pAttachmentName);
+	}
+
+	__inline bool GetAttachment(int number, Vec3& origin) {
+		return GetVFunc<bool(__thiscall*)(void*, int, Vec3&)>(this, 71)(this, number, origin);
+	}
+
 
 	__inline bool CanFireCriticalShot(const bool bHeadShot) {
 		bool bResult = false;
@@ -184,7 +195,7 @@ public: //Everything else, lol
 		typedef void(__thiscall* EstimateAbsVelocityFn)(decltype(this), CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float);
 		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? F3 0F 10 46 ? F3 0F 5C 05 ? ? ? ? F3 0F 11 46 ? 5E 5D C2 20 00")) + 0x1;
 		static DWORD dwOffset = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
-		EstimateAbsVelocityFn fn = (EstimateAbsVelocityFn)dwOffset;	
+		EstimateAbsVelocityFn fn = (EstimateAbsVelocityFn)dwOffset;
 		fn(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
@@ -193,7 +204,7 @@ public: //Everything else, lol
 		typedef bool (*fn_t)(CBaseEntity*);
 		return GetVFunc<fn_t>(pWeapon, 461, 0)(pWeapon);
 	}
-	
+
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)
 	{
 		typedef bool (*fn_t)(CBaseEntity*);
@@ -215,7 +226,7 @@ public: //Everything else, lol
 	}
 
 	__inline int GetMinigunState() {
-		return *reinterpret_cast<int *>(this + 0xC48);
+		return *reinterpret_cast<int*>(this + 0xC48);
 	}
 };
 
@@ -269,7 +280,7 @@ public:
 		DYNVAR_SET(bool, pWeapon, weapon_mode, 0xA38);
 		DYNVAR_SET(bool, pWeapon, weapon_data, 0xA38);*/
 
-		*(float*)((uintptr_t)pWeapon + 0xa38) = crit_bucket;
+		* (float*)((uintptr_t)pWeapon + 0xa38) = crit_bucket;
 		*(unsigned int*)((uintptr_t)pWeapon + 0xb3c) = weapon_seed;
 		*(unsigned int*)((uintptr_t)pWeapon + 0xb30) = unknown1;
 		*(unsigned int*)((uintptr_t)pWeapon + 0xb34) = unknown2;

@@ -1059,6 +1059,13 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								}
 
 							}
+
+							if (ImGui::CollapsingHeader(_("Body part scales"))) {
+								ImGui::Checkbox(_("Body part scales switch"), &Vars::ESP::Players::Funnybodypartslol.m_Var);
+								ImGui::PushItemWidth(100); ImGui::SliderFloat(_("Head scale"), &Vars::ESP::Players::Headscale.m_Var, -180.f, 180.f, _("%.0f"), 1.0f); ImGui::PopItemWidth(); HelpMarker(_("How many degrees the aimbot's FoV will have"));
+								ImGui::PushItemWidth(100); ImGui::SliderFloat(_("Body scale"), &Vars::ESP::Players::Torsoscale.m_Var, -180.0f, 180.f, _("%.0f"), 1.0f); ImGui::PopItemWidth(); HelpMarker(_("How many degrees the aimbot's FoV will have"));
+								ImGui::PushItemWidth(100); ImGui::SliderFloat(_("Hand scale"), &Vars::ESP::Players::Handscale.m_Var, -180.0f, 180.f, _("%.0f"), 1.0f); ImGui::PopItemWidth(); HelpMarker(_("How many degrees the aimbot's FoV will have"));
+							}
 						}
 						ImGui::NextColumn();
 						{

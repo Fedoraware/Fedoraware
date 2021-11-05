@@ -18,22 +18,22 @@ public:
 	void Init();
 
 private:
-	void populate_nodes(class RecvTable *recv_table, map_type *map);
+	void populate_nodes(class RecvTable* recv_table, map_type* map);
 
-	DWORD get_offset_recursive(map_type &map, int acc, const char *name) {
+	DWORD get_offset_recursive(map_type& map, int acc, const char* name) {
 		return acc + map[name]->offset;
 	}
 
 	template<typename ...args_t>
-	DWORD get_offset_recursive(map_type &map, int acc, const char *name, args_t ...args) {
-		const auto &node = map[name];
+	DWORD get_offset_recursive(map_type& map, int acc, const char* name, args_t ...args) {
+		const auto& node = map[name];
 		return get_offset_recursive(node->nodes, acc + node->offset, args...);
 	}
 
 public:
 	template<typename ...args_t>
-	DWORD get_offset(const char *name, args_t ...args) {
-		const auto &node = nodes[name];
+	DWORD get_offset(const char* name, args_t ...args) {
+		const auto& node = nodes[name];
 		return get_offset_recursive(node->nodes, node->offset, args...);
 	}
 };

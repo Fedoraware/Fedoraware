@@ -145,6 +145,8 @@
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\FireBullets\FireBullets.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Hooks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InCondHook\InCondHook.cpp" />
@@ -238,6 +240,8 @@
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\FireBullets\FireBullets.h" />
+    <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
     <ClInclude Include="TeamFortress2\Hooks\InCondHook\InCondHook.h" />

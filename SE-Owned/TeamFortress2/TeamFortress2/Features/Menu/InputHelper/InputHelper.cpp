@@ -21,12 +21,12 @@ void CInputHelper::Update()
 
 bool CInputHelper::IsPressed(int16_t key)
 {
-    return (keys[key] == PRESSED);
+	return (keys[key] == PRESSED);
 }
 
 bool CInputHelper::IsHeld(int16_t key)
 {
-    return (keys[key] == HELD);
+	return (keys[key] == HELD);
 }
 
 bool CInputHelper::IsPressedAndHeld(int16_t key)
@@ -48,14 +48,14 @@ bool CInputHelper::IsPressedAndHeld(int16_t key)
 	return false;
 }
 
-void CInputHelper::Drag(int mousex, int mousey, int &x, int &y, int w, int h, int offsety)
+void CInputHelper::Drag(int mousex, int mousey, int& x, int& y, int w, int h, int offsety)
 {
 	static POINT delta;
 	static bool drag = false;
 	static bool move = false;
 	bool held = IsHeld(VK_LBUTTON);
 
-	if ((mousex > x && mousex < x + w && mousey > y - offsety && mousey < y - offsety + h) && held) 
+	if ((mousex > x && mousex < x + w && mousey > y - offsety && mousey < y - offsety + h) && held)
 	{
 		drag = true;
 

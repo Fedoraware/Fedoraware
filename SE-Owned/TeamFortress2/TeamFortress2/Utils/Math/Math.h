@@ -195,6 +195,10 @@ public:
 		x = X; y = Y; z = Z;
 	}
 
+	__forceinline void Clear() {
+		x = y = z = 0.f;
+	}
+
 	Vec3(float* v)
 	{
 		x = v[0]; y = v[1]; z = v[2];

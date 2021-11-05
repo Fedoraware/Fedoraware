@@ -11,6 +11,6 @@ bool __stdcall EngineClientHook::IsPlayingTimeDemo::Hook()
 		if (reinterpret_cast<DWORD>(_ReturnAddress()) == (dwInterpolateServerEntities + 0xB8))
 			return true;
 	}
-	
+
 	return Table.Original<fn>(index)(g_Interfaces.Engine);
 }

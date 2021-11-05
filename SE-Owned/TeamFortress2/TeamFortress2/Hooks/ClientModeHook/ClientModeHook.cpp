@@ -13,6 +13,54 @@
 #include "../../Features/Vars.h"
 #include "../../Features/Menu/Menu.h"
 
+void AngleVectors2(const QAngle& angles, Vector* forward)
+{
+	float sp, sy, cp, cy;
+
+	Math::SinCos(DEG2RAD(angles.x), &sy, &cy);
+	Math::SinCos(DEG2RAD(angles.y), &sp, &cp);
+
+	forward->x = cp * cy;
+	forward->y = cp * sy;
+	forward->z = -sp;
+}
+
+void FastStop(CUserCmd* pCmd)
+{
+	// Get velocity
+	Vector vel = g_EntityCache.m_pLocal->GetVelocity();
+	//velocity::EstimateAbsVelocity(RAW_ENT(LOCAL_E), vel);
+
+	static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
+	static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
+
+	auto speed = vel.Lenght2D();
+	auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(g_EntityCache.m_pLocal + 0x12b8);
+	auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
+	auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
+
+	if (speed > drop - 1.0f)
+	{
+		Vector velocity = vel;
+		Vector direction;
+		Math::VectorAngles(vel, direction);
+		float speed = velocity.Lenght();
+
+		direction.y = pCmd->viewangles.y - direction.y;
+
+		Vector forward;
+		AngleVectors2(direction, &forward);
+		Vector negated_direction = forward * -speed;
+
+		pCmd->forwardmove = negated_direction.x;
+		pCmd->sidemove = negated_direction.y;
+	}
+	else
+	{
+		pCmd->forwardmove = pCmd->sidemove = 0.0f;
+	}
+}
+
 void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
@@ -31,7 +79,7 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
 }
 
-static void updateAntiAfk(CUserCmd *pCmd)
+static void updateAntiAfk(CUserCmd* pCmd)
 {
 	if (Vars::Misc::AntiAFK.m_Var && g_ConVars.afkTimer->GetInt() != 0) {
 		static float last_time = 0.0f;
@@ -112,21 +160,21 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	updateAntiAfk(pCmd);
 
 	if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var) {
-    	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-        	if (!pLocal->IsAlive() && g_GlobalInfo.m_nShifted) {
-            	g_GlobalInfo.m_bRecharging = true;
-        	}
+		if (const auto& pLocal = g_EntityCache.m_pLocal) {
+			if (!pLocal->IsAlive() && g_GlobalInfo.m_nShifted) {
+				g_GlobalInfo.m_bRecharging = true;
+			}
 		}
-    }
+	}
 
 	if (Vars::Misc::CL_Move::AutoRecharge.m_Var) {
 		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
 				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f
-					&&	!(
-							pCmd->buttons = 0
+					&& !(
+						pCmd->buttons = 0
 						)
-					) 
+					)
 				{
 					g_GlobalInfo.m_bRecharging = true;
 				}
@@ -162,6 +210,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		pCmd->viewangles = ang;
 	}
 
+	if (g_GlobalInfo.m_bShouldShift) {
+		FastStop(pCmd);
+	}
+
 	g_Misc.Run(pCmd);
 	g_Crits.Tick(pCmd);
 	g_EnginePrediction.Start(pCmd);
@@ -191,11 +243,11 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				*pSendPacket = true;
 			}
 			/*if (Vars::Misc::CL_Move::Fakelag.m_Var) {
-				//*pSendPacket = 
+				//*pSendPacket =
 			}*/
 			/*if (Vars::Misc::CL_Move::Fakelag.m_Var) {
-				*pSendPacket = ((g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) || 
-				(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) && pLocal->IsAlive() ? Vars::Misc::CL_Move::FakelagOnKey.m_Var && 
+				*pSendPacket = ((g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) ||
+				(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) && pLocal->IsAlive() ? Vars::Misc::CL_Move::FakelagOnKey.m_Var &&
 				GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) ? false : false : true;
 			}*/
 		}
@@ -233,9 +285,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
-		if (g_GlobalInfo.m_bShouldShift) {
+		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
 			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
 			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+		}
+		else {
+			return;
 		}
 	};
 
@@ -244,7 +299,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
-		if (const auto &pLocal = g_EntityCache.m_pLocal)
+		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
 			if (pLocal->IsTaunting())
 			{
@@ -314,7 +369,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Chams/Chams.h"
 
-bool __stdcall ClientModeHook::DoPostScreenSpaceEffects::Hook(const CViewSetup *pSetup)
+bool __stdcall ClientModeHook::DoPostScreenSpaceEffects::Hook(const CViewSetup* pSetup)
 {
 	g_Chams.Render();
 	g_Glow.Render();

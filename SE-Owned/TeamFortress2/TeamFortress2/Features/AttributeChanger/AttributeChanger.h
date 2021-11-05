@@ -38,7 +38,7 @@ private:
 	void SetAttribute();
 	void SaveConfig();
 	void LoadConfig();
-	
+
 	std::map<int, AttributeInfo_t> m_mapAttributes;
 
 	std::wifstream m_Read;

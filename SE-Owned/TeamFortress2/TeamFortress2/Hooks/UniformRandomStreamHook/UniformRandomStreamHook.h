@@ -9,7 +9,7 @@ namespace UniformRandomStreamHook
 	namespace RandInt
 	{
 		const int index = 2;
-		using fn = int(__thiscall *)(IUniformRandomStream *, int, int);
+		using fn = int(__thiscall*)(IUniformRandomStream*, int, int);
 		int __stdcall Hook(int iMinVal, int iMaxVal);
 	}
 }

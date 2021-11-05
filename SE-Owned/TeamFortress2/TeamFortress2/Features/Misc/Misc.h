@@ -5,19 +5,19 @@
 class CMisc
 {
 private:
-	void AutoJump(CUserCmd *pCmd);
+	void AutoJump(CUserCmd* pCmd);
 	void AutoStrafe(CUserCmd* pCmd);
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
-	bool steamCleared = false;	
+	bool steamCleared = false;
 
 public:
-	void Run(CUserCmd *pCmd);
+	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
 	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
-	void AutoRocketJump(CUserCmd *pCmd);
+	void AutoRocketJump(CUserCmd* pCmd);
 	void NoPush();
 	void SteamRPC();
 	std::vector<std::string> strings;
@@ -45,7 +45,7 @@ private:
 public:
 	Notify() : m_notify_text{} {}
 
-	
+
 	__forceinline void Add(const std::string& text, Color_t color = { 255, 255, 255, 255 }, float time = Vars::Visuals::despawnTime.m_Var) { m_notify_text.push_back(std::make_shared< NotifyText >(text, color, time)); }
 	void Think();
 };

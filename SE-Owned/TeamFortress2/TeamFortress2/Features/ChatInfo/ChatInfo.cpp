@@ -13,6 +13,8 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
 		return;
 
+	static std::string clr({ '\x7', 'F', 'F', 'C', '1', '4', 'B' });
+
 	if (const auto pLocal = g_EntityCache.m_pLocal) {
 		if (Vars::Visuals::ChatInfo.m_Var) {
 			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast")) {
@@ -22,7 +24,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
 					// TODO: Add colors and possibly OTHER TEAM? 
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD] \x3%s voted %s", pi.name, bVotedYes ? "Yes" : "No").c_str());
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
 					if (Vars::Misc::VotesInChat.m_Var) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
 					}
@@ -36,7 +38,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
 
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("\x4[FeD] \x3%s\x1 is now a \x3%s\x1!", pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("%s[FeD] \x3%s\x1 is now a \x3%s\x1!", clr, pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
 				}
 			}
 
@@ -71,7 +73,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_INDICATORS].dwFont, wcattackString, attackStringW, attackStringH);
 
 				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var)
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("\x4[FeD]\x3 %s", attackString.c_str()).c_str());
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]\x3 %s", clr, attackString.c_str()).c_str());
 
 				if (Vars::Visuals::damageLogger.m_Var == 2)
 					g_notify.Add(attackString);
@@ -88,9 +90,10 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 			PlayerInfo_t info;
 			if (g_Interfaces.Engine->GetPlayerInfo(player, &info) && (achievement == 0xCA7 || achievement == 0xCA8) && pLocal->GetIndex() != player) {
 				if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
+					g_notify.Add(tfm::format("%s is a bot!", info.name));
 					if (Vars::Visuals::ChatInfo.m_Var)
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(player, tfm::format("\x4[FeD] \x3 %s\x1 is a bot!", info.name).c_str());
-					
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(player, tfm::format("%s[FeD] \x3 %s\x1 is a bot!", clr, info.name).c_str());
+
 					{ // marked by other bots. r.i.p cl_drawline :(
 						// this will be detected by fedoraware and lmaobox easily.
 						// use 0xCA7 if you want to make more bots do the thing,
@@ -101,7 +104,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 							g_Interfaces.Engine->ServerCmdKeyValues(kv);
 						}
 					}
-					
+
 					m_known_bots[info.friendsID] = true;
 				}
 			}
