@@ -279,7 +279,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	// Bless your beautiful soul reestart/kris - someone else
 
 	// This shit doesn't work half of the time too, btw. - jp4
-
+	//fart
 	// THIS SHIT SUUUUUCKS
 
 
