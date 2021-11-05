@@ -14,6 +14,7 @@ void CHooks::Init()
 		Scoreboard::IsPlayerDominated::Init();
 		ResetHook::Init();
 		FireBullets::Init();
+		Viewmodel::Init();
 	}
 
 	if (g_Interfaces.Client)

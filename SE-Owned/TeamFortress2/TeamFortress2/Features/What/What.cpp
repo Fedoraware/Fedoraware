@@ -984,23 +984,30 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 									"Cool",
 									"Energy orb"
 								};
+								const char* unuEffects2[]{
+									"None",
+									"Hot",
+									"Isotope",
+									"Cool",
+									"Energy orb"
+								};
 								ImGui::PushItemWidth(100);
 								if (ImGui::Combo("Unusual effect 1", &unu1, unuEffects, IM_ARRAYSIZE(unuEffects))) {
 									switch (unu1) {
 									case 0:
-										Vars::Visuals::Skins::Effect.m_Var = 0;
+										Vars::Visuals::Skins::Particle.m_Var = 0;
 										break;
 									case 1:
-										Vars::Visuals::Skins::Effect.m_Var = 701;
+										Vars::Visuals::Skins::Particle.m_Var = 701;
 										break;
 									case 2:
-										Vars::Visuals::Skins::Effect.m_Var = 702;
+										Vars::Visuals::Skins::Particle.m_Var = 702;
 										break;
 									case 3:
-										Vars::Visuals::Skins::Effect.m_Var = 703;
+										Vars::Visuals::Skins::Particle.m_Var = 703;
 										break;
 									case 4:
-										Vars::Visuals::Skins::Effect.m_Var = 704;
+										Vars::Visuals::Skins::Particle.m_Var = 704;
 										break;
 									default:
 										break;
@@ -1009,7 +1016,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PopItemWidth();
 								HelpMarker("The first unusual effect to be applied to the weapon");
 								ImGui::PushItemWidth(100);
-								if (ImGui::Combo("Unusual effect 2", &unu2, unuEffects, IM_ARRAYSIZE(unuEffects))) {
+								if (ImGui::Combo("Unusual effect 2", &unu2, unuEffects2, IM_ARRAYSIZE(unuEffects2))) {
 									switch (unu2) {
 									case 0:
 										Vars::Visuals::Skins::Effect.m_Var = 0;

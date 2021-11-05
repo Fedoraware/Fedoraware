@@ -21,6 +21,7 @@
 #include "InputHook/InputHook.h"
 #include "GameMovementHook/GameMovementHook.h"
 #include "FireBullets/FireBullets.h"
+#include "Viewmodel/Viewmodel.h"
 class CHooks
 {
 private:

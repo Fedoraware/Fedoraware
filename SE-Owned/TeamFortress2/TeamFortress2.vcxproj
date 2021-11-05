@@ -159,6 +159,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
