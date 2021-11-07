@@ -1,6 +1,7 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
+// radar
 class CRadar
 {
 public:
