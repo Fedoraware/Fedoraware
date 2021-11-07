@@ -27,37 +27,39 @@ void AngleVectors2(const QAngle& angles, Vector* forward)
 
 void FastStop(CUserCmd* pCmd)
 {
-	// Get velocity
-	Vector vel = g_EntityCache.m_pLocal->GetVelocity();
-	//velocity::EstimateAbsVelocity(RAW_ENT(LOCAL_E), vel);
+	if (g_EntityCache.m_pLocal) {
+		// Get velocity
+		Vector vel = g_EntityCache.m_pLocal->GetVelocity();
+		//velocity::EstimateAbsVelocity(RAW_ENT(LOCAL_E), vel);
 
-	static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
-	static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
+		static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
+		static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
 
-	auto speed = vel.Lenght2D();
-	auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(g_EntityCache.m_pLocal + 0x12b8);
-	auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
-	auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
+		auto speed = vel.Lenght2D();
+		auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(g_EntityCache.m_pLocal + 0x12b8);
+		auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
+		auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
 
-	if (speed > drop - 1.0f)
-	{
-		Vector velocity = vel;
-		Vector direction;
-		Math::VectorAngles(vel, direction);
-		float speed = velocity.Lenght();
+		if (speed > drop - 1.0f)
+		{
+			Vector velocity = vel;
+			Vector direction;
+			Math::VectorAngles(vel, direction);
+			float speed = velocity.Lenght();
 
-		direction.y = pCmd->viewangles.y - direction.y;
+			direction.y = pCmd->viewangles.y - direction.y;
 
-		Vector forward;
-		AngleVectors2(direction, &forward);
-		Vector negated_direction = forward * -speed;
+			Vector forward;
+			AngleVectors2(direction, &forward);
+			Vector negated_direction = forward * -speed;
 
-		pCmd->forwardmove = negated_direction.x;
-		pCmd->sidemove = negated_direction.y;
-	}
-	else
-	{
-		pCmd->forwardmove = pCmd->sidemove = 0.0f;
+			pCmd->forwardmove = negated_direction.x;
+			pCmd->sidemove = negated_direction.y;
+		}
+		else
+		{
+			pCmd->forwardmove = pCmd->sidemove = 0.0f;
+		}
 	}
 }
 
