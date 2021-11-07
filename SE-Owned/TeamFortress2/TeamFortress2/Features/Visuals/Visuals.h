@@ -17,6 +17,7 @@ public:
 	void UpdateSkyModulation();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
+	void TransparentProps();
 	void SkyboxChanger();
 	void BigHeads(float headSize, float torsoSize, float handSize);
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);

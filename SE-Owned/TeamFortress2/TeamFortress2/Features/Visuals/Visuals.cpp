@@ -5,6 +5,32 @@
 typedef bool(_cdecl* LoadNamedSkysFn)(const char*);
 static LoadNamedSkysFn LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
+void CVisuals::TransparentProps()
+{
+	std::vector<IMaterial*> /*world, */props;
+
+	for (uint16_t h{ g_Interfaces.MatSystem->First() }; h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h)) {
+		IMaterial* mat = g_Interfaces.MatSystem->Get(h);
+		if (!mat)
+			continue;
+
+		/*if (mat->GetTextureGroupName() == "World textures") {
+			world.push_back(mat);
+		}*/
+
+		else if (mat->GetTextureGroupName() == "StaticProp textures")
+			props.push_back(mat);
+	}
+
+	if (g_Interfaces.CVars->FindVar(_("r_DrawSpecificStaticProp"))->GetInt() != 0) {
+		g_Interfaces.CVars->FindVar(_("r_DrawSpecificStaticProp"))->SetValue(0);
+	}
+
+	for (const auto& p : props) {
+		p->AlphaModulate(0.85f);
+	}
+}
+
 void CVisuals::SkyboxChanger() {
 	const char* skybNames[] = {
 		"Custom",

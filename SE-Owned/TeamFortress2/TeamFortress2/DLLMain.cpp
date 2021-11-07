@@ -43,7 +43,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	//"mss32.dll" being one of the last modules to be loaded
 	//So wait for that before proceeding, after it's up everything else should be too
 	//Allows us to correctly use autoinject and just start the game.
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll"))) {
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll"))) {
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 	}
 
@@ -53,7 +53,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Glow.Init();
 	g_Chams.Init();
 	g_DMEChams.Init();
-	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();
 	g_Draw.InitFonts

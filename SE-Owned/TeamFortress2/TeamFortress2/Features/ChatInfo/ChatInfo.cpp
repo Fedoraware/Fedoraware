@@ -2,6 +2,7 @@
 
 #include "../Vars.h"
 #include "../Misc/Misc.h"
+#include "../Crits/Crits.h"
 
 int attackStringW;
 int attackStringH;
@@ -64,6 +65,12 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				}
 
 				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
+
+				g_Crits.RoundDamage += nDamage;
+
+				if (bCrit) {
+					g_Crits.CritDamage += (float)nDamage;
+				}
 
 				const auto maxHealth = pEntity->GetMaxHealth();
 				std::string attackString = "You hit " + std::string(pi.guid) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";

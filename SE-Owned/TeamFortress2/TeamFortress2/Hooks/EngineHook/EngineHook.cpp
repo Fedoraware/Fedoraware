@@ -9,14 +9,20 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
+	auto pLocal = g_EntityCache.m_pLocal;
+
 	if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && g_GlobalInfo.m_nShifted >= g_GlobalInfo.dtTicks) {
 		while (g_GlobalInfo.m_nShifted != 0) {
 			g_GlobalInfo.m_nShifted--;
+			if (pLocal)
+				pLocal->DownTickBase();
 			oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 		}
 
 		return;
 	}
+
+
 
 	if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {
 		g_GlobalInfo.m_bRecharging = true;
@@ -24,6 +30,9 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	if (g_GlobalInfo.m_bRecharging && g_GlobalInfo.m_nShifted < g_GlobalInfo.dtTicks) {
 		g_GlobalInfo.m_nShifted++;
 		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+		if (pLocal) 
+			pLocal->UpTickBase();
+		
 		return; // Don't move
 	}
 	else {
@@ -42,7 +51,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift ? true : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 	}
 
-	const auto& pLocal = g_EntityCache.m_pLocal;
+
 
 	if (!pLocal) {
 		return;
@@ -59,6 +68,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 					if (pLocal->IsOnGround()) {
 						g_GlobalInfo.m_nShifted--;
+						if (pLocal)
+							pLocal->DownTickBase();
 						oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
 					}
 					else {
@@ -67,6 +78,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				}
 				else {
 					g_GlobalInfo.m_nShifted--;
+					if (pLocal)
+						pLocal->DownTickBase();
 					oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
 				}
 			}

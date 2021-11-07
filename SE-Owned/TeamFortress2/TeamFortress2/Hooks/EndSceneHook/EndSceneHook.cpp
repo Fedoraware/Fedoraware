@@ -12,6 +12,7 @@ HRESULT __stdcall EndSceneHook::Func(IDirect3DDevice9* pDevice) {
 
 void EndSceneHook::Init()
 {
+	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 42));
 	Hook.Create(reinterpret_cast<void*>(FN), reinterpret_cast<void*>(Func));
 }

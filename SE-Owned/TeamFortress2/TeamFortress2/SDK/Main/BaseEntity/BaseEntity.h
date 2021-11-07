@@ -406,6 +406,10 @@ public: //Everything else, lol.
 		static CDynamicNetvar<int> n(_("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
 		n.SetValue(this, n.GetValue(this) + 1);
 	}
+	__inline void DownTickBase() {
+		static CDynamicNetvar<int> n(_("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
+		n.SetValue(this, n.GetValue(this) - 1);
+	}
 
 	__inline void ClearPunchAngle() { //m_vecPunchAngle
 		*reinterpret_cast<Vec3*>(this + 0xE8C) = Vec3(0.0f, 0.0f, 0.0f);

@@ -5,7 +5,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 {
 	static auto original = Func.Original<fn>();
 
-	if (!Vars::Visuals::BulletTracer.m_Var) {
+	if (!Vars::Visuals::BulletTracer.m_Var || !pWeapon) {
 		return original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
 
@@ -22,11 +22,9 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 	int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
 	pWeapon->GetAttachment(iAttachment, Trace.vStartPos);
 
-	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Trace.vStartPos, Trace.vEndPos, Color.r, Color.g, Color.b, Color.a, true, 5);
+	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Trace.vStartPos, Trace.vEndPos, Color.r, Color.g, Color.b, Colors::BulletTracer.a, true, 5);
 }
 
 void FireBullets::Init() {
-	static DWORD dwAddr = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")) + 1;
-	fn FireBulletsHook = reinterpret_cast<fn>(((*(PDWORD)(dwAddr)) + dwAddr + 0x4));
-	Func.Hook(reinterpret_cast<void*>(FireBulletsHook), reinterpret_cast<void*>(Hook));
+
 }

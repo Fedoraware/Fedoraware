@@ -415,10 +415,7 @@ void projectileTracer(CBaseEntity* pLocal, Target_t Target) {
 		return;
 	}
 	Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : Target.m_vPos;
-	//Color_t Color = (Utils::Rainbow());
 	Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
-	//Vec3 shootPos = pLocal->GetShootPos();
-	//shootPos.z -= 5.0f;
 	Vec3 shootPos;
 	int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment(_("muzzle"));
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);

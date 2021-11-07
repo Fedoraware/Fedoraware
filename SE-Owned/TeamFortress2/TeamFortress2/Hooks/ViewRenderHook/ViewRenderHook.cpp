@@ -4,7 +4,8 @@
 
 void __stdcall ViewRenderHook::LevelInit::Hook() {
 	g_GlobalInfo.dtTicks = 0;
-
+	//g_Visuals.TransparentProps();
+	g_Visuals.OverrideWorldTextures();
 	Table.Original<fn>(index)(g_Interfaces.ViewRender);
 }
 

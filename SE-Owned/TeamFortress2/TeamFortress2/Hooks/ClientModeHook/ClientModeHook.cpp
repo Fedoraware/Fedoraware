@@ -170,11 +170,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (Vars::Misc::CL_Move::AutoRecharge.m_Var) {
 		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f
-					&& !(
-						pCmd->buttons = 0
-						)
-					)
+				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f && !(pCmd->buttons == 0))
 				{
 					g_GlobalInfo.m_bRecharging = true;
 				}
@@ -226,6 +222,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
+
 
 	//fakelag
 
