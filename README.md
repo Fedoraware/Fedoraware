@@ -55,5 +55,5 @@
   - [lykanfox](https://github.com/lykanfox)
   - [km-ch](https://github.com/km-ch)
   - [HutchyBean](https://github.com/HutchyBean)
-  - [SinnerTF2](https://github.com/SinnerTF2)
+  - [SinnerK0N](https://github.com/SinnerK0N)
   - [John Page The Fourth](https://github.com/relaxtakenotes)
