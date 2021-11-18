@@ -124,20 +124,20 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\SEOConfigs");
+	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs");
 
 
 
 	if (!std::filesystem::exists(m_sConfigPath))
 		std::filesystem::create_directory(m_sConfigPath);
 
-	if (!std::filesystem::exists(m_sConfigPath + _(L"\\SEOCore")))
-		std::filesystem::create_directory(m_sConfigPath + _(L"\\SEOCore"));
+	if (!std::filesystem::exists(m_sConfigPath + _(L"\\FedCore")))
+		std::filesystem::create_directory(m_sConfigPath + _(L"\\FedCore"));
 }
 
 void CConfigManager::Save(const wchar_t *name)
 {
-	m_Write = std::wofstream(m_sConfigPath + L"\\" + name + _(L".seo"));
+	m_Write = std::wofstream(m_sConfigPath + L"\\" + name + _(L".fed"));
 
 	if (m_Write.is_open())
 	{
@@ -636,7 +636,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 void CConfigManager::Load(const wchar_t *name)
 {
-	m_Read = std::wifstream(m_sConfigPath + L"\\" + name + _(L".seo"));
+	m_Read = std::wifstream(m_sConfigPath + L"\\" + name + _(L".fed"));
 
 	if (m_Read.is_open())
 	{
@@ -1129,5 +1129,5 @@ void CConfigManager::Load(const wchar_t *name)
 
 void CConfigManager::Remove(const wchar_t *name)
 {
-	std::filesystem::remove(m_sConfigPath + L"\\" + name + _(L".seo"));
+	std::filesystem::remove(m_sConfigPath + L"\\" + name + _(L".fed"));
 }
