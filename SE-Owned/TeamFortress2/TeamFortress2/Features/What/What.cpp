@@ -452,7 +452,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				int nConfig = 0;
 
 				for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".seo")) == std::string_view::npos)
+					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
 					{
 						continue;
 					}
@@ -474,7 +474,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 				}
 
 				for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".seo")) == std::string_view::npos) {
+					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos) {
 						continue;
 					}
 
