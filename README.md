@@ -1,3 +1,7 @@
+<h1 align="center">Archiving this project because I'm not interested in it anymore</h1>
+
+<hr/>
+
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src="https://raw.githubusercontent.com/M-FeD/Fedoraware/main/.github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
@@ -9,6 +13,8 @@
 <a href="https://github.com/M-FeD/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/M-FeD/Fedoraware/MSBuild"></a>
 <a href="https://github.com/M-FeD/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/M-FeD/Fedoraware"></a>
 </p>  
+
+
 
 ## Notes
 - This cheat is very poop and paste... don't use...
