@@ -94,6 +94,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255}, _("hi from ascendedsion"));
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255}, _("the one who fucked up your configs"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 127, 0, 255 }, _("M-FeD, "));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 72, 52, 225, 255 }, _("JAGNEmk, "));
