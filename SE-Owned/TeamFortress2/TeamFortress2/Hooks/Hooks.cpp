@@ -203,6 +203,15 @@ void CHooks::Init()
 		Func.Hook(reinterpret_cast<void *>(SetColorModulation), reinterpret_cast<void *>(Hook));
 	}
 
+	// I FORGOR
+	{
+		using namespace SetAlphaModulationHook;
+
+		fn SetAlphaModulation = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.StudioRender, 28));
+
+		Func.Hook(reinterpret_cast<void*>(SetAlphaModulation), reinterpret_cast<void*>(Hook));
+	}
+
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
 		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);
 }

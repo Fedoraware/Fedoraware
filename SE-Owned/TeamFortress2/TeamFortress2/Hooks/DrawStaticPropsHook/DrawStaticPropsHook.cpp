@@ -24,5 +24,5 @@ void __fastcall SetColorModulationHook::Hook(void* ecx, void* edx, float const* 
 
 void __fastcall SetAlphaModulationHook::Hook(void* ecx, void* edx, float alpha)
 {
-	Func.Original<fn>()(ecx, edx, Vars::Visuals::PropAlpha.m_Var);
+	Func.Original<fn>()(ecx, edx, bDrawing ? Vars::Visuals::PropAlpha.m_Var : alpha);
 }

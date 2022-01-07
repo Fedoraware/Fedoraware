@@ -498,7 +498,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::PropAlpha);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Wireframe);
-				
 
 
 
