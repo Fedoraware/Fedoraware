@@ -139,7 +139,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			bool is_jumping = pCmd->buttons & IN_JUMP;
 
 
-			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+			if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
 
 				const float speed = pLocal->GetVelocity().Lenght2D();
