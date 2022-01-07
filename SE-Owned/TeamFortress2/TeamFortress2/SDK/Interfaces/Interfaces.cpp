@@ -108,6 +108,9 @@ void CInterfaces::Init()
 
 	StudioRender = g_Interface.Get<void *>(_(L"studiorender.dll"), _("VStudioRender025"));
 	_valid(StudioRender);
+
+	InputSystem = reinterpret_cast<IInputSystem*>(g_Interface.Get<IInputSystem*>(_(L"inputsystem.dll"), _("InputSystemVersion001")));
+	_valid(InputSystem);
 }
 
 void CSteamInterfaces::Init()

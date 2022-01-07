@@ -28,6 +28,7 @@
 #include "Input/Input.h"
 #include "KeyValuesSystem/KeyValuesSystem.h"
 #include "UniformRandomStream/UniformRandomStream.h"
+#include "InputSystem/InputSystem.h"
 
 class CClockDriftMgr
 {
@@ -110,6 +111,7 @@ public:
 	IKeyValuesSystem*			KeyValuesSystem				= nullptr;
 	IUniformRandomStream*		UniformRandomStream			= nullptr;
 	void *						StudioRender				= nullptr;
+	IInputSystem*				InputSystem					= nullptr;
 	void Init();
 };
 

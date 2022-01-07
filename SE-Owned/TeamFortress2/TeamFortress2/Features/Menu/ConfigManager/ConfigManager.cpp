@@ -495,7 +495,8 @@ void CConfigManager::Save(const wchar_t *name)
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
-
+			SAVE_VAR(Vars::Visuals::PropAlpha);
+			SAVE_VAR(Vars::Visuals::ParticleTracer);
 				
 				
 
@@ -980,7 +981,8 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 			LOAD_VAR(Vars::Visuals::SkyboxChanger);
-
+			LOAD_VAR(Vars::Visuals::PropAlpha);
+			LOAD_VAR(Vars::Visuals::ParticleTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);

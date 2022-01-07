@@ -21,3 +21,8 @@ void __fastcall SetColorModulationHook::Hook(void* ecx, void* edx, float const* 
 	bool bShouldUseCustom = Vars::Visuals::WorldModulation.m_Var && bDrawing;
 	Func.Original<fn>()(ecx, edx, bShouldUseCustom ? custom : pColor);
 }
+
+void __fastcall SetAlphaModulationHook::Hook(void* ecx, void* edx, float alpha)
+{
+	Func.Original<fn>()(ecx, edx, Vars::Visuals::PropAlpha.m_Var);
+}

@@ -51,9 +51,9 @@ public: //Netvars
 
 
 public: //Virtuals
-	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 377)
-		M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 327)
-		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 378)
+	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 379)
+		M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 329)
+		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 340)
 		M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
 		M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3& (__thiscall*)(void*), 286)
 
@@ -126,7 +126,7 @@ public: //Everything else, lol
 		bool bResult = false;
 		if (const auto& pOwner = g_Interfaces.EntityList->GetClientEntityFromHandle(GethOwner())) {
 			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
-			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 421)(this, bHeadShot, nullptr);
+			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 423)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
 		} return bResult;
 	}

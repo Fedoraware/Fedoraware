@@ -38,6 +38,8 @@ inline void SetupDiscord()
 	Discord_Initialize("889495873183154226", &handlers, 0, "");
 }
 
+
+//Christ this shit is awful
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
 	//"mss32.dll" being one of the last modules to be loaded
@@ -94,15 +96,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255}, _("hi from ascendedsion"));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255}, _("the one who fucked up your configs"));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, _("Credits: "));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 127, 0, 255 }, _("M-FeD, "));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 72, 52, 225, 255 }, _("JAGNEmk, "));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 0, 234, 255, 255 }, _("Lak3, "));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 143, 5, 188, 255 }, _("spook593, "));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 185, 255, 94, 255}, _("r00t\n"));
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Based on SE-Owned Public Source!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	std::wstring defaultConfig = L"default";

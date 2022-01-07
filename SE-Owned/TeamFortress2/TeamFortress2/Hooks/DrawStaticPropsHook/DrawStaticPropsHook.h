@@ -14,3 +14,11 @@ namespace SetColorModulationHook
 	using fn = void(__fastcall*)(void*, void*, float const*);
 	void __fastcall Hook(void* ecx, void* edx, float const* pColor);
 }
+
+
+namespace SetAlphaModulationHook
+{
+	inline SEOHook::Func Func;
+	using fn = void(__fastcall*)(void*, void*, float);
+	void __fastcall Hook(void* ecx, void* edx, float alpha);
+}

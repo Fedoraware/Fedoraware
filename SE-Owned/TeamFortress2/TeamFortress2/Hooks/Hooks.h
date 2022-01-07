@@ -8,20 +8,20 @@
 #include "EngineVGuiHook/EngineVGuiHook.h"
 #include "EngineClientHook/EngineClientHook.h"
 #include "ModelRenderHook/ModelRenderHook.h"
-#include "WndProcHook/WndProcHook.h"
 #include "UniformRandomStreamHook/UniformRandomStreamHook.h"
 #include "GetDrawPositionHook/GetDrawPositionHook.h"
 #include "PerformScreenSpaceEffectsHook/PerformScreenSpaceEffectsHook.h"
 #include "InCondHook/InCondHook.h"
 #include "DrawStaticPropsHook/DrawStaticPropsHook.h"
 #include "EngineHook/EngineHook.h"
-#include "EndSceneHook/EndSceneHook.h"
-#include "Reset/Reset.h"
+#include "MenuHook/MenuHook.h"
 #include "Scoreboard/Scoreboard.h"
 #include "InputHook/InputHook.h"
 #include "GameMovementHook/GameMovementHook.h"
 #include "FireBullets/FireBullets.h"
 #include "Viewmodel/Viewmodel.h"
+#include "InventoryExpander/InventoryExpander.h"
+
 class CHooks
 {
 private:

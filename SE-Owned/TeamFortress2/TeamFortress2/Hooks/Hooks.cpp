@@ -9,7 +9,7 @@ void CHooks::Init()
 {
 	MH_Initialize();
 	{
-		EndSceneHook::Init();
+		MenuHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 		//ResetHook::Init();
 		FireBullets::Init();
@@ -65,7 +65,7 @@ void CHooks::Init()
 
 		Table.Init(g_Interfaces.Surface);
 		Table.Hook(OnScreenSizeChanged::index, &OnScreenSizeChanged::Hook);
-		Table.Hook(LockCursor::index, &LockCursor::Hook);
+		//Table.Hook(LockCursor::index, &LockCursor::Hook);
 	}
 
 	if (g_Interfaces.Panel)
@@ -114,7 +114,22 @@ void CHooks::Init()
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
-	WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
+	//Inventory expander
+	{
+		CTFInventoryManager* InventoryManager = nullptr;
+		InventoryManager = CTFInventoryManager::Get();
+
+		CTFPlayerInventory* playerinventory = nullptr;
+		playerinventory = InventoryManager->GetPlayerInventory();
+
+		uintptr_t maxItems = GetVFuncPtr(playerinventory, 9);
+
+		using namespace InventoryExpander;
+
+		Func.Hook((reinterpret_cast<void*>(maxItems)), reinterpret_cast<void*>(Expand));
+	}
+
+	//WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
 
 	//EngineHook
 	{
@@ -179,16 +194,6 @@ void CHooks::Init()
 		Func.Hook(reinterpret_cast<void *>(DrawStaticProps), reinterpret_cast<void *>(Hook));
 	}
 
-	//Firebullets
-	{
-		using namespace FireBullets;
-
-		static DWORD dwAddr = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")) + 0x1;
-		fn FireBulletsHook = reinterpret_cast<fn>(((*(PDWORD)(dwAddr)) + dwAddr + 0x4));
-
-		Func.Hook(reinterpret_cast<void*>(FireBulletsHook), reinterpret_cast<void*>(Hook));
-	}
-
 	//SetColorModulation
 	{
 		using namespace SetColorModulationHook;
@@ -205,5 +210,5 @@ void CHooks::Init()
 void CHooks::Release()
 {
 	MH_Uninitialize();
-	SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::WndProc);
+	SetWindowLongPtr(WndProc::hwWindow, GWL_WNDPROC, (LONG_PTR)WndProc::Original);
 }

@@ -14,19 +14,19 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{D75548B5-A1DB-4EA1-8CC1-3E09C441B4B2}</ProjectGuid>
     <RootNamespace>TeamFortress2</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -141,7 +141,8 @@
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.cpp" />
@@ -155,13 +156,11 @@
     <ClCompile Include="TeamFortress2\Hooks\PanelHook\PanelHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
@@ -237,7 +236,8 @@
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.h" />
@@ -251,13 +251,11 @@
     <ClInclude Include="TeamFortress2\Hooks\PanelHook\PanelHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
@@ -409,6 +407,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Input\Input.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Interfaces.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\KeyValuesSystem\KeyValuesSystem.h" />

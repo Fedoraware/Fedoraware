@@ -59,5 +59,10 @@ namespace FireBullets {
 	using fn = void(__fastcall*)(void*, void*, CBaseCombatWeapon*, const FireBulletsInfo_t&, bool, int, int);
 	typedef int (*LookupAttachment_t)(CBaseEntity*, const char*);
 	void __fastcall Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType);
+
+	using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
+	void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz);
+	//inline ParticleTracerFn ParticleTracer;
+
 	void Init();
 }

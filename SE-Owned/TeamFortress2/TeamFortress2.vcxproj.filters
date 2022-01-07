@@ -36,7 +36,6 @@
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
@@ -75,8 +74,7 @@
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_tables.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
@@ -94,6 +92,7 @@
     <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\FireBullets\FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -131,7 +130,6 @@
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Classes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
@@ -476,7 +474,7 @@
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_truetype.h" />
     <ClInclude Include="TeamFortress2\Features\What\What.h" />
-    <ClInclude Include="TeamFortress2\Hooks\EndSceneHook\EndSceneHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
@@ -488,7 +486,6 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
-    <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
     <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\audiodefs.h" />
@@ -621,6 +618,8 @@
     <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\FireBullets\FireBullets.h" />
     <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
+    <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

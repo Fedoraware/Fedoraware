@@ -409,10 +409,12 @@ namespace Vars
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
+		inline CVar<float> PropAlpha				{ 1.f, L"Props" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
+		inline CVar<int> ParticleTracer				{ true, L"Particle tracers" };
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
 		inline CVar<bool> AimPosSquare{ true, L"Aim position square" };
 		inline CVar<bool> OutOfFOVArrows			{ true, L"Out of FOV arrows" };
