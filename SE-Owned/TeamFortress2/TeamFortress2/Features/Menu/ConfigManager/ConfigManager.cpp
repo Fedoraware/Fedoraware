@@ -497,7 +497,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::damageLogger);
 			SAVE_VAR(Vars::Visuals::PropAlpha);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
-				
+			SAVE_VAR(Vars::Glow::Main::Wireframe);
 				
 
 
@@ -994,6 +994,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Menu::LegacyMenu);
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
+			LOAD_VAR(Vars::Glow::Main::Wireframe);
 			
 		}
 
