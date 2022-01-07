@@ -52,6 +52,15 @@ void CGlowEffect::Init()
 		\n}\n")
 		});
 
+	m_pMatBlurXwf = Utils::CreateMaterial
+	({
+		_("\"BlurFilterX\"\
+		\n{\
+		\n\t\"$basetexture\" \"glow_buffer_1\"\
+		\n\t\"$wireframe\" \"1\"\
+		\n}\n")
+		});
+
 	m_pMatBlurY = Utils::CreateMaterial
 	({
 		_("\"BlurFilterY\"\
@@ -59,6 +68,16 @@ void CGlowEffect::Init()
 		\n\t\"$basetexture\" \"glow_buffer_2\"\
 		\n}\n")
 		});
+
+	m_pMatBlurYwf = Utils::CreateMaterial
+	({
+		_("\"BlurFilterY\"\
+		\n{\
+		\n\t\"$basetexture\" \"glow_buffer_2\"\
+		\n\t\"$wireframe\" \"1\"\
+		\n}\n")
+		});
+
 
 	m_pMatHaloAddToScreen = Utils::CreateMaterial
 	({
@@ -312,11 +331,11 @@ void CGlowEffect::Render()
 			pRenderContext->Viewport(0, 0, w, h);
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer2);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurXwf : m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer1);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurYwf : m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 		}
 		pRenderContext->PopRenderTargetAndViewport();
@@ -333,6 +352,13 @@ void CGlowEffect::Render()
 		StencilState.SetStencilState(pRenderContext);
 
 		pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+		if (Vars::Glow::Main::Wireframe.m_Var)
+		{
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+		}
 		StencilStateDisable.SetStencilState(pRenderContext);
 
 		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);

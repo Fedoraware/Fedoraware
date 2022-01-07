@@ -306,6 +306,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<bool> Wireframe{ false, L"Wireframe" };
 			inline CVar<int> Scale{ 5, L"Scale" };
 		}
 

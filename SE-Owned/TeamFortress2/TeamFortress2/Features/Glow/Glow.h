@@ -9,7 +9,9 @@ private:
 	ITexture* m_pRtFullFrame;
 	ITexture* m_pRenderBuffer1;
 	ITexture* m_pRenderBuffer2;
+	IMaterial* m_pMatBlurXwf;
 	IMaterial* m_pMatBlurX;
+	IMaterial* m_pMatBlurYwf;
 	IMaterial* m_pMatBlurY;
 	IMaterial* m_pMatHaloAddToScreen;
 

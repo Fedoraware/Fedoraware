@@ -704,6 +704,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								}
 							}
 							if (ImGui::CollapsingHeader("Glow###playerGloww")) {
+								ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var); HelpMarker("Wireframe glow");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d"); ImGui::PopItemWidth(); HelpMarker("The scale at which the glow will render");
 								ImGui::Checkbox("Player glow", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
 								ImGui::Checkbox("Local rainbow glow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Local player glow is rainbow coloured");
