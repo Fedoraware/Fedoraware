@@ -27,6 +27,14 @@ namespace ClientModeHook
 		bool __stdcall Hook(float input_sample_frametime, CUserCmd* pCmd);
 	}
 
+	namespace InputCreateMove
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(IInput*, int, float, bool);
+		void __stdcall Hook(int sequence_number, float input_sample_frametime, bool active);
+		void Init();
+	}
+
 	namespace DoPostScreenSpaceEffects
 	{
 		const int index = 39;

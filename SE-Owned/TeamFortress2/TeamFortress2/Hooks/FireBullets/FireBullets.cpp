@@ -8,23 +8,24 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var)) {
 		return original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
-
-	Vec3 vStart = info.m_vecSrc;
-	Vec3 vEnd = vStart + info.m_vecDirShooting * info.m_flDistance;
-	CGameTrace Trace;
-	Ray_t Ray;
-	Ray.Init(vStart, vEnd);
-	g_Interfaces.EngineTrace->TraceRay(Ray, MASK_SHOT, NULL, &Trace);
-	int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
-	pWeapon->GetAttachment(iAttachment, Trace.vStartPos);
-	//This shit was gay, I'm sorry
-	if (Vars::Visuals::BulletTracer.m_Var)
-	{
-		Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
-
-		g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Trace.vStartPos, Trace.vEndPos, Color.r, Color.g, Color.b, Colors::BulletTracer.a, true, 5);
-	}
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+		Vec3 vStart = info.m_vecSrc;
+		Vec3 vEnd = vStart + info.m_vecDirShooting * info.m_flDistance;
+
+		CGameTrace trace = { };
+		CTraceFilterHitscan filter = { };
+		filter.pSkip = pLocal;
+		Utils::Trace(vStart, vEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
+		//g_Interfaces.EngineTrace->TraceRay(Ray, (MASK_SOLID | CONTENTS_HITBOX), NULL, &trace);
+		int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
+		pWeapon->GetAttachment(iAttachment, trace.vStartPos);
+		//This shit was gay, I'm sorry
+		if (Vars::Visuals::BulletTracer.m_Var)
+		{
+			Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+
+			g_Interfaces.DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, Color.r, Color.g, Color.b, Colors::BulletTracer.a, true, 5);
+		}
 		if (!pLocal->IsInValidTeam()) {
 			return;
 		}
@@ -35,27 +36,27 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 		{
 			//Machina
 		case 1:
-			ParticleTracer(team == 2 ? "dxhr_sniper_rail_red" : "dxhr_sniper_rail_blue", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
+			ParticleTracer(team == 2 ? "dxhr_sniper_rail_red" : "dxhr_sniper_rail_blue", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			break;
 
 			//C.A.P.P.E.R
 		case 2:
-			pLocal->IsCritBoosted() ? (ParticleTracer(team == 2 ? "bullet_tracer_raygun_red_crit" : "bullet_tracer_raygun_blue_crit", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true)) : (ParticleTracer(team == 2 ? "bullet_tracer_raygun_red" : "bullet_tracer_raygun_blue", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true));
+			pLocal->IsCritBoosted() ? (ParticleTracer(team == 2 ? "bullet_tracer_raygun_red_crit" : "bullet_tracer_raygun_blue_crit", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true)) : (ParticleTracer(team == 2 ? "bullet_tracer_raygun_red" : "bullet_tracer_raygun_blue", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true));
 			break;
 
 			//Short circuit
 		case 3:
-			ParticleTracer(team == 2 ? "dxhr_lightningball_hit_zap_red" : "dxhr_lightningball_hit_zap_blue", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
+			ParticleTracer(team == 2 ? "dxhr_lightningball_hit_zap_red" : "dxhr_lightningball_hit_zap_blue", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			break;
 
 			//Merasmus ZAP
 		case 4:
-			ParticleTracer("merasmus_zap", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
+			ParticleTracer("merasmus_zap", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			break;
 
 			//Merasmus ZAP Beam 2
 		case 5:
-			ParticleTracer("merasmus_zap_beam02", Trace.vStartPos, Trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
+			ParticleTracer("merasmus_zap_beam02", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			break;
 		}
 

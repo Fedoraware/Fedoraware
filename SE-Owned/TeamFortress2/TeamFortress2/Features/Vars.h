@@ -474,8 +474,8 @@ namespace Vars
 			inline CVar<bool> RechargeWhileDead	{ false, L"Recharge While Dead" };
 			inline CVar<bool> AutoRecharge	{ false, L"AutoRecharge" }; //H
 			inline CVar<int> DTMode		    { 0, L"DT Mode" }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
-			inline CVar<int> DtbarOutlineHeight	{ 12, L"Dt default bar height" };
-			inline CVar<int> DtbarOutlineWidth	{ 8, L"Dt default bar width" };
+			inline CVar<int> DtbarOutlineHeight	{ 5, L"Dt default bar height" };
+			inline CVar<int> DtbarOutlineWidth	{ 4, L"Dt default bar width" };
 			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
 			inline CVar<bool> Fakelag       { true, L"Fakelag" };
 			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" };

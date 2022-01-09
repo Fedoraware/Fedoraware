@@ -108,25 +108,16 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								color2 = Colors::DtChargedRight;
 							}
 
-							static int tickWidth = Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
-							int barWidth = (tickWidth * g_GlobalInfo.dtTicks) + 2;
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-								g_Draw.OutlinedRect(
-									g_ScreenSize.c - (barWidth / 2),
-									nY + 80,
-									barWidth,
-									Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var,
-									Colors::DtOutline
-								);
-								g_Draw.GradientRect(
-									g_ScreenSize.c - (barWidth / 2) + 1,
-									nY + 81,
-									(g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * g_GlobalInfo.m_nShifted,
-									nY + 81 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var - 2,
-									color1,
-									color2,
-									true
-								);
+								float maxWidth = g_GlobalInfo.dtTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
+								float dtOffset = g_ScreenSize.c - (maxWidth / 2);
+								static float tickWidth = 0.f;
+								static float barWidth = 0.f;
+								tickWidth = (g_GlobalInfo.m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
+								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
+
+								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2)  + 49, maxWidth + 2, Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2, { 50,50,50,210 });
+								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth, (g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, color1, color2, true);
 							}
 
 						}

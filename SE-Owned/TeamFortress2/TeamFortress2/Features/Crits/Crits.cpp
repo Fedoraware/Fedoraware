@@ -92,7 +92,7 @@ bool CCrits::ForceCrit(CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 		CmdN = LastCmdN;
 	}
 
-	CritStatus = "Found crit at: " + std::to_string(CmdN);
+	CritStatus = "Found crit at: " + std::to_string(CmdN) + "(" + std::to_string(LastUserCmd - CmdN) + ")";
 
 
 	if (CmdN && CmdN != command_number && me->GetActiveWeapon()->GetSlot() != 2)
@@ -215,17 +215,25 @@ void CCrits::Frame()
 
 		int wide = (bucket / 3.75 - bucket * .1) - 1;
 
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 10, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, CritStatus2.c_str());
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 30, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 50, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("cmdnum: ") + std::to_string(LastUserCmd)).c_str());
+
+		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 200, { 84, 168, 255, 127 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
+		if (CmdN == 0) {
+			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, { 255, 84, 84, 255 }, ALIGN_CENTERHORIZONTAL, "Crit banned");
+		}
+		else {
+			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, { 100, 255, 118, 127 }, ALIGN_CENTERHORIZONTAL, CritStatus.c_str());
+		}
 		if (LastUserCmd) {
 			if (CmdN > LastUserCmd)
 			{
 				float nextcrit = ((float)CmdN - (float)LastUserCmd) / (float)90;
 				if (nextcrit > 0.0f)
 				{
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 70, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Wait: ") + std::to_string(nextcrit)).c_str());
+					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Wait: ") + std::to_string(nextcrit)).c_str());
 				}
+			}
+			else {
+				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, { 230, 180, 80, 127 }, ALIGN_CENTERHORIZONTAL, CritStatus2.c_str());
 			}
 		}
 	}

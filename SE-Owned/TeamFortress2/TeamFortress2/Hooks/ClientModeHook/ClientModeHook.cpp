@@ -374,3 +374,13 @@ bool __stdcall ClientModeHook::DoPostScreenSpaceEffects::Hook(const CViewSetup* 
 	g_Glow.Render();
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode, pSetup);
 }
+
+void __stdcall ClientModeHook::InputCreateMove::Hook(int sequence_number, float input_sample_frametime, bool active)
+{
+}
+
+void ClientModeHook::InputCreateMove::Init()
+{
+	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(g_Interfaces.Input, 3));
+	Func.Hook(FN, Hook);
+}

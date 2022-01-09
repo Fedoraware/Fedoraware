@@ -57,7 +57,10 @@ struct Draw_t
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex);
 	void Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID);
-
+	float EaseOut(float start, float end, float speed);
+	float EaseIn(float start, float end, float speed);
+	float Linear(float start, float end, float speed);
+	bool Timer();
 	void ClearAvatarCache();
 };
 

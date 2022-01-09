@@ -237,6 +237,8 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 	}
 }
 
+
+
 void Draw_t::ClearAvatarCache()
 {
 	for (auto Avatar : m_mapAvatars)
@@ -246,4 +248,52 @@ void Draw_t::ClearAvatarCache()
 	}
 
 	m_mapAvatars.clear();
+}
+
+float Draw_t::EaseOut(float start, float end, float speed)
+{
+	if (start > end || speed <= 1)
+		return end;
+
+	if (Timer())
+	{
+		if (start < end)
+			return start * speed;
+		return end;
+	}
+	return start;
+}
+
+float Draw_t::EaseIn(float start, float end, float speed)
+{
+	if (start < end || speed >= 1)
+		return end;
+
+	if (Timer())
+	{
+		if (start > end)
+			return start * speed;
+		return end;
+	}
+	return start;
+}
+
+float Draw_t::Linear(float start, float end, float speed)
+{
+	if (start < end)
+		return start + speed;
+	return end;
+}
+
+bool Draw_t::Timer() // This is to make sure that the animations don't get calculated in a split-second
+{
+	int t = clock();
+	static int i = 0;
+
+	if (t > i)
+	{
+		i += 1;
+		return true;
+	}
+	return false;
 }
