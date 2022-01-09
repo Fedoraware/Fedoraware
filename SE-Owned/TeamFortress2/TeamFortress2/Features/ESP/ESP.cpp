@@ -564,7 +564,7 @@ void CESP::DrawWorld()
 		return;
 
 	Vec3 vScreen = {};
-	size_t FONT = FONT_ESP_COND;
+	size_t FONT = FONT_ESP_PICKUPS;
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
 
