@@ -132,6 +132,22 @@ void Draw_t::Line(int x, int y, int x1, int y1, const Color_t& clr)
 	g_Interfaces.Surface->DrawLine(x, y, x1, y1);
 }
 
+void Draw_t::DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr)
+{
+	static int iTexture = g_Interfaces.Surface->CreateNewTextureID(true);
+
+	g_Interfaces.Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	g_Interfaces.Surface->DrawSetTexture(iTexture);
+
+	g_Interfaces.Surface->DrawTexturedPoly(count, vertices);
+}
+
+void Draw_t::DrawFilledTriangle(std::array<Vec2, 3>points, const Color_t& clr)
+{
+	std::array<Vertex_t, 3>vertices{ Vertex_t(points.at(0)), Vertex_t(points.at(1)), Vertex_t(points.at(2)) };
+	DrawTexturedPolygon(3, vertices.data(), clr);
+}
+
 void Draw_t::Rect(int x, int y, int w, int h, const Color_t& clr)
 {
 	g_Interfaces.Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);

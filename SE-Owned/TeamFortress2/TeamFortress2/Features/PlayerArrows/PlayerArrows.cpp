@@ -70,9 +70,19 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	Color_t HeatColor = color;
 	HeatColor.a = static_cast<byte>(fMap * 255.0f);
 
-	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
-	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
-	g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, HeatColor);
+	if (Vars::Visuals::OutOfFOVArrowsOutline.m_Var) {
+		g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
+		g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
+		g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, HeatColor);
+	}
+	else {
+		Vertex_t t1, t2,t3;
+		t1.Init({ cx + left.x, cy + left.y });
+		t2.Init({ cx + right.x, cy + right.y });
+		t3.Init({ cx + x2, cy + y2 });
+		std::array<Vertex_t, 3> verts{ t1,t2,t3 };
+		g_Draw.DrawTexturedPolygon(3, verts.data(), HeatColor);
+	}
 	//g_Draw.
 }
 

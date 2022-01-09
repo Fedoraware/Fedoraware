@@ -73,6 +73,12 @@ public:
 		GetVFunc<FN>(this, 75)(this, font, text, wide, tall);
 	}
 
+	void DrawTexturedPoly(int n, Vertex_t* vertices, bool bClipVertices = true)
+	{
+		typedef void(__thiscall* OriginalFn)(PVOID, int, Vertex_t*, bool);
+		return 	GetVFunc<OriginalFn>(this, 102)(this, n, vertices, bClipVertices);
+	}
+
 	void GetCursorPos(int& x_out, int& y_out)
 	{
 		typedef void(__thiscall* FN)(PVOID, int&, int&);
