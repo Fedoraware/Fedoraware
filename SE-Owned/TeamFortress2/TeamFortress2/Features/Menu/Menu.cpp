@@ -333,7 +333,7 @@ bool CMenu::InputColor(Color_t& Var, const wchar_t* Label)
 		}
 		g_Draw.Rect(_x, y, w, h, { Var.r, Var.g, Var.b, 255 });
 		g_Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-		g_Draw.String(FONT_ESP_OUTLINED, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.r);
+		g_Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.r);
 		_x += w + Vars::Menu::SpacingX;
 	}
 
@@ -369,7 +369,7 @@ bool CMenu::InputColor(Color_t& Var, const wchar_t* Label)
 
 		g_Draw.Rect(_x, y, w, h, { Var.r, Var.g, Var.b, 255 });
 		g_Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-		g_Draw.String(FONT_ESP_OUTLINED, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.g);
+		g_Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.g);
 		_x += w + Vars::Menu::SpacingX;
 	}
 
@@ -404,7 +404,7 @@ bool CMenu::InputColor(Color_t& Var, const wchar_t* Label)
 		}
 		g_Draw.Rect(_x, y, w, h, { Var.r, Var.g, Var.b, 255 });
 		g_Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-		g_Draw.String(FONT_ESP_OUTLINED, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.b);
+		g_Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.b);
 		_x += w + Vars::Menu::SpacingX;
 	}
 
@@ -439,7 +439,7 @@ bool CMenu::InputColor(Color_t& Var, const wchar_t* Label)
 		}
 
 		g_Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-		g_Draw.String(FONT_ESP_OUTLINED, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.a);
+		g_Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.a);
 	}
 
 	g_Draw.String(FONT_MENU, _x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTERVERTICAL, Label);
@@ -1049,7 +1049,7 @@ void CMenu::Run()
 					GroupBoxStart();
 					{
 						CheckBox(Vars::ESP::Main::Active, _(L"ESP master switch"));
-						ComboBox(Vars::ESP::Main::Outline, { { 0, _(L"Off") }, { 1, _(L"Text Only") }, { 2, _(L"All") } });
+						ComboBox(Vars::ESP::Main::Outlinedbar, { { 0, _(L"Off") }, { 1, _(L"Text Only") }, { 2, _(L"All") } });
 					}
 					GroupBoxEnd(_(L"Main"), 230);
 

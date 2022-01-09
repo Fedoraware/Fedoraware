@@ -270,7 +270,7 @@ void CConfigManager::Save(const wchar_t *name)
 			//Main
 			{
 				SAVE_VAR(Vars::ESP::Main::Active);
-				SAVE_VAR(Vars::ESP::Main::Outline);
+				SAVE_VAR(Vars::ESP::Main::Outlinedbar);
 				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
 			}
 
@@ -622,12 +622,51 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
-
+			SAVE_STRING(Vars::Skybox::SkyboxName);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
 			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
-			SAVE_STRING(Vars::Skybox::SkyboxName);
+
+		}
+
+		//Fonts
+		{
+			//FONT_ESP
+			{
+				SAVE_STRING(Vars::Fonts::FONT_ESP::szName);
+				SAVE_VAR(Vars::Fonts::FONT_ESP::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_ESP::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_ESP::nFlags);
+			}
+			//FONT_ESP_NAME
+			{
+				SAVE_STRING(Vars::Fonts::FONT_ESP_NAME::szName);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nFlags);
+			}
+			//FONT_ESP_COND
+			{
+				SAVE_STRING(Vars::Fonts::FONT_ESP_COND::szName);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nFlags);
+			}
+			//FONT_ESP_PICKUPS
+			{
+				SAVE_STRING(Vars::Fonts::FONT_ESP_PICKUPS::szName);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nFlags);
+			}
+			//FONT_MENU
+			{
+				SAVE_STRING(Vars::Fonts::FONT_MENU::szName);
+				SAVE_VAR(Vars::Fonts::FONT_MENU::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_MENU::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_MENU::nFlags);
+			}
 		}
 
 		m_Write.close();
@@ -769,7 +808,7 @@ void CConfigManager::Load(const wchar_t *name)
 			//Main
 			{
 				LOAD_VAR(Vars::ESP::Main::Active);
-				LOAD_VAR(Vars::ESP::Main::Outline);
+				LOAD_VAR(Vars::ESP::Main::Outlinedbar);
 				LOAD_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
 			}
 
@@ -1119,10 +1158,48 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
-
+			LOAD_STRING(Vars::Skybox::SkyboxName);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
-			LOAD_STRING(Vars::Skybox::SkyboxName);
+		}
+
+		//Fonts
+		{
+			//FONT_ESP
+			{
+				LOAD_STRING(Vars::Fonts::FONT_ESP::szName);
+				LOAD_VAR(Vars::Fonts::FONT_ESP::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_ESP::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_ESP::nFlags);
+			}
+			//FONT_ESP_NAME
+			{
+				LOAD_STRING(Vars::Fonts::FONT_ESP_NAME::szName);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_NAME::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_NAME::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_NAME::nFlags);
+			}
+			//FONT_ESP_COND
+			{
+				LOAD_STRING(Vars::Fonts::FONT_ESP_COND::szName);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_COND::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_COND::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_COND::nFlags);
+			}
+			//FONT_ESP_PICKUPS
+			{
+				LOAD_STRING(Vars::Fonts::FONT_ESP_PICKUPS::szName);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nFlags);
+			}
+			//FONT_MENU
+			{
+				LOAD_STRING(Vars::Fonts::FONT_MENU::szName);
+				LOAD_VAR(Vars::Fonts::FONT_MENU::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_MENU::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_MENU::nFlags);
+			}
 		}
 
 		m_Read.close();

@@ -17,6 +17,17 @@ void Draw_t::InitFonts(const std::vector<Font_t>& fonts)
 		ReloadFonts();
 }
 
+void Draw_t::RemakeFonts(const std::vector<Font_t>& fonts) {
+	m_vecFonts.clear();
+
+	for (const auto& Font : fonts)
+		m_vecFonts.push_back(Font);
+
+	if (!m_vecFonts.empty())
+		ReloadFonts();
+}
+
+
 void Draw_t::ReloadFonts()
 {
 	for (auto& v : m_vecFonts)

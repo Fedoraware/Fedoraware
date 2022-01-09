@@ -480,7 +480,7 @@ void Notify::Think() {
 
 		g_Draw.Rect(x, y, attackStringW + 5, attackStringH + 2, { Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g, Colors::DmgLoggerBackground.b, color.a });
 		g_Draw.OutlinedRect(x, y, attackStringW + 5, attackStringH + 2, { Colors::DmgLoggerOutline.r, Colors::DmgLoggerOutline.g, Colors::DmgLoggerOutline.b, color.a });
-		g_Draw.String(FONT_INDICATORS, x + 5, y + 2, { Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a }, ALIGN_DEFAULT, notify->m_text.c_str());
+		g_Draw.String(FONT_ESP, x + 5, y + 2, { Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a }, ALIGN_DEFAULT, notify->m_text.c_str());
 
 		y += size;
 	}

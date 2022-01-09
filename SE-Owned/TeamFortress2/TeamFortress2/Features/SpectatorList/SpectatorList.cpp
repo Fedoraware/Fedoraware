@@ -137,10 +137,10 @@ void CSpectatorList::DrawClassic()
 
 		int nDrawY = (g_ScreenSize.h / 2) - 300;
 		int centerr = g_ScreenSize.c;
-		int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall;
+		int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 
 		g_Draw.String(
-			FONT_ESP_NAME_OUTLINED,
+			FONT_ESP_NAME,
 			centerr, nDrawY - addyy,
 			{ 255,255,255,255 },
 			ALIGN_CENTERHORIZONTAL,
@@ -151,9 +151,9 @@ void CSpectatorList::DrawClassic()
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].dwFont, (Spectator.m_sMode + Spectator.m_sName).c_str(), w, h);
+			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont, (Spectator.m_sMode + Spectator.m_sName).c_str(), w, h);
 
-			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall;
+			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 			if (Vars::Visuals::SpectatorList.m_Var == 3)
 			{
 				//nDrawX -= 55;
@@ -172,7 +172,7 @@ void CSpectatorList::DrawClassic()
 			}
 
 			g_Draw.String(
-				FONT_ESP_NAME_OUTLINED,
+				FONT_ESP_NAME,
 				nDrawX, nDrawY,
 				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
 				ALIGN_CENTERHORIZONTAL,

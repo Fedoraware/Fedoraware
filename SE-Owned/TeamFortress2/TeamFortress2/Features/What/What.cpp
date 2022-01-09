@@ -14,7 +14,7 @@
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
 bool tooltips = true;
-
+bool showFonts = false;
 void AlignRight(int offset) {
 	ImGui::SameLine(ImGui::GetContentRegionMax().x - offset);
 	ImGui::SetNextItemWidth(offset);
@@ -241,6 +241,9 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
 	static bool bColumnsWidthened = false;
 	bool modified_custom_style = false;
+
+	if (!config)
+		return;
 
 	if (!bInitImGui) {
 		ImGui::CreateContext();
@@ -666,7 +669,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								//ImGui::TextUnformatted("ESP");
 								ImGui::Checkbox("Player ESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player ESP Opacity", &Vars::ESP::Players::Alpha.m_Var, 0.05f, 1.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque/transparent the ESP will be");
-								static const char* textOutline[]{ "Off", "Text Only", "All" }; ImGui::PushItemWidth(100); ImGui::Combo("Text outline", &Vars::ESP::Main::Outline.m_Var, textOutline, IM_ARRAYSIZE(textOutline)); ImGui::PopItemWidth(); HelpMarker("Choose when to use an outline on elements drawn by ESP");
+								static const char* textOutline[]{ "Off", "Text Only", "All" }; ImGui::PushItemWidth(100); ImGui::Combo("Text outline", &Vars::ESP::Main::Outlinedbar.m_Var, textOutline, IM_ARRAYSIZE(textOutline)); ImGui::PopItemWidth(); HelpMarker("Choose when to use an outline on elements drawn by ESP");
 								ImGui::Checkbox("Local ESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
 								static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###ESPteam", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeammatesEsp, IM_ARRAYSIZE(ignoreTeammatesEsp)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
 								static const char* ignoreCloakedEsp[]{ "Off", "All", "Enemies only" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###ESPcloak", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakedEsp, IM_ARRAYSIZE(ignoreCloakedEsp)); ImGui::PopItemWidth(); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
@@ -871,7 +874,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Aimbot prediction", &Vars::Visuals::AimPosSquare.m_Var); HelpMarker("Will show a rough estimate of where the aimbot is going to aim at");
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
-								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
+								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth(); HelpMarker("When to draw glow on projectiles");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
@@ -1205,6 +1208,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					ImGui::EndChild();
 				}
 
+
 				if (ImGui::BeginMainMenuBar())
 				{
 					if (ImGui::BeginMenu("Shortcuts"))
@@ -1228,7 +1232,231 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::MenuItem("Playerlist"))
 						g_PlayerList.showWindow = !g_PlayerList.showWindow;
 
+					if (ImGui::MenuItem("Fonts"))
+					{
+						showFonts = !showFonts;
+					}
+
 					ImGui::EndMainMenuBar();
+				}
+
+				if (showFonts) {
+					if (ImGui::Begin("Fonts###fontmenu", &showFonts, ImGuiWindowFlags_NoCollapse))
+					{
+						std::vector<Font_t> fonts;
+
+						static const char* flags[]{ "None", "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
+						static int fontflags[]{ 0x000, 0x001, 0x002, 0x004, 0x008,0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
+						//{ dwFont, szName, nTall, nWeight, nFlags}
+						if (ImGui::CollapsingHeader("FONT_ESP"))
+						{
+							HelpMarker("ESP Font");
+							ImGui::InputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
+							ImGui::InputInt("Font height###espfontheight", &Vars::Fonts::FONT_ESP::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontweight", &Vars::Fonts::FONT_ESP::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfonttttttttttt", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_ESP::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_ESP::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_ESP::nFlags.m_Var).c_str());
+						}
+						if (ImGui::CollapsingHeader("FONT_ESP_NAME"))
+						{
+							HelpMarker("ESP Name Font");
+							ImGui::InputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
+							ImGui::InputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfonnamettttttttttt", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var).c_str());
+						}
+						if (ImGui::CollapsingHeader("FONT_ESP_COND"))
+						{
+							HelpMarker("ESP Condition Font");
+							ImGui::InputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
+							ImGui::InputInt("Font height###espfontcondheight", &Vars::Fonts::FONT_ESP_COND::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_ESP_COND::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfoncondttttttttttt", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_ESP_COND::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_ESP_COND::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_ESP_COND::nFlags.m_Var).c_str());
+						}
+						if (ImGui::CollapsingHeader("FONT_ESP_PICKUPS"))
+						{
+							HelpMarker("ESP Pickups Font");
+							ImGui::InputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
+							ImGui::InputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfonpickupsttttttttttt", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var).c_str());
+						}
+						if (ImGui::CollapsingHeader("FONT_MENU"))
+						{
+							HelpMarker("Menu Font");
+							ImGui::InputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
+							ImGui::InputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfonnametttttttttttafsafds", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_MENU::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_MENU::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_MENU::nFlags.m_Var).c_str());
+						}
+
+						if (ImGui::Button("Apply settings###fontapply"))
+						{
+							Font_t fontEsp = { 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var };
+							Font_t fontEspName = { 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var };
+							Font_t fontEspCond = { 0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var };
+							Font_t fontEspPickups = { 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var };
+							Font_t fontMenu = { 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var };
+							std::vector<Font_t> fonts = { fontEsp, fontEspName, fontEspCond, fontEspPickups, fontMenu };
+							g_Draw.RemakeFonts(fonts);
+						}
+
+						ImGui::End();
+					}
 				}
 
 				if (g_PlayerList.showWindow)

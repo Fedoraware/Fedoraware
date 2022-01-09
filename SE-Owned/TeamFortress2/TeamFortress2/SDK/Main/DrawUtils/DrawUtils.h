@@ -18,6 +18,19 @@ struct Font_t
 	int nFlags = 0;
 };
 
+enum EFonts
+{
+	FONT_ESP,
+	//FONT_ESP_OUTLINED,
+	FONT_ESP_NAME,
+	//FONT_ESP_NAME_OUTLINED,
+	FONT_ESP_COND,
+	//FONT_ESP_COND_OUTLINED,
+	FONT_ESP_PICKUPS,
+	//FONT_ESP_PICKUPS_OUTLINED,
+	FONT_MENU
+};
+
 enum EStringAlign
 {
 	ALIGN_DEFAULT,
@@ -32,6 +45,7 @@ struct Draw_t
 	std::map<uint64, int> m_mapAvatars = { };
 
 	void InitFonts(const std::vector<Font_t>& fonts);
+	void RemakeFonts(const std::vector<Font_t>& fonts);
 	void ReloadFonts();
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
@@ -47,24 +61,6 @@ struct Draw_t
 	void ClearAvatarCache();
 };
 
-enum EFonts
-{
-	FONT_ESP,
-	FONT_ESP_OUTLINED,
 
-	FONT_ESP_NAME,
-	FONT_ESP_NAME_OUTLINED,
-
-	FONT_ESP_COND,
-	FONT_ESP_COND_OUTLINED,
-
-	FONT_ESP_PICKUPS,
-	FONT_ESP_PICKUPS_OUTLINED,
-
-	FONT_MENU,
-	FONT_DEBUG,
-
-	FONT_INDICATORS
-};
 
 inline Draw_t g_Draw;

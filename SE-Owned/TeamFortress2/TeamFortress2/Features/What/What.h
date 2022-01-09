@@ -10,6 +10,7 @@ private:
 	ImFont* DT;
 	ImDrawList* drawList;
 public:
+	bool config = false;
 	bool menuOpen = false;
 	bool menuUnload = false;
 	void TextCenter(std::string text);

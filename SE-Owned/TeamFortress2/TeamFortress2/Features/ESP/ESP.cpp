@@ -158,8 +158,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			int nHealth = Player->GetHealth(), nMaxHealth = Player->GetMaxHealth();
 			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
-			size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
-				FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME);
+			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME;
 
 			int nTextX = ((x + w) + 3), nTextOffset = 0, nClassNum = Player->GetClassNum();
 
@@ -186,15 +185,17 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				int height = (h + 1); //don't ask me /shrug
 
 				g_Draw.OutlinedRect(x, y, w, height, DrawColor);
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var) {
 					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
+				}
 
 				break;
 			}
 			case 2: {
 				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var) {
 					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+				}
 
 				break;
 			}
@@ -250,7 +251,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						float ratio = (flUber / flMaxUber);
 						g_Draw.Rect((x + nWidth), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), Colors::UberColor);
 
-						if (Vars::ESP::Main::Outline.m_Var == 2)
+						if (Vars::ESP::Main::Outlinedbar.m_Var)
 							g_Draw.OutlinedRect((x + nWidth) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
 
 						x -= w + 1;
@@ -308,7 +309,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 			if (Vars::ESP::Players::Cond.m_Var)
 			{
-				size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_COND_OUTLINED : FONT_ESP_COND);
+				size_t FONT = FONT_ESP_COND;
 				int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
 				std::wstring cond_str = GetPlayerConds(Player);
 
@@ -341,7 +342,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				float ratio = (flHealth / flMaxHealth);
 				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), clr);
 
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var)
 					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
 
 				x += 1;
@@ -381,9 +382,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 			auto nType = EBuildingType(Building->GetType());
 
-			size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
-				FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME),
-				FONT_COND = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_COND_OUTLINED : FONT_ESP_COND);
+			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
 
 			bool bIsMini = Building->GetMiniBuilding();
 
@@ -395,7 +394,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 				g_Draw.OutlinedRect(x, y, w, h, DrawColor);
 
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var)
 					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (h + 2), Colors::OutlineESP);
 
 				h -= 1;
@@ -404,7 +403,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 			case 2: {
 				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
 
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var)
 					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
 				break;
 			}
@@ -548,7 +547,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), HealthColor);
 
-				if (Vars::ESP::Main::Outline.m_Var == 2)
+				if (Vars::ESP::Main::Outlinedbar.m_Var)
 					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
 
 				x += 1;
@@ -565,7 +564,7 @@ void CESP::DrawWorld()
 		return;
 
 	Vec3 vScreen = {};
-	size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_PICKUPS_OUTLINED : FONT_ESP_COND);
+	size_t FONT = FONT_ESP_COND;
 
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
 

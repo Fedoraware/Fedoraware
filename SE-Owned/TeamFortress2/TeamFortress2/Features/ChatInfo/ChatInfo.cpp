@@ -77,7 +77,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 
 				std::wstring wattackString = std::wstring(attackString.begin(), attackString.end());
 				const wchar_t* wcattackString = wattackString.c_str();
-				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_INDICATORS].dwFont, wcattackString, attackStringW, attackStringH);
+				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP].dwFont, wcattackString, attackStringW, attackStringH);
 
 				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var)
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]\x3 %s", clr, attackString.c_str()).c_str());

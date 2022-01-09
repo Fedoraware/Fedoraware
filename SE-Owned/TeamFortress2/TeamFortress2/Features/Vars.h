@@ -186,7 +186,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active	{ true, L"Active" };
-			inline CVar<int> Outline	{ 2, L"Outline" }; //0 - OFF, 1 - Text Only, 2 - All
+			inline CVar<int> Outlinedbar	{ 1, L"Outlined health bar" }; //0 - OFF, 1 - Text Only, 2 - All
 			inline CVar<bool> EnableTeamEnemyColors	{ false, L"Enable team/enemy colors"};
 		}
 
@@ -522,5 +522,43 @@ namespace Vars
 	{
 		inline int skyboxnum = 0;
 		inline std::string SkyboxName = "mr_04";
+	}
+	namespace Fonts
+	{
+		namespace FONT_ESP
+		{
+			inline std::string szName = "Tahoma";
+			inline CVar<int> nTall = { 12, L"nTall" };
+			inline CVar<int> nWeight = { 800, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
+		namespace FONT_ESP_NAME
+		{
+			inline std::string szName = "Tahoma";
+			inline CVar<int> nTall = { 14, L"nTall" };
+			inline CVar<int> nWeight = { 800, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
+		namespace FONT_ESP_COND
+		{
+			inline std::string szName = "Tahoma";
+			inline CVar<int> nTall = { 10, L"nTall" };
+			inline CVar<int> nWeight = { 800, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
+		namespace FONT_ESP_PICKUPS
+		{
+			inline std::string szName = "Tahoma";
+			inline CVar<int> nTall = { 13, L"nTall" };
+			inline CVar<int> nWeight = { 800, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
+		namespace FONT_MENU
+		{
+			inline std::string szName = "DejaVu Sans";
+			inline CVar<int> nTall = { 16, L"nTall" };
+			inline CVar<int> nWeight = { 200, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
 	}
 }

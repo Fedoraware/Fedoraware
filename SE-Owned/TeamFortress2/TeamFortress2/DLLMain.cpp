@@ -57,47 +57,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_DMEChams.Init();
 	g_Hooks.Init();
 	g_ConVars.Init();
-	g_Draw.InitFonts
-	({
-		//FONT_ESP
-		{ 0x0, _("Tahoma"), 12, 800, FONTFLAG_ANTIALIAS },
-		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_NONE },
-		//FONT_ESP_OUTLINED
-		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
-		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_OUTLINE },
-
-		//FONT_ESP_NAME
-		{ 0x0, _("Tahoma"), 14, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_NAME_OUTLINED
-		{ 0x0, _("Verdana"), 14, 0, FONTFLAG_OUTLINE },
-
-		//FONT_ESP_COND
-		{ 0x0, _("Tahoma"), 10, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_COND_OUTLINED
-		{ 0x0, _("Verdana"), 10, 0, FONTFLAG_OUTLINE },
-
-		//FONT_ESP_PICKUPS
-		{ 0x0, _("Tahoma"), 13, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_PICKUPS_OUTLINED
-		{ 0x0, _("Verdana"), 13, 0, FONTFLAG_OUTLINE },
-
-		//FONT_MENU
-		{ 0x0, _("DejaVu Sans"), 16, 200, FONTFLAG_ANTIALIAS},
-
-		//FONT_DEBUG
-		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE },
-
-		//FONT_INDICATORS
-		{ 0x0, _("Tahoma"), 13, 0, FONTFLAG_OUTLINE }
-		});
-
-	SetupDiscord();
-	Discord_ClearPresence();
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
-
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
-	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
-
 	std::wstring defaultConfig = L"default";
 	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
 
@@ -105,6 +64,55 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		StringToWString(s, "default");
 		g_CFG.Load(s.c_str());
 	}
+	g_Draw.InitFonts
+	({
+		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
+		{ 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var },
+		{ 0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var },
+		{ 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var },
+		{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
+	});
+	g_What.config = true;
+	//g_Draw.InitFonts
+	//({
+		//FONT_ESP
+		//{ 0x0, _("Tahoma"), 12, 800, FONTFLAG_ANTIALIAS },
+		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_NONE },
+		//FONT_ESP_OUTLINED
+		//{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_OUTLINE },
+
+		//FONT_ESP_NAME
+		//{ 0x0, _("Tahoma"), 14, 800, FONTFLAG_ANTIALIAS },
+		//FONT_ESP_NAME_OUTLINED
+		//{ 0x0, _("Verdana"), 14, 0, FONTFLAG_OUTLINE },
+
+		//FONT_ESP_COND
+		//{ 0x0, _("Tahoma"), 10, 800, FONTFLAG_ANTIALIAS },
+		//FONT_ESP_COND_OUTLINED
+		//{ 0x0, _("Verdana"), 10, 0, FONTFLAG_OUTLINE },
+
+		//FONT_ESP_PICKUPS
+		//{ 0x0, _("Tahoma"), 13, 800, FONTFLAG_ANTIALIAS },
+		//FONT_ESP_PICKUPS_OUTLINED
+		//{ 0x0, _("Verdana"), 13, 0, FONTFLAG_OUTLINE },
+
+		//FONT_MENU
+		//{ 0x0, _("DejaVu Sans"), 16, 200, FONTFLAG_ANTIALIAS},
+
+		////FONT_DEBUG
+		//{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE },
+
+		////FONT_INDICATORS
+		//{ 0x0, _("Tahoma"), 13, 0, FONTFLAG_OUTLINE }
+		//});
+
+	SetupDiscord();
+	Discord_ClearPresence();
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned"});
+
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
+	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	while (!GetAsyncKeyState(VK_F11)) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
