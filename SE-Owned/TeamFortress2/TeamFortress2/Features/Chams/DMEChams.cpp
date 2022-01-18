@@ -177,7 +177,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
 				}
 				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-				if (found2) {
+				if (found3) {
 					pVar3->SetIntValue(Vars::Chams::DME::HandsRimMultiplier.m_Var);
 				}
 
