@@ -205,11 +205,8 @@ public: //Everything else, lol
 	}
 
 	__inline void GetProjectileFireSetup(CBaseEntity* pPlayer, Vec3 vOffset, Vec3* vSrc, Vec3* vForward, bool bHitTeam, float flEndDist) {
-		typedef void(__thiscall* EstimateAbsVelocityFn)(decltype(this), CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float);
-		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? F3 0F 10 46 ? F3 0F 5C 05 ? ? ? ? F3 0F 11 46 ? 5E 5D C2 20 00")) + 0x1;
-		static DWORD dwOffset = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
-		EstimateAbsVelocityFn fn = (EstimateAbsVelocityFn)dwOffset;
-		fn(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
+		static auto FN = reinterpret_cast< void( __thiscall* )( CBaseEntity*, CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float ) >( g_Pattern.Find( _( L"client.dll" ), _( L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0" ) ) );
+		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
 	__inline bool CalcIsAttackCriticalHelper(CBaseEntity* pWeapon)
