@@ -167,11 +167,9 @@ void CHooks::Init()
 
 		DWORD dwAddy = g_Pattern.Find(
 			_(L"client.dll"),
-			_(L"E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 83 F8 01 75 64 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 FF 74 0E 8B 17")) + 0x1;
+			_(L"55 8B EC 83 EC ? 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 ? 89 7D ? 8B 01 85 C0 74 ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 57 57 57 57 8D 4D ? 51 50 8B 40 ? FF D0 8B 7D ? 83 C4 ? 8B 75 ? 8B 0D ? ? ? ? 8B 19 8B 0D"));
 
-		fn PerformScreenSpaceEffects = reinterpret_cast<fn>(((*(PDWORD)(dwAddy)) + dwAddy + 0x4));
-
-		Func.Hook(reinterpret_cast<void *>(PerformScreenSpaceEffects), reinterpret_cast<void *>(Hook));
+		Func.Hook(reinterpret_cast<void *>( dwAddy ), reinterpret_cast<void *>(Hook));
 	}
 
 	//InCond

@@ -350,12 +350,9 @@ public: //Everything else, lol.
 	}
 
 	__inline Vec3 GetVelocity() {
-		typedef void(__thiscall* EstimateAbsVelocityFn)(CBaseEntity*, Vec3&);
-		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? F3 0F 10 4D ? 8D 85 ? ? ? ? F3 0F 10 45 ? F3 0F 59 C9 56 F3 0F 59 C0 F3 0F 58 C8 0F 2F 0D ? ? ? ? 76 07")) + 0x1;
-		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
-		EstimateAbsVelocityFn vel = (EstimateAbsVelocityFn)dwEstimate;
+		static auto FN = reinterpret_cast< void( __thiscall* )( CBaseEntity*, Vec3& ) >( g_Pattern.Find( _( L"client.dll" ), _( L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0" ) ) );
 		Vec3 v;
-		vel(this, v);
+		FN(this, v);
 		return v;
 	}
 

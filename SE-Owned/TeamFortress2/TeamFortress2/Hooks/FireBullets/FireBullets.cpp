@@ -15,6 +15,8 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 		CGameTrace trace = { };
 		CTraceFilterHitscan filter = { };
 		filter.pSkip = pLocal;
+
+		/* if ur shooting thru stuff, change MASK_SHOT to MASK_SOLID - myzarfin */
 		Utils::Trace(vStart, vEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
 		//g_Interfaces.EngineTrace->TraceRay(Ray, (MASK_SOLID | CONTENTS_HITBOX), NULL, &trace);
 		int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
@@ -70,8 +72,6 @@ void FireBullets::ParticleTracer(const char* pszTracerEffectName, const Vector& 
 }
 
 void FireBullets::Init() {
-	DWORD FireBulletAddress = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")) + 1;
-	fn FireBulletHook = reinterpret_cast<fn>(((*(PDWORD)(FireBulletAddress)) + FireBulletAddress + 0x4));
-
-	Func.Hook(reinterpret_cast<void*>(FireBulletHook), reinterpret_cast<void*>(Hook));
+	static auto dwFireBullets = g_Pattern.Find( _( L"client.dll" ), _( L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 57 8B F9 8B 4B" ) );
+	Func.Hook( reinterpret_cast< void* >( dwFireBullets ), reinterpret_cast< void* >( Hook ) );
 }
