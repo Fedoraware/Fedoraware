@@ -313,7 +313,7 @@ void CVisuals::UpdateWorldModulation()
 
 void CVisuals::UpdateSkyModulation()
 {
-	if (!Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::Vision.m_Var == 1) {
+	if (!Vars::Visuals::SkyModulation.m_Var) {
 		RestoreWorldModulation();
 		return;
 	}

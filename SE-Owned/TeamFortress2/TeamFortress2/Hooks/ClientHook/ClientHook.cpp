@@ -39,27 +39,27 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				pLocal->ClearPunchAngle();								//Clear punch angles for visual no-recoil
 			}
 		}
-		for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		if (Vars::AntiHack::Resolver::PitchResolver.m_Var)
 		{
-			CBaseEntity* entity = nullptr;
-			PlayerInfo_t temp;
-
-			if (!(entity = g_Interfaces.EntityList->GetClientEntity(i)))
-				continue;
-
-			if (entity->GetDormant())
-				continue;
-
-			if (!g_Interfaces.Engine->GetPlayerInfo(i, &temp))
-				continue;
-
-			if (!entity->GetLifeState() == LIFE_ALIVE)
-				continue;
-
-			Vector vX = entity->GetEyeAngles();
-			auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
-			if (Vars::AntiHack::Resolver::PitchResolver.m_Var)
+			for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
 			{
+				CBaseEntity* entity = nullptr;
+				PlayerInfo_t temp;
+
+				if (!(entity = g_Interfaces.EntityList->GetClientEntity(i)))
+					continue;
+
+				if (entity->GetDormant())
+					continue;
+
+				if (!g_Interfaces.Engine->GetPlayerInfo(i, &temp))
+					continue;
+
+				if (!entity->GetLifeState() == LIFE_ALIVE)
+					continue;
+
+				Vector vX = entity->GetEyeAngles();
+				auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
 				//pitch resolver 
 				if (vX.x == 90) //Fake Up resolver
 				{

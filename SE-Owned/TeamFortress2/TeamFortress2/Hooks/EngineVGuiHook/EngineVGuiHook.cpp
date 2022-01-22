@@ -147,6 +147,31 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Crits.Frame();
 			g_Menu.Run();
 		}
+
+		static ConVar* localplayer_visionflags = g_Interfaces.CVars->FindVar("localplayer_visionflags");
+		if (localplayer_visionflags) {
+			switch (Vars::Visuals::Vision.m_Var) {
+			case 1:
+				localplayer_visionflags->SetValue(1);
+				break;
+			case 2:
+				localplayer_visionflags->SetValue(2);
+				break;
+			case 3:
+				localplayer_visionflags->SetValue(4);
+				break;
+			default:
+				break;
+
+			}
+		}
+
+		//static ConVar* localplayer_visionflags = g_Interfaces.CVars->FindVar("localplayer_visionflags");
+		//if (localplayer_visionflags) {
+		//	localplayer_visionflags->nFlags |= ~(1 << 1); //FCVAR_DEVELOPMENTONLY
+		//	g_Interfaces.CVars->ConsolePrintf("localplayer_visionflags found");
+		//	localplayer_visionflags->SetValue("1");
+		//}
 		FinishDrawing(g_Interfaces.Surface);
 	}
 }
