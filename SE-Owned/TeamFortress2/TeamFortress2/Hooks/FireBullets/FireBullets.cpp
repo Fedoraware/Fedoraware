@@ -60,6 +60,14 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 		case 5:
 			ParticleTracer("merasmus_zap_beam02", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			break;
+
+		case 6:
+			pLocal->IsCritBoosted() ? (ParticleTracer(team == 2 ? "bullet_bignasty_tracer01_red_crit" : "bullet_bignasty_tracer01_blue_crit", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true)) : (ParticleTracer(team == 2 ? "bullet_bignasty_tracer01_blue" : "bullet_bignasty_tracer01_red", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true));
+			break;
+
+		case 7:
+			ParticleTracer("tfc_sniper_distortion_trail", trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true); 
+			break;
 		}
 
 	}
