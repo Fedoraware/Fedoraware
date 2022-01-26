@@ -94,6 +94,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

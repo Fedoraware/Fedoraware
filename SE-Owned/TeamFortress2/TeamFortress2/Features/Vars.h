@@ -202,6 +202,7 @@ namespace Vars
 			inline CVar<bool> NameBox			{ true, L"Name box" };
 			inline CVar<int> Uber				{ 2, L"Uber" }; //0 - Off, 1 - Text, 2 - Bar
 			inline CVar<int> Class				{ 1, L"Class" }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
+			inline CVar<bool> WeaponIcon		{ false, L"weapon icon" };
 			inline CVar<bool> Health			{ false, L"Health" };
 			inline CVar<bool> Cond				{ true, L"Cond" };
 			inline CVar<bool> HealthBar			{ true, L"Health Bar" };

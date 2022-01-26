@@ -4,6 +4,18 @@
 #undef CreateFont
 #undef PlaySound
 
+enum FontDrawType_t
+{
+	// Use the "additive" value from the scheme file
+	FONT_DRAW_DEFAULT = 0,
+
+	// Overrides
+	FONT_DRAW_NONADDITIVE,
+	FONT_DRAW_ADDITIVE,
+
+	FONT_DRAW_TYPE_COUNT = 2,
+};
+
 class CSurface
 {
 public:
@@ -47,6 +59,18 @@ public:
 	{
 		typedef void(__thiscall* FN)(PVOID, const wchar_t*, int, int);
 		return GetVFunc<FN>(this, 22)(this, text, text_len, 0);
+	}
+
+	void DrawSetTextFont(unsigned long font)
+	{
+		typedef void(__thiscall* FN)(PVOID, unsigned long);
+		return GetVFunc<FN>(this, 17)(this, font);
+	}
+
+	void DrawUnicodeChar(wchar_t wch, FontDrawType_t drawType = FONT_DRAW_DEFAULT)
+	{
+		typedef void(__thiscall* FN)(PVOID, wchar_t, FontDrawType_t);
+		return GetVFunc<FN>(this, 23)(this, wch, drawType);
 	}
 
 	void DrawLine(int x, int y, int x1, int y1)
@@ -107,6 +131,12 @@ public:
 	{
 		typedef void(__thiscall* FN)(PVOID, int, int, float, int);
 		GetVFunc<FN>(this, 99)(this, x, y, radius, segments); //doesn work?
+	}
+
+	void DrawTexturedSubRect(int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1)
+	{
+		typedef void(__thiscall* FN)(PVOID, int, int, int, int, float, float, float, float);
+		GetVFunc<FN>(this, 101)(this, x0, y0, x1, y1, texs0, text0, texs1, text1); //doesn work?
 	}
 
 	void UnlockCursor()

@@ -172,6 +172,7 @@
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\ConVars\ConVars.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\DrawUtils\DrawUtils.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\EntityCache\EntityCache.cpp" />

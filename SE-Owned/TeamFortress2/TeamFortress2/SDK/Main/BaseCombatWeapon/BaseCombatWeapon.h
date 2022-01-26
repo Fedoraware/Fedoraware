@@ -3,7 +3,6 @@
 #include "../BaseEntity/BaseEntity.h"
 
 
-
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars
@@ -89,7 +88,7 @@ public: //Everything else, lol
 	}
 
 	__inline float GetSwingRange(CBaseEntity* pLocal) {
-		return static_cast<float>(GetVFunc<int(__thiscall*)(CBaseEntity*)>(this, 451)(pLocal));
+		return static_cast<float>(GetVFunc<int(__thiscall*)(CBaseEntity*)>(this, 453)(pLocal));
 	}
 
 	__inline float GetWeaponSpread() {
@@ -238,6 +237,8 @@ public: //Everything else, lol
 	__inline int GetMinigunState() {
 		return *reinterpret_cast<int*>(this + 0xC48);
 	}
+
+	CHudTexture* GetWeaponIcon();
 };
 
 class weapon_info
@@ -330,16 +331,3 @@ struct state_t
 		return !(*this == B);
 	}
 };
-
-/*		M_OFFSETGET(CritBucket, float, 0xA38)
-M_OFFSETGET(WeaponSeed, int, 0xB3C)
-M_OFFSETGET(Unknown1, int, 0xB30)
-M_OFFSETGET(Unknown2, int, 0xB34)
-M_OFFSETGET(Unknown3, bool, 0xB17)
-M_OFFSETGET(Unknown4, float, 0xB40)
-M_OFFSETGET(CritAttempts, int, 0xA3C)
-M_OFFSETGET(CritCount, int, 0xA40)
-M_OFFSETGET(ObservedCritChance, int, 0xBFC)
-M_OFFSETGET(Unknown7, bool, 0xB18)
-M_OFFSETGET(WeaponMode, bool, 0xB04)
-M_OFFSETGET(WeaponDataa, bool, 0xB10)*/

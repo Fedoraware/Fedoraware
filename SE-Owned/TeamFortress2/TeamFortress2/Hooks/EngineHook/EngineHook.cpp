@@ -161,3 +161,9 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 //		g_GlobalInfo.m_bShouldShift = false;
 //	}
 //}
+
+void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
+{
+	static auto originalFn = Func.Original<fn>();
+	return originalFn(ecx, edx);
+}

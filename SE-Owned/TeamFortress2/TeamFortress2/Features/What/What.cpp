@@ -676,6 +676,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Player name", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
 								ImGui::Checkbox("Name box", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
 								static const char* classEsp[]{ "Off", "Icon", "Text" }; ImGui::PushItemWidth(100); ImGui::Combo("Player class", &Vars::ESP::Players::Class.m_Var, classEsp, IM_ARRAYSIZE(classEsp)); ImGui::PopItemWidth(); HelpMarker("Will draw the class the player is");
+								ImGui::Checkbox("Weapon icons", &Vars::ESP::Players::WeaponIcon.m_Var); HelpMarker("Shows the killfeed icon for the wepaon the player is holding (some weapons dont have killfeed icons and others idk the killfeed icon name for"); // CBaseCombatWeapon::GetWeaponIcon
 								ImGui::Checkbox("Player health", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
 								ImGui::Checkbox("Player health bar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
 								ImGui::Checkbox("Player conditions", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
@@ -1183,6 +1184,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Damage logger background", Colors::DmgLoggerBackground);
 							ColorPicker("Damage logger outline", Colors::DmgLoggerOutline);
 							ColorPicker("Damage logger text", Colors::DmgLoggerText);
+							ColorPicker("Weapon icon", Colors::WeaponIcon);
 
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}

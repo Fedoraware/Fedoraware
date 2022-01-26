@@ -11,6 +11,7 @@
 #define VSTDLIB _(L"vstdlib.dll")
 #define MATSYSTEM _(L"materialsystem.dll")
 
+
 void CInterfaces::Init()
 {
 	Client = g_Interface.Get<CBaseClientDLL*>(CLIENT, _(CLIENT_DLL_INTERFACE_VERSION));

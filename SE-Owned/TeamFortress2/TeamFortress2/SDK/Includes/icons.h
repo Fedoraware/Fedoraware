@@ -71,7 +71,7 @@ namespace ICONS
 		_("vgui/animated/tf2_logo_hourglass"),
 		_("console/characters/pauling_gun_mettle_title"),
 		_("console/characters/pauling_tough_break_title"),
-		_("console/characters/pauling_tough_break_title_xmas2015")
+		_("console/characters/pauling_tough_break_title_xmas2015"),
 	};
 
 	inline constexpr int TEXTURE_AMOUNT = (sizeof(TEXTURE) / sizeof(TEXTURE[0]));

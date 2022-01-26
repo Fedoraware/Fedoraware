@@ -307,6 +307,24 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
+			if (Vars::ESP::Players::WeaponIcon.m_Var)
+			{
+				const auto& pWeapon = Player->GetActiveWeapon();
+				if (pWeapon) {
+					CHudTexture* pIcon = pWeapon->GetWeaponIcon();
+					if (pIcon) {
+						float fx, fy, fw, fh;
+						fx = (float)x; fy = (float)y; fw = (float)w; fh = (float)h;
+						const float iconWidth = (float)pIcon->Width();
+						// lol
+						const float scale = std::clamp(fw / iconWidth, 0.5f, 0.75f);
+						static float easedScale = 0.5f;
+						scale > easedScale ? easedScale = g_Draw.EaseOut(scale, easedScale, 0.99f) : easedScale = g_Draw.EaseIn(easedScale, scale, 0.99f);
+						g_Draw.DrawHudTexture(fx + (fw / 2.f) - (iconWidth / 2.f) * scale, fy + fh + 1.f, scale, pIcon, Colors::WeaponIcon);
+					}
+				}
+			}
+
 			if (Vars::ESP::Players::Cond.m_Var)
 			{
 				size_t FONT = FONT_ESP_COND;

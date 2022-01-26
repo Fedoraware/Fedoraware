@@ -58,6 +58,9 @@ struct Draw_t
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex);
+	CHudTexture* GetIcon(const char* szIcon, int eIconFormat = 0);
+	void DrawHudTexture(float x0, float y0, float s0, CHudTexture* texture, Color_t col0);
+	void DrawHudTextureByName(float x0, float y0, float s0, const char* textureName, Color_t col0);
 	void Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID);
 	float EaseOut(float start, float end, float speed);
 	float EaseIn(float start, float end, float speed);

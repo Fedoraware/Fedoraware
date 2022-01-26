@@ -499,6 +499,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Wireframe);
 			SAVE_VAR(Vars::Visuals::Vision);
+			SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 
 
 		}
@@ -618,6 +619,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DmgLoggerBackground);
 			SAVE_OTHER(Colors::DmgLoggerOutline);
 			SAVE_OTHER(Colors::DmgLoggerText);
+			SAVE_OTHER(Colors::WeaponIcon);
 
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
@@ -832,6 +834,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Bones);
 				LOAD_VAR(Vars::ESP::Players::Dlights);
 				LOAD_VAR(Vars::ESP::Players::DlightRadius);
+				LOAD_VAR(Vars::ESP::Players::WeaponIcon);
 			}
 
 			//Buildings
@@ -1152,6 +1155,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DmgLoggerBackground);
 			LOAD_OTHER(Colors::DmgLoggerOutline);
 			LOAD_OTHER(Colors::DmgLoggerText);
+			LOAD_OTHER(Colors::WeaponIcon);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

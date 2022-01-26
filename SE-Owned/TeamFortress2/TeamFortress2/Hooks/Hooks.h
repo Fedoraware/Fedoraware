@@ -22,6 +22,7 @@
 #include "Viewmodel/Viewmodel.h"
 #include "InventoryExpander/InventoryExpander.h"
 #include "IsLocalPlayerUsingVisionFilterFlags/IsLocalPlayerUsingVisionFilterFlags.h"
+
 class CHooks
 {
 private:

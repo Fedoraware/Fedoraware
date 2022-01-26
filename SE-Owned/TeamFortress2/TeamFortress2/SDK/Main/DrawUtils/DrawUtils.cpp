@@ -217,6 +217,59 @@ void Draw_t::Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex)
 	g_Interfaces.Surface->DrawTexturedRect(x, y, w, h);
 }
 
+//E8 ? ? ? ? 80 7F 3C 00
+// Thanks myzarfin
+CHudTexture* Draw_t::GetIcon(const char* szIcon, int eIconFormat /* = 0*/)
+{
+	using fn = CHudTexture * (__stdcall*)(const char*, int);
+	static fn GetIconFn = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 83 7D 0C ? 56"));
+	return GetIconFn(szIcon, eIconFormat);
+}
+
+void Draw_t::DrawHudTexture(float x0, float y0, float s0, CHudTexture* texture, Color_t col0)
+{
+	if (!texture)
+		return;
+
+	if (texture->bRenderUsingFont)
+	{
+
+		g_Interfaces.Surface->DrawSetTextFont(texture->hFont);
+		g_Interfaces.Surface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
+		g_Interfaces.Surface->SetTextPos(x0, y0);
+		g_Interfaces.Surface->DrawUnicodeChar(texture->cCharacterInFont);
+	}
+	else if (texture->textureId != -1)
+	{
+		g_Interfaces.Surface->DrawSetTexture(texture->textureId);
+		g_Interfaces.Surface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
+		g_Interfaces.Surface->DrawTexturedSubRect(x0, y0, x0 + (texture->rc.right - texture->rc.left) * s0, y0 + (texture->rc.bottom - texture->rc.top) * s0, texture->texCoords[0], texture->texCoords[1], texture->texCoords[2], texture->texCoords[3]);
+	}
+}
+
+void Draw_t::DrawHudTextureByName(float x0, float y0, float s0, const char* textureName, Color_t col0)
+{
+	CHudTexture* pIcon = GetIcon(textureName, 0);
+
+	if (!pIcon)
+		return;
+
+	if (pIcon->bRenderUsingFont)
+	{
+
+		g_Interfaces.Surface->DrawSetTextFont(pIcon->hFont);
+		g_Interfaces.Surface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
+		g_Interfaces.Surface->SetTextPos(x0, y0);
+		g_Interfaces.Surface->DrawUnicodeChar(pIcon->cCharacterInFont);
+	}
+	else if (pIcon->textureId != -1)
+	{
+		g_Interfaces.Surface->DrawSetTexture(pIcon->textureId);
+		g_Interfaces.Surface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
+		g_Interfaces.Surface->DrawTexturedSubRect(x0, y0, x0 + (pIcon->rc.right - pIcon->rc.left) * s0, y0 + (pIcon->rc.bottom - pIcon->rc.top) * s0, pIcon->texCoords[0], pIcon->texCoords[1], pIcon->texCoords[2], pIcon->texCoords[3]);
+	}
+}
+
 void Draw_t::Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID)
 {
 	if (const uint64 nID = static_cast<uint64>(nFriendID + 0x0110000100000000))

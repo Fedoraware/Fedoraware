@@ -79,6 +79,7 @@ public:
 	void Init();
 };
 
+
 class CInterfaces
 {
 public: 
@@ -112,6 +113,7 @@ public:
 	IUniformRandomStream*		UniformRandomStream			= nullptr;
 	void *						StudioRender				= nullptr;
 	IInputSystem*				InputSystem					= nullptr;
+	void*						CHud						= nullptr;
 	void Init();
 };
 

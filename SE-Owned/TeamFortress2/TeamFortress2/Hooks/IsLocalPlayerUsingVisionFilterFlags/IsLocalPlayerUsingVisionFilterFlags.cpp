@@ -7,7 +7,7 @@
 
 bool __cdecl IsLocalPlayerUsingVisionFilterFlags::Func(int nFlags, bool bWeaponsCheck)
 {
-	bool ret = Hook.Original<fn>()(nFlags, bWeaponsCheck);
+	static auto originalFn = Hook.Original<fn>();
 	//g_Interfaces.CVars->ConsolePrintf("Ret value: %d\nnFlags: %d\nbWeaponsCheck: %d", ret, nFlags, bWeaponsCheck);
 	switch (Vars::Visuals::Vision.m_Var) {
 	case 1:
@@ -33,14 +33,13 @@ bool __cdecl IsLocalPlayerUsingVisionFilterFlags::Func(int nFlags, bool bWeapons
 		}
 	}
 
-	return ret;
+	return originalFn(nFlags, bWeaponsCheck);
 }
 
 void IsLocalPlayerUsingVisionFilterFlags::Init()
 {
 	//[actual address in first opcode] E8 ? ? ? ? 0F B6 4D FF 83 C4 08 
-	//fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 57 8B F9 8B 0D ? ? ? ? 8B 01 8B 40 20"));
-	DWORD IsLocalPlayerUsingVisionFilterFlagsAddress = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 0F B6 4D FF 83 C4 08") + 1;
-	auto IsLocalPlayerUsingVisionFilterFlagsHook = reinterpret_cast<fn>((*reinterpret_cast<PDWORD>(IsLocalPlayerUsingVisionFilterFlagsAddress) + IsLocalPlayerUsingVisionFilterFlagsAddress + 0x4));
-	Hook.Hook(IsLocalPlayerUsingVisionFilterFlagsHook, Func);
+	// Thanks myzarfin
+	fn IsLocalPlayerUsingVisionFilterFlagsAddress = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 8A 45 ? 56 8B 35"));
+	Hook.Hook(IsLocalPlayerUsingVisionFilterFlagsAddress, Func);
 }

@@ -117,4 +117,39 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 			}
 		}
 	}
+
+	if (uNameHash == FNV1A::HashConst("player_death")) {
+		short userid = pEvent->GetInt("userid");									//user ID who died 
+		long 	victim_entindex = pEvent->GetInt("victim_entindex");
+		long 	inflictor_entindex = pEvent->GetInt("inflictor_entindex");			//ent index of inflictor(a sentry, for example)
+		short 	attacker = pEvent->GetInt("attacker");								//user ID who killed
+		const char* weapon = pEvent->GetString("weapon");							//weapon name killer used
+		short 	weaponid = pEvent->GetInt("weaponid"); 								//ID of weapon killed used
+		long 	damagebits = pEvent->GetInt("damagebits");							//bits of type of damage
+		short 	customkill = pEvent->GetInt("customkill"); 							//type of custom kill
+		short 	assister = pEvent->GetInt("assister"); 								//user ID of assister
+		const char* weapon_logclassname = pEvent->GetString("weapon_logclassname");	//weapon name that should be printed on the log
+		short 	stun_flags = pEvent->GetInt("assister");							//victim's stun flags at the moment of death
+		short 	death_flags = pEvent->GetInt("death_flags");						//death flags.
+		bool 	silent_kill = pEvent->GetBool("silent_kill");
+		short 	playerpenetratecount = pEvent->GetInt("playerpenetratecount");
+		const char* assister_fallback = pEvent->GetString("assister_fallback");		//contains a string to use if "assister" is - 1
+		short 	kill_streak_total = pEvent->GetInt("kill_streak_total");			//Kill streak count(level)
+		short 	kill_streak_wep = pEvent->GetInt("kill_streak_wep");				//Kill streak for killing weapon
+		short 	kill_streak_assist = pEvent->GetInt("kill_streak_assist");			//Kill streak for assister count
+		short 	kill_streak_victim = pEvent->GetInt("kill_streak_victim");			//Victims kill streak
+		short 	ducks_streaked = pEvent->GetInt("ducks_streaked");					//Duck streak increment from this kill
+		short 	duck_streak_total = pEvent->GetInt("duck_streak_total");			//Duck streak count for attacker
+		short 	duck_streak_assist = pEvent->GetInt("duck_streak_assist");			//Duck streak count for assister
+		short 	duck_streak_victim = pEvent->GetInt("duck_streak_victim");			//(former) duck streak count for victim
+		bool 	rocket_jump = pEvent->GetBool("rocket_jump");						//was the victim rocket jumping
+		short 	weapon_def_index = pEvent->GetInt("weapon_def_index");				//item def index of weapon killer used
+		short 	crit_type = pEvent->GetInt("crit_type");							//Crit type of kill. (0: None, 1 : Mini, 2 : Full)
+		g_Interfaces.CVars->ConsolePrintf("weapon: %s", weapon);
+		g_Interfaces.CVars->ConsolePrintf("weapon_logclassname: %s", weapon_logclassname);
+		//g_Interfaces.CVars->ConsolePrintf("userid: %d\nvictim_entindex: %d\nattacker: %d\nweapon: %s\nweaponid: %d\ndamagebits: %d\n", userid, victim_entindex, inflictor_entindex, attacker, weapon, weaponid, damagebits); 
+		//g_Interfaces.CVars->ConsolePrintf("customkill: %d\nassister: %d\nweapon_logclassname: %s\nstun_flags: %d\ndeath_flags: %d\nsilent_kill: %d\nplayerpenetratecount: %d\n", customkill, assister, weapon_logclassname, stun_flags, death_flags, silent_kill, playerpenetratecount);
+		//g_Interfaces.CVars->ConsolePrintf("assister_fallback: %s\nkill_streak_total: %d\nkill_streak_wep: %d\nkill_streak_assist: %d\nkill_streak_victim: %d\nducks_streaked: %d\nduck_streak_assist: %d\nduck_streak_victim: %d\n", assister_fallback, kill_streak_total, kill_streak_wep, kill_streak_assist, kill_streak_victim, ducks_streaked, duck_streak_total, duck_streak_assist, duck_streak_victim);
+		//g_Interfaces.CVars->ConsolePrintf("rocket_jump: %d\nweapon_def_index: %d\ncrit_type: %d\n", rocket_jump, weapon_def_index, crit_type);
+	}
 }

@@ -14,6 +14,8 @@ void CHooks::Init()
 		//ResetHook::Init();
 		FireBullets::Init();
 		//Viewmodel::Init();
+		IsLocalPlayerUsingVisionFilterFlags::Init();
+		//GetIconHook::Init();
 	}
 
 	if (g_Interfaces.Client)
@@ -145,7 +147,10 @@ void CHooks::Init()
 
 		//CL_SendMove
 		{
+			using namespace CL_SendMove;
 
+			fn CLSendMove = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 8D"));
+			Func.Hook(CLSendMove, Hook);
 		}
 	}
 
@@ -210,9 +215,7 @@ void CHooks::Init()
 		Func.Hook(reinterpret_cast<void*>(SetAlphaModulation), reinterpret_cast<void*>(Hook));
 	}
 
-	{
-		IsLocalPlayerUsingVisionFilterFlags::Init();
-	}//GetVisionFilterFlags::Init();
+
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
 		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);

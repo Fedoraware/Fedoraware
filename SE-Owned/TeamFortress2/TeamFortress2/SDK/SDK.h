@@ -142,6 +142,7 @@ namespace Colors
 	inline Color_t DmgLoggerBackground =	{ 30, 30, 30, 255 };
 	inline Color_t DmgLoggerOutline =		{ 30, 30, 255, 255};
 	inline Color_t DmgLoggerText =			{ 255, 255, 255, 255 };
+	inline Color_t WeaponIcon = { 255,255,255,255 };
 }
 
 namespace Utils
@@ -626,3 +627,4 @@ namespace Utils
 		return false;
 	}
 }
+
