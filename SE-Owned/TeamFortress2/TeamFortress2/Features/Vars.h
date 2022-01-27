@@ -516,7 +516,7 @@ namespace Vars
 		}
 		namespace Resolver
 		{
-			inline CVar<bool> PitchResolver			{ false, L"Pitch Resolver" };
+			inline CVar<bool> Resolver				{ false, L"Resolver" };
 		}
 	}
 

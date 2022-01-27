@@ -567,7 +567,7 @@ void CConfigManager::Save(const wchar_t *name)
 			}
 			//Resolver
 			{
-				SAVE_VAR(Vars::AntiHack::Resolver::PitchResolver);
+				SAVE_VAR(Vars::AntiHack::Resolver::Resolver);
 			}
 		}
 
@@ -1102,7 +1102,7 @@ void CConfigManager::Load(const wchar_t *name)
 			}
 			//Resolver
 			{
-				LOAD_VAR(Vars::AntiHack::Resolver::PitchResolver);
+				LOAD_VAR(Vars::AntiHack::Resolver::Resolver);
 			}
 		}
 

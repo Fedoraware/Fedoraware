@@ -3,6 +3,9 @@
 #include "../../SDK/SDK.h"
 #include <algorithm>
 
+const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
+const char* resolveListYaw[]{ "None", "North", "East", "South", "West", "Invert" };
+
 bool sortByTeam(const plistPlayer& a, const plistPlayer& b)
 {
 	return a.teamNum < b.teamNum;
@@ -93,6 +96,11 @@ void CPlayerList::Render()
 						continue;
 
 					bool ignored = (g_GlobalInfo.ignoredPlayers.find(player.info.friendsID) != g_GlobalInfo.ignoredPlayers.end());
+					auto findResolveMode = g_GlobalInfo.resolvePlayers.find(player.info.friendsID);
+					ResolveMode resolveMode;
+					if (findResolveMode != g_GlobalInfo.resolvePlayers.end()) {
+						resolveMode = findResolveMode->second;
+					}
 
 					ImGui::TableNextRow();
 
@@ -121,6 +129,24 @@ void CPlayerList::Render()
 								g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", player.info.userID).c_str());
 
 							ImGui::SameLine();
+
+							if (Vars::AntiHack::Resolver::Resolver.m_Var) {
+								// Pitch resolver
+								ImGui::PushItemWidth(90.f);
+								if (ImGui::Combo("##pitch", &resolveMode.m_Pitch, resolveListPitch, IM_ARRAYSIZE(resolveListPitch))) {
+									g_GlobalInfo.resolvePlayers[player.info.friendsID].m_Pitch = resolveMode.m_Pitch;
+								}
+								ImGui::PopItemWidth();
+								ImGui::SameLine();
+
+								// Yaw resolver
+								ImGui::PushItemWidth(90.f);
+								if (ImGui::Combo("##yaw", &resolveMode.m_Yaw, resolveListYaw, IM_ARRAYSIZE(resolveListYaw))) {
+									g_GlobalInfo.resolvePlayers[player.info.friendsID].m_Yaw = resolveMode.m_Yaw;
+								}
+								ImGui::PopItemWidth();
+								ImGui::SameLine();
+							}
 
 							if (ImGui::Checkbox("Ignore", &ignored))
 								if (g_GlobalInfo.ignoredPlayers.find(player.info.friendsID) == g_GlobalInfo.ignoredPlayers.end())
