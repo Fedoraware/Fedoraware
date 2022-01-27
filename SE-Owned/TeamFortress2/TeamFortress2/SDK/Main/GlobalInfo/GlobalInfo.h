@@ -6,6 +6,11 @@
 #define MAX_NEW_COMMANDS_HEAVY 24
 #define DT_WAIT_CALLS 26
 
+struct ResolveMode {
+	int m_Pitch = 4; // Default to AUTO
+	int m_Yaw = 0;
+};
+
 struct GlobalInfo_t
 {
 	int m_nCurrentTargetIdx				= 0;
@@ -43,6 +48,7 @@ struct GlobalInfo_t
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
+	std::map<int, ResolveMode> resolvePlayers;
 };
 
 inline GlobalInfo_t g_GlobalInfo;

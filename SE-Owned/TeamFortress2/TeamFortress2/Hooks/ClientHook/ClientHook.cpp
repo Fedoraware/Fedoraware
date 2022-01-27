@@ -39,7 +39,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				pLocal->ClearPunchAngle();								//Clear punch angles for visual no-recoil
 			}
 		}
-		if (Vars::AntiHack::Resolver::PitchResolver.m_Var)
+		if (Vars::AntiHack::Resolver::Resolver.m_Var)
 		{
 			for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
 			{
@@ -60,15 +60,70 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 				Vector vX = entity->GetEyeAngles();
 				auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
-				//pitch resolver 
-				if (vX.x == 90) //Fake Up resolver
-				{
-					*m_angEyeAnglesX = -89;
+				auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
+
+				auto findResolve = g_GlobalInfo.resolvePlayers.find(temp.friendsID);
+				ResolveMode resolveMode;
+				if (findResolve != g_GlobalInfo.resolvePlayers.end()) {
+					resolveMode = findResolve->second;
 				}
 
-				if (vX.x == -90) //Fake Down resolver
+				// Pitch resolver 
+				switch (resolveMode.m_Pitch) {
+				case 1: {
+					*m_angEyeAnglesX = -89; // Up
+					break;
+				}
+				case 2: {
+					*m_angEyeAnglesX = 89;  // Down
+					break;
+				}
+				case 3: {
+					*m_angEyeAnglesX = 0;  // Zero
+					break;
+				}
+				case 4: {
+					// Auto (Will resolve fake up/down)
+					if (vX.x >= 90)
+					{
+						*m_angEyeAnglesX = -89;
+					}
+
+					if (vX.x <= -90)
+					{
+						*m_angEyeAnglesX = 89;
+					}
+					break;
+				}
+				default:
+					break;
+				}
+
+				// Yaw resolver
+				switch (resolveMode.m_Yaw)
 				{
-					*m_angEyeAnglesX = 89;
+				case 1: {
+					*m_angEyeAnglesY = 0;  // North
+					break;
+				}
+				case 2: {
+					*m_angEyeAnglesY = 90; // East
+					break;
+				}
+				case 3: {
+					*m_angEyeAnglesY = 180; // South
+					break;
+				}
+				case 4: {
+					*m_angEyeAnglesY = -90;  // West
+					break;
+				}
+				case 5: {
+					*m_angEyeAnglesY += 180; // Invert
+					break;
+				}
+				default:
+					break;
 				}
 			}
 		}
