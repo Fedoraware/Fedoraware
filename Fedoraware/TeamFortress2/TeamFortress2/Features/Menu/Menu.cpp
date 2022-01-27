@@ -1,13 +1,12 @@
-#include "What.h"
+#include "Menu.h"
 #include "../Vars.h"
 #include "../Visuals/Visuals.h"
 #include "ImGui/imgui_internal.h"
-#include "../Menu/InputHelper/InputHelper.h"
-#include "../Menu/ConfigManager/ConfigManager.h"
+#include "InputHelper/InputHelper.h"
+#include "ConfigManager/ConfigManager.h"
 #include "ImGui/imgui_stdlib.h"
 #include <filesystem>
 #include "../AttributeChanger/AttributeChanger.h"
-#include "../Menu/Menu.h"
 #include "../Glow/Glow.h"
 #include "../Chams/Chams.h"
 #include "../PlayerList/PlayerList.h"
@@ -223,7 +222,7 @@ float* cColor(ImVec4 color, Color_t& out) {
 	return &color.x;
 }
 
-void CWhat::TextCenter(std::string text) {
+void CMenu::TextCenter(std::string text) {
 	ImGui::PushFont(DT);
 	float font_size = ImGui::CalcTextSize(text.c_str()).x;
 	//float font_size = ImGui::GetFontSize() * text.size() / 2;
@@ -236,8 +235,35 @@ void CWhat::TextCenter(std::string text) {
 	ImGui::PopFont();
 }
 
+void CMenu::Run() {
+	m_bReopened = false;
 
-void CWhat::Render(IDirect3DDevice9* pDevice) {
+	static bool bOldOpen = m_bOpen;
+
+	if (bOldOpen != m_bOpen)
+	{
+		bOldOpen = m_bOpen;
+
+		if (m_bOpen)
+			m_bReopened = true;
+	}
+
+	flTimeOnChange = 0.0f;
+
+	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
+		flTimeOnChange = g_Interfaces.Engine->Time();
+	}
+	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
+
+	if (m_flFadeElapsed < m_flFadeDuration) {
+		m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
+		g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
+	}
+
+	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+}
+
+void CMenu::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
 	static bool bColumnsWidthened = false;
 	bool modified_custom_style = false;
@@ -914,7 +940,7 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
 								ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Will spam your noisemaker without using its charges");
 								ImGui::Checkbox("Auto rocketjump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
-								ImGui::Checkbox("Chat spam", &Vars::Misc::ChatSpam.m_Var); HelpMarker("Spam the chat with SE-Owned adverts");
+								ImGui::Checkbox("Chat spam", &Vars::Misc::ChatSpam.m_Var); HelpMarker("Spam the chat with Fedoraware adverts");
 								ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 								const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
 								ImGui::Checkbox("Show class changes", &Vars::Visuals::ChatInfo.m_Var); HelpMarker("Will say when people change class in chat");
@@ -926,7 +952,6 @@ void CWhat::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 								ImGui::Checkbox("Be marked as a cat", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
-								ImGui::Checkbox("Old menu", &Vars::Menu::LegacyMenu.m_Var); HelpMarker("Enable the old menu (home key)");
 								ImGui::Checkbox("Menu snow", &Vars::Visuals::Snow.m_Var); HelpMarker("Enable the snow when menu is open");
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}

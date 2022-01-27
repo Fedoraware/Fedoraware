@@ -120,7 +120,7 @@ void CVisuals::ThirdPerson()
 	{
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
-			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible() && !g_Menu.m_bTyping)
+			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
 			{
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;

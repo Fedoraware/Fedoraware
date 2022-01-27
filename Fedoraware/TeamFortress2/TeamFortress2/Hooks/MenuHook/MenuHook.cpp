@@ -1,5 +1,5 @@
 #include "MenuHook.h"
-#include "../../Features/What/What.h"
+#include "../../Features/Menu/Menu.h"
 
 // REDOING THIS SHIT
 
@@ -29,13 +29,13 @@ void MenuHook::Init()
 
 void MenuHook::Unload()
 {
-	g_What.menuOpen = true;
-	g_What.menuUnload = true;
+	g_Menu.menuOpen = true;
+	g_Menu.menuUnload = true;
 }
 
 void __stdcall LockCursor::Func()
 {
-	g_What.menuOpen ? g_Interfaces.Surface->UnlockCursor() : Hook.CallOriginal<fn>()(g_Interfaces.Surface);
+	g_Menu.menuOpen ? g_Interfaces.Surface->UnlockCursor() : Hook.CallOriginal<fn>()(g_Interfaces.Surface);
 }
 
 void LockCursor::Init()
@@ -64,7 +64,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 LONG __stdcall WndProc::Func(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (g_What.menuOpen) {
+	if (g_Menu.menuOpen) {
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		g_Interfaces.InputSystem->ResetInputStateVFunc();
 		return 1;
@@ -88,7 +88,7 @@ HRESULT __stdcall EndScene::Func(IDirect3DDevice9* pDevice)
 		return Hook.CallOriginal<fn>()(pDevice);
 	}
 
-	g_What.Render(pDevice);
+	g_Menu.Render(pDevice);
 	return Hook.CallOriginal<fn>()(pDevice);
 }
 

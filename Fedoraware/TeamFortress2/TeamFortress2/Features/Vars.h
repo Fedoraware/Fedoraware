@@ -52,8 +52,6 @@ namespace Vars
 			inline Color_t FeatureBackground	= { 255, 255, 255, 0 };
 			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
 		}
-
-		inline CVar<bool> LegacyMenu{ false, L"Legacy menu" };
 	}
 
 	namespace Crits

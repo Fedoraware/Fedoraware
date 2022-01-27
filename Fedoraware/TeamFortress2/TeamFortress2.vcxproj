@@ -1,6 +1,100 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{D75548B5-A1DB-4EA1-8CC1-3E09C441B4B2}</ProjectGuid>
+    <RootNamespace>TeamFortress2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <TargetName>Fware($(Configuration))</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>Fware($(Configuration))</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\DLLMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
@@ -8,14 +102,25 @@
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotProjectile\AimbotProjectile.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\AntiAim.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
+    <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
+    <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Features\SpectatorList\SpectatorList.cpp" />
     <ClCompile Include="TeamFortress2\Features\SpyWarning\SpyWarning.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.cpp" />
@@ -23,23 +128,50 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\FireBullets\FireBullets.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Hooks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InCondHook\InCondHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\InputHook\InputHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ModelRenderHook\ModelRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PanelHook\PanelHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\rpc_connection.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\ConVars\ConVars.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\DrawUtils\DrawUtils.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\EntityCache\EntityCache.cpp" />
@@ -47,6 +179,7 @@
     <ClCompile Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.cpp" />
     <ClCompile Include="TeamFortress2\SDK\NetVars\NetVars.cpp" />
     <ClCompile Include="TeamFortress2\Utils\CRC\CRC.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Hash\Hash.cpp" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\buffer.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\hde\hde32.c" />
@@ -54,63 +187,34 @@
     <ClCompile Include="TeamFortress2\Utils\MinHook\hook.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\trampoline.c" />
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.cpp" />
-    <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\What.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
-    <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\rpc_connection.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\InputHook\InputHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\FireBullets\FireBullets.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotMelee\AimbotMelee.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotProjectile\AimbotProjectile.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\AntiAim.h" />
+    <ClInclude Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.h" />
+    <ClInclude Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.h" />
+    <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
+    <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
+    <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
+    <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
+    <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
+    <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
+    <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
+    <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
+    <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Features\SpectatorList\SpectatorList.h" />
     <ClInclude Include="TeamFortress2\Features\SpyWarning\SpyWarning.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.h" />
@@ -119,19 +223,168 @@
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_internal.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_textedit.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
+    <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\FireBullets\FireBullets.h" />
+    <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
     <ClInclude Include="TeamFortress2\Hooks\InCondHook\InCondHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\InputHook\InputHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ModelRenderHook\ModelRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PanelHook\PanelHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
+    <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shape.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9xof.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\audiodefs.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\comdecl.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2D1.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2D1Helper.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2DBaseTypes.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2Derr.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10effect.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d10misc.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d10sdklayers.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10_1.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10_1shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11SDKLayers.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11Shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9caps.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9types.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3Dcommon.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3Dcompiler.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DCSX.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx10async.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10math.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10mesh.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11async.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9anim.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9core.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9effect.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9math.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9mesh.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9shader.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9shape.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9tex.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9xof.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\Dcommon.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dinput.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dinputd.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsconf.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsetup.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsound.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DWrite.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxdiag.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DxErr.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxfile.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGI.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGIFormat.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGIType.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxsdkver.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\gameux.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\PIXPlugin.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rmxfguid.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rmxftmpl.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rpcsal.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\X3DAudio.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3d3.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3wb.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPO.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPOBase.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPOFX.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAudio2.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAudio2fx.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XDSP.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XInput.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xma2defs.h" />
+    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xnamath.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_register.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_rpc.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\backoff.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\connection.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\msg_queue.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\allocators.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\document.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodedstream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodings.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\en.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\error.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filereadstream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filewritestream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\fwd.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\itoa.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\meta.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\pow10.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\regex.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\stack.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strtod.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\swap.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorybuffer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorystream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\pointer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\prettywriter.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\rapidjson.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\reader.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\schema.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stringbuffer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\writer.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\rpc_connection.h" />
+    <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Classes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
@@ -149,11 +402,13 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\DebugOverlay\DebugOverlay.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineClient\EngineClient.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineTrace\EngineTrace.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineVGui\EngineVGui.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Input\Input.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Interfaces.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\KeyValuesSystem\KeyValuesSystem.h" />
@@ -434,8 +689,11 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
+    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
+    <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
+    <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
     <ClInclude Include="TeamFortress2\Utils\Interface\Interface.h" />
     <ClInclude Include="TeamFortress2\Utils\Math\Math.h" />
@@ -445,184 +703,17 @@
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\pstdint.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\table32.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\table64.h" />
+    <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\MinHook.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\trampoline.h" />
     <ClInclude Include="TeamFortress2\Utils\Pattern\Pattern.h" />
     <ClInclude Include="TeamFortress2\Utils\SEOHook\SEOHook.h" />
+    <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
-    <ClInclude Include="TeamFortress2\Utils\XorStr\XorStr.h" />
-    <ClInclude Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.h" />
-    <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
-    <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Utils\WinAPI\WinAPI.h" />
-    <ClInclude Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.h" />
-    <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
-    <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
-    <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
-    <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
-    <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
-    <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
-    <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
-    <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imconfig.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_dx9.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_internal.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_textedit.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imstb_truetype.h" />
-    <ClInclude Include="TeamFortress2\Features\What\What.h" />
-    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shader.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9shape.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9tex.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9xof.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
-    <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
-    <ClInclude Include="TeamFortress2\Features\What\ImGui\imgui_stdlib.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\audiodefs.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\comdecl.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2D1.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2D1Helper.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2DBaseTypes.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2Derr.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10effect.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d10misc.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d10sdklayers.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10shader.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10_1.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D10_1shader.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11SDKLayers.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3D11Shader.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9caps.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3d9types.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3Dcommon.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3Dcompiler.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DCSX.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx10async.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10core.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10math.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10mesh.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX10tex.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11async.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11core.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D3DX11tex.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9anim.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9core.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9effect.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9math.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9mesh.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9shader.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9shape.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9tex.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\d3dx9xof.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\Dcommon.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dinput.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dinputd.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsconf.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsetup.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dsound.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DWrite.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxdiag.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DxErr.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxfile.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGI.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGIFormat.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\DXGIType.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\dxsdkver.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\gameux.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\PIXPlugin.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rmxfguid.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rmxftmpl.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\rpcsal.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\X3DAudio.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3d3.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xact3wb.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPO.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPOBase.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAPOFX.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAudio2.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XAudio2fx.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XDSP.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XInput.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xma2defs.h" />
-    <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xnamath.h" />
-    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
-    <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
-    <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
-    <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
-    <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
-    <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_register.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_rpc.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\en.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\error.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\biginteger.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\diyfp.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\dtoa.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\ieee754.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\itoa.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\meta.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\pow10.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\regex.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\stack.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strfunc.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strtod.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\swap.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\inttypes.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\stdint.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\allocators.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\cursorstreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\document.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodedstream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodings.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filereadstream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filewritestream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\fwd.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\istreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorybuffer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorystream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\ostreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\pointer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\prettywriter.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\rapidjson.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\reader.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\schema.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stringbuffer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\writer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\backoff.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\connection.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\msg_queue.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rpc_connection.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
-    <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
-    <ClInclude Include="TeamFortress2\Hooks\InputHook\InputHook.h" />
-    <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
-    <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
-    <ClInclude Include="TeamFortress2\Hooks\FireBullets\FireBullets.h" />
-    <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
-    <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
-    <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
-    <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
+    <ClInclude Include="TeamFortress2\Utils\XorStr\XorStr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
@@ -637,4 +728,7 @@
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
   </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

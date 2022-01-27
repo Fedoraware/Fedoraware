@@ -9,7 +9,6 @@
 #include "Features/Vars.h"
 
 #include "Features/Menu/Menu.h"
-#include "Features/What/What.h"
 
 #include "Features/Menu/InputHelper/InputHelper.h"
 #include "Features/Menu/ConfigManager/ConfigManager.h"
@@ -72,7 +71,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var },
 		{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
 	});
-	g_What.config = true;
+	g_Menu.config = true;
 	//g_Draw.InitFonts
 	//({
 		//FONT_ESP
@@ -114,7 +113,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
-	while (!GetAsyncKeyState(VK_F11)) {
+	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		g_DiscordRPC.vFunc();
 		g_Misc.SteamRPC();
@@ -123,7 +122,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
 	g_Menu.m_bOpen = false;
-	g_What.menuOpen = false;
+	g_Menu.menuOpen = false;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
 
