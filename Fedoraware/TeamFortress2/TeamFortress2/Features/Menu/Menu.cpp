@@ -335,7 +335,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.00f, 0.00f, 0.10f, 0.20f);
 
 		style->WindowPadding = ImVec2(8.00f, 8.00f);
 		style->FramePadding = ImVec2(5.00f, 2.00f);
@@ -534,20 +534,60 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				{
 					ImGui::PushItemWidth(45);
 					ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
 					if (ImGui::Button("Save")) {
-						g_CFG.Save(selected.c_str());
-						selected.clear();
+						ImGui::OpenPopup("Save config?");
 					}
+
 					ImGui::SameLine();
 					if (ImGui::Button("Load")) {
 						g_CFG.Load(selected.c_str());
 						selected.clear();
 					}
+
 					ImGui::SameLine();
 					if (ImGui::Button("Remove")) {
-						g_CFG.Remove(selected.c_str());
-						selected.clear();
+						ImGui::OpenPopup("Remove config?");
 					}
+
+					// Save config dialog
+					if (ImGui::BeginPopupModal("Save config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+						ImGui::Text("Do you really want to override this config?\n\n");
+						ImGui::Separator();
+
+						if (ImGui::Button("Yes, override!", ImVec2(120, 0))) {
+							g_CFG.Save(selected.c_str());
+							selected.clear();
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::SameLine();
+						if (ImGui::Button("No", ImVec2(120, 0))) {
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndPopup();
+					}
+
+					// Delete config dialog
+					if (ImGui::BeginPopupModal("Remove config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+						ImGui::Text("Do you really want to delete this config?\n\n");
+						ImGui::Separator();
+
+						if (ImGui::Button("Yes, remove!", ImVec2(120, 0))) {
+							g_CFG.Remove(selected.c_str());
+							selected.clear();
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::SameLine();
+						if (ImGui::Button("No", ImVec2(120, 0))) {
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndPopup();
+					}
+
 					ImGui::PopStyleVar();
 					ImGui::PopItemWidth();
 				}
@@ -1111,10 +1151,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						{
 							if (ImGui::CollapsingHeader("HvH", ImGuiTreeNodeFlags_DefaultOpen)) {
 								ImGui::Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var); HelpMarker("Anti-aim master switch");
-								const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth(); HelpMarker("Which way to look up/down");
-								const char* realYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to look horizontally");
-								const char* fakeYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to appear to look horizontally");
-								ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enabled AntiAim resolver in the playerlist");
+								const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Random" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth(); HelpMarker("Which way to look up/down");
+								const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to look horizontally");
+								const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to appear to look horizontally");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth(); HelpMarker("You spin me right 'round, baby, right 'round");
+								ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables AntiAim resolver in the playerlist");
 								ImGui::Checkbox("Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var); HelpMarker("Fakelag master switch");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
 								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
