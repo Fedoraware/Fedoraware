@@ -1,6 +1,9 @@
 #include "AntiAim.h"
 #include "../Vars.h"
 
+float lastRealAngle = -90.f;
+float lastFakeAngle = 90.f;
+
 void CAntiAim::FixMovement(CUserCmd* pCmd, Vec3 vOldAngles, float fOldSideMove, float fOldForwardMove)
 {
 	Vec3 curAngs = pCmd->viewangles;
@@ -67,22 +70,69 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		Vec3 vAngles = pCmd->viewangles;
 
 		switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
-		case 1: { pCmd->viewangles.x = -89.0f; g_GlobalInfo.m_vRealViewAngles.x = -89.0f; break; }
-		case 2: { pCmd->viewangles.x = 89.0f; g_GlobalInfo.m_vRealViewAngles.x = 89.0f; break; }
-		case 3: { pCmd->viewangles.x = -271.0f; g_GlobalInfo.m_vRealViewAngles.x = 89.0f; break; }
-		case 4: { pCmd->viewangles.x = 271.0f; g_GlobalInfo.m_vRealViewAngles.x = -89.0f; break; }
-		default: { bPitchSet = false; break; }
+		case 1: {
+			pCmd->viewangles.x = -89.0f;
+			g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
+			break;
+		}
+		case 2: {
+			pCmd->viewangles.x = 89.0f;
+			g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
+			break;
+		}
+		case 3: {
+			pCmd->viewangles.x = -271.0f;
+			g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
+			break;
+		}
+		case 4: {
+			pCmd->viewangles.x = 271.0f;
+			g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
+			break;
+		}
+		case 5: {
+			pCmd->viewangles.x = Utils::RandFloatRange(-89.0f, 89.0f);
+			g_GlobalInfo.m_vRealViewAngles.x = Utils::RandFloatRange(-89.0f, 89.0f);
+			break;
+		}
+		default: {
+			bPitchSet = false;
+			break;
+		}
 		}
 
-		static bool b = false;
+		static bool bSendReal = false;
 
-		if (b)
+		if (bSendReal)
 		{
 			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
-			case 1: { pCmd->viewangles.y += 90.0f;  break; }
-			case 2: { pCmd->viewangles.y -= 90.0f; break; }
-			case 3: { pCmd->viewangles.y += 180.0f; break; }
-			default: { bYawSet = false; break; }
+			case 1: {
+				pCmd->viewangles.y += 90.0f;
+				break;
+			}
+			case 2: {
+				pCmd->viewangles.y -= 90.0f;
+				break;
+			}
+			case 3: {
+				pCmd->viewangles.y += 180.0f;
+				break;
+			}
+			case 4: {
+				pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+				break;
+			}
+			case 5: {
+				lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
+				if (lastRealAngle > 180.f) { lastRealAngle = -180.f; }
+				if (lastRealAngle < -180.f) { lastRealAngle = 180.f; }
+				pCmd->viewangles.y = lastRealAngle;
+				break;
+			}
+			default: {
+				bYawSet = false;
+				break;
+			}
 			}
 
 			g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;
@@ -91,16 +141,39 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		else
 		{
 			switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
-			case 1: { pCmd->viewangles.y += 90.0f; break; }
-			case 2: { pCmd->viewangles.y -= 90.0f; break; }
-			case 3: { pCmd->viewangles.y += 180.0f; break; }
-			default: { bYawSet = false; break; }
+			case 1: {
+				pCmd->viewangles.y += 90.0f;
+				break;
+			}
+			case 2: {
+				pCmd->viewangles.y -= 90.0f;
+				break;
+			}
+			case 3: {
+				pCmd->viewangles.y += 180.0f;
+				break;
+			}
+			case 4: {
+				pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+				break;
+			}
+			case 5: {
+				lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
+				if (lastFakeAngle > 180.f) { lastFakeAngle = -180.f; }
+				if (lastFakeAngle < -180.f) { lastFakeAngle = 180.f; }
+				pCmd->viewangles.y = lastFakeAngle;
+				break;
+			}
+			default: {
+				bYawSet = false;
+				break;
+			}
 			}
 
 			g_GlobalInfo.m_vFakeViewAngles.y = pCmd->viewangles.y;
 		}
 
-		*pSendPacket = b = !b;
+		*pSendPacket = bSendReal = !bSendReal;
 		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}
