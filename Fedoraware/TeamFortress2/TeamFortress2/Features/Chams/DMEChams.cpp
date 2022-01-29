@@ -2,6 +2,8 @@
 
 #include "../Vars.h"
 #include "../../Hooks/ModelRenderHook/ModelRenderHook.h"
+#include "Chams.h"
+#include "../Glow/Glow.h"
 
 bool CDMEChams::ShouldRun()
 {

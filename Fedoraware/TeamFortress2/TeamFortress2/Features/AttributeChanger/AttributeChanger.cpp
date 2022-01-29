@@ -40,7 +40,7 @@ void CAttributChanger::Run()
 		if (!pLocal->IsAlive())
 			return;
 
-		auto MyWeapons = reinterpret_cast<size_t*>(pLocal + 0xCF8);
+		auto MyWeapons = pLocal->GetMyWeapons(); // reinterpret_cast<size_t*>(pLocal + 0xCF8);
 
 		int n;
 		for (n = 0; MyWeapons[n]; n++)

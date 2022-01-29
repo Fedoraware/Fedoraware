@@ -97,6 +97,70 @@ static void updateAntiAfk(CUserCmd* pCmd)
 	}
 }
 
+inline Vector ComputeMove(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
+{
+	Vec3 diff = (b - a);
+	if (diff.Lenght() == 0.0f)
+		return Vec3(0.0f, 0.0f, 0.0f);
+	const float x = diff.x;
+	const float y = diff.y;
+	Vec3 vsilent(x, y, 0);
+	Vec3 ang;
+	Math::VectorAngles(vsilent, ang);
+	float yaw = DEG2RAD(ang.y - pCmd->viewangles.y);
+	float pitch = DEG2RAD(ang.x - pCmd->viewangles.x);
+	Vec3 move = { cos(yaw) * 450.0f, -sin(yaw) * 450.0f, -cos(pitch) * 450.0f };
+
+	// Only apply upmove in water
+	if (!(g_Interfaces.EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
+		move.z = pCmd->upmove;
+	return move;
+}
+
+// Function for when you want to goto a vector
+inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b, float scale)
+{
+	// Calculate how to get to a vector
+	auto result = ComputeMove(pCmd, pLocal, a, b);
+	// Push our move to usercmd
+	pCmd->forwardmove = result.x * scale;
+	pCmd->sidemove = result.y * scale;
+	pCmd->upmove = result.z * scale;
+}
+
+void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
+	static Vec3 vStartOrigin = {};
+	static Vec3 vStartVel = {};
+	static int nShiftTick = 0;
+	if (pLocal && pLocal->IsAlive()) {
+		if (g_GlobalInfo.m_bShouldShift)
+		{
+			if (vStartOrigin.IsZero()) {
+				vStartOrigin = pLocal->GetVecOrigin();
+			}
+
+			if (vStartVel.IsZero()) {
+				vStartVel = pLocal->GetVecVelocity();
+			}
+
+			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(24 - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(24));
+
+			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
+			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.0f, 520.f, 0.f, 1.f);
+			WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
+
+			nShiftTick++;
+		}
+		else {
+			vStartOrigin = Vec3(0,0,0);
+			vStartVel = Vec3(0,0,0);
+			nShiftTick = 0;
+		}
+	}
+}
+
+
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -108,12 +172,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (!pCmd || !pCmd->command_number)
 		return OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
 
+	FastStop(pCmd, g_EntityCache.m_pLocal);
+
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
-
 
 	int nOldFlags = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
@@ -122,14 +187,15 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-
-		int classNum = pLocal->GetClassNum();
-		if (classNum == ETFClass::CLASS_HEAVY) {
-			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS_HEAVY;
-		}
-		else {
-			g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
-		}
+		
+		//// What an utterly retarded piece of code
+		//int classNum = pLocal->GetClassNum();
+		//if (classNum == ETFClass::CLASS_HEAVY) {
+		// g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS_HEAVY;
+		//}
+		//else {
+		//	g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
+		//}
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
@@ -208,10 +274,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		pCmd->viewangles = ang;
 	}
 
-	if (g_GlobalInfo.m_bShouldShift) {
-		FastStop(pCmd);
-	}
-
 	g_Misc.Run(pCmd);
 	g_Crits.Tick(pCmd);
 	g_EnginePrediction.Start(pCmd);
@@ -235,6 +297,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					pLocal->IsAlive()) {
 					*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
 					chockedPackets++;
+					g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0);
 					if (chockedPackets > Vars::Misc::CL_Move::FakelagValue.m_Var) {
 						chockedPackets = 0;
 					}

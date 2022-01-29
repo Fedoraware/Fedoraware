@@ -59,7 +59,8 @@ public:
 	int				m_nDeltaTick;			// 0x1A0
 	byte pad2[0x110];
 	int				m_nMaxClients;			// 0x2B4	
-	byte pad3[0x486C];
+	byte pad3[0x4868];
+	float			m_frameTime;			// 0x4B20
 	int				lastoutgoingcommand;	// 0x4B24
 	int				chokedcommands;			// 0x4B28
 	int				last_command_ack;		// 0x4B2C

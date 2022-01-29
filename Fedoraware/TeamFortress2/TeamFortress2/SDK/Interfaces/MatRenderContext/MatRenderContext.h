@@ -22,7 +22,7 @@ struct DeformationBase_t;
 struct ColorCorrectionHandle_t;
 
 using Vector2D = Vec2;
-using Vector = Vec3;
+
 using OcclusionQueryObjectHandle_t = void *;
 
 class IMatRenderContext : public IRefCounted

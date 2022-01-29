@@ -69,7 +69,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					if (Vars::Visuals::AimPosSquare.m_Var) {
 						Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
-						Utils::W2S(g_GlobalInfo.m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin, vProjAimStart);
+						Utils::W2S(g_GlobalInfo.jagnepredshit, vProjAimStart);
 						Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd);
 						g_Draw.Line(
 							vProjAimStart.x,
@@ -109,7 +109,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-								float maxWidth = g_GlobalInfo.dtTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
+								float maxWidth = 24 * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
 								float dtOffset = g_ScreenSize.c - (maxWidth / 2);
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;

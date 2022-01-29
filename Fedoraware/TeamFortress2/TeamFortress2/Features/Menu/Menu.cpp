@@ -411,28 +411,22 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		if (ImGui::Begin("Doubletap bar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoDecoration) | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoTitleBar)))
 		{
 			ImGui::SetWindowSize(ImVec2(180, 30));
-
+			static std::string dtstring = "";
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-
-				std::string dtstring = "Doubletap (";
-				dtstring = dtstring + std::to_string(g_GlobalInfo.m_nShifted) + "/" + std::to_string(g_GlobalInfo.dtTicks) + ")";
-				if (g_GlobalInfo.dtTicks == g_GlobalInfo.m_nShifted) {
+				dtstring = "Doubletap (" + std::to_string(g_GlobalInfo.m_nShifted) + " / 24)";
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
+				if (g_GlobalInfo.m_nShifted >= Vars::Misc::CL_Move::DTTicks.m_Var) {
 					if (!g_GlobalInfo.m_nWaitForShift) {
-						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
-						TextCenter(dtstring);
 						ImGui::PopStyleColor();
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
 					}
 					else {
-						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
-						TextCenter(dtstring);
 						ImGui::PopStyleColor();
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
 					}
 				}
-				else {
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
-					TextCenter(dtstring);
-					ImGui::PopStyleColor();
-				}
+				TextCenter(dtstring);
+				ImGui::PopStyleColor();
 			}
 
 		}
@@ -1043,6 +1037,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Don't DT in air", &Vars::Misc::CL_Move::NotInAir.m_Var); HelpMarker("When enabled, doubletap will not work if you are mid-air as to avoid movement being uncontrollable");
 								const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth(); HelpMarker("How should DT behave");
 								const char* dtBarStyles[]{ "Off", "Default", "Nitro" }; ImGui::PushItemWidth(100); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); ImGui::PopItemWidth(); HelpMarker("How many ticks to shift");
 								if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
 									ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
 									ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
@@ -1157,7 +1152,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth(); HelpMarker("You spin me right 'round, baby, right 'round");
 								ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables AntiAim resolver in the playerlist");
 								ImGui::Checkbox("Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var); HelpMarker("Fakelag master switch");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
 								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
 								InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
 							}

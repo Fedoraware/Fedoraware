@@ -7,7 +7,7 @@ struct GameActionSet_t;
 struct CameraThirdData_t;
 struct GameActionSetFlags_t;
 struct C_BaseCombatWeapon;
-using QAngle = Vec3;
+
 
 class IInput
 {

@@ -13,6 +13,15 @@ class IMaterial;
 
 class MaterialPropertyTypes_t;
 class VertexFormat_t;
+using CBaseHandle = unsigned long;
+
+class IHandleEntity
+{
+public:
+	virtual ~IHandleEntity() {}
+	virtual void SetRefEHandle(const CBaseHandle& handle) = 0;
+	virtual const CBaseHandle& GetRefEHandle() const = 0;
+};
 
 struct Vertex_t
 {

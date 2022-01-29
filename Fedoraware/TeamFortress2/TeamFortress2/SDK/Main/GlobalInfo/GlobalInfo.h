@@ -2,8 +2,6 @@
 
 #include "../BaseEntity/BaseEntity.h"
 
-#define MAX_NEW_COMMANDS 20
-#define MAX_NEW_COMMANDS_HEAVY 24
 #define DT_WAIT_CALLS 26
 
 struct ResolveMode {
@@ -31,7 +29,6 @@ struct GlobalInfo_t
 	bool m_bLocalSpectated				= false;
 	bool m_bRollExploiting			    = false;
 	bool m_bAttacking			 	    = false;
-	bool fast_stop						= false;
 	bool m_bModulateWorld				= true;
 	bool m_bShouldShift                 = false;
 	bool m_bRecharging                  = false;
@@ -44,7 +41,7 @@ struct GlobalInfo_t
 	Vec3 m_vRealViewAngles				= {};
 	Vec3 m_vFakeViewAngles				= {};
 	Vec3 m_vPunchAngles					= {};
-	Vec3 m_vClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguinClubPenguin = {}; //clubpenguin > tf2
+	Vec3 jagnepredshit = {}; //clubpenguin > tf2
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;

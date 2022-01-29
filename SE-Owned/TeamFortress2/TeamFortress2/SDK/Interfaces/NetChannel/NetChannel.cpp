@@ -1,6 +1,5 @@
 #include "NetChannel.h"
 
-
 #define NETMSG_TYPE_BITS 6
 #define NUM_NEW_COMMAND_BITS 4
 #define NUM_BACKUP_COMMAND_BITS 3
