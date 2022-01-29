@@ -39,6 +39,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				pLocal->ClearPunchAngle();								//Clear punch angles for visual no-recoil
 			}
 		}
+
 		if (Vars::AntiHack::Resolver::Resolver.m_Var)
 		{
 			for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
@@ -56,6 +57,9 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 					continue;
 
 				if (!entity->GetLifeState() == LIFE_ALIVE)
+					continue;
+
+				if (entity->IsTaunting())
 					continue;
 
 				Vector vX = entity->GetEyeAngles();
