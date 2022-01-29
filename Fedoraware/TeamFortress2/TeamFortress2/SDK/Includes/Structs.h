@@ -11,13 +11,16 @@ struct StudioDecalHandle_t;
 
 struct mstudiobbox_t
 {
-	int bone;
-	int group;
-	Vec3 bbmin;
-	Vec3 bbmax;
-	int szhitboxnameindex;
-	int unused[8];
+	int					bone;
+	int					group;
+	Vec3				bbmin;
+	Vec3				bbmax;
+	int					szhitboxnameindex;
+	Vec3 angle;
+	float m_radius;
+	uint8_t _padding[0x10];
 };
+
 
 struct mstudiohitboxset_t
 {

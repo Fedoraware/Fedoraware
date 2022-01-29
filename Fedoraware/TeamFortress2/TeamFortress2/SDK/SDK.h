@@ -143,6 +143,9 @@ namespace Colors
 	inline Color_t DmgLoggerOutline =		{ 30, 30, 255, 255};
 	inline Color_t DmgLoggerText =			{ 255, 255, 255, 255 };
 	inline Color_t WeaponIcon = { 255,255,255,255 };
+	inline Color_t NoscopeLines1 = { 0,0,0,255 };
+	inline Color_t NoscopeLines2 = { 0,0,0,100 };
+	inline Color_t bonecolor = { 231, 95, 255, 10 };
 }
 
 namespace Utils

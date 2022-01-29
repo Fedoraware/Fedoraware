@@ -462,6 +462,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::FieldOfView);
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
 			SAVE_VAR(Vars::Visuals::RemoveScope);
+			SAVE_VAR(Vars::Visuals::ScopeLines);
 			SAVE_VAR(Vars::Visuals::RemoveZoom);
 			SAVE_VAR(Vars::Visuals::RemovePunch);
 			SAVE_VAR(Vars::Visuals::CrosshairAimPos);
@@ -544,6 +545,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
 			}
 			//Discord
 			{
@@ -620,7 +622,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DmgLoggerOutline);
 			SAVE_OTHER(Colors::DmgLoggerText);
 			SAVE_OTHER(Colors::WeaponIcon);
-
+			SAVE_OTHER(Colors::NoscopeLines1);
+			SAVE_OTHER(Colors::NoscopeLines2);
+			SAVE_OTHER(Colors::bonecolor);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -999,6 +1003,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::FieldOfView);
 			LOAD_VAR(Vars::Visuals::AimFOVAlpha);
 			LOAD_VAR(Vars::Visuals::RemoveScope);
+			LOAD_VAR(Vars::Visuals::ScopeLines);
 			LOAD_VAR(Vars::Visuals::RemoveZoom);
 			LOAD_VAR(Vars::Visuals::RemovePunch);
 			LOAD_VAR(Vars::Visuals::CrosshairAimPos);
@@ -1079,6 +1084,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::DTTicks);
 			}
 			//Discord
 			{
@@ -1156,6 +1162,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DmgLoggerOutline);
 			LOAD_OTHER(Colors::DmgLoggerText);
 			LOAD_OTHER(Colors::WeaponIcon);
+			LOAD_OTHER(Colors::NoscopeLines1);
+			LOAD_OTHER(Colors::NoscopeLines2);
+			LOAD_OTHER(Colors::bonecolor);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

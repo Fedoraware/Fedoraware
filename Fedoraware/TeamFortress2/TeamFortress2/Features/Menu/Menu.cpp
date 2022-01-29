@@ -446,31 +446,21 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			{
 				static ImVec4 active = to_vec4(30, 30, 30, 255);
 				static ImVec4 inactive = to_vec4(30, 30, 30, 255);
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Aimbot", ImVec2(140 - 15, 29))) {
 					SettingsTab = 0;
 				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Triggerbot", ImVec2(140 - 15, 29))) {
 					SettingsTab = 1;
 				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Visuals", ImVec2(140 - 15, 29))) {
 					SettingsTab = 2;
 				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Misc", ImVec2(140 - 15, 29))) {
 					SettingsTab = 3;
 				}
-				ImGui::PopStyleColor();
-				ImGui::PushStyleColor(ImGuiCol_Button, SettingsTab == 0 ? active : inactive);
 				if (ImGui::Button("Colours", ImVec2(140 - 15, 29))) {
 					SettingsTab = 4;
 				}
-				ImGui::PopStyleColor();
 				static std::wstring selected = {};
 				int nConfig = 0;
 
@@ -925,7 +915,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("World modulation", &Vars::Visuals::WorldModulation.m_Var); HelpMarker("Will colour modulate the world");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prop opacity", &Vars::Visuals::PropAlpha.m_Var, 0.01f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
 								ImGui::Checkbox("Sky modulation", &Vars::Visuals::SkyModulation.m_Var); HelpMarker("Will colour modulate the sky");
+								
 								ImGui::Checkbox("Remove scope", &Vars::Visuals::RemoveScope.m_Var); HelpMarker("Will remove the scope overlay on sniper rifles");
+								if (Vars::Visuals::RemoveScope.m_Var) {
+									ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
+								}
 								ImGui::Checkbox("Remove zoom", &Vars::Visuals::RemoveZoom.m_Var); HelpMarker("Will make scoping not affect your FoV");
 								ImGui::Checkbox("Remove punch", &Vars::Visuals::RemovePunch.m_Var); HelpMarker("Will remove visual punch/recoil");
 								ImGui::Checkbox("Remove disguises", &Vars::Visuals::RemoveDisguises.m_Var); HelpMarker("Will remove disguises from spies, making them appear normally and improving aimbot accuracy");
@@ -1218,6 +1212,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Invulnerable", Colors::Invuln);
 							ColorPicker("Cloaked", Colors::Cloak);
 							ColorPicker("Friend", Colors::Friend);
+							ColorPicker("Bone matrix color", Colors::bonecolor); HelpMarker("This is for fakelag");
 							ColorPicker("Overheal", Colors::Overheal);
 							ColorPicker("Health pack", Colors::Health);
 							ColorPicker("Ammo pack", Colors::Ammo);
@@ -1246,6 +1241,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Damage logger outline", Colors::DmgLoggerOutline);
 							ColorPicker("Damage logger text", Colors::DmgLoggerText);
 							ColorPicker("Weapon icon", Colors::WeaponIcon);
+							ColorPicker("Noscope lines 1", Colors::NoscopeLines1);
+							ColorPicker("Noscope lines 2", Colors::NoscopeLines2);
 
 							//ColorPicker("Fresnel chams top", Colors::FresnelTop);
 						}

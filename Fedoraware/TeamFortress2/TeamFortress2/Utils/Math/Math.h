@@ -481,41 +481,6 @@ namespace Math
 		out[2][column] = in.z;
 	}
 
-	inline void AngleMatrix(const Vec3 &angles, matrix3x4 &matrix)
-	{
-		float sr, sp, sy, cr, cp, cy;
-
-		SinCos(DEG2RAD(angles.y), &sy, &cy);
-		SinCos(DEG2RAD(angles.x), &sp, &cp);
-		SinCos(DEG2RAD(angles.z), &sr, &cr);
-
-		// matrix = (YAW * PITCH) * ROLL
-		matrix[0][0] = cp * cy;
-		matrix[1][0] = cp * sy;
-		matrix[2][0] = -sp;
-
-		float crcy = cr * cy;
-		float crsy = cr * sy;
-		float srcy = sr * cy;
-		float srsy = sr * sy;
-		matrix[0][1] = sp * srcy - crsy;
-		matrix[1][1] = sp * srsy + crcy;
-		matrix[2][1] = sr * cp;
-
-		matrix[0][2] = sp * crcy + srsy;
-		matrix[1][2] = sp * crsy - srcy;
-		matrix[2][2] = cr * cp;
-
-		matrix[0][3] = 0.0f;
-		matrix[1][3] = 0.0f;
-		matrix[2][3] = 0.0f;
-	}
-
-	inline void AngleMatrix(const Vec3 &angles, const Vec3 &origin, matrix3x4 &matrix)
-	{
-		AngleMatrix(angles, matrix);
-		MatrixSetColumn(origin, 3, matrix);
-	}
 
 	inline Vec3 VelocityToAngles(const Vec3 &direction)
 	{
@@ -590,6 +555,73 @@ namespace Math
 			in1[2][2] * in2[2][2];
 		out[2][3] = in1[2][0] * in2[0][3] + in1[2][1] * in2[1][3] +
 			in1[2][2] * in2[2][3] + in1[2][3];
+	}
+
+	inline void AngleMatrix(const Vec3& angles, matrix3x4& matrix)
+	{
+		float sr, sp, sy, cr, cp, cy;
+
+		SinCos(DEG2RAD(angles.y), &sy, &cy);
+		SinCos(DEG2RAD(angles.x), &sp, &cp);
+		SinCos(DEG2RAD(angles.z), &sr, &cr);
+
+		// matrix = (YAW * PITCH) * ROLL
+		matrix[0][0] = cp * cy;
+		matrix[1][0] = cp * sy;
+		matrix[2][0] = -sp;
+
+		float crcy = cr * cy;
+		float crsy = cr * sy;
+		float srcy = sr * cy;
+		float srsy = sr * sy;
+		matrix[0][1] = sp * srcy - crsy;
+		matrix[1][1] = sp * srsy + crcy;
+		matrix[2][1] = sr * cp;
+
+		matrix[0][2] = sp * crcy + srsy;
+		matrix[1][2] = sp * crsy - srcy;
+		matrix[2][2] = cr * cp;
+
+		matrix[0][3] = 0.0f;
+		matrix[1][3] = 0.0f;
+		matrix[2][3] = 0.0f;
+	}
+
+	inline void GetMatrixOrigin(const matrix3x4& source, Vec3& target) {
+		target.x = source[0][3];
+		target.y = source[1][3];
+		target.z = source[2][3];
+	}
+
+	inline void MatrixAngles(const matrix3x4& matrix, Vec3& angles) {
+		//Vec3 forward, left, up;
+
+		// extract the basis vectors from the matrix. since we only need the z
+		// component of the up vector, we don't get x and y.
+		const Vec3 forward = { matrix[0][0], matrix[1][0], matrix[2][0] };
+		const Vec3 left = { matrix[0][1], matrix[1][1], matrix[2][1] };
+		const Vec3 up = { 0.f, 0.f, matrix[2][2] };
+
+		float len = forward.Lenght2D();
+
+		// enough here to get angles?
+		if (len > 0.001f) {
+			angles.x = RAD2DEG(std::atan2(-forward.z, len));
+			angles.y = RAD2DEG(std::atan2(forward.y, forward.x));
+			angles.z = RAD2DEG(std::atan2(left.z, up.z));
+		}
+
+		else {
+			angles.x = RAD2DEG(std::atan2(-forward.z, len));
+			angles.y = RAD2DEG(std::atan2(-left.x, left.y));
+			angles.z = 0.f;
+		}
+	}
+
+	inline void AngleMatrix(const Vec3& angles, const Vec3& origin, matrix3x4& matrix)
+	{
+		AngleMatrix(angles, matrix);
+		MatrixSetColumn(origin, 3, matrix);
 	}
 
 	inline void MatrixMultiply(const matrix3x4 &in1, const matrix3x4 &in2, matrix3x4 &out)

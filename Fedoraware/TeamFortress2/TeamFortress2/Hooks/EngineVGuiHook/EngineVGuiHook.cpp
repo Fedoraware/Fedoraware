@@ -146,6 +146,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Radar.Run();
 			g_Crits.Frame();
 			g_Menu.Run();
+
+			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+				if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::ScopeLines.m_Var) {
+					g_Visuals.ScopeLines();
+				}
+			}
 		}
 
 		static ConVar* localplayer_visionflags = g_Interfaces.CVars->FindVar("localplayer_visionflags");

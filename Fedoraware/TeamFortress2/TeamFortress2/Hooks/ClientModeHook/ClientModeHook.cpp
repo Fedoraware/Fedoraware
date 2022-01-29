@@ -296,6 +296,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					!g_GlobalInfo.m_bShouldShift &&
 					pLocal->IsAlive()) {
 					*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
+					if (*pSendPacket) {
+						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
+					}
 					chockedPackets++;
 					g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0);
 					if (chockedPackets > Vars::Misc::CL_Move::FakelagValue.m_Var) {

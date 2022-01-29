@@ -5,30 +5,50 @@
 typedef bool(_cdecl* LoadNamedSkysFn)(const char*);
 static LoadNamedSkysFn LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
-void CVisuals::TransparentProps()
-{
-	std::vector<IMaterial*> /*world, */props;
 
-	for (uint16_t h{ g_Interfaces.MatSystem->First() }; h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h)) {
-		IMaterial* mat = g_Interfaces.MatSystem->Get(h);
-		if (!mat)
+void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time) {
+	//I::DebugOverlay->ClearAllOverlays();
+
+	const model_t* model = pEntity->GetModel();
+	studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
+	mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
+
+	for (int i{}; i < set->numhitboxes; ++i) {
+		mstudiobbox_t* bbox = set->hitbox(i);
+		if (!bbox)
 			continue;
 
-		/*if (mat->GetTextureGroupName() == "World textures") {
-			world.push_back(mat);
-		}*/
+		//nigga balls
+		/*if (bbox->m_radius <= 0.f) {*/
+		matrix3x4 rot_matrix;
+		Math::AngleMatrix(bbox->angle, rot_matrix);
 
-		else if (mat->GetTextureGroupName() == "StaticProp textures")
-			props.push_back(mat);
-	}
+		matrix3x4 matrix;
+		matrix3x4 boneees[128];
+		pEntity->SetupBones(boneees, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime);
+		Math::ConcatTransforms(boneees[bbox->bone], rot_matrix, matrix);
 
-	if (g_Interfaces.CVars->FindVar(_("r_DrawSpecificStaticProp"))->GetInt() != 0) {
-		g_Interfaces.CVars->FindVar(_("r_DrawSpecificStaticProp"))->SetValue(0);
-	}
+		Vec3 bbox_angle;
+		Math::MatrixAngles(matrix, bbox_angle);
 
-	for (const auto& p : props) {
-		p->AlphaModulate(0.85f);
+		Vec3 matrix_origin;
+		Math::GetMatrixOrigin(matrix, matrix_origin);
+
+		g_Interfaces.DebugOverlay->AddBoxOverlay(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colour.r, colour.g, colour.b, colour.a, time);
 	}
+}
+
+void CVisuals::ScopeLines()
+{
+	const int centerX = g_ScreenSize.w / 2;
+	const int centerY = g_ScreenSize.h / 2;
+	Color_t line1 = { Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255 };
+	Color_t line2 = { Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255 };
+	
+	g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
+	g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
+	g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
+	g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
 }
 
 void CVisuals::SkyboxChanger() {

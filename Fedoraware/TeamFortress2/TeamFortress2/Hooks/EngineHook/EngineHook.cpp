@@ -61,7 +61,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))		// 2 - Disable on key 
 		{
 			int ticksShifted = 0;
-			static bool returned = 0;
+			
 			while (g_GlobalInfo.m_nShifted != 0) {
 				ticksShifted++;
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
@@ -72,13 +72,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 							g_GlobalInfo.m_bShouldShift = false;
 							g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 							break;
-						}
-						else if (ticksShifted == 22 && !returned) {
-							returned = true;
-							return;
-						}
-						else {
-							returned = false;
 						}
 					}
 					else {
@@ -93,13 +86,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 						g_GlobalInfo.m_bShouldShift = false;
 						g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 						break;
-					} 
-					else if (ticksShifted == 22 && !returned) {
-						returned = true;
-						return;
-					}
-					else {
-						returned = false;
 					}
 				}
 			}
