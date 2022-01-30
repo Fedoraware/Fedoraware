@@ -233,7 +233,6 @@ void CMenu::TextCenter(std::string text) {
 
 	ImGui::Text(text.c_str());
 	ImGui::PopFont();
-	ImGui::PopFont();
 }
 
 void CMenu::Run() {
@@ -395,16 +394,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 	ImGui_ImplWin32_NewFrame();
 
 	ImGui::NewFrame();
-	/*ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
-	if (g_Menu.m_bOpen) {
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		if (ImGui::Begin(" ##poop"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize) {
-			ImGui::SetWindowSize(ImVec2(g_ScreenSize.w, 50));
-			ImGui::PopStyleVar();
-			ImGui::TextUnformatted("Hello");
-		}
-		ImGui::End();
-	}*/
 
 	if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || g_Menu.m_bOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
