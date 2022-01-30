@@ -17,8 +17,25 @@ void CMisc::Run(CUserCmd* pCmd)
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
+	ServerHitbox(); // super secret deathpole feature!!!!
 }
 
+void CMisc::ServerHitbox() { // draw our serverside hitbox on local servers, used to test fakelag & antiaim
+	if (g_Interfaces.Input->CAM_IsThirdPerson()) {
+		using GetServerAnimating_t = void* (*)(int);
+		static GetServerAnimating_t GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 8B 55 ? 85 D2 7E ? A1").c_str()));
+		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);
+		static DrawServerHitboxes_t DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97").c_str()));
+		auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
+		if (pLocal && pLocal->IsAlive()) {
+			void* server_animating = GetServerAnimating(pLocal->GetIndex());
+			if (server_animating) {
+				DrawServerHitboxes(server_animating, g_Interfaces.GlobalVars->interval_per_tick * 2.f, false);
+			}
+		}
+	}
+}
+// draws server hitbox when in a local server, only for testing rly
 static bool push = true;
 
 void CMisc::CheatsBypass() {
