@@ -126,8 +126,6 @@ CConfigManager::CConfigManager()
 {
 	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs");
 
-
-
 	if (!std::filesystem::exists(m_sConfigPath))
 		std::filesystem::create_directory(m_sConfigPath);
 
@@ -527,6 +525,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::RageRetry);
+			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VoteRevealer);
 			SAVE_VAR(Vars::Misc::VotesInChat);
@@ -634,6 +633,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
+			SAVE_OTHER(Vars::Skybox::SkyboxNum);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
@@ -1072,6 +1072,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
 			LOAD_VAR(Vars::Misc::RageRetry);
+			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);
@@ -1184,6 +1185,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
+			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
 			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
