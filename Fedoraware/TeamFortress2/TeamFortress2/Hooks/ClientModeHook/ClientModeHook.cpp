@@ -315,7 +315,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
+	if (!Vars::Misc::CL_Move::AntiWarp.m_Var) {
 		auto AntiWarp = [](CUserCmd* cmd) -> void
 		{
 			if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
