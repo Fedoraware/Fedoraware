@@ -222,6 +222,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 						g_GlobalInfo.m_bWeaponCanAttack = false;
 				}
 			}
+
+			if (Vars::Misc::RageRetry.m_Var) {
+				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * 0.2)) {
+					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+				}
+			}
 		}
 	}
 

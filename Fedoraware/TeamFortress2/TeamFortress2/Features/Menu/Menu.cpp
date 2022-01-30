@@ -985,6 +985,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Be marked as a cat", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
 								ImGui::Checkbox("Menu snow", &Vars::Visuals::Snow.m_Var); HelpMarker("Enable the snow when menu is open");
+								ImGui::Checkbox("Rage Retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {
