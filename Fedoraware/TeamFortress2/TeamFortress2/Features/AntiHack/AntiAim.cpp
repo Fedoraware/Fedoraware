@@ -1,6 +1,7 @@
 #include "AntiAim.h"
 #include "../Vars.h"
 
+int edgeToEdgeOn = 0;
 float lastRealAngle = -90.f;
 float lastFakeAngle = 90.f;
 
@@ -30,6 +31,66 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, Vec3 vOldAngles, float fOldSideMove, 
 
 	pCmd->forwardmove = cos(DEG2RAD(fDelta)) * fOldForwardMove + cos(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
 	pCmd->sidemove = sin(DEG2RAD(fDelta)) * fOldForwardMove + sin(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
+}
+
+float edgeDistance(float edgeRayYaw)
+{
+	// Main ray tracing area
+	CGameTrace trace;
+	Ray_t ray;
+	Vector forward;
+	float sp, sy, cp, cy;
+	sy = sinf(DEG2RAD(edgeRayYaw)); // yaw
+	cy = cosf(DEG2RAD(edgeRayYaw));
+	sp = sinf(DEG2RAD(0)); // pitch
+	cp = cosf(DEG2RAD(0));
+	forward.x = cp * cy;
+	forward.y = cp * sy;
+	forward.z = -sp;
+	forward = forward * 300.0f + g_EntityCache.m_pLocal->GetEyePosition();
+	ray.Init(g_EntityCache.m_pLocal->GetEyePosition(), forward);
+	// trace::g_pFilterNoPlayer to only focus on the enviroment
+	CTraceFilterWorldAndPropsOnly Filter = { };
+	g_Interfaces.EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
+	// Pythagorean theorem to calculate distance
+	float edgeDistance = (sqrt(pow(trace.vStartPos.x - trace.vEndPos.x, 2) + pow(trace.vStartPos.y - trace.vEndPos.y, 2)));
+	return edgeDistance;
+}
+
+bool findEdge(float edgeOrigYaw)
+{
+	// distance two vectors and report their combined distances
+	float edgeLeftDist = edgeDistance(edgeOrigYaw - 21);
+	edgeLeftDist = edgeLeftDist + edgeDistance(edgeOrigYaw - 27);
+	float edgeRightDist = edgeDistance(edgeOrigYaw + 21);
+	edgeRightDist = edgeRightDist + edgeDistance(edgeOrigYaw + 27);
+
+	// If the distance is too far, then set the distance to max so the angle
+	// isnt used
+	if (edgeLeftDist >= 260)
+		edgeLeftDist = 999999999;
+	if (edgeRightDist >= 260)
+		edgeRightDist = 999999999;
+
+	// If none of the vectors found a wall, then dont edge
+	if (edgeLeftDist == edgeRightDist)
+		return false;
+
+	// Depending on the edge, choose a direction to face
+	if (edgeRightDist < edgeLeftDist)
+	{
+		edgeToEdgeOn = 1;
+		if ((Vars::AntiHack::AntiAim::Pitch.m_Var == 3) || (Vars::AntiHack::AntiAim::Pitch.m_Var == 1) || (g_GlobalInfo.m_vRealViewAngles.x <= 89.0f && Vars::AntiHack::AntiAim::Pitch.m_Var == 6) || (g_GlobalInfo.m_vRealViewAngles.x <= 89.0f && Vars::AntiHack::AntiAim::Pitch.m_Var == 5))	// check for real up
+			edgeToEdgeOn = 2;
+		return true;
+	}
+	else
+	{
+		edgeToEdgeOn = 2;
+		if ((Vars::AntiHack::AntiAim::Pitch.m_Var == 3) || (Vars::AntiHack::AntiAim::Pitch.m_Var == 1) || (g_GlobalInfo.m_vRealViewAngles.x <= 89.0f && Vars::AntiHack::AntiAim::Pitch.m_Var == 6) || (g_GlobalInfo.m_vRealViewAngles.x <= 89.0f && Vars::AntiHack::AntiAim::Pitch.m_Var == 5))	// check for real up
+			edgeToEdgeOn = 1;
+		return true;
+	}
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
@@ -101,6 +162,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		}
 		}
 
+		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 6 || Vars::AntiHack::AntiAim::YawFake.m_Var == 6) { findEdge(pCmd->viewangles.y); }
+
 		static bool bSendReal = false;
 
 		if (bSendReal)
@@ -127,6 +190,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 				if (lastRealAngle > 180.f) { lastRealAngle = -180.f; }
 				if (lastRealAngle < -180.f) { lastRealAngle = 180.f; }
 				pCmd->viewangles.y = lastRealAngle;
+				break;
+			}
+			case 6: {
+				if (edgeToEdgeOn == 1) { pCmd->viewangles.y += 90; }
+				else if (edgeToEdgeOn == 2) { pCmd->viewangles.y -= 90.0f; };
 				break;
 			}
 			default: {
@@ -162,6 +230,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 				if (lastFakeAngle > 180.f) { lastFakeAngle = -180.f; }
 				if (lastFakeAngle < -180.f) { lastFakeAngle = 180.f; }
 				pCmd->viewangles.y = lastFakeAngle;
+				break;
+			}
+			case 6: {
+				if (edgeToEdgeOn == 1) { pCmd->viewangles.y -= 90; }
+				else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += 90.0f; };
 				break;
 			}
 			default: {
