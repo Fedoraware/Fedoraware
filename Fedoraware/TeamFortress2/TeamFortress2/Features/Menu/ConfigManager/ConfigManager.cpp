@@ -128,6 +128,9 @@ CConfigManager::CConfigManager()
 
 	if (!std::filesystem::exists(m_sConfigPath))
 		std::filesystem::create_directory(m_sConfigPath);
+
+	if (!std::filesystem::exists(m_sConfigPath + _(L"\\FedCore")))
+		std::filesystem::create_directory(m_sConfigPath + _(L"\\FedCore"));
 }
 
 void CConfigManager::Save(const wchar_t *name)
