@@ -6,6 +6,16 @@
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/PlayerList/PlayerList.h"
 
+const static std::string clear("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+static std::string clr({ '\x7', '0', 'D', '9', '2', 'F', 'F' });
+
 void __stdcall ClientHook::PreEntity::Hook(char const* szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);
@@ -203,4 +213,50 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 	default: break;
 	}
+}
+
+bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data)
+{
+	const char* buf_data = reinterpret_cast<const char*>(msg_data.m_pData);
+
+	switch (type) {
+	case 4:
+	{
+		// Received chat message
+		int nbl = msg_data.GetNumBytesLeft();
+		if (nbl >= 256) {
+			break;
+		}
+
+		std::string data;
+		for (int i = 0; i < nbl; i++) {
+			data.push_back(buf_data[i]);
+		}
+
+		const char* p = data.c_str() + 2;
+		std::string event(p), name((p += event.size() + 1)), message(p + name.size() + 1);
+		int ent_idx = data[0];
+
+		if (Vars::Misc::ChatCensor.m_Var) {
+			std::vector<std::string> badWords{ "cheat", "hack", "bot", "aim", "esp", "kick", "hax" };
+			bool bwFound = false;
+			for (std::string word : badWords) {
+				if (strstr(message.c_str(), word.c_str())) {
+					bwFound = true;
+					break;
+				}
+			}
+
+			if (bwFound) {
+				std::string cmd = "say \"" + clear + "\"";
+				g_Interfaces.Engine->ServerCmd(cmd.c_str(), '"');
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, name, message).c_str());
+			}
+		}
+		msg_data.Seek(0);
+		break;
+	}
+	}
+
+	return Table.Original<fn>(index)(g_Interfaces.Client, type, msg_data);
 }
