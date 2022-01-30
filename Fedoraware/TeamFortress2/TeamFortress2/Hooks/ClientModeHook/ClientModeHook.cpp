@@ -224,6 +224,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 						g_GlobalInfo.m_bWeaponCanAttack = false;
 				}
 			}
+
+			if (Vars::Misc::RageRetry.m_Var) {
+				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * 0.2)) {
+					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+				}
+			}
 		}
 	}
 
@@ -300,8 +306,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					!g_GlobalInfo.m_bShouldShift &&
 					pLocal->IsAlive()) {
 					*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
-					if (*pSendPacket) { // this sucks
-						//g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var));
+					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && *pSendPacket && g_Interfaces.Input->CAM_IsThirdPerson()) {
+						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
 					}
 					chockedPackets++;
 					// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will NEVER hit this
@@ -317,19 +323,20 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
 
-	auto AntiWarp = [](CUserCmd* cmd) -> void
-	{
-		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
-			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-		}
-		else {
-			return;
-		}
-	};
+	if (!Vars::Misc::CL_Move::AntiWarp.m_Var) {
+		auto AntiWarp = [](CUserCmd* cmd) -> void
+		{
+			if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
+				cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+				cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+			}
+			else {
+				return;
+			}
+		};
 
-	AntiWarp(pCmd);
-
+		AntiWarp(pCmd);
+	}
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
