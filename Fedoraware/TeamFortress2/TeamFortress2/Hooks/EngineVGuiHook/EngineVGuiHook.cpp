@@ -119,11 +119,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2)  + 49, maxWidth + 2, Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2, { 50,50,50,210 });
 								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth, (g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, color1, color2, true);
 							}
+
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
 								float ratio = ((float)g_GlobalInfo.m_nShifted / (float)24);
 
 								if (ratio > 1) { ratio = 1; }
-								else if (ratio < 0) { ratio = 0; } //player changes tick count.
+								else if (ratio < 0) { ratio = 0; } //failsafe (has an actual purpose if u do custom dt ticks better)
 								
 								// these are all vars in dp but fedware doesnt have the vars and i am not adding them
 								int xoff = 0; // width offset (is it called width offset who knows)

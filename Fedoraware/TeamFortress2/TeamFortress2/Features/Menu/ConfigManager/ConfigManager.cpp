@@ -156,6 +156,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
+				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
+				SAVE_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
+				SAVE_VAR(Vars::Aimbot::Global::hitboxTime);
 			}
 
 			{
@@ -703,6 +706,9 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreTaunting);
 				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
+				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
+				LOAD_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
+				LOAD_VAR(Vars::Aimbot::Global::hitboxTime);
 			}
 
 			{

@@ -32,6 +32,7 @@ struct GlobalInfo_t
 	bool m_bModulateWorld				= true;
 	bool m_bShouldShift                 = false;
 	bool m_bRecharging                  = false;
+	bool m_bForceSendPacket				= false; // might not actually be useful 
 	bool unloadWndProcHook = false;
 	float m_flCurAimFOV					= 0.0f;
 	Vec3 m_vPredictedPos				= {};
