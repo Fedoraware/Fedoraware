@@ -475,12 +475,14 @@ namespace Vars
 			inline CVar<int> DTBarStyle     { 0, L"Doubletap bar style" };
 			inline CVar<bool> RechargeWhileDead	{ false, L"Recharge While Dead" };
 			inline CVar<bool> AutoRecharge	{ false, L"AutoRecharge" }; //H
+			inline CVar<bool> AntiWarp		{ true, L"Anti Warp" }; //H
 			inline CVar<int> DTMode		    { 0, L"DT Mode" }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
 			inline CVar<int> DtbarOutlineHeight	{ 5, L"Dt default bar height" };
 			inline CVar<int> DtbarOutlineWidth	{ 4, L"Dt default bar width" };
 			inline CVar<int> DTTicks			{ 21, L"Ticks for DT" };
 			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
 			inline CVar<bool> Fakelag       { true, L"Fakelag" };
+			inline CVar<bool> FakelagIndicator { true, L"Fakelag Indicator" };
 			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" };
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
 			inline CVar<int> FakelagValue   { 1, L"Fakelag value" };

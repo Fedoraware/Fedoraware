@@ -296,7 +296,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					!g_GlobalInfo.m_bShouldShift &&
 					pLocal->IsAlive()) {
 					*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
-					if (*pSendPacket) {
+					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && *pSendPacket && g_Interfaces.Input->CAM_IsThirdPerson()) {
 						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
 					}
 					chockedPackets++;
@@ -309,19 +309,20 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	auto AntiWarp = [](CUserCmd* cmd) -> void
-	{
-		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
-			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-		}
-		else {
-			return;
-		}
-	};
+	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
+		auto AntiWarp = [](CUserCmd* cmd) -> void
+		{
+			if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
+				cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+				cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
+			}
+			else {
+				return;
+			}
+		};
 
-	AntiWarp(pCmd);
-
+		AntiWarp(pCmd);
+	}
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
