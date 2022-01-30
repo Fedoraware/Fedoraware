@@ -530,7 +530,7 @@ namespace Vars
 
 	namespace Skybox
 	{
-		inline int skyboxnum = 0;
+		inline int SkyboxNum = 0;
 		inline std::string SkyboxName = "mr_04";
 	}
 	namespace Fonts

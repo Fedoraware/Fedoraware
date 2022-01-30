@@ -989,7 +989,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
-								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
+								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::SkyboxNum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
@@ -1362,7 +1362,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::BeginMenu("Menus")) {
 						if (ImGui::MenuItem("Console"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
-						if (ImGui::MenuItem("Demo UI"))
+						if (ImGui::MenuItem("Demo Playback"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
 						if (ImGui::MenuItem("Demo Trackbar"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
