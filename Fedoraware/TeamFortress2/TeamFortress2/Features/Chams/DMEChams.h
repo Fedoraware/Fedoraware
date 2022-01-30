@@ -8,6 +8,8 @@ private:
 	IMaterial* m_pMatShiny;
 	IMaterial* m_pMatFlat;
 	IMaterial* m_pMatFresnel;
+	IMaterial* m_pMatFresnelHDR0;
+	IMaterial* m_pMatFresnelHDR1;
 	IMaterial* m_pMatBrick;
 	IMaterial* m_pMatScuffed;
 	IMaterial* m_pMatWFShaded;

@@ -25,6 +25,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 	if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {
+		g_GlobalInfo.m_bForceSendPacket = true; // the more failsafes the safer u r from failure right
 		g_GlobalInfo.m_bRecharging = true;
 	}
 	if (g_GlobalInfo.m_bRecharging && g_GlobalInfo.m_nShifted < sv_maxusrcmdprocessticks->GetInt()) {
@@ -62,31 +63,17 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		{
 			int ticksShifted = 0;
 			
-			while (g_GlobalInfo.m_nShifted != 0) {
+			//while (g_GlobalInfo.m_nShifted != 0) { // equals -1 like a bawss
+			while (g_GlobalInfo.m_nShifted > 0) {
 				ticksShifted++;
-				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
-					if (pLocal->IsOnGround()) {
-						oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
-						g_GlobalInfo.m_nShifted--;
-						if (ticksShifted == Vars::Misc::CL_Move::DTTicks.m_Var) {
-							g_GlobalInfo.m_bShouldShift = false;
-							g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
-							break;
-						}
-					}
-					else {
-						return;
-					}
-				}
-				else {
-					oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
-					g_GlobalInfo.m_nShifted--;
-					
-					if (ticksShifted == Vars::Misc::CL_Move::DTTicks.m_Var) {
-						g_GlobalInfo.m_bShouldShift = false;
-						g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
-						break;
-					}
+				oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
+				g_GlobalInfo.m_nShifted--;
+				g_GlobalInfo.m_bForceSendPacket = true; // make sure we dont fakelag while shifting (should not even be an issue but whatever)
+
+				if (ticksShifted == Vars::Misc::CL_Move::DTTicks.m_Var) {
+					g_GlobalInfo.m_bShouldShift = false; // this is retarded and should be done differently
+					g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+					break;
 				}
 			}
 		}

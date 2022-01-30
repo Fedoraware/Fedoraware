@@ -56,6 +56,7 @@ struct Draw_t
 	void Rect(int x, int y, int w, int h, const Color_t& clr);
 	void OutlinedRect(int x, int y, int w, int h, const Color_t& clr);
 	void GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
+	void GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex);
