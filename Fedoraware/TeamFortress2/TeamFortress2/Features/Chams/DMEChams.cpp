@@ -45,13 +45,33 @@ void CDMEChams::Init()
 	{
 		auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$color2", "[10 10 10]");
+		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelranges", "[0 1.5 2]");
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[0.1 0.2 0.3]");
+		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
-		m_pMatFresnel = g_Interfaces.MatSystem->Create("m_pMatFresnel", kv);
+		kv->SetString("$envmaptint", "[0 1 0]");
+		m_pMatFresnelHDR0 = g_Interfaces.MatSystem->Create("m_pMatFresnelHDR0", kv);
+	}
+
+	{
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", "vgui/white_additive");
+		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		kv->SetString("$envmapfresnel", "1");
+		kv->SetString("$phong", "1");
+		kv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
+		kv->SetString("$selfillum", "1");
+		kv->SetString("$selfillumfresnel", "1");
+		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
+		kv->SetString("$selfillumtint", "[0 0 0]");
+		kv->SetString("$envmaptint", "[0 1 0]");
+		m_pMatFresnelHDR1 = g_Interfaces.MatSystem->Create("m_pMatFresnelHDR1", kv);
 	}
 
 	{
@@ -144,7 +164,15 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						case 4: { bMatWasForced = true; return m_pMatWFShaded; }
 						case 5: { bMatWasForced = true; return m_pMatWFShiny; }
 						case 6: { bMatWasForced = true; return m_pMatWFFlat; }
-						case 7: { bMatWasForced = true; return m_pMatFresnel; }
+						case 7: bMatWasForced = true;
+							if (g_Interfaces.CVars->FindVar("mat_hdr_level")->GetInt() > 1) {
+								m_pMatFresnel = m_pMatFresnelHDR1;
+								return m_pMatFresnel;
+							}
+							else {
+								m_pMatFresnel = m_pMatFresnelHDR0;
+								return m_pMatFresnel;
+							}
 						case 8: { bMatWasForced = true; return m_pMatBrick; }
 						default: return nullptr;
 						}
@@ -236,7 +264,15 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							case 4: { bMatWasForced = true; _case = 4; return m_pMatWFShaded; }
 							case 5: { bMatWasForced = true; _case = 5; return m_pMatWFShiny; }
 							case 6: { bMatWasForced = true; _case = 6; return m_pMatWFFlat; }
-							case 7: { bMatWasForced = true; _case = 7; return m_pMatFresnel; }
+							case 7: bMatWasForced = true;
+								if (g_Interfaces.CVars->FindVar("mat_hdr_level")->GetInt() > 1) {
+									m_pMatFresnel = m_pMatFresnelHDR1;
+									return m_pMatFresnel;
+								}
+								else {
+									m_pMatFresnel = m_pMatFresnelHDR0;
+									return m_pMatFresnel;
+								}
 							case 8: { bMatWasForced = true; _case = 8; return m_pMatBrick; }
 							default: { return nullptr; }
 								   //default: { bMatWasForced = true; _case = 100;  return nullptr; }
@@ -254,6 +290,24 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index) // base
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				bMatWasForced = true;
+
+
+				// the following code is bad & pasted og @ Chams.cpp
+				bool foundselfillumtint = false;
+				if (Vars::Chams::DME::Hands.m_Var == 7) {
+					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
+					if (foundselfillumtint) {
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
+					}
+				}
+
+				foundselfillumtint = false;
+				if (Vars::Chams::DME::Weapon.m_Var == 7) {
+					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
+					if (foundselfillumtint) {
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
+					}
+				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced) {
 					IMaterial* pMaterial = m_pMatScuffed;

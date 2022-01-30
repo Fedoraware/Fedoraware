@@ -3,6 +3,7 @@
 #include "../Vars.h"
 #include "../Misc/Misc.h"
 #include "../Crits/Crits.h"
+#include "../../Features/Visuals/Visuals.h" // u dont see this
 
 int attackStringW;
 int attackStringH;
@@ -14,10 +15,27 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
 		return;
 
-	static std::string clr({ '\x7', 'F', 'F', 'C', '1', '4', 'B' });
+	//static std::string clr({ '\x7', 'F', 'F', 'C', '1', '4', 'B' }); // this colour looks like poo
+	static std::string clr({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); // this colour looks P!!!
 
 	if (const auto pLocal = g_EntityCache.m_pLocal) {
 		if (Vars::Visuals::ChatInfo.m_Var) {
+
+			// literally completely pasted from deathpole
+			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_started")) {
+				const auto initiator = pEvent->GetInt("initiator");
+				const auto target = pEvent->GetString("param1"); // im almost certain this is the param for the targets name 
+
+				auto pEntity = g_Interfaces.EntityList->GetClientEntity(initiator);
+				bool ourteam = (pEntity->GetTeamNum() == pLocal->GetTeamNum());
+
+				PlayerInfo_t pii;
+				g_Interfaces.Engine->GetPlayerInfo(initiator, &pii);
+
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]%sVote Initiator: \x3%s", clr, std::string(ourteam ? " " : " [enemy] "), pii.name).c_str());
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]%sVote Target: \x3%s", clr, std::string(ourteam ? " " : " [enemy] "), target).c_str());
+			}
+
 			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast")) {
 				const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
 				if (pEntity && pEntity->IsPlayer()) {
@@ -32,14 +50,20 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				}
 			}
 
+			// i have moved this to g_notify because it WILL look better than spamming ur chat for every idiot hvher tryna change spawns on 2fort
 			if (uNameHash == FNV1A::HashConst("player_changeclass")) {
 				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")))) {
+					if (pEntity == pLocal) { return; }
 					int nIndex = pEntity->GetIndex();
 
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
 
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("%s[FeD] \x3%s\x1 is now a \x3%s\x1!", clr, pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
+					std::string classString = "[FeD] " + std::string(pi.name) + " is now a " + std::string(Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str();
+					std::wstring wclassString = std::wstring(classString.begin(), classString.end());
+					g_notify.Add(classString);
+
+					//g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("%s[dp] \x3%s\x1 is now a \x3%s\x1!", clr, pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
 				}
 			}
 
@@ -50,6 +74,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 
 		if (Vars::Visuals::damageLogger.m_Var && uNameHash == FNV1A::HashConst("player_hurt")) {
 			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")))) {
+				if (pEntity == pLocal) { return; } // u could literally hurt urself what a meme
 				const auto nAttacker = pEvent->GetInt("attacker");
 				const auto nHealth = pEvent->GetInt("health");
 				const auto nDamage = pEvent->GetInt("damageamount");
@@ -73,19 +98,30 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				}
 
 				const auto maxHealth = pEntity->GetMaxHealth();
-				std::string attackString = "You hit " + std::string(pi.guid) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";
+				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(nDamage) + (bCrit ? " (crit) " : " ") + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")";
 
 				std::wstring wattackString = std::wstring(attackString.begin(), attackString.end());
 				const wchar_t* wcattackString = wattackString.c_str();
-				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP].dwFont, wcattackString, attackStringW, attackStringH);
+				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString, attackStringW, attackStringH);
 
-				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var)
+				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var) // who tf uses this
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]\x3 %s", clr, attackString.c_str()).c_str());
 
 				if (Vars::Visuals::damageLogger.m_Var == 2)
 					g_notify.Add(attackString);
 			}
 		}
+
+		if (Vars::Aimbot::Global::showHitboxes.m_Var && uNameHash == FNV1A::HashConst("player_hurt")) {
+			if (Vars::Aimbot::Global::clearPreviousHitbox.m_Var) { g_Interfaces.DebugOverlay->ClearAllOverlays(); }
+			auto time = Vars::Aimbot::Global::hitboxTime.m_Var;
+			auto colour = Colors::Hitbox; // alpha is how "filled" the hitbox render is, looks bad at anything non-zero (rijin moment)
+			auto pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")));
+			const auto nAttacker = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker")));
+			if (pEntity == pLocal) { return; }; if (pLocal != nAttacker) { return; }
+			g_Visuals.DrawHitboxMatrix(pEntity, colour, time);
+		}
+		
 
 		if (uNameHash == FNV1A::HashConst("achievement_earned")) {
 			const int player = pEvent->GetInt("player", 0xDEAD);

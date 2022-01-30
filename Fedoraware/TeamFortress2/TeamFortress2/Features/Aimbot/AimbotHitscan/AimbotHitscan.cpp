@@ -561,6 +561,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				return;
 		}
 
+		if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && g_GlobalInfo.m_nShifted)) { return; }
 
 
 		g_GlobalInfo.m_nCurrentTargetIdx = Target.m_pEntity->GetIndex();

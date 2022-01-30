@@ -180,6 +180,15 @@ void Draw_t::GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, 
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, 0, 255, horizontal);
 }
 
+// above but accounts for alpha
+void Draw_t::GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
+{
+	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+	g_Interfaces.Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+}
+
 void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr)
 {
 	float Step = PI * 2.0 / segments;
