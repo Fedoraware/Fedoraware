@@ -1024,6 +1024,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
 								ImGui::Checkbox("Menu snow", &Vars::Visuals::Snow.m_Var); HelpMarker("Enable the snow when menu is open");
 								ImGui::Checkbox("Rage Retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+								if (Vars::Misc::RageRetry.m_Var) {
+									ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99); HelpMarker("Minimum health in % that will cause a retry");
+								}
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {

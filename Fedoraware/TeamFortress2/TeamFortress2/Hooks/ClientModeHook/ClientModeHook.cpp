@@ -226,7 +226,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 
 			if (Vars::Misc::RageRetry.m_Var) {
-				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * 0.2)) {
+				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.m_Var / 100.f))) {
 					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
 				}
 			}
