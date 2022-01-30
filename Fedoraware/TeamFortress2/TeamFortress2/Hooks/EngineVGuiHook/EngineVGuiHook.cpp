@@ -97,7 +97,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						{
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
-							static Color_t color1, color2;
+							static Color_t color1, color2, color3;
 
 							if (g_GlobalInfo.m_nWaitForShift) {
 								color1 = Colors::DtChargingLeft;
@@ -114,10 +114,51 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
 								tickWidth = (g_GlobalInfo.m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
-								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
+								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f); 
 
 								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2)  + 49, maxWidth + 2, Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2, { 50,50,50,210 });
 								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth, (g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, color1, color2, true);
+							}
+							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
+								float ratio = ((float)g_GlobalInfo.m_nShifted / (float)24);
+
+								if (ratio > 1) { ratio = 1; }
+								else if (ratio < 0) { ratio = 0; } //player changes tick count.
+								
+								// these are all vars in dp but fedware doesnt have the vars and i am not adding them
+								int xoff = 0; // width offset (is it called width offset who knows)
+								int yoff = 402; // height offset
+								int xscale = 14; // height of bar
+								int yscale = 300; // width of bar
+
+								color3 = { 255,255,255,255 };
+
+								g_Draw.OutlinedRect(g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) + yoff, (yscale + 2), (xscale + 2), color3);
+								g_Draw.GradientRect(g_ScreenSize.c - (yscale / 2) + xoff, nY - (xscale / 2) + yoff, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), (nY - (xscale / 2) + yoff + xscale), { color1 }, { color2 }, TRUE);
+								g_Draw.String(FONT_ESP_COND, g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
+								if (g_GlobalInfo.m_nShifted == 0) // no charge no money
+								{
+									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE, _(L"NO CHARGE"));
+									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + xoff, nY - (xscale / 2) + yoff, yscale, xscale, { 17, 24, 26, 255 });
+								}
+								else if (g_GlobalInfo.m_bRecharging) // charging 
+								{
+									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE, _(L"CHARGING"));
+									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + (yscale * ratio) + xoff, nY - (xscale / 2) + yoff, yscale - (yscale * ratio) + 1 /*float is kind of shit*/, xscale, {17, 24, 26, 255});
+								}
+								else if (ratio != 1) // disgusting btw
+								{
+									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
+									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + (yscale * ratio) + xoff, nY - (xscale / 2) + yoff, yscale - (yscale * ratio) + 1 /*float is kind of shit*/, xscale, { 17, 24, 26, 255 });
+								}
+								else if (!g_GlobalInfo.m_nWaitForShift) // activates when ready
+								{
+									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
+								}
+								else // activates when waiting blah blah blahg
+								{
+									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 46, 46, 255 }, ALIGN_REVERSE, _(L"DT IMPOSSIBLE"));
+								}
 							}
 
 						}
