@@ -703,7 +703,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Columns(3);
 						{
 							ImGui::TextUnformatted("Players");
-							ImGui::Checkbox("Enable Team/Enemy colors", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+							ImGui::Checkbox("Enable Team/Enemy colours", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 							if (ImGui::CollapsingHeader("ESP###playerESp", ImGuiTreeNodeFlags_DefaultOpen))
 							{
 								//ImGui::TextUnformatted("ESP");
@@ -722,7 +722,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Player conditions", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
 								static const char* uberESP[]{ "Off", "Text", "Bar" }; ImGui::PushItemWidth(100); ImGui::Combo("Player ubercharge", &Vars::ESP::Players::Uber.m_Var, uberESP, IM_ARRAYSIZE(uberESP)); ImGui::PopItemWidth(); HelpMarker("Will draw how much ubercharge a medic has");
 								static const char* boxESP[]{ "Off", "Simple", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Player box", &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on players");
-								static const char* bonesESP[]{ "Off", "Custom color", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player bones", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
+								static const char* bonesESP[]{ "Off", "Custom colour", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player bones", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
 								ImGui::Checkbox("Player GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
 								ImGui::Checkbox("Player lines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
 								ImGui::Checkbox("Player Dlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
@@ -756,7 +756,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Glow on cosmetics", &Vars::Glow::Players::Wearables.m_Var); HelpMarker("Will draw glow on player cosmetics");
 								ImGui::Checkbox("Glow on weapons", &Vars::Glow::Players::Weapons.m_Var); HelpMarker("Will draw glow on player weapons");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Player glow opacity", &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
-								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player glow color", &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Player glow colour", &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which colour the glow will draw");
 							}
 							if (ImGui::CollapsingHeader("DME chams")) {
 								ImGui::Checkbox("DME chams###dmeactive", &Vars::Chams::DME::Active.m_Var); HelpMarker("DME chams master switch");
@@ -837,7 +837,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Ignore team buildings###glowbuildingsteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);  HelpMarker("Whether or not to draw glow on your teams buildings");
 								//static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Building glow opacity", &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
-								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow color", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which color the glow will draw");
+								static const char* colorGlow[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Building glow colour", &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow)); ImGui::PopItemWidth(); HelpMarker("Which colour the glow will draw");
 							}
 						}
 						ImGui::NextColumn();
@@ -966,7 +966,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 									ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 								}
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
-								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
+								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer colour will be dictated by a changing colour");
 								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
