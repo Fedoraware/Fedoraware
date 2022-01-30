@@ -523,6 +523,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
+			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VoteRevealer);
 			SAVE_VAR(Vars::Misc::VotesInChat);
@@ -537,11 +538,13 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
+				SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				SAVE_VAR(Vars::Misc::CL_Move::DTMode);
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
@@ -1062,6 +1065,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::Directional);
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
+			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);
@@ -1075,12 +1079,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRecharge);
+				LOAD_VAR(Vars::Misc::CL_Move::AntiWarp);
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
