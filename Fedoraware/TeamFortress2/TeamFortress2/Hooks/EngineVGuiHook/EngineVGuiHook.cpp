@@ -97,7 +97,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						{
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
-							static Color_t color1, color2;
+							static Color_t color1, color2, color3;
 
 							if (g_GlobalInfo.m_nWaitForShift) {
 								color1 = Colors::DtChargingLeft;
@@ -131,7 +131,9 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								int xscale = 14; // height of bar
 								int yscale = 300; // width of bar
 
-								g_Draw.OutlinedRect(g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) + yoff, (yscale + 2), (xscale + 2), Colors::DtOutline);
+								color3 = { 255,255,255,255 };
+
+								g_Draw.OutlinedRect(g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) + yoff, (yscale + 2), (xscale + 2), color3);
 								g_Draw.GradientRect(g_ScreenSize.c - (yscale / 2) + xoff, nY - (xscale / 2) + yoff, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), (nY - (xscale / 2) + yoff + xscale), { color1 }, { color2 }, TRUE);
 								g_Draw.String(FONT_ESP_COND, g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
 								if (g_GlobalInfo.m_nShifted == 0) // no charge no money
