@@ -1305,6 +1305,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						showFonts = !showFonts;
 					}
 
+					if (ImGui::MenuItem("Menus")) {
+						if (ImGui::MenuItem("Demo UI"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+						if (ImGui::MenuItem("Demo Trackbar"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+						if (ImGui::MenuItem("Itemtest"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+					}
+
 					ImGui::EndMainMenuBar();
 				}
 
