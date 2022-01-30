@@ -457,7 +457,7 @@ namespace Vars
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
 		inline CVar<bool> MedalFlip				{ true, L"Medal Flip" };
 		inline CVar<bool> AutoRocketJump		{ false, L"Auto RocketJump" };
-		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
+		inline CVar<int> ChatSpam				{ 0, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<int> EdgeJumpKey			{ VK_MENU, L"Edge Jump key"};

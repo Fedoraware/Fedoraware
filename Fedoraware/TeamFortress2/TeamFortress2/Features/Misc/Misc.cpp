@@ -276,31 +276,51 @@ void CMisc::BypassPure()
 	}
 }
 
-std::string GetSpam(const int nIndex) {
+const std::string spam_Fed[] = {
+	_("Fedoraware - github.com/M-FeD/Fedoraware"),
+	_("Fedoraware - Best free and open-source cheat!"),
+	_("Fedoraware - One tip ahead of the game!"),
+	_("Fedoraware - Now available @ github.com/M-FeD!"),
+	_("Fedoraware - Based on SEOwned public source!") };
+
+const std::string spam_Lbox[] = {
+	_("GET GOOD, GET LMAOBOX!"),
+	_("LMAOBOX - WAY TO THE TOP"),
+	_("WWW.LMAOBOX.NET - BEST FREE TF2 HACK!")
+};
+
+const std::string spam_CH[] = {
+	_("Cathook - more fun than a ball of yarn!"),
+	_("GNU/Linux is the best OS!"),
+	_("Visit https://cathook.club for more information!"),
+	_("Cathook - Free and Open-Source tf2 cheat!"),
+	_("Cathook - ca(n)t stop me meow!")
+};
+
+std::string GetSpam(const int nMode) {
 	std::string str;
 
-	switch (nIndex)
+	switch (nMode)
 	{
-	case 0: str = XorStr("say Fedoraware - github.com/M-FeD/Fedoraware").str(); break;
-	case 1: str = XorStr("say Fedoraware - Best free and open-source cheat!").str(); break;
-	case 2: str = XorStr("say Fedoraware - One tip ahead of the game!").str(); break;
-	case 3: str = XorStr("say Fedoraware - Now available @ github.com/M-FeD!").str(); break;
-	default: str = XorStr("say Fedoraware - Based on SEOwned public source!").str(); break;
+	case 2:str = spam_Lbox[Utils::RandIntSimple(0, ARRAYSIZE(spam_Lbox) - 1)]; break;
+	case 3: str = spam_CH[Utils::RandIntSimple(0, ARRAYSIZE(spam_CH) - 1)]; break;
+	default: str = spam_Fed[Utils::RandIntSimple(0, ARRAYSIZE(spam_Fed) - 1)]; break;
 	}
 
-	return str;
+	Utils::ReplaceSpecials(str);
+	return "say " + str;
 }
 
 void CMisc::ChatSpam()
 {
-	if (!Vars::Misc::ChatSpam.m_Var)
+	if (Vars::Misc::ChatSpam.m_Var == 0)
 		return;
 
 	float flCurTime = g_Interfaces.Engine->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend) {
-		g_Interfaces.Engine->ClientCmd_Unrestricted(GetSpam(Utils::RandIntSimple(0, 5)).c_str());
+		g_Interfaces.Engine->ClientCmd_Unrestricted(GetSpam(Vars::Misc::ChatSpam.m_Var).c_str());
 		flNextSend = (flCurTime + 3.0f);
 	}
 }
