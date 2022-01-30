@@ -1331,6 +1331,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					{
 						if (ImGui::MenuItem("Full Update"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+						if(ImGui::MenuItem("Reload HUD"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
 						if (ImGui::MenuItem("Restart sound system"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
 						if (ImGui::MenuItem("Stop sound"))
@@ -1341,6 +1343,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
 						if (ImGui::MenuItem("Retry"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+						ImGui::Separator();
+						if (ImGui::MenuItem("Exit"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
 
 						ImGui::EndMenu();
 					}
@@ -1353,13 +1358,17 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						showFonts = !showFonts;
 					}
 
-					if (ImGui::MenuItem("Menus")) {
+					if (ImGui::BeginMenu("Menus")) {
+						if (ImGui::MenuItem("Console"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
 						if (ImGui::MenuItem("Demo UI"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
 						if (ImGui::MenuItem("Demo Trackbar"))
-							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
 						if (ImGui::MenuItem("Itemtest"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+
+						ImGui::EndMenu();
 					}
 
 					ImGui::EndMainMenuBar();
