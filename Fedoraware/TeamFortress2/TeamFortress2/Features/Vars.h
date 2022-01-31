@@ -428,10 +428,10 @@ namespace Vars
 		inline CVar<float> ArrowAngle{ 60.f, L"Out of FOV arrow angle" };
 		inline CVar<float> MaxDist{ 1000.f, L"How far until the arrows are no longer visible" };
 		inline CVar<float> MinDist{ 200.f, L"How many units till the arrows are fully opaque" };
-		inline CVar<float> VMOffX{ 0.f, L"VM Offset" };
-		inline CVar<float> VMOffY{ 0.f, L"VM Offset" };
-		inline CVar<float> VMOffZ{ 0.f, L"VM Offset" };
-		inline CVar<float> VMRoll{ 0.f, L"VM Offset" };
+		inline CVar<int> VMOffX{ 0, L"VM Offset" };
+		inline CVar<int> VMOffY{ 0, L"VM Offset" };
+		inline CVar<int> VMOffZ{ 0, L"VM Offset" };
+		inline CVar<int> VMRoll{ 0, L"VM Offset" };
 
 		inline CVar<float> despawnTime{ 5.f, L"How many ticks to despawn a damage log event" };
 		inline CVar<int> damageLogger{ 0, L"Enable damage logger" };
