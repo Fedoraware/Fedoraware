@@ -281,25 +281,25 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		ImGuiStyle* style = &ImGui::GetStyle();
 		auto& io = ImGui::GetIO();
 		ImVec4* colors = ImGui::GetStyle().Colors;
-		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-		colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+		colors[ImGuiCol_Text] = ImVec4(0.76f, 0.76f, 0.76f, 1.00f);
+		colors[ImGuiCol_TextDisabled] = ImVec4(0.56f, 0.41f, 0.04f, 1.00f);
+		colors[ImGuiCol_WindowBg] = ImVec4(0.04f, 0.05f, 0.08f, 1.00f);
 		colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
-		colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
-		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
-		colors[ImGuiCol_FrameBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-		colors[ImGuiCol_FrameBgActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-		colors[ImGuiCol_TitleBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-		colors[ImGuiCol_TitleBgActive] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_PopupBg] = ImVec4(0.04f, 0.05f, 0.08f, 1.00f);
+		colors[ImGuiCol_Border] = ImVec4(1.00f, 0.00f, 0.00f, 0.29f);
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+		colors[ImGuiCol_FrameBg] = ImVec4(0.09f, 0.09f, 0.09f, 0.23f);
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.04f, 0.17f, 0.21f, 0.54f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.13f, 0.48f, 0.65f, 1.00f);
+		colors[ImGuiCol_TitleBg] = ImVec4(0.14f, 0.14f, 0.14f, 0.62f);
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.14f, 0.14f, 0.61f);
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.14f, 0.14f, 0.14f, 0.62f);
 		colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
 		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
 		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
 		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-		colors[ImGuiCol_CheckMark] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
+		colors[ImGuiCol_CheckMark] = ImVec4(0.69f, 0.22f, 0.22f, 1.00f);
 		colors[ImGuiCol_SliderGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
 		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
 		colors[ImGuiCol_Button] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
@@ -308,7 +308,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		colors[ImGuiCol_Header] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
 		colors[ImGuiCol_HeaderHovered] = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
 		colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
-		colors[ImGuiCol_Separator] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
+		colors[ImGuiCol_Separator] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
 		colors[ImGuiCol_SeparatorActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
 		colors[ImGuiCol_ResizeGrip] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
@@ -319,8 +319,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
 		colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
 		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-		//colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-		//colors[ImGuiCol_DockingEmptyBg] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 		colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 		colors[ImGuiCol_PlotHistogram] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
@@ -337,32 +335,34 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.00f, 0.00f, 0.10f, 0.20f);
 
-		style->WindowPadding = ImVec2(8.00f, 8.00f);
-		style->FramePadding = ImVec2(5.00f, 2.00f);
-		style->CellPadding = ImVec2(6.00f, 6.00f);
-		style->ItemSpacing = ImVec2(6.00f, 6.00f);
+		style->WindowPadding = ImVec2(0.00f, 2.00f);
+		style->FramePadding = ImVec2(20.00f, 2.00f);
+		style->CellPadding = ImVec2(6.00f, 0.00f);
+		style->ItemSpacing = ImVec2(6.00f, 4.00f);
 		style->ItemInnerSpacing = ImVec2(6.00f, 6.00f);
 		style->TouchExtraPadding = ImVec2(0.00f, 0.00f);
-		style->IndentSpacing = 25;
-		style->ScrollbarSize = 15;
-		style->GrabMinSize = 10;
-		style->WindowBorderSize = 1;
+		style->IndentSpacing = 0;
+		style->ScrollbarSize = 1;
+		style->GrabMinSize = 7;
+		style->WindowBorderSize = 0;
 		style->ChildBorderSize = 1;
 		style->PopupBorderSize = 1;
-		style->FrameBorderSize = 1;
+		style->FrameBorderSize = 0;
 		style->TabBorderSize = 1;
-		style->WindowRounding = 7;
-		style->ChildRounding = 4;
-		style->FrameRounding = 3;
-		style->PopupRounding = 4;
-		style->ScrollbarRounding = 9;
-		style->GrabRounding = 3;
-		style->LogSliderDeadzone = 4;
-		style->TabRounding = 4;
+		style->WindowRounding = 0;
+		style->ChildRounding = 0;
+		style->FrameRounding = 0;
+		style->PopupRounding = 0;
+		style->ScrollbarRounding = 0;
+		style->GrabRounding = 0;
+		style->LogSliderDeadzone = 0;
+		style->TabRounding = 0;
 
-		style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
+		style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
+		style->SelectableTextAlign = ImVec2(0.0f, 0.5f);
+		style->ButtonTextAlign = ImVec2(0.0f, 0.5f);
 
-		style->DisplaySafeAreaPadding = ImVec2(4, 4);
+		style->DisplaySafeAreaPadding = ImVec2(0, 17);
 
 		auto m_font_config = ImFontConfig();
 		m_font_config.OversampleH = 1;
@@ -1150,7 +1150,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 									}
 								}
 
-								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
+								static const char* bullettracers[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, bullettracers, IM_ARRAYSIZE(bullettracers)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
 								}
@@ -1163,14 +1163,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 								if (Vars::Aimbot::Global::showHitboxes.m_Var) {
 									ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-								  ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-                }
-								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
-								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer colour will be dictated by a changing colour");
-								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
-								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
-									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
+									ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 								}
+
 								ImGui::TextUnformatted("");
 								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Off X", &Vars::Visuals::VMOffX.m_Var, -90, 90);
 								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
@@ -1234,6 +1229,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								if (Vars::Misc::RageRetry.m_Var) {
 									ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99); HelpMarker("Minimum health in % that will cause a retry");
 								}
+								//ImGui::Checkbox("MVM Instant Respawn", &Vars::Misc::MVMRes.m_Var);
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {

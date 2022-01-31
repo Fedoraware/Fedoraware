@@ -19,4 +19,11 @@ namespace EngineHook
 		using fn = void(__cdecl*)(void*, void*);
 		void __cdecl Hook(void* ecx, void* edx);
 	}
+
+	namespace CL_FireEvents
+	{
+		inline SEOHook::Func Func;
+		using fn = float(__fastcall*)(void*, void*);
+		float __fastcall Hook(void* ecx, void* edx);
+	}
 }

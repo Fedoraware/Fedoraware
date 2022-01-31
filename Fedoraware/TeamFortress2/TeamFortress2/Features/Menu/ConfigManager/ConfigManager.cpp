@@ -533,6 +533,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::ChatCensor);
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
+			SAVE_VAR(Vars::Misc::MVMRes);
 			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VoteRevealer);
 			SAVE_VAR(Vars::Misc::VotesInChat);
@@ -1090,6 +1091,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::ChatCensor);
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
+			LOAD_VAR(Vars::Misc::MVMRes);
 			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);

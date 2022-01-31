@@ -76,10 +76,6 @@ namespace Utils
                 ++c;
                 str[i] = '\a';
                 break;
-            case 'e':
-                ++c;
-                str[i] = '\e';
-                break;
                 // Write escaped escape character as is
             case '\\':
                 ++c;

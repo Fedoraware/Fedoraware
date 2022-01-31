@@ -210,13 +210,13 @@ public: //Everything else, lol
 	__inline bool CalcIsAttackCriticalHelper(CBaseEntity* pWeapon)
 	{
 		typedef bool (*fn_t)(CBaseEntity*);
-		return GetVFunc<fn_t>(pWeapon, 461, 0)(pWeapon);
+		return GetVFunc<fn_t>(pWeapon, 462, 0)(pWeapon);
 	}
 
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)
 	{
 		typedef bool (*fn_t)(CBaseEntity*);
-		return GetVFunc<fn_t>(pWeapon, 462, 0)(pWeapon);
+		return GetVFunc<fn_t>(pWeapon, 463, 0)(pWeapon);
 	}
 
 	__inline bool CanFireCriticalShot(CBaseEntity* pWeapon)
