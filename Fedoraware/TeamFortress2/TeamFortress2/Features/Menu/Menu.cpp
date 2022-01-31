@@ -1150,7 +1150,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 									}
 								}
 
-								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
+								static const char* bullettracers[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, bullettracers, IM_ARRAYSIZE(bullettracers)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
 								}
