@@ -1,15 +1,41 @@
 #include "Viewmodel.h"
 
 void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& eyePosition, Vec3& eyeAngles) {
-	auto pLocal = g_EntityCache.m_pLocal;
+    static auto originalFn = Func.Original<fn>();
+    if (auto& pLocal = g_EntityCache.m_pLocal) {
+        if (pLocal->IsAlive() && !g_GlobalInfo.m_vAimPos.IsZero() && Vars::Visuals::AimbotViewmodel.m_Var) {
+            if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE) {
+                eyeAngles = Math::CalcAngle(pLocal->GetEyePosition(), g_GlobalInfo.m_vPredictedPos);
+                g_GlobalInfo.m_vEyeAngDelayed = eyeAngles;
+            }
+            else {
+                eyeAngles = Math::CalcAngle(pLocal->GetEyePosition(), g_GlobalInfo.m_vAimPos);
+                g_GlobalInfo.m_vEyeAngDelayed = eyeAngles;
+            }
+            g_GlobalInfo.vEyeAngDelay = 0;
+        }
+        else if (pLocal->IsAlive())
+        {
+            if (g_GlobalInfo.vEyeAngDelay < 40) { eyeAngles = g_GlobalInfo.m_vEyeAngDelayed; } // looks fucking hot ty senator for the idea
+            else { eyeAngles = g_Interfaces.Engine->GetViewAngles(); }
+        }
+    }
+    //VM Offset Shit
 
-	if (pLocal && pLocal->IsAlive())
-	{
-		Func.Original<fn>()(ecx, edx, owner, eyePosition, eyeAngles);
-	}
-	else {
-		Func.Original<fn>()(ecx, edx, owner, eyePosition, eyeAngles);
-	}
+    Vec3 vForward = {}, vRight = {}, vUp = {};
+    Math::AngleVectors(eyeAngles, &vForward, &vRight, &vUp);
+
+    // viewmodel offsets should probably be locked between 2 values, just like we should clamp our eye angles, however, I don't want to, f*ck you
+
+    Vec3 vEyePosition = eyePosition + (
+        (vRight * Vars::Visuals::VMOffX.m_Var) +
+        (vForward * Vars::Visuals::VMOffY.m_Var) +
+        (vUp * Vars::Visuals::VMOffZ.m_Var)
+        );
+
+    eyeAngles.z += Vars::Visuals::VMRoll.m_Var; //VM Roll
+
+    originalFn(ecx, edx, owner, vEyePosition, eyeAngles);
 }
 
 void Viewmodel::Init() {

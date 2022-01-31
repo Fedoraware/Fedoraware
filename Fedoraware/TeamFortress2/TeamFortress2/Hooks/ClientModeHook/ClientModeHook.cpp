@@ -179,8 +179,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
-
 	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
+	if (pSendPacket) { g_GlobalInfo.m_bChoking = false; }
 
 	int nOldFlags = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
@@ -189,7 +189,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		
+
 		//// What an utterly retarded piece of code
 		//int classNum = pLocal->GetClassNum();
 		//if (classNum == ETFClass::CLASS_HEAVY) {
@@ -294,31 +294,32 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
-
 	// Fake lag
-	static int chockedPackets = 0;
-	if ((Vars::Misc::CL_Move::Fakelag.m_Var && !Vars::Misc::CL_Move::FakelagOnKey.m_Var) || (Vars::Misc::CL_Move::Fakelag.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var))) {
-		if (const auto& pLocal = g_EntityCache.m_pLocal) {
-			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
-				if (!g_GlobalInfo.m_bAttacking && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
-					!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
-					!g_GlobalInfo.m_nShifted &&
-					!g_GlobalInfo.m_bShouldShift &&
-					pLocal->IsAlive()) {
-					*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
-					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && *pSendPacket && g_Interfaces.Input->CAM_IsThirdPerson()) {
-						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
-					}
-					chockedPackets++;
-					// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will NEVER hit this
-					if (chockedPackets > Vars::Misc::CL_Move::FakelagValue.m_Var) {
-						chockedPackets = 0;
-					}
+	const auto& pLocal = g_EntityCache.m_pLocal;
+	static int chockedPackets = 0; static int chockValue;// for obv reasons dont fakelag if we are forcing packet send (cmon)
+	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var && Vars::Misc::CL_Move::FakelagOnKey.m_Var)) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 100.0f) && !g_GlobalInfo.m_bForceSendPacket) {
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { // checking if we can and are shooting is far more reliable than that global var
+			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
+				!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
+				!g_GlobalInfo.m_nShifted &&
+				!g_GlobalInfo.m_bShouldShift) {
+
+				if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && *pSendPacket && g_Interfaces.Input->CAM_IsThirdPerson()) {
+					g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
 				}
+
+				chockedPackets++;
+				// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will use this
+				if (chockedPackets > chockValue) {
+					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) { chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var; }
+					else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
+					*pSendPacket = true; g_GlobalInfo.m_bChoking = false; chockedPackets = 0;
+				}
+				else { *pSendPacket = false; }
 			}
 		}
 	}
-	else if (chockedPackets > 0) { *pSendPacket = true; chockedPackets = 0; } // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
+	else if (chockedPackets > 0) { *pSendPacket = true; chockedPackets = 0; g_GlobalInfo.m_bChoking = false; } // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
 	//	we also leave it all the way out here so that we have the same likelihood of hitting it as the old (bad) failsafe
 	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
@@ -389,17 +390,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	//		because it had just started choking again and the failsafe only activates when it reaches x ticks.
 	// If we choke packets for anything else, literally anything, for longer than 14 ticks, this will limit us to stay at that 14 again.
 	// Because of this I have changed the failsafe to activate instantly and only when fakelag is off
+	g_GlobalInfo.vEyeAngDelay++; // ignore this
 	if (static_cast<int>(g_Misc.strings.size()) > 0) {
-		g_GlobalInfo.tickCounter++;
+		g_GlobalInfo.gNotifCounter++;
 
-		if (g_GlobalInfo.tickCounter > Vars::Visuals::despawnTime.m_Var) {
-			g_GlobalInfo.tickCounter = 0;
+		if (g_GlobalInfo.gNotifCounter > Vars::Visuals::despawnTime.m_Var) {
+			g_GlobalInfo.gNotifCounter = 0;
 
 			g_Misc.strings.pop_back();
 		}
 	}
 	else {
-		g_GlobalInfo.tickCounter = 0;
+		g_GlobalInfo.gNotifCounter = 0;
 	}
 
 	g_GlobalInfo.lateUserCmd = pCmd;

@@ -579,8 +579,63 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("AutoShoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
-							ImGui::Checkbox("Aim at players", &Vars::Aimbot::Global::AimPlayers.m_Var); HelpMarker("The aimbot will aim at players");
-							ImGui::Checkbox("Aim at buildings", &Vars::Aimbot::Global::AimBuildings.m_Var); HelpMarker("The aimbot will aim at buildings");
+							{
+								ImGui::PushItemWidth(100);
+								std::vector<std::string> aimtargetsvec;
+								static bool aimtargetFlags[]{ Vars::Aimbot::Global::AimPlayers.m_Var,Vars::Aimbot::Global::AimBuildings.m_Var };
+								const char* pAimtargets[] = { "Players", "Buildings" }; static std::string aimtargetsPreview = "PH";
+								if (aimtargetsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+									aimtargetsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++) {
+										if (aimtargetFlags[i])
+											aimtargetsvec.push_back(pAimtargets[i]);
+									}
+									for (size_t i = 0; i < aimtargetsvec.size(); i++)
+									{
+										if (aimtargetsvec.size() == 1)
+											aimtargetsPreview += aimtargetsvec.at(i);
+										else if (!(i == aimtargetsvec.size() - 1))
+											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+										else
+											aimtargetsPreview += aimtargetsvec.at(i);
+									}
+								}
+								if (ImGui::BeginCombo("Targets", aimtargetsPreview.c_str()))
+								{
+									aimtargetsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++)
+									{
+										ImGui::Selectable(pAimtargets[i], &aimtargetFlags[i]);
+										if (aimtargetFlags[i])
+											aimtargetsvec.push_back(pAimtargets[i]);
+
+									}
+									for (size_t i = 0; i < aimtargetsvec.size(); i++)
+									{
+										if (aimtargetsvec.size() == 1)
+											aimtargetsPreview += aimtargetsvec.at(i);
+										else if (!(i == aimtargetsvec.size() - 1))
+											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+										else
+											aimtargetsPreview += aimtargetsvec.at(i);
+									}
+									ImGui::EndCombo();
+								}
+								for (size_t i = 0; i < IM_ARRAYSIZE(aimtargetFlags); i++) {
+									if (aimtargetFlags[i]) {
+										switch (i + 1) {
+										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = true; break; }
+										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = true; break; }
+										}
+									}
+									else {
+										switch (i + 1) {
+										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = false; break; }
+										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = false; break; }
+										}
+									}
+								}
+							} // aim targets combobox
 							ImGui::Checkbox("Ignore invulnerable", &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The aimbot will ignore players who can't be damaged");
 							ImGui::Checkbox("Ignore cloaked", &Vars::Aimbot::Global::IgnoreCloaked.m_Var); HelpMarker("The aimbot will ignore spies who are cloaked");
 							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
@@ -902,75 +957,226 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							if (ImGui::CollapsingHeader("Miscellaneous")) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
 								//ImGui::PushItemWidth(100); ImGui::SliderInt("Aimbot FoV circle alpha", &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("How opaque the aimbot's FoV circle is");
-								ImGui::Checkbox("World modulation", &Vars::Visuals::WorldModulation.m_Var); HelpMarker("Will colour modulate the world");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prop opacity", &Vars::Visuals::PropAlpha.m_Var, 0.01f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
-								ImGui::Checkbox("Sky modulation", &Vars::Visuals::SkyModulation.m_Var); HelpMarker("Will colour modulate the sky");
-								
-								// literally complete paste from this same cpp file LMAO
-								std::vector<std::string> vec;
-								static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
-								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string previewValue = "";
-								if (ImGui::BeginCombo("Removals", previewValue.c_str()))
+								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Prop opacity", &Vars::Visuals::PropAlpha.m_Var, 0.01f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								// ok having a slider for this is as bad as the aimbot fov alpha, we have it as a colour, set the prop alpha, to Color::PropModulation.a (or whatever its called)
+								//	i have no idea where i'm supposed to put it so i just said fuck the var and send Colors::StaticPropModulation.a to the hook
+								const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(100); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
+
 								{
-									previewValue = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
-									{
-										ImGui::Selectable(pRemovals[i], &removalFlags[i]);
-										if (removalFlags[i])
-											vec.push_back(pRemovals[i]);
-											
-									}
-									for (size_t i = 0; i < vec.size(); i++)
-									{
-										if (vec.size() == 1)
-											previewValue += vec.at(i);
-										else if (!(i == vec.size() - 1))
-											previewValue += vec.at(i) + ", ";
-										else
-											previewValue += vec.at(i);
-									}
-									ImGui::EndCombo();
-								} // i got tired of trying better ways so this is new method fr*ck you
-								for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
-									if (removalFlags[i]) {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::RemoveScope.m_Var = true; break; }
-										case 2: { Vars::Visuals::RemoveZoom.m_Var = true; break; }
-										case 3: { Vars::Visuals::RemoveDisguises.m_Var = true; break; }
-										case 4: { Vars::Visuals::RemoveTaunts.m_Var = true; break; }
-										case 5: { Vars::Misc::DisableInterpolation.m_Var = true; break; }
-										case 6: { Vars::Visuals::RemovePunch.m_Var = true; break; }
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> modulationvec;
+									static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
+									const char* pmodulation[] = { "World", "Sky", "Prop Wireframe" }; static std::string modulationPreview = "PH";
+									if (modulationPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										modulationPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++) {
+											if (modulationFlags[i])
+												modulationvec.push_back(pmodulation[i]);
+										}
+										for (size_t i = 0; i < modulationvec.size(); i++)
+										{
+											if (modulationvec.size() == 1)
+												modulationPreview += modulationvec.at(i);
+											else if (!(i == modulationvec.size() - 1))
+												modulationPreview += modulationvec.at(i) + ", ";
+											else
+												modulationPreview += modulationvec.at(i);
 										}
 									}
-									else {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::RemoveScope.m_Var = false; break; }
-										case 2: { Vars::Visuals::RemoveZoom.m_Var = false; break; }
-										case 3: { Vars::Visuals::RemoveDisguises.m_Var = false; break; }
-										case 4: { Vars::Visuals::RemoveTaunts.m_Var = false; break; }
-										case 5: { Vars::Misc::DisableInterpolation.m_Var = false; break; }
-										case 6: { Vars::Visuals::RemovePunch.m_Var = false; break; }
+									if (ImGui::BeginCombo("World", modulationPreview.c_str()))
+									{
+										modulationPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++)
+										{
+											ImGui::Selectable(pmodulation[i], &modulationFlags[i]);
+											if (modulationFlags[i])
+												modulationvec.push_back(pmodulation[i]);
+
+										}
+										for (size_t i = 0; i < modulationvec.size(); i++)
+										{
+											if (modulationvec.size() == 1)
+												modulationPreview += modulationvec.at(i);
+											else if (!(i == modulationvec.size() - 1))
+												modulationPreview += modulationvec.at(i) + ", ";
+											else
+												modulationPreview += modulationvec.at(i);
+										}
+										ImGui::EndCombo();
+									}
+									for (size_t i = 0; i < IM_ARRAYSIZE(modulationFlags); i++) {
+										if (modulationFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::WorldModulation.m_Var = true; break; }
+											case 2: { Vars::Visuals::SkyModulation.m_Var = true; break; }
+											case 3: { Vars::Visuals::PropWireframe.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::WorldModulation.m_Var = false; break; }
+											case 2: { Vars::Visuals::SkyModulation.m_Var = false; break; }
+											case 3: { Vars::Visuals::PropWireframe.m_Var = false; break; }
+											}
 										}
 									}
 								}
 
+								{
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> removalsvec;
+									static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
+									const char* pRemovals[] = { "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }; static std::string removalsPreview = "PH";
+									if (removalsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										removalsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++) {
+											if (removalFlags[i])
+												removalsvec.push_back(pRemovals[i]);
+										}
+										for (size_t i = 0; i < removalsvec.size(); i++)
+										{
+											if (removalsvec.size() == 1)
+												removalsPreview += removalsvec.at(i);
+											else if (!(i == removalsvec.size() - 1))
+												removalsPreview += removalsvec.at(i) + ", ";
+											else
+												removalsPreview += removalsvec.at(i);
+										}
+									}
+									if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
+									{
+										removalsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
+										{
+											ImGui::Selectable(pRemovals[i], &removalFlags[i]);
+											if (removalFlags[i])
+												removalsvec.push_back(pRemovals[i]);
+
+										}
+										for (size_t i = 0; i < removalsvec.size(); i++)
+										{
+											if (removalsvec.size() == 1)
+												removalsPreview += removalsvec.at(i);
+											else if (!(i == removalsvec.size() - 1))
+												removalsPreview += removalsvec.at(i) + ", ";
+											else
+												removalsPreview += removalsvec.at(i);
+										}
+										ImGui::EndCombo();
+									}
+									for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
+										if (removalFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::RemoveScope.m_Var = true; break; }
+											case 2: { Vars::Visuals::RemoveZoom.m_Var = true; break; }
+											case 3: { Vars::Visuals::RemoveDisguises.m_Var = true; break; }
+											case 4: { Vars::Visuals::RemoveTaunts.m_Var = true; break; }
+											case 5: { Vars::Misc::DisableInterpolation.m_Var = true; break; }
+											case 6: { Vars::Visuals::RemovePunch.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::RemoveScope.m_Var = false; break; }
+											case 2: { Vars::Visuals::RemoveZoom.m_Var = false; break; }
+											case 3: { Vars::Visuals::RemoveDisguises.m_Var = false; break; }
+											case 4: { Vars::Visuals::RemoveTaunts.m_Var = false; break; }
+											case 5: { Vars::Misc::DisableInterpolation.m_Var = false; break; }
+											case 6: { Vars::Visuals::RemovePunch.m_Var = false; break; }
+											}
+										}
+									}
+								}
+								
+								{
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> predictionsvec;
+									static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
+									const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "PH";
+									if (predictionsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										predictionsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++) {
+											if (predictionFlags[i])
+												predictionsvec.push_back(pPredictions[i]);
+										}
+										for (size_t i = 0; i < predictionsvec.size(); i++)
+										{
+											if (predictionsvec.size() == 1)
+												predictionsPreview += predictionsvec.at(i);
+											else if (!(i == predictionsvec.size() - 1))
+												predictionsPreview += predictionsvec.at(i) + ", ";
+											else
+												predictionsPreview += predictionsvec.at(i);
+										}
+									}
+									if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
+									{
+										predictionsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++)
+										{
+											ImGui::Selectable(pPredictions[i], &predictionFlags[i]);
+											if (predictionFlags[i])
+												predictionsvec.push_back(pPredictions[i]);
+
+										}
+										for (size_t i = 0; i < predictionsvec.size(); i++)
+										{
+											if (predictionsvec.size() == 1)
+												predictionsPreview += predictionsvec.at(i);
+											else if (!(i == predictionsvec.size() - 1))
+												predictionsPreview += predictionsvec.at(i) + ", ";
+											else
+												predictionsPreview += predictionsvec.at(i);
+										}
+										ImGui::EndCombo();
+									} // i got tired of trying better ways so this is new method fr*ck you
+									for (size_t i = 0; i < IM_ARRAYSIZE(predictionFlags); i++) {
+										if (predictionFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::CrosshairAimPos.m_Var = true; break; }
+											case 2: { Vars::Visuals::AimPosSquare.m_Var = true; break; }
+											case 3: { Vars::Visuals::BulletTracer.m_Var = true; break; }
+											case 4: { Vars::Visuals::AimbotViewmodel.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::CrosshairAimPos.m_Var = false; break; }
+											case 2: { Vars::Visuals::AimPosSquare.m_Var = false; break; }
+											case 3: { Vars::Visuals::BulletTracer.m_Var = false; break; }
+											case 4: { Vars::Visuals::AimbotViewmodel.m_Var = false; break; }
+											}
+										}
+									}
+								}
+
+								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
+								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
+									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
+								}
+								if (Vars::Visuals::BulletTracer.m_Var) {
+									ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
+								}
 								if (Vars::Visuals::RemoveScope.m_Var) {
 									ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
 								}
-								
-								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
-								ImGui::Checkbox("Aimbot prediction", &Vars::Visuals::AimPosSquare.m_Var); HelpMarker("Will show a rough estimate of where the aimbot is going to aim at");
 								ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 								if (Vars::Aimbot::Global::showHitboxes.m_Var) {
 									ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-									ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-								}
+								  ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+                }
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer colour will be dictated by a changing colour");
 								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
 								}
+								ImGui::TextUnformatted("");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Off X", &Vars::Visuals::VMOffX.m_Var, -90, 90);
+								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
+								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
+								ImGui::PushItemWidth(100); ImGui::SliderInt("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
+
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
@@ -983,7 +1189,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
-								const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(100); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
 							}
 
 						}
@@ -1022,6 +1227,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and again so you don't get kicked for idling");
 								ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 								ImGui::Checkbox("Be marked as a cat", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
+								ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you");
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
 								ImGui::Checkbox("Menu snow", &Vars::Visuals::Snow.m_Var); HelpMarker("Enable the snow when menu is open");
 								ImGui::Checkbox("Rage Retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
@@ -1193,11 +1399,28 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge"}; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to appear to look horizontally");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth(); HelpMarker("You spin me right 'round, baby, right 'round");
 								ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables AntiAim resolver in the playerlist");
-								ImGui::Checkbox("Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var); HelpMarker("Fakelag master switch");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
-								ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
-								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
-								InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
+
+
+								const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based"}; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
+								if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) { Vars::Misc::CL_Move::Fakelag.m_Var = true; }
+								else { Vars::Misc::CL_Move::Fakelag.m_Var = false; }
+
+								if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+									if (Vars::Misc::CL_Move::FakelagMode.m_Var != 2) {
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+										if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) { // nested bc checking outside of this is useless
+											ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
+											InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
+										}
+									}
+									else {
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag Max Val", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag Min Val", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+
+									}
+
+									ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
+								}
 							}
 
 							if (ImGui::CollapsingHeader("Radar")) {

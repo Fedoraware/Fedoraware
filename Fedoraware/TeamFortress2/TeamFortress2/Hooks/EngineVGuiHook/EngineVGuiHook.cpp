@@ -121,10 +121,10 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
-								float ratio = ((float)g_GlobalInfo.m_nShifted / (float)24);
+								float ratio = ((float)g_GlobalInfo.m_nShifted / (float)Vars::Misc::CL_Move::DTTicks.m_Var);
 
 								if (ratio > 1) { ratio = 1; }
-								else if (ratio < 0) { ratio = 0; } //failsafe (has an actual purpose if u do custom dt ticks better)
+								else if (ratio < 0) { ratio = 0; } //if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
 								
 								// these are all vars in dp but fedware doesnt have the vars and i am not adding them
 								int xoff = 0; // width offset (is it called width offset who knows)

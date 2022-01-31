@@ -414,11 +414,12 @@ namespace Vars
 		inline CVar<bool> ThirdPersonServerHitbox   { false, L"Server Hitboxes" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
-		inline CVar<float> PropAlpha				{ 1.f, L"Props" };
+		inline CVar<bool> PropWireframe			{ false, L"Prop Wireframe" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
+		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
 		inline CVar<int> ParticleTracer				{ true, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
@@ -428,6 +429,10 @@ namespace Vars
 		inline CVar<float> ArrowAngle{ 60.f, L"Out of FOV arrow angle" };
 		inline CVar<float> MaxDist{ 1000.f, L"How far until the arrows are no longer visible" };
 		inline CVar<float> MinDist{ 200.f, L"How many units till the arrows are fully opaque" };
+		inline CVar<int> VMOffX{ 0, L"VM Offset" };
+		inline CVar<int> VMOffY{ 0, L"VM Offset" };
+		inline CVar<int> VMOffZ{ 0, L"VM Offset" };
+		inline CVar<int> VMRoll{ 0, L"VM Offset" };
 
 		inline CVar<float> despawnTime{ 5.f, L"How many ticks to despawn a damage log event" };
 		inline CVar<int> damageLogger{ 0, L"Enable damage logger" };
@@ -467,6 +472,7 @@ namespace Vars
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
+		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };
 		inline CVar<bool> RageRetry				{ false, L"Rage Retry" };
 		inline CVar<int> RageRetryHealth		{ 20, L"Rage Retry health" };
 		inline CVar<bool> BeCat					{ false, L"CatReply" };
@@ -488,10 +494,13 @@ namespace Vars
 			inline CVar<int> DTTicks			{ 21, L"Ticks for DT" };
 			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
 			inline CVar<bool> Fakelag       { true, L"Fakelag" };
+			inline CVar<int> FakelagMode       { 1, L"Fakelag Mode" }; // 1 - plain, 2 - random, 3 - vel based
+			inline CVar<int> FakelagMin      { 1, L"Fakelag Min" }; //	only show when FakelagMode=2
+			inline CVar<int> FakelagMax       { 22, L"Fakelag Max" }; 
 			inline CVar<bool> FakelagIndicator { true, L"Fakelag Indicator" };
-			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" };
+			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" }; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
-			inline CVar<int> FakelagValue   { 1, L"Fakelag value" };
+			inline CVar<int> FakelagValue   { 1, L"Fakelag value" }; // dont show when fakelagmode=2
 		}
 		
 		namespace Discord

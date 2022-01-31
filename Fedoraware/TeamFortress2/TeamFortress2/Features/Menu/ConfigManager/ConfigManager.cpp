@@ -486,9 +486,15 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 			SAVE_VAR(Vars::Visuals::ThirdPersonServerHitbox);
 			SAVE_VAR(Vars::Visuals::WorldModulation);
+			SAVE_VAR(Vars::Visuals::PropWireframe);
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
+			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
+			SAVE_VAR(Vars::Visuals::VMOffX);
+			SAVE_VAR(Vars::Visuals::VMOffY);
+			SAVE_VAR(Vars::Visuals::VMOffZ);
+			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
@@ -498,7 +504,6 @@ void CConfigManager::Save(const wchar_t *name)
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
-			SAVE_VAR(Vars::Visuals::PropAlpha);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Wireframe);
 			SAVE_VAR(Vars::Visuals::Vision);
@@ -525,6 +530,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
+			SAVE_VAR(Vars::Misc::ChatCensor);
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::BeCat);
@@ -548,6 +554,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
@@ -1037,11 +1046,16 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdPersonServerHitbox);
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
+			LOAD_VAR(Vars::Visuals::PropWireframe);
 			LOAD_VAR(Vars::Visuals::SkyboxChanger);
-			LOAD_VAR(Vars::Visuals::PropAlpha);
 			LOAD_VAR(Vars::Visuals::ParticleTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
+			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
+			LOAD_VAR(Vars::Visuals::VMOffX);
+			LOAD_VAR(Vars::Visuals::VMOffY);
+			LOAD_VAR(Vars::Visuals::VMOffZ);
+			LOAD_VAR(Vars::Visuals::VMRoll);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			LOAD_VAR(Vars::Visuals::ArrowLength);
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
@@ -1073,6 +1087,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::Directional);
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
+			LOAD_VAR(Vars::Misc::ChatCensor);
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::BeCat);
@@ -1096,6 +1111,9 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
