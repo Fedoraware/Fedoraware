@@ -153,6 +153,14 @@ void CHooks::Init()
 			fn CLSendMove = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 8D"));
 			Func.Hook(CLSendMove, Hook);
 		}
+
+		//CL_FireEvents
+		{
+			using namespace CL_FireEvents;
+
+			fn CLFireEvents = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"E8 ? ? ? ? 83 EC 10"));
+			Func.Hook(CLFireEvents, Hook);
+		}
 	}
 
 	//EndSceneHook::Init();

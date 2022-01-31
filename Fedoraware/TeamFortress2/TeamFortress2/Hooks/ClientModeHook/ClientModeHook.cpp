@@ -304,16 +304,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				!g_GlobalInfo.m_nShifted &&
 				!g_GlobalInfo.m_bShouldShift) {
 
-				if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && *pSendPacket && g_Interfaces.Input->CAM_IsThirdPerson()) {
-					g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
-				}
-
 				chockedPackets++;
 				// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will use this
 				if (chockedPackets > chockValue) {
 					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) { chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var; }
 					else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
 					*pSendPacket = true; g_GlobalInfo.m_bChoking = false; chockedPackets = 0;
+
+					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && g_Interfaces.Input->CAM_IsThirdPerson()) {
+						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
+					}
+					
 				}
 				else { *pSendPacket = false; }
 			}

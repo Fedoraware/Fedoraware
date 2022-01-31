@@ -321,7 +321,7 @@ void CMisc::ChatSpam()
 
 	if (flCurTime > flNextSend) {
 		g_Interfaces.Engine->ClientCmd_Unrestricted(GetSpam(Vars::Misc::ChatSpam.m_Var).c_str());
-		flNextSend = (flCurTime + 3.0f);
+		flNextSend = (flCurTime + 4.0f);
 	}
 }
 

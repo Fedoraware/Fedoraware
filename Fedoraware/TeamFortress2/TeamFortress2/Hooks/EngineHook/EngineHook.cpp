@@ -114,3 +114,14 @@ void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
 	//static auto originalFn = Func.Original<fn>();
 	//return originalFn(ecx, edx);
 }
+
+float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
+{
+	static auto originalFn = Func.Original<fn>();
+	static DWORD dwGetTime = g_Pattern.Find(_(L"engine.dll"), _(L"D9 43 ? DF F1"));
+
+	if (reinterpret_cast<DWORD>(_ReturnAddress()) == (dwGetTime))
+		return FLT_MAX;
+
+	return originalFn(ecx, edx);
+}	// i dont fucking know if this shit works
