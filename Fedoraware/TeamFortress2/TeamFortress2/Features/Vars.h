@@ -462,7 +462,7 @@ namespace Vars
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
 		inline CVar<bool> MedalFlip				{ true, L"Medal Flip" };
 		inline CVar<bool> AutoRocketJump		{ false, L"Auto RocketJump" };
-		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
+		inline CVar<int> ChatSpam				{ 0, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<int> EdgeJumpKey			{ VK_MENU, L"Edge Jump key"};
@@ -471,7 +471,9 @@ namespace Vars
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
+		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };
 		inline CVar<bool> RageRetry				{ false, L"Rage Retry" };
+		inline CVar<int> RageRetryHealth		{ 20, L"Rage Retry health" };
 		inline CVar<bool> BeCat					{ false, L"CatReply" };
 		namespace CL_Move
 		{
@@ -538,7 +540,7 @@ namespace Vars
 
 	namespace Skybox
 	{
-		inline int skyboxnum = 0;
+		inline int SkyboxNum = 0;
 		inline std::string SkyboxName = "mr_04";
 	}
 	namespace Fonts

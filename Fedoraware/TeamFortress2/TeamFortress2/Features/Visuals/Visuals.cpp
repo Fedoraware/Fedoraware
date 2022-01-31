@@ -78,7 +78,7 @@ void CVisuals::SkyboxChanger() {
 		"sky_rainbow_01"
 	};
 	if (Vars::Visuals::SkyboxChanger.m_Var) {
-		if (Vars::Skybox::skyboxnum == 0) {
+		if (Vars::Skybox::SkyboxNum == 0) {
 			if (Vars::Misc::BypassPure.m_Var) {
 				LoadSkys(Vars::Skybox::SkyboxName.c_str());
 			}
@@ -87,7 +87,7 @@ void CVisuals::SkyboxChanger() {
 			}
 		}
 		else {
-			LoadSkys(skybNames[Vars::Skybox::skyboxnum]);
+			LoadSkys(skybNames[Vars::Skybox::SkyboxNum]);
 		}
 	}
 	else {

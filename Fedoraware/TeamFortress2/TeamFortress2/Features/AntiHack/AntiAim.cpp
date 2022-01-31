@@ -42,8 +42,8 @@ float edgeDistance(float edgeRayYaw)
 	float sp, sy, cp, cy;
 	sy = sinf(DEG2RAD(edgeRayYaw)); // yaw
 	cy = cosf(DEG2RAD(edgeRayYaw));
-	sp = sinf(DEG2RAD(0)); // pitch
-	cp = cosf(DEG2RAD(0));
+	sp = 0.f; // pitch: sinf(DEG2RAD(0))
+	cp = 1.f; // cosf(DEG2RAD(0))
 	forward.x = cp * cy;
 	forward.y = cp * sy;
 	forward.z = -sp;
@@ -52,8 +52,7 @@ float edgeDistance(float edgeRayYaw)
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = { };
 	g_Interfaces.EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
-	// Pythagorean theorem to calculate distance
-	float edgeDistance = (sqrt(pow(trace.vStartPos.x - trace.vEndPos.x, 2) + pow(trace.vStartPos.y - trace.vEndPos.y, 2)));
+	float edgeDistance = (trace.vStartPos - trace.vEndPos).Lenght2D();
 	return edgeDistance;
 }
 

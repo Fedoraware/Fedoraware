@@ -233,7 +233,6 @@ void CMenu::TextCenter(std::string text) {
 
 	ImGui::Text(text.c_str());
 	ImGui::PopFont();
-	ImGui::PopFont();
 }
 
 void CMenu::Run() {
@@ -395,16 +394,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 	ImGui_ImplWin32_NewFrame();
 
 	ImGui::NewFrame();
-	/*ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
-	if (g_Menu.m_bOpen) {
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		if (ImGui::Begin(" ##poop"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize) {
-			ImGui::SetWindowSize(ImVec2(g_ScreenSize.w, 50));
-			ImGui::PopStyleVar();
-			ImGui::TextUnformatted("Hello");
-		}
-		ImGui::End();
-	}*/
 
 	if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || g_Menu.m_bOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
@@ -1189,7 +1178,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
-								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
+								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::SkyboxNum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
@@ -1219,7 +1208,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
 								ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Will spam your noisemaker without using its charges");
 								ImGui::Checkbox("Auto rocketjump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
-								ImGui::Checkbox("Chat spam", &Vars::Misc::ChatSpam.m_Var); HelpMarker("Spam the chat with Fedoraware adverts");
+								// ImGui::Checkbox("Chat spam", &Vars::Misc::ChatSpam.m_Var); HelpMarker("Spam the chat with Fedoraware adverts");
+								const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth(); HelpMarker("Spams the chat with the chosen chat spam");
 								ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 								const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
 								ImGui::Checkbox("Show class changes", &Vars::Visuals::ChatInfo.m_Var); HelpMarker("Will say when people change class in chat");
@@ -1230,9 +1220,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and again so you don't get kicked for idling");
 								ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override");
 								ImGui::Checkbox("Be marked as a cat", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
+								ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you");
 								ImGui::Checkbox("Menu tooltips", &tooltips); HelpMarker("Will enable/disable these");
 								ImGui::Checkbox("Menu snow", &Vars::Visuals::Snow.m_Var); HelpMarker("Enable the snow when menu is open");
 								ImGui::Checkbox("Rage Retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+								if (Vars::Misc::RageRetry.m_Var) {
+									ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99); HelpMarker("Minimum health in % that will cause a retry");
+								}
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {
@@ -1547,6 +1541,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					{
 						if (ImGui::MenuItem("Full Update"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+						if(ImGui::MenuItem("Reload HUD"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
 						if (ImGui::MenuItem("Restart sound system"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
 						if (ImGui::MenuItem("Stop sound"))
@@ -1557,6 +1553,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
 						if (ImGui::MenuItem("Retry"))
 							g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+						ImGui::Separator();
+						if (ImGui::MenuItem("Exit"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
 
 						ImGui::EndMenu();
 					}
@@ -1567,6 +1566,19 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::MenuItem("Fonts"))
 					{
 						showFonts = !showFonts;
+					}
+
+					if (ImGui::BeginMenu("Menus")) {
+						if (ImGui::MenuItem("Console"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
+						if (ImGui::MenuItem("Demo Playback"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+						if (ImGui::MenuItem("Demo Trackbar"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
+						if (ImGui::MenuItem("Itemtest"))
+							g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+
+						ImGui::EndMenu();
 					}
 
 					ImGui::EndMainMenuBar();

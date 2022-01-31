@@ -4,7 +4,7 @@
 #include <algorithm>
 
 const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
-const char* resolveListYaw[]{ "None", "North", "East", "South", "West", "Invert" };
+const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert" };
 
 bool sortByTeam(const plistPlayer& a, const plistPlayer& b)
 {
