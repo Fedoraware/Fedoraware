@@ -71,11 +71,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||																	// 1 - Always
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))		// 2 - Disable on key 
 		{
-			int ticksShifted = 0;
-			
 			//while (g_GlobalInfo.m_nShifted != 0) { // equals -1 like a bawss
 			while (g_GlobalInfo.m_nShifted > 0) {
-				ticksShifted++;
 				oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
 				g_GlobalInfo.m_nShifted--;
 				g_GlobalInfo.m_bForceSendPacket = true; // make sure we dont fakelag while shifting (should not even be an issue but whatever)	

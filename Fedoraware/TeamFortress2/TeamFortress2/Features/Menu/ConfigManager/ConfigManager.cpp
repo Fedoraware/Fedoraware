@@ -553,6 +553,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
@@ -1106,6 +1109,9 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R

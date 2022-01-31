@@ -493,10 +493,13 @@ namespace Vars
 			inline CVar<int> DTTicks			{ 21, L"Ticks for DT" };
 			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
 			inline CVar<bool> Fakelag       { true, L"Fakelag" };
+			inline CVar<int> FakelagMode       { 1, L"Fakelag Mode" }; // 1 - plain, 2 - random, 3 - vel based
+			inline CVar<int> FakelagMin      { 1, L"Fakelag Min" }; //	only show when FakelagMode=2
+			inline CVar<int> FakelagMax       { 22, L"Fakelag Max" }; 
 			inline CVar<bool> FakelagIndicator { true, L"Fakelag Indicator" };
-			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" };
+			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" }; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
-			inline CVar<int> FakelagValue   { 1, L"Fakelag value" };
+			inline CVar<int> FakelagValue   { 1, L"Fakelag value" }; // dont show when fakelagmode=2
 		}
 		
 		namespace Discord
