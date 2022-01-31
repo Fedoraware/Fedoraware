@@ -1163,8 +1163,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 								if (Vars::Aimbot::Global::showHitboxes.m_Var) {
 									ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-								  ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-                }
+									ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+								}
 								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
 								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer colour will be dictated by a changing colour");
 								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
