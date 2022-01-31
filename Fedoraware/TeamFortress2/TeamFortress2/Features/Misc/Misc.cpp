@@ -21,7 +21,7 @@ void CMisc::Run(CUserCmd* pCmd)
 }
 
 void CMisc::ServerHitbox() { // draw our serverside hitbox on local servers, used to test fakelag & antiaim
-	if (g_Interfaces.Input->CAM_IsThirdPerson()) {
+	if (g_Interfaces.Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.m_Var) {
 		using GetServerAnimating_t = void* (*)(int);
 		static GetServerAnimating_t GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 8B 55 ? 85 D2 7E ? A1").c_str()));
 		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);

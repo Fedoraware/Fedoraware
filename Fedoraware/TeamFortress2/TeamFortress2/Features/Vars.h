@@ -411,6 +411,7 @@ namespace Vars
 		inline CVar<int> ThirdPersonKey				{ 0x0, L"Toggle Key"};
 		inline CVar<bool> ThirdPersonSilentAngles	{ true, L"Silent Angles" };
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
+		inline CVar<bool> ThirdPersonServerHitbox   { false, L"Server Hitboxes" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> PropWireframe			{ false, L"Prop Wireframe" };
