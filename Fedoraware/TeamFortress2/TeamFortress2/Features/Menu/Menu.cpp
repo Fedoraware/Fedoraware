@@ -1398,11 +1398,28 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge"}; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to appear to look horizontally");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth(); HelpMarker("You spin me right 'round, baby, right 'round");
 								ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables AntiAim resolver in the playerlist");
-								ImGui::Checkbox("Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var); HelpMarker("Fakelag master switch");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
-								ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
-								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
-								InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
+
+
+								const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based"}; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
+								if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) { Vars::Misc::CL_Move::Fakelag.m_Var = true; }
+								else { Vars::Misc::CL_Move::Fakelag.m_Var = false; }
+
+								if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+									if (Vars::Misc::CL_Move::FakelagMode.m_Var != 2) {
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+										if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) { // nested bc checking outside of this is useless
+											ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
+											InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("Fakelag will only activate when this key is held");
+										}
+									}
+									else {
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag Max Val", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
+										ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag Min Val", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+
+									}
+
+									ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
+								}
 							}
 
 							if (ImGui::CollapsingHeader("Radar")) {
