@@ -475,6 +475,7 @@ namespace Vars
 		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };
 		inline CVar<bool> RageRetry				{ false, L"Rage Retry" };
 		inline CVar<int> RageRetryHealth		{ 20, L"Rage Retry health" };
+		inline CVar<bool> MVMRes				{ true, L"MVM Respawn" };
 		inline CVar<bool> BeCat					{ false, L"CatReply" };
 		namespace CL_Move
 		{
