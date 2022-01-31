@@ -976,6 +976,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
 								ImGui::Checkbox("Thirdperson show real angles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your real angles on thirdperson (not what others see)");
 								ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
+								ImGui::Checkbox("Thirdperson show server hitboxes", &Vars::Visuals::ThirdPersonServerHitbox.m_Var); HelpMarker("Will show the server angles in thirdperson");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 								ImGui::PushItemWidth(100); ImGui::Combo("Skybox", &Vars::Skybox::SkyboxNum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
