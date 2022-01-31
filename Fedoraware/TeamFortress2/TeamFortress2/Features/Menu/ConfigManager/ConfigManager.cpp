@@ -485,9 +485,15 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 			SAVE_VAR(Vars::Visuals::WorldModulation);
+			SAVE_VAR(Vars::Visuals::PropWireframe);
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
+			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
+			SAVE_VAR(Vars::Visuals::VMOffX);
+			SAVE_VAR(Vars::Visuals::VMOffY);
+			SAVE_VAR(Vars::Visuals::VMOffZ);
+			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
@@ -497,7 +503,6 @@ void CConfigManager::Save(const wchar_t *name)
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
-			SAVE_VAR(Vars::Visuals::PropAlpha);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Wireframe);
 			SAVE_VAR(Vars::Visuals::Vision);
@@ -1035,11 +1040,16 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
+			LOAD_VAR(Vars::Visuals::PropWireframe);
 			LOAD_VAR(Vars::Visuals::SkyboxChanger);
-			LOAD_VAR(Vars::Visuals::PropAlpha);
 			LOAD_VAR(Vars::Visuals::ParticleTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
+			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
+			LOAD_VAR(Vars::Visuals::VMOffX);
+			LOAD_VAR(Vars::Visuals::VMOffY);
+			LOAD_VAR(Vars::Visuals::VMOffZ);
+			LOAD_VAR(Vars::Visuals::VMRoll);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			LOAD_VAR(Vars::Visuals::ArrowLength);
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
