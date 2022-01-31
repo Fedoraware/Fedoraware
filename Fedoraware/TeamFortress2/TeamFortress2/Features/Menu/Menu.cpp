@@ -360,6 +360,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 		style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
 		style->SelectableTextAlign = ImVec2(0.0f, 0.5f);
+		style->ButtonTextAlign = ImVec2(0.0f, 0.5f);
 
 		style->DisplaySafeAreaPadding = ImVec2(0, 17);
 
