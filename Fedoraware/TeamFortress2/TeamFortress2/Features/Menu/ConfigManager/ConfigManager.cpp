@@ -484,7 +484,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdPersonKey);
 			SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
-			SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
+			SAVE_VAR(Vars::Visuals::ThirdPersonServerHitbox);
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
 			SAVE_VAR(Vars::Visuals::BulletTracer);
