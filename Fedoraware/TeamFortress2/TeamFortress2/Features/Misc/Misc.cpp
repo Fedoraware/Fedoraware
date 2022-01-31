@@ -18,6 +18,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	CheatsBypass();
 	NoPush();
 	ServerHitbox(); // super secret deathpole feature!!!!
+	InstantRespawnMVM();
 }
 
 void CMisc::ServerHitbox() { // draw our serverside hitbox on local servers, used to test fakelag & antiaim
@@ -37,6 +38,14 @@ void CMisc::ServerHitbox() { // draw our serverside hitbox on local servers, use
 }
 // draws server hitbox when in a local server, only for testing rly
 static bool push = true;
+
+void CMisc::InstantRespawnMVM() {
+	if (g_Interfaces.Engine->IsInGame() && g_Interfaces.Engine->GetLocalPlayer() && !g_EntityCache.m_pLocal->IsAlive() && Vars::Misc::MVMRes.m_Var) {
+		auto kv = new KeyValues("MVM_Revive_Response");
+		kv->SetInt("accepted", 1);
+		g_Interfaces.Engine->ServerCmdKeyValues(kv);
+	}
+}
 
 void CMisc::CheatsBypass() {
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
