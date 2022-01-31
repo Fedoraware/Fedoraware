@@ -590,8 +590,63 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("AutoShoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
 							InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
-							ImGui::Checkbox("Aim at players", &Vars::Aimbot::Global::AimPlayers.m_Var); HelpMarker("The aimbot will aim at players");
-							ImGui::Checkbox("Aim at buildings", &Vars::Aimbot::Global::AimBuildings.m_Var); HelpMarker("The aimbot will aim at buildings");
+							{
+								ImGui::PushItemWidth(100);
+								std::vector<std::string> aimtargetsvec;
+								static bool aimtargetFlags[]{ Vars::Aimbot::Global::AimPlayers.m_Var,Vars::Aimbot::Global::AimBuildings.m_Var };
+								const char* pAimtargets[] = { "Players", "Buildings" }; static std::string aimtargetsPreview = "PH";
+								if (aimtargetsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+									aimtargetsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++) {
+										if (aimtargetFlags[i])
+											aimtargetsvec.push_back(pAimtargets[i]);
+									}
+									for (size_t i = 0; i < aimtargetsvec.size(); i++)
+									{
+										if (aimtargetsvec.size() == 1)
+											aimtargetsPreview += aimtargetsvec.at(i);
+										else if (!(i == aimtargetsvec.size() - 1))
+											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+										else
+											aimtargetsPreview += aimtargetsvec.at(i);
+									}
+								}
+								if (ImGui::BeginCombo("Targets", aimtargetsPreview.c_str()))
+								{
+									aimtargetsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++)
+									{
+										ImGui::Selectable(pAimtargets[i], &aimtargetFlags[i]);
+										if (aimtargetFlags[i])
+											aimtargetsvec.push_back(pAimtargets[i]);
+
+									}
+									for (size_t i = 0; i < aimtargetsvec.size(); i++)
+									{
+										if (aimtargetsvec.size() == 1)
+											aimtargetsPreview += aimtargetsvec.at(i);
+										else if (!(i == aimtargetsvec.size() - 1))
+											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+										else
+											aimtargetsPreview += aimtargetsvec.at(i);
+									}
+									ImGui::EndCombo();
+								}
+								for (size_t i = 0; i < IM_ARRAYSIZE(aimtargetFlags); i++) {
+									if (aimtargetFlags[i]) {
+										switch (i + 1) {
+										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = true; break; }
+										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = true; break; }
+										}
+									}
+									else {
+										switch (i + 1) {
+										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = false; break; }
+										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = false; break; }
+										}
+									}
+								}
+							} // aim targets combobox
 							ImGui::Checkbox("Ignore invulnerable", &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The aimbot will ignore players who can't be damaged");
 							ImGui::Checkbox("Ignore cloaked", &Vars::Aimbot::Global::IgnoreCloaked.m_Var); HelpMarker("The aimbot will ignore spies who are cloaked");
 							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
@@ -917,188 +972,191 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								// ok having a slider for this is as bad as the aimbot fov alpha, we have it as a colour, set the prop alpha, to Color::PropModulation.a (or whatever its called)
 								//	i have no idea where i'm supposed to put it so i just said fuck the var and send Colors::StaticPropModulation.a to the hook
 								const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(100); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
-								
-								ImGui::PushItemWidth(100);
-								std::vector<std::string> modulationvec;
-								static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
-								const char* pmodulation[] = { "World", "Sky", "Prop Wireframe"}; static std::string modulationPreview = "PH";
-								if (modulationPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
-									modulationPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++) {
-										if (modulationFlags[i])
-											modulationvec.push_back(pmodulation[i]);
-									}
-									for (size_t i = 0; i < modulationvec.size(); i++)
-									{
-										if (modulationvec.size() == 1)
-											modulationPreview += modulationvec.at(i);
-										else if (!(i == modulationvec.size() - 1))
-											modulationPreview += modulationvec.at(i) + ", ";
-										else
-											modulationPreview += modulationvec.at(i);
-									}
-								}
-								if (ImGui::BeginCombo("World", modulationPreview.c_str()))
+
 								{
-									modulationPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++)
-									{
-										ImGui::Selectable(pmodulation[i], &modulationFlags[i]);
-										if (modulationFlags[i])
-											modulationvec.push_back(pmodulation[i]);
-
-									}
-									for (size_t i = 0; i < modulationvec.size(); i++)
-									{
-										if (modulationvec.size() == 1)
-											modulationPreview += modulationvec.at(i);
-										else if (!(i == modulationvec.size() - 1))
-											modulationPreview += modulationvec.at(i) + ", ";
-										else
-											modulationPreview += modulationvec.at(i);
-									}
-									ImGui::EndCombo();
-								}
-								for (size_t i = 0; i < IM_ARRAYSIZE(modulationFlags); i++) {
-									if (modulationFlags[i]) {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::WorldModulation.m_Var = true; break; }
-										case 2: { Vars::Visuals::SkyModulation.m_Var = true; break; }
-										case 3: { Vars::Visuals::PropWireframe.m_Var = true; break; }
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> modulationvec;
+									static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
+									const char* pmodulation[] = { "World", "Sky", "Prop Wireframe" }; static std::string modulationPreview = "PH";
+									if (modulationPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										modulationPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++) {
+											if (modulationFlags[i])
+												modulationvec.push_back(pmodulation[i]);
+										}
+										for (size_t i = 0; i < modulationvec.size(); i++)
+										{
+											if (modulationvec.size() == 1)
+												modulationPreview += modulationvec.at(i);
+											else if (!(i == modulationvec.size() - 1))
+												modulationPreview += modulationvec.at(i) + ", ";
+											else
+												modulationPreview += modulationvec.at(i);
 										}
 									}
-									else {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::WorldModulation.m_Var = false; break; }
-										case 2: { Vars::Visuals::SkyModulation.m_Var = false; break; }
-										case 3: { Vars::Visuals::PropWireframe.m_Var = false; break; }
+									if (ImGui::BeginCombo("World", modulationPreview.c_str()))
+									{
+										modulationPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++)
+										{
+											ImGui::Selectable(pmodulation[i], &modulationFlags[i]);
+											if (modulationFlags[i])
+												modulationvec.push_back(pmodulation[i]);
+
+										}
+										for (size_t i = 0; i < modulationvec.size(); i++)
+										{
+											if (modulationvec.size() == 1)
+												modulationPreview += modulationvec.at(i);
+											else if (!(i == modulationvec.size() - 1))
+												modulationPreview += modulationvec.at(i) + ", ";
+											else
+												modulationPreview += modulationvec.at(i);
+										}
+										ImGui::EndCombo();
+									}
+									for (size_t i = 0; i < IM_ARRAYSIZE(modulationFlags); i++) {
+										if (modulationFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::WorldModulation.m_Var = true; break; }
+											case 2: { Vars::Visuals::SkyModulation.m_Var = true; break; }
+											case 3: { Vars::Visuals::PropWireframe.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::WorldModulation.m_Var = false; break; }
+											case 2: { Vars::Visuals::SkyModulation.m_Var = false; break; }
+											case 3: { Vars::Visuals::PropWireframe.m_Var = false; break; }
+											}
 										}
 									}
 								}
 
-
-								ImGui::PushItemWidth(100);
-								std::vector<std::string> removalsvec;
-								static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
-								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string removalsPreview = "PH";
-								if (removalsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
-									removalsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++) {
-										if (removalFlags[i])
-											removalsvec.push_back(pRemovals[i]);
-									}
-									for (size_t i = 0; i < removalsvec.size(); i++)
-									{
-										if (removalsvec.size() == 1)
-											removalsPreview += removalsvec.at(i);
-										else if (!(i == removalsvec.size() - 1))
-											removalsPreview += removalsvec.at(i) + ", ";
-										else
-											removalsPreview += removalsvec.at(i);
-									}
-								}
-								if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
 								{
-									removalsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
-									{
-										ImGui::Selectable(pRemovals[i], &removalFlags[i]);
-										if (removalFlags[i])
-											removalsvec.push_back(pRemovals[i]);
-											
-									}
-									for (size_t i = 0; i < removalsvec.size(); i++)
-									{
-										if (removalsvec.size() == 1)
-											removalsPreview += removalsvec.at(i);
-										else if (!(i == removalsvec.size() - 1))
-											removalsPreview += removalsvec.at(i) + ", ";
-										else
-											removalsPreview += removalsvec.at(i);
-									}
-									ImGui::EndCombo();
-								}
-								for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
-									if (removalFlags[i]) {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::RemoveScope.m_Var = true; break; }
-										case 2: { Vars::Visuals::RemoveZoom.m_Var = true; break; }
-										case 3: { Vars::Visuals::RemoveDisguises.m_Var = true; break; }
-										case 4: { Vars::Visuals::RemoveTaunts.m_Var = true; break; }
-										case 5: { Vars::Misc::DisableInterpolation.m_Var = true; break; }
-										case 6: { Vars::Visuals::RemovePunch.m_Var = true; break; }
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> removalsvec;
+									static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
+									const char* pRemovals[] = { "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }; static std::string removalsPreview = "PH";
+									if (removalsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										removalsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++) {
+											if (removalFlags[i])
+												removalsvec.push_back(pRemovals[i]);
+										}
+										for (size_t i = 0; i < removalsvec.size(); i++)
+										{
+											if (removalsvec.size() == 1)
+												removalsPreview += removalsvec.at(i);
+											else if (!(i == removalsvec.size() - 1))
+												removalsPreview += removalsvec.at(i) + ", ";
+											else
+												removalsPreview += removalsvec.at(i);
 										}
 									}
-									else {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::RemoveScope.m_Var = false; break; }
-										case 2: { Vars::Visuals::RemoveZoom.m_Var = false; break; }
-										case 3: { Vars::Visuals::RemoveDisguises.m_Var = false; break; }
-										case 4: { Vars::Visuals::RemoveTaunts.m_Var = false; break; }
-										case 5: { Vars::Misc::DisableInterpolation.m_Var = false; break; }
-										case 6: { Vars::Visuals::RemovePunch.m_Var = false; break; }
-										}
-									}
-								}
-								
-								
-								
-								ImGui::PushItemWidth(100);
-								std::vector<std::string> predictionsvec;
-								static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
-								const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "";
-								if (predictionsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
-									predictionsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++) {
-										if (predictionFlags[i])
-											predictionsvec.push_back(pPredictions[i]);
-									}
-									for (size_t i = 0; i < predictionsvec.size(); i++)
+									if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
 									{
-										if (predictionsvec.size() == 1)
-											predictionsPreview += predictionsvec.at(i);
-										else if (!(i == predictionsvec.size() - 1))
-											predictionsPreview += predictionsvec.at(i) + ", ";
-										else
-											predictionsPreview += predictionsvec.at(i);
-									}
-								}
-								if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
-								{
-									predictionsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++)
-									{
-										ImGui::Selectable(pPredictions[i], &predictionFlags[i]);
-										if (predictionFlags[i])
-											predictionsvec.push_back(pPredictions[i]);
+										removalsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
+										{
+											ImGui::Selectable(pRemovals[i], &removalFlags[i]);
+											if (removalFlags[i])
+												removalsvec.push_back(pRemovals[i]);
 
+										}
+										for (size_t i = 0; i < removalsvec.size(); i++)
+										{
+											if (removalsvec.size() == 1)
+												removalsPreview += removalsvec.at(i);
+											else if (!(i == removalsvec.size() - 1))
+												removalsPreview += removalsvec.at(i) + ", ";
+											else
+												removalsPreview += removalsvec.at(i);
+										}
+										ImGui::EndCombo();
 									}
-									for (size_t i = 0; i < predictionsvec.size(); i++)
-									{
-										if (predictionsvec.size() == 1)
-											predictionsPreview += predictionsvec.at(i);
-										else if (!(i == predictionsvec.size() - 1))
-											predictionsPreview += predictionsvec.at(i) + ", ";
-										else
-											predictionsPreview += predictionsvec.at(i);
-									}
-									ImGui::EndCombo();
-								} // i got tired of trying better ways so this is new method fr*ck you
-								for (size_t i = 0; i < IM_ARRAYSIZE(predictionFlags); i++) {
-									if (predictionFlags[i]) {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::CrosshairAimPos.m_Var = true; break; }
-										case 2: { Vars::Visuals::AimPosSquare.m_Var = true; break; }
-										case 3: { Vars::Visuals::BulletTracer.m_Var = true; break; }
-										case 4: { Vars::Visuals::AimbotViewmodel.m_Var = true; break; }
+									for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
+										if (removalFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::RemoveScope.m_Var = true; break; }
+											case 2: { Vars::Visuals::RemoveZoom.m_Var = true; break; }
+											case 3: { Vars::Visuals::RemoveDisguises.m_Var = true; break; }
+											case 4: { Vars::Visuals::RemoveTaunts.m_Var = true; break; }
+											case 5: { Vars::Misc::DisableInterpolation.m_Var = true; break; }
+											case 6: { Vars::Visuals::RemovePunch.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::RemoveScope.m_Var = false; break; }
+											case 2: { Vars::Visuals::RemoveZoom.m_Var = false; break; }
+											case 3: { Vars::Visuals::RemoveDisguises.m_Var = false; break; }
+											case 4: { Vars::Visuals::RemoveTaunts.m_Var = false; break; }
+											case 5: { Vars::Misc::DisableInterpolation.m_Var = false; break; }
+											case 6: { Vars::Visuals::RemovePunch.m_Var = false; break; }
+											}
 										}
 									}
-									else {
-										switch (i + 1) {
-										case 1: { Vars::Visuals::CrosshairAimPos.m_Var = false; break; }
-										case 2: { Vars::Visuals::AimPosSquare.m_Var = false; break; }
-										case 3: { Vars::Visuals::BulletTracer.m_Var = false; break; }
-										case 4: { Vars::Visuals::AimbotViewmodel.m_Var = false; break; }
+								}
+								
+								{
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> predictionsvec;
+									static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
+									const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "PH";
+									if (predictionsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										predictionsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++) {
+											if (predictionFlags[i])
+												predictionsvec.push_back(pPredictions[i]);
+										}
+										for (size_t i = 0; i < predictionsvec.size(); i++)
+										{
+											if (predictionsvec.size() == 1)
+												predictionsPreview += predictionsvec.at(i);
+											else if (!(i == predictionsvec.size() - 1))
+												predictionsPreview += predictionsvec.at(i) + ", ";
+											else
+												predictionsPreview += predictionsvec.at(i);
+										}
+									}
+									if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
+									{
+										predictionsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++)
+										{
+											ImGui::Selectable(pPredictions[i], &predictionFlags[i]);
+											if (predictionFlags[i])
+												predictionsvec.push_back(pPredictions[i]);
+
+										}
+										for (size_t i = 0; i < predictionsvec.size(); i++)
+										{
+											if (predictionsvec.size() == 1)
+												predictionsPreview += predictionsvec.at(i);
+											else if (!(i == predictionsvec.size() - 1))
+												predictionsPreview += predictionsvec.at(i) + ", ";
+											else
+												predictionsPreview += predictionsvec.at(i);
+										}
+										ImGui::EndCombo();
+									} // i got tired of trying better ways so this is new method fr*ck you
+									for (size_t i = 0; i < IM_ARRAYSIZE(predictionFlags); i++) {
+										if (predictionFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::CrosshairAimPos.m_Var = true; break; }
+											case 2: { Vars::Visuals::AimPosSquare.m_Var = true; break; }
+											case 3: { Vars::Visuals::BulletTracer.m_Var = true; break; }
+											case 4: { Vars::Visuals::AimbotViewmodel.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Visuals::CrosshairAimPos.m_Var = false; break; }
+											case 2: { Vars::Visuals::AimPosSquare.m_Var = false; break; }
+											case 3: { Vars::Visuals::BulletTracer.m_Var = false; break; }
+											case 4: { Vars::Visuals::AimbotViewmodel.m_Var = false; break; }
+											}
 										}
 									}
 								}
