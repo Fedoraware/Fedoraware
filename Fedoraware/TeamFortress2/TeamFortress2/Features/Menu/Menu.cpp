@@ -921,7 +921,23 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100);
 								std::vector<std::string> modulationvec;
 								static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
-								const char* pmodulation[] = { "World", "Sky", "Prop Wireframe"}; static std::string modulationPreview = "";
+								const char* pmodulation[] = { "World", "Sky", "Prop Wireframe"}; static std::string modulationPreview = "PH";
+								if (modulationPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+									modulationPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++) {
+										if (modulationFlags[i])
+											modulationvec.push_back(pmodulation[i]);
+									}
+									for (size_t i = 0; i < modulationvec.size(); i++)
+									{
+										if (modulationvec.size() == 1)
+											modulationPreview += modulationvec.at(i);
+										else if (!(i == modulationvec.size() - 1))
+											modulationPreview += modulationvec.at(i) + ", ";
+										else
+											modulationPreview += modulationvec.at(i);
+									}
+								}
 								if (ImGui::BeginCombo("World", modulationPreview.c_str()))
 								{
 									modulationPreview = "";
@@ -964,7 +980,23 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100);
 								std::vector<std::string> removalsvec;
 								static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
-								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string removalsPreview = "";
+								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string removalsPreview = "PH";
+								if (removalsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+									removalsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++) {
+										if (removalFlags[i])
+											removalsvec.push_back(pRemovals[i]);
+									}
+									for (size_t i = 0; i < removalsvec.size(); i++)
+									{
+										if (removalsvec.size() == 1)
+											removalsPreview += removalsvec.at(i);
+										else if (!(i == removalsvec.size() - 1))
+											removalsPreview += removalsvec.at(i) + ", ";
+										else
+											removalsPreview += removalsvec.at(i);
+									}
+								}
 								if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
 								{
 									removalsPreview = "";
@@ -1015,6 +1047,22 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								std::vector<std::string> predictionsvec;
 								static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
 								const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "";
+								if (predictionsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+									predictionsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++) {
+										if (predictionFlags[i])
+											predictionsvec.push_back(pPredictions[i]);
+									}
+									for (size_t i = 0; i < predictionsvec.size(); i++)
+									{
+										if (predictionsvec.size() == 1)
+											predictionsPreview += predictionsvec.at(i);
+										else if (!(i == predictionsvec.size() - 1))
+											predictionsPreview += predictionsvec.at(i) + ", ";
+										else
+											predictionsPreview += predictionsvec.at(i);
+									}
+								}
 								if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
 								{
 									predictionsPreview = "";
@@ -1054,6 +1102,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 										}
 									}
 								}
+
 								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
