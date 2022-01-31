@@ -913,35 +913,79 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							if (ImGui::CollapsingHeader("Miscellaneous")) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
 								//ImGui::PushItemWidth(100); ImGui::SliderInt("Aimbot FoV circle alpha", &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("How opaque the aimbot's FoV circle is");
-								ImGui::Checkbox("World modulation", &Vars::Visuals::WorldModulation.m_Var); HelpMarker("Will colour modulate the world");
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prop opacity", &Vars::Visuals::PropAlpha.m_Var, 0.01f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
-								ImGui::Checkbox("Sky modulation", &Vars::Visuals::SkyModulation.m_Var); HelpMarker("Will colour modulate the sky");
+								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Prop opacity", &Vars::Visuals::PropAlpha.m_Var, 0.01f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque the glow is");
+								// ok having a slider for this is as bad as the aimbot fov alpha, we have it as a colour, set the prop alpha, to Color::PropModulation.a (or whatever its called)
+								//	i have no idea where i'm supposed to put it so i just said fuck the var and send Colors::StaticPropModulation.a to the hook
+								const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(100); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
 								
-								// literally complete paste from this same cpp file LMAO
-								std::vector<std::string> vec;
-								static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
-								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string previewValue = "";
-								if (ImGui::BeginCombo("Removals", previewValue.c_str()))
+								ImGui::PushItemWidth(100);
+								std::vector<std::string> modulationvec;
+								static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
+								const char* pmodulation[] = { "World", "Sky", "Prop Wireframe"}; static std::string modulationPreview = "";
+								if (ImGui::BeginCombo("World", modulationPreview.c_str()))
 								{
-									previewValue = "";
+									modulationPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++)
+									{
+										ImGui::Selectable(pmodulation[i], &modulationFlags[i]);
+										if (modulationFlags[i])
+											modulationvec.push_back(pmodulation[i]);
+
+									}
+									for (size_t i = 0; i < modulationvec.size(); i++)
+									{
+										if (modulationvec.size() == 1)
+											modulationPreview += modulationvec.at(i);
+										else if (!(i == modulationvec.size() - 1))
+											modulationPreview += modulationvec.at(i) + ", ";
+										else
+											modulationPreview += modulationvec.at(i);
+									}
+									ImGui::EndCombo();
+								}
+								for (size_t i = 0; i < IM_ARRAYSIZE(modulationFlags); i++) {
+									if (modulationFlags[i]) {
+										switch (i + 1) {
+										case 1: { Vars::Visuals::WorldModulation.m_Var = true; break; }
+										case 2: { Vars::Visuals::SkyModulation.m_Var = true; break; }
+										case 3: { Vars::Visuals::PropWireframe.m_Var = true; break; }
+										}
+									}
+									else {
+										switch (i + 1) {
+										case 1: { Vars::Visuals::WorldModulation.m_Var = false; break; }
+										case 2: { Vars::Visuals::SkyModulation.m_Var = false; break; }
+										case 3: { Vars::Visuals::PropWireframe.m_Var = false; break; }
+										}
+									}
+								}
+
+
+								ImGui::PushItemWidth(100);
+								std::vector<std::string> removalsvec;
+								static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
+								const char* pRemovals[] = {"Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch"}; static std::string removalsPreview = "";
+								if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
+								{
+									removalsPreview = "";
 									for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
 									{
 										ImGui::Selectable(pRemovals[i], &removalFlags[i]);
 										if (removalFlags[i])
-											vec.push_back(pRemovals[i]);
+											removalsvec.push_back(pRemovals[i]);
 											
 									}
-									for (size_t i = 0; i < vec.size(); i++)
+									for (size_t i = 0; i < removalsvec.size(); i++)
 									{
-										if (vec.size() == 1)
-											previewValue += vec.at(i);
-										else if (!(i == vec.size() - 1))
-											previewValue += vec.at(i) + ", ";
+										if (removalsvec.size() == 1)
+											removalsPreview += removalsvec.at(i);
+										else if (!(i == removalsvec.size() - 1))
+											removalsPreview += removalsvec.at(i) + ", ";
 										else
-											previewValue += vec.at(i);
+											removalsPreview += removalsvec.at(i);
 									}
 									ImGui::EndCombo();
-								} // i got tired of trying better ways so this is new method fr*ck you
+								}
 								for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
 									if (removalFlags[i]) {
 										switch (i + 1) {
@@ -964,24 +1008,69 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 										}
 									}
 								}
-
-								if (Vars::Visuals::RemoveScope.m_Var) {
-									ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
-								}
 								
-								ImGui::Checkbox("Aimbot crosshair", &Vars::Visuals::CrosshairAimPos.m_Var); HelpMarker("Will make your crosshair move to where the aimbot is going to shoot");
-								ImGui::Checkbox("Aimbot prediction", &Vars::Visuals::AimPosSquare.m_Var); HelpMarker("Will show a rough estimate of where the aimbot is going to aim at");
-								ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
-								if (Vars::Aimbot::Global::showHitboxes.m_Var) {
-									ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-									ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+								
+								
+								ImGui::PushItemWidth(100);
+								std::vector<std::string> predictionsvec;
+								static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
+								const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "";
+								if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
+								{
+									predictionsPreview = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++)
+									{
+										ImGui::Selectable(pPredictions[i], &predictionFlags[i]);
+										if (predictionFlags[i])
+											predictionsvec.push_back(pPredictions[i]);
+
+									}
+									for (size_t i = 0; i < predictionsvec.size(); i++)
+									{
+										if (predictionsvec.size() == 1)
+											predictionsPreview += predictionsvec.at(i);
+										else if (!(i == predictionsvec.size() - 1))
+											predictionsPreview += predictionsvec.at(i) + ", ";
+										else
+											predictionsPreview += predictionsvec.at(i);
+									}
+									ImGui::EndCombo();
+								} // i got tired of trying better ways so this is new method fr*ck you
+								for (size_t i = 0; i < IM_ARRAYSIZE(predictionFlags); i++) {
+									if (predictionFlags[i]) {
+										switch (i + 1) {
+										case 1: { Vars::Visuals::CrosshairAimPos.m_Var = true; break; }
+										case 2: { Vars::Visuals::AimPosSquare.m_Var = true; break; }
+										case 3: { Vars::Visuals::BulletTracer.m_Var = true; break; }
+										case 4: { Vars::Visuals::AimbotViewmodel.m_Var = true; break; }
+										}
+									}
+									else {
+										switch (i + 1) {
+										case 1: { Vars::Visuals::CrosshairAimPos.m_Var = false; break; }
+										case 2: { Vars::Visuals::AimPosSquare.m_Var = false; break; }
+										case 3: { Vars::Visuals::BulletTracer.m_Var = false; break; }
+										case 4: { Vars::Visuals::AimbotViewmodel.m_Var = false; break; }
+										}
+									}
 								}
-								ImGui::Checkbox("Bullet tracers", &Vars::Visuals::BulletTracer.m_Var); HelpMarker("Will draw a line from your position to where the aimbot will shoot if hitscan or projectile");
-								ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
-								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom"}; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
+								static const char* projectilesgTeam[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam)); ImGui::PopItemWidth();
 								if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 									ImGui::PushItemWidth(100); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
 								}
+								if (Vars::Visuals::BulletTracer.m_Var) {
+									ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
+								}
+								if (Vars::Visuals::RemoveScope.m_Var) {
+									ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
+								}
+								ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
+								if (Vars::Aimbot::Global::showHitboxes.m_Var) {
+									ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+									ImGui::PushItemWidth(100); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+								}
+								ImGui::TextUnformatted("");
+
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 								InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
@@ -993,7 +1082,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("If you want to load a custom skybox, type it here (tf/materials/skybox)");
 								ImGui::TextUnformatted("");
 								ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
-								const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(100); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
 							}
 
 						}

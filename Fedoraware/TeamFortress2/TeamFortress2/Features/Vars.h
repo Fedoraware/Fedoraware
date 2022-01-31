@@ -413,11 +413,12 @@ namespace Vars
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
-		inline CVar<float> PropAlpha				{ 1.f, L"Props" };
+		inline CVar<bool> PropWireframe			{ false, L"Prop Wireframe" };
 		inline CVar<bool> OverrideWorldTextures		{ false, L"World Texture Override" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ true, L"Bullet tracers" };
+		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
 		inline CVar<int> ParticleTracer				{ true, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
@@ -427,6 +428,10 @@ namespace Vars
 		inline CVar<float> ArrowAngle{ 60.f, L"Out of FOV arrow angle" };
 		inline CVar<float> MaxDist{ 1000.f, L"How far until the arrows are no longer visible" };
 		inline CVar<float> MinDist{ 200.f, L"How many units till the arrows are fully opaque" };
+		inline CVar<float> VMOffX{ 0.f, L"VM Offset" };
+		inline CVar<float> VMOffY{ 0.f, L"VM Offset" };
+		inline CVar<float> VMOffZ{ 0.f, L"VM Offset" };
+		inline CVar<float> VMRoll{ 0.f, L"VM Offset" };
 
 		inline CVar<float> despawnTime{ 5.f, L"How many ticks to despawn a damage log event" };
 		inline CVar<int> damageLogger{ 0, L"Enable damage logger" };
