@@ -113,27 +113,33 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 					break;
 				}
 
+				Vec3 vPos;
+				if (const auto& pLocal = g_EntityCache.m_pLocal) {
+					vPos = pLocal->GetHitboxPos(HITBOX_HEAD);
+				}
+				Vec3 vAngleTo = Math::CalcAngle(entity->GetHitboxPos(HITBOX_HEAD), vPos);
+
 				// Yaw resolver
 				switch (resolveMode.m_Yaw)
 				{
 				case 1: {
-					*m_angEyeAnglesY = 0;  // North
+					*m_angEyeAnglesY = vAngleTo.y;  // Forward
 					break;
 				}
 				case 2: {
-					*m_angEyeAnglesY = 90; // East
+					*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
 					break;
 				}
 				case 3: {
-					*m_angEyeAnglesY = 180; // South
+					*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
 					break;
 				}
 				case 4: {
-					*m_angEyeAnglesY = -90;  // West
+					*m_angEyeAnglesY = vAngleTo.y + 90.f;  // Right
 					break;
 				}
 				case 5: {
-					*m_angEyeAnglesY += 180; // Invert
+					*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
 					break;
 				}
 				default:
