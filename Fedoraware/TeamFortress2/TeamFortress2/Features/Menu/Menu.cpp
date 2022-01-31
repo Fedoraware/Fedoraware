@@ -1229,7 +1229,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								if (Vars::Misc::RageRetry.m_Var) {
 									ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99); HelpMarker("Minimum health in % that will cause a retry");
 								}
-								ImGui::Checkbox("MVM Instant Respawn", &Vars::Misc::MVMRes.m_Var);
+								//ImGui::Checkbox("MVM Instant Respawn", &Vars::Misc::MVMRes.m_Var);
 								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {

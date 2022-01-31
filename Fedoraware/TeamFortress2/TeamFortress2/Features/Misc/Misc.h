@@ -16,7 +16,6 @@ public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();
-	void InstantRespawnMVM();
 	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd);
