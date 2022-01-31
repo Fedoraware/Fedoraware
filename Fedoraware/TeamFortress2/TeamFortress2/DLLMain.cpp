@@ -108,7 +108,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	SetupDiscord();
 	Discord_ClearPresence();
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death"});
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started"});
+	// all events @ https://github.com/tf2cheater2013/gameevents.txt
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");

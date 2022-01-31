@@ -22,8 +22,8 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 		if (Vars::Visuals::ChatInfo.m_Var) {
 
 			// literally completely pasted from deathpole
-			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_started")) {
-				const auto initiator = pEvent->GetInt("initiator");
+			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_started")) { // IT TOOK ME SO LONG TO REALISE I HADN'T ADDED THE LISTENER
+				const auto initiator = pEvent->GetInt("initiator"); 
 				const auto target = pEvent->GetString("param1"); // im almost certain this is the param for the targets name 
 
 				auto pEntity = g_Interfaces.EntityList->GetClientEntity(initiator);
@@ -42,8 +42,11 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-					// TODO: Add colors and possibly OTHER TEAM? 
+					std::string voteString;
+					voteString = "[FeD] " + std::string((pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "[enemy] " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
+					g_notify.Add(voteString);
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
+					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString);
 					if (Vars::Misc::VotesInChat.m_Var) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
 					}
