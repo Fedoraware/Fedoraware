@@ -340,8 +340,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		style->CellPadding = ImVec2(6.00f, 0.00f);
 		style->ItemSpacing = ImVec2(6.00f, 4.00f);
 		style->ItemInnerSpacing = ImVec2(6.00f, 6.00f);
-		//style->TouchExtraPadding = ImVec2(0.00f, 0.00f);
-		//style->IndentSpacing = 25;
+		style->TouchExtraPadding = ImVec2(0.00f, 0.00f);
+		style->IndentSpacing = 0;
 		style->ScrollbarSize = 1;
 		style->GrabMinSize = 7;
 		style->WindowBorderSize = 0;
@@ -358,7 +358,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		style->LogSliderDeadzone = 0;
 		style->TabRounding = 0;
 
-		style->WindowTitleAlign = ImVec2(1.f, 0.5f);
+		style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
+		style->SelectableTextAlign = ImVec2(0.0f, 0.5f);
 
 		style->DisplaySafeAreaPadding = ImVec2(0, 17);
 
