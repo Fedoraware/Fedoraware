@@ -166,6 +166,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 
+				// debug
+				{
+					
+				}
+
 				//Current Active Aimbot FOV
 				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
 				{

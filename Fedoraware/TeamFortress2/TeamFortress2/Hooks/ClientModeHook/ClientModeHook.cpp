@@ -179,8 +179,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
-	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
-	if (pSendPacket) { g_GlobalInfo.m_bChoking = false; }
 
 	int nOldFlags = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
@@ -294,6 +292,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
+	
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
 	static int chockedPackets = 0; static int chockValue;// for obv reasons dont fakelag if we are forcing packet send (cmon)
@@ -302,7 +301,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
 				!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
 				!g_GlobalInfo.m_nShifted &&
-				!g_GlobalInfo.m_bShouldShift) {
+				!g_GlobalInfo.m_bShouldShift &&
+				!g_GlobalInfo.m_bRechargeQueued) {
 
 				chockedPackets++;
 				// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will use this
@@ -318,27 +318,47 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				}
 				else { *pSendPacket = false; }
 			}
+			else { *pSendPacket = true; g_GlobalInfo.m_bChoking = false; }
 		}
 	}
 	else if (chockedPackets > 0) { *pSendPacket = true; chockedPackets = 0; g_GlobalInfo.m_bChoking = false; } // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
 	//	we also leave it all the way out here so that we have the same likelihood of hitting it as the old (bad) failsafe
 	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
+	// I put all my jewellery just to go to the bodega
 
-	if (!Vars::Misc::CL_Move::AntiWarp.m_Var) {
-		auto AntiWarp = [](CUserCmd* cmd) -> void
-		{
-			if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
-				cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-				cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / g_GlobalInfo.dtTicks);
-			}
-			else {
-				return;
-			}
-		};
+	//	TODO: make this p
+	//	cmd->sidemove & cmd->forwardmove abs(max) is 450
+	//	pLocal->GetVelocity()/66 = 1 tick velocity (tv)
+	//	if tv*66 < 10 we are not "moving"
+	//	make pLocal->GetVelocity()/66 = pLocal->GetVelocity()/1584
+	//	tvDesired = pLocal->GetVelocity()/1584
+	//	tv = pLocal->GetVelocity()/66
+	/*
+	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
+		float pvs; float pvf; // predictedvelside, predictedvelforward
+		float dpvs; float dpvf; // desired
+		if (pvs > 7) { pvs = 7; }
+		else if (pvs < -7) { pvs = -7; }
+		if (pvf > 7) { pvf = 7; }
+		else if (pvf < -6) { pvf = -6; }
+		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
+			if (abs(pvs) > abs(dpvs)) { pCmd->sidemove = -pCmd->sidemove; if (pvs < -1) { pvs++; } else { pvs--; } }
+			if (abs(pvf) > abs(dpvf)) { pCmd->forwardmove = -pCmd->forwardmove; if (pvf < -1) { pvf ++; } else { pvf --; } }\
+		}
+		else {
+			if (pCmd->sidemove > 100 && pvs < 7) { pvs++; }
+			else if (pCmd->sidemove < -100 && pvs > -7) { pvs--; }
+			else if (abs(pCmd->sidemove) < 100 && abs(pvs) > 0) { if (pvs < -1) { pvs += .5f; } else { pvs -= .5f; } }
 
-		AntiWarp(pCmd);
+			if (pCmd->forwardmove > 100 && pvf < 7) { pvf++; }
+			else if (pCmd->forwardmove < -100 && pvf > -6) { pvf--; }
+			else if (abs(pCmd->forwardmove) < 100 && abs(pvf) > 0) { if (pvf < -1) { pvf += .5f; } else { pvf -= .5f; } }
+
+			dpvs = pvs / Vars::Misc::CL_Move::DTTicks.m_Var; dpvf = pvf / Vars::Misc::CL_Move::DTTicks.m_Var;
+		}
 	}
+	*/ // fucking retarded code
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
@@ -391,7 +411,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	//		because it had just started choking again and the failsafe only activates when it reaches x ticks.
 	// If we choke packets for anything else, literally anything, for longer than 14 ticks, this will limit us to stay at that 14 again.
 	// Because of this I have changed the failsafe to activate instantly and only when fakelag is off
-	g_GlobalInfo.vEyeAngDelay++; // ignore this
+	
 	if (static_cast<int>(g_Misc.strings.size()) > 0) {
 		g_GlobalInfo.gNotifCounter++;
 
@@ -405,7 +425,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_GlobalInfo.gNotifCounter = 0;
 	}
 
+	g_GlobalInfo.vEyeAngDelay++; // ignore this
 	g_GlobalInfo.lateUserCmd = pCmd;
+	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
+	if (pSendPacket) { g_GlobalInfo.m_bChoking = false; }
+	g_Interfaces.Engine->FireEvents();
+	// fire events, ensure send packet shit is all done, we r good to go lads
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

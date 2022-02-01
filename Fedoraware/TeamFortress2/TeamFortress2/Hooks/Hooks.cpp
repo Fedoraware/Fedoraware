@@ -158,7 +158,9 @@ void CHooks::Init()
 		{
 			using namespace CL_FireEvents;
 
-			fn CLFireEvents = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"E8 ? ? ? ? 83 EC 10"));
+			DWORD dwCLFireEvents = g_Pattern.Find(L"engine.dll", L"E8 ? ? ? ? 83 EC 10") + 0x1;
+			DWORD dwEstimate = *(PDWORD)dwCLFireEvents + dwCLFireEvents + 4;
+			fn CLFireEvents = reinterpret_cast<fn>(dwEstimate);
 			Func.Hook(CLFireEvents, Hook);
 		}
 	}
