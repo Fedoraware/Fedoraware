@@ -1232,7 +1232,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 									ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99); HelpMarker("Minimum health in % that will cause a retry");
 								}
 								//ImGui::Checkbox("MVM Instant Respawn", &Vars::Misc::MVMRes.m_Var);
-								ImGui::Checkbox("CatReply", &Vars::Misc::BeCat.m_Var); HelpMarker("Be marked by catbots.");
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {
 								ImGui::Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
