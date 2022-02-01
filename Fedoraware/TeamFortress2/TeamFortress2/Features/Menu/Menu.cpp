@@ -745,9 +745,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::TextUnformatted("Auto uber");
 							ImGui::Checkbox("Active###gAU", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
 							ImGui::Checkbox("Only on friends###gAUf", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
-							ImGui::Checkbox("Uber self###gAUs", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Health left (%)###gAUhp", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); ImGui::PopItemWidth(); HelpMarker("The amount of health the heal target must be below to actiavte");
-
+							ImGui::Checkbox("Uber self###gAUs", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
+							ImGui::Checkbox("Auto Vaccinator", &Vars::Triggerbot::Uber::AutoVacc.m_Var); HelpMarker("Choses the best resistance and pops uber if needed");
+							if (!Vars::Triggerbot::Uber::AutoVacc.m_Var) {
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Health left (%)###gAUhp", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); ImGui::PopItemWidth(); HelpMarker("The amount of health the heal target must be below to actiavte");
+							}
 						}
 					}
 					ImGui::EndChild();

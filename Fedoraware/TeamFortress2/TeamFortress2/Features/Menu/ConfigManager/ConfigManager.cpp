@@ -262,6 +262,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Triggerbot::Uber::Active);
 				SAVE_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
+				SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
 			}
 		}
@@ -825,6 +826,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Triggerbot::Uber::Active);
 				LOAD_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				LOAD_VAR(Vars::Triggerbot::Uber::PopLocal);
+				LOAD_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
 			}
 		}

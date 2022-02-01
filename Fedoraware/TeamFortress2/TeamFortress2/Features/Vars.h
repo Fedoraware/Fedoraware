@@ -178,6 +178,7 @@ namespace Vars
 			inline CVar<bool> Active		{ false, L"Active" };
 			inline CVar<bool> OnlyFriends	{ false, L"Only Friends" };
 			inline CVar<bool> PopLocal      { false, L"Pop on local" };
+			inline CVar<bool> AutoVacc		{ false, L"Auto Vacc" };
 			inline CVar<float> HealthLeft   { 35.0f, L"Health left" };
 		}
 	}
