@@ -3,7 +3,7 @@
 #include "../../Vars.h"
 #include "../AutoGlobal/AutoGlobal.h"
 
-const static int changeTimer = 100;
+const static int changeTimer = 50;
 const static int defaultResistance = 0;
 
 int vaccChangeState = 0;
@@ -13,6 +13,7 @@ int vaccChangeTimer = 0;
 
 int BulletDangerValue(CBaseEntity* pPatient) {
 	bool anyZoomedSnipers = false;
+	bool anyHeavys = false;
 
 	// Find dangerous snipers in other team
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
@@ -20,11 +21,9 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 		if (!player->IsAlive())
 			continue;
 
-		if (player->GetClassNum() != CLASS_SNIPER ||
+		if (player->GetClassNum() != CLASS_SNIPER &&
 			player->GetClassNum() != CLASS_HEAVY)
 			continue;
-
-		// TODO: We should repsect ignored players
 
 		// Check for any zoomed snipers
 		if (HAS_CONDITION(player, TFCond_Zoomed)) {
@@ -34,17 +33,21 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 			}
 		}
 
-		// Check for any reved heavys
+		// Check for any dangerous heavys
 		if (HAS_CONDITION(player, TFCond_Slowed)) {
 			if (const auto& pWeapon = player->GetActiveWeapon()) {
-				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_BODY), player->GetHitboxPos(HITBOX_HEAD))) {
-					return 1;
+				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_CHEST), player->GetHitboxPos(HITBOX_HEAD))) {
+					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && (HAS_CONDITION(player, TFCond_Ubercharged) || HAS_CONDITION(player, TFCondEx2_BulletImmune)))) {
+						return 2;
+					}
+					anyHeavys = true;
 				}
 			}
 		}
 	}
 
-	return anyZoomedSnipers ? 1 : 0;
+	return (anyZoomedSnipers || anyHeavys) ? 1 : 0;
 }
 
 int FireDangerValue(CBaseEntity* pPatient) {
@@ -61,26 +64,21 @@ int FireDangerValue(CBaseEntity* pPatient) {
 		if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) > 450.f)
 			continue;
 
-		if (HAS_CONDITION(pPatient, TFCond_OnFire)) {
-			if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
-			else { return 2; }
-		}
-
 		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower) {
+			if (HAS_CONDITION(pPatient, TFCond_OnFire)) {
+				if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
+				else { return 2; }
+			}
+
+			if (HAS_CONDITION(player, TFCondEx_PhlogUber)) { return 2; }
 			shouldSwitch = 1;
 		}
-	}
-
-	if (HAS_CONDITION(pPatient, TFCond_OnFire)) {
-		if (pPatient->GetHealth() < 35) { return 2; }
-		else { shouldSwitch = 1; }
 	}
 
 	return shouldSwitch;
 }
 
 int BlastDangerValue(CBaseEntity* pPatient) {
-	bool hasCritRockets = false;
 	bool hasRockets = false;
 
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -100,18 +98,15 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 
 		// Projectile is getting closer
 		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) < pPatient->GetVecOrigin().DistToSqr(vPredicted) &&
+		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) > pPatient->GetVecOrigin().DistToSqr(vPredicted) &&
 			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f) {
-			if (pProjectile->IsCritBoosted()) {
-				hasCritRockets = hasRockets = true;
-				break;
-			}
+			if (pProjectile->IsCritBoosted()) { return 2; }
 			hasRockets = true;
 		}
 	}
 
 	if (hasRockets) {
-		if (pPatient->GetHealth() < 80 || hasCritRockets) {
+		if (pPatient->GetHealth() < 80) {
 			return 2;
 		}
 		return 1;
@@ -123,8 +118,7 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 int CurrentResistance() {
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
-		int* m_nChargeResistType = reinterpret_cast<int*>(reinterpret_cast<DWORD>(pWeapon) + g_NetVars.get_offset("DT_WeaponMedigun", "m_nChargeResistType")); // We should implement this into CBaseCombatWeapon
-		return *m_nChargeResistType;
+		return pWeapon->GetChargeResistType();
 	}
 	return 0;
 }
@@ -203,6 +197,9 @@ void DoResistSwitching(CUserCmd* pCmd) {
 			pCmd->buttons |= IN_RELOAD;
 			vaccChangeState--;
 			vaccChangeTicks = 8;
+		}
+		else {
+			vaccChangeTicks--;
 		}
 	}
 }
