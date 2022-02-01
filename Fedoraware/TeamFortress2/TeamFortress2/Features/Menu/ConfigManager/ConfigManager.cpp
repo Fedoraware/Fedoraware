@@ -690,6 +690,13 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Fonts::FONT_MENU::nWeight);
 				SAVE_VAR(Vars::Fonts::FONT_MENU::nFlags);
 			}
+			//FONT_INDICATORS
+			{
+				SAVE_STRING(Vars::Fonts::FONT_INDICATORS::szName);
+				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nTall);
+				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nWeight);
+				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nFlags);
+			}
 		}
 
 		m_Write.close();
@@ -1249,6 +1256,13 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Fonts::FONT_MENU::nTall);
 				LOAD_VAR(Vars::Fonts::FONT_MENU::nWeight);
 				LOAD_VAR(Vars::Fonts::FONT_MENU::nFlags);
+			}
+			//FONT_INDICATORS
+			{
+				LOAD_STRING(Vars::Fonts::FONT_INDICATORS::szName);
+				LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nTall);
+				LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nWeight);
+				LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nFlags);
 			}
 		}
 

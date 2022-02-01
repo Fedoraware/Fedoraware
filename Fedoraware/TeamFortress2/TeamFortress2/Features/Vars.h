@@ -493,6 +493,10 @@ namespace Vars
 			inline CVar<int> DtbarOutlineHeight	{ 5, L"Dt default bar height" };
 			inline CVar<int> DtbarOutlineWidth	{ 4, L"Dt default bar width" };
 			inline CVar<int> DTTicks			{ 21, L"Ticks for DT" };
+			inline CVar<int> DTBarScaleY{ 12, L"DT Indicator Height" };
+			inline CVar<int> DTBarScaleX{ 100, L"DT Indicator Widht" };
+			inline CVar<int> DTBarY{ 60,L"DT Offset Y" };
+			inline CVar<int> DTBarX{ 0,L"DT Offset X" };
 			inline CVar<bool> WaitForDT     { true, L"Wait for DT" };
 			inline CVar<bool> Fakelag       { true, L"Fakelag" };
 			inline CVar<int> FakelagMode       { 1, L"Fakelag Mode" }; // 1 - plain, 2 - random, 3 - vel based
@@ -581,6 +585,13 @@ namespace Vars
 			inline CVar<int> nTall = { 16, L"nTall" };
 			inline CVar<int> nWeight = { 200, L"nWeight" };
 			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS, L"nFlags" };
+		}
+		namespace FONT_INDICATORS
+		{
+			inline std::string szName = "Verdana";
+			inline CVar<int> nTall = { 10, L"nTall" };
+			inline CVar<int> nWeight = { 0, L"nWeight" };
+			inline CVar<int> nFlags = { FONTFLAG_OUTLINE, L"nFlags" };
 		}
 	}
 }
