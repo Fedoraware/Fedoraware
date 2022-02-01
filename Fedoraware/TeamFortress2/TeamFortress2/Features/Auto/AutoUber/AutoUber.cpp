@@ -21,11 +21,12 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 			continue;
 
 		if (player->GetClassNum() != CLASS_SNIPER ||
-			player->GetClassNum() != CLASS_HEAVY) // Sniper only
+			player->GetClassNum() != CLASS_HEAVY)
 			continue;
 
 		// TODO: We should repsect ignored players
 
+		// Check for any zoomed snipers
 		if (HAS_CONDITION(player, TFCond_Zoomed)) {
 			anyZoomedSnipers = true;
 			if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_HEAD), player->GetHitboxPos(HITBOX_HEAD))) {
@@ -33,6 +34,7 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 			}
 		}
 
+		// Check for any reved heavys
 		if (HAS_CONDITION(player, TFCond_Slowed)) {
 			if (const auto& pWeapon = player->GetActiveWeapon()) {
 				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_BODY), player->GetHitboxPos(HITBOX_HEAD))) {
@@ -86,7 +88,7 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 		if (pProjectile->GetVelocity().IsZero())
 			continue;
 
-		if (pProjectile->GetTouched()) // Ignore Stickies?
+		if (pProjectile->GetTouched()) // Ignore landed Stickies
 			continue;
 
 		if (pProjectile->GetTeamNum() == pPatient->GetTeamNum())
@@ -98,7 +100,8 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 
 		// Projectile is getting closer
 		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) < pPatient->GetVecOrigin().DistToSqr(vPredicted)) {
+		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) < pPatient->GetVecOrigin().DistToSqr(vPredicted) &&
+			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f) {
 			if (pProjectile->IsCritBoosted()) {
 				hasCritRockets = hasRockets = true;
 				break;
@@ -129,7 +132,8 @@ int CurrentResistance() {
 int ChargeCount() {
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
-		return pWeapon->GetUberCharge() / 0.25f;
+		if (g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) { return pWeapon->GetUberCharge() / 0.25f; }
+		return pWeapon->GetUberCharge() / 1.f;
 	}
 	return 1;
 }
@@ -207,16 +211,9 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 {
 	if (!Vars::Triggerbot::Uber::Active.m_Var || //Not enabled, return
 		pWeapon->GetWeaponID() != TF_WEAPON_MEDIGUN || //Not medigun, return
-		g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheKritzkrieg) //Kritzkrieg,  return
+		g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheKritzkrieg || //Kritzkrieg,  return
+		ChargeCount() < 1) //Not charged
 		return;
-
-	// Is a charge ready?
-	if (g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) {
-		if (pWeapon->GetUberCharge() < 0.25f) { return; }
-	}
-	else {
-		if (pWeapon->GetUberCharge() < 1.f) { return; }
-	}
 
 	//Check local status, if enabled. Don't pop if local already is not vulnerable
 	if (Vars::Triggerbot::Uber::PopLocal.m_Var && pLocal->IsVulnerable())
@@ -224,10 +221,27 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		m_flHealth = static_cast<float>(pLocal->GetHealth());
 		m_flMaxHealth = static_cast<float>(pLocal->GetMaxHealth());
 
-		if (((m_flHealth / m_flMaxHealth) * 100.0f) <= Vars::Triggerbot::Uber::HealthLeft.m_Var)
-		{
-			pCmd->buttons |= IN_ATTACK2; //We under the wanted health percentage, pop
-			return; //Popped, no point checking our target's status
+		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) {
+			// Auto vaccinator
+			bool shouldPop = false;
+			DoResistSwitching(pCmd);
+
+			int optResistance = OptimalResistance(pLocal, &shouldPop);
+			if (optResistance >= 0 && optResistance != CurrentResistance()) {
+				SetResistance(optResistance);
+			}
+
+			if (shouldPop && CurrentResistance() == optResistance) {
+				pCmd->buttons |= IN_ATTACK2;
+			}
+		}
+		else {
+			// Default medigun
+			if (((m_flHealth / m_flMaxHealth) * 100.0f) <= Vars::Triggerbot::Uber::HealthLeft.m_Var)
+			{
+				pCmd->buttons |= IN_ATTACK2; //We under the wanted health percentage, pop
+				return; //Popped, no point checking our target's status
+			}
 		}
 	}
 
