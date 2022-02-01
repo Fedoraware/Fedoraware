@@ -9,7 +9,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	auto pLocal = g_EntityCache.m_pLocal;
+	auto pLocal = g_EntityCache.m_pLocal; const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
 
 	if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && g_GlobalInfo.m_nShifted >= g_GlobalInfo.dtTicks) {
 		while (g_GlobalInfo.m_nShifted != 0) {
@@ -30,6 +30,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	*/ // ok so, if they have set the value to 0, leaving only a hardcoded restriction of like 46 or smthn on how many you can manipulate, this code right
 	//		below me decides to charge, to a whopping, nothing.
 
+	/*
 	if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var) && !g_GlobalInfo.m_bChoking) { // ok ik this is advanced BUT hear me out
 		g_GlobalInfo.m_bForceSendPacket = true; // the more failsafes the safer u r from failure right		// we do this so our cheat has 1 tick to turn off fakelag and game can account for it all that shih
 		g_GlobalInfo.m_bRecharging = true;																	// and then while recharging we make sure we keep up connection with the server as well
@@ -42,6 +43,25 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		g_GlobalInfo.m_nShifted++;								// while it is unlikely anybody would allow for a commit to choke packets while we are manipulating ticks, it is possible.
 		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;			//		so we will account for the possibility by ensuring that anybody trying to do so is almost certain to find this
 		return; // Don't move									//				or be left with a half broken feature and a broken doubletap
+	}
+	else {
+		g_GlobalInfo.m_bRecharging = false;
+	}
+	*/
+
+	if (g_GlobalInfo.m_bRechargeQueued && !g_GlobalInfo.m_bChoking) {
+		g_GlobalInfo.m_bRechargeQueued = false;
+		g_GlobalInfo.m_bRecharging = true;
+	}
+	else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var)) {
+		g_GlobalInfo.m_bForceSendPacket = true;				// force uninterrupted connection with server
+		g_GlobalInfo.m_nShifted++;							// add ticks to tick counter
+		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS + 1;	// set wait condition
+		return;												// !CLMove
+	}
+	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {
+		g_GlobalInfo.m_bForceSendPacket = true;
+		g_GlobalInfo.m_bRechargeQueued = true;
 	}
 	else {
 		g_GlobalInfo.m_bRecharging = false;
@@ -75,8 +95,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			while (g_GlobalInfo.m_nShifted > 0) {
 				oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
 				g_GlobalInfo.m_nShifted--;
-				g_GlobalInfo.m_bForceSendPacket = true; // make sure we dont fakelag while shifting (should not even be an issue but whatever)	
 			}
+			g_GlobalInfo.m_bForceSendPacket = true;
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
 		g_GlobalInfo.m_bShouldShift = false;

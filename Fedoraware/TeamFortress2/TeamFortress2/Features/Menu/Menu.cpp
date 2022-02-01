@@ -1236,7 +1236,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 							if (ImGui::CollapsingHeader("Out of FoV arrows")) {
 								ImGui::Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
-								ImGui::Checkbox("Outline arrows###ballsinyourjawballsniggerfart", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
+								ImGui::Checkbox("Outline arrows###ballsinyourjawballsninjafart", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("The angle of the arrow");
 								//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
@@ -1273,20 +1273,85 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						{
 							if (ImGui::CollapsingHeader("Tickbase exploits", ImGuiTreeNodeFlags_DefaultOpen)) {
 								ImGui::Checkbox("Active", &Vars::Misc::CL_Move::Enabled.m_Var); HelpMarker("Tickbase exploit master switch");
-								InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
-								InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to move fast");
-								InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Shifts ticks when shooting for a rapid-fire effect");
-								ImGui::Checkbox("Recharge While Dead", &Vars::Misc::CL_Move::RechargeWhileDead.m_Var); HelpMarker("Recharge your DoubleTap bar while you're dead");
-								ImGui::Checkbox("AutoRecharge", &Vars::Misc::CL_Move::AutoRecharge.m_Var); HelpMarker("Recharge your DoubleTap bar if you are doing nothing");
-								ImGui::Checkbox("Wait for DT", &Vars::Misc::CL_Move::WaitForDT.m_Var); HelpMarker("While the doubletap key is held and ticks are fully charged, it will wait until doubletap is ready to shoot");
-								ImGui::Checkbox("Anti Warp", &Vars::Misc::CL_Move::AntiWarp.m_Var); HelpMarker("Will prevent teleporting when using doubletap");
-								ImGui::Checkbox("Don't DT in air", &Vars::Misc::CL_Move::NotInAir.m_Var); HelpMarker("When enabled, doubletap will not work if you are mid-air as to avoid movement being uncontrollable");
-								const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth(); HelpMarker("How should DT behave");
-								const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(100); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
-								ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); ImGui::PopItemWidth(); HelpMarker("How many ticks to shift");
-								if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-									ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
-									ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+								if (Vars::Misc::CL_Move::Enabled.m_Var) {
+									if (Vars::Misc::CL_Move::DTMode.m_Var == 0 || Vars::Misc::CL_Move::DTMode.m_Var == 2)
+										InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
+									InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to move fast");
+									InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Shifts ticks when shooting for a rapid-fire effect");
+									{
+										ImGui::PushItemWidth(100);
+										std::vector<std::string> dtvec;
+										static bool dtFlags[]{ Vars::Misc::CL_Move::RechargeWhileDead.m_Var,Vars::Misc::CL_Move::AutoRecharge.m_Var,Vars::Misc::CL_Move::WaitForDT.m_Var,Vars::Misc::CL_Move::AntiWarp.m_Var,Vars::Misc::CL_Move::NotInAir.m_Var };
+										const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }; static std::string dtPreview = "PH";
+										if (dtPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+											dtPreview = "";
+											for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++) {
+												if (dtFlags[i])
+													dtvec.push_back(pDt[i]);
+											}
+											for (size_t i = 0; i < dtvec.size(); i++)
+											{
+												if (dtvec.size() == 1)
+													dtPreview += dtvec.at(i);
+												else if (!(i == dtvec.size() - 1))
+													dtPreview += dtvec.at(i) + ", ";
+												else
+													dtPreview += dtvec.at(i);
+											}
+										}
+										if (ImGui::BeginCombo("Options", dtPreview.c_str()))
+										{
+											dtPreview = "";
+											for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++)
+											{
+												ImGui::Selectable(pDt[i], &dtFlags[i]);
+												if (dtFlags[i])
+													dtvec.push_back(pDt[i]);
+
+											}
+											for (size_t i = 0; i < dtvec.size(); i++)
+											{
+												if (dtvec.size() == 1)
+													dtPreview += dtvec.at(i);
+												else if (!(i == dtvec.size() - 1))
+													dtPreview += dtvec.at(i) + ", ";
+												else
+													dtPreview += dtvec.at(i);
+											}
+											ImGui::EndCombo();
+										} // i got tired of trying better ways so this is new method fr*ck you
+										for (size_t i = 0; i < IM_ARRAYSIZE(dtFlags); i++) {
+											if (dtFlags[i]) {
+												switch (i + 1) {
+												case 1: { Vars::Misc::CL_Move::RechargeWhileDead.m_Var = true; break; }
+												case 2: { Vars::Misc::CL_Move::AutoRecharge.m_Var = true; break; }
+												case 3: { Vars::Misc::CL_Move::WaitForDT.m_Var = true; break; }
+												case 4: { Vars::Misc::CL_Move::AntiWarp.m_Var = true; break; }
+												case 5: { Vars::Misc::CL_Move::NotInAir.m_Var = true; break; }
+												}
+											}
+											else {
+												switch (i + 1) {
+												case 1: { Vars::Misc::CL_Move::RechargeWhileDead.m_Var = false; break; }
+												case 2: { Vars::Misc::CL_Move::AutoRecharge.m_Var = false; break; }
+												case 3: { Vars::Misc::CL_Move::WaitForDT.m_Var = false; break; }
+												case 4: { Vars::Misc::CL_Move::AntiWarp.m_Var = false; break; }
+												case 5: { Vars::Misc::CL_Move::NotInAir.m_Var = false; break; }
+												}
+											}
+										}
+									}
+									const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth(); HelpMarker("How should DT behave");
+									const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(100); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
+									ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); ImGui::PopItemWidth(); HelpMarker("How many ticks to shift");
+									if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+										ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+										ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+									}
+									else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+										ImGui::SliderInt("DT Bar Height", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
+										ImGui::SliderInt("DT Bar Width", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
+									}
 								}
 
 							}
@@ -1792,15 +1857,55 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 							HelpMarker(std::to_string(Vars::Fonts::FONT_MENU::nFlags.m_Var).c_str());
 						}
+						if (ImGui::CollapsingHeader("FONT_INDICATORS"))
+						{
+							HelpMarker("ESP Indicator Font");
+							ImGui::InputText("Font name###espfontcondname", &Vars::Fonts::FONT_INDICATORS::szName);
+							ImGui::InputInt("Font height###espfontcondheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var); HelpMarker("How bold the font is (full bold is like 800)");
+							static bool flagbools[12]{ 0,0,0,0,0,0,0,0,0,0,0,0 };
+							static std::string previewValue = "";
+							std::vector<std::string> vec;
+							if (ImGui::BeginCombo("Font flags###espfoncondttttttttttt", previewValue.c_str()))
+							{
+								previewValue = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+								{
+									ImGui::Selectable(flags[i], &flagbools[i]);
+									if (flagbools[i])
+										vec.push_back(flags[i]);
+								}
+								for (size_t i = 0; i < vec.size(); i++)
+								{
+									if (vec.size() == 1)
+										previewValue += vec.at(i);
+									else if (!(i == vec.size() - 1))
+										previewValue += vec.at(i) + ",";
+									else
+										previewValue += vec.at(i);
+								}
+								ImGui::EndCombo();
+
+							}
+							Vars::Fonts::FONT_INDICATORS::nFlags.m_Var = 0;
+							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
+							{
+								if (flagbools[i]) {
+									Vars::Fonts::FONT_INDICATORS::nFlags.m_Var |= fontflags[i];
+								}
+							}
+							HelpMarker(std::to_string(Vars::Fonts::FONT_INDICATORS::nFlags.m_Var).c_str());
+						}
 
 						if (ImGui::Button("Apply settings###fontapply"))
 						{
 							Font_t fontEsp = { 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var };
 							Font_t fontEspName = { 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var };
 							Font_t fontEspCond = { 0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var };
+							Font_t fontIndicator = { 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var };
 							Font_t fontEspPickups = { 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var };
 							Font_t fontMenu = { 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var };
-							std::vector<Font_t> fonts = { fontEsp, fontEspName, fontEspCond, fontEspPickups, fontMenu };
+							std::vector<Font_t> fonts = { fontEsp, fontEspName, fontEspCond, fontEspPickups, fontMenu, fontIndicator };
 							g_Draw.RemakeFonts(fonts);
 						}
 

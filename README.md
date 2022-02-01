@@ -1,9 +1,9 @@
-<h1 align="center">I love this project and 24/7 of my time is now being spent on this</h1>
+<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
 
 <hr/>
 
 <p align="center" style="margin-bottom: 0px !important;">
-  <img width="200" src="https://raw.githubusercontent.com/M-FeD/Fedoraware/main/.github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
+  <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
 <h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
 <h1 align="center" style="margin-top: 0px;">SE-Owned but awesome</h1>

@@ -8,6 +8,7 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
+#include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Keybinds/Keybinds.h"
 #include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
@@ -109,7 +110,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-								float maxWidth = 24 * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
+								float maxWidth = (float)Vars::Misc::CL_Move::DTTicks.m_Var * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
 								float dtOffset = g_ScreenSize.c - (maxWidth / 2);
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
@@ -121,49 +122,54 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
-								float ratio = ((float)g_GlobalInfo.m_nShifted / (float)Vars::Misc::CL_Move::DTTicks.m_Var);
+								float rratio = ((float)g_GlobalInfo.m_nShifted / (float)Vars::Misc::CL_Move::DTTicks.m_Var);
+								static float ratio = 0.f; ratio = g_Draw.EaseIn(ratio, rratio, 0.98f);
 
-								if (ratio > 1) { ratio = 1; }
-								else if (ratio < 0) { ratio = 0; } //if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
+								if (ratio > 1.f) { ratio = 1.f; }
+								else if (ratio < 0.f) { ratio = 0.f; } //if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
 								
-								// these are all vars in dp but fedware doesnt have the vars and i am not adding them
-								int xoff = 0; // width offset (is it called width offset who knows)
-								int yoff = 402; // height offset
-								int xscale = 14; // height of bar
-								int yscale = 300; // width of bar
+								// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
+								//		so i added them
+								int xoff = Vars::Misc::CL_Move::DTBarX.m_Var; // width offset (is it called width offset who knows)
+								int yoff = Vars::Misc::CL_Move::DTBarY.m_Var; // height offset
+								int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
+								int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
 
 								color3 = { 255,255,255,255 };
 
-								g_Draw.OutlinedRect(g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) + yoff, (yscale + 2), (xscale + 2), color3);
-								g_Draw.GradientRect(g_ScreenSize.c - (yscale / 2) + xoff, nY - (xscale / 2) + yoff, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), (nY - (xscale / 2) + yoff + xscale), { color1 }, { color2 }, TRUE);
-								g_Draw.String(FONT_ESP_COND, g_ScreenSize.c - (yscale / 2 + 1) + xoff, nY - (xscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
+								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2), color3);
+								g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale, yscale, { 17, 24, 26, 255 });
+								g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, ((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)), (nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);
+								g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
 								if (g_GlobalInfo.m_nShifted == 0) // no charge no money
 								{
-									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE, _(L"NO CHARGE"));
-									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + xoff, nY - (xscale / 2) + yoff, yscale, xscale, { 17, 24, 26, 255 });
+									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale), nY - (yscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE, _(L"NO CHARGE"));
 								}
 								else if (g_GlobalInfo.m_bRecharging) // charging 
 								{
-									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE, _(L"CHARGING"));
-									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + (yscale * ratio) + xoff, nY - (xscale / 2) + yoff, yscale - (yscale * ratio) + 1 /*float is kind of shit*/, xscale, {17, 24, 26, 255});
+									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale), nY - (yscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE, _(L"CHARGING"));
 								}
 								else if (ratio != 1) // disgusting btw
 								{
-									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
-									g_Draw.Rect(g_ScreenSize.c - (yscale / 2) + (yscale * ratio) + xoff, nY - (xscale / 2) + yoff, yscale - (yscale * ratio) + 1 /*float is kind of shit*/, xscale, { 17, 24, 26, 255 });
+									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale), nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
 								}
 								else if (!g_GlobalInfo.m_nWaitForShift) // activates when ready
 								{
-									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
+									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale), nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE, _(L"READY"));
 								}
 								else // activates when waiting blah blah blahg
 								{
-									g_Draw.String(FONT_ESP_COND, (g_ScreenSize.c - (yscale / 2) + xoff + yscale), nY - (xscale / 2 + 1) - 10 + yoff, { 255, 46, 46, 255 }, ALIGN_REVERSE, _(L"DT IMPOSSIBLE"));
+									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale), nY - (yscale / 2 + 1) - 10 + yoff, { 255, 46, 46, 255 }, ALIGN_REVERSE, _(L"DT IMPOSSIBLE"));
 								}
 							}
 
 						}
 					}
+				}
+
+				// debug
+				{
+					
 				}
 
 				//Current Active Aimbot FOV
@@ -186,6 +192,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
+			g_DTBar.Run();
 			g_Crits.Frame();
 			g_Menu.Run();
 
