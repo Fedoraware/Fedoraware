@@ -9,6 +9,8 @@
 	return GetVFunc<fn>(pBase, index)(pBase); \
 }
 
+#define HAS_CONDITION(ent, cond) (ent->GetCond() & cond)
+
 class CBaseEntity
 {
 public: //Netvars & conditions
