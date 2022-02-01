@@ -1,4 +1,4 @@
-<h1 align="center">I love this project and 24/7 of my time is now being spent on this</h1>
+<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
 
 <hr/>
 
