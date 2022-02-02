@@ -624,7 +624,7 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 
 	if (nFlag & FL_DUCKING)
 	{
-		szCond += _(L"DUCKING ");
+		szCond += _(L"CROUCH ");
 	}
 
 	if (nCondEx2 & TFCondEx2_BlastImmune)
@@ -655,7 +655,7 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 		szCond += _(L"CRIT ");
 
 	if (nCond & TFCond_Cloaked)
-		szCond += _(L"CLOAK ");
+		szCond += _(L"INVIS ");
 
 	if (nCond & TFCond_Zoomed)
 		szCond += _(L"SCOPE ");
