@@ -121,9 +121,10 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth, (g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, color1, color2, true);
 							}
 
-							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
+							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+								g_DTBar.Run(); // put this here so we don't move menu if we r using something else, no biggie
 								float rratio = ((float)g_GlobalInfo.m_nShifted / (float)Vars::Misc::CL_Move::DTTicks.m_Var);
-								static float ratio = 0.f; ratio = g_Draw.EaseIn(ratio, rratio, 0.98f);
+								static float ratio = 0.f; ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
 
 								if (ratio > 1.f) { ratio = 1.f; }
 								else if (ratio < 0.f) { ratio = 0.f; } //if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
@@ -192,7 +193,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_DTBar.Run();
 			g_Crits.Frame();
 			g_Menu.Run();
 

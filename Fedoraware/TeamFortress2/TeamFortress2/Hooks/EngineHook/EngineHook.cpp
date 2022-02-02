@@ -5,6 +5,7 @@
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
 	static auto oClMove = Func.Original<fn>();
+
 	if (!Vars::Misc::CL_Move::Enabled.m_Var) {
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
@@ -97,7 +98,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				g_GlobalInfo.m_bForceSendPacket = true;
 				g_Interfaces.Engine->FireEvents();
 			}
-			g_Interfaces.Engine->FireEvents();
 			g_GlobalInfo.m_bForceSendPacket = true;
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
@@ -146,4 +146,4 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 		return FLT_MAX;
 
 	return originalFn(ecx, edx);
-}	// i dont fucking know if this shit works
+}	// this shit fucking works
