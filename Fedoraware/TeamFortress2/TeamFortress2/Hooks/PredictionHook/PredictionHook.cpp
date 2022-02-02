@@ -8,7 +8,8 @@ int CalculateTick(int simTicks, CBaseEntity* player)
 	int fast = nIdealFinalTick + clockcorrect;
 	int slow = nIdealFinalTick - clockcorrect;
 	if (EstimatedFinal > fast || EstimatedFinal < slow) { return nIdealFinalTick - simTicks; };
-	return player->GetTickBase();
+	// this is useless
+	return EstimatedFinal;
 }
 
 void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity* pEntity, CUserCmd* pCmd, CMoveHelper* pMoveHelper)

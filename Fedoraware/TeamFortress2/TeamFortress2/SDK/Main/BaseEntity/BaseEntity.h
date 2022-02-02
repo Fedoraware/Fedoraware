@@ -503,8 +503,10 @@ public: //Everything else, lol.
 		DYNVAR_SET(float, this, flAnimTime, _("DT_BaseEntity"), _("m_flAnimTime"));
 	}
 
+	/*
 	__inline CCollisionProperty* GetCollision() {
-		return reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
+		return *reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
 	}
+	*/ // why push this when A) It doesn't work, and B) Isn't used
 
 };

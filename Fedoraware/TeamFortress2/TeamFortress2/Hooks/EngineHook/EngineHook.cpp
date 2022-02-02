@@ -20,7 +20,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return;
 	}
 
-
 	// this check is useless because the cvar isn't used, and even if it was, this check achieves nothing
 	/*
 	static ConVar* sv_maxusrcmdprocessticks = g_Interfaces.CVars->FindVar("sv_maxusrcmdprocessticks");
@@ -95,7 +94,10 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			while (g_GlobalInfo.m_nShifted > 0) {
 				oClMove(accumulated_extra_samples, g_GlobalInfo.m_nShifted == 1);
 				g_GlobalInfo.m_nShifted--;
+				g_GlobalInfo.m_bForceSendPacket = true;
+				g_Interfaces.Engine->FireEvents();
 			}
+			g_Interfaces.Engine->FireEvents();
 			g_GlobalInfo.m_bForceSendPacket = true;
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}

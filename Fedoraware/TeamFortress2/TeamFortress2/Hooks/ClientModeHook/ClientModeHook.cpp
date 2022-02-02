@@ -316,25 +316,19 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					}
 					
 				}
-				else { *pSendPacket = false; }
+				else { *pSendPacket = false; g_GlobalInfo.m_bChoking = true; }
 			}
 			else { *pSendPacket = true; g_GlobalInfo.m_bChoking = false; }
 		}
 	}
 	else if (chockedPackets > 0) { *pSendPacket = true; chockedPackets = 0; g_GlobalInfo.m_bChoking = false; } // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
+	else { g_GlobalInfo.m_bChoking = false; }
 	//	we also leave it all the way out here so that we have the same likelihood of hitting it as the old (bad) failsafe
 	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
 	// I put all my jewellery just to go to the bodega
 
 	//	TODO: make this p
-	//	cmd->sidemove & cmd->forwardmove abs(max) is 450
-	//	pLocal->GetVelocity()/66 = 1 tick velocity (tv)
-	//	if tv*66 < 10 we are not "moving"
-	//	make pLocal->GetVelocity()/66 = pLocal->GetVelocity()/1584
-	//	tvDesired = pLocal->GetVelocity()/1584
-	//	tv = pLocal->GetVelocity()/66
-	/*
 	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
 		float pvs; float pvf; // predictedvelside, predictedvelforward
 		float dpvs; float dpvf; // desired
@@ -355,10 +349,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			else if (pCmd->forwardmove < -100 && pvf > -6) { pvf--; }
 			else if (abs(pCmd->forwardmove) < 100 && abs(pvf) > 0) { if (pvf < -1) { pvf += .5f; } else { pvf -= .5f; } }
 
-			dpvs = pvs / Vars::Misc::CL_Move::DTTicks.m_Var; dpvf = pvf / Vars::Misc::CL_Move::DTTicks.m_Var;
+			dpvs = pvs / (float)Vars::Misc::CL_Move::DTTicks.m_Var; dpvf = pvf / (float)Vars::Misc::CL_Move::DTTicks.m_Var;
 		}
 	}
-	*/ // fucking retarded code
+
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
@@ -428,7 +422,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_GlobalInfo.vEyeAngDelay++; // ignore this
 	g_GlobalInfo.lateUserCmd = pCmd;
 	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
-	if (pSendPacket) { g_GlobalInfo.m_bChoking = false; }
+	else if (g_GlobalInfo.m_bForceChokePacket) { *pSendPacket = false; g_GlobalInfo.m_bForceChokePacket = false; } // check after force send to prevent timing out possibly
 	g_Interfaces.Engine->FireEvents();
 	// fire events, ensure send packet shit is all done, we r good to go lads
 
