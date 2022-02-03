@@ -168,6 +168,10 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 
+				// build date
+				if(g_Menu.m_bOpen)
+					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
+
 				// debug
 				{
 					
