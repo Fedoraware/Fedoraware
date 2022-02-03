@@ -613,6 +613,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Invuln);
 			SAVE_OTHER(Colors::Cloak);
 			SAVE_OTHER(Colors::Friend);
+			SAVE_OTHER(Colors::Local);
+			SAVE_OTHER(Colors::Ignored);
 			SAVE_OTHER(Colors::Overheal);
 			SAVE_OTHER(Colors::Health);
 			SAVE_OTHER(Colors::Ammo);
@@ -1184,6 +1186,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Invuln);
 			LOAD_OTHER(Colors::Cloak);
 			LOAD_OTHER(Colors::Friend);
+			LOAD_OTHER(Colors::Local);
+			LOAD_OTHER(Colors::Ignored);
 			LOAD_OTHER(Colors::Overheal);
 			LOAD_OTHER(Colors::Health);
 			LOAD_OTHER(Colors::Ammo);

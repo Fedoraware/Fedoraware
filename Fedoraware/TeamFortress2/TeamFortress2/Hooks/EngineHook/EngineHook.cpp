@@ -98,6 +98,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				g_GlobalInfo.m_bForceSendPacket = true;
 				g_Interfaces.Engine->FireEvents();
 			}
+			g_Interfaces.Engine->FireEvents();
 			g_GlobalInfo.m_bForceSendPacket = true;
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}

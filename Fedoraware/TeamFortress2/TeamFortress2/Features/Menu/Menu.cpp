@@ -576,115 +576,177 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						{
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Aimbot###Aim bot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
-							ImGui::Checkbox("AutoShoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
-							InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
-							{
-								ImGui::PushItemWidth(100);
-								std::vector<std::string> aimtargetsvec;
-								static bool aimtargetFlags[]{ Vars::Aimbot::Global::AimPlayers.m_Var,Vars::Aimbot::Global::AimBuildings.m_Var };
-								const char* pAimtargets[] = { "Players", "Buildings" }; static std::string aimtargetsPreview = "PH";
-								if (aimtargetsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
-									aimtargetsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++) {
-										if (aimtargetFlags[i])
-											aimtargetsvec.push_back(pAimtargets[i]);
-									}
-									for (size_t i = 0; i < aimtargetsvec.size(); i++)
-									{
-										if (aimtargetsvec.size() == 1)
-											aimtargetsPreview += aimtargetsvec.at(i);
-										else if (!(i == aimtargetsvec.size() - 1))
-											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
-										else
-											aimtargetsPreview += aimtargetsvec.at(i);
-									}
-								}
-								if (ImGui::BeginCombo("Targets", aimtargetsPreview.c_str()))
+							if (Vars::Aimbot::Global::Active.m_Var) {
+								ImGui::Checkbox("AutoShoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 1.0f, 180.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
+								InputKeybind("Aim key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 								{
-									aimtargetsPreview = "";
-									for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++)
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> aimtargetsvec;
+									static bool aimtargetFlags[]{ Vars::Aimbot::Global::AimPlayers.m_Var,Vars::Aimbot::Global::AimBuildings.m_Var };
+									const char* pAimtargets[] = { "Players", "Buildings" }; static std::string aimtargetsPreview = "PH";
+									if (aimtargetsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										aimtargetsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++) {
+											if (aimtargetFlags[i])
+												aimtargetsvec.push_back(pAimtargets[i]);
+										}
+										for (size_t i = 0; i < aimtargetsvec.size(); i++)
+										{
+											if (aimtargetsvec.size() == 1)
+												aimtargetsPreview += aimtargetsvec.at(i);
+											else if (!(i == aimtargetsvec.size() - 1))
+												aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+											else
+												aimtargetsPreview += aimtargetsvec.at(i);
+										}
+									}
+									if (ImGui::BeginCombo("Targets", aimtargetsPreview.c_str()))
 									{
-										ImGui::Selectable(pAimtargets[i], &aimtargetFlags[i]);
-										if (aimtargetFlags[i])
-											aimtargetsvec.push_back(pAimtargets[i]);
+										aimtargetsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pAimtargets); i++)
+										{
+											ImGui::Selectable(pAimtargets[i], &aimtargetFlags[i]);
+											if (aimtargetFlags[i])
+												aimtargetsvec.push_back(pAimtargets[i]);
 
+										}
+										for (size_t i = 0; i < aimtargetsvec.size(); i++)
+										{
+											if (aimtargetsvec.size() == 1)
+												aimtargetsPreview += aimtargetsvec.at(i);
+											else if (!(i == aimtargetsvec.size() - 1))
+												aimtargetsPreview += aimtargetsvec.at(i) + ", ";
+											else
+												aimtargetsPreview += aimtargetsvec.at(i);
+										}
+										ImGui::EndCombo();
 									}
-									for (size_t i = 0; i < aimtargetsvec.size(); i++)
+									for (size_t i = 0; i < IM_ARRAYSIZE(aimtargetFlags); i++) {
+										if (aimtargetFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = true; break; }
+											case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = false; break; }
+											case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = false; break; }
+											}
+										}
+									}
+								} // aim targets combobox
+								{
+									ImGui::PushItemWidth(100);
+									std::vector<std::string> ignoretargetsvec;
+									static bool ignoretargetFlags[]{ Vars::Aimbot::Global::IgnoreInvlunerable.m_Var,Vars::Aimbot::Global::IgnoreCloaked.m_Var,Vars::Aimbot::Global::IgnoreFriends.m_Var,Vars::Aimbot::Global::IgnoreTaunting.m_Var };
+									const char* pIgnoretargets[] = { "Invulnerable", "Cloaked", "Friends", "Taunting"}; static std::string ignoretargetsPreview = "PH";
+									if (ignoretargetsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+										ignoretargetsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pIgnoretargets); i++) {
+											if (ignoretargetFlags[i])
+												ignoretargetsvec.push_back(pIgnoretargets[i]);
+										}
+										for (size_t i = 0; i < ignoretargetsvec.size(); i++)
+										{
+											if (ignoretargetsvec.size() == 1)
+												ignoretargetsPreview += ignoretargetsvec.at(i);
+											else if (!(i == ignoretargetsvec.size() - 1))
+												ignoretargetsPreview += ignoretargetsvec.at(i) + ", ";
+											else
+												ignoretargetsPreview += ignoretargetsvec.at(i);
+										}
+									}
+									if (ImGui::BeginCombo("Ignore Flags", ignoretargetsPreview.c_str()))
 									{
-										if (aimtargetsvec.size() == 1)
-											aimtargetsPreview += aimtargetsvec.at(i);
-										else if (!(i == aimtargetsvec.size() - 1))
-											aimtargetsPreview += aimtargetsvec.at(i) + ", ";
-										else
-											aimtargetsPreview += aimtargetsvec.at(i);
+										ignoretargetsPreview = "";
+										for (size_t i = 0; i < IM_ARRAYSIZE(pIgnoretargets); i++)
+										{
+											ImGui::Selectable(pIgnoretargets[i], &ignoretargetFlags[i]);
+											if (ignoretargetFlags[i])
+												ignoretargetsvec.push_back(pIgnoretargets[i]);
+
+										}
+										for (size_t i = 0; i < ignoretargetsvec.size(); i++)
+										{
+											if (ignoretargetsvec.size() == 1)
+												ignoretargetsPreview += ignoretargetsvec.at(i);
+											else if (!(i == ignoretargetsvec.size() - 1))
+												ignoretargetsPreview += ignoretargetsvec.at(i) + ", ";
+											else
+												ignoretargetsPreview += ignoretargetsvec.at(i);
+										}
+										ImGui::EndCombo();
 									}
-									ImGui::EndCombo();
-								}
-								for (size_t i = 0; i < IM_ARRAYSIZE(aimtargetFlags); i++) {
-									if (aimtargetFlags[i]) {
-										switch (i + 1) {
-										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = true; break; }
-										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = true; break; }
+									for (size_t i = 0; i < IM_ARRAYSIZE(ignoretargetFlags); i++) {
+										if (ignoretargetFlags[i]) {
+											switch (i + 1) {
+											case 1: { Vars::Aimbot::Global::IgnoreInvlunerable.m_Var = true; break; }
+											case 2: { Vars::Aimbot::Global::IgnoreCloaked.m_Var = true; break; }
+											case 3: { Vars::Aimbot::Global::IgnoreFriends.m_Var = true; break; }
+											case 4: { Vars::Aimbot::Global::IgnoreTaunting.m_Var = true; break; }
+											}
+										}
+										else {
+											switch (i + 1) {
+											case 1: { Vars::Aimbot::Global::IgnoreInvlunerable.m_Var = false; break; }
+											case 2: { Vars::Aimbot::Global::IgnoreCloaked.m_Var = false; break; }
+											case 3: { Vars::Aimbot::Global::IgnoreFriends.m_Var = false; break; }
+											case 4: { Vars::Aimbot::Global::IgnoreTaunting.m_Var = false; break; }
+											}
 										}
 									}
-									else {
-										switch (i + 1) {
-										case 1: { Vars::Aimbot::Global::AimPlayers.m_Var = false; break; }
-										case 2: { Vars::Aimbot::Global::AimBuildings.m_Var = false; break; }
-										}
-									}
-								}
-							} // aim targets combobox
-							ImGui::Checkbox("Ignore invulnerable", &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The aimbot will ignore players who can't be damaged");
-							ImGui::Checkbox("Ignore cloaked", &Vars::Aimbot::Global::IgnoreCloaked.m_Var); HelpMarker("The aimbot will ignore spies who are cloaked");
-							ImGui::Checkbox("Ignore friends", &Vars::Aimbot::Global::IgnoreFriends.m_Var); HelpMarker("The aimbot will ignore steam friends");
-							ImGui::Checkbox("Ignore taunting", &Vars::Aimbot::Global::IgnoreTaunting.m_Var); HelpMarker("The aimbot will ignore taunting players");
-							ImGui::Checkbox("BAim when lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
-							ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Doubletap.m_Var); HelpMarker("When enough ticks are choked, the aimbot will shoot them all at once in a burst, leading to a rapid-fire effect");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Crithack");
-							ImGui::Checkbox("Active###critsactive", &Vars::Crits::Active.m_Var); HelpMarker("Crit hack - this is the worst fucking crit hack known to man and I'm sorry for adding it");
-							InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Crit key, self explanatory");
+								} // ignore targets combobox
+								ImGui::Checkbox("BAim when lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+								ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Doubletap.m_Var); HelpMarker("When enough ticks are choked, the aimbot will shoot them all at once in a burst, leading to a rapid-fire effect");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("Crithack");
+								ImGui::Checkbox("Active###critsactive", &Vars::Crits::Active.m_Var); HelpMarker("Crit hack - this is the worst fucking crit hack known to man and I'm sorry for adding it");
+								if (Vars::Crits::Active.m_Var)
+									InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Crit key, self explanatory");
+							}
 						}
-						ImGui::NextColumn();
-						{
-							ImGui::TextUnformatted("Hitscan");
-							//ImGui::Checkbox("Active###Hit scan", &Vars::Aimbot::Hitscan::Active.m_Var); HelpMarker("Hitscan aimbot master switch");
-							static const char* hitscanSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###hitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, hitscanSortMethod, IM_ARRAYSIZE(hitscanSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
-							static const char* hitscanAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###hitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, hitscanAimMethod, IM_ARRAYSIZE(hitscanAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
-							static const char* hitscanAimHitbox[]{ "Head", "Body", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###hitscanAimPosition", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, hitscanAimHitbox, IM_ARRAYSIZE(hitscanAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
-							static const char* hitscanTapFire[]{ "Off", "Distance", "Always" }; ImGui::PushItemWidth(100); ImGui::Combo("Tap-fire", &Vars::Aimbot::Hitscan::TapFire.m_Var, hitscanTapFire, IM_ARRAYSIZE(hitscanTapFire)); ImGui::PopItemWidth(); HelpMarker("When to tap-fire with inaccurate rapid-fire weapons");
-							ImGui::Checkbox("Minigun rev up", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
-							ImGui::Checkbox("Body multipoint", &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var); HelpMarker("Will attempt to shoot the body hitbox by scanning the edges");
-							ImGui::Checkbox("Head multipoint", &Vars::Aimbot::Hitscan::ScanHead.m_Var); HelpMarker("Will attempt to shoot the head hitbox by scanning the edges");
-							ImGui::Checkbox("Building multipoint", &Vars::Aimbot::Hitscan::ScanBuildings.m_Var); HelpMarker("Will attempt to shoot buildings by scanning the edges");
-							ImGui::Checkbox("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
-							ImGui::Checkbox("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
-							ImGui::Checkbox("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
-							ImGui::Checkbox("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var); HelpMarker("The aimbot will only shoot if scoped");
-							ImGui::Checkbox("Scope automatically", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
-						}
-						ImGui::NextColumn();
-						{
-							ImGui::TextUnformatted("Projectile");
-							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
-							static const char* projectileSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###projectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, projectileSortMethod, IM_ARRAYSIZE(projectileSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
-							static const char* projectileAimMethod[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###projectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, projectileAimMethod, IM_ARRAYSIZE(projectileAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
-							static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###projectileAimPosition", &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
-							ImGui::Checkbox("Aim at feet if on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("If true, aimbot will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
-							ImGui::TextUnformatted("");
-							ImGui::Checkbox("Manual Z Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Manual Z Adjust for projectiles");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Manual Z Adjust amount", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.0f, 10.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("Note: Higher values may cause inaccuracy");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Melee");
-							static const char* meleeSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###meleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
-							static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###meleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, meleeAimMethod, IM_ARRAYSIZE(meleeAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor###meleeSmooth", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
-							ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
-							ImGui::Checkbox("Melee prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
-							ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
+						if (Vars::Aimbot::Global::Active.m_Var) {
+							ImGui::NextColumn();
+							{
+								ImGui::TextUnformatted("Hitscan");
+								//ImGui::Checkbox("Active###Hit scan", &Vars::Aimbot::Hitscan::Active.m_Var); HelpMarker("Hitscan aimbot master switch");
+								static const char* hitscanSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###hitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, hitscanSortMethod, IM_ARRAYSIZE(hitscanSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+								static const char* hitscanAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###hitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, hitscanAimMethod, IM_ARRAYSIZE(hitscanAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
+								static const char* hitscanAimHitbox[]{ "Head", "Body", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###hitscanAimPosition", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, hitscanAimHitbox, IM_ARRAYSIZE(hitscanAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
+								static const char* hitscanTapFire[]{ "Off", "Distance", "Always" }; ImGui::PushItemWidth(100); ImGui::Combo("Tap-fire", &Vars::Aimbot::Hitscan::TapFire.m_Var, hitscanTapFire, IM_ARRAYSIZE(hitscanTapFire)); ImGui::PopItemWidth(); HelpMarker("When to tap-fire with inaccurate rapid-fire weapons");
+								ImGui::Checkbox("Minigun rev up", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
+								ImGui::Checkbox("Body multipoint", &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var); HelpMarker("Will attempt to shoot the body hitbox by scanning the edges");
+								ImGui::Checkbox("Head multipoint", &Vars::Aimbot::Hitscan::ScanHead.m_Var); HelpMarker("Will attempt to shoot the head hitbox by scanning the edges");
+								ImGui::Checkbox("Building multipoint", &Vars::Aimbot::Hitscan::ScanBuildings.m_Var); HelpMarker("Will attempt to shoot buildings by scanning the edges");
+								ImGui::Checkbox("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
+								ImGui::Checkbox("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
+								ImGui::Checkbox("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
+								ImGui::Checkbox("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var); HelpMarker("The aimbot will only shoot if scoped");
+								ImGui::Checkbox("Scope automatically", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
+							}
+							ImGui::NextColumn();
+							{
+								ImGui::TextUnformatted("Projectile");
+								ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
+								static const char* projectileSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###projectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, projectileSortMethod, IM_ARRAYSIZE(projectileSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+								static const char* projectileAimMethod[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###projectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, projectileAimMethod, IM_ARRAYSIZE(projectileAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
+								static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim position###projectileAimPosition", &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
+								ImGui::Checkbox("Aim at feet if on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("If true, aimbot will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
+								ImGui::TextUnformatted("");
+								ImGui::Checkbox("Manual Z Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Manual Z Adjust for projectiles");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Manual Z Adjust amount", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.0f, 10.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("Note: Higher values may cause inaccuracy");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("Melee");
+								static const char* meleeSortMethod[]{ "FoV", "Distance" }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###meleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+								static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###meleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, meleeAimMethod, IM_ARRAYSIZE(meleeAimMethod)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Smooth factor###meleeSmooth", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", 1.0f); ImGui::PopItemWidth(); HelpMarker("How many degrees the aimbot's FoV will have");
+								ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
+								ImGui::Checkbox("Melee prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
+								ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
+							}
 						}
 					}
 					ImGui::EndChild();
@@ -697,58 +759,61 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						{
 							ImGui::TextUnformatted("Global");
 							ImGui::Checkbox("Triggerbot###gTrigger", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
-							InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
-							ImGui::Checkbox("Ignore invulnerable###gTriggerIgnoreInvuln", &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The triggerbot will ignore targets who can't be damaged");
-							ImGui::Checkbox("Ignore cloaked###gTriggerIgnoreCloak", &Vars::Triggerbot::Global::IgnoreCloaked.m_Var); HelpMarker("The triggerbot will ignore spies who are cloaked");
-							ImGui::Checkbox("Ignore friend###gTriggerIgnoreFriend", &Vars::Triggerbot::Global::IgnoreFriends.m_Var); HelpMarker("The triggerbot will ignore steam friends");
+							if (Vars::Triggerbot::Global::Active.m_Var) {
+								InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
+								ImGui::Checkbox("Ignore invulnerable###gTriggerIgnoreInvuln", &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var); HelpMarker("The triggerbot will ignore targets who can't be damaged");
+								ImGui::Checkbox("Ignore cloaked###gTriggerIgnoreCloak", &Vars::Triggerbot::Global::IgnoreCloaked.m_Var); HelpMarker("The triggerbot will ignore spies who are cloaked");
+								ImGui::Checkbox("Ignore friend###gTriggerIgnoreFriend", &Vars::Triggerbot::Global::IgnoreFriends.m_Var); HelpMarker("The triggerbot will ignore steam friends");
 
 
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Auto airblast");
-							ImGui::Checkbox("Active###gAAB", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
-							ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
-							ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Airblast FoV###gAABFoV", &Vars::Triggerbot::Blast::Fov.m_Var, 1, 60, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees the auto airblast's FoV will have");
-
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("Auto airblast");
+								ImGui::Checkbox("Active###gAAB", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
+								ImGui::Checkbox("Rage mode###gAABr", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
+								ImGui::Checkbox("Silent###gAABs", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Airblast FoV###gAABFoV", &Vars::Triggerbot::Blast::Fov.m_Var, 1, 60, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees the auto airblast's FoV will have");
+							}
 						}
-						ImGui::NextColumn();
-						{
-							ImGui::TextUnformatted("Auto shoot");
-							ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
-							ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var); HelpMarker("Auto shoot will target players");
-							ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var); HelpMarker("Auto shoot will target buildings");
-							ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
-							ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
+						if (Vars::Triggerbot::Global::Active.m_Var) {
+							ImGui::NextColumn();
+							{
+								ImGui::TextUnformatted("Auto shoot");
+								ImGui::Checkbox("Active###gAS", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
+								ImGui::Checkbox("Shoot players###gASsp", &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var); HelpMarker("Auto shoot will target players");
+								ImGui::Checkbox("Shoot buildings###gASsb", &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var); HelpMarker("Auto shoot will target buildings");
+								ImGui::Checkbox("Head only###gASho", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Head scale###gAShs", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
+								ImGui::Checkbox("Wait for charge###gASwfc", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
 
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Auto detonate");
-							ImGui::Checkbox("Active###gAD", &Vars::Triggerbot::Detonate::Active.m_Var); HelpMarker("Auto detonate master switch");
-							ImGui::Checkbox("Stickybombs###gADs", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs");
-							ImGui::Checkbox("Detonator flares###gADd", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
-						}
-						ImGui::NextColumn();
-						{
-							ImGui::TextUnformatted("Auto backstab");
-							ImGui::Checkbox("Active###gABS", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
-							ImGui::Checkbox("Rage mode###gABSr", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
-							ImGui::Checkbox("Silent###gABSs", &Vars::Triggerbot::Stab::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
-							ImGui::Checkbox("Disguise after stab###gABSd", &Vars::Triggerbot::Stab::Disguise.m_Var); HelpMarker("Will apply the previous disguise after stabbing");
-							ImGui::Checkbox("Ignore razorback###gABSig", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
-							ImGui::PushItemWidth(100); ImGui::SliderFloat("Stab range", &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The range at which auto backstab will attempt to stab");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("Auto detonate");
+								ImGui::Checkbox("Active###gAD", &Vars::Triggerbot::Detonate::Active.m_Var); HelpMarker("Auto detonate master switch");
+								ImGui::Checkbox("Stickybombs###gADs", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs");
+								ImGui::Checkbox("Detonator flares###gADd", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The radius around the projectile that it will detonate if a player is in");
+							}
+							ImGui::NextColumn();
+							{
+								ImGui::TextUnformatted("Auto backstab");
+								ImGui::Checkbox("Active###gABS", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
+								ImGui::Checkbox("Rage mode###gABSr", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
+								ImGui::Checkbox("Silent###gABSs", &Vars::Triggerbot::Stab::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+								ImGui::Checkbox("Disguise after stab###gABSd", &Vars::Triggerbot::Stab::Disguise.m_Var); HelpMarker("Will apply the previous disguise after stabbing");
+								ImGui::Checkbox("Ignore razorback###gABSig", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Stab range", &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, "%.1f"); ImGui::PopItemWidth(); HelpMarker("The range at which auto backstab will attempt to stab");
 
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("");
-							ImGui::TextUnformatted("Auto uber");
-							ImGui::Checkbox("Active###gAU", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
-							ImGui::Checkbox("Only on friends###gAUf", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
-							ImGui::Checkbox("Uber self###gAUs", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
-							ImGui::Checkbox("Auto Vaccinator", &Vars::Triggerbot::Uber::AutoVacc.m_Var); HelpMarker("Choses the best resistance and pops uber if needed");
-							if (!Vars::Triggerbot::Uber::AutoVacc.m_Var) {
-								ImGui::PushItemWidth(100); ImGui::SliderFloat("Health left (%)###gAUhp", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); ImGui::PopItemWidth(); HelpMarker("The amount of health the heal target must be below to actiavte");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("");
+								ImGui::TextUnformatted("Auto uber");
+								ImGui::Checkbox("Active###gAU", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
+								ImGui::Checkbox("Only on friends###gAUf", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
+								ImGui::Checkbox("Uber self###gAUs", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
+								ImGui::Checkbox("Auto Vaccinator", &Vars::Triggerbot::Uber::AutoVacc.m_Var); HelpMarker("Choses the best resistance and pops uber if needed");
+								if (!Vars::Triggerbot::Uber::AutoVacc.m_Var) {
+									ImGui::PushItemWidth(100); ImGui::SliderFloat("Health left (%)###gAUhp", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); ImGui::PopItemWidth(); HelpMarker("The amount of health the heal target must be below to actiavte");
+								}
 							}
 						}
 					}
@@ -1533,7 +1598,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Columns(2);
 						{
 							ImGui::TextDisabled("Cheat colours");
-							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1 || Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
 								ColorPicker("Dt bar chargin left", Colors::DtChargingLeft);
 								ColorPicker("Dt bar chargin right", Colors::DtChargingRight);
 								ColorPicker("Dt bar charged left", Colors::DtChargedLeft);
@@ -1546,6 +1611,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Invulnerable", Colors::Invuln);
 							ColorPicker("Cloaked", Colors::Cloak);
 							ColorPicker("Friend", Colors::Friend);
+							ColorPicker("Local", Colors::Local);
+							ColorPicker("Ignored", Colors::Ignored);
 							ColorPicker("Bone matrix color", Colors::bonecolor); HelpMarker("This is for fakelag");
 							ColorPicker("Overheal", Colors::Overheal);
 							ColorPicker("Health pack", Colors::Health);
