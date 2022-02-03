@@ -143,11 +143,11 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 				vStartVel = pLocal->GetVecVelocity();
 			}
 
-			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(24 - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(24));
+			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var));
 
 			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
-			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.0f, 520.f, 0.f, 1.f);
+			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.f, 520.f, 0.f, 1.f);
 			WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
 			nShiftTick++;
@@ -329,28 +329,20 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	// I put all my jewellery just to go to the bodega
 
 	//	TODO: make this p
-	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
-		float pvs; float pvf; // predictedvelside, predictedvelforward
-		float dpvs; float dpvf; // desired
-		if (pvs > 7) { pvs = 7; }
-		else if (pvs < -7) { pvs = -7; }
-		if (pvf > 7) { pvf = 7; }
-		else if (pvf < -6) { pvf = -6; }
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
 		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
-			if (abs(pvs) > abs(dpvs)) { pCmd->sidemove = -pCmd->sidemove; if (pvs < -1) { pvs++; } else { pvs--; } }
-			if (abs(pvf) > abs(dpvf)) { pCmd->forwardmove = -pCmd->forwardmove; if (pvf < -1) { pvf ++; } else { pvf --; } }\
+			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
+			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
 		}
 		else {
-			if (pCmd->sidemove > 100 && pvs < 7) { pvs++; }
-			else if (pCmd->sidemove < -100 && pvs > -7) { pvs--; }
-			else if (abs(pCmd->sidemove) < 100 && abs(pvs) > 0) { if (pvs < -1) { pvs += .5f; } else { pvs -= .5f; } }
-
-			if (pCmd->forwardmove > 100 && pvf < 7) { pvf++; }
-			else if (pCmd->forwardmove < -100 && pvf > -6) { pvf--; }
-			else if (abs(pCmd->forwardmove) < 100 && abs(pvf) > 0) { if (pvf < -1) { pvf += .5f; } else { pvf -= .5f; } }
-
-			dpvs = pvs / (float)Vars::Misc::CL_Move::DTTicks.m_Var; dpvf = pvf / (float)Vars::Misc::CL_Move::DTTicks.m_Var;
+			return;
 		}
+	};
+
+	
+	if (!Vars::Misc::CL_Move::AntiWarp.m_Var) {
+		AntiWarp(pCmd);
 	}
 
 
