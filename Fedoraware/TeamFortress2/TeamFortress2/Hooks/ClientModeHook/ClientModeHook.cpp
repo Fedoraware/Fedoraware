@@ -295,8 +295,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
-	static int chockedPackets = 0; static int chockValue;// for obv reasons dont fakelag if we are forcing packet send (cmon)
-	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var && Vars::Misc::CL_Move::FakelagOnKey.m_Var)) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 100.0f) && !g_GlobalInfo.m_bForceSendPacket) {
+	static int chockedPackets = 0; static int chockValue = 0;// for obv reasons dont fakelag if we are forcing packet send (cmon)
+	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) && Vars::Misc::CL_Move::FakelagOnKey.m_Var) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !g_GlobalInfo.m_bForceSendPacket) {
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { // checking if we can and are shooting is far more reliable than that global var
 			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
 				!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
