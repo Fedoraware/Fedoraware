@@ -564,6 +564,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		ImGui::PushFont(VerdanaBold); ImGui::PushStyleColor(ImGuiCol_Text, accent.Value); ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 		ImGui::Begin("Fedoraware", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar); ImGui::PopFont(); ImGui::PopStyleColor(2); ImGui::PushFont(VerdanaNormal);
 		{
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+			ImVec2 winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+			ImVec2 winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+			const auto drawList = ImGui::GetWindowDrawList();
+			const auto bgDrawList = ImGui::GetBackgroundDrawList();
+			const auto fgDrawList = window->DrawList;/*ImGui::GetForegroundDrawList();*/
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 			if (ImGui::BeginPopupContextWindow("Settings")) {
@@ -679,12 +685,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			//		ImGui::EndPopup();
 			//	}
 			//}
-			ImGuiWindow* window = ImGui::GetCurrentWindow();
-			ImVec2 winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-			ImVec2 winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-			const auto drawList = ImGui::GetWindowDrawList();
-			const auto bgDrawList = ImGui::GetBackgroundDrawList();
-			const auto fgDrawList = ImGui::GetForegroundDrawList();
+
 
 			std::vector < Font_t > fonts;
 			static const char* flags[]{ "None","Italic","Underline","Strikeout","Symbol",	"Antialias",	"Gaussian",	"Rotary",	"Dropshadow","Additive",	"Outline","Custom" };
@@ -1501,6 +1502,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Aimbot FOV circle", Colors::FOVCircle);
 						const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(150); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
 						{
 							ImGui::PushItemWidth(150);
@@ -1560,6 +1564,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 							}
 						}
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("World modulation colour", Colors::WorldModulation);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("Sky modulation colour", Colors::SkyModulation);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 68);
+						ImGui::SetNextItemWidth(68);
+						ColorPicker("Prop modulation colour", Colors::StaticPropModulation);
 						{
 							ImGui::PushItemWidth(150);
 							std::vector<std::string> removalsvec;
@@ -1685,6 +1698,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 							}
 						}
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Bullet tracer colour", Colors::BulletTracer);
 						static const char* bullettracers[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, bullettracers, IM_ARRAYSIZE(bullettracers)); ImGui::PopItemWidth();
 						if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 							ImGui::PushItemWidth(150); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
@@ -1694,8 +1710,17 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						if (Vars::Visuals::RemoveScope.m_Var) {
 							ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+							ImGui::SetNextItemWidth(20);
+							ColorPicker("Noscope lines 1", Colors::NoscopeLines1);
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+							ImGui::SetNextItemWidth(44);
+							ColorPicker("Noscope lines 2", Colors::NoscopeLines2);
 						}
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Hitbox matrix colour", Colors::bonecolor);
 						if (Vars::Aimbot::Global::showHitboxes.m_Var) {
 							ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 							ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
@@ -1714,6 +1739,119 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
+
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("DT indicator");
+						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+						ImGui::Text("DT indicator");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(150); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
+						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
+							ImGui::PushItemWidth(150); ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+							ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30); ImGui::PopItemWidth();
+						}
+						else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar Height", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
+							ImGui::SliderInt("DT Bar Width", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000); ImGui::PopItemWidth();
+						}
+						const char* unuEffects[]{
+							"None",
+							"Hot",
+							"Isotope",
+							"Cool",
+							"Energy orb"
+						};
+						const char* unuEffects2[]{
+							"None",
+							"Hot",
+							"Isotope",
+							"Cool",
+							"Energy orb"
+						};
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("Attribute changer");
+						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+						ImGui::Text("Attribute changer");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushItemWidth(150);
+						if (ImGui::Combo("Unusual effect 1", &unu1, unuEffects, IM_ARRAYSIZE(unuEffects))) {
+							switch (unu1) {
+							case 0:
+								Vars::Visuals::Skins::Particle.m_Var = 0;
+								break;
+							case 1:
+								Vars::Visuals::Skins::Particle.m_Var = 701;
+								break;
+							case 2:
+								Vars::Visuals::Skins::Particle.m_Var = 702;
+								break;
+							case 3:
+								Vars::Visuals::Skins::Particle.m_Var = 703;
+								break;
+							case 4:
+								Vars::Visuals::Skins::Particle.m_Var = 704;
+								break;
+							default:
+								break;
+							}
+						}
+						ImGui::PopItemWidth();
+						HelpMarker("The first unusual effect to be applied to the weapon");
+						ImGui::PushItemWidth(150);
+						if (ImGui::Combo("Unusual effect 2", &unu2, unuEffects2, IM_ARRAYSIZE(unuEffects2))) {
+							switch (unu2) {
+							case 0:
+								Vars::Visuals::Skins::Effect.m_Var = 0;
+								break;
+							case 1:
+								Vars::Visuals::Skins::Effect.m_Var = 701;
+								break;
+							case 2:
+								Vars::Visuals::Skins::Effect.m_Var = 702;
+								break;
+							case 3:
+								Vars::Visuals::Skins::Effect.m_Var = 703;
+								break;
+							case 4:
+								Vars::Visuals::Skins::Effect.m_Var = 704;
+								break;
+							default:
+								break;
+							}
+						}
+						ImGui::PopItemWidth();
+						HelpMarker("The second unusual effect to be applied to the weapon");
+						const char* sheens[]{
+							"None",
+							"Team shine",
+							"Deadly daffodil",
+							"Manndarin",
+							"Mean green",
+							"Agonizing emerald",
+							"Villainous violet",
+							"Hot rod"
+						};
+						ImGui::PushItemWidth(150);
+						ImGui::Combo("Sheen", &Vars::Visuals::Skins::Sheen.m_Var, sheens, IM_ARRAYSIZE(sheens));
+						ImGui::PopItemWidth();
+						HelpMarker("Which sheen to apply to the weapon");
+						ImGui::Checkbox("Style override", &Vars::Visuals::Skins::Override.m_Var);
+						if (ImGui::Button("Apply", ImVec2(45, 20))) {
+							g_AttributeChanger.m_bSet = true;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Save", ImVec2(45, 20))) {
+							g_AttributeChanger.m_bSave = true;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Load", ImVec2(44, 20))) {
+							g_AttributeChanger.m_bLoad = true;
+						}
+
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -1895,6 +2033,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else {
 							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						}
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Fresnel base colour###fresnelbasecolour", Colors::FresnelBase);
 						ImGui::Checkbox("Ignore Z###PlayerChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var);
 						WidthSlider("Player chams alpha", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::Dummy(ImVec2(0, 20));
@@ -2134,6 +2275,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(150); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
 						ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var);
 						const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(150); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth();
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Background colour###dmgloggerbg", Colors::DmgLoggerBackground);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("Outline colour###dmgloggerout", Colors::DmgLoggerOutline);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 68);
+						ImGui::SetNextItemWidth(68);
+						ColorPicker("Text colour###dmgloggertext", Colors::DmgLoggerText);
 						ImGui::PushItemWidth(150); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f"); ImGui::PopItemWidth();
 						ImGui::Checkbox("Bypass pure", &Vars::Misc::BypassPure.m_Var);
 						ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var);
