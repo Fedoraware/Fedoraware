@@ -1875,7 +1875,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
-				} ImGui::SameLine();
+				} ImGui::SameLine(); //
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
