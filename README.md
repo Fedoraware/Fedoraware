@@ -1,4 +1,4 @@
-<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
+<h1 align="center">Official fedoraware repository until further notice?</h1>
 
 <hr/>
 
