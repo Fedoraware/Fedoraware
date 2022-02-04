@@ -5,11 +5,13 @@
 
 class CMenu
 {
-private:
-	ImFont* Normal;
-	ImFont* DT;
-	ImDrawList* drawList;
-
+public:
+	//ImFont* Normal;
+	//ImFont* DT;
+	//ImDrawList* drawList;
+	ImFont* VerdanaSmall;
+	ImFont* VerdanaNormal;
+	ImFont* VerdanaBold;
 public:
 	bool config = false;
 	bool menuOpen = false;

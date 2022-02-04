@@ -13,7 +13,7 @@ private:
 	void DrawClassic();
 
 private:
-	int m_nSpecListW = 160, m_nSpecListTitleBarH = 12;
+	int m_nSpecListW = 160, m_nSpecListTitleBarH = 24;
 
 public:
 	int m_nSpecListX = 500, m_nSpecListY = 500;

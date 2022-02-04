@@ -71,6 +71,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var },
 		{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
+		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 	});
 	g_Menu.config = true;
 	//g_Draw.InitFonts
@@ -114,7 +115,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
-
 	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		g_DiscordRPC.vFunc();

@@ -63,7 +63,6 @@
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
@@ -95,6 +94,7 @@
     <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -464,7 +464,6 @@
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
-    <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
@@ -623,6 +622,7 @@
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

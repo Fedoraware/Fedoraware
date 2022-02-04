@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\DLLMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
@@ -108,7 +109,6 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
     <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Console\Console.cpp" />
     <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
@@ -191,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
@@ -203,7 +204,6 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
     <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
-    <ClInclude Include="TeamFortress2\Features\Console\Console.h" />
     <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
