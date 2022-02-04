@@ -1,4 +1,4 @@
-<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
+<h1 align="center">Official fedoraware repository until further notice?</h1>
 
 <hr/>
 
@@ -55,7 +55,7 @@
 ### Credits to:
   - [spook953](https://github.com/spook953)
   - [Lak3](https://github.com/Lak3)
-  - [M-FeD](https://github.com/M-FeD)
+  - [M-FeD](https://github.com/M-F3D)
   - [JAGNEmk](https://github.com/JAGNEmk)
   - [r00t](https://github.com/l-r00t-l)
   - [lykanfox](https://github.com/lykanfox)
