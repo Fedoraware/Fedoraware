@@ -2966,33 +2966,34 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-							ImGui::PushItemWidth(100);
-							if (ImGui::Button("Toggle playerlist"))
+							
+							if (ImGui::Button("Toggle playerlist", ImVec2(150, 20)))
 								g_PlayerList.showWindow = !g_PlayerList.showWindow;
-							if (ImGui::Button("Full update"))
+							if (ImGui::Button("Full update", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
-							if (ImGui::Button("Reload HUD"))
+							if (ImGui::Button("Reload HUD", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
-							if (ImGui::Button("Restart sound system"))
+							if (ImGui::Button("Restart sound", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
-							if (ImGui::Button("Stop sound"))
+							if (ImGui::Button("Stop sound", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
-							if (ImGui::Button("Status"))
+							if (ImGui::Button("Status", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("status");
-							if (ImGui::Button("Ping"))
+							if (ImGui::Button("Ping", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
-							if (ImGui::Button("Retry"))
+							if (ImGui::Button("Retry", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
-							if (ImGui::Button("Exit"))
+							if (ImGui::Button("Exit", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
-							if (ImGui::Button("Console"))
+							if (ImGui::Button("Console", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
-							if (ImGui::Button("Demo playback"))
+							if (ImGui::Button("Demo playback", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
-							if (ImGui::Button("Demo trackbar"))
+							if (ImGui::Button("Demo trackbar", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
-							if (ImGui::Button("Itemtest"))
+							if (ImGui::Button("Itemtest", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+							
 							ImGui::PopStyleVar();
 						}
 						ImGui::EndChild();
