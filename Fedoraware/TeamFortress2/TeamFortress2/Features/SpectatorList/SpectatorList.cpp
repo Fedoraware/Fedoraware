@@ -90,12 +90,12 @@ void CSpectatorList::DrawDefault()
 		m_nSpecListTitleBarH,
 		0);
 
-	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, Vars::Menu::Colors::TitleBar);
+	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, Vars::Menu::Colors::MenuAccent);
 
 	g_Draw.String(FONT_MENU,
 		m_nSpecListX + (m_nSpecListW / 2),
 		m_nSpecListY + (m_nSpecListTitleBarH / 2),
-		Vars::Menu::Colors::Text,
+		{ 255,255,255,255 },
 		ALIGN_CENTER,
 		"%hs", _("Spectators"));
 
@@ -112,8 +112,8 @@ void CSpectatorList::DrawDefault()
 		int y = m_nSpecListY + m_nSpecListTitleBarH;
 		int h = nFontTall * m_vecSpectators.size();
 
-		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, Vars::Menu::Colors::WindowBackground);
-		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, Vars::Menu::Colors::Text);
+		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, { 20,20,20,255 });
+		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, { 255,255,255,255 });
 
 		for (size_t n = 0; n < m_vecSpectators.size(); n++)
 		{
@@ -122,8 +122,8 @@ void CSpectatorList::DrawDefault()
 
 			y = m_nSpecListY + m_nSpecListTitleBarH + (nFontTall * n);
 
-			g_Draw.String(FONT_MENU, nModeX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
-			g_Draw.String(FONT_MENU, nNameX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
+			g_Draw.String(FONT_MENU, nModeX, y, { 255,255,255,255 }, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
+			g_Draw.String(FONT_MENU, nNameX, y, { 255,255,255,255 }, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
 		}
 	}
 }

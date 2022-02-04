@@ -34,13 +34,12 @@ void CRadar::DrawRadar()
 		DragRadar();
 
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
-		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 10, m_nRadarSize * 2, 10, Vars::Menu::Colors::TitleBar);
+		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 10, m_nRadarSize * 2, 10, Vars::Menu::Colors::MenuAccent);
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 	}
 
 	//Build the bg color with the wanted alpha.
 	Color_t clrBack = { 30, 30, 30, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
-	Color_t clrLines = { Vars::Menu::Colors::TitleBar.r, Vars::Menu::Colors::TitleBar.g, Vars::Menu::Colors::TitleBar.b, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) };
 
 
 
@@ -48,11 +47,11 @@ void CRadar::DrawRadar()
 	g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrLines);
+	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, Vars::Menu::Colors::MenuAccent);
 
 	//Center lines
-	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, clrLines);
-	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, clrLines);
+	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, { 255,255,255,255 });
+	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, { 255,255,255,255 });
 }
 
 bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)

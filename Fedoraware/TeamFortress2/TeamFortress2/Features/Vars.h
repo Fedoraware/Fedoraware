@@ -41,16 +41,7 @@ namespace Vars
 
 		namespace Colors
 		{
-			inline Color_t WindowBackground		= { 30, 30, 30, 255 };
-			inline Color_t TitleBar				= { 50, 50, 50, 255 };
-			inline Color_t Text					= { 255, 255, 255, 190 };
-			inline Color_t Widget				= { 20, 20, 20, 255 };
-			inline Color_t WidgetActive			= { 70, 70, 70, 255 };
-			inline Color_t OutlineMenu			= { 255, 255, 255, 20 };
-			inline Color_t FeatureOn			= { 255, 255, 255, 0 };
-			inline Color_t FeatureOff			= { 255, 255, 255, 0 };
-			inline Color_t FeatureBackground	= { 255, 255, 255, 0 };
-			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
+			inline Color_t MenuAccent = { 255, 101, 101, 255 };
 		}
 	}
 
@@ -188,7 +179,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active	{ true, L"Active" };
-			inline CVar<int> Outlinedbar	{ 1, L"Outlined health bar" }; //0 - OFF, 1 - Text Only, 2 - All
+			inline CVar<bool> Outlinedbar	{ 1, L"Outlined health bar" }; //0 - OFF, 1 - Text Only, 2 - All
 			inline CVar<bool> EnableTeamEnemyColors	{ false, L"Enable team/enemy colors"};
 		}
 

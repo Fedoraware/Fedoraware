@@ -223,7 +223,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
-
+				
 			if (Vars::ESP::Players::Uber.m_Var && nClassNum == ETFClass::CLASS_MEDIC)
 			{
 				if (const auto& pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))

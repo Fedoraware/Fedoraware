@@ -114,7 +114,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
-
 	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		g_DiscordRPC.vFunc();

@@ -596,16 +596,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Others
 		{
-			SAVE_OTHER(Vars::Menu::Colors::WindowBackground);
-			SAVE_OTHER(Vars::Menu::Colors::TitleBar);
-			SAVE_OTHER(Vars::Menu::Colors::Text);
-			SAVE_OTHER(Vars::Menu::Colors::Widget);
-			SAVE_OTHER(Vars::Menu::Colors::WidgetActive);
-			SAVE_OTHER(Vars::Menu::Colors::OutlineMenu);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOn);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOff);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureBackground);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOutline);
+			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			SAVE_OTHER(Colors::OutlineESP);
 			SAVE_OTHER(Colors::Cond);
@@ -1168,17 +1159,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Others
 		{
-			LOAD_OTHER(Vars::Menu::Colors::WindowBackground);
-			LOAD_OTHER(Vars::Menu::Colors::TitleBar);
-			LOAD_OTHER(Vars::Menu::Colors::Text);
-			LOAD_OTHER(Vars::Menu::Colors::Widget);
-			LOAD_OTHER(Vars::Menu::Colors::WidgetActive);
-			LOAD_OTHER(Vars::Menu::Colors::OutlineMenu);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOn);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOff);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureBackground);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOutline);
-
+			LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			LOAD_OTHER(Colors::OutlineESP);
 			LOAD_OTHER(Colors::Cond);
@@ -1236,7 +1217,8 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Fonts
 		{
-			//FONT_ESP
+			//
+
 			{
 				LOAD_STRING(Vars::Fonts::FONT_ESP::szName);
 				LOAD_VAR(Vars::Fonts::FONT_ESP::nTall);
