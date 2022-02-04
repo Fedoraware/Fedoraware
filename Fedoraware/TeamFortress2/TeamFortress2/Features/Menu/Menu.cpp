@@ -1783,24 +1783,33 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(150); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the doubletap bar style");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::DtChargingLeft);
+						ColorPicker("DT charging left###dtcg2", Colors::DtChargingLeft);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 						ImGui::SetNextItemWidth(44);
-						ColorPicker("Invulnerable colour", Colors::DtChargingRight);
-						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1) {
-							ImGui::PushItemWidth(150); ImGui::SliderInt("Dt bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
-							ImGui::SliderInt("Dt bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30); ImGui::PopItemWidth();
-						}
-						else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+						ColorPicker("DT charging right###dtcg1", Colors::DtChargingRight);
+						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar Height", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
-							ImGui::SliderInt("DT Bar Width", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000); ImGui::PopItemWidth();
+							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+							ImGui::SetNextItemWidth(20);
+							ColorPicker("DT charged left###dtcl1", Colors::DtChargedLeft);
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+							ImGui::SetNextItemWidth(44);
+							ColorPicker("DT charged right###dtcr1", Colors::DtChargedRight);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar Width", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
+							ImGui::PopItemWidth();
 						}
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::DtChargedLeft);
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
-						ImGui::SetNextItemWidth(44);
-						ColorPicker("Invulnerable colour", Colors::DtChargedRight);
+						else {
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+							ImGui::SetNextItemWidth(20);
+							ColorPicker("DT charged left###dtcl2", Colors::DtChargedLeft);
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+							ImGui::SetNextItemWidth(44);
+							ColorPicker("DT charged right###dtcr2", Colors::DtChargedRight);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+							ImGui::PopItemWidth();
+						}
+						
 						const char* unuEffects[]{
 							"None",
 							"Hot",
@@ -2489,7 +2498,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Enabled.m_Var);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::DtOutline);
+						ColorPicker("DT bar outline colour", Colors::DtOutline);
 						InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey);
 						InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey);
 						InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey);
