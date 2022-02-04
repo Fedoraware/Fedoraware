@@ -984,7 +984,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				(s.x / 3) - 13
 				(s.x / 3) - 12
 				*/
-				ImGui::BeginChild("Feature", ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
@@ -1216,6 +1216,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Autoshoot");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var);
 						ImGui::PushItemWidth(100);
@@ -1312,6 +1313,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Player ESP");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var);
 						ImGui::Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var);
@@ -1451,6 +1453,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Name font");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
@@ -1488,16 +1491,229 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopStyleVar();
 					}
 					else if (tab1 == 2 && tab2 == 4) {
-						ImVec2 font_size = ImGui::CalcTextSize("Misc");
+						ImVec2 font_size = ImGui::CalcTextSize("Visual misc 1");
 						ImGui::SameLine(
 							ImGui::GetWindowSize().x / 2 -
 							font_size.x + (font_size.x / 2)
 						);
-						ImGui::Text("Misc");
+						ImGui::Text("Visual misc 1");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::PushItemWidth(150); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
+						const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(150); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
+						{
+							ImGui::PushItemWidth(150);
+							std::vector<std::string> modulationvec;
+							static bool modulationFlags[]{ Vars::Visuals::WorldModulation.m_Var,Vars::Visuals::SkyModulation.m_Var,Vars::Visuals::PropWireframe.m_Var };
+							const char* pmodulation[] = { "World", "Sky", "Prop Wireframe" }; static std::string modulationPreview = "PH";
+							if (modulationPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+								modulationPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++) {
+									if (modulationFlags[i])
+										modulationvec.push_back(pmodulation[i]);
+								}
+								for (size_t i = 0; i < modulationvec.size(); i++)
+								{
+									if (modulationvec.size() == 1)
+										modulationPreview += modulationvec.at(i);
+									else if (!(i == modulationvec.size() - 1))
+										modulationPreview += modulationvec.at(i) + ", ";
+									else
+										modulationPreview += modulationvec.at(i);
+								}
+							}
+							if (ImGui::BeginCombo("World", modulationPreview.c_str()))
+							{
+								modulationPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pmodulation); i++)
+								{
+									ImGui::Selectable(pmodulation[i], &modulationFlags[i]);
+									if (modulationFlags[i])
+										modulationvec.push_back(pmodulation[i]);
+								}
+								for (size_t i = 0; i < modulationvec.size(); i++)
+								{
+									if (modulationvec.size() == 1)
+										modulationPreview += modulationvec.at(i);
+									else if (!(i == modulationvec.size() - 1))
+										modulationPreview += modulationvec.at(i) + ", ";
+									else
+										modulationPreview += modulationvec.at(i);
+								}
+								ImGui::EndCombo();
+							}
+							for (size_t i = 0; i < IM_ARRAYSIZE(modulationFlags); i++) {
+								if (modulationFlags[i]) {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::WorldModulation.m_Var = true; break; }
+									case 2: { Vars::Visuals::SkyModulation.m_Var = true; break; }
+									case 3: { Vars::Visuals::PropWireframe.m_Var = true; break; }
+									}
+								}
+								else {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::WorldModulation.m_Var = false; break; }
+									case 2: { Vars::Visuals::SkyModulation.m_Var = false; break; }
+									case 3: { Vars::Visuals::PropWireframe.m_Var = false; break; }
+									}
+								}
+							}
+						}
+						{
+							ImGui::PushItemWidth(150);
+							std::vector<std::string> removalsvec;
+							static bool removalFlags[6]{ Vars::Visuals::RemoveScope.m_Var,Vars::Visuals::RemoveZoom.m_Var,Vars::Visuals::RemoveDisguises.m_Var,Vars::Visuals::RemoveTaunts.m_Var,Vars::Misc::DisableInterpolation.m_Var,Vars::Visuals::RemovePunch.m_Var };
+							const char* pRemovals[] = { "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }; static std::string removalsPreview = "PH";
+							if (removalsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+								removalsPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++) {
+									if (removalFlags[i])
+										removalsvec.push_back(pRemovals[i]);
+								}
+								for (size_t i = 0; i < removalsvec.size(); i++)
+								{
+									if (removalsvec.size() == 1)
+										removalsPreview += removalsvec.at(i);
+									else if (!(i == removalsvec.size() - 1))
+										removalsPreview += removalsvec.at(i) + ", ";
+									else
+										removalsPreview += removalsvec.at(i);
+								}
+							}
+							if (ImGui::BeginCombo("Removals", removalsPreview.c_str()))
+							{
+								removalsPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pRemovals); i++)
+								{
+									ImGui::Selectable(pRemovals[i], &removalFlags[i]);
+									if (removalFlags[i])
+										removalsvec.push_back(pRemovals[i]);
+								}
+								for (size_t i = 0; i < removalsvec.size(); i++)
+								{
+									if (removalsvec.size() == 1)
+										removalsPreview += removalsvec.at(i);
+									else if (!(i == removalsvec.size() - 1))
+										removalsPreview += removalsvec.at(i) + ", ";
+									else
+										removalsPreview += removalsvec.at(i);
+								}
+								ImGui::EndCombo();
+							}
+							for (size_t i = 0; i < IM_ARRAYSIZE(removalFlags); i++) {
+								if (removalFlags[i]) {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::RemoveScope.m_Var = true; break; }
+									case 2: { Vars::Visuals::RemoveZoom.m_Var = true; break; }
+									case 3: { Vars::Visuals::RemoveDisguises.m_Var = true; break; }
+									case 4: { Vars::Visuals::RemoveTaunts.m_Var = true; break; }
+									case 5: { Vars::Misc::DisableInterpolation.m_Var = true; break; }
+									case 6: { Vars::Visuals::RemovePunch.m_Var = true; break; }
+									}
+								}
+								else {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::RemoveScope.m_Var = false; break; }
+									case 2: { Vars::Visuals::RemoveZoom.m_Var = false; break; }
+									case 3: { Vars::Visuals::RemoveDisguises.m_Var = false; break; }
+									case 4: { Vars::Visuals::RemoveTaunts.m_Var = false; break; }
+									case 5: { Vars::Misc::DisableInterpolation.m_Var = false; break; }
+									case 6: { Vars::Visuals::RemovePunch.m_Var = false; break; }
+									}
+								}
+							}
+						}
 
+						{
+							ImGui::PushItemWidth(150);
+							std::vector<std::string> predictionsvec;
+							static bool predictionFlags[]{ Vars::Visuals::CrosshairAimPos.m_Var,Vars::Visuals::AimPosSquare.m_Var,Vars::Visuals::BulletTracer.m_Var,Vars::Visuals::AimbotViewmodel.m_Var };
+							const char* pPredictions[] = { "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }; static std::string predictionsPreview = "PH";
+							if (predictionsPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+								predictionsPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++) {
+									if (predictionFlags[i])
+										predictionsvec.push_back(pPredictions[i]);
+								}
+								for (size_t i = 0; i < predictionsvec.size(); i++)
+								{
+									if (predictionsvec.size() == 1)
+										predictionsPreview += predictionsvec.at(i);
+									else if (!(i == predictionsvec.size() - 1))
+										predictionsPreview += predictionsvec.at(i) + ", ";
+									else
+										predictionsPreview += predictionsvec.at(i);
+								}
+							}
+							if (ImGui::BeginCombo("Prediction", predictionsPreview.c_str()))
+							{
+								predictionsPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pPredictions); i++)
+								{
+									ImGui::Selectable(pPredictions[i], &predictionFlags[i]);
+									if (predictionFlags[i])
+										predictionsvec.push_back(pPredictions[i]);
+								}
+								for (size_t i = 0; i < predictionsvec.size(); i++)
+								{
+									if (predictionsvec.size() == 1)
+										predictionsPreview += predictionsvec.at(i);
+									else if (!(i == predictionsvec.size() - 1))
+										predictionsPreview += predictionsvec.at(i) + ", ";
+									else
+										predictionsPreview += predictionsvec.at(i);
+								}
+								ImGui::EndCombo();
+							} // i got tired of trying better ways so this is new method fr*ck you
+							for (size_t i = 0; i < IM_ARRAYSIZE(predictionFlags); i++) {
+								if (predictionFlags[i]) {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::CrosshairAimPos.m_Var = true; break; }
+									case 2: { Vars::Visuals::AimPosSquare.m_Var = true; break; }
+									case 3: { Vars::Visuals::BulletTracer.m_Var = true; break; }
+									case 4: { Vars::Visuals::AimbotViewmodel.m_Var = true; break; }
+									}
+								}
+								else {
+									switch (i + 1) {
+									case 1: { Vars::Visuals::CrosshairAimPos.m_Var = false; break; }
+									case 2: { Vars::Visuals::AimPosSquare.m_Var = false; break; }
+									case 3: { Vars::Visuals::BulletTracer.m_Var = false; break; }
+									case 4: { Vars::Visuals::AimbotViewmodel.m_Var = false; break; }
+									}
+								}
+							}
+						}
+						static const char* bullettracers[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, bullettracers, IM_ARRAYSIZE(bullettracers)); ImGui::PopItemWidth();
+						if (Vars::Visuals::ParticleTracer.m_Var == 9) {
+							ImGui::PushItemWidth(150); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
+						}
+						if (Vars::Visuals::BulletTracer.m_Var) {
+							ImGui::Checkbox("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.m_Var); HelpMarker("Bullet tracer color will be dictated by a changing color");
+						}
+						if (Vars::Visuals::RemoveScope.m_Var) {
+							ImGui::Checkbox("Noscope lines", &Vars::Visuals::ScopeLines.m_Var); HelpMarker("Will draw a custom overlay");
+						}
+						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
+						if (Vars::Aimbot::Global::showHitboxes.m_Var) {
+							ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+							ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+						}
+						ImGui::Checkbox("Chat info", &Vars::Visuals::ChatInfo.m_Var);
+						const char* specModes[]{ "Off", "Draggable", "Static", "Static + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth();
+						ImGui::Dummy(ImVec2(0, 20));
+
+						font_size = ImGui::CalcTextSize("Viewmodel offset");
+						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+						ImGui::Text("Viewmodel offset");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off X", &Vars::Visuals::VMOffX.m_Var, -90, 90);
+						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
+						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
+						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -1506,7 +1722,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-				ImGui::BeginChild("Feature 2", ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 2", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
@@ -1617,6 +1833,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Autodetonate");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Autodetonate###Triggerautodet", &Vars::Triggerbot::Detonate::Active.m_Var);
 						ImGui::Checkbox("Explode stickies", &Vars::Triggerbot::Detonate::Stickies.m_Var);
@@ -1665,6 +1882,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Player chams");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var);
 						ImGui::Checkbox("Self chams###PlayerChamsBox", &Vars::Chams::Players::ShowLocal.m_Var);
@@ -1685,6 +1903,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("DME chams");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("DME chams###dmeactive", &Vars::Chams::DME::Active.m_Var);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1825,6 +2044,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
 						ImGui::Text("Pickup font");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
@@ -1874,316 +2094,415 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						ImGui::PopStyleVar();
 					}
-					ImGui::EndChild();
-				} ImGui::SameLine(); //
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
-				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-				ImGui::BeginChild("Feature 3", ImVec2((winSize.x / 3) - 12, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
-				{
-					ImGui::PopStyleVar();
-					ImGui::PopStyleVar();
-					ImGui::PopStyleVar();
-					if (tab1 == 0) {
-						ImVec2 font_size = ImGui::CalcTextSize("Projectile");
-						//float font_size = ImGui::GetFontSize() * text.size() / 2;
+					else if (tab1 == 2 && tab2 == 4) {
+						ImVec2 font_size = ImGui::CalcTextSize("Visual misc 2");
 						ImGui::SameLine(
 							ImGui::GetWindowSize().x / 2 -
 							font_size.x + (font_size.x / 2)
 						);
-						ImGui::Text("Projectile");
+						ImGui::Text("Visual misc 2");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var);
-						{
-							static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth();
-							static const char* aimMethodArr[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
-							static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth();
-						}
-						ImGui::Checkbox("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
-						ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
-						WidthSlider("Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Melee");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Melee");
-						widget_pos = ImGui::GetCursorScreenPos();
-						widget_pos.y -= 6;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						{
-							static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth();
-							static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
-						}
-						WidthSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
-						ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var);
-						ImGui::Checkbox("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var);
-						ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var);
-						ImGui::PopStyleVar();
-					}
-					else if (tab1 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Autoblast");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Autoblast");
-						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var);
-						ImGui::Checkbox("Rage airblast", &Vars::Triggerbot::Blast::Rage.m_Var);
-						ImGui::Checkbox("Silent###triggerblastsilent", &Vars::Triggerbot::Blast::Silent.m_Var);
-
+						const char* skyNames[] = {
+							"Custom",
+							"sky_tf2_04",
+							"sky_upward",
+							"sky_dustbowl_01",
+							"sky_goldrush_01",
+							"sky_granary_01",
+							"sky_well_01",
+							"sky_gravel_01",
+							"sky_badlands_01",
+							"sky_hydro_01",
+							"sky_night_01",
+							"sky_nightfall_01",
+							"sky_trainyard_01",
+							"sky_stormfront_01",
+							"sky_morningsnow_01",
+							"sky_alpinestorm_01",
+							"sky_harvest_01",
+							"sky_harvest_night_01",
+							"sky_halloween",
+							"sky_halloween_night_01",
+							"sky_halloween_night2014_01",
+							"sky_island_01",
+							"sky_rainbow_01"
+						};
+						ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var);
+						ImGui::PushItemWidth(150); ImGui::Combo("Skybox", &Vars::Skybox::SkyboxNum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
+						ImGui::PushItemWidth(150); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
+						ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var);
+						const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(150); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f"); ImGui::PopItemWidth();
+						ImGui::Checkbox("Bypass pure", &Vars::Misc::BypassPure.m_Var);
+						ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Autouber");
+
+						font_size = ImGui::CalcTextSize("Thirdperson");
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Autouber");
+						ImGui::Text("Thirdperson");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Autouber###Triggeruber", &Vars::Triggerbot::Uber::Active.m_Var);
-						ImGui::Checkbox("Only uber friends", &Vars::Triggerbot::Uber::OnlyFriends.m_Var);
-						ImGui::Checkbox("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var);
-						ImGui::Checkbox("Vaccinator resistances", &Vars::Triggerbot::Uber::AutoVacc.m_Var);
-						WidthSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f);
-
-						ImGui::PopStyleVar();
-					}
-					else if (tab1 == 2 && tab2 == 0) {
-						ImVec2 font_size = ImGui::CalcTextSize("Glow main");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Glow main");
-						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Glow", &Vars::Glow::Main::Active.m_Var);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth();
-						ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var);
+						ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var);
+						InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey);
+						ImGui::Checkbox("Thirdperson show real angles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
+						ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
+						ImGui::Checkbox("Thirdperson show server hitboxes", &Vars::Visuals::ThirdPersonServerHitbox.m_Var);
+						ImGui::Checkbox("Show fakelag", &Vars::Misc::CL_Move::FakelagIndicator.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Player glow");
+
+						font_size = ImGui::CalcTextSize("Out of FOV arrows");
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Player glow");
+						ImGui::Text("Out of FOV arrows");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.m_Var);
-						ImGui::Checkbox("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.m_Var);
-						ImGui::Checkbox("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Homosapien");
-						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamGlowp", &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Wearable glow###PlayerWearableChams", &Vars::Glow::Players::Wearables.m_Var);
-						ImGui::Checkbox("Weapon glow###PlayerWearableChams", &Vars::Glow::Players::Weapons.m_Var);
-						WidthSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-						static const char* colourArr[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Glow colour###GlowColour", &Vars::Glow::Players::Color.m_Var, colourArr, IM_ARRAYSIZE(colourArr)); ImGui::PopItemWidth();
-
-						ImGui::PopStyleVar();
-					}
-					else if (tab1 == 2 && tab2 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Building glow");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Building glow");
-						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.m_Var);
-						ImGui::Checkbox("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);
-						WidthSlider("Glow alpha###BuildingGlowAlpha", &Vars::Glow::Buildings::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-						static const char* colourArr[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Glow colour###GlowColourBuildings", &Vars::Glow::Buildings::Color.m_Var, colourArr, IM_ARRAYSIZE(colourArr)); ImGui::PopItemWidth();
-
-						ImGui::PopStyleVar();
-					}
-					else if (tab1 == 2 && tab2 == 2) {
-						ImVec2 font_size = ImGui::CalcTextSize("World glow");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("World glow");
-						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
-						ImGui::Checkbox("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
-						ImGui::Checkbox("Health packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
-						static const char* ignoreTeamArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-						WidthSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-
-						ImGui::PopStyleVar();
-					}
-					else if (tab1 == 2 && tab2 == 3) {
-						ImVec2 font_size = ImGui::CalcTextSize("Menu font");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Menu font");
-						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::PushItemWidth(100);
-						ImGui::InputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
-						ImGui::InputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.m_Var);
-						ImGui::InputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var);
-						{
-							static bool flagbools[12]{
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0
-							};
-							static std::string previewValue = "";
-							std::vector < std::string > vec;
-							if (ImGui::BeginCombo("Font flags###espfonnametttttttttttafsafds", previewValue.c_str())) {
-								previewValue = "";
-								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
-									ImGui::Selectable(flags[i], &flagbools[i]);
-									if (flagbools[i])
-										vec.push_back(flags[i]);
-								}
-								for (size_t i = 0; i < vec.size(); i++) {
-									if (vec.size() == 1)
-										previewValue += vec.at(i);
-									else if (!(i == vec.size() - 1))
-										previewValue += vec.at(i) + ",";
-									else
-										previewValue += vec.at(i);
-								}
-								ImGui::EndCombo();
-							}
-							Vars::Fonts::FONT_MENU::nFlags.m_Var = 0;
-							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
-								if (flagbools[i]) {
-									Vars::Fonts::FONT_MENU::nFlags.m_Var |= fontflags[i];
-								}
-							}
-						}
-						ImGui::PopItemWidth();
+						ImGui::Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var);
+						ImGui::Checkbox("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f"); ImGui::PopItemWidth();
+						//ImGui::PushItemWidth(100); ImGui::SliderFloat("Arrow range", &Vars::Visuals::ScreenRange.m_Var, 1.1f, 4.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How far on the screen the arrows will go");
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Indicator font");
+						font_size = ImGui::CalcTextSize("Spy warning");
 						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Indicator font");
+						ImGui::Text("Spy warning");
 						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushItemWidth(100);
-						ImGui::InputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
-						ImGui::InputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
-						ImGui::InputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
-						{
-							static bool flagbools[12]{
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0,
-								0
-							};
-							static std::string previewValue = "";
-							std::vector < std::string > vec;
-							if (ImGui::BeginCombo("Font flags###espfoncondttttttttttt", previewValue.c_str())) {
-								previewValue = "";
-								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
-									ImGui::Selectable(flags[i], &flagbools[i]);
-									if (flagbools[i])
-										vec.push_back(flags[i]);
-								}
-								for (size_t i = 0; i < vec.size(); i++) {
-									if (vec.size() == 1)
-										previewValue += vec.at(i);
-									else if (!(i == vec.size() - 1))
-										previewValue += vec.at(i) + ",";
-									else
-										previewValue += vec.at(i);
-								}
-								ImGui::EndCombo();
-							}
-							Vars::Fonts::FONT_INDICATORS::nFlags.m_Var = 0;
-							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
-								if (flagbools[i]) {
-									Vars::Fonts::FONT_INDICATORS::nFlags.m_Var |= fontflags[i];
-								}
-							}
-						}
-						ImGui::PopItemWidth();
-						if (ImGui::Button("Apply settings###fontapply")) {
-							Font_t fontEsp = {
-								0x0,
-								Vars::Fonts::FONT_ESP::szName.c_str(),
-								Vars::Fonts::FONT_ESP::nTall.m_Var,
-								Vars::Fonts::FONT_ESP::nWeight.m_Var,
-								Vars::Fonts::FONT_ESP::nFlags.m_Var
-							};
-							Font_t fontEspName = {
-								0x0,
-								Vars::Fonts::FONT_ESP_NAME::szName.c_str(),
-								Vars::Fonts::FONT_ESP_NAME::nTall.m_Var,
-								Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var,
-								Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var
-							};
-							Font_t fontEspCond = {
-								0x0,
-								Vars::Fonts::FONT_ESP_COND::szName.c_str(),
-								Vars::Fonts::FONT_ESP_COND::nTall.m_Var,
-								Vars::Fonts::FONT_ESP_COND::nWeight.m_Var,
-								Vars::Fonts::FONT_ESP_COND::nFlags.m_Var
-							};
-							Font_t fontIndicator = {
-								0x0,
-								Vars::Fonts::FONT_INDICATORS::szName.c_str(),
-								Vars::Fonts::FONT_INDICATORS::nTall.m_Var,
-								Vars::Fonts::FONT_INDICATORS::nWeight.m_Var,
-								Vars::Fonts::FONT_INDICATORS::nFlags.m_Var
-							};
-							Font_t fontEspPickups = {
-								0x0,
-								Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(),
-								Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var,
-								Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var,
-								Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var
-							};
-							Font_t fontMenu = {
-								0x0,
-								Vars::Fonts::FONT_MENU::szName.c_str(),
-								Vars::Fonts::FONT_MENU::nTall.m_Var,
-								Vars::Fonts::FONT_MENU::nWeight.m_Var,
-								Vars::Fonts::FONT_MENU::nFlags.m_Var
-							};
-							std::vector < Font_t > fonts = {
-								fontEsp,
-								fontEspName,
-								fontEspCond,
-								fontEspPickups,
-								fontMenu,
-								fontIndicator
-							};
-							g_Draw.RemakeFonts(fonts);
-						}
+						ImGui::Checkbox("Active###spywarn", &Vars::Visuals::SpyWarning.m_Var);
+						ImGui::Checkbox("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.m_Var);
+						ImGui::Checkbox("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.m_Var);
+						ImGui::Checkbox("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.m_Var);
+						const char* spyWmodes[]{ "Arrow", "Flash" }; ImGui::PushItemWidth(150); ImGui::Combo("Warning style", &Vars::Visuals::SpyWarningStyle.m_Var, spyWmodes, IM_ARRAYSIZE(spyWmodes)); ImGui::PopItemWidth();
+
+
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
+				}
+				if (!(tab1 == 2 && tab2 == 4)) {
+					ImGui::SameLine(); //
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+					ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+					ImGui::BeginChild("Feature 3", ImVec2((winSize.x / 3) - 12, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+					{
+						ImGui::PopStyleVar();
+						ImGui::PopStyleVar();
+						ImGui::PopStyleVar();
+						if (tab1 == 0) {
+							ImVec2 font_size = ImGui::CalcTextSize("Projectile");
+							//float font_size = ImGui::GetFontSize() * text.size() / 2;
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Projectile");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var);
+							{
+								static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth();
+								static const char* aimMethodArr[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
+								static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth();
+							}
+							ImGui::Checkbox("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
+							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
+							WidthSlider("Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							ImGui::Dummy(ImVec2(0, 20));
+							font_size = ImGui::CalcTextSize("Melee");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Melee");
+							widget_pos = ImGui::GetCursorScreenPos();
+
+							widget_pos.y -= 6;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							{
+								static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth();
+								static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
+							}
+							WidthSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+							ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var);
+							ImGui::Checkbox("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var);
+							ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var);
+							ImGui::PopStyleVar();
+						}
+						else if (tab1 == 1) {
+							ImVec2 font_size = ImGui::CalcTextSize("Autoblast");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Autoblast");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var);
+							ImGui::Checkbox("Rage airblast", &Vars::Triggerbot::Blast::Rage.m_Var);
+							ImGui::Checkbox("Silent###triggerblastsilent", &Vars::Triggerbot::Blast::Silent.m_Var);
+
+							ImGui::Dummy(ImVec2(0, 20));
+
+							font_size = ImGui::CalcTextSize("Autouber");
+							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+							ImGui::Text("Autouber");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::Checkbox("Autouber###Triggeruber", &Vars::Triggerbot::Uber::Active.m_Var);
+							ImGui::Checkbox("Only uber friends", &Vars::Triggerbot::Uber::OnlyFriends.m_Var);
+							ImGui::Checkbox("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var);
+							ImGui::Checkbox("Vaccinator resistances", &Vars::Triggerbot::Uber::AutoVacc.m_Var);
+							WidthSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f);
+
+							ImGui::PopStyleVar();
+						}
+						else if (tab1 == 2 && tab2 == 0) {
+							ImVec2 font_size = ImGui::CalcTextSize("Glow main");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Glow main");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Glow", &Vars::Glow::Main::Active.m_Var);
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth();
+							ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var);
+							ImGui::Dummy(ImVec2(0, 20));
+
+							font_size = ImGui::CalcTextSize("Player glow");
+							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+							ImGui::Text("Player glow");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::Checkbox("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.m_Var);
+							ImGui::Checkbox("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.m_Var);
+							ImGui::Checkbox("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Homosapien");
+							static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamGlowp", &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
+							ImGui::Checkbox("Wearable glow###PlayerWearableChams", &Vars::Glow::Players::Wearables.m_Var);
+							ImGui::Checkbox("Weapon glow###PlayerWearableChams", &Vars::Glow::Players::Weapons.m_Var);
+							WidthSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							static const char* colourArr[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Glow colour###GlowColour", &Vars::Glow::Players::Color.m_Var, colourArr, IM_ARRAYSIZE(colourArr)); ImGui::PopItemWidth();
+
+							ImGui::PopStyleVar();
+						}
+						else if (tab1 == 2 && tab2 == 1) {
+							ImVec2 font_size = ImGui::CalcTextSize("Building glow");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Building glow");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.m_Var);
+							ImGui::Checkbox("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);
+							WidthSlider("Glow alpha###BuildingGlowAlpha", &Vars::Glow::Buildings::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							static const char* colourArr[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Glow colour###GlowColourBuildings", &Vars::Glow::Buildings::Color.m_Var, colourArr, IM_ARRAYSIZE(colourArr)); ImGui::PopItemWidth();
+
+							ImGui::PopStyleVar();
+						}
+						else if (tab1 == 2 && tab2 == 2) {
+							ImVec2 font_size = ImGui::CalcTextSize("World glow");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("World glow");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
+							ImGui::Checkbox("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
+							ImGui::Checkbox("Health packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
+							static const char* ignoreTeamArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
+							WidthSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+
+							ImGui::PopStyleVar();
+						}
+						else if (tab1 == 2 && tab2 == 3) {
+							ImVec2 font_size = ImGui::CalcTextSize("Menu font");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Menu font");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::PushItemWidth(100);
+							ImGui::InputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
+							ImGui::InputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var);
+							{
+								static bool flagbools[12]{
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0
+								};
+								static std::string previewValue = "";
+								std::vector < std::string > vec;
+								if (ImGui::BeginCombo("Font flags###espfonnametttttttttttafsafds", previewValue.c_str())) {
+									previewValue = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
+										ImGui::Selectable(flags[i], &flagbools[i]);
+										if (flagbools[i])
+											vec.push_back(flags[i]);
+									}
+									for (size_t i = 0; i < vec.size(); i++) {
+										if (vec.size() == 1)
+											previewValue += vec.at(i);
+										else if (!(i == vec.size() - 1))
+											previewValue += vec.at(i) + ",";
+										else
+											previewValue += vec.at(i);
+									}
+									ImGui::EndCombo();
+								}
+								Vars::Fonts::FONT_MENU::nFlags.m_Var = 0;
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
+									if (flagbools[i]) {
+										Vars::Fonts::FONT_MENU::nFlags.m_Var |= fontflags[i];
+									}
+								}
+							}
+							ImGui::PopItemWidth();
+							ImGui::Dummy(ImVec2(0, 20));
+
+							font_size = ImGui::CalcTextSize("Indicator font");
+							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
+							ImGui::Text("Indicator font");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushItemWidth(100);
+							ImGui::InputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
+							ImGui::InputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
+							ImGui::InputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
+							{
+								static bool flagbools[12]{
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0,
+									0
+								};
+								static std::string previewValue = "";
+								std::vector < std::string > vec;
+								if (ImGui::BeginCombo("Font flags###espfoncondttttttttttt", previewValue.c_str())) {
+									previewValue = "";
+									for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
+										ImGui::Selectable(flags[i], &flagbools[i]);
+										if (flagbools[i])
+											vec.push_back(flags[i]);
+									}
+									for (size_t i = 0; i < vec.size(); i++) {
+										if (vec.size() == 1)
+											previewValue += vec.at(i);
+										else if (!(i == vec.size() - 1))
+											previewValue += vec.at(i) + ",";
+										else
+											previewValue += vec.at(i);
+									}
+									ImGui::EndCombo();
+								}
+								Vars::Fonts::FONT_INDICATORS::nFlags.m_Var = 0;
+								for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++) {
+									if (flagbools[i]) {
+										Vars::Fonts::FONT_INDICATORS::nFlags.m_Var |= fontflags[i];
+									}
+								}
+							}
+							ImGui::PopItemWidth();
+							if (ImGui::Button("Apply settings###fontapply")) {
+								Font_t fontEsp = {
+									0x0,
+									Vars::Fonts::FONT_ESP::szName.c_str(),
+									Vars::Fonts::FONT_ESP::nTall.m_Var,
+									Vars::Fonts::FONT_ESP::nWeight.m_Var,
+									Vars::Fonts::FONT_ESP::nFlags.m_Var
+								};
+								Font_t fontEspName = {
+									0x0,
+									Vars::Fonts::FONT_ESP_NAME::szName.c_str(),
+									Vars::Fonts::FONT_ESP_NAME::nTall.m_Var,
+									Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var,
+									Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var
+								};
+								Font_t fontEspCond = {
+									0x0,
+									Vars::Fonts::FONT_ESP_COND::szName.c_str(),
+									Vars::Fonts::FONT_ESP_COND::nTall.m_Var,
+									Vars::Fonts::FONT_ESP_COND::nWeight.m_Var,
+									Vars::Fonts::FONT_ESP_COND::nFlags.m_Var
+								};
+								Font_t fontIndicator = {
+									0x0,
+									Vars::Fonts::FONT_INDICATORS::szName.c_str(),
+									Vars::Fonts::FONT_INDICATORS::nTall.m_Var,
+									Vars::Fonts::FONT_INDICATORS::nWeight.m_Var,
+									Vars::Fonts::FONT_INDICATORS::nFlags.m_Var
+								};
+								Font_t fontEspPickups = {
+									0x0,
+									Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(),
+									Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var,
+									Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var,
+									Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var
+								};
+								Font_t fontMenu = {
+									0x0,
+									Vars::Fonts::FONT_MENU::szName.c_str(),
+									Vars::Fonts::FONT_MENU::nTall.m_Var,
+									Vars::Fonts::FONT_MENU::nWeight.m_Var,
+									Vars::Fonts::FONT_MENU::nFlags.m_Var
+								};
+								std::vector < Font_t > fonts = {
+									fontEsp,
+									fontEspName,
+									fontEspCond,
+									fontEspPickups,
+									fontMenu,
+									fontIndicator
+								};
+								g_Draw.RemakeFonts(fonts);
+							}
+							ImGui::PopStyleVar();
+						}
+						ImGui::EndChild();
+					}
+
 				}
 				ImGui::EndChild();
 			}
