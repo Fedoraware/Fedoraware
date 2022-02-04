@@ -2538,14 +2538,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 						}
 						const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth();
-						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
-							ImGui::SliderInt("DT bar height###rijinh", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
-							ImGui::SliderInt("DT bar width###rijinw", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
-						}
-						else {
-							ImGui::SliderInt("DT bar height###dtbarh", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
-							ImGui::SliderInt("DT bar width###dtbarw", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
-						}
 
 						ImGui::Dummy(ImVec2(0, 20));
 						font_size = ImGui::CalcTextSize("HvH");
@@ -2899,7 +2891,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 									fontEspCond,
 									fontEspPickups,
 									fontMenu,
-									fontIndicator
+									fontIndicator,
+									{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
 								};
 								g_Draw.RemakeFonts(fonts);
 							}
