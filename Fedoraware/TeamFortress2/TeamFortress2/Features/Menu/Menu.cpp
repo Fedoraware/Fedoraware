@@ -237,6 +237,8 @@ float* cColor(ImVec4 color, Color_t& out) {
 //	ImGui::PopFont();
 //}
 
+
+
 void CMenu::Run() {
 	m_bReopened = false;
 
@@ -559,7 +561,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		}
 		static int tab1 = 0;
 		static int tab2 = 0;
-
+		ImGui::GetStyle().WindowMinSize = ImVec2(708, 708);
 
 		ImGui::PushFont(VerdanaBold); ImGui::PushStyleColor(ImGuiCol_Text, accent.Value); ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 		ImGui::Begin("Fedoraware", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar); ImGui::PopFont(); ImGui::PopStyleColor(2); ImGui::PushFont(VerdanaNormal);
@@ -699,6 +701,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			const float third = winSize.x / 3;
 			const float quarter = winSize.x / 4;
 			const float fifth = winSize.x / 5;
+			const float sixth = winSize.x / 6;
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowTitleAlign, ImVec2(0.5f, 0.1f));
 			{
@@ -834,7 +837,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else {
 						pushedtab20 = false;
 					}
-					if (ImGui::Button("Players", ImVec2(winSize.x / 5, 27))) {
+					if (ImGui::Button("Players", ImVec2(sixth, 27))) {
 						tab2 = 0;
 					}
 					if (tab2 == 0) {
@@ -845,10 +848,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					ImVec2 b1 = window->DC.CursorPos;
 					//b1.x += fifth * 3;
 					if (ImGui::IsItemHovered()) {
-						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
 					else if (tab2 == 0) {
-						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
@@ -862,7 +865,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else {
 						pushedtab20 = false;
 					}
-					if (ImGui::Button("Buildings", ImVec2(winSize.x / 5, 27))) {
+					if (ImGui::Button("Buildings", ImVec2(sixth, 27))) {
 						tab2 = 1;
 					}
 					if (tab2 == 1) {
@@ -871,12 +874,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 					}
 					ImVec2 b1 = window->DC.CursorPos;
-					b1.x += fifth;
+					b1.x += sixth;
 					if (ImGui::IsItemHovered()) {
-						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
 					else if (tab2 == 1) {
-						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
@@ -889,7 +892,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else {
 						pushedtab20 = false;
 					}
-					if (ImGui::Button("World", ImVec2(winSize.x / 5, 27))) {
+					if (ImGui::Button("World", ImVec2(sixth, 27))) {
 						tab2 = 2;
 					}
 					if (tab2 == 2) {
@@ -898,12 +901,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 					}
 					ImVec2 b1 = window->DC.CursorPos;
-					b1.x += fifth * 2;
+					b1.x += sixth * 2;
 					if (ImGui::IsItemHovered()) {
-						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
 					else if (tab2 == 2) {
-						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
@@ -916,7 +919,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else {
 						pushedtab20 = false;
 					}
-					if (ImGui::Button("Fonts", ImVec2(winSize.x / 5, 27))) {
+					if (ImGui::Button("Fonts", ImVec2(sixth, 27))) {
 						tab2 = 3;
 					}
 					if (tab2 == 3) {
@@ -925,12 +928,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 					}
 					ImVec2 b1 = window->DC.CursorPos;
-					b1.x += fifth * 3;
+					b1.x += sixth * 3;
 					if (ImGui::IsItemHovered()) {
-						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
 					else if (tab2 == 3) {
-						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
@@ -943,7 +946,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else {
 						pushedtab20 = false;
 					}
-					if (ImGui::Button("Misc###MiscButtonTab", ImVec2(winSize.x / 5, 27))) {
+					if (ImGui::Button("Misc###MiscButtonTab", ImVec2(sixth, 27))) {
 						tab2 = 4;
 					}
 					if (tab2 == 4) {
@@ -952,12 +955,39 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 					}
 					ImVec2 b1 = window->DC.CursorPos;
-					b1.x += fifth * 4;
+					b1.x += sixth * 4;
 					if (ImGui::IsItemHovered()) {
-						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
 					else if (tab2 == 4) {
-						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, fifth, 3);
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
+					}
+					ImGui::SameLine();
+				}
+				{
+					bool pushedtab20 = false;
+					if (tab2 == 5) {
+						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
+						pushedtab20 = true;
+					}
+					else {
+						pushedtab20 = false;
+					}
+					if (ImGui::Button("Radar###RadarButtonTab", ImVec2(sixth, 27))) {
+						tab2 = 5;
+					}
+					if (tab2 == 5) {
+						if (pushedtab20) {
+							ImGui::PopStyleColor();
+						}
+					}
+					ImVec2 b1 = window->DC.CursorPos;
+					b1.x += sixth * 5;
+					if (ImGui::IsItemHovered()) {
+						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
+					}
+					else if (tab2 == 5) {
+						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
@@ -986,7 +1016,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				(s.x / 3) - 13
 				(s.x / 3) - 12
 				*/
-				ImGui::BeginChild("Feature", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 1", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
@@ -1722,10 +1752,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Hitbox matrix colour", Colors::bonecolor);
-						if (Vars::Aimbot::Global::showHitboxes.m_Var) {
-							ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-							ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-						}
+						ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+						ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+
 						ImGui::Checkbox("Chat info", &Vars::Visuals::ChatInfo.m_Var);
 						const char* specModes[]{ "Off", "Draggable", "Static", "Static + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
@@ -1853,6 +1882,83 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							g_AttributeChanger.m_bLoad = true;
 						}
 
+						ImGui::PopStyleVar();
+					}
+					else if (tab1 == 2 && tab2 == 5) {
+						ImVec2 font_size = ImGui::CalcTextSize("Main");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Main");
+						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::Checkbox("Active###RadarActive", &Vars::Radar::Main::Active.m_Var);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar size", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar range", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar background alpha", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar lines alpha", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
+
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("Players");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Players");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						const char* iconPlayersRadar[]{ "Scoreboard", "Portraits", "Avatar" }; ImGui::PushItemWidth(100); ImGui::Combo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar)); ImGui::PopItemWidth();
+						const char* backgroundpradar[]{ "Off", "Rectangle", "Texture" }; ImGui::PushItemWidth(100); ImGui::Combo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, backgroundpradar, IM_ARRAYSIZE(backgroundpradar)); ImGui::PopItemWidth();
+						ImGui::Checkbox("Outline###radaro", &Vars::Radar::Players::Outline.m_Var); HelpMarker("Will put an outline on players on the radar");
+						static const char* ignoreTeammatespRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###radarplayersteam", &Vars::Radar::Players::IgnoreTeam.m_Var, ignoreTeammatespRadar, IM_ARRAYSIZE(ignoreTeammatespRadar)); ImGui::PopItemWidth();
+						static const char* ignoreCloakedpRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.m_Var, ignoreCloakedpRadar, IM_ARRAYSIZE(ignoreCloakedpRadar)); ImGui::PopItemWidth();
+						ImGui::Checkbox("Health bar###radarhealt", &Vars::Radar::Players::Health.m_Var);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
+						ImGui::PopStyleVar();
+					}
+					else if (tab1 == 3) {
+						ImVec2 font_size = ImGui::CalcTextSize("Movement");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Movement");
+						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var);
+						const char* autoStrafeModes[]{ "Off", "Normal", "Directional" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth();
+						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var);
+						InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, false);
+						ImGui::Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var);
+						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var);
+						ImGui::Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var);
+						ImGui::Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var);
+						const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
+
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("Misc 1");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Misc 1");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var);
+						const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth();
+						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var);
+						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%");
+						ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var);
+						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var);
+						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var);
+						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var);
+						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var);
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -2336,6 +2442,154 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
+					else if (tab1 == 2 && tab2 == 5) {
+						ImVec2 font_size = ImGui::CalcTextSize("Buildings");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Buildings");
+						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+
+						ImGui::Checkbox("Active###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
+						ImGui::Checkbox("Outline###radarbuildingsao", &Vars::Radar::Buildings::Outline.m_Var);
+						ImGui::Checkbox("Ignore team###radarbuildingsb", &Vars::Radar::Buildings::IgnoreTeam.m_Var);
+						ImGui::Checkbox("Health bar###radarbuildingsc", &Vars::Radar::Buildings::Health.m_Var);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###buildingsizeiconradar", &Vars::Radar::Buildings::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
+						ImGui::PopStyleVar();
+					}
+					else if (tab1 == 3) {
+						ImVec2 font_size = ImGui::CalcTextSize("Tickbase exploits");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Tickbase exploits");
+						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::Checkbox("Tickbase exploits###dtmasterswitch", &Vars::Misc::CL_Move::Enabled.m_Var);
+						ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Enabled.m_Var);
+						InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey);
+						InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey);
+						InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey);
+						{
+							ImGui::PushItemWidth(100);
+							std::vector<std::string> dtvec;
+							static bool dtFlags[]{ Vars::Misc::CL_Move::RechargeWhileDead.m_Var,Vars::Misc::CL_Move::AutoRecharge.m_Var,Vars::Misc::CL_Move::WaitForDT.m_Var,Vars::Misc::CL_Move::AntiWarp.m_Var,Vars::Misc::CL_Move::NotInAir.m_Var };
+							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }; static std::string dtPreview = "PH";
+							if (dtPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+								dtPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++) {
+									if (dtFlags[i])
+										dtvec.push_back(pDt[i]);
+								}
+								for (size_t i = 0; i < dtvec.size(); i++)
+								{
+									if (dtvec.size() == 1)
+										dtPreview += dtvec.at(i);
+									else if (!(i == dtvec.size() - 1))
+										dtPreview += dtvec.at(i) + ", ";
+									else
+										dtPreview += dtvec.at(i);
+								}
+							}
+							if (ImGui::BeginCombo("Options", dtPreview.c_str()))
+							{
+								dtPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++)
+								{
+									ImGui::Selectable(pDt[i], &dtFlags[i]);
+									if (dtFlags[i])
+										dtvec.push_back(pDt[i]);
+								}
+								for (size_t i = 0; i < dtvec.size(); i++)
+								{
+									if (dtvec.size() == 1)
+										dtPreview += dtvec.at(i);
+									else if (!(i == dtvec.size() - 1))
+										dtPreview += dtvec.at(i) + ", ";
+									else
+										dtPreview += dtvec.at(i);
+								}
+								ImGui::EndCombo();
+							} // i got tired of trying better ways so this is new method fr*ck you
+							for (size_t i = 0; i < IM_ARRAYSIZE(dtFlags); i++) {
+								if (dtFlags[i]) {
+									switch (i + 1) {
+									case 1: { Vars::Misc::CL_Move::RechargeWhileDead.m_Var = true; break; }
+									case 2: { Vars::Misc::CL_Move::AutoRecharge.m_Var = true; break; }
+									case 3: { Vars::Misc::CL_Move::WaitForDT.m_Var = true; break; }
+									case 4: { Vars::Misc::CL_Move::AntiWarp.m_Var = true; break; }
+									case 5: { Vars::Misc::CL_Move::NotInAir.m_Var = true; break; }
+									}
+								}
+								else {
+									switch (i + 1) {
+									case 1: { Vars::Misc::CL_Move::RechargeWhileDead.m_Var = false; break; }
+									case 2: { Vars::Misc::CL_Move::AutoRecharge.m_Var = false; break; }
+									case 3: { Vars::Misc::CL_Move::WaitForDT.m_Var = false; break; }
+									case 4: { Vars::Misc::CL_Move::AntiWarp.m_Var = false; break; }
+									case 5: { Vars::Misc::CL_Move::NotInAir.m_Var = false; break; }
+									}
+								}
+							}
+						}
+						const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth();
+						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+							ImGui::SliderInt("DT bar height###rijinh", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
+							ImGui::SliderInt("DT bar width###rijinw", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
+						}
+						else {
+							ImGui::SliderInt("DT bar height###dtbarh", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+							ImGui::SliderInt("DT bar width###dtbarw", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+						}
+
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("HvH");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("HvH");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
+						const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Random" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth();
+						const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth();
+						const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
+						ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var);
+						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
+						if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) {
+							Vars::Misc::CL_Move::Fakelag.m_Var = true;
+						}
+						else {
+							Vars::Misc::CL_Move::Fakelag.m_Var = false;
+						}
+
+						ImGui::Dummy(ImVec2(0, 20));
+						font_size = ImGui::CalcTextSize("Fakelag");
+						ImGui::SameLine(
+							ImGui::GetWindowSize().x / 2 -
+							font_size.x + (font_size.x / 2)
+						);
+						ImGui::Text("Fakelag");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+						ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
+						InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Random max", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Random min", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+						ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
+
+						ImGui::PopStyleVar();
+					}
 					ImGui::EndChild();
 				}
 				if (!(tab1 == 2 && tab2 == 4)) {
@@ -2651,6 +2905,96 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 							ImGui::PopStyleVar();
 						}
+						else if (tab1 == 2 && tab2 == 5) {
+							ImVec2 font_size = ImGui::CalcTextSize("World");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("World");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
+							ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Active.m_Var);
+							ImGui::Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Active.m_Var);
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
+
+							ImGui::PopStyleVar();
+						}
+
+						else if (tab1 == 3) {
+							ImVec2 font_size = ImGui::CalcTextSize("Discord RPC");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Discord RPC");
+							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+							ImGui::Checkbox("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var);
+							ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var);
+							ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var);
+							ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var);
+							const char* imagething[]{ "Big fedora + Small TF2", "Small TF2 + Big fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth();
+
+							ImGui::Dummy(ImVec2(0, 20));
+							font_size = ImGui::CalcTextSize("Steam RPC");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Steam RPC");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence");
+							const char* matchGroups[]{ "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }; ImGui::PushItemWidth(100); ImGui::Combo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, matchGroups, IM_ARRAYSIZE(matchGroups)); ImGui::PopItemWidth(); HelpMarker("Which match group should be used?");
+							ImGui::Checkbox("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
+							const char* mapTexts[]{ "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf", "custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Map text", &Vars::Misc::Steam::MapText.m_Var, mapTexts, IM_ARRAYSIZE(mapTexts)); ImGui::PopItemWidth(); HelpMarker("Which map text should be used?");
+							ImGui::PushItemWidth(100); ImGui::InputText("Custom map text", &Vars::Misc::Steam::CustomText); ImGui::PopItemWidth(); HelpMarker("For when \"custom\" is selcted in \"Map text\". Sets custom map text.");
+							ImGui::PushItemWidth(100); ImGui::InputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size"); ImGui::PopItemWidth();
+
+							ImGui::Dummy(ImVec2(0, 20));
+							font_size = ImGui::CalcTextSize("Utilities");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Utilities");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							ImGui::PushItemWidth(100);
+							if (ImGui::Button("Toggle playerlist"))
+								g_PlayerList.showWindow = !g_PlayerList.showWindow;
+							if (ImGui::Button("Full update"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+							if (ImGui::Button("Reload HUD"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
+							if (ImGui::Button("Restart sound system"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+							if (ImGui::Button("Stop sound"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+							if (ImGui::Button("Status"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+							if (ImGui::Button("Ping"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+							if (ImGui::Button("Retry"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+							if (ImGui::Button("Exit"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
+							if (ImGui::Button("Console"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
+							if (ImGui::Button("Demo playback"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+							if (ImGui::Button("Demo trackbar"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
+							if (ImGui::Button("Itemtest"))
+								g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+							ImGui::PopStyleVar();
+						}
 						ImGui::EndChild();
 					}
 
@@ -2658,7 +3002,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				ImGui::EndChild();
 			}
 		}
-		ImGui::End(); ImGui::PopFont();
+		ImGui::PopFont();
+		if (g_PlayerList.showWindow)
+		{
+			g_PlayerList.Render();
+		}
+		ImGui::End(); 
 		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
 		//if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		//{

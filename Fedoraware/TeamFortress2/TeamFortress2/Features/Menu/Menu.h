@@ -5,7 +5,7 @@
 
 class CMenu
 {
-private:
+public:
 	//ImFont* Normal;
 	//ImFont* DT;
 	//ImDrawList* drawList;
