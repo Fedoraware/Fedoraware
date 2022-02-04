@@ -569,7 +569,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			ImVec2 winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 			const auto drawList = ImGui::GetWindowDrawList();
 			const auto bgDrawList = ImGui::GetBackgroundDrawList();
-			const auto fgDrawList = window->DrawList;/*ImGui::GetForegroundDrawList();*/
+			const auto fgDrawList = window->DrawList;
+			const auto foregroundDrawList = ImGui::GetForegroundDrawList();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 			if (ImGui::BeginPopupContextWindow("Settings")) {
@@ -691,7 +692,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			static const char* flags[]{ "None","Italic","Underline","Strikeout","Symbol",	"Antialias",	"Gaussian",	"Rotary",	"Dropshadow","Additive",	"Outline","Custom" };
 			static int fontflags[]{ 0x000,0x001,0x002,0x004,0x008,0x010,0x020,0x040,0x080,0x100,0x200,0x400 };
 
-			ImGui::GradientRect(fgDrawList, &titlegradient, { winPos.x, winPos.y }, winSize.x, 3);
+			ImGui::GradientRect(foregroundDrawList, &titlegradient, { winPos.x, winPos.y }, winSize.x, 3);
 			ImGui::Dummy(ImVec2(0, 7));
 
 			const float half = winSize.x / 2;
