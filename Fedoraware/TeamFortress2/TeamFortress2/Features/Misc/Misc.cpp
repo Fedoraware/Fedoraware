@@ -49,12 +49,13 @@ void CMisc::InstantRespawnMVM() {
 */ // FUCKING BROKEN PASXTE LATER
 
 void CMisc::CheatsBypass() {
+	static bool cheatset = false;
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
 	if (Vars::Misc::CheatsBypass.m_Var) {
-		if (sv_cheats->GetInt() == 0) sv_cheats->SetValue(1);
+		if (sv_cheats->GetInt() == 0) { sv_cheats->SetValue(1); cheatset = true; };
 	}
 	else {
-		sv_cheats->SetValue(0);
+		if (cheatset) { sv_cheats->SetValue(0); cheatset = false; }
 	}
 }
 
@@ -78,9 +79,6 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 		}
 	}
 }
-
-
-const int nY = (g_ScreenSize.h / 2) + 20;
 
 void CMisc::NoPush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
