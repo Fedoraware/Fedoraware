@@ -98,7 +98,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						{
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
-							static Color_t color1, color2, color3;
+							static Color_t color1, color2;
 
 							if (g_GlobalInfo.m_nWaitForShift) {
 								color1 = Colors::DtChargingLeft;
@@ -136,9 +136,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
 								int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
 
-								color3 = { 255,255,255,255 };
-
-								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2), color3);
+								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2), Colors::DtOutline);
 								g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale, yscale, { 17, 24, 26, 255 });
 								g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, ((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)), (nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);
 								g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
