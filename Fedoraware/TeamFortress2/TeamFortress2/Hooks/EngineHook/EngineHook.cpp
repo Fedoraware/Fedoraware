@@ -12,8 +12,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	auto pLocal = g_EntityCache.m_pLocal; const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
 
-	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted) {
-		while (g_GlobalInfo.m_nShifted != 0) {
+	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bRecharging) {
+		while (g_GlobalInfo.m_nShifted > 0) {
 			oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 			g_GlobalInfo.m_nShifted--;
 		}
