@@ -9,7 +9,6 @@
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Crits/Crits.h"
 
-
 #include "../../Features/Vars.h"
 #include "../../Features/Menu/Menu.h"
 
