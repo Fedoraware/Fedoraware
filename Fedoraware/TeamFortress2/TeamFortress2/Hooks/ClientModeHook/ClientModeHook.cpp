@@ -8,7 +8,6 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Crits/Crits.h"
-#include "../../Features/Backtrack/Backtrack.h"
 
 
 #include "../../Features/Vars.h"
