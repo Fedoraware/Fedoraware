@@ -2579,10 +2579,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
+						ImGui::Checkbox("AntiBackstab", &Vars::AntiHack::AntiAim::AntiBackstab.m_Var); HelpMarker("This feature requires Anti-aim to be on. It does not look legit.");
 						const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Random" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth();
 						const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth();
 						const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
+						if (Vars::AntiHack::AntiAim::YawFake.m_Var == 5 || Vars::AntiHack::AntiAim::YawReal.m_Var == 5)
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
 						ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var);
 						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
 						if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) {
