@@ -2507,7 +2507,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100);
 							std::vector<std::string> dtvec;
 							static bool dtFlags[]{ Vars::Misc::CL_Move::RechargeWhileDead.m_Var,Vars::Misc::CL_Move::AutoRecharge.m_Var,Vars::Misc::CL_Move::WaitForDT.m_Var,Vars::Misc::CL_Move::AntiWarp.m_Var,Vars::Misc::CL_Move::NotInAir.m_Var };
-							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }; static std::string dtPreview = "PH";
+							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne"}; static std::string dtPreview = "PH";
 							if (dtPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
 								dtPreview = "";
 								for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++) {

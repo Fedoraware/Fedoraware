@@ -122,6 +122,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 		bool bPitchSet = true;
 		bool bYawSet = true;
+		bool bAntiBackstabActive = false;
 
 		Vec3 vOldAngles = pCmd->viewangles;
 		float fOldSideMove = pCmd->sidemove;
@@ -247,26 +248,29 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 		//	anti-backstab
 		//	not dying to a spy is more important than not getting shot imo hence its position at the end of this file
-		Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
-		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		if (Vars::AntiHack::AntiAim::AntiBackstab.m_Var) {
-			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost())
-				continue;
+			Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
+			for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)) {
 
-			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter(); Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
 
-			if (vLocalPos.DistTo(vEnemyPos) > 250.0f)
-				continue;
+				if (!pEnemy || !pEnemy->IsAlive() || pEnemy->IsCloaked() || pEnemy->IsAGhost() || pEnemy->GetClassNum() != CLASS_SPY) { return; }
 
-			pCmd->viewangles.y = vAngleToEnemy.y;					// face the enemy
-			pCmd->viewangles.x = 0;									// if we are using fakeup/down we now don't want that
-			g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;	// this is what we use to render our angles in third person, lets render them correctly
-			g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x;	// ditto
-			bYawSet = true;
+				Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter(); Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
+
+				if (vLocalPos.DistTo(vEnemyPos) > 170.f) { return; }
+
+				pCmd->viewangles.y = vAngleToEnemy.y;							// face the enemy
+				pCmd->viewangles.x = vAngleToEnemy.x;							// if we are using fakeup/down we now don't want that
+				g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;			// this is what we use to render our angles in third person, lets render them correctly
+				g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x;			// ditto
+				bPitchSet = false; bYawSet = false;	bAntiBackstabActive = true;	// there is no reason to choke packets if we don't have a fake/real angle
+			}
 		}
 
-		*pSendPacket = bSendReal = !bSendReal;
-		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
+		if (bYawSet) 
+			*pSendPacket = bSendReal = !bSendReal;
+		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet || bAntiBackstabActive;
+		
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}
 }
