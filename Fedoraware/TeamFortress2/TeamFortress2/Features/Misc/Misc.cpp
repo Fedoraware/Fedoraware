@@ -167,7 +167,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
 
-				const float speed = pLocal->GetVelocity().Lenght2D();
+				const float speed = pLocal->GetVelocity().Length2D();
 				auto vel = pLocal->GetVelocity();
 
 				if (speed < 2.0f)

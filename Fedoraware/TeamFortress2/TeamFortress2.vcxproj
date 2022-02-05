@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />

@@ -52,7 +52,7 @@ float edgeDistance(float edgeRayYaw)
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = { };
 	g_Interfaces.EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
-	float edgeDistance = (trace.vStartPos - trace.vEndPos).Lenght2D();
+	float edgeDistance = (trace.vStartPos - trace.vEndPos).Length2D();
 	return edgeDistance;
 }
 
