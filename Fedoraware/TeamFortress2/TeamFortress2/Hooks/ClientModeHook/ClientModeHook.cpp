@@ -35,7 +35,7 @@ void FastStop(CUserCmd* pCmd)
 		static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
 		static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
 
-		auto speed = vel.Lenght2D();
+		auto speed = vel.Length2D();
 		auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(g_EntityCache.m_pLocal + 0x12b8);
 		auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
 		auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
@@ -45,7 +45,7 @@ void FastStop(CUserCmd* pCmd)
 			Vector velocity = vel;
 			Vector direction;
 			Math::VectorAngles(vel, direction);
-			float speed = velocity.Lenght();
+			float speed = velocity.Length();
 
 			direction.y = pCmd->viewangles.y - direction.y;
 
@@ -100,7 +100,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 inline Vector ComputeMove(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
 {
 	Vec3 diff = (b - a);
-	if (diff.Lenght() == 0.0f)
+	if (diff.Length() == 0.0f)
 		return Vec3(0.0f, 0.0f, 0.0f);
 	const float x = diff.x;
 	const float y = diff.y;
@@ -147,7 +147,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var));
 
 			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
-			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.f, 520.f, 0.f, 1.f);
+			float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.f, 520.f, 0.f, 1.f);
 			WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
 			nShiftTick++;
@@ -244,7 +244,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (Vars::Misc::CL_Move::AutoRecharge.m_Var) {
 		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f && !(pCmd->buttons == 0))
+				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons == 0))
 				{
 					g_GlobalInfo.m_bRecharging = true;
 				}
@@ -295,17 +295,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
-	static int chockedPackets = 0; static int chockValue = 0;// for obv reasons dont fakelag if we are forcing packet send (cmon)
+	static int chockedPackets = 0; static int chockValue = 0;
 	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) && Vars::Misc::CL_Move::FakelagOnKey.m_Var) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !g_GlobalInfo.m_bForceSendPacket) {
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { // checking if we can and are shooting is far more reliable than that global var
-			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
-				!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
+				!g_GlobalInfo.m_bRecharging &&
 				!g_GlobalInfo.m_nShifted &&
 				!g_GlobalInfo.m_bShouldShift &&
 				!g_GlobalInfo.m_bRechargeQueued) {
 
 				chockedPackets++;
-				// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will use this
+
 				if (chockedPackets > chockValue) {
 					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) { chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var; }
 					else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }

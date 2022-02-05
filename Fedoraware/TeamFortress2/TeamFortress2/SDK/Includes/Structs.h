@@ -184,7 +184,7 @@ struct Ray_t
 	{
 		vaDelta = destination - source;
 
-		IsSwept = (vaDelta.LenghtSqr() != 0);
+		IsSwept = (vaDelta.LengthSqr() != 0);
 
 		vaExtents.Set();
 		IsRay = true;
@@ -197,11 +197,11 @@ struct Ray_t
 	{
 		vaDelta = destination - source;
 
-		IsSwept = (vaDelta.LenghtSqr() != 0);
+		IsSwept = (vaDelta.LengthSqr() != 0);
 
 		vaExtents = max - min;
 		vaExtents *= 0.5f;
-		IsRay = (vaExtents.LenghtSqr() < 1e-6);
+		IsRay = (vaExtents.LengthSqr() < 1e-6);
 
 		vaStartOffset = min + max;
 

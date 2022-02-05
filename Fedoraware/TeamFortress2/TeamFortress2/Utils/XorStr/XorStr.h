@@ -29,15 +29,15 @@ namespace Const
 	}
 }
 
-template<typename StringType, size_t nLenght>
+template<typename StringType, size_t nLength>
 class CBasicXorString
 {
 	using ValueType = typename StringType::value_type;
-	static constexpr auto nRealLenght = (nLenght - 1);
+	static constexpr auto nRealLength = (nLength - 1);
 
 public:
-	constexpr FORCE_INLINE CBasicXorString(ValueType const (&str)[nLenght])
-		: CBasicXorString(str, std::make_index_sequence<nRealLenght>()) { }
+	constexpr FORCE_INLINE CBasicXorString(ValueType const (&str)[nLength])
+		: CBasicXorString(str, std::make_index_sequence<nRealLength>()) { }
 
 	//c_str operator
 	//Decrypt the data if it's not decrypted already
@@ -54,7 +54,7 @@ public:
 	inline auto str() const
 	{
 		Decrypt();
-		return StringType(m_Data, m_Data + nRealLenght);
+		return StringType(m_Data, m_Data + nRealLength);
 	}
 
 	inline operator StringType() const
@@ -66,7 +66,7 @@ private:
 
 	//Our initializer which takes and encrypts the string
 	template<size_t... nIndices>
-	constexpr FORCE_INLINE CBasicXorString(ValueType const (&str)[nLenght], std::index_sequence<nIndices...>)
+	constexpr FORCE_INLINE CBasicXorString(ValueType const (&str)[nLength], std::index_sequence<nIndices...>)
 		: m_Data{ Encrypt(str[nIndices], nIndices)..., '\0' },
 		m_bEncrypted(true) { }
 
@@ -101,7 +101,7 @@ private:
 		if (m_bEncrypted)
 		{
 			//If so, loop trough the "data" and use "Encrypt()" again to restore the string to it's original state
-			for (size_t t = 0; t < nRealLenght; t++)
+			for (size_t t = 0; t < nRealLength; t++)
 				m_Data[t] = Encrypt(m_Data[t], t);
 
 			//Set the encrypted member to false, as we just finished decrypting it.
@@ -110,48 +110,48 @@ private:
 	}
 
 	//Members that hold information about the string
-	mutable ValueType m_Data[nLenght]; //String data
+	mutable ValueType m_Data[nLength]; //String data
 	mutable bool m_bEncrypted; //Is the string encrypted
 };
 //===========================================================================
-template<size_t nLenght>
-using XorStrA = CBasicXorString<std::string, nLenght>;
-template<size_t nLenght>
-using XorStrW = CBasicXorString<std::wstring, nLenght>;
-template<size_t nLenght>
-using XorStrU16 = CBasicXorString<std::u16string, nLenght>;
-template<size_t nLenght>
-using XorStrU32 = CBasicXorString<std::u32string, nLenght>;
+template<size_t nLength>
+using XorStrA = CBasicXorString<std::string, nLength>;
+template<size_t nLength>
+using XorStrW = CBasicXorString<std::wstring, nLength>;
+template<size_t nLength>
+using XorStrU16 = CBasicXorString<std::u16string, nLength>;
+template<size_t nLength>
+using XorStrU32 = CBasicXorString<std::u32string, nLength>;
 //===========================================================================
-template<typename StringType, size_t nLenght, size_t nLenght2>
-inline auto operator==(const CBasicXorString<StringType, nLenght>& lhs, const CBasicXorString<StringType, nLenght2>& rhs)
+template<typename StringType, size_t nLength, size_t nLength2>
+inline auto operator==(const CBasicXorString<StringType, nLength>& lhs, const CBasicXorString<StringType, nLength2>& rhs)
 {
-	//Issue compile time error if lenghts wont match
-	static_assert(nLenght == nLenght2, "[XorString operator==] Different lenghts!");
-	return nLenght == nLenght2 && lhs.str() == rhs.str();
+	//Issue compile time error if lengths wont match
+	static_assert(nLength == nLength2, "[XorString operator==] Different lengths!");
+	return nLength == nLength2 && lhs.str() == rhs.str();
 }
 //===========================================================================
-template<typename StringType, size_t nLenght>
-inline auto operator==(const StringType& lhs, const CBasicXorString<StringType, nLenght>& rhs)
+template<typename StringType, size_t nLength>
+inline auto operator==(const StringType& lhs, const CBasicXorString<StringType, nLength>& rhs)
 {
-	return lhs.size() == nLenght && lhs == rhs.str();
+	return lhs.size() == nLength && lhs == rhs.str();
 }
 //===========================================================================
-template<typename StreamType, typename StringType, size_t nLenght>
-inline auto& operator<<(StreamType& lhs, const CBasicXorString<StringType, nLenght>& rhs)
+template<typename StreamType, typename StringType, size_t nLength>
+inline auto& operator<<(StreamType& lhs, const CBasicXorString<StringType, nLength>& rhs)
 {
 	lhs << rhs.c_str();
 	return lhs;
 }
 //===========================================================================
-template<typename StringType, size_t nLenght, size_t nLenght2>
-inline auto operator+(const CBasicXorString<StringType, nLenght>& lhs, const CBasicXorString<StringType, nLenght2>& rhs)
+template<typename StringType, size_t nLength, size_t nLength2>
+inline auto operator+(const CBasicXorString<StringType, nLength>& lhs, const CBasicXorString<StringType, nLength2>& rhs)
 {
 	return lhs.str() + rhs.str();
 }
 //===========================================================================
-template<typename StringType, size_t nLenght>
-inline auto operator+(const StringType& lhs, const CBasicXorString<StringType, nLenght>& rhs)
+template<typename StringType, size_t nLength>
+inline auto operator+(const StringType& lhs, const CBasicXorString<StringType, nLength>& rhs)
 {
 	return lhs + rhs.str();
 }
@@ -159,28 +159,28 @@ inline auto operator+(const StringType& lhs, const CBasicXorString<StringType, n
 //Here we have the final wrappers for our string encrypting
 //We probably don't even need char16/32, but I've kept them in just in case
 //===========================================================================
-template<size_t nLenght>
-constexpr FORCE_INLINE auto XorStr(char const (&str)[nLenght])
+template<size_t nLength>
+constexpr FORCE_INLINE auto XorStr(char const (&str)[nLength])
 {
-	return XorStrA<nLenght>(str);
+	return XorStrA<nLength>(str);
 }
 //===========================================================================
-template<size_t nLenght>
-constexpr FORCE_INLINE auto XorStr(wchar_t const (&str)[nLenght])
+template<size_t nLength>
+constexpr FORCE_INLINE auto XorStr(wchar_t const (&str)[nLength])
 {
-	return XorStrW<nLenght>(str);
+	return XorStrW<nLength>(str);
 }
 //===========================================================================
-template<size_t nLenght>
-constexpr FORCE_INLINE auto XorStr(char16_t const (&str)[nLenght])
+template<size_t nLength>
+constexpr FORCE_INLINE auto XorStr(char16_t const (&str)[nLength])
 {
-	return XorStrU16<nLenght>(str);
+	return XorStrU16<nLength>(str);
 }
 //===========================================================================
-template<size_t nLenght>
-constexpr FORCE_INLINE auto XorStr(char32_t const (&str)[nLenght])
+template<size_t nLength>
+constexpr FORCE_INLINE auto XorStr(char32_t const (&str)[nLength])
 {
-	return XorStrU32<nLenght>(str);
+	return XorStrU32<nLength>(str);
 }
 //===========================================================================
 

@@ -1953,6 +1953,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var);
 						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var);
 						const char* autoStrafeModes[]{ "Off", "Normal", "Directional" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth();
 						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var);
@@ -2494,7 +2495,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Tickbase exploits###dtmasterswitch", &Vars::Misc::CL_Move::Enabled.m_Var);
 						ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Enabled.m_Var);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -2502,12 +2502,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); ImGui::PopItemWidth();
 						InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey);
 						InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey);
-						InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey);
+						if (Vars::Misc::CL_Move::DTMode.m_Var == 0 || Vars::Misc::CL_Move::DTMode.m_Var == 2)
+							InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey);
 						{
 							ImGui::PushItemWidth(100);
 							std::vector<std::string> dtvec;
 							static bool dtFlags[]{ Vars::Misc::CL_Move::RechargeWhileDead.m_Var,Vars::Misc::CL_Move::AutoRecharge.m_Var,Vars::Misc::CL_Move::WaitForDT.m_Var,Vars::Misc::CL_Move::AntiWarp.m_Var,Vars::Misc::CL_Move::NotInAir.m_Var };
-							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }; static std::string dtPreview = "PH";
+							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne"}; static std::string dtPreview = "PH";
 							if (dtPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
 								dtPreview = "";
 								for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++) {
@@ -2566,6 +2567,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 						}
 						const char* dtModes[]{ "On key", "Always", "Disable on key", "Disabled" }; ImGui::PushItemWidth(100); ImGui::Combo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, dtModes, IM_ARRAYSIZE(dtModes)); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d");
 
 						ImGui::Dummy(ImVec2(0, 20));
 						font_size = ImGui::CalcTextSize("HvH");
@@ -2581,7 +2583,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Random" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth();
 						const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth();
 						const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw)); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
+						if (Vars::AntiHack::AntiAim::YawFake.m_Var == 5 || Vars::AntiHack::AntiAim::YawReal.m_Var == 5)
+							ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
 						ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var);
 						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
 						if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) {
@@ -2601,13 +2604,20 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
-						ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
-						InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Random max", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Random min", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
-						ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
-
+						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3) {
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) {
+								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
+								if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+									InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey);
+							}
+						}
+						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) {
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Random max", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Random min", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+						}
+						//ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
+						// this already exists in visuals misc near the thirdperson
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();

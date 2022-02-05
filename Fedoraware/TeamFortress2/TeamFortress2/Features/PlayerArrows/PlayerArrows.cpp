@@ -47,16 +47,16 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 
 	//constexpr float arrow_angle = DEG2RAD(60.0f);
 	float arrow_angle = DEG2RAD(Vars::Visuals::ArrowAngle.m_Var);
-	//constexpr float arrow_lenght = 20.0f;
-	float arrow_lenght = Vars::Visuals::ArrowLength.m_Var;
+	//constexpr float arrow_length = 20.0f;
+	float arrow_length = Vars::Visuals::ArrowLength.m_Var;
 
 	const Vec3 line{ x2 - x1, y2 - y1, 0.0f };
-	const float length = line.Lenght();
+	const float length = line.Length();
 
-	const float fpoint_on_line = arrow_lenght / (atanf(arrow_angle) * length);
+	const float fpoint_on_line = arrow_length / (atanf(arrow_angle) * length);
 	const Vec3 point_on_line = Vec3(x2, y2, 0) + (line * fpoint_on_line * -1.0f);
 	const Vec3 normal_vector{ -line.y, line.x, 0.0f };
-	const Vec3 normal = Vec3(arrow_lenght, arrow_lenght, 0.0f) / (length * 2);
+	const Vec3 normal = Vec3(arrow_length, arrow_length, 0.0f) / (length * 2);
 
 	const Vec3 rotation = normal * normal_vector;
 	const Vec3 left = point_on_line + rotation;
