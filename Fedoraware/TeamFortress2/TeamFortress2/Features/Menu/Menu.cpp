@@ -2499,6 +2499,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("DT bar outline colour", Colors::DtOutline);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); ImGui::PopItemWidth();
 						InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey);
 						InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey);
 						InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey);
