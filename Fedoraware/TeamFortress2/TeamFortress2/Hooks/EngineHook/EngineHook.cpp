@@ -10,7 +10,21 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	auto pLocal = g_EntityCache.m_pLocal; const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
+	// pSpeedhack
+	if (Vars::Misc::CL_Move::SEnabled.m_Var)
+	{
+		int SpeedTicks{ 0 };
+		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
+		g_GlobalInfo.m_nShifted = 0;
+
+		while (SpeedTicks < SpeedTicksDesired)
+		{
+			SpeedTicks++;
+			oClMove(accumulated_extra_samples, (SpeedTicks == (SpeedTicksDesired)));
+		}
+	}
+
+	auto pLocal = g_EntityCache.m_pLocal;
 
 	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bRecharging) {
 		while (g_GlobalInfo.m_nShifted > 0) {

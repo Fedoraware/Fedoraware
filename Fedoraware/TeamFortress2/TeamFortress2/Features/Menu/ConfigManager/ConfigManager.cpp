@@ -576,6 +576,14 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::Discord::IncludeTimestamp);
 				SAVE_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
 			}
+			//Steam
+			{
+				SAVE_VAR(Vars::Misc::Steam::EnableRPC);
+				SAVE_VAR(Vars::Misc::Steam::MatchGroup);
+				SAVE_VAR(Vars::Misc::Steam::OverrideMenu);
+				SAVE_VAR(Vars::Misc::Steam::MapText);
+				SAVE_VAR(Vars::Misc::Steam::GroupSize);
+			}
 		}
 
 		//AntiHack
@@ -1138,6 +1146,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::Discord::IncludeClass);
 				LOAD_VAR(Vars::Misc::Discord::IncludeTimestamp);
 				LOAD_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+			}
+			//Steam
+			{
+				LOAD_VAR(Vars::Misc::Steam::EnableRPC);
+				LOAD_VAR(Vars::Misc::Steam::MatchGroup);
+				LOAD_VAR(Vars::Misc::Steam::OverrideMenu);
+				LOAD_VAR(Vars::Misc::Steam::MapText);
+				LOAD_VAR(Vars::Misc::Steam::GroupSize);
 			}
 		}
 

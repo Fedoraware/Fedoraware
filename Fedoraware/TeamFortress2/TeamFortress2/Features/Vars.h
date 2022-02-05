@@ -473,6 +473,8 @@ namespace Vars
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
 			inline CVar<bool> Doubletap		{ true, L"Doubletap" };
+			inline CVar<bool> SEnabled{ false, L"Speedhack" };
+			inline CVar<int> SFactor{ 1, L"Speedhack Factor" };
 			inline CVar<bool> NotInAir		{ true, L"Dont DT in air" };
 			inline CVar<int> TeleportKey	{ 0x52, L"Teleport Key" }; //R
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
