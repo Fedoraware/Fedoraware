@@ -246,30 +246,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			g_GlobalInfo.m_vFakeViewAngles.y = pCmd->viewangles.y;
 		}
 
-		//	anti-backstab
-		//	not dying to a spy is more important than not getting shot imo hence its position at the end of this file
-		if (Vars::AntiHack::AntiAim::AntiBackstab.m_Var) {
-			Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
-			for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)) {
-
-
-				if (!pEnemy || !pEnemy->IsAlive() || pEnemy->IsCloaked() || pEnemy->IsAGhost() || pEnemy->GetClassNum() != CLASS_SPY) { return; }
-
-				Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter(); Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-
-				if (vLocalPos.DistTo(vEnemyPos) > 170.f) { return; }
-
-				pCmd->viewangles.y = vAngleToEnemy.y;							// face the enemy
-				pCmd->viewangles.x = vAngleToEnemy.x;							// if we are using fakeup/down we now don't want that
-				g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;			// this is what we use to render our angles in third person, lets render them correctly
-				g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x;			// ditto
-				bPitchSet = false; bYawSet = false;	bAntiBackstabActive = true;	// there is no reason to choke packets if we don't have a fake/real angle
-			}
-		}
-
 		if (bYawSet) 
 			*pSendPacket = bSendReal = !bSendReal;
-		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet || bAntiBackstabActive;
+		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
 		
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}
