@@ -510,7 +510,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 	//	ImGui::End();
 	//	ImGui::PopStyleColor(2);
 	//}
-	ImGui::GetIO().MouseDrawCursor = menuOpen;
+	//ImGui::GetIO().MouseDrawCursor = menuOpen;
+	// could need this
 	if (g_Menu.m_bOpen)
 	{
 		ImColor accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
