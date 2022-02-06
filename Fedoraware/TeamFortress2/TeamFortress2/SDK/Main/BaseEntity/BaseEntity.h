@@ -82,6 +82,67 @@ public: //Netvars & conditions
 		M_CONDGET(BulletImmune, GetCondEx2(), TFCondEx2_BulletImmune)
 		M_CONDGET(FireImmune, GetCondEx2(), TFCondEx2_FireImmune)
 
+		// thanks litebase this is just better ngl
+		NETVAR(m_vecOrigin, Vec3, _("CBaseEntity"), _("m_vecOrigin"));
+	NETVAR(m_Local, void*, _("CBasePlayer"), _("m_Local"));
+	NETVAR(m_chAreaBits, void*, _("CBasePlayer"), _("m_chAreaBits"));
+	NETVAR(m_chAreaPortalBits, void*, _("CBasePlayer"), _("m_chAreaPortalBits"));
+	NETVAR(m_iHideHUD, int, _("CBasePlayer"), _("m_iHideHUD"));
+	NETVAR(m_flFOVRate, float, _("CBasePlayer"), _("m_flFOVRate"));
+	NETVAR(m_bDucked, bool, _("CBasePlayer"), _("m_bDucked"));
+	NETVAR(m_bDucking, bool, _("CBasePlayer"), _("m_bDucking"));
+	NETVAR(m_bInDuckJump, bool, _("CBasePlayer"), _("m_bInDuckJump"));
+	NETVAR(m_flDucktime, float, _("CBasePlayer"), _("m_flDucktime"));
+	NETVAR(m_flDuckJumpTime, float, _("CBasePlayer"), _("m_flDuckJumpTime"));
+	NETVAR(m_flJumpTime, float, _("CBasePlayer"), _("m_flJumpTime"));
+	NETVAR(m_flFallVelocity, float, _("CBasePlayer"), _("m_flFallVelocity"));
+	NETVAR(m_vecPunchAngle, Vec3, _("CBasePlayer"), _("m_vecPunchAngle"));
+	NETVAR(m_vecPunchAngleVel, Vec3, _("CBasePlayer"), _("m_vecPunchAngleVel"));
+	NETVAR(m_bDrawViewmodel, bool, _("CBasePlayer"), _("m_bDrawViewmodel"));
+	NETVAR(m_bWearingSuit, bool, _("CBasePlayer"), _("m_bWearingSuit"));
+	NETVAR(m_bPoisoned, bool, _("CBasePlayer"), _("m_bPoisoned"));
+	NETVAR(m_flStepSize, float, _("CBasePlayer"), _("m_flStepSize"));
+	NETVAR(m_bAllowAutoMovement, bool, _("CBasePlayer"), _("m_bAllowAutoMovement"));
+	NETVAR(m_vecViewOffset, Vec3, _("CBasePlayer"), "m_vecViewOffset[0]");
+	NETVAR(m_flFriction, float, _("CBasePlayer"), _("m_flFriction"));
+	NETVAR(m_iAmmo, void*, _("CBasePlayer"), _("m_iAmmo"));
+	NETVAR(m_fOnTarget, int, _("CBasePlayer"), _("m_fOnTarget"));
+	NETVAR(m_nTickBase, int, _("CBasePlayer"), _("m_nTickBase"));
+	NETVAR(m_nNextThinkTick, int, _("CBasePlayer"), _("m_nNextThinkTick"));
+	NETVAR(m_hLastWeapon, int, _("CBasePlayer"), _("m_hLastWeapon"));
+	NETVAR(m_hGroundEntity, int, _("CBasePlayer"), _("m_hGroundEntity"));
+	NETVAR(m_vecVelocity, Vec3, _("CBasePlayer"), _("m_vecVelocity[0]"));
+	NETVAR(m_vecBaseVelocity, Vec3, _("CBasePlayer"), _("m_vecBaseVelocity"));
+	NETVAR(m_hConstraintEntity, int, _("CBasePlayer"), _("m_hConstraintEntity"));
+	NETVAR(m_vecConstraintCenter, Vec3, _("CBasePlayer"), _("m_vecConstraintCenter"));
+	NETVAR(m_flConstraintRadius, float, _("CBasePlayer"), _("m_flConstraintRadius"));
+	NETVAR(m_flConstraintWidth, float, _("CBasePlayer"), _("m_flConstraintWidth"));
+	NETVAR(m_flConstraintSpeedFactor, float, _("CBasePlayer"), _("m_flConstraintSpeedFactor"));
+	NETVAR(m_flDeathTime, float, _("CBasePlayer"), _("m_flDeathTime"));
+	NETVAR(m_nWaterLevel, int, _("CBasePlayer"), _("m_nWaterLevel"));
+	NETVAR(m_flLaggedMovementValue, float, _("CBasePlayer"), _("m_flLaggedMovementValue"));
+	NETVAR(m_AttributeList, void*, _("CBasePlayer"), _("m_AttributeList"));
+	NETVAR(pl, void*, _("CBasePlayer"), _("pl"));
+	NETVAR(deadflag, int, _("CBasePlayer"), _("deadflag"));
+	NETVAR(m_iFOV, int, _("CBasePlayer"), _("m_iFOV"));
+	NETVAR(m_iFOVStart, int, _("CBasePlayer"), _("m_iFOVStart"));
+	NETVAR(m_flFOVTime, float, _("CBasePlayer"), _("m_flFOVTime"));
+	NETVAR(m_iDefaultFOV, int, _("CBasePlayer"), _("m_iDefaultFOV"));
+	NETVAR(m_hZoomOwner, int, _("CBasePlayer"), _("m_hZoomOwner"));
+	NETVAR(m_hVehicle, int, _("CBasePlayer"), _("m_hVehicle"));
+	NETVAR(m_hUseEntity, int, _("CBasePlayer"), _("m_hUseEntity"));
+	NETVAR(m_iHealth, int, _("CBasePlayer"), _("m_iHealth"));
+	NETVAR(m_lifeState, byte, _("CBasePlayer"), _("m_lifeState"));
+	NETVAR(m_iBonusProgress, int, _("CBasePlayer"), _("m_iBonusProgress"));
+	NETVAR(m_iBonusChallenge, int, _("CBasePlayer"), _("m_iBonusChallenge"));
+	NETVAR(m_flMaxspeed, float, _("CBasePlayer"), _("m_flMaxspeed"));
+	NETVAR(m_fFlags, int, _("CBasePlayer"), _("m_fFlags"));
+	NETVAR(m_iObserverMode, int, _("CBasePlayer"), _("m_iObserverMode"));
+	NETVAR(m_hObserverTarget, int, _("CBasePlayer"), _("m_hObserverTarget"));
+	NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"));
+	NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"));
+	NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"));
+
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
 		M_VIRTUALGET(MaxHealth, int, this, int(__thiscall*)(void*), 107)
@@ -160,6 +221,15 @@ public: //Everything else, lol.
 	__inline CBaseCombatWeapon* GetActiveWeapon() {
 		DYNVAR(pHandle, int, _("DT_BaseCombatCharacter"), _("m_hActiveWeapon"));
 		return reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
+	}
+
+	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
+	{
+		typedef float(__thiscall* CalculateMaxSpeedFn)(CBaseEntity*, bool);
+		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1")) + 0x1;
+		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
+		CalculateMaxSpeedFn maxSpeed = (CalculateMaxSpeedFn)dwEstimate;
+		return maxSpeed(this, bIgnoreSpecialAbility);
 	}
 
 	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot) {

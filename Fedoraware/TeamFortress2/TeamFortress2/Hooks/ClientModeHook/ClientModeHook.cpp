@@ -160,7 +160,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 	}
 }
 
-
+#include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -292,6 +292,33 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
+	//
+	//g_GlobalInfo.predBeforeLines.clear();
+	//g_GlobalInfo.predFutureLines.clear();
+	//CMoveData balls; Vec3 cock;
+	//g_Interfaces.DebugOverlay->ClearAllOverlays();
+	//if (g_EntityCache.m_pLocal && g_EntityCache.m_pLocal->IsAlive()) {
+	//	if (g_MoveSim.Initialize(g_EntityCache.m_pLocal)) {
+	//		for (int i = 0; i < TIME_TO_TICKS(1.f); i++) {
+	//			if (!g_EntityCache.m_pLocal) {
+	//				break;
+	//			}
+
+
+	//			g_MoveSim.RunTick(balls, cock);
+	//		}
+	//		g_MoveSim.Restore();
+	//	}
+	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_EntityCache.m_pLocal->m_vecOrigin(), cock, 0, 255, 0, false, 1.f);
+	//}
+
+	//
+	//for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++) {
+	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_GlobalInfo.predBeforeLines.at(i), g_GlobalInfo.predFutureLines.at(i), 255, 255, 255, false, 1.f);
+	//	
+	//}
+
+	
 	
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
