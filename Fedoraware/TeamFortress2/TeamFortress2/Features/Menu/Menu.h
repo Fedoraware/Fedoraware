@@ -30,3 +30,19 @@ public:
 };
 
 inline CMenu g_Menu;
+
+enum MainTabs {
+	Aimbot,
+	Triggerbot,
+	Visuals,
+	Misc
+};
+
+enum VisualsTabs {
+	Players,
+	Buildings,
+	World,
+	Fonts,
+	MiscVisuals,
+	Radar
+};
