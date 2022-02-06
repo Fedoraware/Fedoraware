@@ -405,25 +405,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			bWasSet = false;
 		}
 	}
-
-	/*
-	//failsafe (this shit stopped 22 tick fakelag LOL)
-	{
-		static int nChoked = 0;
-
-		if (!*pSendPacket)
-			nChoked++;
-
-		else nChoked = 0;
-
-		if (nChoked > 14)
-			*pSendPacket = true;
-	}
-	*/ // Problems
-	// FLG disables bc player is trying to charge doubletap, instead of charing 24 ticks, it now charges 14 ticks, (or 2 with 22 tick fakelag)
-	//		because it had just started choking again and the failsafe only activates when it reaches x ticks.
-	// If we choke packets for anything else, literally anything, for longer than 14 ticks, this will limit us to stay at that 14 again.
-	// Because of this I have changed the failsafe to activate instantly and only when fakelag is off
 	
 	if (static_cast<int>(g_Misc.strings.size()) > 0) {
 		g_GlobalInfo.gNotifCounter++;
@@ -442,8 +423,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_GlobalInfo.lateUserCmd = pCmd;
 	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
 	else if (g_GlobalInfo.m_bForceChokePacket) { *pSendPacket = false; g_GlobalInfo.m_bForceChokePacket = false; } // check after force send to prevent timing out possibly
-	g_Interfaces.Engine->FireEvents();
-	// fire events, ensure send packet shit is all done, we r good to go lads
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

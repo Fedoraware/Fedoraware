@@ -2653,7 +2653,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth();
 							}
 							ImGui::Checkbox("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
-							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
+							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var);
 							WidthSlider("Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 							ImGui::Dummy(ImVec2(0, 20));
 							font_size = ImGui::CalcTextSize("Melee");
