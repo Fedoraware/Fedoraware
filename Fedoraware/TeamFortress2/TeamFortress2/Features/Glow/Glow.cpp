@@ -25,8 +25,12 @@ void CGlowEffect::SetScale(int nScale)
 	static IMaterialVar* pVar = nullptr;
 	static bool bFound = false;
 
+
 	if (!bFound)
 		pVar = m_pMatBlurY->FindVar(_("$bloomamount"), &bFound);
+
+	else if (!pVar)
+		return;
 
 	else pVar->SetIntValue(nScale);
 }
