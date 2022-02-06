@@ -1043,7 +1043,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Target", Colors::Target);
+						ColorPicker("Target", Colors::Target); HelpMarker("Target color");
 						InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 						WidthSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
@@ -1168,7 +1168,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						} // Ignore targets
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::Invuln);
+						ColorPicker("Invulnerable colour", Colors::Invuln); HelpMarker("Invulnerable colour");
 						ImGui::Dummy(ImVec2(0, 20));
 
 						SectionTitle("Crits");
