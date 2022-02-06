@@ -36,6 +36,15 @@ static void HelpMarker(const char* desc)
 	}
 }
 
+static void SectionTitle(const char* title) {
+	ImVec2 font_size = ImGui::CalcTextSize(title);
+	ImGui::SameLine(
+		ImGui::GetWindowSize().x / 2 -
+		font_size.x + (font_size.x / 2)
+	);
+	ImGui::Text(title);
+}
+
 int skyName = 0;
 
 int unu1 = 0;
@@ -559,8 +568,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			normal.addMark(0.68f, framenormal);
 			normal.addMark(0.9999998f, framenormal); // literally why
 		}
-		static int tab1 = 0;
-		static int tab2 = 0;
+		static int mainTab = 0;
+		static int visualsTab = 0;
 		ImGui::GetStyle().WindowMinSize = ImVec2(708, 708);
 
 		ImGui::PushFont(VerdanaBold); ImGui::PushStyleColor(ImGuiCol_Text, accent.Value); ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
@@ -573,6 +582,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			const auto bgDrawList = ImGui::GetBackgroundDrawList();
 			const auto fgDrawList = window->DrawList;
 			const auto foregroundDrawList = ImGui::GetForegroundDrawList();
+
+			/* Settings window (Configs & Accent Color) */
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 			if (ImGui::BeginPopupContextWindow("Settings")) {
@@ -690,7 +701,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 
 			std::vector < Font_t > fonts;
-			static const char* flags[]{ "None","Italic","Underline","Strikeout","Symbol",	"Antialias",	"Gaussian",	"Rotary",	"Dropshadow","Additive",	"Outline","Custom" };
+			static const char* flags[]{ "None", "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
 			static int fontflags[]{ 0x000,0x001,0x002,0x004,0x008,0x010,0x020,0x040,0x080,0x100,0x200,0x400 };
 
 			ImGui::GradientRect(foregroundDrawList, &titlegradient, { winPos.x, winPos.y }, winSize.x, 3);
@@ -701,25 +712,27 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			const float quarter = winSize.x / 4;
 			const float fifth = winSize.x / 5;
 			const float sixth = winSize.x / 6;
+
+			// Main Tabs
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowTitleAlign, ImVec2(0.5f, 0.1f));
 			{
-				bool pushed1 = false;
+				bool pushedAim = false;
 
-				// Tab 1
+				// Tab 1 (Aimbot)
 				{
-					if (tab1 == 0) {
+					if (mainTab == 0) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
-						pushed1 = true;
+						pushedAim = true;
 					}
 					else {
-						pushed1 = false;
+						pushedAim = false;
 					}
 					if (ImGui::Button("Aimbot", ImVec2(quarter, 27))) {
-						tab1 = 0;
+						mainTab = 0;
 					}
-					if (tab1 == 0) {
-						if (pushed1) {
+					if (mainTab == 0) {
+						if (pushedAim) {
 							ImGui::PopStyleColor();
 						}
 					}
@@ -728,28 +741,28 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x, b1.y - 3 }, quarter, 3);
 					}
-					else if (tab1 == 0) {
+					else if (mainTab == 0) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, quarter, 3);
 					}
 					ImGui::SameLine();
 				}
 
-				bool pushed2 = false;
+				bool pushedTrigger = false;
 
-				// Tab 2
+				// Tab 2 (Triggerbot)
 				{
-					if (tab1 == 1) {
+					if (mainTab == 1) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
-						pushed2 = true;
+						pushedTrigger = true;
 					}
 					else {
-						pushed2 = false;
+						pushedTrigger = false;
 					}
 					if (ImGui::Button("Triggerbot", ImVec2(quarter, 27))) {
-						tab1 = 1;
+						mainTab = 1;
 					}
-					if (tab1 == 1) {
-						if (pushed2) {
+					if (mainTab == 1) {
+						if (pushedTrigger) {
 							ImGui::PopStyleColor();
 						}
 					}
@@ -758,28 +771,28 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b2.x, b2.y - 3 }, quarter, 3);
 					}
-					else if (tab1 == 1) {
+					else if (mainTab == 1) {
 						ImGui::GradientRect(fgDrawList, &active, { b2.x, b2.y - 3 }, quarter, 3);
 					}
 					ImGui::SameLine();
 				}
 
-				bool pushed3 = false;
+				bool pushedVisuals = false;
 
-				// Tab 3
+				// Tab 3 (Visuals)
 				{
-					if (tab1 == 2) {
+					if (mainTab == 2) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
-						pushed3 = true;
+						pushedVisuals = true;
 					}
 					else {
-						pushed3 = false;
+						pushedVisuals = false;
 					}
 					if (ImGui::Button("Visuals", ImVec2(quarter, 27))) {
-						tab1 = 2;
+						mainTab = 2;
 					}
-					if (tab1 == 2) {
-						if (pushed3) {
+					if (mainTab == 2) {
+						if (pushedVisuals) {
 							ImGui::PopStyleColor();
 						}
 					}
@@ -788,28 +801,28 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b3.x, b3.y - 3 }, quarter, 3);
 					}
-					else if (tab1 == 2) {
+					else if (mainTab == 2) {
 						ImGui::GradientRect(fgDrawList, &active, { b3.x, b3.y - 3 }, quarter, 3);
 					}
 					ImGui::SameLine();
 				}
 
-				bool pushed4 = false;
+				bool pushedMisc = false;
 
-				// Tab4
+				// Tab 4 (Misc)
 				{
-					if (tab1 == 3) {
+					if (mainTab == 3) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
-						pushed4 = true;
+						pushedMisc = true;
 					}
 					else {
-						pushed4 = false;
+						pushedMisc = false;
 					}
 					if (ImGui::Button("Misc", ImVec2(quarter, 27))) {
-						tab1 = 3;
+						mainTab = 3;
 					}
-					if (tab1 == 3) {
-						if (pushed4) {
+					if (mainTab == 3) {
+						if (pushedMisc) {
 							ImGui::PopStyleColor();
 						}
 					}
@@ -818,7 +831,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, quarter, 3);
 					}
-					else if (tab1 == 3) {
+					else if (mainTab == 3) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, quarter, 3);
 					}
 					ImGui::SameLine();
@@ -826,10 +839,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			}
 			ImGui::Dummy(ImVec2(0, 0));
 
-			if (tab1 == 2) {
+			// Visuals subsections
+			if (mainTab == 2) {
 				{
 					bool pushedtab20 = false;
-					if (tab2 == 0) {
+					if (visualsTab == 0) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 						pushedtab20 = true;
 					}
@@ -837,9 +851,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						pushedtab20 = false;
 					}
 					if (ImGui::Button("Players", ImVec2(sixth, 27))) {
-						tab2 = 0;
+						visualsTab = 0;
 					}
-					if (tab2 == 0) {
+					if (visualsTab == 0) {
 						if (pushedtab20) {
 							ImGui::PopStyleColor();
 						}
@@ -849,7 +863,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 0) {
+					else if (visualsTab == 0) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
@@ -857,7 +871,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 				{
 					bool pushedtab20 = false;
-					if (tab2 == 1) {
+					if (visualsTab == 1) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 						pushedtab20 = true;
 					}
@@ -865,9 +879,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						pushedtab20 = false;
 					}
 					if (ImGui::Button("Buildings", ImVec2(sixth, 27))) {
-						tab2 = 1;
+						visualsTab = 1;
 					}
-					if (tab2 == 1) {
+					if (visualsTab == 1) {
 						if (pushedtab20) {
 							ImGui::PopStyleColor();
 						}
@@ -877,14 +891,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 1) {
+					else if (visualsTab == 1) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
 				{
 					bool pushedtab20 = false;
-					if (tab2 == 2) {
+					if (visualsTab == 2) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 						pushedtab20 = true;
 					}
@@ -892,9 +906,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						pushedtab20 = false;
 					}
 					if (ImGui::Button("World", ImVec2(sixth, 27))) {
-						tab2 = 2;
+						visualsTab = 2;
 					}
-					if (tab2 == 2) {
+					if (visualsTab == 2) {
 						if (pushedtab20) {
 							ImGui::PopStyleColor();
 						}
@@ -904,25 +918,25 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 2) {
+					else if (visualsTab == 2) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
 				{
-					bool pushedtab20 = false;
-					if (tab2 == 3) {
+					bool pushedVisualsTab = false;
+					if (visualsTab == 3) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
-						pushedtab20 = true;
+						pushedVisualsTab = true;
 					}
 					else {
-						pushedtab20 = false;
+						pushedVisualsTab = false;
 					}
 					if (ImGui::Button("Fonts", ImVec2(sixth, 27))) {
-						tab2 = 3;
+						visualsTab = 3;
 					}
-					if (tab2 == 3) {
-						if (pushedtab20) {
+					if (visualsTab == 3) {
+						if (pushedVisualsTab) {
 							ImGui::PopStyleColor();
 						}
 					}
@@ -931,14 +945,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 3) {
+					else if (visualsTab == 3) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
 				{
 					bool pushedtab20 = false;
-					if (tab2 == 4) {
+					if (visualsTab == 4) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 						pushedtab20 = true;
 					}
@@ -946,9 +960,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						pushedtab20 = false;
 					}
 					if (ImGui::Button("Misc###MiscButtonTab", ImVec2(sixth, 27))) {
-						tab2 = 4;
+						visualsTab = 4;
 					}
-					if (tab2 == 4) {
+					if (visualsTab == 4) {
 						if (pushedtab20) {
 							ImGui::PopStyleColor();
 						}
@@ -958,14 +972,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 4) {
+					else if (visualsTab == 4) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
 				}
 				{
 					bool pushedtab20 = false;
-					if (tab2 == 5) {
+					if (visualsTab == 5) {
 						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 						pushedtab20 = true;
 					}
@@ -973,9 +987,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						pushedtab20 = false;
 					}
 					if (ImGui::Button("Radar###RadarButtonTab", ImVec2(sixth, 27))) {
-						tab2 = 5;
+						visualsTab = 5;
 					}
-					if (tab2 == 5) {
+					if (visualsTab == 5) {
 						if (pushedtab20) {
 							ImGui::PopStyleColor();
 						}
@@ -985,7 +999,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (ImGui::IsItemHovered()) {
 						ImGui::GradientRect(fgDrawList, &hover, { b1.x - 1, b1.y - 3 }, sixth, 3);
 					}
-					else if (tab2 == 5) {
+					else if (visualsTab == 5) {
 						ImGui::GradientRect(fgDrawList, &active, { b1.x, b1.y - 3 }, sixth, 3);
 					}
 					ImGui::SameLine();
@@ -1015,19 +1029,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				(s.x / 3) - 13
 				(s.x / 3) - 12
 				*/
-				ImGui::BeginChild("Feature 1", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 1", (mainTab == 2 && visualsTab == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
-					if (tab1 == 0) {
+					if (mainTab == 0) {
+						SectionTitle("Global");
 
-						ImVec2 font_size = ImGui::CalcTextSize("Global");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Global");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1157,12 +1166,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Invulnerable colour", Colors::Invuln);
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Crits");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Crits");
+
+						SectionTitle("Crits");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 6;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1170,13 +1175,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						InputKeybind("Crit key", Vars::Crits::CritKey);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Global");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Global");
+					else if (mainTab == 1) {
+						SectionTitle("Global");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1243,9 +1243,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Autoshoot");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Autoshoot");
+						SectionTitle("Autoshoot");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1312,10 +1310,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("Head scale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 0) {
-						ImVec2 font_size = ImGui::CalcTextSize("ESP Main");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("ESP Main");
+					else if (mainTab == 2 && visualsTab == 0) {
+						SectionTitle("ESP Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1340,9 +1336,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Player ESP");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Player ESP");
+						SectionTitle("Player ESP");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1389,13 +1383,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Building ESP");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Building ESP");
+					else if (mainTab == 2 && visualsTab == 1) {
+						SectionTitle("Building ESP");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1415,13 +1404,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 2) {
-						ImVec2 font_size = ImGui::CalcTextSize("World ESP");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("World ESP");
+					else if (mainTab == 2 && visualsTab == 2) {
+						SectionTitle("World ESP");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1437,13 +1421,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 3) {
-						ImVec2 font_size = ImGui::CalcTextSize("ESP font");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("ESP font");
+					else if (mainTab == 2 && visualsTab == 3) {
+						SectionTitle("ESP Font");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1483,9 +1462,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Name font");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Name font");
+						SectionTitle("Name Font");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1524,13 +1501,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 4) {
-						ImVec2 font_size = ImGui::CalcTextSize("World & UI");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("World & UI");
+					else if (mainTab == 2 && visualsTab == 4) {
+						SectionTitle("World & UI");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1761,9 +1733,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						const char* specModes[]{ "Off", "Draggable", "Static", "Static + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Viewmodel offset");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Viewmodel offset");
+						SectionTitle("Viewmodel Offset");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1771,11 +1741,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
-
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("DT indicator");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("DT indicator");
+
+						SectionTitle("DT Indicator");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1808,7 +1776,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar width###dtBWidth", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
 							ImGui::PopItemWidth();
 						}
-						
+
 						const char* unuEffects[]{
 							"None",
 							"Hot",
@@ -1824,9 +1792,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							"Energy orb"
 						};
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Attribute changer");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Attribute changer");
+
+						SectionTitle("Attribute Changer");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1907,13 +1874,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 5) {
-						ImVec2 font_size = ImGui::CalcTextSize("Main");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Main");
+					else if (mainTab == 2 && visualsTab == 5) {
+						SectionTitle("Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1924,12 +1886,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
 
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Players");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Players");
+						SectionTitle("Players");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1942,13 +1899,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 3) {
-						ImVec2 font_size = ImGui::CalcTextSize("Movement");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Movement");
+					else if (mainTab == 3) {
+						SectionTitle("Movement");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1964,12 +1916,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
 
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Misc");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Misc");
+						SectionTitle("Misc");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -1991,18 +1938,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-				ImGui::BeginChild("Feature 2", (tab1 == 2 && tab2 == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 2", (mainTab == 2 && visualsTab == 4) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
-					if (tab1 == 0) {
-						ImVec2 font_size = ImGui::CalcTextSize("Hitscan");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Hitscan");
+					if (mainTab == 0) {
+						SectionTitle("Hitscan");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2079,13 +2021,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.m_Var);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Autostab");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Autostab");
+					else if (mainTab == 1) {
+						SectionTitle("Autostab");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2098,9 +2035,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Autodetonate");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Autodetonate");
+						SectionTitle("Auto Detonate");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2111,13 +2046,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 1) {
-						ImVec2 font_size = ImGui::CalcTextSize("Building chams");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Building chams");
+					else if (mainTab == 2 && visualsTab == 1) {
+						SectionTitle("Building Chams");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2134,22 +2064,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("Building chams alpha", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 0) {
-						ImVec2 font_size = ImGui::CalcTextSize("Chams main");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Chams main");
+					else if (mainTab == 2 && visualsTab == 0) {
+						SectionTitle("Chams Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Player chams");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Player chams");
+						SectionTitle("Player Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2171,9 +2094,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("Player chams alpha", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("DME chams");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("DME chams");
+						SectionTitle("DME Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2230,13 +2151,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 2) {
-						ImVec2 font_size = ImGui::CalcTextSize("World chams");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("World chams");
+					else if (mainTab == 2 && visualsTab == 2) {
+						SectionTitle("World Chams");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2254,13 +2170,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::Chams::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 3) {
-						ImVec2 font_size = ImGui::CalcTextSize("Condition font");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Condition font");
+					else if (mainTab == 2 && visualsTab == 3) {
+						SectionTitle("Condition Font");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2312,9 +2223,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Pickup font");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Pickup font");
+						SectionTitle("Pickup Font");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2366,13 +2275,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 4) {
-						ImVec2 font_size = ImGui::CalcTextSize("Skybox & Textures");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Skybox & Textures");
+					else if (mainTab == 2 && visualsTab == 4) {
+						SectionTitle("Skybox & Textures");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2423,9 +2327,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Dummy(ImVec2(0, 20));
 
 
-						font_size = ImGui::CalcTextSize("Thirdperson");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Thirdperson");
+						SectionTitle("Thirdperson");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2438,9 +2340,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Dummy(ImVec2(0, 20));
 
 
-						font_size = ImGui::CalcTextSize("Out of FOV arrows");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Out of FOV arrows");
+						SectionTitle("Out of FOV arrows");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2453,9 +2353,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(150); ImGui::SliderFloat("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
-						font_size = ImGui::CalcTextSize("Spy warning");
-						ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-						ImGui::Text("Spy warning");
+						SectionTitle("Spy Warning");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2468,13 +2366,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 2 && tab2 == 5) {
-						ImVec2 font_size = ImGui::CalcTextSize("Buildings");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Buildings");
+					else if (mainTab == 2 && visualsTab == 5) {
+						SectionTitle("Building");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2486,13 +2379,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###buildingsizeiconradar", &Vars::Radar::Buildings::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
 						ImGui::PopStyleVar();
 					}
-					else if (tab1 == 3) {
-						ImVec2 font_size = ImGui::CalcTextSize("Tickbase exploits");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Tickbase exploits");
+					else if (mainTab == 3) {
+						SectionTitle("Tickbase Exploits");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2508,7 +2396,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100);
 							std::vector<std::string> dtvec;
 							static bool dtFlags[]{ Vars::Misc::CL_Move::RechargeWhileDead.m_Var,Vars::Misc::CL_Move::AutoRecharge.m_Var,Vars::Misc::CL_Move::WaitForDT.m_Var,Vars::Misc::CL_Move::AntiWarp.m_Var,Vars::Misc::CL_Move::NotInAir.m_Var };
-							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne"}; static std::string dtPreview = "PH";
+							const char* pDt[] = { "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }; static std::string dtPreview = "PH";
 							if (dtPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
 								dtPreview = "";
 								for (size_t i = 0; i < IM_ARRAYSIZE(pDt); i++) {
@@ -2573,12 +2461,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::SliderInt("SpeedHack Factor", &Vars::Misc::CL_Move::SFactor.m_Var, 1, 66, "%d"); HelpMarker("High values are not recommended");
 
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("HvH");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("HvH");
+
+						SectionTitle("HvH");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2599,12 +2483,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						if (Vars::Misc::CL_Move::Fakelag.m_Var) {
 							ImGui::Dummy(ImVec2(0, 20));
-							font_size = ImGui::CalcTextSize("Fakelag");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Fakelag");
+
+							SectionTitle("Fakelag");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2627,7 +2507,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					}
 					ImGui::EndChild();
 				}
-				if (!(tab1 == 2 && tab2 == 4)) {
+				if (!(mainTab == 2 && visualsTab == 4)) {
 					ImGui::SameLine(); //
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
@@ -2637,14 +2517,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopStyleVar();
 						ImGui::PopStyleVar();
 						ImGui::PopStyleVar();
-						if (tab1 == 0) {
-							ImVec2 font_size = ImGui::CalcTextSize("Projectile");
-							//float font_size = ImGui::GetFontSize() * text.size() / 2;
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Projectile");
+						if (mainTab == 0) {
+							SectionTitle("Projectile");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2661,12 +2535,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								WidthSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 							}
 							ImGui::Dummy(ImVec2(0, 20));
-							font_size = ImGui::CalcTextSize("Melee");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Melee");
+
+							SectionTitle("Melee");
 							widget_pos = ImGui::GetCursorScreenPos();
 
 							widget_pos.y -= 6;
@@ -2681,13 +2551,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var);
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 1) {
-							ImVec2 font_size = ImGui::CalcTextSize("Autoblast");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Autoblast");
+						else if (mainTab == 1) {
+							SectionTitle("Autoblast");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2697,9 +2562,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::Dummy(ImVec2(0, 20));
 
-							font_size = ImGui::CalcTextSize("Autouber");
-							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-							ImGui::Text("Autouber");
+							SectionTitle("Autouber");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2711,13 +2574,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 2 && tab2 == 0) {
-							ImVec2 font_size = ImGui::CalcTextSize("Glow main");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Glow main");
+						else if (mainTab == 2 && visualsTab == 0) {
+							SectionTitle("Glow Main");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2726,9 +2584,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var);
 							ImGui::Dummy(ImVec2(0, 20));
 
-							font_size = ImGui::CalcTextSize("Player glow");
-							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-							ImGui::Text("Player glow");
+							SectionTitle("Player Glow");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2743,13 +2599,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 2 && tab2 == 1) {
-							ImVec2 font_size = ImGui::CalcTextSize("Building glow");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Building glow");
+						else if (mainTab == 2 && visualsTab == 1) {
+							SectionTitle("Building Glow");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2760,13 +2611,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 2 && tab2 == 2) {
-							ImVec2 font_size = ImGui::CalcTextSize("World glow");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("World glow");
+						else if (mainTab == 2 && visualsTab == 2) {
+							SectionTitle("World Glow");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2778,13 +2624,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 2 && tab2 == 3) {
-							ImVec2 font_size = ImGui::CalcTextSize("Menu font");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Menu font");
+						else if (mainTab == 2 && visualsTab == 3) {
+							SectionTitle("Menu Font");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2836,9 +2677,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PopItemWidth();
 							ImGui::Dummy(ImVec2(0, 20));
 
-							font_size = ImGui::CalcTextSize("Indicator font");
-							ImGui::SameLine(ImGui::GetWindowSize().x / 2 - font_size.x + (font_size.x / 2));
-							ImGui::Text("Indicator font");
+							SectionTitle("Indicator Font");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2944,13 +2783,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 							ImGui::PopStyleVar();
 						}
-						else if (tab1 == 2 && tab2 == 5) {
-							ImVec2 font_size = ImGui::CalcTextSize("World");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("World");
+						else if (mainTab == 2 && visualsTab == 5) {
+							SectionTitle("World");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2962,13 +2796,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PopStyleVar();
 						}
 
-						else if (tab1 == 3) {
-							ImVec2 font_size = ImGui::CalcTextSize("Discord RPC");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Discord RPC");
+						else if (mainTab == 3) {
+							SectionTitle("Discord RPC");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2977,14 +2806,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var);
 							ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var);
 							const char* imagething[]{ "Big fedora + Small TF2", "Big TF2 + Small fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth();
-
 							ImGui::Dummy(ImVec2(0, 20));
-							font_size = ImGui::CalcTextSize("Steam RPC");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Steam RPC");
+
+							SectionTitle("Steam RPC");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2996,18 +2820,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); ImGui::PopItemWidth(); HelpMarker("For when \"Custom\" is selcted in \"Map text\". Sets custom map text.");
 							}
 							ImGui::PushItemWidth(100); ImGui::InputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size"); ImGui::PopItemWidth();
-
 							ImGui::Dummy(ImVec2(0, 20));
-							font_size = ImGui::CalcTextSize("Utilities");
-							ImGui::SameLine(
-								ImGui::GetWindowSize().x / 2 -
-								font_size.x + (font_size.x / 2)
-							);
-							ImGui::Text("Utilities");
+
+							SectionTitle("Utilities");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-							
+
 							if (ImGui::Button("Toggle playerlist", ImVec2(150, 20)))
 								g_PlayerList.showWindow = !g_PlayerList.showWindow;
 							if (ImGui::Button("Full update", ImVec2(150, 20)))
@@ -3034,7 +2853,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
 							if (ImGui::Button("Itemtest", ImVec2(150, 20)))
 								g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
-							
+
 							ImGui::PopStyleVar();
 						}
 						ImGui::EndChild();
@@ -3049,7 +2868,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		{
 			g_PlayerList.Render();
 		}
-		ImGui::End(); 
+		ImGui::End();
 		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.00f));
 		//if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse))
 		//{
