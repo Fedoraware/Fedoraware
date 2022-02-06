@@ -195,6 +195,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -771,6 +772,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 

@@ -52,6 +52,8 @@ struct GlobalInfo_t
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
 	std::map<int, ResolveMode> resolvePlayers;
+	std::vector<Vec3> predBeforeLines;
+	std::vector<Vec3> predFutureLines;
 };
 
 inline GlobalInfo_t g_GlobalInfo;
