@@ -1040,13 +1040,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
+						ImGui::Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Target", Colors::Target);
-						InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey);
-						WidthSlider("Aimbot FoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
-						ImGui::Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
+						InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
+						WidthSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+						ImGui::Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 						ImGui::PushItemWidth(100);
 						{
 							std::vector<std::string> aimTargets;
@@ -1088,6 +1088,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 								ImGui::EndCombo();
 							}
+							HelpMarker("Choose which targets the Aimbot should aim at");
+
 							for (size_t i = 0; i < IM_ARRAYSIZE(aim_targetVariables); i++) {
 								if (aim_targetVariables[i]) {
 									switch (i + 1) {
@@ -1143,6 +1145,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 								ImGui::EndCombo();
 							}
+							HelpMarker("Choose which targets should be ignored");
+
 							for (size_t i = 0; i < IM_ARRAYSIZE(ignore_targetVariables); i++) {
 								if (ignore_targetVariables[i]) {
 									switch (i + 1) {
@@ -1171,8 +1175,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 6;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Crit hack", &Vars::Crits::Active.m_Var);
-						InputKeybind("Crit key", Vars::Crits::CritKey);
+						ImGui::Checkbox("Crit hack", &Vars::Crits::Active.m_Var);  HelpMarker("Enables the crit hack (This doesn't work)");
+						InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Will try to fire crits when the key is held");
 						ImGui::PopStyleVar();
 					}
 					else if (mainTab == MainTabs::Triggerbot) {
@@ -1180,8 +1184,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var);
-						InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey);
+						ImGui::Checkbox("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
+						InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
 						ImGui::PushItemWidth(100);
 						{
 							std::vector<std::string> ignoreTargets;
@@ -1223,6 +1227,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 								ImGui::EndCombo();
 							}
+							HelpMarker("Choose which targets should be ignored");
+
 							for (size_t i = 0; i < IM_ARRAYSIZE(ignore_targetVariables); i++) {
 								if (ignore_targetVariables[i]) {
 									switch (i + 1) {
@@ -1247,7 +1253,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var);
+						ImGui::Checkbox("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
 						ImGui::PushItemWidth(100);
 						{
 							std::vector<std::string> aimTargets;
@@ -1269,6 +1275,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 										aim_targetPreview += aimTargets.at(i);
 								}
 							}
+
 							if (ImGui::BeginCombo("Trigger targets", aim_targetPreview.c_str()))
 							{
 								aim_targetPreview = "";
@@ -1289,6 +1296,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								}
 								ImGui::EndCombo();
 							}
+							HelpMarker("Choose which target the triggerbot should shoot at");
+
 							for (size_t i = 0; i < IM_ARRAYSIZE(aim_targetVariables); i++) {
 								if (aim_targetVariables[i]) {
 									switch (i + 1) {
@@ -1305,9 +1314,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 						} // Aim targets
 						ImGui::PopItemWidth();
-						ImGui::Checkbox("Head only", &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
-						ImGui::Checkbox("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
-						WidthSlider("Head scale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						ImGui::Checkbox("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
+						ImGui::Checkbox("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
+						WidthSlider("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
 						ImGui::PopStyleVar();
 					}
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Players) {
@@ -1315,24 +1324,24 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var);
-						ImGui::Checkbox("Outlined health bars", &Vars::ESP::Main::Outlinedbar.m_Var);
-						ImGui::Checkbox("Relative colours", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+						ImGui::Checkbox("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
+						ImGui::Checkbox("Outlined health bars", &Vars::ESP::Main::Outlinedbar.m_Var); HelpMarker("Will outline the health bars");
+						ImGui::Checkbox("Relative colours", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var); HelpMarker("Chooses colors relative to your team (team/enemy)");
 						if (Vars::ESP::Main::EnableTeamEnemyColors.m_Var) {
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("Enemy###EnemyColorPicker", Colors::Enemy);
+							ColorPicker("Enemy###EnemyColorPicker", Colors::Enemy); HelpMarker("Enemy color");
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("Team###TeamColorPicker", Colors::Team);
+							ColorPicker("Team###TeamColorPicker", Colors::Team); HelpMarker("Team color");
 						}
 						else {
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("RED Team###RedColorPicker", Colors::TeamRed);
+							ColorPicker("RED Team###RedColorPicker", Colors::TeamRed); HelpMarker("RED Team color");
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("BLU Team###BluColorPicker", Colors::TeamBlu);
+							ColorPicker("BLU Team###BluColorPicker", Colors::TeamBlu); HelpMarker("BLU Team color");
 						}
 						ImGui::Dummy(ImVec2(0, 20));
 
@@ -1340,45 +1349,45 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var);
-						ImGui::Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var);
-						ImGui::Checkbox("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var);
-						ImGui::Checkbox("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.m_Var);
+						ImGui::Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
+						ImGui::Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
+						ImGui::Checkbox("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
+						ImGui::Checkbox("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Local colour", Colors::Local);
-						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamESPp", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
+						ColorPicker("Local colour", Colors::Local); HelpMarker("Local colour");
+						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamESPp", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth(); HelpMarker("Which teammates the ESP will ignore drawing on");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Friend colour", Colors::Friend);
-						static const char* ignoreCloakArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakArr, IM_ARRAYSIZE(ignoreCloakArr)); ImGui::PopItemWidth();
+						ColorPicker("Friend colour", Colors::Friend); HelpMarker("Friend colour");
+						static const char* ignoreCloakArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakArr, IM_ARRAYSIZE(ignoreCloakArr)); ImGui::PopItemWidth(); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Cloaked colour", Colors::Cloak);
-						static const char* espUberArr[]{ "Off", "Text", "Bar" }; ImGui::PushItemWidth(100); ImGui::Combo("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.m_Var, espUberArr, IM_ARRAYSIZE(espUberArr)); ImGui::PopItemWidth();
+						ColorPicker("Cloaked colour", Colors::Cloak); HelpMarker("Cloaked colour");
+						static const char* espUberArr[]{ "Off", "Text", "Bar" }; ImGui::PushItemWidth(100); ImGui::Combo("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.m_Var, espUberArr, IM_ARRAYSIZE(espUberArr)); ImGui::PopItemWidth(); HelpMarker("Will draw how much ubercharge a medic has");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Ubercharge colour", Colors::UberColor);
-						static const char* classArr[]{ "Off", "Icon", "Text", "Both" }; ImGui::PushItemWidth(100); ImGui::Combo("Class###PlayerIconClass", &Vars::ESP::Players::Class.m_Var, classArr, IM_ARRAYSIZE(classArr)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Weapon icons", &Vars::ESP::Players::WeaponIcon.m_Var);
+						ColorPicker("Ubercharge colour", Colors::UberColor); HelpMarker("Ubercharge colour");
+						static const char* classArr[]{ "Off", "Icon", "Text", "Both" }; ImGui::PushItemWidth(100); ImGui::Combo("Class###PlayerIconClass", &Vars::ESP::Players::Class.m_Var, classArr, IM_ARRAYSIZE(classArr)); ImGui::PopItemWidth(); HelpMarker("Will draw the class the player is");
+						ImGui::Checkbox("Weapon icons", &Vars::ESP::Players::WeaponIcon.m_Var); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::WeaponIcon);
-						ImGui::Checkbox("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var);
-						ImGui::Checkbox("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var);
-						ImGui::Checkbox("Condition", &Vars::ESP::Players::Cond.m_Var);
+						ColorPicker("Invulnerable colour", Colors::WeaponIcon); HelpMarker("Invulnerable colour");
+						ImGui::Checkbox("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
+						ImGui::Checkbox("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
+						ImGui::Checkbox("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Condition colour", Colors::Cond);
-						ImGui::Checkbox("GUID", &Vars::ESP::Players::GUID.m_Var);
-						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth();
+						ColorPicker("Condition colour", Colors::Cond); HelpMarker("Condition colour");
+						ImGui::Checkbox("GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
+						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on players");
 						static const char* bonesESP[]{ "Off", "Custom colour", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Skellington colour", Colors::Bones);
-						ImGui::Checkbox("Lines###Playerlines", &Vars::ESP::Players::Lines.m_Var);
-						ImGui::Checkbox("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.m_Var);
-						WidthSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+						ColorPicker("Skellington colour", Colors::Bones); HelpMarker("Skellington colour");
+						ImGui::Checkbox("Lines###Playerlines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
+						ImGui::Checkbox("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
+						WidthSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
 						WidthSlider("ESP alpha###PlayerESPAlpha", &Vars::ESP::Players::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 
 						ImGui::PopStyleVar();
@@ -1904,13 +1913,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var);
-						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var);
-						const char* autoStrafeModes[]{ "Off", "Normal", "Directional" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var);
-						InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, false);
-						ImGui::Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var);
-						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var);
+						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
+						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
+						const char* autoStrafeModes[]{ "Off", "Normal", "Directional" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth(); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
+						InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, false);  HelpMarker("Edge jump bind, leave as None for always on");
+						ImGui::Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
+						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
 						ImGui::Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var);
 						ImGui::Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var);
 						const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
@@ -1920,16 +1929,16 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var);
+						ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Will spam your noisemaker without using its charges");
 						const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var);
-						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%");
+						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you of cheating");
+						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
 						ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var);
-						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var);
+						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override etc.");
 						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var);
-						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var);
-						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var);
+						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
+						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
