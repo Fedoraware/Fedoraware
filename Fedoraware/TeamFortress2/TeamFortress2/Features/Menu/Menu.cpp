@@ -510,7 +510,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 	//	ImGui::End();
 	//	ImGui::PopStyleColor(2);
 	//}
-	ImGui::GetIO().MouseDrawCursor = menuOpen;
+	// ImGui::GetIO().MouseDrawCursor = menuOpen;
 	if (g_Menu.m_bOpen)
 	{
 		ImColor accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
@@ -621,56 +621,55 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							selected = s;
 						}
 						ImGui::PopStyleColor();
+
+						// Save, Load and Remove buttons
+						if (ImGui::Button("Save", ImVec2(61, 20))) {
+							ImGui::OpenPopup("Save config?");
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Load", ImVec2(61, 20))) {
+							g_CFG.Load(selected.c_str());
+							selected.clear();
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Remove", ImVec2(62, 20))) {
+							ImGui::OpenPopup("Remove config?");
+						}
+						// Save config dialog
+						if (ImGui::BeginPopupModal("Save config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+							ImGui::Text("Do you really want to override this config?\n\n");
+							ImGui::Separator();
+							if (ImGui::Button("Yes, override!", ImVec2(150, 0))) {
+								g_CFG.Save(selected.c_str());
+								selected.clear();
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::SameLine();
+							if (ImGui::Button("No", ImVec2(120, 0))) {
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::EndPopup();
+						}
+						// Delete config dialog
+						if (ImGui::BeginPopupModal("Remove config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+							ImGui::Text("Do you really want to delete this config?\n\n");
+							ImGui::Separator();
+							if (ImGui::Button("Yes, remove!", ImVec2(150, 0))) {
+								g_CFG.Remove(selected.c_str());
+								selected.clear();
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::SameLine();
+							if (ImGui::Button("No", ImVec2(150, 0))) {
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::EndPopup();
+						}
 					}
 					else {
 						if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
 							selected = s;
 						}
-					}
-				}
-				if (!selected.empty())
-				{
-					if (ImGui::Button("Save", ImVec2(61, 20))) {
-						ImGui::OpenPopup("Save config?");
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Load", ImVec2(61, 20))) {
-						g_CFG.Load(selected.c_str());
-						selected.clear();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Remove", ImVec2(62, 20))) {
-						ImGui::OpenPopup("Remove config?");
-					}
-					// Save config dialog
-					if (ImGui::BeginPopupModal("Save config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-						ImGui::Text("Do you really want to override this config?\n\n");
-						ImGui::Separator();
-						if (ImGui::Button("Yes, override!", ImVec2(150, 0))) {
-							g_CFG.Save(selected.c_str());
-							selected.clear();
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("No", ImVec2(120, 0))) {
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::EndPopup();
-					}
-					// Delete config dialog
-					if (ImGui::BeginPopupModal("Remove config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-						ImGui::Text("Do you really want to delete this config?\n\n");
-						ImGui::Separator();
-						if (ImGui::Button("Yes, remove!", ImVec2(150, 0))) {
-							g_CFG.Remove(selected.c_str());
-							selected.clear();
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("No", ImVec2(150, 0))) {
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::EndPopup();
 					}
 				}
 
