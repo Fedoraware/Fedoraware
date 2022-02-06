@@ -67,6 +67,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 
 	if (!pLocal) {
+		g_GlobalInfo.m_nShifted = 0; // we do not have charge if we do not exist
 		return;
 	}
 
