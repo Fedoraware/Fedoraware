@@ -452,25 +452,25 @@ void CMisc::SteamRPC()
 	switch (Vars::Misc::Steam::MapText.m_Var)
 	{
 	case 0:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
-		break;
-	case 1:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
-		break;
-	case 2:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
-		break;
-	case 3:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
-		break;
-	case 4:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
-		break;
-	case 5:
-		if (Vars::Misc::Steam::CustomText.empty())
+		if (Vars::Misc::Steam::CustomText.m_Var.empty())
 			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
 		else
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.c_str());
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.m_Var.c_str());
+		break;
+	case 1:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+		break;
+	case 2:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
+		break;
+	case 3:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
+		break;
+	case 4:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
+		break;
+	case 5:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
 		break;
 	default:
 		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");

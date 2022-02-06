@@ -1525,12 +1525,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopStyleVar();
 					}
 					else if (tab1 == 2 && tab2 == 4) {
-						ImVec2 font_size = ImGui::CalcTextSize("Visual misc 1");
+						ImVec2 font_size = ImGui::CalcTextSize("World & UI");
 						ImGui::SameLine(
 							ImGui::GetWindowSize().x / 2 -
 							font_size.x + (font_size.x / 2)
 						);
-						ImGui::Text("Visual misc 1");
+						ImGui::Text("World & UI");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -1787,25 +1787,25 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SetNextItemWidth(44);
 						ColorPicker("DT charging right###dtcg1", Colors::DtChargingRight);
 						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
-							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar Height", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar height###dtBHeightNitro", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
 							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("DT charged left###dtcl1", Colors::DtChargedLeft);
+							ColorPicker("DT charged left###dtCLeftNitro", Colors::DtChargedLeft);
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("DT charged right###dtcr1", Colors::DtChargedRight);
-							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar Width", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
+							ColorPicker("DT charged right###dtCRightNitro", Colors::DtChargedRight);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar width###dtBWidthNitro", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
 							ImGui::PopItemWidth();
 						}
 						else {
-							ImGui::PushItemWidth(150); ImGui::SliderInt("DT bar height", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar height###dtBHeight", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
 							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("DT charged left###dtcl2", Colors::DtChargedLeft);
+							ColorPicker("DT charged left###dtCLeft", Colors::DtChargedLeft);
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("DT charged right###dtcr2", Colors::DtChargedRight);
-							ImGui::PushItemWidth(150); ImGui::SliderInt("DT bar width", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
+							ColorPicker("DT charged right###dtCRight", Colors::DtChargedRight);
+							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar width###dtBWidth", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
 							ImGui::PopItemWidth();
 						}
 						
@@ -1917,11 +1917,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Active###RadarActive", &Vars::Radar::Main::Active.m_Var);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar size", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar range", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar background alpha", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Radar lines alpha", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
+						ImGui::Checkbox("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var);
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Size###RadarSize", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Range###RadarRange", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
 
 						ImGui::Dummy(ImVec2(0, 20));
 						font_size = ImGui::CalcTextSize("Players");
@@ -1964,12 +1964,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						const char* rollModes[]{ "Off", "Backwards", "Fake forward" }; ImGui::PushItemWidth(100); ImGui::Combo("Crouch speed", &Vars::Misc::Roll.m_Var, rollModes, IM_ARRAYSIZE(rollModes)); ImGui::PopItemWidth(); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
 
 						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Misc 1");
+						font_size = ImGui::CalcTextSize("Misc");
 						ImGui::SameLine(
 							ImGui::GetWindowSize().x / 2 -
 							font_size.x + (font_size.x / 2)
 						);
-						ImGui::Text("Misc 1");
+						ImGui::Text("Misc");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
@@ -2074,8 +2074,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var);
 						ImGui::Checkbox("Spectated smooth", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var);
 						ImGui::Checkbox("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var);
-						ImGui::Checkbox("Automatically scope", &Vars::Aimbot::Hitscan::AutoScope.m_Var);
-						ImGui::Checkbox("Automatically rev", &Vars::Aimbot::Hitscan::AutoRev.m_Var);
+						ImGui::Checkbox("Auto scope", &Vars::Aimbot::Hitscan::AutoScope.m_Var);
+						ImGui::Checkbox("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.m_Var);
 						ImGui::Checkbox("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.m_Var);
 						ImGui::PopStyleVar();
 					}
@@ -2106,8 +2106,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Autodetonate###Triggerautodet", &Vars::Triggerbot::Detonate::Active.m_Var);
 						ImGui::Checkbox("Explode stickies", &Vars::Triggerbot::Detonate::Stickies.m_Var);
-						ImGui::Checkbox("Detonator flares", &Vars::Triggerbot::Detonate::Flares.m_Var);
-						WidthSlider("Radius scale###Triggerdetradius", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						ImGui::Checkbox("Detonate flares", &Vars::Triggerbot::Detonate::Flares.m_Var);
+						WidthSlider("Detonation radius###Triggerdetradius", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 
 						ImGui::PopStyleVar();
 					}
@@ -2154,10 +2154,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var);
-						ImGui::Checkbox("Self chams###PlayerChamsBox", &Vars::Chams::Players::ShowLocal.m_Var);
+						ImGui::Checkbox("Self chams###PlayerSelfChamsBox", &Vars::Chams::Players::ShowLocal.m_Var);
 						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
 						ImGui::Checkbox("Wearable chams###PlayerWearableChams", &Vars::Chams::Players::Wearables.m_Var);
-						ImGui::Checkbox("Weapon chams###PlayerWearableChams", &Vars::Chams::Players::Weapons.m_Var);
+						ImGui::Checkbox("Weapon chams###PlayerWeaponChams", &Vars::Chams::Players::Weapons.m_Var);
 						if (g_Interfaces.CVars->FindVar("mat_phong")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_specular")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_bumpmap")->GetInt() == 1) {
 							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						}
@@ -2243,7 +2243,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("World chams###woldchamsbut", &Vars::Chams::World::Active.m_Var);
 						ImGui::Checkbox("Health packs###WorldchamsHealthPacks", &Vars::Chams::World::Health.m_Var);
 						ImGui::Checkbox("Ammo packs###Worldchamsammopacks", &Vars::Chams::World::Ammo.m_Var);
-						ImGui::Checkbox("Projectiles###Worldchamsprojectiles", &Vars::Chams::World::Ammo.m_Var);
+						static const char* wChamsProjectiles[]{ "Off", "All", "Enemy only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectiles###WorldChamsProjectiles", &Vars::Chams::World::Projectiles.m_Var, wChamsProjectiles, IM_ARRAYSIZE(wChamsProjectiles)); ImGui::PopItemWidth();
 						if (g_Interfaces.CVars->FindVar("mat_phong")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_specular")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_bumpmap")->GetInt() == 1) {
 							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::World::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						}
@@ -2367,12 +2367,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopStyleVar();
 					}
 					else if (tab1 == 2 && tab2 == 4) {
-						ImVec2 font_size = ImGui::CalcTextSize("Visual misc 2");
+						ImVec2 font_size = ImGui::CalcTextSize("Skybox & Textures");
 						ImGui::SameLine(
 							ImGui::GetWindowSize().x / 2 -
 							font_size.x + (font_size.x / 2)
 						);
-						ImGui::Text("Visual misc 2");
+						ImGui::Text("Skybox & Textures");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -2403,7 +2403,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						};
 						ImGui::Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var);
 						ImGui::PushItemWidth(150); ImGui::Combo("Skybox", &Vars::Skybox::SkyboxNum, skyNames, IM_ARRAYSIZE(skyNames), 6);  ImGui::PopItemWidth();
-						ImGui::PushItemWidth(150); ImGui::InputText("Custom skybox", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
+						if (Vars::Skybox::SkyboxNum == 0) {
+							ImGui::PushItemWidth(150); ImGui::InputText("Custom skybox name", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth();
+						}
 						ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var);
 						const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(150); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth();
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -2429,10 +2431,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var);
 						InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey);
-						ImGui::Checkbox("Thirdperson show real angles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
-						ImGui::Checkbox("Thirdperson instant yaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
-						ImGui::Checkbox("Thirdperson show server hitboxes", &Vars::Visuals::ThirdPersonServerHitbox.m_Var);
-						ImGui::Checkbox("Show fakelag", &Vars::Misc::CL_Move::FakelagIndicator.m_Var);
+						ImGui::Checkbox("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
+						ImGui::Checkbox("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
+						ImGui::Checkbox("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.m_Var);
+						ImGui::Checkbox("Show fakelag###tpShowFakelag", &Vars::Misc::CL_Move::FakelagIndicator.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
 
 
@@ -2477,7 +2479,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 
-						ImGui::Checkbox("Active###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
+						ImGui::Checkbox("Show buildings###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
 						ImGui::Checkbox("Outline###radarbuildingsao", &Vars::Radar::Buildings::Outline.m_Var);
 						ImGui::Checkbox("Ignore team###radarbuildingsb", &Vars::Radar::Buildings::IgnoreTeam.m_Var);
 						ImGui::Checkbox("Health bar###radarbuildingsc", &Vars::Radar::Buildings::Health.m_Var);
@@ -2587,7 +2589,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (Vars::AntiHack::AntiAim::YawFake.m_Var == 5 || Vars::AntiHack::AntiAim::YawReal.m_Var == 5)
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth();
 						ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var);
-						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fake Lag", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
+						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
 						if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) {
 							Vars::Misc::CL_Move::Fakelag.m_Var = true;
 						}
@@ -2595,27 +2597,29 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							Vars::Misc::CL_Move::Fakelag.m_Var = false;
 						}
 
-						ImGui::Dummy(ImVec2(0, 20));
-						font_size = ImGui::CalcTextSize("Fakelag");
-						ImGui::SameLine(
-							ImGui::GetWindowSize().x / 2 -
-							font_size.x + (font_size.x / 2)
-						);
-						ImGui::Text("Fakelag");
-						widget_pos = ImGui::GetCursorScreenPos();
-						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3) {
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
-							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) {
-								ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
-								if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
-									InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey);
+						if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+							ImGui::Dummy(ImVec2(0, 20));
+							font_size = ImGui::CalcTextSize("Fakelag");
+							ImGui::SameLine(
+								ImGui::GetWindowSize().x / 2 -
+								font_size.x + (font_size.x / 2)
+							);
+							ImGui::Text("Fakelag");
+							widget_pos = ImGui::GetCursorScreenPos();
+							widget_pos.y -= 4;
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3) {
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
+								if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) {
+									ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
+									if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+										InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey);
+								}
 							}
-						}
-						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) {
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Random max", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Random min", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) {
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); ImGui::PopItemWidth();
+								ImGui::PushItemWidth(100); ImGui::SliderInt("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth();
+							}
 						}
 						//ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
 						// this already exists in visuals misc near the thirdperson
@@ -2653,7 +2657,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							}
 							ImGui::Checkbox("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);
 							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var);
-							WidthSlider("Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var) {
+								WidthSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							}
 							ImGui::Dummy(ImVec2(0, 20));
 							font_size = ImGui::CalcTextSize("Melee");
 							ImGui::SameLine(
@@ -2730,8 +2736,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.m_Var);
 							ImGui::Checkbox("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Homosapien");
 							static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamGlowp", &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-							ImGui::Checkbox("Wearable glow###PlayerWearableChams", &Vars::Glow::Players::Wearables.m_Var);
-							ImGui::Checkbox("Weapon glow###PlayerWearableChams", &Vars::Glow::Players::Weapons.m_Var);
+							ImGui::Checkbox("Wearable glow###PlayerWearableGlow", &Vars::Glow::Players::Wearables.m_Var);
+							ImGui::Checkbox("Weapon glow###PlayerWeaponGlow", &Vars::Glow::Players::Weapons.m_Var);
 							WidthSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 							static const char* colourArr[]{ "Team", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Glow colour###GlowColour", &Vars::Glow::Players::Color.m_Var, colourArr, IM_ARRAYSIZE(colourArr)); ImGui::PopItemWidth();
 
@@ -2949,8 +2955,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
-							ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Active.m_Var);
-							ImGui::Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Active.m_Var);
+							ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
+							ImGui::Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
 
 							ImGui::PopStyleVar();
@@ -2970,7 +2976,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var);
 							ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var);
 							ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var);
-							const char* imagething[]{ "Big fedora + Small TF2", "Small TF2 + Big fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth();
+							const char* imagething[]{ "Big fedora + Small TF2", "Big TF2 + Small fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth();
 
 							ImGui::Dummy(ImVec2(0, 20));
 							font_size = ImGui::CalcTextSize("Steam RPC");
@@ -2985,8 +2991,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence");
 							const char* matchGroups[]{ "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }; ImGui::PushItemWidth(100); ImGui::Combo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, matchGroups, IM_ARRAYSIZE(matchGroups)); ImGui::PopItemWidth(); HelpMarker("Which match group should be used?");
 							ImGui::Checkbox("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
-							const char* mapTexts[]{ "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf", "custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Map text", &Vars::Misc::Steam::MapText.m_Var, mapTexts, IM_ARRAYSIZE(mapTexts)); ImGui::PopItemWidth(); HelpMarker("Which map text should be used?");
-							ImGui::PushItemWidth(100); ImGui::InputText("Custom map text", &Vars::Misc::Steam::CustomText); ImGui::PopItemWidth(); HelpMarker("For when \"custom\" is selcted in \"Map text\". Sets custom map text.");
+							const char* mapTexts[]{ "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }; ImGui::PushItemWidth(100); ImGui::Combo("Map text", &Vars::Misc::Steam::MapText.m_Var, mapTexts, IM_ARRAYSIZE(mapTexts)); ImGui::PopItemWidth(); HelpMarker("Which map text should be used?");
+							if (Vars::Misc::Steam::MapText.m_Var == 0) {
+								ImGui::PushItemWidth(100); ImGui::InputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); ImGui::PopItemWidth(); HelpMarker("For when \"Custom\" is selcted in \"Map text\". Sets custom map text.");
+							}
 							ImGui::PushItemWidth(100); ImGui::InputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size"); ImGui::PopItemWidth();
 
 							ImGui::Dummy(ImVec2(0, 20));
