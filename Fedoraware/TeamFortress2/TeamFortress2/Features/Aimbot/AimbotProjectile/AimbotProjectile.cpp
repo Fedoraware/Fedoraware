@@ -371,10 +371,17 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			}
 			case CLASS_SNIPER:
 			{
+				// thank you spook953
+				Vec3 vHeadDelta = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD) - Predictor.m_pEntity->m_vecOrigin();
+				vPredictedPos.x += vHeadDelta.x;
+				vPredictedPos.y += vHeadDelta.y;
+
 				Vec3 vEntPos = Predictor.m_pEntity->GetWorldSpaceCenter();
 				Vec3 vHeadPos = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD);
 				float zOffset = vHeadPos.z - vEntPos.z;
 				vPredictedPos.z += zOffset;
+
+
 				Vec3 vEntForward = {};
 				Math::AngleVectors(Predictor.m_pEntity->GetEyeAngles(), &vEntForward);
 				Vec3 vToEnt = Predictor.m_vPosition - pLocal->GetAbsOrigin();
