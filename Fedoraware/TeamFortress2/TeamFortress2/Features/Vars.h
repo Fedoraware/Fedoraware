@@ -517,9 +517,9 @@ namespace Vars
 			inline CVar<bool>EnableRPC{ true, L"Enable Steam RPC" };
 			inline CVar<int>MatchGroup{ 0, L"Match group" }; // 0 - Special Event; 1 - MvM Mann Up; 2 - Competitive; 3 - Casual; 4 - MvM Boot Camp;
 			inline CVar<bool>OverrideMenu{ false, L"Override when in main menu" }; // Override matchgroup when in main menu
-			inline CVar<int>MapText{ 0, L"Match group" }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
+			inline CVar<int>MapText{ 1, L"Map Text" }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
 			inline CVar<int>GroupSize{ 1337, L"Player group size" };
-			inline std::string CustomText = "M-FeD is gay";
+			inline CVar<std::string> CustomText = { "M-FeD is gay", L"Custom Text" };
 		}
 	}
 
