@@ -2196,6 +2196,71 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("Weapon glow colour", Colors::WeaponOverlay);
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Weapon glow boost", &Vars::Chams::DME::WeaponRimMultiplier.m_Var, 1, 100, "%d"); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
 
+						ImGui::PushItemWidth(100);
+						{
+							std::vector<std::string> hitscan_mpTargets;
+							static bool hitscan_mpVariables[4]{ Vars::Chams::DME::HandsRainbow.m_Var, Vars::Chams::DME::HandsOverlayRainbow.m_Var, Vars::Chams::DME::WeaponRainbow.m_Var, Vars::Chams::DME::WeaponOverlayRainbow.m_Var };
+							const char* hitscan_mpStrings[] = { "Hands", "Hands overlay", "Weapon", "Weapon overlay" }; static std::string hitscan_mpPreview = "PH";
+							if (hitscan_mpPreview == "PH") { // super simple, iterate through this once so we don't have clear combo boxesB
+								hitscan_mpPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(hitscan_mpStrings); i++) {
+									if (hitscan_mpVariables[i])
+										hitscan_mpTargets.push_back(hitscan_mpStrings[i]);
+								}
+								for (size_t i = 0; i < hitscan_mpTargets.size(); i++)
+								{
+									if (hitscan_mpTargets.size() == 1)
+										hitscan_mpPreview += hitscan_mpTargets.at(i);
+									else if (!(i == hitscan_mpTargets.size() - 1))
+										hitscan_mpPreview += hitscan_mpTargets.at(i) + ", ";
+									else
+										hitscan_mpPreview += hitscan_mpTargets.at(i);
+								}
+							}
+
+							if (ImGui::BeginCombo("Rainbow DME###RainbowDMEChams", hitscan_mpPreview.c_str()))
+							{
+								hitscan_mpPreview = "";
+								for (size_t i = 0; i < IM_ARRAYSIZE(hitscan_mpStrings); i++)
+								{
+									ImGui::Selectable(hitscan_mpStrings[i], &hitscan_mpVariables[i]);
+									if (hitscan_mpVariables[i])
+										hitscan_mpTargets.push_back(hitscan_mpStrings[i]);
+								}
+								for (size_t i = 0; i < hitscan_mpTargets.size(); i++)
+								{
+									if (hitscan_mpTargets.size() == 1)
+										hitscan_mpPreview += hitscan_mpTargets.at(i);
+									else if (!(i == hitscan_mpTargets.size() - 1))
+										hitscan_mpPreview += hitscan_mpTargets.at(i) + ", ";
+									else
+										hitscan_mpPreview += hitscan_mpTargets.at(i);
+								}
+								ImGui::EndCombo();
+							}
+							HelpMarker("Rainbow DME chams");
+
+							for (size_t i = 0; i < IM_ARRAYSIZE(hitscan_mpVariables); i++) {
+								if (hitscan_mpVariables[i]) {
+									switch (i + 1) {
+									case 1: { Vars::Chams::DME::HandsRainbow.m_Var = true; break; }
+									case 2: { Vars::Chams::DME::HandsOverlayRainbow.m_Var = true; break; }
+									case 3: { Vars::Chams::DME::WeaponRainbow.m_Var = true; break; }
+									case 4: { Vars::Chams::DME::WeaponOverlayRainbow.m_Var = true; break; }
+									}
+								}
+								else {
+									switch (i + 1) {
+									case 1: { Vars::Chams::DME::HandsRainbow.m_Var = false; break; }
+									case 2: { Vars::Chams::DME::HandsOverlayRainbow.m_Var = false; break; }
+									case 3: { Vars::Chams::DME::WeaponRainbow.m_Var = false; break; }
+									case 4: { Vars::Chams::DME::WeaponOverlayRainbow.m_Var = false; break; }
+									}
+								}
+							}
+						}
+						ImGui::PopItemWidth();
+
 						ImGui::PopStyleVar();
 					}
 
