@@ -40,14 +40,14 @@ void CAttributChanger::Run()
 		if (!pLocal->IsAlive())
 			return;
 
-		auto MyWeapons = pLocal->GetMyWeapons(); // reinterpret_cast<size_t*>(pLocal + 0xCF8);
+		auto MyWeapons = reinterpret_cast<size_t*>(pLocal + 0xCF8);
 
 		int n;
 		for (n = 0; MyWeapons[n]; n++)
 		{
 			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(MyWeapons[n])))
 			{
-				auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C0);
+				auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
 
 				if (!pList || pList->m_Attributes.Count() > 0)
 					continue;
