@@ -7,6 +7,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	static auto oClMove = Func.Original<fn>();
 
 	if (!Vars::Misc::CL_Move::Enabled.m_Var) {
+		g_GlobalInfo.m_nShifted = 0;
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 

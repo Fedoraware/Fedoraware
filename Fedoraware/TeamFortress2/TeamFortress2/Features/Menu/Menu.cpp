@@ -2716,10 +2716,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Glow", &Vars::Glow::Main::Active.m_Var);
-							ImGui::PushItemWidth(100); ImGui::SliderInt("Glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth();
 							ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var);
+							if (!Vars::Glow::Main::Wireframe.m_Var) { ImGui::PushItemWidth(100); ImGui::SliderInt("Glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth(); }
 							ImGui::Dummy(ImVec2(0, 20));
-
 							SectionTitle("Player Glow");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;

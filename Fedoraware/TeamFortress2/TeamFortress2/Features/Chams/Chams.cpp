@@ -99,6 +99,9 @@ void CChams::Render()
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
 
+	if (!Vars::Chams::Main::Active.m_Var)
+		return;
+
 	m_bHasSetStencil = false;
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)

@@ -113,7 +113,7 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 
 void CESP::DrawPlayers(CBaseEntity* pLocal)
 {
-	if (!Vars::ESP::Players::Active.m_Var)
+	if (!Vars::ESP::Players::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
 		return;
 
 	for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
@@ -373,7 +373,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 void CESP::DrawBuildings(CBaseEntity* pLocal)
 {
-	if (!Vars::ESP::Buildings::Active.m_Var)
+	if (!Vars::ESP::Buildings::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
 		return;
 
 	const auto Buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.m_Var ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL);
@@ -578,7 +578,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 void CESP::DrawWorld()
 {
-	if (!Vars::ESP::World::Active.m_Var)
+	if (!Vars::ESP::World::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
 		return;
 
 	Vec3 vScreen = {};
