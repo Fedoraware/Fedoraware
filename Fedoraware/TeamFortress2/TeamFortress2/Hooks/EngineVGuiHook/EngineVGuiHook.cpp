@@ -65,7 +65,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
 				// Fuck you.
-				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var) {
+				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero()) {
 					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++) {
 						Vec3 vScreenpast, vScreenfuture;
 						if (Utils::W2S(g_GlobalInfo.predBeforeLines.at(i), vScreenpast)) {

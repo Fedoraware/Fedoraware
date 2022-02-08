@@ -59,8 +59,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
+		bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
 
-		for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		for (const auto& Player : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
@@ -81,13 +82,13 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				}
 			}
 
-			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
+			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting() && (!bIsMedigun))
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
+			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && (!bIsMedigun))
 				continue;
 
-			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end() && (!bIsMedigun))
 				continue;
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var) {
