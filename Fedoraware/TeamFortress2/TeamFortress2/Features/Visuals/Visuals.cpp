@@ -169,7 +169,6 @@ void CVisuals::ThirdPerson()
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
 		{
 			g_Interfaces.Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
-
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
 				if (const auto &pAnimState = pLocal->GetAnimState())
