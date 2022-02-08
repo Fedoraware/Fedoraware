@@ -471,6 +471,7 @@ namespace Vars
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };
+		inline CVar<bool> AntiAutobal			{ false, L"AntiAutobal" };
 		inline CVar<bool> RageRetry				{ false, L"Rage Retry" };
 		inline CVar<int> RageRetryHealth		{ 20, L"Rage Retry health" };
 		inline CVar<bool> MVMRes				{ true, L"MVM Respawn" };
