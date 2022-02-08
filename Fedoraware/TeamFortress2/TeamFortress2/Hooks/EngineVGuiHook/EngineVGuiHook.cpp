@@ -65,20 +65,32 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
 				// Fuck you.
-				if (!g_GlobalInfo.m_vPredictedPos.IsZero())
-				{
-					if (Vars::Visuals::AimPosSquare.m_Var) {
-						Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
-						if (Utils::W2S(g_GlobalInfo.jagnepredshit, vProjAimStart) && Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd)) {
-							g_Draw.Line(
-								vProjAimStart.x,
-								vProjAimStart.y,
-								vProjAimEnd.x,
-								vProjAimEnd.y,
-								{ 255, 255, 255, 255 } //Set this to a var if u wantto idc
-							);
+				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var) {
+					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++) {
+						Vec3 vScreenpast, vScreenfuture;
+						if (Utils::W2S(g_GlobalInfo.predBeforeLines.at(i), vScreenpast)) {
+							if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture)) {
+								g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y, { 255,255,255,255 });
+							}
 						}
-						
+					}
+				}
+				else {
+					if (!g_GlobalInfo.m_vPredictedPos.IsZero())
+					{
+						if (Vars::Visuals::AimPosSquare.m_Var) {
+							Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+							if (Utils::W2S(g_GlobalInfo.jagnepredshit, vProjAimStart) && Utils::W2S(g_GlobalInfo.m_vPredictedPos, vProjAimEnd)) {
+								g_Draw.Line(
+									vProjAimStart.x,
+									vProjAimStart.y,
+									vProjAimEnd.x,
+									vProjAimEnd.y,
+									{ 255, 255, 255, 255 } //Set this to a var if u wantto idc
+								);
+							}
+
+						}
 					}
 				}
 
@@ -98,7 +110,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						{
 							const int nY = (g_ScreenSize.h / 2) + 20;
 
-							static Color_t color1, color2, color3;
+							static Color_t color1, color2;
 
 							if (g_GlobalInfo.m_nWaitForShift) {
 								color1 = Colors::DtChargingLeft;
@@ -115,19 +127,20 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
 								tickWidth = (g_GlobalInfo.m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
-								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f); 
+								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
 
-								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2)  + 49, maxWidth + 2, Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2, { 50,50,50,210 });
+								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2) + 49, maxWidth + 2, Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2, { 50,50,50,210 });
 								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth, (g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, color1, color2, true);
 							}
 
-							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) { // literally directly pasted from deathpole and not tested so PLEASE M-FED TEST THIS
+							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3) {
+								g_DTBar.Run(); // put this here so we don't move menu if we r using something else, no biggie
 								float rratio = ((float)g_GlobalInfo.m_nShifted / (float)Vars::Misc::CL_Move::DTTicks.m_Var);
-								static float ratio = 0.f; ratio = g_Draw.EaseIn(ratio, rratio, 0.98f);
+								static float ratio = 0.f; ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
 
 								if (ratio > 1.f) { ratio = 1.f; }
 								else if (ratio < 0.f) { ratio = 0.f; } //if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
-								
+
 								// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
 								//		so i added them
 								int xoff = Vars::Misc::CL_Move::DTBarX.m_Var; // width offset (is it called width offset who knows)
@@ -135,9 +148,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
 								int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
 
-								color3 = { 255,255,255,255 };
-
-								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2), color3);
+								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2), Colors::DtOutline);
 								g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale, yscale, { 17, 24, 26, 255 });
 								g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, ((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)), (nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);
 								g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff, nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _(L"CHARGE"));
@@ -167,9 +178,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 
+				// build date
+				if (g_Menu.m_bOpen)
+					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
+
 				// debug
 				{
-					
+
 				}
 
 				//Current Active Aimbot FOV
@@ -192,7 +207,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_DTBar.Run();
 			g_Crits.Frame();
 			g_Menu.Run();
 

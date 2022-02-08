@@ -41,16 +41,7 @@ namespace Vars
 
 		namespace Colors
 		{
-			inline Color_t WindowBackground		= { 30, 30, 30, 255 };
-			inline Color_t TitleBar				= { 50, 50, 50, 255 };
-			inline Color_t Text					= { 255, 255, 255, 190 };
-			inline Color_t Widget				= { 20, 20, 20, 255 };
-			inline Color_t WidgetActive			= { 70, 70, 70, 255 };
-			inline Color_t OutlineMenu			= { 255, 255, 255, 20 };
-			inline Color_t FeatureOn			= { 255, 255, 255, 0 };
-			inline Color_t FeatureOff			= { 255, 255, 255, 0 };
-			inline Color_t FeatureBackground	= { 255, 255, 255, 0 };
-			inline Color_t FeatureOutline		= { 255, 255, 255, 0 };
+			inline Color_t MenuAccent = { 255, 101, 101, 255 };
 		}
 	}
 
@@ -109,8 +100,10 @@ namespace Vars
 			inline CVar<int> AimPosition		{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround	{ false, L"Aim at feet if target is on the ground." };
+			inline CVar<bool> MovementSimulation{ false, L"move sim" };
 			inline CVar<bool> ManualZAdjust		{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount	{ 5.5f, L"Z Adjust factor." };
+			inline CVar<float> predTime			{ 2.0f, L"Prediction TIme" };
 		}
 
 		namespace Melee
@@ -178,6 +171,7 @@ namespace Vars
 			inline CVar<bool> Active		{ false, L"Active" };
 			inline CVar<bool> OnlyFriends	{ false, L"Only Friends" };
 			inline CVar<bool> PopLocal      { false, L"Pop on local" };
+			inline CVar<bool> AutoVacc		{ false, L"Auto Vacc" };
 			inline CVar<float> HealthLeft   { 35.0f, L"Health left" };
 		}
 	}
@@ -187,7 +181,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active	{ true, L"Active" };
-			inline CVar<int> Outlinedbar	{ 1, L"Outlined health bar" }; //0 - OFF, 1 - Text Only, 2 - All
+			inline CVar<bool> Outlinedbar	{ 1, L"Outlined health bar" }; //0 - OFF, 1 - Text Only, 2 - All
 			inline CVar<bool> EnableTeamEnemyColors	{ false, L"Enable team/enemy colors"};
 		}
 
@@ -295,11 +289,15 @@ namespace Vars
 			inline CVar<float> HandsAlpha{ 1.0f, L"Hands Alpha" };
 			inline CVar<bool> HandsGlowOverlay{ false, L"Hands Glow" };
 			inline CVar<int> HandsRimMultiplier { 10, L"Hands Rimlight Boost" };
+			inline CVar<bool> HandsRainbow{ false, L"Rainbow hands" };
+			inline CVar<bool> HandsOverlayRainbow{ false, L"Rainbow hands" };
 
 			inline CVar<int> Weapon{ 0, L"Weapon" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
 			inline CVar<float> WeaponAlpha{ 1.0f, L"Weapon Alpha" };
 			inline CVar<bool> WeaponGlowOverlay{ false, L"Weapon Glow" };
 			inline CVar<int> WeaponRimMultiplier{ 10, L"Weapon Rimlight Boost" };
+			inline CVar<bool> WeaponRainbow { false, L"Rainbow weapons" };
+			inline CVar<bool> WeaponOverlayRainbow { false, L"Rainbow weapons" };
 		}
 	}
 
@@ -481,6 +479,8 @@ namespace Vars
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
 			inline CVar<bool> Doubletap		{ true, L"Doubletap" };
+			inline CVar<bool> SEnabled{ false, L"Speedhack" };
+			inline CVar<int> SFactor{ 1, L"Speedhack Factor" };
 			inline CVar<bool> NotInAir		{ true, L"Dont DT in air" };
 			inline CVar<int> TeleportKey	{ 0x52, L"Teleport Key" }; //R
 			inline CVar<int> RechargeKey	{ 0x48, L"Recharge Key" }; //H
@@ -522,9 +522,9 @@ namespace Vars
 			inline CVar<bool>EnableRPC{ true, L"Enable Steam RPC" };
 			inline CVar<int>MatchGroup{ 0, L"Match group" }; // 0 - Special Event; 1 - MvM Mann Up; 2 - Competitive; 3 - Casual; 4 - MvM Boot Camp;
 			inline CVar<bool>OverrideMenu{ false, L"Override when in main menu" }; // Override matchgroup when in main menu
-			inline CVar<int>MapText{ 0, L"Match group" }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
+			inline CVar<int>MapText{ 1, L"Map Text" }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
 			inline CVar<int>GroupSize{ 1337, L"Player group size" };
-			inline std::string CustomText = "M-FeD is gay";
+			inline CVar<std::string> CustomText = { "M-FeD is gay", L"Custom Text" };
 		}
 	}
 

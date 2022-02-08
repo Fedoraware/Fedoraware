@@ -8,7 +8,7 @@ private:
 	{
 		float m_flVelocity = 0.0f;
 		float m_flGravity = 0.0f;
-		float m_flMaxTime = 2.0f;
+		float m_flMaxTime = Vars::Aimbot::Projectile::predTime.m_Var;
 	};
 
 	struct Predictor_t

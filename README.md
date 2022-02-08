@@ -1,4 +1,4 @@
-<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
+<h1 align="center">Official fedoraware repository until further notice?</h1>
 
 <hr/>
 
@@ -8,10 +8,10 @@
 <h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
 <h1 align="center" style="margin-top: 0px;">SE-Owned but awesome</h1>
 <p align="center">
-<a href="https://github.com/M-FeD/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/M-FeD/Fedoraware"></a>  
+<a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>  
 <a href="https://discord.gg/NGhFSWdHxK"><img alt="Fedoraware Discord Server :trollface:" src="https://img.shields.io/discord/937420218672771112?label=Discord&logo=Discord"></a>  
-<a href="https://github.com/M-FeD/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/M-FeD/Fedoraware/MSBuild"></a>
-<a href="https://github.com/M-FeD/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/M-FeD/Fedoraware"></a>
+<a href="https://github.com/tf2cheater2013/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/tf2cheater2013/Fedoraware/MSBuild"></a>
+<a href="https://github.com/tf2cheater2013/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tf2cheater2013/Fedoraware"></a>
 </p>  
 
 
@@ -55,7 +55,7 @@
 ### Credits to:
   - [spook953](https://github.com/spook953)
   - [Lak3](https://github.com/Lak3)
-  - [M-FeD](https://github.com/M-FeD)
+  - [M-FeD](https://github.com/M-F3D)
   - [JAGNEmk](https://github.com/JAGNEmk)
   - [r00t](https://github.com/l-r00t-l)
   - [lykanfox](https://github.com/lykanfox)

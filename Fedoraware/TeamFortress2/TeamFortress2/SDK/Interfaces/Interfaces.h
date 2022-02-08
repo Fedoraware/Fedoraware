@@ -115,6 +115,7 @@ public:
 	void *						StudioRender				= nullptr;
 	IInputSystem*				InputSystem					= nullptr;
 	void*						CHud						= nullptr;
+	void*						CTFGameMovement				= nullptr;
 	void Init();
 };
 

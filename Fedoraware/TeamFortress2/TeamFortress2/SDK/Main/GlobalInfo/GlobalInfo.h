@@ -17,7 +17,7 @@ struct GlobalInfo_t
 	int m_nShifted                      = 0;
 	int dtTicks = MAX_NEW_COMMANDS; // how many to shift
 	int gNotifCounter = 0;
-	int vEyeAngDelay = 0;
+	int vEyeAngDelay = 25	;
 	bool m_bWeaponCanHeadShot			= false;
 	bool m_bWeaponCanAttack				= false;
 	bool m_bWeaponCanSecondaryAttack	= false;
@@ -35,6 +35,7 @@ struct GlobalInfo_t
 	bool m_bRecharging                  = false;
 	bool m_bRechargeQueued				= false;
 	bool m_bForceSendPacket				= false; // might not actually be useful 
+	bool m_bForceChokePacket			= false; // might not actually be useful 
 	bool m_bChoking						= false; // might not actually be useful 
 	bool unloadWndProcHook = false;
 	float m_flCurAimFOV					= 0.0f;
@@ -51,6 +52,8 @@ struct GlobalInfo_t
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
 	std::map<int, ResolveMode> resolvePlayers;
+	std::vector<Vec3> predBeforeLines;
+	std::vector<Vec3> predFutureLines;
 };
 
 inline GlobalInfo_t g_GlobalInfo;

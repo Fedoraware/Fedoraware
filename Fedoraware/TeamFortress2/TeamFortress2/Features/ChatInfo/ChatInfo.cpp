@@ -26,14 +26,11 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				const auto initiator = pEvent->GetInt("initiator"); 
 				const auto target = pEvent->GetString("param1"); // im almost certain this is the param for the targets name 
 
-				auto pEntity = g_Interfaces.EntityList->GetClientEntity(initiator);
-				bool ourteam = (pEntity->GetTeamNum() == pLocal->GetTeamNum());
-
 				PlayerInfo_t pii;
 				g_Interfaces.Engine->GetPlayerInfo(initiator, &pii);
 
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]%sVote Initiator: \x3%s", clr, std::string(ourteam ? " " : " [enemy] "), pii.name).c_str());
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD]%sVote Target: \x3%s", clr, std::string(ourteam ? " " : " [enemy] "), target).c_str());
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] Vote Initiator: \x3%s", clr,  pii.name).c_str());
+				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] Vote Target: \x3%s", clr,  target).c_str());
 			}
 
 			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast")) {
@@ -46,7 +43,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					voteString = "[FeD] " + std::string((pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "[enemy] " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
 					g_notify.Add(voteString);
 					//g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
-					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString);
+					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString.c_str());
 					if (Vars::Misc::VotesInChat.m_Var) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
 					}

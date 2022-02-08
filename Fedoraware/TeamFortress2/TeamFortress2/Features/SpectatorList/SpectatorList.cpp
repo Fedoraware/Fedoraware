@@ -32,7 +32,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 bool CSpectatorList::ShouldRun()
 {
-	return Vars::Visuals::SpectatorList.m_Var && !g_Interfaces.EngineVGui->IsGameUIVisible();
+	return Vars::Visuals::SpectatorList.m_Var/* && !g_Interfaces.EngineVGui->IsGameUIVisible()*/;
 }
 
 void CSpectatorList::Run()
@@ -90,12 +90,13 @@ void CSpectatorList::DrawDefault()
 		m_nSpecListTitleBarH,
 		0);
 
-	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, Vars::Menu::Colors::TitleBar);
+	// 38 to 43
+	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, { 43, 43, 45, 250 });
 
-	g_Draw.String(FONT_MENU,
+	g_Draw.String(FONT_IMGUI,
 		m_nSpecListX + (m_nSpecListW / 2),
 		m_nSpecListY + (m_nSpecListTitleBarH / 2),
-		Vars::Menu::Colors::Text,
+		Vars::Menu::Colors::MenuAccent,
 		ALIGN_CENTER,
 		"%hs", _("Spectators"));
 
@@ -111,9 +112,9 @@ void CSpectatorList::DrawDefault()
 		int nNameX = nModeX + nModeW + (nSpacing * 2);
 		int y = m_nSpecListY + m_nSpecListTitleBarH;
 		int h = nFontTall * m_vecSpectators.size();
-
-		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, Vars::Menu::Colors::WindowBackground);
-		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, Vars::Menu::Colors::Text);
+		// 25 to 31
+		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, { 36, 36, 36,255 });
+		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, { 255,255,255,255 });
 
 		for (size_t n = 0; n < m_vecSpectators.size(); n++)
 		{
@@ -122,8 +123,8 @@ void CSpectatorList::DrawDefault()
 
 			y = m_nSpecListY + m_nSpecListTitleBarH + (nFontTall * n);
 
-			g_Draw.String(FONT_MENU, nModeX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
-			g_Draw.String(FONT_MENU, nNameX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
+			g_Draw.String(FONT_MENU, nModeX, y, { 255,255,255,255 }, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
+			g_Draw.String(FONT_MENU, nNameX, y, { 255,255,255,255 }, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
 		}
 	}
 }

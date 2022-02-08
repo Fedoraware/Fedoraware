@@ -52,7 +52,7 @@ float edgeDistance(float edgeRayYaw)
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = { };
 	g_Interfaces.EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
-	float edgeDistance = (trace.vStartPos - trace.vEndPos).Lenght2D();
+	float edgeDistance = (trace.vStartPos - trace.vEndPos).Length2D();
 	return edgeDistance;
 }
 
@@ -98,7 +98,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
 	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
 
-	if (!Vars::AntiHack::AntiAim::Active.m_Var)
+	if (!Vars::AntiHack::AntiAim::Active.m_Var || g_GlobalInfo.m_bForceSendPacket)
 		return;
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -122,6 +122,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 		bool bPitchSet = true;
 		bool bYawSet = true;
+		bool bAntiBackstabActive = false;
 
 		Vec3 vOldAngles = pCmd->viewangles;
 		float fOldSideMove = pCmd->sidemove;
@@ -245,8 +246,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			g_GlobalInfo.m_vFakeViewAngles.y = pCmd->viewangles.y;
 		}
 
-		*pSendPacket = bSendReal = !bSendReal;
+		if (bYawSet) 
+			*pSendPacket = bSendReal = !bSendReal;
 		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
+		
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}
 }

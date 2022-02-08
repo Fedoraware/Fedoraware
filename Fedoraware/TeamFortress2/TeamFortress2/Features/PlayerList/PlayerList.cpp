@@ -2,6 +2,9 @@
 #include "../Menu/ImGui/imgui.h"
 #include "../../SDK/SDK.h"
 #include <algorithm>
+#include "../Menu/ImGui/imgui_color_gradient.h"
+#include "../Menu/ImGui/imgui_internal.h"
+#include "../Menu/Menu.h"
 
 const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
 const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert" };
@@ -76,19 +79,61 @@ void CPlayerList::GetPlayers()
 
 void CPlayerList::Render()
 {
+	
+	
+	ImColor accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
+	static ImGradient titlegradient;
+	{	
+		ImColor titlebg = ImGui::GetStyle().Colors[ImGuiCol_TitleBg];
+		titlegradient.m_marks.clear();
+		titlegradient.addMark(0.0f, titlebg);
+		titlegradient.addMark(0.32f, titlebg);
+		titlegradient.addMark(0.5f, accent);
+		titlegradient.addMark(0.68f, titlebg);
+		titlegradient.addMark(0.9999998f, titlebg); // literally why
+	}
+
+	ImGui::PushFont(g_Menu.VerdanaBold);
+	ImGui::GetStyle().WindowMinSize = ImVec2(200, 50);
+	ImGui::PushStyleColor(ImGuiCol_Text, accent.Value);
 	if (ImGui::Begin("Playerlist", &g_PlayerList.showWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
-		if (!g_Interfaces.Engine->IsInGame())
-			ImGui::TextUnformatted("You're not in game, noob!");
-		else if (g_Interfaces.Engine->IsInGame() && g_PlayerList.players.empty())
-			ImGui::TextUnformatted("You're all alone, again.");
+		ImGui::PopStyleColor();
+		ImGui::PopFont();
+		ImGui::PushFont(g_Menu.VerdanaNormal);
+		ImGuiWindow* window = ImGui::GetCurrentWindow();
+		ImVec2 winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+		ImVec2 winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		const auto drawList = ImGui::GetWindowDrawList();
+		const auto bgDrawList = ImGui::GetBackgroundDrawList();
+		const auto fgDrawList = window->DrawList;
+		const auto foregroundDrawList = ImGui::GetForegroundDrawList();
+		ImGui::GradientRect(foregroundDrawList, &titlegradient, { winPos.x, winPos.y }, winSize.x, 3);
+		ImGui::Dummy(ImVec2(0, 13));
+		ImGui::Dummy(ImVec2(0, 20));
+		if (!g_Interfaces.Engine->IsInGame()) {
+			static ImVec2 font_size = ImGui::CalcTextSize("You're not in game, noob!");
+			ImGui::SameLine(
+				ImGui::GetWindowSize().x / 2 -
+				font_size.x + (font_size.x / 2)
+			);
+			ImGui::Text("You're not in game, noob!");
+		}
+		else if (g_Interfaces.Engine->IsInGame() && g_PlayerList.players.empty()) {
+			static ImVec2 font_size = ImGui::CalcTextSize("You're all alone, again.");
+			ImGui::SameLine(
+				ImGui::GetWindowSize().x / 2 -
+				font_size.x + (font_size.x / 2)
+			);
+			ImGui::Text("You're all alone, again.");
+		}
 		else if (g_Interfaces.Engine->IsInGame() && !g_PlayerList.players.empty())
 		{
 			if (ImGui::BeginTable("playerlist", 2, ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersH))
 			{
 				ImGui::TableSetupColumn("Player");
 				ImGui::TableSetupColumn("Actions");
-				ImGui::TableHeadersRow();
+				//ImGui::TableHeadersRow();
 
 				for (const auto& player : players) // Print players
 				{
@@ -161,6 +206,7 @@ void CPlayerList::Render()
 				ImGui::EndTable();
 			}
 		}
+		ImGui::PopFont();
 		ImGui::End();
 	}
 }

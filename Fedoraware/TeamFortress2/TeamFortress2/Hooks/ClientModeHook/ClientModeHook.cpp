@@ -35,7 +35,7 @@ void FastStop(CUserCmd* pCmd)
 		static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
 		static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
 
-		auto speed = vel.Lenght2D();
+		auto speed = vel.Length2D();
 		auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(g_EntityCache.m_pLocal + 0x12b8);
 		auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
 		auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
@@ -45,7 +45,7 @@ void FastStop(CUserCmd* pCmd)
 			Vector velocity = vel;
 			Vector direction;
 			Math::VectorAngles(vel, direction);
-			float speed = velocity.Lenght();
+			float speed = velocity.Length();
 
 			direction.y = pCmd->viewangles.y - direction.y;
 
@@ -100,7 +100,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 inline Vector ComputeMove(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
 {
 	Vec3 diff = (b - a);
-	if (diff.Lenght() == 0.0f)
+	if (diff.Length() == 0.0f)
 		return Vec3(0.0f, 0.0f, 0.0f);
 	const float x = diff.x;
 	const float y = diff.y;
@@ -143,11 +143,11 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 				vStartVel = pLocal->GetVecVelocity();
 			}
 
-			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(24 - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(24));
+			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var));
 
 			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
-			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.0f, 520.f, 0.f, 1.f);
+			float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.f, 520.f, 0.f, 1.f);
 			WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
 			nShiftTick++;
@@ -160,7 +160,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 	}
 }
 
-
+#include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
 
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -244,7 +244,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (Vars::Misc::CL_Move::AutoRecharge.m_Var) {
 		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				if (pLocal->GetVecVelocity().Lenght2D() < 5.0f && !(pCmd->buttons == 0))
+				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons == 0))
 				{
 					g_GlobalInfo.m_bRecharging = true;
 				}
@@ -292,20 +292,47 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
+	//
+	//g_GlobalInfo.predBeforeLines.clear();
+	//g_GlobalInfo.predFutureLines.clear();
+	//CMoveData balls; Vec3 cock;
+	//g_Interfaces.DebugOverlay->ClearAllOverlays();
+	//if (g_EntityCache.m_pLocal && g_EntityCache.m_pLocal->IsAlive()) {
+	//	if (g_MoveSim.Initialize(g_EntityCache.m_pLocal)) {
+	//		for (int i = 0; i < TIME_TO_TICKS(1.f); i++) {
+	//			if (!g_EntityCache.m_pLocal) {
+	//				break;
+	//			}
+
+
+	//			g_MoveSim.RunTick(balls, cock);
+	//		}
+	//		g_MoveSim.Restore();
+	//	}
+	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_EntityCache.m_pLocal->m_vecOrigin(), cock, 0, 255, 0, false, 1.f);
+	//}
+
+	//
+	//for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++) {
+	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_GlobalInfo.predBeforeLines.at(i), g_GlobalInfo.predFutureLines.at(i), 255, 255, 255, false, 1.f);
+	//	
+	//}
+
+	
 	
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
-	static int chockedPackets = 0; static int chockValue;// for obv reasons dont fakelag if we are forcing packet send (cmon)
-	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var && Vars::Misc::CL_Move::FakelagOnKey.m_Var)) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 100.0f) && !g_GlobalInfo.m_bForceSendPacket) {
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { // checking if we can and are shooting is far more reliable than that global var
-			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) && // whats the point in allowing us to charge packets and then waste it on fakelag, automate this because no
-				!g_GlobalInfo.m_bRecharging && //	user would be stupid enough to think high tick fakelag and dt is a good idea
+	static int chockedPackets = 0; static int chockValue = 0;
+	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) && Vars::Misc::CL_Move::FakelagOnKey.m_Var) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !g_GlobalInfo.m_bForceSendPacket) {
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
+				!g_GlobalInfo.m_bRecharging &&
 				!g_GlobalInfo.m_nShifted &&
 				!g_GlobalInfo.m_bShouldShift &&
 				!g_GlobalInfo.m_bRechargeQueued) {
 
 				chockedPackets++;
-				// g_GlobalInfo.m_nShifted = std::max(g_GlobalInfo.m_nShifted - chockedPackets, 0); // we shouldn't and will use this
+
 				if (chockedPackets > chockValue) {
 					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) { chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var; }
 					else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
@@ -316,49 +343,35 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					}
 					
 				}
-				else { *pSendPacket = false; }
+				else { *pSendPacket = false; g_GlobalInfo.m_bChoking = true; }
 			}
 			else { *pSendPacket = true; g_GlobalInfo.m_bChoking = false; }
 		}
 	}
 	else if (chockedPackets > 0) { *pSendPacket = true; chockedPackets = 0; g_GlobalInfo.m_bChoking = false; } // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
+	else { g_GlobalInfo.m_bChoking = false; }
 	//	we also leave it all the way out here so that we have the same likelihood of hitting it as the old (bad) failsafe
 	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
 	// I put all my jewellery just to go to the bodega
 
 	//	TODO: make this p
-	//	cmd->sidemove & cmd->forwardmove abs(max) is 450
-	//	pLocal->GetVelocity()/66 = 1 tick velocity (tv)
-	//	if tv*66 < 10 we are not "moving"
-	//	make pLocal->GetVelocity()/66 = pLocal->GetVelocity()/1584
-	//	tvDesired = pLocal->GetVelocity()/1584
-	//	tv = pLocal->GetVelocity()/66
-	/*
-	if (Vars::Misc::CL_Move::AntiWarp.m_Var) {
-		float pvs; float pvf; // predictedvelside, predictedvelforward
-		float dpvs; float dpvf; // desired
-		if (pvs > 7) { pvs = 7; }
-		else if (pvs < -7) { pvs = -7; }
-		if (pvf > 7) { pvf = 7; }
-		else if (pvf < -6) { pvf = -6; }
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
 		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted) {
-			if (abs(pvs) > abs(dpvs)) { pCmd->sidemove = -pCmd->sidemove; if (pvs < -1) { pvs++; } else { pvs--; } }
-			if (abs(pvf) > abs(dpvf)) { pCmd->forwardmove = -pCmd->forwardmove; if (pvf < -1) { pvf ++; } else { pvf --; } }\
+			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
+			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
 		}
 		else {
-			if (pCmd->sidemove > 100 && pvs < 7) { pvs++; }
-			else if (pCmd->sidemove < -100 && pvs > -7) { pvs--; }
-			else if (abs(pCmd->sidemove) < 100 && abs(pvs) > 0) { if (pvs < -1) { pvs += .5f; } else { pvs -= .5f; } }
-
-			if (pCmd->forwardmove > 100 && pvf < 7) { pvf++; }
-			else if (pCmd->forwardmove < -100 && pvf > -6) { pvf--; }
-			else if (abs(pCmd->forwardmove) < 100 && abs(pvf) > 0) { if (pvf < -1) { pvf += .5f; } else { pvf -= .5f; } }
-
-			dpvs = pvs / Vars::Misc::CL_Move::DTTicks.m_Var; dpvf = pvf / Vars::Misc::CL_Move::DTTicks.m_Var;
+			return;
 		}
+	};
+
+	
+	if (!Vars::Misc::CL_Move::AntiWarp.m_Var) {
+		AntiWarp(pCmd);
 	}
-	*/ // fucking retarded code
+
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
@@ -392,25 +405,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			bWasSet = false;
 		}
 	}
-
-	/*
-	//failsafe (this shit stopped 22 tick fakelag LOL)
-	{
-		static int nChoked = 0;
-
-		if (!*pSendPacket)
-			nChoked++;
-
-		else nChoked = 0;
-
-		if (nChoked > 14)
-			*pSendPacket = true;
-	}
-	*/ // Problems
-	// FLG disables bc player is trying to charge doubletap, instead of charing 24 ticks, it now charges 14 ticks, (or 2 with 22 tick fakelag)
-	//		because it had just started choking again and the failsafe only activates when it reaches x ticks.
-	// If we choke packets for anything else, literally anything, for longer than 14 ticks, this will limit us to stay at that 14 again.
-	// Because of this I have changed the failsafe to activate instantly and only when fakelag is off
 	
 	if (static_cast<int>(g_Misc.strings.size()) > 0) {
 		g_GlobalInfo.gNotifCounter++;
@@ -428,9 +422,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_GlobalInfo.vEyeAngDelay++; // ignore this
 	g_GlobalInfo.lateUserCmd = pCmd;
 	if (g_GlobalInfo.m_bForceSendPacket) { *pSendPacket = true; g_GlobalInfo.m_bForceSendPacket = false; } // if we are trying to force update do this lol
-	if (pSendPacket) { g_GlobalInfo.m_bChoking = false; }
-	g_Interfaces.Engine->FireEvents();
-	// fire events, ensure send packet shit is all done, we r good to go lads
+	else if (g_GlobalInfo.m_bForceChokePacket) { *pSendPacket = false; g_GlobalInfo.m_bForceChokePacket = false; } // check after force send to prevent timing out possibly
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

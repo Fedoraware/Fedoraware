@@ -195,6 +195,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -262,6 +263,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Triggerbot::Uber::Active);
 				SAVE_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
+				SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
 			}
 		}
@@ -377,6 +379,10 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				SAVE_VAR(Vars::Chams::DME::WeaponRimMultiplier);
 				SAVE_VAR(Vars::Chams::DME::HandsRimMultiplier);
+				SAVE_VAR(Vars::Chams::DME::HandsRainbow);
+				SAVE_VAR(Vars::Chams::DME::WeaponRainbow);
+				SAVE_VAR(Vars::Chams::DME::HandsOverlayRainbow);
+				SAVE_VAR(Vars::Chams::DME::WeaponOverlayRainbow);
 			}
 		}
 
@@ -553,6 +559,10 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::DTMode);
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
 				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
+				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleX);
+				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleY);
+				SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
+				SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
@@ -570,6 +580,15 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::Discord::IncludeClass);
 				SAVE_VAR(Vars::Misc::Discord::IncludeTimestamp);
 				SAVE_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+			}
+			//Steam
+			{
+				SAVE_VAR(Vars::Misc::Steam::EnableRPC);
+				SAVE_VAR(Vars::Misc::Steam::MatchGroup);
+				SAVE_VAR(Vars::Misc::Steam::OverrideMenu);
+				SAVE_VAR(Vars::Misc::Steam::MapText);
+				SAVE_VAR(Vars::Misc::Steam::GroupSize);
+				SAVE_VAR(Vars::Misc::Steam::CustomText);
 			}
 		}
 
@@ -591,16 +610,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Others
 		{
-			SAVE_OTHER(Vars::Menu::Colors::WindowBackground);
-			SAVE_OTHER(Vars::Menu::Colors::TitleBar);
-			SAVE_OTHER(Vars::Menu::Colors::Text);
-			SAVE_OTHER(Vars::Menu::Colors::Widget);
-			SAVE_OTHER(Vars::Menu::Colors::WidgetActive);
-			SAVE_OTHER(Vars::Menu::Colors::OutlineMenu);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOn);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOff);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureBackground);
-			SAVE_OTHER(Vars::Menu::Colors::FeatureOutline);
+			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			SAVE_OTHER(Colors::OutlineESP);
 			SAVE_OTHER(Colors::Cond);
@@ -608,6 +618,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Invuln);
 			SAVE_OTHER(Colors::Cloak);
 			SAVE_OTHER(Colors::Friend);
+			SAVE_OTHER(Colors::Local);
+			SAVE_OTHER(Colors::Ignored);
 			SAVE_OTHER(Colors::Overheal);
 			SAVE_OTHER(Colors::Health);
 			SAVE_OTHER(Colors::Ammo);
@@ -765,6 +777,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -832,6 +845,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Triggerbot::Uber::Active);
 				LOAD_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				LOAD_VAR(Vars::Triggerbot::Uber::PopLocal);
+				LOAD_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
 			}
 		}
@@ -944,6 +958,10 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				LOAD_VAR(Vars::Chams::DME::WeaponRimMultiplier);
 				LOAD_VAR(Vars::Chams::DME::HandsRimMultiplier);
+				LOAD_VAR(Vars::Chams::DME::HandsRainbow);
+				LOAD_VAR(Vars::Chams::DME::WeaponRainbow);
+				LOAD_VAR(Vars::Chams::DME::HandsOverlayRainbow);
+				LOAD_VAR(Vars::Chams::DME::WeaponOverlayRainbow);
 			}
 		}
 
@@ -1118,6 +1136,10 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
+				LOAD_VAR(Vars::Misc::CL_Move::DTBarScaleX);
+				LOAD_VAR(Vars::Misc::CL_Move::DTBarScaleY);
+				LOAD_VAR(Vars::Misc::CL_Move::DTBarX);
+				LOAD_VAR(Vars::Misc::CL_Move::DTBarY);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
@@ -1135,6 +1157,15 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::Discord::IncludeClass);
 				LOAD_VAR(Vars::Misc::Discord::IncludeTimestamp);
 				LOAD_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+			}
+			//Steam
+			{
+				LOAD_VAR(Vars::Misc::Steam::EnableRPC);
+				LOAD_VAR(Vars::Misc::Steam::MatchGroup);
+				LOAD_VAR(Vars::Misc::Steam::OverrideMenu);
+				LOAD_VAR(Vars::Misc::Steam::MapText);
+				LOAD_VAR(Vars::Misc::Steam::GroupSize);
+				LOAD_VAR(Vars::Misc::Steam::CustomText);
 			}
 		}
 
@@ -1156,17 +1187,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Others
 		{
-			LOAD_OTHER(Vars::Menu::Colors::WindowBackground);
-			LOAD_OTHER(Vars::Menu::Colors::TitleBar);
-			LOAD_OTHER(Vars::Menu::Colors::Text);
-			LOAD_OTHER(Vars::Menu::Colors::Widget);
-			LOAD_OTHER(Vars::Menu::Colors::WidgetActive);
-			LOAD_OTHER(Vars::Menu::Colors::OutlineMenu);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOn);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOff);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureBackground);
-			LOAD_OTHER(Vars::Menu::Colors::FeatureOutline);
-
+			LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			LOAD_OTHER(Colors::OutlineESP);
 			LOAD_OTHER(Colors::Cond);
@@ -1174,6 +1195,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Invuln);
 			LOAD_OTHER(Colors::Cloak);
 			LOAD_OTHER(Colors::Friend);
+			LOAD_OTHER(Colors::Local);
+			LOAD_OTHER(Colors::Ignored);
 			LOAD_OTHER(Colors::Overheal);
 			LOAD_OTHER(Colors::Health);
 			LOAD_OTHER(Colors::Ammo);
@@ -1222,7 +1245,8 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Fonts
 		{
-			//FONT_ESP
+			//
+
 			{
 				LOAD_STRING(Vars::Fonts::FONT_ESP::szName);
 				LOAD_VAR(Vars::Fonts::FONT_ESP::nTall);

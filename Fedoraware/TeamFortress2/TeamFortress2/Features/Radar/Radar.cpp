@@ -26,33 +26,32 @@ void CRadar::DrawRadar()
 {
 	//If menu is open, check for input and draw the titlebar.
 	//The titlebar also indicates where we can drag / move the radar.
-	if (g_Menu.m_bOpen || g_Menu.m_flFadeElapsed < g_Menu.m_flFadeDuration)
+	int offset = 0;
+	if (g_Menu.m_bOpen)
 	{
 		//A quick notify, common sense but I made it by accident:
 		//If on drawing, it's important to update position first before drawing
 		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
 		DragRadar();
-
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
-		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 10, m_nRadarSize * 2, 10, Vars::Menu::Colors::TitleBar);
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 24, m_nRadarSize * 2, 24, { 43, 43, 45, 250 });
+		offset = 24;
 	}
-
+	
+	g_Draw.GradientRect(m_nRadarX - m_nRadarSize,					m_nRadarY - m_nRadarSize - 3 - offset, m_nRadarX - m_nRadarSize + (m_nRadarSize),				m_nRadarY - m_nRadarSize - offset, { 43, 43, 45, 250 }, Vars::Menu::Colors::MenuAccent, true);
+	g_Draw.GradientRect(m_nRadarX - m_nRadarSize + m_nRadarSize,	m_nRadarY - m_nRadarSize - 3 - offset, m_nRadarX - m_nRadarSize + (m_nRadarSize * 2),			m_nRadarY - m_nRadarSize - offset, Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
 	//Build the bg color with the wanted alpha.
-	Color_t clrBack = { 30, 30, 30, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
-	Color_t clrLines = { Vars::Menu::Colors::TitleBar.r, Vars::Menu::Colors::TitleBar.g, Vars::Menu::Colors::TitleBar.b, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) };
-
+	Color_t clrBack = { 36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
 
 
 	//Background
 	g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrLines);
+	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)});
 
 	//Center lines
-	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, clrLines);
-	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, clrLines);
+	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) });
+	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) });
 }
 
 bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)
@@ -337,7 +336,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 bool CRadar::ShouldRun()
 {
-	if (!Vars::Radar::Main::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (!Vars::Radar::Main::Active.m_Var /*|| g_Interfaces.EngineVGui->IsGameUIVisible()*/)
 		return false;
 
 	return true;
@@ -355,7 +354,7 @@ void CRadar::DragRadar()
 
 	if ((mousex > (m_nRadarX - m_nRadarSize) &&
 		mousex < (m_nRadarX - m_nRadarSize) + (m_nRadarSize * 2) &&
-		mousey >(m_nRadarY - m_nRadarSize) - 10 &&
+		mousey >(m_nRadarY - m_nRadarSize) - 24 &&
 		mousey < (m_nRadarY - m_nRadarSize)) && bHeld)
 	{
 		m_bDrag = true;

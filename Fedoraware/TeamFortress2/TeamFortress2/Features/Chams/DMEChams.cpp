@@ -181,7 +181,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 
 			if (bMatWasForced) {
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
+				if (Vars::Chams::DME::HandsRainbow.m_Var) {
+					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r), Color::TOFLOAT(Utils::Rainbow().g), Color::TOFLOAT(Utils::Rainbow().b));
+				}
+				else {
+					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
+				}
 			}
 
 			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
@@ -200,11 +205,21 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				bool found3 = false;
 				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 				if (found) {
-					pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var) {
+						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+					}
+					else {
+						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					}
 				}
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 				if (found2) {
-					pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var) {
+						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+					}
+					else {
+						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					}
 				}
 				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
 				if (found3) {
@@ -281,7 +296,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 
 				if (bMatWasForced) {
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
+					if (Vars::Chams::DME::WeaponRainbow.m_Var) {
+						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r), Color::TOFLOAT(Utils::Rainbow().g), Color::TOFLOAT(Utils::Rainbow().b));
+					}
+					else {
+						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
+					}
 				}
 
 				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
@@ -316,11 +336,21 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					bool found3 = false;
 					IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 					if (found) {
-						pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var) {
+							pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+						}
+						else {
+							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						}
 					}
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 					if (found2) {
-						pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var) {
+							pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+						}
+						else {
+							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						}
 					}
 					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
 					if (found3) {

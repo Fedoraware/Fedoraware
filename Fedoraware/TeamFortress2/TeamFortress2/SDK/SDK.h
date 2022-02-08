@@ -113,6 +113,8 @@ namespace Colors
 	inline Color_t Invuln =					{ 120, 111, 166, 255 };
 	inline Color_t Cloak =					{ 165, 177, 194, 255 };
 	inline Color_t Friend =					{ 32, 191, 107, 255 };
+	inline Color_t Local =					{ 168, 255, 211, 255 };
+	inline Color_t Ignored =				{ 32, 191, 107, 255 };
 	inline Color_t Overheal =				{ 84, 160, 255, 255 };
 	inline Color_t Health =					{ 0, 230, 64, 255 };
 	inline Color_t Ammo =					{ 191, 191, 191, 255 };
@@ -280,16 +282,23 @@ namespace Utils
 	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)
 	{
 		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
+		PlayerInfo_t info{}; g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &info);
 
 		if (pEntity->IsPlayer())
 		{
-			if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
+			if (g_EntityCache.m_pLocal->GetIndex() == pEntity->GetIndex())
+				out = Colors::Local;
+
+			else if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
 				out = Colors::Friend;
 
-			if (pEntity->IsCloaked())
+			else if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+				out = Colors::Ignored;
+
+			else if (pEntity->IsCloaked())
 				out = Colors::Cloak;
 
-			if (!pEntity->IsVulnerable())
+			else if (!pEntity->IsVulnerable())
 				out = Colors::Invuln;
 		}
 

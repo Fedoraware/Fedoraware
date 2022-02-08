@@ -49,12 +49,13 @@ void CMisc::InstantRespawnMVM() {
 */ // FUCKING BROKEN PASXTE LATER
 
 void CMisc::CheatsBypass() {
+	static bool cheatset = false;
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
 	if (Vars::Misc::CheatsBypass.m_Var) {
-		if (sv_cheats->GetInt() == 0) sv_cheats->SetValue(1);
+		if (sv_cheats->GetInt() == 0) { sv_cheats->SetValue(1); cheatset = true; };
 	}
 	else {
-		sv_cheats->SetValue(0);
+		if (cheatset) { sv_cheats->SetValue(0); cheatset = false; }
 	}
 }
 
@@ -78,9 +79,6 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 		}
 	}
 }
-
-
-const int nY = (g_ScreenSize.h / 2) + 20;
 
 void CMisc::NoPush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
@@ -169,7 +167,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
 
-				const float speed = pLocal->GetVelocity().Lenght2D();
+				const float speed = pLocal->GetVelocity().Length2D();
 				auto vel = pLocal->GetVelocity();
 
 				if (speed < 2.0f)
@@ -454,25 +452,25 @@ void CMisc::SteamRPC()
 	switch (Vars::Misc::Steam::MapText.m_Var)
 	{
 	case 0:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
-		break;
-	case 1:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
-		break;
-	case 2:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
-		break;
-	case 3:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
-		break;
-	case 4:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
-		break;
-	case 5:
-		if (Vars::Misc::Steam::CustomText.empty())
+		if (Vars::Misc::Steam::CustomText.m_Var.empty())
 			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
 		else
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.c_str());
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.m_Var.c_str());
+		break;
+	case 1:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+		break;
+	case 2:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
+		break;
+	case 3:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
+		break;
+	case 4:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
+		break;
+	case 5:
+		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
 		break;
 	default:
 		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");

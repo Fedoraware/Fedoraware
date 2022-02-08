@@ -15,6 +15,7 @@ void CHooks::Init()
 		FireBullets::Init();
 		Viewmodel::Init();
 		IsLocalPlayerUsingVisionFilterFlags::Init();
+		GameMovement::Duck::Init();
 		//GetIconHook::Init();
 	}
 

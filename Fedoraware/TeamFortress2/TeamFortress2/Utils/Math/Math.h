@@ -142,24 +142,24 @@ public:
 		x = X; y = Y;
 	}
 
-	float Lenght(void) const
+	float Length(void) const
 	{
 		return sqrtf(x * x + y * y);
 	}
 
-	float LenghtSqr(void) const
+	float LengthSqr(void) const
 	{
 		return (x * x + y * y);
 	}
 
 	float DistTo(const Vec2& v) const
 	{
-		return (*this - v).Lenght();
+		return (*this - v).Length();
 	}
 
 	float DistToSqr(const Vec2& v) const
 	{
-		return (*this - v).LenghtSqr();
+		return (*this - v).LengthSqr();
 	}
 
 	float Dot(const Vec2& v) const
@@ -324,26 +324,26 @@ public:
 		x = X; y = Y; z = Z;
 	}
 
-	float Lenght(void) const
+	float Length(void) const
 	{
 		return sqrtf(x * x + y * y + z * z);
 	}
 
-	float LenghtSqr(void) const
+	float LengthSqr(void) const
 	{
 		return (x * x + y * y + z * z);
 	}
 
 	float Normalize()
 	{
-		float fl_lenght = Lenght();
-		float fl_lenght_normal = 1.f / (FLT_EPSILON + fl_lenght);
+		float fl_length = Length();
+		float fl_length_normal = 1.f / (FLT_EPSILON + fl_length);
 
-		x = x * fl_lenght_normal;
-		y = y * fl_lenght_normal;
-		z = z * fl_lenght_normal;
+		x = x * fl_length_normal;
+		y = y * fl_length_normal;
+		z = z * fl_length_normal;
 
-		return fl_lenght;
+		return fl_length;
 	}
 
 	void Rotate2D(const float& flYaw)
@@ -362,24 +362,24 @@ public:
 		return Normalize();
 	}
 
-	float Lenght2D(void) const
+	float Length2D(void) const
 	{
 		return sqrtf(x * x + y * y);
 	}
 
-	float Lenght2DSqr(void) const
+	float Length2DSqr(void) const
 	{
 		return (x * x + y * y);
 	}
 
 	float DistTo(const Vec3& v) const
 	{
-		return (*this - v).Lenght();
+		return (*this - v).Length();
 	}
 
 	float DistToSqr(const Vec3& v) const
 	{
-		return (*this - v).LenghtSqr();
+		return (*this - v).LengthSqr();
 	}
 
 	float Dot(const Vec3& v) const
@@ -602,7 +602,7 @@ namespace Math
 		const Vec3 left = { matrix[0][1], matrix[1][1], matrix[2][1] };
 		const Vec3 up = { 0.f, 0.f, matrix[2][2] };
 
-		float len = forward.Lenght2D();
+		float len = forward.Length2D();
 
 		// enough here to get angles?
 		if (len > 0.001f) {
@@ -746,14 +746,14 @@ namespace Math
 
 	inline float VectorNormalize(Vec3& vector)
 	{
-		float lenght = vector.Lenght();
+		float length = vector.Length();
 
-		if (!lenght)
+		if (!length)
 			vector.Set();
 		else
-			vector /= lenght;
+			vector /= length;
 
-		return lenght;
+		return length;
 	}
 
 	inline Vec3 CalcAngle(const Vec3& source, const Vec3& destination)
@@ -780,7 +780,7 @@ namespace Math
 		Vec3 v_dst = Vec3();
 		AngleVectors(dst, &v_dst);
 
-		float result = RAD2DEG(acos(v_dst.Dot(v_src) / v_dst.LenghtSqr()));
+		float result = RAD2DEG(acos(v_dst.Dot(v_src) / v_dst.LengthSqr()));
 
 		if (!isfinite(result) || isinf(result) || isnan(result))
 			result = 0.0f;
@@ -822,7 +822,7 @@ namespace Math
 			if (yaw < 0)
 				yaw += 360;
 
-			tmp = forward.Lenght2D();
+			tmp = forward.Length2D();
 			pitch = RAD2DEG(atan2f(-forward.z, tmp));
 
 			if (pitch < 0)
@@ -857,7 +857,7 @@ namespace Math
 		Math::SinCos(DEG2RAD(angles.y), &sy, &cy);
 
 		Vec3 forward = { cp * cy, cp * sy, -sp };
-		forward *= (1.f / (FLT_EPSILON + forward.Lenght()));
+		forward *= (1.f / (FLT_EPSILON + forward.Length()));
 		return forward;
 	}
 
