@@ -103,6 +103,7 @@ namespace Vars
 			inline CVar<bool> MovementSimulation{ false, L"move sim" };
 			inline CVar<bool> ManualZAdjust		{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount	{ 5.5f, L"Z Adjust factor." };
+			inline CVar<float> predTime			{ 2.0f, L"Prediction TIme" };
 		}
 
 		namespace Melee

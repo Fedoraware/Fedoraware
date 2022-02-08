@@ -1048,7 +1048,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Target", Colors::Target); HelpMarker("Target color");
+						ColorPicker("Target", Colors::Target);
 						InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 						WidthSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
@@ -1173,7 +1173,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						} // Ignore targets
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Invulnerable colour", Colors::Invuln); HelpMarker("Invulnerable colour");
+						ColorPicker("Invulnerable colour", Colors::Invuln);
 						ImGui::Dummy(ImVec2(0, 20));
 
 						SectionTitle("Crits");
@@ -2136,7 +2136,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Fresnel base colour###fresnelbasecolour", Colors::FresnelBase);
+						ColorPicker("Fresnel base colour", Colors::FresnelBase);
 						ImGui::Checkbox("Ignore Z###PlayerChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw chams through walls");
 						WidthSlider("Player chams alpha", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how opaque the player chams are");
 						ImGui::Dummy(ImVec2(0, 20));
@@ -2588,6 +2588,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
 							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Use performance mode if you value your computer/fps. Don't use this on high ping. This won't suddenly make the projectile aimbot hit strafing players");
+							if (Vars::Aimbot::Projectile::MovementSimulation.m_Var) {
+								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prediction Time", &Vars::Aimbot::Projectile::predTime.m_Var, 0.1f, 10.f, "%.1f");
+							}
 							{
 								static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth();
 								static const char* aimMethodArr[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();

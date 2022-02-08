@@ -77,8 +77,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||																	// 1 - Always
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))		// 2 - Disable on key 
 		{
-			if (g_GlobalInfo.m_nShifted) { g_GlobalInfo.m_bForceChokePacket = true; oClMove(accumulated_extra_samples, false); g_GlobalInfo.m_nShifted--; } // hypothetically we should only hit this if it is our first tick of doubletap
-			while (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var && g_GlobalInfo.m_nShifted > 0) {
+			while (g_GlobalInfo.m_nShifted > 0) {
 				oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 				g_GlobalInfo.m_nShifted--;
 				g_GlobalInfo.m_bForceSendPacket = true;		// Keep up connection with server
