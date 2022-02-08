@@ -3,7 +3,7 @@
 
 bool CChams::ShouldRun()
 {
-	return /*Vars::Chams::Main::Active.m_Var && */!g_Interfaces.EngineVGui->IsGameUIVisible();
+	return !g_Interfaces.EngineVGui->IsGameUIVisible();
 }
 
 void CChams::DrawModel(CBaseEntity* pEntity)
@@ -99,9 +99,6 @@ void CChams::Render()
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
 
-	if (!Vars::Chams::Main::Active.m_Var)
-		return;
-
 	m_bHasSetStencil = false;
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -134,7 +131,7 @@ void CChams::Render()
 
 void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Players::Active.m_Var)
+	if (!Vars::Chams::Players::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
 		return;
 
 	const auto& Players = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
@@ -279,7 +276,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Buildings::Active.m_Var)
+	if (!Vars::Chams::Buildings::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
 		return;
 
 	const auto& Buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
@@ -375,7 +372,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::World::Active.m_Var)
+	if (!Vars::Chams::World::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
 		return;
 
 	bool bMatWasForced = false;
