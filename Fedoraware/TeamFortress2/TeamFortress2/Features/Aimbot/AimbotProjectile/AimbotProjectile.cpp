@@ -346,38 +346,45 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		}
 	}
 	else {
-		Vec3 vPredictedPos = {};
-		CMoveData moveData = {};
-		Vec3 worldSpaceCenter = {};
-		bool returnValue = false;
-		g_GlobalInfo.predBeforeLines.clear();
-		g_GlobalInfo.predFutureLines.clear();
-		if (g_MoveSim.Initialize(Predictor.m_pEntity))
-		{
-			int n = 0;
-			for (; n < TIME_TO_TICKS(MAX_TIME); n++) {
-				if (Predictor.m_pEntity == nullptr)
-					break;
-				g_MoveSim.RunTick(moveData, worldSpaceCenter);
-				vPredictedPos = worldSpaceCenter;
-				//Class offsets
-				switch (pLocal->GetClassNum())
-				{
-				case CLASS_SOLDIER:
-				case CLASS_DEMOMAN:
-				{
-					vPredictedPos -= Vec3(0.0f, 0.0f, 24.0f);
-					break;
-				}
-				case CLASS_SNIPER:
-				{
-					Vec3 vEntPos = Predictor.m_pEntity->GetWorldSpaceCenter();
-					Vec3 vHeadPos = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD);
-					float zOffset = vHeadPos.z - vEntPos.z;
-					vPredictedPos.z += zOffset;
-					Vec3 vEntForward = {};
-					Math::AngleVectors(Predictor.m_pEntity->GetEyeAngles(), &vEntForward);
-					Vec3 vToEnt = Predictor.m_vPosition - pLocal->GetAbsOrigin();
+	Vec3 vPredictedPos = {};
+	CMoveData moveData = {};
+	Vec3 worldSpaceCenter = {};
+	bool returnValue = false;
+	g_GlobalInfo.predBeforeLines.clear();
+	g_GlobalInfo.predFutureLines.clear();
+	if (g_MoveSim.Initialize(Predictor.m_pEntity))
+	{
+		int n = 0;
+		for (; n < TIME_TO_TICKS(MAX_TIME); n++) {
+			if (Predictor.m_pEntity == nullptr)
+				break;
+			g_MoveSim.RunTick(moveData, worldSpaceCenter);
+			vPredictedPos = worldSpaceCenter;
+			//Class offsets
+			switch (pLocal->GetClassNum())
+			{
+			case CLASS_SOLDIER:
+			case CLASS_DEMOMAN:
+			{
+				vPredictedPos -= Vec3(0.0f, 0.0f, 24.0f);
+				break;
+			}
+			case CLASS_SNIPER:
+			{
+				// thank you spook953
+				Vec3 vHeadDelta = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD) - Predictor.m_pEntity->m_vecOrigin();
+				vPredictedPos.x += vHeadDelta.x;
+				vPredictedPos.y += vHeadDelta.y;
+
+				Vec3 vEntPos = Predictor.m_pEntity->GetWorldSpaceCenter();
+				Vec3 vHeadPos = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD);
+				float zOffset = vHeadPos.z - vEntPos.z;
+				vPredictedPos.z += zOffset;
+
+
+				Vec3 vEntForward = {};
+				Math::AngleVectors(Predictor.m_pEntity->GetEyeAngles(), &vEntForward);
+				Vec3 vToEnt = Predictor.m_vPosition - pLocal->GetAbsOrigin();
 
 					if (vToEnt.Dot(vEntForward) > 0.1071f) {
 						vPredictedPos.z += 5.0f;
