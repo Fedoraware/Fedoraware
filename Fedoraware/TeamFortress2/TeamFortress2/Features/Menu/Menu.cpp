@@ -1955,6 +1955,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you of cheating");
 						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
+						ImGui::Checkbox("Anti autobalance", &Vars::Misc::AntiAutobal.m_Var); HelpMarker("Will rejoin the server to prevent you being autobalanced");
 						ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
 						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override etc.");
 						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var); HelpMarker("Will respawn you instantly in MvM");

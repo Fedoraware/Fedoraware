@@ -222,6 +222,9 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	}
 }
 
+static int anti_balance_attempts = 0;
+static std::string previous_name = "";
+
 bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data)
 {
 	const char* buf_data = reinterpret_cast<const char*>(msg_data.m_pData);
@@ -261,6 +264,34 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 			}
 		}
 		msg_data.Seek(0);
+		break;
+	}
+	case 5:
+	{
+		if (Vars::Misc::AntiAutobal.m_Var && msg_data.GetNumBitsLeft() > 35) {
+			INetChannel* server = g_Interfaces.Engine->GetNetChannelInfo();
+			
+			std::string data(buf_data);
+
+			if (data.find("TeamChangeP") != data.npos && g_EntityCache.m_pLocal) {
+				std::string server_name(server->GetAddress());
+				if (server_name != previous_name)
+				{
+					previous_name = server_name;
+					anti_balance_attempts = 0;
+				}
+				if (anti_balance_attempts < 2) {
+					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+				}
+				else {
+					std::string autobalance_msg = "\"";
+
+					g_Interfaces.Engine->ClientCmd_Unrestricted("tf_party_chat \"I will be autobalanced in 3 seconds\"");
+				}
+				anti_balance_attempts++;
+			}
+			msg_data.Seek(0);
+		}
 		break;
 	}
 	}
