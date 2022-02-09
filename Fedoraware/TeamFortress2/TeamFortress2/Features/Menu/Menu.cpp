@@ -1201,20 +1201,20 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var);
-						ImGui::Checkbox("Ignore team###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.m_Var);
-						ImGui::Checkbox("Name ESP###BuildingNameESP", &Vars::ESP::Buildings::Name.m_Var);
-						ImGui::Checkbox("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.m_Var);
-						ImGui::Checkbox("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.m_Var);
-						ImGui::Checkbox("Health text###buildinghealth", &Vars::ESP::Buildings::Health.m_Var);
-						ImGui::Checkbox("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.m_Var);
-						ImGui::Checkbox("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.m_Var);
-						ImGui::Checkbox("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.m_Var);
-						ImGui::Checkbox("Lines###buildinglines", &Vars::ESP::Buildings::Lines.m_Var);
-						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.m_Var);
-						WidthSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
-						WidthSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						ImGui::Checkbox("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
+						ImGui::Checkbox("Ignore team buildings###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
+						ImGui::Checkbox("Name ESP###BuildingNameESP", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
+						ImGui::Checkbox("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
+						ImGui::Checkbox("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the building has");
+						ImGui::Checkbox("Health text###buildinghealth", &Vars::ESP::Buildings::Health.m_Var); HelpMarker("Will draw the building's health, as well as its max health");
+						ImGui::Checkbox("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.m_Var); HelpMarker("Shows who built the building");
+						ImGui::Checkbox("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.m_Var); HelpMarker("Will draw what level the building is");
+						ImGui::Checkbox("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.m_Var); HelpMarker("Will draw what conditions the building is under");
+						ImGui::Checkbox("Lines###buildinglines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
+						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on buildings");
+						ImGui::Checkbox("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
+						WidthSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+						WidthSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the ESP should be");
 						ImGui::PopStyleVar();
 					}
 
@@ -1224,16 +1224,16 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var);
-						ImGui::Checkbox("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var);
+						ImGui::Checkbox("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
+						ImGui::Checkbox("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Health pack colour", Colors::Health);
-						ImGui::Checkbox("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var);
+						ColorPicker("Health pack colour", Colors::Health); HelpMarker("Color for health pack ESP");
+						ImGui::Checkbox("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw chams on ammo packs");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Ammo pack colour", Colors::Ammo);
-						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						ColorPicker("Ammo pack colour", Colors::Ammo); HelpMarker("Color for ammo pack ESP");
+						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
 						ImGui::PopStyleVar();
 					}
 
@@ -1463,6 +1463,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::PopItemWidth();
 						HelpMarker("The first unusual effect to be applied to the weapon");
+
 						ImGui::PushItemWidth(150);
 						if (ImGui::Combo("Unusual effect 2", &unu2, unuEffects2, IM_ARRAYSIZE(unuEffects2))) {
 							switch (unu2) {
@@ -1487,6 +1488,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						ImGui::PopItemWidth();
 						HelpMarker("The second unusual effect to be applied to the weapon");
+
 						const char* sheens[]{
 							"None",
 							"Team shine",
@@ -1523,24 +1525,24 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-						ImGui::Checkbox("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Size###RadarSize", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Range###RadarRange", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth();
+						ImGui::Checkbox("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var); HelpMarker("Will show nearby things relative to your player");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Size###RadarSize", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth(); HelpMarker("The size of the radar window");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Range###RadarRange", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); ImGui::PopItemWidth(); HelpMarker("The range of the radar");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("The background alpha of the radar");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); ImGui::PopItemWidth(); HelpMarker("The line alpha of the radar");
 
 						ImGui::Dummy(ImVec2(0, 20));
 						SectionTitle("Players");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						const char* iconPlayersRadar[]{ "Scoreboard", "Portraits", "Avatar" }; ImGui::PushItemWidth(100); ImGui::Combo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar)); ImGui::PopItemWidth();
-						const char* backgroundpradar[]{ "Off", "Rectangle", "Texture" }; ImGui::PushItemWidth(100); ImGui::Combo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, backgroundpradar, IM_ARRAYSIZE(backgroundpradar)); ImGui::PopItemWidth();
+						const char* iconPlayersRadar[]{ "Scoreboard", "Portraits", "Avatar" }; ImGui::PushItemWidth(100); ImGui::Combo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar)); ImGui::PopItemWidth(); HelpMarker("What sort of icon to represent players with");
+						const char* backgroundpradar[]{ "Off", "Rectangle", "Texture" }; ImGui::PushItemWidth(100); ImGui::Combo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, backgroundpradar, IM_ARRAYSIZE(backgroundpradar)); ImGui::PopItemWidth(); HelpMarker("What sort of background to put on players on the radar");
 						ImGui::Checkbox("Outline###radaro", &Vars::Radar::Players::Outline.m_Var); HelpMarker("Will put an outline on players on the radar");
-						static const char* ignoreTeammatespRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###radarplayersteam", &Vars::Radar::Players::IgnoreTeam.m_Var, ignoreTeammatespRadar, IM_ARRAYSIZE(ignoreTeammatespRadar)); ImGui::PopItemWidth();
-						static const char* ignoreCloakedpRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.m_Var, ignoreCloakedpRadar, IM_ARRAYSIZE(ignoreCloakedpRadar)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Health bar###radarhealt", &Vars::Radar::Players::Health.m_Var);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
+						static const char* ignoreTeammatespRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###radarplayersteam", &Vars::Radar::Players::IgnoreTeam.m_Var, ignoreTeammatespRadar, IM_ARRAYSIZE(ignoreTeammatespRadar)); ImGui::PopItemWidth(); HelpMarker("Which teammates the radar will ignore drawing on");
+						static const char* ignoreCloakedpRadar[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.m_Var, ignoreCloakedpRadar, IM_ARRAYSIZE(ignoreCloakedpRadar)); ImGui::PopItemWidth(); HelpMarker("Which cloaked players the radar will ignore drawing on");
+						ImGui::Checkbox("Health bar###radarhealt", &Vars::Radar::Players::Health.m_Var); HelpMarker("Will show players health on the radar");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth(); HelpMarker("The icon size of players on the radar");
 						ImGui::PopStyleVar();
 					}
 
@@ -2096,8 +2098,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								static const char* aimMethodArr[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
 								static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth();
 							}
-							ImGui::Checkbox("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var);  HelpMarker("Will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
-							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var);
+							ImGui::Checkbox("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
+							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
 							if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var) {
 								WidthSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
 							}
@@ -2380,18 +2382,18 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-							ImGui::Checkbox("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var);
-							ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var);
-							ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var);
-							ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var);
-							const char* imagething[]{ "Big fedora + Small TF2", "Big TF2 + Small fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth();
+							ImGui::Checkbox("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
+							ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var); HelpMarker("Should Discord Rich Presence contain current map name?");
+							ImGui::Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var); HelpMarker("Should Discord Rich Presence contain current class?");
+							ImGui::Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var); HelpMarker("Should time since you started playing TF2 be included?");
+							const char* imagething[]{ "Big fedora + Small TF2", "Big TF2 + Small fedora" }; ImGui::PushItemWidth(100); ImGui::Combo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, imagething, IM_ARRAYSIZE(imagething)); ImGui::PopItemWidth(); HelpMarker("Which image should be big and which small");
 							ImGui::Dummy(ImVec2(0, 20));
 
 							SectionTitle("Steam RPC");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
 							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-							ImGui::Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence");
+							ImGui::Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
 							const char* matchGroups[]{ "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }; ImGui::PushItemWidth(100); ImGui::Combo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, matchGroups, IM_ARRAYSIZE(matchGroups)); ImGui::PopItemWidth(); HelpMarker("Which match group should be used?");
 							ImGui::Checkbox("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
 							const char* mapTexts[]{ "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }; ImGui::PushItemWidth(100); ImGui::Combo("Map text", &Vars::Misc::Steam::MapText.m_Var, mapTexts, IM_ARRAYSIZE(mapTexts)); ImGui::PopItemWidth(); HelpMarker("Which map text should be used?");
