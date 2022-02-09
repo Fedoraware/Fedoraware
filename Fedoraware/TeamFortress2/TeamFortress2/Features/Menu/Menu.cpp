@@ -1067,7 +1067,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Global");
 
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1087,7 +1087,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Crits");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 6;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Crit hack", &Vars::Crits::Active.m_Var);  HelpMarker("Enables the crit hack (This doesn't work)");
 						InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Will try to fire crits when the key is held");
 						ImGui::PopStyleVar();
@@ -1097,7 +1097,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Triggerbot) {
 						SectionTitle("Global");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
 						InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
@@ -1109,7 +1109,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Autoshoot");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
 						ImGui::PushItemWidth(100);
 						MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Choose which target the triggerbot should shoot at", "Trigger targets");
@@ -1124,7 +1124,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Players) {
 						SectionTitle("ESP Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
 						ImGui::Checkbox("Outlined health bars", &Vars::ESP::Main::Outlinedbar.m_Var); HelpMarker("Will outline the health bars");
@@ -1150,7 +1150,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Player ESP");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
 						ImGui::Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
 						ImGui::Checkbox("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
@@ -1199,7 +1199,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Buildings) {
 						SectionTitle("Building ESP");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
 						ImGui::Checkbox("Ignore team buildings###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
@@ -1222,7 +1222,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::World) {
 						SectionTitle("World ESP");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
 						ImGui::Checkbox("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
@@ -1241,7 +1241,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Fonts) {
 						SectionTitle("ESP Font");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
@@ -1282,7 +1282,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Name Font");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
 						ImGui::InputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
@@ -1323,7 +1323,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::MiscVisuals) {
 						SectionTitle("World & UI");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1378,7 +1378,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Viewmodel Offset");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off X", &Vars::Visuals::VMOffX.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
@@ -1388,7 +1388,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("DT Indicator");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(150); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the bar style");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1438,7 +1438,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Attribute Changer");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(150);
 						if (ImGui::Combo("Unusual effect 1", &unu1, unuEffects, IM_ARRAYSIZE(unuEffects))) {
 							switch (unu1) {
@@ -1521,7 +1521,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Ragdoll effects");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
 						MultiCombo({ "Burning", "Electrocuted", "Become ash"}, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var}, "Ragdoll particle effects", "Effects###RagdollEffects");
 						if (ImGui::Checkbox("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var)) {
@@ -1540,7 +1540,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Radar) {
 						SectionTitle("Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var); HelpMarker("Will show nearby things relative to your player");
 						ImGui::PushItemWidth(100); ImGui::SliderInt("Size###RadarSize", &Vars::Radar::Main::Size.m_Var, 20, 200); ImGui::PopItemWidth(); HelpMarker("The size of the radar window");
@@ -1552,7 +1552,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Players");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						const char* iconPlayersRadar[]{ "Scoreboard", "Portraits", "Avatar" }; ImGui::PushItemWidth(100); ImGui::Combo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar)); ImGui::PopItemWidth(); HelpMarker("What sort of icon to represent players with");
 						const char* backgroundpradar[]{ "Off", "Rectangle", "Texture" }; ImGui::PushItemWidth(100); ImGui::Combo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, backgroundpradar, IM_ARRAYSIZE(backgroundpradar)); ImGui::PopItemWidth(); HelpMarker("What sort of background to put on players on the radar");
 						ImGui::Checkbox("Outline###radaro", &Vars::Radar::Players::Outline.m_Var); HelpMarker("Will put an outline on players on the radar");
@@ -1567,7 +1567,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Misc) {
 						SectionTitle("Movement");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
@@ -1584,7 +1584,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Misc");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Will spam your noisemaker without using its charges");
 						const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth();
 						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you of cheating");
@@ -1616,7 +1616,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					if (mainTab == MainTabs::Aimbot) {
 						SectionTitle("Hitscan");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 						static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
@@ -1640,7 +1640,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Triggerbot) {
 						SectionTitle("Autostab");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Auto backstab###TriggerAutostab", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
 						ImGui::Checkbox("Rage mode", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
@@ -1654,7 +1654,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Auto Detonate");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Autodetonate###TriggerDet", &Vars::Triggerbot::Detonate::Active.m_Var);
 						ImGui::Checkbox("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs when a player is in range");
 						ImGui::Checkbox("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares when a player is in range");
@@ -1667,7 +1667,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Buildings) {
 						SectionTitle("Building Chams");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
 						ImGui::Checkbox("Ignore team buildings", &Vars::Chams::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw chams on your teams buildings");
@@ -1689,7 +1689,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Players) {
 						SectionTitle("Chams Main");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.m_Var);  HelpMarker("Chams master switch");
 						ImGui::Dummy(ImVec2(0, 20));
@@ -1697,7 +1697,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Player Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
 						ImGui::Checkbox("Self chams###PlayerSelfChamsBox", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Draw chams on the local player");
 						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
@@ -1721,7 +1721,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("DME Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("DME chams###dmeactive", &Vars::Chams::DME::Active.m_Var); HelpMarker("DME chams master switch");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1782,7 +1782,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::World) {
 						SectionTitle("World Chams");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("World chams###woldchamsbut", &Vars::Chams::World::Active.m_Var);
 						ImGui::Checkbox("Health packs###WorldchamsHealthPacks", &Vars::Chams::World::Health.m_Var);
@@ -1803,7 +1803,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Fonts) {
 						SectionTitle("Condition Font");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
@@ -1856,7 +1856,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Pickup Font");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushItemWidth(100);
 						ImGui::InputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
 						ImGui::InputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
@@ -1910,7 +1910,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::MiscVisuals) {
 						SectionTitle("Skybox & Textures");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && (widget_pos.y - winPos.y) + winSize.y - 12) {
+							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							HelpMarker(tfm::format("x: %d, y: %d", widget_pos.x, widget_pos.y).c_str());
+						}
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						const char* skyNames[] = {
 							"Custom",
@@ -1962,7 +1965,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Thirdperson");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24) ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 						InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
 						ImGui::Checkbox("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your real angles on thirdperson (not what others see)");
@@ -1975,7 +1978,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Out of FOV arrows");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
 						ImGui::Checkbox("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
 						ImGui::PushItemWidth(150); ImGui::SliderFloat("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How long the arrows are");
@@ -1988,7 +1991,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("Spy Warning");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24) ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						
 						ImGui::Checkbox("Active###spywarn", &Vars::Visuals::SpyWarning.m_Var); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
 						ImGui::Checkbox("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.m_Var); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
 						ImGui::Checkbox("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.m_Var); HelpMarker("Will only alert you to visible spies");
@@ -2003,7 +2007,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Radar) {
 						SectionTitle("Building");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 
 						ImGui::Checkbox("Show buildings###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
@@ -2018,7 +2022,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					else if (mainTab == MainTabs::Misc) {
 						SectionTitle("Tickbase Exploits");
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("Doubletap", &Vars::Misc::CL_Move::Enabled.m_Var); HelpMarker("Shifts ticks when shooting for a rapid-fire effect");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -2043,7 +2047,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						SectionTitle("HvH");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
-						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
 						const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Random" }; ImGui::PushItemWidth(100); ImGui::Combo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch)); ImGui::PopItemWidth(); HelpMarker("Which way to look up/down");
 						const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge" }; ImGui::PushItemWidth(100); ImGui::Combo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw)); ImGui::PopItemWidth(); HelpMarker("Which way to look horizontally");
@@ -2066,7 +2070,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Fakelag");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
 								if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) {
@@ -2103,7 +2107,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (mainTab == MainTabs::Aimbot) {
 							SectionTitle("Projectile");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
 							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Use performance mode if you value your computer/fps. Don't use this on high ping. This won't suddenly make the projectile aimbot hit strafing players");
@@ -2126,7 +2130,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							widget_pos = ImGui::GetCursorScreenPos();
 
 							widget_pos.y -= 6;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							{
 								static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 								static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
@@ -2142,7 +2146,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Triggerbot) {
 							SectionTitle("Autoblast");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
 							ImGui::Checkbox("Rage airblast###TriggerAirRage", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
@@ -2153,7 +2157,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Autouber");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::Checkbox("Autouber###Triggeruber", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
 							ImGui::Checkbox("Only uber friends", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
 							ImGui::Checkbox("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
@@ -2167,7 +2171,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Players) {
 							SectionTitle("Glow Main");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Glow", &Vars::Glow::Main::Active.m_Var);
 							ImGui::Checkbox("Wireframe glow", &Vars::Glow::Main::Wireframe.m_Var);
@@ -2176,7 +2180,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Player Glow");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::Checkbox("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
 							ImGui::Checkbox("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.m_Var); HelpMarker("Draw glow on the local player");
 							ImGui::Checkbox("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Homosapien");
@@ -2193,7 +2197,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Buildings) {
 							SectionTitle("Building Glow");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.m_Var);
 							ImGui::Checkbox("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);
@@ -2207,7 +2211,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::World) {
 							SectionTitle("World Glow");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
 							ImGui::Checkbox("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
@@ -2222,7 +2226,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Fonts) {
 							SectionTitle("Menu Font");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::PushItemWidth(100);
 							ImGui::InputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
@@ -2275,7 +2279,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Indicator Font");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushItemWidth(100);
 							ImGui::InputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
 							ImGui::InputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
@@ -2383,7 +2387,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::Radar) {
 							SectionTitle("World");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
 							ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
@@ -2397,7 +2401,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						else if (mainTab == MainTabs::Misc) {
 							SectionTitle("Discord RPC");
 							ImVec2 widget_pos = ImGui::GetCursorScreenPos();
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
 							ImGui::Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var); HelpMarker("Should Discord Rich Presence contain current map name?");
@@ -2409,7 +2413,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Steam RPC");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
 							const char* matchGroups[]{ "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }; ImGui::PushItemWidth(100); ImGui::Combo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, matchGroups, IM_ARRAYSIZE(matchGroups)); ImGui::PopItemWidth(); HelpMarker("Which match group should be used?");
 							ImGui::Checkbox("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
@@ -2423,7 +2427,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							SectionTitle("Utilities");
 							widget_pos = ImGui::GetCursorScreenPos();
 							widget_pos.y -= 4;
-							ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 
 							if (ImGui::Button("Toggle playerlist", ImVec2(150, 20)))
 								g_PlayerList.showWindow = !g_PlayerList.showWindow;

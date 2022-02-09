@@ -33,10 +33,6 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 
 		Bruh(pEntity);
 
-		if (Vars::Visuals::RagdollEffects::Gib.m_Var) {
-			Offset(bool*, pEntity, 0xC91) = true;
-		}
-
 		if (Vars::Visuals::RagdollEffects::Burning.m_Var) {
 			Offset(bool*, pEntity, 0xC92) = true;
 		}
