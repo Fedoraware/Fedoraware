@@ -148,7 +148,7 @@ public:
 	void ServerCmdKeyValues(void* pKV)
 	{
 		typedef void(__thiscall* FN)(void*, void*);
- 		GetVFunc<FN>(this, 127)(this, pKV);
+		GetVFunc<FN>(this, 128)(this, pKV);
 	}
 
 	ISpatialQuery *GetBSPTreeQuery()
