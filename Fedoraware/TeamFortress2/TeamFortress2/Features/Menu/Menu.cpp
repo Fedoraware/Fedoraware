@@ -1075,6 +1075,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("Target", Colors::Target);
 						InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 						WidthSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Aimbot FOV circle", Colors::FOVCircle);
 						ImGui::Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 						ImGui::PushItemWidth(100);
 						MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
@@ -1326,9 +1329,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); ImGui::PopItemWidth(); HelpMarker("How many degrees of field of vision you would like");
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-						ImGui::SetNextItemWidth(20);
-						ColorPicker("Aimbot FOV circle", Colors::FOVCircle);
 						const char* visionModifiers[]{ "Off", "Pyrovision", "Halloween", "Romevision" }; ImGui::PushItemWidth(150); ImGui::Combo("Vision modifiers", &Vars::Visuals::Vision.m_Var, visionModifiers, IM_ARRAYSIZE(visionModifiers)); ImGui::PopItemWidth(); HelpMarker("Vision modifiers");
 						ImGui::PushItemWidth(150);
 						MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.m_Var, &Vars::Visuals::SkyModulation.m_Var, &Vars::Visuals::PropWireframe.m_Var }, "Select which types of modulation you want to enable", "Modulations");
