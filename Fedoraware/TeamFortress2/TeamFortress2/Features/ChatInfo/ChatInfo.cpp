@@ -42,7 +42,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					std::string voteString;
 					voteString = "[FeD] " + std::string((pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "[enemy] " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
 					g_notify.Add(voteString);
-					//g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
 					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString.c_str());
 					if (Vars::Misc::VotesInChat.m_Var) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
