@@ -537,6 +537,7 @@ namespace Utils
 			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
 			case TF_WEAPON_FLAMETHROWER:
+			case TF_WEAPON_CLEAVER:
 			{
 				return EWeaponType::PROJECTILE;
 			}
