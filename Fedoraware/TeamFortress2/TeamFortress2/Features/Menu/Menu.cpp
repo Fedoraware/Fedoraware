@@ -1515,6 +1515,23 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (ImGui::Button("Load", ImVec2(44, 20))) {
 							g_AttributeChanger.m_bLoad = true;
 						}
+						
+						ImGui::Dummy(ImVec2(0, 20));
+
+						SectionTitle("Ragdoll effects");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
+						MultiCombo({ "Burning", "Electrocuted", "Become ash"}, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var}, "Ragdoll particle effects", "Effects###RagdollEffects");
+						if (ImGui::Checkbox("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var)) {
+							Vars::Visuals::RagdollEffects::Ice.m_Var = false;
+						}
+						HelpMarker("Will make their ragdoll gold");
+						if (ImGui::Checkbox("Ice ragdoll", &Vars::Visuals::RagdollEffects::Ice.m_Var)) {
+							Vars::Visuals::RagdollEffects::Gold.m_Var = false;
+						}
+						HelpMarker("Will make their ragdoll ice");
 
 						ImGui::PopStyleVar();
 					}

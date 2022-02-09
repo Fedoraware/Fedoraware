@@ -16,6 +16,7 @@ void CHooks::Init()
 		Viewmodel::Init();
 		IsLocalPlayerUsingVisionFilterFlags::Init();
 		GameMovement::Duck::Init();
+		Ragdoll::Init();
 		//GetIconHook::Init();
 	}
 

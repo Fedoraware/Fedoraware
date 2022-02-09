@@ -437,6 +437,16 @@ namespace Vars
 
 		inline CVar<int> Vision{ false, L"vision modifier" };
 
+		namespace RagdollEffects
+		{
+			inline CVar<bool> EnemyOnly{ false, L"Only on enemies" };
+			inline CVar<bool> Burning{ false, L"Burn ragdoll" };
+			inline CVar<bool> Electrocuted{ false, L"Electrocute ragdoll" };
+			inline CVar<bool> Dissolve{ false, L"Dissolve ragdoll" };
+			inline CVar<bool> Gold{ false, L"Gold ragdoll" };
+			inline CVar<bool> Ice{ false, L"Ice ragdoll" };
+		}
+
 		namespace Skins
 		{
 			inline CVar<bool> Enabled				{ false, L"Active" };

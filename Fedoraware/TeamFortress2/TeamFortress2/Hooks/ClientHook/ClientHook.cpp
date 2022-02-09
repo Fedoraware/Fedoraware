@@ -35,6 +35,8 @@ void __stdcall ClientHook::ShutDown::Hook()
 	g_EntityCache.Clear();
 }
 
+
+
 void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 {
 	switch (FrameStage)
@@ -173,6 +175,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 	case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
 		g_AttributeChanger.Run();
+
 		break;
 	}
 
