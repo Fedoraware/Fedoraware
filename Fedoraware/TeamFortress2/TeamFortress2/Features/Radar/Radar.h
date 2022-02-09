@@ -6,7 +6,7 @@ class CRadar
 {
 public:
 	void Run();
-	int m_nRadarX = 300, m_nRadarY = 300;
+	int m_nRadarX = 100, m_nRadarY = 500;
 
 private:
 	bool ShouldRun();

@@ -16,7 +16,7 @@ private:
 	int m_nSpecListW = 160, m_nSpecListTitleBarH = 24;
 
 public:
-	int m_nSpecListX = 500, m_nSpecListY = 500;
+	int m_nSpecListX = 30, m_nSpecListY = 100;
 
 public:
 	void Run();
