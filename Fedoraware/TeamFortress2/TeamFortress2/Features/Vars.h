@@ -314,7 +314,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> ShowLocal{ true, L"Show Local" };
-			inline CVar<bool> LocalRainbow{ true, L"Local player is rainbow" };
+			inline CVar<bool> LocalRainbow{ false, L"Local player is rainbow" };
 			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<bool> Wearables{ true, L"Render Wearables" };
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
