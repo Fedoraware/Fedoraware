@@ -596,8 +596,10 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				g_GlobalInfo.m_bShouldShift = true;
 			}
 
+			/*
 			if (g_GlobalInfo.m_bAAActive && !g_GlobalInfo.m_bWeaponCanAttack)
 				pCmd->buttons &= ~IN_ATTACK;
+			*/ // what is the point of this
 
 			if (Vars::Aimbot::Hitscan::TapFire.m_Var && nWeaponID == TF_WEAPON_MINIGUN)
 			{
