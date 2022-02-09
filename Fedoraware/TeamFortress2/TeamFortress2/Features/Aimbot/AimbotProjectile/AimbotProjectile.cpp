@@ -146,7 +146,9 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Pyro_s_TheDetonator:
 	case Pyro_s_TheFlareGun:
 	case Pyro_s_FestiveFlareGun:
-	case Pyro_s_TheScorchShot: {
+	case Pyro_s_TheScorchShot:
+	case Scout_s_TheFlyingGuillotine:
+	case Scout_s_TheFlyingGuillotineG: {
 		out = { 2000.0f, 0.3f };
 		break;
 	}
