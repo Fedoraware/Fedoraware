@@ -75,7 +75,7 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
-			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
+			inline CVar<int> AimMethod			{ 2, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox			{ 2, L"Aim Hitbox" };	//0 - Head,		1 - Body,	2 - Auto
 			inline CVar<float> SmoothingAmount	{ 4.0f, L"Smoothing Amount" };
 			inline CVar<int> TapFire			{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
@@ -84,7 +84,7 @@ namespace Vars
 			inline CVar<bool> ScanBuildings		{ true, L"Scan Buildings" };
 			inline CVar<bool> WaitForHeadshot	{ true, L"Wait For Headshot" };
 			inline CVar<bool> WaitForCharge     { true, L"Wait For Charge" };
-			inline CVar<bool> SpectatedSmooth	{ false, L"Spectated Smooth" };
+			inline CVar<bool> SpectatedSmooth	{ true, L"Spectated Smooth" };
 			inline CVar<bool> ScopedOnly		{ false, L"Scoped Only" };
 			inline CVar<bool> AutoScope			{ false, L"Auto Scope" };
 			inline CVar<bool> AutoRev			{ false, L"Auto Rev" };
@@ -110,7 +110,7 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<int> SortMethod			{ 1, L"Sort Method" };	//0 - FOV,		1 - Distance
-			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
+			inline CVar<int> AimMethod			{ 2, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
 			//inline CVar<float> AimFOV			{ 45.0f, L"Aim FOV" };
 			inline CVar<float> SmoothingAmount	{ 8.0f, L"Smoothing Amount" };
 			inline CVar<bool> RangeCheck		{ true, L"Range Check" };
