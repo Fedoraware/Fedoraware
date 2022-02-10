@@ -2,6 +2,7 @@
 
 #include "../../SDK/SDK.h"
 #include "../ClientModeHook/ClientModeHook.h"
+
 namespace EngineHook
 {
 	namespace CL_Move

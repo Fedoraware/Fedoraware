@@ -9,7 +9,8 @@ void Ragdoll::Init()
 
 #define Offset(type, ent, offset) *reinterpret_cast<type>(ent + offset)
 
-void Bruh(CBaseEntity* pEntity) {
+void Bruh(CBaseEntity* pEntity)
+{
 	Offset(bool*, pEntity, 0xC91) = false; // Gib
 	Offset(bool*, pEntity, 0xC92) = false; // Burning
 	Offset(bool*, pEntity, 0xC93) = false; // Electrocuted
@@ -22,10 +23,15 @@ void Bruh(CBaseEntity* pEntity) {
 
 void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 {
-	if (const auto& pEntity = reinterpret_cast<CBaseEntity*>(ecx)) {
-		if (Vars::Visuals::RagdollEffects::EnemyOnly.m_Var) {
-			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				if (Offset(int*, pEntity, 0xCBC) == pLocal->GetTeamNum()) { //Team offset
+	if (const auto& pEntity = reinterpret_cast<CBaseEntity*>(ecx))
+	{
+		if (Vars::Visuals::RagdollEffects::EnemyOnly.m_Var)
+		{
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				if (Offset(int*, pEntity, 0xCBC) == pLocal->GetTeamNum())
+				{
+					//Team offset
 					return;
 				}
 			}
@@ -33,23 +39,28 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 
 		Bruh(pEntity);
 
-		if (Vars::Visuals::RagdollEffects::Burning.m_Var) {
+		if (Vars::Visuals::RagdollEffects::Burning.m_Var)
+		{
 			Offset(bool*, pEntity, 0xC92) = true;
 		}
 
-		if (Vars::Visuals::RagdollEffects::Electrocuted.m_Var) {
+		if (Vars::Visuals::RagdollEffects::Electrocuted.m_Var)
+		{
 			Offset(bool*, pEntity, 0xC93) = true;
 		}
 
-		if (Vars::Visuals::RagdollEffects::Dissolve.m_Var) {
+		if (Vars::Visuals::RagdollEffects::Dissolve.m_Var)
+		{
 			Offset(bool*, pEntity, 0xC99) = true;
 		}
 
-		if (Vars::Visuals::RagdollEffects::Gold.m_Var) {
+		if (Vars::Visuals::RagdollEffects::Gold.m_Var)
+		{
 			Offset(bool*, pEntity, 0xCA0) = true;
 		}
 
-		if (Vars::Visuals::RagdollEffects::Ice.m_Var) {
+		if (Vars::Visuals::RagdollEffects::Ice.m_Var)
+		{
 			Offset(bool*, pEntity, 0xCA1) = true;
 		}
 	}

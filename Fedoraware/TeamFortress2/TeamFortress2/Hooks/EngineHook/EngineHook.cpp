@@ -6,7 +6,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 {
 	static auto oClMove = Func.Original<fn>();
 
-	if (!Vars::Misc::CL_Move::Enabled.m_Var) {
+	if (!Vars::Misc::CL_Move::Enabled.m_Var)
+	{
 		g_GlobalInfo.m_nShifted = 0;
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
@@ -14,7 +15,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	// pSpeedhack
 	if (Vars::Misc::CL_Move::SEnabled.m_Var)
 	{
-		int SpeedTicks{ 0 };
+		int SpeedTicks{0};
 		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
 		g_GlobalInfo.m_nShifted = 0;
 
@@ -27,61 +28,79 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	auto pLocal = g_EntityCache.m_pLocal;
 
-	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bRecharging) {
-		while (g_GlobalInfo.m_nShifted > 0) {
+	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.
+		m_bRecharging)
+	{
+		while (g_GlobalInfo.m_nShifted > 0)
+		{
 			oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 			g_GlobalInfo.m_nShifted--;
 		}
 		return;
 	}
 
-	if (g_GlobalInfo.m_bRechargeQueued && !g_GlobalInfo.m_bChoking) {	// probably perfect method of waiting to ensure we don't fuck with fakelag
-		g_GlobalInfo.m_bRechargeQueued = false;							// see relevant code @clientmodehook
+	if (g_GlobalInfo.m_bRechargeQueued && !g_GlobalInfo.m_bChoking)
+	{
+		// probably perfect method of waiting to ensure we don't fuck with fakelag
+		g_GlobalInfo.m_bRechargeQueued = false; // see relevant code @clientmodehook
 		g_GlobalInfo.m_bRecharging = true;
 	}
-	else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var)) {
-		g_GlobalInfo.m_bForceSendPacket = true;							// force uninterrupted connection with server
-		g_GlobalInfo.m_nShifted++;										// add ticks to tick counter
-		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS + 1;				// set wait condition
-		return;															// this recharges
+	else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var))
+	{
+		g_GlobalInfo.m_bForceSendPacket = true; // force uninterrupted connection with server
+		g_GlobalInfo.m_nShifted++; // add ticks to tick counter
+		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS + 1; // set wait condition
+		return; // this recharges
 	}
-	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {	// queue recharge
+	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var))
+	{
+		// queue recharge
 		g_GlobalInfo.m_bForceSendPacket = true;
 		g_GlobalInfo.m_bRechargeQueued = true;
 	}
-	else {
-		g_GlobalInfo.m_bRecharging = false;									// if we are unable to recharge, don't
+	else
+	{
+		g_GlobalInfo.m_bRecharging = false; // if we are unable to recharge, don't
 	}
 
-	oClMove(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
+	oClMove(accumulated_extra_samples,
+	        (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
-	if (g_GlobalInfo.m_nWaitForShift) {
+	if (g_GlobalInfo.m_nWaitForShift)
+	{
 		g_GlobalInfo.m_nWaitForShift--;
 		return;
 	}
 
-	if (g_GlobalInfo.lateUserCmd != nullptr) {
+	if (g_GlobalInfo.lateUserCmd != nullptr)
+	{
 		// Shift if attacking normally
-		g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift ? true : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+		g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
+			                              ? true
+			                              : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 	}
 
 
-
-	if (!pLocal) {
+	if (!pLocal)
+	{
 		g_GlobalInfo.m_nShifted = 0; // we do not have charge if we do not exist
 		return;
 	}
 
-	if (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) {
+	if (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift)
+	{
 		if (
-			(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||	// 0 - On key
-			(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||																	// 1 - Always
-			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))		// 2 - Disable on key 
+			(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
+			// 0 - On key
+			(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
+			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
+		// 2 - Disable on key 
 		{
-			while (g_GlobalInfo.m_nShifted > 0) {
+			while (g_GlobalInfo.m_nShifted > 0)
+			{
 				oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 				g_GlobalInfo.m_nShifted--;
-				g_GlobalInfo.m_bForceSendPacket = true;		// Keep up connection with server
+				g_GlobalInfo.m_bForceSendPacket = true; // Keep up connection with server
 			}
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
@@ -93,7 +112,8 @@ void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
 {
 	byte data[4000];
 
-	const int nextcommandnr = g_Interfaces.ClientState->lastoutgoingcommand + g_Interfaces.ClientState->chokedcommands + 1;
+	const int nextcommandnr = g_Interfaces.ClientState->lastoutgoingcommand + g_Interfaces.ClientState->chokedcommands +
+		1;
 
 	CLC_Move moveMsg;
 	moveMsg.m_DataOut.StartWriting(data, sizeof(data));
@@ -106,16 +126,19 @@ void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
 
 	int from = -1;
 	bool bOK = true;
-	for (int to = nextcommandnr - numcmds + 1; to <= nextcommandnr; to++) {
+	for (int to = nextcommandnr - numcmds + 1; to <= nextcommandnr; to++)
+	{
 		const bool isnewcmd = to >= nextcommandnr - moveMsg.m_nNewCommands + 1;
 		bOK = bOK && g_Interfaces.Client->WriteUsercmdDeltaToBuffer(&moveMsg.m_DataOut, from, to, isnewcmd);
 		from = to;
 	}
 
-	if (bOK) {
+	if (bOK)
+	{
 		if (extraCommands)
 			g_Interfaces.ClientState->m_NetChannel->m_nChokedPackets -= extraCommands;
-		GetVFunc<bool(__thiscall*)(PVOID, INetMessage* msg, bool, bool)>(g_Interfaces.ClientState->m_NetChannel, 37)(g_Interfaces.ClientState->m_NetChannel, &moveMsg, false, false);
+		GetVFunc<bool(__thiscall*)(PVOID, INetMessage* msg, bool, bool)>(g_Interfaces.ClientState->m_NetChannel, 37)(
+			g_Interfaces.ClientState->m_NetChannel, &moveMsg, false, false);
 	}
 	//static auto originalFn = Func.Original<fn>();
 	//return originalFn(ecx, edx);
@@ -130,4 +153,4 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 		return FLT_MAX;
 
 	return originalFn(ecx, edx);
-}	// this shit fucking works
+} // this shit fucking works

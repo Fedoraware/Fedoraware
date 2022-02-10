@@ -9,8 +9,8 @@ namespace ClientHook
 	namespace PreEntity
 	{
 		const int index = 5;
-		using fn = void(__thiscall*)(CBaseClientDLL*, char const*);
-		void __stdcall Hook(char const* szMapName);
+		using fn = void(__thiscall*)(CBaseClientDLL*, const char*);
+		void __stdcall Hook(const char* szMapName);
 	}
 
 	namespace PostEntity

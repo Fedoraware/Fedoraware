@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Hooks.h"
+
 namespace Ragdoll
 {
 	inline SEOHook::Func Func;

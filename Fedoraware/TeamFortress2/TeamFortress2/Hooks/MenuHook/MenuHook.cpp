@@ -40,7 +40,7 @@ void __stdcall LockCursor::Func()
 
 void LockCursor::Init()
 {
-	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(g_Interfaces.Surface, 62));
+	auto FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(g_Interfaces.Surface, 62));
 	Hook.Create(reinterpret_cast<void*>(FN), reinterpret_cast<void*>(Func));
 }
 
@@ -56,7 +56,7 @@ HRESULT __stdcall Reset::Func(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* 
 
 void Reset::Init()
 {
-	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 16));
+	auto FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 16));
 	Hook.Create(reinterpret_cast<void*>(FN), reinterpret_cast<void*>(Func));
 }
 
@@ -64,7 +64,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 LONG __stdcall WndProc::Func(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (g_Menu.menuOpen) {
+	if (g_Menu.menuOpen)
+	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		g_Interfaces.InputSystem->ResetInputStateVFunc();
 		return 1;
@@ -76,7 +77,7 @@ LONG __stdcall WndProc::Func(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void WndProc::Init()
 {
 	while (!hwWindow)
-		hwWindow = FindWindowW(0, L"Team Fortress 2");
+		hwWindow = FindWindowW(nullptr, L"Team Fortress 2");
 
 	Original = (WNDPROC)SetWindowLongPtr(hwWindow, GWL_WNDPROC, (LONG_PTR)Func);
 }
@@ -84,7 +85,8 @@ void WndProc::Init()
 HRESULT __stdcall EndScene::Func(IDirect3DDevice9* pDevice)
 {
 	static void* fAddr = _ReturnAddress();
-	if (fAddr != _ReturnAddress()) {
+	if (fAddr != _ReturnAddress())
+	{
 		return Hook.CallOriginal<fn>()(pDevice);
 	}
 
@@ -94,10 +96,11 @@ HRESULT __stdcall EndScene::Func(IDirect3DDevice9* pDevice)
 
 void EndScene::Init()
 {
-	while (!g_dwDirectXDevice) {
-		g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
+	while (!g_dwDirectXDevice)
+	{
+		g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(
+			_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
 	}
-	fn FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 42));
+	auto FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 42));
 	Hook.Create(reinterpret_cast<void*>(FN), reinterpret_cast<void*>(Func));
 }
-

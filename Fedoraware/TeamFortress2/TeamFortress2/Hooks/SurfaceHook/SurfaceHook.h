@@ -9,14 +9,14 @@ namespace SurfaceHook
 	namespace OnScreenSizeChanged
 	{
 		const int index = 111;
-		using fn = void(__thiscall *)(CSurface *, int, int);
+		using fn = void(__thiscall *)(CSurface*, int, int);
 		void __stdcall Hook(int OldWidht, int OldHeight);
 	}
 
 	namespace LockCursor
 	{
 		const int index = 62;
-		using fn = void(__thiscall *)(CSurface *);
+		using fn = void(__thiscall *)(CSurface*);
 		void __stdcall Hook();
 	}
 }

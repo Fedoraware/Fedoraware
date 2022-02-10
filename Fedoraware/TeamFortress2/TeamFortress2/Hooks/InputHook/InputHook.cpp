@@ -8,7 +8,8 @@ CUserCmd* __stdcall InputHook::GetUserCmd::Hook(int sequence_number)
 	if (pCommand == nullptr)
 		return pCommand;
 
-	if (!Vars::Crits::Active.m_Var) {
+	if (!Vars::Crits::Active.m_Var)
+	{
 		return pCommand;
 	}
 
@@ -17,7 +18,7 @@ CUserCmd* __stdcall InputHook::GetUserCmd::Hook(int sequence_number)
 	{
 		oldcmd = pCommand->command_number;
 		pCommand->command_number = g_Crits.new_command_number[pCommand->command_number];
-		pCommand->random_seed = MD5_PseudoRandom(unsigned(pCommand->command_number)) & 0x7fffffff;
+		pCommand->random_seed = MD5_PseudoRandom(static_cast<unsigned>(pCommand->command_number)) & 0x7fffffff;
 		g_Crits.new_command_number.erase(g_Crits.new_command_number.find(oldcmd));
 		g_Interfaces.ClientState->lastoutgoingcommand = pCommand->command_number - 1;
 		if (g_Interfaces.Engine->GetNetChannelInfo())

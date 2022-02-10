@@ -4,7 +4,8 @@
 #include "../Hooks.h"
 #include "../../Utils/MinHook/hook.h"
 
-namespace MenuHook {
+namespace MenuHook
+{
 	void Init();
 	void Unload();
 }

@@ -4,7 +4,8 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 
-void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
+void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo,
+                                                       matrix3x4* pBoneToWorld)
 {
 	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
@@ -21,7 +22,8 @@ void __stdcall ModelRenderHook::ForcedMaterialOverride::Hook(IMaterial* mat, EOv
 {
 	if (!g_DMEChams.m_bRendering)
 	{
-		if ((g_Glow.m_bRendering && !g_Glow.IsGlowMaterial(mat)) || (g_Chams.m_bRendering && !g_Chams.IsChamsMaterial(mat)))
+		if ((g_Glow.m_bRendering && !g_Glow.IsGlowMaterial(mat)) || (g_Chams.m_bRendering && !g_Chams.
+			IsChamsMaterial(mat)))
 			return;
 	}
 
