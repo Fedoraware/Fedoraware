@@ -14,37 +14,34 @@ bool sortByTeam(const plistPlayer& a, const plistPlayer& b)
 	return a.teamNum < b.teamNum;
 }
 
-bool findPlayer(int id, int teamNum)
+bool findPlayer(int id)
 {
-	for (const auto& player : g_PlayerList.players)
-		if (player.info.userID == id && player.teamNum == teamNum)
+	for (const auto& player : g_PlayerList.players) {
+		if (player.index == id) {
 			return true;
+		}
+	}
 	return false;
 }
+
+constexpr plistPlayer nullPlayer{ {},
+	{0,0,0,0},
+	-1,
+	-1
+};
 
 void CPlayerList::GetPlayers()
 {
 	if (g_Interfaces.Engine->IsInGame() && !g_Interfaces.Engine->IsDrawingLoadingImage() && g_Interfaces.Engine->
 		IsConnected())
 	{
-		CBaseEntity* local = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
-		for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		for (int i = 1; i < players.size(); i++)	
 		{
 			CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(i);
 
 			if (!ent || !ent->IsPlayer() || ent == g_EntityCache.m_pLocal)
 			{
-				if (!g_PlayerList.players.empty())
-				{
-					for (auto it = g_PlayerList.players.begin(); it != g_PlayerList.players.end(); ++it)
-					{
-						if (it->index == i)
-						{
-							it = g_PlayerList.players.erase(it);
-							break;
-						}
-					}
-				}
+				players[i] = nullPlayer;
 				continue;
 			}
 
@@ -52,29 +49,20 @@ void CPlayerList::GetPlayers()
 
 			if (g_Interfaces.Engine->GetPlayerInfo(i, &player.info))
 			{
-				int teamNum = ent->GetTeamNum();
+				const int teamNum = ent->GetTeamNum();
 				player.teamNum = teamNum;
 				player.color = Utils::GetTeamColor(teamNum, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 				player.index = i;
 
-				if (g_PlayerList.players.empty())
-					players.push_back(player);
-				else if (!g_PlayerList.players.empty() && !findPlayer(player.info.userID, teamNum))
-				{
-					for (auto i = g_PlayerList.players.begin(); i != g_PlayerList.players.end(); ++i)
-					{
-						if (i->info.userID == player.info.userID)
-						{
-							i = g_PlayerList.players.erase(i);
-							break;
-						}
-					}
-					players.push_back(player);
-				}
+				players[i] = player;
+			} else
+			{
+				players[i] = nullPlayer;
 			}
 		}
-		if (!g_PlayerList.players.empty())
+		if (!g_PlayerList.players.empty()) {
 			std::sort(players.begin(), players.end(), sortByTeam);
+		}
 	}
 }
 
@@ -95,7 +83,7 @@ void CPlayerList::Render()
 	}
 
 	ImGui::PushFont(g_Menu.VerdanaBold);
-	ImGui::GetStyle().WindowMinSize = ImVec2(200, 50);
+	ImGui::GetStyle().WindowMinSize = ImVec2(200, 24);
 	ImGui::PushStyleColor(ImGuiCol_Text, accent.Value);
 	if (ImGui::Begin("Playerlist", &g_PlayerList.showWindow,
 	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
@@ -106,30 +94,18 @@ void CPlayerList::Render()
 		ImGuiWindow* window = ImGui::GetCurrentWindow();
 		auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		const auto drawList = ImGui::GetWindowDrawList();
-		const auto bgDrawList = ImGui::GetBackgroundDrawList();
-		const auto fgDrawList = window->DrawList;
 		const auto foregroundDrawList = ImGui::GetForegroundDrawList();
 		ImGui::GradientRect(foregroundDrawList, &titlegradient, {winPos.x, winPos.y}, winSize.x, 3);
-		ImGui::Dummy(ImVec2(0, 13));
-		ImGui::Dummy(ImVec2(0, 20));
+		ImGui::Dummy(ImVec2(0, 7));
 		if (!g_Interfaces.Engine->IsInGame())
 		{
+			ImGui::Dummy(ImVec2(0, 20));
 			static ImVec2 font_size = ImGui::CalcTextSize("You're not in game, noob!");
 			ImGui::SameLine(
 				ImGui::GetWindowSize().x / 2 -
 				font_size.x + (font_size.x / 2)
 			);
 			ImGui::Text("You're not in game, noob!");
-		}
-		else if (g_Interfaces.Engine->IsInGame() && g_PlayerList.players.empty())
-		{
-			static ImVec2 font_size = ImGui::CalcTextSize("You're all alone, again.");
-			ImGui::SameLine(
-				ImGui::GetWindowSize().x / 2 -
-				font_size.x + (font_size.x / 2)
-			);
-			ImGui::Text("You're all alone, again.");
 		}
 		else if (g_Interfaces.Engine->IsInGame() && !g_PlayerList.players.empty())
 		{
@@ -143,7 +119,7 @@ void CPlayerList::Render()
 
 				for (const auto& player : players) // Print players
 				{
-					if (!player.info.userID)
+					if (player.index == -1)
 						continue;
 
 					bool ignored = (g_GlobalInfo.ignoredPlayers.find(player.info.friendsID) != g_GlobalInfo.

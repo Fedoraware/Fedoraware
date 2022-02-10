@@ -6,7 +6,7 @@ struct plistPlayer
 	PlayerInfo_t info;
 	Color_t color;
 	int teamNum;
-	int index;
+	int index = -1;
 };
 
 class CPlayerList
@@ -15,7 +15,7 @@ public:
 	bool showWindow;
 	void GetPlayers();
 	void Render();
-	std::vector<plistPlayer> players;
+	std::array<plistPlayer, 64> players;
 };
 
 inline CPlayerList g_PlayerList;

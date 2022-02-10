@@ -185,7 +185,6 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_NET_UPDATE_START:
 		{
 			g_EntityCache.Clear();
-			g_PlayerList.players.clear();
 			break;
 		}
 
