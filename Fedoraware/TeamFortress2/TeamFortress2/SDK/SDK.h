@@ -122,7 +122,7 @@ namespace Colors
 	inline Color_t TeamRed =				{ 255, 100, 87, 255 };
 	inline Color_t TeamBlu =				{ 30, 144, 255, 255 };
 	inline Color_t Enemy =					{ 255, 100, 87, 255 };
-	inline Color_t Team =					{ 30, 144, 255, 255 };
+	inline Color_t rTeam =					{ 30, 144, 255, 255 };
 	inline Color_t Hands =					{ 30, 144, 255, 255 };
 	inline Color_t HandsOverlay =			{ 255, 127, 0, 255 };
 	inline Color_t Weapon =					{ 30, 144, 255, 255 };
@@ -261,8 +261,8 @@ namespace Utils
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
 				// Enemy/Team based colors
 				auto lPlayerTeam = pLocal->GetTeamNum();
-				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::Team;
-				else if (lPlayerTeam == 3 && nTeamNum == 3) return Colors::Team;
+				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::rTeam;
+				else if (lPlayerTeam == 3 && nTeamNum == 3) return Colors::rTeam;
 				else if (lPlayerTeam == 2 && nTeamNum == 3) return Colors::Enemy;
 				else if (lPlayerTeam == 3 && nTeamNum == 2) return Colors::Enemy;
 				else return Colors::White;

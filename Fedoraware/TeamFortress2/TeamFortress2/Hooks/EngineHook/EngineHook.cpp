@@ -83,7 +83,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				g_GlobalInfo.m_nShifted--;
 				g_GlobalInfo.m_bForceSendPacket = true;		// Keep up connection with server
 			}
-			g_Interfaces.Engine->FireEvents(); // schizophrenia kicks in (bad)
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
 		g_GlobalInfo.m_bShouldShift = false;

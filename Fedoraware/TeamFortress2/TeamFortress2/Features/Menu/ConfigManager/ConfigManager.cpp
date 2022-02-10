@@ -196,6 +196,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
+				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -624,10 +625,10 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Health);
 			SAVE_OTHER(Colors::Ammo);
 			SAVE_OTHER(Colors::UberColor);
+			SAVE_OTHER(Colors::Enemy);
+			SAVE_OTHER(Colors::rTeam);
 			SAVE_OTHER(Colors::TeamRed);
 			SAVE_OTHER(Colors::TeamBlu);
-			SAVE_OTHER(Colors::Enemy);
-			SAVE_OTHER(Colors::Team);
 			SAVE_OTHER(Colors::Hands);
 			SAVE_OTHER(Colors::Weapon);
 			SAVE_OTHER(Colors::HandsOverlay);
@@ -778,6 +779,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
+				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -1201,10 +1203,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Health);
 			LOAD_OTHER(Colors::Ammo);
 			LOAD_OTHER(Colors::UberColor);
+			LOAD_OTHER(Colors::Enemy);
+			LOAD_OTHER(Colors::rTeam);
 			LOAD_OTHER(Colors::TeamRed);
 			LOAD_OTHER(Colors::TeamBlu);
-			LOAD_OTHER(Colors::Enemy);
-			LOAD_OTHER(Colors::Team);
 			LOAD_OTHER(Colors::Hands);
 			LOAD_OTHER(Colors::HandsOverlay);
 			LOAD_OTHER(Colors::Weapon);

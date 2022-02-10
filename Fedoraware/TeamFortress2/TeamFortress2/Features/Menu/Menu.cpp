@@ -1135,7 +1135,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ColorPicker("Enemy color", Colors::Enemy);
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("Team color", Colors::Team);
+							ColorPicker("Team color", Colors::rTeam);
 						}
 						else {
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
