@@ -5,8 +5,15 @@
 
 constexpr int MAX_BUFFER = (MAX_PATH * 3);
 
-std::array<int, 46> australium_table{ 4, 7, 13, 14, 15, 16, 18, 19, 20, 21, 29, 36, 38, 45, 61, 132, 141, 194, 197, 200, 201, 202, 203, 205, 206, 207, 208, 211, 228, 424, 654, 658, 659, 662, 663, 664, 665, 669, 1000, 1004, 1006, 1007, 1078, 1082, 1085, 1149 };
-std::array<std::pair<int, int>, 12> redirects{ std::pair{ 264, 1071 }, std::pair{ 18, 205 }, std::pair{ 13, 200 }, std::pair{ 21, 208 }, std::pair{ 19, 206 }, std::pair{ 20, 207 }, std::pair{ 15, 202 }, std::pair{ 7, 197 }, std::pair{ 29, 211 }, std::pair{ 14, 201 }, std::pair{ 16, 203 }, std::pair{ 4, 194 } };
+std::array<int, 46> australium_table{
+	4, 7, 13, 14, 15, 16, 18, 19, 20, 21, 29, 36, 38, 45, 61, 132, 141, 194, 197, 200, 201, 202, 203, 205, 206, 207,
+	208, 211, 228, 424, 654, 658, 659, 662, 663, 664, 665, 669, 1000, 1004, 1006, 1007, 1078, 1082, 1085, 1149
+};
+std::array<std::pair<int, int>, 12> redirects{
+	std::pair{264, 1071}, std::pair{18, 205}, std::pair{13, 200}, std::pair{21, 208}, std::pair{19, 206},
+	std::pair{20, 207}, std::pair{15, 202}, std::pair{7, 197}, std::pair{29, 211}, std::pair{14, 201},
+	std::pair{16, 203}, std::pair{4, 194}
+};
 
 
 void CAttributChanger::Run()
@@ -14,19 +21,23 @@ void CAttributChanger::Run()
 	if (!g_Interfaces.Engine->IsInGame())
 		return;
 
-	static auto dwItemDefOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
+	static auto dwItemDefOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"),
+	                                                _("m_iItemDefinitionIndex"));
 
-	if (m_bSet) {
+	if (m_bSet)
+	{
 		SetAttribute();
 		m_bSet = false;
 	}
 
-	if (m_bSave) {
+	if (m_bSave)
+	{
 		SaveConfig();
 		m_bSave = false;
 	}
 
-	if (m_bLoad) {
+	if (m_bLoad)
+	{
 		LoadConfig();
 		m_bLoad = false;
 	}
@@ -45,7 +56,8 @@ void CAttributChanger::Run()
 		int n;
 		for (n = 0; MyWeapons[n]; n++)
 		{
-			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(MyWeapons[n])))
+			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->
+				GetClientEntityFromHandle(MyWeapons[n])))
 			{
 				auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
 
@@ -57,7 +69,8 @@ void CAttributChanger::Run()
 
 				if (m_mapAttributes.find(*nIndex) != m_mapAttributes.end())
 				{
-					if (m_mapAttributes[*nIndex].m_bStyleOverride) {
+					if (m_mapAttributes[*nIndex].m_bStyleOverride)
+					{
 						switch (*nIndex)
 						{
 						case 264:
@@ -97,20 +110,20 @@ void CAttributChanger::Run()
 							*nIndex = 194;
 							break;
 						}
-						pList->Add(AttributeID::ItemStyleOverride, true);
+						pList->Add(ItemStyleOverride, true);
 					}
 
 					if (m_mapAttributes[*nIndex].m_nEffect)
-						pList->Add(AttributeID::UnusualEffect, m_mapAttributes[*nIndex].m_nEffect);
+						pList->Add(UnusualEffect, m_mapAttributes[*nIndex].m_nEffect);
 
 					if (m_mapAttributes[*nIndex].m_nParticle)
-						pList->Add(AttributeID::ParticleEffect, m_mapAttributes[*nIndex].m_nParticle);
+						pList->Add(ParticleEffect, m_mapAttributes[*nIndex].m_nParticle);
 
 					if (m_mapAttributes[*nIndex].m_bAncient)
-						pList->Add(AttributeID::AncientPowers, true);
+						pList->Add(AncientPowers, true);
 
 					if (m_mapAttributes[*nIndex].m_nSheen)
-						pList->Add(AttributeID::Sheen, m_mapAttributes[*nIndex].m_nSheen);
+						pList->Add(Sheen, m_mapAttributes[*nIndex].m_nSheen);
 				}
 			}
 		}
@@ -152,16 +165,18 @@ void CAttributChanger::LoadConfig()
 
 	if (m_Read.is_open())
 	{
-		wchar_t* szSection, szSections[MAX_BUFFER];
+		wchar_t *szSection, szSections[MAX_BUFFER];
 		GetPrivateProfileSectionNamesW(szSections, MAX_BUFFER, m_szAttributePath.c_str());
 		szSection = szSections;
 
 		while (*szSection != NULL)
 		{
 			const int nIndex = LoadInt(szSection, L"Index");
-			m_mapAttributes[nIndex] = { nIndex, LoadInt(szSection, L"Effect"),
-										LoadInt(szSection, L"Particle"), LoadInt(szSection, L"Sheen"),
-										LoadBool(szSection, L"Ancient"), LoadBool(szSection, L"StyleOverride") };
+			m_mapAttributes[nIndex] = {
+				nIndex, LoadInt(szSection, L"Effect"),
+				LoadInt(szSection, L"Particle"), LoadInt(szSection, L"Sheen"),
+				LoadBool(szSection, L"Ancient"), LoadBool(szSection, L"StyleOverride")
+			};
 
 			szSection += (wcslen(szSection) + 1);
 		}
@@ -172,8 +187,8 @@ void CAttributChanger::LoadConfig()
 
 void CAttributChanger::SetAttribute()
 {
-	typedef void(__thiscall* fn)(CClientState*);
-	fn ForceFullUpdate = (fn)g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D"));
+	using fn = void(__thiscall*)(CClientState*);
+	auto ForceFullUpdate = (fn)g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D"));
 
 	//Needed here, runs 2 stages before cache is filled
 	if (const auto& pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer()))
@@ -181,9 +196,11 @@ void CAttributChanger::SetAttribute()
 		if (const auto& pWeapon = pLocal->GetActiveWeapon())
 		{
 			const int nIndex = pWeapon->GetItemDefIndex();
-			m_mapAttributes[nIndex] = { nIndex, Vars::Visuals::Skins::Effect.m_Var,
-										Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var,
-										Vars::Visuals::Skins::Acient.m_Var,   Vars::Visuals::Skins::Override.m_Var };
+			m_mapAttributes[nIndex] = {
+				nIndex, Vars::Visuals::Skins::Effect.m_Var,
+				Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var,
+				Vars::Visuals::Skins::Acient.m_Var, Vars::Visuals::Skins::Override.m_Var
+			};
 
 			ForceFullUpdate(g_Interfaces.ClientState);
 		}

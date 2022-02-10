@@ -30,8 +30,10 @@ private:
 	};
 
 	bool GetProjectileInfo(CBaseCombatWeapon* pWeapon, ProjectileInfo_t& out);
-	bool CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& ProjInfo, Solution_t& out);
-	bool SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& Predictor, const ProjectileInfo_t& ProjInfo, Solution_t& out);
+	bool CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& ProjInfo,
+	                   Solution_t& out);
+	bool SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& Predictor,
+	                     const ProjectileInfo_t& ProjInfo, Solution_t& out);
 
 private:
 	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity);

@@ -20,21 +20,32 @@ void CMisc::Run(CUserCmd* pCmd)
 	ServerHitbox(); // super secret deathpole feature!!!!
 }
 
-void CMisc::ServerHitbox() { // draw our serverside hitbox on local servers, used to test fakelag & antiaim
-	if (g_Interfaces.Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.m_Var) {
+void CMisc::ServerHitbox()
+{
+	// draw our serverside hitbox on local servers, used to test fakelag & antiaim
+	if (g_Interfaces.Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.m_Var)
+	{
 		using GetServerAnimating_t = void* (*)(int);
-		static GetServerAnimating_t GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 8B 55 ? 85 D2 7E ? A1").c_str()));
+		static auto GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(
+			XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 8B 55 ? 85 D2 7E ? A1").c_str()));
 		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);
-		static DrawServerHitboxes_t DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(XorStr(L"server.dll").c_str(), XorStr(L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97").c_str()));
+		static auto DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(
+			XorStr(L"server.dll").c_str(),
+			XorStr(
+				L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97")
+			.c_str()));
 		auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
-		if (pLocal && pLocal->IsAlive()) {
+		if (pLocal && pLocal->IsAlive())
+		{
 			void* server_animating = GetServerAnimating(pLocal->GetIndex());
-			if (server_animating) {
+			if (server_animating)
+			{
 				DrawServerHitboxes(server_animating, g_Interfaces.GlobalVars->interval_per_tick * 2.f, false);
 			}
 		}
 	}
 }
+
 // draws server hitbox when in a local server, only for testing rly
 static bool push = true;
 
@@ -48,14 +59,25 @@ void CMisc::InstantRespawnMVM() {
 }
 */ // FUCKING BROKEN PASXTE LATER
 
-void CMisc::CheatsBypass() {
+void CMisc::CheatsBypass()
+{
 	static bool cheatset = false;
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
-	if (Vars::Misc::CheatsBypass.m_Var) {
-		if (sv_cheats->GetInt() == 0) { sv_cheats->SetValue(1); cheatset = true; };
+	if (Vars::Misc::CheatsBypass.m_Var)
+	{
+		if (sv_cheats->GetInt() == 0)
+		{
+			sv_cheats->SetValue(1);
+			cheatset = true;
+		}
 	}
-	else {
-		if (cheatset) { sv_cheats->SetValue(0); cheatset = false; }
+	else
+	{
+		if (cheatset)
+		{
+			sv_cheats->SetValue(0);
+			cheatset = false;
+		}
 	}
 }
 
@@ -63,29 +85,35 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
 	{
-		if (Vars::Misc::EdgeJumpKey.m_Var == 0x0) {
+		if (Vars::Misc::EdgeJumpKey.m_Var == 0x0)
+		{
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
 					pCmd->buttons |= IN_JUMP;
 			}
 		}
-		else {
+		else
+		{
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming() && GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming() && GetAsyncKeyState(
+					Vars::Misc::EdgeJumpKey.m_Var))
 					pCmd->buttons |= IN_JUMP;
 			}
 		}
 	}
 }
 
-void CMisc::NoPush() {
+void CMisc::NoPush()
+{
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
-	if (Vars::Misc::NoPush.m_Var) {
+	if (Vars::Misc::NoPush.m_Var)
+	{
 		if (noPush->GetInt() == 1) noPush->SetValue(0);
 	}
-	else {
+	else
+	{
 		if (noPush->GetInt() == 0) noPush->SetValue(1);
 	}
 }
@@ -105,25 +133,30 @@ void CMisc::AutoJump(CUserCmd* pCmd)
 
 		if (pCmd->buttons & IN_JUMP)
 		{
-			if (!bJumpState && !pLocal->IsOnGround()) {
+			if (!bJumpState && !pLocal->IsOnGround())
+			{
 				pCmd->buttons &= ~IN_JUMP;
 			}
 
-			else if (bJumpState) {
+			else if (bJumpState)
+			{
 				bJumpState = false;
 			}
 		}
 
-		else if (!bJumpState) {
+		else if (!bJumpState)
+		{
 			bJumpState = true;
 		}
 	}
 }
 
-float fclamp(float d, float min, float max) {
+float fclamp(float d, float min, float max)
+{
 	const float t = d < min ? min : d;
 	return t > max ? max : t;
 }
+
 static float normalizeRad(float a) noexcept
 {
 	return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
@@ -149,16 +182,17 @@ static float angleDiffRad(float a1, float a2) noexcept
 
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
 		if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
 		{
-			if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->mousedx < -1))
+			if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->
+				mousedx < -1))
 
 				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
 		}
 		if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
 		{
-
 #
 			static bool was_jumping = false;
 			bool is_jumping = pCmd->buttons & IN_JUMP;
@@ -166,7 +200,6 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 
 			if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
 			{
-
 				const float speed = pLocal->GetVelocity().Length2D();
 				auto vel = pLocal->GetVelocity();
 
@@ -175,7 +208,8 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 
 				constexpr auto perfectDelta = [](float speed) noexcept
 				{
-					if (const auto& pLocal = g_EntityCache.m_pLocal) {
+					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					{
 						static auto speedVar = pLocal->GetMaxSpeed();
 						static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
 
@@ -197,16 +231,16 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 					const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
 					const float delta = angleDiffRad(velDir, wishAng);
 
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), (int)was_jumping);
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), (int)is_jumping);
+					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, {255, 64, 64, 255},
+					              ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), was_jumping);
+					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, {255, 64, 64, 255},
+					              ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), is_jumping);
 
 					float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
 
 					pCmd->forwardmove = cosf(moveDir) * 450.f;
 					pCmd->sidemove = -sinf(moveDir) * 450.f;
 				}
-
-
 			}
 			was_jumping = is_jumping;
 		}
@@ -216,10 +250,10 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 void CMisc::InitSpamKV(void* pKV)
 {
 	char chCommand[30] = "use_action_slot_item_server";
-	typedef int(__cdecl* HashFunc_t)(const char*, bool);
+	using HashFunc_t = int(__cdecl*)(const char*, bool);
 
 	static DWORD dwHashFunctionLocation = g_Pattern.Find(_(L"client.dll"), _(L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6"));
-	static HashFunc_t SymbForString = (HashFunc_t) * *(PDWORD*)(dwHashFunctionLocation + 0x2);
+	static auto SymbForString = (HashFunc_t)**(PDWORD*)(dwHashFunctionLocation + 0x2);
 
 	int nAddr = 0;
 	while (nAddr < 29)
@@ -289,7 +323,8 @@ const std::string spam_Fed[] = {
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
 	_("Fedoraware - Now available @ github.com/M-FeD!"),
-	_("Fedoraware - Based on SEOwned public source!") };
+	_("Fedoraware - Based on SEOwned public source!")
+};
 
 const std::string spam_Lbox[] = {
 	_("GET GOOD, GET LMAOBOX!"),
@@ -305,14 +340,18 @@ const std::string spam_CH[] = {
 	_("Cathook - ca(n)t stop me meow!")
 };
 
-std::string GetSpam(const int nMode) {
+std::string GetSpam(const int nMode)
+{
 	std::string str;
 
 	switch (nMode)
 	{
-	case 2:str = spam_Lbox[Utils::RandIntSimple(0, ARRAYSIZE(spam_Lbox) - 1)]; break;
-	case 3: str = spam_CH[Utils::RandIntSimple(0, ARRAYSIZE(spam_CH) - 1)]; break;
-	default: str = spam_Fed[Utils::RandIntSimple(0, ARRAYSIZE(spam_Fed) - 1)]; break;
+	case 2: str = spam_Lbox[Utils::RandIntSimple(0, ARRAYSIZE(spam_Lbox) - 1)];
+		break;
+	case 3: str = spam_CH[Utils::RandIntSimple(0, ARRAYSIZE(spam_CH) - 1)];
+		break;
+	default: str = spam_Fed[Utils::RandIntSimple(0, ARRAYSIZE(spam_Fed) - 1)];
+		break;
 	}
 
 	Utils::ReplaceSpecials(str);
@@ -327,7 +366,8 @@ void CMisc::ChatSpam()
 	float flCurTime = g_Interfaces.Engine->Time();
 	static float flNextSend = 0.0f;
 
-	if (flCurTime > flNextSend) {
+	if (flCurTime > flNextSend)
+	{
 		g_Interfaces.Engine->ClientCmd_Unrestricted(GetSpam(Vars::Misc::ChatSpam.m_Var).c_str());
 		flNextSend = (flCurTime + 4.0f);
 	}
@@ -348,16 +388,13 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 		{
-			if (pWeapon->IsInReload()) {
+			if (pWeapon->IsInReload())
+			{
 				pCmd->buttons |= IN_ATTACK;
 				return;
 			}
-
-			else
-			{
-				if (pCmd->buttons & IN_ATTACK)
-					pCmd->buttons &= ~IN_ATTACK;
-			}
+			if (pCmd->buttons & IN_ATTACK)
+				pCmd->buttons &= ~IN_ATTACK;
 
 			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka
 				|| g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheCowMangler5000
@@ -369,9 +406,10 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 				pCmd->buttons |= IN_ATTACK | IN_JUMP;
 
 				Vec3 vVelocity = pLocal->GetVelocity();
-				Vec3 vAngles = { vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f };
+				Vec3 vAngles = {vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f};
 
-				if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero()) {
+				if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
+				{
 					Vec3 vForward = {}, vRight = {}, vUp = {};
 					Math::AngleVectors(vAngles, &vForward, &vRight, &vUp);
 					Math::VectorAngles((vForward * 23.5f) + (vRight * -5.6f) + (vUp * -3.0f), vAngles);
@@ -393,7 +431,8 @@ void CMisc::SteamRPC()
 	{
 		if (steamCleared == false) //stupid way to return back to normal rpc
 		{
-			g_SteamInterfaces.Friends015->SetRichPresence("steam_display", ""); //this will only make it say "Team Fortress 2" until the player leaves/joins some server. its bad but its better than making 1000 checks to recreate the original
+			g_SteamInterfaces.Friends015->SetRichPresence("steam_display", "");
+			//this will only make it say "Team Fortress 2" until the player leaves/joins some server. its bad but its better than making 1000 checks to recreate the original
 			steamCleared = true;
 		}
 		return;
@@ -477,45 +516,50 @@ void CMisc::SteamRPC()
 		break;
 	}
 
-	g_SteamInterfaces.Friends015->SetRichPresence("steam_player_group_size", std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
+	g_SteamInterfaces.Friends015->SetRichPresence("steam_player_group_size",
+	                                              std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
 }
 
 // pasted from cam???? (i have no h*cking idea where i got this but credits to whoever)
-void Notify::Think() {
-	int		x{ 8 }, y{ 5 }, size{ 20 };
-	Color_t	color;
-	float	left;
+void Notify::Think()
+{
+	int x{8}, y{5}, size{20};
+	Color_t color;
+	float left;
 
 	if (m_notify_text.size() > (MAX_NOTIFY_SIZE + 1))
 		m_notify_text.erase(m_notify_text.begin());
 
-	for (size_t i{}; i < m_notify_text.size(); ++i) {
+	for (size_t i{}; i < m_notify_text.size(); ++i)
+	{
 		auto notify = m_notify_text[i];
 
 		notify->m_time -= g_Interfaces.GlobalVars->absoluteframetime;
 
-		if (notify->m_time <= 0.f) {
+		if (notify->m_time <= 0.f)
+		{
 			m_notify_text.erase(m_notify_text.begin() + i);
-			continue;
 		}
 	}
 
 	if (m_notify_text.empty())
 		return;
 
-	for (size_t i{}; i < m_notify_text.size(); ++i) {
+	for (size_t i{}; i < m_notify_text.size(); ++i)
+	{
 		auto notify = m_notify_text[i];
 
 		left = notify->m_time;
 		color = notify->m_color;
 
-		if (left < .5f) {
+		if (left < .5f)
+		{
 			float f = left;
 			Math::Clamp(f, 0.f, .5f);
 
 			f /= .5f;
 
-			color.a = (int)(f * 255.f);
+			color.a = static_cast<int>(f * 255.f);
 
 			if (i == 0 && f < 0.2f)
 				y -= size * (1.f - f / 0.2f);
@@ -525,17 +569,29 @@ void Notify::Think() {
 			color.a = 255;
 
 		const size_t cSize = strlen(notify->m_text.c_str()) + 1;
-		wchar_t* wc = new wchar_t[cSize];
+		auto wc = new wchar_t[cSize];
 		mbstowcs(wc, notify->m_text.c_str(), cSize);
 
 		int w, h;
 		// g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
-		g_Interfaces.Surface->GetTextSize(FONT_ESP_COND, wc, w, h); // there was no need to do what u did to the font system mfed
+		g_Interfaces.Surface->GetTextSize(FONT_ESP_COND, wc, w, h);
+		// there was no need to do what u did to the font system mfed
 
-		g_Draw.Line(x, y, x, y + 19, { Colors::DmgLoggerOutline.r, Colors::DmgLoggerOutline.g, Colors::DmgLoggerOutline.b, color.a });
-		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19, { Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g, Colors::DmgLoggerBackground.b, color.a }, { Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g, Colors::DmgLoggerBackground.b, 1 }, true);
-		g_Draw.String(FONT_ESP_COND, x + 6, y + 2, { Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a }, ALIGN_DEFAULT, notify->m_text.c_str());
+		g_Draw.Line(x, y, x, y + 19, {
+			            Colors::DmgLoggerOutline.r, Colors::DmgLoggerOutline.g, Colors::DmgLoggerOutline.b, color.a
+		            });
+		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
+		                     {
+			                     Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g,
+			                     Colors::DmgLoggerBackground.b, color.a
+		                     }, {
+			                     Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g,
+			                     Colors::DmgLoggerBackground.b, 1
+		                     }, true);
+		g_Draw.String(FONT_ESP_COND, x + 6, y + 2,
+		              {Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a},
+		              ALIGN_DEFAULT, notify->m_text.c_str());
 
 		y += size;
 	}

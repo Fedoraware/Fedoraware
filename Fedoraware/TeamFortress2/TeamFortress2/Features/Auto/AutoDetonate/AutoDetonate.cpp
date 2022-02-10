@@ -6,16 +6,21 @@
 class CEntitySphereQuery
 {
 public:
-	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0, const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS) {
+	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0,
+	                   const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS)
+	{
 		static DWORD dwAddress = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 14 D9 45 0C"));
-		reinterpret_cast<void(__thiscall*)(void*, const Vec3&, float, int, int)>(dwAddress)(this, center, radius, flagMask, partitionMask);
+		reinterpret_cast<void(__thiscall*)(void*, const Vec3&, float, int, int)>(dwAddress)(
+			this, center, radius, flagMask, partitionMask);
 	}
 
-	CBaseEntity* GetCurrentEntity() {
+	CBaseEntity* GetCurrentEntity()
+	{
 		return (m_nListIndex < m_nListCount) ? m_pList[m_nListIndex] : nullptr;
 	}
 
-	void NextEntity() {
+	void NextEntity()
+	{
 		m_nListIndex++;
 	}
 
@@ -39,9 +44,11 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		{
 			CBaseEntity* pEntity = nullptr;
 
-			for (CEntitySphereQuery Sphere(Sticky->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.GetCurrentEntity()) != nullptr; Sphere.NextEntity())
+			for (CEntitySphereQuery Sphere(Sticky->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.
+				     GetCurrentEntity()) != nullptr; Sphere.NextEntity())
 			{
-				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum())
+				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->
+					GetTeamNum())
 					continue;
 
 				const bool bIsPlayer = pEntity->IsPlayer();
@@ -59,11 +66,13 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 							continue;
 					}
 
-					CTraceFilterWorldAndPropsOnly Filter = { };
-					CGameTrace Trace = { };
-					Utils::Trace(Sticky->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter, &Trace);
+					CTraceFilterWorldAndPropsOnly Filter = {};
+					CGameTrace Trace = {};
+					Utils::Trace(Sticky->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter,
+					             &Trace);
 
-					if (Trace.flFraction >= 0.99f || Trace.entity == pEntity) {
+					if (Trace.flFraction >= 0.99f || Trace.entity == pEntity)
+					{
 						m_bDetonated = true;
 						break;
 					}
@@ -85,9 +94,11 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		{
 			CBaseEntity* pEntity = nullptr;
 
-			for (CEntitySphereQuery Sphere(pFlare->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.GetCurrentEntity()) != nullptr; Sphere.NextEntity())
+			for (CEntitySphereQuery Sphere(pFlare->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.
+				     GetCurrentEntity()) != nullptr; Sphere.NextEntity())
 			{
-				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum())
+				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->
+					GetTeamNum())
 					continue;
 
 				const bool bIsPlayer = pEntity->IsPlayer();
@@ -105,11 +116,13 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 							continue;
 					}
 
-					CTraceFilterWorldAndPropsOnly Filter = { };
-					CGameTrace Trace = { };
-					Utils::Trace(pFlare->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter, &Trace);
+					CTraceFilterWorldAndPropsOnly Filter = {};
+					CGameTrace Trace = {};
+					Utils::Trace(pFlare->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter,
+					             &Trace);
 
-					if (Trace.flFraction >= 0.99f || (Trace.entity == pEntity && Trace.entity != pLocal)) {
+					if (Trace.flFraction >= 0.99f || (Trace.entity == pEntity && Trace.entity != pLocal))
+					{
 						m_bDetonated = true;
 						break;
 					}

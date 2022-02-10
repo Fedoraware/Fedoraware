@@ -1,17 +1,18 @@
 #include "AimbotMelee.h"
 #include "../../Vars.h"
 
-bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles, int nTargetIndex)
+bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
+                               int nTargetIndex)
 {
-	static Vec3 vecSwingMins = { -18.0f, -18.0f, -18.0f };
-	static Vec3 vecSwingMaxs = { 18.0f, 18.0f, 18.0f };
+	static Vec3 vecSwingMins = {-18.0f, -18.0f, -18.0f};
+	static Vec3 vecSwingMaxs = {18.0f, 18.0f, 18.0f};
 
 	float flRange = (pWeapon->GetSwingRange(pLocal));
 
 	if (flRange <= 0.0f)
 		return false;
 
-	Vec3 vecForward = Vec3();
+	auto vecForward = Vec3();
 	Math::AngleVectors(vecViewAngles, &vecForward);
 
 	Vec3 vecTraceStart = pLocal->GetShootPos();
@@ -24,7 +25,8 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 
 	if (!(trace.entity && trace.entity->GetIndex() == nTargetIndex))
 	{
-		if (!Vars::Aimbot::Melee::PredictSwing.m_Var || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE || pLocal->IsCharging())
+		if (!Vars::Aimbot::Melee::PredictSwing.m_Var || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE || pLocal->
+			IsCharging())
 			return false;
 
 		static const float flDelay = 0.2f; //it just works
@@ -32,22 +34,23 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		if (pLocal->IsOnGround())
 			vecTraceStart += (pLocal->GetVelocity() * flDelay);
 
-		else vecTraceStart += (pLocal->GetVelocity() * flDelay) - (Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat()) * 0.5f * flDelay * flDelay);
+		else vecTraceStart += (pLocal->GetVelocity() * flDelay) - (Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat()) *
+			0.5f * flDelay * flDelay);
 
 		Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
 		Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
 
 		return (trace.entity && trace.entity->GetIndex() == nTargetIndex);
 	}
-
-	else return true;
+	return true;
 
 	return false;
 }
 
 ESortMethod CAimbotMelee::GetSortMethod()
 {
-	switch (Vars::Aimbot::Melee::SortMethod.m_Var) {
+	switch (Vars::Aimbot::Melee::SortMethod.m_Var)
+	{
 	case 0: return ESortMethod::FOV;
 	case 1: return ESortMethod::DISTANCE;
 	default: return ESortMethod::UNKNOWN;
@@ -70,9 +73,11 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
-		const bool bWhipTeam = (pWeapon->GetItemDefIndex() == ETFWeapons::Soldier_t_TheDisciplinaryAction && Vars::Aimbot::Melee::WhipTeam.m_Var);
+		const bool bWhipTeam = (pWeapon->GetItemDefIndex() == Soldier_t_TheDisciplinaryAction &&
+			Vars::Aimbot::Melee::WhipTeam.m_Var);
 
-		for (const auto& Player : g_EntityCache.GetGroup(bWhipTeam ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
+		for (const auto& Player : g_EntityCache.GetGroup(
+			     bWhipTeam ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
@@ -83,7 +88,8 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked()) {
+			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
+			{
 				int nCond = Player->GetCond();
 				if (!(nCond & TFCond_Milked || nCond & TFCond_Jarated))
 					continue;
@@ -93,7 +99,8 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 
 			// Ignore when ignore friends is on but only when friend on da enemy team
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
+			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->
+				GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
 				continue;
 
 			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
@@ -107,7 +114,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
-			g_AimbotGlobal.m_vecTargets.push_back({ Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo });
+			g_AimbotGlobal.m_vecTargets.push_back({Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -126,7 +133,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
 				continue;
 
-			g_AimbotGlobal.m_vecTargets.push_back({ Building, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
+			g_AimbotGlobal.m_vecTargets.push_back({Building, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -135,8 +142,9 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& Target)
 {
-	if (Vars::Aimbot::Melee::RangeCheck.m_Var ? !CanMeleeHit(pLocal, pWeapon, Target.m_vAngleTo, Target.m_pEntity->GetIndex()) :
-		!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos))
+	if (Vars::Aimbot::Melee::RangeCheck.m_Var
+		    ? !CanMeleeHit(pLocal, pWeapon, Target.m_vAngleTo, Target.m_pEntity->GetIndex())
+		    : !Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos))
 		return false;
 
 	return true;
@@ -168,25 +176,28 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	switch (Vars::Aimbot::Melee::AimMethod.m_Var)
 	{
-	case 0: {
-		pCmd->viewangles = vAngle;
-		g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
-		break;
-	}
+	case 0:
+		{
+			pCmd->viewangles = vAngle;
+			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			break;
+		}
 
-	case 1: {
-		Vec3 vecDelta = vAngle - pCmd->viewangles;
-		Math::ClampAngles(vecDelta);
-		pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.m_Var;
-		g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
-		break;
-	}
+	case 1:
+		{
+			Vec3 vecDelta = vAngle - pCmd->viewangles;
+			Math::ClampAngles(vecDelta);
+			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.m_Var;
+			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			break;
+		}
 
-	case 2: {
-		Utils::FixMovement(pCmd, vAngle);
-		pCmd->viewangles = vAngle;
-		break;
-	}
+	case 2:
+		{
+			Utils::FixMovement(pCmd, vAngle);
+			pCmd->viewangles = vAngle;
+			break;
+		}
 
 	default: break;
 	}
@@ -198,7 +209,10 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 
 	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
-	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.m_Var == 2 ? Target.m_vAngleTo : g_Interfaces.Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
+	if (!CanMeleeHit(pLocal, pWeapon,
+	                 Vars::Aimbot::Melee::AimMethod.m_Var == 2
+		                 ? Target.m_vAngleTo
+		                 : g_Interfaces.Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
 		return false;
 
 	return true;
@@ -208,18 +222,21 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 {
 	if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 		return ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack);
-
-	else return fabs(pWeapon->GetSmackTime() - g_Interfaces.GlobalVars->curtime) < g_Interfaces.GlobalVars->interval_per_tick * 2.0f;
+	return fabs(pWeapon->GetSmackTime() - g_Interfaces.GlobalVars->curtime) < g_Interfaces.GlobalVars->interval_per_tick
+		* 2.0f;
 }
 
 void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Aimbot::Global::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
+	if (!Vars::Aimbot::Global::Active.m_Var || g_GlobalInfo.m_bAutoBackstabRunning || pWeapon->GetWeaponID() ==
+		TF_WEAPON_KNIFE)
 		return;
 
-	Target_t Target = { };
+	Target_t Target = {};
 
-	bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : g_AimbotGlobal.IsKeyDown());
+	bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
+		                   ? (pCmd->buttons & IN_ATTACK)
+		                   : g_AimbotGlobal.IsKeyDown());
 
 	if (GetTarget(pLocal, pWeapon, Target) && bShouldAim)
 	{
@@ -231,7 +248,8 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		if (ShouldSwing(pLocal, pWeapon, pCmd, Target))
 			pCmd->buttons |= IN_ATTACK;
 
-		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) &&
+			!g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
 		{
 			if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && g_GlobalInfo.m_nShifted)) { return; }
 			g_GlobalInfo.m_bShouldShift = true;
@@ -239,13 +257,15 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking) {
+		if (bIsAttacking)
+		{
 			g_GlobalInfo.m_bAttacking = true;
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)
 		{
-			if (bIsAttacking) {
+			if (bIsAttacking)
+			{
 				Aim(pCmd, Target.m_vAngleTo);
 				g_GlobalInfo.m_bSilentTime = true;
 			}

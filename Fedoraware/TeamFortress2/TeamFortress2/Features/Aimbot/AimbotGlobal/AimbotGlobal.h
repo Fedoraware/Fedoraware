@@ -1,12 +1,18 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-enum struct ETargetType {
-	UNKNOWN, PLAYER, BUILDING
+enum struct ETargetType
+{
+	UNKNOWN,
+	PLAYER,
+	BUILDING
 };
 
-enum struct ESortMethod {
-	UNKNOWN, FOV, DISTANCE
+enum struct ESortMethod
+{
+	UNKNOWN,
+	FOV,
+	DISTANCE
 };
 
 struct Target_t

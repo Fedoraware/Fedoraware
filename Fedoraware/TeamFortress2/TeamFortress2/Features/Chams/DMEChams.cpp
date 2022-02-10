@@ -7,7 +7,8 @@
 
 bool CDMEChams::ShouldRun()
 {
-	if (!Vars::Chams::DME::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.m_Var)
+	if (!Vars::Chams::DME::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
+		m_Var)
 		return false;
 
 	return true;
@@ -155,29 +156,67 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (Vars::Chams::DME::Hands.m_Var)
 			{
 				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+				{
+					switch (Vars::Chams::DME::Hands.m_Var)
 					{
-						switch (Vars::Chams::DME::Hands.m_Var) {
-
-						case 1: { bMatWasForced = true; return m_pMatShaded; }
-						case 2: { bMatWasForced = true; return m_pMatShiny; }
-						case 3: { bMatWasForced = true; return m_pMatFlat; }
-						case 4: { bMatWasForced = true; return m_pMatWFShaded; }
-						case 5: { bMatWasForced = true; return m_pMatWFShiny; }
-						case 6: { bMatWasForced = true; return m_pMatWFFlat; }
-						case 7: { bMatWasForced = true; return m_pMatFresnel; }
-						case 8: { bMatWasForced = true; return m_pMatBrick; }
-						default: return nullptr;
+					case 1:
+						{
+							bMatWasForced = true;
+							return m_pMatShaded;
 						}
-					}());
-
+					case 2:
+						{
+							bMatWasForced = true;
+							return m_pMatShiny;
+						}
+					case 3:
+						{
+							bMatWasForced = true;
+							return m_pMatFlat;
+						}
+					case 4:
+						{
+							bMatWasForced = true;
+							return m_pMatWFShaded;
+						}
+					case 5:
+						{
+							bMatWasForced = true;
+							return m_pMatWFShiny;
+						}
+					case 6:
+						{
+							bMatWasForced = true;
+							return m_pMatWFFlat;
+						}
+					case 7:
+						{
+							bMatWasForced = true;
+							return m_pMatFresnel;
+						}
+					case 8:
+						{
+							bMatWasForced = true;
+							return m_pMatBrick;
+						}
+					default: return nullptr;
+					}
+				}());
 			}
 
-			if (bMatWasForced) {
-				if (Vars::Chams::DME::HandsRainbow.m_Var) {
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r), Color::TOFLOAT(Utils::Rainbow().g), Color::TOFLOAT(Utils::Rainbow().b));
+			if (bMatWasForced)
+			{
+				if (Vars::Chams::DME::HandsRainbow.m_Var)
+				{
+					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
+					                                            Color::TOFLOAT(Utils::Rainbow().g),
+					                                            Color::TOFLOAT(Utils::Rainbow().b));
 				}
-				else {
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
+				else
+				{
+					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r),
+					                                            Color::TOFLOAT(Colors::Hands.g),
+					                                            Color::TOFLOAT(Colors::Hands.b));
 				}
 			}
 
@@ -185,59 +224,80 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha.m_Var);
 
 
-
-			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
+			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+					ModelRenderHook::DrawModelExecute::index)
 				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			bMatWasForced = true;
 
-			if (Vars::Chams::DME::Hands.m_Var == 7) {
+			if (Vars::Chams::DME::Hands.m_Var == 7)
+			{
 				IMaterial* mat = m_pMatFresnel;
 				bool found = false;
 				IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
-				if (found) {
-					envmap->SetVecValue(Color::TOFLOAT(Colors::Hands.r) * 4, Color::TOFLOAT(Colors::Hands.g) * 4, Color::TOFLOAT(Colors::Hands.b) * 4);
+				if (found)
+				{
+					envmap->SetVecValue(Color::TOFLOAT(Colors::Hands.r) * 4, Color::TOFLOAT(Colors::Hands.g) * 4,
+					                    Color::TOFLOAT(Colors::Hands.b) * 4);
 				}
 			}
 
-			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced) { // Overlay
+			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
+			{
+				// Overlay
 				IMaterial* pMaterial = m_pMatScuffed;
 				bool found = false;
 				bool found2 = false;
 				bool found3 = false;
 				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
-				if (found) {
-					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var) {
-						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+				if (found)
+				{
+					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
+					{
+						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
+						                  Color::TOFLOAT(Utils::Rainbow().g) * 4,
+						                  Color::TOFLOAT(Utils::Rainbow().b) * 4);
 					}
-					else {
-						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					else
+					{
+						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
+						                  Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
+						                  Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
 					}
 				}
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
-				if (found2) {
-					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var) {
-						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+				if (found2)
+				{
+					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
+					{
+						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
+						                   Color::TOFLOAT(Utils::Rainbow().g) * 4,
+						                   Color::TOFLOAT(Utils::Rainbow().b) * 4);
 					}
-					else {
-						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4, Color::TOFLOAT(Colors::HandsOverlay.g) * 4, Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+					else
+					{
+						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
+						                   Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
+						                   Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
 					}
 				}
 				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-				if (found3) {
+				if (found3)
+				{
 					pVar3->SetIntValue(Vars::Chams::DME::HandsRimMultiplier.m_Var);
 				}
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+						ModelRenderHook::DrawModelExecute::index)
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
 
-			if (bMatWasForced) {
+			if (bMatWasForced)
+			{
 				g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-
 			}
 
 			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
@@ -271,99 +331,170 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (Vars::Chams::DME::Weapon.m_Var)
 				{
 					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+					{
+						switch (Vars::Chams::DME::Weapon.m_Var)
 						{
-							switch (Vars::Chams::DME::Weapon.m_Var) {
-							case 1: { bMatWasForced = true; return m_pMatShaded; }
-							case 2: { bMatWasForced = true; return m_pMatShiny; }
-							case 3: { bMatWasForced = true; return m_pMatFlat; }
-							case 4: { bMatWasForced = true; return m_pMatWFShaded; }
-							case 5: { bMatWasForced = true; return m_pMatWFShiny; }
-							case 6: { bMatWasForced = true; return m_pMatWFFlat; }
-							case 7: { bMatWasForced = true; return m_pMatFresnel2; }
-							case 8: { bMatWasForced = true; return m_pMatBrick; }
-							default: return nullptr;
+						case 1:
+							{
+								bMatWasForced = true;
+								return m_pMatShaded;
 							}
-						}());
+						case 2:
+							{
+								bMatWasForced = true;
+								return m_pMatShiny;
+							}
+						case 3:
+							{
+								bMatWasForced = true;
+								return m_pMatFlat;
+							}
+						case 4:
+							{
+								bMatWasForced = true;
+								return m_pMatWFShaded;
+							}
+						case 5:
+							{
+								bMatWasForced = true;
+								return m_pMatWFShiny;
+							}
+						case 6:
+							{
+								bMatWasForced = true;
+								return m_pMatWFFlat;
+							}
+						case 7:
+							{
+								bMatWasForced = true;
+								return m_pMatFresnel2;
+							}
+						case 8:
+							{
+								bMatWasForced = true;
+								return m_pMatBrick;
+							}
+						default: return nullptr;
+						}
+					}());
 				}
 
-				if (bMatWasForced) {
-					if (Vars::Chams::DME::WeaponRainbow.m_Var) {
-						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r), Color::TOFLOAT(Utils::Rainbow().g), Color::TOFLOAT(Utils::Rainbow().b));
+				if (bMatWasForced)
+				{
+					if (Vars::Chams::DME::WeaponRainbow.m_Var)
+					{
+						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
+						                                            Color::TOFLOAT(Utils::Rainbow().g),
+						                                            Color::TOFLOAT(Utils::Rainbow().b));
 					}
-					else {
-						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
+					else
+					{
+						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r),
+						                                            Color::TOFLOAT(Colors::Weapon.g),
+						                                            Color::TOFLOAT(Colors::Weapon.b));
 					}
 				}
 
 				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
 					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponAlpha.m_Var);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index) // base
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+						ModelRenderHook::DrawModelExecute::index) // base
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				bMatWasForced = true;
 
-				if (Vars::Chams::DME::Weapon.m_Var == 7) {
+				if (Vars::Chams::DME::Weapon.m_Var == 7)
+				{
 					IMaterial* mat = m_pMatFresnel2;
 					bool found = false;
 					IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
-					if (found) {
-						envmap->SetVecValue(Color::TOFLOAT(Colors::Weapon.r) * 4, Color::TOFLOAT(Colors::Weapon.g) * 4, Color::TOFLOAT(Colors::Weapon.b) * 4);
+					if (found)
+					{
+						envmap->SetVecValue(Color::TOFLOAT(Colors::Weapon.r) * 4, Color::TOFLOAT(Colors::Weapon.g) * 4,
+						                    Color::TOFLOAT(Colors::Weapon.b) * 4);
 					}
 				}
 
 				// the following code is bad & pasted og @ Chams.cpp
 				bool foundselfillumtint = false;
-				if (Vars::Chams::DME::Hands.m_Var == 7) {
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint) {
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
+				if (Vars::Chams::DME::Hands.m_Var == 7)
+				{
+					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(
+						_("$selfillumtint"), &foundselfillumtint);
+					if (foundselfillumtint)
+					{
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
+						                                  Color::TOFLOAT(Colors::FresnelBase.g),
+						                                  Color::TOFLOAT(Colors::FresnelBase.b));
 					}
 				}
 
 				foundselfillumtint = false;
-				if (Vars::Chams::DME::Weapon.m_Var == 7) {
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel2->FindVar(_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint) {
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
+				if (Vars::Chams::DME::Weapon.m_Var == 7)
+				{
+					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel2->FindVar(
+						_("$selfillumtint"), &foundselfillumtint);
+					if (foundselfillumtint)
+					{
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
+						                                  Color::TOFLOAT(Colors::FresnelBase.g),
+						                                  Color::TOFLOAT(Colors::FresnelBase.b));
 					}
 				}
 
-				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced) {
+				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)
+				{
 					IMaterial* pMaterial = m_pMatScuffed;
 					bool found = false;
 					bool found2 = false;
 					bool found3 = false;
 					IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
-					if (found) {
-						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var) {
-							pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+					if (found)
+					{
+						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
+						{
+							pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
+							                  Color::TOFLOAT(Utils::Rainbow().g) * 4,
+							                  Color::TOFLOAT(Utils::Rainbow().b) * 4);
 						}
-						else {
-							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						else
+						{
+							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
+							                  Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
+							                  Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
 						}
 					}
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
-					if (found2) {
-						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var) {
-							pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4, Color::TOFLOAT(Utils::Rainbow().g) * 4, Color::TOFLOAT(Utils::Rainbow().b) * 4);
+					if (found2)
+					{
+						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
+						{
+							pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
+							                   Color::TOFLOAT(Utils::Rainbow().g) * 4,
+							                   Color::TOFLOAT(Utils::Rainbow().b) * 4);
 						}
-						else {
-							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4, Color::TOFLOAT(Colors::WeaponOverlay.g) * 4, Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+						else
+						{
+							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
+							                   Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
+							                   Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
 						}
 					}
 					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-					if (found3) {
+					if (found3)
+					{
 						pVar3->SetIntValue(Vars::Chams::DME::WeaponRimMultiplier.m_Var);
 					}
 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index) //overlay
+					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+							ModelRenderHook::DrawModelExecute::index) //overlay
 						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				}
 
-				if (bMatWasForced) {
-
+				if (bMatWasForced)
+				{
 					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}

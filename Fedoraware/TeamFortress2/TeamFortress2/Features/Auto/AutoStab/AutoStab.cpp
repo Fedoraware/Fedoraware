@@ -7,12 +7,12 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 	vWSCDelta.z = 0;
 	vWSCDelta.NormalizeInPlace();
 
-	Vec3 vecEyeSpy = Vec3();
+	auto vecEyeSpy = Vec3();
 	Math::AngleVectors(vSrc, &vecEyeSpy);
 	vecEyeSpy.z = 0;
 	vecEyeSpy.NormalizeInPlace();
 
-	Vec3 vecEyeVictim = Vec3();
+	auto vecEyeVictim = Vec3();
 	Math::AngleVectors(vDst, &vecEyeVictim);
 	vecEyeVictim.z = 0;
 	vecEyeVictim.NormalizeInPlace();
@@ -29,14 +29,15 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 	return true;
 }
 
-bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles, CBaseEntity** pEntityOut)
+bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles,
+                           CBaseEntity** pEntityOut)
 {
 	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.m_Var);
 
 	if (flRange <= 0.0f)
 		return false;
 
-	Vec3 vForward = Vec3();
+	auto vForward = Vec3();
 	Math::AngleVectors(vViewAngles, &vForward);
 	Vec3 vTraceStart = pLocal->GetShootPos();
 	Vec3 vTraceEnd = (vTraceStart + (vForward * flRange));
@@ -44,7 +45,8 @@ bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, cons
 	CGameTrace Trace = {};
 	CTraceFilterHitscan Filter = {};
 	Filter.pSkip = pLocal;
-	Utils::TraceHull(vTraceStart, vTraceEnd, { -18.0f, -18.0f, -18.0f }, { 18.0f, 18.0f, 18.0f }, MASK_SOLID, &Filter, &Trace);
+	Utils::TraceHull(vTraceStart, vTraceEnd, {-18.0f, -18.0f, -18.0f}, {18.0f, 18.0f, 18.0f}, MASK_SOLID, &Filter,
+	                 &Trace);
 
 	if (IsEntityValid(pLocal, Trace.entity))
 	{
@@ -81,11 +83,12 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	if (!TraceMelee(pLocal, pWeapon, pCmd->viewangles, &pEnemy))
 		return;
 
-	if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
-		pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
+	if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == CLASS_SNIPER &&
+		pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 		return;
 
-	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(), (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(),
+	                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 		return;
 
 	pCmd->buttons |= IN_ATTACK;
@@ -94,7 +97,8 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	if (Vars::Misc::DisableInterpolation.m_Var)
 	{
 		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
-			+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate->GetFloat()));
+			+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate
+				->GetFloat()));
 	}
 }
 
@@ -102,8 +106,8 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 {
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
-			pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
+		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == CLASS_SNIPER &&
+			pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 			continue;
 
 		CBaseEntity* pTraceEnemy = nullptr;
@@ -113,10 +117,12 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (!TraceMelee(pLocal, pWeapon, vAngleTo, &pTraceEnemy) || pTraceEnemy != pEnemy)
 			continue;
 
-		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(),
+		                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 			continue;
 
-		if (Vars::Triggerbot::Stab::Silent.m_Var) {
+		if (Vars::Triggerbot::Stab::Silent.m_Var)
+		{
 			Utils::FixMovement(pCmd, vAngleTo);
 			g_GlobalInfo.m_bSilentTime = true;
 		}
@@ -128,7 +134,8 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (Vars::Misc::DisableInterpolation.m_Var)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
-				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate->GetFloat()));
+				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.
+					cl_updaterate->GetFloat()));
 		}
 
 		break;
@@ -137,7 +144,8 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE)
+	if (!Vars::Triggerbot::Stab::Active.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() !=
+		TF_WEAPON_KNIFE)
 		return;
 
 	if (Vars::Triggerbot::Stab::RageMode.m_Var)

@@ -46,25 +46,29 @@ private:
 	std::wstring m_szAttributePath = L"";
 
 private:
-	__inline void SaveInt(const wchar_t* szSection, const wchar_t* szItem, int value) {
+	__inline void SaveInt(const wchar_t* szSection, const wchar_t* szItem, int value)
+	{
 		std::wstring szToSave = L"";
 		szToSave += std::to_wstring(value);
 		WritePrivateProfileStringW(szSection, szItem, szToSave.c_str(), m_szAttributePath.c_str());
 	}
 
-	__inline void SaveBool(const wchar_t* szSection, const wchar_t* szItem, bool value) {
+	__inline void SaveBool(const wchar_t* szSection, const wchar_t* szItem, bool value)
+	{
 		std::wstring szToSave = L"";
 		szToSave += value ? L"true" : L"false";
 		WritePrivateProfileStringW(szSection, szItem, szToSave.c_str(), m_szAttributePath.c_str());
 	}
 
-	__inline int LoadInt(const wchar_t* szSection, const wchar_t* szItem) {
+	__inline int LoadInt(const wchar_t* szSection, const wchar_t* szItem)
+	{
 		wchar_t szReturn[69];
 		GetPrivateProfileStringW(szSection, szItem, L"0", szReturn, 69, m_szAttributePath.c_str());
 		return std::stoi(szReturn);
 	}
 
-	__inline bool LoadBool(const wchar_t* szSection, const wchar_t* szItem) {
+	__inline bool LoadBool(const wchar_t* szSection, const wchar_t* szItem)
+	{
 		wchar_t szReturn[69];
 		GetPrivateProfileStringW(szSection, szItem, L"false", szReturn, 69, m_szAttributePath.c_str());
 		return (wcscmp(szReturn, L"true") == 0) ? true : false;

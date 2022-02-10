@@ -67,7 +67,7 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 		&& Utils::W2S(vTrans[6], blt) && Utils::W2S(vTrans[7], flt)
 		&& Utils::W2S(vTrans[6], blt) && Utils::W2S(vTrans[7], flt))
 	{
-		Vec3 arr[] = { flb, brt, blb, frt, frb, brb, blt, flt };
+		Vec3 arr[] = {flb, brt, blb, frt, frb, brb, blt, flt};
 
 		float left = flb.x;
 		float top = flb.y;
@@ -129,15 +129,31 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			switch (Vars::ESP::Players::IgnoreCloaked.m_Var)
 			{
 			case 0: { break; }
-			case 1: { if (Player->IsCloaked()) { continue; } break; }
-			case 2: { if (Player->IsCloaked() && Player->GetTeamNum() != pLocal->GetTeamNum()) { continue; } break; }
+			case 1:
+				{
+					if (Player->IsCloaked()) { continue; }
+					break;
+				}
+			case 2:
+				{
+					if (Player->IsCloaked() && Player->GetTeamNum() != pLocal->GetTeamNum()) { continue; }
+					break;
+				}
 			}
 
 			switch (Vars::ESP::Players::IgnoreTeammates.m_Var)
 			{
 			case 0: break;
-			case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
-			case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[nIndex]) { continue; } break; }
+			case 1:
+				{
+					if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; }
+					break;
+				}
+			case 2:
+				{
+					if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[nIndex]) { continue; }
+					break;
+				}
 			}
 		}
 
@@ -152,7 +168,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		if (Vars::ESP::Players::Dlights.m_Var)
 			CreateDLight(nIndex, DrawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.m_Var);
 
-		int x = 0, y = 0, w = 0, h = 0; Vec3 vTrans[8];
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
 		if (GetDrawBounds(Player, vTrans, x, y, w, h))
 		{
 			int nHealth = Player->GetHealth(), nMaxHealth = Player->GetMaxHealth();
@@ -162,8 +179,9 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 			int nTextX = ((x + w) + 3), nTextOffset = 0, nClassNum = Player->GetClassNum();
 
-			if (Vars::ESP::Players::Uber.m_Var == 2 && nClassNum == ETFClass::CLASS_MEDIC) {
-				if (const auto& pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
+			if (Vars::ESP::Players::Uber.m_Var == 2 && nClassNum == CLASS_MEDIC)
+			{
+				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
 					nTextX += 5;
 			}
 
@@ -173,36 +191,42 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				const Color_t clrBone = Vars::ESP::Players::Bones.m_Var == 1 ? Colors::Bones : HealthColor;
 
-				DrawBones(Player, { 8, 7, 6, 4 }, clrBone);
-				DrawBones(Player, { 11, 10, 9, 4 }, clrBone);
-				DrawBones(Player, { 0, 4, 1 }, clrBone);
-				DrawBones(Player, { 14, 13, 1 }, clrBone);
-				DrawBones(Player, { 17, 16, 1 }, clrBone);
+				DrawBones(Player, {8, 7, 6, 4}, clrBone);
+				DrawBones(Player, {11, 10, 9, 4}, clrBone);
+				DrawBones(Player, {0, 4, 1}, clrBone);
+				DrawBones(Player, {14, 13, 1}, clrBone);
+				DrawBones(Player, {17, 16, 1}, clrBone);
 			}
 
-			switch (Vars::ESP::Players::Box.m_Var) {
-			case 1: {
-				int height = (h + 1); //don't ask me /shrug
+			switch (Vars::ESP::Players::Box.m_Var)
+			{
+			case 1:
+				{
+					int height = (h + 1); //don't ask me /shrug
 
-				g_Draw.OutlinedRect(x, y, w, height, DrawColor);
-				if (Vars::ESP::Main::Outlinedbar.m_Var) {
-					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
+					g_Draw.OutlinedRect(x, y, w, height, DrawColor);
+					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					{
+						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
+					}
+
+					break;
 				}
+			case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
+					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					{
+						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+					}
 
-				break;
-			}
-			case 2: {
-				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
-				if (Vars::ESP::Main::Outlinedbar.m_Var) {
-					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+					break;
 				}
-
-				break;
-			}
-			case 3: {
-				Draw3DBox(vTrans, DrawColor);
-				break;
-			}
+			case 3:
+				{
+					Draw3DBox(vTrans, DrawColor);
+					break;
+				}
 			default:
 				break;
 			}
@@ -220,17 +244,19 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 			if (Vars::ESP::Players::Health.m_Var)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
+				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor,
+				              ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
-				
-			if (Vars::ESP::Players::Uber.m_Var && nClassNum == ETFClass::CLASS_MEDIC)
+
+			if (Vars::ESP::Players::Uber.m_Var && nClassNum == CLASS_MEDIC)
 			{
-				if (const auto& pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
+				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
 				{
 					if (Vars::ESP::Players::Uber.m_Var == 1)
 					{
-						g_Draw.String(FONT, nTextX, (y + nTextOffset), Colors::UberColor, ALIGN_DEFAULT, L"%.0f%%", (pMedGun->GetUberCharge() * 100.0f));
+						g_Draw.String(FONT, nTextX, (y + nTextOffset), Colors::UberColor, ALIGN_DEFAULT, L"%.0f%%",
+						              (pMedGun->GetUberCharge() * 100.0f));
 						nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 					}
 
@@ -238,7 +264,9 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					{
 						x += w + 1;
 
-						float flUber = pMedGun->GetUberCharge() * (pMedGun->GetItemDefIndex() == Medic_s_TheVaccinator ? 400.0f : 100.0f);
+						float flUber = pMedGun->GetUberCharge() * (pMedGun->GetItemDefIndex() == Medic_s_TheVaccinator
+							                                           ? 400.0f
+							                                           : 100.0f);
 						float flMaxUber = 100.0f;
 
 						if (flUber > flMaxUber)
@@ -249,10 +277,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						int nHeight2 = (h + 1);
 
 						float ratio = (flUber / flMaxUber);
-						g_Draw.Rect((x + nWidth), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), Colors::UberColor);
+						g_Draw.Rect((x + nWidth), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio),
+						            Colors::UberColor);
 
 						if (Vars::ESP::Main::Outlinedbar.m_Var)
-							g_Draw.OutlinedRect((x + nWidth) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
+							g_Draw.OutlinedRect((x + nWidth) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2,
+							                    (nHeight * ratio) + 2, Colors::OutlineESP);
 
 						x -= w + 1;
 					}
@@ -266,18 +296,21 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Players::Name.m_Var)
 				{
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-					if (Vars::ESP::Players::NameBox.m_Var) {
+					if (Vars::ESP::Players::NameBox.m_Var)
+					{
 						int wideth, heighth;
-						g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
+						g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
+						                                  Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = DrawColor;
 						LineColor.a = 180;
 						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
-						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, { 0,0,0,180 });
+						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset, wideth + 10, heighth + 2, {0, 0, 0, 180});
 						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 						g_Draw.Rect((middle - (wideth / 2)) - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					g_Draw.String(FONT_NAME, middle, (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
+					g_Draw.String(FONT_NAME, middle, (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL,
+					              Utils::ConvertUtf8ToWide(pi.name).data());
 				}
 
 				if (Vars::ESP::Players::GUID.m_Var)
@@ -291,18 +324,22 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				if (Vars::ESP::Players::Class.m_Var == 1 || Vars::ESP::Players::Class.m_Var == 3)
 				{
-					int offset = (Vars::ESP::Players::Name.m_Var ? g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall * 0.3f) : 0);
+					int offset = (Vars::ESP::Players::Name.m_Var
+						              ? g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall * 0.3f)
+						              : 0);
 
 					if (offset && Vars::ESP::Players::NameBox.m_Var)
 						offset += 2;
 
 					static const int nSize = 18;
-					g_Draw.Texture((x + (w / 2) - (nSize / 2)), ((y - offset) - nSize), nSize, nSize, Colors::White, nClassNum);
+					g_Draw.Texture((x + (w / 2) - (nSize / 2)), ((y - offset) - nSize), nSize, nSize, Colors::White,
+					               nClassNum);
 				}
 
 				if (Vars::ESP::Players::Class.m_Var >= 2)
 				{
-					g_Draw.String(FONT, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, L"%ls", GetPlayerClass(nClassNum));
+					g_Draw.String(FONT, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, L"%ls",
+					              GetPlayerClass(nClassNum));
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 			}
@@ -310,17 +347,25 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			if (Vars::ESP::Players::WeaponIcon.m_Var)
 			{
 				const auto& pWeapon = Player->GetActiveWeapon();
-				if (pWeapon) {
+				if (pWeapon)
+				{
 					CHudTexture* pIcon = pWeapon->GetWeaponIcon();
-					if (pIcon) {
+					if (pIcon)
+					{
 						float fx, fy, fw, fh;
-						fx = (float)x; fy = (float)y; fw = (float)w; fh = (float)h;
-						const float iconWidth = (float)pIcon->Width();
+						fx = static_cast<float>(x);
+						fy = static_cast<float>(y);
+						fw = static_cast<float>(w);
+						fh = static_cast<float>(h);
+						const float iconWidth = static_cast<float>(pIcon->Width());
 						// lol
 						const float scale = std::clamp(fw / iconWidth, 0.5f, 0.75f);
 						static float easedScale = 0.5f;
-						scale > easedScale ? easedScale = g_Draw.EaseOut(scale, easedScale, 0.99f) : easedScale = g_Draw.EaseIn(easedScale, scale, 0.99f);
-						g_Draw.DrawHudTexture(fx + (fw / 2.f) - (iconWidth / 2.f) * scale, fy + fh + 1.f, scale, pIcon, Colors::WeaponIcon);
+						scale > easedScale
+							? easedScale = g_Draw.EaseOut(scale, easedScale, 0.99f)
+							: easedScale = g_Draw.EaseIn(easedScale, scale, 0.99f);
+						g_Draw.DrawHudTexture(fx + (fw / 2.f) - (iconWidth / 2.f) * scale, fy + fh + 1.f, scale, pIcon,
+						                      Colors::WeaponIcon);
 					}
 				}
 			}
@@ -334,7 +379,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (!cond_str.empty())
 				{
 					cond_str.erase((cond_str.end() - 1), cond_str.end());
-					g_Draw.String(FONT, (x + (w / 2)), ((y + h) + offset), Colors::Cond, ALIGN_CENTERHORIZONTAL, cond_str.data());
+					g_Draw.String(FONT, (x + (w / 2)), ((y + h) + offset), Colors::Cond, ALIGN_CENTERHORIZONTAL,
+					              cond_str.data());
 				}
 			}
 
@@ -361,7 +407,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), clr);
 
 				if (Vars::ESP::Main::Outlinedbar.m_Var)
-					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
+					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2,
+					                    (nHeight * ratio) + 2, Colors::OutlineESP);
 
 				x += 1;
 			}
@@ -376,7 +423,9 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 	if (!Vars::ESP::Buildings::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
 		return;
 
-	const auto Buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.m_Var ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL);
+	const auto Buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.m_Var
+		                                              ? EGroupType::BUILDINGS_ENEMIES
+		                                              : EGroupType::BUILDINGS_ALL);
 
 	for (const auto& pBuilding : Buildings)
 	{
@@ -388,17 +437,19 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 		Color_t DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
 		if (Vars::ESP::Buildings::Dlights.m_Var)
-			CreateDLight(Building->GetIndex(), DrawColor, Building->GetAbsOrigin(), Vars::ESP::Buildings::DlightRadius.m_Var);
+			CreateDLight(Building->GetIndex(), DrawColor, Building->GetAbsOrigin(),
+			             Vars::ESP::Buildings::DlightRadius.m_Var);
 
-		int x = 0, y = 0, w = 0, h = 0; Vec3 vTrans[8];
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
 		if (GetDrawBounds(Building, vTrans, x, y, w, h))
 		{
 			auto nHealth = Building->GetHealth(), nMaxHealth = Building->GetMaxHealth(),
-				nTextX = ((x + w) + 3), nTextOffset = 0, nTextTopOffset = 0;
+			     nTextX = ((x + w) + 3), nTextOffset = 0, nTextTopOffset = 0;
 
 			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
-			auto nType = EBuildingType(Building->GetType());
+			auto nType = static_cast<EBuildingType>(Building->GetType());
 
 			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
 
@@ -406,29 +457,33 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 			g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.m_Var);
 
-			switch (Vars::ESP::Buildings::Box.m_Var) {
-			case 1: {
-				h += 1;
+			switch (Vars::ESP::Buildings::Box.m_Var)
+			{
+			case 1:
+				{
+					h += 1;
 
-				g_Draw.OutlinedRect(x, y, w, h, DrawColor);
+					g_Draw.OutlinedRect(x, y, w, h, DrawColor);
 
-				if (Vars::ESP::Main::Outlinedbar.m_Var)
-					g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (h + 2), Colors::OutlineESP);
+					if (Vars::ESP::Main::Outlinedbar.m_Var)
+						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (h + 2), Colors::OutlineESP);
 
-				h -= 1;
-				break;
-			}
-			case 2: {
-				g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
+					h -= 1;
+					break;
+				}
+			case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
 
-				if (Vars::ESP::Main::Outlinedbar.m_Var)
-					g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
-				break;
-			}
-			case 3: {
-				Draw3DBox(vTrans, DrawColor);
-				break;
-			}
+					if (Vars::ESP::Main::Outlinedbar.m_Var)
+						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+					break;
+				}
+			case 3:
+				{
+					Draw3DBox(vTrans, DrawColor);
+					break;
+				}
 			default:
 				break;
 			}
@@ -451,47 +506,50 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 				switch (nType)
 				{
 				case EBuildingType::SENTRY:
-				{
-					if (bIsMini)
 					{
-						szName = _(L"Mini Sentry");
+						if (bIsMini)
+						{
+							szName = _(L"Mini Sentry");
+							break;
+						}
+
+						szName = _(L"Sentry");
 						break;
 					}
-
-					szName = _(L"Sentry");
-					break;
-				}
 				case EBuildingType::DISPENSER:
-				{
-					szName = _(L"Dispenser");
-					break;
-				}
+					{
+						szName = _(L"Dispenser");
+						break;
+					}
 				case EBuildingType::TELEPORTER:
-				{
-					szName = _(L"Teleporter");
-					break;
-				}
+					{
+						szName = _(L"Teleporter");
+						break;
+					}
 				default:
-				{
-					szName = _(L"Unknown");
-					break;
-				}
+					{
+						szName = _(L"Unknown");
+						break;
+					}
 				}
 
 				nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-				if (Vars::ESP::Buildings::NameBox.m_Var) {
+				if (Vars::ESP::Buildings::NameBox.m_Var)
+				{
 					int wideth, heighth;
 					int middle = (x + (w / 2));
 					g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
 					Color_t LineColor = DrawColor;
 					LineColor.a = 180;
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
-					g_Draw.Rect((middle - (wideth / 2)) - 5, y - nTextTopOffset, wideth + 10, heighth + 2, { 0,0,0,180 });
+					g_Draw.Rect((middle - (wideth / 2)) - 5, y - nTextTopOffset, wideth + 10, heighth + 2,
+					            {0, 0, 0, 180});
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 					g_Draw.Rect((middle - (wideth / 2)) - 5, y - nTextTopOffset - 2, wideth + 10, 2, LineColor);
 				}
 
-				g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL, szName);
+				g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL,
+				              szName);
 			}
 
 			if (Vars::ESP::Buildings::Owner.m_Var && !Building->GetMapPlaced())
@@ -501,8 +559,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 					PlayerInfo_t pi;
 					if (g_Interfaces.Engine->GetPlayerInfo(pOwner->GetIndex(), &pi))
 					{
-						nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-						g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL, _(L"Built by: %ls"), Utils::ConvertUtf8ToWide(pi.name).data());
+						nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall /
+							4));
+						g_Draw.String(FONT_NAME, (x + (w / 2)), (y - nTextTopOffset), DrawColor, ALIGN_CENTERHORIZONTAL,
+						              _(L"Built by: %ls"), Utils::ConvertUtf8ToWide(pi.name).data());
 					}
 				}
 			}
@@ -510,7 +570,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 			float flConstructed = Building->GetConstructed() * 100.0f;
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
-				g_Draw.String(FONT_NAME, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"), flConstructed);
+				g_Draw.String(FONT_NAME, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"),
+				              flConstructed);
 				nTextOffset += g_Draw.m_vecFonts[FONT_NAME].nTall;
 			}
 
@@ -522,7 +583,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 			if (Vars::ESP::Buildings::Level.m_Var && !bIsMini)
 			{
-				g_Draw.String(FONT_NAME, x + (w / 2), (y + h + nTextOffset), DrawColor, ALIGN_CENTERHORIZONTAL, L"%d/3", Building->GetLevel());
+				g_Draw.String(FONT_NAME, x + (w / 2), (y + h + nTextOffset), DrawColor, ALIGN_CENTERHORIZONTAL, L"%d/3",
+				              Building->GetLevel());
 				nTextOffset += g_Draw.m_vecFonts[FONT_NAME].nTall;
 			}
 
@@ -543,7 +605,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 				if (!cond_str.empty())
 				{
 					cond_str.erase((cond_str.end() - 1), cond_str.end());
-					g_Draw.String(FONT_COND, (x + (w / 2)), (y + h) + offset, Colors::Cond, ALIGN_CENTERHORIZONTAL, cond_str.data());
+					g_Draw.String(FONT_COND, (x + (w / 2)), (y + h) + offset, Colors::Cond, ALIGN_CENTERHORIZONTAL,
+					              cond_str.data());
 				}
 			}
 
@@ -563,10 +626,12 @@ void CESP::DrawBuildings(CBaseEntity* pLocal)
 
 				float ratio = (flHealth / flMaxHealth);
 
-				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), HealthColor);
+				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio),
+				            HealthColor);
 
 				if (Vars::ESP::Main::Outlinedbar.m_Var)
-					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
+					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2,
+					                    (nHeight * ratio) + 2, Colors::OutlineESP);
 
 				x += 1;
 			}
@@ -680,8 +745,10 @@ std::wstring CESP::GetPlayerConds(CBaseEntity* pEntity)
 
 const wchar_t* CESP::GetPlayerClass(int nClassNum)
 {
-	static const wchar_t* szClasses[] = { L"unknown", L"scout", L"sniper", L"soldier", L"demoman",
-										  L"medic",   L"heavy", L"pyro",   L"spy",     L"engineer" };
+	static const wchar_t* szClasses[] = {
+		L"unknown", L"scout", L"sniper", L"soldier", L"demoman",
+		L"medic", L"heavy", L"pyro", L"spy", L"engineer"
+	};
 
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
 }

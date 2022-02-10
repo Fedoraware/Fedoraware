@@ -4,7 +4,15 @@
 class CSpectatorList
 {
 private:
-	struct Spectator_t { std::wstring m_sName; std::wstring m_sMode; bool m_bIsFriend; int m_nTeam; int m_nIndex; };
+	struct Spectator_t
+	{
+		std::wstring m_sName;
+		std::wstring m_sMode;
+		bool m_bIsFriend;
+		int m_nTeam;
+		int m_nIndex;
+	};
+
 	std::vector<Spectator_t> m_vecSpectators;
 	bool GetSpectators(CBaseEntity* pLocal);
 	bool ShouldRun();

@@ -11,7 +11,8 @@ int vaccChangeTicks = 0;
 int vaccIdealResist = 0;
 int vaccChangeTimer = 0;
 
-int BulletDangerValue(CBaseEntity* pPatient) {
+int BulletDangerValue(CBaseEntity* pPatient)
+{
 	bool anyZoomedSnipers = false;
 	bool anyHeavys = false;
 
@@ -31,19 +32,28 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 		if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { continue; }
 
 		// Check for any zoomed snipers
-		if (HAS_CONDITION(player, TFCond_Zoomed)) {
+		if (HAS_CONDITION(player, TFCond_Zoomed))
+		{
 			anyZoomedSnipers = true;
-			if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_HEAD), player->GetHitboxPos(HITBOX_HEAD))) {
+			if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_HEAD), player->GetHitboxPos(HITBOX_HEAD)))
+			{
 				return 2;
 			}
 		}
 
 		// Check for any dangerous heavys
-		if (HAS_CONDITION(player, TFCond_Slowed)) {
-			if (const auto& pWeapon = player->GetActiveWeapon()) {
-				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_CHEST), player->GetHitboxPos(HITBOX_HEAD))) {
+		if (HAS_CONDITION(player, TFCond_Slowed))
+		{
+			if (const auto& pWeapon = player->GetActiveWeapon())
+			{
+				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_CHEST),
+				                  player->GetHitboxPos(HITBOX_HEAD)))
+				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
-						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && (HAS_CONDITION(player, TFCond_Ubercharged) || HAS_CONDITION(player, TFCondEx2_BulletImmune)))) {
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && (
+							HAS_CONDITION(player, TFCond_Ubercharged) ||
+							HAS_CONDITION(player, TFCondEx2_BulletImmune))))
+					{
 						return 2;
 					}
 					anyHeavys = true;
@@ -55,7 +65,8 @@ int BulletDangerValue(CBaseEntity* pPatient) {
 	return (anyZoomedSnipers || anyHeavys) ? 1 : 0;
 }
 
-int FireDangerValue(CBaseEntity* pPatient) {
+int FireDangerValue(CBaseEntity* pPatient)
+{
 	int shouldSwitch = 0;
 
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
@@ -69,10 +80,12 @@ int FireDangerValue(CBaseEntity* pPatient) {
 		if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) > 450.f)
 			continue;
 
-		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower) {
-			if (HAS_CONDITION(pPatient, TFCond_OnFire)) {
+		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower)
+		{
+			if (HAS_CONDITION(pPatient, TFCond_OnFire))
+			{
 				if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
-				else { return 2; }
+				return 2;
 			}
 
 			if (HAS_CONDITION(player, TFCondEx_PhlogUber)) { return 2; }
@@ -83,7 +96,8 @@ int FireDangerValue(CBaseEntity* pPatient) {
 	return shouldSwitch;
 }
 
-int BlastDangerValue(CBaseEntity* pPatient) {
+int BlastDangerValue(CBaseEntity* pPatient)
+{
 	bool hasRockets = false;
 
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -103,15 +117,19 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 
 		// Projectile is getting closer
 		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) > pPatient->GetVecOrigin().DistToSqr(vPredicted) &&
-			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f) {
+		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) > pPatient->GetVecOrigin().
+			DistToSqr(vPredicted) &&
+			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f)
+		{
 			if (pProjectile->IsCritBoosted()) { return 2; }
 			hasRockets = true;
 		}
 	}
 
-	if (hasRockets) {
-		if (pPatient->GetHealth() < 80) {
+	if (hasRockets)
+	{
+		if (pPatient->GetHealth() < 80)
+		{
 			return 2;
 		}
 		return 1;
@@ -120,7 +138,8 @@ int BlastDangerValue(CBaseEntity* pPatient) {
 	return 0;
 }
 
-int CurrentResistance() {
+int CurrentResistance()
+{
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
 		return pWeapon->GetChargeResistType();
@@ -128,7 +147,8 @@ int CurrentResistance() {
 	return 0;
 }
 
-int ChargeCount() {
+int ChargeCount()
+{
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
 		if (g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) { return pWeapon->GetUberCharge() / 0.25f; }
@@ -137,18 +157,21 @@ int ChargeCount() {
 	return 1;
 }
 
-int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop) {
+int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
+{
 	int bulletDanger = BulletDangerValue(pPatient);
 	int fireDanger = FireDangerValue(pPatient);
 	int blastDanger = BlastDangerValue(pPatient);
-	if (pShouldPop) {
+	if (pShouldPop)
+	{
 		int charges = ChargeCount();
 		if (bulletDanger > 1) { *pShouldPop = true; }
 		if (fireDanger > 1) { *pShouldPop = true; }
 		if (blastDanger > 1) { *pShouldPop = true; }
 	}
 
-	if (!(bulletDanger || fireDanger || blastDanger)) {
+	if (!(bulletDanger || fireDanger || blastDanger))
+	{
 		return -1;
 	}
 
@@ -161,51 +184,60 @@ int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop) {
 	return -1;
 }
 
-void SetResistance(int pResistance) {
+void SetResistance(int pResistance)
+{
 	Math::Clamp(pResistance, 0, 2);
 	vaccChangeTimer = changeTimer;
 	vaccIdealResist = pResistance;
 
 	int curResistance = CurrentResistance();
 	if (pResistance == curResistance) { return; }
-	if (pResistance > curResistance) {
+	if (pResistance > curResistance)
+	{
 		vaccChangeState = pResistance - curResistance;
 	}
-	else {
+	else
+	{
 		vaccChangeState = 3 - curResistance + pResistance;
 	}
 }
 
-void DoResistSwitching(CUserCmd* pCmd) {
-	if (vaccChangeTimer > 0) {
-		if (vaccChangeTimer == 1 && defaultResistance) {
+void DoResistSwitching(CUserCmd* pCmd)
+{
+	if (vaccChangeTimer > 0)
+	{
+		if (vaccChangeTimer == 1 && false)
+		{
 			SetResistance(defaultResistance - 1);
 		}
 		vaccChangeTimer--;
 	}
-	else {
+	else
+	{
 		vaccChangeTimer = changeTimer;
 	}
 
 	if (!vaccChangeState) { return; }
-	if (CurrentResistance() == vaccIdealResist) {
+	if (CurrentResistance() == vaccIdealResist)
+	{
 		vaccChangeTicks = 0;
 		vaccChangeState = 0;
 		return;
 	}
-	if (pCmd->buttons & IN_RELOAD) {
+	if (pCmd->buttons & IN_RELOAD)
+	{
 		vaccChangeTicks = 8;
 		return;
 	}
-	else {
-		if (vaccChangeTicks <= 0) {
-			pCmd->buttons |= IN_RELOAD;
-			vaccChangeState--;
-			vaccChangeTicks = 8;
-		}
-		else {
-			vaccChangeTicks--;
-		}
+	if (vaccChangeTicks <= 0)
+	{
+		pCmd->buttons |= IN_RELOAD;
+		vaccChangeState--;
+		vaccChangeTicks = 8;
+	}
+	else
+	{
+		vaccChangeTicks--;
 	}
 }
 
@@ -223,21 +255,25 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		m_flHealth = static_cast<float>(pLocal->GetHealth());
 		m_flMaxHealth = static_cast<float>(pLocal->GetMaxHealth());
 
-		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) {
+		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator)
+		{
 			// Auto vaccinator
 			bool shouldPop = false;
 			DoResistSwitching(pCmd);
 
 			int optResistance = OptimalResistance(pLocal, &shouldPop);
-			if (optResistance >= 0 && optResistance != CurrentResistance()) {
+			if (optResistance >= 0 && optResistance != CurrentResistance())
+			{
 				SetResistance(optResistance);
 			}
 
-			if (shouldPop && CurrentResistance() == optResistance) {
+			if (shouldPop && CurrentResistance() == optResistance)
+			{
 				pCmd->buttons |= IN_ATTACK2;
 			}
 		}
-		else {
+		else
+		{
 			// Default medigun
 			if (((m_flHealth / m_flMaxHealth) * 100.0f) <= Vars::Triggerbot::Uber::HealthLeft.m_Var)
 			{
@@ -262,21 +298,25 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		m_flHealth = static_cast<float>(pTarget->GetHealth());
 		m_flMaxHealth = static_cast<float>(pTarget->GetMaxHealth());
 
-		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) {
+		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator)
+		{
 			// Auto vaccinator
 			bool shouldPop = false;
 			DoResistSwitching(pCmd);
 
 			int optResistance = OptimalResistance(pTarget, &shouldPop);
-			if (optResistance >= 0 && optResistance != CurrentResistance()) {
+			if (optResistance >= 0 && optResistance != CurrentResistance())
+			{
 				SetResistance(optResistance);
 			}
 
-			if (shouldPop && CurrentResistance() == optResistance) {
+			if (shouldPop && CurrentResistance() == optResistance)
+			{
 				pCmd->buttons |= IN_ATTACK2;
 			}
 		}
-		else {
+		else
+		{
 			// Default mediguns
 			if (((m_flHealth / m_flMaxHealth) * 100.0f) <= Vars::Triggerbot::Uber::HealthLeft.m_Var)
 			{

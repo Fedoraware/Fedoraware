@@ -4,7 +4,7 @@
 class CEnginePrediction
 {
 private:
-	CMoveData m_MoveData = { };
+	CMoveData m_MoveData = {};
 	float m_fOldCurrentTime = 0.0f;
 	float m_fOldFrameTime = 0.0f;
 	int m_nOldTickCount = 0;

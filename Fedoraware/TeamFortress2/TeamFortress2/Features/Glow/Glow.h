@@ -15,7 +15,8 @@ private:
 	IMaterial* m_pMatBlurY;
 	IMaterial* m_pMatHaloAddToScreen;
 
-	struct GlowEnt_t {
+	struct GlowEnt_t
+	{
 		CBaseEntity* m_pEntity;
 		Color_t m_Color;
 		float m_flAlpha;
@@ -32,11 +33,13 @@ public:
 	void Init();
 	void Render();
 
-	inline bool HasDrawn(CBaseEntity* pEntity) {
+	bool HasDrawn(CBaseEntity* pEntity)
+	{
 		return m_DrawnEntities.find(pEntity) != m_DrawnEntities.end();
 	}
 
-	inline bool IsGlowMaterial(IMaterial* pMat) {
+	bool IsGlowMaterial(IMaterial* pMat)
+	{
 		return pMat == m_pMatGlowColor;
 	}
 

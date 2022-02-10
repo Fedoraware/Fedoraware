@@ -2,8 +2,8 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-constexpr Color_t clrBlack = { 0, 0, 0, 255 };
-constexpr Color_t clrWhite = { 255, 255, 255, 255 };
+constexpr Color_t clrBlack = {0, 0, 0, 255};
+constexpr Color_t clrWhite = {255, 255, 255, 255};
 
 void CRadar::Run()
 {
@@ -33,33 +33,43 @@ void CRadar::DrawRadar()
 		//If on drawing, it's important to update position first before drawing
 		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
 		DragRadar();
-		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 24, m_nRadarSize * 2, 24, { 43, 43, 45, 250 });
+		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 24, m_nRadarSize * 2, 24, {43, 43, 45, 250});
 		offset = 21;
 	}
-	
-	g_Draw.GradientRect(m_nRadarX - m_nRadarSize,					m_nRadarY - m_nRadarSize - 3 - offset, m_nRadarX - m_nRadarSize + (m_nRadarSize),				m_nRadarY - m_nRadarSize - offset, { 43, 43, 45, 250 }, Vars::Menu::Colors::MenuAccent, true);
-	g_Draw.GradientRect(m_nRadarX - m_nRadarSize + m_nRadarSize,	m_nRadarY - m_nRadarSize - 3 - offset, m_nRadarX - m_nRadarSize + (m_nRadarSize * 2),			m_nRadarY - m_nRadarSize - offset, Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
+
+	g_Draw.GradientRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 3 - offset,
+	                    m_nRadarX - m_nRadarSize + (m_nRadarSize), m_nRadarY - m_nRadarSize - offset, {43, 43, 45, 250},
+	                    Vars::Menu::Colors::MenuAccent, true);
+	g_Draw.GradientRect(m_nRadarX - m_nRadarSize + m_nRadarSize, m_nRadarY - m_nRadarSize - 3 - offset,
+	                    m_nRadarX - m_nRadarSize + (m_nRadarSize * 2), m_nRadarY - m_nRadarSize - offset,
+	                    Vars::Menu::Colors::MenuAccent, {43, 43, 45, 250}, true);
 	//Build the bg color with the wanted alpha.
-	Color_t clrBack = { 36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var) };
+	Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var)};
 
 
 	//Background
 	g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)});
+	g_Draw.OutlinedRect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize, m_nRadarCorrSize, m_nRadarCorrSize, {
+		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+	                    });
 
 	//Center lines
-	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) });
-	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, { 43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var) });
+	g_Draw.Line(m_nRadarX, m_nRadarY - m_nRadarSize, m_nRadarX, m_nRadarY + m_nRadarSize - 1, {
+		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+	            });
+	g_Draw.Line(m_nRadarX - m_nRadarSize, m_nRadarY, m_nRadarX + m_nRadarSize - 1, m_nRadarY, {
+		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+	            });
 }
 
 bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)
 {
 	//Calculate the delta and initial position of the entity
 	Vec3 vDelta = pEntity->GetAbsOrigin() - m_vLocalOrigin;
-	Vec2 vPos = Vec2((vDelta.y * (-m_flLocalCos) + vDelta.x * m_flLocalSin),
-		(vDelta.x * (-m_flLocalCos) - vDelta.y * m_flLocalSin));
+	auto vPos = Vec2((vDelta.y * (-m_flLocalCos) + vDelta.x * m_flLocalSin),
+	                 (vDelta.x * (-m_flLocalCos) - vDelta.y * m_flLocalSin));
 
 	//Range, keep in bounds
 	//Credits are due to whoever wrote this, does what I want and is fast so idc. Code probably older than Jesus.
@@ -142,7 +152,9 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 	if (Vars::Radar::Buildings::Active.m_Var)
 	{
-		const auto Buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.m_Var ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL);
+		const auto Buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.m_Var
+			                                              ? EGroupType::BUILDINGS_ENEMIES
+			                                              : EGroupType::BUILDINGS_ALL);
 
 		for (const auto& Building : Buildings)
 		{
@@ -162,37 +174,37 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					switch (pObject->GetClassID())
 					{
 					case ETFClassID::CObjectSentrygun:
-					{
-						int nTexture = (pObject->GetLevel() + 40);
+						{
+							int nTexture = (pObject->GetLevel() + 40);
 
-						if (Vars::Radar::Buildings::Outline.m_Var)
-							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
+							if (Vars::Radar::Buildings::Outline.m_Var)
+								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 
-						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
-						break;
-					}
+							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
+							break;
+						}
 					case ETFClassID::CObjectDispenser:
-					{
-						if (Vars::Radar::Buildings::Outline.m_Var)
-							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, 44);
+						{
+							if (Vars::Radar::Buildings::Outline.m_Var)
+								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, 44);
 
-						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, 44);
-						break;
-					}
+							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, 44);
+							break;
+						}
 					case ETFClassID::CObjectTeleporter:
-					{
-						int nTexture = 46; //Exit texture ID
+						{
+							int nTexture = 46; //Exit texture ID
 
-						//If "m_flYawToExit" is not zero, it most like is an entrance
-						if (pObject->GetYawToExit())
-							nTexture -= 1; //In that case, -1 from "nTexture" so we get entrace texture ID
+							//If "m_flYawToExit" is not zero, it most like is an entrance
+							if (pObject->GetYawToExit())
+								nTexture -= 1; //In that case, -1 from "nTexture" so we get entrace texture ID
 
-						if (Vars::Radar::Buildings::Outline.m_Var)
-							g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
+							if (Vars::Radar::Buildings::Outline.m_Var)
+								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 
-						g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
-						break;
-					}
+							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
+							break;
+						}
 					default: break;
 					}
 
@@ -209,7 +221,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						float flRatio = (flHealth / flMaxHealth);
 
 						g_Draw.Rect(((nX - nW) - 1), nY, nW, nSize, Colors::OutlineESP);
-						g_Draw.Rect(((nX - nW) - 1), (nY + nSize - (nSize * flRatio)), nW, (nSize * flRatio), clrHealth);
+						g_Draw.Rect(((nX - nW) - 1), (nY + nSize - (nSize * flRatio)), nW, (nSize * flRatio),
+						            clrHealth);
 					}
 				}
 			}
@@ -220,7 +233,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	{
 		for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
-			if (!Player->IsAlive() || Player == g_EntityCache.m_pObservedTarget || Player->IsAGhost() || Player == pLocal)
+			if (!Player->IsAlive() || Player == g_EntityCache.m_pObservedTarget || Player->IsAGhost() || Player ==
+				pLocal)
 				continue;
 
 			int nEntTeam = Player->GetTeamNum(), nLocalTeam = pLocal->GetTeamNum();
@@ -228,8 +242,16 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			switch (Vars::Radar::Players::IgnoreCloaked.m_Var)
 			{
 			case 0: { break; }
-			case 1: { if (Player->IsCloaked()) { continue; } break; }
-			case 2: { if (Player->IsCloaked() && nEntTeam != nLocalTeam) { continue; } break; }
+			case 1:
+				{
+					if (Player->IsCloaked()) { continue; }
+					break;
+				}
+			case 2:
+				{
+					if (Player->IsCloaked() && nEntTeam != nLocalTeam) { continue; }
+					break;
+				}
 			}
 
 			bool bIsFriend = g_EntityCache.Friends[Player->GetIndex()];
@@ -237,8 +259,16 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			switch (Vars::Radar::Players::IgnoreTeam.m_Var)
 			{
 			case 0: { break; }
-			case 1: { if (nEntTeam == nLocalTeam) { continue; } break; }
-			case 2: { if (nEntTeam == nLocalTeam && !bIsFriend) { continue; } break; }
+			case 1:
+				{
+					if (nEntTeam == nLocalTeam) { continue; }
+					break;
+				}
+			case 2:
+				{
+					if (nEntTeam == nLocalTeam && !bIsFriend) { continue; }
+					break;
+				}
 			}
 
 			int nX = -1, nY = -1;
@@ -263,7 +293,9 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						nTexture += (nEntTeam + 50);
 					}
 
-					nTexture ? g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture) : g_Draw.Rect(nX, nY, nSize, nSize, clrDraw);
+					nTexture
+						? g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture)
+						: g_Draw.Rect(nX, nY, nSize, nSize, clrDraw);
 				}
 
 				//Prepare the correct texture index for player icon, and draw it
@@ -321,12 +353,14 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					float flRatio = (flHealth / flMaxHealth);
 
 					g_Draw.Rect(((nX - nWidth) - 1), nY, nWidth, nSize, Colors::OutlineESP);
-					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize * flRatio), clrHealth);
+					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize * flRatio),
+					            clrHealth);
 
 					if (flOverHeal > 0.0f)
 					{
 						flRatio = (flOverHeal / flMaxHealth);
-						g_Draw.Rect(((nX - nWidth) - 1), (nY + (nSize + 1) - (nSize * flRatio)), nWidth, (nSize * flRatio), Colors::Overheal);
+						g_Draw.Rect(((nX - nWidth) - 1), (nY + (nSize + 1) - (nSize * flRatio)), nWidth,
+						            (nSize * flRatio), Colors::Overheal);
 					}
 				}
 			}
@@ -354,7 +388,7 @@ void CRadar::DragRadar()
 
 	if ((mousex > (m_nRadarX - m_nRadarSize) &&
 		mousex < (m_nRadarX - m_nRadarSize) + (m_nRadarSize * 2) &&
-		mousey >(m_nRadarY - m_nRadarSize) - 24 &&
+		mousey > (m_nRadarY - m_nRadarSize) - 24 &&
 		mousey < (m_nRadarY - m_nRadarSize)) && bHeld)
 	{
 		m_bDrag = true;
@@ -369,7 +403,7 @@ void CRadar::DragRadar()
 
 	if (m_bDrag)
 	{
-		m_nRadarX = (mousex + m_nRadarSize) - (m_nRadarSize)-pCorrect.x;
+		m_nRadarX = (mousex + m_nRadarSize) - (m_nRadarSize) - pCorrect.x;
 		m_nRadarY = (mousey + m_nRadarSize) - pCorrect.y;
 	}
 

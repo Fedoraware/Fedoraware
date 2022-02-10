@@ -36,7 +36,7 @@ int CCrits::FindNextCritCmdN(CBaseEntity* pWeapon, CUserCmd* pCommand)
 
 	seed_backup = *g_Interfaces.RandomSeed;
 
-	memcpy(&state, &GetState((CBaseCombatWeapon*)pWeapon), sizeof(state_t));
+	memcpy(&state, &GetState(static_cast<CBaseCombatWeapon*>(pWeapon)), sizeof(state_t));
 	memcpy(&stats, &*(stats_t*)(pWeapon + 0xA54), sizeof(stats_t));
 	seed_backup = *g_Interfaces.RandomSeed;
 	while (!found && tries < 4096)
@@ -55,7 +55,7 @@ int CCrits::FindNextCritCmdN(CBaseEntity* pWeapon, CUserCmd* pCommand)
 
 	*g_Interfaces.RandomSeed = seed_backup;
 
-	memcpy(&GetState((CBaseCombatWeapon*)pWeapon), &state, sizeof(state_t));
+	memcpy(&GetState(static_cast<CBaseCombatWeapon*>(pWeapon)), &state, sizeof(state_t));
 	memcpy(&*(stats_t*)(pWeapon + 0xA54), &stats, sizeof(stats_t));
 
 	if (found)
@@ -72,14 +72,14 @@ struct cached_calculation_s
 };
 
 
-
 static cached_calculation_s cached_calculation{};
 
 bool CCrits::ForceCrit(CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	auto command_number = pCmd->command_number;
 
-	if (LastCmdN < command_number || LastWeapon != (unsigned long*)pWeapon->GetModel() || LastCmdN - command_number > 1000)
+	if (LastCmdN < command_number || LastWeapon != (unsigned long*)pWeapon->GetModel() || LastCmdN - command_number >
+		1000)
 	{
 		/*if (cached_calculation.init_command > command_number || command_number - cached_calculation.init_command > 50 || (command_number && (cached_calculation.command_number < command_number)))
 			cached_calculation.weapon_entity = 0;
@@ -88,7 +88,8 @@ bool CCrits::ForceCrit(CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 
 		CmdN = FindNextCritCmdN(pWeapon, pCmd);
 	}
-	else {
+	else
+	{
 		CmdN = LastCmdN;
 	}
 
@@ -113,11 +114,14 @@ bool CCrits::ForceCrit(CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 
 void CCrits::Tick(CUserCmd* pCommand)
 {
-	if (!Vars::Crits::Active.m_Var) {
+	if (!Vars::Crits::Active.m_Var)
+	{
 		return;
 	}
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (!pLocal->IsAlive()) {
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		if (!pLocal->IsAlive())
+		{
 			return;
 		}
 		LastUserCmd = pCommand->command_number;
@@ -130,12 +134,15 @@ void CCrits::Tick(CUserCmd* pCommand)
 
 		CBaseCombatWeapon* pActiveWep = pLocal->GetActiveWeapon();
 		CorrectBucket(pActiveWep, pCommand);
-		if (GetAsyncKeyState(Vars::Crits::CritKey.m_Var) && (pCommand->buttons & IN_ATTACK || g_GlobalInfo.m_bHitscanRunning || g_GlobalInfo.m_bAttacking))
+		if (GetAsyncKeyState(Vars::Crits::CritKey.m_Var) && (pCommand->buttons & IN_ATTACK || g_GlobalInfo.
+			m_bHitscanRunning || g_GlobalInfo.m_bAttacking))
 		{
-			if (pCommand->command_number != CmdN && CmdN) {
+			if (pCommand->command_number != CmdN && CmdN)
+			{
 				CritStatus2 = "Waiting...";
 			}
-			else {
+			else
+			{
 				CritStatus2 = "Fired!";
 			}
 			ForceCrit(pActiveWep, pCommand);
@@ -192,15 +199,18 @@ void CCrits::Tick(CUserCmd* pCommand)
 
 void CCrits::Frame()
 {
-	if (!Vars::Crits::Active.m_Var) {
+	if (!Vars::Crits::Active.m_Var)
+	{
 		return;
 	}
 
 	if (!g_Interfaces.Engine->IsInGame())
 		return;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (!pLocal->IsAlive()) {
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		if (!pLocal->IsAlive())
+		{
 			return;
 		}
 
@@ -211,29 +221,38 @@ void CCrits::Frame()
 
 		stats_t stats = *(stats_t*)(pActiveWep + 0xA54);
 
-		int bucket = (int)(stats.flCritBucket);
+		int bucket = static_cast<int>(stats.flCritBucket);
 
 		int wide = (bucket / 3.75 - bucket * .1) - 1;
 
 
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 200, { 84, 168, 255, 127 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
-		if (CmdN == 0) {
-			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, { 255, 84, 84, 255 }, ALIGN_CENTERHORIZONTAL, "Crit banned");
+		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 200, {84, 168, 255, 127},
+		              ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
+		if (CmdN == 0)
+		{
+			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, {255, 84, 84, 255},
+			              ALIGN_CENTERHORIZONTAL, "Crit banned");
 		}
-		else {
-			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, { 100, 255, 118, 127 }, ALIGN_CENTERHORIZONTAL, CritStatus.c_str());
+		else
+		{
+			g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 220, {100, 255, 118, 127},
+			              ALIGN_CENTERHORIZONTAL, CritStatus.c_str());
 		}
-		if (LastUserCmd) {
+		if (LastUserCmd)
+		{
 			if (CmdN > LastUserCmd)
 			{
-				float nextcrit = ((float)CmdN - (float)LastUserCmd) / (float)90;
+				float nextcrit = (static_cast<float>(CmdN) - static_cast<float>(LastUserCmd)) / static_cast<float>(90);
 				if (nextcrit > 0.0f)
 				{
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Wait: ") + std::to_string(nextcrit)).c_str());
+					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, {181, 181, 181, 255},
+					              ALIGN_CENTERHORIZONTAL, (std::string("Wait: ") + std::to_string(nextcrit)).c_str());
 				}
 			}
-			else {
-				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, { 230, 180, 80, 127 }, ALIGN_CENTERHORIZONTAL, CritStatus2.c_str());
+			else
+			{
+				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 240, {230, 180, 80, 127},
+				              ALIGN_CENTERHORIZONTAL, CritStatus2.c_str());
 			}
 		}
 	}

@@ -22,7 +22,8 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		|| pLocal->IsAGhost())
 		return false;
 
-	switch (g_GlobalInfo.m_nCurItemDefIndex) {
+	switch (g_GlobalInfo.m_nCurItemDefIndex)
+	{
 	case Soldier_m_RocketJumper:
 	case Demoman_s_StickyJumper: return false;
 	default: break;
@@ -39,9 +40,10 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	case TF_WEAPON_INVIS:
 	case TF_WEAPON_LUNCHBOX:
 	case TF_WEAPON_BUFF_ITEM:
-	case TF_WEAPON_GRAPPLINGHOOK: {
-		return false;
-	}
+	case TF_WEAPON_GRAPPLINGHOOK:
+		{
+			return false;
+		}
 
 	default: break;
 	}
@@ -64,8 +66,9 @@ void CAimbot::Run(CUserCmd* pCmd)
 	if (pLocal)
 	{
 		auto pWeapon = pLocal->GetActiveWeapon();
-		
-		if (!pWeapon) {
+
+		if (!pWeapon)
+		{
 			return;
 		}
 
@@ -74,20 +77,23 @@ void CAimbot::Run(CUserCmd* pCmd)
 
 		switch (g_GlobalInfo.m_WeaponType)
 		{
-		case EWeaponType::HITSCAN: {
-			g_AimbotHitscan.Run(pLocal, pWeapon, pCmd);
-			break;
-		}
+		case EWeaponType::HITSCAN:
+			{
+				g_AimbotHitscan.Run(pLocal, pWeapon, pCmd);
+				break;
+			}
 
-		case EWeaponType::PROJECTILE: {
-			g_AimbotProjectile.Run(pLocal, pWeapon, pCmd);
-			break;
-		}
+		case EWeaponType::PROJECTILE:
+			{
+				g_AimbotProjectile.Run(pLocal, pWeapon, pCmd);
+				break;
+			}
 
-		case EWeaponType::MELEE: {
-			g_AimbotMelee.Run(pLocal, pWeapon, pCmd);
-			break;
-		}
+		case EWeaponType::MELEE:
+			{
+				g_AimbotMelee.Run(pLocal, pWeapon, pCmd);
+				break;
+			}
 
 		default: break;
 		}

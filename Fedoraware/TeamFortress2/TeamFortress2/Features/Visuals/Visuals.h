@@ -10,7 +10,7 @@ private:
 public:
 	bool RemoveScope(int nPanel);
 	void Init();
-	void FOV(CViewSetup *pView);
+	void FOV(CViewSetup* pView);
 	void ThirdPerson();
 	void ModulateWorld();
 	void UpdateWorldModulation();

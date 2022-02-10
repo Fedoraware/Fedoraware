@@ -40,12 +40,16 @@ void CGlowEffect::Init()
 	m_pMatGlowColor = g_Interfaces.MatSystem->Find(_("dev/glow_color"), TEXTURE_GROUP_OTHER);
 	m_pRtFullFrame = g_Interfaces.MatSystem->FindTexture(_("_rt_FullFrameFB"), TEXTURE_GROUP_RENDER_TARGET);
 
-	m_pRenderBuffer1 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(_("glow_buffer_1"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
-		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
+	m_pRenderBuffer1 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(
+		_("glow_buffer_1"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
+		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
+		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer1->IncrementReferenceCount();
 
-	m_pRenderBuffer2 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(_("glow_buffer_2"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
-		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
+	m_pRenderBuffer2 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(
+		_("glow_buffer_2"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
+		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
+		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
 	m_pMatBlurX = Utils::CreateMaterial
@@ -54,7 +58,7 @@ void CGlowEffect::Init()
 		\n{\
 		\n\t\"$basetexture\" \"glow_buffer_1\"\
 		\n}\n")
-		});
+	});
 
 	m_pMatBlurXwf = Utils::CreateMaterial
 	({
@@ -63,7 +67,7 @@ void CGlowEffect::Init()
 		\n\t\"$basetexture\" \"glow_buffer_1\"\
 		\n\t\"$wireframe\" \"1\"\
 		\n}\n")
-		});
+	});
 
 	m_pMatBlurY = Utils::CreateMaterial
 	({
@@ -71,7 +75,7 @@ void CGlowEffect::Init()
 		\n{\
 		\n\t\"$basetexture\" \"glow_buffer_2\"\
 		\n}\n")
-		});
+	});
 
 	m_pMatBlurYwf = Utils::CreateMaterial
 	({
@@ -80,7 +84,7 @@ void CGlowEffect::Init()
 		\n\t\"$basetexture\" \"glow_buffer_2\"\
 		\n\t\"$wireframe\" \"1\"\
 		\n}\n")
-		});
+	});
 
 
 	m_pMatHaloAddToScreen = Utils::CreateMaterial
@@ -90,7 +94,7 @@ void CGlowEffect::Init()
 		\n\t\"$basetexture\" \"glow_buffer_1\"\
 		\n\t\"$additive\" \"1\"\
 		\n}\n")
-		});
+	});
 }
 
 void CGlowEffect::Render()
@@ -155,10 +159,20 @@ void CGlowEffect::Render()
 
 				if (!bIsLocal)
 				{
-					switch (Vars::Glow::Players::IgnoreTeammates.m_Var) {
+					switch (Vars::Glow::Players::IgnoreTeammates.m_Var)
+					{
 					case 0: break;
-					case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
-					case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->GetIndex()]) { continue; } break; }
+					case 1:
+						{
+							if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; }
+							break;
+						}
+					case 2:
+						{
+							if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->
+								GetIndex()]) { continue; }
+							break;
+						}
 					}
 				}
 
@@ -173,24 +187,30 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Players::Color.m_Var == 0) {
-					if (Vars::Glow::Players::LocalRainbow.m_Var) {
-						if (bIsLocal) {
+				if (Vars::Glow::Players::Color.m_Var == 0)
+				{
+					if (Vars::Glow::Players::LocalRainbow.m_Var)
+					{
+						if (bIsLocal)
+						{
 							DrawColor = Utils::Rainbow();
 						}
-						else {
+						else
+						{
 							DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 						}
 					}
-					else {
+					else
+					{
 						DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 					}
 				}
-				else {
+				else
+				{
 					DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
 				}
 
-				m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+				m_vecGlowEntities.push_back({Player, DrawColor, Vars::Glow::Players::Alpha.m_Var});
 
 				if (!g_Chams.HasDrawn(Player))
 					DrawModel(Player, STUDIO_RENDER, true);
@@ -206,7 +226,7 @@ void CGlowEffect::Render()
 
 						if (pAttachment->IsWearable())
 						{
-							m_vecGlowEntities.push_back({ pAttachment, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+							m_vecGlowEntities.push_back({pAttachment, DrawColor, Vars::Glow::Players::Alpha.m_Var});
 
 							if (!g_Chams.HasDrawn(pAttachment))
 								DrawModel(pAttachment, STUDIO_RENDER, true);
@@ -220,7 +240,7 @@ void CGlowEffect::Render()
 				{
 					if (const auto& pWeapon = Player->GetActiveWeapon())
 					{
-						m_vecGlowEntities.push_back({ pWeapon, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+						m_vecGlowEntities.push_back({pWeapon, DrawColor, Vars::Glow::Players::Alpha.m_Var});
 
 						if (!g_Chams.HasDrawn(pWeapon))
 							DrawModel(pWeapon, STUDIO_RENDER, true);
@@ -249,7 +269,7 @@ void CGlowEffect::Render()
 
 				else DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
 
-				m_vecGlowEntities.push_back({ Building, DrawColor, Vars::Glow::Buildings::Alpha.m_Var });
+				m_vecGlowEntities.push_back({Building, DrawColor, Vars::Glow::Buildings::Alpha.m_Var});
 
 				if (!g_Chams.HasDrawn(Building))
 					DrawModel(Building, STUDIO_RENDER, true);
@@ -265,7 +285,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Health))
 						continue;
 
-					m_vecGlowEntities.push_back({ Health, Colors::Health, Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({Health, Colors::Health, Vars::Glow::World::Alpha.m_Var});
 
 					if (!g_Chams.HasDrawn(Health))
 						DrawModel(Health, STUDIO_RENDER, true);
@@ -279,7 +299,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Ammo))
 						continue;
 
-					m_vecGlowEntities.push_back({ Ammo, Colors::Ammo, Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({Ammo, Colors::Ammo, Vars::Glow::World::Alpha.m_Var});
 
 					if (!g_Chams.HasDrawn(Ammo))
 						DrawModel(Ammo, STUDIO_RENDER, true);
@@ -301,7 +321,10 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Projectile))
 						continue;
 
-					m_vecGlowEntities.push_back({ Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var), Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({
+						Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+						Vars::Glow::World::Alpha.m_Var
+					});
 
 					if (!g_Chams.HasDrawn(Projectile))
 						DrawModel(Projectile, STUDIO_RENDER, true);
@@ -323,9 +346,12 @@ void CGlowEffect::Render()
 			pRenderContext->ClearColor4ub(0, 0, 0, 0);
 			pRenderContext->ClearBuffers(true, false, false);
 
-			for (const auto& GlowEntity : m_vecGlowEntities) {
+			for (const auto& GlowEntity : m_vecGlowEntities)
+			{
 				g_Interfaces.RenderView->SetBlend(GlowEntity.m_flAlpha);
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(GlowEntity.m_Color.r), Color::TOFLOAT(GlowEntity.m_Color.g), Color::TOFLOAT(GlowEntity.m_Color.b));
+				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(GlowEntity.m_Color.r),
+				                                            Color::TOFLOAT(GlowEntity.m_Color.g),
+				                                            Color::TOFLOAT(GlowEntity.m_Color.b));
 				DrawModel(GlowEntity.m_pEntity, STUDIO_RENDER | STUDIO_NOSHADOWS, false);
 			}
 
@@ -338,11 +364,13 @@ void CGlowEffect::Render()
 			pRenderContext->Viewport(0, 0, w, h);
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer2);
-			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurXwf : m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurXwf : m_pMatBlurX, 0,
+			                                         0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 
 			pRenderContext->SetRenderTarget(m_pRenderBuffer1);
-			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurYwf : m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurYwf : m_pMatBlurY, 0,
+			                                         0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 		}
 		pRenderContext->PopRenderTargetAndViewport();
@@ -361,9 +389,12 @@ void CGlowEffect::Render()
 		pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 		if (Vars::Glow::Main::Wireframe.m_Var)
 		{
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w,
+			                                         h);
+			pRenderContext->
+				DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->
+				DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 		}
 		StencilStateDisable.SetStencilState(pRenderContext);

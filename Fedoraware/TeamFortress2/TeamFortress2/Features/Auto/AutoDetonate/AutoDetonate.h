@@ -8,7 +8,7 @@ public:
 
 private:
 	float m_flRadius;
-	bool  m_bDetonated;
+	bool m_bDetonated;
 };
 
 inline CAutoDetonate g_AutoDetonate;

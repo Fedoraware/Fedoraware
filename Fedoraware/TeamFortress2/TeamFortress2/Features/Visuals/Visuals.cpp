@@ -2,18 +2,21 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-typedef bool(_cdecl* LoadNamedSkysFn)(const char*);
-static LoadNamedSkysFn LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
+using LoadNamedSkysFn = bool(_cdecl*)(const char*);
+static LoadNamedSkysFn LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(
+	_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
 
-void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time) {
+void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time)
+{
 	//I::DebugOverlay->ClearAllOverlays();
 
 	const model_t* model = pEntity->GetModel();
 	studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
 	mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
 
-	for (int i{}; i < set->numhitboxes; ++i) {
+	for (int i{}; i < set->numhitboxes; ++i)
+	{
 		mstudiobbox_t* bbox = set->hitbox(i);
 		if (!bbox)
 			continue;
@@ -34,7 +37,8 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time
 		Vec3 matrix_origin;
 		Math::GetMatrixOrigin(matrix, matrix_origin);
 
-		g_Interfaces.DebugOverlay->AddBoxOverlay(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colour.r, colour.g, colour.b, colour.a, time);
+		g_Interfaces.DebugOverlay->AddBoxOverlay(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colour.r,
+		                                         colour.g, colour.b, colour.a, time);
 	}
 }
 
@@ -42,16 +46,17 @@ void CVisuals::ScopeLines()
 {
 	const int centerX = g_ScreenSize.w / 2;
 	const int centerY = g_ScreenSize.h / 2;
-	Color_t line1 = { Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255 };
-	Color_t line2 = { Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255 };
-	
+	Color_t line1 = {Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255};
+	Color_t line2 = {Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255};
+
 	g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
 	g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
 	g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
 	g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
 }
 
-void CVisuals::SkyboxChanger() {
+void CVisuals::SkyboxChanger()
+{
 	const char* skybNames[] = {
 		"Custom",
 		"sky_tf2_04",
@@ -77,28 +82,36 @@ void CVisuals::SkyboxChanger() {
 		"sky_island_01",
 		"sky_rainbow_01"
 	};
-	if (Vars::Visuals::SkyboxChanger.m_Var) {
-		if (Vars::Skybox::SkyboxNum == 0) {
-			if (Vars::Misc::BypassPure.m_Var) {
+	if (Vars::Visuals::SkyboxChanger.m_Var)
+	{
+		if (Vars::Skybox::SkyboxNum == 0)
+		{
+			if (Vars::Misc::BypassPure.m_Var)
+			{
 				LoadSkys(Vars::Skybox::SkyboxName.c_str());
 			}
-			else {
+			else
+			{
 				LoadSkys(g_Interfaces.CVars->FindVar("sv_skyname")->GetString());
 			}
 		}
-		else {
+		else
+		{
 			LoadSkys(skybNames[Vars::Skybox::SkyboxNum]);
 		}
 	}
-	else {
+	else
+	{
 		LoadSkys(g_Interfaces.CVars->FindVar("sv_skyname")->GetString());
 	}
 }
 
 void CVisuals::BigHeads(float headSize, float torsoSize, float handSize)
 {
-	if (Vars::ESP::Players::Funnybodypartslol.m_Var) {
-		for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+	if (Vars::ESP::Players::Funnybodypartslol.m_Var)
+	{
+		for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+		{
 			float* headScale = Player->GetHeadScale();
 			float* torsoScale = Player->GetTorsoScale();
 			float* handScale = Player->GetHandScale();
@@ -118,13 +131,14 @@ bool CVisuals::RemoveScope(int nPanel)
 }
 
 
-void CVisuals::FOV(CViewSetup *pView)
+void CVisuals::FOV(CViewSetup* pView)
 {
-	CBaseEntity *pLocal = g_EntityCache.m_pLocal;
+	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
 
 	if (pLocal && pView)
 	{
-		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var))
+		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.
+			m_Var))
 			return;
 
 		pView->fov = Vars::Visuals::FieldOfView.m_Var;
@@ -136,7 +150,7 @@ void CVisuals::FOV(CViewSetup *pView)
 
 void CVisuals::ThirdPerson()
 {
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
@@ -145,13 +159,14 @@ void CVisuals::ThirdPerson()
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
 
-				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && flElapsed > 0.2f) {
+				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && flElapsed > 0.2f)
+				{
 					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
 					flPressedTime = g_Interfaces.Engine->Time();
 				}
 			}
 		}
-		
+
 		bool bIsInThirdPerson = g_Interfaces.Input->CAM_IsThirdPerson();
 
 		if (!Vars::Visuals::ThirdPerson.m_Var
@@ -171,7 +186,7 @@ void CVisuals::ThirdPerson()
 			g_Interfaces.Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
-				if (const auto &pAnimState = pLocal->GetAnimState())
+				if (const auto& pAnimState = pLocal->GetAnimState())
 					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
 			}
 		}
@@ -208,12 +223,12 @@ bool bWorldIsModulated = false;
 bool bSkyIsModulated = false;
 
 
-
-void ApplyModulation(const Color_t &clr)
+void ApplyModulation(const Color_t& clr)
 {
-	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h))
+	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
+	     MatSystem->Next(h))
 	{
-		if (const auto &pMaterial = g_Interfaces.MatSystem->Get(h))
+		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
 		{
 			//bool bFound2 = false;
 			//IMaterialVar* rain = pMaterial->FindVar(_("env_global"), &bFound2);
@@ -223,18 +238,17 @@ void ApplyModulation(const Color_t &clr)
 
 			std::string_view group(pMaterial->GetTextureGroupName());
 
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos/* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
+			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos
+				/* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
 			{
 				bool bFound = false;
-				IMaterialVar *pVar = pMaterial->FindVar(_("$color2"), &bFound);
+				IMaterialVar* pVar = pMaterial->FindVar(_("$color2"), &bFound);
 
 				if (bFound && pVar)
 					pVar->SetVecValue(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 
 				else pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 			}
-
-
 		}
 	}
 
@@ -243,7 +257,8 @@ void ApplyModulation(const Color_t &clr)
 
 void ApplySkyboxModulation(const Color_t& clr)
 {
-	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h))
+	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
+	     MatSystem->Next(h))
 	{
 		const auto& pMaterial = g_Interfaces.MatSystem->Get(h);
 
@@ -271,44 +286,48 @@ void CVisuals::ModulateWorld()
 }
 
 
-
 void CVisuals::OverrideWorldTextures()
 {
-		static KeyValues *kv = nullptr;
-		if (!kv) {
-			kv = new KeyValues("LightmappedGeneric");
-			//kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
-			kv->SetString("$basetexture", "vgui/white_additive"); //flat 
-			kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
+	static KeyValues* kv = nullptr;
+	if (!kv)
+	{
+		kv = new KeyValues("LightmappedGeneric");
+		//kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
+		kv->SetString("$basetexture", "vgui/white_additive"); //flat 
+		kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
+	}
+
+	if (Vars::Visuals::OverrideWorldTextures.m_Var)
+	{
+		for (auto h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
+		     MatSystem->Next(h))
+		{
+			IMaterial* pMaterial = g_Interfaces.MatSystem->Get(h);
+
+			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached()
+				|| pMaterial->IsTranslucent() || pMaterial->IsSpriteCard()
+				|| std::string_view(pMaterial->GetTextureGroupName()).find("World") == std::string_view::npos)
+				continue;
+
+			auto sName = std::string_view(pMaterial->GetName());
+
+			if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
+				|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
+				|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
+				|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
+				|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
+				|| sName.find("hay") != std::string_view::npos)
+				continue;
+
+			pMaterial->SetShaderAndParams(kv);
 		}
-
-		if (Vars::Visuals::OverrideWorldTextures.m_Var) {
-			for (auto h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h)) {
-				IMaterial* pMaterial = g_Interfaces.MatSystem->Get(h);
-
-				if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached()
-					|| pMaterial->IsTranslucent() || pMaterial->IsSpriteCard()
-					|| std::string_view(pMaterial->GetTextureGroupName()).find("World") == std::string_view::npos)
-					continue;
-
-				std::string_view sName = std::string_view(pMaterial->GetName());
-
-				if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
-					|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
-					|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
-					|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
-					|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
-					|| sName.find("hay") != std::string_view::npos)
-					continue;
-
-				pMaterial->SetShaderAndParams(kv);
-			}
-		}
+	}
 }
 
 void CVisuals::UpdateWorldModulation()
 {
-	if (!Vars::Visuals::WorldModulation.m_Var) {
+	if (!Vars::Visuals::WorldModulation.m_Var)
+	{
 		RestoreWorldModulation();
 		return;
 	}
@@ -318,7 +337,8 @@ void CVisuals::UpdateWorldModulation()
 		static Color_t old = Colors::WorldModulation;
 		Color_t cur = Colors::WorldModulation;
 
-		if (cur.r != old.r || cur.g != old.g || cur.b != old.b) {
+		if (cur.r != old.r || cur.g != old.g || cur.b != old.b)
+		{
 			old = cur;
 			return true;
 		}
@@ -332,7 +352,8 @@ void CVisuals::UpdateWorldModulation()
 
 void CVisuals::UpdateSkyModulation()
 {
-	if (!Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::Vision.m_Var == 1) {
+	if (!Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::Vision.m_Var == 1)
+	{
 		RestoreWorldModulation();
 		return;
 	}
@@ -342,7 +363,8 @@ void CVisuals::UpdateSkyModulation()
 		static Color_t old = Colors::SkyModulation;
 		Color_t cur = Colors::SkyModulation;
 
-		if (cur.r != old.r || cur.g != old.g || cur.b != old.b) {
+		if (cur.r != old.r || cur.g != old.g || cur.b != old.b)
+		{
 			old = cur;
 			return true;
 		}
@@ -362,8 +384,8 @@ void CVisuals::RestoreWorldModulation()
 	if (!bSkyIsModulated)
 		return;
 
-	ApplyModulation({ 255, 255, 255, 255 });
-	ApplySkyboxModulation({ 255, 255, 255, 255 });
+	ApplyModulation({255, 255, 255, 255});
+	ApplySkyboxModulation({255, 255, 255, 255});
 	bWorldIsModulated = false;
 	bSkyIsModulated = false;
 }
