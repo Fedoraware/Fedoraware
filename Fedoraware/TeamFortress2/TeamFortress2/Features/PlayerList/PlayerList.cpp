@@ -100,10 +100,10 @@ void CPlayerList::Render()
 		if (!g_Interfaces.Engine->IsInGame())
 		{
 			ImGui::Dummy(ImVec2(0, 20));
-			static ImVec2 font_size = ImGui::CalcTextSize("You're not in game, noob!");
+			static ImVec2 fontSize = ImGui::CalcTextSize("You're not in game, noob!");
 			ImGui::SameLine(
 				ImGui::GetWindowSize().x / 2 -
-				font_size.x + (font_size.x / 2)
+				fontSize.x + (fontSize.x / 2)
 			);
 			ImGui::Text("You're not in game, noob!");
 		}
