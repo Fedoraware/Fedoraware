@@ -76,7 +76,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Demoman_m_TopShelf:
 	case Demoman_m_Warhawk:
 	case Demoman_m_ButcherBird: {
-		out = { 1200.0f, 0.4f };
+		out = { 1216.f, 0.4f };
 		break;
 	}
 
@@ -146,14 +146,14 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Pyro_s_TheDetonator:
 	case Pyro_s_TheFlareGun:
 	case Pyro_s_FestiveFlareGun:
-	case Pyro_s_TheScorchShot:
-	case Scout_s_TheFlyingGuillotine:
-	case Scout_s_TheFlyingGuillotineG: {
+	case Pyro_s_TheScorchShot: {
 		out = { 2000.0f, 0.3f };
 		break;
 	}
 
-	case Pyro_s_TheManmelter: {
+	case Pyro_s_TheManmelter:
+	case Scout_s_TheFlyingGuillotine:
+	case Scout_s_TheFlyingGuillotineG: {
 		out = { 3000.0f, 0.2f };
 		break;
 	}
@@ -170,7 +170,10 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Sniper_m_FestiveHuntsman:
 	case Sniper_m_TheFortifiedCompound: {
 		float charge = (g_Interfaces.GlobalVars->curtime - pWeapon->GetChargeBeginTime());
-		out = { ((fminf(fmaxf(charge, 0.0f), 1.0f) * 800.0f) + 1800.0f), ((fminf(fmaxf(charge, 0.0f), 1.0f) * -0.4f) + 0.5f) };
+		out = { 
+			((fminf(fmaxf(charge, 0.0f), 1.0f) * 788.0f) + 1812.0f),  // Magic
+			((fminf(fmaxf(charge, 0.0f), 1.0f) * -0.4f) + 0.5f) 
+		};
 		break;
 	}
 	}

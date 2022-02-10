@@ -50,9 +50,9 @@ public: //Netvars & conditions
 		M_DYNVARGET(ObserverMode, int, this, _("DT_BasePlayer"), _("m_iObserverMode"))
 		M_DYNVARGET(GlowEnabled, bool, this, _("DT_TFPlayer"), _("m_bGlowEnabled"))
 		M_DYNVARGET(Thrower, void*, this, _("DT_BaseGrenade"), _("m_hThrower"))
-		M_DYNVARGET(DamageRadius, float, this, _("DT_BaseGrenade"), _("m_DmgRadius"))
+		M_DYNVARGET(DamageRadius, float, this, _("DT_BaseGrenade"), _("m_DmgRadius"));
 
-		M_OFFSETGET(PipebombType, int, 0x8FC)
+	M_OFFSETGET(PipebombType, int, 0x8FC)
 		M_OFFSETGET(Touched, bool, 0x8F8)
 		M_OFFSETGET(PunchAngles, Vec3, 0xE8C)
 		M_OFFSETGET(VecVelocity, Vec3, 0x120)
@@ -422,7 +422,7 @@ public: //Everything else, lol.
 	}
 
 	__inline Vec3 GetVelocity() {
-		static auto FN = reinterpret_cast< void( __thiscall* )( CBaseEntity*, Vec3& ) >( g_Pattern.Find( _( L"client.dll" ), _( L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0" ) ) );
+		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0")));
 		Vec3 v;
 		FN(this, v);
 		return v;

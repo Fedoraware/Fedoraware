@@ -34,7 +34,7 @@ void CRadar::DrawRadar()
 		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
 		DragRadar();
 		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 24, m_nRadarSize * 2, 24, { 43, 43, 45, 250 });
-		offset = 24;
+		offset = 21;
 	}
 	
 	g_Draw.GradientRect(m_nRadarX - m_nRadarSize,					m_nRadarY - m_nRadarSize - 3 - offset, m_nRadarX - m_nRadarSize + (m_nRadarSize),				m_nRadarY - m_nRadarSize - offset, { 43, 43, 45, 250 }, Vars::Menu::Colors::MenuAccent, true);

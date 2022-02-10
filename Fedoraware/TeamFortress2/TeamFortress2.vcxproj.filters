@@ -96,6 +96,7 @@
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -625,6 +626,7 @@
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
