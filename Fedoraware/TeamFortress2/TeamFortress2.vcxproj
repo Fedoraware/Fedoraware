@@ -400,10 +400,12 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_common.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv_redef.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Enums.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\icons.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Includes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\MD5.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\proxyfnhook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Structs.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\BaseClientDLL\BaseClientDLL.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientDLLSharedAppSystems\ClientDLLSharedAppSystems.h" />

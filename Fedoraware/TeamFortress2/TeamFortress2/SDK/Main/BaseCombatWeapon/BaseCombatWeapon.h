@@ -253,46 +253,26 @@ public:
 	int iNumCrits{};
 	float m_flObservedCritChance{};
 	bool unknown7{};
-	//int weapon_mode{};
-	//int weapon_data{};
-	/*
-	
-// Game keeps track of these stats
-struct stats_t
-{
-	float flCritBucket; // A54
-	int   iNumAttacks;  // A58
-	int   iNumCrits;    // A5C
-} stats;
-
-// Memory layout for C_TFWeaponBase
-struct state_t
-{
-	bool  bCurrentAttackIsCrit;
-	bool  bLowered;                  // NETVAR 0xB40
-	int   iAltFireHint;              // 0xB44
-	int   iReloadStartClipAmount;    // 0xB48
-	float flCritEndTime;             // 0xB4C
-	float flLastCritCheckTime;       // NETVAR // 0xB50
-	int   iLastCritCheckFrame;       // 0xB54
-	int   iCurrentSeed;              // 0xB58
-	float flLastCritCheckTimeNoPred; // 0xB5C
-};*/
-
+	int weapon_mode{};
+	int weapon_data{};
+	weapon_info() {
+		
+	}
+	// I don't actually know if any of these are right... lol
 	void Load(CBaseCombatWeapon* pWeapon)
 	{
-		flCritBucket = *(float*)((uintptr_t)pWeapon + 0xA54);//pWeapon->GetCritBucket();
-		iCurrentSeed = *(int*)((uintptr_t)pWeapon + 0xB58);//pWeapon->GetWeaponSeed();
-		flCritEndTime = *(float*)((uintptr_t)pWeapon + 0xB4C);//pWeapon->GetUnknown1();
-		flLastCritCheckTime = *(float*)((uintptr_t)pWeapon + 0xB50); //pWeapon->GetUnknown2();
-		iLastCritCheckFrame = *(int*)((uintptr_t)pWeapon + 0xB54);//pWeapon->GetUnknown4();
-		iNumAttacks = *(int*)((uintptr_t)pWeapon + 0xB58);//pWeapon->GetCritAttempts();
-		iNumCrits = *(int*)((uintptr_t)pWeapon + 0xA5C);//pWeapon->GetCritCount();
-		m_flObservedCritChance = *(float*)((uintptr_t)pWeapon + 0xC1C); // pWeapon->GetObservedCritChance();
+		flCritBucket = *(float*)((uintptr_t)pWeapon + 0xA54);
+		iCurrentSeed = *(int*)((uintptr_t)pWeapon + 0xB58);
+		flCritEndTime = *(float*)((uintptr_t)pWeapon + 0xB4C);
+		flLastCritCheckTime = *(float*)((uintptr_t)pWeapon + 0xB50); 
+		iLastCritCheckFrame = *(int*)((uintptr_t)pWeapon + 0xB54);
+		iNumAttacks = *(int*)((uintptr_t)pWeapon + 0xB58);
+		iNumCrits = *(int*)((uintptr_t)pWeapon + 0xA5C);
+		m_flObservedCritChance = *(float*)((uintptr_t)pWeapon + 0xC1C);
 		unknown7 = *(bool*)((uintptr_t)pWeapon + 0xB34);
 
-		//weapon_mode = pWeapon->GetWeaponMode();
-		//weapon_data = pWeapon->GetWeaponDataa();
+		weapon_mode = *(int*)((uintptr_t)pWeapon + GetNetVar("CTFWeaponBase", "m_bLowered") - 48); //m_bLowered - 48
+		weapon_data = *(int*)((uintptr_t)pWeapon + GetNetVar("CTFWeaponBase", "m_bLowered") - 36); //m_bLowered - 36
 	}
 	weapon_info(CBaseCombatWeapon* pWeapon)
 	{

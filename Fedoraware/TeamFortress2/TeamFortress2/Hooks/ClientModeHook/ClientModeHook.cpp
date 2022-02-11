@@ -187,6 +187,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	FastStop(pCmd, g_EntityCache.m_pLocal);
 
+	g_Crits.Tick(pCmd);
+
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
@@ -309,7 +311,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_PR->Update();
 
 	g_Misc.Run(pCmd);
-	g_Crits.Tick(pCmd);
+	
 	g_EnginePrediction.Start(pCmd);
 	{
 		g_Aimbot.Run(pCmd);
@@ -319,6 +321,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
+
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 	//
 	//g_GlobalInfo.predBeforeLines.clear();

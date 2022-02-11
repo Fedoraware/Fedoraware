@@ -22,7 +22,7 @@ CUserCmd* __stdcall InputHook::GetUserCmd::Hook(int sequence_number)
 		g_Crits.new_command_number.erase(g_Crits.new_command_number.find(oldcmd));
 		g_Interfaces.ClientState->lastoutgoingcommand = pCommand->command_number - 1;
 		if (g_Interfaces.Engine->GetNetChannelInfo())
-			g_Interfaces.Engine->GetNetChannelInfo()->m_nOutSequenceNr = pCommand->command_number - 1;
+			reinterpret_cast<CNetChannelpasted*>(g_Interfaces.Engine->GetNetChannelInfo())->m_nOutSequenceNr = pCommand->command_number - 1;
 	}
 
 	return pCommand;

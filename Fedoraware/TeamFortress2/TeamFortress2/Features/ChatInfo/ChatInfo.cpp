@@ -4,6 +4,7 @@
 #include "../Misc/Misc.h"
 #include "../Crits/Crits.h"
 #include "../../Features/Visuals/Visuals.h"
+#include "../PlayerResource/PlayerResource.h"
 
 int attackStringW;
 int attackStringH;
@@ -16,6 +17,47 @@ static std::string blue		({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
 static std::string white	({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
 static std::string red		({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
 static std::string green	({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
+
+int GetPlayerForUserID(int userID)
+{
+	for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+	{
+		PlayerInfo_t player_info;
+		if (!g_Interfaces.Engine->GetPlayerInfo(i, &player_info))
+			continue;
+		// Found player
+		if (player_info.userID == userID)
+			return i;
+	}
+	return 0;
+}
+
+int HandleToIDX(int handle)
+{
+	return handle & 0xFFF;
+}
+
+// A function to find a weapon by WeaponID
+int getWeaponByID(CBaseEntity* player, int weaponid)
+{
+	// Invalid player
+	if (!player)
+		return -1;
+	size_t* hWeapons = player->GetMyWeapons();
+	// Go through the handle array and search for the item
+	for (int i = 0; hWeapons[i]; i++)
+	{
+		if (!(HandleToIDX(hWeapons[i]) >= 0 && HandleToIDX(hWeapons[i]) <= 2049 && HandleToIDX(hWeapons[i]) < 2048))
+			continue;
+		// Get the weapon
+		CBaseCombatWeapon* weapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
+		// if weapon is what we are looking for, return true
+		if (weapon && weapon->GetWeaponID() == weaponid)
+			return weapon->GetIndex();
+	}
+	// Nothing found
+	return -1;
+}
 
 void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
@@ -99,12 +141,13 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
 				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
 			{
-				if (pEntity == pLocal) { return; } // u could literally hurt urself what a meme
 				const auto nAttacker = pEvent->GetInt("attacker");
 				const auto nHealth = pEvent->GetInt("health");
 				const auto nDamage = pEvent->GetInt("damageamount");
 				const auto bCrit = pEvent->GetBool("crit");
 				const int nIndex = pEntity->GetIndex();
+				if (pEntity == pLocal) { return; }
+
 
 				PlayerInfo_t pi;
 
@@ -115,13 +158,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 
 				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
-
-				g_Crits.RoundDamage += nDamage;
-
-				if (bCrit)
-				{
-					g_Crits.CritDamage += static_cast<float>(nDamage);
-				}
 
 				const auto maxHealth = pEntity->GetMaxHealth();
 				std::string attackString = "You hit " + std::string(pi.name) + " for " + std::to_string(nDamage) + (
@@ -160,6 +196,58 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			g_Visuals.DrawHitboxMatrix(pEntity, colour, time);
 		}
 
+		if (uNameHash == FNV1A::HashConst("teamplay_round_start")) {
+			g_Crits.critDamage = 0;
+			g_Crits.meleeDamage = 0;
+			g_Crits.roundDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer());
+			g_Crits.cachedDamage = g_Crits.cachedDamage - g_Crits.meleeDamage;
+		}
+
+		if (uNameHash == FNV1A::HashConst("player_hurt")) {
+			int victim = GetPlayerForUserID(pEvent->GetInt("userid"));
+			int health = pEvent->GetInt("health");
+
+			if (GetPlayerForUserID(pEvent->GetInt("attacker")) == g_Interfaces.Engine->GetLocalPlayer()) {
+				if (victim != g_Interfaces.Engine->GetLocalPlayer()) {
+					// The weapon we damaged with
+					int weaponid = pEvent->GetInt("weaponid");
+					int weapon_idx = getWeaponByID(g_EntityCache.m_pLocal, weaponid);
+
+					auto& status = g_Crits.player_status_list[victim - 1];
+					int health_difference = status.health - health;
+					status.health = health;
+					status.just_updated = true;
+
+					bool isMelee = false;
+					if (weapon_idx >= 0 && weapon_idx <= 2048 && weapon_idx < 2049) {
+						int slot = ((CBaseCombatWeapon*)g_Interfaces.EntityList->GetClientEntity(weapon_idx))->GetSlot();
+						if (slot == 2)
+							isMelee = true;
+					}
+
+					int damage = pEvent->GetInt("damageamount");
+					if (damage > health_difference && !health)
+						damage = health_difference;
+
+					// Not a melee weapon
+					if (!isMelee)
+					{
+						// Crit handling
+						if (!g_EntityCache.m_pLocal || !g_EntityCache.m_pLocalWeapon || !g_EntityCache.m_pLocal->IsCritBoosted())
+						{
+							// Crit damage counter
+							if (pEvent->GetBool("crit"))
+								g_Crits.critDamage += damage;
+						}
+					}
+					else
+					{
+						// Melee damage
+						g_Crits.meleeDamage += damage;
+					}
+				}
+			}
+		}
 
 		if (uNameHash == FNV1A::HashConst("achievement_earned"))
 		{

@@ -629,6 +629,8 @@
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerResource\PlayerResource.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\proxyfnhook.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv_redef.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

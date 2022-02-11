@@ -25,7 +25,7 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 	if (pLocal && pLocal->IsAlive() && g_Interfaces.MoveHelper)
 	{
 		pLocal->SetCurrentCmd(pCmd);
-
+		oldrandomseed = *g_Interfaces.RandomSeed;
 		*g_Interfaces.RandomSeed = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
 
 		m_fOldCurrentTime = g_Interfaces.GlobalVars->curtime;
@@ -72,6 +72,6 @@ void CEnginePrediction::End(CUserCmd* pCmd)
 
 		pLocal->SetCurrentCmd(nullptr);
 
-		*g_Interfaces.RandomSeed = -1;
+		*g_Interfaces.RandomSeed = oldrandomseed;
 	}
 }

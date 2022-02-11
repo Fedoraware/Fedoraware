@@ -53,14 +53,13 @@ class CClientState
 {
 public:
 	byte pad0[0x10];
-	INetChannel *m_NetChannel;			// 0x10
+	INetChannel* m_NetChannel;			// 0x10
 	byte pad1[0x140];
 	CClockDriftMgr	m_ClockDriftMgr;		// 0x154
 	int				m_nDeltaTick;			// 0x1A0
 	byte pad2[0x110];
 	int				m_nMaxClients;			// 0x2B4	
-	byte pad3[0x4868];
-	float			m_frameTime;			// 0x4B20
+	byte pad3[0x486C];
 	int				lastoutgoingcommand;	// 0x4B24
 	int				chokedcommands;			// 0x4B28
 	int				last_command_ack;		// 0x4B2C
