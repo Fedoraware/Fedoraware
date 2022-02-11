@@ -3,7 +3,7 @@
 #include "../Vars.h"
 #include "../Misc/Misc.h"
 #include "../Crits/Crits.h"
-#include "../../Features/Visuals/Visuals.h" // u dont see this
+#include "../../Features/Visuals/Visuals.h"
 
 int attackStringW;
 int attackStringH;
@@ -11,13 +11,16 @@ int attackStringH;
 #define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
 #define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
 
+static std::string yellow	({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
+static std::string blue		({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
+static std::string white	({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
+static std::string red		({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
+static std::string green	({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
+
 void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
 	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
 		return;
-
-	//static std::string clr({ '\x7', 'F', 'F', 'C', '1', '4', 'B' }); // this colour looks like poo
-	static std::string clr({'\x7', '0', 'D', '9', '2', 'F', 'F'}); // this colour looks P!!!
 
 	if (const auto pLocal = g_EntityCache.m_pLocal)
 	{
@@ -35,9 +38,9 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				g_Interfaces.Engine->GetPlayerInfo(initiator, &pii);
 
 				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					0, tfm::format("%s[FeD] Vote Initiator: \x3%s", clr, pii.name).c_str());
+					0, tfm::format("%s[FeD] %sVote Initiator: \x3%s", blue, yellow, pii.name).c_str());
 				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					0, tfm::format("%s[FeD] Vote Target: \x3%s", clr, target).c_str());
+					0, tfm::format("%s[FeD] %sVote Target: \x3%s", blue, yellow, target).c_str());
 			}
 
 			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast"))
@@ -48,14 +51,10 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-					std::string voteString;
-					voteString = "[FeD] " + std::string((pEntity->GetTeamNum() != pLocal->GetTeamNum())
-						                                    ? "[enemy] "
-						                                    : "") + std::string(pi.name) + " voted " + std::string(
-						bVotedYes ? "Yes" : "No");
+					std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
 					g_notify.Add(voteString);
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-						0, tfm::format("%s[FeD] \x3%s voted %s", clr, pi.name, bVotedYes ? "Yes" : "No").c_str());
+						0, tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 					g_Interfaces.CVars->ConsoleColorPrintf({133, 255, 66, 255}, _("%s\n"), voteString.c_str());
 					if (Vars::Misc::VotesInChat.m_Var)
 					{
@@ -133,9 +132,13 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
 				                                  attackStringW, attackStringH);
 
-				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var) // who tf uses this
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-						0, tfm::format("%s[FeD]\x3 %s", clr, attackString.c_str()).c_str());
+				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var) {
+					const std::string chatAttackString(blue + "[FeD]" + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
+
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex,
+						chatAttackString.c_str());
+				}
+				// who tf uses this
 
 				if (Vars::Visuals::damageLogger.m_Var == 2)
 					g_notify.Add(attackString);
@@ -175,7 +178,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					g_notify.Add(tfm::format("%s is a bot!", info.name));
 					if (Vars::Visuals::ChatInfo.m_Var)
 						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-							player, tfm::format("%s[FeD] \x3 %s\x1 is a bot!", clr, info.name).c_str());
+							player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
 
 					{
 						// marked by other bots. r.i.p cl_drawline :(
