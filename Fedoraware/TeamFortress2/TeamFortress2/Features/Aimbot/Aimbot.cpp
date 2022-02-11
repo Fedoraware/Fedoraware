@@ -10,7 +10,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (!Vars::Aimbot::Global::Active.m_Var)
 		return false;
 
-	if (g_Interfaces.EngineWGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
+	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return false;
 
 	if (!pLocal->IsAlive()
@@ -36,7 +36,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	case TF_WEAPON_PDA_ENGINEER_DESTROY:
 	case TF_WEAPON_PDA_SPY:
 	case TF_WEAPON_PDA_SPY_BUILD:
-	case TF_WE@PON_BUILDER:
+	case TF_WEAPON_BUILDER:
 	case TF_WEAPON_INVIS:
 	case TF_WEAPON_LUNCHBOX:
 	case TF_WEAPON_BUFF_ITEM:
