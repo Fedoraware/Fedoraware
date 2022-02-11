@@ -49,7 +49,7 @@ static void MultiCombo(std::vector<const char*> titles, std::vector<bool*> optio
 	if (titles.size() != options.size()) { return; }
 
 	std::string preview = "<None>##";
-	for (int i = 0; i < options.size(); i++) {
+	for (size_t i = 0; i < options.size(); i++) {
 		if (*options[i]) {
 			if (preview == "<None>##") { preview = ""; }
 			preview += titles[i];
@@ -59,7 +59,7 @@ static void MultiCombo(std::vector<const char*> titles, std::vector<bool*> optio
 	preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
 	if (ImGui::BeginCombo(comboName.c_str(), preview.c_str())) {
-		for (int i = 0; i < titles.size(); i++) {
+		for (size_t i = 0; i < titles.size(); i++) {
 			ImGui::Selectable(titles[i], options[i]);
 		}
 

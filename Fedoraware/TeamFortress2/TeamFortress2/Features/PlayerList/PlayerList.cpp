@@ -38,7 +38,7 @@ void CPlayerList::GetPlayers()
 	if (g_Interfaces.Engine->IsInGame() && !g_Interfaces.Engine->IsDrawingLoadingImage() && g_Interfaces.Engine->
 		IsConnected())
 	{
-		for (int i = 1; i < players.size(); i++)
+		for (size_t i = 1; i < players.size(); i++)
 		{
 			CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(i);
 

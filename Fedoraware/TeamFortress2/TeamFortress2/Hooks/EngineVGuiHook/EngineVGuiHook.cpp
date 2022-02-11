@@ -10,11 +10,9 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Keybinds/Keybinds.h"
-#include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Crits/Crits.h"
-#include "../../Features/Aimbot/AimbotProjectile/AimbotProjectile.h"
-#include "../../Features/Crits/Crits.h"
+#include "../../Features/PlayerResource/PlayerResource.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -227,6 +225,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				// debug
 				{
+					#ifdef _DEBUG
+
+					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
+						g_Draw.String(FONT_MENU, 300, 300, { 255,255,255,255 }, ALIGN_CENTER, "localDamage = %d", localDamage);
+					}
+
+					#endif
 				}
 
 				//Current Active Aimbot FOV

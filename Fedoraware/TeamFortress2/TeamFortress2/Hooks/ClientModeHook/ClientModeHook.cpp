@@ -11,7 +11,8 @@
 
 
 #include "../../Features/Vars.h"
-#include "../../Features/Menu/Menu.h"
+
+#include "../../Features/PlayerResource/PlayerResource.h"
 
 void AngleVectors2(const QAngle& angles, Vector* forward)
 {
@@ -304,6 +305,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		pCmd->forwardmove = v;
 		pCmd->viewangles = ang;
 	}
+
+	g_PR->Update();
 
 	g_Misc.Run(pCmd);
 	g_Crits.Tick(pCmd);
