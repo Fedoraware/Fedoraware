@@ -142,7 +142,7 @@ namespace Colors
 	inline Color_t DtChargedRight =			{ 106, 255, 250, 180 };
 	inline Color_t DtOutline =				{ 30, 30, 30, 180 };
 	inline Color_t DmgLoggerBackground =	{ 30, 30, 30, 255 };
-	inline Color_t DmgLoggerOutline =		{ 30, 30, 255, 255};
+	inline Color_t DmgLoggerOutline =		{ 255, 101, 101, 255};
 	inline Color_t DmgLoggerText =			{ 255, 255, 255, 255 };
 	inline Color_t Hitbox =			{ 255, 255, 255, 0 };
 	inline Color_t WeaponIcon = { 255,255,255,255 };

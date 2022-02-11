@@ -273,33 +273,33 @@ float* cColor(ImVec4 color, Color_t& out) {
 
 
 
-void CMenu::Run() {
-	m_bReopened = false;
-
-	static bool bOldOpen = m_bOpen;
-
-	if (bOldOpen != m_bOpen)
-	{
-		bOldOpen = m_bOpen;
-
-		if (m_bOpen)
-			m_bReopened = true;
-	}
-
-	flTimeOnChange = 0.0f;
-
-	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
-		flTimeOnChange = g_Interfaces.Engine->Time();
-	}
-	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
-
-	if (m_flFadeElapsed < m_flFadeDuration) {
-		m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
-	}
-
-	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
-}
+//void CMenu::Run() {
+//	m_bReopened = false;
+//
+//	static bool bOldOpen = m_bOpen;
+//
+//	if (bOldOpen != m_bOpen)
+//	{
+//		bOldOpen = m_bOpen;
+//
+//		if (m_bOpen)
+//			m_bReopened = true;
+//	}
+//
+//	flTimeOnChange = 0.0f;
+//
+//	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
+//		flTimeOnChange = g_Interfaces.Engine->Time();
+//	}
+//	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
+//
+//	if (m_flFadeElapsed < m_flFadeDuration) {
+//		m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
+//		g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
+//	}
+//
+//	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+//}
 
 //ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_)
 

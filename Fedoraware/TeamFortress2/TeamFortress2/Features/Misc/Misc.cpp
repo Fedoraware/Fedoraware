@@ -520,10 +520,10 @@ void CMisc::SteamRPC()
 	                                              std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
 }
 
-// pasted from cam???? (i have no h*cking idea where i got this but credits to whoever)
+// Myzarfin added this
 void Notify::Think()
 {
-	int x{8}, y{5}, size{20};
+	int x{1}, y{1}, size{20};
 	Color_t color;
 	float left;
 

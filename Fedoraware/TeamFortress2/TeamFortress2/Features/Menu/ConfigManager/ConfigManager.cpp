@@ -8,6 +8,7 @@
 #include "../../Radar/Radar.h"
 #include "../../SpectatorList/SpectatorList.h"
 #include "../../Keybinds/Keybinds.h"
+#include "../../Misc/Misc.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
@@ -721,6 +722,10 @@ void CConfigManager::Save(const wchar_t *name)
 
 		m_Write.close();
 	}
+	std::wstring wName = name;
+	std::string sName(wName.begin(), wName.end());
+	std::string savedString("Config " + sName + " saved.");
+	g_notify.Add(savedString);
 }
 
 void CConfigManager::Load(const wchar_t *name)
@@ -1320,6 +1325,10 @@ void CConfigManager::Load(const wchar_t *name)
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
 	});
+	std::wstring wName = name;
+	std::string sName(wName.begin(), wName.end());
+	std::string loadString("Config " + sName + " loaded.");
+	g_notify.Add(loadString);
 }
 
 void CConfigManager::Remove(const wchar_t *name)

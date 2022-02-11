@@ -600,7 +600,7 @@ namespace Vars
 		namespace FONT_INDICATORS
 		{
 			inline std::string szName = "Verdana";
-			inline CVar<int> nTall = { 10, L"nTall" };
+			inline CVar<int> nTall = { 12, L"nTall" };
 			inline CVar<int> nWeight = { 0, L"nWeight" };
 			inline CVar<int> nFlags = { FONTFLAG_OUTLINE, L"nFlags" };
 		}

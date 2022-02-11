@@ -104,10 +104,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 
-				// for damage logger. 
-				// you can use it for more, i'm sure. - myzarfin
-				g_notify.Think();
-
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.m_Var)
 				{
@@ -257,7 +253,10 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpectatorList.Run();
 			g_Radar.Run();
 			g_Crits.Frame();
-			g_Menu.Run();
+			//g_Menu.Run();
+			// for damage logger. 
+// you can use it for more, i'm sure. - myzarfin
+			g_notify.Think();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
