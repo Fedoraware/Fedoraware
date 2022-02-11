@@ -575,7 +575,7 @@ void Notify::Think()
 		int w, h;
 		// g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
-		g_Interfaces.Surface->GetTextSize(FONT_ESP_COND, wc, w, h);
+		g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 		// there was no need to do what u did to the font system mfed
 
 		g_Draw.Line(x, y, x, y + 19, {
@@ -589,7 +589,7 @@ void Notify::Think()
 			                     Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g,
 			                     Colors::DmgLoggerBackground.b, 1
 		                     }, true);
-		g_Draw.String(FONT_ESP_COND, x + 6, y + 2,
+		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
 		              {Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a},
 		              ALIGN_DEFAULT, notify->m_text.c_str());
 
