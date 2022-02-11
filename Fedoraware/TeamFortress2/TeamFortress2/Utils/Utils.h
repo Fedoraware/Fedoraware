@@ -120,4 +120,8 @@ namespace Utils
         }
         str.resize(len - c);
     }
+
+    inline bool CompareFloat(float a, float b, float epsilon = 1.0e-5f) {
+        return (fabs(a - b) <= epsilon * std::max(fabs(a), fabs(b)));
+    }
 }
