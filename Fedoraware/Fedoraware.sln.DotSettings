@@ -53,4 +53,5 @@
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2EF2DDAF2A65444490D7F75EA3662F00/AbsolutePath/@EntryValue">C:\Users\mfed\Documents\GitHub\Fedoraware\Fedoraware\Fedoraware.sln.DotSettings</s:String>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2EF2DDAF2A65444490D7F75EA3662F00/RelativePath/@EntryValue"></s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2EF2DDAF2A65444490D7F75EA3662F00/@KeyIndexDefined">True</s:Boolean>
-	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2EF2DDAF2A65444490D7F75EA3662F00/RelativePriority/@EntryValue">1</s:Double></wpf:ResourceDictionary>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2EF2DDAF2A65444490D7F75EA3662F00/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EFeature_002EServices_002ECpp_002ECodeStyle_002ESettingsUpgrade_002EFunctionReturnStyleSettingsUpgrader/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
