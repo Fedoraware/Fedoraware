@@ -72,6 +72,6 @@ void CEnginePrediction::End(CUserCmd* pCmd)
 
 		pLocal->SetCurrentCmd(nullptr);
 
-		*g_Interfaces.RandomSeed = -1;
+		*g_Interfaces.RandomSeed = -1; 
 	}
 }

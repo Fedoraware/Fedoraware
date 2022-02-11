@@ -42,9 +42,6 @@ void fixBucket(CBaseCombatWeapon* weapon, CUserCmd* cmd)
 	if (!ch)
 		return;
 
-	if (!weapon)
-		return;
-
 	static int last_weapon;
 	// This tracks only when bucket is updated
 	static int last_update_command;
