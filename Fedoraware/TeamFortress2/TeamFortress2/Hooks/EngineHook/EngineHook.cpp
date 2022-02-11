@@ -75,9 +75,21 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	if (g_GlobalInfo.lateUserCmd != nullptr)
 	{
 		// Shift if attacking normally
-		g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
-			                              ? true
-			                              : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+		if (Vars::Misc::CL_Move::NotInAir.m_Var) {
+			if (pLocal) {
+				if (pLocal->IsOnGround()) {
+					g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
+						? true
+						: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+				} else {
+					g_GlobalInfo.m_bShouldShift = false;
+				}
+			}
+		} else {
+			g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
+				? true
+				: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+		}
 	}
 
 

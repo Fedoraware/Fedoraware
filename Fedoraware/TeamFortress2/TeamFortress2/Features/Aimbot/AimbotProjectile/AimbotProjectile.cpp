@@ -938,7 +938,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			{
 				if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && g_GlobalInfo.m_nShifted))
 				{
-					
+					g_GlobalInfo.m_bShouldShift = false;
 				}
 				else {
 					g_GlobalInfo.m_bShouldShift = true;
