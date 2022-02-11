@@ -16,16 +16,19 @@ bool sortByTeam(const plistPlayer& a, const plistPlayer& b)
 
 bool findPlayer(int id)
 {
-	for (const auto& player : g_PlayerList.players) {
-		if (player.index == id) {
+	for (const auto& player : g_PlayerList.players)
+	{
+		if (player.index == id)
+		{
 			return true;
 		}
 	}
 	return false;
 }
 
-constexpr plistPlayer nullPlayer{ {},
-	{0,0,0,0},
+constexpr plistPlayer nullPlayer{
+	{},
+	{0, 0, 0, 0},
 	-1,
 	-1
 };
@@ -35,7 +38,7 @@ void CPlayerList::GetPlayers()
 	if (g_Interfaces.Engine->IsInGame() && !g_Interfaces.Engine->IsDrawingLoadingImage() && g_Interfaces.Engine->
 		IsConnected())
 	{
-		for (int i = 1; i < players.size(); i++)	
+		for (int i = 1; i < players.size(); i++)
 		{
 			CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(i);
 
@@ -55,12 +58,14 @@ void CPlayerList::GetPlayers()
 				player.index = i;
 
 				players[i] = player;
-			} else
+			}
+			else
 			{
 				players[i] = nullPlayer;
 			}
 		}
-		if (!g_PlayerList.players.empty()) {
+		if (!g_PlayerList.players.empty())
+		{
 			std::sort(players.begin(), players.end(), sortByTeam);
 		}
 	}
