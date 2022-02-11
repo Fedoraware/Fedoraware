@@ -63,7 +63,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		StringToWString(s, "default");
 		g_CFG.Load(s.c_str());
 	}
-	g_Draw.InitFonts
+	g_Draw.RemakeFonts
 	({
 		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
 		{ 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var },
