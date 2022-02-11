@@ -38,9 +38,9 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				g_Interfaces.Engine->GetPlayerInfo(initiator, &pii);
 
 				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					0, tfm::format("%s[FeD] %sVote Initiator: \x3%s", blue, yellow, pii.name).c_str());
+					initiator, tfm::format("%s[FeD] %sVote Initiator: \x3%s", blue, yellow, pii.name).c_str());
 				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					0, tfm::format("%s[FeD] %sVote Target: \x3%s", blue, yellow, target).c_str());
+					initiator, tfm::format("%s[FeD] %sVote Target: \x3%s", blue, yellow, target).c_str());
 			}
 
 			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast"))
@@ -54,7 +54,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
 					g_notify.Add(voteString);
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-						0, tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
+						pEntity->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 					g_Interfaces.CVars->ConsoleColorPrintf({133, 255, 66, 255}, _("%s\n"), voteString.c_str());
 					if (Vars::Misc::VotesInChat.m_Var)
 					{
