@@ -938,9 +938,11 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			{
 				if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && g_GlobalInfo.m_nShifted))
 				{
-					return;
+					
 				}
-				g_GlobalInfo.m_bShouldShift = true;
+				else {
+					g_GlobalInfo.m_bShouldShift = true;
+				}
 			}
 
 			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
