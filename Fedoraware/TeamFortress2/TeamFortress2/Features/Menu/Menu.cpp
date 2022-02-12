@@ -1721,10 +1721,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						}
 						HelpMarker("Which material the chams will apply to the player");
-
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Fresnel base colour", Colors::FresnelBase);
+						ImGui::Checkbox("Player glow overlay", &Vars::Chams::Players::GlowOverlay.m_Var);
 						ImGui::Checkbox("Ignore Z###PlayerChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw chams through walls");
 						WidthSlider("Player chams alpha", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how opaque the player chams are");
 						ImGui::Dummy(ImVec2(0, 20));
