@@ -6,7 +6,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 {
 	static auto oClMove = Func.Original<fn>();
 
-	//g_PingReducer.FixInputDelay(bFinalTick);
+	g_PingReducer.FixInputDelay(bFinalTick);
 
 	if (!Vars::Misc::CL_Move::Enabled.m_Var)
 	{

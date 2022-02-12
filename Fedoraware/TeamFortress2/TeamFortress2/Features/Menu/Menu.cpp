@@ -1102,8 +1102,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 						ImGui::Checkbox("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
-						//WidthSlider("Fake latency", &Vars::Backtrack::Latency.m_Var, 0.f, 1000.f, "%.0f", ImGuiSliderFlags_AlwaysClamp);
-
 						ImGui::PopStyleVar();
 					}
 
