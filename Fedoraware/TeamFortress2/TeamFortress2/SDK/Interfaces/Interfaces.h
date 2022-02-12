@@ -75,6 +75,7 @@ public:
 	ISteamClient017* Client = nullptr;
 	ISteamUser017* User = nullptr;
 	ISteamUtils007* Utils007 = nullptr;
+	ISteamNetworking004* Networking = nullptr;
 
 	void Init();
 };

@@ -162,6 +162,7 @@
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
@@ -264,6 +266,7 @@
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
+    <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
@@ -414,6 +417,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientEntityList\ClientEntityList.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientModeShared\ClientModeShared.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\DebugOverlay\DebugOverlay.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineClient\EngineClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
