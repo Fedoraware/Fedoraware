@@ -160,6 +160,22 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::hitboxTime);
 			}
 
+			// Backtrack
+			{
+				SAVE_VAR(Vars::Backtrack::Enabled);
+				SAVE_VAR(Vars::Backtrack::Aim);
+				//Bt Chams
+				{
+					SAVE_VAR(Vars::Backtrack::BtChams::Enabled);
+					SAVE_VAR(Vars::Backtrack::BtChams::LastOnly);
+					SAVE_VAR(Vars::Backtrack::BtChams::EnemyOnly);
+					SAVE_VAR(Vars::Backtrack::BtChams::IgnoreZ);
+					SAVE_VAR(Vars::Backtrack::BtChams::Material);
+					SAVE_VAR(Vars::Backtrack::BtChams::Alpha);
+					SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
+				}
+			}
+
 			{
 				SAVE_VAR(Vars::Crits::Active);
 				SAVE_VAR(Vars::Crits::CritKey);
@@ -752,6 +768,23 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
 				LOAD_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
 				LOAD_VAR(Vars::Aimbot::Global::hitboxTime);
+			}
+
+
+			// Backtrack
+			{
+				LOAD_VAR(Vars::Backtrack::Enabled);
+				LOAD_VAR(Vars::Backtrack::Aim);
+				//Bt Chams
+				{
+					LOAD_VAR(Vars::Backtrack::BtChams::Enabled);
+					LOAD_VAR(Vars::Backtrack::BtChams::LastOnly);
+					LOAD_VAR(Vars::Backtrack::BtChams::EnemyOnly);
+					LOAD_VAR(Vars::Backtrack::BtChams::IgnoreZ);
+					LOAD_VAR(Vars::Backtrack::BtChams::Material);
+					LOAD_VAR(Vars::Backtrack::BtChams::Alpha);
+					LOAD_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
+				}
 			}
 
 			{

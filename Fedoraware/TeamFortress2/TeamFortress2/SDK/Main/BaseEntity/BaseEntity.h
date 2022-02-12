@@ -143,6 +143,9 @@ public: //Netvars & conditions
 	NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"));
 	NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"));
 
+	NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence");
+	NETVAR(m_flCycle, int, "CBaseAnimating", "m_flCycle");
+
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
 		M_VIRTUALGET(MaxHealth, int, this, int(__thiscall*)(void*), 107)
@@ -245,6 +248,11 @@ public: //Everything else, lol.
 
 	__inline CTFPlayerAnimState* GetAnimState() {
 		return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1BF8);
+	}
+
+	__inline void SetPoseParam(std::array<float, MAXSTUDIOPOSEPARAM> param) {
+		static DWORD dwOffset = g_NetVars.get_offset(_("DT_BaseAnimating"), _("m_flPoseParameter"));
+		*reinterpret_cast<std::array<float, MAXSTUDIOPOSEPARAM>*>(this + dwOffset) = param;
 	}
 
 	__inline std::array<float, MAXSTUDIOPOSEPARAM> GetPoseParam() {

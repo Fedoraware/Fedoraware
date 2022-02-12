@@ -51,6 +51,22 @@ namespace Vars
 		inline CVar<int> CritKey				{ VK_SHIFT, L"Crit Key" };
 	}
 
+	namespace Backtrack
+	{
+		inline CVar<bool> Enabled{ false, L"Backtrack master switch" };
+		inline CVar<bool> Aim{ false, L"Aims at last tick" };
+		namespace BtChams
+		{
+			inline CVar<bool> Enabled{ false, L"Backtrack chams"};
+			inline CVar<bool> LastOnly{ true, L"Only draws last" };
+			inline CVar<bool> EnemyOnly{ true, L"Enemy only" };
+			inline CVar<bool> IgnoreZ{ true, L"IgnoreZ" };
+			inline CVar<int> Material{ 1, L"Backtrack material" };
+			inline CVar<float> Alpha{ 1, L"Backtrack alpha" };
+			inline Color_t BacktrackColor { 255,255,255,255 };
+		}
+	}
+
 	namespace Aimbot
 	{
 		namespace Global
@@ -70,6 +86,8 @@ namespace Vars
 			inline CVar<bool> clearPreviousHitbox{ true, L"Clear Hitboxes" };
 			inline CVar<int> hitboxTime{ 2, L"Hitbox Show Time" };
 		}
+
+
 
 		namespace Hitscan
 		{

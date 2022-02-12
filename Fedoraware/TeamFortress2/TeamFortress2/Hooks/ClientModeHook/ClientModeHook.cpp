@@ -8,6 +8,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Crits/Crits.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 
 #include "../../Features/Vars.h"
@@ -192,6 +193,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
+
+
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
 	auto pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
@@ -315,6 +318,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.Start(pCmd);
 	{
 		g_Aimbot.Run(pCmd);
+		g_Backtrack.Run(pCmd);
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
 		g_Misc.EdgeJump(pCmd, nOldFlags);

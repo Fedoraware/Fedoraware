@@ -3,7 +3,7 @@
 
 class CDMEChams
 {
-private:
+public:
 	IMaterial* m_pMatShaded;
 	IMaterial* m_pMatShiny;
 	IMaterial* m_pMatFlat;

@@ -1,8 +1,9 @@
 #pragma once
 #include "../BaseEntity/BaseEntity.h"
 
-struct ConVars_t
+class CConVars
 {
+public:
 	ConVar* cl_interp = nullptr;
 	ConVar* cl_sidespeed = nullptr;
 	ConVar* cl_interp_ratio = nullptr;
@@ -20,6 +21,10 @@ struct ConVars_t
 	ConVar* afkTimer = nullptr;
 
 	void Init();
+	ConVar* FindVar(FNV1A_t hashName);
+
+private:
+	std::map<FNV1A_t, ConVar*> cvarMap;
 };
 
-inline ConVars_t g_ConVars;
+inline CConVars g_ConVars;

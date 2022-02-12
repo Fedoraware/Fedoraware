@@ -38,7 +38,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	case TF_WEAPON_PDA_SPY_BUILD:
 	case TF_WEAPON_BUILDER:
 	case TF_WEAPON_INVIS:
-	case TF_WEAPON_LUNCHBOX:
+	//case TF_WEAPON_LUNCHBOX:
 	case TF_WEAPON_BUFF_ITEM:
 	case TF_WEAPON_GRAPPLINGHOOK:
 		{

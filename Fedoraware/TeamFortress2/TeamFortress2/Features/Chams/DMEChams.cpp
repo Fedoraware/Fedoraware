@@ -4,6 +4,7 @@
 #include "../../Hooks/ModelRenderHook/ModelRenderHook.h"
 #include "Chams.h"
 #include "../Glow/Glow.h"
+#include "../Backtrack/Backtrack.h"
 
 bool CDMEChams::ShouldRun()
 {
@@ -220,6 +221,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
+
 			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
 				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha.m_Var);
 
@@ -305,6 +307,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			return true;
 		}
+
 
 		if (!pEntity && pInfo.m_pModel)
 		{

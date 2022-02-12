@@ -1093,6 +1093,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Crit hack", &Vars::Crits::Active.m_Var);  HelpMarker("Enables the crit hack (This doesn't work)");
 						InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Will try to fire crits when the key is held");
+						
+
+						ImGui::Dummy(ImVec2(0, 20));
+						SectionTitle("Backtrack");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 6;
+						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
+						ImGui::Checkbox("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
 						ImGui::PopStyleVar();
 					}
 
@@ -1775,6 +1784,33 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(100);
 						MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.m_Var, &Vars::Chams::DME::HandsOverlayRainbow.m_Var, &Vars::Chams::DME::WeaponRainbow.m_Var, &Vars::Chams::DME::WeaponOverlayRainbow.m_Var }, "Rainbow DME chams", "Rainbow DME###RainbowDMEChams");
 						ImGui::PopItemWidth();
+						
+						ImGui::Dummy(ImVec2(0, 20));
+						SectionTitle("Backtrack chams");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.m_Var); HelpMarker("Draws chams to show where a player is");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);
+						ImGui::Checkbox("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.m_Var); HelpMarker("Only draws the last tick (can save FPS)");
+						ImGui::Checkbox("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.m_Var); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
+						ImGui::PushItemWidth(100); ImGui::SliderFloat("Backtrack alpha", &Vars::Backtrack::BtChams::Alpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("Controls how opaque the backtrack chams should be");
+						static const char* backtrackMaterial[]{
+							"Shaded",
+							"Shiny",
+							"Flat",
+							"Wireframe shaded",
+							"Wireframe shiny",
+							"Wireframe flat",
+							"Fresnel",
+							"Brick"
+						};
+						ImGui::PushItemWidth(100);
+						ImGui::Combo("Backtrack material", &Vars::Backtrack::BtChams::Material.m_Var, backtrackMaterial, IM_ARRAYSIZE(backtrackMaterial));
+						ImGui::PopItemWidth();
+						ImGui::Checkbox("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.m_Var); HelpMarker("Draws them through walls");
 						ImGui::PopStyleVar();
 					}
 

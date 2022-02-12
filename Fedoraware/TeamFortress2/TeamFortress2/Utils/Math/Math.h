@@ -691,6 +691,20 @@ namespace Math
 			output[i] = input.Dot((Vec3&)matrix[i]) + matrix[i][3];
 	}
 
+
+	inline float DistPointToLine(const Vec3 point, const Vec3 origin, const Vec3 direction) {
+		const auto pointDirection = point - origin;
+
+		const auto temporaryOffset = pointDirection.Dot(direction) / (direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+		if (temporaryOffset < 0.000001f) {
+			return FLT_MAX;
+		}
+
+		const auto perpendicularPoint = origin + (direction * temporaryOffset);
+
+		return (point - perpendicularPoint).Length();
+	}
+
 	inline void AngleVectors(const Vec3& angles, Vec3* forward)
 	{
 		float sp, sy, cp, cy;

@@ -1,5 +1,6 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
+#include "../../Backtrack/Backtrack.h"
 
 int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
@@ -283,6 +284,15 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 			{
 				int nHit = -1;
 
+
+				
+				if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
+					if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(),
+						g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition)) {
+						Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition);
+						return true;
+					}
+				}
 				if (!Utils::VisPosHitboxIdOut(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos, nHit))
 					return false;
 

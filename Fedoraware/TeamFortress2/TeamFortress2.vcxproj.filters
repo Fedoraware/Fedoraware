@@ -98,6 +98,7 @@
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerResource\PlayerResource.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -631,6 +632,7 @@
     <ClInclude Include="TeamFortress2\Features\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\proxyfnhook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv_redef.h" />
+    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

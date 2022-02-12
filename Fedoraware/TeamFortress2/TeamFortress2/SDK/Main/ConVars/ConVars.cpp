@@ -1,6 +1,6 @@
 #include "ConVars.h"
 
-void ConVars_t::Init()
+void CConVars::Init()
 {
 	cl_interp = g_Interfaces.CVars->FindVar(_("cl_interp"));
 	cl_sidespeed = g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
@@ -17,4 +17,17 @@ void ConVars_t::Init()
 	r_drawspecificstaticprop = g_Interfaces.CVars->FindVar(_("r_drawspecificstaticprop"));
 	sv_namechange_cooldown_seconds = g_Interfaces.CVars->FindVar(_("sv_namechange_cooldown_seconds"));
 	afkTimer = g_Interfaces.CVars->FindVar(_("mp_idlemaxtime"));
+
+	ConCommandBase* cmdBase = g_Interfaces.CVars->GetCommands();
+	while (cmdBase != nullptr) {
+		constexpr int FCVAR_HIDDEN = (int)EConVarFlags::FCVAR_HIDDEN;
+		constexpr int FCVAR_DEVELOPMENT_ONLY = (int)EConVarFlags::FCVAR_DEVELOPMENT_ONLY;
+		cmdBase->m_nFlags &= ~( FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY );
+
+		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase)) {
+			cvarMap[FNV1A::HashConst(convar->GetName())] = convar;
+		}
+
+		cmdBase = cmdBase->m_pNext;
+	}
 }

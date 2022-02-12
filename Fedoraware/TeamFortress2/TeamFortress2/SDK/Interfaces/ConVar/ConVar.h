@@ -5,12 +5,20 @@
 
 //big mess
 
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
+
 class ConVar;
 class IConVar;
 class CCommand;
 class ConCommand;
 class ConCommandBase;
 
+
+//-----------------------------------------------------------------------------
+// Abstract interface for ConVars
+//-----------------------------------------------------------------------------
 class IConVar {
 public:
 	virtual void SetValue(const char *pValue) = 0;
