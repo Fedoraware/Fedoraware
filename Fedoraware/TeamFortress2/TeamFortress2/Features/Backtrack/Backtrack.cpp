@@ -61,7 +61,20 @@ void CBacktrack::Start(CUserCmd* pCmd) {
 
 						pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
 
-						Record[i].insert(Record[i].begin(), TickRecord(pEntity->GetSimulationTime(), pEntity->GetHitboxPos(hitbox), pEntity->GetAbsOrigin(), *reinterpret_cast<BoneMatrixes*>(&bones)));
+						model_t* model = pEntity->GetModel();
+						studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
+
+						if (model && hdr) {
+
+							Record[i].insert(Record[i].begin(), TickRecord(
+								pEntity->GetSimulationTime(),
+								pEntity->GetHitboxPos(hitbox),
+								pEntity->GetAbsOrigin(),
+								*reinterpret_cast<BoneMatrixes*>(&bones),
+								model,
+								hdr,
+								pEntity->GetHitboxSet()));
+						}
 
 						if (Record[i].size() > 12) {
 							Record[i].pop_back();
@@ -104,11 +117,12 @@ void CBacktrack::Calculate(CUserCmd* pCmd) {
 
 			float finalTargetIndex = -1;
 			if (bestTargetIndex != -1) {
-				for (const auto& i : Record[bestTargetIndex]) {
+				for (auto& i : Record[bestTargetIndex]) {
 					if (const float fieldOfViewDistance = Math::DistPointToLine(i.HeadPosition, pLocal->GetEyePosition(), newViewDirection); fieldOfViewDistance < bestFieldOfView) {
 						bestFieldOfView = fieldOfViewDistance;
 						finalTargetIndex = i.SimulationTime;
 					}
+					i.AimedAt = true;
 				}
 
 				if (finalTargetIndex != -1) {
