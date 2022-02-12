@@ -1,6 +1,7 @@
 #include "EngineHook.h"
 #include "../../Features/Vars.h"
 #include "../../Features/Misc/Misc.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
@@ -228,4 +229,25 @@ void CPingReducer::FixInputDelay(bool a)
 		OnReadPacket.Setup();
 	}
 	backup.Apply();
+}
+
+int __fastcall EngineHook::SendDatagram::Hook(INetChannel* ch, void* edx, bf_write* datagram)
+{
+	static auto originalFn = Func.Original<fn>();
+
+	if (!ch || !g_EntityCache.m_pLocal || std::floor(Vars::Backtrack::Latency.m_Var) == 0) {
+		return originalFn(ch, edx, datagram);
+	}
+
+	int in		= ch->m_nInSequenceNr;
+	int state	= ch->m_nInReliableState;
+
+	g_Backtrack.AdjustPing(ch);
+
+	int ret = originalFn(ch, edx, datagram);
+	ch->m_nInSequenceNr = in;
+	ch->m_nInReliableState = state;
+
+	return ret;
+
 }

@@ -127,3 +127,75 @@ void CBacktrack::Run(CUserCmd* pCmd) {
 		Calculate(pCmd);
 	}
 }
+
+static int lastincomingsequence = 0;
+std::deque<CIncomingSequence> sequences;
+static float latencyRampup = 0.0f;
+
+// Update our sequences
+void CBacktrack::UpdateDatagram()
+{
+	INetChannel* ch = g_Interfaces.Engine->GetNetChannelInfo();
+	if (ch)
+	{
+		int m_nInSequenceNr = ch->m_nInSequenceNr;
+		int instate = ch->m_nInReliableState;
+		if (m_nInSequenceNr > lastincomingsequence)
+		{
+			lastincomingsequence = m_nInSequenceNr;
+			sequences.insert(sequences.begin(), CIncomingSequence(instate, m_nInSequenceNr, g_Interfaces.GlobalVars->realtime));
+		}
+		if (sequences.size() > 2048)
+			sequences.pop_back();
+	}
+}
+
+void CBacktrack::UpdateDatagrams(CUserCmd* pCmd) {
+	if (!Vars::Backtrack::Enabled.m_Var) {
+		latencyRampup = 0.0f;
+		return;
+	}
+
+	if (g_EntityCache.m_pLocal && pCmd) {
+		UpdateDatagram();
+	} else {
+		sequences.clear();
+	}
+
+	latencyRampup += g_Interfaces.GlobalVars->interval_per_tick;
+	latencyRampup = std::min(1.0f, latencyRampup);
+}
+
+// Change Datagram data
+void CBacktrack::AdjustPing(INetChannel* ch)
+{
+	if (!Vars::Backtrack::Enabled.m_Var)
+		return;
+	for (auto& seq : sequences)
+	{
+		if (g_Interfaces.GlobalVars->realtime - seq.curtime >= GetLatency() / 1000.0f)
+		{
+			ch->m_nInReliableState = seq.inreliablestate;
+			ch->m_nInSequenceNr = seq.sequencenr;
+			break;
+		}
+	}
+}
+
+
+// Latency to add for backtrack
+float CBacktrack::GetLatency()
+{
+	INetChannel* ch = g_Interfaces.Engine->GetNetChannelInfo();
+	// Track what actual latency we have
+	float real_latency = 0.0f;
+
+	// If we have a netchannel (just in case) set real latency to it
+	if (ch)
+		real_latency = ch->GetLatency(FLOW_OUTGOING) * 1000.0f;
+
+	// Clamp and apply rampup, also ensure we do not go out of the 1000.0f bounds
+	float backtrack_latency = latencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var, 0.0f, 900.0f - real_latency);
+
+	return backtrack_latency;
+}

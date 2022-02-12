@@ -34,6 +34,13 @@ namespace EngineHook
 		using fn = void(__cdecl*)(bool bFinalTick);
 		void __cdecl Hook(bool bFinalTick);
 	}
+
+	namespace SendDatagram
+	{
+		inline SEOHook::Func Func;
+		using fn = int(__fastcall*)(INetChannel* ch, void* edx, bf_write* datagram);
+		int __fastcall Hook(INetChannel* ch, void* edx, bf_write* datagram);
+	}
 }
 
 class CPingReducer

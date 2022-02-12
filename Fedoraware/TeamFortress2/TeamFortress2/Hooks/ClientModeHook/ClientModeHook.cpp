@@ -189,6 +189,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	FastStop(pCmd, g_EntityCache.m_pLocal);
 
 	g_Crits.Tick(pCmd);
+	//g_Backtrack.UpdateDatagrams(pCmd);
 
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);

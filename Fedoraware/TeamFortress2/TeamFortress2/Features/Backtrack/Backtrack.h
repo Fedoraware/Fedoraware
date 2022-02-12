@@ -26,6 +26,25 @@ public:
 	void Start(CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
+	void UpdateDatagram();
+	void UpdateDatagrams(CUserCmd* pCmd);
+	void AdjustPing(INetChannel* ch);
+	float GetLatency();
+};
+
+class CIncomingSequence
+{
+public:
+	int inreliablestate;
+	int sequencenr;
+	float curtime;
+
+	CIncomingSequence(int instate, int seqnr, float time)
+	{
+		inreliablestate = instate;
+		sequencenr = seqnr;
+		curtime = time;
+	}
 };
 
 inline CBacktrack g_Backtrack;
