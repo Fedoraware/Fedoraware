@@ -1,4 +1,4 @@
-<h3 align="center">Official fedoraware repository until further notice?</h1>
+<h3 align="center">Official fedoraware repository until further notice?</h3>
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
@@ -61,9 +61,9 @@
 ![ScreenShot](https://i.imgur.com/JwwZeRt.png)
 
 ## Media:  
-- [[TF2/FEDORAware] Best TF2 Paste? (by c1R)](https://www.youtube.com/watch?v=7gDLPRXtdw8)
-- [[TF2/FEDORAWARE] The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
-- [[TF2/Fedoraware] Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
+- [Fedoraware is the best free cheat in tf2 (by bean)](https://www.youtube.com/watch?v=FyeaMghYZL0)
+- [The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
+- [Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
 
 ## Credits to:
   - [spook953](https://github.com/spook953)
