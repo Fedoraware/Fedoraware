@@ -6,8 +6,6 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 {
 	static auto oClMove = Func.Original<fn>();
 
-	//g_PingReducer.FixInputDelay(bFinalTick);
-
 	if (!Vars::Misc::CL_Move::Enabled.m_Var)
 	{
 		g_GlobalInfo.m_nShifted = 0;
@@ -168,64 +166,3 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 
 	return originalFn(ecx, edx);
 } // this shit fucking works
-
-
-void __cdecl EngineHook::CL_ReadPackets::Hook(bool bFinalTick)
-{
-	static auto originalFn = Func.Original<fn>();
-
-	if (g_PingReducer.ShouldCallReadPackets()) {
-		originalFn(bFinalTick);
-	}
-}
-
-void CPingReducer::ReadPacketsStore::Setup()
-{
-	CsFrametime = g_Interfaces.ClientState->m_frameTime;
-	Frametime = g_Interfaces.GlobalVars->frametime;
-	Curtime = g_Interfaces.GlobalVars->curtime;
-	TickCount = g_Interfaces.GlobalVars->tickcount;
-}
-
-void CPingReducer::ReadPacketsStore::Apply() const
-{
-	g_Interfaces.ClientState->m_frameTime = CsFrametime;
-	g_Interfaces.GlobalVars->frametime = Frametime;
-	g_Interfaces.GlobalVars->curtime = Curtime;
-	g_Interfaces.GlobalVars->tickcount = TickCount;
-}
-
-bool CPingReducer::ShouldCallReadPackets()
-{
-	auto netchan = g_Interfaces.ClientState->m_NetChannel;
-
-	if (!netchan || netchan->IsLoopback())
-		return true;
-
-	if (!g_Interfaces.Engine->IsInGame())
-		return true;
-
-	OnReadPacket.Apply();
-	return false;
-}
-
-void CPingReducer::FixInputDelay(bool a)
-{
-	auto netchan = g_Interfaces.ClientState->m_NetChannel;
-
-	if (!netchan || netchan->IsLoopback())
-		return;
-
-	if (!g_Interfaces.Engine->IsInGame())
-		return;
-
-	ReadPacketsStore backup;
-
-	backup.Setup();
-	{
-		EngineHook::CL_ReadPackets::Func.Original< EngineHook::CL_ReadPackets::fn>()(a);
-
-		OnReadPacket.Setup();
-	}
-	backup.Apply();
-}

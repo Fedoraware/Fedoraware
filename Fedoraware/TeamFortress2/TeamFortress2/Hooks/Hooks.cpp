@@ -220,14 +220,6 @@ void CHooks::Init()
 			fn CLFireEvents = reinterpret_cast<fn>(dwEstimate);
 			Func.Hook(CLFireEvents, Hook);
 		}
-
-		{
-			using namespace CL_ReadPackets;
-
-			fn CLReadPackets = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 34 8B 0D"));
-			Func.Hook(CLReadPackets, Hook);
-			g_PingReducer.oReadPackets = CLReadPackets;
-		}
 	}
 
 	//EndSceneHook::Init();
