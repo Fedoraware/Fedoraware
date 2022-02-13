@@ -140,6 +140,6 @@ void CSteamInterfaces::Init()
 	User       = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, _(STEAMUSER_INTERFACE_VERSION_017)));
 	_validS(User);
 
-	Networking = reinterpret_cast<ISteamNetworking004*>(Client->GetISteamNetworking(hsNewUser, hsNewPipe, _(STEAMNETWORKINGUTILS_INTERFACE_VERSION)));
-	_validS(Networking);
+	/*Networking = reinterpret_cast<ISteamNetworking004*>(Client->GetISteamNetworking(hsNewUser, hsNewPipe, _(STEAMNETWORKINGUTILS_INTERFACE_VERSION)));
+	_validS(Networking);*/
 }
