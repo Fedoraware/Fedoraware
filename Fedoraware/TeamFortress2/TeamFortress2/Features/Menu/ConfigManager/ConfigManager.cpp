@@ -524,6 +524,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
 			SAVE_VAR(Vars::Visuals::MaxDist);
 			SAVE_VAR(Vars::Visuals::MinDist);
+			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
@@ -1135,6 +1136,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
 			LOAD_VAR(Vars::Visuals::MaxDist);
 			LOAD_VAR(Vars::Visuals::MinDist);
+			LOAD_VAR(Vars::Visuals::FovArrowsDist);
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
