@@ -110,39 +110,44 @@ void CPlayerArrows::Run()
 				continue;
 
 			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
+			Vec3 vScreen;
 
-			/*if (!(vLocalPos.DistTo(vEnemyPos) > 400.0f))
-				continue;*/
+			if (!Utils::W2S(vEnemyPos, vScreen)) {
+				m_vecPlayers.push_back(vEnemyPos);
+			}
 
-			Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-			Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
-			viewangless.x = 0;
-			float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
+			///*if (!(vLocalPos.DistTo(vEnemyPos) > 400.0f))
+			//	continue;*/
 
-			/*
-			Vec3 vEntForward = {};
-			Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
-			Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
-			vToEnt.NormalizeInPlace();
+			//Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
+			//Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
+			//viewangless.x = 0;
+			//float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
 
-			if (vEntForward.Dot(vToEnt) < 0.5071f)
-				continue;*/
+			///*
+			//Vec3 vEntForward = {};
+			//Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
+			//Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
+			//vToEnt.NormalizeInPlace();
 
-			if (fFovToEnemy < Vars::Visuals::FieldOfView.m_Var)
-				continue;
+			//if (vEntForward.Dot(vToEnt) < 0.5071f)
+			//	continue;*/
 
-			/*if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
-			{
-				CGameTrace Trace = {};
-				CTraceFilterWorldAndPropsOnly Filter = {};
+			//if (fFovToEnemy < Vars::Visuals::FieldOfView.m_Var)
+			//	continue;
 
-				Utils::Trace(vEnemyPos, vLocalPos, MASK_SOLID, &Filter, &Trace);
+			///*if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
+			//{
+			//	CGameTrace Trace = {};
+			//	CTraceFilterWorldAndPropsOnly Filter = {};
 
-				if (Trace.flFraction < 1.0f)
-					continue;
-			}*/
+			//	Utils::Trace(vEnemyPos, vLocalPos, MASK_SOLID, &Filter, &Trace);
 
-			m_vecPlayers.push_back(vEnemyPos);
+			//	if (Trace.flFraction < 1.0f)
+			//		continue;
+			//}*/
+
+			/*m_vecPlayers.push_back(vEnemyPos);*/
 		}
 		if (m_vecPlayers.empty())
 			return;
