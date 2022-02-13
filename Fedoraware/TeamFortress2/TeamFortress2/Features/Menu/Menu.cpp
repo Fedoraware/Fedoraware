@@ -1532,7 +1532,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
-						MultiCombo({ "Burning", "Electrocuted", "Become ash"}, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var}, "Ragdoll particle effects", "Effects###RagdollEffects");
+						MultiCombo({ "Burning", "Electrocuted", "Become ash", "Dissolve"}, {&Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::BecomeAsh.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var }, "Ragdoll particle effects", "Effects###RagdollEffects");
 						if (ImGui::Checkbox("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var)) {
 							Vars::Visuals::RagdollEffects::Ice.m_Var = false;
 						}

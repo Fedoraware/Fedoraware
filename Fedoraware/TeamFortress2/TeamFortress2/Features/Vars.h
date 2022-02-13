@@ -460,6 +460,7 @@ namespace Vars
 			inline CVar<bool> EnemyOnly{ false, L"Only on enemies" };
 			inline CVar<bool> Burning{ false, L"Burn ragdoll" };
 			inline CVar<bool> Electrocuted{ false, L"Electrocute ragdoll" };
+			inline CVar<bool> BecomeAsh{ false, L"Ash ragdoll" };
 			inline CVar<bool> Dissolve{ false, L"Dissolve ragdoll" };
 			inline CVar<bool> Gold{ false, L"Gold ragdoll" };
 			inline CVar<bool> Ice{ false, L"Ice ragdoll" };
