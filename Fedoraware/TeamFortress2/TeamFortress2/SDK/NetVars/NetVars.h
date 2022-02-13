@@ -111,10 +111,10 @@ inline int GetNetVar(const char* szClass, const char* szNetVar)
 {
 	CClientClass* pClasses = g_Interfaces.Client->GetAllClasses();
 
-	for (auto pCurrNode = pClasses; pCurrNode; pCurrNode = pCurrNode->pNextClass)
+	for (auto pCurrNode = pClasses; pCurrNode; pCurrNode = pCurrNode->m_pNext)
 	{
-		if (std::string_view(szClass).compare(pCurrNode->szNetworkName) == 0)
-			return GetOffset(pCurrNode->pRecvTable, szNetVar);
+		if (std::string_view(szClass).compare(pCurrNode->m_pNetworkName) == 0)
+			return GetOffset(pCurrNode->m_pRecvTable, szNetVar);
 	}
 
 	return 0;

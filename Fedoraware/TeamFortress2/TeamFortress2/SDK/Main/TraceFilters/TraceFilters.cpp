@@ -4,7 +4,7 @@ bool CTraceFilterHitscan::ShouldHitEntity(void *pEntityHandle, int nContentsMask
 {
 	CBaseEntity *pEntity = reinterpret_cast<CBaseEntity *>(pEntityHandle);
 
-	switch (pEntity->GetClientClass()->iClassID)
+	switch (pEntity->GetClientClass()->m_ClassID)
 	{
 		//wtf are these? =D
 		case 55: //CFuncAreaPortalWindow
@@ -28,7 +28,7 @@ bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity(void *pEntityHandle, int nCo
 {
 	CBaseEntity *pEntity = reinterpret_cast<CBaseEntity *>(pEntityHandle);
 
-	switch (pEntity->GetClientClass()->iClassID)
+	switch (pEntity->GetClientClass()->m_ClassID)
 	{
 		case 55:
 		case 64:

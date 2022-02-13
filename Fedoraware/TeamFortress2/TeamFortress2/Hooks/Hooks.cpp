@@ -15,9 +15,9 @@ bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn
 	while (pClass)
 	{
 		// Main class found
-		if (!strcmp(pClass->pRecvTable->m_pNetTableName, path[0].c_str()))
+		if (!strcmp(pClass->m_pRecvTable->m_pNetTableName, path[0].c_str()))
 		{
-			RecvTable* curr_table = pClass->pRecvTable;
+			RecvTable* curr_table = pClass->m_pRecvTable;
 			for (size_t i = 1; i < path.size(); i++)
 			{
 				bool found = false;
@@ -53,7 +53,7 @@ bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn
 				}
 			}
 		}
-		pClass = pClass->pNextClass;
+		pClass = pClass->m_pNext;
 	}
 	return false;
 }

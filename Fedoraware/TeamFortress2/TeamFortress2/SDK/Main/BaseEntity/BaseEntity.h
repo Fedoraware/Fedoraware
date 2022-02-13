@@ -11,6 +11,60 @@
 
 #define HAS_CONDITION(ent, cond) (ent->GetCond() & cond)
 
+enum ShouldTransmitState_t {
+	SHOULDTRANSMIT_START = 0,
+	SHOULDTRANSMIT_END
+};
+
+
+// has all these in them. Left it as an enum in case we want to go back though
+enum DataUpdateType_t
+{
+	DATA_UPDATE_CREATED = 0,	// indicates it was created +and+ entered the pvs
+//	DATA_UPDATE_ENTERED_PVS,
+DATA_UPDATE_DATATABLE_CHANGED,
+//	DATA_UPDATE_LEFT_PVS,
+//	DATA_UPDATE_DESTROYED,		// FIXME: Could enable this, but it's a little worrying
+								// since it changes a bunch of existing code
+};
+
+class IClientNetworkable;
+class CBaseEntity;
+class IClientRenderable;
+class ICollideable;
+class IClientEntity;
+class IClientThinkable;
+
+class IClientUnknown : public IHandleEntity
+{
+public:
+	virtual ICollideable* GetCollideable() = 0;
+	virtual IClientNetworkable* GetClientNetworkable() = 0;
+	virtual IClientRenderable* GetClientRenderable() = 0;
+	virtual IClientEntity* GetIClientEntity() = 0;
+	virtual CBaseEntity* GetBaseEntity() = 0;
+	virtual IClientThinkable* GetClientThinkable() = 0;
+};
+
+class IClientNetworkable
+{
+public:
+	virtual IClientUnknown* GetIClientUnknown() = 0;
+	virtual void Release() = 0;
+	virtual CClientClass* GetClientClass() = 0;
+	virtual void NotifyShouldTransmit(ShouldTransmitState_t state) = 0;
+	virtual void OnPreDataChanged(DataUpdateType_t updateType) = 0;
+	virtual void OnDataChanged(DataUpdateType_t updateType) = 0;
+	virtual void PreDataUpdate(DataUpdateType_t updateType) = 0;
+	virtual void PostDataUpdate(DataUpdateType_t updateType) = 0;
+	virtual bool IsDormant(void) = 0;
+	virtual int	entindex(void) const = 0;
+	virtual void ReceiveMessage(int classID, bf_read& msg) = 0;
+	virtual void* GetDataTableBasePtr() = 0;
+	virtual void SetDestroyedOnRecreateEntities(void) = 0;
+	virtual void OnDataUnchangedInPVS() = 0;
+};
+
 class CBaseEntity
 {
 public: //Netvars & conditions
@@ -170,13 +224,23 @@ public: //Virtuals from renderable
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
 	}
 
+	__inline Vec3 &m_vecMins() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_BaseEntity"), _("m_Collision"), _("m_VecMins"));
+		return *reinterpret_cast<Vec3*>(this + dwOff);
+	}
+
+	__inline Vec3& m_vecMaxs() {
+		static auto dwOff = g_NetVars.get_offset(_("DT_BaseEntity"), _("m_Collision"), _("m_VecMins"));
+		return *reinterpret_cast<Vec3*>(this + dwOff);
+	}
+
 	__inline int DrawModel(int nFlags) {
 		const auto pRend = Renderable();
 		return GetVFunc<int(__thiscall*)(void*, int)>(pRend, 10)(pRend, nFlags);
 	}
 
 public: //Virtuals from networkable
-	__inline void* Networkable() { return reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(this) + 0x8)); }
+	__inline IClientNetworkable* Networkable() { return reinterpret_cast<IClientNetworkable*>((reinterpret_cast<uintptr_t>(this) + 0x8)); }
 
 	M_VIRTUALGET(ClientClass, CClientClass*, Networkable(), CClientClass* (__thiscall*)(void*), 2)
 		M_VIRTUALGET(Dormant, bool, Networkable(), bool(__thiscall*)(void*), 8)
@@ -243,7 +307,7 @@ public: //Everything else, lol.
 
 	__inline ETFClassID GetClassID() {
 		const auto& pCC = GetClientClass();
-		return pCC ? ETFClassID(pCC->iClassID) : ETFClassID(0);
+		return pCC ? ETFClassID(pCC->m_ClassID) : ETFClassID(0);
 	}
 
 	__inline CTFPlayerAnimState* GetAnimState() {

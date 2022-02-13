@@ -233,14 +233,23 @@ public:
 	bool	hasbeenpredicted;
 };
 
+typedef void* (*CreateClientClassFn)(int entnum, int serialNum);
+typedef void* (*CreateEventFn)();
+
 class CClientClass
 {
 public:
-	BYTE Pad[8];
-	char *szNetworkName;
-	RecvTable *pRecvTable;
-	CClientClass *pNextClass;
-	int iClassID;
+	const char* GetName()
+	{
+		return m_pNetworkName;
+	}
+public:
+	CreateClientClassFn		m_pCreateFn;
+	CreateEventFn			m_pCreateEventFn;	// Only called for event objects.
+	char *m_pNetworkName;
+	RecvTable *m_pRecvTable;
+	CClientClass *m_pNext;
+	int m_ClassID;
 };
 
 class CBaseEntity; //forward declare
