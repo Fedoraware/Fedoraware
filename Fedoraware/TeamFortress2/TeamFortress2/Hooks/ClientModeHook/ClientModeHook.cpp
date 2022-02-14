@@ -390,7 +390,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && g_Interfaces.Input->CAM_IsThirdPerson())
 					{
 						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor,
-						                           TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
+						                           TICKS_TO_TIME(chockValue + 1));
 					}
 				}
 				else
