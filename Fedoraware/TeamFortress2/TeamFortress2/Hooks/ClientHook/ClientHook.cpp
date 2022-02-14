@@ -33,6 +33,7 @@ void __stdcall ClientHook::ShutDown::Hook()
 {
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_EntityCache.Clear();
+	g_Visuals.rain.Cleanup();
 }
 
 
@@ -165,7 +166,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 					}
 				}
 			}
-			g_Visuals.ThirdPerson();
+			/*g_Visuals.ThirdPerson();*/
 			g_Visuals.SkyboxChanger();
 
 			break;
@@ -236,6 +237,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		{
 			if (!g_GlobalInfo.unloadWndProcHook)
 			{
+				g_Visuals.rain.Run();
 				g_Visuals.UpdateWorldModulation();
 				g_Visuals.UpdateSkyModulation();
 			}
@@ -334,4 +336,8 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.Client, type, msg_data);
+}
+
+void __fastcall ClientHook::DoPrecipitation::Hook(void* ecx, void* edx)
+{
 }

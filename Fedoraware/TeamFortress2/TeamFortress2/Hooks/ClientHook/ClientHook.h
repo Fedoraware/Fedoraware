@@ -40,4 +40,11 @@ namespace ClientHook
 		using fn = bool(__thiscall*)(CBaseClientDLL*, int type, bf_read& msg_data);
 		bool __stdcall Hook(int type, bf_read& msg_data);
 	}
+
+	namespace DoPrecipitation
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(void*, void*);
+		void __fastcall Hook(void* ecx, void* edx);
+	}
 }

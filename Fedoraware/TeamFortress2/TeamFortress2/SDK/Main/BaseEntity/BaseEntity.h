@@ -196,7 +196,8 @@ public: //Netvars & conditions
 	NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"));
 	NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"));
 	NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"));
-
+	NETVAR(m_vecMins, Vec3, _("CBaseEntity"), _("m_vecMins"));
+	NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"));
 	NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence");
 	NETVAR(m_flCycle, int, "CBaseAnimating", "m_flCycle");
 
@@ -222,16 +223,6 @@ public: //Virtuals from renderable
 	__inline bool SetupBones(matrix3x4* pOut, int nMax, int nMask, float flTime) {
 		const auto pRend = Renderable();
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
-	}
-
-	__inline Vec3 &m_vecMins() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_BaseEntity"), _("m_Collision"), _("m_VecMins"));
-		return *reinterpret_cast<Vec3*>(this + dwOff);
-	}
-
-	__inline Vec3& m_vecMaxs() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_BaseEntity"), _("m_Collision"), _("m_VecMins"));
-		return *reinterpret_cast<Vec3*>(this + dwOff);
 	}
 
 	__inline int DrawModel(int nFlags) {

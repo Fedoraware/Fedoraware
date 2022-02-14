@@ -2008,6 +2008,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
 						ImGui::Checkbox("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.m_Var); HelpMarker("Will show the server angles in thirdperson");
 						ImGui::Checkbox("Show fakelag###tpShowFakelag", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
+
+						ImGui::Checkbox("Thirdperson offsets", &Vars::Visuals::ThirdpersonOffset.m_Var); HelpMarker("These will mess you up if you use a small FoV");
+						WidthSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						WidthSlider("Thirdperson right", &Vars::Visuals::ThirdpersonRight.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						WidthSlider("Thirdperson up", &Vars::Visuals::ThirdpersonUp.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						ImGui::Checkbox("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.m_Var);
+						ImGui::Checkbox("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var);
+						InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
 						ImGui::Dummy(ImVec2(0, 20));
 
 

@@ -7,6 +7,8 @@ static LoadNamedSkysFn LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(
 	_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
 
+
+
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time)
 {
 	//I::DebugOverlay->ClearAllOverlays();
@@ -148,7 +150,7 @@ void CVisuals::FOV(CViewSetup* pView)
 	}
 }
 
-void CVisuals::ThirdPerson()
+void CVisuals::ThirdPerson(CViewSetup* pView)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
@@ -159,7 +161,7 @@ void CVisuals::ThirdPerson()
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
 
-				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && flElapsed > 0.2f)
+				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && !GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && flElapsed > 0.2f)
 				{
 					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
 					flPressedTime = g_Interfaces.Engine->Time();
@@ -188,6 +190,40 @@ void CVisuals::ThirdPerson()
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
+			}
+		}
+
+
+
+		if (bIsInThirdPerson && Vars::Visuals::ThirdpersonOffset.m_Var) {
+			
+			const Vec3 viewangles = g_Interfaces.Engine->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
+			Vec3 vForward, vRight, vUp;
+			Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
+			if (Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var) {
+				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_UP)) {
+					arrowUp += 1.5f;
+				}
+
+				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_DOWN)) {
+					arrowUp -= 1.5f;
+				}
+
+				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_RIGHT)) {
+					arrowRight += 1.5f;
+				}
+
+				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_LEFT)) {
+					arrowRight -= 1.5f;
+				}
+
+				pView->origin += vRight * arrowRight;
+				pView->origin += vUp * arrowUp;
+				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.m_Var;
+			} else {
+				pView->origin += vRight * Vars::Visuals::ThirdpersonRight.m_Var;
+				pView->origin += vUp * Vars::Visuals::ThirdpersonUp.m_Var;
+				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.m_Var;
 			}
 		}
 	}
@@ -388,4 +424,68 @@ void CVisuals::RestoreWorldModulation()
 	ApplySkyboxModulation({255, 255, 255, 255});
 	bWorldIsModulated = false;
 	bSkyIsModulated = false;
+}
+
+CClientClass* CVisuals::CPrecipitation::GetPrecipitationClass()
+{
+	static CClientClass* pReturn = nullptr;
+
+	if (!pReturn)
+	{
+		for (auto pClass = g_Interfaces.Client->GetAllClasses(); pClass; pClass = pClass->m_pNext)
+		{
+			if (pClass->m_ClassID == (int)ETFClassID::CPrecipitation) {
+				pReturn = pClass;
+				break;
+			}
+		}
+	}
+
+	return pReturn;
+}
+
+void CVisuals::CPrecipitation::Run()
+{
+	const auto PRECIPITATION_INDEX = (MAX_EDICTS - 1);
+
+	auto* pRainEntity = g_Interfaces.EntityList->GetClientEntity(PRECIPITATION_INDEX);
+
+	if (!pRainEntity) {
+		auto pClass = GetPrecipitationClass();
+
+		if (!pClass || !pClass->m_pCreateFn)
+			return;
+
+		RainNetworkable = reinterpret_cast<IClientNetworkable * (__cdecl*)(int, int)>(pClass->m_pCreateFn)(PRECIPITATION_INDEX, 0);
+
+		if (!RainNetworkable)
+			return;
+
+		RainEntity = g_Interfaces.EntityList->GetClientEntity(PRECIPITATION_INDEX);
+
+		if (!RainEntity)
+			return;
+
+		static auto dwOff = GetNetVar("CPrecipitation", "m_nPrecipType");
+		*reinterpret_cast<int*>(RainEntity + dwOff) = 0;
+
+		RainEntity->Networkable()->PreDataUpdate(DATA_UPDATE_CREATED);
+		RainEntity->Networkable()->OnPreDataChanged(DATA_UPDATE_CREATED);
+
+		RainEntity->m_vecMins() = Vec3(-32767.0f, -32767.0f, -32767.0f);
+		RainEntity->m_vecMaxs() = Vec3(32767.0f, 32767.0f, 32767.0f);
+
+		RainEntity->Networkable()->OnDataChanged(DataUpdateType_t::DATA_UPDATE_CREATED);
+		RainEntity->Networkable()->PostDataUpdate(DataUpdateType_t::DATA_UPDATE_CREATED);
+	}
+}
+
+void CVisuals::CPrecipitation::Cleanup()
+{
+	//if (RainEntity) {
+	//	RainEntity->Networkable()->Release();
+	//} // This doesn't seem to do anything anyway
+
+	RainEntity = nullptr;
+	RainNetworkable = nullptr;
 }

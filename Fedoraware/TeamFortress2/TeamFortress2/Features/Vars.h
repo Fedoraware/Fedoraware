@@ -429,6 +429,14 @@ namespace Vars
 		inline CVar<bool> ThirdPersonSilentAngles	{ true, L"Silent Angles" };
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
 		inline CVar<bool> ThirdPersonServerHitbox   { false, L"Server Hitboxes" };
+		inline CVar<bool> ThirdpersonOffset{ false, L"Thirdperson offsets" };
+		inline CVar<float> ThirdpersonDist{ 200.f, L"Thirdperson distance" };
+		inline CVar<float> ThirdpersonRight{ 0.f, L"Thirdperson distance" };
+		inline CVar<float> ThirdpersonUp{ 0.f, L"Thirdperson distance" };
+		inline CVar<bool> ThirdpersonOffsetWithArrows{ false, L"Offset thirdperson with arrows" };
+		inline CVar<int> ThirdpersonArrowOffsetKey{ VK_F, L"Which key to press to move the camera around" };
+		inline CVar<bool> ThirdpersonCrosshair{ false, L"Make thirdperson where player is aiming in thirdperson" };
+		
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> PropWireframe			{ false, L"Prop Wireframe" };
