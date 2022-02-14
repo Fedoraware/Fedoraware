@@ -41,30 +41,30 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	const float xrot = cos(deg - PI / 2);
 	const float yrot = sin(deg - PI / 2);
 
-	const float x1 = ((g_ScreenSize.w * 0.15) + 5.0f) * xrot;
-	const float y1 = ((g_ScreenSize.w * 0.15) + 5.0f) * yrot;
-	const float x2 = ((g_ScreenSize.w * 0.15) + 15.0f) * xrot;
-	const float y2 = ((g_ScreenSize.w * 0.15) + 15.0f) * yrot;
+	const float x1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 5.0f) * xrot;
+	const float y1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 5.0f) * yrot;
+	const float x2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 15.0f) * xrot;
+	const float y2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 15.0f) * yrot;
 
 	//constexpr float arrow_angle = DEG2RAD(60.0f);
-	float arrow_angle = DEG2RAD(Vars::Visuals::ArrowAngle.m_Var);
+	const float arrowAngle = DEG2RAD(Vars::Visuals::ArrowAngle.m_Var);
 	//constexpr float arrow_length = 20.0f;
-	float arrow_length = Vars::Visuals::ArrowLength.m_Var;
+	const float arrowLength = Vars::Visuals::ArrowLength.m_Var;
 
 	const Vec3 line{x2 - x1, y2 - y1, 0.0f};
 	const float length = line.Length();
 
-	const float fpoint_on_line = arrow_length / (atanf(arrow_angle) * length);
-	const Vec3 point_on_line = Vec3(x2, y2, 0) + (line * fpoint_on_line * -1.0f);
-	const Vec3 normal_vector{-line.y, line.x, 0.0f};
-	const Vec3 normal = Vec3(arrow_length, arrow_length, 0.0f) / (length * 2);
+	const float fpointOnLine = arrowLength / (atanf(arrowAngle) * length);
+	const Vec3 pointOnLine = Vec3(x2, y2, 0) + (line * fpointOnLine * -1.0f);
+	const Vec3 normalVector{-line.y, line.x, 0.0f};
+	const Vec3 normal = Vec3(arrowLength, arrowLength, 0.0f) / (length * 2);
 
-	const Vec3 rotation = normal * normal_vector;
-	const Vec3 left = point_on_line + rotation;
-	const Vec3 right = point_on_line - rotation;
+	const Vec3 rotation = normal * normalVector;
+	const Vec3 left = pointOnLine + rotation;
+	const Vec3 right = pointOnLine - rotation;
 
-	float cx = static_cast<float>(g_ScreenSize.w / 2);
-	float cy = static_cast<float>(g_ScreenSize.h / 2);
+	const auto cx = static_cast<float>(g_ScreenSize.w / 2);
+	const auto cy = static_cast<float>(g_ScreenSize.h / 2);
 
 	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
 	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var,
@@ -110,39 +110,44 @@ void CPlayerArrows::Run()
 				continue;
 
 			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
+			Vec3 vScreen;
 
-			/*if (!(vLocalPos.DistTo(vEnemyPos) > 400.0f))
-				continue;*/
+			if (!Utils::W2S(vEnemyPos, vScreen)) {
+				m_vecPlayers.push_back(vEnemyPos);
+			}
 
-			Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-			Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
-			viewangless.x = 0;
-			float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
+			///*if (!(vLocalPos.DistTo(vEnemyPos) > 400.0f))
+			//	continue;*/
 
-			/*
-			Vec3 vEntForward = {};
-			Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
-			Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
-			vToEnt.NormalizeInPlace();
+			//Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
+			//Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
+			//viewangless.x = 0;
+			//float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
 
-			if (vEntForward.Dot(vToEnt) < 0.5071f)
-				continue;*/
+			///*
+			//Vec3 vEntForward = {};
+			//Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
+			//Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
+			//vToEnt.NormalizeInPlace();
 
-			if (fFovToEnemy < Vars::Visuals::FieldOfView.m_Var)
-				continue;
+			//if (vEntForward.Dot(vToEnt) < 0.5071f)
+			//	continue;*/
 
-			/*if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
-			{
-				CGameTrace Trace = {};
-				CTraceFilterWorldAndPropsOnly Filter = {};
+			//if (fFovToEnemy < Vars::Visuals::FieldOfView.m_Var)
+			//	continue;
 
-				Utils::Trace(vEnemyPos, vLocalPos, MASK_SOLID, &Filter, &Trace);
+			///*if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
+			//{
+			//	CGameTrace Trace = {};
+			//	CTraceFilterWorldAndPropsOnly Filter = {};
 
-				if (Trace.flFraction < 1.0f)
-					continue;
-			}*/
+			//	Utils::Trace(vEnemyPos, vLocalPos, MASK_SOLID, &Filter, &Trace);
 
-			m_vecPlayers.push_back(vEnemyPos);
+			//	if (Trace.flFraction < 1.0f)
+			//		continue;
+			//}*/
+
+			/*m_vecPlayers.push_back(vEnemyPos);*/
 		}
 		if (m_vecPlayers.empty())
 			return;

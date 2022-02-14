@@ -9,7 +9,7 @@ void Ragdoll::Init()
 
 #define Offset(type, ent, offset) *reinterpret_cast<type>(ent + offset)
 
-void Bruh(CBaseEntity* pEntity)
+void ClearEffects(CBaseEntity* pEntity)
 {
 	Offset(bool*, pEntity, 0xC91) = false; // Gib
 	Offset(bool*, pEntity, 0xC92) = false; // Burning
@@ -37,7 +37,7 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 			}
 		}
 
-		Bruh(pEntity);
+		ClearEffects(pEntity);
 
 		if (Vars::Visuals::RagdollEffects::Burning.m_Var)
 		{
@@ -49,9 +49,15 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 			Offset(bool*, pEntity, 0xC93) = true;
 		}
 
-		if (Vars::Visuals::RagdollEffects::Dissolve.m_Var)
+		if (Vars::Visuals::RagdollEffects::BecomeAsh.m_Var)
 		{
 			Offset(bool*, pEntity, 0xC99) = true;
+		}
+
+		// Thanks jagne
+		if (Vars::Visuals::RagdollEffects::Dissolve.m_Var)
+		{
+			Offset(bool*, pEntity, 0xC95) = true;
 		}
 
 		if (Vars::Visuals::RagdollEffects::Gold.m_Var)

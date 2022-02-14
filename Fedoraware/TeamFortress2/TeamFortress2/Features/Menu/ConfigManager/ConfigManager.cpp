@@ -524,6 +524,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ArrowAngle);
 			SAVE_VAR(Vars::Visuals::MaxDist);
 			SAVE_VAR(Vars::Visuals::MinDist);
+			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
@@ -537,6 +538,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Burning);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
+				SAVE_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Dissolve);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
@@ -1134,6 +1136,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ArrowAngle);
 			LOAD_VAR(Vars::Visuals::MaxDist);
 			LOAD_VAR(Vars::Visuals::MinDist);
+			LOAD_VAR(Vars::Visuals::FovArrowsDist);
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
@@ -1144,6 +1147,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Burning);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
+				LOAD_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Dissolve);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Gold);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Ice);

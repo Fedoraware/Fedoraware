@@ -412,6 +412,7 @@ namespace Vars
 		inline CVar<bool> CrosshairAimPos	{ true, L"Crosshair At Aim Pos" };
 		inline CVar<bool> ChatInfo			{ true, L"Show Class Changes" };
 		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
+		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList { 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
 
 		inline CVar<bool> SpyWarning				{ true, L"Active" };
@@ -460,6 +461,7 @@ namespace Vars
 			inline CVar<bool> EnemyOnly{ false, L"Only on enemies" };
 			inline CVar<bool> Burning{ false, L"Burn ragdoll" };
 			inline CVar<bool> Electrocuted{ false, L"Electrocute ragdoll" };
+			inline CVar<bool> BecomeAsh{ false, L"Ash ragdoll" };
 			inline CVar<bool> Dissolve{ false, L"Dissolve ragdoll" };
 			inline CVar<bool> Gold{ false, L"Gold ragdoll" };
 			inline CVar<bool> Ice{ false, L"Ice ragdoll" };
