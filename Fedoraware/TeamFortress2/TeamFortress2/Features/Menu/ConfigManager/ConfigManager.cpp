@@ -550,6 +550,18 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
 			}
+
+			{
+				SAVE_VAR(Vars::Visuals::Fog::CustomFog);
+				SAVE_VAR(Vars::Visuals::Fog::FogDensity);
+				SAVE_VAR(Vars::Visuals::Fog::FogDensitySkybox);
+				SAVE_VAR(Vars::Visuals::Fog::FogStart);
+				SAVE_VAR(Vars::Visuals::Fog::FogStartSkybox);
+				SAVE_VAR(Vars::Visuals::Fog::FogEnd);
+				SAVE_VAR(Vars::Visuals::Fog::FogEndSkybox);
+				SAVE_OTHER(Vars::Visuals::Fog::FogColor);
+				SAVE_OTHER(Vars::Visuals::Fog::FogColorSkybox);
+			}
 		}
 
 		//Misc
@@ -1165,6 +1177,18 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Dissolve);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Gold);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Ice);
+			}
+
+			{
+				LOAD_VAR(Vars::Visuals::Fog::CustomFog);
+				LOAD_VAR(Vars::Visuals::Fog::FogDensity);
+				LOAD_VAR(Vars::Visuals::Fog::FogDensitySkybox);
+				LOAD_VAR(Vars::Visuals::Fog::FogStart);
+				LOAD_VAR(Vars::Visuals::Fog::FogStartSkybox);
+				LOAD_VAR(Vars::Visuals::Fog::FogEnd);
+				LOAD_VAR(Vars::Visuals::Fog::FogEndSkybox);
+				LOAD_OTHER(Vars::Visuals::Fog::FogColor);
+				LOAD_OTHER(Vars::Visuals::Fog::FogColorSkybox);
 			}
 			
 		}

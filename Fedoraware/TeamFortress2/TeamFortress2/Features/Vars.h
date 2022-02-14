@@ -464,6 +464,8 @@ namespace Vars
 
 		inline CVar<int> Vision{ false, L"vision modifier" };
 
+		inline CVar<int> Rain{ false, L"0 - none, 1 - \"rain\", 2 - \"snow\"" };
+
 		namespace RagdollEffects
 		{
 			inline CVar<bool> EnemyOnly{ false, L"Only on enemies" };
@@ -484,6 +486,19 @@ namespace Vars
 			inline CVar<bool> Acient				{ false, L"Ancient" };
 			inline CVar<bool> Override				{ false, L"Style Override" };
 			inline CVar<bool> Australium				{ false, L"Australium" };
+		}
+
+		namespace Fog
+		{
+			inline CVar<bool> CustomFog{ false, L"Fog" };
+			inline Color_t FogColor{ 255,255,255,255 };
+			inline Color_t FogColorSkybox{ 255,255,255,255 };
+			inline CVar<float> FogDensity{ 0, L"fog" };
+			inline CVar<float> FogDensitySkybox{ 0, L"fog" };
+			inline CVar<float> FogStart{ 0, L"fog" };
+			inline CVar<float> FogStartSkybox{ 0, L"fog" };
+			inline CVar<float> FogEnd{ 0, L"fog" };
+			inline CVar<float> FogEndSkybox{ 0, L"fog" };
 		}
 	}
 

@@ -237,7 +237,9 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		{
 			if (!g_GlobalInfo.unloadWndProcHook)
 			{
-				g_Visuals.rain.Run();
+				if (Vars::Visuals::Rain.m_Var > 0) {
+					g_Visuals.rain.Run();
+				}
 				g_Visuals.UpdateWorldModulation();
 				g_Visuals.UpdateSkyModulation();
 			}

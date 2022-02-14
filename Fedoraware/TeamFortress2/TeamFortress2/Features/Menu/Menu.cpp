@@ -149,7 +149,7 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 
 	if (ImGui::GetActiveID() == id) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonActive));
-		ImGui::Button("...", ImVec2(100, 17));
+		ImGui::Button("...", ImVec2(100, 20));
 		ImGui::PopStyleColor();
 
 		static float time = g_Interfaces.Engine->Time();
@@ -196,7 +196,7 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 		if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0]))
 			ImGui::ClearActiveID();
 	}
-	else if (ImGui::Button(VK2STR(output.m_Var), ImVec2(50, 20))) {
+	else if (ImGui::Button(VK2STR(output.m_Var), ImVec2(100, 20))) {
 		ImGui::SetActiveID(id, ImGui::GetCurrentWindow());
 	}
 
@@ -233,14 +233,17 @@ Color_t vColor(ImVec4 color) {
 	};
 }
 
-void ColorPicker(const char* label, Color_t& color) {
+bool ColorPicker(const char* label, Color_t& color) {
+	bool ret = false;
 	ImVec4 FUCKOFF = mColor(color);
 	ImGui::PushItemWidth(150);
 	if (ImGui::ColorEdit4(label, &FUCKOFF.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
 		color = vColor(FUCKOFF);
+		ret = true;
 	}
 	ImGui::PopItemWidth();
 	HelpMarker(label);
+	return ret;
 }
 
 Color_t* vpColor(ImVec4 color) {
@@ -1995,6 +1998,92 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushItemWidth(150); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f"); ImGui::PopItemWidth();
 						ImGui::Checkbox("Bypass sv_pure", &Vars::Misc::BypassPure.m_Var); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
 						ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
+						const char* weather[]{ "Off", "Rain", "Snow" };
+						ImGui::PushItemWidth(150);
+						ImGui::Combo("Precipitation", &Vars::Visuals::Rain.m_Var, weather, IM_ARRAYSIZE(weather), 3);
+						ImGui::PopItemWidth();
+						ImGui::Dummy(ImVec2(0, 20));
+
+
+						SectionTitle("Custom fog");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24) ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						if (ImGui::Checkbox("Custom fog", &Vars::Visuals::Fog::CustomFog.m_Var)) {
+							if (static auto fog_enable = g_Interfaces.CVars->FindVar("fog_enable"); fog_enable) {
+								fog_enable->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+							}
+							if (static auto fog_enableskybox = g_Interfaces.CVars->FindVar("fog_enableskybox"); fog_enableskybox) {
+								fog_enableskybox->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+							}
+							if (static auto fog_override = g_Interfaces.CVars->FindVar("fog_override"); fog_override) {
+								fog_override->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+							}
+						}
+						ImGui::PushItemWidth(150);
+						if (ImGui::SliderFloat("Fog density", &Vars::Visuals::Fog::FogDensity.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
+							if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensity"); fog_density) {
+								fog_density->SetValue(Vars::Visuals::Fog::FogDensity.m_Var);
+							}
+
+						}
+						ImGui::PopItemWidth();
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						if (ColorPicker("Fog colour", Vars::Visuals::Fog::FogColor)) {
+							if (static auto fog_color = g_Interfaces.CVars->FindVar("fog_color"); fog_color) {
+								fog_color->SetValue(std::string("").
+									append(std::to_string(Vars::Visuals::Fog::FogColor.r)).
+									append(" ").
+									append(std::to_string(Vars::Visuals::Fog::FogColor.g)).
+									append(" ").
+									append(std::to_string(Vars::Visuals::Fog::FogColor.b)).
+									append(" ").c_str());
+							}
+						}
+
+						ImGui::PushItemWidth(150);
+						if (ImGui::SliderFloat("Fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None)) {
+							if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_start"); fog_start) {
+								fog_start->SetValue(Vars::Visuals::Fog::FogStart.m_Var);
+							}
+						}
+						if (ImGui::SliderFloat("Fog end", &Vars::Visuals::Fog::FogEnd.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None)) {
+							if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_end"); fog_end) {
+								fog_end->SetValue(Vars::Visuals::Fog::FogEnd.m_Var);
+							}
+						}
+						if (ImGui::SliderFloat("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
+							if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensityskybox"); fog_density) {
+								fog_density->SetValue(Vars::Visuals::Fog::FogDensitySkybox.m_Var);
+							}
+						}
+						ImGui::PushItemWidth(150);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						if (ColorPicker("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox)) {
+							if (static auto fog_colorskybox = g_Interfaces.CVars->FindVar("fog_colorskybox"); fog_colorskybox) {
+								fog_colorskybox->SetValue(std::string("").
+									append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.r)).
+									append(" ").
+									append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.g)).
+									append(" ").
+									append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.b)).
+									append(" ").c_str());
+							}
+						}
+						ImGui::PushItemWidth(150);
+						if (ImGui::SliderFloat("Skybox fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None)) {
+							if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_startskybox"); fog_start) {
+								fog_start->SetValue(Vars::Visuals::Fog::FogStartSkybox.m_Var);
+							}
+						}
+						if (ImGui::SliderFloat("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None)) {
+							if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_endskybox"); fog_end) {
+								fog_end->SetValue(Vars::Visuals::Fog::FogEndSkybox.m_Var);
+							}
+						}
+						ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
 

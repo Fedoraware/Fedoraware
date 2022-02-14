@@ -467,7 +467,8 @@ void CVisuals::CPrecipitation::Run()
 			return;
 
 		static auto dwOff = GetNetVar("CPrecipitation", "m_nPrecipType");
-		*reinterpret_cast<int*>(RainEntity + dwOff) = 0;
+
+		*reinterpret_cast<int*>(RainEntity + dwOff) = Vars::Visuals::Rain.m_Var - 1;
 
 		RainEntity->Networkable()->PreDataUpdate(DATA_UPDATE_CREATED);
 		RainEntity->Networkable()->OnPreDataChanged(DATA_UPDATE_CREATED);
