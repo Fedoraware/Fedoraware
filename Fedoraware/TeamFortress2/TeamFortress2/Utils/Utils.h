@@ -27,6 +27,20 @@
 #undef min
 #undef max
 
+inline void Q_memcpy(void* dest, const void* src, int count)
+{
+    int             i;
+    if ((((long)dest | (long)src | count) & 3) == 0)
+    {
+        count >>= 2;
+        for (i = 0; i < count; i++)
+            ((int*)dest)[i] = ((int*)src)[i];
+    }
+    else
+        for (i = 0; i < count; i++)
+            ((char*)dest)[i] = ((char*)src)[i];
+}
+
 namespace Utils
 {
 	inline uintptr_t GetVFuncPtr(void* pBaseClass, unsigned int nIndex)

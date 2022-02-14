@@ -93,7 +93,8 @@ void CInterfaces::Init()
 		ViewRender = **reinterpret_cast<IViewRender***>(static_cast<DWORD>(pdwTable[27]) + 5);
 	_valid(ViewRender);
 
-	Input = **reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, _(L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC")) + 0x2);
+	Input =	**reinterpret_cast<IInput***>(
+		g_Pattern.Find(CLIENT, _(L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC")) + 0x2);
 	_valid(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
@@ -112,6 +113,9 @@ void CInterfaces::Init()
 
 	InputSystem = reinterpret_cast<IInputSystem*>(g_Interface.Get<IInputSystem*>(_(L"inputsystem.dll"), _("InputSystemVersion001")));
 	_valid(InputSystem);
+
+	EffectsClient = g_Interface.Get<CEffectsClient*>(CLIENT, _(IEFFECTS_INTERFACE_VERSION));
+	_valid(EffectsClient);
 }
 
 void CSteamInterfaces::Init()

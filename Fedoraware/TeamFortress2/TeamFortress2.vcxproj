@@ -419,6 +419,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\DebugOverlay\DebugOverlay.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineClient\EngineClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineTrace\EngineTrace.h" />

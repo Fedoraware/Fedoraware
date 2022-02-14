@@ -29,6 +29,7 @@
 #include "KeyValuesSystem/KeyValuesSystem.h"
 #include "UniformRandomStream/UniformRandomStream.h"
 #include "InputSystem/InputSystem.h"
+#include "EffectsClient/EffectsClient.h"
 
 class CClockDriftMgr
 {
@@ -93,6 +94,7 @@ public:
 	CPanel*                     Panel						= nullptr;
 	CSurface*                   Surface						= nullptr;
 	CClientEntityList*          EntityList					= nullptr;
+	IEffects*					EffectsClient				= nullptr;
 	CModelInfoClient*           ModelInfo					= nullptr;
 	CEngineTrace*               EngineTrace					= nullptr;
 	CPrediction*                Prediction					= nullptr;

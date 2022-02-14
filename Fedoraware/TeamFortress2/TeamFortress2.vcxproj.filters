@@ -637,6 +637,7 @@
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

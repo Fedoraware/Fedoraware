@@ -446,19 +446,7 @@ void bf_write::WriteBitLong(unsigned int data, int numbits, bool bSigned)
 		WriteUBitLong(data, numbits);
 }
 
-void Q_memcpy(void* dest, const void* src, int count)
-{
-	int             i;
-	if ((((long)dest | (long)src | count) & 3) == 0)
-	{
-		count >>= 2;
-		for (i = 0; i < count; i++)
-			((int*)dest)[i] = ((int*)src)[i];
-	}
-	else
-		for (i = 0; i < count; i++)
-			((char*)dest)[i] = ((char*)src)[i];
-}
+
 
 bool bf_write::WriteBits(const void* pInData, int nBits)
 {
