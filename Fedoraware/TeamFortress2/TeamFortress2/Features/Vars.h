@@ -62,7 +62,6 @@ namespace Vars
 			inline CVar<bool> EnemyOnly{ true, L"Enemy only" };
 			inline CVar<bool> IgnoreZ{ true, L"IgnoreZ" };
 			inline CVar<int> Material{ 1, L"Backtrack material" };
-			inline CVar<float> Alpha{ 1, L"Backtrack alpha" };
 			inline Color_t BacktrackColor { 255,255,255,255 };
 		}
 	}
@@ -275,7 +274,6 @@ namespace Vars
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
 			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 0.5f, L"Alpha" };
 			inline CVar<bool> GlowOverlay { false , L"Glow overlay" };
 		}
 
@@ -285,7 +283,6 @@ namespace Vars
 			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
 			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 0.5f, L"Alpha" };
 		}
 
 		namespace World
@@ -296,7 +293,6 @@ namespace Vars
 			inline CVar<int> Projectiles{ 2, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 0.5f, L"Alpha" };
 		}
 
 		namespace DME
@@ -304,14 +300,12 @@ namespace Vars
 			inline CVar<bool> Active{ true, L"Active" };
 
 			inline CVar<int> Hands{ 0, L"Hands" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
-			inline CVar<float> HandsAlpha{ 1.0f, L"Hands Alpha" };
 			inline CVar<bool> HandsGlowOverlay{ false, L"Hands Glow" };
 			inline CVar<int> HandsRimMultiplier { 10, L"Hands Rimlight Boost" };
 			inline CVar<bool> HandsRainbow{ false, L"Rainbow hands" };
 			inline CVar<bool> HandsOverlayRainbow{ false, L"Rainbow hands" };
 
 			inline CVar<int> Weapon{ 0, L"Weapon" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
-			inline CVar<float> WeaponAlpha{ 1.0f, L"Weapon Alpha" };
 			inline CVar<bool> WeaponGlowOverlay{ true, L"Weapon Glow" };
 			inline CVar<int> WeaponRimMultiplier{ 10, L"Weapon Rimlight Boost" };
 			inline CVar<bool> WeaponRainbow { false, L"Rainbow weapons" };
@@ -564,7 +558,6 @@ namespace Vars
 			{
 				inline CVar<bool> Enabled{ false, L"Fakelag chams" };
 				inline CVar<int> Material{ 1, L"Fakelag material" };
-				inline CVar<float> Alpha{ 1, L"Fakelag alpha" };
 				inline Color_t FakelagColor{ 255,255,255,255 };
 			}
 		}

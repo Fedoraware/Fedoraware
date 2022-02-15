@@ -182,8 +182,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 5:
 				{
 					lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
-					if (lastRealAngle > 180.f) { lastRealAngle = -180.f; }
-					if (lastRealAngle < -180.f) { lastRealAngle = 180.f; }
+					if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
+					if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
 					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
@@ -228,8 +228,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 5:
 				{
 					lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
-					if (lastFakeAngle > 180.f) { lastFakeAngle = -180.f; }
-					if (lastFakeAngle < -180.f) { lastFakeAngle = 180.f; }
+					if (lastFakeAngle > 180.f) { lastFakeAngle -= 360.f; }
+					if (lastFakeAngle < -180.f) { lastFakeAngle += 360.f; }
 					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}

@@ -221,10 +221,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-
-			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
-				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha.m_Var);
-
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
 
 			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
 					ModelRenderHook::DrawModelExecute::index)
@@ -302,8 +299,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			}
 
-			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
-				g_Interfaces.RenderView->SetBlend(1.0f);
+			g_Interfaces.RenderView->SetBlend(1.0f);
 
 			return true;
 		}
@@ -398,8 +394,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
-					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponAlpha.m_Var);
+				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
 						ModelRenderHook::DrawModelExecute::index) // base
@@ -502,8 +497,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}
 
-				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
-					g_Interfaces.RenderView->SetBlend(1.0f);
+				g_Interfaces.RenderView->SetBlend(1.0f);
 
 				return true;
 			}

@@ -1693,7 +1693,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						HelpMarker("Which material the chams will apply to the player");
 
 						ImGui::Checkbox("Ignore Z###BuildingChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw building chams through walls");
-						WidthSlider("Building chams alpha", &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how opaque the chams are");
 						ImGui::PopStyleVar();
 					}
 
@@ -1727,7 +1726,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("Fresnel base colour", Colors::FresnelBase);
 						ImGui::Checkbox("Player glow overlay", &Vars::Chams::Players::GlowOverlay.m_Var);
 						ImGui::Checkbox("Ignore Z###PlayerChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw chams through walls");
-						WidthSlider("Player chams alpha", &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how opaque the player chams are");
 						ImGui::Dummy(ImVec2(0, 20));
 
 						SectionTitle("DME Chams");
@@ -1757,7 +1755,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels arms/hands");
 
-						ImGui::PushItemWidth(100); ImGui::SliderFloat("Hand alpha", &Vars::Chams::DME::HandsAlpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("Controls how opaque the hands/arms should be");
 						ImGui::Checkbox("Hand glow overlay", &Vars::Chams::DME::HandsGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1778,7 +1775,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Combo("Weapon material", &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels weapon");
-						ImGui::PushItemWidth(100); ImGui::SliderFloat("Weapon alpha", &Vars::Chams::DME::WeaponAlpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("How opaque your viewmodel arms will appear");
 						ImGui::Checkbox("Weapon glow overlay", &Vars::Chams::DME::WeaponGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1799,7 +1795,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);
 						ImGui::Checkbox("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.m_Var); HelpMarker("Only draws the last tick (can save FPS)");
 						ImGui::Checkbox("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.m_Var); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
-						ImGui::PushItemWidth(100); ImGui::SliderFloat("Backtrack alpha", &Vars::Backtrack::BtChams::Alpha.m_Var, 0.0f, 1.0f, "%.2f"); ImGui::PopItemWidth(); HelpMarker("Controls how opaque the backtrack chams should be");
 						static const char* backtrackMaterial[]{
 							"Shaded",
 							"Shiny",
@@ -1846,7 +1841,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::World::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						}
 						ImGui::Checkbox("Ignore Z###worldignorez", &Vars::Chams::World::IgnoreZ.m_Var);
-						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::Chams::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						ImGui::PopStyleVar();
 					}
 

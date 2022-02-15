@@ -75,7 +75,7 @@ void DrawBT(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRen
 						pRenderContext->DepthRange(0.0f, 0.2f);
 				}
 
-				g_Interfaces.RenderView->SetBlend(Vars::Backtrack::BtChams::Alpha.m_Var);
+				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
 
 
@@ -178,6 +178,8 @@ void DrawFakeAngles(CBaseEntity* pEntity, const DrawModelState_t& pState, const 
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.g),
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.b));
 				}
+
+				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.a)); // this is so much better than having a seperate alpha slider lmao
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
 					ModelRenderHook::DrawModelExecute::index)

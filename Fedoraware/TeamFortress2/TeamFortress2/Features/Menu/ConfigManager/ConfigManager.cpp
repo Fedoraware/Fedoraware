@@ -171,7 +171,6 @@ void CConfigManager::Save(const wchar_t *name)
 					SAVE_VAR(Vars::Backtrack::BtChams::EnemyOnly);
 					SAVE_VAR(Vars::Backtrack::BtChams::IgnoreZ);
 					SAVE_VAR(Vars::Backtrack::BtChams::Material);
-					SAVE_VAR(Vars::Backtrack::BtChams::Alpha);
 					SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
 				}
 			}
@@ -362,7 +361,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Weapons);
 				SAVE_VAR(Vars::Chams::Players::Material);
 				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
-				SAVE_VAR(Vars::Chams::Players::Alpha);
 			}
 
 			//Buildings
@@ -371,7 +369,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Buildings::IgnoreTeammates);
 				SAVE_VAR(Vars::Chams::Buildings::Material);
 				SAVE_VAR(Vars::Chams::Buildings::IgnoreZ);
-				SAVE_VAR(Vars::Chams::Buildings::Alpha);
 			}
 
 			//World
@@ -382,7 +379,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::World::Projectiles);
 				SAVE_VAR(Vars::Chams::World::Material);
 				SAVE_VAR(Vars::Chams::World::IgnoreZ);
-				SAVE_VAR(Vars::Chams::World::Alpha);
 			}
 
 			//DME
@@ -391,9 +387,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::DME::Hands);
 
 				SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
-				SAVE_VAR(Vars::Chams::DME::HandsAlpha);
 				SAVE_VAR(Vars::Chams::DME::Weapon);
-				SAVE_VAR(Vars::Chams::DME::WeaponAlpha);
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				SAVE_VAR(Vars::Chams::DME::WeaponRimMultiplier);
 				SAVE_VAR(Vars::Chams::DME::HandsRimMultiplier);
@@ -533,6 +527,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::MinDist);
 			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
+			SAVE_VAR(Vars::Visuals::Rain);
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
@@ -807,7 +802,6 @@ void CConfigManager::Load(const wchar_t *name)
 					LOAD_VAR(Vars::Backtrack::BtChams::EnemyOnly);
 					LOAD_VAR(Vars::Backtrack::BtChams::IgnoreZ);
 					LOAD_VAR(Vars::Backtrack::BtChams::Material);
-					LOAD_VAR(Vars::Backtrack::BtChams::Alpha);
 					LOAD_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
 				}
 			}
@@ -996,7 +990,6 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Players::Weapons);
 				LOAD_VAR(Vars::Chams::Players::Material);
 				LOAD_VAR(Vars::Chams::Players::IgnoreZ);
-				LOAD_VAR(Vars::Chams::Players::Alpha);
 			}
 
 			//Buildings
@@ -1005,7 +998,6 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::Chams::Buildings::Material);
 				LOAD_VAR(Vars::Chams::Buildings::IgnoreZ);
-				LOAD_VAR(Vars::Chams::Buildings::Alpha);
 			}
 
 			//World
@@ -1016,17 +1008,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::World::Projectiles);
 				LOAD_VAR(Vars::Chams::World::Material);
 				LOAD_VAR(Vars::Chams::World::IgnoreZ);
-				LOAD_VAR(Vars::Chams::World::Alpha);
 			}
 
 			//DME
 			{
 				LOAD_VAR(Vars::Chams::DME::Active);
 				LOAD_VAR(Vars::Chams::DME::Hands);
-				LOAD_VAR(Vars::Chams::DME::HandsAlpha);
 				LOAD_VAR(Vars::Chams::DME::HandsGlowOverlay);
 				LOAD_VAR(Vars::Chams::DME::Weapon);
-				LOAD_VAR(Vars::Chams::DME::WeaponAlpha);
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				LOAD_VAR(Vars::Chams::DME::WeaponRimMultiplier);
 				LOAD_VAR(Vars::Chams::DME::HandsRimMultiplier);
@@ -1172,6 +1161,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::damageLogger);
 			LOAD_VAR(Vars::Glow::Main::Wireframe);
 			LOAD_VAR(Vars::Visuals::Vision);
+			LOAD_VAR(Vars::Visuals::Rain);
 
 			{
 				LOAD_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);

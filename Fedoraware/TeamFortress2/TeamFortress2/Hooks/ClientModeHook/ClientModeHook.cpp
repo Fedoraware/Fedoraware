@@ -372,6 +372,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 			else
 			{
+				g_FakeAng.Run(pCmd);
 				*pSendPacket = true;
 				g_GlobalInfo.m_bChoking = false;
 			}
