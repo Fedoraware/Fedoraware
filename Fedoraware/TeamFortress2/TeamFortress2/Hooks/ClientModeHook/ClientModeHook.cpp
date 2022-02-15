@@ -9,6 +9,7 @@
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Crits/Crits.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 
 
 #include "../../Features/Vars.h"
@@ -328,32 +329,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_Misc.AutoRocketJump(pCmd);
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
-	//
-	//g_GlobalInfo.predBeforeLines.clear();
-	//g_GlobalInfo.predFutureLines.clear();
-	//CMoveData balls; Vec3 cock;
-	//g_Interfaces.DebugOverlay->ClearAllOverlays();
-	//if (g_EntityCache.m_pLocal && g_EntityCache.m_pLocal->IsAlive()) {
-	//	if (g_MoveSim.Initialize(g_EntityCache.m_pLocal)) {
-	//		for (int i = 0; i < TIME_TO_TICKS(1.f); i++) {
-	//			if (!g_EntityCache.m_pLocal) {
-	//				break;
-	//			}
-
-
-	//			g_MoveSim.RunTick(balls, cock);
-	//		}
-	//		g_MoveSim.Restore();
-	//	}
-	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_EntityCache.m_pLocal->m_vecOrigin(), cock, 0, 255, 0, false, 1.f);
-	//}
-
-	//
-	//for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++) {
-	//	g_Interfaces.DebugOverlay->AddLineOverlay(g_GlobalInfo.predBeforeLines.at(i), g_GlobalInfo.predFutureLines.at(i), 255, 255, 255, false, 1.f);
-	//	
-	//}
-
 
 	// Fake lag
 	const auto& pLocal = g_EntityCache.m_pLocal;
@@ -387,12 +362,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					*pSendPacket = true;
 					g_GlobalInfo.m_bChoking = false;
 					chockedPackets = 0;
-
-					if (Vars::Misc::CL_Move::FakelagIndicator.m_Var && g_Interfaces.Input->CAM_IsThirdPerson())
-					{
-						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor,
-						                           TICKS_TO_TIME(chockValue + 1));
-					}
+					g_FakeAng.Run(pCmd);
 				}
 				else
 				{
@@ -407,15 +377,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 	}
-	else if (chockedPackets > 0)
+	else if (chockedPackets > 0)	// failsafe
 	{
 		*pSendPacket = true;
 		chockedPackets = 0;
 		g_GlobalInfo.m_bChoking = false;
-	} // actual failsafe, fakelag disables for whatever reason, and instantly this kicks in
+	}
 	else { g_GlobalInfo.m_bChoking = false; }
-	//	we also leave it all the way out here so that we have the same likelihood of hitting it as the old (bad) failsafe
-	//	ngl had this as just an if for like a solid 5 minutes before thinking about it a bit better
 
 	// I put all my jewellery just to go to the bodega
 

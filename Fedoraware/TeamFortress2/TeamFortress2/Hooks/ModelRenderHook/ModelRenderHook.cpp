@@ -4,6 +4,7 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 
 void DrawBT(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo,
             matrix3x4* pBoneToWorld) {
@@ -120,6 +121,81 @@ void DrawBT(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRen
 	}
 }
 
+void DrawFakeAngles(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo) {
+	if (Vars::Misc::CL_Move::Fakelag.m_Var && Vars::Misc::CL_Move::FakelagIndicator.m_Var && g_GlobalInfo.m_bChoking) {
+		if (pEntity && pEntity == g_EntityCache.m_pLocal) {
+			if (!g_Glow.m_bRendering && !g_Chams.m_bRendering) {
+				bool bMatWasForced = false;
+
+				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial* {
+					switch (Vars::Misc::CL_Move::FLGChams::Material.m_Var) {
+					case 0:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatShaded;
+					}
+					case 1:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatShiny;
+					}
+					case 2:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatFlat;
+					}
+					case 3:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatWFShaded;
+					}
+					case 4:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatWFShiny;
+					}
+					case 5:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatWFFlat;
+					}
+					case 6:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatScuffed;
+					}
+					case 7:
+					{
+						bMatWasForced = true;
+						return g_DMEChams.m_pMatBrick;
+					}
+					default: return nullptr;
+					}
+					}());
+				if (bMatWasForced) {
+					g_Interfaces.RenderView->SetColorModulation(
+						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.r),
+						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.g),
+						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.b));
+				}
+
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+					ModelRenderHook::DrawModelExecute::index)
+					(g_Interfaces.ModelRender, pState, pInfo, reinterpret_cast<matrix3x4*>(&g_FakeAng.BoneMatrix));
+
+				bMatWasForced = true;
+
+				if (bMatWasForced) {
+					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
+					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				}
+
+				g_Interfaces.RenderView->SetBlend(1.0f);
+			}
+		}
+	}
+}
+
 void DrawOverlay(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo,
 	matrix3x4* pBoneToWorld) {
 	if (!Vars::Chams::Players::GlowOverlay.m_Var) return;
@@ -210,6 +286,7 @@ void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& p
 	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(pEntity, pState, pInfo, pBoneToWorld);
+	DrawFakeAngles(pEntity, pState, pInfo);
 
 	//DrawOverlay(pEntity, pState, pInfo, pBoneToWorld); ////Didn't work
 

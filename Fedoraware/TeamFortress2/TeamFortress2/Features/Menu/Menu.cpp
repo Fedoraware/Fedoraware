@@ -1814,6 +1814,18 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Combo("Backtrack material", &Vars::Backtrack::BtChams::Material.m_Var, backtrackMaterial, IM_ARRAYSIZE(backtrackMaterial));
 						ImGui::PopItemWidth();
 						ImGui::Checkbox("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.m_Var); HelpMarker("Draws them through walls");
+
+						ImGui::Dummy(ImVec2(0, 20));
+						SectionTitle("Fakelag chams");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						ImGui::Checkbox("Fakelag chams", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Draws chams to show your fakelag position");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Fakelag colour", Vars::Misc::CL_Move::FLGChams::FakelagColor);
+						ImGui::PushItemWidth(100);
+						ImGui::Combo("Fakelag material", &Vars::Misc::CL_Move::FLGChams::Material.m_Var, backtrackMaterial, IM_ARRAYSIZE(backtrackMaterial));
 						ImGui::PopStyleVar();
 					}
 
@@ -2096,7 +2108,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your real angles on thirdperson (not what others see)");
 						ImGui::Checkbox("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
 						ImGui::Checkbox("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.m_Var); HelpMarker("Will show the server angles in thirdperson");
-						ImGui::Checkbox("Show fakelag###tpShowFakelag", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
 
 						ImGui::Checkbox("Thirdperson offsets", &Vars::Visuals::ThirdpersonOffset.m_Var); HelpMarker("These will mess you up if you use a small FoV");
 						WidthSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);

@@ -143,7 +143,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		case 5:
 			{
 				pCmd->viewangles.x = Utils::RandFloatRange(-89.0f, 89.0f);
-				g_GlobalInfo.m_vRealViewAngles.x = Utils::RandFloatRange(-89.0f, 89.0f);
+				g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
 				break;
 			}
 		default:
@@ -152,7 +152,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				break;
 			}
 		}
-		g_GlobalInfo.m_vFakeViewAngles.x = pCmd->viewangles.x;
 
 		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 6 || Vars::AntiHack::AntiAim::YawFake.m_Var == 6) {
 			FindEdge(pCmd->viewangles.y);
@@ -247,7 +246,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			}
 
-			g_GlobalInfo.m_vFakeViewAngles.y = pCmd->viewangles.y;
+			g_GlobalInfo.m_vFakeViewAngles = pCmd->viewangles;
 		}
 
 		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }

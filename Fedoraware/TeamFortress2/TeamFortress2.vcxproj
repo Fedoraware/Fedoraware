@@ -132,6 +132,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoShoot\AutoShoot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
+    <ClInclude Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />

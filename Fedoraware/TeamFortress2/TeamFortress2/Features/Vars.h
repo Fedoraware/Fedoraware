@@ -560,6 +560,13 @@ namespace Vars
 			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" }; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
 			inline CVar<int> FakelagValue   { 1, L"Fakelag value" }; // dont show when fakelagmode=2
+			namespace FLGChams
+			{
+				inline CVar<bool> Enabled{ false, L"Fakelag chams" };
+				inline CVar<int> Material{ 1, L"Fakelag material" };
+				inline CVar<float> Alpha{ 1, L"Fakelag alpha" };
+				inline Color_t FakelagColor{ 255,255,255,255 };
+			}
 		}
 		
 		namespace Discord
