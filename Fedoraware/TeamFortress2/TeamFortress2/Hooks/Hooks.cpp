@@ -73,6 +73,7 @@ void CHooks::Init()
 		GameMovement::Duck::Init();
 		Ragdoll::Init();
 		//GetIconHook::Init();
+		ClientModeHook::SetAbsVelocity::Init();
 	}
 
 	if (g_Interfaces.Client)

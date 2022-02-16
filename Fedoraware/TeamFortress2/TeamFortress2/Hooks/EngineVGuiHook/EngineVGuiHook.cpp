@@ -66,7 +66,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				//Proj aim line
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
-				// Fuck you.
+				
 				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
 					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
@@ -89,7 +89,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						if (Vars::Visuals::AimPosSquare.m_Var)
 						{
 							Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
-							if (Utils::W2S(g_GlobalInfo.jagnepredshit, vProjAimStart) && Utils::W2S(
+							if (Utils::W2S(g_GlobalInfo.linearPredLine, vProjAimStart) && Utils::W2S(
 								g_GlobalInfo.m_vPredictedPos, vProjAimEnd))
 							{
 								g_Draw.Line(
@@ -253,9 +253,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpectatorList.Run();
 			g_Radar.Run();
 			g_Crits.Frame();
-			//g_Menu.Run();
-			// for damage logger. 
-// you can use it for more, i'm sure. - myzarfin
+			
+			// you can use it for more, i'm sure. - myzarfin
 			g_notify.Think();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)

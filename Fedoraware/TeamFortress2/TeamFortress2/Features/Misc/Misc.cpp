@@ -56,8 +56,7 @@ void CMisc::InstantRespawnMVM() {
 		kv->SetInt("accepted", 1);
 		g_Interfaces.Engine->ServerCmdKeyValues(kv);
 	}
-}
-*/ // FUCKING BROKEN PASXTE LATER
+}*/
 
 void CMisc::CheatsBypass()
 {

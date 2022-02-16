@@ -41,7 +41,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	if (g_GlobalInfo.m_bRechargeQueued && !g_GlobalInfo.m_bChoking)
 	{
-		// probably perfect method of waiting to ensure we don't fuck with fakelag
+		// probably perfect method of waiting to ensure we don't mess with fakelag
 		g_GlobalInfo.m_bRechargeQueued = false; // see relevant code @clientmodehook
 		g_GlobalInfo.m_bRecharging = true;
 	}
@@ -165,4 +165,4 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 		return FLT_MAX;
 
 	return originalFn(ecx, edx);
-} // this shit fucking works
+} 

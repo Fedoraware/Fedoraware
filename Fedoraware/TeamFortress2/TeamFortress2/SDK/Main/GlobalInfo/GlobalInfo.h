@@ -9,6 +9,12 @@ struct ResolveMode {
 	int m_Yaw = 0;
 };
 
+struct VelFixRecord {
+	Vec3 m_vecOrigin;
+	int m_nFlags;
+	float m_flSimulationTime;
+};
+
 struct GlobalInfo_t
 {
 	int m_nCurrentTargetIdx				= 0;
@@ -47,11 +53,12 @@ struct GlobalInfo_t
 	Vec3 m_vRealViewAngles				= {};
 	Vec3 m_vFakeViewAngles				= {};
 	Vec3 m_vPunchAngles					= {};
-	Vec3 jagnepredshit = {}; //clubpenguin > tf2
+	Vec3 linearPredLine = {}; //clubpenguin > tf2
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
 	std::map<int, ResolveMode> resolvePlayers;
+	std::map < CBaseEntity*, VelFixRecord> velFixRecord;
 	std::vector<Vec3> predBeforeLines;
 	std::vector<Vec3> predFutureLines;
 };

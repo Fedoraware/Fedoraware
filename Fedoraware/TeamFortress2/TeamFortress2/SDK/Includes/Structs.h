@@ -3,7 +3,7 @@
 #include "Const.h"
 
 struct Rect_t { int x, y, w, h; };
-struct model_t;
+typedef unsigned long model_t;
 class IClientRenderable;
 typedef unsigned short ModelInstanceHandle_t;
 struct StudioData_t;

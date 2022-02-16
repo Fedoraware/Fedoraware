@@ -21,6 +21,11 @@
 #include "SDK/Discord/include/discord_rpc.h"
 #include "Features/Discord/Discord.h"
 
+void Sleep(int ms)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
 int StringToWString(std::wstring& ws, const std::string& s)
 {
 	std::wstring wsTmp(s.begin(), s.end());
@@ -37,17 +42,33 @@ inline void SetupDiscord()
 	Discord_Initialize("889495873183154226", &handlers, 0, "");
 }
 
-
-//Christ this shit is awful
-DWORD WINAPI MainThread(LPVOID lpParam)
+void InitRichPresence()
 {
-	//"mss32.dll" being one of the last modules to be loaded
-	//So wait for that before proceeding, after it's up everything else should be too
-	//Allows us to correctly use autoinject and just start the game.
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll"))) {
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-	}
+	SetupDiscord();
+	Discord_ClearPresence();
+}
 
+void ShutdownRichPresence()
+{
+	Discord_ClearPresence();
+	Discord_Shutdown();
+}
+
+void UpdateRichPresence()
+{
+	g_DiscordRPC.vFunc();
+	g_Misc.SteamRPC();
+}
+
+void Loaded()
+{
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
+	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
+
+}
+
+void Initialize()
+{
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
 	g_NetVars.Init();
@@ -56,6 +77,34 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_DMEChams.Init();
 	g_Hooks.Init();
 	g_ConVars.Init();
+
+	InitRichPresence();
+}
+
+void Uninitialize()
+{
+	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
+	g_GlobalInfo.unloadWndProcHook = true;
+	g_Menu.m_bOpen = false;
+	g_Menu.menuOpen = false;
+	Vars::Visuals::SkyboxChanger.m_Var = false;
+	Vars::Visuals::ThirdPerson.m_Var = false;
+
+	Sleep(100);
+
+	g_Events.Destroy();
+	g_Hooks.Release();
+
+	ShutdownRichPresence();
+
+	Sleep(100);
+
+	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
+}
+
+void LoadDefaultConfig()
+{
 	std::wstring defaultConfig = L"default";
 	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
 
@@ -72,73 +121,32 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
-	});
+		});
 	g_Menu.config = true;
-	//g_Draw.InitFonts
-	//({
-		//FONT_ESP
-		//{ 0x0, _("Tahoma"), 12, 800, FONTFLAG_ANTIALIAS },
-		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_NONE },
-		//FONT_ESP_OUTLINED
-		//{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
-		//{ 0x0, _(Vars::Fonts::ESP_FONT), 12, 0, FONTFLAG_OUTLINE },
+}
 
-		//FONT_ESP_NAME
-		//{ 0x0, _("Tahoma"), 14, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_NAME_OUTLINED
-		//{ 0x0, _("Verdana"), 14, 0, FONTFLAG_OUTLINE },
-
-		//FONT_ESP_COND
-		//{ 0x0, _("Tahoma"), 10, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_COND_OUTLINED
-		//{ 0x0, _("Verdana"), 10, 0, FONTFLAG_OUTLINE },
-
-		//FONT_ESP_PICKUPS
-		//{ 0x0, _("Tahoma"), 13, 800, FONTFLAG_ANTIALIAS },
-		//FONT_ESP_PICKUPS_OUTLINED
-		//{ 0x0, _("Verdana"), 13, 0, FONTFLAG_OUTLINE },
-
-		//FONT_MENU
-		//{ 0x0, _("DejaVu Sans"), 16, 200, FONTFLAG_ANTIALIAS},
-
-		////FONT_DEBUG
-		//{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE },
-
-		////FONT_INDICATORS
-		//{ 0x0, _("Tahoma"), 13, 0, FONTFLAG_OUTLINE }
-		//});
-
-	SetupDiscord();
-	Discord_ClearPresence();
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started", "teamplay_round_start"});
-	// all events @ https://github.com/tf2cheater2013/gameevents.txt
-
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
-	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
-	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-		g_DiscordRPC.vFunc();
-		g_Misc.SteamRPC();
+DWORD WINAPI MainThread(LPVOID lpParam)
+{
+	//"mss32.dll" being one of the last modules to be loaded
+	//So wait for that before proceeding, after it's up everything else should be too
+	//Allows us to correctly use autoinject and just start the game.
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll"))) {
+		Sleep(5000);
 	}
 
-	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
-	g_GlobalInfo.unloadWndProcHook = true;
-	g_Menu.m_bOpen = false;
-	g_Menu.menuOpen = false;
-	Vars::Visuals::SkyboxChanger.m_Var = false;
-	Vars::Visuals::ThirdPerson.m_Var = false;
+	Initialize();
+	LoadDefaultConfig();
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	
-	g_Events.Destroy();
-	g_Hooks.Release();
-	Discord_ClearPresence();
-	Discord_Shutdown();
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started", "teamplay_round_start"}); // all events @ https://github.com/tf2cheater2013/gameevents.txt
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	Loaded();
 
-	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
+	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
+		Sleep(1000);
+		UpdateRichPresence();
+	}
+
+	Uninitialize();
 
 	WinAPI::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 	return EXIT_SUCCESS;
@@ -148,11 +156,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{	
-
-#ifdef DEBUG
-		WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0);
-#endif
-
 		Utils::RemovePEH(hinstDLL);
 		if (auto hMainThread = WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0))
 			WinAPI::CloseHandle(hMainThread);

@@ -72,7 +72,6 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
 	g_Visuals.ThirdPerson(pView);
-	/*g_Visuals.OverrideWorldTextures();*/ // Idiot
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
@@ -190,8 +189,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	FastStop(pCmd, g_EntityCache.m_pLocal);
 
-	g_Crits.Tick(pCmd);
-
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
@@ -208,14 +205,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		//// What an utterly retarded piece of code
-		//int classNum = pLocal->GetClassNum();
-		//if (classNum == ETFClass::CLASS_HEAVY) {
-		// g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS_HEAVY;
-		//}
-		//else {
-		//	g_GlobalInfo.dtTicks = MAX_NEW_COMMANDS;
-		//}
+		if (GetAsyncKeyState(VK_H) & 1) {
+			for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+				Player->PostDataUpdate(0);
+			}
+		}
+
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
@@ -317,6 +312,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	g_Misc.Run(pCmd);
 	
+	g_Crits.Tick(pCmd);
+
 	g_EnginePrediction.Start(pCmd);
 	{
 		g_Aimbot.Run(pCmd);
@@ -386,21 +383,15 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 	else { g_GlobalInfo.m_bChoking = false; }
 
-	// I put all my jewellery just to go to the bodega
-
 	//	TODO: make this p
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
 		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted)
 		{
-			cmd->sidemove = -(cmd->sidemove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
-			cmd->forwardmove = -(cmd->forwardmove) * (g_GlobalInfo.m_nShifted / Vars::Misc::CL_Move::DTTicks.m_Var);
-		}
-		else
-		{
+			cmd->sidemove = (- (cmd->sidemove) * (static_cast<float>(g_GlobalInfo.m_nShifted) / Vars::Misc::CL_Move::DTTicks.m_Var)) * 0.95f;
+			cmd->forwardmove = (-(cmd->forwardmove) * (static_cast<float>(g_GlobalInfo.m_nShifted) / Vars::Misc::CL_Move::DTTicks.m_Var)) * 0.95f;
 		}
 	};
-
 
 	if (!Vars::Misc::CL_Move::AntiWarp.m_Var)
 	{
@@ -480,7 +471,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	       || g_GlobalInfo.m_bHitscanSilentActive
 	       || g_GlobalInfo.m_bProjectileSilentActive
 	       || g_GlobalInfo.m_bRollExploiting
-		       //|| ShouldNoPush()
 		       ? false
 		       : OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
 }
@@ -503,4 +493,60 @@ void ClientModeHook::InputCreateMove::Init()
 {
 	auto FN = reinterpret_cast<fn>(Utils::GetVFuncPtr(g_Interfaces.Input, 3));
 	Func.Hook(FN, Hook);
+}
+
+#include <map>
+#include <intrin.h>
+void __fastcall ClientModeHook::SetAbsVelocity::Hook(void* ecx, void* edx, const Vector& vecAbsVelocity)
+{
+	static DWORD dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 8D 47 ? 39 05") - 0x3;
+
+	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall) {
+		if (auto pBasePlayer = static_cast<CBaseEntity*>(ecx)) {
+			if (g_GlobalInfo.velFixRecord.find(pBasePlayer) != g_GlobalInfo.velFixRecord.end()) {
+				const auto& Record = g_GlobalInfo.velFixRecord[pBasePlayer];
+
+				float flSimTimeDelta = pBasePlayer->GetSimulationTime() - Record.m_flSimulationTime;
+
+				if (flSimTimeDelta > 0.0f) {
+					Vec3 vOldOrigin = Record.m_vecOrigin;
+
+					int nCurFlags = pBasePlayer->m_fFlags();
+					int nOldFlags = Record.m_nFlags;
+
+					if (!(nCurFlags & FL_ONGROUND) && !(nOldFlags & FL_ONGROUND))
+					{
+						bool bCorrected = false;
+
+						if ((nCurFlags & FL_DUCKING) && !(nOldFlags & FL_DUCKING)) {
+							vOldOrigin.z += 20.0f;
+							bCorrected = true;
+						}
+
+						if (!(nCurFlags & FL_DUCKING) && (nOldFlags & FL_DUCKING)) {
+							vOldOrigin.z -= 20.0f;
+							bCorrected = true;
+						}
+
+						if (bCorrected)
+						{
+							Vec3 vNewVelocity = vecAbsVelocity;
+							vNewVelocity.z = (pBasePlayer->m_vecOrigin().z - vOldOrigin.z) / flSimTimeDelta;
+							Func.Original<fn>()(ecx, edx, vNewVelocity);
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	Func.Original<fn>()(ecx, edx, vecAbsVelocity);
+}
+
+void ClientModeHook::SetAbsVelocity::Init()
+{
+	static DWORD dwLocation = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 F3 0F"));
+	//static DWORD dwFN = ((*(PDWORD)(dwLocation)) + dwLocation + 4);
+	Func.Hook(reinterpret_cast<void*>(dwLocation), Hook);
 }

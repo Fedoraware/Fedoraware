@@ -5,7 +5,7 @@
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
-	g_GlobalInfo.jagnepredshit = m_vPosition;
+	g_GlobalInfo.linearPredLine = m_vPosition;
 
 	Vec3 vecOut = {};
 

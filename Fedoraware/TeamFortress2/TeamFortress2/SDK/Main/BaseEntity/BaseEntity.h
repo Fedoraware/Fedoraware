@@ -559,6 +559,13 @@ public: //Everything else, lol.
 		func(this, vOrigin);
 	}
 
+	__inline void PostDataUpdate(int updateType) {
+		typedef void(__thiscall* FN)(CBaseEntity*, int);
+		static DWORD dwFn = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB");
+		FN func = (FN)dwFn;
+		func(this, updateType);
+	}
+
 	__inline void SetAbsAngles(const Vec3& vAngles) {
 		Vec3* pAbsAngles = const_cast<Vec3*>(&this->GetAbsAngles());
 		*pAbsAngles = vAngles;

@@ -22,11 +22,11 @@ void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& 
 		else if (pLocal->IsAlive())
 		{
 			if (g_GlobalInfo.vEyeAngDelay < 25) { eyeAngles = g_GlobalInfo.m_vEyeAngDelayed; }
-			// looks fucking hot ty senator for the idea
+			// looks hot ty senator for the idea
 			else { eyeAngles = g_Interfaces.Engine->GetViewAngles(); }
 		}
 	}
-	//VM Offset Shit
+	//VM Offsets
 
 	Vec3 vForward = {}, vRight = {}, vUp = {};
 	Math::AngleVectors(eyeAngles, &vForward, &vRight, &vUp);

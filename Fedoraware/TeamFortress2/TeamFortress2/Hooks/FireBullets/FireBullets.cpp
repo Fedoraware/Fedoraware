@@ -24,7 +24,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 		//g_Interfaces.EngineTrace->TraceRay(Ray, (MASK_SOLID | CONTENTS_HITBOX), NULL, &trace);
 		int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
 		pWeapon->GetAttachment(iAttachment, trace.vStartPos);
-		//This shit was gay, I'm sorry
+		
 		if (Vars::Visuals::BulletTracer.m_Var)
 		{
 			Color_t Color = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;

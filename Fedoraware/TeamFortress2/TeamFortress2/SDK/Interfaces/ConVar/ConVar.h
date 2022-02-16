@@ -1,8 +1,5 @@
 #pragma once
 #include "../../Includes/Includes.h"
-// NOTE TO SELF
-// DO NOT FUCKING INCLUDE "VARS.H" YOU FUCKING DONKEY
-
 //big mess
 
 //-----------------------------------------------------------------------------

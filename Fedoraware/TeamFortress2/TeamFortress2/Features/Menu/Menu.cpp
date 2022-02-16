@@ -235,10 +235,10 @@ Color_t vColor(ImVec4 color) {
 
 bool ColorPicker(const char* label, Color_t& color) {
 	bool ret = false;
-	ImVec4 FUCKOFF = mColor(color);
+	ImVec4 tempColor = mColor(color);
 	ImGui::PushItemWidth(150);
-	if (ImGui::ColorEdit4(label, &FUCKOFF.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
-		color = vColor(FUCKOFF);
+	if (ImGui::ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
+		color = vColor(tempColor);
 		ret = true;
 	}
 	ImGui::PopItemWidth();

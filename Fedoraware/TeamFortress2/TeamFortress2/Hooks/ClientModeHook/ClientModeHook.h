@@ -41,4 +41,12 @@ namespace ClientModeHook
 		using fn = bool(__thiscall*)(CClientModeShared*, const CViewSetup*);
 		bool __stdcall Hook(const CViewSetup* pSetup);
 	}
+
+	namespace SetAbsVelocity
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__fastcall*)(void*, void*, const Vec3&);
+		void Init();
+		void __fastcall Hook(void* ecx, void* edx, const Vector& vecAbsVelocity);
+	}
 }

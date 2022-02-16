@@ -230,6 +230,13 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				}
 			}
 
+			for (int i =0;i < g_Interfaces.Engine->GetMaxClients(); i++) {
+				if (const auto& Player = g_Interfaces.EntityList->GetClientEntity(i)) {
+					VelFixRecord record = { Player->m_vecOrigin(), Player->m_fFlags(), Player->GetSimulationTime() };
+					g_GlobalInfo.velFixRecord[Player] = record;
+				}
+			}
+
 			break;
 		}
 

@@ -10,6 +10,9 @@ void CNetVars::Init()
 	{
 		const auto class_info = std::make_shared<node>(0);
 		RecvTable* recv_table = reinterpret_cast<RecvTable*>(client_class->m_pRecvTable);
+		if (!class_info || !recv_table) {
+			continue;
+		}
 		populate_nodes(recv_table, &class_info->nodes);
 		nodes.emplace(recv_table->GetName(), class_info);
 
