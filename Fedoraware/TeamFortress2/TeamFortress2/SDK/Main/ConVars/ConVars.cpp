@@ -25,7 +25,13 @@ void CConVars::Init()
 		cmdBase->m_nFlags &= ~( FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY );
 
 		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase)) {
+			if (convar->GetName() == "name") {
+				convar->m_fnChangeCallback = 0;
+				convar->InternalSetValue(0);
+				convar->m_fnChangeCallback = 0;
+			}
 			cvarMap[FNV1A::HashConst(convar->GetName())] = convar;
+
 		}
 
 		cmdBase = cmdBase->m_pNext;

@@ -221,6 +221,33 @@ void CHooks::Init()
 			fn CLFireEvents = reinterpret_cast<fn>(dwEstimate);
 			Func.Hook(CLFireEvents, Hook);
 		}
+
+		//Q_stricmp
+		{
+			using namespace Q_stricmp;
+
+			DWORD dwQ_stricmp = g_Pattern.Find(L"engine.dll", L"E8 ? ? ? ? 83 C4 08 33 D2") + 0x1;
+			DWORD dwFunc = *(PDWORD)dwQ_stricmp + dwQ_stricmp + 4;
+			fn Qstricmp = reinterpret_cast<fn>(dwFunc);
+			//Func.Hook(Qstricmp, Hook);
+		}
+
+		//UpdateNameFromSteamID
+		{
+			using namespace UpdateNameFromSteamID;
+
+			DWORD dwUpdateNameFromSteamID = g_Pattern.Find(L"engine.dll", L"E8 ? ? ? ? 83 C4 08 8B 45 FC") + 0x1;
+			DWORD dwFunc = *(PDWORD)dwUpdateNameFromSteamID + dwUpdateNameFromSteamID + 4;
+			Func.Hook((fn)dwFunc, Hook);
+		}
+
+		//CL_NameCvarChanged
+		{
+			using namespace CL_NameCvarChanged;
+
+			fn dwA = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 30 8D 4D F8"));
+			Func.Hook(dwA, Hook);
+		}
 	}
 
 	//EndSceneHook::Init();

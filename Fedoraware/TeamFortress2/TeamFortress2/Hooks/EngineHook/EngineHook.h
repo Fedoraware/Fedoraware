@@ -27,4 +27,26 @@ namespace EngineHook
 		using fn = float(__fastcall*)(void*, void*);
 		float __fastcall Hook(void* ecx, void* edx);
 	}
+
+	namespace Q_stricmp
+	{
+		inline SEOHook::Func Func;
+		using fn = int(__cdecl*)(const char*, const char*);
+		int __cdecl Hook(const char* str1, const char* str2);
+	}
+
+
+	namespace UpdateNameFromSteamID
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__cdecl*)(IConVar*, CSteamID*);
+		void __cdecl Hook(IConVar* pConvar, CSteamID* pSteamID);
+	}
+
+	namespace CL_NameCvarChanged
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__cdecl*)(IConVar*);
+		void __cdecl Hook(IConVar* pConvar);
+	}
 }

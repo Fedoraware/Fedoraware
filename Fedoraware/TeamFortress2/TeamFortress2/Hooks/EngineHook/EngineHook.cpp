@@ -166,3 +166,40 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 
 	return originalFn(ecx, edx);
 } 
+
+int __cdecl EngineHook::Q_stricmp::Hook(const char* str1, const char* str2)
+{
+	static auto originalFn = Func.Original<fn>();
+
+	static std::map<void*, bool> calls = {};
+
+	if (str2 == "name") {
+		auto retaddress = _ReturnAddress();
+		if (calls.find(retaddress) == calls.end()) {
+			calls[retaddress] = true;
+			printf("%p\n", retaddress);
+		}
+	}
+
+	return Func.Original<fn>()(str1, str2);
+}
+
+void __cdecl EngineHook::UpdateNameFromSteamID::Hook(IConVar* pConvar, CSteamID* pSteamID)
+{
+	//static bool setOnce = false;
+	if (pConvar && pSteamID) {
+		//if (!setOnce) {
+		//	Func.Original<fn>()(pConvar, pSteamID);
+		//	setOnce = true;
+		//}
+	}
+}
+
+
+void __cdecl EngineHook::CL_NameCvarChanged::Hook(IConVar* pConvar)
+{
+	Func.Original<fn>()(pConvar);
+	if (auto name = g_Interfaces.CVars->FindVar("name")) {
+		g_Interfaces.CVars->ConsolePrintf("[FeD] Name set to: %s\n", name->GetString());
+	}
+}
