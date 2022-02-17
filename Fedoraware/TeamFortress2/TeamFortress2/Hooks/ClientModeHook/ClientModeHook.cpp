@@ -205,12 +205,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (GetAsyncKeyState(VK_H) & 1) {
-			for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
-				Player->PostDataUpdate(0);
-			}
-		}
-
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
