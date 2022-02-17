@@ -460,6 +460,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_GlobalInfo.m_bForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
+	//if (pCmd->buttons & IN_ATTACK && g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift)
+	//{
+	//	if (
+	//		(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
+	//		// 0 - On key
+	//		(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
+	//		(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var))) {
+	//		g_GlobalInfo.m_bShouldShift = true;
+	//	}
+	//}
+
 	return g_GlobalInfo.m_bSilentTime
 	       || g_GlobalInfo.m_bAAActive
 	       || g_GlobalInfo.m_bHitscanSilentActive
@@ -549,10 +560,16 @@ void __fastcall ClientModeHook::StartMessageMode::Hook(CClientModeShared* ecx, v
 {
 	if (g_Interfaces.GlobalVars->maxclients != -1) {
 		if (const auto v4 = g_Interfaces.ClientMode->m_pChatElement) {
+#ifdef _DEBUG
 			using fn = void(__thiscall*)(CBaseHudChat*, int);
-			static auto fnCBaseHudChat__StartMessageMode = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 08 83 EC 0C 56 57 8B F9 68 ? ? ? ?"));
-			fnCBaseHudChat__StartMessageMode(v4, iMessageTypeMode);
-
+			static auto dwCBaseHudChat__StartMessageMode = g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 08 83 EC 0C 56 57 8B F9 68 ? ? ? ?");
+			fn fnCBaseHudChat__StartMessageMode = reinterpret_cast<fn>(dwCBaseHudChat__StartMessageMode);
+			if (fnCBaseHudChat__StartMessageMode) {
+				fnCBaseHudChat__StartMessageMode(v4, iMessageTypeMode);
+			}
+#else
+			v4->StartMessageMode(iMessageTypeMode);
+#endif
 		}
 	}
 }

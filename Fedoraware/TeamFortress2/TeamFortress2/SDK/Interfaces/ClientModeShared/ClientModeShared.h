@@ -13,7 +13,7 @@ public:
 
 	void StartMessageMode(int iMessageModeType)
 	{
-		typedef void(_cdecl* FN)(void*, int);
+		typedef void(__thiscall* FN)(void*, int);
 		GetVFunc<FN>(this, 20)(this, iMessageModeType);
 	}
 };
