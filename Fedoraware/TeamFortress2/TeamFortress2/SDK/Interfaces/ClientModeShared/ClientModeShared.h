@@ -10,6 +10,12 @@ public:
 		typedef void(_cdecl* FN)(void*, int, int, const char*, ...);
 		GetVFunc<FN>(this, 19)(this, pIndex, 0, fmt);
 	}
+
+	void StartMessageMode(int iMessageModeType)
+	{
+		typedef void(_cdecl* FN)(void*, int);
+		GetVFunc<FN>(this, 20)(this, iMessageModeType);
+	}
 };
 
 class CClientModeShared

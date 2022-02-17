@@ -35,6 +35,13 @@ namespace ClientModeHook
 		void Init();
 	}
 
+	namespace StartMessageMode
+	{
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(CClientModeShared*, void*, int);
+		void __fastcall Hook(CClientModeShared* ecx, void* edx, int iMessageTypeMode);
+	}
+
 	namespace DoPostScreenSpaceEffects
 	{
 		const int index = 39;

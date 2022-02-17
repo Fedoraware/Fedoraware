@@ -350,3 +350,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 void __fastcall ClientHook::DoPrecipitation::Hook(void* ecx, void* edx)
 {
 }
+
+void __fastcall ClientHook::CHud__FindElement::Hook(void* ecx, void* edx, const char* String2)
+{
+}

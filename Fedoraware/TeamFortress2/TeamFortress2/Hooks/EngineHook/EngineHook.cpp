@@ -112,7 +112,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			{
 				oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 				g_GlobalInfo.m_nShifted--;
-				g_GlobalInfo.m_bForceSendPacket = true;
+				//g_GlobalInfo.m_bForceSendPacket = true;
 			}
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}

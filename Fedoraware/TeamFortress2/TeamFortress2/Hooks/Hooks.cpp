@@ -97,6 +97,12 @@ void CHooks::Init()
 		Table.Hook(ShouldDrawViewModel::index, &ShouldDrawViewModel::Hook);
 		Table.Hook(CreateMove::index, &CreateMove::Hook);
 		Table.Hook(DoPostScreenSpaceEffects::index, &DoPostScreenSpaceEffects::Hook);
+		{
+			using namespace StartMessageMode;
+
+			static auto FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC A1 ? ? ? ? 83 EC 64"));
+			Func.Hook(FN, Hook);
+		}
 	}
 
 	if (g_Interfaces.Input) {

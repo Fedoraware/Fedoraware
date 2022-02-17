@@ -544,3 +544,15 @@ void ClientModeHook::SetAbsVelocity::Init()
 	//static DWORD dwFN = ((*(PDWORD)(dwLocation)) + dwLocation + 4);
 	Func.Hook(reinterpret_cast<void*>(dwLocation), Hook);
 }
+
+void __fastcall ClientModeHook::StartMessageMode::Hook(CClientModeShared* ecx, void* edx, int iMessageTypeMode)
+{
+	if (g_Interfaces.GlobalVars->maxclients != -1) {
+		if (const auto v4 = g_Interfaces.ClientMode->m_pChatElement) {
+			using fn = void(__thiscall*)(CBaseHudChat*, int);
+			static auto fnCBaseHudChat__StartMessageMode = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 08 83 EC 0C 56 57 8B F9 68 ? ? ? ?"));
+			fnCBaseHudChat__StartMessageMode(v4, iMessageTypeMode);
+
+		}
+	}
+}

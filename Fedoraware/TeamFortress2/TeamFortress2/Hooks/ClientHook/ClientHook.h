@@ -47,4 +47,14 @@ namespace ClientHook
 		using fn = void(__thiscall*)(void*, void*);
 		void __fastcall Hook(void* ecx, void* edx);
 	}
+
+	namespace CHud__FindElement
+	{
+		//E8 ? ? ? ? C3 53
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(void*, void*, const char*);
+		void __fastcall Hook(void* ecx, void* edx, const char* String2);
+	}
+
+
 }
