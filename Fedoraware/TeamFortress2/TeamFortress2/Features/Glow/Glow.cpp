@@ -93,6 +93,7 @@ void CGlowEffect::Init()
 		\n{\
 		\n\t\"$basetexture\" \"glow_buffer_1\"\
 		\n\t\"$additive\" \"1\"\
+		\n\t\"$linearwrite\" \"1\"\
 		\n}\n")
 	});
 }
