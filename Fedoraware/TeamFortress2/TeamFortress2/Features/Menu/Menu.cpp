@@ -2355,8 +2355,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			}
 			ImGui::SetCursorPos(ImVec2(12, winSize.y - 20));
 			ImGui::TextUnformatted(toolTipText.c_str());
-			ImGui::SameLine(ImGui::GetContentRegionMax().x - 50);
-			ImGui::SetNextItemWidth(50);
+			ImGui::SameLine(ImGui::GetContentRegionMax().x - 25);
+			ImGui::SetNextItemWidth(25);
 			ImGui::PushFont(Icons);
 			ImGui::TextUnformatted(ICON_FA_COG);
 			ImGui::PopFont();
