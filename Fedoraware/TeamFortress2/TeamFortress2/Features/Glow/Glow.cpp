@@ -45,7 +45,7 @@ void CGlowEffect::Init()
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer1->IncrementReferenceCount();
-
+	// This can cause a crash on inject for some reason
 	m_pRenderBuffer2 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(
 		_("glow_buffer_2"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,

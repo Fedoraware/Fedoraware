@@ -20,6 +20,9 @@ void AlignRight(int offset) {
 	ImGui::SetNextItemWidth(offset);
 }
 
+std::string toolTipText = "";
+bool hovered = false;
+
 static void HelpMarker(const char* desc)
 {
 	if (tooltips) {
@@ -27,11 +30,16 @@ static void HelpMarker(const char* desc)
 		//ImGui::TextDisabled("(?)");
 		if (ImGui::IsItemHovered())
 		{
-			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-			ImGui::TextUnformatted(desc);
-			ImGui::PopTextWrapPos();
-			ImGui::EndTooltip();
+			hovered = true;
+			toolTipText = desc;
+			//ImGui::BeginTooltip();
+			//ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			//ImGui::TextUnformatted(desc);
+			//ImGui::PopTextWrapPos();
+			//ImGui::EndTooltip();
+		}
+		else {
+			hovered = false;
 		}
 	}
 }
@@ -260,56 +268,20 @@ float* cColor(ImVec4 color, Color_t& out) {
 	return &color.x;
 }
 
-// Redo the Nitro DT bar
-//void CMenu::TextCenter(std::string text) {
-//	ImGui::PushFont(DT);
-//	float font_size = ImGui::CalcTextSize(text.c_str()).x;
-//	//float font_size = ImGui::GetFontSize() * text.size() / 2;
-//	ImGui::SameLine(
-//		ImGui::GetWindowSize().x / 2 -
-//		font_size + (font_size / 2)
-//	);
-//
-//	ImGui::Text(text.c_str());
-//	ImGui::PopFont();
-//}
-
-
-
-//void CMenu::Run() {
-//	m_bReopened = false;
-//
-//	static bool bOldOpen = m_bOpen;
-//
-//	if (bOldOpen != m_bOpen)
-//	{
-//		bOldOpen = m_bOpen;
-//
-//		if (m_bOpen)
-//			m_bReopened = true;
-//	}
-//
-//	flTimeOnChange = 0.0f;
-//
-//	if (Utils::IsGameWindowInFocus() && (GetAsyncKeyState(VK_HOME) & 1)) {
-//		flTimeOnChange = g_Interfaces.Engine->Time();
-//	}
-//	m_flFadeElapsed = g_Interfaces.Engine->Time() - flTimeOnChange;
-//
-//	if (m_flFadeElapsed < m_flFadeDuration) {
-//		m_flFadeAlpha = Math::RemapValClamped(m_flFadeElapsed, 0.0f, m_flFadeDuration, !m_bOpen ? 1.0f : 0.0f, m_bOpen ? 1.0f : 0.0f);
-//		g_Interfaces.Surface->DrawSetAlphaMultiplier(m_flFadeAlpha);
-//	}
-//
-//	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
-//}
-
-//ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_)
-
 #define WidthSlider(label, var, min, max, format, flagspower) \
 ImGui::PushItemWidth(100); \
 ImGui::SliderFloat(label, var, min, max, format, flagspower); \
 ImGui::PopItemWidth()
+
+#include "Fonts/font_awesome.h"
+
+void IconText(const char* icon) {
+	ImGui::PushFont(g_Menu.Icons);
+	ImGui::Text(icon);
+	ImGui::PopFont();
+}
+
+
 
 void CMenu::Render(IDirect3DDevice9* pDevice) {
 	static bool bInitImGui = false;
@@ -343,15 +315,20 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		style.FrameBorderSize = 0.f;
 		style.FrameRounding = 0;
 		style.ScrollbarSize = 3.f;
+		
 
 		auto fontConfig = ImFontConfig();
 		fontConfig.OversampleH = 1;
 		fontConfig.OversampleV = 1;
 		fontConfig.PixelSnapH = true;
 
-		VerdanaNormal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 14.0f, &fontConfig, io.Fonts->GetGlyphRangesCyrillic());
-		VerdanaSmall = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 12.0f, &fontConfig, io.Fonts->GetGlyphRangesCyrillic());
-		VerdanaBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 18.0f, &fontConfig, io.Fonts->GetGlyphRangesCyrillic());
+		ImWchar TextFontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F,0};
+		ImWchar IconFontRange[]{ ICON_MIN_FA, ICON_MAX_FA, 0 };
+		VerdanaNormal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 14.0f, &fontConfig, TextFontRange);
+		VerdanaSmall = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 12.0f, &fontConfig, TextFontRange);
+		VerdanaBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 18.0f, &fontConfig, TextFontRange);
+		Icons = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 14.0f, &fontConfig, IconFontRange);
+		
 
 		ImVec4* colors = style.Colors;
 		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -409,97 +386,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
 
 		bInitImGui = true;
-
-		//ImGui::SetColorEditOptions(ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_Uint8);
-		//ImGuiStyle* style = &ImGui::GetStyle();
-		//auto& io = ImGui::GetIO();
-		//ImVec4* colors = ImGui::GetStyle().Colors;
-		//colors[ImGuiCol_Text] = ImVec4(0.76f, 0.76f, 0.76f, 1.00f);
-		//colors[ImGuiCol_TextDisabled] = ImVec4(0.56f, 0.41f, 0.04f, 1.00f);
-		//colors[ImGuiCol_WindowBg] = ImVec4(0.04f, 0.05f, 0.08f, 1.00f);
-		//colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		//colors[ImGuiCol_PopupBg] = ImVec4(0.04f, 0.05f, 0.08f, 1.00f);
-		//colors[ImGuiCol_Border] = ImVec4(1.00f, 0.00f, 0.00f, 0.29f);
-		//colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_FrameBg] = ImVec4(0.09f, 0.09f, 0.09f, 0.23f);
-		//colors[ImGuiCol_FrameBgHovered] = ImVec4(0.04f, 0.17f, 0.21f, 0.54f);
-		//colors[ImGuiCol_FrameBgActive] = ImVec4(0.13f, 0.48f, 0.65f, 1.00f);
-		//colors[ImGuiCol_TitleBg] = ImVec4(0.14f, 0.14f, 0.14f, 0.62f);
-		//colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.14f, 0.14f, 0.61f);
-		//colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.14f, 0.14f, 0.14f, 0.62f);
-		//colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-		//colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-		//colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-		//colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
-		//colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-		//colors[ImGuiCol_CheckMark] = ImVec4(0.69f, 0.22f, 0.22f, 1.00f);
-		//colors[ImGuiCol_SliderGrab] = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-		//colors[ImGuiCol_SliderGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-		//colors[ImGuiCol_Button] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-		//colors[ImGuiCol_ButtonHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-		//colors[ImGuiCol_ButtonActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-		//colors[ImGuiCol_Header] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-		//colors[ImGuiCol_HeaderHovered] = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
-		//colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
-		//colors[ImGuiCol_Separator] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		//colors[ImGuiCol_SeparatorHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-		//colors[ImGuiCol_SeparatorActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-		//colors[ImGuiCol_ResizeGrip] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-		//colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-		//colors[ImGuiCol_ResizeGripActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-		//colors[ImGuiCol_Tab] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-		//colors[ImGuiCol_TabHovered] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-		//colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
-		//colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-		//colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-		//colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_PlotHistogram] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_TableHeaderBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-		//colors[ImGuiCol_TableBorderStrong] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-		//colors[ImGuiCol_TableBorderLight] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-		//colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		//colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-		//colors[ImGuiCol_TextSelectedBg] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-		//colors[ImGuiCol_DragDropTarget] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-		//colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-		//colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
-		//colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-		//colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.00f, 0.00f, 0.10f, 0.20f);
-		//style->WindowPadding = ImVec2(0.00f, 2.00f);
-		//style->FramePadding = ImVec2(20.00f, 2.00f);
-		//style->CellPadding = ImVec2(6.00f, 0.00f);
-		//style->ItemSpacing = ImVec2(6.00f, 4.00f);
-		//style->ItemInnerSpacing = ImVec2(6.00f, 6.00f);
-		//style->TouchExtraPadding = ImVec2(0.00f, 0.00f);
-		//style->IndentSpacing = 0;
-		//style->ScrollbarSize = 1;
-		//style->GrabMinSize = 7;
-		//style->WindowBorderSize = 0;
-		//style->ChildBorderSize = 1;
-		//style->PopupBorderSize = 1;
-		//style->FrameBorderSize = 0;
-		//style->TabBorderSize = 1;
-		//style->WindowRounding = 0;
-		//style->ChildRounding = 0;
-		//style->FrameRounding = 0;
-		//style->PopupRounding = 0;
-		//style->ScrollbarRounding = 0;
-		//style->GrabRounding = 0;
-		//style->LogSliderDeadzone = 0;
-		//style->TabRounding = 0;
-		//style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
-		//style->SelectableTextAlign = ImVec2(0.0f, 0.5f);
-		//style->ButtonTextAlign = ImVec2(0.0f, 0.5f);
-		//style->DisplaySafeAreaPadding = ImVec2(0, 17);
-		//auto m_font_config = ImFontConfig();
-		//m_font_config.OversampleH = 1;
-		//m_font_config.OversampleV = 1;
-		//m_font_config.PixelSnapH = true;
-		//drawList = ImGui::GetBackgroundDrawList();
-		//Normal = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahomabd.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
-		//DT = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\tahoma.ttf", 14.0f, &m_font_config, io.Fonts->GetGlyphRangesCyrillic());
 	}
 
 	pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
@@ -520,34 +406,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 	ImGui::NewFrame();
 
-	//if ((!g_Interfaces.EngineVGui->IsGameUIVisible() || g_Menu.m_bOpen) && Vars::Misc::CL_Move::DTBarStyle.m_Var == 2) {
-	//	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.03, 0.03, 0.03, 0.3));
-	//	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-	//	if (ImGui::Begin("Doubletap bar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoDecoration) | (g_Menu.m_bOpen ? 0 : ImGuiWindowFlags_NoTitleBar)))
-	//	{
-	//		ImGui::SetWindowSize(ImVec2(180, 30));
-	//		static std::string dtstring = "";
-	//		if (const auto& pLocal = g_EntityCache.m_pLocal) {
-	//			dtstring = "Doubletap (" + std::to_string(g_GlobalInfo.m_nShifted) + " / 24)";
-	//			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.3f, 0.3f, 1.0f));
-	//			if (g_GlobalInfo.m_nShifted >= Vars::Misc::CL_Move::DTTicks.m_Var) {
-	//				if (!g_GlobalInfo.m_nWaitForShift) {
-	//					ImGui::PopStyleColor();
-	//					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 1.f, 0.3f, 1.0f));
-	//				}
-	//				else {
-	//					ImGui::PopStyleColor();
-	//					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 0.5f, 0.f, 1.0f));
-	//				}
-	//			}
-	//			TextCenter(dtstring);
-	//			ImGui::PopStyleColor();
-	//		}
-	//	}
-	//	ImGui::End();
-	//	ImGui::PopStyleColor(2);
-	//}
-	// ImGui::GetIO().MouseDrawCursor = menuOpen;
 	if (g_Menu.m_bOpen)
 	{
 		ImColor accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g), Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
@@ -564,7 +422,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			titlegradient.addMark(0.32f, titlebg);
 			titlegradient.addMark(0.5f, accent);
 			titlegradient.addMark(0.68f, titlebg);
-			titlegradient.addMark(0.9999998f, titlebg); // literally why
+			titlegradient.addMark(0.9999998f, titlebg);
 		}
 		static ImGradient hover;
 		{
@@ -574,7 +432,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			hover.addMark(0.32f, buttonhovered);
 			hover.addMark(0.5f, ImColor(IM_COL32(255, 255, 255, 255)));
 			hover.addMark(0.68f, buttonhovered);
-			hover.addMark(0.9999998f, buttonhovered); // literally why
+			hover.addMark(0.9999998f, buttonhovered); 
 		}
 		static ImGradient active;
 		{
@@ -584,7 +442,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			active.addMark(0.32f, buttonactive);
 			active.addMark(0.5f, ImColor(IM_COL32(255, 255, 255, 255)));
 			active.addMark(0.68f, buttonactive);
-			active.addMark(0.9999998f, buttonactive); // literally why
+			active.addMark(0.9999998f, buttonactive); 
 		}
 		static ImGradient normal;
 		{
@@ -592,9 +450,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			normal.m_marks.clear();
 			normal.addMark(0.0f, framenormal);
 			normal.addMark(0.32f, framenormal);
-			normal.addMark(0.5f, accent/*ImColor(IM_COL32(255, 255, 255, 255))*/);
+			normal.addMark(0.5f, accent);
 			normal.addMark(0.68f, framenormal);
-			normal.addMark(0.9999998f, framenormal); // literally why
+			normal.addMark(0.9999998f, framenormal); 
 		}
 		static MainTabs mainTab = MainTabs::Aimbot;
 		static VisualsTabs visualsTab = VisualsTabs::Players;
@@ -610,114 +468,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			const auto bgDrawList = ImGui::GetBackgroundDrawList();
 			const auto fgDrawList = window->DrawList;
 			const auto foregroundDrawList = ImGui::GetForegroundDrawList();
-
-			/* Settings window (Configs & Accent Color) */
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-			if (ImGui::BeginPopupContextWindow("Settings")) {
-				ImGui::PopStyleVar();
-				ImGui::PopStyleVar();
-				ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent);
-				ImGui::SameLine(); ImGui::Text("Menu accent");
-				static std::wstring selected = {};
-				int nConfig = 0;
-
-				for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
-					{
-						continue;
-					}
-					nConfig++;
-				}
-
-				if (nConfig < 100) {
-					std::string output = {};
-
-					ImGui::PushItemWidth(200);
-					if (ImGui::InputTextWithHint("###configname", "New config name", &output, ImGuiInputTextFlags_EnterReturnsTrue)) {
-						std::wstring outstring(output.begin(), output.end());
-						if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + outstring)) {
-							g_CFG.Save(outstring.c_str());
-						}
-					}
-					ImGui::PopItemWidth();
-				}
-
-				for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-					if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos) {
-						continue;
-					}
-					std::wstring s = entry.path().filename().wstring();
-					s.erase(s.end() - 4, s.end());
-					std::string configName(s.begin(), s.end());
-					if (s == selected) {
-						ImGuiStyle* style2 = &ImGui::GetStyle();
-						ImVec4* colors2 = style2->Colors;
-						ImVec4 buttonColor = colors2[ImGuiCol_Button];
-						buttonColor.w *= 0.5;
-						ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
-						if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
-							selected = s;
-						}
-						ImGui::PopStyleColor();
-
-						// Save, Load and Remove buttons
-						if (ImGui::Button("Save", ImVec2(61, 20))) {
-							ImGui::OpenPopup("Save config?");
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("Load", ImVec2(61, 20))) {
-							g_CFG.Load(selected.c_str());
-							selected.clear();
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("Remove", ImVec2(62, 20))) {
-							ImGui::OpenPopup("Remove config?");
-						}
-						// Save config dialog
-						if (ImGui::BeginPopupModal("Save config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-							ImGui::Text("Do you really want to override this config?\n\n");
-							ImGui::Separator();
-							if (ImGui::Button("Yes, override!", ImVec2(150, 0))) {
-								g_CFG.Save(selected.c_str());
-								selected.clear();
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::SameLine();
-							if (ImGui::Button("No", ImVec2(120, 0))) {
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::EndPopup();
-						}
-						// Delete config dialog
-						if (ImGui::BeginPopupModal("Remove config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-							ImGui::Text("Do you really want to delete this config?\n\n");
-							ImGui::Separator();
-							if (ImGui::Button("Yes, remove!", ImVec2(150, 0))) {
-								g_CFG.Remove(selected.c_str());
-								selected.clear();
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::SameLine();
-							if (ImGui::Button("No", ImVec2(150, 0))) {
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::EndPopup();
-						}
-					}
-					else {
-						if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
-							selected = s;
-						}
-					}
-				}
-
-				ImGui::EndPopup();
-			}
-			else {
-				ImGui::PopStyleVar();
-				ImGui::PopStyleVar();
-			}
+			
 			//if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
 			//	ImGui::BeginPopup("Settings");
 			//	{
@@ -1059,7 +810,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				*/
 
 				// Columns 1
-				ImGui::BeginChild("Feature 1", (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::MiscVisuals) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 1", mainTab == MainTabs::Visuals ? (visualsTab == VisualsTabs::MiscVisuals ? ImVec2((winSize.x / 2) - 16, winSize.y - 113) : ImVec2((winSize.x / 3) - 13, winSize.y - 113)) : ImVec2((winSize.x / 3) - 13, winSize.y - 86), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
@@ -1618,7 +1369,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 
 				// Columnd 2
-				ImGui::BeginChild("Feature 2", (mainTab == MainTabs::Visuals && visualsTab == VisualsTabs::MiscVisuals) ? ImVec2((winSize.x / 2) - 16, 0) : ImVec2((winSize.x / 3) - 13, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+				ImGui::BeginChild("Feature 2", mainTab == MainTabs::Visuals ? (visualsTab == VisualsTabs::MiscVisuals ? ImVec2((winSize.x / 2) - 16, winSize.y - 113) : ImVec2((winSize.x / 3) - 13, winSize.y - 113)) : ImVec2((winSize.x / 3) - 13, winSize.y - 86), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 				{
 					ImGui::PopStyleVar();
 					ImGui::PopStyleVar();
@@ -2235,7 +1986,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
 					ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-					ImGui::BeginChild("Feature 3", ImVec2((winSize.x / 3) - 12, 0), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
+					ImGui::BeginChild("Feature 3", mainTab == MainTabs::Visuals ? ImVec2((winSize.x / 3 - 16), winSize.y - 113) : ImVec2((winSize.x / 3) - 13, winSize.y - 86), true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_HorizontalScrollbar);
 					{
 						ImGui::PopStyleVar();
 						ImGui::PopStyleVar();
@@ -2248,7 +1999,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
-							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Use performance mode if you value your computer/fps. Don't use this on high ping. This won't suddenly make the projectile aimbot hit strafing players");
+							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Uses game functions to predict where the player will be");
 							if (Vars::Aimbot::Projectile::MovementSimulation.m_Var) {
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prediction Time", &Vars::Aimbot::Projectile::predTime.m_Var, 0.1f, 10.f, "%.1f");
 							}
@@ -2257,7 +2008,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								static const char* aimMethodArr[]{ "Plain", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth();
 								static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth();
 							}
-							ImGui::Checkbox("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at enemies feet if target is on the ground (Demoman only and will only work if the aim postition is set to auto");
+							ImGui::Checkbox("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at feet if target is on the ground");
 							ImGui::Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
 							if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var) {
 								WidthSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
@@ -2601,6 +2352,134 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 
 				}
 				ImGui::EndChild();
+			}
+			ImGui::SetCursorPos(ImVec2(12, winSize.y - 20));
+			ImGui::TextUnformatted(toolTipText.c_str());
+			ImGui::SameLine(ImGui::GetContentRegionMax().x - 50);
+			ImGui::SetNextItemWidth(50);
+			ImGui::PushFont(Icons);
+			ImGui::TextUnformatted(ICON_FA_COG);
+			ImGui::PopFont();
+			static bool showSettings = false;
+			if (ImGui::IsItemClicked()) {
+				showSettings = !showSettings;
+			}
+			if (showSettings) {
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1, 1));
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.43f, 0.43f, 0.50f, 1.00f));
+				
+				if (ImGui::Begin("Settings", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings)) {
+					ImGui::PopStyleVar();
+					ImGui::PopStyleVar();
+					ImGui::PopStyleVar();
+					
+					ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent);
+					ImGui::SameLine(); ImGui::Text("Menu accent");
+					static std::wstring selected = {};
+					int nConfig = 0;
+
+					for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
+						if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+						{
+							continue;
+						}
+						nConfig++;
+					}
+
+					if (nConfig < 100) {
+						std::string output = {};
+
+						ImGui::PushItemWidth(200);
+						if (ImGui::InputTextWithHint("###configname", "New config name", &output, ImGuiInputTextFlags_EnterReturnsTrue)) {
+							std::wstring outstring(output.begin(), output.end());
+							if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + outstring)) {
+								g_CFG.Save(outstring.c_str());
+							}
+						}
+						ImGui::PopItemWidth();
+					}
+
+					for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
+						if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos) {
+							continue;
+						}
+						std::wstring s = entry.path().filename().wstring();
+						s.erase(s.end() - 4, s.end());
+						std::string configName(s.begin(), s.end());
+						if (s == selected) {
+							ImGuiStyle* style2 = &ImGui::GetStyle();
+							ImVec4* colors2 = style2->Colors;
+							ImVec4 buttonColor = colors2[ImGuiCol_Button];
+							buttonColor.w *= 0.5;
+							ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
+							if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
+								selected = s;
+							}
+							ImGui::PopStyleColor();
+
+							// Save, Load and Remove buttons
+							if (ImGui::Button("Save", ImVec2(61, 20))) {
+								ImGui::OpenPopup("Save config?");
+							}
+							ImGui::SameLine();
+							if (ImGui::Button("Load", ImVec2(61, 20))) {
+								g_CFG.Load(selected.c_str());
+								selected.clear();
+							}
+							ImGui::SameLine();
+							if (ImGui::Button("Remove", ImVec2(62, 20))) {
+								ImGui::OpenPopup("Remove config?");
+							}
+							// Save config dialog
+							if (ImGui::BeginPopupModal("Save config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+								ImGui::Text("Do you really want to override this config?\n\n");
+								ImGui::Separator();
+								if (ImGui::Button("Yes, override!", ImVec2(150, 0))) {
+									g_CFG.Save(selected.c_str());
+									selected.clear();
+									ImGui::CloseCurrentPopup();
+								}
+								ImGui::SameLine();
+								if (ImGui::Button("No", ImVec2(120, 0))) {
+									ImGui::CloseCurrentPopup();
+								}
+								ImGui::EndPopup();
+							}
+							// Delete config dialog
+							if (ImGui::BeginPopupModal("Remove config?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+								ImGui::Text("Do you really want to delete this config?\n\n");
+								ImGui::Separator();
+								if (ImGui::Button("Yes, remove!", ImVec2(150, 0))) {
+									g_CFG.Remove(selected.c_str());
+									selected.clear();
+									ImGui::CloseCurrentPopup();
+								}
+								ImGui::SameLine();
+								if (ImGui::Button("No", ImVec2(150, 0))) {
+									ImGui::CloseCurrentPopup();
+								}
+								ImGui::EndPopup();
+							}
+						}
+						else {
+							if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
+								selected = s;
+							}
+						}
+					}
+
+					ImGui::End();
+				}
+				else {
+					ImGui::PopStyleVar();
+					ImGui::PopStyleVar();
+					ImGui::PopStyleVar();
+				}
+				ImGui::PopStyleVar();
+				ImGui::PopStyleColor();
 			}
 		}
 		ImGui::PopFont();

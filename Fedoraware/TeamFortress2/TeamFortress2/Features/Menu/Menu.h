@@ -12,6 +12,7 @@ public:
 	ImFont* VerdanaSmall;
 	ImFont* VerdanaNormal;
 	ImFont* VerdanaBold;
+	ImFont* Icons;
 public:
 	bool config = false;
 	bool menuOpen = false;
