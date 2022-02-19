@@ -332,7 +332,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 		else nChoked = 0;
 
-		if (nChoked > 14)
+		if (nChoked > 21)
 			*pSendPacket = true;
 	}
 	else
