@@ -28,7 +28,7 @@ void AngleVectors2(const QAngle& angles, Vector* forward)
 	forward->z = -sp;
 }
 
-void FastStop(CUserCmd* pCmd)
+/*void FastStop(CUserCmd* pCmd)
 {
 	if (g_EntityCache.m_pLocal)
 	{
@@ -65,7 +65,7 @@ void FastStop(CUserCmd* pCmd)
 			pCmd->forwardmove = pCmd->sidemove = 0.0f;
 		}
 	}
-}
+}*/
 
 void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
@@ -143,7 +143,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (g_GlobalInfo.m_bShouldShift)
+		if (g_GlobalInfo.m_bShouldShift && Vars::Misc::CL_Move::AntiWarp.m_Var)
 		{
 			if (vStartOrigin.IsZero())
 			{
@@ -155,9 +155,12 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				vStartVel = pLocal->GetVecVelocity();
 			}
 
+			pCmd->forwardmove = 0.0f;
+			pCmd->sidemove = 0.0f;
+
 			Vec3 vPredicted = vStartOrigin + (vStartVel *
-				TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.m_Var));
+				TICKS_TO_TIME(8 - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(8));
 
 			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f,
 			                                      vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
@@ -187,12 +190,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (!pCmd || !pCmd->command_number)
 		return OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
 
-	FastStop(pCmd, g_EntityCache.m_pLocal);
-
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
-
-
 
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
@@ -315,70 +314,88 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
 		g_Misc.EdgeJump(pCmd, nOldFlags);
+		FastStop(pCmd, g_EntityCache.m_pLocal);
 	}
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
-	// Fake lag
-	const auto& pLocal = g_EntityCache.m_pLocal;
-	static int chockedPackets = 0;
-	static int chockValue = 0;
-	if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode
+	static int nChoked = 0;
+
+	if (g_GlobalInfo.m_bShouldShift)
+	{
+		*pSendPacket = g_GlobalInfo.m_nShifted == 1;
+
+		if (!*pSendPacket)
+			nChoked++;
+
+		else nChoked = 0;
+
+		if (nChoked > 21)
+			*pSendPacket = true;
+	}
+	else
+	{
+		nChoked = 0;
+		const auto& pLocal = g_EntityCache.m_pLocal;
+		static int chockedPackets = 0;
+		static int chockValue = 0;
+		if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode
 			.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) && Vars::Misc::CL_Move::FakelagOnKey
 				.
 				m_Var) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (
-			abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !
-		g_GlobalInfo.m_bForceSendPacket)
-	{
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+					abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !
+			g_GlobalInfo.m_bForceSendPacket)
 		{
-			if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
-				!g_GlobalInfo.m_bRecharging &&
-				!g_GlobalInfo.m_nShifted &&
-				!g_GlobalInfo.m_bShouldShift &&
-				!g_GlobalInfo.m_bRechargeQueued)
+			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 			{
-				chockedPackets++;
-
-				if (chockedPackets > chockValue)
+				if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
+					!g_GlobalInfo.m_bRecharging &&
+					!g_GlobalInfo.m_nShifted &&
+					!g_GlobalInfo.m_bShouldShift &&
+					!g_GlobalInfo.m_bRechargeQueued)
 				{
-					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+					chockedPackets++;
+
+					if (chockedPackets > chockValue)
 					{
-						chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.
-							m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
+						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+						{
+							chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.
+								m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
+						}
+						else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
+						*pSendPacket = true;
+						g_GlobalInfo.m_bChoking = false;
+						chockedPackets = 0;
+						g_FakeAng.Run(pCmd);
 					}
-					else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
-					*pSendPacket = true;
-					g_GlobalInfo.m_bChoking = false;
-					chockedPackets = 0;
-					g_FakeAng.Run(pCmd);
+					else
+					{
+						*pSendPacket = false;
+						g_GlobalInfo.m_bChoking = true;
+					}
 				}
 				else
 				{
-					*pSendPacket = false;
-					g_GlobalInfo.m_bChoking = true;
+					g_FakeAng.Run(pCmd);
+					*pSendPacket = true;
+					g_GlobalInfo.m_bChoking = false;
 				}
 			}
-			else
-			{
-				g_FakeAng.Run(pCmd);
-				*pSendPacket = true;
-				g_GlobalInfo.m_bChoking = false;
-			}
 		}
+		else if (chockedPackets > 0)	// failsafe
+		{
+			*pSendPacket = true;
+			chockedPackets = 0;
+			g_GlobalInfo.m_bChoking = false;
+		}
+		else { g_GlobalInfo.m_bChoking = false; }
 	}
-	else if (chockedPackets > 0)	// failsafe
-	{
-		*pSendPacket = true;
-		chockedPackets = 0;
-		g_GlobalInfo.m_bChoking = false;
-	}
-	else { g_GlobalInfo.m_bChoking = false; }
 
 	//	TODO: make this p
-	auto AntiWarp = [](CUserCmd* cmd) -> void
+	/*auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
 		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted)
 		{
@@ -390,7 +407,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (!Vars::Misc::CL_Move::AntiWarp.m_Var)
 	{
 		AntiWarp(pCmd);
-	}
+	}*/
 
 
 	if (Vars::Misc::TauntSlide.m_Var)
@@ -447,7 +464,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_GlobalInfo.gNotifCounter = 0;
 	}
 
-	g_GlobalInfo.vEyeAngDelay++; // ignore this
+	g_GlobalInfo.vEyeAngDelay++; // Used for the return delay in the viewmodel aimbot
 	g_GlobalInfo.lateUserCmd = pCmd;
 	if (g_GlobalInfo.m_bForceSendPacket)
 	{
