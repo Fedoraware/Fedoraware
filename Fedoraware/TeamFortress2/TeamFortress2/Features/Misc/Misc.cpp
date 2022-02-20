@@ -17,6 +17,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
+	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
 }
 
@@ -54,6 +55,21 @@ void CMisc::InstantRespawnMVM() {
 		g_Interfaces.Engine->ServerCmdKeyValues(kv);
 	}
 }*/
+
+void CMisc::PingReducer()
+{
+	static int oldRate = -1;
+	ConVar* cl_cmdrate = g_Interfaces.CVars->FindVar("cl_cmdrate");
+
+	// TODO: We need to do this using net messages
+	if (Vars::Misc::PingReducer.m_Var) {
+		if (oldRate == -1) { oldRate = cl_cmdrate->GetInt(); }
+		cl_cmdrate->SetValue(-1);
+	} else if (oldRate != -1) {
+		cl_cmdrate->SetValue(oldRate);
+		oldRate = -1;
+	}
+}
 
 void CMisc::CheatsBypass()
 {

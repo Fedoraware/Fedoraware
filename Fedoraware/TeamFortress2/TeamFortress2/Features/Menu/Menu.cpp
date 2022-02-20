@@ -1359,6 +1359,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var); HelpMarker("Will respawn you instantly in MvM");
 						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
 						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
+						ImGui::Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping in the scoreboard");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();

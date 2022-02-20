@@ -523,6 +523,7 @@ namespace Vars
 		inline CVar<int> RageRetryHealth		{ 20, L"Rage Retry health" };
 		inline CVar<bool> MVMRes				{ true, L"MVM Respawn" };
 		inline CVar<bool> BeCat					{ false, L"CatReply" };
+		inline CVar<bool> PingReducer			{ false, L"Ping reducer" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
