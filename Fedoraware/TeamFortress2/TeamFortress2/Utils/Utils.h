@@ -138,4 +138,13 @@ namespace Utils
     inline bool CompareFloat(float a, float b, float epsilon = 1.0e-5f) {
         return (fabs(a - b) <= epsilon * std::max(fabs(a), fabs(b)));
     }
+
+    inline float ClampFloat(float n, float lower, float upper) {
+        return std::max(lower, std::min(n, upper));
+	}
+
+    inline float NormalizeRad(float a) noexcept
+    {
+        return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
+    }
 }

@@ -46,9 +46,6 @@ void CMisc::ServerHitbox()
 	}
 }
 
-// draws server hitbox when in a local server, only for testing rly
-static bool push = true;
-
 /*
 void CMisc::InstantRespawnMVM() {
 	if (g_Interfaces.Engine->IsInGame() && g_Interfaces.Engine->GetLocalPlayer() && !g_EntityCache.m_pLocal->IsAlive() && Vars::Misc::MVMRes.m_Var) {
@@ -64,11 +61,8 @@ void CMisc::CheatsBypass()
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
 	if (Vars::Misc::CheatsBypass.m_Var)
 	{
-		if (sv_cheats->GetInt() == 0)
-		{
-			sv_cheats->SetValue(1);
-			cheatset = true;
-		}
+		sv_cheats->SetValue(1);
+		cheatset = true;
 	}
 	else
 	{
@@ -107,14 +101,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 void CMisc::NoPush()
 {
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
-	if (Vars::Misc::NoPush.m_Var)
-	{
-		if (noPush->GetInt() == 1) noPush->SetValue(0);
-	}
-	else
-	{
-		if (noPush->GetInt() == 0) noPush->SetValue(1);
-	}
+	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
 }
 
 void CMisc::AutoJump(CUserCmd* pCmd)
@@ -150,31 +137,16 @@ void CMisc::AutoJump(CUserCmd* pCmd)
 	}
 }
 
-float fclamp(float d, float min, float max)
-{
-	const float t = d < min ? min : d;
-	return t > max ? max : t;
-}
-
-static float normalizeRad(float a) noexcept
-{
-	return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
-}
-
 static float angleDiffRad(float a1, float a2) noexcept
 {
-	float delta;
-
-	delta = normalizeRad(a1 - a2);
+	float delta = Utils::NormalizeRad(a1 - a2);
 	if (a1 > a2)
 	{
-		if (delta >= PI)
-			delta -= PI * 2;
+		if (delta >= PI) { delta -= PI * 2; }	
 	}
 	else
 	{
-		if (delta <= -PI)
-			delta += PI * 2;
+		if (delta <= -PI) { delta += PI * 2; }
 	}
 	return delta;
 }
