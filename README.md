@@ -18,8 +18,8 @@
 - The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
 
 ## Guide:
-- If you are lazy and you just want a compiled .dll file, go to the [Actions](https://github.com/tf2cheater2013/Fedoraware/actions) tab of this repo and select the latest workflow, and then select the Fedoraware button under the Artifacts category. This will download a zip file which you'll need to extract, after that you will get the .dll file. You have to be logged into GitHub to download from this.
-- To inject Fedoraware into TF2, you'll have to also use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject it into TF2.
+- I suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes vac bypass
+- Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2.
 - __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__
 - Should you choose to compile this cheat yourself, you may enable enhanced instruction sets to possibly increase performance. __Properties -> C/C++ -> Code Generation -> Enable Enhanced Instruction Set__. Be sure to check what's the best instruction set you can use by checking in [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html), otherwise the cheat won't work on your PC. 
 
