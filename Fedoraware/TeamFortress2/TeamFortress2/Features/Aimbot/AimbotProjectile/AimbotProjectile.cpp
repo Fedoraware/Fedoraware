@@ -245,6 +245,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 	float MAX_TIME = ProjInfo.m_flMaxTime;
+	
 	if (Predictor.m_pEntity->GetClassID() == ETFClassID::CObjectSentrygun || Predictor.m_pEntity->GetClassID() ==
 		ETFClassID::CObjectDispenser ||
 		Predictor.m_pEntity->GetClassID() == ETFClassID::CObjectTeleporter || Predictor.m_pEntity->GetClassID() !=
@@ -252,8 +253,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		!Vars::Aimbot::Projectile::MovementSimulation.m_Var)
 	{
 		float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
-
-
 		float TIME_STEP = (MAX_TIME / 128.0f);
 
 		for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
@@ -508,9 +507,9 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				}
 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, ProjInfo, out))
-				{
 					break;
-				}
+				
+				out.m_flTime += fLatency;
 
 				if (out.m_flTime < TICKS_TO_TIME(n))
 				{
