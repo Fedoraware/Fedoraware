@@ -19,7 +19,7 @@
 
 ## Guide:
 - I suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes vac bypass
-- Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2.
+- Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
 - __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__
 - Should you choose to compile this cheat yourself, you may enable enhanced instruction sets to possibly increase performance. __Properties -> C/C++ -> Code Generation -> Enable Enhanced Instruction Set__. Be sure to check what's the best instruction set you can use by checking in [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html), otherwise the cheat won't work on your PC. 
 
