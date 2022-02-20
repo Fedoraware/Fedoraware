@@ -185,7 +185,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									              nY - (yscale / 2 + 1) - 10 + yoff, {255, 55, 40, 255}, ALIGN_REVERSE,
 									              _(L"NO CHARGE"));
 								}
-								else if (g_GlobalInfo.m_bRecharging) // charging 
+								else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nWaitForShift || ratio < 1)) // charging 
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 									              nY - (yscale / 2 + 1) - 10 + yoff, {255, 126, 0, 255}, ALIGN_REVERSE,
