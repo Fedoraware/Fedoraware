@@ -252,12 +252,11 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		ETFClassID::CTFPlayer ||
 		!Vars::Aimbot::Projectile::MovementSimulation.m_Var)
 	{
-
+		float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
 		float TIME_STEP = (MAX_TIME / 128.0f);
 
 		for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 		{
-			float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
 			float fCorrectTime = (fPredTime + fLatency);
 			Vec3 vPredictedPos = Predictor.Extrapolate(fCorrectTime);
 
@@ -509,8 +508,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, ProjInfo, out))
 					break;
-				else
-					out.m_flTime += pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
+				
+				out.m_flTime += fLatency;
 
 				if (out.m_flTime < TICKS_TO_TIME(n))
 				{
