@@ -12,6 +12,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
+	if (g_GlobalInfo.m_nShifted > Vars::Misc::CL_Move::DTTicks.m_Var) { g_GlobalInfo.m_nShifted -= 1; oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == Vars::Misc::CL_Move::DTTicks.m_Var + 1)); } // pCode
+
 	// pSpeedhack
 	if (Vars::Misc::CL_Move::SEnabled.m_Var)
 	{
