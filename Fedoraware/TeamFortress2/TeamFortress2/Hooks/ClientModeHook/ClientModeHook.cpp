@@ -193,6 +193,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
+	static ConVar* engine_no_focus_sleep = g_Interfaces.CVars->FindVar("engine_no_focus_sleep");
+	if (engine_no_focus_sleep && engine_no_focus_sleep->GetInt() >= 1)
+	{ engine_no_focus_sleep->SetValue(0); } // stop lagging my audio when I alt-tab lmao
+
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
 	auto pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);

@@ -511,6 +511,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdpersonArrowOffsetKey);
 			SAVE_VAR(Vars::Visuals::ThirdpersonCrosshair);
 			SAVE_VAR(Vars::Visuals::WorldModulation);
+			SAVE_VAR(Vars::Visuals::SkyModulation);
 			SAVE_VAR(Vars::Visuals::PropWireframe);
 			SAVE_VAR(Vars::Visuals::SkyboxChanger);
 			SAVE_VAR(Vars::Visuals::BulletTracer);
@@ -1142,6 +1143,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdpersonCrosshair);
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
+			LOAD_VAR(Vars::Visuals::SkyModulation);
 			LOAD_VAR(Vars::Visuals::PropWireframe);
 			LOAD_VAR(Vars::Visuals::SkyboxChanger);
 			LOAD_VAR(Vars::Visuals::ParticleTracer);
