@@ -62,7 +62,7 @@ void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
 	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
-	if (Vars::Misc::CheatsBypass.m_Var)
+	if (Vars::Misc::CheatsBypass.m_Var && sv_cheats)
 	{
 		if (sv_cheats->GetInt() == 0)
 		{
