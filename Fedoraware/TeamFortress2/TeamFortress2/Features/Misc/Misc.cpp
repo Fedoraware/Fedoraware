@@ -2,7 +2,8 @@
 
 #include "../Vars.h"
 #include "../ChatInfo/ChatInfo.h"
-
+#include "../../Utils/Timer/Timer.hpp"
+#include "../PlayerResource/PlayerResource.h"
 
 //#define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
 
@@ -17,6 +18,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
+	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
 }
 
@@ -70,6 +72,19 @@ void CMisc::CheatsBypass()
 		{
 			sv_cheats->SetValue(0);
 			cheatset = false;
+		}
+	}
+}
+
+void CMisc::PingReducer() {
+	if (Vars::Misc::PingReducer.m_Var) {
+		const ConVar* cl_cmdrate = g_Interfaces.CVars->FindVar("cl_cmdrate");
+		static Timer updateRateTimer{ };
+		const int currentPing = g_PR->GetPing(g_Interfaces.Engine->GetLocalPlayer());
+		if (updateRateTimer.TestAndSet(500)) {
+			CNetChannel* netChannel = g_Interfaces.Engine->GetNetChannelInfo();
+			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.m_Var <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
+			if (netChannel != nullptr) { netChannel->SendNetMsg(cmd); }
 		}
 	}
 }

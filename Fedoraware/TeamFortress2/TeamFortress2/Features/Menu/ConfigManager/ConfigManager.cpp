@@ -584,6 +584,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VoteRevealer);
 			SAVE_VAR(Vars::Misc::VotesInChat);
+			SAVE_VAR(Vars::Misc::PingReducer);
+			SAVE_VAR(Vars::Misc::PingTarget);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -1212,6 +1214,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VoteRevealer);
 			LOAD_VAR(Vars::Misc::VotesInChat);
+			LOAD_VAR(Vars::Misc::PingReducer);
+			LOAD_VAR(Vars::Misc::PingTarget);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled

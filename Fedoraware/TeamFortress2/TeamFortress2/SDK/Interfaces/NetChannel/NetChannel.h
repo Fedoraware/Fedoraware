@@ -1,5 +1,7 @@
 #ifndef INETCHANNELINFO_CLASS
 #define INETCHANNELINFO_CLASS
+#include "NetChannel.h"
+#include "NetChannel.h"
 #include "../../Includes/Includes.h"
 
 #define MULTIPLAYER_BACKUP 90
@@ -171,7 +173,11 @@ public:
 	virtual void	ProcessPlayback(void) = 0;
 	virtual bool	ProcessStream(void) = 0;
 	virtual void	ProcessPacket(struct netpacket_s* packet, bool bHasHeader) = 0;
-	virtual bool	SendNetMsg(INetMessage& msg, bool bForceReliable = false, bool bVoice = false) = 0;
+
+	bool SendNetMsg(INetMessage& msg, bool bForceReliable = false, bool bVoice = false) {
+		return GetVFunc<bool(__thiscall*)(void*, INetMessage&, bool, bool)>(this, 37)(this, msg, bForceReliable, bVoice);
+	}
+
 	virtual bool	SendData(bf_write& msg, bool bReliable = true) = 0;
 	virtual bool	SendFile(const char* filename, unsigned int transferID) = 0;
 	virtual void	DenyFile(const char* filename, unsigned int transferID) = 0;
@@ -634,6 +640,33 @@ public:
 	int m_nLength;
 	bf_read m_DataIn;
 	bf_write m_DataOut;
+};
+
+class NET_SetConVar : public CNetMessage
+{
+	DECLARE_NET_MESSAGE(SetConVar);
+
+	int GetGroup() const
+	{
+		return INetChannelInfo::STRINGCMD;
+	}
+
+	NET_SetConVar() { }
+	NET_SetConVar(const char* name, const char* value)
+	{
+		CVar_t cvar;
+		strncpy(cvar.Name, name, MAX_OSPATH);
+		strncpy(cvar.Value, value, MAX_OSPATH);
+		ConVar = cvar;
+	}
+
+public:
+	typedef struct CVar_s
+	{
+		char Name[MAX_OSPATH];
+		char Value[MAX_OSPATH];
+	} CVar_t;
+	CVar_t ConVar;
 };
 
 #endif
