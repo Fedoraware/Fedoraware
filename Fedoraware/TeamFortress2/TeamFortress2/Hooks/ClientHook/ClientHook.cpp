@@ -247,8 +247,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				if (Vars::Visuals::Rain.m_Var > 0) {
 					g_Visuals.rain.Run();
 				}
-				g_Visuals.UpdateWorldModulation();
-				g_Visuals.UpdateSkyModulation();
+				g_Visuals.ModulateWorld(); // not sure if this is needed, test without it
 			}
 			break;
 		}

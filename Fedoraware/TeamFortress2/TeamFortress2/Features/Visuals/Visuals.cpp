@@ -255,14 +255,29 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
-bool bWorldIsModulated = false;
-bool bSkyIsModulated = false;
+// this whole section below is for world modulation
+bool ModColChanged() // check if colours have been changed
+{
+	static auto oldW = Colors::WorldModulation; static auto oldS = Colors::SkyModulation;
+	auto curW = Colors::WorldModulation; auto curS = Colors::SkyModulation;
 
+	if (curW.r != oldW.r || curW.g != oldW.g || curW.b != oldW.b || curS.r != oldS.r || curS.g != oldS.g || curS.b != oldS.b) { oldW = curW; oldS = curS; return true; }
+	return false;
+}
+
+bool ModSetChanged() // check if modulation has been switched
+{
+	static auto oldS = Vars::Visuals::SkyModulation.m_Var; static auto oldW = Vars::Visuals::WorldModulation.m_Var;
+	auto curS = Vars::Visuals::SkyModulation.m_Var; auto curW = Vars::Visuals::WorldModulation.m_Var;
+
+	if (curS != oldS || curW != oldW) { return true; }
+	return false;
+}
 
 void ApplyModulation(const Color_t& clr)
 {
 	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
-	     MatSystem->Next(h))
+		MatSystem->Next(h))
 	{
 		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
 		{
@@ -288,13 +303,12 @@ void ApplyModulation(const Color_t& clr)
 		}
 	}
 
-	bWorldIsModulated = true;
 }
 
 void ApplySkyboxModulation(const Color_t& clr)
 {
 	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
-	     MatSystem->Next(h))
+		MatSystem->Next(h))
 	{
 		const auto& pMaterial = g_Interfaces.MatSystem->Get(h);
 
@@ -308,19 +322,23 @@ void ApplySkyboxModulation(const Color_t& clr)
 			pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 		}
 	}
-	bSkyIsModulated = true;
 }
-
 
 void CVisuals::ModulateWorld()
 {
-	if (!Vars::Visuals::WorldModulation.m_Var)
-		return;
-
-	ApplyModulation(Colors::WorldModulation);
-	ApplySkyboxModulation(Colors::SkyModulation);
+	if (ModColChanged() || ModSetChanged()) {
+		Vars::Visuals::WorldModulation.m_Var ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({ 255, 255, 255, 255 });
+		Vars::Visuals::SkyModulation.m_Var ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({ 255, 255, 255, 255 });
+	}
+	else if (!Vars::Visuals::WorldModulation.m_Var) { ApplyModulation({ 255, 255, 255, 255 }); } // i don't know why i need to do this
 }
 
+void CVisuals::RestoreWorldModulation() // keep this because its mentioned in @DLLMain.cpp if you find a better way to do this, remove it ig.
+{
+	ApplyModulation({ 255, 255, 255, 255 });
+	ApplySkyboxModulation({ 255, 255, 255, 255 });
+}
+// all world mod stuff above
 
 void CVisuals::OverrideWorldTextures()
 {
@@ -358,72 +376,6 @@ void CVisuals::OverrideWorldTextures()
 			pMaterial->SetShaderAndParams(kv);
 		}
 	}
-}
-
-void CVisuals::UpdateWorldModulation()
-{
-	if (!Vars::Visuals::WorldModulation.m_Var)
-	{
-		RestoreWorldModulation();
-		return;
-	}
-
-	auto ColorChanged = [&]() -> bool
-	{
-		static Color_t old = Colors::WorldModulation;
-		Color_t cur = Colors::WorldModulation;
-
-		if (cur.r != old.r || cur.g != old.g || cur.b != old.b)
-		{
-			old = cur;
-			return true;
-		}
-
-		return false;
-	};
-
-	if (!bWorldIsModulated || ColorChanged())
-		ApplyModulation(Colors::WorldModulation);
-}
-
-void CVisuals::UpdateSkyModulation()
-{
-	if (!Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::Vision.m_Var == 1)
-	{
-		RestoreWorldModulation();
-		return;
-	}
-
-	auto ColorChanged = [&]() -> bool
-	{
-		static Color_t old = Colors::SkyModulation;
-		Color_t cur = Colors::SkyModulation;
-
-		if (cur.r != old.r || cur.g != old.g || cur.b != old.b)
-		{
-			old = cur;
-			return true;
-		}
-
-		return false;
-	};
-
-	if (!bWorldIsModulated || ColorChanged())
-		ApplySkyboxModulation(Colors::SkyModulation);
-}
-
-void CVisuals::RestoreWorldModulation()
-{
-	if (!bWorldIsModulated)
-		return;
-
-	if (!bSkyIsModulated)
-		return;
-
-	ApplyModulation({255, 255, 255, 255});
-	ApplySkyboxModulation({255, 255, 255, 255});
-	bWorldIsModulated = false;
-	bSkyIsModulated = false;
 }
 
 CClientClass* CVisuals::CPrecipitation::GetPrecipitationClass()
