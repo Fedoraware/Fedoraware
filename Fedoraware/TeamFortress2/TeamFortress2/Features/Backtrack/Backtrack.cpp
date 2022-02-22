@@ -1,8 +1,7 @@
 #include "Backtrack.h"
 
-float LerpTime()
+static const float LerpTime()
 {
-
 	static ConVar* updaterate = g_Interfaces.CVars->FindVar("cl_updaterate");
 	static ConVar* minupdate = g_Interfaces.CVars->FindVar("sv_minupdaterate");
 	static ConVar* maxupdate = g_Interfaces.CVars->FindVar("sv_maxupdaterate");
