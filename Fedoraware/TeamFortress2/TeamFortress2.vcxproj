@@ -713,7 +713,6 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
-    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
@@ -733,6 +732,7 @@
     <ClInclude Include="TeamFortress2\Utils\Pattern\Pattern.h" />
     <ClInclude Include="TeamFortress2\Utils\SEOHook\SEOHook.h" />
     <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
+    <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />

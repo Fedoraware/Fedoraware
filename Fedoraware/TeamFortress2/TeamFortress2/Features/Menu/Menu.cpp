@@ -1359,6 +1359,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var); HelpMarker("Will respawn you instantly in MvM");
 						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
 						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
+						ImGui::Checkbox("Fake ping", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces or increases your ping on the scoreboard");
+						if (Vars::Misc::PingReducer.m_Var) {
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
+						}
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();

@@ -15,6 +15,7 @@ private:
 public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
+	void PingReducer();
 	void ServerHitbox();
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();

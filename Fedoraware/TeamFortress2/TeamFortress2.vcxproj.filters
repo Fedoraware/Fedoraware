@@ -570,7 +570,6 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\XInput.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xma2defs.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\xnamath.h" />
-    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
     <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
@@ -643,6 +642,7 @@
     <ClInclude Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome_defs.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome.h" />
+    <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
