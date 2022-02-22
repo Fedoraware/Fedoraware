@@ -707,8 +707,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
-			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
-			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
 
 		}
 
@@ -1340,8 +1338,6 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
-			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
-			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
 		}
 
 		//Fonts
