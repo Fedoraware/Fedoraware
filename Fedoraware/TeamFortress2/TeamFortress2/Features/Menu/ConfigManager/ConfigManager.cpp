@@ -7,7 +7,6 @@
 #include "../../../SDK/SDK.h"
 #include "../../Radar/Radar.h"
 #include "../../SpectatorList/SpectatorList.h"
-#include "../../Keybinds/Keybinds.h"
 #include "../../Misc/Misc.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
