@@ -533,7 +533,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
-			SAVE_VAR(Vars::Glow::Main::Wireframe);
+			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::Vision);
 			SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 
@@ -1163,7 +1163,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
-			LOAD_VAR(Vars::Glow::Main::Wireframe);
+			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
 

@@ -143,7 +143,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (g_GlobalInfo.m_bShouldShift && Vars::Misc::CL_Move::AntiWarp.m_Var)
+		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var)
 		{
 			if (vStartOrigin.IsZero())
 			{

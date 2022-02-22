@@ -360,21 +360,23 @@ void CGlowEffect::Render()
 		}
 		pRenderContext->PopRenderTargetAndViewport();
 
-		pRenderContext->PushRenderTargetAndViewport();
-		{
-			pRenderContext->Viewport(0, 0, w, h);
+		if (!Vars::Glow::Main::Stencil.m_Var) {
+			pRenderContext->PushRenderTargetAndViewport();
+			{
+				pRenderContext->Viewport(0, 0, w, h);
 
-			pRenderContext->SetRenderTarget(m_pRenderBuffer2);
-			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurXwf : m_pMatBlurX, 0,
-			                                         0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
-			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
+				pRenderContext->SetRenderTarget(m_pRenderBuffer2);
+				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0,
+					0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+				//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 
-			pRenderContext->SetRenderTarget(m_pRenderBuffer1);
-			pRenderContext->DrawScreenSpaceRectangle(Vars::Glow::Main::Wireframe.m_Var ? m_pMatBlurYwf : m_pMatBlurY, 0,
-			                                         0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
-			//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
+				pRenderContext->SetRenderTarget(m_pRenderBuffer1);
+				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0,
+					0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+				//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
+			}
+			pRenderContext->PopRenderTargetAndViewport();
 		}
-		pRenderContext->PopRenderTargetAndViewport();
 
 		ShaderStencilState_t StencilState = {};
 		StencilState.m_bEnable = true;
@@ -387,16 +389,19 @@ void CGlowEffect::Render()
 		StencilState.m_ZFailOp = STENCILOPERATION_KEEP;
 		StencilState.SetStencilState(pRenderContext);
 
-		pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
-		if (Vars::Glow::Main::Wireframe.m_Var)
+		if (Vars::Glow::Main::Stencil.m_Var)
 		{
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w,
-			                                         h);
-			pRenderContext->
-				DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
-			pRenderContext->
-				DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+		}
+		else {
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 		}
 		StencilStateDisable.SetStencilState(pRenderContext);
 
