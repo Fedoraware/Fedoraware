@@ -62,7 +62,6 @@
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Keybinds\Keybinds.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
@@ -471,7 +470,6 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
-    <ClInclude Include="TeamFortress2\Features\Keybinds\Keybinds.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />

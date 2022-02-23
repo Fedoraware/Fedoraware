@@ -93,14 +93,11 @@ static void updateAntiAfk(CUserCmd* pCmd)
 		static float last_time = 0.0f;
 		static int buttones = 0;
 
-		if (pCmd->buttons != buttones)
+		if (g_Interfaces.GlobalVars->curtime - last_time > 20)
 		{
+			pCmd->buttons &= IN_FORWARD;
+			pCmd->buttons &= IN_JUMP;
 			last_time = g_Interfaces.GlobalVars->curtime;
-			buttones = pCmd->buttons;
-		}
-		else if (g_Interfaces.GlobalVars->curtime - last_time > (g_ConVars.afkTimer->GetInt() * 60) - 1)
-		{
-			pCmd->buttons |= IN_FORWARD;
 		}
 	}
 }
@@ -143,7 +140,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (g_GlobalInfo.m_bShouldShift && Vars::Misc::CL_Move::AntiWarp.m_Var)
+		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var)
 		{
 			if (vStartOrigin.IsZero())
 			{

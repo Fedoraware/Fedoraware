@@ -7,7 +7,6 @@
 #include "../../../SDK/SDK.h"
 #include "../../Radar/Radar.h"
 #include "../../SpectatorList/SpectatorList.h"
-#include "../../Keybinds/Keybinds.h"
 #include "../../Misc/Misc.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
@@ -533,7 +532,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLogger);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
-			SAVE_VAR(Vars::Glow::Main::Wireframe);
+			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::Vision);
 			SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 
@@ -708,8 +707,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
-			SAVE_OTHER(g_Keybinds.m_nKeybindsX);
-			SAVE_OTHER(g_Keybinds.m_nKeybindsY);
 
 		}
 
@@ -1163,7 +1160,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Visuals::despawnTime);
 			LOAD_VAR(Vars::Visuals::damageLogger);
-			LOAD_VAR(Vars::Glow::Main::Wireframe);
+			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
 
@@ -1341,8 +1338,6 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
-			LOAD_OTHER(g_Keybinds.m_nKeybindsX);
-			LOAD_OTHER(g_Keybinds.m_nKeybindsY);
 		}
 
 		//Fonts

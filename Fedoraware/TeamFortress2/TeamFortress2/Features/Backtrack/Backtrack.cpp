@@ -1,8 +1,7 @@
 #include "Backtrack.h"
 
-float LerpTime()
+static const float LerpTime()
 {
-
 	static ConVar* updaterate = g_Interfaces.CVars->FindVar("cl_updaterate");
 	static ConVar* minupdate = g_Interfaces.CVars->FindVar("sv_minupdaterate");
 	static ConVar* maxupdate = g_Interfaces.CVars->FindVar("sv_maxupdaterate");
@@ -126,8 +125,10 @@ void CBacktrack::Calculate(CUserCmd* pCmd) {
 				}
 
 				if (finalTargetIndex != -1) {
-					if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
-						pCmd->tick_count = TIME_TO_TICKS(finalTargetIndex);
+					if (!g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted == 0) {
+						if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+							pCmd->tick_count = TIME_TO_TICKS(finalTargetIndex);
+						}
 					}
 				}
 			}
