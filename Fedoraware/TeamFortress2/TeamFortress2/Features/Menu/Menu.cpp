@@ -1296,6 +1296,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						HelpMarker("Will make their ragdoll ice");
 
+						ImGui::Dummy(ImVec2(0, 20));
+						SectionTitle("Freecam");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);  HelpMarker("Allows you to freely move your camera when holding the key");
+						WidthSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.m_Var, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
+
 						ImGui::PopStyleVar();
 					}
 

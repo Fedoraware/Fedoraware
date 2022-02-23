@@ -409,6 +409,9 @@ namespace Vars
 		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList { 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
 
+		inline CVar<int> FreecamKey					{ 0, L"Freecam Key" };
+		inline CVar<float> FreecamSpeed				{ 10.f, L"Freecam Speed" };
+
 		inline CVar<bool> SpyWarning				{ true, L"Active" };
 		inline CVar<bool> SpyWarningAnnounce		{ true, L"Announce" };
 		inline CVar<int> SpyWarningStyle			{ 0, L"Style" }; //0 - Indicator, 1 - Flash
