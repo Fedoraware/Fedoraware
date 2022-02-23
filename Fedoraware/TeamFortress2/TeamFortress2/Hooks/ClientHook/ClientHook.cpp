@@ -44,10 +44,17 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_RENDER_START:
 		{
 			g_GlobalInfo.m_vPunchAngles = Vec3();
+			Vec3 localHead;
 
-			if (Vars::Visuals::RemovePunch.m_Var)
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				localHead = pLocal->GetHitboxPos(HITBOX_HEAD);
+
+				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
+					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
+				}
+
+				if (Vars::Visuals::RemovePunch.m_Var)
 				{
 					g_GlobalInfo.m_vPunchAngles = pLocal->GetPunchAngles();
 					//Store punch angles to be compesnsated for in aim
@@ -126,14 +133,8 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 						break;
 					}
 
-					Vec3 vPos;
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
-					{
-						vPos = pLocal->GetHitboxPos(HITBOX_HEAD);
-					}
-					Vec3 vAngleTo = Math::CalcAngle(entity->GetHitboxPos(HITBOX_HEAD), vPos);
-
 					// Yaw resolver
+					Vec3 vAngleTo = Math::CalcAngle(entity->GetHitboxPos(HITBOX_HEAD), localHead);
 					switch (resolveMode.m_Yaw)
 					{
 					case 1:

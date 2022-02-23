@@ -61,6 +61,8 @@ struct GlobalInfo_t
 	std::map < CBaseEntity*, VelFixRecord> velFixRecord;
 	std::vector<Vec3> predBeforeLines;
 	std::vector<Vec3> predFutureLines;
+	bool m_bFreecamActive				= false;
+	Vec3 m_vFreecamPos					= {};
 };
 
 inline GlobalInfo_t g_GlobalInfo;

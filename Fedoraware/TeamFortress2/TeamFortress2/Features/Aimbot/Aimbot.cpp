@@ -7,6 +7,9 @@
 
 bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
+	if (g_GlobalInfo.m_bFreecamActive)
+		return false;
+
 	if (!Vars::Aimbot::Global::Active.m_Var)
 		return false;
 

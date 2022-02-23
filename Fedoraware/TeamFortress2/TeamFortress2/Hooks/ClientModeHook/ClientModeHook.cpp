@@ -207,6 +207,40 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		// Freecam
+		if (Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
+			if (g_GlobalInfo.m_bFreecamActive == false) {
+				g_GlobalInfo.m_vFreecamPos = pLocal->GetVecOrigin();
+				g_GlobalInfo.m_bFreecamActive = true;
+			}
+
+			const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+			Vec3 fcMove;
+
+			fcMove.x = cosf(DEG2RAD(viewAngles.y)) * cosf(DEG2RAD(viewAngles.x));
+			fcMove.y = sinf(DEG2RAD(viewAngles.y)) * cosf(DEG2RAD(viewAngles.x));
+			fcMove.z = sinf(DEG2RAD(viewAngles.x));
+
+			if (pCmd->buttons & IN_FORWARD) {
+				g_GlobalInfo.m_vFreecamPos.x += Vars::Visuals::FreecamSpeed.m_Var * fcMove.x;
+				g_GlobalInfo.m_vFreecamPos.y += Vars::Visuals::FreecamSpeed.m_Var * fcMove.y;
+				g_GlobalInfo.m_vFreecamPos.z -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.z;
+			}
+
+			if (pCmd->buttons & IN_BACK) {
+				g_GlobalInfo.m_vFreecamPos.x -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.x;
+				g_GlobalInfo.m_vFreecamPos.y -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.y;
+				g_GlobalInfo.m_vFreecamPos.z += Vars::Visuals::FreecamSpeed.m_Var * fcMove.z;
+			}
+
+			pCmd->buttons = 0;
+			pCmd->forwardmove = 0;
+			pCmd->sidemove = 0;
+			pCmd->upmove = 0;
+		} else {
+			g_GlobalInfo.m_bFreecamActive = false;
+		}
+		
 		nOldFlags = pLocal->GetFlags();
 
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
