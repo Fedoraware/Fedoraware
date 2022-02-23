@@ -6,6 +6,8 @@
 #include "../../Features/Auto/Auto.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
+#include "../../Features/Chams/Chams.h"
+#include "../../Features/Glow/Glow.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Crits/Crits.h"
 #include "../../Features/Backtrack/Backtrack.h"
@@ -497,9 +499,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		       ? false
 		       : OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
 }
-
-#include "../../Features/Glow/Glow.h"
-#include "../../Features/Chams/Chams.h"
 
 bool __stdcall ClientModeHook::DoPostScreenSpaceEffects::Hook(const CViewSetup* pSetup)
 {
