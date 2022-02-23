@@ -77,16 +77,22 @@ void CMisc::CheatsBypass()
 }
 
 void CMisc::PingReducer() {
-	if (Vars::Misc::PingReducer.m_Var) {
-		const ConVar* cl_cmdrate = g_Interfaces.CVars->FindVar("cl_cmdrate");
-		static Timer updateRateTimer{ };
-		const int currentPing = g_PR->GetPing(g_Interfaces.Engine->GetLocalPlayer());
-		if (updateRateTimer.TestAndSet(500)) {
-			CNetChannel* netChannel = g_Interfaces.Engine->GetNetChannelInfo();
+	const ConVar* cl_cmdrate = g_Interfaces.CVars->FindVar("cl_cmdrate");
+	CNetChannel* netChannel = g_Interfaces.Engine->GetNetChannelInfo();
+	if (cl_cmdrate == nullptr || netChannel == nullptr) { return; }
+
+	static Timer updateRateTimer{ };
+	if (updateRateTimer.TestAndSet(500)) {
+		if (Vars::Misc::PingReducer.m_Var) {
+			const int currentPing = g_PR->GetPing(g_Interfaces.Engine->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.m_Var <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
-			if (netChannel != nullptr) { netChannel->SendNetMsg(cmd); }
+			netChannel->SendNetMsg(cmd);
 		}
-	}
+		else {
+			NET_SetConVar cmd("cl_cmdrate", std::to_string(cl_cmdrate->GetInt()).c_str());
+			netChannel->SendNetMsg(cmd);
+		}
+	} 
 }
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
