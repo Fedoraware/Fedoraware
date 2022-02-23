@@ -97,6 +97,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 		{
 			pCmd->buttons &= IN_FORWARD;
 			pCmd->buttons &= IN_JUMP;
+			last_time = g_Interfaces.GlobalVars->curtime;
 		}
 	}
 }
