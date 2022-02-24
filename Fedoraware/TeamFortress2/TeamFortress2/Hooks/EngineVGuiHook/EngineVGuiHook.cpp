@@ -190,13 +190,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									              nY - (yscale / 2 + 1) - 10 + yoff, {255, 126, 0, 255}, ALIGN_REVERSE,
 									              _(L"CHARGING"));
 								}
-								else if (ratio != 1) // disgusting btw
-								{
-									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
-									              nY - (yscale / 2 + 1) - 10 + yoff, {66, 255, 0, 255}, ALIGN_REVERSE,
-									              _(L"READY"));
-								}
-								else if (!g_GlobalInfo.m_nWaitForShift) // activates when ready
+								else if (!g_GlobalInfo.m_nWaitForShift || ratio != 1) // activates when ready
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 									              nY - (yscale / 2 + 1) - 10 + yoff, {66, 255, 0, 255}, ALIGN_REVERSE,

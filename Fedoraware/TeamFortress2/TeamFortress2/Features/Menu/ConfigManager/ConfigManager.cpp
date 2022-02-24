@@ -484,7 +484,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::RemoveZoom);
 			SAVE_VAR(Vars::Visuals::RemovePunch);
 			SAVE_VAR(Vars::Visuals::CrosshairAimPos);
-			SAVE_VAR(Vars::Visuals::ChatInfo);
+			SAVE_VAR(Vars::Visuals::ChatInfoText);
+			SAVE_VAR(Vars::Visuals::ChatInfoChat);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			SAVE_VAR(Vars::Visuals::SpectatorList);
 
@@ -530,7 +531,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::Rain);
 				
 			SAVE_VAR(Vars::Visuals::despawnTime);
-			SAVE_VAR(Vars::Visuals::damageLogger);
+			SAVE_VAR(Vars::Visuals::damageLoggerText);
+			SAVE_VAR(Vars::Visuals::damageLoggerChat);
+			SAVE_VAR(Vars::Visuals::damageLoggerConsole);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::Vision);
@@ -582,8 +585,10 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::MVMRes);
 			SAVE_VAR(Vars::Misc::BeCat);
-			SAVE_VAR(Vars::Misc::VoteRevealer);
-			SAVE_VAR(Vars::Misc::VotesInChat);
+			SAVE_VAR(Vars::Misc::VoteRevealerText);
+			SAVE_VAR(Vars::Misc::VoteRevealerConsole);
+			SAVE_VAR(Vars::Misc::VoteRevealerChat);
+			SAVE_VAR(Vars::Misc::VoteRevealerParty);
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
 			// CL_Move
@@ -693,9 +698,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DtChargedLeft);
 			SAVE_OTHER(Colors::DtChargedRight);
 			SAVE_OTHER(Colors::DtOutline);
-			SAVE_OTHER(Colors::DmgLoggerBackground);
-			SAVE_OTHER(Colors::DmgLoggerOutline);
-			SAVE_OTHER(Colors::DmgLoggerText);
+			SAVE_OTHER(Colors::NotifBG);
+			SAVE_OTHER(Colors::NotifOutline);
+			SAVE_OTHER(Colors::NotifText);
 			SAVE_OTHER(Colors::WeaponIcon);
 			SAVE_OTHER(Colors::NoscopeLines1);
 			SAVE_OTHER(Colors::NoscopeLines2);
@@ -1113,7 +1118,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::RemoveZoom);
 			LOAD_VAR(Vars::Visuals::RemovePunch);
 			LOAD_VAR(Vars::Visuals::CrosshairAimPos);
-			LOAD_VAR(Vars::Visuals::ChatInfo);
+			LOAD_VAR(Vars::Visuals::ChatInfoText);
+			LOAD_VAR(Vars::Visuals::ChatInfoChat);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			LOAD_VAR(Vars::Visuals::SpectatorList);
 
@@ -1159,7 +1165,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::FovArrowsDist);
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
 			LOAD_VAR(Vars::Visuals::despawnTime);
-			LOAD_VAR(Vars::Visuals::damageLogger);
+			LOAD_VAR(Vars::Visuals::damageLoggerText);
+			LOAD_VAR(Vars::Visuals::damageLoggerChat);
+			LOAD_VAR(Vars::Visuals::damageLoggerConsole);
 			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
@@ -1211,8 +1219,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::MVMRes);
 			LOAD_VAR(Vars::Misc::BeCat);
-			LOAD_VAR(Vars::Misc::VoteRevealer);
-			LOAD_VAR(Vars::Misc::VotesInChat);
+			LOAD_VAR(Vars::Misc::VoteRevealerText);
+			LOAD_VAR(Vars::Misc::VoteRevealerConsole);
+			LOAD_VAR(Vars::Misc::VoteRevealerChat);
+			LOAD_VAR(Vars::Misc::VoteRevealerParty);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
 			// CL_Move
@@ -1322,9 +1332,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DtChargedLeft);
 			LOAD_OTHER(Colors::DtChargedRight);
 			LOAD_OTHER(Colors::DtOutline);
-			LOAD_OTHER(Colors::DmgLoggerBackground);
-			LOAD_OTHER(Colors::DmgLoggerOutline);
-			LOAD_OTHER(Colors::DmgLoggerText);
+			LOAD_OTHER(Colors::NotifBG);
+			LOAD_OTHER(Colors::NotifOutline);
+			LOAD_OTHER(Colors::NotifText);
 			LOAD_OTHER(Colors::WeaponIcon);
 			LOAD_OTHER(Colors::NoscopeLines1);
 			LOAD_OTHER(Colors::NoscopeLines2);

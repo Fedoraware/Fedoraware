@@ -571,18 +571,18 @@ void Notify::Think()
 		// there was no need to do what u did to the font system mfed
 
 		g_Draw.Line(x, y, x, y + 19, {
-			            Colors::DmgLoggerOutline.r, Colors::DmgLoggerOutline.g, Colors::DmgLoggerOutline.b, color.a
+			            Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a
 		            });
 		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
 		                     {
-			                     Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g,
-			                     Colors::DmgLoggerBackground.b, color.a
+			                     Colors::NotifBG.r, Colors::NotifBG.g,
+			                     Colors::NotifBG.b, color.a
 		                     }, {
-			                     Colors::DmgLoggerBackground.r, Colors::DmgLoggerBackground.g,
-			                     Colors::DmgLoggerBackground.b, 1
+			                     Colors::NotifBG.r, Colors::NotifBG.g,
+			                     Colors::NotifBG.b, 1
 		                     }, true);
 		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
-		              {Colors::DmgLoggerText.r, Colors::DmgLoggerText.g, Colors::DmgLoggerText.b, color.a},
+		              {Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a},
 		              ALIGN_DEFAULT, notify->m_text.c_str());
 
 		y += size;

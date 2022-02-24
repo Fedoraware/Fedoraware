@@ -395,19 +395,20 @@ namespace Vars
 
 	namespace Visuals
 	{
-		inline CVar<bool> RemoveDisguises   { false, L"Remove Disguises" };
-		inline CVar<bool> RemoveTaunts		{ false, L"Remove Taunts" };
-		inline CVar<int> FieldOfView		{ 110, L"Field of View" };
-		inline CVar<int> AimFOVAlpha		{ 10, L"Aim FOV Alpha" };
-		inline CVar<bool> RemoveScope		{ true, L"Remove Scope" };
-		inline CVar<bool> ScopeLines		{ false, L"Scope lines" };
-		inline CVar<bool> RemoveZoom		{ true, L"Remove Zoom" };
-		inline CVar<bool> RemovePunch		{ true, L"Remove Recoil" };
-		inline CVar<bool> CrosshairAimPos	{ true, L"Crosshair At Aim Pos" };
-		inline CVar<bool> ChatInfo			{ true, L"Show Class Changes" };
-		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
-		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
-		inline CVar<int> SpectatorList { 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
+		inline CVar<bool> RemoveDisguises		{ false, L"Remove Disguises" };
+		inline CVar<bool> RemoveTaunts			{ false, L"Remove Taunts" };
+		inline CVar<int> FieldOfView			{ 110, L"Field of View" };
+		inline CVar<int> AimFOVAlpha			{ 10, L"Aim FOV Alpha" };
+		inline CVar<bool> RemoveScope			{ true, L"Remove Scope" };
+		inline CVar<bool> ScopeLines			{ false, L"Scope lines" };
+		inline CVar<bool> RemoveZoom			{ true, L"Remove Zoom" };
+		inline CVar<bool> RemovePunch			{ true, L"Remove Recoil" };
+		inline CVar<bool> CrosshairAimPos		{ true, L"Crosshair At Aim Pos" };
+		inline CVar<bool> ChatInfoText			{ false, L"Show Class Changes" };
+		inline CVar<bool> ChatInfoChat			{ false, L"Show Class Changes" };
+		inline CVar<bool> OutOfFOVArrowsOutline	{ false, L"balls" };
+		inline CVar<float> FovArrowsDist		{ 0.15f, L"balls" };
+		inline CVar<int> SpectatorList			{ 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
 
 		inline CVar<int> FreecamKey					{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed				{ 10.f, L"Freecam Speed" };
@@ -457,7 +458,10 @@ namespace Vars
 		inline CVar<int> VMRoll{ 0, L"VM Offset" };
 
 		inline CVar<float> despawnTime{ 5.f, L"How many ticks to despawn a damage log event" };
-		inline CVar<int> damageLogger{ 2, L"Enable damage logger" };
+		//inline CVar<int> damageLogger{ 2, L"Enable damage logger" };
+		inline CVar<bool> damageLoggerText{ false, L"Enable damage logger" };
+		inline CVar<bool> damageLoggerChat{ false, L"Enable damage logger" };
+		inline CVar<bool> damageLoggerConsole{ false, L"Enable damage logger" };
 
 		inline CVar<int> Vision{ false, L"vision modifier" };
 
@@ -516,8 +520,10 @@ namespace Vars
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<int> EdgeJumpKey			{ VK_MENU, L"Edge Jump key"};
 		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
-		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
-		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline CVar<bool> VoteRevealerText		{ false, L"Reveal votes To Text" };
+		inline CVar<bool> VoteRevealerConsole	{ false, L"Reveal votes To Console" };
+		inline CVar<bool> VoteRevealerChat		{ false, L"Reveal votes To Chat" };
+		inline CVar<bool> VoteRevealerParty		{ false, L"Reveal votes To Party" };
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };

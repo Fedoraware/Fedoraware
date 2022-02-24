@@ -66,77 +66,58 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 	if (const auto pLocal = g_EntityCache.m_pLocal)
 	{
-		if (Vars::Visuals::ChatInfo.m_Var)
+		if ((Vars::Visuals::ChatInfoText.m_Var || Vars::Visuals::ChatInfoChat.m_Var) && uNameHash == FNV1A::HashConst("player_changeclass"))
 		{
-			// literally completely pasted from deathpole
-			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_started"))
+			if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(
+				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
 			{
-				// IT TOOK ME SO LONG TO REALISE I HADN'T ADDED THE LISTENER
-				const auto initiator = pEvent->GetInt("initiator");
-				const auto target = pEvent->GetString("param1");
-				// im almost certain this is the param for the targets name 
+				if (pEntity == pLocal) { return; }
+				int nIndex = pEntity->GetIndex();
 
-				PlayerInfo_t pii;
-				g_Interfaces.Engine->GetPlayerInfo(initiator, &pii);
+				PlayerInfo_t pi;
+				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
 
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					initiator, tfm::format("%s[FeD] %sVote Initiator: \x3%s", blue, yellow, pii.name).c_str());
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					initiator, tfm::format("%s[FeD] %sVote Target: \x3%s", blue, yellow, target).c_str());
-			}
+				std::string classString = "[FeD] " + std::string(pi.name) + " is now a " + std::string(
+					Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str();
+				auto wclassString = std::wstring(classString.begin(), classString.end());
 
-			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst("vote_cast"))
-			{
-				const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
-				if (pEntity && pEntity->IsPlayer())
-				{
-					const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
-					PlayerInfo_t pi;
-					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-					std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
-					g_notify.Add(voteString);
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-						pEntity->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
-					g_Interfaces.CVars->ConsoleColorPrintf({133, 255, 66, 255}, _("%s\n"), voteString.c_str());
-					if (Vars::Misc::VotesInChat.m_Var)
-					{
-						g_Interfaces.Engine->ClientCmd_Unrestricted(
-							tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
-					}
-				}
-			}
-
-			// i have moved this to g_notify because it WILL look better than spamming ur chat for every idiot hvher tryna change spawns on 2fort
-			if (uNameHash == FNV1A::HashConst("player_changeclass"))
-			{
-				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(
-					g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
-				{
-					if (pEntity == pLocal) { return; }
-					int nIndex = pEntity->GetIndex();
-
-					PlayerInfo_t pi;
-					g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
-
-					std::string classString = "[FeD] " + std::string(pi.name) + " is now a " + std::string(
-						Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str();
-					auto wclassString = std::wstring(classString.begin(), classString.end());
+				if (Vars::Visuals::ChatInfoText.m_Var)
 					g_notify.Add(classString);
 
-					//g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, tfm::format("%s[dp] \x3%s\x1 is now a \x3%s\x1!", clr, pi.name, Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str());
+				if (Vars::Visuals::ChatInfoChat.m_Var) {
+					const std::string changeClassString(blue + "[FeD] " + red + pi.name + yellow + " is now a " + red + Utils::GetClassByIndex(pEvent->GetInt("class")));
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex, changeClassString.c_str());
 				}
-			}
-
-			if (uNameHash == FNV1A::HashConst("player_connect"))
-			{
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-					GET_INDEX_USERID(pEvent->GetInt(_("userid"))),
-					tfm::format("\x3%s\x1 connected. (%s)", pEvent->GetString("name"),
-					            pEvent->GetString("address")).c_str());
 			}
 		}
 
-		if (Vars::Visuals::damageLogger.m_Var && uNameHash == FNV1A::HashConst("player_hurt"))
+		if ((Vars::Misc::VoteRevealerText.m_Var || Vars::Misc::VoteRevealerChat.m_Var || Vars::Misc::VoteRevealerConsole.m_Var || Vars::Misc::VoteRevealerParty.m_Var) && uNameHash == FNV1A::HashConst("vote_cast"))
+		{
+			const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
+			if (pEntity && pEntity->IsPlayer())
+			{
+				const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
+				PlayerInfo_t pi;
+				g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
+				std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
+				if (Vars::Misc::VoteRevealerParty.m_Var)
+				{
+					g_Interfaces.Engine->ClientCmd_Unrestricted(
+						tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
+				}
+				if (Vars::Misc::VoteRevealerText.m_Var) {
+					g_notify.Add(voteString);
+				}
+				if (Vars::Misc::VoteRevealerConsole.m_Var) {
+					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString.c_str());
+				}
+				if (Vars::Misc::VoteRevealerText.m_Var) {
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pEntity->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
+				}
+			}
+		}
+
+		if ((Vars::Visuals::damageLoggerConsole.m_Var || &Vars::Visuals::damageLoggerChat.m_Var) && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
 			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
 				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
@@ -167,16 +148,15 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const wchar_t* wcattackString = wattackString.c_str();
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
 				                                  attackStringW, attackStringH);
+				const std::string chatAttackString(blue + "[FeD]" + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
-				if (Vars::Visuals::damageLogger.m_Var == 1 && Vars::Visuals::ChatInfo.m_Var) {
-					const std::string chatAttackString(blue + "[FeD]" + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
-
+				if (Vars::Visuals::damageLoggerChat.m_Var) {
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex,
 						chatAttackString.c_str());
 				}
-				// who tf uses this
-
-				if (Vars::Visuals::damageLogger.m_Var == 2)
+				if (Vars::Visuals::damageLoggerConsole.m_Var)
+					g_Interfaces.CVars->ConsoleColorPrintf({ 219, 145, 59, 255 }, _("%s\n"), attackString.c_str());
+				if (&Vars::Visuals::damageLoggerText.m_Var)
 					g_notify.Add(attackString);
 			}
 		}
@@ -264,7 +244,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				if (m_known_bots.find(info.friendsID) == m_known_bots.end())
 				{
 					g_notify.Add(tfm::format("%s is a bot!", info.name));
-					if (Vars::Visuals::ChatInfo.m_Var)
+					if (Vars::Visuals::ChatInfoText.m_Var)
 						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
 							player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
 

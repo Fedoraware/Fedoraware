@@ -68,7 +68,7 @@ static void MultiCombo(std::vector<const char*> titles, std::vector<bool*> optio
 
 	if (ImGui::BeginCombo(comboName.c_str(), preview.c_str())) {
 		for (size_t i = 0; i < titles.size(); i++) {
-			ImGui::Selectable(titles[i], options[i]);
+			ImGui::Selectable(titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
 		}
 
 		ImGui::EndCombo();
@@ -1111,6 +1111,17 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Bullet tracer colour", Colors::BulletTracer);
+						MultiCombo({ "Votes (Console)", "Votes (Text)", "Votes (Chat)", "Votes (Party)", "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)"}, {&Vars::Misc::VoteRevealerConsole.m_Var, &Vars::Misc::VoteRevealerText.m_Var, &Vars::Misc::VoteRevealerChat.m_Var, &Vars::Misc::VoteRevealerParty.m_Var, &Vars::Visuals::damageLoggerConsole.m_Var, &Vars::Visuals::damageLoggerText.m_Var, &Vars::Visuals::damageLoggerChat.m_Var, &Vars::Visuals::ChatInfoText.m_Var, &Vars::Visuals::ChatInfoChat.m_Var}, "What & How should events be logged", "Event Logging");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("GUI Notif Background", Colors::NotifBG);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("GUI Notif Outline", Colors::NotifOutline);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 68);
+						ImGui::SetNextItemWidth(68);
+						ColorPicker("GUI Notif Colour", Colors::NotifText);
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("GUI Notif Time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 3.f, "%.1f"); ImGui::PopItemWidth();
 						static const char* bullettracers[]{ "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" }; ImGui::PushItemWidth(100); ImGui::Combo("Particle tracer", &Vars::Visuals::ParticleTracer.m_Var, bullettracers, IM_ARRAYSIZE(bullettracers)); ImGui::PopItemWidth();
 						if (Vars::Visuals::ParticleTracer.m_Var == 9) {
 							ImGui::PushItemWidth(150); ImGui::InputText("Custom Tracer", &Vars::Visuals::ParticleName); ImGui::PopItemWidth(); HelpMarker("If you want to use a custom particle tracer");
@@ -1134,7 +1145,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 
-						ImGui::Checkbox("Chat info", &Vars::Visuals::ChatInfo.m_Var);
 						const char* specModes[]{ "Off", "Draggable", "Static", "Static + Avatars" }; ImGui::PushItemWidth(100); ImGui::Combo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, specModes, IM_ARRAYSIZE(specModes)); ImGui::PopItemWidth();
 						ImGui::Dummy(ImVec2(0, 20));
 
@@ -1365,8 +1375,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
 						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override etc.");
 						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var); HelpMarker("Will respawn you instantly in MvM");
-						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealer.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
-						ImGui::Checkbox("Log votes to party", &Vars::Misc::VotesInChat.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
+						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealerText.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
+						ImGui::Checkbox("Log votes to party", &Vars::Misc::VoteRevealerParty.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
 						ImGui::Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
 						if (Vars::Misc::PingReducer.m_Var) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
@@ -1754,17 +1764,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(150); ImGui::InputText("Custom skybox name", &Vars::Skybox::SkyboxName); ImGui::PopItemWidth(); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
 						}
 						ImGui::Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
-						const char* logModes[]{ "Off", "Chat", "Text" }; ImGui::PushItemWidth(150); ImGui::Combo("Damage logger", &Vars::Visuals::damageLogger.m_Var, logModes, IM_ARRAYSIZE(logModes)); ImGui::PopItemWidth(); HelpMarker("Will log any damage you deal to players");
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-						ImGui::SetNextItemWidth(20);
-						ColorPicker("Damage logger background colour", Colors::DmgLoggerBackground);
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
-						ImGui::SetNextItemWidth(44);HelpMarker("Will log any damage you deal to players");
-						ColorPicker("Damage logger outline colour", Colors::DmgLoggerOutline);
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 68);
-						ImGui::SetNextItemWidth(68);
-						ColorPicker("Damage logger text colour", Colors::DmgLoggerText);
-						ImGui::PushItemWidth(150); ImGui::SliderFloat("Damage logger time", &Vars::Visuals::despawnTime.m_Var, 0.5f, 10.f, "%.1f"); ImGui::PopItemWidth();
 						ImGui::Checkbox("Bypass sv_pure", &Vars::Misc::BypassPure.m_Var); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
 						ImGui::Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
 						const char* weather[]{ "Off", "Rain", "Snow" };
