@@ -52,6 +52,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
 					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
+					pLocal->SetAbsOrigin(g_GlobalInfo.m_vFreecamPos);
 				}
 
 				if (Vars::Visuals::RemovePunch.m_Var)
