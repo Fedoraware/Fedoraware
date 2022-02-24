@@ -489,6 +489,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			SAVE_VAR(Vars::Visuals::SpectatorList);
 
+			SAVE_VAR(Vars::Visuals::FreecamKey);
+			SAVE_VAR(Vars::Visuals::FreecamSpeed);
+
 			SAVE_VAR(Vars::Visuals::SpyWarning);
 			SAVE_VAR(Vars::Visuals::SpyWarningAnnounce);
 			SAVE_VAR(Vars::Visuals::SpyWarningStyle);
@@ -1122,6 +1125,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ChatInfoChat);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			LOAD_VAR(Vars::Visuals::SpectatorList);
+
+			LOAD_VAR(Vars::Visuals::FreecamKey);
+			LOAD_VAR(Vars::Visuals::FreecamSpeed);
 
 			LOAD_VAR(Vars::Visuals::SpyWarning);
 			LOAD_VAR(Vars::Visuals::SpyWarningAnnounce);

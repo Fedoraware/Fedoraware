@@ -13,9 +13,7 @@
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 
-
 #include "../../Features/Vars.h"
-
 #include "../../Features/PlayerResource/PlayerResource.h"
 
 void AngleVectors2(const QAngle& angles, Vector* forward)
@@ -88,7 +86,7 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
 }
 
-static void updateAntiAfk(CUserCmd* pCmd)
+static void UpdateAntiAFK(CUserCmd* pCmd)
 {
 	if (Vars::Misc::AntiAFK.m_Var && g_ConVars.afkTimer->GetInt() != 0)
 	{
@@ -208,37 +206,49 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		// Freecam
-		if (Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
-			if (g_GlobalInfo.m_bFreecamActive == false) {
-				g_GlobalInfo.m_vFreecamPos = pLocal->GetVecOrigin();
-				g_GlobalInfo.m_bFreecamActive = true;
+		{
+			if (Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
+				if (g_GlobalInfo.m_bFreecamActive == false) {
+					g_GlobalInfo.m_vFreecamPos = pLocal->GetVecOrigin();
+					g_GlobalInfo.m_bFreecamActive = true;
+				}
+
+				const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+				float zMove = sinf(DEG2RAD(viewAngles.x));
+				Vec3 vForward, vRight, vUp;
+				Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
+				Vec3 moveVector;
+
+				if (pCmd->buttons & IN_FORWARD) {
+					moveVector += vForward;
+					moveVector.z -= zMove;
+				}
+
+				if (pCmd->buttons & IN_BACK) {
+					moveVector -= vForward;
+					moveVector.z += zMove;
+				}
+
+				if (pCmd->buttons & IN_MOVELEFT) {
+					moveVector -= vRight;
+				}
+
+				if (pCmd->buttons & IN_MOVERIGHT) {
+					moveVector += vRight;
+				}
+
+				Math::VectorNormalize(moveVector);
+				moveVector *= Vars::Visuals::FreecamSpeed.m_Var;
+				g_GlobalInfo.m_vFreecamPos += moveVector;
+
+				pCmd->buttons = 0;
+				pCmd->forwardmove = 0.f;
+				pCmd->sidemove = 0.f;
+				pCmd->upmove = 0.f;
 			}
-
-			const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
-			Vec3 fcMove;
-
-			fcMove.x = cosf(DEG2RAD(viewAngles.y)) * cosf(DEG2RAD(viewAngles.x));
-			fcMove.y = sinf(DEG2RAD(viewAngles.y)) * cosf(DEG2RAD(viewAngles.x));
-			fcMove.z = sinf(DEG2RAD(viewAngles.x));
-
-			if (pCmd->buttons & IN_FORWARD) {
-				g_GlobalInfo.m_vFreecamPos.x += Vars::Visuals::FreecamSpeed.m_Var * fcMove.x;
-				g_GlobalInfo.m_vFreecamPos.y += Vars::Visuals::FreecamSpeed.m_Var * fcMove.y;
-				g_GlobalInfo.m_vFreecamPos.z -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.z;
+			else {
+				g_GlobalInfo.m_bFreecamActive = false;
 			}
-
-			if (pCmd->buttons & IN_BACK) {
-				g_GlobalInfo.m_vFreecamPos.x -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.x;
-				g_GlobalInfo.m_vFreecamPos.y -= Vars::Visuals::FreecamSpeed.m_Var * fcMove.y;
-				g_GlobalInfo.m_vFreecamPos.z += Vars::Visuals::FreecamSpeed.m_Var * fcMove.z;
-			}
-
-			pCmd->buttons = 0;
-			pCmd->forwardmove = 0;
-			pCmd->sidemove = 0;
-			pCmd->upmove = 0;
-		} else {
-			g_GlobalInfo.m_bFreecamActive = false;
 		}
 		
 		nOldFlags = pLocal->GetFlags();
@@ -279,7 +289,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	updateAntiAfk(pCmd);
+	UpdateAntiAFK(pCmd);
 
 	if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var)
 	{
