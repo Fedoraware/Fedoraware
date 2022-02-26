@@ -4,8 +4,7 @@
 class CChams
 {
 private:
-	IMaterial *m_pMatShaded, *m_pMatFlat, *m_pMatShiny, *m_pMatBrick, *m_pMatFresnelHDR0, *m_pMatFresnelHDR1, *
-	          m_pMatFresnel;
+	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny, * m_pMatBrick, * m_pMatFresnelHDR0, * m_pMatFresnelHDR1, *m_pMatFresnel, * m_pMatPlastic;
 	IMaterial* m_pMatBlur;
 
 	IMaterialVar *m_pMatFresnelHDRSelfillumTint, *m_pMatFresnelHDREnvmapTint;
