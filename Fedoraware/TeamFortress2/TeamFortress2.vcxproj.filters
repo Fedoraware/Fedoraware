@@ -103,6 +103,7 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Fonts\font_awesome_data.h" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -643,6 +644,7 @@
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome.h" />
     <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

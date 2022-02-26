@@ -149,6 +149,7 @@
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />

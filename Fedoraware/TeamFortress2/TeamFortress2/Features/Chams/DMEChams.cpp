@@ -24,7 +24,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = g_Interfaces.MatSystem->Create("m_pMatShaded", kv);
+		m_pMatShaded = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatShaded", kv);
 	}
 
 	{
@@ -35,13 +35,13 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = g_Interfaces.MatSystem->Create("m_pMatShiny", kv);
+		m_pMatShiny = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = g_Interfaces.MatSystem->Create("m_pMatFlat", kv);
+		m_pMatFlat = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFlat", kv);
 	}
 
 	{
@@ -57,7 +57,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel = g_Interfaces.MatSystem->Create("m_pMatFresnel", kv);
+		m_pMatFresnel = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFresnel", kv);
 	}
 
 	{
@@ -73,7 +73,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel2 = g_Interfaces.MatSystem->Create("m_pMatFresnel2", kv);
+		m_pMatFresnel2 = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFresnel2", kv);
 	}
 
 	{
@@ -88,7 +88,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "10");
-		m_pMatBrick = g_Interfaces.MatSystem->Create("m_pMatBrick", kv);
+		m_pMatBrick = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatBrick", kv);
 	}
 
 	{
@@ -106,7 +106,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "10");
-		m_pMatScuffed = g_Interfaces.MatSystem->Create("m_pMatScuffed", kv);
+		m_pMatScuffed = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
 
 	{
@@ -117,7 +117,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShaded = g_Interfaces.MatSystem->Create("m_pMatWFShaded", kv);
+		m_pMatWFShaded = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFShaded", kv);
 	}
 
 	{
@@ -129,14 +129,98 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShiny = g_Interfaces.MatSystem->Create("m_pMatWFShiny", kv);
+		m_pMatWFShiny = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$wireframe", "1");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatWFFlat = g_Interfaces.MatSystem->Create("m_pMatWFFlat", kv);
+		m_pMatWFFlat = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFFlat", kv);
+	}
+
+	{
+		m_pMatPulseMaterial = g_Interfaces.MatSystem->Find("models/items/bomb_hologram/crystal_ball_glass", "Model textures");
+		{
+
+
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2");
+			//kv->SetString("$nocull", "1");
+			//kv->SetString("$cvar", "[.5 .5]");
+			//kv->SetString("$svar", "[1 .25]");
+			//kv->SetString("$rvar", "0");
+			//kv->SetString("$tvar", "[0 0]");
+			//kv->SetString("$sine1", "0");
+			//kv->SetString("$sine2", "0");
+			KeyValues* Proxies = kv->FindKey("proxies", true);
+			{
+				//KeyValues* linearramp = Proxies->FindKey("linearramp", true);
+				//{
+				//	linearramp->SetString("rate", ".3");
+				//	linearramp->SetString("initialvalue", "0");
+				//	linearramp->SetString("resultvar", "\"$tvar[1]\"");
+				//}
+				//KeyValues* sine1 = Proxies->FindKey("sine", true);
+				//{
+				//	sine1->SetString("sineperiod", "1.3");
+				//	sine1->SetString("sinemin", "-.004");
+				//	sine1->SetString("sinemax", ".002");
+				//	sine1->SetString("timeoffset", "0");
+				//	sine1->SetString("resultvar", "$sine1");
+				//}
+				
+				{
+					KeyValues* sine = Proxies->FindKey("sine", true);
+					sine->SetString("sineperiod", "1.3");
+					sine->SetString("sinemin", "0");
+					sine->SetString("sinemax", "1");
+					sine->SetString("timeoffset", "0");
+					sine->SetString("resultvar", "$color[0]");
+				}
+				{
+					KeyValues* sine = Proxies->FindKey("sine", true);
+					sine->SetString("sineperiod", "1.7");
+					sine->SetString("sinemin", "0");
+					sine->SetString("sinemax", "1");
+					sine->SetString("timeoffset", "0");
+					sine->SetString("resultvar", "$color[1]");
+				}
+				{
+					KeyValues* sine = Proxies->FindKey("sine", true);
+					sine->SetString("sineperiod", "2.3");
+					sine->SetString("sinemin", "0");
+					sine->SetString("sinemax", "1");
+					sine->SetString("timeoffset", "0");
+					sine->SetString("resultvar", "$color[2]");
+				}
+
+
+				//KeyValues* sine2 = Proxies->FindKey("sine", true);
+				//{
+				//	sine2->SetString("sineperiod", "1.7");
+				//	sine2->SetString("sinemin", "-.003");
+				//	sine2->SetString("sinemax", ".007");
+				//	sine2->SetString("timeoffset", ".2");
+				//	sine2->SetString("resultvar", "$sine2");
+				//}
+				//KeyValues* add = Proxies->FindKey("add", true);
+				//{
+				//	add->SetString("srcvar1", "$sine1");
+				//	add->SetString("srcvar2", "$sine2");
+				//	add->SetString("resultvar", "\"$tvar[0]\"");
+				//}
+				//KeyValues* texturetransform = Proxies->FindKey("texturetransform", true);
+				//{
+				//	texturetransform->SetString("centervar", "$cvar");
+				//	texturetransform->SetString("scalevar", "$svar");
+				//	texturetransform->SetString("rotatevar", "$rvar");
+				//	texturetransform->SetString("translatevar", "$tvar");
+				//	texturetransform->SetString("resultvar", "$basetexturetransform");
+				//}
+			}
+			m_pMatEnergyBall = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatEnergyBall", kv);
+		}
 	}
 }
 
@@ -157,52 +241,62 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (Vars::Chams::DME::Hands.m_Var)
 			{
 				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-				{
-					switch (Vars::Chams::DME::Hands.m_Var)
 					{
-					case 1:
+						switch (Vars::Chams::DME::Hands.m_Var)
+						{
+						case 1:
 						{
 							bMatWasForced = true;
 							return m_pMatShaded;
 						}
-					case 2:
+						case 2:
 						{
 							bMatWasForced = true;
 							return m_pMatShiny;
 						}
-					case 3:
+						case 3:
 						{
 							bMatWasForced = true;
 							return m_pMatFlat;
 						}
-					case 4:
+						case 4:
 						{
 							bMatWasForced = true;
 							return m_pMatWFShaded;
 						}
-					case 5:
+						case 5:
 						{
 							bMatWasForced = true;
 							return m_pMatWFShiny;
 						}
-					case 6:
+						case 6:
 						{
 							bMatWasForced = true;
 							return m_pMatWFFlat;
 						}
-					case 7:
+						case 7:
 						{
 							bMatWasForced = true;
 							return m_pMatFresnel;
 						}
-					case 8:
+						case 8:
 						{
 							bMatWasForced = true;
 							return m_pMatBrick;
 						}
-					default: return nullptr;
-					}
-				}());
+						case 9:
+						{
+							bMatWasForced = true;
+							return m_pMatPulseMaterial;
+						}
+						case 10:
+						{
+							bMatWasForced = true;
+							return m_pMatEnergyBall;
+						}
+						default: return nullptr;
+						}
+					}());
 			}
 
 			if (bMatWasForced)
@@ -210,21 +304,21 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (Vars::Chams::DME::HandsRainbow.m_Var)
 				{
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
-					                                            Color::TOFLOAT(Utils::Rainbow().g),
-					                                            Color::TOFLOAT(Utils::Rainbow().b));
+						Color::TOFLOAT(Utils::Rainbow().g),
+						Color::TOFLOAT(Utils::Rainbow().b));
 				}
 				else
 				{
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r),
-					                                            Color::TOFLOAT(Colors::Hands.g),
-					                                            Color::TOFLOAT(Colors::Hands.b));
+						Color::TOFLOAT(Colors::Hands.g),
+						Color::TOFLOAT(Colors::Hands.b));
 				}
 			}
 
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
 
 			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index)
+				ModelRenderHook::DrawModelExecute::index)
 				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			bMatWasForced = true;
 
@@ -236,7 +330,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (found)
 				{
 					envmap->SetVecValue(Color::TOFLOAT(Colors::Hands.r) * 4, Color::TOFLOAT(Colors::Hands.g) * 4,
-					                    Color::TOFLOAT(Colors::Hands.b) * 4);
+						Color::TOFLOAT(Colors::Hands.b) * 4);
 				}
 			}
 
@@ -253,14 +347,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
 					{
 						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-						                  Color::TOFLOAT(Utils::Rainbow().g) * 4,
-						                  Color::TOFLOAT(Utils::Rainbow().b) * 4);
+							Color::TOFLOAT(Utils::Rainbow().g) * 4,
+							Color::TOFLOAT(Utils::Rainbow().b) * 4);
 					}
 					else
 					{
 						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
-						                  Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
-						                  Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+							Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
+							Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
 					}
 				}
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
@@ -269,14 +363,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
 					{
 						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-						                   Color::TOFLOAT(Utils::Rainbow().g) * 4,
-						                   Color::TOFLOAT(Utils::Rainbow().b) * 4);
+							Color::TOFLOAT(Utils::Rainbow().g) * 4,
+							Color::TOFLOAT(Utils::Rainbow().b) * 4);
 					}
 					else
 					{
 						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
-						                   Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
-						                   Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+							Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
+							Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
 					}
 				}
 				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
@@ -288,7 +382,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index)
+					ModelRenderHook::DrawModelExecute::index)
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
@@ -303,7 +397,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			return true;
 		}
-
 
 		if (!pEntity && pInfo.m_pModel)
 		{
@@ -330,52 +423,62 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (Vars::Chams::DME::Weapon.m_Var)
 				{
 					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-					{
-						switch (Vars::Chams::DME::Weapon.m_Var)
 						{
-						case 1:
+							switch (Vars::Chams::DME::Weapon.m_Var)
+							{
+							case 1:
 							{
 								bMatWasForced = true;
 								return m_pMatShaded;
 							}
-						case 2:
+							case 2:
 							{
 								bMatWasForced = true;
 								return m_pMatShiny;
 							}
-						case 3:
+							case 3:
 							{
 								bMatWasForced = true;
 								return m_pMatFlat;
 							}
-						case 4:
+							case 4:
 							{
 								bMatWasForced = true;
 								return m_pMatWFShaded;
 							}
-						case 5:
+							case 5:
 							{
 								bMatWasForced = true;
 								return m_pMatWFShiny;
 							}
-						case 6:
+							case 6:
 							{
 								bMatWasForced = true;
 								return m_pMatWFFlat;
 							}
-						case 7:
+							case 7:
 							{
 								bMatWasForced = true;
 								return m_pMatFresnel2;
 							}
-						case 8:
+							case 8:
 							{
 								bMatWasForced = true;
 								return m_pMatBrick;
 							}
-						default: return nullptr;
-						}
-					}());
+							case 9:
+							{
+								bMatWasForced = true;
+								return m_pMatPulseMaterial;
+							}
+							case 10:
+							{
+								bMatWasForced = true;
+								return m_pMatEnergyBall;
+							}
+							default: return nullptr;
+							}
+						}());
 				}
 
 				if (bMatWasForced)
@@ -383,21 +486,21 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (Vars::Chams::DME::WeaponRainbow.m_Var)
 					{
 						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
-						                                            Color::TOFLOAT(Utils::Rainbow().g),
-						                                            Color::TOFLOAT(Utils::Rainbow().b));
+							Color::TOFLOAT(Utils::Rainbow().g),
+							Color::TOFLOAT(Utils::Rainbow().b));
 					}
 					else
 					{
 						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r),
-						                                            Color::TOFLOAT(Colors::Weapon.g),
-						                                            Color::TOFLOAT(Colors::Weapon.b));
+							Color::TOFLOAT(Colors::Weapon.g),
+							Color::TOFLOAT(Colors::Weapon.b));
 					}
 				}
 
 				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index) // base
+					ModelRenderHook::DrawModelExecute::index) // base
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				bMatWasForced = true;
 
@@ -409,7 +512,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (found)
 					{
 						envmap->SetVecValue(Color::TOFLOAT(Colors::Weapon.r) * 4, Color::TOFLOAT(Colors::Weapon.g) * 4,
-						                    Color::TOFLOAT(Colors::Weapon.b) * 4);
+							Color::TOFLOAT(Colors::Weapon.b) * 4);
 					}
 				}
 
@@ -422,8 +525,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (foundselfillumtint)
 					{
 						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-						                                  Color::TOFLOAT(Colors::FresnelBase.g),
-						                                  Color::TOFLOAT(Colors::FresnelBase.b));
+							Color::TOFLOAT(Colors::FresnelBase.g),
+							Color::TOFLOAT(Colors::FresnelBase.b));
 					}
 				}
 
@@ -435,8 +538,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (foundselfillumtint)
 					{
 						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-						                                  Color::TOFLOAT(Colors::FresnelBase.g),
-						                                  Color::TOFLOAT(Colors::FresnelBase.b));
+							Color::TOFLOAT(Colors::FresnelBase.g),
+							Color::TOFLOAT(Colors::FresnelBase.b));
 					}
 				}
 
@@ -452,14 +555,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
 						{
 							pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-							                  Color::TOFLOAT(Utils::Rainbow().g) * 4,
-							                  Color::TOFLOAT(Utils::Rainbow().b) * 4);
+								Color::TOFLOAT(Utils::Rainbow().g) * 4,
+								Color::TOFLOAT(Utils::Rainbow().b) * 4);
 						}
 						else
 						{
 							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
-							                  Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
-							                  Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+								Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
+								Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
 						}
 					}
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
@@ -468,14 +571,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
 						{
 							pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-							                   Color::TOFLOAT(Utils::Rainbow().g) * 4,
-							                   Color::TOFLOAT(Utils::Rainbow().b) * 4);
+								Color::TOFLOAT(Utils::Rainbow().g) * 4,
+								Color::TOFLOAT(Utils::Rainbow().b) * 4);
 						}
 						else
 						{
 							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
-							                   Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
-							                   Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+								Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
+								Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
 						}
 					}
 					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
@@ -487,7 +590,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
 					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-							ModelRenderHook::DrawModelExecute::index) //overlay
+						ModelRenderHook::DrawModelExecute::index) //overlay
 						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				}
 
