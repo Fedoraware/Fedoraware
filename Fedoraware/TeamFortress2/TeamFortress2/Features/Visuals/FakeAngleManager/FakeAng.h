@@ -11,6 +11,7 @@ class CFakeAng {
 public:
 	FakeMatrixes BoneMatrix;
 	void Run(CUserCmd* pCmd);
+	bool DrawChams = false;
 };
 
 inline CFakeAng g_FakeAng;

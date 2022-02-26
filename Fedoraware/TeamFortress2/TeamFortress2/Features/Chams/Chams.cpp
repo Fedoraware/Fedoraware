@@ -23,7 +23,7 @@ void CChams::Init()
 		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
 		kv->SetString("$envmapfresnel", "1");
 		kv->SetString("$phong", "1");
-		kv->SetString("$phongfresnelranges", "[0 1.5 2]");
+		kv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");

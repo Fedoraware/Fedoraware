@@ -1457,12 +1457,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
 						ImGui::Checkbox("Ignore team buildings", &Vars::Chams::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw chams on your teams buildings");
 						//static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsb", &Vars::Chams::Buildings::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-						if (g_Interfaces.CVars->FindVar("mat_phong")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_specular")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_bumpmap")->GetInt() == 1) {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
-						else {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
+						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Building material", &Vars::Chams::Buildings::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						HelpMarker("Which material the chams will apply to the player");
 
 						ImGui::Checkbox("Ignore Z###BuildingChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw building chams through walls");
@@ -1487,12 +1482,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
 						ImGui::Checkbox("Wearable chams###PlayerWearableChams", &Vars::Chams::Players::Wearables.m_Var);  HelpMarker("Will draw chams on player cosmetics");
 						ImGui::Checkbox("Weapon chams###PlayerWeaponChams", &Vars::Chams::Players::Weapons.m_Var);  HelpMarker("Will draw chams on player weapons");
-						if (g_Interfaces.CVars->FindVar("mat_phong")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_specular")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_bumpmap")->GetInt() == 1) {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
-						else {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
+						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						HelpMarker("Which material the chams will apply to the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1607,12 +1597,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Health packs###WorldchamsHealthPacks", &Vars::Chams::World::Health.m_Var);
 						ImGui::Checkbox("Ammo packs###Worldchamsammopacks", &Vars::Chams::World::Ammo.m_Var);
 						static const char* wChamsProjectiles[]{ "Off", "All", "Enemy only" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectiles###WorldChamsProjectiles", &Vars::Chams::World::Projectiles.m_Var, wChamsProjectiles, IM_ARRAYSIZE(wChamsProjectiles)); ImGui::PopItemWidth();
-						if (g_Interfaces.CVars->FindVar("mat_phong")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_specular")->GetInt() == 1 && g_Interfaces.CVars->FindVar("mat_bumpmap")->GetInt() == 1) {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::World::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
-						else {
-							static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::World::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-						}
+						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::World::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						ImGui::Checkbox("Ignore Z###worldignorez", &Vars::Chams::World::IgnoreZ.m_Var);
 						ImGui::PopStyleVar();
 					}

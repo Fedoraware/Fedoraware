@@ -122,7 +122,7 @@ void DrawBT(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRen
 }
 
 void DrawFakeAngles(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo) {
-	if (Vars::Misc::CL_Move::Fakelag.m_Var && Vars::Misc::CL_Move::FakelagIndicator.m_Var) {
+	if (Vars::Misc::CL_Move::Fakelag.m_Var && Vars::Misc::CL_Move::FakelagIndicator.m_Var && g_FakeAng.DrawChams) {
 		if (pEntity && pEntity == g_EntityCache.m_pLocal) {
 			if (!g_Glow.m_bRendering && !g_Chams.m_bRendering) {
 				bool bMatWasForced = false;

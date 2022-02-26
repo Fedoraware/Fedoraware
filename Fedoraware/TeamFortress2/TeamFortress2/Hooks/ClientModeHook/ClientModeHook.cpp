@@ -397,6 +397,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		{
 			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 			{
+				
 				if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
 					!g_GlobalInfo.m_bRecharging &&
 					!g_GlobalInfo.m_nShifted &&
@@ -417,6 +418,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 						g_GlobalInfo.m_bChoking = false;
 						chockedPackets = 0;
 						g_FakeAng.Run(pCmd);
+						g_FakeAng.DrawChams = true;
 					}
 					else
 					{
@@ -429,6 +431,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					g_FakeAng.Run(pCmd);
 					*pSendPacket = true;
 					g_GlobalInfo.m_bChoking = false;
+					g_FakeAng.DrawChams = true;
 				}
 			}
 		}
@@ -438,7 +441,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			chockedPackets = 0;
 			g_GlobalInfo.m_bChoking = false;
 		}
-		else { g_GlobalInfo.m_bChoking = false; }
+		else { g_GlobalInfo.m_bChoking = false;
+			g_FakeAng.DrawChams = false;
+		}
+	}
+
+	if (g_GlobalInfo.m_nShifted > 0) {
+		g_FakeAng.DrawChams = false;
 	}
 
 	//	TODO: make this p
