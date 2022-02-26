@@ -417,6 +417,9 @@ namespace Vars
 		inline CVar<int> FreecamKey					{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed				{ 10.f, L"Freecam Speed" };
 
+		inline CVar<int> CameraMode					{ 0, L"Camera Mode" };
+		inline CVar<float> CameraFOV				{ 90.f, L"Camera FOV" };
+
 		inline CVar<bool> SpyWarning				{ true, L"Active" };
 		inline CVar<bool> SpyWarningAnnounce		{ true, L"Announce" };
 		inline CVar<int> SpyWarningStyle			{ 0, L"Style" }; //0 - Indicator, 1 - Flash
