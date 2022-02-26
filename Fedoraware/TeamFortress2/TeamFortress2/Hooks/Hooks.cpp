@@ -74,6 +74,7 @@ void CHooks::Init()
 		Ragdoll::Init();
 		//GetIconHook::Init();
 		ClientModeHook::SetAbsVelocity::Init();
+		MaterialSystemHook::CMaterial::Uncache::Init();
 	}
 
 	if (g_Interfaces.Client)

@@ -1511,7 +1511,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							"Wireframe shiny",
 							"Wireframe flat",
 							"Fresnel",
-							"Brick"
+							"Brick",
+							"What",
+							"Wacky"
 						};
 						ImGui::PushItemWidth(100);
 						ImGui::Combo("Hand material", &Vars::Chams::DME::Hands.m_Var, handsMaterial, IM_ARRAYSIZE(handsMaterial));
@@ -1532,7 +1534,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							"Wireframe shiny",
 							"Wireframe flat",
 							"Fresnel",
-							"Brick"
+							"Brick",
+							"What",
+							"Wacky"
 						};
 						ImGui::PushItemWidth(100);
 						ImGui::Combo("Weapon material", &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));

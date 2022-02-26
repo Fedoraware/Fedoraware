@@ -24,6 +24,7 @@
 #include "IsLocalPlayerUsingVisionFilterFlags/IsLocalPlayerUsingVisionFilterFlags.h"
 #include "Ragdoll/Ragdoll.h"
 #include "ViewRenderHook/ViewRenderHook.h"
+#include "MaterialSystemHook/MaterialSystemHook.h"
 
 class CHooks
 {

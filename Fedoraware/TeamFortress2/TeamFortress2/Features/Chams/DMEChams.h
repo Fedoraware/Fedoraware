@@ -14,7 +14,8 @@ public:
 	IMaterial* m_pMatWFShaded;
 	IMaterial* m_pMatWFShiny;
 	IMaterial* m_pMatWFFlat;
-
+	IMaterial* m_pMatPulseMaterial;
+	IMaterial* m_pMatEnergyBall;
 private:
 	bool ShouldRun();
 

@@ -114,6 +114,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Pyro_m_DragonsFury:
 	{
 		out = { 3000.0f, 0.0f, 0.12f };
+		m_bIsFlameThrower = true;
 		break;
 	}
 
