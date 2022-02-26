@@ -97,6 +97,7 @@
     <!-- <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" /> -->
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Fonts\font_awesome_data.h" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
@@ -201,6 +202,7 @@
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
+    <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome_defs.h" />

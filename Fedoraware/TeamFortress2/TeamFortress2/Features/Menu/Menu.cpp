@@ -10,6 +10,7 @@
 #include "../Glow/Glow.h"
 #include "../Chams/Chams.h"
 #include "../PlayerList/PlayerList.h"
+#include "../Camera/CameraWindow.h"
 #include "ImGui/imgui_color_gradient.h"
 ImFont* g_pImFontDefaultFont = nullptr;
 ImFont* g_pImFontChineseFont = nullptr;
@@ -1314,6 +1315,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);  HelpMarker("Allows you to freely move your camera when holding the key");
 						WidthSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.m_Var, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
+						ImGui::Dummy(ImVec2(0, 20));
+						SectionTitle("Camera");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						static const char* camModes[]{ "Off", "Mirror" }; ImGui::PushItemWidth(100); ImGui::Combo("Camera mode", &Vars::Visuals::CameraMode.m_Var, camModes, IM_ARRAYSIZE(camModes)); ImGui::PopItemWidth(); HelpMarker("What the camera should display");
+						WidthSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
+
 						ImGui::PopStyleVar();
 					}
 
@@ -2480,10 +2489,33 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			}
 		}
 		ImGui::PopFont();
+
+		// Draw playerlist
 		if (g_PlayerList.showWindow)
 		{
 			g_PlayerList.Render();
 		}
+
+		// Draw camera window
+		if (g_Interfaces.Engine->IsInGame() && Vars::Visuals::CameraMode.m_Var != 0) {
+			ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
+			ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
+			if (ImGui::Begin("Camera", &g_PlayerList.showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus))
+			{
+				ImVec2 winPos = ImGui::GetWindowPos();
+				ImVec2 winSize = ImGui::GetWindowSize();
+
+				g_CameraWindow.ViewRect.x = static_cast<int>(winPos.x);
+				g_CameraWindow.ViewRect.y = static_cast<int>(winPos.y);
+				g_CameraWindow.ViewRect.w = static_cast<int>(winSize.x);
+				g_CameraWindow.ViewRect.h = static_cast<int>(winSize.y);
+
+				ImGui::End();
+			}
+			ImGui::PopStyleVar();
+		}
+
 		ImGui::End();
 		
 		// Old menu: https://github.com/tf2cheater2013/Fedoraware/blob/259389c24d40dfacc3388d9404c11c6079255260/Fedoraware/TeamFortress2/TeamFortress2/Features/Menu/Menu.cpp

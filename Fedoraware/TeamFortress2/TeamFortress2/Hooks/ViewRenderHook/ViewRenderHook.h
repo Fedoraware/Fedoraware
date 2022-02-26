@@ -27,6 +27,6 @@ namespace ViewRenderHook
 		const int index = 6;
 		inline SEOHook::Func Func;
 		using fn = void(__thiscall*)(void*, const CViewSetup& view, int nClearFlags, int whatToDraw);
-		void __fastcall Hook(void* ecx, void* edx, const CViewSetup& view, int nClearFlags, int whatToDraw);
+		void __fastcall Hook(void* ecx, void* edx, const CViewSetup& view, ClearFlags_t nClearFlags, RenderViewInfo_t whatToDraw);
 	}
 }

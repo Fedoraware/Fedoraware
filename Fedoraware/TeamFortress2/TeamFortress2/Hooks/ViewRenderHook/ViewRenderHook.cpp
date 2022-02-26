@@ -1,6 +1,7 @@
 #include "ViewRenderHook.h"
 #include "../../Features/Chams/Chams.h"
 #include "../../Features/Visuals/Visuals.h"
+#include "../../Features/Camera/CameraWindow.h"
 
 void CustomFogSetup() {
 	if (static auto fog_enable = g_Interfaces.CVars->FindVar("fog_enable"); fog_enable) {
@@ -63,7 +64,8 @@ void __fastcall ViewRenderHook::LevelShutdown::Hook(void* ecx, void* edx)
 	Func.Original<fn>()(ecx);
 }
 
-void __fastcall ViewRenderHook::RenderView::Hook(void* ecx, void* edx, const CViewSetup& view, int nClearFlags, int whatToDraw)
+void __fastcall ViewRenderHook::RenderView::Hook(void* ecx, void* edx, const CViewSetup& view, ClearFlags_t nClearFlags, RenderViewInfo_t whatToDraw)
 {
 	Func.Original<fn>()(ecx, view, nClearFlags, whatToDraw);
+	g_CameraWindow.RenderView(ecx, view);
 }
