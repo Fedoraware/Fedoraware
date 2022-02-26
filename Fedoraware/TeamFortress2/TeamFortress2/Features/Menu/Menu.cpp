@@ -138,6 +138,8 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 		case VK_RSHIFT: return "Shift";
 		case VK_CONTROL: return "Control";
 		case VK_MENU: return "LAlt";
+		case VK_PRIOR: return "Page Up";
+		case VK_NEXT: return "Page Down";
 		default: break;
 		}
 
@@ -171,7 +173,18 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 
 		if (curr == nullptr && elapsed > 0.1f) {
 			for (short n = 0; n < 256; n++) {
-				if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
+				if ((n > 0x0 && n < 0x7) ||
+					(n > L'A' - 1 && n < L'Z' + 1) ||
+					(n > L'0' - 1 && n < L'9' + 1) ||
+					n == VK_LSHIFT ||
+					n == VK_RSHIFT ||
+					n == VK_SHIFT ||
+					n == VK_ESCAPE ||
+					n == VK_HOME ||
+					n == VK_CONTROL ||
+					n == VK_MENU ||
+					n == VK_PRIOR ||
+					n == VK_NEXT) {
 					if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
 						ImGui::ClearActiveID();
 						break;
@@ -2317,39 +2330,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::InputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); ImGui::PopItemWidth(); HelpMarker("For when \"Custom\" is selcted in \"Map text\". Sets custom map text.");
 							}
 							ImGui::PushItemWidth(100); ImGui::InputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size"); ImGui::PopItemWidth();
-							ImGui::Dummy(ImVec2(0, 20));
-
-							SectionTitle("Utilities");
-							widget_pos = ImGui::GetCursorScreenPos();
-							widget_pos.y -= 4;
-							if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-
-							if (ImGui::Button("Toggle playerlist", ImVec2(150, 20)))
-								g_PlayerList.showWindow = !g_PlayerList.showWindow;
-							if (ImGui::Button("Full update", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
-							if (ImGui::Button("Reload HUD", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
-							if (ImGui::Button("Restart sound", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
-							if (ImGui::Button("Stop sound", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
-							if (ImGui::Button("Status", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("status");
-							if (ImGui::Button("Ping", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
-							if (ImGui::Button("Retry", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
-							if (ImGui::Button("Exit", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
-							if (ImGui::Button("Console", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
-							if (ImGui::Button("Demo playback", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
-							if (ImGui::Button("Demo trackbar", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
-							if (ImGui::Button("Itemtest", ImVec2(150, 20)))
-								g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
 
 							ImGui::PopStyleVar();
 						}
@@ -2359,6 +2339,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 				}
 				ImGui::EndChild();
 			}
+
+			// Settings icon
 			ImGui::SetCursorPos(ImVec2(12, winSize.y - 20));
 			ImGui::TextUnformatted(toolTipText.c_str());
 			ImGui::SameLine(ImGui::GetContentRegionMax().x - 25);
@@ -2366,10 +2348,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			ImGui::PushFont(Icons);
 			ImGui::TextUnformatted(ICON_FA_COG);
 			ImGui::PopFont();
+
 			static bool showSettings = false;
 			if (ImGui::IsItemClicked()) {
 				showSettings = !showSettings;
 			}
+
+			// Settings & Config window
 			if (showSettings) {
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
@@ -2387,8 +2372,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 					static std::wstring selected = {};
 					int nConfig = 0;
 
-					for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-						if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+					for (const auto& configFile : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
+						if (std::string(std::filesystem::path(configFile).filename().string()).find(_(".fed")) == std::string_view::npos)
 						{
 							continue;
 						}
@@ -2408,21 +2393,21 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 					}
 
-					for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
-						if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos) {
+					for (const auto& configFile : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
+						if (std::string(std::filesystem::path(configFile).filename().string()).find(_(".fed")) == std::string_view::npos) {
 							continue;
 						}
-						std::wstring s = entry.path().filename().wstring();
-						s.erase(s.end() - 4, s.end());
-						std::string configName(s.begin(), s.end());
-						if (s == selected) {
+						std::wstring wConfigName = configFile.path().filename().wstring();
+						wConfigName.erase(wConfigName.end() - 4, wConfigName.end());
+						std::string configName(wConfigName.begin(), wConfigName.end());
+						if (wConfigName == selected) {
 							ImGuiStyle* style2 = &ImGui::GetStyle();
 							ImVec4* colors2 = style2->Colors;
 							ImVec4 buttonColor = colors2[ImGuiCol_Button];
 							buttonColor.w *= 0.5;
 							ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
 							if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
-								selected = s;
+								selected = wConfigName;
 							}
 							ImGui::PopStyleColor();
 
@@ -2472,7 +2457,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						}
 						else {
 							if (ImGui::Button(configName.c_str(), ImVec2(200, 20))) {
-								selected = s;
+								selected = wConfigName;
 							}
 						}
 					}
@@ -2489,6 +2474,51 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			}
 		}
 		ImGui::PopFont();
+
+		// Menu bar
+		if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("Shortcuts"))
+			{
+				if (ImGui::MenuItem("Full Update"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+				if (ImGui::MenuItem("Reload HUD"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
+				if (ImGui::MenuItem("Restart sound system"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+				if (ImGui::MenuItem("Stop sound"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+				if (ImGui::MenuItem("Status"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+				if (ImGui::MenuItem("Ping"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+				if (ImGui::MenuItem("Retry"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+				ImGui::Separator();
+				if (ImGui::MenuItem("Exit"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Playerlist")) {
+				g_PlayerList.showWindow = !g_PlayerList.showWindow;
+			}
+
+			if (ImGui::BeginMenu("Menus")) {
+				if (ImGui::MenuItem("Console"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
+				if (ImGui::MenuItem("Demo Playback"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+				if (ImGui::MenuItem("Demo Trackbar"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
+				if (ImGui::MenuItem("Itemtest"))
+					g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
 
 		// Draw playerlist
 		if (g_PlayerList.showWindow)
