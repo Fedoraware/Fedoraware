@@ -23,6 +23,7 @@
 #include "InventoryExpander/InventoryExpander.h"
 #include "IsLocalPlayerUsingVisionFilterFlags/IsLocalPlayerUsingVisionFilterFlags.h"
 #include "Ragdoll/Ragdoll.h"
+#include "ViewRenderHook/ViewRenderHook.h"
 
 class CHooks
 {

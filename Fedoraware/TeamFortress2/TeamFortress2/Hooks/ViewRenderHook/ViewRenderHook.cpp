@@ -50,15 +50,20 @@ void CustomFogSetup() {
 	}
 }
 
-void __stdcall ViewRenderHook::LevelInit::Hook()
+void __fastcall ViewRenderHook::LevelInit::Hook(void* ecx, void* edx)
 {
 	g_GlobalInfo.dtTicks = 0;
 	CustomFogSetup();
 	g_Visuals.OverrideWorldTextures();
-	Table.Original<fn>(index)(g_Interfaces.ViewRender);
+	Func.Original<fn>()(ecx);
 }
 
-void __stdcall ViewRenderHook::LevelShutdown::Hook()
+void __fastcall ViewRenderHook::LevelShutdown::Hook(void* ecx, void* edx)
 {
-	Table.Original<fn>(index)(g_Interfaces.ViewRender);
+	Func.Original<fn>()(ecx);
+}
+
+void __fastcall ViewRenderHook::RenderView::Hook(void* ecx, void* edx, const CViewSetup& view, int nClearFlags, int whatToDraw)
+{
+	Func.Original<fn>()(ecx, view, nClearFlags, whatToDraw);
 }

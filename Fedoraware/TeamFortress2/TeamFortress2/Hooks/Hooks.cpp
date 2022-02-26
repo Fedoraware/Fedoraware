@@ -176,6 +176,28 @@ void CHooks::Init()
 		Table.Hook(RandInt::index, &RandInt::Hook);
 	}
 
+	if (g_Interfaces.ViewRender)
+	{
+		using namespace ViewRenderHook;
+
+		{
+			using namespace LevelInit;
+			fn FN = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.ViewRender, index));
+			Func.Hook(FN, Hook);
+		}
+		{
+			using namespace LevelShutdown;
+			fn FN = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.ViewRender, index));
+			Func.Hook(FN, Hook);
+		}
+		{
+			using namespace RenderView;
+			fn FN = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.ViewRender, index));
+			Func.Hook(FN, Hook);
+		}
+
+	}
+
 	while (!m_hwWindow) {
 		m_hwWindow = WinAPI::FindWindowW(0, _(L"Team Fortress 2"));
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));

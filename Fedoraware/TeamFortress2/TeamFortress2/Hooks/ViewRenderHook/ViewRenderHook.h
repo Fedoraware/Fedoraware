@@ -9,14 +9,24 @@ namespace ViewRenderHook
 	namespace LevelInit
 	{
 		const int index = 1;
-		using fn = void(__stdcall*)(IViewRender*);
-		void __stdcall Hook();
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(void*);
+		void __fastcall Hook(void* ecx, void* edx);
 	}
 
 	namespace LevelShutdown
 	{
 		const int index = 2;
-		using fn = void(__stdcall*)(IViewRender*);
-		void __stdcall Hook();
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(void*);
+		void __fastcall Hook(void* ecx, void* edx);
+	}
+
+	namespace RenderView
+	{
+		const int index = 6;
+		inline SEOHook::Func Func;
+		using fn = void(__thiscall*)(void*, const CViewSetup& view, int nClearFlags, int whatToDraw);
+		void __fastcall Hook(void* ecx, void* edx, const CViewSetup& view, int nClearFlags, int whatToDraw);
 	}
 }
