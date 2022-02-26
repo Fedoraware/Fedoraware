@@ -138,6 +138,8 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 		case VK_RSHIFT: return "Shift";
 		case VK_CONTROL: return "Control";
 		case VK_MENU: return "LAlt";
+		case VK_PRIOR: return "Page Up";
+		case VK_NEXT: return "Page Down";
 		default: break;
 		}
 
@@ -171,7 +173,18 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 
 		if (curr == nullptr && elapsed > 0.1f) {
 			for (short n = 0; n < 256; n++) {
-				if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
+				if ((n > 0x0 && n < 0x7) ||
+					(n > L'A' - 1 && n < L'Z' + 1) ||
+					(n > L'0' - 1 && n < L'9' + 1) ||
+					n == VK_LSHIFT ||
+					n == VK_RSHIFT ||
+					n == VK_SHIFT ||
+					n == VK_ESCAPE ||
+					n == VK_HOME ||
+					n == VK_CONTROL ||
+					n == VK_MENU ||
+					n == VK_PRIOR ||
+					n == VK_NEXT) {
 					if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
 						ImGui::ClearActiveID();
 						break;
