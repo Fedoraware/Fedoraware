@@ -52,6 +52,15 @@ public:
 		return GetVFunc<FN>(this, 87)(this, pRTName, w, h, sizeMode, format, depth, textureFlags, renderTargetFlags);
 	}
 
+	ITexture* CreateFullFrameRenderTarget(const char* pName)
+	{
+		return CreateNamedRenderTargetTextureEx(
+			pName, 1, 1, RT_SIZE_FULL_FRAME_BUFFER, IMAGE_FORMAT_RGB888,
+			MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT,
+			CREATERENDERTARGETFLAGS_HDR
+		);
+	}
+
 	ITexture *FindTexture(char const *pTextureName, const char *pTextureGroupName, bool complain = true, int nAdditionalCreationFlags = 0)
 	{
 		typedef ITexture *(__thiscall *FN)(PVOID, char const *, const char *, bool, int);

@@ -5,6 +5,7 @@
 #include "Features/Chams/DMEChams.h"
 #include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
+#include "Features/Camera/CameraWindow.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
@@ -75,6 +76,7 @@ void Initialize()
 	g_Glow.Init();
 	g_Chams.Init();
 	g_DMEChams.Init();
+	g_CameraWindow.Init();
 	g_Hooks.Init();
 	g_ConVars.Init();
 

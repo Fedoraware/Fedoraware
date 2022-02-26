@@ -39,6 +39,24 @@ enum DrawFlags_t
 	DF_SHADOW_DEPTH_MAP = 0x100000
 };
 
+enum ClearFlags_t
+{
+	VIEW_CLEAR_COLOR = 0x1,
+	VIEW_CLEAR_DEPTH = 0x2,
+	VIEW_CLEAR_FULL_TARGET = 0x4,
+	VIEW_NO_DRAW = 0x8,
+	VIEW_CLEAR_OBEY_STENCIL = 0x10, // Draws a quad allowing stencil test to clear through portals
+	VIEW_CLEAR_STENCIL = 0x20,
+};
+
+enum RenderViewInfo_t
+{
+	RENDERVIEW_UNSPECIFIED = 0,
+	RENDERVIEW_DRAWVIEWMODEL = (1 << 0),
+	RENDERVIEW_DRAWHUD = (1 << 1),
+	RENDERVIEW_SUPPRESSMONITORRENDERING = (1 << 2),
+};
+
 //-----------------------------------------------------------------------------
 // Purpose: View setup and rendering
 //-----------------------------------------------------------------------------
