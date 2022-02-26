@@ -24,7 +24,7 @@ void __fastcall MaterialSystemHook::CMaterial::Uncache::Func(void* ecx, void* ed
 
 void MaterialSystemHook::CMaterial::Uncache::Init()
 {
-	DWORD dwFN = g_Pattern.Find(L"MaterialSystem.dll", L"E8 ? ? \? ? 83 7E 1C 00 ") + 0x1;
+	DWORD dwFN = g_Pattern.Find(L"MaterialSystem.dll", L"E8 ? ? ? ? 83 7E 1C 00 ") + 0x1;
 	DWORD dwResolved = *(PDWORD)dwFN + dwFN + 4;
 	fn FN = reinterpret_cast<fn>(dwResolved);
 	Hook.Hook(FN, Func);

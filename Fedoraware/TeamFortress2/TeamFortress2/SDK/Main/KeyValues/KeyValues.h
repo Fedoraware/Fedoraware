@@ -44,7 +44,7 @@ public:
 	void Initialize(char* name);
 	KeyValues(const char* name);
 	KeyValues* FindKey(const char* keyName, bool bCreate = false);
-
+	KeyValues* AddSubkey(KeyValues* pSubkey);
 	int GetInt(const char* keyName, int defaultValue = 0);
 	uint64_t GetUint64(const char* keyName, uint64_t defaultValue = 0);
 	float GetFloat(const char* keyName, float defaultValue = 0.0f);

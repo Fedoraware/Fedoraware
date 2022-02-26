@@ -6,6 +6,394 @@
 #include "../Glow/Glow.h"
 #include "../Backtrack/Backtrack.h"
 
+
+
+
+
+// I can't believe i'm doing this
+
+// TODO: add an option to import custom ones from a file path
+
+namespace ProxySkins
+{
+	static IMaterial* spectrumSplattered = nullptr;
+	static IMaterial* electroSkullsBlue = nullptr;
+	static IMaterial* frozenAurora = nullptr;
+	static IMaterial* jazzy = nullptr;
+	static IMaterial* hana = nullptr;
+	static IMaterial* wtf = nullptr;
+	static IMaterial* ghost = nullptr;
+	static IMaterial* flames = nullptr;
+	static IMaterial* spookwood = nullptr;
+	static IMaterial* edgy = nullptr;
+	static IMaterial* serenity = nullptr;
+	static IMaterial* fade = nullptr;
+
+	void Init()
+	{
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2203845847/2203845847_spectrum");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			spectrumSplattered = g_Interfaces.MatSystem->Create("spectrumskinrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1326382486/1326382486_electro_skulls_blu");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			electroSkullsBlue = g_Interfaces.MatSystem->Create("elecrtoskullsrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1193300219/1193300219_cow");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			frozenAurora = g_Interfaces.MatSystem->Create("frozenaurorarargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/1558054217/1558054217_a");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			jazzy = g_Interfaces.MatSystem->Create("jazzyrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1183962036/1183962036_aes_blue");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			hana = g_Interfaces.MatSystem->Create("hanarargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2596228713/2596228713_main_blu");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			wtf = g_Interfaces.MatSystem->Create("wtfrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2594850983/2594850983_pattern_red");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			ghost = g_Interfaces.MatSystem->Create("ghostrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2223065529/2223065529_helldriver_flames");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			flames = g_Interfaces.MatSystem->Create("flamesrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1180839618/1180839618_spooky_wood");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			spookwood = g_Interfaces.MatSystem->Create("spookwoodrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/500642896/500642896");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			edgy = g_Interfaces.MatSystem->Create("edgyrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			serenity = g_Interfaces.MatSystem->Create("serenityrargh", kv);
+		}
+		{
+			auto kv = new KeyValues("VertexLitGeneric");
+			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_serenity");
+			kv->SetString("$additive", "1");
+			kv->SetString("$scrollanglevar", "0");
+			KeyValues* Proxies = new KeyValues("Proxies");
+			{
+				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
+				{
+					KeyValues* Sine = new KeyValues("Sine");
+					g_KeyValUtils.Initialize(Sine, (char*)"sine");
+					Sine->SetString("resultvar", "$scrollanglevar");
+					Sine->SetString("sineperiod", "50000");
+					Sine->SetString("sinemin", "0");
+					Sine->SetString("sinemax", "360");
+					Proxies->AddSubkey(Sine);
+				}
+				{
+					KeyValues* TextureScroll = new KeyValues("TextureScroll");
+					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+					TextureScroll->SetString("texturescrollrate", "0.1");
+					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+					Proxies->AddSubkey(TextureScroll);
+				}
+				kv->AddSubkey(Proxies);
+
+			}
+			fade = g_Interfaces.MatSystem->Create("faderargh", kv);
+		}
+	}
+}
+
 bool CDMEChams::ShouldRun()
 {
 	if (!Vars::Chams::DME::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
@@ -139,89 +527,7 @@ void CDMEChams::Init()
 		m_pMatWFFlat = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFFlat", kv);
 	}
 
-	{
-		m_pMatPulseMaterial = g_Interfaces.MatSystem->Find("models/items/bomb_hologram/crystal_ball_glass", "Model textures");
-		{
-
-
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2");
-			//kv->SetString("$nocull", "1");
-			//kv->SetString("$cvar", "[.5 .5]");
-			//kv->SetString("$svar", "[1 .25]");
-			//kv->SetString("$rvar", "0");
-			//kv->SetString("$tvar", "[0 0]");
-			//kv->SetString("$sine1", "0");
-			//kv->SetString("$sine2", "0");
-			KeyValues* Proxies = kv->FindKey("proxies", true);
-			{
-				//KeyValues* linearramp = Proxies->FindKey("linearramp", true);
-				//{
-				//	linearramp->SetString("rate", ".3");
-				//	linearramp->SetString("initialvalue", "0");
-				//	linearramp->SetString("resultvar", "\"$tvar[1]\"");
-				//}
-				//KeyValues* sine1 = Proxies->FindKey("sine", true);
-				//{
-				//	sine1->SetString("sineperiod", "1.3");
-				//	sine1->SetString("sinemin", "-.004");
-				//	sine1->SetString("sinemax", ".002");
-				//	sine1->SetString("timeoffset", "0");
-				//	sine1->SetString("resultvar", "$sine1");
-				//}
-				
-				{
-					KeyValues* sine = Proxies->FindKey("sine", true);
-					sine->SetString("sineperiod", "1.3");
-					sine->SetString("sinemin", "0");
-					sine->SetString("sinemax", "1");
-					sine->SetString("timeoffset", "0");
-					sine->SetString("resultvar", "$color[0]");
-				}
-				{
-					KeyValues* sine = Proxies->FindKey("sine", true);
-					sine->SetString("sineperiod", "1.7");
-					sine->SetString("sinemin", "0");
-					sine->SetString("sinemax", "1");
-					sine->SetString("timeoffset", "0");
-					sine->SetString("resultvar", "$color[1]");
-				}
-				{
-					KeyValues* sine = Proxies->FindKey("sine", true);
-					sine->SetString("sineperiod", "2.3");
-					sine->SetString("sinemin", "0");
-					sine->SetString("sinemax", "1");
-					sine->SetString("timeoffset", "0");
-					sine->SetString("resultvar", "$color[2]");
-				}
-
-
-				//KeyValues* sine2 = Proxies->FindKey("sine", true);
-				//{
-				//	sine2->SetString("sineperiod", "1.7");
-				//	sine2->SetString("sinemin", "-.003");
-				//	sine2->SetString("sinemax", ".007");
-				//	sine2->SetString("timeoffset", ".2");
-				//	sine2->SetString("resultvar", "$sine2");
-				//}
-				//KeyValues* add = Proxies->FindKey("add", true);
-				//{
-				//	add->SetString("srcvar1", "$sine1");
-				//	add->SetString("srcvar2", "$sine2");
-				//	add->SetString("resultvar", "\"$tvar[0]\"");
-				//}
-				//KeyValues* texturetransform = Proxies->FindKey("texturetransform", true);
-				//{
-				//	texturetransform->SetString("centervar", "$cvar");
-				//	texturetransform->SetString("scalevar", "$svar");
-				//	texturetransform->SetString("rotatevar", "$rvar");
-				//	texturetransform->SetString("translatevar", "$tvar");
-				//	texturetransform->SetString("resultvar", "$basetexturetransform");
-				//}
-			}
-			m_pMatEnergyBall = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatEnergyBall", kv);
-		}
-	}
+	ProxySkins::Init();
 }
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
@@ -284,16 +590,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							bMatWasForced = true;
 							return m_pMatBrick;
 						}
-						case 9:
-						{
-							bMatWasForced = true;
-							return m_pMatPulseMaterial;
-						}
-						case 10:
-						{
-							bMatWasForced = true;
-							return m_pMatEnergyBall;
-						}
 						default: return nullptr;
 						}
 					}());
@@ -332,6 +628,65 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					envmap->SetVecValue(Color::TOFLOAT(Colors::Hands.r) * 4, Color::TOFLOAT(Colors::Hands.g) * 4,
 						Color::TOFLOAT(Colors::Hands.b) * 4);
 				}
+			}
+
+			if (Vars::Chams::DME::HandsProxySkin.m_Var && bMatWasForced)
+			{
+
+				IMaterial* pMaterial = nullptr;
+				{
+					using namespace ProxySkins;
+					switch (Vars::Chams::DME::HandsProxySkin.m_Var) {
+					case 1:
+						pMaterial = spectrumSplattered;
+						break;
+					case 2:
+						pMaterial = electroSkullsBlue;
+						break;
+					case 3:
+						pMaterial = frozenAurora;
+						break;
+					case 4:
+						pMaterial = jazzy;
+						break;
+					case 5:
+						pMaterial = hana;
+						break;
+					case 6:
+						pMaterial = wtf;
+						break;
+					case 7:
+						pMaterial = ghost;
+						break;
+					case 8:
+						pMaterial = flames;
+						break;
+					case 9:
+						pMaterial = spookwood;
+						break;
+					case 10:
+						pMaterial = edgy;
+						break;
+					case 11:
+						pMaterial = serenity;
+						break;
+					case 12:
+						pMaterial = fade;
+						break;
+					default: break;
+					}
+				}
+				bool found = false;
+				auto pVar = pMaterial->FindVar("$wireframe", &found);
+				if (pVar) {
+					pVar->SetIntValue(Vars::Chams::DME::HandsProxyWF.m_Var);
+				}
+				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+					ModelRenderHook::DrawModelExecute::index)
+					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
 			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
@@ -466,16 +821,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 								bMatWasForced = true;
 								return m_pMatBrick;
 							}
-							case 9:
-							{
-								bMatWasForced = true;
-								return m_pMatPulseMaterial;
-							}
-							case 10:
-							{
-								bMatWasForced = true;
-								return m_pMatEnergyBall;
-							}
 							default: return nullptr;
 							}
 						}());
@@ -514,6 +859,65 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						envmap->SetVecValue(Color::TOFLOAT(Colors::Weapon.r) * 4, Color::TOFLOAT(Colors::Weapon.g) * 4,
 							Color::TOFLOAT(Colors::Weapon.b) * 4);
 					}
+				}
+
+				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
+				{
+
+					IMaterial* pMaterial = nullptr;
+					{
+						using namespace ProxySkins;
+						switch (Vars::Chams::DME::WeaponsProxySkin.m_Var) {
+						case 1:
+							pMaterial = spectrumSplattered;
+							break;
+						case 2:
+							pMaterial = electroSkullsBlue;
+							break;
+						case 3:
+							pMaterial = frozenAurora;
+							break;
+						case 4:
+							pMaterial = jazzy;
+							break;
+						case 5:
+							pMaterial = hana;
+							break;
+						case 6:
+							pMaterial = wtf;
+							break;
+						case 7:
+							pMaterial = ghost;
+							break;
+						case 8:
+							pMaterial = flames;
+							break;
+						case 9:
+							pMaterial = spookwood;
+							break;
+						case 10:
+							pMaterial = edgy;
+							break;
+						case 11:
+							pMaterial = serenity;
+							break;
+						case 12:
+							pMaterial = fade;
+							break;
+						default: break;
+						}
+					}
+					bool found = false;
+					auto pVar = pMaterial->FindVar("$wireframe", &found);
+					if (pVar) {
+						pVar->SetIntValue(Vars::Chams::DME::WeaponsProxyWF.m_Var);
+					}
+					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+
+					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+						ModelRenderHook::DrawModelExecute::index)
+						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				}
 
 				// the following code is bad & pasted og @ Chams.cpp

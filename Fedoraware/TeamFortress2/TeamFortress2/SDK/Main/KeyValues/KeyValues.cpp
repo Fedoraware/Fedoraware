@@ -38,6 +38,15 @@ KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 	return FN(this, keyName, bCreate);
 }
 
+KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
+{
+	using fn = KeyValues * (__thiscall*)(KeyValues*, KeyValues*);
+	static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? EB 92") + 0x1;
+	static DWORD b = *(PDWORD)a + a + 4;
+	static fn FN = reinterpret_cast<fn>(b);
+	return FN(this, pSubkey);
+}
+
 int KeyValues::GetInt(const char* keyName, int defaultValue)
 {
 	KeyValues* dat = FindKey(keyName, false);

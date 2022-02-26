@@ -1520,6 +1520,25 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels arms/hands");
 
+						static const char* handsProxyMaterial[]{
+							"None",
+							"Spectrum splattered",
+							"Electro skulls",
+							"Jazzy",
+							"Frozen aurora",
+							"Hana",
+							"IDK",
+							"Ghost thing",
+							"Flames",
+							"Spook wood",
+							"Edgy",
+							"Starlight serenity",
+							"Fade"
+						};
+						ImGui::PushItemWidth(100);
+						ImGui::Combo("Hand proxy material", &Vars::Chams::DME::HandsProxySkin.m_Var, handsProxyMaterial, IM_ARRAYSIZE(handsProxyMaterial));
+						ImGui::PopItemWidth();
+						HelpMarker("Puts a cool looking animated skin on your hands");
 						ImGui::Checkbox("Hand glow overlay", &Vars::Chams::DME::HandsGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -1542,6 +1561,26 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Combo("Weapon material", &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels weapon");
+
+						static const char* weaponProxyMaterial[]{
+							"None",
+							"Spectrum splattered",
+							"Electro skulls",
+							"Jazzy",
+							"Frozen aurora",
+							"Hana",
+							"IDK",
+							"Ghost thing",
+							"Flames",
+							"Spook wood",
+							"Edgy",
+							"Starlight serenity",
+							"Fade"
+						};
+						ImGui::PushItemWidth(100);
+						ImGui::Combo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.m_Var, weaponProxyMaterial, IM_ARRAYSIZE(weaponProxyMaterial));
+						ImGui::PopItemWidth();
+						HelpMarker("Puts a cool looking animated skin on your weapons");
 						ImGui::Checkbox("Weapon glow overlay", &Vars::Chams::DME::WeaponGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
