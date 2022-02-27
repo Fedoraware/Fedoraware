@@ -12,6 +12,7 @@
 #include "../../Features/Crits/Crits.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
+#include "../../Features/Camera/CameraWindow.h"
 
 #include "../../Features/Vars.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
@@ -349,10 +350,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 
 	g_PR->Update();
-
 	g_Misc.Run(pCmd);
-	
 	g_Crits.Tick(pCmd);
+	g_CameraWindow.Update();
 
 	g_EnginePrediction.Start(pCmd);
 	{
@@ -363,6 +363,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Misc.EdgeJump(pCmd, nOldFlags);
 		FastStop(pCmd, g_EntityCache.m_pLocal);
 	}
+
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 

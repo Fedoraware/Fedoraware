@@ -138,6 +138,8 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 		case VK_RSHIFT: return "Shift";
 		case VK_CONTROL: return "Control";
 		case VK_MENU: return "LAlt";
+		case VK_PRIOR: return "Page Up";
+		case VK_NEXT: return "Page Down";
 		default: break;
 		}
 
@@ -171,7 +173,18 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 
 		if (curr == nullptr && elapsed > 0.1f) {
 			for (short n = 0; n < 256; n++) {
-				if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
+				if ((n > 0x0 && n < 0x7) ||
+					(n > L'A' - 1 && n < L'Z' + 1) ||
+					(n > L'0' - 1 && n < L'9' + 1) ||
+					n == VK_LSHIFT ||
+					n == VK_RSHIFT ||
+					n == VK_SHIFT ||
+					n == VK_ESCAPE ||
+					n == VK_HOME ||
+					n == VK_CONTROL ||
+					n == VK_MENU ||
+					n == VK_PRIOR ||
+					n == VK_NEXT) {
 					if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
 						ImGui::ClearActiveID();
 						break;
@@ -1320,7 +1333,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						static const char* camModes[]{ "Off", "Mirror" }; ImGui::PushItemWidth(100); ImGui::Combo("Camera mode", &Vars::Visuals::CameraMode.m_Var, camModes, IM_ARRAYSIZE(camModes)); ImGui::PopItemWidth(); HelpMarker("What the camera should display");
+						static const char* camModes[]{ "Off", "Mirror", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Camera mode", &Vars::Visuals::CameraMode.m_Var, camModes, IM_ARRAYSIZE(camModes)); ImGui::PopItemWidth(); HelpMarker("What the camera should display");
 						WidthSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 
 						ImGui::PopStyleVar();
@@ -2544,6 +2557,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
 			ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
+
 			if (ImGui::Begin("Camera", &g_PlayerList.showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus))
 			{
 				ImVec2 winPos = ImGui::GetWindowPos();
