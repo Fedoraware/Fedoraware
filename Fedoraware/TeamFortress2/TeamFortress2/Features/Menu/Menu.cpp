@@ -1333,7 +1333,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						static const char* camModes[]{ "Off", "Mirror" }; ImGui::PushItemWidth(100); ImGui::Combo("Camera mode", &Vars::Visuals::CameraMode.m_Var, camModes, IM_ARRAYSIZE(camModes)); ImGui::PopItemWidth(); HelpMarker("What the camera should display");
+						static const char* camModes[]{ "Off", "Mirror", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Camera mode", &Vars::Visuals::CameraMode.m_Var, camModes, IM_ARRAYSIZE(camModes)); ImGui::PopItemWidth(); HelpMarker("What the camera should display");
 						WidthSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 
 						ImGui::PopStyleVar();
@@ -2557,6 +2557,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
 			ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
+
 			if (ImGui::Begin("Camera", &g_PlayerList.showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus))
 			{
 				ImVec2 winPos = ImGui::GetWindowPos();

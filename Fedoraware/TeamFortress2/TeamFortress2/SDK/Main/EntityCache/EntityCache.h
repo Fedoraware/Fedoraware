@@ -21,6 +21,7 @@ public:
 	CBaseEntity* m_pLocal = nullptr;
 	CBaseCombatWeapon* m_pLocalWeapon = nullptr;
 	CBaseEntity* m_pObservedTarget = nullptr;
+	CBaseEntity* m_pAimbotTarget = nullptr;
 
 	void Fill();
 	void Clear();
