@@ -12,9 +12,14 @@ extern int attackStringH;
 
 void CMisc::Run(CUserCmd* pCmd)
 {
-	AutoJump(pCmd);
-	AutoStrafe(pCmd);
-	NoiseMakerSpam();
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		AutoJump(pCmd, pLocal);
+		AutoStrafe(pCmd, pLocal);
+		NoiseMakerSpam(pLocal);
+		ExtendFreeze(pLocal);
+	}
+
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
@@ -82,7 +87,7 @@ void CMisc::PingReducer() {
 	if (cl_cmdrate == nullptr || netChannel == nullptr) { return; }
 
 	static Timer updateRateTimer{ };
-	if (updateRateTimer.TestAndSet(500)) {
+	if (updateRateTimer.Run(500)) {
 		if (Vars::Misc::PingReducer.m_Var) {
 			const int currentPing = g_PR->GetPing(g_Interfaces.Engine->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.m_Var <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
@@ -92,7 +97,19 @@ void CMisc::PingReducer() {
 			NET_SetConVar cmd("cl_cmdrate", std::to_string(cl_cmdrate->GetInt()).c_str());
 			netChannel->SendNetMsg(cmd);
 		}
-	} 
+	}
+}
+
+void CMisc::ExtendFreeze(CBaseEntity* pLocal)
+{
+	if (Vars::Misc::ExtendFreeze.m_Var &&
+		g_Interfaces.Engine->IsInGame() &&
+		!pLocal->IsAlive()) {
+		static Timer cmdTimer{ };
+		if (cmdTimer.Run(2000)) {
+			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
+		}
+	}
 }
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
@@ -125,36 +142,33 @@ void CMisc::NoPush()
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
 }
 
-void CMisc::AutoJump(CUserCmd* pCmd)
+void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (!Vars::Misc::AutoJump.m_Var
+		|| !pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost())
+		return;
+
+	static bool bJumpState = false;
+
+	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!Vars::Misc::AutoJump.m_Var
-			|| !pLocal->IsAlive()
-			|| pLocal->IsSwimming()
-			|| pLocal->IsInBumperKart()
-			|| pLocal->IsAGhost())
-			return;
-
-		static bool bJumpState = false;
-
-		if (pCmd->buttons & IN_JUMP)
+		if (!bJumpState && !pLocal->IsOnGround())
 		{
-			if (!bJumpState && !pLocal->IsOnGround())
-			{
-				pCmd->buttons &= ~IN_JUMP;
-			}
-
-			else if (bJumpState)
-			{
-				bJumpState = false;
-			}
+			pCmd->buttons &= ~IN_JUMP;
 		}
 
-		else if (!bJumpState)
+		else if (bJumpState)
 		{
-			bJumpState = true;
+			bJumpState = false;
 		}
+	}
+
+	else if (!bJumpState)
+	{
+		bJumpState = true;
 	}
 }
 
@@ -172,70 +186,67 @@ static float angleDiffRad(float a1, float a2) noexcept
 	return delta;
 }
 
-void CMisc::AutoStrafe(CUserCmd* pCmd)
+void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
 	{
-		if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
-		{
-			if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->
-				mousedx < -1))
+		if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->
+			mousedx < -1))
 
-				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
-		}
-		if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
-		{
+			pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
+	}
+	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
+	{
 #
-			static bool was_jumping = false;
-			bool is_jumping = pCmd->buttons & IN_JUMP;
+		static bool was_jumping = false;
+		bool is_jumping = pCmd->buttons & IN_JUMP;
 
 
-			if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		{
+			const float speed = pLocal->GetVelocity().Length2D();
+			auto vel = pLocal->GetVelocity();
+
+			if (speed < 2.0f)
+				return;
+
+			constexpr auto perfectDelta = [](float speed) noexcept
 			{
-				const float speed = pLocal->GetVelocity().Length2D();
-				auto vel = pLocal->GetVelocity();
-
-				if (speed < 2.0f)
-					return;
-
-				constexpr auto perfectDelta = [](float speed) noexcept
+				if (const auto& pLocal = g_EntityCache.m_pLocal)
 				{
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
-					{
-						static auto speedVar = pLocal->GetMaxSpeed();
-						static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+					static auto speedVar = pLocal->GetMaxSpeed();
+					static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
 
-						static auto wishSpeed = 30.0f;
+					static auto wishSpeed = 30.0f;
 
-						const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
+					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
 
-						if (term < 1.0f && term > -1.0f)
-							return acosf(term);
-					}
-					return 0.0f;
-				};
-
-				const float pDelta = perfectDelta(speed);
-				if (pDelta)
-				{
-					const float yaw = DEG2RAD(pCmd->viewangles.y);
-					const float velDir = atan2f(vel.y, vel.x) - yaw;
-					const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
-					const float delta = angleDiffRad(velDir, wishAng);
-
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, {255, 64, 64, 255},
-					              ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), was_jumping);
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, {255, 64, 64, 255},
-					              ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), is_jumping);
-
-					float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
-
-					pCmd->forwardmove = cosf(moveDir) * 450.f;
-					pCmd->sidemove = -sinf(moveDir) * 450.f;
+					if (term < 1.0f && term > -1.0f)
+						return acosf(term);
 				}
+				return 0.0f;
+			};
+
+			const float pDelta = perfectDelta(speed);
+			if (pDelta)
+			{
+				const float yaw = DEG2RAD(pCmd->viewangles.y);
+				const float velDir = atan2f(vel.y, vel.x) - yaw;
+				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
+				const float delta = angleDiffRad(velDir, wishAng);
+
+				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, {255, 64, 64, 255},
+				              ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), was_jumping);
+				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, {255, 64, 64, 255},
+				              ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), is_jumping);
+
+				float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
+
+				pCmd->forwardmove = cosf(moveDir) * 450.f;
+				pCmd->sidemove = -sinf(moveDir) * 450.f;
 			}
-			was_jumping = is_jumping;
 		}
+		was_jumping = is_jumping;
 	}
 }
 
@@ -267,23 +278,20 @@ void CMisc::InitSpamKV(void* pKV)
 	}
 }
 
-void CMisc::NoiseMakerSpam()
+void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::NoisemakerSpam.m_Var)
 		return;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
-	{
-		if (pLocal->GetUsingActionSlot())
-			return;
+	if (pLocal->GetUsingActionSlot())
+		return;
 
-		if (pLocal->GetNextNoiseMakerTime() < g_Interfaces.GlobalVars->curtime)
+	if (pLocal->GetNextNoiseMakerTime() < g_Interfaces.GlobalVars->curtime)
+	{
+		if (const auto pKV = Utils::InitKeyValue())
 		{
-			if (const auto pKV = Utils::InitKeyValue())
-			{
-				InitSpamKV(pKV);
-				g_Interfaces.Engine->ServerCmdKeyValues(pKV);
-			}
+			InitSpamKV(pKV);
+			g_Interfaces.Engine->ServerCmdKeyValues(pKV);
 		}
 	}
 }
@@ -398,7 +406,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 				pCmd->buttons |= IN_ATTACK | IN_JUMP;
 
 				Vec3 vVelocity = pLocal->GetVelocity();
-				Vec3 vAngles = {vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f};
+				Vec3 vAngles = { vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f };
 
 				if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
 				{

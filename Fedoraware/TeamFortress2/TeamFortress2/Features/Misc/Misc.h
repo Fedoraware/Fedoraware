@@ -5,9 +5,11 @@
 class CMisc
 {
 private:
-	void AutoJump(CUserCmd* pCmd);
-	void AutoStrafe(CUserCmd* pCmd);
-	void NoiseMakerSpam();
+	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void NoiseMakerSpam(CBaseEntity* pLocal);
+	void PingReducer();
+	void ExtendFreeze(CBaseEntity* pLocal);
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
 	bool steamCleared = false;
@@ -15,7 +17,6 @@ private:
 public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
-	void PingReducer();
 	void ServerHitbox();
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();

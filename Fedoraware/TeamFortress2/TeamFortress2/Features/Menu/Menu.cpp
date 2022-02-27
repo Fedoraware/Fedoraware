@@ -1403,6 +1403,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (Vars::Misc::PingReducer.m_Var) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 						}
+						ImGui::Checkbox("Freeze Respawn", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Freezes the respawn countdown");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
