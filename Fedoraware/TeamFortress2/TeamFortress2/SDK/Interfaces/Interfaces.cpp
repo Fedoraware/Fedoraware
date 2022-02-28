@@ -116,6 +116,11 @@ void CInterfaces::Init()
 
 	EffectsClient = g_Interface.Get<CEffectsClient*>(CLIENT, _(IEFFECTS_INTERFACE_VERSION));
 	_valid(EffectsClient);
+
+	typedef IAchievementMgr* (*getachievementmgr)();
+
+	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(g_Interfaces.Engine, 115));
+	_valid(AchievementMgr);
 }
 
 void CSteamInterfaces::Init()

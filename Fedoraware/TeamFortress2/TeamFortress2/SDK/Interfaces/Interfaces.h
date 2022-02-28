@@ -30,7 +30,7 @@
 #include "UniformRandomStream/UniformRandomStream.h"
 #include "InputSystem/InputSystem.h"
 #include "EffectsClient/EffectsClient.h"
-
+#include "AchievementMgr/AchievementMgr.h"
 class CClockDriftMgr
 {
 private:
@@ -118,6 +118,7 @@ public:
 	IInputSystem*				InputSystem					= nullptr;
 	void*						CHud						= nullptr;
 	void*						CTFGameMovement				= nullptr;
+	IAchievementMgr*			AchievementMgr				= nullptr;
 	void Init();
 };
 

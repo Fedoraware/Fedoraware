@@ -645,6 +645,7 @@
     <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\AchievementMgr\AchievementMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
