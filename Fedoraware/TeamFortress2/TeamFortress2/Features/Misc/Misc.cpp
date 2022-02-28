@@ -102,9 +102,7 @@ void CMisc::PingReducer() {
 
 void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 {
-	if (Vars::Misc::ExtendFreeze.m_Var &&
-		g_Interfaces.Engine->IsInGame() &&
-		!pLocal->IsAlive()) {
+	if (Vars::Misc::ExtendFreeze.m_Var && g_Interfaces.Engine->IsInGame() && !pLocal->IsAlive()) {
 		static Timer cmdTimer{ };
 		if (cmdTimer.Run(2000)) {
 			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
