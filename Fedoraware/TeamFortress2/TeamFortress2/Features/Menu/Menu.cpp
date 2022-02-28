@@ -1403,6 +1403,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (Vars::Misc::PingReducer.m_Var) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 						}
+						ImGui::Checkbox("Infinite Respawn", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Grants infinite respawn time");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -2558,7 +2559,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 			ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
 
-			if (ImGui::Begin("Camera", &g_PlayerList.showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus))
+			int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
+			if (Vars::Visuals::CameraMode.m_Var <= 1 || g_CameraWindow.CanDraw) {
+				windowFlags |= ImGuiWindowFlags_NoBackground;
+			}
+			if (ImGui::Begin("Camera", &g_PlayerList.showWindow, windowFlags))
 			{
 				ImVec2 winPos = ImGui::GetWindowPos();
 				ImVec2 winSize = ImGui::GetWindowSize();

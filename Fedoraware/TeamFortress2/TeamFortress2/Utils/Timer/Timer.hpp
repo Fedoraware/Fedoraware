@@ -6,25 +6,26 @@
  */
 
 class Timer {
+private:
+	std::chrono::steady_clock::time_point Last;
+
+	[[nodiscard]] bool Check(unsigned ms) const
+	{
+		const auto currentTime = std::chrono::steady_clock::now();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - Last).count() >= ms;
+	}
 public:
-	typedef std::chrono::system_clock clock;
-	std::chrono::time_point<clock> Last{ };
-
-	Timer() = default;
-
-	bool Check(unsigned ms) const {
-		return std::chrono::duration_cast<std::chrono::microseconds>(clock::now() - Last).count() >= ms;
+	Timer()
+	{
+		Last = std::chrono::steady_clock::now();
 	}
 
-	bool TestAndSet(unsigned ms) {
+	bool Run(unsigned ms)
+	{
 		if (Check(ms)) {
-			Update();
+			Last = std::chrono::steady_clock::now();
 			return true;
 		}
 		return false;
-	}
-
-	void Update() {
-		Last = clock::now();
 	}
 };
