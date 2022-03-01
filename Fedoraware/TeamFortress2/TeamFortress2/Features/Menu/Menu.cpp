@@ -1540,6 +1540,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						};
 						ImGui::PushItemWidth(100);
 						ImGui::Combo("Hand material", &Vars::Chams::DME::Hands.m_Var, handsMaterial, IM_ARRAYSIZE(handsMaterial));
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Fresnel Hands Base", Colors::FresnelBaseHands);
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels arms/hands");
 
@@ -1582,6 +1585,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						};
 						ImGui::PushItemWidth(100);
 						ImGui::Combo("Weapon material", &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Fresnel Weapons Base", Colors::FresnelBaseWeps);
 						ImGui::PopItemWidth();
 						HelpMarker("What material to put on your viewmodels weapon");
 

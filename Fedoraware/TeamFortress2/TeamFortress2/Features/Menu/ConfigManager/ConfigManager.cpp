@@ -700,6 +700,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Bones);
 			SAVE_OTHER(Colors::BulletTracer);
 			SAVE_OTHER(Colors::FresnelBase);
+			SAVE_OTHER(Colors::FresnelBaseHands);
+			SAVE_OTHER(Colors::FresnelBaseWeps);
 			SAVE_OTHER(Colors::FresnelTop);
 			SAVE_OTHER(Colors::AimSquareCol);
 			SAVE_OTHER(Colors::DtChargingLeft);
@@ -1343,6 +1345,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Bones);
 			LOAD_OTHER(Colors::BulletTracer);
 			LOAD_OTHER(Colors::FresnelBase);
+			LOAD_OTHER(Colors::FresnelBaseHands);
+			LOAD_OTHER(Colors::FresnelBaseWeps);
 			LOAD_OTHER(Colors::FresnelTop);
 			LOAD_OTHER(Colors::AimSquareCol);
 			LOAD_OTHER(Colors::DtChargingLeft);

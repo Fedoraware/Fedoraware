@@ -624,9 +624,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
 				if (foundselfillumtint)
 				{
-					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r) * 4,
-						Color::TOFLOAT(Colors::FresnelBase.g) * 4,
-						Color::TOFLOAT(Colors::FresnelBase.b) * 4);
+					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseHands.r) * 4,
+						Color::TOFLOAT(Colors::FresnelBaseHands.g) * 4,
+						Color::TOFLOAT(Colors::FresnelBaseHands.b) * 4);
 				}
 				bool found = false;
 				IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
@@ -862,9 +862,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
 					if (foundselfillumtint)
 					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r) * 4,
-							Color::TOFLOAT(Colors::FresnelBase.g) * 4,
-							Color::TOFLOAT(Colors::FresnelBase.b) * 4);
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseWeps.r) * 4,
+							Color::TOFLOAT(Colors::FresnelBaseWeps.g) * 4,
+							Color::TOFLOAT(Colors::FresnelBaseWeps.b) * 4);
 					}
 					bool found = false;
 					IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
