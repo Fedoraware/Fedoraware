@@ -1120,7 +1120,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ColorPicker("Prop modulation colour", Colors::StaticPropModulation);
 						ImGui::PushItemWidth(150);
 						MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }, { &Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var }, "Select what you want to remove", "Removals");
-						MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var }, "Which types of predictions should be drawn", "Predictions");
+						MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway"}, {&Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var }, "What misc visual features should be run", "Misc");
 						ImGui::PopItemWidth(); // ?
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);

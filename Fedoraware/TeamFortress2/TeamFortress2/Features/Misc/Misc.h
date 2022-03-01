@@ -18,6 +18,7 @@ public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();
+	void WeaponSway();
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd);

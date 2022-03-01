@@ -525,6 +525,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
+			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::VMOffX);
 			SAVE_VAR(Vars::Visuals::VMOffY);
 			SAVE_VAR(Vars::Visuals::VMOffZ);
@@ -1169,6 +1170,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
+			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::VMOffX);
 			LOAD_VAR(Vars::Visuals::VMOffY);
 			LOAD_VAR(Vars::Visuals::VMOffZ);

@@ -449,6 +449,7 @@ namespace Vars
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ false, L"Bullet tracers" };
 		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
+		inline CVar<bool> ViewmodelSway			{ false, L"AimbotVM" };
 		inline CVar<int> ParticleTracer				{ 2, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };
