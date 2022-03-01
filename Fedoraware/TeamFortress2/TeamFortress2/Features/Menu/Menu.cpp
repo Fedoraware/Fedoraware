@@ -1430,7 +1430,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
 						static const char* aimHitboxArr[]{ "Head", "Body", "Auto" }; ImGui::PushItemWidth(100); ImGui::Combo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, aimHitboxArr, IM_ARRAYSIZE(aimHitboxArr)); ImGui::PopItemWidth(); HelpMarker("Which hitbox the aimbot will target");
 						static const char* tapfireMethodArr[]{ "Off", "Distance", "Always" }; ImGui::PushItemWidth(100); ImGui::Combo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, tapfireMethodArr, IM_ARRAYSIZE(tapfireMethodArr)); ImGui::PopItemWidth(); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
-						WidthSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
+						ImGui::PushItemWidth(100); ImGui::SliderInt("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth(); HelpMarker("Changes how smooth the aimbot will aim at the target");
 						ImGui::PushItemWidth(100);
 						MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Choose what the aimbot should multipoint", "Multipoint");
 						ImGui::PopItemWidth();
@@ -2086,7 +2086,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								static const char* sortMethodArr[]{ "FOV", "Distance", }; ImGui::PushItemWidth(100); ImGui::Combo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 								static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; ImGui::PushItemWidth(100); ImGui::Combo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, aimMethodArr, IM_ARRAYSIZE(aimMethodArr)); ImGui::PopItemWidth(); HelpMarker("Which method the aimbot uses to aim at the target");
 							}
-							WidthSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); ImGui::PopItemWidth(); HelpMarker("How smooth the aimbot should be");
 							ImGui::Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
 							ImGui::Checkbox("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 							ImGui::Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
