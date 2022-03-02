@@ -20,6 +20,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		ExtendFreeze(pLocal);
 	}
 
+	AutoJoin();
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
@@ -106,6 +107,29 @@ void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 		static Timer cmdTimer{ };
 		if (cmdTimer.Run(2000)) {
 			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
+		}
+	}
+}
+
+const std::string classNames[] = {"scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy"};
+void CMisc::AutoJoin()
+{
+	if (Vars::Misc::AutoJoin.m_Var > 0) {
+		static Timer cmdTimer{ };
+		if (cmdTimer.Run(250)) {
+			bool inTeam = false;
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				inTeam = pLocal->GetTeamNum() != TEAM_NONE && pLocal->IsInValidTeam();
+				if (g_Interfaces.Engine->IsInGame() && !pLocal->IsClass(Vars::Misc::AutoJoin.m_Var - 1)) {
+					const std::string classCmd = "join_class " + classNames[Vars::Misc::AutoJoin.m_Var - 1];
+					g_Interfaces.Engine->ClientCmd_Unrestricted(classCmd.c_str());
+				}
+			}
+
+			if (!inTeam && g_Interfaces.Engine->IsConnected()) {
+				g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
+			}
 		}
 	}
 }

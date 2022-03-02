@@ -10,6 +10,7 @@ private:
 	void NoiseMakerSpam(CBaseEntity* pLocal);
 	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
+	void AutoJoin();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
 	bool steamCleared = false;

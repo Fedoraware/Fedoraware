@@ -541,7 +541,8 @@ namespace Vars
 		inline CVar<bool> BeCat					{ false, L"CatReply" };
 		inline CVar<bool> PingReducer			{ false, L"Ping reducer" };
 		inline CVar<int> PingTarget				{ 0, L"Ping target" };
-		inline CVar<bool> ExtendFreeze			{ false, L"Freeze Respawn" };
+		inline CVar<bool> ExtendFreeze			{ false, L"Infinite Respawn" };
+		inline CVar<int> AutoJoin				{ false, L"Auto Join" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
