@@ -1404,6 +1404,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 						}
 						ImGui::Checkbox("Infinite Respawn", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Grants infinite respawn time");
+						const char* autoClass[]{ "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Auto join", &Vars::Misc::AutoJoin.m_Var, autoClass, IM_ARRAYSIZE(autoClass)); ImGui::PopItemWidth(); HelpMarker("Automatically joins the given class");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
