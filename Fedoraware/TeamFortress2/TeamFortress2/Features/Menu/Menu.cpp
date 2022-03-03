@@ -1374,9 +1374,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
-						const char* autoStrafeModes[]{ "Off", "Normal", "Directional" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth(); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+						if (Vars::Misc::AutoJump.m_Var) {
+							const char* autoStrafeModes[]{ "Off", "Legit", "WASD" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth(); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+						}
 						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
-						InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, false);  HelpMarker("Edge jump bind, leave as None for always on");
+						if (Vars::Misc::EdgeJump.m_Var) {
+							InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
+						}
 						ImGui::Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
 						ImGui::Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
 						ImGui::Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
@@ -1388,23 +1392,19 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Noisemaker spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Will spam your noisemaker without using its charges");
+						MultiCombo({ "Chat Censor", "Anti-Autobal", "sv_cheats Bypass", "Pseudo Spectator", "Noisemaker Spammer"}, { &Vars::Misc::ChatCensor.m_Var, &Vars::Misc::AntiAutobal.m_Var, &Vars::Misc::CheatsBypass.m_Var, &Vars::Misc::ExtendFreeze.m_Var, &Vars::Misc::NoisemakerSpam.m_Var }, "Enable/Disable Misc. Options", "Misc");
 						const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Chat censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses you of cheating");
+						const char* autoClass[]{ "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Pick Class", &Vars::Misc::AutoJoin.m_Var, autoClass, IM_ARRAYSIZE(autoClass)); ImGui::PopItemWidth(); HelpMarker("Automatically joins the given class");
 						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
-						ImGui::Checkbox("Anti autobalance", &Vars::Misc::AntiAutobal.m_Var); HelpMarker("Will rejoin the server to prevent you being autobalanced");
-						ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
-						ImGui::Checkbox("Force sv_cheats", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Will force sv_cheats 1, allowing commands like tf_viewmodels_offset_override, fog_override etc.");
-						ImGui::Checkbox("MvM instant respawn", &Vars::Misc::MVMRes.m_Var); HelpMarker("Will respawn you instantly in MvM");
-						ImGui::Checkbox("Vote revealer", &Vars::Misc::VoteRevealerText.m_Var); HelpMarker("Will say who voted F1 or F2 in chat");
-						ImGui::Checkbox("Log votes to party", &Vars::Misc::VoteRevealerParty.m_Var); HelpMarker("Will send vote information to party chat (use with caution)");
+						if (Vars::Misc::RageRetry.m_Var){
+							ImGui::PushItemWidth(100); ImGui::SliderInt("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
+						}
+						//ImGui::Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
+						
 						ImGui::Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
 						if (Vars::Misc::PingReducer.m_Var) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 						}
-						ImGui::Checkbox("Infinite Respawn", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Grants infinite respawn time");
-						const char* autoClass[]{ "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Auto join", &Vars::Misc::AutoJoin.m_Var, autoClass, IM_ARRAYSIZE(autoClass)); ImGui::PopItemWidth(); HelpMarker("Automatically joins the given class");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -1502,18 +1502,17 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
-						ImGui::Checkbox("Self chams###PlayerSelfChamsBox", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Draw chams on the local player");
-						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-						ImGui::Checkbox("Wearable chams###PlayerWearableChams", &Vars::Chams::Players::Wearables.m_Var);  HelpMarker("Will draw chams on player cosmetics");
-						ImGui::Checkbox("Weapon chams###PlayerWeaponChams", &Vars::Chams::Players::Weapons.m_Var);  HelpMarker("Will draw chams on player weapons");
-						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic"}; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+						MultiCombo({ "Ignore-Z", "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::IgnoreZ.m_Var, &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Customize Chams", "Chams Flags");
+						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 						HelpMarker("Which material the chams will apply to the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Fresnel base colour", Colors::FresnelBase);
-						ImGui::Checkbox("Player glow overlay", &Vars::Chams::Players::GlowOverlay.m_Var);
-						ImGui::Checkbox("Ignore Z###PlayerChamsIgnoreZ", &Vars::Chams::Players::IgnoreZ.m_Var); HelpMarker("Draw chams through walls");
+						ImGui::Checkbox("Self chams###PlayerSelfChamsBox", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Draw chams on the local player");
+						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
+						//ImGui::Checkbox("Player glow overlay", &Vars::Chams::Players::GlowOverlay.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
+
 
 						SectionTitle("DME Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
