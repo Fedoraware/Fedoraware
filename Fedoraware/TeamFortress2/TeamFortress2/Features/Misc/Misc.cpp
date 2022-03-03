@@ -19,12 +19,29 @@ void CMisc::Run(CUserCmd* pCmd)
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
 	}
-
+	AutoJoin();
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
+	WeaponSway();
+}
+
+void CMisc::WeaponSway()	//	pasted but looks cool
+{
+	static ConVar* cl_wpn_sway_interp = g_Interfaces.CVars->FindVar("cl_wpn_sway_interp");
+	if (cl_wpn_sway_interp)
+	{
+		if (Vars::Visuals::ViewmodelSway.m_Var) {
+			cl_wpn_sway_interp->SetValue(0.05f);
+		}
+		else
+		{
+			if (cl_wpn_sway_interp->GetFloat())
+				cl_wpn_sway_interp->SetValue(0.0f);
+		}
+	}
 }
 
 void CMisc::ServerHitbox()
@@ -106,6 +123,29 @@ void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 		static Timer cmdTimer{ };
 		if (cmdTimer.Run(2000)) {
 			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
+		}
+	}
+}
+
+const std::string classNames[] = {"scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy"};
+void CMisc::AutoJoin()
+{
+	if (Vars::Misc::AutoJoin.m_Var > 0) {
+		static Timer cmdTimer{ };
+		if (cmdTimer.Run(250)) {
+			bool inTeam = false;
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				inTeam = pLocal->GetTeamNum() != TEAM_NONE && pLocal->IsInValidTeam();
+				if (g_Interfaces.Engine->IsInGame() && !pLocal->IsClass(Vars::Misc::AutoJoin.m_Var - 1)) {
+					const std::string classCmd = "join_class " + classNames[Vars::Misc::AutoJoin.m_Var - 1];
+					g_Interfaces.Engine->ClientCmd_Unrestricted(classCmd.c_str());
+				}
+			}
+
+			if (!inTeam && g_Interfaces.Engine->IsConnected()) {
+				g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
+			}
 		}
 	}
 }

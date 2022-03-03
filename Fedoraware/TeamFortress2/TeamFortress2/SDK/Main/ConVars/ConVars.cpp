@@ -22,7 +22,10 @@ void CConVars::Init()
 	while (cmdBase != nullptr) {
 		constexpr int FCVAR_HIDDEN = (int)EConVarFlags::FCVAR_HIDDEN;
 		constexpr int FCVAR_DEVELOPMENT_ONLY = (int)EConVarFlags::FCVAR_DEVELOPMENT_ONLY;
-		cmdBase->m_nFlags &= ~( FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY );
+		constexpr int FCVAR_CHEAT = (int)EConVarFlags::FCVAR_CHEAT;
+		constexpr int FCVAR_NOT_CONNECTED = (int)EConVarFlags::FCVAR_NOT_CONNECTED;
+		cmdBase->m_nFlags &= ~(FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY | FCVAR_CHEAT | FCVAR_NOT_CONNECTED);
+
 
 		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase)) {
 			if (convar->GetName() == "name") {

@@ -10,6 +10,7 @@ private:
 	void NoiseMakerSpam(CBaseEntity* pLocal);
 	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
+	void AutoJoin();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
 	bool steamCleared = false;
@@ -18,6 +19,7 @@ public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();
+	void WeaponSway();
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd);

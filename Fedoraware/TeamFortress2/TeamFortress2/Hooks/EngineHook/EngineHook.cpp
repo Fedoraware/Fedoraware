@@ -17,7 +17,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	// pSpeedhack
 	if (Vars::Misc::CL_Move::SEnabled.m_Var)
 	{
-		int SpeedTicks{0};
+		int SpeedTicks{ 0 };
 		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
 		g_GlobalInfo.m_nShifted = 0;
 
@@ -66,7 +66,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	}
 
 	oClMove(accumulated_extra_samples,
-	        (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
+		(g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
 	if (g_GlobalInfo.m_nWaitForShift)
 	{
@@ -83,11 +83,13 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 					g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
 						? true
 						: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
-				} else {
+				}
+				else {
 					g_GlobalInfo.m_bShouldShift = false;
 				}
 			}
-		} else {
+		}
+		else {
 			g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
 				? true
 				: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
@@ -108,7 +110,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			// 0 - On key
 			(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
-		// 2 - Disable on key 
+			// 2 - Disable on key 
 		{
 			while (g_GlobalInfo.m_nShifted > 0)
 			{
@@ -168,7 +170,7 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 		return FLT_MAX;
 
 	return originalFn(ecx, edx);
-} 
+}
 
 int __cdecl EngineHook::Q_stricmp::Hook(const char* str1, const char* str2)
 {

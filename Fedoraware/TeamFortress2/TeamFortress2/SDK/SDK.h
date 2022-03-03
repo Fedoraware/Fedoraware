@@ -134,6 +134,8 @@ namespace Colors
 	inline Color_t Bones =					{ 255, 255, 255, 255 };
 	inline Color_t BulletTracer =			{ 255, 255, 255, 255 };
 	inline Color_t FresnelBase =			{ 0,0,0,255 };
+	inline Color_t FresnelBaseHands =			{ 0,0,0,255 };
+	inline Color_t FresnelBaseWeps =			{ 0,0,0,255 };
 	inline Color_t FresnelTop = 			{ 0,255,0,255 };
 	inline Color_t AimSquareCol = 			{ 0,255,0,255 };
 	inline Color_t DtChargingLeft =			{ 255, 192, 81, 180};

@@ -525,6 +525,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::BulletTracer);
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
+			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::VMOffX);
 			SAVE_VAR(Vars::Visuals::VMOffY);
 			SAVE_VAR(Vars::Visuals::VMOffZ);
@@ -599,6 +600,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::VoteRevealerParty);
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
+			SAVE_VAR(Vars::Misc::ExtendFreeze);
+			SAVE_VAR(Vars::Misc::AutoJoin);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -699,6 +702,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Bones);
 			SAVE_OTHER(Colors::BulletTracer);
 			SAVE_OTHER(Colors::FresnelBase);
+			SAVE_OTHER(Colors::FresnelBaseHands);
+			SAVE_OTHER(Colors::FresnelBaseWeps);
 			SAVE_OTHER(Colors::FresnelTop);
 			SAVE_OTHER(Colors::AimSquareCol);
 			SAVE_OTHER(Colors::DtChargingLeft);
@@ -1169,6 +1174,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::BulletTracer);
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
+			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::VMOffX);
 			LOAD_VAR(Vars::Visuals::VMOffY);
 			LOAD_VAR(Vars::Visuals::VMOffZ);
@@ -1241,6 +1247,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::VoteRevealerParty);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
+			LOAD_VAR(Vars::Misc::ExtendFreeze);
+			LOAD_VAR(Vars::Misc::AutoJoin);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -1341,6 +1349,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Bones);
 			LOAD_OTHER(Colors::BulletTracer);
 			LOAD_OTHER(Colors::FresnelBase);
+			LOAD_OTHER(Colors::FresnelBaseHands);
+			LOAD_OTHER(Colors::FresnelBaseWeps);
 			LOAD_OTHER(Colors::FresnelTop);
 			LOAD_OTHER(Colors::AimSquareCol);
 			LOAD_OTHER(Colors::DtChargingLeft);
