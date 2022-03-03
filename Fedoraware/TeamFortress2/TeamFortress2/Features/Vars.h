@@ -94,7 +94,7 @@ namespace Vars
 			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 2, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox			{ 2, L"Aim Hitbox" };	//0 - Head,		1 - Body,	2 - Auto
-			inline CVar<float> SmoothingAmount	{ 4.0f, L"Smoothing Amount" };
+			inline CVar<int> SmoothingAmount	{ 4, L"Smoothing Amount" };
 			inline CVar<int> TapFire			{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
 			inline CVar<bool> ScanHitboxes		{ true, L"Scan Body" };
 			inline CVar<bool> ScanHead			{ true, L"Scan Head" };
@@ -128,8 +128,7 @@ namespace Vars
 			//inline CVar<bool> Active			{ true, L"Active" };
 			inline CVar<int> SortMethod			{ 1, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 2, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
-			//inline CVar<float> AimFOV			{ 45.0f, L"Aim FOV" };
-			inline CVar<float> SmoothingAmount	{ 8.0f, L"Smoothing Amount" };
+			inline CVar<int> SmoothingAmount	{ 8, L"Smoothing Amount" };
 			inline CVar<bool> RangeCheck		{ true, L"Range Check" };
 			inline CVar<bool> PredictSwing		{ true, L"Predict Swing" };
 			inline CVar<bool> WhipTeam			{ true, L"Whip Teammates" };
@@ -450,6 +449,7 @@ namespace Vars
 		inline CVar<bool> SkyModulation				{ true, L"Skybox modulation" };
 		inline CVar<bool> BulletTracer				{ false, L"Bullet tracers" };
 		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
+		inline CVar<bool> ViewmodelSway			{ false, L"AimbotVM" };
 		inline CVar<int> ParticleTracer				{ 2, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };

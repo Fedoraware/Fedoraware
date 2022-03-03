@@ -399,6 +399,11 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 1: //Smooth
 	{
+		if (Vars::Aimbot::Hitscan::SmoothingAmount.m_Var == 0) { // plain aim at 0 smoothing factor
+			pCmd->viewangles = vAngle;
+			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			break;
+		}
 		//Calculate delta of current viewangles and wanted angles
 		Vec3 vecDelta = vAngle - g_Interfaces.Engine->GetViewAngles();
 

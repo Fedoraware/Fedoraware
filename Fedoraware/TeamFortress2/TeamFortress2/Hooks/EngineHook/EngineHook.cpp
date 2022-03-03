@@ -43,15 +43,13 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	if (g_GlobalInfo.m_bRechargeQueued && !g_GlobalInfo.m_bChoking)
 	{
-		// probably perfect method of waiting to ensure we don't mess with fakelag
-		g_GlobalInfo.m_bRechargeQueued = false; // see relevant code @clientmodehook
+		g_GlobalInfo.m_bRechargeQueued = false;
 		g_GlobalInfo.m_bRecharging = true;
 	}
 	else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var))
 	{
-		g_GlobalInfo.m_bForceSendPacket = true; // force uninterrupted connection with server
 		g_GlobalInfo.m_nShifted++; // add ticks to tick counter
-		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS + 1; // set wait condition
+		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS; // set wait condition
 		return; // this recharges
 	}
 	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var))
@@ -105,16 +103,13 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	{
 		if (
 			(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
-			// 0 - On key
-			(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
+			(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
-		// 2 - Disable on key 
 		{
 			while (g_GlobalInfo.m_nShifted > 0)
 			{
 				oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
 				g_GlobalInfo.m_nShifted--;
-				//g_GlobalInfo.m_bForceSendPacket = true;
 			}
 			g_Interfaces.Engine->FireEvents();
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;

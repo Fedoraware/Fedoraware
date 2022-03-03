@@ -19,13 +19,29 @@ void CMisc::Run(CUserCmd* pCmd)
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
 	}
-
 	AutoJoin();
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
+	WeaponSway();
+}
+
+void CMisc::WeaponSway()	//	pasted but looks cool
+{
+	static ConVar* cl_wpn_sway_interp = g_Interfaces.CVars->FindVar("cl_wpn_sway_interp");
+	if (cl_wpn_sway_interp)
+	{
+		if (Vars::Visuals::ViewmodelSway.m_Var) {
+			cl_wpn_sway_interp->SetValue(0.05f);
+		}
+		else
+		{
+			if (cl_wpn_sway_interp->GetFloat())
+				cl_wpn_sway_interp->SetValue(0.0f);
+		}
+	}
 }
 
 void CMisc::ServerHitbox()

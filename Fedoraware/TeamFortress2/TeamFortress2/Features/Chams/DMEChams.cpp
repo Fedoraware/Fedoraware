@@ -533,7 +533,7 @@ void CDMEChams::Init()
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	m_bRendering = false;
-
+	bool foundselfillumtint = false;
 	if (ShouldRun())
 	{
 		m_bRendering = true;
@@ -595,7 +595,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}());
 			}
 
-			if (bMatWasForced)
+			if (bMatWasForced && (Vars::Chams::DME::Hands.m_Var != 7))
 			{
 				if (Vars::Chams::DME::HandsRainbow.m_Var)
 				{
@@ -617,10 +617,17 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				ModelRenderHook::DrawModelExecute::index)
 				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			bMatWasForced = true;
-
+			foundselfillumtint = false;
 			if (Vars::Chams::DME::Hands.m_Var == 7)
 			{
 				IMaterial* mat = m_pMatFresnel;
+				IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
+				if (foundselfillumtint)
+				{
+					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseHands.r) * 4,
+						Color::TOFLOAT(Colors::FresnelBaseHands.g) * 4,
+						Color::TOFLOAT(Colors::FresnelBaseHands.b) * 4);
+				}
 				bool found = false;
 				IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
 				if (found)
@@ -826,7 +833,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}());
 				}
 
-				if (bMatWasForced)
+				if (bMatWasForced && (Vars::Chams::DME::Weapon.m_Var != 7))
 				{
 					if (Vars::Chams::DME::WeaponRainbow.m_Var)
 					{
@@ -848,10 +855,17 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					ModelRenderHook::DrawModelExecute::index) // base
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				bMatWasForced = true;
-
+				foundselfillumtint = false;
 				if (Vars::Chams::DME::Weapon.m_Var == 7)
 				{
 					IMaterial* mat = m_pMatFresnel2;
+					IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
+					if (foundselfillumtint)
+					{
+						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseWeps.r) * 4,
+							Color::TOFLOAT(Colors::FresnelBaseWeps.g) * 4,
+							Color::TOFLOAT(Colors::FresnelBaseWeps.b) * 4);
+					}
 					bool found = false;
 					IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
 					if (found)
@@ -918,33 +932,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
 						ModelRenderHook::DrawModelExecute::index)
 						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-				}
-
-				// the following code is bad & pasted og @ Chams.cpp
-				bool foundselfillumtint = false;
-				if (Vars::Chams::DME::Hands.m_Var == 7)
-				{
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(
-						_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
-					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-							Color::TOFLOAT(Colors::FresnelBase.g),
-							Color::TOFLOAT(Colors::FresnelBase.b));
-					}
-				}
-
-				foundselfillumtint = false;
-				if (Vars::Chams::DME::Weapon.m_Var == 7)
-				{
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel2->FindVar(
-						_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
-					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-							Color::TOFLOAT(Colors::FresnelBase.g),
-							Color::TOFLOAT(Colors::FresnelBase.b));
-					}
 				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)

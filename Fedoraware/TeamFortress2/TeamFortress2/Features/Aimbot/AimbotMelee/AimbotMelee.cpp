@@ -185,6 +185,12 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 1:
 		{
+			if (Vars::Aimbot::Melee::SmoothingAmount.m_Var == 0) { // plain aim at 0 smoothing factor
+				pCmd->viewangles = vAngle;
+				g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+				break;
+			}
+
 			Vec3 vecDelta = vAngle - pCmd->viewangles;
 			Math::ClampAngles(vecDelta);
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.m_Var;
