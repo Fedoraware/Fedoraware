@@ -252,7 +252,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 			{
 				if (const auto& pLocal = g_EntityCache.m_pLocal)
 				{
-					static auto speedVar = pLocal->GetMaxSpeed();
+					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
 					static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
 
 					static auto wishSpeed = 30.0f;
@@ -272,11 +272,6 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 				const float velDir = atan2f(vel.y, vel.x) - yaw;
 				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
 				const float delta = angleDiffRad(velDir, wishAng);
-
-				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, {255, 64, 64, 255},
-				              ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), was_jumping);
-				g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, {255, 64, 64, 255},
-				              ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), is_jumping);
 
 				float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
 
