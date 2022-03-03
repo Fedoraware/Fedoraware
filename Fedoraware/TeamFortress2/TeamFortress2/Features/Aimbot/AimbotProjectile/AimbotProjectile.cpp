@@ -186,11 +186,22 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	{
 		float charge = (g_Interfaces.GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 		out = {
-			((fminf(fmaxf(charge, 0.0f), 1.0f) * 788.0f) + 1812.0f), // Magic
-			((fminf(fmaxf(charge, 0.0f), 1.0f) * -0.4f) + 0.5f)
+			Math::RemapValClamped(charge, 0.0f, 1.f, 1800, 2600),
+			Math::RemapValClamped(charge, 0.0f, 1.f, 0.5, 0.1)
 		};
 		break;
 	}
+/*
+float CTFCompoundBow::GetProjectileSpeed( void )
+{
+	return RemapValClamped( GetCurrentCharge(), 0.0f, 1.f, 1800, 2600 );
+}
+
+float CTFCompoundBow::GetProjectileGravity( void )
+{
+	return RemapValClamped( GetCurrentCharge(), 0.0f, 1.f, 0.5, 0.1 );
+}
+*/
 	}
 
 	return out.m_flVelocity;
@@ -456,17 +467,16 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				//Weapon offsets
 				switch (pWeapon->GetWeaponID())
 				{
+					// This is from tf_bot_behaviour :/
 				case TF_WEAPON_GRENADELAUNCHER:
 				case TF_WEAPON_PIPEBOMBLAUNCHER:
 				case TF_WEAPON_STICKBOMB:
 				case TF_WEAPON_STICKY_BALL_LAUNCHER:
 				{
-					Vec3 vDelta = (vPredictedPos - vLocalPos);
-					float fRange = Math::VectorNormalize(vDelta);
+					Vec3 toThreat = (vPredictedPos - vLocalPos);
+					float fRange = Math::VectorNormalize(toThreat);
 
-					float fElevationAngle = (fRange * (g_GlobalInfo.m_nCurItemDefIndex == Demoman_m_TheLochnLoad
-						? 0.0075f
-						: 0.013f));
+					float fElevationAngle = (fRange * (g_GlobalInfo.m_nCurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f));
 
 					if (fElevationAngle > 45.0f)
 						fElevationAngle = 45.0f;
@@ -474,8 +484,11 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					float s = 0.0f, c = 0.0f;
 					Math::SinCos((fElevationAngle * PI / 180.0f), &s, &c);
 
-					float fElevation = (fRange * (s / c));
-					vPredictedPos.z += (c > 0.0f ? fElevation : 0.0f);
+					if (c > 0.0f)
+					{
+						float elevation = fRange * s / c;
+						vPredictedPos.z += elevation;
+					}
 					break;
 				}
 
