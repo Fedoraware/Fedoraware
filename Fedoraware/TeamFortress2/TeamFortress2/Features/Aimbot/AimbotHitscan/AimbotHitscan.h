@@ -4,7 +4,7 @@
 
 class CAimbotHitscan
 {
-private:
+public:
 	int GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	ESortMethod GetSortMethod();
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);

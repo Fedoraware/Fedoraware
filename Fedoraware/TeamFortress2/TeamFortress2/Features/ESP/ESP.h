@@ -6,7 +6,7 @@ class CESP
 private:
 	static bool ShouldRun();
 	static bool GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h);
-	std::wstring GetPlayerConds(CBaseEntity* pEntity) const;
+	std::vector<std::wstring> GetPlayerConds(CBaseEntity* pEntity) const;
 	static const wchar_t* GetPlayerClass(int nClassNum);
 
 	void DrawPlayers(CBaseEntity* pLocal);

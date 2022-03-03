@@ -1,0 +1,10 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define M_DYNVARGET(name, type, base, __VA_ARGS__) __inline type Get##name() { static CDynamicNetvar<type> Var##name( __VA_ARGS__ ); return Var##name.GetValue(base); }
+#define M_OFFSETGET(name, type, offset) __inline type Get##name() { return *reinterpret_cast<type*>(this + offset); }
+#define M_CONDGET(name, conditions, cond) __inline bool Is##name() { return (conditions & cond); }
+#define FL_DUCKING (1<<1)
+#define M_VIRTUALGET(name, type, base, fn, index) __inline type Get##name() { void* pBase = base; return GetVFunc<fn>(pBase, index)(pBase); }
+#define NETVAR(_name, type, table, name) inline type &_name() { static int offset = GetNetVar(table, name); return *reinterpret_cast<type *>(reinterpret_cast<DWORD>(this) + offset); }
+#define _(s) XorStr(s).c_str()

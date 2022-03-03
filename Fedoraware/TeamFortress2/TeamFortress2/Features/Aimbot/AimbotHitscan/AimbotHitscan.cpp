@@ -62,7 +62,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
 
 		for (const auto& Player : g_EntityCache.GetGroup(
-			bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : EGroupType::PLAYERS_ENEMIES))
+			bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
@@ -583,6 +583,8 @@ void bulletTracer(CBaseEntity* pLocal, Target_t Target)
 }
 
 
+
+
 void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	static int nLastTracerTick = pCmd->tick_count;
@@ -606,6 +608,11 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 	if (GetTarget(pLocal, pWeapon, Target) && bShouldAim)
 	{
+
+		if (SandvichAimbot::bIsSandvich) {
+			SandvichAimbot::RunSandvichAimbot(pLocal, pWeapon, pCmd, Target.m_pEntity);
+		}
+
 		if (nWeaponID != TF_WEAPON_COMPOUND_BOW
 			&& pLocal->GetClassNum() == CLASS_SNIPER
 			&& pWeapon->GetSlot() == SLOT_PRIMARY)
@@ -664,11 +671,6 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 					g_GlobalInfo.m_bShouldShift = true;
 				}
 			}
-
-			/*
-			if (g_GlobalInfo.m_bAAActive && !g_GlobalInfo.m_bWeaponCanAttack)
-				pCmd->buttons &= ~IN_ATTACK;
-			*/ // what is the point of this
 
 			if (Vars::Aimbot::Hitscan::TapFire.m_Var && nWeaponID == TF_WEAPON_MINIGUN)
 			{

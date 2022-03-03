@@ -41,7 +41,6 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	case TF_WEAPON_PDA_SPY_BUILD:
 	case TF_WEAPON_BUILDER:
 	case TF_WEAPON_INVIS:
-	//case TF_WEAPON_LUNCHBOX:
 	case TF_WEAPON_BUFF_ITEM:
 	case TF_WEAPON_GRAPPLINGHOOK:
 		{
@@ -77,6 +76,11 @@ void CAimbot::Run(CUserCmd* pCmd)
 
 		if (!ShouldRun(pLocal, pWeapon))
 			return;
+
+		SandvichAimbot::IsSandvich();
+		if (SandvichAimbot::bIsSandvich) {
+			g_GlobalInfo.m_WeaponType = EWeaponType::HITSCAN;
+		}
 
 		switch (g_GlobalInfo.m_WeaponType)
 		{

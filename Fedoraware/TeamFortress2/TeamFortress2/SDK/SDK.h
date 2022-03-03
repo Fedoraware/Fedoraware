@@ -561,6 +561,15 @@ namespace Utils
 			}
 		}
 
+		if (g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
+			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_Sandvich ||
+			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
+			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_Fishcake ||
+			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
+			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_SecondBanana) {
+			return EWeaponType::HITSCAN;
+		}
+
 		return EWeaponType::UNKNOWN;
 	}
 

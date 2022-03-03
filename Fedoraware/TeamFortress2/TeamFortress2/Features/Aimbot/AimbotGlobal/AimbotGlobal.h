@@ -1,6 +1,13 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
+namespace SandvichAimbot
+{
+	extern bool bIsSandvich;
+	extern void IsSandvich();
+	extern void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget);
+}
+
 enum struct ETargetType
 {
 	UNKNOWN,
