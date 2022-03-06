@@ -1406,6 +1406,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 						}
 						ImGui::Checkbox("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
+						ImGui::Checkbox("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();

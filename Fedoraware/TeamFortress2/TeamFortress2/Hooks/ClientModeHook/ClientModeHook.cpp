@@ -451,6 +451,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_FakeAng.DrawChams = false;
 	}
 
+	if (Vars::Misc::PartyCrasher.m_Var) {
+		g_Interfaces.Engine->ClientCmd_Unrestricted("tf_party_chat \"###\"");
+	}
+
 	//	TODO: make this p
 	/*auto AntiWarp = [](CUserCmd* cmd) -> void
 	{

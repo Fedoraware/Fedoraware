@@ -542,6 +542,7 @@ namespace Vars
 		inline CVar<bool> ExtendFreeze			{ false, L"Infinite Respawn" };
 		inline CVar<int> AutoJoin				{ false, L"Auto Join" };
 		inline CVar<bool> KillstreakWeapon		{ false, L"Killstreak Weapon" };
+		inline CVar<bool> PartyCrasher			{ false, L"Party Crasher" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
