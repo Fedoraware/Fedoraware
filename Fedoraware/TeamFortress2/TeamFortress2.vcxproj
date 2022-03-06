@@ -99,6 +99,7 @@
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Fonts\font_awesome_data.h" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
+    <ClInclude Include="TeamFortress2\Features\Fedworking\Fedworking.h" />
     <ClInclude Include="TeamFortress2\Features\Killstreak\Killstreak.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome_defs.h" />
@@ -720,6 +722,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
+    <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />

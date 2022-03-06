@@ -147,4 +147,10 @@ namespace Utils
     {
         return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
     }
+
+    inline bool StartsWith(const char* a, const char* b)
+    {
+        if (strncmp(a, b, strlen(b)) == 0) return true;
+        return false;
+    }
 }
