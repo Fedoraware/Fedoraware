@@ -596,7 +596,7 @@ namespace Vars
 			inline CVar<bool>OverrideMenu{ false, L"Override when in main menu" }; // Override matchgroup when in main menu
 			inline CVar<int>MapText{ 1, L"Map Text" }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
 			inline CVar<int>GroupSize{ 1337, L"Player group size" };
-			inline CVar<std::string> CustomText = { "M-FeD is gay", L"Custom Text" };
+			inline CVar<std::string> CustomText = { "oxyGodmode is gay", L"Custom Text" };
 		}
 	}
 
