@@ -600,6 +600,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::PingTarget);
 			SAVE_VAR(Vars::Misc::ExtendFreeze);
 			SAVE_VAR(Vars::Misc::AutoJoin);
+			SAVE_VAR(Vars::Misc::KillstreakWeapon);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -1245,6 +1246,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::PingTarget);
 			LOAD_VAR(Vars::Misc::ExtendFreeze);
 			LOAD_VAR(Vars::Misc::AutoJoin);
+			LOAD_VAR(Vars::Misc::KillstreakWeapon);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled

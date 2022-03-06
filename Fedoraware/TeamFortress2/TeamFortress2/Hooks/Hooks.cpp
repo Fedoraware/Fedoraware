@@ -177,6 +177,14 @@ void CHooks::Init()
 		Table.Hook(RandInt::index, &RandInt::Hook);
 	}
 
+	if (g_Interfaces.GameEvent)
+	{
+		using namespace EventMangerHook;
+
+		Table.Init(g_Interfaces.GameEvent);
+		Table.Hook(FireEventClientSide::index, &FireEventClientSide::Hook);
+	}
+
 	if (g_Interfaces.ViewRender)
 	{
 		using namespace ViewRenderHook;

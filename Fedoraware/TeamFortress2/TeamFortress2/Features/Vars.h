@@ -541,6 +541,7 @@ namespace Vars
 		inline CVar<int> PingTarget				{ 0, L"Ping target" };
 		inline CVar<bool> ExtendFreeze			{ false, L"Infinite Respawn" };
 		inline CVar<int> AutoJoin				{ false, L"Auto Join" };
+		inline CVar<bool> KillstreakWeapon		{ false, L"Killstreak Weapon" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };

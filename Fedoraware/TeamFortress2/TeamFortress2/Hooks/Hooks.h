@@ -25,6 +25,7 @@
 #include "Ragdoll/Ragdoll.h"
 #include "ViewRenderHook/ViewRenderHook.h"
 #include "MaterialSystemHook/MaterialSystemHook.h"
+#include "EventManagerHook/EventManagerHook.h"
 
 class CHooks
 {
