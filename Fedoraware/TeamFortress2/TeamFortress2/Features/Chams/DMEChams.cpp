@@ -483,11 +483,12 @@ void CDMEChams::Init()
 		auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "models/player/shared/ice_player");
 		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		kv->SetString("$translucent", "1");
 		kv->SetString("$additive", "1");
 		kv->SetString("$phong", "1");
 		kv->SetString("$phongfresnelranges", "[0 0.5 10]");
 		kv->SetString("$phongtint", "[0 0 0]");
-		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
 		kv->SetString("$envmapfresnel", "1");
 		kv->SetString("$envmaptint", "[0 0 0]");
 		kv->SetString("$selfillum", "1");
@@ -714,9 +715,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 					else
 					{
-						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
-							Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
-							Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r),
+							Color::TOFLOAT(Colors::HandsOverlay.g),
+							Color::TOFLOAT(Colors::HandsOverlay.b));
 					}
 				}
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
@@ -730,15 +731,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 					else
 					{
-						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r) * 4,
-							Color::TOFLOAT(Colors::HandsOverlay.g) * 4,
-							Color::TOFLOAT(Colors::HandsOverlay.b) * 4);
+						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r),
+							Color::TOFLOAT(Colors::HandsOverlay.g),
+							Color::TOFLOAT(Colors::HandsOverlay.b));
 					}
-				}
-				IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-				if (found3)
-				{
-					pVar3->SetIntValue(Vars::Chams::DME::HandsRimMultiplier.m_Var);
 				}
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
@@ -951,9 +947,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}
 						else
 						{
-							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
-								Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
-								Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+							pVar->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r),
+								Color::TOFLOAT(Colors::WeaponOverlay.g),
+								Color::TOFLOAT(Colors::WeaponOverlay.b));
 						}
 					}
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
@@ -967,15 +963,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}
 						else
 						{
-							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r) * 4,
-								Color::TOFLOAT(Colors::WeaponOverlay.g) * 4,
-								Color::TOFLOAT(Colors::WeaponOverlay.b) * 4);
+							pVar2->SetVecValue(Color::TOFLOAT(Colors::WeaponOverlay.r),
+								Color::TOFLOAT(Colors::WeaponOverlay.g),
+								Color::TOFLOAT(Colors::WeaponOverlay.b));
 						}
-					}
-					IMaterialVar* pVar3 = pMaterial->FindVar(_("$rimlightboost"), &found3);
-					if (found3)
-					{
-						pVar3->SetIntValue(Vars::Chams::DME::WeaponRimMultiplier.m_Var);
 					}
 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);

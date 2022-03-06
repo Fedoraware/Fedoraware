@@ -388,8 +388,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
 				SAVE_VAR(Vars::Chams::DME::Weapon);
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
-				SAVE_VAR(Vars::Chams::DME::WeaponRimMultiplier);
-				SAVE_VAR(Vars::Chams::DME::HandsRimMultiplier);
 				SAVE_VAR(Vars::Chams::DME::HandsRainbow);
 				SAVE_VAR(Vars::Chams::DME::WeaponRainbow);
 				SAVE_VAR(Vars::Chams::DME::HandsOverlayRainbow);
@@ -1035,8 +1033,6 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::DME::HandsGlowOverlay);
 				LOAD_VAR(Vars::Chams::DME::Weapon);
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowOverlay);
-				LOAD_VAR(Vars::Chams::DME::WeaponRimMultiplier);
-				LOAD_VAR(Vars::Chams::DME::HandsRimMultiplier);
 				LOAD_VAR(Vars::Chams::DME::HandsRainbow);
 				LOAD_VAR(Vars::Chams::DME::WeaponRainbow);
 				LOAD_VAR(Vars::Chams::DME::HandsOverlayRainbow);

@@ -278,24 +278,13 @@ void ApplyModulation(const Color_t& clr)
 	{
 		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
 		{
-			//bool bFound2 = false;
-			//IMaterialVar* rain = pMaterial->FindVar(_("env_global"), &bFound2);
-
 			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
 				continue;
 
 			std::string_view group(pMaterial->GetTextureGroupName());
 
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos
-				/* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
+			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos)
 			{
-				/*
-				bool bFound = false;
-				IMaterialVar* pVar = pMaterial->FindVar(_("$color2"), &bFound);
-
-				if (bFound && pVar)
-					pVar->SetVecValue(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
-				*/ // causes black chams?
 				pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 			}
 		}

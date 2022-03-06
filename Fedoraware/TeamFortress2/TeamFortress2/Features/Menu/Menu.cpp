@@ -1569,7 +1569,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Hand glow colour", Colors::HandsOverlay);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Hand glow boost", &Vars::Chams::DME::HandsRimMultiplier.m_Var, 1, 100, "%d"); ImGui::PopItemWidth();
 						static const char* weaponMaterial[]{
 							"Original",
 							"Shaded",
@@ -1614,7 +1613,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Weapon glow colour", Colors::WeaponOverlay);
-						ImGui::PushItemWidth(100); ImGui::SliderInt("Weapon glow boost", &Vars::Chams::DME::WeaponRimMultiplier.m_Var, 1, 100, "%d"); ImGui::PopItemWidth(); HelpMarker("How much the glow effect will be boosted by");
 						ImGui::PushItemWidth(100);
 						MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.m_Var, &Vars::Chams::DME::HandsOverlayRainbow.m_Var, &Vars::Chams::DME::WeaponRainbow.m_Var, &Vars::Chams::DME::WeaponOverlayRainbow.m_Var }, "Rainbow DME chams", "Rainbow DME###RainbowDMEChams");
 						ImGui::PopItemWidth();
