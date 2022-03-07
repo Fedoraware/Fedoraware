@@ -18,12 +18,10 @@ namespace Base64
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     /**
-    * Encode - Base64 encode
+    * Encodes the given data to Base64
     * @src: Data to be encoded
     * @len: Length of the data to be encoded
-    * @out_len: Pointer to output length variable, or %NULL if not used
-    * Returns: Allocated buffer of out_len bytes of encoded data,
-    * or empty string on failure
+    * Returns: String with the encoded Base64 data
     */
     inline std::string Encode(const unsigned char* src, size_t len)
     {
@@ -78,6 +76,12 @@ namespace Base64
     0,  0,  0, 63,  0, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
     41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 };
 
+    /**
+    * Decodes the given data from Base64
+    * @data: Data to be decoded
+    * @len: Length of the data to be encoded
+    * Returns: String with the decoded Base64 data
+    */
     inline std::string Decode(const void* data, const size_t len)
     {
 	    const auto* p = (unsigned char*)data;

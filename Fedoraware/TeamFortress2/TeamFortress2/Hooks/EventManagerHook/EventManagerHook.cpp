@@ -10,14 +10,11 @@ bool __stdcall EventMangerHook::FireEventClientSide::Hook(CGameEvent* pEvent)
 	if (uNameHash == FNV1A::HashConst("party_chat")) {
 		const auto msg = pEvent->GetString("text");
 
-		// Block crash message
-		if (Utils::StartsWith(msg, "###")) {
-			return false;
-		}
-
 		// Handle networking
 		if (Utils::StartsWith(msg, "FED@")) {
-			g_Fedworking.HandleMessage(msg);
+			if (Vars::Misc::PartyNetworking.m_Var) {
+				g_Fedworking.HandleMessage(msg);
+			}
 			return false;
 		}
 	}

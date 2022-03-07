@@ -5,6 +5,7 @@
 #include "Structs.h"
 #include "bitbuf.h"
 #include "MD5.h"
+#include "worldsize.h"
 
 #include <deque>
 using Vector = Vec3;

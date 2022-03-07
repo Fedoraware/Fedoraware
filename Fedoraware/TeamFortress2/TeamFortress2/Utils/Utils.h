@@ -154,7 +154,7 @@ namespace Utils
         return false;
     }
 
-    inline std::vector<std::string> Split(const std::string& pString, const std::string& pDelimeter)
+    inline std::vector<std::string> SplitString(const std::string& pString, const std::string& pDelimeter)
 	{
         std::vector<std::string> strings;
 
