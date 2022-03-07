@@ -495,6 +495,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "10");
+		kv->SetString("$wireframe", "0");
 		m_pMatScuffed = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
 
@@ -736,6 +737,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							Color::TOFLOAT(Colors::HandsOverlay.b));
 					}
 				}
+				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
@@ -968,6 +970,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 								Color::TOFLOAT(Colors::WeaponOverlay.b));
 						}
 					}
+					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 

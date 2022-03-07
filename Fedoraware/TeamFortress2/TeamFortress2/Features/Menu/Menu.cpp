@@ -1565,7 +1565,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Combo("Hand proxy material", &Vars::Chams::DME::HandsProxySkin.m_Var, handsProxyMaterial, IM_ARRAYSIZE(handsProxyMaterial));
 						ImGui::PopItemWidth();
 						HelpMarker("Puts a cool looking animated skin on your hands");
-						ImGui::Checkbox("Hand glow overlay", &Vars::Chams::DME::HandsGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
+						static const char* dmeGlowMaterial[]{
+							"None",
+							"Fresnel Glow",
+							"Wireframe Glow"
+						};
+						ImGui::PushItemWidth(100); ImGui::Combo("Hand Glow", &Vars::Chams::DME::HandsGlowOverlay.m_Var, dmeGlowMaterial, IM_ARRAYSIZE(dmeGlowMaterial)); ImGui::PopItemWidth();
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Hand glow colour", Colors::HandsOverlay);
@@ -1609,7 +1614,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Combo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.m_Var, weaponProxyMaterial, IM_ARRAYSIZE(weaponProxyMaterial));
 						ImGui::PopItemWidth();
 						HelpMarker("Puts a cool looking animated skin on your weapons");
-						ImGui::Checkbox("Weapon glow overlay", &Vars::Chams::DME::WeaponGlowOverlay.m_Var); HelpMarker("Will place a second glow-like material overlayed on top of the original material");
+						ImGui::PushItemWidth(100); ImGui::Combo("Weapon Glow", &Vars::Chams::DME::WeaponGlowOverlay.m_Var, dmeGlowMaterial, IM_ARRAYSIZE(dmeGlowMaterial)); ImGui::PopItemWidth();
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Weapon glow colour", Colors::WeaponOverlay);
