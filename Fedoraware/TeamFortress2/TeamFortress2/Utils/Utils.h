@@ -147,4 +147,26 @@ namespace Utils
     {
         return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
     }
+
+    inline bool StartsWith(const char* a, const char* b)
+    {
+        if (strncmp(a, b, strlen(b)) == 0) return true;
+        return false;
+    }
+
+    inline std::vector<std::string> SplitString(const std::string& pString, const std::string& pDelimeter)
+	{
+        std::vector<std::string> strings;
+
+        std::string::size_type pos = 0;
+        std::string::size_type prev = 0;
+        while ((pos = pString.find(pDelimeter, prev)) != std::string::npos)
+        {
+            strings.push_back(pString.substr(prev, pos - prev));
+            prev = pos + 1;
+        }
+
+        strings.push_back(pString.substr(prev));
+        return strings;
+	}
 }
