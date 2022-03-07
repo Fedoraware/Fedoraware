@@ -3,11 +3,10 @@
 
 class CFedworking
 {
-private:
-	Vec3 ReadPos(std::string pData, int pStart);
-
 public:
 	void HandleMessage(const char* pMessage);
+	void SendMarker(const Vec3& pPos, const std::string& pTitle);
+	void SendMessage(const std::string& pData);
 };
 
 inline CFedworking g_Fedworking;

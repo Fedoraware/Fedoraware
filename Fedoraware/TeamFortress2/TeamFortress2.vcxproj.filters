@@ -653,6 +653,7 @@
     <ClInclude Include="TeamFortress2\Hooks\EventManagerHook\EventManagerHook.h" />
     <ClInclude Include="TeamFortress2\Features\Fedworking\Fedworking.h" />
     <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
+    <ClInclude Include="TeamFortress2\Utils\Hex\Hex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

@@ -65,6 +65,11 @@ namespace Base64
         return outStr;
     }
 
+    inline std::string Encode(const std::string& pSource)
+    {
+        return Encode(reinterpret_cast<const unsigned char*>(pSource.c_str()), pSource.length());
+    }
+
     static const int B64index[256] = { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 62, 63, 62, 62, 63, 52, 53, 54, 55,
@@ -99,5 +104,10 @@ namespace Base64
             }
         }
         return str;
+    }
+
+    inline std::string Decode(const std::string& pData)
+    {
+        return Decode(pData.c_str(), pData.length());
     }
 }
