@@ -494,7 +494,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$rimlight", "1");
-		kv->SetString("$rimlightboost", "10");
+		kv->SetString("$rimlightboost", "-5");
 		kv->SetString("$wireframe", "0");
 		m_pMatScuffed = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
@@ -737,6 +737,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							Color::TOFLOAT(Colors::HandsOverlay.b));
 					}
 				}
+				bool foundfresnelranges = false;
+				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
+				if (foundfresnelranges)
+				{
+					phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::HandsGlowAmount.m_Var, 10 / Vars::Chams::DME::HandsGlowAmount.m_Var);
+				}
 				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
@@ -969,6 +975,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 								Color::TOFLOAT(Colors::WeaponOverlay.g),
 								Color::TOFLOAT(Colors::WeaponOverlay.b));
 						}
+					}
+					bool foundfresnelranges = false;
+					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
+					if (foundfresnelranges)
+					{
+						phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::WeaponGlowAmount.m_Var, 10 / Vars::Chams::DME::WeaponGlowAmount.m_Var);
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
