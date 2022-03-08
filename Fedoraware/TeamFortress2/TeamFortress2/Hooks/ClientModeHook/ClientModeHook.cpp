@@ -13,6 +13,7 @@
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
+#include "../../Features/Fedworking/Fedworking.h"
 
 #include "../../Features/Vars.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
@@ -351,6 +352,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	g_PR->Update();
 	g_Misc.Run(pCmd);
+	g_Fedworking.Run();
 	g_Crits.Tick(pCmd);
 	g_CameraWindow.Update();
 
@@ -449,6 +451,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (g_GlobalInfo.m_nShifted > 0) {
 		g_FakeAng.DrawChams = false;
+	}
+
+	if (Vars::Misc::PartyCrasher.m_Var) {
+		g_Interfaces.Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
 	//	TODO: make this p

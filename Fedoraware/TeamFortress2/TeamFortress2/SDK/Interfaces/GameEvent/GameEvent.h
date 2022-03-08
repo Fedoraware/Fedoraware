@@ -44,7 +44,12 @@ public:
 	virtual bool		FindListener(CGameEventListener* pListener, const char* szName) = 0;
 	virtual void		RemoveListener(CGameEventListener* pListener) = 0;
 	virtual void		AddListenerGlobal(CGameEventListener* pListener, bool bServerSide) = 0;
-	virtual CGameEvent* CreateNewEvent(const char* szName, bool bForce = false, int* unknown = nullptr) = 0;
+
+	// virtual CGameEvent* CreateNewEvent(const char* szName, bool bForce = false, int* unknown = nullptr) = 0;
+	CGameEvent* CreateNewEvent(const char* szName, bool bForce = false) {
+		return GetVFunc<CGameEvent* (__thiscall*)(void*, const char*, bool)>(this, 6)(this, szName, bForce);
+	}
+
 	virtual bool		FireEvent(CGameEvent* pEvent, bool bDontBroadcast = false) = 0;
 	virtual bool		FireEventClientSide(CGameEvent* pEvent) = 0;
 	virtual CGameEvent* DuplicateEvent(CGameEvent* pEvent) = 0;
