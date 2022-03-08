@@ -4,7 +4,7 @@
 enum MessageType {
 	None,
 	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-ID ]
-	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX, Team ]
+	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
 };
 
 void CFedworking::HandleMessage(const char* pMessage)
@@ -63,27 +63,16 @@ void CFedworking::HandleMessage(const char* pMessage)
 
 	case ESP:
 		{
-			if (dataVector.size() == 6) {
+			if (dataVector.size() == 5) {
 				try {
 					const float xPos = std::stof(dataVector[1]);
 					const float yPos = std::stof(dataVector[2]);
 					const float zPos = std::stof(dataVector[3]);
 					const int playerIndex = std::stoi(dataVector[4]);
-					const int teamNum = std::stoi(dataVector[5]);
 
-					PlayerInfo_t playerInfo{};
-					g_Interfaces.Engine->GetPlayerInfo(playerIndex, &playerInfo);
-
-					// TODO: Check team and local player
-					if (playerInfo.userID != 0) {
-						g_GlobalInfo.partyPlayerESP[playerInfo.userID].Location = { xPos, yPos, zPos };
-						g_GlobalInfo.partyPlayerESP[playerInfo.userID].PlayerInfo = playerInfo;
-						g_GlobalInfo.partyPlayerESP[playerInfo.userID].Team = teamNum;
-					}
-
-					/*std::string consoleMsg = "Received player data for: ";
-					consoleMsg.append(playerInfo.name);
-					ConsoleLog(consoleMsg);*/
+					// TODO: Check valid index?
+					g_GlobalInfo.partyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
+					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = g_Interfaces.Engine->Time();
 				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
 			}
 			break;
@@ -109,7 +98,7 @@ void CFedworking::SendESP(CBaseEntity* pPlayer)
 {
 	const Vec3 playerPos = pPlayer->GetVecOrigin();
 	std::stringstream msg;
-	msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex() << "&" << pPlayer->GetTeamNum();
+	msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
 	SendMessage(msg.str());
 }
 
@@ -150,10 +139,21 @@ void CFedworking::Run()
 
 		// Party ESP
 		if (Vars::Misc::PartyESP.m_Var) {
+			if (!pLocal->GetDormant() && pLocal->IsInValidTeam() && pLocal->IsAlive()) {
+				const float lastUpdate = g_GlobalInfo.partyPlayerESP[pLocal->GetIndex()].LastUpdate;
+				if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
+					SendESP(pLocal);
+				}
+			}
+
 			for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
-				if (player->IsAlive()) {
-					SendESP(player);
+				if (player->GetIndex() == pLocal->GetIndex()) { continue; }
+				if (!player->GetDormant() && player->IsInValidTeam() && player->IsAlive()) {
+					const float lastUpdate = g_GlobalInfo.partyPlayerESP[player->GetIndex()].LastUpdate;
+					if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
+						SendESP(player);
+					}
 				}
 			}
 		}

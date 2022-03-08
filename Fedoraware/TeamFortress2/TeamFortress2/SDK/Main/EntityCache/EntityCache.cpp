@@ -27,8 +27,20 @@ void CEntityCache::Fill()
 		{
 			pEntity = g_Interfaces.EntityList->GetClientEntity(n);
 
-			if (!pEntity || pEntity->GetDormant())
+			if (!pEntity)
 				continue;
+
+			if (pEntity->GetDormant() && !g_GlobalInfo.partyPlayerESP.count(pEntity->GetIndex())) {
+				continue;
+			}
+
+			if (pEntity->GetDormant()) {
+				const float lastUpdate = g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].LastUpdate;
+				if (g_Interfaces.Engine->Time() - lastUpdate <= 2.0f) {
+					pEntity->SetAbsOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
+					pEntity->SetVecOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
+				}
+			}
 
 			if (pEntity == m_pLocal)
 			{

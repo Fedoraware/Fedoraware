@@ -15,10 +15,9 @@ struct VelFixRecord {
 	float m_flSimulationTime;
 };
 
-struct PartyPlayer {
+struct DormantData {
 	Vec3 Location;
-	PlayerInfo_t PlayerInfo;
-	int Team;
+	float LastUpdate = 0.f;
 };
 
 struct GlobalInfo_t
@@ -69,7 +68,7 @@ struct GlobalInfo_t
 	std::vector<Vec3> predFutureLines;
 	bool m_bFreecamActive				= false;
 	Vec3 m_vFreecamPos					= {};
-	std::map<int, PartyPlayer> partyPlayerESP;
+	std::map<int, DormantData> partyPlayerESP; // < Player-Index, DormantData >
 };
 
 inline GlobalInfo_t g_GlobalInfo;
