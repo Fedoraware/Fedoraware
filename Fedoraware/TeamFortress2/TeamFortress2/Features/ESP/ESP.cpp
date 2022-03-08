@@ -420,6 +420,16 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
+
+	if (Vars::Misc::PartyESP.m_Var && !g_GlobalInfo.partyPlayerESP.empty()) {
+		for (const auto &player : g_GlobalInfo.partyPlayerESP) {
+			Vec3 vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+			Utils::W2S(player.second.Location, vOrigin);
+
+			g_Draw.String(FONT_ESP, vOrigin.x, vOrigin.y + 30, Colors::White, ALIGN_DEFAULT, "%s", player.second.PlayerInfo.name);
+			g_Draw.OutlinedRect(vOrigin.x, vOrigin.y, 25, 25, { 255, 50, 0, 255 });
+		}
+	}
 }
 
 void CESP::DrawBuildings(CBaseEntity* pLocal) const

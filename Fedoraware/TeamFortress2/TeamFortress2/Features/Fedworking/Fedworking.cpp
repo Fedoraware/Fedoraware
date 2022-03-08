@@ -3,7 +3,8 @@
 
 enum MessageType {
 	None,
-	Marker	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-ID ]
+	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-ID ]
+	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX, Team ]
 };
 
 void CFedworking::HandleMessage(const char* pMessage)
@@ -60,6 +61,34 @@ void CFedworking::HandleMessage(const char* pMessage)
 			break;
 		}
 
+	case ESP:
+		{
+			if (dataVector.size() == 6) {
+				try {
+					const float xPos = std::stof(dataVector[1]);
+					const float yPos = std::stof(dataVector[2]);
+					const float zPos = std::stof(dataVector[3]);
+					const int playerIndex = std::stoi(dataVector[4]);
+					const int teamNum = std::stoi(dataVector[5]);
+
+					PlayerInfo_t playerInfo{};
+					g_Interfaces.Engine->GetPlayerInfo(playerIndex, &playerInfo);
+
+					// TODO: Check team and local player
+					if (playerInfo.userID != 0) {
+						g_GlobalInfo.partyPlayerESP[playerInfo.userID].Location = { xPos, yPos, zPos };
+						g_GlobalInfo.partyPlayerESP[playerInfo.userID].PlayerInfo = playerInfo;
+						g_GlobalInfo.partyPlayerESP[playerInfo.userID].Team = teamNum;
+					}
+
+					/*std::string consoleMsg = "Received player data for: ";
+					consoleMsg.append(playerInfo.name);
+					ConsoleLog(consoleMsg);*/
+				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
+			}
+			break;
+		}
+
 	default:
 		{
 			// Unknown message type
@@ -69,14 +98,18 @@ void CFedworking::HandleMessage(const char* pMessage)
 	}
 }
 
-void CFedworking::SendMarker(const Vec3& pPos, int pEntityIndex)
+void CFedworking::SendMarker(const Vec3& pPos, int pPlayerIdx)
 {
-	const std::string xPos = std::to_string(pPos.x);
-	const std::string yPos = std::to_string(pPos.y);
-	const std::string zPos = std::to_string(pPos.z);
-
 	std::stringstream msg;
-	msg << Marker << "&" << xPos << "&" << yPos << "&" << zPos << "&" << pEntityIndex;
+	msg << Marker << "&" << pPos.x << "&" << pPos.y << "&" << pPos.z << "&" << pPlayerIdx;
+	SendMessage(msg.str());
+}
+
+void CFedworking::SendESP(CBaseEntity* pPlayer)
+{
+	const Vec3 playerPos = pPlayer->GetVecOrigin();
+	std::stringstream msg;
+	msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex() << "&" << pPlayer->GetTeamNum();
 	SendMessage(msg.str());
 }
 
@@ -112,6 +145,16 @@ void CFedworking::Run()
 			g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
 			if (trace.DidHit()) {
 				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
+			}
+		}
+
+		// Party ESP
+		if (Vars::Misc::PartyESP.m_Var) {
+			for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+			{
+				if (player->IsAlive()) {
+					SendESP(player);
+				}
 			}
 		}
 	}

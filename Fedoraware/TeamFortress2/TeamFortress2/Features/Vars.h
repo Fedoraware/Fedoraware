@@ -545,6 +545,7 @@ namespace Vars
 		inline CVar<bool> PartyNetworking		{ false, L"Party Networking" };
 		inline CVar<bool> PartyCrasher			{ false, L"Party Crasher" };
 		inline CVar<int> PartyMarker			{ false, L"Party Marker" };
+		inline CVar<bool> PartyESP				{ false, L"Party ESP" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled       { true, L"Enabled" };
