@@ -111,9 +111,7 @@ void CFedworking::Run()
 			traceRay.Init(pLocal->GetEyePosition(), vForward);
 			g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
 			if (trace.DidHit()) {
-#ifdef _DEBUG
 				g_Interfaces.DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
-#endif
 				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
 			}
 		}
