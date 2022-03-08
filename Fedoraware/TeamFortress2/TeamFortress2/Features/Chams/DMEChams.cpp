@@ -36,6 +36,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2203845847/2203845847_spectrum");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -66,6 +67,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1326382486/1326382486_electro_skulls_blu");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -96,6 +98,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1193300219/1193300219_cow");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -126,6 +129,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/1558054217/1558054217_a");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -156,6 +160,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1183962036/1183962036_aes_blue");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -186,6 +191,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2596228713/2596228713_main_blu");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -216,6 +222,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2594850983/2594850983_pattern_red");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -246,6 +253,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2223065529/2223065529_helldriver_flames");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -276,6 +284,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1180839618/1180839618_spooky_wood");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -306,6 +315,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/500642896/500642896");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -336,6 +346,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -366,6 +377,7 @@ namespace ProxySkins
 			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_serenity");
 			kv->SetString("$additive", "1");
 			kv->SetString("$scrollanglevar", "0");
+			kv->SetString("$wireframe", "0");
 			KeyValues* Proxies = new KeyValues("Proxies");
 			{
 				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
@@ -494,7 +506,8 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$rimlight", "1");
-		kv->SetString("$rimlightboost", "10");
+		kv->SetString("$rimlightboost", "-5");
+		kv->SetString("$wireframe", "0");
 		m_pMatScuffed = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
 
@@ -736,6 +749,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							Color::TOFLOAT(Colors::HandsOverlay.b));
 					}
 				}
+				bool foundfresnelranges = false;
+				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
+				if (foundfresnelranges)
+				{
+					phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::HandsGlowAmount.m_Var, 10 / Vars::Chams::DME::HandsGlowAmount.m_Var);
+				}
+				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
@@ -968,6 +988,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 								Color::TOFLOAT(Colors::WeaponOverlay.b));
 						}
 					}
+					bool foundfresnelranges = false;
+					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
+					if (foundfresnelranges)
+					{
+						phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::WeaponGlowAmount.m_Var, 10 / Vars::Chams::DME::WeaponGlowAmount.m_Var);
+					}
+					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
