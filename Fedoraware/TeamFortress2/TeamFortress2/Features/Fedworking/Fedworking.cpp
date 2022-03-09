@@ -39,6 +39,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 					PlayerInfo_t playerInfo{};
 					g_Interfaces.Engine->GetPlayerInfo(playerIndex, &playerInfo);
 
+					// TODO: Use CTFAnnotationsPanel::AddAnnotation
 					if (playerInfo.userID != 0) {
 						CGameEvent* markerEvent = g_Interfaces.GameEvent->CreateNewEvent("show_annotation");
 						if (markerEvent) {
@@ -96,10 +97,15 @@ void CFedworking::SendMarker(const Vec3& pPos, int pPlayerIdx)
 
 void CFedworking::SendESP(CBaseEntity* pPlayer)
 {
-	const Vec3 playerPos = pPlayer->GetVecOrigin();
-	std::stringstream msg;
-	msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
-	SendMessage(msg.str());
+	if (!pPlayer->GetDormant() && pPlayer->IsInValidTeam() && pPlayer->IsAlive()) {
+		const float lastUpdate = g_GlobalInfo.partyPlayerESP[pPlayer->GetIndex()].LastUpdate;
+		if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
+			const Vec3 playerPos = pPlayer->GetVecOrigin();
+			std::stringstream msg;
+			msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
+			SendMessage(msg.str());
+		}
+	}
 }
 
 void CFedworking::SendMessage(const std::string& pData)
@@ -142,22 +148,11 @@ void CFedworking::Run()
 
 		// Party ESP
 		if (Vars::Misc::PartyESP.m_Var) {
-			if (!pLocal->GetDormant() && pLocal->IsInValidTeam() && pLocal->IsAlive()) {
-				const float lastUpdate = g_GlobalInfo.partyPlayerESP[pLocal->GetIndex()].LastUpdate;
-				if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
-					SendESP(pLocal);
-				}
-			}
-
+			SendESP(pLocal);
 			for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
 				if (player->GetIndex() == pLocal->GetIndex()) { continue; }
-				if (!player->GetDormant() && player->IsInValidTeam() && player->IsAlive()) {
-					const float lastUpdate = g_GlobalInfo.partyPlayerESP[player->GetIndex()].LastUpdate;
-					if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
-						SendESP(player);
-					}
-				}
+				SendESP(player);
 			}
 		}
 	}

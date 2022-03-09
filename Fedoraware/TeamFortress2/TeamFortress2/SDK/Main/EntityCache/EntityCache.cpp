@@ -36,7 +36,7 @@ void CEntityCache::Fill()
 
 			if (pEntity->GetDormant()) {
 				const float lastUpdate = g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].LastUpdate;
-				if (g_Interfaces.Engine->Time() - lastUpdate <= 2.0f) {
+				if (g_Interfaces.Engine->Time() - lastUpdate <= 5.0f) {
 					pEntity->SetAbsOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
 					pEntity->SetVecOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
 				}
