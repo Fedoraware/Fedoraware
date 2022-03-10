@@ -1511,7 +1511,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							"Local",
 							"Friends",
 							"Enemies",
-							"Teammates"
+							"Teammates",
+							"Target"
 						};
 
 						static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
@@ -1528,7 +1529,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						MultiCombo({ "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Customize Chams", "Flags");
 						ImGui::Combo("Config", &currentSelected, chamOptions, IM_ARRAYSIZE(chamOptions));
 
-						switch (currentSelected)
+						switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
 						{
 						case 0:
 						{
@@ -1552,6 +1553,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						{
 							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "", "Options");
 							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+							break;
+						}
+						case 4:
+						{
+							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "", "Options");
+							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Target.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
 							break;
 						}
 						}

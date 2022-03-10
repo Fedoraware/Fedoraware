@@ -755,6 +755,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Chams::Players::Enemy);
 			SAVE_OTHER(Vars::Chams::Players::Team);
 			SAVE_OTHER(Vars::Chams::Players::Friend);
+			SAVE_OTHER(Vars::Chams::Players::Target);
 
 
 		}
@@ -1410,6 +1411,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Chams::Players::Enemy);
 			LOAD_OTHER(Vars::Chams::Players::Team);
 			LOAD_OTHER(Vars::Chams::Players::Friend);
+			LOAD_OTHER(Vars::Chams::Players::Target);
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);

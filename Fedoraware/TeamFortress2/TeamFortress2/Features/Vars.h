@@ -280,6 +280,7 @@ namespace Vars
 			inline Chams_t Friend {false, 0, 0, false};
 			inline Chams_t Enemy {false, 0, 0, false};
 			inline Chams_t Team {false, 0, 0, false};
+			inline Chams_t Target {false, 0, 0, false};
 		}
 
 		namespace Buildings
