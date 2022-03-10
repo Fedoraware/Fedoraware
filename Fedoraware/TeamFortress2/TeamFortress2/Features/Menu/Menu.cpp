@@ -1507,20 +1507,59 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.m_Var);  HelpMarker("Chams master switch");
 						ImGui::Dummy(ImVec2(0, 20));
 
+						static const char* chamOptions[]{
+							"Local",
+							"Friends",
+							"Enemies",
+							"Teammates"
+						};
+
+						static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
+						static auto currentSelectedStruct = &Vars::Chams::Players::Local; // 0 - local, 1 - friends, 2 - enemy, 3 - team
+
+						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" }; 
+
+
 						SectionTitle("Player Chams");
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
-						MultiCombo({ "Ignore-Z", "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::IgnoreZ.m_Var, &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Customize Chams", "Chams Flags");
-						static const char* pchamsMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" }; ImGui::PushItemWidth(100); ImGui::Combo("Player material", &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+						MultiCombo({ "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Customize Chams", "Flags");
+						ImGui::Combo("Config", &currentSelected, chamOptions, IM_ARRAYSIZE(chamOptions));
+
+						switch (currentSelected)
+						{
+						case 0:
+						{
+							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "", "Options");
+							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Local.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+							break;
+						}
+						case 1:
+						{
+							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "", "Options");
+							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Friend.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+							break;
+						}
+						case 2:
+						{
+							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "", "Options");
+							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Enemy.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+							break;
+						}
+						case 3:
+						{
+							MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "", "Options");
+							ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
+							break;
+						}
+						}
+
 						HelpMarker("Which material the chams will apply to the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Fresnel base colour", Colors::FresnelBase);
-						ImGui::Checkbox("Self chams###PlayerSelfChamsBox", &Vars::Chams::Players::ShowLocal.m_Var); HelpMarker("Draw chams on the local player");
-						static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore team###IgnoreTeamChamsp", &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
-						//ImGui::Checkbox("Player glow overlay", &Vars::Chams::Players::GlowOverlay.m_Var);
 						ImGui::Dummy(ImVec2(0, 20));
 
 

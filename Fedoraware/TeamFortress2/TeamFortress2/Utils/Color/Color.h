@@ -8,6 +8,14 @@ using byte = unsigned char;
 
 struct Color_t { byte r = 0, g = 0, b = 0, a = 0; };
 
+// cry
+struct Chams_t {
+	bool	showObstructed = false;
+	int		drawMaterial = 0;
+	int		overlayType = 0;
+	bool	chamsActive = false;
+};
+
 namespace Color
 {
 	inline float TOFLOAT(byte x) {
