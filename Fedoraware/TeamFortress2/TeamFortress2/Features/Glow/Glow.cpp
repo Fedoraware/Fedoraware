@@ -219,10 +219,10 @@ void CGlowEffect::Render()
 				{
 					CBaseEntity* pAttachment = Player->FirstMoveChild();
 
-					for (int n = 0; n < 10; n++)
+					for (int n = 0; n < 32; n++)
 					{
 						if (!pAttachment)
-							break;
+							continue;
 
 						if (pAttachment->IsWearable())
 						{

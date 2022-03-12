@@ -12,11 +12,11 @@ int attackStringH;
 #define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
 #define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
 
-static std::string yellow	({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
-static std::string blue		({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
-static std::string white	({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
-static std::string red		({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
-static std::string green	({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
+static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
+static std::string blue({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
+static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
+static std::string red({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
+static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 
 int GetPlayerForUserID(int userID)
 {
@@ -147,7 +147,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				auto wattackString = std::wstring(attackString.begin(), attackString.end());
 				const wchar_t* wcattackString = wattackString.c_str();
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
-				                                  attackStringW, attackStringH);
+					attackStringW, attackStringH);
 				const std::string chatAttackString(blue + "[FeD]" + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" + std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
 				if (Vars::Visuals::damageLoggerChat.m_Var) {
@@ -238,37 +238,38 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			// 0xCA8 is a mark request.
 
 			PlayerInfo_t info;
-			if (g_Interfaces.Engine->GetPlayerInfo(player, &info) && (achievement == 0xCA7 || achievement == 0xCA8) &&
-				pLocal->GetIndex() != player)
-			{
-				if (m_known_bots.find(info.friendsID) == m_known_bots.end())
+			if (g_Interfaces.Engine->GetPlayerInfo(player, &info)) {
+				if ((achievement == 0xCA7 || achievement == 0xCA8) && pLocal->GetIndex() != player)
 				{
-					g_notify.Add(tfm::format("%s is a bot!", info.name));
-					if (Vars::Visuals::ChatInfoText.m_Var)
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-							player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
-
+					if (m_known_bots.find(info.friendsID) == m_known_bots.end())
 					{
-						// marked by other bots. r.i.p cl_drawline :(
-						// this will be detected by fedoraware and lmaobox easily.
-						// use 0xCA7 if you want to make more bots do the thing,
-						// most only care about being marked.
-						if (Vars::Misc::BeCat.m_Var)
-						{
-							auto kv = new KeyValues("AchievementEarned");
-							kv->SetInt("achievementID", 0xCA8);
-							g_Interfaces.Engine->ServerCmdKeyValues(kv);
-						}
-					}
+						g_notify.Add(tfm::format("%s is a bot!", info.name));
+						if (Vars::Visuals::ChatInfoText.m_Var)
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
+								player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
 
-					m_known_bots[info.friendsID] = true;
+						{
+							// marked by other bots. r.i.p cl_drawline :(
+							// this will be detected by fedoraware and lmaobox easily.
+							// use 0xCA7 if you want to make more bots do the thing,
+							// most only care about being marked.
+							if (Vars::Misc::BeCat.m_Var)
+							{
+								auto kv = new KeyValues("AchievementEarned");
+								kv->SetInt("achievementID", 0xCA8);
+								g_Interfaces.Engine->ServerCmdKeyValues(kv);
+							}
+						}
+
+						m_known_bots[info.friendsID] = true;
+					}
 				}
 			}
 		}
 	}
 
 	/*if (uNameHash == FNV1A::HashConst("player_death")) {
-		short userid = pEvent->GetInt("userid");									//user ID who died 
+		short userid = pEvent->GetInt("userid");									//user ID who died
 		long 	victim_entindex = pEvent->GetInt("victim_entindex");
 		long 	inflictor_entindex = pEvent->GetInt("inflictor_entindex");			//ent index of inflictor(a sentry, for example)
 		short 	attacker = pEvent->GetInt("attacker");								//user ID who killed
@@ -296,7 +297,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		short 	crit_type = pEvent->GetInt("crit_type");							//Crit type of kill. (0: None, 1 : Mini, 2 : Full)
 		//g_Interfaces.CVars->ConsolePrintf("weapon: %s", weapon);
 		//g_Interfaces.CVars->ConsolePrintf("weapon_logclassname: %s", weapon_logclassname);
-		//g_Interfaces.CVars->ConsolePrintf("userid: %d\nvictim_entindex: %d\nattacker: %d\nweapon: %s\nweaponid: %d\ndamagebits: %d\n", userid, victim_entindex, inflictor_entindex, attacker, weapon, weaponid, damagebits); 
+		//g_Interfaces.CVars->ConsolePrintf("userid: %d\nvictim_entindex: %d\nattacker: %d\nweapon: %s\nweaponid: %d\ndamagebits: %d\n", userid, victim_entindex, inflictor_entindex, attacker, weapon, weaponid, damagebits);
 		//g_Interfaces.CVars->ConsolePrintf("customkill: %d\nassister: %d\nweapon_logclassname: %s\nstun_flags: %d\ndeath_flags: %d\nsilent_kill: %d\nplayerpenetratecount: %d\n", customkill, assister, weapon_logclassname, stun_flags, death_flags, silent_kill, playerpenetratecount);
 		//g_Interfaces.CVars->ConsolePrintf("assister_fallback: %s\nkill_streak_total: %d\nkill_streak_wep: %d\nkill_streak_assist: %d\nkill_streak_victim: %d\nducks_streaked: %d\nduck_streak_assist: %d\nduck_streak_victim: %d\n", assister_fallback, kill_streak_total, kill_streak_wep, kill_streak_assist, kill_streak_victim, ducks_streaked, duck_streak_total, duck_streak_assist, duck_streak_victim);
 		//g_Interfaces.CVars->ConsolePrintf("rocket_jump: %d\nweapon_def_index: %d\ncrit_type: %d\n", rocket_jump, weapon_def_index, crit_type);

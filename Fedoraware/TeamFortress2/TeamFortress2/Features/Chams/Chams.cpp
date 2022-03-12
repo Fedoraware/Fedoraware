@@ -255,10 +255,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		{
 			CBaseEntity* pAttachment = Player->FirstMoveChild();
 
-			for (int n = 0; n < 10; n++)
+			for (int n = 0; n < 32; n++)
 			{
 				if (!pAttachment)
-					break;
+					continue;
 
 				if (pAttachment->IsWearable())
 					DrawModel(pAttachment);
