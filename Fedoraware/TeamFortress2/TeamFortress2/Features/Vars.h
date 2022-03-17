@@ -274,6 +274,13 @@ namespace Vars
 			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
 			inline CVar<bool> GlowOverlay { false , L"Glow overlay" };
+
+			// {ignorez, material, overlay type (0 = off), active}
+			inline Chams_t Local {false, 0, 0, false};
+			inline Chams_t Friend {false, 0, 0, false};
+			inline Chams_t Enemy {false, 0, 0, false};
+			inline Chams_t Team {false, 0, 0, false};
+			inline Chams_t Target {false, 0, 0, false};
 		}
 
 		namespace Buildings
