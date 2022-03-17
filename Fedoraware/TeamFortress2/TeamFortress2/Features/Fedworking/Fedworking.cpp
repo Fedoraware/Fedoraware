@@ -70,7 +70,6 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const float zPos = std::stof(dataVector[3]);
 					const int playerIndex = std::stoi(dataVector[4]);
 
-					// TODO: Check valid index?
 					g_GlobalInfo.partyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
 					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = g_Interfaces.Engine->Time();
 				} catch (...) { ConsoleLog("Failed to read ESP data!"); }

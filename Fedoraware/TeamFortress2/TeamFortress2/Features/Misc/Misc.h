@@ -10,6 +10,7 @@ private:
 	void NoiseMakerSpam(CBaseEntity* pLocal);
 	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
+	void Freecam(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoJoin();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
@@ -23,9 +24,12 @@ public:
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd);
+	void AutoPeek(CUserCmd* pCmd);
 	void NoPush();
 	void SteamRPC();
+
 	std::vector<std::string> strings;
+	Vec3 PeekReturnPos;
 };
 
 inline CMisc g_Misc;

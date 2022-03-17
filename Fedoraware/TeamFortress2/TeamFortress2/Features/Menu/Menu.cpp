@@ -2104,6 +2104,16 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth(); HelpMarker("Minimum random fakelag value");
 							}
 						}
+
+						ImGui::Dummy(ImVec2(0, 20));
+
+						SectionTitle("Auto peek");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Start peeking");
+						ImGui::Checkbox("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
+
 						//ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
 						// this already exists in visuals misc near the thirdperson
 						ImGui::PopStyleVar();

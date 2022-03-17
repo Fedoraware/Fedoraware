@@ -586,6 +586,8 @@ namespace Vars
 			inline CVar<bool> FakelagOnKey  { true, L"Fakelag On Key" }; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey	    { 0x54, L"Fakelag Key" }; //T
 			inline CVar<int> FakelagValue   { 1, L"Fakelag value" }; // dont show when fakelagmode=2
+			inline CVar<int> AutoPeekKey	{ false, L"Autopeek Key" };
+			inline CVar<bool> AutoPeekFree	{ false, L"Autopeek free move" };
 			namespace FLGChams
 			{
 				inline CVar<bool> Enabled{ false, L"Fakelag chams" };
