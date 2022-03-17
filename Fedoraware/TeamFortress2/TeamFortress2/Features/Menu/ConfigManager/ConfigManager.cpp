@@ -23,6 +23,7 @@
 #pragma warning (disable : 6031)
 #pragma warning (disable : 4477)
 
+
 bool CConfigManager::Find(const wchar_t *name, std::wstring &output)
 {
 	m_Read.clear();
@@ -74,6 +75,13 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::Save(const wchar_t *name, Chams_t val)
+{
+	char buffer[64];
+	sprintf_s(buffer, "%ls: %d %d %d %d", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive);
+	m_Write << buffer << "\n";
+}
+
 void CConfigManager::Load(const wchar_t* name, std::string& val)
 {
 	std::wstring line = {};
@@ -119,6 +127,17 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	}
+}
+
+void CConfigManager::Load(const wchar_t* name, Chams_t& val)
+{
+	std::wstring line = {};
+
+	if (Find(name, line)) {
+		int r = 0, g = 0, b = 0, a = 0;
+		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
+		val = { static_cast<bool>(r), static_cast<int>(g), static_cast<int>(b), static_cast<bool>(a) };
 	}
 }
 
@@ -359,6 +378,9 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Wearables);
 				SAVE_VAR(Vars::Chams::Players::Weapons);
 				SAVE_VAR(Vars::Chams::Players::Material);
+				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
+				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
+				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
 				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
 			}
 
@@ -728,6 +750,13 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
+
+			SAVE_OTHER(Vars::Chams::Players::Local);
+			SAVE_OTHER(Vars::Chams::Players::Enemy);
+			SAVE_OTHER(Vars::Chams::Players::Team);
+			SAVE_OTHER(Vars::Chams::Players::Friend);
+			SAVE_OTHER(Vars::Chams::Players::Target);
+
 
 		}
 
@@ -1377,6 +1406,12 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
+
+			LOAD_OTHER(Vars::Chams::Players::Local);
+			LOAD_OTHER(Vars::Chams::Players::Enemy);
+			LOAD_OTHER(Vars::Chams::Players::Team);
+			LOAD_OTHER(Vars::Chams::Players::Friend);
+			LOAD_OTHER(Vars::Chams::Players::Target);
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
