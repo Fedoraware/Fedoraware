@@ -3,7 +3,7 @@
 
 enum MessageType {
 	None,
-	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-ID ]
+	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
 	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
 };
 
@@ -39,7 +39,6 @@ void CFedworking::HandleMessage(const char* pMessage)
 					PlayerInfo_t playerInfo{};
 					g_Interfaces.Engine->GetPlayerInfo(playerIndex, &playerInfo);
 
-					// TODO: Use CTFAnnotationsPanel::AddAnnotation
 					if (playerInfo.userID != 0) {
 						CGameEvent* markerEvent = g_Interfaces.GameEvent->CreateNewEvent("show_annotation");
 						if (markerEvent) {
@@ -53,7 +52,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 							markerEvent->SetString("text", playerInfo.name);
 							markerEvent->SetString("play_sound", "coach/coach_go_here.wav");
 
-							g_Interfaces.GameEvent->FireEvent(markerEvent);
+							g_Interfaces.GameEvent->FireEventClientSide(markerEvent);
 						}
 					}
 				}
