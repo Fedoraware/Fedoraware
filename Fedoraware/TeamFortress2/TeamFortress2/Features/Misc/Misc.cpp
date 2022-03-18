@@ -508,7 +508,8 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 	// TODO: This needs some improvement
 
 	if (const auto pWeapon = pLocal->GetActiveWeapon()) {
-		if (pWeapon->IsInReload()) { return false; }
+		if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped()) { return false; }
+		if (!pWeapon->CanShoot(pLocal)) { return false; }
 
 		PlayerInfo_t info{};
 		for (const auto& target : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
