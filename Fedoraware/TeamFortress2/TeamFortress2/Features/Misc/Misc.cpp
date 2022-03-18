@@ -5,8 +5,6 @@
 #include "../../Utils/Timer/Timer.hpp"
 #include "../PlayerResource/PlayerResource.h"
 
-//#define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
-
 extern int attackStringW;
 extern int attackStringH;
 
@@ -18,6 +16,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
+		Freecam(pCmd, pLocal);
 	}
 	AutoJoin();
 	ChatSpam();
@@ -124,6 +123,52 @@ void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 		if (cmdTimer.Run(2000)) {
 			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
 		}
+	}
+}
+
+void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
+		if (g_GlobalInfo.m_bFreecamActive == false) {
+			g_GlobalInfo.m_vFreecamPos = pLocal->GetVecOrigin();
+			g_GlobalInfo.m_bFreecamActive = true;
+		}
+
+		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+		const float zMove = sinf(DEG2RAD(viewAngles.x));
+		Vec3 vForward, vRight, vUp;
+		Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
+		Vec3 moveVector;
+
+		if (pCmd->buttons & IN_FORWARD) {
+			moveVector += vForward;
+			moveVector.z -= zMove;
+		}
+
+		if (pCmd->buttons & IN_BACK) {
+			moveVector -= vForward;
+			moveVector.z += zMove;
+		}
+
+		if (pCmd->buttons & IN_MOVELEFT) {
+			moveVector -= vRight;
+		}
+
+		if (pCmd->buttons & IN_MOVERIGHT) {
+			moveVector += vRight;
+		}
+
+		Math::VectorNormalize(moveVector);
+		moveVector *= Vars::Visuals::FreecamSpeed.m_Var;
+		g_GlobalInfo.m_vFreecamPos += moveVector;
+
+		pCmd->buttons = 0;
+		pCmd->forwardmove = 0.f;
+		pCmd->sidemove = 0.f;
+		pCmd->upmove = 0.f;
+	}
+	else {
+		g_GlobalInfo.m_bFreecamActive = false;
 	}
 }
 
@@ -454,6 +499,130 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 			}
 
 			else pCmd->buttons |= IN_DUCK;
+		}
+	}
+}
+
+bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
+{
+	// TODO: This needs some improvement
+
+	if (const auto pWeapon = pLocal->GetActiveWeapon()) {
+		if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped()) { return false; }
+		if (!pWeapon->CanShoot(pLocal)) { return false; }
+
+		PlayerInfo_t info{};
+		for (const auto& target : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		{
+			if (!target->IsAlive()) { continue; }
+
+			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !target->IsVulnerable()) { continue; }
+
+			if (!g_Interfaces.Engine->GetPlayerInfo(target->GetIndex(), &info)) { continue; }
+
+			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[target->GetIndex()]) { continue; }
+
+			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { continue; }
+
+			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD))) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void CMisc::AutoPeek(CUserCmd* pCmd)
+{
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		static bool posPlaced = false;
+		static bool isReturning = false;
+		static bool hasDirection = false;
+		static Vec3 peekVector;
+
+		if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::AutoPeekKey.m_Var)) {
+			const Vec3 localPos = pLocal->GetAbsOrigin();
+
+			// We just started peeking. Save the return position!
+			if (!posPlaced) {
+				if (pLocal->IsOnGround()) {
+					PeekReturnPos = localPos;
+					posPlaced = true;
+				}
+			} else {
+				static Timer particleTimer{ };
+				if (particleTimer.Run(700)) {
+					Particles::DispatchParticleEffect("ping_circle", PeekReturnPos, { });
+				}
+			}
+
+			// We need a peek direction (A / D)
+			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection) {
+				const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+				Vec3 vForward, vRight, vUp;
+				Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
+
+				if (pCmd->sidemove != 0.f) {
+					CGameTrace trace;
+					CTraceFilterHitscan traceFilter = {};
+					Ray_t traceRay;
+
+					if (pCmd->sidemove < 0.1f) {
+						vRight = pLocal->GetEyePosition() - vRight * 500.f; // Left
+					}
+					else if (pCmd->sidemove > 0.1f) {
+						vRight = pLocal->GetEyePosition() + vRight * 500.f; // Right
+					}
+
+					traceRay.Init(pLocal->GetEyePosition(), vRight);
+					g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+					peekVector = trace.vEndPos - trace.vStartPos;
+					hasDirection = true;
+				}
+
+				Utils::BlockMovement(pCmd);
+			}
+
+			// Should we peek?
+			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && hasDirection) {
+				bool targetFound = false;
+				for (int i = 10; i < 100; i += 10) {
+					const float step = i / 100.f;
+					Vec3 currentPos = pLocal->GetEyePosition() + (peekVector * step);
+					if (CanAttack(pLocal, currentPos)) {
+						Utils::WalkTo(pCmd, pLocal, currentPos);
+						targetFound = true;
+					}
+
+					if (targetFound) {
+						g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 68, 189, 50, 100, false, 0.04f);
+						break;
+					}
+
+					g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 235, 59, 90, 100, false, 0.04f);
+				}
+
+				if (!targetFound) { isReturning = true; }
+			}
+
+			// We've just attacked. Let's return!
+			if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+				isReturning = true;
+			}
+
+			if (isReturning) {
+				if (localPos.DistTo(PeekReturnPos) < 7.f) {
+					isReturning = false;
+					return;
+				}
+
+				Utils::WalkTo(pCmd, pLocal, PeekReturnPos);
+			}
+		} else {
+			posPlaced = isReturning = hasDirection = false;
+			PeekReturnPos = Vec3();
 		}
 	}
 }

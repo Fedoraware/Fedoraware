@@ -3,7 +3,8 @@
 
 enum MessageType {
 	None,
-	Marker	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-ID ]
+	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
+	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
 };
 
 void CFedworking::HandleMessage(const char* pMessage)
@@ -51,11 +52,27 @@ void CFedworking::HandleMessage(const char* pMessage)
 							markerEvent->SetString("text", playerInfo.name);
 							markerEvent->SetString("play_sound", "coach/coach_go_here.wav");
 
-							g_Interfaces.GameEvent->FireEvent(markerEvent);
+							g_Interfaces.GameEvent->FireEventClientSide(markerEvent);
 						}
 					}
 				}
 				catch (...) { ConsoleLog("Failed to read marker data!"); }
+			}
+			break;
+		}
+
+	case ESP:
+		{
+			if (dataVector.size() == 5) {
+				try {
+					const float xPos = std::stof(dataVector[1]);
+					const float yPos = std::stof(dataVector[2]);
+					const float zPos = std::stof(dataVector[3]);
+					const int playerIndex = std::stoi(dataVector[4]);
+
+					g_GlobalInfo.partyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
+					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = g_Interfaces.Engine->Time();
+				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
 			}
 			break;
 		}
@@ -69,15 +86,24 @@ void CFedworking::HandleMessage(const char* pMessage)
 	}
 }
 
-void CFedworking::SendMarker(const Vec3& pPos, int pEntityIndex)
+void CFedworking::SendMarker(const Vec3& pPos, int pPlayerIdx)
 {
-	const std::string xPos = std::to_string(pPos.x);
-	const std::string yPos = std::to_string(pPos.y);
-	const std::string zPos = std::to_string(pPos.z);
-
 	std::stringstream msg;
-	msg << Marker << "&" << xPos << "&" << yPos << "&" << zPos << "&" << pEntityIndex;
+	msg << Marker << "&" << pPos.x << "&" << pPos.y << "&" << pPos.z << "&" << pPlayerIdx;
 	SendMessage(msg.str());
+}
+
+void CFedworking::SendESP(CBaseEntity* pPlayer)
+{
+	if (!pPlayer->GetDormant() && pPlayer->IsInValidTeam() && pPlayer->IsAlive()) {
+		const float lastUpdate = g_GlobalInfo.partyPlayerESP[pPlayer->GetIndex()].LastUpdate;
+		if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
+			const Vec3 playerPos = pPlayer->GetVecOrigin();
+			std::stringstream msg;
+			msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
+			SendMessage(msg.str());
+		}
+	}
 }
 
 void CFedworking::SendMessage(const std::string& pData)
@@ -115,6 +141,16 @@ void CFedworking::Run()
 				g_Interfaces.DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
 #endif
 				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
+			}
+		}
+
+		// Party ESP
+		if (Vars::Misc::PartyESP.m_Var) {
+			SendESP(pLocal);
+			for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+			{
+				if (player->GetIndex() == pLocal->GetIndex()) { continue; }
+				SendESP(player);
 			}
 		}
 	}

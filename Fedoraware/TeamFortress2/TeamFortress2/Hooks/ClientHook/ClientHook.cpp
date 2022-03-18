@@ -34,6 +34,7 @@ void __stdcall ClientHook::ShutDown::Hook()
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_EntityCache.Clear();
 	g_Visuals.rain.Cleanup();
+	g_GlobalInfo.partyPlayerESP.clear();
 }
 
 

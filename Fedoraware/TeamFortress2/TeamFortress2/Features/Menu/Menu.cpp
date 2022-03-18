@@ -1415,6 +1415,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
 						ImGui::Checkbox("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 						InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
+						ImGui::Checkbox("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 						ImGui::PopStyleVar();
 					}
 					ImGui::EndChild();
@@ -2103,6 +2104,16 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); ImGui::PopItemWidth(); HelpMarker("Minimum random fakelag value");
 							}
 						}
+
+						ImGui::Dummy(ImVec2(0, 20));
+
+						SectionTitle("Auto peek");
+						widget_pos = ImGui::GetCursorScreenPos();
+						widget_pos.y -= 4;
+						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
+						InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
+						ImGui::Checkbox("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
+
 						//ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");
 						// this already exists in visuals misc near the thirdperson
 						ImGui::PopStyleVar();

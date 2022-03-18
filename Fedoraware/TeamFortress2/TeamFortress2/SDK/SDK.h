@@ -651,6 +651,49 @@ namespace Utils
 
 		return false;
 	}
+
+	__inline Vector ComputeMove(const CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
+	{
+		Vec3 diff = (b - a);
+		if (diff.Length() == 0.0f)
+			return Vec3(0.0f, 0.0f, 0.0f);
+		const float x = diff.x;
+		const float y = diff.y;
+		Vec3 vsilent(x, y, 0);
+		Vec3 ang;
+		Math::VectorAngles(vsilent, ang);
+		float yaw = DEG2RAD(ang.y - pCmd->viewangles.y);
+		float pitch = DEG2RAD(ang.x - pCmd->viewangles.x);
+		Vec3 move = { cos(yaw) * 450.0f, -sin(yaw) * 450.0f, -cos(pitch) * 450.0f };
+
+		// Only apply upmove in water
+		if (!(g_Interfaces.EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
+			move.z = pCmd->upmove;
+		return move;
+	}
+
+	__inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b, float scale)
+	{
+		// Calculate how to get to a vector
+		auto result = ComputeMove(pCmd, pLocal, a, b);
+		// Push our move to usercmd
+		pCmd->forwardmove = result.x * scale;
+		pCmd->sidemove = result.y * scale;
+		pCmd->upmove = result.z * scale;
+	}
+
+	__inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& pDestination)
+	{
+		Vec3 localPos = pLocal->GetVecOrigin();
+		WalkTo(pCmd, pLocal, localPos, pDestination, 1.f);
+	}
+
+	__inline void BlockMovement(CUserCmd* pCmd)
+	{
+		pCmd->forwardmove = 0.f;
+		pCmd->sidemove = 0.f;
+		pCmd->upmove = 0.f;
+	}
 }
 
 namespace Particles {
