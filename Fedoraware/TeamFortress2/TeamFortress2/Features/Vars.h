@@ -538,6 +538,12 @@ namespace Vars
 		inline CVar<bool> VoteRevealerConsole	{ false, L"Reveal votes To Console" };
 		inline CVar<bool> VoteRevealerChat		{ false, L"Reveal votes To Chat" };
 		inline CVar<bool> VoteRevealerParty		{ false, L"Reveal votes To Party" };
+		inline CVar<bool> AutoVote				{ false, L"Auto-Vote" };
+		inline CVar<bool> AnnounceVotesText		{ true, L"Announce votes to text" };
+		inline CVar<bool> AnnounceVotesConsole	{ false, L"Announce votes to console" };
+		inline CVar<bool> AnnounceVotesChat		{ false, L"Announce votes to chat" };
+		inline CVar<bool> AnnounceVotesParty	{ false, L"Announce votes to party" };
+		inline CVar<int> AnnounceVotes			{ 0, L"Announce votes" }; //0 - basic, 1 detailed
 		inline CVar<bool> CheatsBypass			{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll					{ false, L"Super Crouch Speed" };
 		inline CVar<bool> ChatCensor			{ false, L"Chat Censor" };

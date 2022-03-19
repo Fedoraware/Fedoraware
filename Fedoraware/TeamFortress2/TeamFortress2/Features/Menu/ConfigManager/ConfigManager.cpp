@@ -620,6 +620,12 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::VoteRevealerConsole);
 			SAVE_VAR(Vars::Misc::VoteRevealerChat);
 			SAVE_VAR(Vars::Misc::VoteRevealerParty);
+			SAVE_VAR(Vars::Misc::AutoVote);
+			SAVE_VAR(Vars::Misc::AnnounceVotes);
+			SAVE_VAR(Vars::Misc::AnnounceVotesText);
+			SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
+			SAVE_VAR(Vars::Misc::AnnounceVotesChat);
+			SAVE_VAR(Vars::Misc::AnnounceVotesParty);
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
 			SAVE_VAR(Vars::Misc::ExtendFreeze);
@@ -1279,6 +1285,12 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::VoteRevealerConsole);
 			LOAD_VAR(Vars::Misc::VoteRevealerChat);
 			LOAD_VAR(Vars::Misc::VoteRevealerParty);
+			LOAD_VAR(Vars::Misc::AutoVote);
+			SAVE_VAR(Vars::Misc::AnnounceVotes);
+			SAVE_VAR(Vars::Misc::AnnounceVotesText);
+			SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
+			SAVE_VAR(Vars::Misc::AnnounceVotesChat);
+			SAVE_VAR(Vars::Misc::AnnounceVotesParty);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
 			LOAD_VAR(Vars::Misc::ExtendFreeze);
