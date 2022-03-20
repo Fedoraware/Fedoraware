@@ -14,6 +14,7 @@ struct Chams_t {
 	int		drawMaterial = 0;
 	int		overlayType = 0;
 	bool	chamsActive = false;
+	Color_t fresnelBase = { 0,0,0,255 };
 };
 
 namespace Color

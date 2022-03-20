@@ -198,99 +198,12 @@ void DrawFakeAngles(CBaseEntity* pEntity, const DrawModelState_t& pState, const 
 	}
 }
 
-void DrawOverlay(CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo,
-	matrix3x4* pBoneToWorld) {
-	if (!Vars::Chams::Players::GlowOverlay.m_Var) return;
-	if (pEntity && pEntity->GetClassID() == ETFClassID::CTFPlayer) {
-		if (!g_Glow.m_bRendering && !g_Chams.m_bRendering) {
-			bool bMatWasForced = false;
-
-			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				bool bIsLocal = pEntity->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
-
-				if (!bIsLocal)
-				{
-					switch (Vars::Chams::Players::IgnoreTeammates.m_Var)
-					{
-					case 0: break;
-					case 1:
-					{
-						if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) { return; }
-						break;
-					}
-					case 2:
-					{
-						if (pEntity->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[pEntity->GetIndex()])
-						{
-							return;
-						}
-						break;
-					}
-					}
-				}
-
-				else
-				{
-					if (!Vars::Chams::Players::ShowLocal.m_Var)
-						return;
-				}
-			}
-
-
-
-			g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial* {
-				bMatWasForced = true;
-				return g_DMEChams.m_pMatScuffed;
-				}());
-
-
-
-			const Color_t DrawColor = Utils::GetEntityDrawColor(pEntity, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
-			if (bMatWasForced) {
-				g_Interfaces.RenderView->SetColorModulation(
-					Color::TOFLOAT(DrawColor.r),
-					Color::TOFLOAT(DrawColor.g),
-					Color::TOFLOAT(DrawColor.b));
-
-				bool foundenvmaptint = false;
-				IMaterialVar* fresnelEnvmaptint = g_DMEChams.m_pMatScuffed->FindVar(_("$envmaptint"), &foundenvmaptint);
-				if (foundenvmaptint)
-				{
-					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-						Color::TOFLOAT(DrawColor.b));
-				}
-				bool foundignorez = false;
-				IMaterialVar* ignorez = g_DMEChams.m_pMatScuffed->FindVar(_("$ignorez"), &foundignorez);
-				if (foundignorez)
-				{
-					ignorez->SetStringValue("1");
-				}
-			}
-
-			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-				ModelRenderHook::DrawModelExecute::index)
-				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-
-			bMatWasForced = true;
-
-			if (bMatWasForced) {
-				g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-			}
-
-			g_Interfaces.RenderView->SetBlend(1.0f);
-		}
-	}
-}
-
 void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo,
                                                        matrix3x4* pBoneToWorld) {
 	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(pEntity, pState, pInfo, pBoneToWorld);
 	DrawFakeAngles(pEntity, pState, pInfo);
-
-	//DrawOverlay(pEntity, pState, pInfo, pBoneToWorld); ////Didn't work
 
 	if ((g_Chams.HasDrawn(pEntity) || g_Glow.HasDrawn(pEntity)) && !g_Glow.m_bDrawingGlow) { return; }
 

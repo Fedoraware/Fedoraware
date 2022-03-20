@@ -78,7 +78,7 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 void CConfigManager::Save(const wchar_t *name, Chams_t val)
 {
 	char buffer[64];
-	sprintf_s(buffer, "%ls: %d %d %d %d", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive);
+	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive, val.fresnelBase.r, val.fresnelBase.g, val.fresnelBase.b);
 	m_Write << buffer << "\n";
 }
 
@@ -135,9 +135,9 @@ void CConfigManager::Load(const wchar_t* name, Chams_t& val)
 	std::wstring line = {};
 
 	if (Find(name, line)) {
-		int r = 0, g = 0, b = 0, a = 0;
-		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
-		val = { static_cast<bool>(r), static_cast<int>(g), static_cast<int>(b), static_cast<bool>(a) };
+		int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+		swscanf_s(line.c_str(), L"%*ls %d %d %d %d %d %d %d", &a, &b, &c, &d, &e, &f, &g);
+		val = { static_cast<bool>(a), static_cast<int>(b), static_cast<int>(c), static_cast<bool>(d), {static_cast<byte>(e), static_cast<byte>(f), static_cast<byte>(g), 255} };
 	}
 }
 
@@ -373,21 +373,13 @@ void CConfigManager::Save(const wchar_t *name)
 			//Players
 			{
 				SAVE_VAR(Vars::Chams::Players::Active);
-				SAVE_VAR(Vars::Chams::Players::ShowLocal);
-				SAVE_VAR(Vars::Chams::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::Chams::Players::Wearables);
 				SAVE_VAR(Vars::Chams::Players::Weapons);
-				SAVE_VAR(Vars::Chams::Players::Material);
-				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
-				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
-				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
-				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
 			}
 
 			//Buildings
 			{
 				SAVE_VAR(Vars::Chams::Buildings::Active);
-				SAVE_VAR(Vars::Chams::Buildings::IgnoreTeammates);
 				SAVE_VAR(Vars::Chams::Buildings::Material);
 				SAVE_VAR(Vars::Chams::Buildings::IgnoreZ);
 			}
@@ -395,11 +387,6 @@ void CConfigManager::Save(const wchar_t *name)
 			//World
 			{
 				SAVE_VAR(Vars::Chams::World::Active);
-				SAVE_VAR(Vars::Chams::World::Health);
-				SAVE_VAR(Vars::Chams::World::Ammo);
-				SAVE_VAR(Vars::Chams::World::Projectiles);
-				SAVE_VAR(Vars::Chams::World::Material);
-				SAVE_VAR(Vars::Chams::World::IgnoreZ);
 			}
 
 			//DME
@@ -765,6 +752,16 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Chams::Players::Friend);
 			SAVE_OTHER(Vars::Chams::Players::Target);
 
+			SAVE_OTHER(Vars::Chams::Buildings::Local);
+			SAVE_OTHER(Vars::Chams::Buildings::Enemy);
+			SAVE_OTHER(Vars::Chams::Buildings::Team);
+			SAVE_OTHER(Vars::Chams::Buildings::Friend);
+			SAVE_OTHER(Vars::Chams::Buildings::Target);
+
+			SAVE_OTHER(Vars::Chams::World::Health);
+			SAVE_OTHER(Vars::Chams::World::Ammo);
+			SAVE_OTHER(Vars::Chams::World::Projectiles);
+
 
 		}
 
@@ -1042,18 +1039,13 @@ void CConfigManager::Load(const wchar_t *name)
 			//Players
 			{
 				LOAD_VAR(Vars::Chams::Players::Active);
-				LOAD_VAR(Vars::Chams::Players::ShowLocal);
-				LOAD_VAR(Vars::Chams::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::Chams::Players::Wearables);
 				LOAD_VAR(Vars::Chams::Players::Weapons);
-				LOAD_VAR(Vars::Chams::Players::Material);
-				LOAD_VAR(Vars::Chams::Players::IgnoreZ);
 			}
 
 			//Buildings
 			{
 				LOAD_VAR(Vars::Chams::Buildings::Active);
-				LOAD_VAR(Vars::Chams::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::Chams::Buildings::Material);
 				LOAD_VAR(Vars::Chams::Buildings::IgnoreZ);
 			}
@@ -1061,11 +1053,6 @@ void CConfigManager::Load(const wchar_t *name)
 			//World
 			{
 				LOAD_VAR(Vars::Chams::World::Active);
-				LOAD_VAR(Vars::Chams::World::Health);
-				LOAD_VAR(Vars::Chams::World::Ammo);
-				LOAD_VAR(Vars::Chams::World::Projectiles);
-				LOAD_VAR(Vars::Chams::World::Material);
-				LOAD_VAR(Vars::Chams::World::IgnoreZ);
 			}
 
 			//DME
@@ -1428,6 +1415,16 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Chams::Players::Team);
 			LOAD_OTHER(Vars::Chams::Players::Friend);
 			LOAD_OTHER(Vars::Chams::Players::Target);
+
+			LOAD_OTHER(Vars::Chams::Buildings::Local);
+			LOAD_OTHER(Vars::Chams::Buildings::Enemy);
+			LOAD_OTHER(Vars::Chams::Buildings::Team);
+			LOAD_OTHER(Vars::Chams::Buildings::Friend);
+			LOAD_OTHER(Vars::Chams::Buildings::Target);
+
+			LOAD_OTHER(Vars::Chams::World::Health);
+			LOAD_OTHER(Vars::Chams::World::Ammo);
+			LOAD_OTHER(Vars::Chams::World::Projectiles);
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);

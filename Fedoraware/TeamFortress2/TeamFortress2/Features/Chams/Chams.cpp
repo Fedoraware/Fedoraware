@@ -129,18 +129,29 @@ void CChams::Render()
 }
 
 Chams_t fetchChams(CBaseEntity* pEntity) {
-	PlayerInfo_t info{}; g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &info);
-
 	if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)
 		return Vars::Chams::Players::Target;
 	if (pEntity == g_EntityCache.m_pLocal)
 		return Vars::Chams::Players::Local;
-	if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
+	if (g_EntityCache.Friends[pEntity->GetIndex()])
 		return Vars::Chams::Players::Friend;
 	if (pEntity->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
 		return Vars::Chams::Players::Enemy;
 	if (pEntity->GetTeamNum() == g_EntityCache.m_pLocal->GetTeamNum())
 		return Vars::Chams::Players::Team;
+}
+Chams_t fetchChams(CBaseObject* Building) {
+	auto pEntity = Building->GetOwner();
+	if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)
+		return Vars::Chams::Buildings::Target;
+	if (pEntity->GetIndex() == g_EntityCache.m_pLocal->GetIndex())
+		return Vars::Chams::Buildings::Local;
+	if (g_EntityCache.Friends[pEntity->GetIndex()])
+		return Vars::Chams::Buildings::Friend;
+	if (pEntity->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
+		return Vars::Chams::Buildings::Enemy;
+	if (pEntity->GetTeamNum() == g_EntityCache.m_pLocal->GetTeamNum())
+		return Vars::Chams::Buildings::Team;
 }
 
 IMaterial* CChams::fetchMaterial(Chams_t chams)
@@ -229,9 +240,9 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		{
 			if (foundselfillumtint)
 			{
-				fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-					Color::TOFLOAT(Colors::FresnelBase.g),
-					Color::TOFLOAT(Colors::FresnelBase.b));
+				fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
+					Color::TOFLOAT(chams.fresnelBase.g),
+					Color::TOFLOAT(chams.fresnelBase.b));
 			}
 			if (foundenvmaptint)
 			{
@@ -292,102 +303,62 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 	if (Buildings.empty())
 		return;
 
-	bool bMatWasForced = false;
+	bool foundselfillumtint = false;
+	bool foundenvmaptint = false;
+	IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
+	IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
 
-	if (Vars::Chams::Buildings::Material.m_Var)
+	for (const auto& pBuilding : Buildings)
 	{
-		g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+		if (!pBuilding->IsAlive())
+			continue;
+
+		if (!Utils::IsOnScreen(pLocal, pBuilding))
+			continue;
+
+		const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
+		
+		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		auto chams = fetchChams(Building);
+		auto chamsMaterial = fetchMaterial(chams);
+
+		if (!chams.chamsActive || !chams.drawMaterial)
+			continue;
+
+		if (chams.showObstructed)
+			pRenderContext->DepthRange(0.0f, 0.2f);
+
+		g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+
+		Color_t DrawColor = Utils::GetEntityDrawColor(pBuilding, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+
+		g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+		if (chams.drawMaterial != 6)
 		{
-				bMatWasForced = true;
-				switch (Vars::Chams::Buildings::Material.m_Var)
-				{
-				case 1:
-				{
-					return m_pMatShaded;
-				}
-				case 2:
-				{
-					return m_pMatShiny;
-				}
-				case 3:
-				{
-					return m_pMatFlat;
-				}
-				case 4:
-				{
-					return m_pMatBrick;
-				}
-				case 5:
-				{
-					return m_pMatBlur;
-				}
-				case 6:
-				{
-					return m_pMatFresnel;
-				}
-				case 7:
-				{
-					return m_pMatPlastic;
-				}
-				default: bMatWasForced = false; return nullptr;
-				}
-		}());
-	}
-
-	g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-
-	if (Vars::Chams::Buildings::IgnoreZ.m_Var)
-		pRenderContext->DepthRange(0.0f, 0.2f);
-
-	for (const auto& Building : Buildings)
-	{
-		if (!Building->IsAlive())
-			continue;
-
-		if (Vars::Chams::Buildings::IgnoreTeammates.m_Var && Building->GetTeamNum() == pLocal->GetTeamNum())
-			continue;
-
-		if (!Utils::IsOnScreen(pLocal, Building))
-			continue;
-
-		if (bMatWasForced)
+			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
+				Color::TOFLOAT(DrawColor.b));
+		}
+		else if (chams.drawMaterial == 6)
 		{
-			Color_t DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
-			bool foundselfillumtint = false;
-			bool foundenvmaptint = false;
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
-			if (Vars::Chams::Buildings::Material.m_Var != 6)
+			if (foundselfillumtint)
 			{
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-					Color::TOFLOAT(DrawColor.b));
+				fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
+					Color::TOFLOAT(chams.fresnelBase.g),
+					Color::TOFLOAT(chams.fresnelBase.b));
 			}
-			else if (Vars::Chams::Players::Material.m_Var == 6)
+			if (foundenvmaptint)
 			{
-				IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
-				if (foundselfillumtint)
-				{
-					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-						Color::TOFLOAT(Colors::FresnelBase.g),
-						Color::TOFLOAT(Colors::FresnelBase.b));
-				}
-				IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
-				if (foundenvmaptint)
-				{
-					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */,
-						Color::TOFLOAT(DrawColor.g) /* * 4 */,
-						Color::TOFLOAT(DrawColor.b) /* * 4 */);
-				}
+				fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r) /* * 4 */,
+					Color::TOFLOAT(DrawColor.g) /* * 4 */,
+					Color::TOFLOAT(DrawColor.b) /* * 4 */);
 			}
 		}
 
-		DrawModel(Building);
+		DrawModel(pBuilding);
 	}
 
-	if (bMatWasForced)
-	{
-		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-	}
+	g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
+	g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
 	g_Interfaces.RenderView->SetBlend(1.0f);
 
@@ -400,88 +371,42 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 	if (!Vars::Chams::World::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
 		return;
 
-	bool bMatWasForced = false;
+	bool foundselfillumtint = false;
+	bool foundenvmaptint = false;
+	IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
+	IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
 
-	if (Vars::Chams::World::Material.m_Var)
-	{
-		g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-			{
-				bMatWasForced = true;
-				switch (Vars::Chams::World::Material.m_Var)
-				{
-				case 1:
-				{
-					return m_pMatShaded;
-				}
-				case 2:
-				{
-					return m_pMatShiny;
-				}
-				case 3:
-				{
-					return m_pMatFlat;
-				}
-				case 4:
-				{
-					return m_pMatBrick;
-				}
-				case 5:
-				{
-					return m_pMatBlur;
-				}
-				case 6:
-				{
-					return m_pMatFresnel;
-				}
-				case 7:
-				{
-					return m_pMatPlastic;
-				}
-				default: bMatWasForced = false; return nullptr;
-				}
-			}());
-	}
-
-	g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-
-	if (Vars::Chams::World::IgnoreZ.m_Var)
-		pRenderContext->DepthRange(0.0f, 0.2f);
-
-	if (Vars::Chams::World::Health.m_Var)
+	if (Vars::Chams::World::Health.chamsActive)
 	{
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
 			if (!Utils::IsOnScreen(pLocal, Health))
 				continue;
 
-			if (bMatWasForced)
+			auto chams = Vars::Chams::World::Health;
+			auto chamsMaterial = fetchMaterial(chams);
+			Color_t DrawColor = Colors::Health;
+			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			if (Vars::Chams::World::Health.drawMaterial != 6)
 			{
-				Color_t DrawColor = Colors::Health;
-				bool foundselfillumtint = false;
-				bool foundenvmaptint = false;
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
-				if (Vars::Chams::World::Material.m_Var != 6)
+				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+					Color::TOFLOAT(DrawColor.g),
+					Color::TOFLOAT(DrawColor.b));
+			}
+			else if (Vars::Chams::World::Health.drawMaterial == 6)
+			{
+				if (foundselfillumtint)
 				{
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
-						Color::TOFLOAT(DrawColor.g),
-						Color::TOFLOAT(DrawColor.b));
+					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
+						Color::TOFLOAT(chams.fresnelBase.g),
+						Color::TOFLOAT(chams.fresnelBase.b));
 				}
-				else if (Vars::Chams::World::Material.m_Var == 6)
+				if (foundenvmaptint)
 				{
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(
-						_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
-					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-							Color::TOFLOAT(Colors::FresnelBase.g),
-							Color::TOFLOAT(Colors::FresnelBase.b));
-					}
-					IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
-					if (foundenvmaptint)
-					{
-						fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-							Color::TOFLOAT(DrawColor.b));
-					}
+					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
+						Color::TOFLOAT(DrawColor.b));
 				}
 			}
 
@@ -489,45 +414,41 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-	if (Vars::Chams::World::Ammo.m_Var)
+	if (Vars::Chams::World::Ammo.chamsActive)
 	{
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
 			if (!Utils::IsOnScreen(pLocal, Ammo))
 				continue;
 
-			if (bMatWasForced)
+			auto chams = Vars::Chams::World::Ammo;
+			auto chamsMaterial = fetchMaterial(chams);
+			Color_t DrawColor = Colors::Ammo;
+			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			if (chams.drawMaterial != 6)
 			{
-				Color_t DrawColor = Colors::Ammo;
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
-				if (Vars::Chams::World::Material.m_Var != 6)
+				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+					Color::TOFLOAT(DrawColor.g),
+					Color::TOFLOAT(DrawColor.b));
+			}
+			else
+			{
+				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+			}
+
+			if (chams.drawMaterial == 6)
+			{
+				if (foundselfillumtint)
 				{
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
-						Color::TOFLOAT(DrawColor.g),
+					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
+						Color::TOFLOAT(chams.fresnelBase.g),
+						Color::TOFLOAT(chams.fresnelBase.b));
+				}
+				if (foundenvmaptint)
+				{
+					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
 						Color::TOFLOAT(DrawColor.b));
-				}
-				else
-				{
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				}
-				bool foundselfillumtint = false;
-				bool foundenvmaptint = false;
-				if (Vars::Chams::World::Material.m_Var == 6)
-				{
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(
-						_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
-					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-							Color::TOFLOAT(Colors::FresnelBase.g),
-							Color::TOFLOAT(Colors::FresnelBase.b));
-					}
-					IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
-					if (foundenvmaptint)
-					{
-						fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-							Color::TOFLOAT(DrawColor.b));
-					}
 				}
 			}
 
@@ -535,53 +456,50 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-	if (Vars::Chams::World::Projectiles.m_Var)
+	if (Vars::Chams::World::Projectiles.chamsActive)
 	{
 		for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 		{
 			if (*reinterpret_cast<byte*>(Projectile + 0x7C) & EF_NODRAW)
 				continue;
-
+			
 			int nTeam = Projectile->GetTeamNum();
 
-			if (Vars::Chams::World::Projectiles.m_Var == 2 && nTeam == pLocal->GetTeamNum())
+			if (Vars::Chams::World::Projectilez.m_Var == 2 && nTeam == pLocal->GetTeamNum())
 				continue;
+
 
 			if (!Utils::IsOnScreen(pLocal, Projectile))
 				continue;
 
-			if (bMatWasForced)
+			auto chams = Vars::Chams::World::Projectiles;
+			auto chamsMaterial = fetchMaterial(chams);
+			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			if (chams.drawMaterial != 6)
 			{
-				Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
-				if (Vars::Chams::World::Material.m_Var != 6)
+				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+					Color::TOFLOAT(DrawColor.g),
+					Color::TOFLOAT(DrawColor.b));
+			}
+			else
+			{
+				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+			}
+
+			if (chams.drawMaterial == 6)
+			{
+				if (foundselfillumtint)
 				{
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
-						Color::TOFLOAT(DrawColor.g),
+					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
+						Color::TOFLOAT(chams.fresnelBase.g),
+						Color::TOFLOAT(chams.fresnelBase.b));
+				}
+				if (foundenvmaptint)
+				{
+					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
 						Color::TOFLOAT(DrawColor.b));
-				}
-				else
-				{
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				}
-				bool foundselfillumtint = false;
-				bool foundenvmaptint = false;
-				if (Vars::Chams::World::Material.m_Var == 6)
-				{
-					IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(
-						_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
-					{
-						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r),
-							Color::TOFLOAT(Colors::FresnelBase.g),
-							Color::TOFLOAT(Colors::FresnelBase.b));
-					}
-					IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
-					if (foundenvmaptint)
-					{
-						fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-							Color::TOFLOAT(DrawColor.b));
-					}
 				}
 			}
 
@@ -589,14 +507,10 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-	if (bMatWasForced)
-	{
 		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-	}
 
 	g_Interfaces.RenderView->SetBlend(1.0f);
 
-	if (Vars::Chams::World::IgnoreZ.m_Var)
-		pRenderContext->DepthRange(0.0f, 1.0f);
+	pRenderContext->DepthRange(0.0f, 1.0f);
 }

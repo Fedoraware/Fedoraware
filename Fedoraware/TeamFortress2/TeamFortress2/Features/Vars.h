@@ -267,38 +267,38 @@ namespace Vars
 		namespace Players
 		{
 			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> ShowLocal{ true, L"Show Local" };
-			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<bool> Wearables{ true, L"Render Wearables" };
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
-			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<bool> GlowOverlay { false , L"Glow overlay" };
 
 			// {ignorez, material, overlay type (0 = off), active}
-			inline Chams_t Local {false, 0, 0, false};
-			inline Chams_t Friend {false, 0, 0, false};
-			inline Chams_t Enemy {false, 0, 0, false};
-			inline Chams_t Team {false, 0, 0, false};
-			inline Chams_t Target {false, 0, 0, false};
+			inline Chams_t Local {};
+			inline Chams_t Friend {};
+			inline Chams_t Enemy {};
+			inline Chams_t Team {};
+			inline Chams_t Target {};
 		}
 
 		namespace Buildings
 		{
+			inline Chams_t Local{};
+			inline Chams_t Friend{};
+			inline Chams_t Enemy{};
+			inline Chams_t Team{};
+			inline Chams_t Target{};
+
 			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
 			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
 		}
 
 		namespace World
 		{
+			
 			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> Health{ true, L"Health" };
-			inline CVar<bool> Ammo{ true, L"Ammo" };
-			inline CVar<int> Projectiles{ 2, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
-			inline CVar<int> Material{ 3, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
+			inline CVar<int> Projectilez{ 2, L"please replace this with a bool lol thnx" };
+			inline Chams_t Health{};
+			inline Chams_t Ammo{};
+			inline Chams_t Projectiles{};
 		}
 
 		namespace DME
