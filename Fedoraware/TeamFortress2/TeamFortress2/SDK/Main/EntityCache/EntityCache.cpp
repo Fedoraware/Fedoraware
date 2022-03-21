@@ -22,8 +22,8 @@ void CEntityCache::Fill()
 		default: break;
 		}
 
-		CBaseEntity* pEntity; int n;
-		for (n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
+		CBaseEntity* pEntity;
+		for (int n = 1; n < g_Interfaces.EntityList->GetHighestEntityIndex(); n++)
 		{
 			pEntity = g_Interfaces.EntityList->GetClientEntity(n);
 
@@ -39,6 +39,8 @@ void CEntityCache::Fill()
 				if (g_Interfaces.Engine->Time() - lastUpdate <= 5.0f) {
 					pEntity->SetAbsOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
 					pEntity->SetVecOrigin(g_GlobalInfo.partyPlayerESP[pEntity->GetIndex()].Location);
+				} else {
+					continue;
 				}
 			}
 

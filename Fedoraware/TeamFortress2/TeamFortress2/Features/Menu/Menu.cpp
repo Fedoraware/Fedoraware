@@ -1393,9 +1393,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
+						ImGui::PushItemWidth(100);
 						MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
 						const char* voteAnnouncementModes[]{ "Basic", "Detailed" }; ImGui::PushItemWidth(100); ImGui::Combo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, voteAnnouncementModes, IM_ARRAYSIZE(voteAnnouncementModes)); ImGui::PopItemWidth();
 						MultiCombo({ "Chat Censor", "Anti-Autobal", "sv_cheats Bypass", "Pseudo Spectator", "Noisemaker Spammer"}, { &Vars::Misc::ChatCensor.m_Var, &Vars::Misc::AntiAutobal.m_Var, &Vars::Misc::CheatsBypass.m_Var, &Vars::Misc::ExtendFreeze.m_Var, &Vars::Misc::NoisemakerSpam.m_Var }, "Enable/Disable Misc. Options", "Misc");
+						ImGui::PopItemWidth();
 						const char* spamModes[]{ "Off", "Fedoraware", "Lmaobox", "Cathook" }; ImGui::PushItemWidth(100); ImGui::Combo("Chat spam", &Vars::Misc::ChatSpam.m_Var, spamModes, IM_ARRAYSIZE(spamModes)); ImGui::PopItemWidth();
 						const char* autoClass[]{ "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }; ImGui::PushItemWidth(100); ImGui::Combo("Pick Class", &Vars::Misc::AutoJoin.m_Var, autoClass, IM_ARRAYSIZE(autoClass)); ImGui::PopItemWidth(); HelpMarker("Automatically joins the given class");
 						ImGui::Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
@@ -2223,8 +2225,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 								ImGui::PushItemWidth(100); ImGui::SliderInt("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); ImGui::PopItemWidth(); HelpMarker("How much lag you should fake(?)");
 								if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1) {
 									ImGui::Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
-									if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+									if (Vars::Misc::CL_Move::FakelagOnKey.m_Var) {
 										InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
+									}
 								}
 							}
 							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2) {
@@ -2240,6 +2243,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
+						ImGui::PushItemWidth(100); ImGui::SliderFloat("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); ImGui::PopItemWidth(); HelpMarker("Maximum distance that auto peek can walk");
 						ImGui::Checkbox("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
 
 						//ImGui::Checkbox("Fakelag Indicator", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Shows your fakelag position in thirdperson");

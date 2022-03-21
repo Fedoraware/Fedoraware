@@ -400,7 +400,7 @@ const std::string spam_Fed[] = {
 	_("Fedoraware - github.com/M-FeD/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
-	_("Fedoraware - Now available @ github.com/M-FeD!"),
+	_("Fedoraware - Now available @ https://github.com/tf2cheater2013!"),
 	_("Fedoraware - Based on SEOwned public source!")
 };
 
@@ -540,6 +540,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd)
 		static bool posPlaced = false;
 		static bool isReturning = false;
 		static bool hasDirection = false;
+		static Vec3 peekStart;
 		static Vec3 peekVector;
 
 		if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::AutoPeekKey.m_Var)) {
@@ -559,30 +560,29 @@ void CMisc::AutoPeek(CUserCmd* pCmd)
 			}
 
 			// We need a peek direction (A / D)
-			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection) {
+			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection && pLocal->IsOnGround()) {
 				const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
-				Vec3 vForward, vRight, vUp;
+				Vec3 vForward, vRight, vUp, vDirection;
 				Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
 
-				if (pCmd->sidemove != 0.f) {
+				if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000 || GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
 					CGameTrace trace;
-					CTraceFilterHitscan traceFilter = {};
+					CTraceFilterWorldAndPropsOnly traceFilter;
 					Ray_t traceRay;
 
-					if (pCmd->sidemove < 0.1f) {
-						vRight = pLocal->GetEyePosition() - vRight * 500.f; // Left
+					if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000) {
+						vDirection = pLocal->GetEyePosition() - vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Left
 					}
-					else if (pCmd->sidemove > 0.1f) {
-						vRight = pLocal->GetEyePosition() + vRight * 500.f; // Right
+					else if (GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
+						vDirection = pLocal->GetEyePosition() + vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Right
 					}
 
-					traceRay.Init(pLocal->GetEyePosition(), vRight);
+					traceRay.Init(pLocal->GetEyePosition(), vDirection);
 					g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+					peekStart = trace.vStartPos;
 					peekVector = trace.vEndPos - trace.vStartPos;
 					hasDirection = true;
 				}
-
-				Utils::BlockMovement(pCmd);
 			}
 
 			// Should we peek?
@@ -590,7 +590,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd)
 				bool targetFound = false;
 				for (int i = 10; i < 100; i += 10) {
 					const float step = i / 100.f;
-					Vec3 currentPos = pLocal->GetEyePosition() + (peekVector * step);
+					Vec3 currentPos = peekStart + (peekVector * step);
 					if (CanAttack(pLocal, currentPos)) {
 						Utils::WalkTo(pCmd, pLocal, currentPos);
 						targetFound = true;
@@ -614,6 +614,10 @@ void CMisc::AutoPeek(CUserCmd* pCmd)
 
 			if (isReturning) {
 				if (localPos.DistTo(PeekReturnPos) < 7.f) {
+					// We reached our destination. Recharge DT if wanted
+					if (Vars::Misc::CL_Move::AutoRecharge.m_Var && isReturning && !g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nShifted) {
+						g_GlobalInfo.m_bRechargeQueued = true;
+					}
 					isReturning = false;
 					return;
 				}
