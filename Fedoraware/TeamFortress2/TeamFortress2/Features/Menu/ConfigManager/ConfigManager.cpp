@@ -650,6 +650,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekKey);
+				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekFree);
 				{
 					SAVE_VAR(Vars::Misc::CL_Move::FLGChams::Material);
@@ -1315,6 +1316,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTTicks);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekKey);
+				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekFree);
 				{
 					LOAD_VAR(Vars::Misc::CL_Move::FLGChams::Material);
