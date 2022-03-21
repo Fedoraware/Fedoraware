@@ -118,7 +118,7 @@ void CResolver::Run()
 			}
 			case 6:
 			{
-				*m_angEyeAnglesY = YawResolves[ResolveData[entity->GetIndex()].Mode];
+				*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
 				break;
 			}
 			default:
@@ -136,12 +136,11 @@ void CResolver::Update(CUserCmd* pCmd)
 	// Log shots
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		static int lastAmmo = pLocal->GetAmmo();
-
-		if (g_GlobalInfo.m_nCurrentTargetIdx != 0 && pLocal->GetAmmo() < lastAmmo) // TODO: Check can fire?
+		if (g_GlobalInfo.m_nCurrentTargetIdx != 0 &&
+			(pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) &&
+			pLocal->GetActiveWeapon()->CanShoot(pLocal))
 		{
 			PlayerInfo_t temp{};
-			lastAmmo = pLocal->GetAmmo();
 			const int aimTarget = g_GlobalInfo.m_nCurrentTargetIdx;
 			
 			if (const auto& pTarget = g_Interfaces.EntityList->GetClientEntity(aimTarget))
@@ -159,8 +158,6 @@ void CResolver::Update(CUserCmd* pCmd)
 					{
 						ResolveData[temp.friendsID].LastShot = g_Interfaces.Engine->Time();
 						ResolveData[temp.friendsID].RequiresUpdate = true;
-
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("[FeD]\x3 We shot at: %s", temp.name).c_str());
 					}
 				}
 			}
@@ -188,7 +185,6 @@ void CResolver::Update(CUserCmd* pCmd)
 				data.second.Mode -= YawResolves.size();
 			}
 
-			g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("[FeD]\x3 Trying angle: %s", YawResolves[data.second.Mode]).c_str());
 			data.second.RequiresUpdate = false;
 		}
 	}
@@ -203,11 +199,6 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 	const int attacker = g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
 	const bool bCrit = pEvent->GetBool("crit");
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
-	{
-		// TODO: Check if we are a sniper using sniperrifle
-	}
-
 	if (attacker == g_Interfaces.Engine->GetLocalPlayer()) {
 		PlayerInfo_t temp{};
 
@@ -217,7 +208,5 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 
 		ResolveData[temp.friendsID].LastHit = g_Interfaces.Engine->Time();
 		// ResolveData[temp.friendsID].RequiresUpdate = false;
-
-		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("[FeD]\x3 We hit: %s", temp.name).c_str());
 	}
 }
