@@ -107,6 +107,7 @@
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EventManagerHook\EventManagerHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Resolver\Resolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -654,6 +655,7 @@
     <ClInclude Include="TeamFortress2\Features\Fedworking\Fedworking.h" />
     <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
     <ClInclude Include="TeamFortress2\SDK\Includes\worldsize.h" />
+    <ClInclude Include="TeamFortress2\Features\Resolver\Resolver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

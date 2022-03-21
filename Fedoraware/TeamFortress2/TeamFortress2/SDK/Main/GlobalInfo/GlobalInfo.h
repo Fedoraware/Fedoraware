@@ -4,11 +4,6 @@
 
 #define DT_WAIT_CALLS 26
 
-struct ResolveMode {
-	int m_Pitch = 4; // Default to AUTO
-	int m_Yaw = 0;
-};
-
 struct VelFixRecord {
 	Vec3 m_vecOrigin;
 	int m_nFlags;
@@ -62,7 +57,6 @@ struct GlobalInfo_t
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* lateUserCmd{nullptr};
 	std::map<int, bool> ignoredPlayers;
-	std::map<int, ResolveMode> resolvePlayers;
 	std::map < CBaseEntity*, VelFixRecord> velFixRecord;
 	std::vector<Vec3> predBeforeLines;
 	std::vector<Vec3> predFutureLines;

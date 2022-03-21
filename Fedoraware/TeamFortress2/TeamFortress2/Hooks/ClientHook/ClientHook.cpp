@@ -5,6 +5,7 @@
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/PlayerList/PlayerList.h"
+#include "../../Features/Resolver/Resolver.h"
 
 const static std::string clear("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -38,6 +39,7 @@ void __stdcall ClientHook::ShutDown::Hook()
 	g_EntityCache.Clear();
 	g_Visuals.rain.Cleanup();
 	g_GlobalInfo.partyPlayerESP.clear();
+	g_Resolver.ResolveData.clear();
 }
 
 
@@ -48,17 +50,16 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_RENDER_START:
 		{
 			g_GlobalInfo.m_vPunchAngles = Vec3();
-			Vec3 localHead;
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				localHead = pLocal->GetHitboxPos(HITBOX_HEAD);
-
+				// Handle freecam position
 				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
 					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
 					pLocal->SetAbsOrigin(g_GlobalInfo.m_vFreecamPos);
 				}
 
+				// Remove punch effect
 				if (Vars::Visuals::RemovePunch.m_Var)
 				{
 					g_GlobalInfo.m_vPunchAngles = pLocal->GetPunchAngles();
@@ -67,112 +68,9 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				}
 			}
 
-			if (Vars::AntiHack::Resolver::Resolver.m_Var)
-			{
-				for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
-				{
-					CBaseEntity* entity = nullptr;
-					PlayerInfo_t temp;
+			// Resolver
+			g_Resolver.Run();
 
-					if (!(entity = g_Interfaces.EntityList->GetClientEntity(i)))
-						continue;
-
-					if (entity->GetDormant())
-						continue;
-
-					if (!g_Interfaces.Engine->GetPlayerInfo(i, &temp))
-						continue;
-
-					if (!entity->GetLifeState() == LIFE_ALIVE)
-						continue;
-
-					if (entity->IsTaunting())
-						continue;
-
-					Vector vX = entity->GetEyeAngles();
-					auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-						get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
-					auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-						get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
-
-					auto findResolve = g_GlobalInfo.resolvePlayers.find(temp.friendsID);
-					ResolveMode resolveMode;
-					if (findResolve != g_GlobalInfo.resolvePlayers.end())
-					{
-						resolveMode = findResolve->second;
-					}
-
-					// Pitch resolver 
-					switch (resolveMode.m_Pitch)
-					{
-					case 1:
-						{
-							*m_angEyeAnglesX = -89; // Up
-							break;
-						}
-					case 2:
-						{
-							*m_angEyeAnglesX = 89; // Down
-							break;
-						}
-					case 3:
-						{
-							*m_angEyeAnglesX = 0; // Zero
-							break;
-						}
-					case 4:
-						{
-							// Auto (Will resolve fake up/down)
-							if (vX.x >= 90)
-							{
-								*m_angEyeAnglesX = -89;
-							}
-
-							if (vX.x <= -90)
-							{
-								*m_angEyeAnglesX = 89;
-							}
-							break;
-						}
-					default:
-						break;
-					}
-
-					// Yaw resolver
-					Vec3 vAngleTo = Math::CalcAngle(entity->GetHitboxPos(HITBOX_HEAD), localHead);
-					switch (resolveMode.m_Yaw)
-					{
-					case 1:
-						{
-							*m_angEyeAnglesY = vAngleTo.y; // Forward
-							break;
-						}
-					case 2:
-						{
-							*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
-							break;
-						}
-					case 3:
-						{
-							*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
-							break;
-						}
-					case 4:
-						{
-							*m_angEyeAnglesY = vAngleTo.y + 90.f; // Right
-							break;
-						}
-					case 5:
-						{
-							*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
-							break;
-						}
-					default:
-						break;
-					}
-				}
-			}
-			/*g_Visuals.ThirdPerson();*/
 			g_Visuals.SkyboxChanger();
 
 			break;

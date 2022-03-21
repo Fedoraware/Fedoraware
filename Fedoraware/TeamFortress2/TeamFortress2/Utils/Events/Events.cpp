@@ -1,5 +1,6 @@
 #include "Events.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
+#include "../../Features/Resolver/Resolver.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -20,9 +21,13 @@ void CEventListener::Destroy()
 }
 
 void CEventListener::FireGameEvent(CGameEvent* pEvent) {
-	if (pEvent == nullptr)
-		return;
+	if (pEvent == nullptr) { return; }
 
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
 	g_ChatInfo.Event(pEvent, uNameHash);
+
+	if (uNameHash == FNV1A::HashConst("player_hurt"))
+	{
+		g_Resolver.OnPlayerHurt(pEvent);
+	}
 }

@@ -9,60 +9,18 @@
 int attackStringW;
 int attackStringH;
 
-#define GET_PLAYER_USERID(userid) g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(userid))
-#define GET_INDEX_USERID(userid) g_Interfaces.Engine->GetPlayerForUserID(userid)
-
 static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
 static std::string blue({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
 static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
 static std::string red({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
 static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 
-int GetPlayerForUserID(int userID)
-{
-	for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
-	{
-		PlayerInfo_t player_info;
-		if (!g_Interfaces.Engine->GetPlayerInfo(i, &player_info))
-			continue;
-		// Found player
-		if (player_info.userID == userID)
-			return i;
-	}
-	return 0;
-}
-
-int HandleToIDX(int handle)
-{
-	return handle & 0xFFF;
-}
-
-// A function to find a weapon by WeaponID
-int getWeaponByID(CBaseEntity* player, int weaponid)
-{
-	// Invalid player
-	if (!player)
-		return -1;
-	size_t* hWeapons = player->GetMyWeapons();
-	// Go through the handle array and search for the item
-	for (int i = 0; hWeapons[i]; i++)
-	{
-		if (!(HandleToIDX(hWeapons[i]) >= 0 && HandleToIDX(hWeapons[i]) <= 2049 && HandleToIDX(hWeapons[i]) < 2048))
-			continue;
-		// Get the weapon
-		CBaseCombatWeapon* weapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
-		// if weapon is what we are looking for, return true
-		if (weapon && weapon->GetWeaponID() == weaponid)
-			return weapon->GetIndex();
-	}
-	// Nothing found
-	return -1;
-}
-
 void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
 	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
+	{
 		return;
+	}
 
 	if (const auto pLocal = g_EntityCache.m_pLocal)
 	{
@@ -74,15 +32,17 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				if (pEntity == pLocal) { return; }
 				int nIndex = pEntity->GetIndex();
 
-				PlayerInfo_t pi;
+				PlayerInfo_t pi{};
 				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
 
-				std::string classString = "[FeD] " + std::string(pi.name) + " is now a " + std::string(
-					Utils::GetClassByIndex(pEvent->GetInt("class"))).c_str();
+				std::string classString = "[FeD] " + 
+					std::string(pi.name) + " is now a " + std::string(Utils::GetClassByIndex(pEvent->GetInt("class")));
 				auto wclassString = std::wstring(classString.begin(), classString.end());
 
 				if (Vars::Visuals::ChatInfoText.m_Var)
+				{
 					g_notify.Add(classString);
+				}
 
 				if (Vars::Visuals::ChatInfoChat.m_Var) {
 					const std::string changeClassString(blue + "[FeD] " + red + pi.name + yellow + " is now a " + red + Utils::GetClassByIndex(pEvent->GetInt("class")));
@@ -97,7 +57,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			if (pEntity && pEntity->IsPlayer())
 			{
 				const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
-				PlayerInfo_t pi;
+				PlayerInfo_t pi{};
 				g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
 				std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
 				if (Vars::Misc::VoteRevealerParty.m_Var)
@@ -117,7 +77,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			}
 		}
 
-		if ((Vars::Visuals::damageLoggerConsole.m_Var || &Vars::Visuals::damageLoggerChat.m_Var) && uNameHash == FNV1A::HashConst("player_hurt"))
+		if ((Vars::Visuals::damageLoggerConsole.m_Var || Vars::Visuals::damageLoggerChat.m_Var) && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
 			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
 				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
@@ -130,12 +90,11 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				if (pEntity == pLocal) { return; }
 
 
-				PlayerInfo_t pi;
+				PlayerInfo_t pi{};
 
 				{
 					g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &pi);
-					if (nAttacker != pi.userID)
-						return;
+					if (nAttacker != pi.userID) { return; }
 				}
 
 				g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi);
@@ -154,10 +113,16 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(nIndex,
 						chatAttackString.c_str());
 				}
+
 				if (Vars::Visuals::damageLoggerConsole.m_Var)
+				{
 					g_Interfaces.CVars->ConsoleColorPrintf({ 219, 145, 59, 255 }, _("%s\n"), attackString.c_str());
-				if (&Vars::Visuals::damageLoggerText.m_Var)
+				}
+
+				if (Vars::Visuals::damageLoggerText.m_Var)
+				{
 					g_notify.Add(attackString);
+				}
 			}
 		}
 
@@ -184,14 +149,14 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		}
 
 		if (uNameHash == FNV1A::HashConst("player_hurt")) {
-			int victim = GetPlayerForUserID(pEvent->GetInt("userid"));
+			int victim = g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
 			int health = pEvent->GetInt("health");
 
-			if (GetPlayerForUserID(pEvent->GetInt("attacker")) == g_Interfaces.Engine->GetLocalPlayer()) {
+			if (g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker")) == g_Interfaces.Engine->GetLocalPlayer()) {
 				if (victim != g_Interfaces.Engine->GetLocalPlayer()) {
 					// The weapon we damaged with
 					int weaponid = pEvent->GetInt("weaponid");
-					int weapon_idx = getWeaponByID(g_EntityCache.m_pLocal, weaponid);
+					int weapon_idx = Utils::GetWeaponByID(g_EntityCache.m_pLocal, weaponid);
 
 					auto& status = g_Crits.player_status_list[victim - 1];
 					int health_difference = status.health - health;
@@ -200,14 +165,15 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 					bool isMelee = false;
 					if (weapon_idx >= 0 && weapon_idx <= 2048 && weapon_idx < 2049) {
-						int slot = ((CBaseCombatWeapon*)g_Interfaces.EntityList->GetClientEntity(weapon_idx))->GetSlot();
-						if (slot == 2)
-							isMelee = true;
+						int slot = static_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntity(weapon_idx))->GetSlot();
+						if (slot == 2) { isMelee = true; }
 					}
 
 					int damage = pEvent->GetInt("damageamount");
 					if (damage > health_difference && !health)
+					{
 						damage = health_difference;
+					}
 
 					// Not a melee weapon
 					if (!isMelee)
@@ -217,7 +183,9 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 						{
 							// Crit damage counter
 							if (pEvent->GetBool("crit"))
+							{
 								g_Crits.critDamage += damage;
+							}
 						}
 					}
 					else
@@ -237,7 +205,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			// 0xCA7 is an identify and mark request.
 			// 0xCA8 is a mark request.
 
-			PlayerInfo_t info;
+			PlayerInfo_t info{};
 			if (g_Interfaces.Engine->GetPlayerInfo(player, &info)) {
 				if ((achievement == 0xCA7 || achievement == 0xCA8) && pLocal->GetIndex() != player)
 				{
@@ -245,8 +213,10 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					{
 						g_notify.Add(tfm::format("%s is a bot!", info.name));
 						if (Vars::Visuals::ChatInfoText.m_Var)
+						{
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
 								player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
+						}
 
 						{
 							// marked by other bots. r.i.p cl_drawline :(

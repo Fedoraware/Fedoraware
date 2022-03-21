@@ -5,9 +5,10 @@
 #include "../Menu/ImGui/imgui_color_gradient.h"
 #include "../Menu/ImGui/imgui_internal.h"
 #include "../Menu/Menu.h"
+#include "../Resolver/Resolver.h"
 
-const char* resolveListPitch[]{"None", "Up", "Down", "Zero", "Auto"};
-const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert"};
+const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
+const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert", "Auto" };
 
 bool sortByTeam(const plistPlayer& a, const plistPlayer& b)
 {
@@ -129,9 +130,9 @@ void CPlayerList::Render()
 
 					bool ignored = (g_GlobalInfo.ignoredPlayers.find(player.info.friendsID) != g_GlobalInfo.
 						ignoredPlayers.end());
-					auto findResolveMode = g_GlobalInfo.resolvePlayers.find(player.info.friendsID);
+					auto findResolveMode = g_Resolver.ResolvePlayers.find(player.info.friendsID);
 					ResolveMode resolveMode;
-					if (findResolveMode != g_GlobalInfo.resolvePlayers.end())
+					if (findResolveMode != g_Resolver.ResolvePlayers.end())
 					{
 						resolveMode = findResolveMode->second;
 					}
@@ -175,7 +176,7 @@ void CPlayerList::Render()
 								if (ImGui::Combo("##pitch", &resolveMode.m_Pitch, resolveListPitch,
 								                 IM_ARRAYSIZE(resolveListPitch)))
 								{
-									g_GlobalInfo.resolvePlayers[player.info.friendsID].m_Pitch = resolveMode.m_Pitch;
+									g_Resolver.ResolvePlayers[player.info.friendsID].m_Pitch = resolveMode.m_Pitch;
 								}
 								ImGui::PopItemWidth();
 								ImGui::SameLine();
@@ -185,7 +186,7 @@ void CPlayerList::Render()
 								if (ImGui::Combo("##yaw", &resolveMode.m_Yaw, resolveListYaw,
 								                 IM_ARRAYSIZE(resolveListYaw)))
 								{
-									g_GlobalInfo.resolvePlayers[player.info.friendsID].m_Yaw = resolveMode.m_Yaw;
+									g_Resolver.ResolvePlayers[player.info.friendsID].m_Yaw = resolveMode.m_Yaw;
 								}
 								ImGui::PopItemWidth();
 								ImGui::SameLine();
