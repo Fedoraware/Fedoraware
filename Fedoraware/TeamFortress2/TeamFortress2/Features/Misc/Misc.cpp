@@ -608,7 +608,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd)
 			}
 
 			// We've just attacked. Let's return!
-			if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+			if (g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
 				isReturning = true;
 			}
 
