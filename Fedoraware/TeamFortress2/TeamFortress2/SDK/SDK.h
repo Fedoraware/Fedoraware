@@ -694,6 +694,37 @@ namespace Utils
 		pCmd->sidemove = 0.f;
 		pCmd->upmove = 0.f;
 	}
+
+	__inline int HandleToIDX(int pHandle)
+	{
+		return pHandle & 0xFFF;
+	}
+
+	// A function to find a weapon by WeaponID
+	__inline int GetWeaponByID(CBaseEntity* pPlayer, int pWeaponID)
+	{
+		// Invalid player
+		if (!pPlayer) { return -1; }
+
+		const size_t* hWeapons = pPlayer->GetMyWeapons();
+		// Go through the handle array and search for the item
+		for (int i = 0; hWeapons[i]; i++)
+		{
+			if (!(HandleToIDX(hWeapons[i]) >= 0 && HandleToIDX(hWeapons[i]) <= 2049 && HandleToIDX(hWeapons[i]) < 2048))
+			{
+				continue;
+			}
+			// Get the weapon
+			auto* weapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
+			// if weapon is what we are looking for, return true
+			if (weapon && weapon->GetWeaponID() == pWeaponID)
+			{
+				return weapon->GetIndex();
+			}
+		}
+		// Nothing found
+		return -1;
+	}
 }
 
 namespace Particles {

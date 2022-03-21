@@ -14,6 +14,7 @@
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
 #include "../../Features/Fedworking/Fedworking.h"
+#include "../../Features/Resolver/Resolver.h"
 
 #include "../../Features/Vars.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
@@ -253,6 +254,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoPeek(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
+	g_Resolver.Update(pCmd);
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 

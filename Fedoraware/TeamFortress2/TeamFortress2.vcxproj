@@ -129,6 +129,7 @@
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Resolver\Resolver.cpp" />
     <ClCompile Include="TeamFortress2\Features\SpectatorList\SpectatorList.cpp" />
     <ClCompile Include="TeamFortress2\Features\SpyWarning\SpyWarning.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
+    <ClInclude Include="TeamFortress2\Features\Resolver\Resolver.h" />
     <ClInclude Include="TeamFortress2\Features\SpectatorList\SpectatorList.h" />
     <ClInclude Include="TeamFortress2\Features\SpyWarning\SpyWarning.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.h" />
