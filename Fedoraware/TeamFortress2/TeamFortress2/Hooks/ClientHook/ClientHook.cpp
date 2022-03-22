@@ -251,44 +251,69 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 		{
 			int team = msg_data.ReadByte(), caller = msg_data.ReadByte();
 			char reason[64], vote_target[64];
-			msg_data.ReadString(reason, 64); msg_data.ReadString(vote_target, 64);
-			int target = static_cast<int>(static_cast<unsigned char>(msg_data.ReadByte()) >> 1);
+			msg_data.ReadString(reason, 64);
+			msg_data.ReadString(vote_target, 64);
+			int target = static_cast<unsigned char>(msg_data.ReadByte()) >> 1;
 
 			PlayerInfo_t info_target{}, info_caller{};
-			if (target > 0 && g_Interfaces.Engine->GetPlayerInfo(target, &info_target) && caller > 0 && g_Interfaces.Engine->GetPlayerInfo(caller, &info_caller))
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				bool bSameTeam = team == g_EntityCache.m_pLocal->GetTeamNum();
-				
-				if (Vars::Misc::AnnounceVotesConsole.m_Var)
-					if (Vars::Misc::AnnounceVotes.m_Var == 0)
-						g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
-					else
-						g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
-				if (Vars::Misc::AnnounceVotesText.m_Var)
-					if (Vars::Misc::AnnounceVotes.m_Var == 0)
-						g_notify.Add(tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name));
-					else
-						g_notify.Add(tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID));
-				if (Vars::Misc::AnnounceVotesChat.m_Var)
-					if (Vars::Misc::AnnounceVotes.m_Var == 0)
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(g_EntityCache.m_pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %scalled a vote on %s%s", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, white, green, info_target.name).c_str());
-					else
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(g_EntityCache.m_pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %s[U:1:%s] %scalled a vote on %s%s %s[U:1:%s]", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, yellow, info_caller.friendsID, white, green, info_target.name, yellow, info_target.friendsID).c_str());
-				if (Vars::Misc::AnnounceVotesParty.m_Var)
-					if (Vars::Misc::AnnounceVotes.m_Var == 0)
-						g_Interfaces.Engine->ClientCmd_Unrestricted(
-							tfm::format("say_party \"%s %s called a vote on %s\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
-					else
-						g_Interfaces.Engine->ClientCmd_Unrestricted(
-							tfm::format("say_party \"%s %s [U:1:%s] called a vote on %s [U:1:%s]\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
+				if (target > 0 && g_Interfaces.Engine->GetPlayerInfo(target, &info_target) && caller > 0 && g_Interfaces.Engine->GetPlayerInfo(caller, &info_caller))
+				{
+					bool bSameTeam = team == pLocal->GetTeamNum();
 
-				if (Vars::Misc::AutoVote.m_Var && bSameTeam)
-					if (g_GlobalInfo.ignoredPlayers.find(info_target.friendsID) != g_GlobalInfo.ignoredPlayers.end() || g_EntityCache.Friends[info_target.friendsID])
-						g_Interfaces.Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
-					else
-						g_Interfaces.Engine->ClientCmd_Unrestricted("vote option1"); //f1 on everyone else
-				msg_data.Seek(0);
+					if (Vars::Misc::AnnounceVotesConsole.m_Var)
+					{
+						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
+							g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
+						}
+						else {
+							g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
+						}
+					}
+					if (Vars::Misc::AnnounceVotesText.m_Var)
+					{
+						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
+							g_notify.Add(tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name));
+						}
+						else {
+							g_notify.Add(tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID));
+						}
+					}
+					if (Vars::Misc::AnnounceVotesChat.m_Var)
+					{
+						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %scalled a vote on %s%s", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, white, green, info_target.name).c_str());
+						}
+						else {
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %s[U:1:%s] %scalled a vote on %s%s %s[U:1:%s]", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, yellow, info_caller.friendsID, white, green, info_target.name, yellow, info_target.friendsID).c_str());
+						}
+					}
+					if (Vars::Misc::AnnounceVotesParty.m_Var)
+					{
+						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted(
+								tfm::format("say_party \"%s %s called a vote on %s\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
+						}
+						else {
+							g_Interfaces.Engine->ClientCmd_Unrestricted(
+								tfm::format("say_party \"%s %s [U:1:%s] called a vote on %s [U:1:%s]\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
+						}
+					}
+
+					if (Vars::Misc::AutoVote.m_Var && bSameTeam && target != g_Interfaces.Engine->GetLocalPlayer())
+					{
+						if (g_GlobalInfo.ignoredPlayers.find(info_target.friendsID) != g_GlobalInfo.ignoredPlayers.end() ||
+							(target > 0 && target <= 129 && g_EntityCache.Friends[target])) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
+						}
+						else {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("vote option1"); //f1 on everyone else
+						}
+					}
+				}
 			}
+			msg_data.Seek(0);
 			break;
 		}
 	}
