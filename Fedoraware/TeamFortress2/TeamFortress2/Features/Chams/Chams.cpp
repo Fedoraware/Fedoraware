@@ -334,7 +334,11 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 			continue;
 
 		const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
-		
+
+		bool built = Building->GetConstructed() == 1.f;
+		if (!built)
+			continue;
+
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Building);
 		auto chamsMaterial = fetchMaterial(chams);
@@ -405,6 +409,9 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			Color_t DrawColor = Colors::Health;
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 
+			if (chams.showObstructed)
+				pRenderContext->DepthRange(0.0f, 0.2f);
+
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 			if (Vars::Chams::World::Health.drawMaterial != 6)
 			{
@@ -443,6 +450,10 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			Color_t DrawColor = Colors::Ammo;
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+
+			if (chams.showObstructed)
+				pRenderContext->DepthRange(0.0f, 0.2f);
+
 			if (chams.drawMaterial != 6)
 			{
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
@@ -494,6 +505,10 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+
+			if (chams.showObstructed)
+				pRenderContext->DepthRange(0.0f, 0.2f);
+
 			if (chams.drawMaterial != 6)
 			{
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
