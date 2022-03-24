@@ -39,36 +39,12 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 
 		ClearEffects(pEntity);
 
-		if (Vars::Visuals::RagdollEffects::Burning.m_Var)
-		{
-			Offset(bool*, pEntity, 0xC92) = true;
-		}
-
-		if (Vars::Visuals::RagdollEffects::Electrocuted.m_Var)
-		{
-			Offset(bool*, pEntity, 0xC93) = true;
-		}
-
-		if (Vars::Visuals::RagdollEffects::BecomeAsh.m_Var)
-		{
-			Offset(bool*, pEntity, 0xC99) = true;
-		}
-
-		// Thanks jagne
-		if (Vars::Visuals::RagdollEffects::Dissolve.m_Var)
-		{
-			Offset(bool*, pEntity, 0xC95) = true;
-		}
-
-		if (Vars::Visuals::RagdollEffects::Gold.m_Var)
-		{
-			Offset(bool*, pEntity, 0xCA0) = true;
-		}
-
-		if (Vars::Visuals::RagdollEffects::Ice.m_Var)
-		{
-			Offset(bool*, pEntity, 0xCA1) = true;
-		}
+		Offset(bool*, pEntity, 0xC92) = Vars::Visuals::RagdollEffects::Burning.m_Var;
+		Offset(bool*, pEntity, 0xC93) = Vars::Visuals::RagdollEffects::Electrocuted.m_Var;
+		Offset(bool*, pEntity, 0xC99) = Vars::Visuals::RagdollEffects::BecomeAsh.m_Var;
+		Offset(bool*, pEntity, 0xC95) = Vars::Visuals::RagdollEffects::Dissolve.m_Var;
+		Offset(bool*, pEntity, 0xCA0) = Vars::Visuals::RagdollEffects::Gold.m_Var;
+		Offset(bool*, pEntity, 0xCA1) = Vars::Visuals::RagdollEffects::Ice.m_Var;
 	}
 
 	Func.Original<fn>()(ecx, edx);

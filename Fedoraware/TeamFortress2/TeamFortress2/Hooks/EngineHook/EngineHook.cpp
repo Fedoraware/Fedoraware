@@ -129,8 +129,7 @@ void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
 {
 	byte data[4000];
 
-	const int nextcommandnr = g_Interfaces.ClientState->lastoutgoingcommand + g_Interfaces.ClientState->chokedcommands +
-		1;
+	const int nextcommandnr = g_Interfaces.ClientState->lastoutgoingcommand + g_Interfaces.ClientState->chokedcommands + 1;
 
 	CLC_Move moveMsg;
 	moveMsg.m_DataOut.StartWriting(data, sizeof(data));

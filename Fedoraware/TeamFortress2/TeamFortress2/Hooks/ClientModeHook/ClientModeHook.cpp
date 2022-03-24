@@ -71,6 +71,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 vStartOrigin = {};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
+	static float lf = (Vars::Misc::CL_Move::DTTicks.m_Var / 3);
 	if (pLocal && pLocal->IsAlive())
 	{
 		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var)
@@ -85,16 +86,11 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				vStartVel = pLocal->GetVecVelocity();
 			}
 
-			pCmd->forwardmove = 0.0f;
-			pCmd->sidemove = 0.0f;
+			const Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(lf - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(lf));
 
-			const Vec3 vPredicted = vStartOrigin + (vStartVel *
-				TICKS_TO_TIME(8 - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(8));
-
-			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f,
-			                                            vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
-			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.f, 520.f, 0.f, 1.f);
+			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin), 1.0f, 0.0f);
+			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.0f, pLocal->GetPlayerMaxVelocity(), 0.0f, 1.0f);
 			Utils::WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
 			nShiftTick++;
@@ -248,10 +244,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
 		g_Misc.EdgeJump(pCmd, nOldFlags);
-		FastStop(pCmd, g_EntityCache.m_pLocal);
 	}
-
 	g_EnginePrediction.End(pCmd);
+
+	FastStop(pCmd, g_EntityCache.m_pLocal);
 	g_Misc.AutoPeek(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
 	g_Resolver.Update(pCmd);

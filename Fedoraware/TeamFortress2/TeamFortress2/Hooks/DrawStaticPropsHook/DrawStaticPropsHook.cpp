@@ -3,12 +3,10 @@
 
 bool bDrawing = false;
 
-void __fastcall DrawStaticPropsHook::Hook(void* ecx, void* edx, IClientRenderable** pProps, int count,
-                                          bool bShadowDepth, bool drawVCollideWireframe)
+void __fastcall DrawStaticPropsHook::Hook(void* ecx, void* edx, IClientRenderable** pProps, int count, bool bShadowDepth, bool drawVCollideWireframe)
 {
 	bDrawing = true;
-	if (Vars::Visuals::PropWireframe.m_Var) { drawVCollideWireframe = true; }
-	// wireframes look kind of bad but it's an option that's kind of alright ig.
+	drawVCollideWireframe = Vars::Visuals::PropWireframe.m_Var;
 	Func.Original<fn>()(ecx, edx, pProps, count, bShadowDepth, drawVCollideWireframe);
 	bDrawing = false;
 }
