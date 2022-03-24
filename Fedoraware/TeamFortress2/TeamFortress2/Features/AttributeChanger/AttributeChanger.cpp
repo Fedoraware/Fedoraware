@@ -69,49 +69,48 @@ void CAttributChanger::Run()
 
 				if (m_mapAttributes.find(*nIndex) != m_mapAttributes.end())
 				{
-					if (m_mapAttributes[*nIndex].m_bStyleOverride)
+					switch (*nIndex)
 					{
-						switch (*nIndex)
-						{
-						case 264:
-							*nIndex = 1071;
-							break;
-						case 18:
-							*nIndex = 205;
-							break;
-						case 13:
-							*nIndex = 200;
-							break;
-						case 21:
-							*nIndex = 208;
-							break;
-						case 19:
-							*nIndex = 206;
-							break;
-						case 20:
-							*nIndex = 207;
-							break;
-						case 15:
-							*nIndex = 202;
-							break;
-						case 7:
-							*nIndex = 197;
-							break;
-						case 29:
-							*nIndex = 211;
-							break;
-						case 14:
-							*nIndex = 201;
-							break;
-						case 16:
-							*nIndex = 203;
-							break;
-						case 4:
-							*nIndex = 194;
-							break;
-						}
-						pList->Add(ItemStyleOverride, true);
+					case 264:
+						*nIndex = 1071;
+						break;
+					case 18:
+						*nIndex = 205;
+						break;
+					case 13:
+						*nIndex = 200;
+						break;
+					case 21:
+						*nIndex = 208;
+						break;
+					case 19:
+						*nIndex = 206;
+						break;
+					case 20:
+						*nIndex = 207;
+						break;
+					case 15:
+						*nIndex = 202;
+						break;
+					case 7:
+						*nIndex = 197;
+						break;
+					case 29:
+						*nIndex = 211;
+						break;
+					case 14:
+						*nIndex = 201;
+						break;
+					case 16:
+						*nIndex = 203;
+						break;
+					case 4:
+						*nIndex = 194;
+						break;
 					}
+
+					if (m_mapAttributes[*nIndex].m_bStyleOverride)
+						pList->Add(ItemStyleOverride, true);
 
 					if (m_mapAttributes[*nIndex].m_nEffect)
 						pList->Add(UnusualEffect, m_mapAttributes[*nIndex].m_nEffect);
