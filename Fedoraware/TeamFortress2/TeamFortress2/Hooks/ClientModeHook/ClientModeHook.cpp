@@ -12,6 +12,7 @@
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
+#include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Fedworking/Fedworking.h"
 #include "../../Features/Resolver/Resolver.h"
 
@@ -242,6 +243,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Backtrack.Run(pCmd);
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
+		g_CritHack.Run(pCmd);
 		g_Misc.EdgeJump(pCmd, nOldFlags);
 	}
 	g_EnginePrediction.End(pCmd);

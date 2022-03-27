@@ -208,10 +208,30 @@ public: //Everything else, lol
 		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
-	__inline bool CalcIsAttackCriticalHelper(CBaseEntity* pWeapon)
+	/*__inline bool CalcIsAttackCriticalHelper(CBaseEntity* pWeapon)
 	{
 		typedef bool (*fn_t)(CBaseEntity*);
 		return GetVFunc<fn_t>(pWeapon, 462, 0)(pWeapon);
+	}*/
+
+	/*__inline inline bool CalcIsAttackCriticalHelper()
+	{
+		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(U::Pattern.Find("client.dll", "55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
+		return pCalcIsAttackCriticalHelper(this);
+	}*/
+
+	__inline bool CalcIsAttackCriticalHelper()
+	{
+		typedef bool(__thiscall* fn)(void*);
+		return GetVFunc<fn>(this, 392)(this);
+	}
+
+	__inline bool CalcIsAttackCriticalHelperMelee()
+	{
+		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57")));
+		return pCalcIsAttackCriticalHelper(this);
 	}
 
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)
