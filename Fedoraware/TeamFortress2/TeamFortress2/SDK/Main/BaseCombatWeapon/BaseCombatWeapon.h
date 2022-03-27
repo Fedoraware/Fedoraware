@@ -208,10 +208,17 @@ public: //Everything else, lol
 		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
-	__inline bool CalcIsAttackCriticalHelper(CBaseEntity* pWeapon)
+	__inline bool CalcIsAttackCriticalHelper()
 	{
-		typedef bool (*fn_t)(CBaseEntity*);
-		return GetVFunc<fn_t>(pWeapon, 462, 0)(pWeapon);
+		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC")));
+		return pCalcIsAttackCriticalHelper(this);
+	}
+	__inline bool CalcIsAttackCriticalHelperMelee()
+	{
+		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57")));
+		return pCalcIsAttackCriticalHelper(this);
 	}
 
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)
@@ -226,10 +233,6 @@ public: //Everything else, lol
 		return GetVFunc<fn_t>(pWeapon, 491, 0)(pWeapon);
 	}
 
-	/*__inline bool CalcIsAttackCriticalHelper() {
-		return false;
-	}*/
-
 	__inline Vec3 GetSpreadAngles() {
 		Vec3 vOut; GetSpreadAngles(vOut); return vOut;
 	}
@@ -239,75 +242,4 @@ public: //Everything else, lol
 	}
 
 	CHudTexture* GetWeaponIcon();
-};
-
-class weapon_info
-{
-public:
-	float flCritBucket{};
-	int iCurrentSeed{};
-	float flCritEndTime{};
-	float flLastCritCheckTime{};
-	float iLastCritCheckFrame{};
-	int iNumAttacks{};
-	int iNumCrits{};
-	float m_flObservedCritChance{};
-	bool unknown7{};
-	int weapon_mode{};
-	int weapon_data{};
-	weapon_info() {
-		
-	}
-	// I don't actually know if any of these are right... lol
-	void Load(CBaseCombatWeapon* pWeapon)
-	{
-		flCritBucket = *(float*)((uintptr_t)pWeapon + 0xA54);
-		iCurrentSeed = *(int*)((uintptr_t)pWeapon + 0xB58);
-		flCritEndTime = *(float*)((uintptr_t)pWeapon + 0xB4C);
-		flLastCritCheckTime = *(float*)((uintptr_t)pWeapon + 0xB50); 
-		iLastCritCheckFrame = *(int*)((uintptr_t)pWeapon + 0xB54);
-		iNumAttacks = *(int*)((uintptr_t)pWeapon + 0xB58);
-		iNumCrits = *(int*)((uintptr_t)pWeapon + 0xA5C);
-		m_flObservedCritChance = *(float*)((uintptr_t)pWeapon + 0xC1C);
-		unknown7 = *(bool*)((uintptr_t)pWeapon + 0xB34);
-
-		weapon_mode = *(int*)((uintptr_t)pWeapon + GetNetVar("CTFWeaponBase", "m_bLowered") - 48); //m_bLowered - 48
-		weapon_data = *(int*)((uintptr_t)pWeapon + GetNetVar("CTFWeaponBase", "m_bLowered") - 36); //m_bLowered - 36
-	}
-	weapon_info(CBaseCombatWeapon* pWeapon)
-	{
-		Load(pWeapon);
-	}
-	void RestoreData(CBaseCombatWeapon* pWeapon)
-	{
-		*(float*)((uintptr_t)pWeapon + 0xA54) = flCritBucket;
-		*(int*)((uintptr_t)pWeapon + 0xB58) = iCurrentSeed;
-		*(float*)((uintptr_t)pWeapon + 0xB4C) = flCritEndTime;
-		*(float*)((uintptr_t)pWeapon + 0xB50) = flLastCritCheckTime;
-		*(float*)((uintptr_t)pWeapon + 0xB5C) = iLastCritCheckFrame;
-		*(int*)((uintptr_t)pWeapon + 0xA58) = iNumAttacks;
-		*(int*)((uintptr_t)pWeapon + 0xA5C) = iNumCrits;
-		*(float*)((uintptr_t)pWeapon + 0xC18) = m_flObservedCritChance;
-		*(bool*)((uintptr_t)pWeapon + 0xB34) = unknown7;
-	}
-
-	bool operator==(const weapon_info& b) const
-	{
-		return (
-			flCritBucket == b.flCritBucket &&
-			iCurrentSeed == b.iCurrentSeed &&
-			flCritEndTime == b.flCritEndTime &&
-			flLastCritCheckTime == b.flLastCritCheckTime &&
-			iLastCritCheckFrame == b.iLastCritCheckFrame &&
-			iNumAttacks == b.iNumAttacks &&
-			iNumCrits == b.iNumCrits &&
-			m_flObservedCritChance == b.m_flObservedCritChance &&
-			unknown7 == b.unknown7
-			);
-		//return  == B.crit_bucket && weapon_seed == B.weapon_seed && unknown1 == B.unknown1 && unknown2 == B.unknown2 && unknown3 == B.unknown3 && critTime == B.critTime && crit_attempts == B.crit_attempts && crit_count == B.crit_count && observed_crit_chance == B.observed_crit_chance && unknown7 == B.unknown7;
-	}
-	bool operator!=(const weapon_info& B) const
-	{
-		return !(*this == B);
-	}
 };

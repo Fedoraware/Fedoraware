@@ -57,7 +57,8 @@ struct GlobalInfo_t
 	Vec3 m_vPunchAngles					= {};
 	Vec3 linearPredLine = {}; //clubpenguin > tf2
 	EWeaponType m_WeaponType			= {};
-	CUserCmd* lateUserCmd{nullptr};
+	CUserCmd* currentUserCmd{ nullptr };
+	CUserCmd* lateUserCmd{ nullptr };
 	std::map<int, bool> ignoredPlayers;
 	std::map < CBaseEntity*, VelFixRecord> velFixRecord;
 	std::vector<Vec3> predBeforeLines;

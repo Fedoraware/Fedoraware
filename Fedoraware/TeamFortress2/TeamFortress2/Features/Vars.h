@@ -45,7 +45,7 @@ namespace Vars
 		}
 	}
 
-	namespace Crits
+	namespace CritHack
 	{
 		inline CVar<bool> Active				{ false, L"Active" };
 		inline CVar<int> CritKey				{ VK_SHIFT, L"Crit Key" };
