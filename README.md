@@ -42,7 +42,7 @@
 - Optional colours relative to your team
 - Body part scales
 - Various rainbow toggles
-- Wireframe glow
+- Stencil glow
 - Out of FoV arrows
 - Skybox modulation/changer
 - Bullet tracers (lines/particles)
