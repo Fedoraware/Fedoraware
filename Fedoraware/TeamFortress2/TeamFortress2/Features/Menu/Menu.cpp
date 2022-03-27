@@ -933,6 +933,15 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
 						ImGui::Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
+						ImGui::Checkbox("Custom Name Color", &Vars::ESP::Players::NameC.m_Var); HelpMarker("Custom color for name esp");
+						if (Vars::ESP::Players::NameC.m_Var) {
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+							ImGui::SetNextItemWidth(20);
+							ColorPicker("Name ESP Color", Vars::ESP::Players::NameColor);
+						}
+						else {
+
+						}
 						ImGui::Checkbox("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
 						ImGui::Checkbox("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);

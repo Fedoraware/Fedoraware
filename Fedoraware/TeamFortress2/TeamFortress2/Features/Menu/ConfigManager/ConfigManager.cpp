@@ -320,6 +320,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::ESP::Players::Name);
+				SAVE_VAR(Vars::ESP::Players::NameC);
+				SAVE_OTHER(Vars::ESP::Players::NameColor);
 				SAVE_VAR(Vars::ESP::Players::NameBox);
 				SAVE_VAR(Vars::ESP::Players::Uber);
 				SAVE_VAR(Vars::ESP::Players::Class);
@@ -993,6 +995,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::ESP::Players::Name);
+				LOAD_VAR(Vars::ESP::Players::NameC);
+				LOAD_OTHER(Vars::ESP::Players::NameColor);
 				LOAD_VAR(Vars::ESP::Players::NameBox);
 				LOAD_VAR(Vars::ESP::Players::Uber);
 				LOAD_VAR(Vars::ESP::Players::Class);
