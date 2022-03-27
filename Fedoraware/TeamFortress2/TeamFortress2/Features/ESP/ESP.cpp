@@ -308,7 +308,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					g_Draw.String(FONT_NAME, middle, y - offset, DrawColor, ALIGN_CENTERHORIZONTAL,
+					g_Draw.String(FONT_NAME, middle, y - offset, Colors::White, ALIGN_CENTERHORIZONTAL,
 						Utils::ConvertUtf8ToWide(pi.name).data());
 				}
 

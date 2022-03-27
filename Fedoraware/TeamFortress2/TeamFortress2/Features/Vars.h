@@ -118,6 +118,7 @@ namespace Vars
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround	{ false, L"Aim at feet if target is on the ground." };
 			inline CVar<bool> MovementSimulation{ true, L"move sim" };
+			inline Color_t PredictionColor		{ 255,255,255,255 };
 			inline CVar<bool> ManualZAdjust		{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount	{ 5.5f, L"Z Adjust factor." };
 			inline CVar<float> predTime			{ 2.0f, L"Prediction TIme" };
@@ -457,6 +458,7 @@ namespace Vars
 		inline CVar<bool> BulletTracer				{ false, L"Bullet tracers" };
 		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
 		inline CVar<bool> ViewmodelSway			{ false, L"AimbotVM" };
+		inline CVar<bool> MoveSimLine{ true, L"Movement Simulation Line" };
 		inline CVar<int> ParticleTracer				{ 2, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };

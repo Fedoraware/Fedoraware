@@ -229,6 +229,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
@@ -535,6 +536,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
+			SAVE_VAR(Vars::Visuals::MoveSimLine);
 			SAVE_VAR(Vars::Visuals::VMOffX);
 			SAVE_VAR(Vars::Visuals::VMOffY);
 			SAVE_VAR(Vars::Visuals::VMOffZ);
@@ -900,6 +902,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
@@ -1205,6 +1208,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
+			LOAD_VAR(Vars::Visuals::MoveSimLine);
 			LOAD_VAR(Vars::Visuals::VMOffX);
 			LOAD_VAR(Vars::Visuals::VMOffY);
 			LOAD_VAR(Vars::Visuals::VMOffZ);
