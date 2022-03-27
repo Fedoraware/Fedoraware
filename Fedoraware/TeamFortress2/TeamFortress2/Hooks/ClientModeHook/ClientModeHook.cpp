@@ -110,6 +110,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 {
 	g_GlobalInfo.m_bSilentTime = false;
 	g_GlobalInfo.m_bAttacking = false;
+	g_GlobalInfo.m_bFakeShotPitch = false;
 
 	auto OriginalFn = Table.Original<fn>(index);
 
@@ -436,6 +437,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	return g_GlobalInfo.m_bSilentTime
 	       || g_GlobalInfo.m_bAAActive
+		   || g_GlobalInfo.m_bFakeShotPitch
 		   || g_GlobalInfo.m_bHitscanSilentActive
 		   || g_GlobalInfo.m_bAvoidingBackstab
 	       || g_GlobalInfo.m_bProjectileSilentActive

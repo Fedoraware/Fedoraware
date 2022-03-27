@@ -28,6 +28,7 @@ struct GlobalInfo_t
 	bool m_bWeaponCanAttack				= false;
 	bool m_bWeaponCanSecondaryAttack	= false;
 	bool m_bAAActive					= false;
+	bool m_bFakeShotPitch				= false;
 	bool m_bHitscanSilentActive			= false;
 	bool m_bAvoidingBackstab			= false;
 	bool m_bProjectileSilentActive		= false; //flamethrower

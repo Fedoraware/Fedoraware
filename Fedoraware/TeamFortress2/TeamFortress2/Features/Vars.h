@@ -633,6 +633,8 @@ namespace Vars
 			inline CVar<int> YawFake	{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 			inline CVar<float> SpinSpeed{ 15.f, L"Spin Speed" };
 			inline CVar <bool> AntiBackstab{ false, L"Antibackstab" };
+			inline CVar<bool> invalidshootpitch{ false, L"stupid feature" }; // i dont know what to name this its TRASH
+			// no reason to do this for projectile and melee cause u have psilent lel
 		}
 		namespace Resolver
 		{
