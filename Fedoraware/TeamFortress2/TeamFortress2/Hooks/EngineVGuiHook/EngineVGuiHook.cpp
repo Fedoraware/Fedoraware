@@ -10,7 +10,6 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/Crits/Crits.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
@@ -245,7 +244,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_Crits.Frame();
 			
 			// you can use it for more, i'm sure. - myzarfin
 			g_notify.Think();

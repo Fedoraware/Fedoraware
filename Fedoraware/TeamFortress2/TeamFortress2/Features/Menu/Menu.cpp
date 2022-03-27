@@ -859,8 +859,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 6;
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Crit hack", &Vars::Crits::Active.m_Var);  HelpMarker("Enables the crit hack (This doesn't work)");
-						InputKeybind("Crit key", Vars::Crits::CritKey); HelpMarker("Will try to fire crits when the key is held");
+						ImGui::Checkbox("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (This doesn't work)");
+						InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to fire crits when the key is held");
 						
 
 						ImGui::Dummy(ImVec2(0, 20));

@@ -241,7 +241,7 @@ public: //Everything else, lol
 	CHudTexture* GetWeaponIcon();
 };
 
-class weapon_info
+/*class weapon_info
 {
 public:
 	float flCritBucket{};
@@ -310,4 +310,4 @@ public:
 	{
 		return !(*this == B);
 	}
-};
+};*/

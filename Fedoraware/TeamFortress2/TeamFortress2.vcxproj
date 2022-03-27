@@ -116,7 +116,6 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
     <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Crits\Crits.cpp" />
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
@@ -226,7 +225,6 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
     <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
-    <ClInclude Include="TeamFortress2\Features\Crits\Crits.h" />
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />

@@ -9,7 +9,6 @@
 #include "../../Features/Chams/Chams.h"
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/AntiHack/AntiAim.h"
-#include "../../Features/Crits/Crits.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
@@ -235,7 +234,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_PR->Update();
 	g_Misc.Run(pCmd);
 	g_Fedworking.Run();
-	g_Crits.Tick(pCmd);
 	g_CameraWindow.Update();
 
 	g_EnginePrediction.Start(pCmd);

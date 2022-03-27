@@ -194,8 +194,8 @@ void CConfigManager::Save(const wchar_t *name)
 			}
 
 			{
-				SAVE_VAR(Vars::Crits::Active);
-				SAVE_VAR(Vars::Crits::CritKey);
+				SAVE_VAR(Vars::CritHack::Active);
+				SAVE_VAR(Vars::CritHack::CritKey);
 			}
 
 			//Hitscan
@@ -865,8 +865,8 @@ void CConfigManager::Load(const wchar_t *name)
 			}
 
 			{
-				LOAD_VAR(Vars::Crits::Active);
-				LOAD_VAR(Vars::Crits::CritKey);
+				LOAD_VAR(Vars::CritHack::Active);
+				LOAD_VAR(Vars::CritHack::CritKey);
 			}
 
 			//Hitscan
