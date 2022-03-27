@@ -11,6 +11,7 @@
 #include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
+#include "../../Features/CritHack/CritHack.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -243,6 +244,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
+			g_CritHack.Draw();
 			g_Radar.Run();
 			
 			// you can use it for more, i'm sure. - myzarfin
