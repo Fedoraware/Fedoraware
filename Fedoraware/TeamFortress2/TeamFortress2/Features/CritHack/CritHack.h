@@ -3,13 +3,16 @@
 
 class CCritHack {
 private:
-	int NextCritTick(const CUserCmd* pCmd, int pLoops);
+	int NextCritTick(const CUserCmd* pCmd, int loops);
+
+	int PreviousCrit = 0;
+	int PreviousWeapon = 0;
 
 	struct stats_t
 	{
-		float flCritBucket; // A54
-		int iNumAttacks; // A58
-		int iNumCrits; // A5C
+		float flCritBucket;	// 0xA54
+		int iNumAttacks;	// 0xA58
+		int iNumCrits;		// 0xA5C
 	};
 
 public:

@@ -133,6 +133,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
+	g_GlobalInfo.currentUserCmd = pCmd;
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		nOldFlags = pLocal->GetFlags();

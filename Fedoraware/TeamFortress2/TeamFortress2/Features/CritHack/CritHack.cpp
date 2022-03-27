@@ -1,48 +1,47 @@
 #include "CritHack.h"
 
-int CCritHack::NextCritTick(const CUserCmd* pCmd, int pLoops = 4096)
+/* Returns the next crit command number */
+int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 {
-	static int previousCrit = -1;
-	static int previousWeapon = -1;
-
 	const auto& pLocal = g_EntityCache.m_pLocal;
 	if (!pLocal) { return -1; }
 
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return -1; }
 
-	if (previousWeapon == pWeapon->GetIndex() && previousCrit >= pCmd->command_number) { return previousCrit; }
+	// Return previous crit tick if it's still good
+	if (PreviousWeapon == pWeapon->GetIndex() && PreviousCrit >= pCmd->command_number) { return PreviousCrit; }
 
+	// Find the next crit tick
+	int foundTick = -1;
 	const int seedBackup = *g_Interfaces.RandomSeed;
-	for (int i = 0; i < pLoops; i++) {
+	for (int i = 0; i < loops; i++)
+	{
 		const int cmdNum = pCmd->command_number + i;
 		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & std::numeric_limits<int>::max();
 
-
-		const bool isCrit = pWeapon->CalcIsAttackCriticalHelper();
-
-		if (isCrit) {
-			*g_Interfaces.RandomSeed = seedBackup;
-			previousCrit = cmdNum;
-			previousWeapon = pWeapon->GetIndex();
-			return cmdNum;
+		if (pWeapon->CalcIsAttackCriticalHelper() || (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && pWeapon->CalcIsAttackCriticalHelperMelee()))
+		{
+			PreviousCrit = cmdNum;
+			PreviousWeapon = pWeapon->GetIndex();
+			foundTick = cmdNum;
 		}
 	}
 
 	*g_Interfaces.RandomSeed = seedBackup;
-	return -1;
+	return foundTick;
 }
 
 void CCritHack::Run(CUserCmd* pCmd)
 {
 	if (!Vars::CritHack::Active.m_Var) { return; }
 
-	if (!GetAsyncKeyState(Vars::CritHack::CritKey.m_Var)) { return; }
+	// TODO: Fix the crit bucket
 
-	if (pCmd->buttons & IN_ATTACK)
+	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) && pCmd->buttons & IN_ATTACK)
 	{
 		const int nextCrit = NextCritTick(pCmd);
-		if (nextCrit != -1)
+		if (nextCrit >= 0)
 		{
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & std::numeric_limits<int>::max();
@@ -66,6 +65,6 @@ void CCritHack::Draw()
 		const stats_t stats = *reinterpret_cast<stats_t*>(pWeapon + 0xA54);
 		const int bucket = static_cast<int>(stats.flCritBucket);
 		
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 320, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
+		g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 200, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, (std::string("Bucket: ") + std::to_string(bucket)).c_str());
 	}
 }
