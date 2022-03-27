@@ -2378,7 +2378,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
 							ImGui::Checkbox("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
-							ImGui::Checkbox("Health packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
+							ImGui::Checkbox("Ammo packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
 							static const char* ignoreTeamArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
 							WidthSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 
