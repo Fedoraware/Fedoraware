@@ -1,7 +1,11 @@
 #include "InputHook.h"
 
+inline CUserCmd* GetCmds()
+{
+	return *(CUserCmd**)((uintptr_t)g_Interfaces.Input + 0xFC);
+}
+
 CUserCmd* __stdcall InputHook::GetUserCmd::Hook(int sequence_number)
 {
-	auto cmds = *(CUserCmd**)(g_Interfaces.Input + 0xFC);
-	return &cmds[sequence_number % 90];
+	return &GetCmds()[sequence_number % 90];
 }
