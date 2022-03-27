@@ -20,6 +20,7 @@ public:
 	void Run(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();
+	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
 	void WeaponSway();
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();

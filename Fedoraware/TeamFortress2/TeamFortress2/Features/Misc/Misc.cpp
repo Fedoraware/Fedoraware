@@ -17,6 +17,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
 		Freecam(pCmd, pLocal);
+		AntiBackstab(pLocal, pCmd);
 	}
 	AutoJoin();
 	ChatSpam();
@@ -66,6 +67,47 @@ void CMisc::ServerHitbox()
 				DrawServerHitboxes(server_animating, g_Interfaces.GlobalVars->interval_per_tick * 2.f, false);
 			}
 		}
+	}
+}
+
+void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
+{
+	g_GlobalInfo.m_bAvoidingBackstab = false;
+	CBaseEntity* target{}; Vec3 vTargetPos;
+
+	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.m_Var)
+		return;
+
+	if (g_GlobalInfo.m_bAttacking) { return; }	// not needed but whatever
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
+
+	Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
+	
+	target = nullptr;
+
+	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	{
+		if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost())
+			continue;
+
+		Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
+		if (!target && vLocalPos.DistTo(vEnemyPos) < 150.f) {
+			target = pEnemy;
+			vTargetPos = target->GetWorldSpaceCenter();
+		}
+		else if (vLocalPos.DistTo(vEnemyPos) < vLocalPos.DistTo(vTargetPos) && vLocalPos.DistTo(vEnemyPos) < 150.f) {
+			target = pEnemy;
+			vTargetPos = target->GetWorldSpaceCenter();
+		}
+	}
+
+	if (target) {
+		vTargetPos = target->GetWorldSpaceCenter();
+		Vec3 vAngleToSpy = Math::CalcAngle(vLocalPos, vTargetPos);
+		g_GlobalInfo.m_bAvoidingBackstab = true;
+		Utils::FixMovement(pCmd, vAngleToSpy);
+		pCmd->viewangles = vAngleToSpy;
+		return;
 	}
 }
 

@@ -436,7 +436,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	return g_GlobalInfo.m_bSilentTime
 	       || g_GlobalInfo.m_bAAActive
-	       || g_GlobalInfo.m_bHitscanSilentActive
+		   || g_GlobalInfo.m_bHitscanSilentActive
+		   || g_GlobalInfo.m_bAvoidingBackstab
 	       || g_GlobalInfo.m_bProjectileSilentActive
 	       || g_GlobalInfo.m_bRollExploiting
 		       ? false
