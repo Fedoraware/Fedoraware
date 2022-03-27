@@ -14,7 +14,7 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 
 	// Find the next crit tick
 	int foundTick = -1;
-	const int seedBackup = *g_Interfaces.RandomSeed;
+	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
 	for (int i = 0; i < loops; i++)
 	{
 		const int cmdNum = pCmd->command_number + i;
@@ -38,13 +38,21 @@ void CCritHack::Run(CUserCmd* pCmd)
 
 	// TODO: Fix the crit bucket
 
-	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) && pCmd->buttons & IN_ATTACK)
+	int nextCrit = NextCritTick(pCmd);
+	if (nextCrit >= 0)
 	{
-		const int nextCrit = NextCritTick(pCmd);
-		if (nextCrit >= 0)
+		if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) && (pCmd->buttons & IN_ATTACK))
 		{
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & std::numeric_limits<int>::max();
+			return;
+		}
+
+		// Prevent crit
+		while (pCmd->command_number == nextCrit)
+		{
+			pCmd->command_number++;
+			nextCrit = NextCritTick(pCmd, 5);
 		}
 	}
 }
