@@ -68,6 +68,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				
 				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
+					if (Vars::Visuals::MoveSimLine.m_Var)
 					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
 					{
 						Vec3 vScreenpast, vScreenfuture;
@@ -76,7 +77,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture))
 							{
 								g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
-								            {255, 255, 255, 255});
+								            {Vars::Aimbot::Projectile::PredictionColor});
 							}
 						}
 					}
