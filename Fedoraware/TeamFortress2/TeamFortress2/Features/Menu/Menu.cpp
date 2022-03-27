@@ -2274,9 +2274,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
+							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Uses game functions to predict where the player will be");
+							ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
 							ColorPicker("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
-							ImGui::Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Uses game functions to predict where the player will be");
 							if (Vars::Aimbot::Projectile::MovementSimulation.m_Var) {
 								ImGui::PushItemWidth(100); ImGui::SliderFloat("Prediction Time", &Vars::Aimbot::Projectile::predTime.m_Var, 0.1f, 10.f, "%.1f");
 							}
