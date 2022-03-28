@@ -39,12 +39,12 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 	{
 		const int cmdNum = pCmd->command_number + i;
 		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
-
-		if (pWeapon->CalcIsAttackCriticalHelper() || (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && pWeapon->CalcIsAttackCriticalHelperMelee()))
+		if (pWeapon->WillCrit())
 		{
 			PreviousCrit = cmdNum;
 			PreviousWeapon = pWeapon->GetIndex();
 			foundTick = cmdNum;
+			break;
 		}
 	}
 
@@ -62,20 +62,24 @@ void CCritHack::Run(CUserCmd* pCmd)
 	// TODO: Fix the crit bucket
 
 	int nextCrit = NextCritTick(pCmd);
-	if (nextCrit >= 0)
+	if (nextCrit >= 0 && (pCmd->buttons & IN_ATTACK))
 	{
-		if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) && (pCmd->buttons & IN_ATTACK))
+		if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000)
 		{
+			// Force next crit
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
-			return;
-		}
-
-		// Prevent crit
-		while (pCmd->command_number == nextCrit)
+		} else
 		{
-			pCmd->command_number++;
-			nextCrit = NextCritTick(pCmd, 5);
+			// Prevent crit
+			int tries = 0;
+			while (pCmd->command_number == nextCrit && tries < 5)
+			{
+				pCmd->command_number++;
+				pCmd->random_seed = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
+				nextCrit = NextCritTick(pCmd, 5);
+				tries++;
+			}
 		}
 	}
 }

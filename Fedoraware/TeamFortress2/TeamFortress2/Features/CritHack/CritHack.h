@@ -17,6 +17,11 @@ private:
 		int iNumCrits;		// 0xA5C
 	};
 
+	int ShotsUntilCrit = 0;
+	int AddedPerShot = 0;
+	int ShotsToFill = 0;
+	int TakenPerCrit = 0;
+
 public:
 	void Run(CUserCmd* pCmd);
 	void Draw();
