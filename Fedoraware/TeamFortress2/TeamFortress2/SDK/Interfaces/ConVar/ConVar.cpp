@@ -124,6 +124,11 @@ int ConVar::GetInt(void) const
 	return m_pParent->m_Value.m_nValue;
 }
 
+bool ConVar::GetBool(void) const
+{
+	return m_pParent->m_Value.m_nValue == 1;
+}
+
 const char *ConVar::GetString(void) const
 {
 	return m_pParent->m_Value.m_pszString;

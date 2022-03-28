@@ -1,4 +1,24 @@
 #include "CritHack.h"
+#define MASK_SIGNED 0x7FFFFFFF
+
+/* Returns whether random crits are enabled on the server */
+bool CCritHack::AreRandomCritsEnabled()
+{
+	if (static auto tf_weapon_criticals = g_Interfaces.CVars->FindVar("tf_weapon_criticals"); tf_weapon_criticals) {
+		return tf_weapon_criticals->GetBool();
+	}
+	return true;
+}
+
+/* Returns whether the crithack should run */
+bool CCritHack::IsEnabled()
+{
+	if (!Vars::CritHack::Active.m_Var) { return false; }
+	if (!AreRandomCritsEnabled()) { return false; }
+	if (!g_Interfaces.Engine->IsInGame()) { return false; }
+
+	return true;
+}
 
 /* Returns the next crit command number */
 int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
@@ -14,11 +34,11 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 
 	// Find the next crit tick
 	int foundTick = -1;
-	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
+	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
 	for (int i = 0; i < loops; i++)
 	{
 		const int cmdNum = pCmd->command_number + i;
-		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & std::numeric_limits<int>::max();
+		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
 
 		if (pWeapon->CalcIsAttackCriticalHelper() || (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && pWeapon->CalcIsAttackCriticalHelperMelee()))
 		{
@@ -34,7 +54,10 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 
 void CCritHack::Run(CUserCmd* pCmd)
 {
-	if (!Vars::CritHack::Active.m_Var) { return; }
+	if (!IsEnabled()) { return; }
+
+	const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
+	if (!pWeapon) { return; }
 
 	// TODO: Fix the crit bucket
 
@@ -44,7 +67,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 		if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) && (pCmd->buttons & IN_ATTACK))
 		{
 			pCmd->command_number = nextCrit;
-			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & std::numeric_limits<int>::max();
+			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
 			return;
 		}
 
@@ -59,9 +82,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 
 void CCritHack::Draw()
 {
-	if (!Vars::CritHack::Active.m_Var) { return; }
-
-	if (!g_Interfaces.Engine->IsInGame()) { return; }
+	if (!IsEnabled()) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{

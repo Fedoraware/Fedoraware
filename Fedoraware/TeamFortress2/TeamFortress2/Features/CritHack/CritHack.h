@@ -3,6 +3,8 @@
 
 class CCritHack {
 private:
+	bool AreRandomCritsEnabled();
+	bool IsEnabled();
 	int NextCritTick(const CUserCmd* pCmd, int loops);
 
 	int PreviousCrit = 0;
