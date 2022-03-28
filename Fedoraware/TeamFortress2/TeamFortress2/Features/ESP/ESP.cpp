@@ -377,7 +377,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			if (0 < Vars::ESP::Players::Cond.m_Var < 2)
+			if (Vars::ESP::Players::Cond.m_Var)
 			{
 				size_t FONT = FONT_ESP_COND;
 				int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
@@ -390,10 +390,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						nTextOffset += g_Draw.m_vecFonts[FONT_ESP_COND].nTall;
 					}
 				}
-			}
-			else if (Vars::ESP::Players::Cond.m_Var == 1)
-			{
-
 			}
 
 			if (Vars::ESP::Players::HealthBar.m_Var)
