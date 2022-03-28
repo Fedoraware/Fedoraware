@@ -45,7 +45,7 @@ namespace Vars
 		}
 	}
 
-	namespace Crits
+	namespace CritHack
 	{
 		inline CVar<bool> Active				{ false, L"Active" };
 		inline CVar<int> CritKey				{ VK_SHIFT, L"Crit Key" };
@@ -118,6 +118,7 @@ namespace Vars
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround	{ false, L"Aim at feet if target is on the ground." };
 			inline CVar<bool> MovementSimulation{ true, L"move sim" };
+			inline Color_t PredictionColor		{ 255,255,255,255 };
 			inline CVar<bool> ManualZAdjust		{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount	{ 5.5f, L"Z Adjust factor." };
 			inline CVar<float> predTime			{ 2.0f, L"Prediction TIme" };
@@ -210,6 +211,8 @@ namespace Vars
 			inline CVar<int> IgnoreTeammates	{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<int> IgnoreCloaked		{ 2, L"Ignore Cloaked" };	//0 - OFF, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Name				{ true, L"Name" };
+			inline CVar<bool> NameC			{ false, L"Name Color" };
+			inline Color_t NameColor			{ 255,255,255,255 };
 			inline CVar<bool> NameBox			{ false, L"Name box" };
 			inline CVar<int> Uber				{ 2, L"Uber" }; //0 - Off, 1 - Text, 2 - Bar
 			inline CVar<int> Class				{ 1, L"Class" }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
@@ -457,6 +460,7 @@ namespace Vars
 		inline CVar<bool> BulletTracer				{ false, L"Bullet tracers" };
 		inline CVar<bool> AimbotViewmodel				{ true, L"AimbotVM" };
 		inline CVar<bool> ViewmodelSway			{ false, L"AimbotVM" };
+		inline CVar<bool> MoveSimLine{ true, L"Movement Simulation Line" };
 		inline CVar<int> ParticleTracer				{ 2, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 		inline CVar<bool> BulletTracerRainbow		{ true, L"Rainbow tracers" };

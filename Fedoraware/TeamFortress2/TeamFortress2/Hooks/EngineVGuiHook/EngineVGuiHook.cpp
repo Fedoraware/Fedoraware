@@ -10,8 +10,8 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/Crits/Crits.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
+#include "../../Features/CritHack/CritHack.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -68,6 +68,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				
 				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
+					if (Vars::Visuals::MoveSimLine.m_Var)
 					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
 					{
 						Vec3 vScreenpast, vScreenfuture;
@@ -76,7 +77,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture))
 							{
 								g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
-								            {255, 255, 255, 255});
+								            {Vars::Aimbot::Projectile::PredictionColor});
 							}
 						}
 					}
@@ -244,8 +245,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();
+			g_CritHack.Draw();
 			g_Radar.Run();
-			g_Crits.Frame();
 			
 			// you can use it for more, i'm sure. - myzarfin
 			g_notify.Think();

@@ -9,10 +9,10 @@
 #include "../../Features/Chams/Chams.h"
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/AntiHack/AntiAim.h"
-#include "../../Features/Crits/Crits.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
+#include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Fedworking/Fedworking.h"
 #include "../../Features/Resolver/Resolver.h"
 
@@ -133,6 +133,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
+	g_GlobalInfo.currentUserCmd = pCmd;
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		nOldFlags = pLocal->GetFlags();
@@ -235,7 +237,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_PR->Update();
 	g_Misc.Run(pCmd);
 	g_Fedworking.Run();
-	g_Crits.Tick(pCmd);
 	g_CameraWindow.Update();
 
 	g_EnginePrediction.Start(pCmd);
@@ -244,6 +245,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Backtrack.Run(pCmd);
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
+		g_CritHack.Run(pCmd);
 		g_Misc.EdgeJump(pCmd, nOldFlags);
 	}
 	g_EnginePrediction.End(pCmd);

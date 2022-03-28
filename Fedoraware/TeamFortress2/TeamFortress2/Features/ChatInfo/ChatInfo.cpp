@@ -2,7 +2,6 @@
 
 #include "../Vars.h"
 #include "../Misc/Misc.h"
-#include "../Crits/Crits.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../PlayerResource/PlayerResource.h"
 
@@ -139,62 +138,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			if (pEntity == pLocal) { return; }
 			if (pLocal != nAttacker) { return; }
 			g_Visuals.DrawHitboxMatrix(pEntity, colour, time);
-		}
-
-		if (uNameHash == FNV1A::HashConst("teamplay_round_start")) {
-			g_Crits.critDamage = 0;
-			g_Crits.meleeDamage = 0;
-			g_Crits.roundDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer());
-			g_Crits.cachedDamage = g_Crits.cachedDamage - g_Crits.meleeDamage;
-		}
-
-		if (uNameHash == FNV1A::HashConst("player_hurt")) {
-			int victim = g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
-			int health = pEvent->GetInt("health");
-
-			if (g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker")) == g_Interfaces.Engine->GetLocalPlayer()) {
-				if (victim != g_Interfaces.Engine->GetLocalPlayer()) {
-					// The weapon we damaged with
-					int weaponid = pEvent->GetInt("weaponid");
-					int weapon_idx = Utils::GetWeaponByID(g_EntityCache.m_pLocal, weaponid);
-
-					auto& status = g_Crits.player_status_list[victim - 1];
-					int health_difference = status.health - health;
-					status.health = health;
-					status.just_updated = true;
-
-					bool isMelee = false;
-					if (weapon_idx >= 0 && weapon_idx <= 2048 && weapon_idx < 2049) {
-						int slot = static_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntity(weapon_idx))->GetSlot();
-						if (slot == 2) { isMelee = true; }
-					}
-
-					int damage = pEvent->GetInt("damageamount");
-					if (damage > health_difference && !health)
-					{
-						damage = health_difference;
-					}
-
-					// Not a melee weapon
-					if (!isMelee)
-					{
-						// Crit handling
-						if (!g_EntityCache.m_pLocal || !g_EntityCache.m_pLocalWeapon || !g_EntityCache.m_pLocal->IsCritBoosted())
-						{
-							// Crit damage counter
-							if (pEvent->GetBool("crit"))
-							{
-								g_Crits.critDamage += damage;
-							}
-						}
-					}
-					else
-					{
-						// Melee damage
-						g_Crits.meleeDamage += damage;
-					}
-				}
-			}
 		}
 
 		if (uNameHash == FNV1A::HashConst("achievement_earned"))

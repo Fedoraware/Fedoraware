@@ -194,8 +194,8 @@ void CConfigManager::Save(const wchar_t *name)
 			}
 
 			{
-				SAVE_VAR(Vars::Crits::Active);
-				SAVE_VAR(Vars::Crits::CritKey);
+				SAVE_VAR(Vars::CritHack::Active);
+				SAVE_VAR(Vars::CritHack::CritKey);
 			}
 
 			//Hitscan
@@ -229,6 +229,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
@@ -319,6 +320,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::ESP::Players::Name);
+				SAVE_VAR(Vars::ESP::Players::NameC);
+				SAVE_OTHER(Vars::ESP::Players::NameColor);
 				SAVE_VAR(Vars::ESP::Players::NameBox);
 				SAVE_VAR(Vars::ESP::Players::Uber);
 				SAVE_VAR(Vars::ESP::Players::Class);
@@ -535,6 +538,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
+			SAVE_VAR(Vars::Visuals::MoveSimLine);
 			SAVE_VAR(Vars::Visuals::VMOffX);
 			SAVE_VAR(Vars::Visuals::VMOffY);
 			SAVE_VAR(Vars::Visuals::VMOffZ);
@@ -741,6 +745,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::NoscopeLines1);
 			SAVE_OTHER(Colors::NoscopeLines2);
 			SAVE_OTHER(Colors::bonecolor);
+			SAVE_OTHER(Colors::Hitbox);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -865,8 +870,8 @@ void CConfigManager::Load(const wchar_t *name)
 			}
 
 			{
-				LOAD_VAR(Vars::Crits::Active);
-				LOAD_VAR(Vars::Crits::CritKey);
+				LOAD_VAR(Vars::CritHack::Active);
+				LOAD_VAR(Vars::CritHack::CritKey);
 			}
 
 			//Hitscan
@@ -900,6 +905,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
 				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
@@ -990,6 +996,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::ESP::Players::Name);
+				LOAD_VAR(Vars::ESP::Players::NameC);
+				LOAD_OTHER(Vars::ESP::Players::NameColor);
 				LOAD_VAR(Vars::ESP::Players::NameBox);
 				LOAD_VAR(Vars::ESP::Players::Uber);
 				LOAD_VAR(Vars::ESP::Players::Class);
@@ -1205,6 +1213,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
+			LOAD_VAR(Vars::Visuals::MoveSimLine);
 			LOAD_VAR(Vars::Visuals::VMOffX);
 			LOAD_VAR(Vars::Visuals::VMOffY);
 			LOAD_VAR(Vars::Visuals::VMOffZ);
@@ -1276,11 +1285,11 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::VoteRevealerChat);
 			LOAD_VAR(Vars::Misc::VoteRevealerParty);
 			LOAD_VAR(Vars::Misc::AutoVote);
-			SAVE_VAR(Vars::Misc::AnnounceVotes);
-			SAVE_VAR(Vars::Misc::AnnounceVotesText);
-			SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
-			SAVE_VAR(Vars::Misc::AnnounceVotesChat);
-			SAVE_VAR(Vars::Misc::AnnounceVotesParty);
+			LOAD_VAR(Vars::Misc::AnnounceVotes);
+			LOAD_VAR(Vars::Misc::AnnounceVotesText);
+			LOAD_VAR(Vars::Misc::AnnounceVotesConsole);
+			LOAD_VAR(Vars::Misc::AnnounceVotesChat);
+			LOAD_VAR(Vars::Misc::AnnounceVotesParty);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
 			LOAD_VAR(Vars::Misc::ExtendFreeze);
@@ -1409,6 +1418,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::NoscopeLines1);
 			LOAD_OTHER(Colors::NoscopeLines2);
 			LOAD_OTHER(Colors::bonecolor);
+			LOAD_OTHER(Colors::Hitbox);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

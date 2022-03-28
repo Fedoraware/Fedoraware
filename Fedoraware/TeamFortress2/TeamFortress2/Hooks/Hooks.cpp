@@ -1,7 +1,6 @@
 #include "Hooks.h"
 #include "../SDK/SDK.h"
 #include "../SDK/Includes/proxyfnhook.h"
-#include "../Features/Crits/Crits.h"
 
 inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
 	return static_cast<uintptr_t>((*static_cast<int **>(pBaseClass))[nIndex]);
@@ -57,8 +56,6 @@ bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn
 	}
 	return false;
 }
-
-static ProxyFnHook observedCritChanceHook{};
 
 void CHooks::Init()
 {
@@ -347,9 +344,6 @@ void CHooks::Init()
 
 		Func.Hook(reinterpret_cast<void*>(SetAlphaModulation), reinterpret_cast<void*>(Hook));
 	}
-
-	HookNetvar({ "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance" }, observedCritChanceHook, Argh::ObservedCritChance_NetHook);
-
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
 		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);
