@@ -46,13 +46,17 @@ void CMisc::WeaponSway()	//	pasted but looks cool
 }
 
 //	dumb feature made out of spite for fourteen
-void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)	
+void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static bool pos = true;
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && !g_GlobalInfo.m_bShouldShift && Vars::AntiHack::AntiAim::legjitter.m_Var) {
-		pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
-		pos ? pCmd->sidemove = 2.f : pCmd->sidemove = -2.f;
-		pos = !pos;
+
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+		if (g_GlobalInfo.m_bAttacking || g_GlobalInfo.m_bShouldShift || (pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) { return; }
+		if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.m_Var) {
+			pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
+			pos ? pCmd->sidemove = 2.f : pCmd->sidemove = -2.f;
+			pos = !pos;
+		}
 	}
 }
 
