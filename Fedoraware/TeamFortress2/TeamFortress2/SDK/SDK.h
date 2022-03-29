@@ -146,7 +146,8 @@ namespace Colors
 	inline Color_t NotifBG =	{ 30, 30, 30, 255 };
 	inline Color_t NotifOutline =		{ 255, 101, 101, 255};
 	inline Color_t NotifText =			{ 255, 255, 255, 255 };
-	inline Color_t Hitbox =			{ 255, 255, 255, 0 };
+	inline Color_t HitboxFace =			{ 255, 255, 255, 0 };
+	inline Color_t HitboxEdge =			{ 255, 255, 255, 0 };
 	inline Color_t WeaponIcon = { 255,255,255,255 };
 	inline Color_t NoscopeLines1 = { 0,0,0,255 };
 	inline Color_t NoscopeLines2 = { 0,0,0,100 };

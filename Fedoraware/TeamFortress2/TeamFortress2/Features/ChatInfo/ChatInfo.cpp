@@ -129,7 +129,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		{
 			if (Vars::Aimbot::Global::clearPreviousHitbox.m_Var) { g_Interfaces.DebugOverlay->ClearAllOverlays(); }
 			auto time = Vars::Aimbot::Global::hitboxTime.m_Var;
-			auto colour = Colors::Hitbox;
 			// alpha is how "filled" the hitbox render is, looks bad at anything non-zero (rijin moment)
 			auto pEntity = g_Interfaces.EntityList->GetClientEntity(
 				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid")));
@@ -137,7 +136,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker")));
 			if (pEntity == pLocal) { return; }
 			if (pLocal != nAttacker) { return; }
-			g_Visuals.DrawHitboxMatrix(pEntity, colour, time);
+			g_Visuals.DrawHitboxMatrix(pEntity, Colors::HitboxFace, Colors::HitboxEdge, time);
 		}
 
 		if (uNameHash == FNV1A::HashConst("achievement_earned"))

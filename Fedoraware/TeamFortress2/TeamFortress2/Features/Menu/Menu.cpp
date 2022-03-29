@@ -1164,7 +1164,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Hitbox matrix colour", Colors::Hitbox);
+						ColorPicker("Hitbox matrix face colour", Colors::HitboxFace);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("Hitbox matrix edge colour", Colors::HitboxEdge);
 						ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 

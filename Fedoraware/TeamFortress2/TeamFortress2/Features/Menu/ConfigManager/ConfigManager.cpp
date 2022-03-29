@@ -745,7 +745,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::NoscopeLines1);
 			SAVE_OTHER(Colors::NoscopeLines2);
 			SAVE_OTHER(Colors::bonecolor);
-			SAVE_OTHER(Colors::Hitbox);
+			SAVE_OTHER(Colors::HitboxFace);
+			SAVE_OTHER(Colors::HitboxEdge);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -1418,7 +1419,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::NoscopeLines1);
 			LOAD_OTHER(Colors::NoscopeLines2);
 			LOAD_OTHER(Colors::bonecolor);
-			LOAD_OTHER(Colors::Hitbox);
+			LOAD_OTHER(Colors::HitboxFace);
+			LOAD_OTHER(Colors::HitboxEdge);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

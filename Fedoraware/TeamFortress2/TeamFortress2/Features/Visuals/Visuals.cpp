@@ -2,7 +2,7 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time)
+void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
 	//I::DebugOverlay->ClearAllOverlays();
 
@@ -32,8 +32,7 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time
 		Vec3 matrix_origin;
 		Math::GetMatrixOrigin(matrix, matrix_origin);
 
-		g_Interfaces.DebugOverlay->AddBoxOverlay(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colour.r,
-		                                         colour.g, colour.b, colour.a, time);
+		g_Interfaces.DebugOverlay->AddBoxOverlay2(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colourface, colouredge, time);
 	}
 }
 
