@@ -2,6 +2,10 @@
 
 #include "../BaseEntity/BaseEntity.h"
 
+#ifndef TICKS_TO_TIME
+#define TICKS_TO_TIME( t )	( g_Interfaces.GlobalVars->interval_per_tick * ( t ) )
+#endif
+
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars
@@ -63,6 +67,11 @@ public: //Everything else, lol
 		return *reinterpret_cast<float*>(this + dwOffset);
 	}
 
+	__inline float ObservedCritChance()
+	{
+		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
+	}
+
 	__inline CAttributeList* GetAttributeList() {
 		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_AttributeList"));
 		return reinterpret_cast<CAttributeList*>(this + dwOff);
@@ -96,16 +105,17 @@ public: //Everything else, lol
 		return GetWeaponSpreadFn(this);
 	}
 
-	__inline bool WillCrit() {
+	/*__inline bool WillCrit() {
 		static auto dwCalcIsAttackCritical = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
 		return reinterpret_cast<bool(__thiscall*)(decltype(this))>(dwCalcIsAttackCritical);
-	}
+	}*/
 
-	__inline bool CalcIsAttackCritical() {
+	/*__inline bool CalcIsAttackCritical() {
 		typedef bool(__thiscall* OriginalFn)(CBaseCombatWeapon*);
 		static DWORD dwFunc = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
 		return ((OriginalFn)dwFunc)(this);
-	}
+	}*/
+
 	__inline bool DoSwingTrace(CGameTrace& Trace) {
 		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 453)(Trace);
 	}
@@ -208,6 +218,24 @@ public: //Everything else, lol
 		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
+	__inline bool IsRapidFire()
+	{
+		const bool ret = GetWeaponData().m_bUseRapidFireCrits;
+		return ret || this->GetClientClass()->m_ClassID == static_cast<int>(ETFClassID::CTFMinigun);
+	}
+
+	__inline bool WillCrit()
+	{
+		return this->GetSlot() == SLOT_MELEE ? this->CalcIsAttackCriticalHelperMelee() : this->CalcIsAttackCriticalHelper();
+	}
+
+	__inline bool CalcIsAttackCritical()
+	{
+		static auto func = g_Pattern.Find(_(L"client.dll"), _(L"53 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 14 85 DB 0F 84 ? ? ? ?"));
+		typedef bool(__thiscall* fn)(void*);
+		return reinterpret_cast<fn>(func)(this);
+	}
+
 	__inline bool CalcIsAttackCriticalHelper()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
@@ -240,6 +268,22 @@ public: //Everything else, lol
 	__inline int GetMinigunState() {
 		return *reinterpret_cast<int*>(this + 0xC48);
 	}
+
+	__inline bool IsReadyToFire()
+	{
+		static float lastFire = 0, nextAttack = 0;
+
+		if (lastFire != GetLastFireTime())
+		{
+			lastFire = GetLastFireTime();
+			nextAttack = GetNextPrimaryAttack();
+		}
+
+		if (GetClip1() == 0)
+			return false;
+		return (nextAttack <= (TICKS_TO_TIME(g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())->GetTickBase())));
+	}
+
 
 	CHudTexture* GetWeaponIcon();
 };

@@ -244,10 +244,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_Backtrack.Run(pCmd);
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
-		g_CritHack.Run(pCmd);
 		g_Misc.EdgeJump(pCmd, nOldFlags);
 	}
 	g_EnginePrediction.End(pCmd);
+	g_CritHack.Run(pCmd);
 
 	FastStop(pCmd, g_EntityCache.m_pLocal);
 	g_Misc.AutoPeek(pCmd);

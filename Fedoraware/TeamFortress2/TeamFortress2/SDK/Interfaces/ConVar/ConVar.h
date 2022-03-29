@@ -108,6 +108,7 @@ public:
 	//----------------------------
 	float					GetFloat(void) const;
 	int						GetInt(void) const;
+	bool GetBool() const;
 	//DWORD					GetColor(void) const;
 	const char *GetString(void) const;
 	const char *GetDefault(void) const;
