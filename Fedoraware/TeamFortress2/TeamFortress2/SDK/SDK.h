@@ -56,7 +56,9 @@
 
 #define TICK_INTERVAL		( g_Interfaces.GlobalVars->interval_per_tick )
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
+#ifndef TICKS_TO_TIME
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
+#endif
 #define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
