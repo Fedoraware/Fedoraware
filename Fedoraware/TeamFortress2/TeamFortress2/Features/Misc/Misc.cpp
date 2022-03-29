@@ -49,7 +49,7 @@ void CMisc::WeaponSway()	//	pasted but looks cool
 void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)	
 {
 	static bool pos = true;
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.m_Var) {
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && !g_GlobalInfo.m_bShouldShift && Vars::AntiHack::AntiAim::legjitter.m_Var) {
 		pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
 		pos ? pCmd->sidemove = 2.f : pCmd->sidemove = -2.f;
 		pos = !pos;
