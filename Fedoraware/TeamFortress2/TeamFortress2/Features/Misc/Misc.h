@@ -22,6 +22,7 @@ public:
 	void ServerHitbox();
 	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
 	void WeaponSway();
+	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd);

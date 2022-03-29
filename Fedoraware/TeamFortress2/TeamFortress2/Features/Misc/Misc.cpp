@@ -18,6 +18,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		ExtendFreeze(pLocal);
 		Freecam(pCmd, pLocal);
 		AntiBackstab(pLocal, pCmd);
+		LegJitter(pCmd, pLocal);
 	}
 	AutoJoin();
 	ChatSpam();
@@ -40,6 +41,21 @@ void CMisc::WeaponSway()	//	pasted but looks cool
 		{
 			if (cl_wpn_sway_interp->GetFloat())
 				cl_wpn_sway_interp->SetValue(0.0f);
+		}
+	}
+}
+
+//	dumb feature made out of spite for fourteen
+void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	static bool pos = true;
+
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+		if (g_GlobalInfo.m_bAttacking || g_GlobalInfo.m_bShouldShift || (pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) { return; }
+		if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.m_Var) {
+			pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
+			pos ? pCmd->sidemove = 2.f : pCmd->sidemove = -2.f;
+			pos = !pos;
 		}
 	}
 }

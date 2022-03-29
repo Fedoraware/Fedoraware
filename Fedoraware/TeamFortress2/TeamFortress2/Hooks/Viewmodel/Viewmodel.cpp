@@ -9,11 +9,11 @@ void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& 
 		{
 			if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE)
 			{
-				eyeAngles = Math::CalcAngle(pLocal->GetEyePosition(), g_GlobalInfo.m_vPredictedPos);
+				eyeAngles = Math::CalcAngle(eyePosition, g_GlobalInfo.m_vPredictedPos);
 			}
 			else
 			{
-				eyeAngles = Math::CalcAngle(pLocal->GetEyePosition(), g_GlobalInfo.m_vAimPos);
+				eyeAngles = Math::CalcAngle(eyePosition, g_GlobalInfo.m_vAimPos);
 			}
 			g_GlobalInfo.m_vEyeAngDelayed = eyeAngles;
 			g_GlobalInfo.vEyeAngDelay = 0;

@@ -71,10 +71,9 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 vStartOrigin = {};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
-	static float lf = (Vars::Misc::CL_Move::DTTicks.m_Var / 3);
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var)
+		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var && pLocal->GetVecVelocity().Length2D() > 10.f)
 		{
 			if (vStartOrigin.IsZero())
 			{
@@ -86,11 +85,11 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				vStartVel = pLocal->GetVecVelocity();
 			}
 
-			const Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(lf - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(lf));
+			const Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(3 - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(3));
 
-			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin), 1.0f, 0.0f);
-			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.0f, pLocal->GetPlayerMaxVelocity(), 0.0f, 1.0f);
+			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.5, 1.0f, 0.0f);
+			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.0f, 540.0f, 0.5f, 2.0f);
 			Utils::WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
 			nShiftTick++;

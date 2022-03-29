@@ -1164,7 +1164,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Hitbox matrix colour", Colors::Hitbox);
+						ColorPicker("Hitbox matrix face colour", Colors::HitboxFace);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("Hitbox matrix edge colour", Colors::HitboxEdge);
 						ImGui::Checkbox("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 						ImGui::PushItemWidth(150); ImGui::SliderInt("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 
@@ -2215,8 +2218,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::PushItemWidth(100); ImGui::SliderFloat("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); ImGui::PopItemWidth(); HelpMarker("You spin me right 'round, baby, right 'round");
 						}
 						ImGui::Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
-						ImGui::Checkbox("Anti-backstab", &Vars::AntiHack::AntiAim::AntiBackstab.m_Var); HelpMarker("Enables anti-backstab, it looks extremely blatant.");
-						ImGui::Checkbox("Hide pitch onshot", &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var); HelpMarker("Fake your pitch when you shoot.");
+						MultiCombo({ "AntiBackstab", "HidePitchOS", "LegJitter"}, { &Vars::AntiHack::AntiAim::AntiBackstab.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var }, "", "Misc Anti-Aim");
 						const char* flgModes[]{ "None", "Plain", "Random", "Velocity Based" }; ImGui::PushItemWidth(100); ImGui::Combo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, flgModes, IM_ARRAYSIZE(flgModes)); ImGui::PopItemWidth(); HelpMarker("Controls how fakelag will be controlled.");
 						if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) {
 							Vars::Misc::CL_Move::Fakelag.m_Var = true;

@@ -9,17 +9,12 @@ private:
 
 public:
 	bool RemoveScope(int nPanel);
-	void Init();
 	void FOV(CViewSetup* pView);
 	void ThirdPerson(CViewSetup* pView);
-	void ThirdPerson();
 	void ModulateWorld();
-	void UpdateWorldModulation();
-	void UpdateSkyModulation();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
-	void TransparentProps();
-	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time);
+	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
 	void ScopeLines();
 	void SkyboxChanger();
 	void BigHeads(float headSize, float torsoSize, float handSize);

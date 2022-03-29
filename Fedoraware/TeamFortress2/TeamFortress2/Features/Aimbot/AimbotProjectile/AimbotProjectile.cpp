@@ -696,7 +696,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 		for (const auto& Player : g_EntityCache.GetGroup(
 			bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
-			if (!Player->IsAlive() || Player->IsAGhost() || Player == pLocal || (bIsCrossbow && (Player->GetHealth() ==
+			if (!Player->IsAlive() || Player->IsAGhost() || Player == pLocal || (bIsCrossbow && (Player->GetHealth() >=
 				Player->GetMaxHealth()) && (Player->GetTeamNum() == pLocal->GetTeamNum())))
 				continue;
 
