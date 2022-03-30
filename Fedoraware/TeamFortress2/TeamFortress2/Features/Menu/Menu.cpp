@@ -1162,6 +1162,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::SetNextItemWidth(44);
 							ColorPicker("Outer line color", Colors::NoscopeLines2);
 						}
+						ImGui::Checkbox("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammo packs");
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);

@@ -364,6 +364,32 @@ void CVisuals::OverrideWorldTextures()
 	}
 }
 
+void CVisuals::PickupTimers()
+{
+	if (!Vars::Visuals::PickupTimers.m_Var) { return; }
+
+	for (auto pickupData = PickupDatas.begin(); pickupData != PickupDatas.end(); )
+	{
+		const float timeDiff = g_Interfaces.Engine->Time() - pickupData->Time;
+		if (timeDiff > 10.f)
+		{
+			pickupData = PickupDatas.erase(pickupData);
+			continue;
+		}
+
+		auto timerText = tfm::format("%s: %.1fs", pickupData->Type ? "HEALTH" : "AMMO", 10.f - timeDiff);
+		auto color = pickupData->Type ? Colors::Health : Colors::Ammo;
+		
+		Vec3 vScreen;
+		if (Utils::W2S(pickupData->Location, vScreen))
+		{
+			g_Draw.String(FONT_ESP_PICKUPS, vScreen.x, vScreen.y, color, ALIGN_CENTER, timerText.c_str());
+		}
+
+		++pickupData;
+	}
+}
+
 CClientClass* CVisuals::CPrecipitation::GetPrecipitationClass()
 {
 	static CClientClass* pReturn = nullptr;

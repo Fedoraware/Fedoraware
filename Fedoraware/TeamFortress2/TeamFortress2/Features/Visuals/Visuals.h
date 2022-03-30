@@ -14,6 +14,7 @@ public:
 	void ModulateWorld();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
+	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
 	void ScopeLines();
 	void SkyboxChanger();
@@ -31,6 +32,13 @@ public:
 		void Run();
 		void Cleanup();
 	};
+
+	struct PickupData {
+		int Type = 0;
+		float Time = 0.f;
+		Vec3 Location;
+	};
+	std::vector<PickupData> PickupDatas;
 
 	CPrecipitation rain;
 };
