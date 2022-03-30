@@ -40,6 +40,7 @@ void __stdcall ClientHook::ShutDown::Hook()
 	g_Visuals.rain.Cleanup();
 	g_GlobalInfo.partyPlayerESP.clear();
 	g_Resolver.ResolveData.clear();
+	g_GlobalInfo.chokeMap.clear();
 }
 
 

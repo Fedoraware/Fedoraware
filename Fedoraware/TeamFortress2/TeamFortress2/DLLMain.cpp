@@ -6,7 +6,6 @@
 #include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
 #include "Features/Camera/CameraWindow.h"
-#include "Features/CritHack/CritHack.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
@@ -80,7 +79,6 @@ void Initialize()
 	g_CameraWindow.Init();
 	g_Hooks.Init();
 	g_ConVars.Init();
-	g_CritHack.Init();
 
 	InitRichPresence();
 }
@@ -141,7 +139,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	Initialize();
 	LoadDefaultConfig();
 
-	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started", "teamplay_round_start", "player_spawn"}); // all events @ https://github.com/tf2cheater2013/gameevents.txt
+	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started", "teamplay_round_start", "player_spawn", "item_pickup" }); // all events @ https://github.com/tf2cheater2013/gameevents.txt
 
 	Loaded();
 

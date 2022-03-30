@@ -859,7 +859,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 6;
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::Checkbox("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack");
+						ImGui::Checkbox("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (BETA)");
 						InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 						
 
@@ -971,6 +971,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Condition colour", Colors::Cond);
 						ImGui::Checkbox("GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
+						ImGui::Checkbox("Choked Packets", &Vars::ESP::Players::Choked.m_Var); HelpMarker("Shows how many packets the player has choked");
 						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on players");
 						static const char* bonesESP[]{ "Off", "Custom colour", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1161,6 +1162,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 							ImGui::SetNextItemWidth(44);
 							ColorPicker("Outer line color", Colors::NoscopeLines2);
 						}
+						ImGui::Checkbox("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammo packs");
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);

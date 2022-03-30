@@ -15,6 +15,11 @@ struct DormantData {
 	float LastUpdate = 0.f;
 };
 
+struct ChokeData {
+	float LastSimTime = 0.f;
+	int ChokedTicks = 0;
+};
+
 struct GlobalInfo_t
 {
 	int m_nCurrentTargetIdx				= 0;
@@ -65,7 +70,8 @@ struct GlobalInfo_t
 	std::vector<Vec3> predFutureLines;
 	bool m_bFreecamActive				= false;
 	Vec3 m_vFreecamPos					= {};
-	std::map<int, DormantData> partyPlayerESP; // < Player-Index, DormantData >
+	std::map<int, DormantData> partyPlayerESP;		// < Player-Index, DormantData >
+	std::map<int, ChokeData> chokeMap;
 };
 
 inline GlobalInfo_t g_GlobalInfo;

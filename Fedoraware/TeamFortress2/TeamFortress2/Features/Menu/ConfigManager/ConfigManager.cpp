@@ -330,6 +330,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::HealthBar);
 				SAVE_VAR(Vars::ESP::Players::Box);
 				SAVE_VAR(Vars::ESP::Players::GUID);
+				SAVE_VAR(Vars::ESP::Players::Choked);
 				SAVE_VAR(Vars::ESP::Players::Alpha);
 				SAVE_VAR(Vars::ESP::Players::Lines);
 				SAVE_VAR(Vars::ESP::Players::Bones);
@@ -495,6 +496,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
 			SAVE_VAR(Vars::Visuals::RemoveScope);
 			SAVE_VAR(Vars::Visuals::ScopeLines);
+			SAVE_VAR(Vars::Visuals::PickupTimers);
 			SAVE_VAR(Vars::Visuals::RemoveZoom);
 			SAVE_VAR(Vars::Visuals::RemovePunch);
 			SAVE_VAR(Vars::Visuals::CrosshairAimPos);
@@ -1009,6 +1011,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Cond);
 				LOAD_VAR(Vars::ESP::Players::HealthBar);
 				LOAD_VAR(Vars::ESP::Players::Box);
+				LOAD_VAR(Vars::ESP::Players::Choked);
 				LOAD_VAR(Vars::ESP::Players::GUID);
 				LOAD_VAR(Vars::ESP::Players::Alpha);
 				LOAD_VAR(Vars::ESP::Players::Lines);
@@ -1171,6 +1174,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::FieldOfView);
 			LOAD_VAR(Vars::Visuals::AimFOVAlpha);
 			LOAD_VAR(Vars::Visuals::RemoveScope);
+			LOAD_VAR(Vars::Visuals::PickupTimers);
 			LOAD_VAR(Vars::Visuals::ScopeLines);
 			LOAD_VAR(Vars::Visuals::RemoveZoom);
 			LOAD_VAR(Vars::Visuals::RemovePunch);

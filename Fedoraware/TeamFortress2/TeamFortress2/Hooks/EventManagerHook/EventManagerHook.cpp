@@ -1,12 +1,10 @@
 #include "EventManagerHook.h"
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/Fedworking/Fedworking.h"
-#include "../../Features/CritHack/CritHack.h"
 
 bool __stdcall EventMangerHook::FireEventClientSide::Hook(CGameEvent* pEvent)
 {
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
-	g_CritHack.FireEvent(pEvent, uNameHash);
 	g_Killstreaker.FireEvents(pEvent, uNameHash);
 
 	if (uNameHash == FNV1A::HashConst("party_chat")) {

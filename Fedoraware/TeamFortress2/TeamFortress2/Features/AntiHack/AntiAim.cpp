@@ -121,8 +121,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		const float fOldSideMove = pCmd->sidemove;
 		const float fOldForwardMove = pCmd->forwardmove;
 
-		Vec3 vAngles = pCmd->viewangles;
-
+		// Pitch
 		switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
 		case 1:
 			{
@@ -171,6 +170,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			FindEdge(pCmd->viewangles.y);
 		}
 
+		// Yaw (Real)
 		if (bSendReal) {
 			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
 			case 1:
@@ -190,13 +190,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
 					{
-						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
-					pCmd->viewangles.y = currentAngle;
+					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
 			case 5:
@@ -217,9 +216,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				{
 					if (wasHit)
 					{
-						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 						wasHit = false;
 					}
+					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
 			default:
@@ -230,7 +230,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 
 			// Check if our real angle is overlapping with the fake angle
-			if (IsOverlapping(pCmd->viewangles.y, g_GlobalInfo.m_vFakeViewAngles.y))
+			if (Vars::AntiHack::AntiAim::YawFake.m_Var != 0 && IsOverlapping(pCmd->viewangles.y, g_GlobalInfo.m_vFakeViewAngles.y))
 			{
 				if (Vars::AntiHack::AntiAim::SpinSpeed.m_Var > 0)
 				{
@@ -247,6 +247,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;
 		}
 
+		// Yaw ( Fake)
 		else {
 			switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
 			case 1:
@@ -266,13 +267,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
 					{
-						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
-					pCmd->viewangles.y = currentAngle;
+					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
 			case 5:
@@ -293,9 +293,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				{
 					if (wasHit)
 					{
-						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 						wasHit = false;
 					}
+					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
 			default:

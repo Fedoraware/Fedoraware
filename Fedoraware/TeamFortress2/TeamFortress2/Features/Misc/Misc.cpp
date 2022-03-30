@@ -27,6 +27,16 @@ void CMisc::Run(CUserCmd* pCmd)
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
 	WeaponSway();
+	DetectChoke();
+}
+
+void CMisc::RunLate(CUserCmd* pCmd)
+{
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		AutoPeek(pCmd, pLocal);
+		AutoRocketJump(pCmd, pLocal);
+	}
 }
 
 void CMisc::WeaponSway()	//	pasted but looks cool
@@ -42,6 +52,29 @@ void CMisc::WeaponSway()	//	pasted but looks cool
 			if (cl_wpn_sway_interp->GetFloat())
 				cl_wpn_sway_interp->SetValue(0.0f);
 		}
+	}
+}
+
+void CMisc::DetectChoke()
+{
+	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+	{
+		if (!player->IsAlive())
+		{
+			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+			continue;
+		}
+
+		if (player->GetSimulationTime() == g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime)
+		{
+			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks++;
+			// TODO: This could be used to detect cheaters
+		} else
+		{
+			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+		}
+
+		g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime = player->GetSimulationTime();
 	}
 }
 
@@ -498,55 +531,52 @@ void CMisc::ChatSpam()
 	}
 }
 
-void CMisc::AutoRocketJump(CUserCmd* pCmd)
+void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::AutoRocketJump.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
 		return;
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return;
+	
+	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
+		return;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
-		if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
+		if (pWeapon->IsInReload())
+		{
+			pCmd->buttons |= IN_ATTACK;
+			return;
+		}
+		if (pCmd->buttons & IN_ATTACK)
+			pCmd->buttons &= ~IN_ATTACK;
+
+		if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka
+			|| g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheCowMangler5000
+			|| pWeapon->GetSlot() != SLOT_PRIMARY)
 			return;
 
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (pLocal->GetViewOffset().z < 60.05f)
 		{
-			if (pWeapon->IsInReload())
+			pCmd->buttons |= IN_ATTACK | IN_JUMP;
+
+			Vec3 vVelocity = pLocal->GetVelocity();
+			Vec3 vAngles = { vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f };
+
+			if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
 			{
-				pCmd->buttons |= IN_ATTACK;
-				return;
-			}
-			if (pCmd->buttons & IN_ATTACK)
-				pCmd->buttons &= ~IN_ATTACK;
-
-			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka
-				|| g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheCowMangler5000
-				|| pWeapon->GetSlot() != SLOT_PRIMARY)
-				return;
-
-			if (pLocal->GetViewOffset().z < 60.05f)
-			{
-				pCmd->buttons |= IN_ATTACK | IN_JUMP;
-
-				Vec3 vVelocity = pLocal->GetVelocity();
-				Vec3 vAngles = { vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f };
-
-				if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
-				{
-					Vec3 vForward = {}, vRight = {}, vUp = {};
-					Math::AngleVectors(vAngles, &vForward, &vRight, &vUp);
-					Math::VectorAngles((vForward * 23.5f) + (vRight * -5.6f) + (vUp * -3.0f), vAngles);
-				}
-
-				Math::ClampAngles(vAngles);
-				pCmd->viewangles = vAngles;
-				g_GlobalInfo.m_bSilentTime = true;
+				Vec3 vForward = {}, vRight = {}, vUp = {};
+				Math::AngleVectors(vAngles, &vForward, &vRight, &vUp);
+				Math::VectorAngles((vForward * 23.5f) + (vRight * -5.6f) + (vUp * -3.0f), vAngles);
 			}
 
-			else pCmd->buttons |= IN_DUCK;
+			Math::ClampAngles(vAngles);
+			pCmd->viewangles = vAngles;
+			g_GlobalInfo.m_bSilentTime = true;
 		}
+
+		else pCmd->buttons |= IN_DUCK;
 	}
 }
 
@@ -580,101 +610,98 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 	return false;
 }
 
-void CMisc::AutoPeek(CUserCmd* pCmd)
+void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
-	{
-		static bool posPlaced = false;
-		static bool isReturning = false;
-		static bool hasDirection = false;
-		static Vec3 peekStart;
-		static Vec3 peekVector;
+	static bool posPlaced = false;
+	static bool isReturning = false;
+	static bool hasDirection = false;
+	static Vec3 peekStart;
+	static Vec3 peekVector;
 
-		if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::AutoPeekKey.m_Var)) {
-			const Vec3 localPos = pLocal->GetAbsOrigin();
+	if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::AutoPeekKey.m_Var)) {
+		const Vec3 localPos = pLocal->GetAbsOrigin();
 
-			// We just started peeking. Save the return position!
-			if (!posPlaced) {
-				if (pLocal->IsOnGround()) {
-					PeekReturnPos = localPos;
-					posPlaced = true;
-				}
-			} else {
-				static Timer particleTimer{ };
-				if (particleTimer.Run(700)) {
-					Particles::DispatchParticleEffect("ping_circle", PeekReturnPos, { });
-				}
-			}
-
-			// We need a peek direction (A / D)
-			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection && pLocal->IsOnGround()) {
-				const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
-				Vec3 vForward, vRight, vUp, vDirection;
-				Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
-
-				if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000 || GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
-					CGameTrace trace;
-					CTraceFilterWorldAndPropsOnly traceFilter;
-					Ray_t traceRay;
-
-					if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000) {
-						vDirection = pLocal->GetEyePosition() - vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Left
-					}
-					else if (GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
-						vDirection = pLocal->GetEyePosition() + vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Right
-					}
-
-					traceRay.Init(pLocal->GetEyePosition(), vDirection);
-					g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
-					peekStart = trace.vStartPos;
-					peekVector = trace.vEndPos - trace.vStartPos;
-					hasDirection = true;
-				}
-			}
-
-			// Should we peek?
-			if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && hasDirection) {
-				bool targetFound = false;
-				for (int i = 10; i < 100; i += 10) {
-					const float step = i / 100.f;
-					Vec3 currentPos = peekStart + (peekVector * step);
-					if (CanAttack(pLocal, currentPos)) {
-						Utils::WalkTo(pCmd, pLocal, currentPos);
-						targetFound = true;
-					}
-
-					if (targetFound) {
-						g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 68, 189, 50, 100, false, 0.04f);
-						break;
-					}
-
-					g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 235, 59, 90, 100, false, 0.04f);
-				}
-
-				if (!targetFound) { isReturning = true; }
-			}
-
-			// We've just attacked. Let's return!
-			if (g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
-				isReturning = true;
-			}
-
-			if (isReturning) {
-				if (localPos.DistTo(PeekReturnPos) < 7.f) {
-					// We reached our destination. Recharge DT if wanted
-					if (Vars::Misc::CL_Move::AutoRecharge.m_Var && isReturning && !g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nShifted) {
-						g_GlobalInfo.m_bRechargeQueued = true;
-					}
-					isReturning = false;
-					return;
-				}
-
-				Utils::WalkTo(pCmd, pLocal, PeekReturnPos);
+		// We just started peeking. Save the return position!
+		if (!posPlaced) {
+			if (pLocal->IsOnGround()) {
+				PeekReturnPos = localPos;
+				posPlaced = true;
 			}
 		} else {
-			posPlaced = isReturning = hasDirection = false;
-			PeekReturnPos = Vec3();
+			static Timer particleTimer{ };
+			if (particleTimer.Run(700)) {
+				Particles::DispatchParticleEffect("ping_circle", PeekReturnPos, { });
+			}
 		}
+
+		// We need a peek direction (A / D)
+		if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection && pLocal->IsOnGround()) {
+			const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+			Vec3 vForward, vRight, vUp, vDirection;
+			Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
+
+			if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000 || GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
+				CGameTrace trace;
+				CTraceFilterWorldAndPropsOnly traceFilter;
+				Ray_t traceRay;
+
+				if (GetAsyncKeyState(VK_A) & 0x8000 || GetAsyncKeyState(VK_W) & 0x8000) {
+					vDirection = pLocal->GetEyePosition() - vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Left
+				}
+				else if (GetAsyncKeyState(VK_D) & 0x8000 || GetAsyncKeyState(VK_S) & 0x8000) {
+					vDirection = pLocal->GetEyePosition() + vRight * Vars::Misc::CL_Move::AutoPeekDistance.m_Var; // Right
+				}
+
+				traceRay.Init(pLocal->GetEyePosition(), vDirection);
+				g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+				peekStart = trace.vStartPos;
+				peekVector = trace.vEndPos - trace.vStartPos;
+				hasDirection = true;
+			}
+		}
+
+		// Should we peek?
+		if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && hasDirection) {
+			bool targetFound = false;
+			for (int i = 10; i < 100; i += 10) {
+				const float step = i / 100.f;
+				Vec3 currentPos = peekStart + (peekVector * step);
+				if (CanAttack(pLocal, currentPos)) {
+					Utils::WalkTo(pCmd, pLocal, currentPos);
+					targetFound = true;
+				}
+
+				if (targetFound) {
+					g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 68, 189, 50, 100, false, 0.04f);
+					break;
+				}
+
+				g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 235, 59, 90, 100, false, 0.04f);
+			}
+
+			if (!targetFound) { isReturning = true; }
+		}
+
+		// We've just attacked. Let's return!
+		if (g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+			isReturning = true;
+		}
+
+		if (isReturning) {
+			if (localPos.DistTo(PeekReturnPos) < 7.f) {
+				// We reached our destination. Recharge DT if wanted
+				if (Vars::Misc::CL_Move::AutoRecharge.m_Var && isReturning && !g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nShifted) {
+					g_GlobalInfo.m_bRechargeQueued = true;
+				}
+				isReturning = false;
+				return;
+			}
+
+			Utils::WalkTo(pCmd, pLocal, PeekReturnPos);
+		}
+	} else {
+		posPlaced = isReturning = hasDirection = false;
+		PeekReturnPos = Vec3();
 	}
 }
 

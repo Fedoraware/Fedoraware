@@ -242,6 +242,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			OtherDraws();
 			g_Misc.BypassPure();
 			g_ESP.Run();
+			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
 			g_SpectatorList.Run();

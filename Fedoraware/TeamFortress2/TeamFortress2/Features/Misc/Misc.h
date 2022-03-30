@@ -18,15 +18,17 @@ private:
 
 public:
 	void Run(CUserCmd* pCmd);
+	void RunLate(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();
 	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
 	void WeaponSway();
+	void DetectChoke();
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void BypassPure();
-	void AutoRocketJump(CUserCmd* pCmd);
-	void AutoPeek(CUserCmd* pCmd);
+	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoPush();
 	void SteamRPC();
 
