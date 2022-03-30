@@ -14,8 +14,6 @@
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
-    <ClCompile Include="TeamFortress2\Features\SpectatorList\SpectatorList.cpp" />
     <ClCompile Include="TeamFortress2\Features\SpyWarning\SpyWarning.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoShoot\AutoShoot.cpp" />
@@ -63,16 +61,6 @@
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
@@ -83,7 +71,6 @@
     <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InputHook\InputHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerList\PlayerList.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\FireBullets\FireBullets.cpp" />
@@ -91,8 +78,6 @@
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
-    <ClCompile Include="TeamFortress2\Features\DTBar\DTBar.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerResource\PlayerResource.cpp" />
@@ -122,8 +107,6 @@
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
-    <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
-    <ClInclude Include="TeamFortress2\Features\SpectatorList\SpectatorList.h" />
     <ClInclude Include="TeamFortress2\Features\SpyWarning\SpyWarning.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoGlobal\AutoGlobal.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoShoot\AutoShoot.h" />
@@ -477,16 +460,6 @@
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_internal.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_textedit.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
-    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9mesh.h" />
@@ -499,7 +472,6 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9effect.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9math.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hook.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\audiodefs.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\comdecl.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\D2D1.h" />
@@ -623,7 +595,6 @@
     <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Hooks\InputHook\InputHook.h" />
-    <ClInclude Include="TeamFortress2\Features\PlayerList\PlayerList.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\FireBullets\FireBullets.h" />
@@ -631,8 +602,6 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
-    <ClInclude Include="TeamFortress2\Features\DTBar\DTBar.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerResource\PlayerResource.h" />

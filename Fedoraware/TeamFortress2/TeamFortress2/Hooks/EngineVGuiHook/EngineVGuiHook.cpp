@@ -1,14 +1,10 @@
 #include "EngineVGuiHook.h"
 
 #include "../../SDK/Includes/icons.h"
-#include "../../Features/Menu/Menu.h"
-#include "../../Features/SpectatorList/SpectatorList.h"
 #include "../../Features/SpyWarning/SpyWarning.h"
 #include "../../Features/PlayerArrows/PlayerArrows.h"
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
-#include "../../Features/Radar/Radar.h"
-#include "../../Features/DTBar/DTBar.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
 #include "../../Features/CritHack/CritHack.h"
@@ -149,7 +145,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3)
 							{
-								g_DTBar.Run();
 								// put this here so we don't move menu if we r using something else, no biggie
 								float rratio = (static_cast<float>(g_GlobalInfo.m_nShifted) / static_cast<float>(
 									Vars::Misc::CL_Move::DTTicks.m_Var));
@@ -208,11 +203,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 
-				// build date
-				if (g_Menu.m_bOpen)
-					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var,
-					              {116, 255, 48, 255}, ALIGN_DEFAULT, _(__DATE__));
-
 				// debug
 				{
 					#ifdef _DEBUG
@@ -245,9 +235,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
-			g_SpectatorList.Run();
 			g_CritHack.Draw();
-			g_Radar.Run();
 			
 			// you can use it for more, i'm sure. - myzarfin
 			g_notify.Think();

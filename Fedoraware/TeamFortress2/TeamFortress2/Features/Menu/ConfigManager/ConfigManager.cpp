@@ -5,8 +5,6 @@
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
-#include "../../Radar/Radar.h"
-#include "../../SpectatorList/SpectatorList.h"
 #include "../../Misc/Misc.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
@@ -752,13 +750,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::bonecolor);
 			SAVE_OTHER(Colors::HitboxFace);
 			SAVE_OTHER(Colors::HitboxEdge);
-
-			SAVE_OTHER(g_Radar.m_nRadarX);
-			SAVE_OTHER(g_Radar.m_nRadarY);
+			
 			SAVE_OTHER(Vars::Skybox::SkyboxNum);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
-			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
-			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
 
 			SAVE_OTHER(Vars::Chams::Players::Local);
 			SAVE_OTHER(Vars::Chams::Players::Enemy);
@@ -1431,12 +1425,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::bonecolor);
 			LOAD_OTHER(Colors::HitboxFace);
 			LOAD_OTHER(Colors::HitboxEdge);
-
-			LOAD_OTHER(g_Radar.m_nRadarX);
-			LOAD_OTHER(g_Radar.m_nRadarY);
-
-			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
-			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
 			LOAD_OTHER(Vars::Chams::Players::Local);
 			LOAD_OTHER(Vars::Chams::Players::Enemy);

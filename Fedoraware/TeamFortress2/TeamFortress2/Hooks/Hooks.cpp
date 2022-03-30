@@ -61,7 +61,6 @@ void CHooks::Init()
 {
 	MH_Initialize();
 	{
-		MenuHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 		//ResetHook::Init();
 		FireBullets::Init();
@@ -352,5 +351,4 @@ void CHooks::Init()
 void CHooks::Release()
 {
 	MH_Uninitialize();
-	SetWindowLongPtr(WndProc::hwWindow, GWL_WNDPROC, (LONG_PTR)WndProc::Original);
 }
