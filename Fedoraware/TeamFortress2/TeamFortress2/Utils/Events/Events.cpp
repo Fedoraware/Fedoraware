@@ -1,6 +1,7 @@
 #include "Events.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
 #include "../../Features/Resolver/Resolver.h"
+#include "../../Features/AntiHack/AntiAim.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -25,6 +26,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
 	g_ChatInfo.Event(pEvent, uNameHash);
+	g_AntiAim.Event(pEvent, uNameHash);
 
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{

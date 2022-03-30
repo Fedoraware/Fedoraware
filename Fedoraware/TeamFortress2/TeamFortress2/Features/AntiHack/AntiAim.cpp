@@ -1,9 +1,11 @@
 #include "AntiAim.h"
 #include "../Vars.h"
+#include "../../Utils/Timer/Timer.hpp"
 
 int edgeToEdgeOn = 0;
 float lastRealAngle = -90.f;
 float lastFakeAngle = 90.f;
+bool wasHit = false;
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove) {
 	Vec3 curAngs = pCmd->viewangles;
@@ -29,7 +31,7 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 	pCmd->sidemove = sin(DEG2RAD(fDelta)) * fOldForwardMove + sin(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
 }
 
-float EdgeDistance(float edgeRayYaw) {
+float CAntiAim::EdgeDistance(float edgeRayYaw) {
 	// Main ray tracing area
 	CGameTrace trace;
 	Ray_t ray;
@@ -51,7 +53,7 @@ float EdgeDistance(float edgeRayYaw) {
 	return edgeDistance;
 }
 
-bool FindEdge(float edgeOrigYaw) {
+bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	// distance two vectors and report their combined distances
 	float edgeLeftDist = EdgeDistance(edgeOrigYaw - 21);
 	edgeLeftDist = edgeLeftDist + EdgeDistance(edgeOrigYaw - 27);
@@ -87,6 +89,12 @@ bool FindEdge(float edgeOrigYaw) {
 	}
 
 	return true;
+}
+
+bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
+{
+	if (!Vars::AntiHack::AntiAim::AntiOverlap.m_Var) { return false; }
+	return std::abs(a - b) < epsilon;
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
@@ -142,7 +150,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 		case 5:
 			{
-				pCmd->viewangles.x = Utils::RandFloatRange(-89.0f, 89.0f);
+				static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+				static Timer updateTimer{ };
+				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+				{
+					currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+				}
+				pCmd->viewangles.x = currentAngle;
 				g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
 				break;
 			}
@@ -176,7 +190,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+					static Timer updateTimer{ };
+					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+					{
+						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+					}
+					pCmd->viewangles.y = currentAngle;
 					break;
 				}
 			case 5:
@@ -193,10 +213,34 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y -= 90.0f; }
 					break;
 				}
+			case 7:
+				{
+					if (wasHit)
+					{
+						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						wasHit = false;
+					}
+					break;
+				}
 			default:
 				{
 					bYawSet = false;
 					break;
+				}
+			}
+
+			// Check if our real angle is overlapping with the fake angle
+			if (IsOverlapping(pCmd->viewangles.y, g_GlobalInfo.m_vFakeViewAngles.y))
+			{
+				if (Vars::AntiHack::AntiAim::SpinSpeed.m_Var > 0)
+				{
+					pCmd->viewangles.y += 50.f;
+					lastRealAngle += 50.f;
+				}
+				else
+				{
+					pCmd->viewangles.y -= 50.f;
+					lastRealAngle -= 50.f;
 				}
 			}
 
@@ -222,7 +266,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+					static Timer updateTimer{ };
+					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+					{
+						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+					}
+					pCmd->viewangles.y = currentAngle;
 					break;
 				}
 			case 5:
@@ -239,6 +289,15 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += 90.0f; }
 					break;
 				}
+			case 7:
+				{
+					if (wasHit)
+					{
+						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						wasHit = false;
+					}
+					break;
+				}
 			default:
 				{
 					bYawSet = false;
@@ -253,5 +312,26 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
 
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
+	}
+}
+
+void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
+{
+	if (uNameHash == FNV1A::HashConst("player_hurt"))
+	{
+		if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
+			g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
+		{
+			const auto nAttacker = pEvent->GetInt("attacker");
+			const auto& pLocal = g_EntityCache.m_pLocal;
+			if (!pLocal) { return; }
+			if (pEntity != pLocal) { return; }
+
+			PlayerInfo_t pi{};
+			g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &pi);
+			if (nAttacker == pi.userID) { return; }
+
+			wasHit = true;
+		}
 	}
 }
