@@ -6,7 +6,6 @@
 #include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
 #include "Features/Camera/CameraWindow.h"
-#include "Features/CritHack/CritHack.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
@@ -80,7 +79,6 @@ void Initialize()
 	g_CameraWindow.Init();
 	g_Hooks.Init();
 	g_ConVars.Init();
-	g_CritHack.Init();
 
 	InitRichPresence();
 }
