@@ -190,13 +190,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
 					{
-						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
-					pCmd->viewangles.y = currentAngle;
+					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
 			case 5:
@@ -217,9 +216,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				{
 					if (wasHit)
 					{
-						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 						wasHit = false;
 					}
+					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
 			default:
@@ -267,13 +267,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 4:
 				{
-					static float currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
 					{
-						currentAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
-					pCmd->viewangles.y = currentAngle;
+					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
 			case 5:
@@ -294,9 +293,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				{
 					if (wasHit)
 					{
-						pCmd->viewangles.y = Utils::RandFloatRange(-180.0f, 180.0f);
+						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 						wasHit = false;
 					}
+					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
 			default:
