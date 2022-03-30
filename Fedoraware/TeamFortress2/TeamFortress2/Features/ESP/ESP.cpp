@@ -325,6 +325,13 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "%s", pi.guid);
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
+
+				if (Vars::ESP::Players::Choked.m_Var)
+				{
+					int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
+					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, tfm::format("C: %s", chokeCount).c_str());
+					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+				}
 			}
 
 			if (Vars::ESP::Players::Class.m_Var)

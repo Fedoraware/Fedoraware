@@ -250,8 +250,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_CritHack.Run(pCmd);
 
 	FastStop(pCmd, g_EntityCache.m_pLocal);
-	g_Misc.AutoPeek(pCmd);
-	g_Misc.AutoRocketJump(pCmd);
+	g_Misc.RunLate(pCmd);
 	g_Resolver.Update(pCmd);
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;

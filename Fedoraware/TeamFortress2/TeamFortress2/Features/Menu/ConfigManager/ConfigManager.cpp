@@ -330,6 +330,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::HealthBar);
 				SAVE_VAR(Vars::ESP::Players::Box);
 				SAVE_VAR(Vars::ESP::Players::GUID);
+				SAVE_VAR(Vars::ESP::Players::Choked);
 				SAVE_VAR(Vars::ESP::Players::Alpha);
 				SAVE_VAR(Vars::ESP::Players::Lines);
 				SAVE_VAR(Vars::ESP::Players::Bones);
@@ -1009,6 +1010,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Cond);
 				LOAD_VAR(Vars::ESP::Players::HealthBar);
 				LOAD_VAR(Vars::ESP::Players::Box);
+				LOAD_VAR(Vars::ESP::Players::Choked);
 				LOAD_VAR(Vars::ESP::Players::GUID);
 				LOAD_VAR(Vars::ESP::Players::Alpha);
 				LOAD_VAR(Vars::ESP::Players::Lines);

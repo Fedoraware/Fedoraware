@@ -223,6 +223,7 @@ namespace Vars
 			inline CVar<int> Box				{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
 			inline CVar<int> Bones				{ 0, L"Bones" };
 			inline CVar<bool> GUID              { false, L"GUID" };
+			inline CVar<bool> Choked			{ false, L"Choked Packets" };
 			inline CVar<bool> Lines             { false, L"Lines" };
 			inline CVar<bool> Dlights			{ false, L"Dlights" };
 			inline CVar<float> DlightRadius		{ 200.0f, L"DLight Radius" };
