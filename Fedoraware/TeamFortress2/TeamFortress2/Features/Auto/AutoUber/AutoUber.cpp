@@ -46,7 +46,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		{
 			if (const auto& pWeapon = player->GetActiveWeapon())
 			{
-				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_CHEST),
+				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_PELVIS),
 				                  player->GetHitboxPos(HITBOX_HEAD)))
 				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
