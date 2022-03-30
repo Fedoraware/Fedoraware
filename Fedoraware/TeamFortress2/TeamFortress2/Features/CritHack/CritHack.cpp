@@ -2,7 +2,6 @@
 #define MASK_SIGNED 0x7FFFFFFF
 
 // i hate crithack
-float idkBucket = 0.f;
 
 /* Returns whether random crits are enabled on the server */
 bool CCritHack::AreRandomCritsEnabled()
@@ -86,7 +85,6 @@ void CCritHack::Run(CUserCmd* pCmd)
 			}
 		}
 	}
-	idkBucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
 
 	// TODO: Fix the crit bucket
 }
@@ -103,7 +101,7 @@ void CCritHack::Draw()
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
 
-	// const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
+	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
 	int currentY = (g_ScreenSize.h / 2) + 150;
 
 	// Are we currently forcing crits?
@@ -113,6 +111,6 @@ void CCritHack::Draw()
 	}
 
 	const float bucketCap = g_Interfaces.CVars->FindVar("tf_weapon_criticals_bucket_cap")->GetFloat();
-	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(idkBucket), bucketCap);
+	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
 }
