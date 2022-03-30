@@ -636,8 +636,10 @@ namespace Vars
 			inline CVar<int> YawReal	{ 0, L"Yaw Real" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 			inline CVar<int> YawFake	{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 			inline CVar<float> SpinSpeed{ 15.f, L"Spin Speed" };
+			inline CVar<int> RandInterval{ 25, L"Random Interval" };
 			inline CVar <bool> AntiBackstab{ false, L"Antibackstab" };
 			inline CVar <bool> legjitter { false, L"leg jitter" }; // frick u fourteen
+			inline CVar<bool> AntiOverlap{ false, L"Anti Overlap" };
 			inline CVar<bool> invalidshootpitch{ false, L"stupid feature" }; // i dont know what to name this its TRASH
 			// no reason to do this for projectile and melee cause u have psilent lel
 		}
