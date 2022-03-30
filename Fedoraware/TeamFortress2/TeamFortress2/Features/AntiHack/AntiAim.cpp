@@ -113,7 +113,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		if (g_GlobalInfo.m_bAttacking) { return; }
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
 
-		static bool bSendReal = false;
+		static bool bSendReal = true;
 		bool bPitchSet = true;
 		bool bYawSet = true;
 
@@ -309,6 +309,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		}
 
 		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }
+		if (Vars::AntiHack::AntiAim::YawFake.m_Var == 0)
+		{
+			*pSendPacket = bSendReal = true;
+		}
 		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
 
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
