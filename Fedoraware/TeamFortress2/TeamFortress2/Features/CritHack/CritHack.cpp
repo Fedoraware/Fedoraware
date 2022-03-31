@@ -93,6 +93,7 @@ void CCritHack::Draw()
 {
 	if (!IsEnabled()) { return; }
 	if (!g_GlobalInfo.currentUserCmd) { return; }
+	if (!Vars::CritHack::indicators.m_Var) { return; }
 
 	const auto& pLocal = g_EntityCache.m_pLocal;
 	if (!pLocal) { return; }

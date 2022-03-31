@@ -7,7 +7,7 @@ class CVar
 {
 public:
 	T m_Var;
-	const wchar_t* m_szDisplayName;
+	const wchar_t* m_szDisplayName = L"";
 };
 
 namespace Vars
@@ -48,6 +48,7 @@ namespace Vars
 	namespace CritHack
 	{
 		inline CVar<bool> Active				{ false, L"Active" };
+		inline CVar<bool> indicators			{ true };
 		inline CVar<int> CritKey				{ VK_SHIFT, L"Crit Key" };
 	}
 
