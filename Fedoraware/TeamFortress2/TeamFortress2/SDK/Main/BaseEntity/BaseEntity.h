@@ -206,7 +206,7 @@ public: //Netvars & conditions
 
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
-		M_VIRTUALGET(MaxHealth, bool, this, int(__thiscall*)(void*), 107)
+		M_VIRTUALGET(MaxHealth, int, this, int(__thiscall*)(void*), 107)
 		M_VIRTUALGET(AbsAngles, const Vec3&, this, Vec3& (__thiscall*)(void*), 10)
 		M_VIRTUALGET(AbsOrigin, const Vec3&, this, Vec3& (__thiscall*)(void*), 9)
 
