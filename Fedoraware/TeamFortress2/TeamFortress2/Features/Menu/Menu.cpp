@@ -2,16 +2,18 @@
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
 #include "ImGui/imgui_internal.h"
+#include "Components.hpp"
 
 constexpr int MENU_KEY = VK_INSERT;
 
 /* The main menu */
 void CMenu::DrawMenu()
 {
-	ImGui::GetStyle().WindowMinSize = ImVec2(1000, 650);
-	
-	ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
-	ImGui::PushFont(Segoe);
+	ImGui::GetStyle().WindowMinSize = ImVec2(800, 500);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::SetNextWindowSize(ImVec2(1000, 600), ImGuiCond_Once);
+	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
 		// Draw rects
 		const auto window = ImGui::GetCurrentWindow();
@@ -19,32 +21,59 @@ void CMenu::DrawMenu()
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
+		constexpr float sBorder = 8.f;		// Border size (left, top)
+		constexpr float wSidebar = 225.f;	// Sidewar width (left)
+		constexpr float hTitle = 80.f;		// Titlebox height (top)
+
 		// Border structure
-		drawList->AddRectFilled(window->DC.CursorPos, { window->DC.CursorPos.x + 225.f, window->DC.CursorPos.y + windowSize.y }, BackgroundDark);
+		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + windowSize.y }, BackgroundDark);
+		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + hTitle }, AccentColor);
 
-		drawList->AddRectFilled(window->DC.CursorPos, { window->DC.CursorPos.x + 225.f, window->DC.CursorPos.y + 80.f }, AccentColor);
-		drawList->AddRectFilled(window->DC.CursorPos, { window->DC.CursorPos.x + windowSize.x, window->DC.CursorPos.y + 8.f }, AccentColor);
-		drawList->AddRectFilled(window->DC.CursorPos, { window->DC.CursorPos.x + 8.f, window->DC.CursorPos.y + windowSize.y }, AccentColor);
+		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + sBorder }, AccentColor);
+		drawList->AddRectFilled(windowPos, { windowPos.x + sBorder, windowPos.y + windowSize.y }, AccentColor);
 
-		window->DC.CursorPos.x += 32.f;
-		window->DC.CursorPos.y += 17.f;
+		// "Fedoraware" label
+		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, BackgroundDark, "Fedora");
+		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, BackgroundDark, "ware");
 
-		// Fedoraware label
-		ImGui::PushStyleColor(ImGuiCol_Text, BackgroundDark.Value);
-		ImGui::PushFont(Title);
-		ImGui::Text("Fedora");
-		ImGui::PopFont();
-		ImGui::SameLine(125.f);
-		ImGui::PushFont(TitleLight);
-		ImGui::Text("ware");
-		ImGui::PopFont();
-		ImGui::PopStyleColor();
+		// Sidebar
+		// ImGui::PushStyleColor(ImGuiCol_ChildBg, ImColor(100, 0, 0, 100).Value); // DEBUG: Child BG
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
+		ImGui::SetCursorPos({ sBorder, hTitle });
+		if (ImGui::BeginChild("Sidebar", { wSidebar - sBorder, windowSize.y - hTitle }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			ImGui::PushFont(TabFont);
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.f, 10.f });
+			ImGui::PushStyleColor(ImGuiCol_Border, ImColor(38, 38, 38).Value);
+			Cmp::SidebarButton("AIMBOT", true);
+			Cmp::SidebarButton("TRIGGER");
+			Cmp::SidebarButton("VISUALS");
+			Cmp::SidebarButton("HVH");
+			Cmp::SidebarButton("MISC");
+			Cmp::SidebarButton("CONFIGS");
+			ImGui::PopStyleColor();
+			ImGui::PopStyleVar(2);
+			ImGui::PopFont();
+		}
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
 
 		// Main content
-		ImGui::SetCursorPos({ windowPos.x + 235.f, windowPos.y + 20.f });
+		ImGui::SetCursorPos({ wSidebar, sBorder });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 15.f });
+		if (ImGui::BeginChild("Content", { windowSize.x - wSidebar, windowSize.y - sBorder }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			static bool test;
+			ImGui::Checkbox("Testbox", &test);
+		}
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+		// ImGui::PopStyleColor(); // DEBUG: Child BG
+
+		ImGui::End();
 	}
-	ImGui::PopFont();
-	ImGui::End();
+	ImGui::PopStyleVar();
 }
 
 /* Window for the camera feature */
@@ -52,29 +81,29 @@ void CMenu::DrawCameraWindow()
 {
 	if (g_Interfaces.Engine->IsInGame() && Vars::Visuals::CameraMode.m_Var != 0)
 	{
+		int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
+		if (Vars::Visuals::CameraMode.m_Var <= 1 || g_CameraWindow.CanDraw) {
+			windowFlags |= ImGuiWindowFlags_NoBackground;
+		}
+
+		// Draw the camera window
 		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
+		ImGui::PushStyleColor(ImGuiCol_Text, BackgroundDark.Value);
+		if (ImGui::Begin("Camera", nullptr, windowFlags))
 		{
-			int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
-			if (Vars::Visuals::CameraMode.m_Var <= 1 || g_CameraWindow.CanDraw) {
-				windowFlags |= ImGuiWindowFlags_NoBackground;
-			}
+			const ImVec2 winPos = ImGui::GetWindowPos();
+			const ImVec2 winSize = ImGui::GetWindowSize();
 
-			// Draw the camera window
-			if (ImGui::Begin("Camera", nullptr, windowFlags))
-			{
-				const ImVec2 winPos = ImGui::GetWindowPos();
-				const ImVec2 winSize = ImGui::GetWindowSize();
+			g_CameraWindow.ViewRect.x = static_cast<int>(winPos.x);
+			g_CameraWindow.ViewRect.y = static_cast<int>(winPos.y);
+			g_CameraWindow.ViewRect.w = static_cast<int>(winSize.x);
+			g_CameraWindow.ViewRect.h = static_cast<int>(winSize.y);
 
-				g_CameraWindow.ViewRect.x = static_cast<int>(winPos.x);
-				g_CameraWindow.ViewRect.y = static_cast<int>(winPos.y);
-				g_CameraWindow.ViewRect.w = static_cast<int>(winSize.x);
-				g_CameraWindow.ViewRect.h = static_cast<int>(winSize.y);
-
-				ImGui::End();
-			}
+			ImGui::End();
 		}
+		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 	}
 }
@@ -110,10 +139,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 	if (g_Menu.IsOpen)
 	{
+		ImGui::PushFont(Segoe);
 		DrawMenu();
 		DrawCameraWindow();
 
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
+		ImGui::PopFont();
 	}
 
 	// End frame and render
@@ -130,40 +161,55 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	ImGui_ImplWin32_Init(FindWindowA(nullptr, "Team Fortress 2"));
 	ImGui_ImplDX9_Init(pDevice);
 
-	auto& io = ImGui::GetIO();
+	const auto& io = ImGui::GetIO();
 	auto& style = ImGui::GetStyle();
 
 	// Fonts
 	{
 		auto fontConfig = ImFontConfig();
-		fontConfig.OversampleH = 1;
-		fontConfig.OversampleV = 1;
-		fontConfig.PixelSnapH = true;
+		fontConfig.OversampleH = 2;
+		//fontConfig.OversampleV = 1;
+		//fontConfig.PixelSnapH = true;
 
-		const ImWchar TextFontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F,0 }; // Basic Latin, Latin Supplement and Cyrillic
-		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 14.0f, &fontConfig, TextFontRange);
-		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 14.0f, &fontConfig, TextFontRange);
-		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 14.0f, &fontConfig, TextFontRange);
+		auto wideFontConfig = ImFontConfig();
+		wideFontConfig.GlyphExtraSpacing = { 6.f, 0.f };
 
-		Title = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 38.0f, &fontConfig, TextFontRange);
-		TitleLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 38.0f, &fontConfig, TextFontRange);
+		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F,0 }; // Basic Latin, Latin Supplement and Cyrillic
+		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
+		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
+		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
+
+		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 26.0f, &wideFontConfig, fontRange);
+
+		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 38.0f, &fontConfig, fontRange);
+		TitleLightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 38.0f, &fontConfig, fontRange);
 
 		io.Fonts->Build();
 	}
 
 	// Style
 	{
+		// https://raais.github.io/ImStudio/
+
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
 		style.WindowMinSize = ImVec2(708, 708);
 		style.WindowPadding = ImVec2(0, 0);
-		style.WindowBorderSize = 0.f;
-		style.ButtonTextAlign = ImVec2(0.5f, 0.5f);		// Center button text
+		style.WindowBorderSize = 1.f;
+		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
 		style.FrameBorderSize = 0.f;
 		style.FrameRounding = 0.f;
+		style.ChildBorderSize = 0.f;
+		style.ChildRounding = 0.f;
 		style.ScrollbarSize = 3.f;
 
 		ImVec4* colors = style.Colors;
+		colors[ImGuiCol_Border] = AccentColor;
 		colors[ImGuiCol_WindowBg] = Background;
+		colors[ImGuiCol_TitleBg] = BackgroundDark;
+		colors[ImGuiCol_TitleBgActive] = AccentColor;
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
+		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
+		colors[ImGuiCol_ButtonHovered] = Background;
+		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
 	}
 }

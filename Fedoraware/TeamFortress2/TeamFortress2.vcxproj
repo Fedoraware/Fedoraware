@@ -218,6 +218,7 @@
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Components.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h">
       <DeploymentContent>false</DeploymentContent>
