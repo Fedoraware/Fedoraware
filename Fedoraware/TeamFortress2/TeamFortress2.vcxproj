@@ -118,7 +118,6 @@
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.cpp" />

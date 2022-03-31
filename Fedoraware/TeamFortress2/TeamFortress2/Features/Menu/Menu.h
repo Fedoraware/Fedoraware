@@ -9,9 +9,12 @@ private:
 	void DrawCameraWindow();
 
 	// Fonts
-	ImFont* SegoeLight;
-	ImFont* Segoe;
-	ImFont* SegoeBold;
+	ImFont* SegoeLight = nullptr;
+	ImFont* Segoe = nullptr;
+	ImFont* SegoeBold = nullptr;
+
+	ImFont* Title = nullptr;
+	ImFont* TitleLight = nullptr;
 
 public:
 	void Render(IDirect3DDevice9* pDevice);
@@ -20,6 +23,11 @@ public:
 	bool IsOpen = false;
 	bool ConfigLoaded = false;
 	bool Unload = false;
+
+	// Colors
+	ImColor AccentColor = { 225, 177, 44 };
+	ImColor BackgroundDark = { 13, 13, 13 };
+	ImColor Background = { 23, 23, 23, 240 };
 };
 
 inline CMenu g_Menu;
