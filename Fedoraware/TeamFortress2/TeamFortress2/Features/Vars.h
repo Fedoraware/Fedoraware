@@ -476,6 +476,7 @@ namespace Vars
 		inline CVar<int> VMOffX{ 0, L"VM Offset" };
 		inline CVar<int> VMOffY{ 0, L"VM Offset" };
 		inline CVar<int> VMOffZ{ 0, L"VM Offset" };
+		inline Vec3 VMOffsets{};
 		inline CVar<int> VMRoll{ 0, L"VM Offset" };
 
 		inline CVar<float> despawnTime{ 5.f, L"How many ticks to despawn a damage log event" };

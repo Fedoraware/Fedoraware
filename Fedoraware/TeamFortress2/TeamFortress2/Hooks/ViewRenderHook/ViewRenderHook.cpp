@@ -53,7 +53,6 @@ void CustomFogSetup() {
 
 void __fastcall ViewRenderHook::LevelInit::Hook(void* ecx, void* edx)
 {
-	g_GlobalInfo.dtTicks = 0;
 	CustomFogSetup();
 	g_Visuals.OverrideWorldTextures();
 	Func.Original<fn>()(ecx);

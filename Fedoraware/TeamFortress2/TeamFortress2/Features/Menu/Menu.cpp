@@ -1181,9 +1181,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
 						widget_pos = ImGui::GetCursorScreenPos();
 						widget_pos.y -= 4;
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
-						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off X", &Vars::Visuals::VMOffX.m_Var, -90, 90);
-						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Y", &Vars::Visuals::VMOffY.m_Var, -90, 90);
-						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Off Z", &Vars::Visuals::VMOffZ.m_Var, -90, 90);
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("VM Off X", &Vars::Visuals::VMOffsets.x, -45.f, 45.f);
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("VM Off Y", &Vars::Visuals::VMOffsets.y, -45.f, 45.f);
+						ImGui::PushItemWidth(150); ImGui::SliderFloat("VM Off Z", &Vars::Visuals::VMOffsets.z, -45.f, 45.f);
 						ImGui::PushItemWidth(150); ImGui::SliderInt("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
 						ImGui::Dummy(ImVec2(0, 20));
 

@@ -26,7 +26,6 @@ struct GlobalInfo_t
 	int m_nCurItemDefIndex              = 0;
 	int m_nWaitForShift                 = 0;
 	int m_nShifted                      = 0;
-	int dtTicks = MAX_NEW_COMMANDS; // how many to shift
 	int gNotifCounter = 0;
 	int vEyeAngDelay = 25	;
 	bool m_bWeaponCanHeadShot			= false;
@@ -54,7 +53,6 @@ struct GlobalInfo_t
 	float m_flCurAimFOV					= 0.0f;
 	Vec3 m_vPredictedPos				= {};
 	Vec3 m_vAimPos						= {};
-	Vec3 m_vEyeAngDelayed				= {};
 	VMatrix m_WorldToProjection			= {};
 	Vec3 m_vViewAngles					= {};
 	Vec3 m_vRealViewAngles				= {};

@@ -75,6 +75,13 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::Save(const wchar_t* name, Vec3 val)
+{
+	char buffer[64];
+	sprintf_s(buffer, "%ls: %f %f %f", name, val.x, val.y, val.z);
+	m_Write << buffer << "\n";
+}
+
 void CConfigManager::Save(const wchar_t *name, Chams_t val)
 {
 	char buffer[64];
@@ -127,6 +134,17 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	}
+}
+
+void CConfigManager::Load(const wchar_t* name, Vec3& val)
+{
+	std::wstring line = {};
+
+	if (Find(name, line)) {
+		float x = 0.f, y = 0.f, z = 0.f;
+		swscanf_s(line.c_str(), L"%*ls %f %f %f", &x, &y, &z);
+		val = { x, y, z };
 	}
 }
 
@@ -542,9 +560,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::MoveSimLine);
-			SAVE_VAR(Vars::Visuals::VMOffX);
-			SAVE_VAR(Vars::Visuals::VMOffY);
-			SAVE_VAR(Vars::Visuals::VMOffZ);
+			SAVE_OTHER(Vars::Visuals::VMOffsets);
 			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
@@ -1224,9 +1240,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::MoveSimLine);
-			LOAD_VAR(Vars::Visuals::VMOffX);
-			LOAD_VAR(Vars::Visuals::VMOffY);
-			LOAD_VAR(Vars::Visuals::VMOffZ);
+			LOAD_OTHER(Vars::Visuals::VMOffsets);
 			LOAD_VAR(Vars::Visuals::VMRoll);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			LOAD_VAR(Vars::Visuals::ArrowLength);
