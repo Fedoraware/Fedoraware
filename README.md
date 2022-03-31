@@ -68,7 +68,7 @@
 ## Credits to:
   - [spook953](https://github.com/spook953)
   - [Lak3](https://github.com/Lak3)
-  - [M-FeD](https://github.com/M-F3D)
+  - [Johnathon Walnut](https://github.com/johnathon-walnut)
   - [JAGNEmk](https://github.com/JAGNEmk)
   - [r00t](https://github.com/l-r00t-l)
   - [lykanfox](https://github.com/lykanfox)
