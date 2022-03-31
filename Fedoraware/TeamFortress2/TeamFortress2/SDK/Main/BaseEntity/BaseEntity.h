@@ -197,6 +197,7 @@ public: //Netvars & conditions
 		NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"))
 		NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"))
 		NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"))
+		NETVAR(clientAnimations, bool, _("CBaseAnimating"), _("m_bClientSideAnimation"))
 		NETVAR(m_vecMins, Vec3, _("CBaseEntity"), _("m_vecMins"))
 		NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"))
 		NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence")
@@ -205,7 +206,7 @@ public: //Netvars & conditions
 
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
-		M_VIRTUALGET(MaxHealth, int, this, int(__thiscall*)(void*), 107)
+		M_VIRTUALGET(MaxHealth, bool, this, int(__thiscall*)(void*), 107)
 		M_VIRTUALGET(AbsAngles, const Vec3&, this, Vec3& (__thiscall*)(void*), 10)
 		M_VIRTUALGET(AbsOrigin, const Vec3&, this, Vec3& (__thiscall*)(void*), 9)
 

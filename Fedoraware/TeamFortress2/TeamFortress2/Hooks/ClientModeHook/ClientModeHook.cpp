@@ -57,11 +57,8 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 		static float last_time = 0.0f;
 		static int buttones = 0;
 
-		if (g_Interfaces.GlobalVars->curtime - last_time > 20)
-		{
-			pCmd->buttons &= IN_FORWARD;
-			pCmd->buttons &= IN_JUMP;
-			last_time = g_Interfaces.GlobalVars->curtime;
+		if (pCmd->command_number % 2){
+			pCmd->buttons |= 1 << 27;
 		}
 	}
 }
