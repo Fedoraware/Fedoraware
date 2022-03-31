@@ -37,24 +37,11 @@ void CMenu::DrawMenu()
 		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, BackgroundDark, "ware");
 
 		// Sidebar
-		// ImGui::PushStyleColor(ImGuiCol_ChildBg, ImColor(100, 0, 0, 100).Value); // DEBUG: Child BG
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
 		ImGui::SetCursorPos({ sBorder, hTitle });
 		if (ImGui::BeginChild("Sidebar", { wSidebar - sBorder, windowSize.y - hTitle }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
 		{
-			ImGui::PushFont(TabFont);
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
-			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.f, 10.f });
-			ImGui::PushStyleColor(ImGuiCol_Border, ImColor(38, 38, 38).Value);
-			Cmp::SidebarButton("AIMBOT", true);
-			Cmp::SidebarButton("TRIGGER");
-			Cmp::SidebarButton("VISUALS");
-			Cmp::SidebarButton("HVH");
-			Cmp::SidebarButton("MISC");
-			Cmp::SidebarButton("CONFIGS");
-			ImGui::PopStyleColor();
-			ImGui::PopStyleVar(2);
-			ImGui::PopFont();
+			DrawSidebar();
 		}
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
@@ -64,16 +51,106 @@ void CMenu::DrawMenu()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 15.f });
 		if (ImGui::BeginChild("Content", { windowSize.x - wSidebar, windowSize.y - sBorder }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
 		{
-			static bool test;
-			ImGui::Checkbox("Testbox", &test);
+			ImGui::PushFont(Segoe);
+			switch (CurrentTab)
+			{
+				case MenuTab::Aimbot: { MenuAimbot(); break; }
+				case MenuTab::Trigger: { MenuTrigger(); break; }
+				case MenuTab::Visuals: { MenuVisuals(); break; }
+				case MenuTab::HvH: { MenuHvH(); break; }
+				case MenuTab::Misc: { MenuMisc(); break; }
+				case MenuTab::Configs: { MenuConfigs(); break; }
+				default: { MenuAimbot(); break; }
+			}
+			ImGui::PopFont();
 		}
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
-		// ImGui::PopStyleColor(); // DEBUG: Child BG
 
+		// End
 		ImGui::End();
 	}
 	ImGui::PopStyleVar();
+}
+
+/* Draws the menu sidebar */
+void CMenu::DrawSidebar()
+{
+	ImGui::PushFont(TabFont);
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.f, 10.f });
+	ImGui::PushStyleColor(ImGuiCol_Border, ImColor(38, 38, 38).Value);
+	{
+		if (Cmp::SidebarButton("AIMBOT", CurrentTab == MenuTab::Aimbot))
+		{
+			CurrentTab = MenuTab::Aimbot;
+		}
+
+		if (Cmp::SidebarButton("TRIGGER", CurrentTab == MenuTab::Trigger))
+		{
+			CurrentTab = MenuTab::Trigger;
+		}
+
+		if (Cmp::SidebarButton("VISUALS", CurrentTab == MenuTab::Visuals))
+		{
+			CurrentTab = MenuTab::Visuals;
+		}
+
+		if (Cmp::SidebarButton("HVH", CurrentTab == MenuTab::HvH))
+		{
+			CurrentTab = MenuTab::HvH;
+		}
+
+		if (Cmp::SidebarButton("MISC", CurrentTab == MenuTab::Misc))
+		{
+			CurrentTab = MenuTab::Misc;
+		}
+
+		if (Cmp::SidebarButton("CONFIGS", CurrentTab == MenuTab::Configs))
+		{
+			CurrentTab = MenuTab::Configs;
+		}
+	}
+	ImGui::PopStyleColor();
+	ImGui::PopStyleVar(2);
+	ImGui::PopFont();
+}
+
+/* Tab: Aimbot */
+void CMenu::MenuAimbot()
+{
+	static bool test;
+	ImGui::Switch("Test toggle", &test);
+}
+
+/* Tab: Trigger */
+void CMenu::MenuTrigger()
+{
+	
+}
+
+/* Tab: Visuals */
+void CMenu::MenuVisuals()
+{
+
+}
+
+/* Tab: HvH */
+void CMenu::MenuHvH()
+{
+
+}
+
+/* Tab: Misc */
+void CMenu::MenuMisc()
+{
+
+}
+
+/* Tab: Configs */
+void CMenu::MenuConfigs()
+{
+
 }
 
 /* Window for the camera feature */

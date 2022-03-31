@@ -4,9 +4,26 @@
 #include "../../SDK/SDK.h"
 
 class CMenu {
-private:
 	void DrawMenu();
+	void DrawSidebar();
+	void MenuAimbot();
+	void MenuTrigger();
+	void MenuVisuals();
+	void MenuHvH();
+	void MenuMisc();
+	void MenuConfigs();
 	void DrawCameraWindow();
+
+	enum class MenuTab {
+		Aimbot,
+		Trigger,
+		Visuals,
+		HvH,
+		Misc,
+		Configs
+	};
+
+	MenuTab CurrentTab = MenuTab::Aimbot;
 
 	// Fonts
 	ImFont* SegoeLight = nullptr;	// 16px
