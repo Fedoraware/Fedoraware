@@ -27,10 +27,10 @@ void CMenu::DrawMenu()
 
 		// Border structure
 		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + windowSize.y }, BackgroundDark);
-		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + hTitle }, AccentColor);
+		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + hTitle }, Accent);
 
-		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + sBorder }, AccentColor);
-		drawList->AddRectFilled(windowPos, { windowPos.x + sBorder, windowPos.y + windowSize.y }, AccentColor);
+		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + sBorder }, Accent);
+		drawList->AddRectFilled(windowPos, { windowPos.x + sBorder, windowPos.y + windowSize.y }, Accent);
 
 		// "Fedoraware" label
 		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, BackgroundDark, "Fedora");
@@ -119,8 +119,23 @@ void CMenu::DrawSidebar()
 /* Tab: Aimbot */
 void CMenu::MenuAimbot()
 {
-	static bool test;
-	ImGui::Switch("Test toggle", &test);
+	if (ImGui::BeginTable("c1", 3))
+	{
+		ImGui::TableNextColumn();
+
+		if (Cmp::BeginContainer("Global"))
+		{
+			Cmp::Switch("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
+
+			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
+		}
+
+		ImGui::TableNextColumn();
+
+		ImGui::TableNextColumn();
+
+		ImGui::EndTable();
+	}
 }
 
 /* Tab: Trigger */
@@ -277,16 +292,21 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 0.f;
 		style.ChildRounding = 0.f;
-		style.ScrollbarSize = 3.f;
+		style.ScrollbarSize = 4.f;
+		style.GrabMinSize = 14.f;
+		style.GrabRounding = 12.f;
 
 		ImVec4* colors = style.Colors;
-		colors[ImGuiCol_Border] = AccentColor;
+		colors[ImGuiCol_Border] = Accent;
 		colors[ImGuiCol_WindowBg] = Background;
 		colors[ImGuiCol_TitleBg] = BackgroundDark;
-		colors[ImGuiCol_TitleBgActive] = AccentColor;
+		colors[ImGuiCol_TitleBgActive] = Accent;
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
 		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
 		colors[ImGuiCol_ButtonHovered] = Background;
 		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
+		colors[ImGuiCol_HeaderActive] = Accent;
+		colors[ImGuiCol_HeaderHovered] = Accent;
+		colors[ImGuiCol_Header] = AccentDark;
 	}
 }

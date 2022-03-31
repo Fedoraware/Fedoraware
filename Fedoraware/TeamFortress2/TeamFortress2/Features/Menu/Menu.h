@@ -44,7 +44,8 @@ public:
 	bool Unload = false;
 
 	// Colors
-	ImColor AccentColor = { 225, 177, 44 };
+	ImColor Accent = { 225, 177, 44 };
+	ImColor AccentDark = { 225, 177, 44 };
 	ImColor BackgroundDark = { 13, 13, 13 };
 	ImColor Background = { 23, 23, 23, 250 };
 };
