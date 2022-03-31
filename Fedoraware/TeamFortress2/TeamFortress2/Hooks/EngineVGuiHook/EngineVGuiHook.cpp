@@ -8,6 +8,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
 #include "../../Features/CritHack/CritHack.h"
+#include "../../Features/Menu/Menu.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -201,6 +202,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 						}
 					}
+				}
+
+				// Build Date
+				if (g_Menu.IsOpen)
+				{
+					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
 				}
 
 				// debug

@@ -85,7 +85,6 @@
     <ClCompile Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Fonts\font_awesome_data.h" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
@@ -93,6 +92,16 @@
     <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
     <ClCompile Include="TeamFortress2\Features\Resolver\Resolver.cpp" />
     <ClCompile Include="TeamFortress2\Features\CritHack\CritHack.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -612,8 +621,6 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome_defs.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Fonts\font_awesome.h" />
     <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Hooks\MaterialSystemHook\MaterialSystemHook.h" />
@@ -625,6 +632,17 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\worldsize.h" />
     <ClInclude Include="TeamFortress2\Features\Resolver\Resolver.h" />
     <ClInclude Include="TeamFortress2\Features\CritHack\CritHack.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_internal.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_textedit.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

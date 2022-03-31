@@ -9,6 +9,8 @@
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
+#include "Features/Menu/Menu.h"
+
 #include "Features/Menu/InputHelper/InputHelper.h"
 #include "Features/Menu/ConfigManager/ConfigManager.h"
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
@@ -120,6 +122,7 @@ void LoadDefaultConfig()
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		});
+	g_Menu.ConfigLoaded = true;
 }
 
 DWORD WINAPI MainThread(LPVOID lpParam)
@@ -138,7 +141,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Loaded();
 
-	while (!GetAsyncKeyState(VK_F11)) {
+	while (!GetAsyncKeyState(VK_F11) || g_Menu.IsOpen) {
 		Sleep(1000);
 		UpdateRichPresence();
 	}
