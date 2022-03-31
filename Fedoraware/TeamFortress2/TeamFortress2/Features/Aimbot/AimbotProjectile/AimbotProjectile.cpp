@@ -541,15 +541,12 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					case TF_WEAPON_COMPOUND_BOW:
 					case TF_WEAPON_SYRINGEGUN_MEDIC:
 					{
-						if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal)
-						{
-							Vec3 vecOffset(23.5f, 12.0f, -3.0f);
+						Vec3 vecOffset(23.5f, 12.0f, -3.0f);
+						if (pLocal->IsDucking())
+							vecOffset.z = 8.0f;
+						if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheOriginal) { vecOffset.z = 0.f; }
 
-							if (pLocal->IsDucking())
-								vecOffset.z = 8.0f;
-
-							Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vVisCheck);
-						}
+						Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vVisCheck);
 
 						break;
 					}
@@ -571,7 +568,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					default: break;
 					}
 
-					Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2), MASK_SOLID_BRUSHONLY,
+					Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-8, -8, -8), Vec3(8, 8, 8), MASK_SOLID_BRUSHONLY,
 						&TraceFilter, &Trace);
 
 					if (Trace.DidHit())
