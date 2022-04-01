@@ -29,8 +29,8 @@ void CMenu::DrawMenu()
 		drawList->AddRectFilled(windowPos, { windowPos.x + BorderWidth, windowPos.y + windowSize.y }, Accent);
 
 		// "Fedoraware" label
-		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, BackgroundDark, "Fedora");
-		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, BackgroundDark, "ware");
+		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, TextDark, "Fedora");
+		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, TextDark, "ware");
 
 		// Sidebar
 		if (SidebarWidth > 10.f)
@@ -205,7 +205,7 @@ void CMenu::DrawCameraWindow()
 		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
 		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
-		ImGui::PushStyleColor(ImGuiCol_Text, BackgroundDark.Value);
+		ImGui::PushStyleColor(ImGuiCol_Text, TextDark.Value);
 		if (ImGui::Begin("Camera", nullptr, windowFlags))
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
@@ -335,6 +335,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
 		colors[ImGuiCol_FrameBgActive] = ImColor(60, 60, 60);
 		colors[ImGuiCol_CheckMark] = Accent;
+		colors[ImGuiCol_Text] = TextLight;
 
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;

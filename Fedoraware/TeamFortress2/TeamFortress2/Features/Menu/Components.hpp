@@ -32,7 +32,7 @@ namespace ImGui
 	__inline bool BeginContainer(const char* str_id)
 	{
 		PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.f, 8.f));
-		PushStyleColor(ImGuiCol_Text, ImColor(13, 13, 13).Value);
+		PushStyleColor(ImGuiCol_Text, g_Menu.TextDark.Value);
 		const bool open = CollapsingHeader(str_id, ImGuiTreeNodeFlags_DefaultOpen);
 		PopStyleColor();
 		PopStyleVar();
@@ -115,7 +115,7 @@ namespace ImGui
 		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
 		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
 		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
-		PushStyleColor(ImGuiCol_Text, g_Menu.BackgroundDark.Value);
+		PushStyleColor(ImGuiCol_Text, g_Menu.TextDark.Value);
 		if (GetActiveID() == id) {
 			Button("...", ImVec2(100, 20));
 
