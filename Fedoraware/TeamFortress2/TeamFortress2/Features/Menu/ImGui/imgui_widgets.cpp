@@ -3106,6 +3106,8 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
         RenderText({ frame_bb.Max.x - style.ItemInnerSpacing.x - valueLabelSize.x, frame_bb.Min.y + 14 }, value_buf, value_buf_end);
     }
 
+    window->DC.CursorPos.y += 6.f;
+
     IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
     return value_changed;
 }

@@ -131,8 +131,14 @@ void CMenu::MenuAimbot()
 		{
 			ImGui::ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
 			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
+			ImGui::ColorPickerInline("FOV Circle", Colors::FOVCircle);
 			static int value = 5;
+			static bool testbool = false;
 			ImGui::SliderInt("My Label", &value, 2, 100);
+			ImGui::InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);
+			ImGui::ToggleButton("This shouldn't clip", &testbool);
+			ImGui::ToggleButton("Toggle A", &Vars::Aimbot::Global::Active.m_Var);
+			ImGui::ToggleButton("Checkbox B", &Vars::Aimbot::Global::Active.m_Var);
 		}
 
 		ImGui::TableNextColumn();
@@ -293,6 +299,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
+		style.CellPadding = ImVec2(10.f, 4.f);
 		style.FrameBorderSize = 0.f;
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 0.f;
@@ -310,6 +317,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
 		colors[ImGuiCol_ButtonHovered] = Background;
 		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
+
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;
 		colors[ImGuiCol_HeaderActive] = Accent;

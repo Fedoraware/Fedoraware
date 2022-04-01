@@ -2,6 +2,19 @@
 
 namespace ImGui
 {
+	inline ImVec4 mColor(Color_t color) {
+		return ImVec4(Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a));
+	}
+
+	inline Color_t vColor(ImVec4 color) {
+		return {
+			static_cast<byte>(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
+			static_cast<byte>(color.y * 256.0f > 255 ? 255 : color.y * 256.0f),
+			static_cast<byte>(color.z * 256.0f > 255 ? 255 : color.z * 256.0f),
+			static_cast<byte>(color.w * 256.0f > 255 ? 255 : color.w * 256.0f)
+		};
+	}
+
 	__inline bool SidebarButton(const char* label, bool active = false)
 	{
 		if (active) { PushStyleColor(ImGuiCol_Button, ImColor(38, 38, 38).Value); }
@@ -17,6 +30,172 @@ namespace ImGui
 		const bool open = CollapsingHeader(str_id, ImGuiTreeNodeFlags_DefaultOpen);
 		PopStyleColor();
 		return open;
+	}
+
+    __inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
+	{
+		bool active = false;
+
+		auto VK2STR = [&](const short key) -> const char* {
+			switch (key) {
+			case VK_LBUTTON: return "LMB";
+			case VK_RBUTTON: return "RMB";
+			case VK_MBUTTON: return "MMB";
+			case VK_XBUTTON1: return "Mouse4";
+			case VK_XBUTTON2: return "Mouse5";
+			case VK_SPACE: return "Space";
+			case 0x0: return "None";
+			case VK_A: return "A";
+			case VK_B: return "B";
+			case VK_C: return "C";
+			case VK_D: return "D";
+			case VK_E: return "E";
+			case VK_F: return "F";
+			case VK_G: return "G";
+			case VK_H: return "H";
+			case VK_I: return "I";
+			case VK_J: return "J";
+			case VK_K: return "K";
+			case VK_L: return "L";
+			case VK_M: return "M";
+			case VK_N: return "N";
+			case VK_O: return "O";
+			case VK_P: return "P";
+			case VK_Q: return "Q";
+			case VK_R: return "R";
+			case VK_S: return "S";
+			case VK_T: return "T";
+			case VK_U: return "U";
+			case VK_V: return "V";
+			case VK_W: return "W";
+			case VK_X: return "X";
+			case VK_Y: return "Y";
+			case VK_Z: return "Z";
+			case VK_0: return "0";
+			case VK_1: return "1";
+			case VK_2: return "2";
+			case VK_3: return "3";
+			case VK_4: return "4";
+			case VK_5: return "5";
+			case VK_6: return "6";
+			case VK_7: return "7";
+			case VK_8: return "8";
+			case VK_9: return "9";
+			case VK_ESCAPE: return "Escape";
+			case VK_SHIFT: return "Shift";
+			case VK_LSHIFT: return "Shift";
+			case VK_RSHIFT: return "Shift";
+			case VK_CONTROL: return "Control";
+			case VK_MENU: return "LAlt";
+			case VK_PRIOR: return "Page Up";
+			case VK_NEXT: return "Page Down";
+			default: break;
+			}
+
+			WCHAR output[16] = { L"\0" };
+			if (const int result = GetKeyNameTextW(MapVirtualKeyW(key, MAPVK_VK_TO_VSC) << 16, output, 16)) {
+				char outputt[128];
+				sprintf(outputt, "%ws", output);
+				return outputt;
+			}
+
+			return "VK2STR_FAILED";
+		};
+
+		const auto id = GetID(label);
+		PushID(label);
+
+		if (GetActiveID() == id) {
+			PushStyleColor(ImGuiCol_Button, GetColorU32(ImGuiCol_ButtonActive));
+			Button("...", ImVec2(100, 20));
+			PopStyleColor();
+
+			static float time = g_Interfaces.Engine->Time();
+			const float elapsed = g_Interfaces.Engine->Time() - time;
+			static CVar<int>* curr = nullptr, * prevv = curr;
+			if (curr != prevv) {
+				time = g_Interfaces.Engine->Time();
+				prevv = curr;
+			}
+
+			if (curr == nullptr && elapsed > 0.1f) {
+				for (short n = 0; n < 256; n++) {
+					if ((n > 0x0 && n < 0x7) ||
+						(n > L'A' - 1 && n < L'Z' + 1) ||
+						(n > L'0' - 1 && n < L'9' + 1) ||
+						n == VK_LSHIFT ||
+						n == VK_RSHIFT ||
+						n == VK_SHIFT ||
+						n == VK_ESCAPE ||
+						n == VK_HOME ||
+						n == VK_CONTROL ||
+						n == VK_MENU ||
+						n == VK_PRIOR ||
+						n == VK_NEXT) {
+						if ((!IsItemHovered() && GetIO().MouseClicked[0])) {
+							ClearActiveID();
+							break;
+						}
+						if (GetAsyncKeyState(n) & 0x8000)
+						{
+							if (n == VK_HOME || n == VK_INSERT) {
+								break;
+							}
+
+							if (n == VK_ESCAPE && bAllowNone) {
+								ClearActiveID();
+								output.m_Var = 0x0;
+								break;
+							}
+
+							output.m_Var = n;
+							ClearActiveID();
+							break;
+						}
+					} //loop
+				}
+			}
+
+			if (curr != prevv) {
+				time = g_Interfaces.Engine->Time();
+				prevv = curr;
+			}
+
+			GetCurrentContext()->ActiveIdAllowOverlap = true;
+			if ((!IsItemHovered() && GetIO().MouseClicked[0]))
+			{
+				ClearActiveID();
+			}
+		}
+		else if (Button(VK2STR(output.m_Var), ImVec2(100, 20))) {
+			SetActiveID(id, GetCurrentWindow());
+		}
+
+		SameLine();
+		TextUnformatted(label);
+		PopID();
+
+		return true;
+	}
+
+	__inline bool ColorPicker(const char* label, Color_t& color)
+	{
+		bool open = false;
+		ImVec4 tempColor = {};
+		PushItemWidth(150);
+		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
+			color = vColor(tempColor);
+			open = true;
+		}
+		PopItemWidth();
+		return open;
+	}
+
+	__inline bool ColorPickerInline(const char* label, Color_t& color)
+	{
+		SameLine(ImGui::GetContentRegionMax().x - 20);
+		SetNextItemWidth(20);
+		return ColorPicker(label, color);
 	}
 
     // Source: https://github.com/ocornut/imgui/issues/1537#issuecomment-355569554
