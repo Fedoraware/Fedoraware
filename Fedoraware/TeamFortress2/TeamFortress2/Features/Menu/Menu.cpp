@@ -81,32 +81,36 @@ void CMenu::DrawSidebar()
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.f, 10.f });
 	ImGui::PushStyleColor(ImGuiCol_Border, ImColor(38, 38, 38).Value);
 	{
-		if (Cmp::SidebarButton("AIMBOT", CurrentTab == MenuTab::Aimbot))
+		if (ImGui::SidebarButton("AIMBOT", CurrentTab == MenuTab::Aimbot))
 		{
 			CurrentTab = MenuTab::Aimbot;
 		}
 
-		if (Cmp::SidebarButton("TRIGGER", CurrentTab == MenuTab::Trigger))
+		if (ImGui::SidebarButton("TRIGGER", CurrentTab == MenuTab::Trigger))
 		{
 			CurrentTab = MenuTab::Trigger;
 		}
 
-		if (Cmp::SidebarButton("VISUALS", CurrentTab == MenuTab::Visuals))
+		if (ImGui::SidebarButton("VISUALS", CurrentTab == MenuTab::Visuals))
 		{
 			CurrentTab = MenuTab::Visuals;
 		}
 
-		if (Cmp::SidebarButton("HVH", CurrentTab == MenuTab::HvH))
+		if (ImGui::SidebarButton("HVH", CurrentTab == MenuTab::HvH))
 		{
 			CurrentTab = MenuTab::HvH;
 		}
 
-		if (Cmp::SidebarButton("MISC", CurrentTab == MenuTab::Misc))
+		if (ImGui::SidebarButton("MISC", CurrentTab == MenuTab::Misc))
 		{
 			CurrentTab = MenuTab::Misc;
 		}
 
-		if (Cmp::SidebarButton("CONFIGS", CurrentTab == MenuTab::Configs))
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (ImGui::SidebarButton("CONFIGS", CurrentTab == MenuTab::Configs))
 		{
 			CurrentTab = MenuTab::Configs;
 		}
@@ -123,11 +127,12 @@ void CMenu::MenuAimbot()
 	{
 		ImGui::TableNextColumn();
 
-		if (Cmp::BeginContainer("Global"))
+		if (ImGui::BeginContainer("Global"))
 		{
-			Cmp::Switch("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
-
+			ImGui::ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
 			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
+			static int value = 5;
+			ImGui::SliderInt("My Label", &value, 2, 100);
 		}
 
 		ImGui::TableNextColumn();
@@ -305,8 +310,14 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
 		colors[ImGuiCol_ButtonHovered] = Background;
 		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
+		colors[ImGuiCol_SliderGrab] = Accent;
+		colors[ImGuiCol_SliderGrabActive] = AccentDark;
 		colors[ImGuiCol_HeaderActive] = Accent;
 		colors[ImGuiCol_HeaderHovered] = Accent;
 		colors[ImGuiCol_Header] = AccentDark;
 	}
 }
+
+#pragma region Components
+
+#pragma endregion
