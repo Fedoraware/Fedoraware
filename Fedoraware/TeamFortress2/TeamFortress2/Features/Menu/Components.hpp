@@ -17,7 +17,7 @@ namespace ImGui
 
 	__inline void HelpMarker(const char* desc)
 	{
-
+		// TODO: This
 	}
 
 	__inline bool SidebarButton(const char* label, bool active = false)
@@ -187,9 +187,9 @@ namespace ImGui
 	}
 
 	/* Combobox with multiple selectable items */
-	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, std::string description, std::string comboName) {
+	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, const std::string& description, std::string comboName) {
 		if (titles.size() != options.size()) { return; }
-
+		
 		std::string preview = "<None>##";
 		for (size_t i = 0; i < options.size(); i++) {
 			if (*options[i]) {
@@ -200,13 +200,21 @@ namespace ImGui
 		}
 		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
+		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
+		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
+		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
 		if (BeginCombo(comboName.c_str(), preview.c_str())) {
+			PushStyleColor(ImGuiCol_Header, ImColor(40, 40, 40).Value);
+			PushStyleColor(ImGuiCol_HeaderHovered, ImColor(50, 50, 50).Value);
+			PushStyleColor(ImGuiCol_HeaderActive, ImColor(40, 40, 40).Value);
 			for (size_t i = 0; i < titles.size(); i++) {
 				Selectable(titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
 			}
+			PopStyleColor(3);
 
 			EndCombo();
 		}
+		PopStyleColor(3);
 
 		HelpMarker(description.c_str());
 	}

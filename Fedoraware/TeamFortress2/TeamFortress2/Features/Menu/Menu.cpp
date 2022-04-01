@@ -129,10 +129,11 @@ void CMenu::MenuAimbot()
 			ImGui::ColorPickerL("Target Color", Colors::Target);
 			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
 			ImGui::ColorPickerL("FOV Circle", Colors::FOVCircle);
+			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey);
 			ImGui::ToggleButton("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
 			ImGui::MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
 			ImGui::MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
-			ImGui::ColorPicker("Invulnerable colour", Colors::Invuln);
+			ImGui::ColorPickerL("Invulnerable colour", Colors::Invuln);
 		}
 
 		ImGui::TableNextColumn();
@@ -316,6 +317,10 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
 		colors[ImGuiCol_ButtonHovered] = Background;
 		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
+		colors[ImGuiCol_PopupBg] = BackgroundDark;
+		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
+		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
+		colors[ImGuiCol_FrameBgActive] = ImColor(60, 60, 60);
 
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;

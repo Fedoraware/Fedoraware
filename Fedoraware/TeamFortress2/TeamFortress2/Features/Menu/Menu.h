@@ -52,6 +52,8 @@ public:
 	ImColor AccentDark = { 191, 150, 38 };
 	ImColor BackgroundDark = { 13, 13, 13 };
 	ImColor Background = { 23, 23, 23, 250 };
+	ImColor TextDark = { 13, 13, 13 };
+	ImColor TextLight = { 240, 240, 240 };
 };
 
 inline CMenu g_Menu;
