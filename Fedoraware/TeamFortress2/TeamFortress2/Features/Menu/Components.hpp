@@ -15,6 +15,11 @@ namespace ImGui
 		};
 	}
 
+	__inline void HelpMarker(const char* desc)
+	{
+
+	}
+
 	__inline bool SidebarButton(const char* label, bool active = false)
 	{
 		if (active) { PushStyleColor(ImGuiCol_Button, ImColor(38, 38, 38).Value); }
@@ -105,10 +110,12 @@ namespace ImGui
 		const auto id = GetID(label);
 		PushID(label);
 
+		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
+		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
+		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
+		PushStyleColor(ImGuiCol_Text, g_Menu.BackgroundDark.Value);
 		if (GetActiveID() == id) {
-			PushStyleColor(ImGuiCol_Button, GetColorU32(ImGuiCol_ButtonActive));
 			Button("...", ImVec2(100, 20));
-			PopStyleColor();
 
 			static float time = g_Interfaces.Engine->Time();
 			const float elapsed = g_Interfaces.Engine->Time() - time;
@@ -170,12 +177,38 @@ namespace ImGui
 		else if (Button(VK2STR(output.m_Var), ImVec2(100, 20))) {
 			SetActiveID(id, GetCurrentWindow());
 		}
+		PopStyleColor(4);
 
 		SameLine();
 		TextUnformatted(label);
 		PopID();
 
 		return true;
+	}
+
+	/* Combobox with multiple selectable items */
+	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, std::string description, std::string comboName) {
+		if (titles.size() != options.size()) { return; }
+
+		std::string preview = "<None>##";
+		for (size_t i = 0; i < options.size(); i++) {
+			if (*options[i]) {
+				if (preview == "<None>##") { preview = ""; }
+				preview += titles[i];
+				preview.append(", ");
+			}
+		}
+		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
+
+		if (BeginCombo(comboName.c_str(), preview.c_str())) {
+			for (size_t i = 0; i < titles.size(); i++) {
+				Selectable(titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
+			}
+
+			EndCombo();
+		}
+
+		HelpMarker(description.c_str());
 	}
 
 	__inline bool ColorPicker(const char* label, Color_t& color)
@@ -191,9 +224,10 @@ namespace ImGui
 		return open;
 	}
 
-	__inline bool ColorPickerInline(const char* label, Color_t& color)
+	/* Inline color picker */
+	__inline bool ColorPickerL(const char* label, Color_t& color, int num = 0)
 	{
-		SameLine(ImGui::GetContentRegionMax().x - 20);
+		SameLine(GetContentRegionMax().x - 20 - (num * 24));
 		SetNextItemWidth(20);
 		return ColorPicker(label, color);
 	}

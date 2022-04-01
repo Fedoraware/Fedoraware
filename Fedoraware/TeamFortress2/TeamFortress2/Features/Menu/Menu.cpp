@@ -21,16 +21,12 @@ void CMenu::DrawMenu()
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
-		constexpr float sBorder = 8.f;		// Border size (left, top)
-		constexpr float wSidebar = 225.f;	// Sidewar width (left)
-		constexpr float hTitle = 80.f;		// Titlebox height (top)
-
 		// Border structure
-		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + windowSize.y }, BackgroundDark);
-		drawList->AddRectFilled(windowPos, { windowPos.x + wSidebar, windowPos.y + hTitle }, Accent);
+		drawList->AddRectFilled(windowPos, { windowPos.x + SidebarWidth, windowPos.y + windowSize.y }, BackgroundDark);
+		drawList->AddRectFilled(windowPos, { windowPos.x + SidebarWidth, windowPos.y + TitleHeight }, Accent);
 
-		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + sBorder }, Accent);
-		drawList->AddRectFilled(windowPos, { windowPos.x + sBorder, windowPos.y + windowSize.y }, Accent);
+		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + BorderWidth }, Accent);
+		drawList->AddRectFilled(windowPos, { windowPos.x + BorderWidth, windowPos.y + windowSize.y }, Accent);
 
 		// "Fedoraware" label
 		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, BackgroundDark, "Fedora");
@@ -38,8 +34,8 @@ void CMenu::DrawMenu()
 
 		// Sidebar
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
-		ImGui::SetCursorPos({ sBorder, hTitle });
-		if (ImGui::BeginChild("Sidebar", { wSidebar - sBorder, windowSize.y - hTitle }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		ImGui::SetCursorPos({ BorderWidth, TitleHeight });
+		if (ImGui::BeginChild("Sidebar", { SidebarWidth - BorderWidth, windowSize.y - TitleHeight }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
 		{
 			DrawSidebar();
 		}
@@ -47,9 +43,9 @@ void CMenu::DrawMenu()
 		ImGui::PopStyleVar();
 
 		// Main content
-		ImGui::SetCursorPos({ wSidebar, sBorder });
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 15.f });
-		if (ImGui::BeginChild("Content", { windowSize.x - wSidebar, windowSize.y - sBorder }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		ImGui::SetCursorPos({ SidebarWidth, BorderWidth });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 10.f });
+		if (ImGui::BeginChild("Content", { windowSize.x - SidebarWidth, windowSize.y - BorderWidth }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
 		{
 			ImGui::PushFont(Segoe);
 			switch (CurrentTab)
@@ -60,7 +56,6 @@ void CMenu::DrawMenu()
 				case MenuTab::HvH: { MenuHvH(); break; }
 				case MenuTab::Misc: { MenuMisc(); break; }
 				case MenuTab::Configs: { MenuConfigs(); break; }
-				default: { MenuAimbot(); break; }
 			}
 			ImGui::PopFont();
 		}
@@ -123,27 +118,31 @@ void CMenu::DrawSidebar()
 /* Tab: Aimbot */
 void CMenu::MenuAimbot()
 {
-	if (ImGui::BeginTable("c1", 3))
+	using namespace ImGui;
+	if (ImGui::BeginTable("AimbotTable", 2))
 	{
 		ImGui::TableNextColumn();
 
 		if (ImGui::BeginContainer("Global"))
 		{
 			ImGui::ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
+			ImGui::ColorPickerL("Target Color", Colors::Target);
 			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
-			ImGui::ColorPickerInline("FOV Circle", Colors::FOVCircle);
-			static int value = 5;
-			static bool testbool = false;
-			ImGui::SliderInt("My Label", &value, 2, 100);
-			ImGui::InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);
-			ImGui::ToggleButton("This shouldn't clip", &testbool);
-			ImGui::ToggleButton("Toggle A", &Vars::Aimbot::Global::Active.m_Var);
-			ImGui::ToggleButton("Checkbox B", &Vars::Aimbot::Global::Active.m_Var);
+			ImGui::ColorPickerL("FOV Circle", Colors::FOVCircle);
+			ImGui::ToggleButton("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
+			ImGui::MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
+			ImGui::MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
+			ImGui::ColorPicker("Invulnerable colour", Colors::Invuln);
 		}
 
 		ImGui::TableNextColumn();
 
-		ImGui::TableNextColumn();
+		if (ImGui::BeginContainer("Menu"))
+		{
+			ImGui::SliderFloat("Border Width", &BorderWidth, 0.f, 50.f);
+			ImGui::SliderFloat("Sidebar Width", &SidebarWidth, 0.f, 300.f);
+			ImGui::SliderFloat("Title Height", &TitleHeight, 0.f, 100.f);
+		}
 
 		ImGui::EndTable();
 	}
@@ -320,9 +319,12 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;
+		colors[ImGuiCol_ResizeGrip] = AccentDark;
+		colors[ImGuiCol_ResizeGripActive] = Accent;
+		colors[ImGuiCol_ResizeGripHovered] = Accent;
 		colors[ImGuiCol_HeaderActive] = Accent;
 		colors[ImGuiCol_HeaderHovered] = Accent;
-		colors[ImGuiCol_Header] = AccentDark;
+		colors[ImGuiCol_Header] = Accent;
 	}
 }
 

@@ -35,6 +35,10 @@ class CMenu {
 	ImFont* TitleFont = nullptr;		// 38px
 	ImFont* TitleLightFont = nullptr;	// 38px
 
+	float SidebarWidth = 225.f;	// Sidewar width (left)
+	float TitleHeight = 80.f;	// Titlebox height (top)
+	float BorderWidth = 8.f;	// Border size (left, top)
+
 public:
 	void Render(IDirect3DDevice9* pDevice);
 	void Init(IDirect3DDevice9* pDevice);
@@ -45,7 +49,7 @@ public:
 
 	// Colors
 	ImColor Accent = { 225, 177, 44 };
-	ImColor AccentDark = { 225, 177, 44 };
+	ImColor AccentDark = { 191, 150, 38 };
 	ImColor BackgroundDark = { 13, 13, 13 };
 	ImColor Background = { 23, 23, 23, 250 };
 };
