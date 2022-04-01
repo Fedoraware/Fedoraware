@@ -3068,8 +3068,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
     // Draw frame
     const ImU32 frame_col = GetColorU32(g.ActiveId == id ? ImGuiCol_FrameBgActive : hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
     RenderNavHighlight(frame_bb, id);
-    // RenderFrame(frame_bb.Min, frame_bb.Max, frame_col, true, g.Style.FrameRounding);
-    window->DrawList->AddLine(ImVec2(frame_bb.Min.x, frame_bb.Min.y + ((frame_bb.Max.y - frame_bb.Min.y) / 2)), ImVec2(frame_bb.Max.x - style.ItemInnerSpacing.x, frame_bb.Min.y + ((frame_bb.Max.y - frame_bb.Min.y) / 2)), GetColorU32(ImVec4(0.21f, 0.20f, 0.21f, 1.00f)), 1.8f);
+    window->DrawList->AddLine(ImVec2(frame_bb.Min.x, frame_bb.Min.y + ((frame_bb.Max.y - frame_bb.Min.y) / 4)), ImVec2(frame_bb.Max.x - style.ItemInnerSpacing.x, frame_bb.Min.y + ((frame_bb.Max.y - frame_bb.Min.y) / 4)), GetColorU32(ImVec4(0.21f, 0.20f, 0.21f, 1.00f)), 1.8f);
 
     // Slider behavior
     ImRect grab_bb;
@@ -3082,7 +3081,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
     // Render grab
     if (grab_bb.Max.x > grab_bb.Min.x)
     {
-        window->DrawList->AddCircleFilled(ImVec2(grab_bb.Min.x + 6, grab_bb.Min.y + ((grab_bb.Max.y - grab_bb.Min.y) / 2)), hovered ? 7.f : 6.f, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), 0.2f);
+        window->DrawList->AddCircleFilled(ImVec2(grab_bb.Min.x + 6, grab_bb.Min.y + ((grab_bb.Max.y - grab_bb.Min.y) / 4)), hovered ? 7.f : 6.f, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), 0.2f);
     }
 
     // Display value using user-provided display format so user can add prefix/suffix/decorations to the value.
@@ -3096,17 +3095,15 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
     // Draw label
     if (label_size.x > 0.0f)
     {
-        RenderText(ImVec2(frame_bb.Min.x + style.ItemInnerSpacing.x, frame_bb.Min.y + 14), label);
+        RenderText(ImVec2(frame_bb.Min.x + style.ItemInnerSpacing.x, grab_bb.Min.y + ((grab_bb.Max.y - grab_bb.Min.y) / 3)), label);
     }
 
     // Draw value label
     const ImVec2 valueLabelSize = CalcTextSize(value_buf, value_buf_end, true);
     if (valueLabelSize.x > 0.0f)
     {
-        RenderText({ frame_bb.Max.x - style.ItemInnerSpacing.x - valueLabelSize.x, frame_bb.Min.y + 14 }, value_buf, value_buf_end);
+        RenderText({ frame_bb.Max.x - style.ItemInnerSpacing.x - valueLabelSize.x, grab_bb.Min.y + ((grab_bb.Max.y - grab_bb.Min.y) / 3) }, value_buf, value_buf_end);
     }
-
-    window->DC.CursorPos.y += 9.f;
 
     IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
     return value_changed;

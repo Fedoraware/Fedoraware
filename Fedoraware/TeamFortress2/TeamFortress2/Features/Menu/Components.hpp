@@ -250,9 +250,10 @@ namespace ImGui
         const float height = GetFrameHeight();
         const float width = height * 1.8f;
         const float radius = height * 0.50f;
+		const float bb_width = CalcItemWidth();
         const ImVec2 labelSize = CalcTextSize(str_id, nullptr, true);
 
-        InvisibleButton(str_id, ImVec2(width + style.ItemInnerSpacing.x + labelSize.x, height));
+        InvisibleButton(str_id, ImVec2(bb_width, height));
         if (IsItemClicked()) { *v = !*v; }
 
         float t = *v ? 1.0f : 0.0f;

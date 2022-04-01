@@ -33,14 +33,17 @@ void CMenu::DrawMenu()
 		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, BackgroundDark, "ware");
 
 		// Sidebar
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
-		ImGui::SetCursorPos({ BorderWidth, TitleHeight });
-		if (ImGui::BeginChild("Sidebar", { SidebarWidth - BorderWidth, windowSize.y - TitleHeight }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		if (SidebarWidth > 10.f)
 		{
-			DrawSidebar();
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
+			ImGui::SetCursorPos({ BorderWidth, TitleHeight });
+			if (ImGui::BeginChild("Sidebar", { SidebarWidth - BorderWidth, windowSize.y - TitleHeight }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+			{
+				DrawSidebar();
+			}
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
 		}
-		ImGui::EndChild();
-		ImGui::PopStyleVar();
 
 		// Main content
 		ImGui::SetCursorPos({ SidebarWidth, BorderWidth });
