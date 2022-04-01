@@ -31,9 +31,11 @@ namespace ImGui
     /* Container for feature groups */
 	__inline bool BeginContainer(const char* str_id)
 	{
+		PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.f, 8.f));
 		PushStyleColor(ImGuiCol_Text, ImColor(13, 13, 13).Value);
 		const bool open = CollapsingHeader(str_id, ImGuiTreeNodeFlags_DefaultOpen);
 		PopStyleColor();
+		PopStyleVar();
 		return open;
 	}
 
@@ -208,7 +210,7 @@ namespace ImGui
 			PushStyleColor(ImGuiCol_HeaderHovered, ImColor(50, 50, 50).Value);
 			PushStyleColor(ImGuiCol_HeaderActive, ImColor(40, 40, 40).Value);
 			for (size_t i = 0; i < titles.size(); i++) {
-				Selectable(titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
+				Selectable((*options[i]) ? tfm::format("+ %s", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
 			}
 			PopStyleColor(3);
 

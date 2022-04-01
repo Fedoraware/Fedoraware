@@ -122,33 +122,42 @@ void CMenu::DrawSidebar()
 void CMenu::MenuAimbot()
 {
 	using namespace ImGui;
-	if (ImGui::BeginTable("AimbotTable", 2))
+	if (BeginTable("AimbotTable", 2))
 	{
-		ImGui::TableNextColumn();
+		TableNextColumn();
 
-		if (ImGui::BeginContainer("Global"))
+		if (BeginContainer("Global"))
 		{
-			ImGui::ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
-			ImGui::ColorPickerL("Target Color", Colors::Target);
-			ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
-			ImGui::ColorPickerL("FOV Circle", Colors::FOVCircle);
+			ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
+			Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
+			ColorPickerL("Target Color", Colors::Target);
+			SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
+			ColorPickerL("FOV Circle", Colors::FOVCircle);
 			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey);
-			ImGui::ToggleButton("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
-			ImGui::MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
-			ImGui::MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
-			ImGui::ColorPickerL("Invulnerable colour", Colors::Invuln);
+			ToggleButton("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
+			MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
+			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
+			ColorPickerL("Invulnerable colour", Colors::Invuln);
 		}
 
-		ImGui::TableNextColumn();
-
-		if (ImGui::BeginContainer("Menu"))
+		Spacing(); Spacing();
+		if (BeginContainer("Crits"))
 		{
-			ImGui::SliderFloat("Border Width", &BorderWidth, 0.f, 50.f);
-			ImGui::SliderFloat("Sidebar Width", &SidebarWidth, 0.f, 300.f);
-			ImGui::SliderFloat("Title Height", &TitleHeight, 0.f, 100.f);
+			ToggleButton("Crithack", &Vars::CritHack::Active.m_Var);
+			ToggleButton("Draw info", &Vars::CritHack::Active.m_Var);
+			InputKeybind("Crithack key", Vars::Aimbot::Global::AimKey);
 		}
 
-		ImGui::EndTable();
+		TableNextColumn();
+
+		if (BeginContainer("Menu"))
+		{
+			SliderFloat("Border Width", &BorderWidth, 0.f, 50.f);
+			SliderFloat("Sidebar Width", &SidebarWidth, 0.f, 300.f);
+			SliderFloat("Title Height", &TitleHeight, 0.f, 100.f);
+		}
+
+		EndTable();
 	}
 }
 
@@ -302,7 +311,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
-		style.CellPadding = ImVec2(10.f, 4.f);
+		style.CellPadding = ImVec2(12.f, 0.f);
 		style.FrameBorderSize = 0.f;
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 0.f;
@@ -310,6 +319,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.ScrollbarSize = 4.f;
 		style.GrabMinSize = 14.f;
 		style.GrabRounding = 12.f;
+		style.ItemSpacing = ImVec2(8.f, 5.f);
 
 		ImVec4* colors = style.Colors;
 		colors[ImGuiCol_Border] = Accent;
@@ -324,6 +334,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
 		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
 		colors[ImGuiCol_FrameBgActive] = ImColor(60, 60, 60);
+		colors[ImGuiCol_CheckMark] = Accent;
 
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;
