@@ -656,6 +656,8 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\worldsize.h" />
     <ClInclude Include="TeamFortress2\Features\Resolver\Resolver.h" />
     <ClInclude Include="TeamFortress2\Features\CritHack\CritHack.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
+    <ClInclude Include="TeamFortress2\Utils\Json\Json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

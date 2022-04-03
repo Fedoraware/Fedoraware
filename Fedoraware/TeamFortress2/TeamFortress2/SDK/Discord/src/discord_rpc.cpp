@@ -99,12 +99,12 @@ public:
         });
     }
 
-    void Notify() { waitForIOActivity.notify_all(); }
+    void CNotifications() { waitForIOActivity.notify_all(); }
 
     void Stop()
     {
         keepRunning.exchange(false);
-        Notify();
+        CNotifications();
         if (ioThread.joinable()) {
             ioThread.join();
         }
@@ -240,7 +240,7 @@ static void Discord_UpdateConnection(void)
 static void SignalIOActivity()
 {
     if (IoThread != nullptr) {
-        IoThread->Notify();
+        IoThread->CNotifications();
     }
 }
 

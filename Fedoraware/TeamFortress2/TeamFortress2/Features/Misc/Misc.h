@@ -57,13 +57,13 @@ public:
 	}
 };
 
-class Notify
+class CNotifications
 {
 private:
-	std::vector<std::shared_ptr<NotifyText>> m_notify_text;
+	std::vector<std::shared_ptr<NotifyText>> m_vNotificationTexts;
 
 public:
-	Notify() : m_notify_text{}
+	CNotifications() : m_vNotificationTexts{}
 	{
 	}
 
@@ -71,10 +71,10 @@ public:
 	__forceinline void Add(const std::string& text, Color_t color = {255, 255, 255, 255},
 	                       float time = Vars::Visuals::despawnTime.m_Var)
 	{
-		m_notify_text.push_back(std::make_shared<NotifyText>(text, color, time));
+		m_vNotificationTexts.push_back(std::make_shared<NotifyText>(text, color, time));
 	}
 
 	void Think();
 };
 
-inline Notify g_notify;
+inline CNotifications g_Notifications;

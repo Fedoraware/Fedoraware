@@ -1,5 +1,35 @@
 #include "FireBullets.h"
 
+void DrawBeam(Vector source, Vector end)
+{
+	BeamInfo_t beamInfo;
+	beamInfo.m_nType = 0;
+	beamInfo.m_pszModelName = Vars::Visuals::BEAMS::UseCustomModel.m_Var ? Vars::Visuals::BEAMS::Model.m_Var.c_str() : "sprites/physbeam.vmt";
+	beamInfo.m_nModelIndex = -1; // will be set by CreateBeamPoints if its -1
+	beamInfo.m_flHaloScale = 0.0f;
+	beamInfo.m_flLife = Vars::Visuals::BEAMS::Life.m_Var;
+	beamInfo.m_flWidth = Vars::Visuals::BEAMS::Width.m_Var;
+	beamInfo.m_flEndWidth = Vars::Visuals::BEAMS::EndWidth.m_Var;
+	beamInfo.m_flFadeLength = Vars::Visuals::BEAMS::FadeLength.m_Var;
+	beamInfo.m_flAmplitude = Vars::Visuals::BEAMS::Amplitude.m_Var;
+	beamInfo.m_flBrightness = Vars::Visuals::BEAMS::Brightness.m_Var;
+	beamInfo.m_flSpeed = Vars::Visuals::BEAMS::Speed.m_Var;
+	beamInfo.m_nStartFrame = 0;
+	beamInfo.m_flFrameRate = 0;
+	beamInfo.m_flRed = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 0) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.r;
+	beamInfo.m_flGreen = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 2) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.g;
+	beamInfo.m_flBlue = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 4) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.b;
+	beamInfo.m_nSegments = 2;
+	beamInfo.m_bRenderable = true;
+	beamInfo.m_nFlags = Vars::Visuals::BEAMS::Flags.m_Var;
+	beamInfo.m_vecStart = source;
+	beamInfo.m_vecEnd = end;
+	Beam_t* coolBeam = g_Interfaces.ILOVEBEAMS->CreateBeamPoints(beamInfo);
+	if (coolBeam)
+	{
+		g_Interfaces.ILOVEBEAMS->DrawBeam(coolBeam);
+	}
+}
 
 void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info,
                                   bool bDoEffects, int nDamageType, int nCustomDamageType)
@@ -97,6 +127,29 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 			Particles::ParticleTracer(Vars::Visuals::ParticleName.c_str(), trace.vStartPos, trace.vEndPos, pLocal->GetIndex(),
 			               iAttachment, true);
 			break;
+		}
+
+		/*
+				namespace BEAMS
+		{
+			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<bool> Rainbow { false, L"Rainbow" };
+			inline Color_t BeamColour{ 255, 255, 255, 255 };
+			inline CVar<bool> UseCustomModel { false, L"Use Custom Model" };
+			inline CVar<std::string> Model{ "sprites/physbeam.vmt", L"Model" };
+			inline CVar<float> Life { 2.f, L"Life" };
+			inline CVar<float> Width { 2.f, L"Width" };
+			inline CVar<float> EndWidth { 2.f, L"End Width" };
+			inline CVar<float> FadeLength { 10.f, L"Fade Length" };
+			inline CVar<float> Amplitude { 2.f, L"Amplitude" };
+			inline CVar<float> Brightness { 255.f, L"Brightness" };
+			inline CVar<float> Speed { 0.2f, L"Speed" };
+			inline CVar<int> Flags { 65792, L"Flags" }; // FBEAM_ONLYNOISEONCE | FBEAM_REVERSED
+		}*/
+
+		if (Vars::Visuals::BEAMS::Active.m_Var)
+		{
+			DrawBeam(trace.vStartPos, trace.vEndPos);
 		}
 	}
 }

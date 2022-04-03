@@ -250,7 +250,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Radar.Run();
 			
 			// you can use it for more, i'm sure. - myzarfin
-			g_notify.Think();
+			g_Notifications.Think();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{

@@ -709,6 +709,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Surface\Surface.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Texture\Texture.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\UniformRandomStream\UniformRandomStream.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRender\ViewRender.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseEntity\AnimState\Activity.h" />
@@ -732,6 +733,7 @@
     <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
     <ClInclude Include="TeamFortress2\Utils\Interface\Interface.h" />
+    <ClInclude Include="TeamFortress2\Utils\Json\Json.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Math\Math.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\buffer.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\hde32.h" />

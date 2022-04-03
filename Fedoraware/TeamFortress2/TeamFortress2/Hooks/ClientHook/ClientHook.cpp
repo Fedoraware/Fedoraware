@@ -275,10 +275,10 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 					if (Vars::Misc::AnnounceVotesText.m_Var)
 					{
 						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
-							g_notify.Add(tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name));
+							g_Notifications.Add(tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name));
 						}
 						else {
-							g_notify.Add(tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID));
+							g_Notifications.Add(tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID));
 						}
 					}
 					if (Vars::Misc::AnnounceVotesChat.m_Var)

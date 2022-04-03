@@ -847,7 +847,7 @@ void CConfigManager::Save(const wchar_t *name)
 	std::wstring wName = name;
 	std::string sName(wName.begin(), wName.end());
 	std::string savedString("Config " + sName + " saved.");
-	g_notify.Add(savedString);
+	g_Notifications.Add(savedString);
 }
 
 void CConfigManager::Load(const wchar_t *name)
@@ -1536,7 +1536,7 @@ void CConfigManager::Load(const wchar_t *name)
 	std::wstring wName = name;
 	std::string sName(wName.begin(), wName.end());
 	std::string loadString("Config " + sName + " loaded.");
-	g_notify.Add(loadString);
+	g_Notifications.Add(loadString);
 }
 
 void CConfigManager::Remove(const wchar_t *name)
