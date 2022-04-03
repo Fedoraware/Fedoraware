@@ -36,7 +36,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 {
 	static auto original = Func.Original<fn>();
 
-	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var))
+	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var && !Vars::Visuals::BEAMS::Active.m_Var))
 	{
 		return original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
