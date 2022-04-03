@@ -4,7 +4,7 @@ void DrawBeam(Vector source, Vector end)
 {
 	BeamInfo_t beamInfo;
 	beamInfo.m_nType = 0;
-	beamInfo.m_pszModelName = Vars::Visuals::BEAMS::UseCustomModel.m_Var ? Vars::Visuals::BEAMS::Model.c_str() : "sprites/physbeam.vmt";
+	beamInfo.m_pszModelName = Vars::Visuals::BEAMS::UseCustomModel.m_Var ? Vars::Visuals::BEAMS::Model.m_Var.c_str() : "sprites/physbeam.vmt";
 	beamInfo.m_nModelIndex = -1; // will be set by CreateBeamPoints if its -1
 	beamInfo.m_flHaloScale = 0.0f;
 	beamInfo.m_flLife = Vars::Visuals::BEAMS::Life.m_Var;

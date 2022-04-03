@@ -473,7 +473,7 @@ namespace Vars
 			inline CVar<bool> Rainbow { false, L"Rainbow" };
 			inline Color_t BeamColour{ 255, 255, 255, 255 };
 			inline CVar<bool> UseCustomModel { false, L"Use Custom Model" };
-			inline std::string Model = "sprites/physbeam.vmt";
+			inline CVar<std::string> Model{ "sprites/physbeam.vmt", L"Model" };
 			inline CVar<float> Life { 2.f, L"Life" };
 			inline CVar<float> Width { 2.f, L"Width" };
 			inline CVar<float> EndWidth { 2.f, L"End Width" };
