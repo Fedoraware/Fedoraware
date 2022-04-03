@@ -1338,7 +1338,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							ImGui::Checkbox("Custom model", &BEAMS::UseCustomModel.m_Var);
 							if (BEAMS::UseCustomModel.m_Var)
 							{
-								ImGui::InputText("Model", &BEAMS::Model);
+								ImGui::InputText("Model", &BEAMS::Model.m_Var);
 							}
 							ImGui::PushItemWidth(150); ImGui::SliderFloat("Beam lifespan", &BEAMS::Life.m_Var, 0.0f, 10.f);
 							ImGui::PushItemWidth(150); ImGui::SliderFloat("Beam width", &BEAMS::Width.m_Var, 0.0f, 10.f);
