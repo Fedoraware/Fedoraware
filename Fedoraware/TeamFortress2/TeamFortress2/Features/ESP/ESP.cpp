@@ -326,12 +326,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 
-				if (Vars::ESP::Players::Choked.m_Var)
-				{
-					int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
-					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "Choking (%i)", chokeCount);
-					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
-				}
+				
 			}
 
 			if (Vars::ESP::Players::Class.m_Var)
@@ -424,6 +419,25 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Main::Outlinedbar.m_Var)
 					g_Draw.OutlinedRect(x - nWidth - 2 - 1, y + nHeight - nHeight * ratio - 1, nWidth + 2,
 						nHeight * ratio + 2, Colors::OutlineESP);
+
+				x += 1;
+			}
+
+			if (Vars::ESP::Players::Choked.m_Var)
+			{
+				x -= 1;
+				static float ratio = 0.0f;
+				int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
+				//g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "Choking (%i)", chokeCount);
+
+				Color_t clr = { 140, 0, 128, 255 };
+				Color_t clr2 = { 0, 0, 0, 255 };
+				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
+				ratio = chokeCount/22.0f;
+
+				g_Draw.OutlinedRect(position.x - 1, position.y + 1 - (h + 2), 2 + 2, h + 2, Colors::OutlineESP);
+				g_Draw.GradientRectWH(position.x, position.y - h, 2, h, clr, clr2, false);
+				g_Draw.Rect(position.x, position.y - h, 2, h * (1.0f - ratio), clr2);
 
 				x += 1;
 			}
