@@ -329,7 +329,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Players::Choked.m_Var)
 				{
 					int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
-					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, tfm::format("C: %s", chokeCount).c_str());
+					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "Choking (%i)", chokeCount);
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 			}

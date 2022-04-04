@@ -85,7 +85,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			const Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(3 - nShiftTick));
 			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(3));
 
-			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.5, 1.0f, 0.0f);
+			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.5, 1.2f, 0.0f);
 			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.0f, 540.0f, 0.5f, 2.0f);
 			Utils::WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
 
