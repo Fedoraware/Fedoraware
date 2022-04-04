@@ -65,6 +65,7 @@ void Loaded()
 {
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware (homemade) Loaded!\n"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
+	WinAPI::MessageBoxW(0, _(L"i have ur ip"), _(L"lol!"), MB_ICONERROR); // im hilarious.
 
 }
 
