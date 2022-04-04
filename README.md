@@ -58,12 +58,15 @@
 - Duck speed
 - Some bug fixes
 - Some bad pasted code
-![ScreenShot](https://i.imgur.com/JwwZeRt.png)
+
 
 ## Media:  
+
 - [Fedoraware is the best free cheat in tf2 (by bean)](https://www.youtube.com/watch?v=FyeaMghYZL0)
 - [The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
 - [Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
+
+![Screenshot](https://user-images.githubusercontent.com/17802843/161588254-5cf29b82-fd70-41c1-90c3-f77b29014a68.png)
 
 ## Credits to:
   - [spook953](https://github.com/spook953)
