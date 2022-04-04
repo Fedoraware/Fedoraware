@@ -49,6 +49,7 @@ namespace Vars
 	{
 		inline CVar<bool> Active{ false, L"Active" };
 		inline CVar<bool> indicators{ true };
+		inline CVar<bool> avoidrandom{ true };
 		inline CVar<int> CritKey{ VK_SHIFT, L"Crit Key" };
 	}
 

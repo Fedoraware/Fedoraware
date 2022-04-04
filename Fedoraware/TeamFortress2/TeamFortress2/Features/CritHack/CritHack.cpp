@@ -72,7 +72,8 @@ void CCritHack::Run(CUserCmd* pCmd)
 			// Force next crit
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
-		} else
+		} 
+		else if (Vars::CritHack::avoidrandom.m_Var)
 		{
 			// Prevent crit
 			int tries = 0;

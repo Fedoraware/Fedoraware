@@ -214,6 +214,7 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::CritHack::Active);
 				SAVE_VAR(Vars::CritHack::indicators);
+				SAVE_VAR(Vars::CritHack::avoidrandom);
 				SAVE_VAR(Vars::CritHack::CritKey);
 			}
 
@@ -915,6 +916,7 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::CritHack::Active);
 				LOAD_VAR(Vars::CritHack::indicators);
+				LOAD_VAR(Vars::CritHack::avoidrandom);
 				LOAD_VAR(Vars::CritHack::CritKey);
 			}
 
