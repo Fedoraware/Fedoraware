@@ -211,17 +211,55 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				// build date
 				if (g_Menu.m_bOpen)
 					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var,
-					              {116, 255, 48, 255}, ALIGN_DEFAULT, _(__DATE__));
+					              {116, 255, 48, 255}, ALIGN_DEFAULT, "Build : %s %s", __DATE__, __TIME__);
 
 				// debug
 				{
-					#ifdef _DEBUG
-
+					/*
+					int yoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
-						g_Draw.String(FONT_MENU, 300, 300, { 255,255,255,255 }, ALIGN_CENTER, "localDamage = %d", localDamage);
+						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
+						yoffset += 20;
 					}
 
-					#endif
+					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+						int weaponid = pWeapon->GetWeaponID();
+						if (weaponid) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
+							yoffset += 20;
+						}
+					}
+
+					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+					{
+						Vec3 CollideableMins = Projectile->GetCollideableMins();
+						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
+						if (!CollideableMins.IsZero()) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %f %f %f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
+							yoffset += 20;
+						}
+						if (!CollideableMaxs.IsZero()) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %f %f %f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
+							yoffset += 20;
+						}
+						if (CollideableMins.IsZero() || CollideableMaxs.IsZero()) {
+							model_t* pModel = Projectile->GetModel();
+							if (pModel) {
+								studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
+								if (pHDR) {
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %f %f %f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %f %f %f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmin.x, pHDR->view_bbmin.y, pHDR->view_bbmin.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmax.x, pHDR->view_bbmax.y, pHDR->view_bbmax.z);
+									yoffset += 20;
+								}
+							}
+						}
+					}
+					*/
 				}
 
 				//Current Active Aimbot FOV
