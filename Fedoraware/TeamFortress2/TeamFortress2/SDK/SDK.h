@@ -109,7 +109,10 @@ inline void ShaderStencilState_t::SetStencilState(IMatRenderContext *pRenderCont
 namespace Colors
 {
 	inline Color_t White =					{ 255, 255, 255, 255 };
-	inline Color_t OutlineESP =				{ 0, 0, 0, 220 };
+	inline Color_t OutlineESP =				{ 0, 0, 0, 255 };
+	inline Color_t ChokedTop =				{ 255, 210, 0, 255 };
+	inline Color_t ChokedBottom =			{ 47, 39, 0, 255 };
+	inline Color_t ChokedOverlay =			{ 0, 0, 0, 255 };
 	inline Color_t Cond =					{ 254, 202, 87, 255 };
 	inline Color_t Target =					{ 240, 147, 43, 255 };
 	inline Color_t Invuln =					{ 120, 111, 166, 255 };

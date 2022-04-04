@@ -430,14 +430,15 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
 				//g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "Choking (%i)", chokeCount);
 
-				Color_t clr = { 140, 0, 128, 255 };
-				Color_t clr2 = { 0, 0, 0, 255 };
+				Color_t clr = Colors::ChokedTop;
+				Color_t clr2 = Colors::ChokedBottom;
+				Color_t clro = Colors::ChokedOverlay;
 				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
 				ratio = chokeCount/22.0f;
 
 				g_Draw.OutlinedRect(position.x - 1, position.y + 1 - (h + 2), 2 + 2, h + 2, Colors::OutlineESP);
 				g_Draw.GradientRectWH(position.x, position.y - h, 2, h, clr, clr2, false);
-				g_Draw.Rect(position.x, position.y - h, 2, h * (1.0f - ratio), clr2);
+				g_Draw.Rect(position.x, position.y - h, 2, h * (1.0f - ratio), clro);
 
 				x += 1;
 			}

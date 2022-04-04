@@ -742,6 +742,9 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			SAVE_OTHER(Colors::OutlineESP);
+			SAVE_OTHER(Colors::ChokedOverlay);
+			SAVE_OTHER(Colors::ChokedTop);
+			SAVE_OTHER(Colors::ChokedBottom);
 			SAVE_OTHER(Colors::Cond);
 			SAVE_OTHER(Colors::Target);
 			SAVE_OTHER(Colors::Invuln);
@@ -1437,6 +1440,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			LOAD_OTHER(Colors::OutlineESP);
+			LOAD_OTHER(Colors::ChokedOverlay);
+			LOAD_OTHER(Colors::ChokedTop);
+			LOAD_OTHER(Colors::ChokedBottom);
 			LOAD_OTHER(Colors::Cond);
 			LOAD_OTHER(Colors::Target);
 			LOAD_OTHER(Colors::Invuln);

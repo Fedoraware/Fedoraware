@@ -191,17 +191,6 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		};
 		break;
 	}
-/*
-float CTFCompoundBow::GetProjectileSpeed( void )
-{
-	return RemapValClamped( GetCurrentCharge(), 0.0f, 1.f, 1800, 2600 );
-}
-
-float CTFCompoundBow::GetProjectileGravity( void )
-{
-	return RemapValClamped( GetCurrentCharge(), 0.0f, 1.f, 0.5, 0.1 );
-}
-*/
 	}
 
 	return out.m_flVelocity;
