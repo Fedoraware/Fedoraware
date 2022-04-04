@@ -386,7 +386,7 @@ void CVisuals::PickupTimers()
 			continue;
 		}
 
-		auto timerText = tfm::format("%s: %.1fs", pickupData->Type ? "HEALTH" : "AMMO", 10.f - timeDiff);
+		auto timerText = tfm::format("%.1f", pickupData->Type ? "HEALTH" : "AMMO", 10.f - timeDiff);
 		auto color = pickupData->Type ? Colors::Health : Colors::Ammo;
 		
 		Vec3 vScreen;
