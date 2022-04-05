@@ -111,23 +111,20 @@ namespace ImGui
 	                  float height)
 	{
 		const auto drawList = GetWindowDrawList();
+		const ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems) { return; }
 
 		ImVec4 colorA = {1, 1, 1, 1};
 		ImVec4 colorB = {1, 1, 1, 1};
 		float prevX = bar_pos.x;
 		const float barBottom = bar_pos.y + height;
 		ImGradientMark* prevMark = nullptr;
-		// ImDrawList* draw_list = GetWindowDrawList();
-
-		//draw_list->AddRectFilled(ImVec2(bar_pos.x - 2, bar_pos.y - 2),
-		//    ImVec2(bar_pos.x + maxWidth + 2, barBottom + 2),
-		//    IM_COL32(100, 100, 100, 255));
 
 		if (gradient->GetMarks().empty())
 		{
 			drawList->AddRectFilled(ImVec2(bar_pos.x, bar_pos.y),
 			                        ImVec2(bar_pos.x + maxWidth, barBottom),
-			                        IM_COL32(255, 255, 255, 255));
+			                        ImColor(255, 255, 255, 255));
 		}
 
 		ImU32 colorAU32 = 0;
@@ -191,15 +188,15 @@ namespace ImGui
 		float prevX = bar_pos.x;
 		const float barBottom = bar_pos.y + height;
 		ImGradientMark* prevMark = nullptr;
-		ImDrawList* draw_list = GetWindowDrawList();
+		ImDrawList* drawList = GetWindowDrawList();
 
-		draw_list->AddRectFilled(ImVec2(bar_pos.x - 2, bar_pos.y - 2),
+		drawList->AddRectFilled(ImVec2(bar_pos.x - 2, bar_pos.y - 2),
 		                         ImVec2(bar_pos.x + maxWidth + 2, barBottom + 2),
 		                         IM_COL32(100, 100, 100, 255));
 
 		if (gradient->GetMarks().empty())
 		{
-			draw_list->AddRectFilled(ImVec2(bar_pos.x, bar_pos.y),
+			drawList->AddRectFilled(ImVec2(bar_pos.x, bar_pos.y),
 			                         ImVec2(bar_pos.x + maxWidth, barBottom),
 			                         IM_COL32(255, 255, 255, 255));
 		}
@@ -237,7 +234,7 @@ namespace ImGui
 
 			if (mark->Position > 0.f)
 			{
-				draw_list->AddRectFilledMultiColor(ImVec2(from, bar_pos.y),
+				drawList->AddRectFilledMultiColor(ImVec2(from, bar_pos.y),
 				                                   ImVec2(to, barBottom),
 				                                   colorAU32, colorBU32, colorBU32, colorAU32);
 			}
@@ -247,7 +244,7 @@ namespace ImGui
 
 		if (prevMark && prevMark->Position < 1.f)
 		{
-			draw_list->AddRectFilledMultiColor(ImVec2(prevX, bar_pos.y),
+			drawList->AddRectFilledMultiColor(ImVec2(prevX, bar_pos.y),
 			                                   ImVec2(bar_pos.x + maxWidth, barBottom),
 			                                   colorBU32, colorBU32, colorBU32, colorBU32);
 		}

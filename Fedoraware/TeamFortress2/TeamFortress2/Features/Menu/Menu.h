@@ -5,6 +5,7 @@
 class CMenu {
 	void DrawMenu();
 	void DrawSidebar();
+	void DrawTabbar();
 	void MenuAimbot();
 	void MenuTrigger();
 	void MenuVisuals();
@@ -29,14 +30,8 @@ class CMenu {
 	ImFont* Segoe = nullptr;		// 16px
 	ImFont* SegoeBold = nullptr;	// 16px
 
-	ImFont* TabFont = nullptr;		// 26px
-
-	ImFont* TitleFont = nullptr;		// 38px
-	ImFont* TitleLightFont = nullptr;	// 38px
-
-	float SidebarWidth = 225.f;	// Sidewar width (left)
-	float TitleHeight = 80.f;	// Titlebox height (top)
-	float BorderWidth = 8.f;	// Border size (left, top)
+	ImFont* TabFont = nullptr;		// 22px
+	ImFont* TitleFont = nullptr;		// 26px
 
 public:
 	void Render(IDirect3DDevice9* pDevice);
@@ -45,6 +40,9 @@ public:
 	bool IsOpen = false;
 	bool ConfigLoaded = false;
 	bool Unload = false;
+
+	float TitleHeight = 22.f;
+	float TabHeight = 35.f;
 
 	// Colors
 	ImColor Accent = { 255, 101, 101 };

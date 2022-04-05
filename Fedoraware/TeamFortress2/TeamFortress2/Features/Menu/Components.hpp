@@ -31,6 +31,15 @@ namespace ImGui
 		return pressed;
 	}
 
+	__inline bool TabButton(const char* label, bool active = false)
+	{
+		TableNextColumn();
+		if (active) { PushStyleColor(ImGuiCol_Button, GetColorU32(ImGuiCol_ButtonActive)); }
+		const bool pressed = Button(label, { GetColumnWidth(), g_Menu.TabHeight });
+		if (active) { PopStyleColor(); }
+		return pressed;
+	}
+
     /* Container for feature groups */
 	__inline bool BeginContainer(const char* str_id)
 	{
@@ -243,17 +252,14 @@ namespace ImGui
 		return ColorPicker(label, color);
 	}
 
-	/*__inline void GradientRect()
+	__inline void TextCentered(const char* fmt)
 	{
-		ImGuiWindow* window = GetCurrentWindow();
-		if (window->SkipItems) { return; }
+		const auto windowWidth = GetWindowSize().x;
+		const auto textWidth = CalcTextSize(fmt).x;
 
-		ImGuiContext& g = *GImGui;
-		const ImGuiStyle& style = g.Style;
-		const float w = CalcItemWidth();
-
-
-	}*/
+		SetCursorPosX((windowWidth - textWidth) * 0.5f);
+		Text(fmt);
+	}
 
     // Source: https://github.com/ocornut/imgui/issues/1537#issuecomment-355569554
 	__inline void ToggleButton(const char* str_id, bool* v)

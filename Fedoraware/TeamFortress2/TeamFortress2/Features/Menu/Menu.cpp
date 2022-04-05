@@ -12,26 +12,72 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(800, 500);
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	ImGui::SetNextWindowSize(ImVec2(1000, 600), ImGuiCond_Once);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
+
 		static ImGradient mainGradient;
 		{
 			mainGradient.ClearMarks();
 			mainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-			mainGradient.AddMark(0.32f, ImColor(0, 0, 0, 0));
+			mainGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
 			mainGradient.AddMark(0.5f, Accent);
-			mainGradient.AddMark(0.68f, ImColor(0, 0, 0, 0));
+			mainGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
 			mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 		}
 
-		// Draw rects
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
+		// Gradient line
 		ImGui::GradientRect(&mainGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
+		ImGui::Dummy({ 0, 2 });
+
+		// Title Text
+		{
+			ImGui::PushFont(TitleFont);
+			const auto titleWidth = ImGui::CalcTextSize("Fedoraware").x;
+			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, "Fedoraware");
+			ImGui::PopFont();
+		}
+
+		// Tabbar
+		ImGui::SetCursorPos({ 0, TitleHeight });
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundLight.Value);
+		if (TabHeight > 5.f)
+		{
+			if (ImGui::BeginChild("Tabbar", { windowSize.x, TabHeight }))
+			{
+				DrawTabbar();
+			}
+			ImGui::EndChild();
+		}
+		ImGui::PopStyleColor();
+
+		// Main content
+		ImGui::SetCursorPos({ 0, TitleHeight + TabHeight });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 10.f });
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
+		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			ImGui::PushFont(Segoe);
+			switch (CurrentTab)
+			{
+			case MenuTab::Aimbot: { MenuAimbot(); break; }
+			case MenuTab::Trigger: { MenuTrigger(); break; }
+			case MenuTab::Visuals: { MenuVisuals(); break; }
+			case MenuTab::HvH: { MenuHvH(); break; }
+			case MenuTab::Misc: { MenuMisc(); break; }
+			case MenuTab::Configs: { MenuConfigs(); break; }
+			}
+
+			ImGui::PopFont();
+		}
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
 
 		// Border structure
 		/*drawList->AddRectFilled(windowPos, {windowPos.x + SidebarWidth, windowPos.y + windowSize.y}, BackgroundDark);
@@ -83,50 +129,43 @@ void CMenu::DrawMenu()
 	ImGui::PopStyleVar();
 }
 
-/* Draws the menu sidebar */
-void CMenu::DrawSidebar()
+void CMenu::DrawTabbar()
 {
 	ImGui::PushFont(TabFont);
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.f, 10.f });
-	ImGui::PushStyleColor(ImGuiCol_Border, ImColor(38, 38, 38).Value);
+	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0, 0 });
+	if (ImGui::BeginTable("TabbarTable", 4))
 	{
-		if (ImGui::SidebarButton("AIMBOT", CurrentTab == MenuTab::Aimbot))
+		ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
+		ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
+		if (ImGui::TabButton("Aimbot", CurrentTab == MenuTab::Aimbot))
 		{
 			CurrentTab = MenuTab::Aimbot;
 		}
 
-		if (ImGui::SidebarButton("TRIGGER", CurrentTab == MenuTab::Trigger))
+		if (ImGui::TabButton("Trigger", CurrentTab == MenuTab::Trigger))
 		{
 			CurrentTab = MenuTab::Trigger;
 		}
 
-		if (ImGui::SidebarButton("VISUALS", CurrentTab == MenuTab::Visuals))
+		if (ImGui::TabButton("Visuals", CurrentTab == MenuTab::Visuals))
 		{
 			CurrentTab = MenuTab::Visuals;
 		}
 
-		if (ImGui::SidebarButton("HVH", CurrentTab == MenuTab::HvH))
+		if (ImGui::TabButton("HvH", CurrentTab == MenuTab::HvH))
 		{
 			CurrentTab = MenuTab::HvH;
 		}
 
-		if (ImGui::SidebarButton("MISC", CurrentTab == MenuTab::Misc))
+		if (ImGui::TabButton("Misc", CurrentTab == MenuTab::Misc))
 		{
 			CurrentTab = MenuTab::Misc;
 		}
 
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		if (ImGui::SidebarButton("CONFIGS", CurrentTab == MenuTab::Configs))
-		{
-			CurrentTab = MenuTab::Configs;
-		}
+		ImGui::PopStyleColor(2);
+		ImGui::EndTable();
 	}
-	ImGui::PopStyleColor();
-	ImGui::PopStyleVar(2);
+	ImGui::PopStyleVar();
 	ImGui::PopFont();
 }
 
@@ -134,7 +173,7 @@ void CMenu::DrawSidebar()
 void CMenu::MenuAimbot()
 {
 	using namespace ImGui;
-	if (BeginTable("AimbotTable", 2))
+	if (BeginTable("AimbotTable", 3))
 	{
 		TableNextColumn();
 
@@ -162,12 +201,7 @@ void CMenu::MenuAimbot()
 
 		TableNextColumn();
 
-		if (BeginContainer("Menu"))
-		{
-			SliderFloat("Border Width", &BorderWidth, 0.f, 50.f);
-			SliderFloat("Sidebar Width", &SidebarWidth, 0.f, 300.f);
-			SliderFloat("Title Height", &TitleHeight, 0.f, 100.f);
-		}
+		TableNextColumn();
 
 		EndTable();
 	}
@@ -306,10 +340,10 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
 		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
 
-		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 26.0f, &wideFontConfig, fontRange);
+		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
 
-		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 38.0f, &fontConfig, fontRange);
-		TitleLightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 38.0f, &fontConfig, fontRange);
+		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
+		// TitleLightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 38.0f, &fontConfig, fontRange);
 
 		io.Fonts->Build();
 	}
@@ -319,11 +353,11 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		// https://raais.github.io/ImStudio/
 
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
-		style.WindowMinSize = ImVec2(708, 708);
+		style.WindowMinSize = ImVec2(700, 700);
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
-		style.CellPadding = ImVec2(12.f, 0.f);
+		// style.CellPadding = ImVec2(12.f, 0.f);
 		style.FrameBorderSize = 0.f;
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 0.f;
@@ -339,9 +373,9 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_TitleBg] = BackgroundDark;
 		colors[ImGuiCol_TitleBgActive] = Accent;
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
-		colors[ImGuiCol_Button] = ImColor(0, 0, 0, 255);
-		colors[ImGuiCol_ButtonHovered] = Background;
-		colors[ImGuiCol_ButtonActive] = ImColor(38, 38, 38);
+		colors[ImGuiCol_Button] = BackgroundLight;
+		colors[ImGuiCol_ButtonHovered] = ImColor(69, 69, 77);
+		colors[ImGuiCol_ButtonActive] = ImColor(82, 79, 87);
 		colors[ImGuiCol_PopupBg] = BackgroundDark;
 		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
 		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
