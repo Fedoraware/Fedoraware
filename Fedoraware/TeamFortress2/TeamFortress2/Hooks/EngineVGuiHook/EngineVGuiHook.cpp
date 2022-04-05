@@ -120,13 +120,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 							if (g_GlobalInfo.m_nWaitForShift)
 							{
-								color1 = Colors::DtChargingLeft;
-								color2 = Colors::DtChargingRight;
+								color1 = Colors::DTBarIndicatorsCharging.startColour;
+								color2 = Colors::DTBarIndicatorsCharging.endColour;
 							}
 							else
 							{
-								color1 = Colors::DtChargedLeft;
-								color2 = Colors::DtChargedRight;
+								color1 = Colors::DTBarIndicatorsCharged.startColour;
+								color2 = Colors::DTBarIndicatorsCharged.endColour;
 							}
 
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1)

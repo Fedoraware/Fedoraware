@@ -187,6 +187,15 @@ void Draw_t::GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, 
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, 0, 255, horizontal);
 }
 
+// above but does alpha better (imo)
+void Draw_t::GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
+{
+	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+	g_Interfaces.Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+}
+
 void Draw_t::GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
 {
 	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
@@ -195,20 +204,11 @@ void Draw_t::GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, 
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x + w, y + h, 0, 255, horizontal);
 }
 
-void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, bool horizontal)
+void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, const Color_t& overlay_clr, bool horizontal)
 {
 	OutlinedRect(x - 1, y + 1 - (h + 2), w + 2, h + 2, outline_clr);
-	Rect(x, y - h, w, h, bottom_clr);
-	GradientRect(x, y, x + w, y - h, top_clr, bottom_clr, horizontal);
-}
-
-// above but accounts for alpha
-void Draw_t::GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
-{
-	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
-	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
-	g_Interfaces.Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
-	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+	GradientRectWH(x, y - h, w, h, bottom_clr, top_clr, horizontal);
+	Rect(x, y - h, w, h * (1.0f - bwidthp), overlay_clr);
 }
 
 void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr)

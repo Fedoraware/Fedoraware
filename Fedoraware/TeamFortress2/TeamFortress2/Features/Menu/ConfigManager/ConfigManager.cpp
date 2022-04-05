@@ -75,6 +75,13 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::Save(const wchar_t* name, Gradient_t val)
+{
+	char buffer[64];
+	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d %d", name, val.startColour.r, val.startColour.g, val.startColour.b, val.startColour.a, val.endColour.r, val.endColour.g, val.endColour.b, val.endColour.a);
+	m_Write << buffer << "\n";
+}
+
 void CConfigManager::Save(const wchar_t* name, Vec3 val)
 {
 	char buffer[64];
@@ -134,6 +141,19 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	}
+}
+
+void CConfigManager::Load(const wchar_t* name, Gradient_t& val)
+{
+	std::wstring line = {};
+
+	if (Find(name, line)) {
+		int r1 = 0, g1 = 0, b1 = 0, a1 = 0;
+		int r2 = 0, g2 = 0, b2 = 0, a2 = 0;
+		swscanf_s(line.c_str(), L"%*ls %d %d %d %d %d %d %d %d", &r1, &g1, &b1, &a1, &r2, &g2, &b2, &a2);
+		val.startColour = { static_cast<byte>(r1), static_cast<byte>(g1), static_cast<byte>(b1), static_cast<byte>(a1) };
+		val.endColour = { static_cast<byte>(r2), static_cast<byte>(g2), static_cast<byte>(b2), static_cast<byte>(a2) };
 	}
 }
 
@@ -743,9 +763,11 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			SAVE_OTHER(Colors::OutlineESP);
-			SAVE_OTHER(Colors::ChokedOverlay);
-			SAVE_OTHER(Colors::ChokedTop);
-			SAVE_OTHER(Colors::ChokedBottom);
+			SAVE_OTHER(Colors::DTBarIndicatorsCharged);
+			SAVE_OTHER(Colors::DTBarIndicatorsCharging);
+			SAVE_OTHER(Colors::ChokedBar);
+			SAVE_OTHER(Colors::HealthBar);
+			SAVE_OTHER(Colors::OverhealHealthBar);
 			SAVE_OTHER(Colors::Cond);
 			SAVE_OTHER(Colors::Target);
 			SAVE_OTHER(Colors::Invuln);
@@ -776,10 +798,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::FresnelBaseWeps);
 			SAVE_OTHER(Colors::FresnelTop);
 			SAVE_OTHER(Colors::AimSquareCol);
-			SAVE_OTHER(Colors::DtChargingLeft);
-			SAVE_OTHER(Colors::DtChargingRight);
-			SAVE_OTHER(Colors::DtChargedLeft);
-			SAVE_OTHER(Colors::DtChargedRight);
 			SAVE_OTHER(Colors::DtOutline);
 			SAVE_OTHER(Colors::NotifBG);
 			SAVE_OTHER(Colors::NotifOutline);
@@ -1442,9 +1460,11 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			LOAD_OTHER(Colors::OutlineESP);
-			LOAD_OTHER(Colors::ChokedOverlay);
-			LOAD_OTHER(Colors::ChokedTop);
-			LOAD_OTHER(Colors::ChokedBottom);
+			LOAD_OTHER(Colors::DTBarIndicatorsCharged);
+			LOAD_OTHER(Colors::DTBarIndicatorsCharging);
+			LOAD_OTHER(Colors::ChokedBar);
+			LOAD_OTHER(Colors::HealthBar);
+			LOAD_OTHER(Colors::OverhealHealthBar);
 			LOAD_OTHER(Colors::Cond);
 			LOAD_OTHER(Colors::Target);
 			LOAD_OTHER(Colors::Invuln);
@@ -1475,10 +1495,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::FresnelBaseWeps);
 			LOAD_OTHER(Colors::FresnelTop);
 			LOAD_OTHER(Colors::AimSquareCol);
-			LOAD_OTHER(Colors::DtChargingLeft);
-			LOAD_OTHER(Colors::DtChargingRight);
-			LOAD_OTHER(Colors::DtChargedLeft);
-			LOAD_OTHER(Colors::DtChargedRight);
 			LOAD_OTHER(Colors::DtOutline);
 			LOAD_OTHER(Colors::NotifBG);
 			LOAD_OTHER(Colors::NotifOutline);

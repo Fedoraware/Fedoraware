@@ -1077,6 +1077,12 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						ImGui::SetNextItemWidth(20);
 						ColorPicker("Invulnerable colour", Colors::WeaponIcon);
 						ImGui::Checkbox("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+						ImGui::SetNextItemWidth(20);
+						ColorPicker("Health Bar Top", Colors::HealthBar.startColour);
+						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
+						ImGui::SetNextItemWidth(44);
+						ColorPicker("Health Bar Bottom", Colors::HealthBar.endColour);
 						ImGui::Checkbox("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
 						ImGui::Checkbox("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1086,13 +1092,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						ImGui::Checkbox("Choked Packets", &Vars::ESP::Players::Choked.m_Var); HelpMarker("Shows how many packets the player has choked");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Choked Bar Top", Colors::ChokedTop);
+						ColorPicker("Choked Bar Top", Colors::ChokedBar.startColour);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 						ImGui::SetNextItemWidth(44);
-						ColorPicker("Choked Bar Bottom", Colors::ChokedBottom);
-						ImGui::SameLine(ImGui::GetContentRegionMax().x - 66);
-						ImGui::SetNextItemWidth(66);
-						ColorPicker("Choked Bar Overlay", Colors::ChokedOverlay);
+						ColorPicker("Choked Bar Bottom", Colors::ChokedBar.endColour);
 						static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; ImGui::PushItemWidth(100); ImGui::Combo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, boxArr, IM_ARRAYSIZE(boxArr)); ImGui::PopItemWidth(); HelpMarker("What sort of box to draw on players");
 						static const char* bonesESP[]{ "Off", "Custom colour", "Health" }; ImGui::PushItemWidth(100); ImGui::Combo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, bonesESP, IM_ARRAYSIZE(bonesESP)); ImGui::PopItemWidth(); HelpMarker("Will draw the bone structure of the player");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
@@ -1434,19 +1437,19 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						const char* dtBarStyles[]{ "Off", "Default", "Nitro", "Rijin" }; ImGui::PushItemWidth(150); ImGui::Combo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, dtBarStyles, IM_ARRAYSIZE(dtBarStyles)); ImGui::PopItemWidth(); HelpMarker("Which style to do the bar style");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("DT charging left", Colors::DtChargingLeft);
+						ColorPicker("DT charging right", Colors::DTBarIndicatorsCharging.endColour);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 						ImGui::SetNextItemWidth(44);
-						ColorPicker("DT charging right", Colors::DtChargingRight);
+						ColorPicker("DT charging left", Colors::DTBarIndicatorsCharging.startColour);
 						if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3)
 						{
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar height###dtBHeightNitro", &Vars::Misc::CL_Move::DTBarScaleY.m_Var, 1, 25);
 							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("DT charged left (Nitro)", Colors::DtChargedLeft);
+							ColorPicker("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("DT charged right (Nitro)", Colors::DtChargedRight);
+							ColorPicker("DT charged left", Colors::DTBarIndicatorsCharged.startColour);
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar width###dtBWidthNitro", &Vars::Misc::CL_Move::DTBarScaleX.m_Var, 100, 1000);
 							ImGui::PopItemWidth();
 						}
@@ -1455,10 +1458,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar height###dtBHeight", &Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var, 1, 30);
 							ImGui::PopItemWidth(); ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 							ImGui::SetNextItemWidth(20);
-							ColorPicker("DT charged left", Colors::DtChargedLeft);
+							ColorPicker("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
 							ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 							ImGui::SetNextItemWidth(44);
-							ColorPicker("DT charged right", Colors::DtChargedRight);
+							ColorPicker("DT charged left", Colors::DTBarIndicatorsCharged.startColour);
 							ImGui::PushItemWidth(150); ImGui::SliderInt("DT Bar width###dtBWidth", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
 							ImGui::PopItemWidth();
 						}

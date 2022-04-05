@@ -20,6 +20,7 @@ private:
 	void Save(const wchar_t* name, int val);
 	void Save(const wchar_t* name, float val);
 	void Save(const wchar_t* name, Color_t val);
+	void Save(const wchar_t* name, Gradient_t val);
 	void Save(const wchar_t* name, Vec3 val);
 	void Save(const wchar_t* name, Chams_t val);
 
@@ -31,6 +32,7 @@ private:
 	void Load(const wchar_t* name, int& val);
 	void Load(const wchar_t* name, float& val);
 	void Load(const wchar_t* name, Color_t& val);
+	void Load(const wchar_t* name, Gradient_t& val);
 	void Load(const wchar_t* name, Vec3& val);
 	void Load(const wchar_t* name, Chams_t& val);
 
