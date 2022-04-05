@@ -49,7 +49,6 @@ namespace Vars
 	{
 		inline CVar<bool> Active{ false, L"Active" };
 		inline CVar<bool> indicators{ true };
-		inline CVar<bool> avoidrandom{ true };
 		inline CVar<int> CritKey{ VK_SHIFT, L"Crit Key" };
 	}
 
@@ -427,7 +426,6 @@ namespace Vars
 		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
 		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList{ 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-		inline CVar<int> Damage{ 2, L"damage" }; // very awesome stuff here
 
 		inline CVar<int> FreecamKey{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed{ 10.f, L"Freecam Speed" };
@@ -475,7 +473,7 @@ namespace Vars
 			inline CVar<bool> Rainbow { false, L"Rainbow" };
 			inline Color_t BeamColour{ 255, 255, 255, 255 };
 			inline CVar<bool> UseCustomModel { false, L"Use Custom Model" };
-			inline std::string Model = "sprites/physbeam.vmt";
+			inline CVar<std::string> Model{ "sprites/physbeam.vmt", L"Model" };
 			inline CVar<float> Life { 2.f, L"Life" };
 			inline CVar<float> Width { 2.f, L"Width" };
 			inline CVar<float> EndWidth { 2.f, L"End Width" };

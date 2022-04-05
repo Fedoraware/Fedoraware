@@ -121,6 +121,9 @@ void CInterfaces::Init()
 
 	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(g_Interfaces.Engine, 115));
 	_valid(AchievementMgr);
+
+	ILOVEBEAMS = **reinterpret_cast<IViewRenderBeams***>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?") + 0x2);
+	_valid(ILOVEBEAMS);
 }
 
 void CSteamInterfaces::Init()

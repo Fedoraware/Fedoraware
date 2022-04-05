@@ -326,12 +326,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 
-				if (Vars::ESP::Players::Choked.m_Var)
-				{
-					int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
-					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, tfm::format("C: %s", chokeCount).c_str());
-					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
-				}
+				
 			}
 
 			if (Vars::ESP::Players::Class.m_Var)
@@ -406,24 +401,29 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				float flHealth = static_cast<float>(nHealth);
 				float flMaxHealth = static_cast<float>(nMaxHealth);
 
-				Color_t clr = flHealth > flMaxHealth ? Colors::Overheal : HealthColor;
+				Gradient_t clr = flHealth > flMaxHealth ? Colors::OverhealHealthBar : Colors::HealthBar;
 
 				if (!Player->IsVulnerable())
-					clr = Colors::Invuln;
+					clr = { Colors::Invuln, Colors::Invuln };
 
 				if (flHealth > flMaxHealth)
 					flHealth = flMaxHealth;
 
-				static const int nWidth = 2;
-				int nHeight = h + (flHealth < flMaxHealth ? 2 : 1);
-				int nHeight2 = h + 1;
-
 				float ratio = flHealth / flMaxHealth;
-				g_Draw.Rect(x - nWidth - 2, y + nHeight - nHeight * ratio, nWidth, nHeight * ratio, clr);
+				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
 
-				if (Vars::ESP::Main::Outlinedbar.m_Var)
-					g_Draw.OutlinedRect(x - nWidth - 2 - 1, y + nHeight - nHeight * ratio - 1, nWidth + 2,
-						nHeight * ratio + 2, Colors::OutlineESP);
+				x += 1;
+			}
+
+			if (Vars::ESP::Players::Choked.m_Var)
+			{
+				x -= 1;
+				static float ratio = 0.0f;
+				int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
+
+				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
+				ratio = chokeCount/22.0f;
+				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
 
 				x += 1;
 			}

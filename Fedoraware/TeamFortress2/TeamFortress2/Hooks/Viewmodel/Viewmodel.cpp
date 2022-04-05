@@ -2,6 +2,7 @@
 
 void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& eyePosition, Vec3& eyeAngles)
 {
+	static Vec3 m_vEyeAngDelayed;
 	static auto originalFn = Func.Original<fn>();
 	if (auto& pLocal = g_EntityCache.m_pLocal)
 	{
@@ -15,12 +16,12 @@ void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& 
 			{
 				eyeAngles = Math::CalcAngle(eyePosition, g_GlobalInfo.m_vAimPos);
 			}
-			g_GlobalInfo.m_vEyeAngDelayed = eyeAngles;
+			m_vEyeAngDelayed = eyeAngles;
 			g_GlobalInfo.vEyeAngDelay = 0;
 		}
 		else if (pLocal->IsAlive())
 		{
-			if (g_GlobalInfo.vEyeAngDelay < 25) { eyeAngles = g_GlobalInfo.m_vEyeAngDelayed; }
+			if (g_GlobalInfo.vEyeAngDelay < 32) { eyeAngles = m_vEyeAngDelayed; }
 			// looks hot ty senator for the idea
 			else { eyeAngles = g_Interfaces.Engine->GetViewAngles(); }
 		}
@@ -33,9 +34,9 @@ void __fastcall Viewmodel::Hook(void* ecx, void* edx, CBaseEntity* owner, Vec3& 
 	// viewmodel offsets should probably be locked between 2 values, just like we should clamp our eye angles, however, I don't want to, f*ck you
 
 	Vec3 vEyePosition = eyePosition + (
-		(vRight * Vars::Visuals::VMOffX.m_Var) +
-		(vForward * Vars::Visuals::VMOffY.m_Var) +
-		(vUp * Vars::Visuals::VMOffZ.m_Var)
+		(vRight * Vars::Visuals::VMOffsets.x) +
+		(vForward * Vars::Visuals::VMOffsets.y) +
+		(vUp * Vars::Visuals::VMOffsets.z)
 	);
 
 	eyeAngles.z += Vars::Visuals::VMRoll.m_Var; //VM Roll

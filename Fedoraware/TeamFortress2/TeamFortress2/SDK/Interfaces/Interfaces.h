@@ -31,6 +31,8 @@
 #include "InputSystem/InputSystem.h"
 #include "EffectsClient/EffectsClient.h"
 #include "AchievementMgr/AchievementMgr.h"
+#include "ViewRenderBeams/ViewRenderBeams.h"
+
 class CClockDriftMgr
 {
 private:
@@ -119,6 +121,7 @@ public:
 	void*						CHud						= nullptr;
 	void*						CTFGameMovement				= nullptr;
 	IAchievementMgr*			AchievementMgr				= nullptr;
+	IViewRenderBeams*			ILOVEBEAMS					= nullptr;
 	void Init();
 };
 

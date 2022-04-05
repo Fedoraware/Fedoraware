@@ -127,6 +127,15 @@ bool CVisuals::RemoveScope(int nPanel)
 	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
 }
 
+bool CVisuals::RemoveMOTD(int nPanel)
+{
+	if (!m_nHudMotd && Hash::IsHudMotd(g_Interfaces.Panel->GetName(nPanel)))
+	{
+		m_nHudMotd = nPanel;
+	}
+	return (Vars::Visuals::RemoveMOTD.m_Var && nPanel == m_nHudMotd);
+}
+
 
 void CVisuals::FOV(CViewSetup* pView)
 {
@@ -140,8 +149,10 @@ void CVisuals::FOV(CViewSetup* pView)
 
 		pView->fov = Vars::Visuals::FieldOfView.m_Var;
 
-		if (pLocal->IsAlive())
+		if (pLocal->IsAlive()) {
 			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
+			pLocal->m_iDefaultFOV() = Vars::Visuals::FieldOfView.m_Var;
+		}
 	}
 }
 
@@ -376,7 +387,7 @@ void CVisuals::PickupTimers()
 			continue;
 		}
 
-		auto timerText = tfm::format("%s: %.1fs", pickupData->Type ? "HEALTH" : "AMMO", 10.f - timeDiff);
+		auto timerText = tfm::format("%.1f", 10.f - timeDiff);
 		auto color = pickupData->Type ? Colors::Health : Colors::Ammo;
 		
 		Vec3 vScreen;

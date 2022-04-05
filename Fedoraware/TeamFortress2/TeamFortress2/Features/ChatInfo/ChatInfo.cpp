@@ -40,7 +40,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::ChatInfoText.m_Var)
 				{
-					g_notify.Add(classString);
+					g_Notifications.Add(classString);
 				}
 
 				if (Vars::Visuals::ChatInfoChat.m_Var) {
@@ -65,7 +65,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 						tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (Vars::Misc::VoteRevealerText.m_Var) {
-					g_notify.Add(voteString);
+					g_Notifications.Add(voteString);
 				}
 				if (Vars::Misc::VoteRevealerConsole.m_Var) {
 					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString.c_str());
@@ -120,7 +120,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::damageLoggerText.m_Var)
 				{
-					g_notify.Add(attackString);
+					g_Notifications.Add(attackString);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				{
 					if (m_known_bots.find(info.friendsID) == m_known_bots.end())
 					{
-						g_notify.Add(tfm::format("%s is a bot!", info.name));
+						g_Notifications.Add(tfm::format("%s is a bot!", info.name));
 						if (Vars::Visuals::ChatInfoText.m_Var)
 						{
 							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(

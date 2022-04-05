@@ -5,10 +5,12 @@ class CVisuals
 {
 private:
 	int m_nHudZoom = 0;
+	int m_nHudMotd = 0;
 	IMaterial* m_pMatDev;
 
 public:
 	bool RemoveScope(int nPanel);
+	bool RemoveMOTD(int nPanel);
 	void FOV(CViewSetup* pView);
 	void ThirdPerson(CViewSetup* pView);
 	void ModulateWorld();

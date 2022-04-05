@@ -117,13 +117,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 							if (g_GlobalInfo.m_nWaitForShift)
 							{
-								color1 = Colors::DtChargingLeft;
-								color2 = Colors::DtChargingRight;
+								color1 = Colors::DTBarIndicatorsCharging.startColour;
+								color2 = Colors::DTBarIndicatorsCharging.endColour;
 							}
 							else
 							{
-								color1 = Colors::DtChargedLeft;
-								color2 = Colors::DtChargedRight;
+								color1 = Colors::DTBarIndicatorsCharged.startColour;
+								color2 = Colors::DTBarIndicatorsCharged.endColour;
 							}
 
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1)
@@ -212,13 +212,51 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				// debug
 				{
-					#ifdef _DEBUG
-
+					/*
+					int yoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
-						g_Draw.String(FONT_MENU, 300, 300, { 255,255,255,255 }, ALIGN_CENTER, "localDamage = %d", localDamage);
+						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
+						yoffset += 20;
 					}
 
-					#endif
+					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+						int weaponid = pWeapon->GetWeaponID();
+						if (weaponid) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
+							yoffset += 20;
+						}
+					}
+
+					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+					{
+						Vec3 CollideableMins = Projectile->GetCollideableMins();
+						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
+						if (!CollideableMins.IsZero()) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %f %f %f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
+							yoffset += 20;
+						}
+						if (!CollideableMaxs.IsZero()) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %f %f %f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
+							yoffset += 20;
+						}
+						if (CollideableMins.IsZero() || CollideableMaxs.IsZero()) {
+							model_t* pModel = Projectile->GetModel();
+							if (pModel) {
+								studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
+								if (pHDR) {
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %f %f %f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %f %f %f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmin.x, pHDR->view_bbmin.y, pHDR->view_bbmin.z);
+									yoffset += 20;
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmax.x, pHDR->view_bbmax.y, pHDR->view_bbmax.z);
+									yoffset += 20;
+								}
+							}
+						}
+					}
+					*/
 				}
 
 				//Current Active Aimbot FOV
@@ -237,6 +275,18 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 			};
 			OtherDraws();
+			
+			if (Vars::Visuals::Damage.m_Var)
+			{
+				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				{
+					if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
+					{
+						g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
+					}
+				}
+			}
+			
 			g_Misc.BypassPure();
 			g_ESP.Run();
 			g_Visuals.PickupTimers();
@@ -245,7 +295,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_CritHack.Draw();
 			
 			// you can use it for more, i'm sure. - myzarfin
-			g_notify.Think();
+			g_Notifications.Think();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{

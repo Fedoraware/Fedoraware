@@ -72,7 +72,8 @@ void CCritHack::Run(CUserCmd* pCmd)
 			// Force next crit
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
-		} else
+		} 
+		else if (Vars::CritHack::avoidrandom.m_Var)
 		{
 			// Prevent crit
 			int tries = 0;
@@ -93,6 +94,7 @@ void CCritHack::Draw()
 {
 	if (!IsEnabled()) { return; }
 	if (!g_GlobalInfo.currentUserCmd) { return; }
+	if (!Vars::CritHack::indicators.m_Var) { return; }
 
 	const auto& pLocal = g_EntityCache.m_pLocal;
 	if (!pLocal) { return; }

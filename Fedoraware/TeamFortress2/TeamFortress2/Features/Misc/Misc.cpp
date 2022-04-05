@@ -801,33 +801,33 @@ void CMisc::SteamRPC()
 }
 
 // Myzarfin added this
-void Notify::Think()
+void CNotifications::Think()
 {
 	int x{1}, y{1}, size{20};
 	Color_t color;
 	float left;
 
-	if (m_notify_text.size() > (MAX_NOTIFY_SIZE + 1))
-		m_notify_text.erase(m_notify_text.begin());
+	if (m_vNotificationTexts.size() > (MAX_NOTIFY_SIZE + 1))
+		m_vNotificationTexts.erase(m_vNotificationTexts.begin());
 
-	for (size_t i{}; i < m_notify_text.size(); ++i)
+	for (size_t i{}; i < m_vNotificationTexts.size(); ++i)
 	{
-		auto notify = m_notify_text[i];
+		auto notify = m_vNotificationTexts[i];
 
 		notify->m_time -= g_Interfaces.GlobalVars->absoluteframetime;
 
 		if (notify->m_time <= 0.f)
 		{
-			m_notify_text.erase(m_notify_text.begin() + i);
+			m_vNotificationTexts.erase(m_vNotificationTexts.begin() + i);
 		}
 	}
 
-	if (m_notify_text.empty())
+	if (m_vNotificationTexts.empty())
 		return;
 
-	for (size_t i{}; i < m_notify_text.size(); ++i)
+	for (size_t i{}; i < m_vNotificationTexts.size(); ++i)
 	{
-		auto notify = m_notify_text[i];
+		auto notify = m_vNotificationTexts[i];
 
 		left = notify->m_time;
 		color = notify->m_color;
@@ -853,21 +853,15 @@ void Notify::Think()
 		mbstowcs(wc, notify->m_text.c_str(), cSize);
 
 		int w, h;
-		// g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
 		g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
-		// there was no need to do what u did to the font system mfed
 
-		g_Draw.Line(x, y, x, y + 19, {
-			            Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a
-		            });
-		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
-		                     {
-			                     Colors::NotifBG.r, Colors::NotifBG.g,
-			                     Colors::NotifBG.b, color.a
-		                     }, {
-			                     Colors::NotifBG.r, Colors::NotifBG.g,
-			                     Colors::NotifBG.b, 1
+		delete[] wc; // Memory leak
+
+		g_Draw.Line(x, y, x, y + 19, { Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a });
+		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19, 
+							{ Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a }, 
+							{ Colors::NotifBG.r, Colors::NotifBG.g,              Colors::NotifBG.b, 1
 		                     }, true);
 		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
 		              {Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a},
