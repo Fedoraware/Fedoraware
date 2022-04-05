@@ -150,8 +150,10 @@ void CVisuals::FOV(CViewSetup* pView)
 
 		pView->fov = Vars::Visuals::FieldOfView.m_Var;
 
-		if (pLocal->IsAlive())
+		if (pLocal->IsAlive()) {
 			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
+			pLocal->m_iDefaultFOV() = Vars::Visuals::FieldOfView.m_Var;
+		}
 	}
 }
 
