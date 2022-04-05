@@ -278,6 +278,18 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 			};
 			OtherDraws();
+			
+			if (Vars::Visuals::Damage.m_Var)
+			{
+				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				{
+					if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
+					{
+						g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
+					}
+				}
+			}
+			
 			g_Misc.BypassPure();
 			g_ESP.Run();
 			g_Visuals.PickupTimers();
