@@ -5,7 +5,40 @@
 #include "ImGui/imgui_color_gradient.h"
 #include "Components.hpp"
 
+#define SLIDER(label, var, min, max, format, flagspower) \
+ImGui::PushItemWidth(100); \
+ImGui::SliderFloat(label, var, min, max, format, flagspower); \
+ImGui::PopItemWidth()
+
+#define TOGGLE(label, v) ImGui::Checkbox(label, v);
+
 constexpr int MENU_KEY = VK_INSERT;
+static ImGradient titleGradient;
+static ImGradient mainGradient;
+
+// Fonts
+ImFont* SegoeLight = nullptr;	// 16px
+ImFont* Segoe = nullptr;		// 16px
+ImFont* SegoeBold = nullptr;	// 16px
+
+ImFont* SectionFont = nullptr;	// 18px
+ImFont* TabFont = nullptr;		// 22px
+ImFont* TitleFont = nullptr;	// 26px
+
+#pragma region Components
+void SectionTitle(const char* title, int yOffset = 6)
+{
+	ImGui::Dummy({ 0, yOffset });
+	ImGui::PushFont(SectionFont);
+	const ImVec2 titleSize = ImGui::CalcTextSize(title);
+	ImGui::SameLine((ImGui::GetColumnWidth()) / 2 - (titleSize.x / 2));
+	ImGui::Text(title);
+	ImGui::PopFont();
+
+	const auto widgetPos = ImGui::GetCursorScreenPos();
+	ImGui::GradientRect(&mainGradient, { widgetPos.x, widgetPos.y - 2 }, ImGui::GetColumnWidth(), 3);
+}
+#pragma endregion
 
 /* The main menu */
 void CMenu::DrawMenu()
@@ -16,23 +49,12 @@ void CMenu::DrawMenu()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
-
-		static ImGradient mainGradient;
-		{
-			mainGradient.ClearMarks();
-			mainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-			mainGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
-			mainGradient.AddMark(0.5f, Accent);
-			mainGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
-			mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
-		}
-
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
 		// Gradient line
-		ImGui::GradientRect(&mainGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
+		ImGui::GradientRect(&titleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
 		ImGui::Dummy({ 0, 2 });
 
 		// Title Text
@@ -48,7 +70,7 @@ void CMenu::DrawMenu()
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundLight.Value);
 		if (TabHeight > 5.f)
 		{
-			if (ImGui::BeginChild("Tabbar", { windowSize.x, TabHeight }))
+			if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight }))
 			{
 				DrawTabbar();
 			}
@@ -78,50 +100,6 @@ void CMenu::DrawMenu()
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
-
-		// Border structure
-		/*drawList->AddRectFilled(windowPos, {windowPos.x + SidebarWidth, windowPos.y + windowSize.y}, BackgroundDark);
-		drawList->AddRectFilled(windowPos, { windowPos.x + SidebarWidth, windowPos.y + TitleHeight }, Accent);
-
-		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + BorderWidth }, Accent);
-		drawList->AddRectFilled(windowPos, { windowPos.x + BorderWidth, windowPos.y + windowSize.y }, Accent);
-
-		// "Fedoraware" label
-		drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + 32.f, windowPos.y + 20.f }, TextDark, "Fedora");
-		drawList->AddText(TitleLightFont, TitleLightFont->FontSize, { windowPos.x + 125.f, windowPos.y + 20.f }, TextDark, "ware");
-
-		// Sidebar
-		if (SidebarWidth > 10.f)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 10.f, 20.f });
-			ImGui::SetCursorPos({ BorderWidth, TitleHeight });
-			if (ImGui::BeginChild("Sidebar", { SidebarWidth - BorderWidth, windowSize.y - TitleHeight }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
-			{
-				DrawSidebar();
-			}
-			ImGui::EndChild();
-			ImGui::PopStyleVar();
-		}
-
-		// Main content
-		ImGui::SetCursorPos({ SidebarWidth, BorderWidth });
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 10.f });
-		if (ImGui::BeginChild("Content", { windowSize.x - SidebarWidth, windowSize.y - BorderWidth }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
-		{
-			ImGui::PushFont(Segoe);
-			switch (CurrentTab)
-			{
-				case MenuTab::Aimbot: { MenuAimbot(); break; }
-				case MenuTab::Trigger: { MenuTrigger(); break; }
-				case MenuTab::Visuals: { MenuVisuals(); break; }
-				case MenuTab::HvH: { MenuHvH(); break; }
-				case MenuTab::Misc: { MenuMisc(); break; }
-				case MenuTab::Configs: { MenuConfigs(); break; }
-			}
-			ImGui::PopFont();
-		}
-		ImGui::EndChild();
-		ImGui::PopStyleVar();*/
 
 		// End
 		ImGui::End();
@@ -165,7 +143,7 @@ void CMenu::DrawTabbar()
 		ImGui::PopStyleColor(2);
 		ImGui::EndTable();
 	}
-	ImGui::PopStyleVar();
+	ImGui::PopStyleVar(1);
 	ImGui::PopFont();
 }
 
@@ -177,27 +155,28 @@ void CMenu::MenuAimbot()
 	{
 		TableNextColumn();
 
-		if (BeginContainer("Global"))
-		{
-			ToggleButton("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
-			Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var);
-			ColorPickerL("Target Color", Colors::Target);
-			SliderFloat("Aimbot FOV", &Vars::Aimbot::Global::AimFOV.m_Var, 1, 100);
-			ColorPickerL("FOV Circle", Colors::FOVCircle);
-			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey);
-			ToggleButton("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var);
-			MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
-			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
-			ColorPickerL("Invulnerable colour", Colors::Invuln);
-		}
+		// Global Aimbot
+		SectionTitle("Global");
+		TOGGLE("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
+		ColorPickerL("Aim Target", Colors::Target);
+		InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
+		SLIDER("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+		ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
+		TOGGLE("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
+		MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
+		MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
+		ColorPickerL("Invulnerable colour", Colors::Invuln);
 
-		Spacing(); Spacing();
-		if (BeginContainer("Crits"))
-		{
-			ToggleButton("Crithack", &Vars::CritHack::Active.m_Var);
-			ToggleButton("Draw info", &Vars::CritHack::Active.m_Var);
-			InputKeybind("Crithack key", Vars::Aimbot::Global::AimKey);
-		}
+		// Crithack
+		SectionTitle("Crithack", 12);
+		TOGGLE("Crit hack", &Vars::CritHack::Active.m_Var); HelpMarker("Enables the crit hack (BETA)");
+		//MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
+		InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
+
+		// Backtrack
+		SectionTitle("Backtrack", 12);
+		TOGGLE("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
+		TOGGLE("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
 
 		TableNextColumn();
 
@@ -329,21 +308,18 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	{
 		auto fontConfig = ImFontConfig();
 		fontConfig.OversampleH = 2;
-		//fontConfig.OversampleV = 1;
-		//fontConfig.PixelSnapH = true;
 
 		auto wideFontConfig = ImFontConfig();
-		wideFontConfig.GlyphExtraSpacing = { 6.f, 0.f };
+		wideFontConfig.GlyphExtraSpacing = { 1.f, 0.f };
 
 		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F,0 }; // Basic Latin, Latin Supplement and Cyrillic
 		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
 		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
 		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
 
+		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 18.0f, &wideFontConfig, fontRange);
 		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
-
 		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
-		// TitleLightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 38.0f, &fontConfig, fontRange);
 
 		io.Fonts->Build();
 	}
@@ -363,12 +339,11 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.ChildBorderSize = 0.f;
 		style.ChildRounding = 0.f;
 		style.ScrollbarSize = 4.f;
-		style.GrabMinSize = 14.f;
-		style.GrabRounding = 12.f;
+		style.GrabMinSize = 15.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);
 
 		ImVec4* colors = style.Colors;
-		colors[ImGuiCol_Border] = Accent;
+		colors[ImGuiCol_Border] = ImColor(110, 110, 128);
 		colors[ImGuiCol_WindowBg] = Background;
 		colors[ImGuiCol_TitleBg] = BackgroundDark;
 		colors[ImGuiCol_TitleBgActive] = Accent;
@@ -392,8 +367,26 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_HeaderHovered] = Accent;
 		colors[ImGuiCol_Header] = Accent;
 	}
+
+	// Misc
+	{
+		titleGradient.ClearMarks();
+		titleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		titleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
+		titleGradient.AddMark(0.5f, Accent);
+		titleGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
+		titleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+	}
+
+	{
+		mainGradient.ClearMarks();
+		mainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		mainGradient.AddMark(0.15f, ImColor(0, 0, 0, 0));
+		mainGradient.AddMark(0.45f, Accent);
+		mainGradient.AddMark(0.75f, ImColor(0, 0, 0, 0));
+		mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+	}
 }
 
-#pragma region Components
-
-#pragma endregion
+#undef SLIDER
+#undef TOGGLE

@@ -122,10 +122,6 @@ namespace ImGui
 		const auto id = GetID(label);
 		PushID(label);
 
-		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
-		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
-		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
-		PushStyleColor(ImGuiCol_Text, g_Menu.TextDark.Value);
 		if (GetActiveID() == id) {
 			Button("...", ImVec2(100, 20));
 
@@ -189,7 +185,6 @@ namespace ImGui
 		else if (Button(VK2STR(output.m_Var), ImVec2(100, 20))) {
 			SetActiveID(id, GetCurrentWindow());
 		}
-		PopStyleColor(4);
 
 		SameLine();
 		TextUnformatted(label);
@@ -236,7 +231,7 @@ namespace ImGui
 		bool open = false;
 		ImVec4 tempColor = {};
 		PushItemWidth(150);
-		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
+		if (ColorEdit4(label, reinterpret_cast<float*>(&tempColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
 			color = vColor(tempColor);
 			open = true;
 		}

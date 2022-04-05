@@ -4,7 +4,6 @@
 
 class CMenu {
 	void DrawMenu();
-	void DrawSidebar();
 	void DrawTabbar();
 	void MenuAimbot();
 	void MenuTrigger();
@@ -25,14 +24,6 @@ class CMenu {
 
 	MenuTab CurrentTab = MenuTab::Aimbot;
 
-	// Fonts
-	ImFont* SegoeLight = nullptr;	// 16px
-	ImFont* Segoe = nullptr;		// 16px
-	ImFont* SegoeBold = nullptr;	// 16px
-
-	ImFont* TabFont = nullptr;		// 22px
-	ImFont* TitleFont = nullptr;		// 26px
-
 public:
 	void Render(IDirect3DDevice9* pDevice);
 	void Init(IDirect3DDevice9* pDevice);
@@ -42,7 +33,7 @@ public:
 	bool Unload = false;
 
 	float TitleHeight = 22.f;
-	float TabHeight = 35.f;
+	float TabHeight = 30.f;
 
 	// Colors
 	ImColor Accent = { 255, 101, 101 };
