@@ -207,6 +207,7 @@ namespace ImGui
 		}
 		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
+		PushItemWidth(150);
 		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
 		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
 		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
@@ -222,6 +223,7 @@ namespace ImGui
 			EndCombo();
 		}
 		PopStyleColor(3);
+		PopItemWidth();
 
 		HelpMarker(description.c_str());
 	}
@@ -231,10 +233,12 @@ namespace ImGui
 		bool open = false;
 		ImVec4 tempColor = {};
 		PushItemWidth(150);
+		PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 		if (ColorEdit4(label, reinterpret_cast<float*>(&tempColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
 			color = vColor(tempColor);
 			open = true;
 		}
+		PopStyleVar();
 		PopItemWidth();
 		return open;
 	}

@@ -5,9 +5,19 @@
 #include "ImGui/imgui_color_gradient.h"
 #include "Components.hpp"
 
-#define SLIDER(label, var, min, max, format, flagspower) \
-ImGui::PushItemWidth(100); \
+#define WSLIDER(label, var, min, max, format, flagspower) \
+ImGui::PushItemWidth(150); \
 ImGui::SliderFloat(label, var, min, max, format, flagspower); \
+ImGui::PopItemWidth()
+
+#define WISLIDER(label, var, min, max, format, flagspower) \
+ImGui::PushItemWidth(150); \
+ImGui::SliderInt(label, var, min, max, format, flagspower); \
+ImGui::PopItemWidth()
+
+#define WCOMBO(label, var, items) \
+ImGui::PushItemWidth(150); \
+ImGui::Combo(label, var, items, IM_ARRAYSIZE(items)); \
 ImGui::PopItemWidth()
 
 #define TOGGLE(label, v) ImGui::Checkbox(label, v);
@@ -26,7 +36,7 @@ ImFont* TabFont = nullptr;		// 22px
 ImFont* TitleFont = nullptr;	// 26px
 
 #pragma region Components
-void SectionTitle(const char* title, int yOffset = 6)
+void SectionTitle(const char* title, float yOffset = 6)
 {
 	ImGui::Dummy({ 0, yOffset });
 	ImGui::PushFont(SectionFont);
@@ -111,6 +121,7 @@ void CMenu::DrawTabbar()
 {
 	ImGui::PushFont(TabFont);
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0, 0 });
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 	if (ImGui::BeginTable("TabbarTable", 4))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
@@ -143,7 +154,7 @@ void CMenu::DrawTabbar()
 		ImGui::PopStyleColor(2);
 		ImGui::EndTable();
 	}
-	ImGui::PopStyleVar(1);
+	ImGui::PopStyleVar(2);
 	ImGui::PopFont();
 }
 
@@ -153,6 +164,7 @@ void CMenu::MenuAimbot()
 	using namespace ImGui;
 	if (BeginTable("AimbotTable", 3))
 	{
+		/* Column 1 */
 		TableNextColumn();
 
 		// Global Aimbot
@@ -160,7 +172,7 @@ void CMenu::MenuAimbot()
 		TOGGLE("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
 		ColorPickerL("Aim Target", Colors::Target);
 		InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
-		SLIDER("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+		WSLIDER("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 		ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
 		TOGGLE("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 		MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
@@ -170,7 +182,7 @@ void CMenu::MenuAimbot()
 		// Crithack
 		SectionTitle("Crithack", 12);
 		TOGGLE("Crit hack", &Vars::CritHack::Active.m_Var); HelpMarker("Enables the crit hack (BETA)");
-		//MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
+		MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
 		InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
 		// Backtrack
@@ -178,9 +190,57 @@ void CMenu::MenuAimbot()
 		TOGGLE("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 		TOGGLE("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
 
+		/* Column 2 */
 		TableNextColumn();
 
+		// Hitscan options
+		SectionTitle("Hitscan");
+		static const char* sortMethodArr[]{ "FOV", "Distance", }; WCOMBO("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, sortMethodArr, IM_ARRAYSIZE(sortMethodArr)); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+		static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; WCOMBO("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, aimMethodArr); HelpMarker("Which method the aimbot uses to aim at the target");
+		static const char* aimHitboxArr[]{ "Head", "Body", "Auto" }; WCOMBO("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, aimHitboxArr); HelpMarker("Which hitbox the aimbot will target");
+		static const char* tapfireMethodArr[]{ "Off", "Distance", "Always" }; WCOMBO("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, tapfireMethodArr); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
+		WISLIDER("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
+		MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Choose what the aimbot should multipoint", "Multipoint");
+		TOGGLE("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
+		TOGGLE("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
+		TOGGLE("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
+		TOGGLE("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var); HelpMarker("The aimbot will only shoot if scoped");
+		TOGGLE("Auto scope", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
+		TOGGLE("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
+		TOGGLE("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+
+		/* Column 3 */
 		TableNextColumn();
+
+		SectionTitle("Projectile");
+		TOGGLE("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
+		TOGGLE("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Uses game functions to predict where the player will be");
+		ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+		if (Vars::Aimbot::Projectile::MovementSimulation.m_Var)
+		{
+			WSLIDER("Prediction Time", &Vars::Aimbot::Projectile::predTime.m_Var, 0.1f, 10.f, "%.1f", ImGuiSliderFlags_None);
+		}
+		{
+			static const char* sortMethodArr[]{ "FOV", "Distance", }; WCOMBO("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, sortMethodArr);
+			static const char* aimMethodArr[]{ "Plain", "Silent" }; WCOMBO("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, aimMethodArr);
+			static const char* aimHitboxArr[]{ "Body", "Feet", "Auto" }; WCOMBO("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, aimHitboxArr);
+		}
+		TOGGLE("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at feet if target is on the ground");
+		TOGGLE("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
+		if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
+		{
+			WSLIDER("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
+		}
+
+		SectionTitle("Melee", 12);
+		{
+			static const char* sortMethodArr[]{ "FOV", "Distance", }; WCOMBO("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, sortMethodArr); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+			static const char* aimMethodArr[]{ "Plain", "Smooth", "Silent" }; WCOMBO("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, aimMethodArr); HelpMarker("Which method the aimbot uses to aim at the target");
+		}
+		WISLIDER("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
+		TOGGLE("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
+		TOGGLE("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
+		TOGGLE("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
 
 		EndTable();
 	}
@@ -189,13 +249,97 @@ void CMenu::MenuAimbot()
 /* Tab: Trigger */
 void CMenu::MenuTrigger()
 {
-	
+	using namespace ImGui;
+	if (BeginTable("TriggerTable", 3))
+	{
+		TableNextColumn();
+
+		// Global Triggerbot
+		SectionTitle("Global");
+		TOGGLE("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
+		InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
+		MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var, &Vars::Triggerbot::Global::IgnoreCloaked.m_Var, &Vars::Triggerbot::Global::IgnoreFriends.m_Var }, "Choose which targets should be ignored", "Ignored targets###TriggerIgnoredTargets");
+
+		// Autoshoot
+		SectionTitle("Autoshoot");
+		TOGGLE("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
+		MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Choose which target the triggerbot should shoot at", "Trigger targets");
+		TOGGLE("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
+		TOGGLE("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
+		WSLIDER("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
+
+		EndTable();
+	}
 }
 
 /* Tab: Visuals */
 void CMenu::MenuVisuals()
 {
+	using namespace ImGui;
+	if (CurrentVisualsTab == VisualsTab::Players)
+	{
+		if (BeginTable("VisualsTable", 3))
+		{
+			TableNextColumn();
 
+			// ESP
+			SectionTitle("ESP Main");
+			TOGGLE("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
+			TOGGLE("Outlined health bars", &Vars::ESP::Main::Outlinedbar.m_Var); HelpMarker("Will outline the health bars");
+			TOGGLE("Relative colours", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var); HelpMarker("Chooses colors relative to your team (team/enemy)");
+			if (Vars::ESP::Main::EnableTeamEnemyColors.m_Var)
+			{
+				ColorPickerL("Enemy color", Colors::Enemy);
+				ColorPickerL("Team color", Colors::rTeam, 1);
+			}
+			else
+			{
+				ColorPickerL("RED Team color", Colors::TeamRed);
+				ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
+			}
+
+			// Player ESP
+			SectionTitle("Player ESP");
+			TOGGLE("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
+			TOGGLE("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
+			TOGGLE("Custom Name Color", &Vars::ESP::Players::NameC.m_Var); HelpMarker("Custom color for name esp");
+			if (Vars::ESP::Players::NameC.m_Var)
+			{
+				ColorPickerL("Name ESP Color", Vars::ESP::Players::NameColor);
+			}
+			TOGGLE("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
+			TOGGLE("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
+			ColorPickerL("Local colour", Colors::Local);
+			static const char* ignoreTeamArr[]{ "Off", "All", "Only friends" }; WCOMBO("Ignore team###IgnoreTeamESPp", &Vars::ESP::Players::IgnoreTeammates.m_Var, ignoreTeamArr); HelpMarker("Which teammates the ESP will ignore drawing on");
+			ColorPickerL("Friend colour", Colors::Friend);
+			static const char* ignoreCloakArr[]{ "Off", "All", "Only enemies" }; WCOMBO("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.m_Var, ignoreCloakArr); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
+			ColorPickerL("Cloaked colour", Colors::Cloak);
+			static const char* espUberArr[]{ "Off", "Text", "Bar" }; WCOMBO("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.m_Var, espUberArr); HelpMarker("Will draw how much ubercharge a medic has");
+			ColorPickerL("Ubercharge colour", Colors::UberColor);
+			static const char* classArr[]{ "Off", "Icon", "Text", "Both" }; WCOMBO("Class###PlayerIconClass", &Vars::ESP::Players::Class.m_Var, classArr); HelpMarker("Will draw the class the player is");
+			TOGGLE("Weapon icons", &Vars::ESP::Players::WeaponIcon.m_Var); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
+			ColorPickerL("Invulnerable colour", Colors::WeaponIcon);
+			TOGGLE("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
+			ColorPickerL("Health Bar Top", Colors::HealthBar.startColour);
+			ColorPickerL("Health Bar Bottom", Colors::HealthBar.endColour, 1);
+			TOGGLE("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
+			TOGGLE("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
+			ColorPickerL("Condition colour", Colors::Cond);
+			TOGGLE("GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
+			TOGGLE("Choked Packets", &Vars::ESP::Players::Choked.m_Var); HelpMarker("Shows how many packets the player has choked");
+			ColorPickerL("Choked Bar Top", Colors::ChokedBar.startColour);
+			ColorPickerL("Choked Bar Bottom", Colors::ChokedBar.endColour, 1);
+			static const char* boxArr[]{ "Off", "Bounding", "Cornered", "3D" }; WCOMBO("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, boxArr); HelpMarker("What sort of box to draw on players");
+			static const char* bonesESP[]{ "Off", "Custom colour", "Health" }; WCOMBO("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, bonesESP); HelpMarker("Will draw the bone structure of the player");
+			ColorPicker("Skellington colour", Colors::Bones);
+			TOGGLE("Lines###Playerlines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
+			TOGGLE("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
+			WSLIDER("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+			WSLIDER("ESP alpha###PlayerESPAlpha", &Vars::ESP::Players::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+
+			EndTable();
+		}
+	}
 }
 
 /* Tab: HvH */
@@ -334,7 +478,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.WindowBorderSize = 1.f;
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
 		// style.CellPadding = ImVec2(12.f, 0.f);
-		style.FrameBorderSize = 0.f;
+		style.FrameBorderSize = 1.f;	// Old menu feeling
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 0.f;
 		style.ChildRounding = 0.f;

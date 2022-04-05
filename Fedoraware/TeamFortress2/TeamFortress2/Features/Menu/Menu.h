@@ -22,7 +22,17 @@ class CMenu {
 		Configs
 	};
 
+	enum class VisualsTab {
+		Players,
+		Buildings,
+		World,
+		Font,
+		Misc,
+		Radar
+	};
+
 	MenuTab CurrentTab = MenuTab::Aimbot;
+	VisualsTab CurrentVisualsTab = VisualsTab::Players;
 
 public:
 	void Render(IDirect3DDevice9* pDevice);
