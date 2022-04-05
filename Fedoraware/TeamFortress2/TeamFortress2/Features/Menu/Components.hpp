@@ -1,11 +1,14 @@
 #pragma once
+#include "ImGui/imgui_internal.h"
 
 namespace ImGui
 {
+	/* Color_t to ImVec4 */
 	inline ImVec4 mColor(Color_t color) {
 		return ImVec4(Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a));
 	}
 
+	/* ImVec4 to Color_t */
 	inline Color_t vColor(ImVec4 color) {
 		return {
 			static_cast<byte>(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
@@ -41,8 +44,6 @@ namespace ImGui
 
     __inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
 	{
-		bool active = false;
-
 		auto VK2STR = [&](const short key) -> const char* {
 			switch (key) {
 			case VK_LBUTTON: return "LMB";
@@ -241,6 +242,18 @@ namespace ImGui
 		SetNextItemWidth(20);
 		return ColorPicker(label, color);
 	}
+
+	/*__inline void GradientRect()
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems) { return; }
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const float w = CalcItemWidth();
+
+
+	}*/
 
     // Source: https://github.com/ocornut/imgui/issues/1537#issuecomment-355569554
 	__inline void ToggleButton(const char* str_id, bool* v)

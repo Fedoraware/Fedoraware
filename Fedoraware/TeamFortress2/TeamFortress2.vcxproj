@@ -118,6 +118,7 @@
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.cpp" />
@@ -224,6 +225,7 @@
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_dx9.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_impl_win32.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_internal.h" />

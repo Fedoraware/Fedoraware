@@ -1,5 +1,4 @@
 #pragma once
-#include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_impl_dx9.h"
 #include "../../SDK/SDK.h"
 
@@ -48,10 +47,11 @@ public:
 	bool Unload = false;
 
 	// Colors
-	ImColor Accent = { 225, 177, 44 };
-	ImColor AccentDark = { 191, 150, 38 };
-	ImColor BackgroundDark = { 13, 13, 13 };
-	ImColor Background = { 23, 23, 23, 250 };
+	ImColor Accent = { 255, 101, 101 };
+	ImColor AccentDark = { 217, 87, 87 };
+	ImColor Background = { 23, 23, 23, 250 };	// Title bar
+	ImColor BackgroundLight = { 51, 51, 56 };	// Tab bar
+	ImColor BackgroundDark = { 31, 31, 31 };	// Background
 	ImColor TextDark = { 13, 13, 13 };
 	ImColor TextLight = { 240, 240, 240 };
 };

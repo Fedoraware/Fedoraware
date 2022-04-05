@@ -1,7 +1,8 @@
 #include "Menu.h"
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
-#include "ImGui/imgui_internal.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "ImGui/imgui_color_gradient.h"
 #include "Components.hpp"
 
 constexpr int MENU_KEY = VK_INSERT;
@@ -15,14 +16,25 @@ void CMenu::DrawMenu()
 	ImGui::SetNextWindowSize(ImVec2(1000, 600), ImGuiCond_Once);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
+		static ImGradient mainGradient;
+		{
+			mainGradient.ClearMarks();
+			mainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+			mainGradient.AddMark(0.32f, ImColor(0, 0, 0, 0));
+			mainGradient.AddMark(0.5f, Accent);
+			mainGradient.AddMark(0.68f, ImColor(0, 0, 0, 0));
+			mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		}
+
 		// Draw rects
-		const auto window = ImGui::GetCurrentWindow();
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
+		ImGui::GradientRect(&mainGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
+
 		// Border structure
-		drawList->AddRectFilled(windowPos, { windowPos.x + SidebarWidth, windowPos.y + windowSize.y }, BackgroundDark);
+		/*drawList->AddRectFilled(windowPos, {windowPos.x + SidebarWidth, windowPos.y + windowSize.y}, BackgroundDark);
 		drawList->AddRectFilled(windowPos, { windowPos.x + SidebarWidth, windowPos.y + TitleHeight }, Accent);
 
 		drawList->AddRectFilled(windowPos, { windowPos.x + windowSize.x, windowPos.y + BorderWidth }, Accent);
@@ -63,7 +75,7 @@ void CMenu::DrawMenu()
 			ImGui::PopFont();
 		}
 		ImGui::EndChild();
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar();*/
 
 		// End
 		ImGui::End();

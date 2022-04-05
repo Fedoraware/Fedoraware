@@ -101,6 +101,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -643,6 +644,7 @@
     <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Components.hpp" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
