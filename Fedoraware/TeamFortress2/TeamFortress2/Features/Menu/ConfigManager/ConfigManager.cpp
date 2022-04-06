@@ -764,7 +764,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::DTBarIndicatorsCharged);
 			SAVE_OTHER(Colors::DTBarIndicatorsCharging);
 			SAVE_OTHER(Colors::ChokedBar);
-			SAVE_OTHER(Colors::HealthBar);
+			SAVE_OTHER(Colors::GradientHealthBar);
 			SAVE_OTHER(Colors::OverhealHealthBar);
 			SAVE_OTHER(Colors::Cond);
 			SAVE_OTHER(Colors::Target);
@@ -1457,7 +1457,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::DTBarIndicatorsCharged);
 			LOAD_OTHER(Colors::DTBarIndicatorsCharging);
 			LOAD_OTHER(Colors::ChokedBar);
-			LOAD_OTHER(Colors::HealthBar);
+			LOAD_OTHER(Colors::GradientHealthBar);
 			LOAD_OTHER(Colors::OverhealHealthBar);
 			LOAD_OTHER(Colors::Cond);
 			LOAD_OTHER(Colors::Target);
