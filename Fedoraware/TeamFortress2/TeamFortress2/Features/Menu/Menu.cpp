@@ -1,12 +1,14 @@
 #include "Menu.h"
+
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
 #include "../AttributeChanger/AttributeChanger.h"
+#include "../Misc/Misc.h"
+
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_color_gradient.h"
+#include "ImGui/imgui_stdlib.h"
 #include "Components.hpp"
-
-#define TOGGLE(label, v) ImGui::Checkbox(label, v);
 
 constexpr int MENU_KEY = VK_INSERT;
 static ImGradient titleGradient;
@@ -20,9 +22,6 @@ ImFont* SegoeBold = nullptr;	// 16px
 ImFont* SectionFont = nullptr;	// 18px
 ImFont* TabFont = nullptr;		// 22px
 ImFont* TitleFont = nullptr;	// 26px
-
-int unu1 = 0;
-int unu2 = 0;
 
 #pragma region Components
 void SectionTitle(const char* title, float yOffset = 6)
@@ -111,6 +110,7 @@ void CMenu::DrawTabbar()
 	ImGui::PushFont(TabFont);
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0, 0 });
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 	if (ImGui::BeginTable("TabbarTable", 5))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
@@ -190,7 +190,7 @@ void CMenu::DrawTabbar()
 		SubTabHeight = 0.f;
 	}
 
-	ImGui::PopStyleVar(2);
+	ImGui::PopStyleVar(3);
 	ImGui::PopFont();
 }
 
@@ -202,12 +202,81 @@ void CMenu::MenuAimbot()
 	{
 		/* Column 1 */
 		TableNextColumn();
+		{
+			SectionTitle("Global");
+
+			Checkbox("Aimbot", &Vars::Aimbot::Global::Active.m_Var); HelpMarker("Aimbot master switch");
+			ColorPickerL("Target", Colors::Target);
+			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
+			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
+			Checkbox("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
+			MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
+			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
+			ColorPickerL("Invulnerable colour", Colors::Invuln);
+
+			SectionTitle("Crits", 20);
+			Checkbox("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (BETA)");
+			MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
+			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
+
+			SectionTitle("Backtrack", 20);
+			Checkbox("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
+			Checkbox("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
+		}
 
 		/* Column 2 */
 		TableNextColumn();
+		{
+			SectionTitle("Hitscan");
+			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
+			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Auto" }); HelpMarker("Which hitbox the aimbot will target");
+			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
+			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
+			MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Choose what the aimbot should multipoint", "Multipoint");
+			Checkbox("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
+			Checkbox("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
+			Checkbox("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
+			Checkbox("Scoped only", &Vars::Aimbot::Hitscan::ScopedOnly.m_Var); HelpMarker("The aimbot will only shoot if scoped");
+			Checkbox("Auto scope", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
+			Checkbox("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
+			Checkbox("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+		}
 
 		/* Column 3 */
 		TableNextColumn();
+		{
+			SectionTitle("Projectile");
+			Checkbox("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
+			Checkbox("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.m_Var); HelpMarker("Uses game functions to predict where the player will be");
+			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+			if (Vars::Aimbot::Projectile::MovementSimulation.m_Var)
+			{
+				WSlider("Prediction Time", &Vars::Aimbot::Projectile::predTime.m_Var, 0.1f, 10.f, "%.1f");
+			}
+			{
+				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.m_Var, { "FOV", "Distance" });
+				WCombo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.m_Var, { "Plain", "Silent" });
+				WCombo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.m_Var, { "Body", "Feet", "Auto" });
+			}
+			Checkbox("Feet aim on ground (Demoman)", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at feet if target is on the ground");
+			Checkbox("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
+			if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
+			{
+				WSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
+			}
+
+			SectionTitle("Melee", 20);
+			{
+				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+				WCombo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
+			}
+			WSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
+			Checkbox("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
+			Checkbox("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
+			Checkbox("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
+		}
 
 		/* End */
 		EndTable();
@@ -222,12 +291,53 @@ void CMenu::MenuTrigger()
 	{
 		/* Column 1 */
 		TableNextColumn();
+		{
+			SectionTitle("Global");
+			Checkbox("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
+			InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
+			MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var, &Vars::Triggerbot::Global::IgnoreCloaked.m_Var, &Vars::Triggerbot::Global::IgnoreFriends.m_Var }, "Choose which targets should be ignored", "Ignored targets###TriggerIgnoredTargets");
+
+			SectionTitle("Autoshoot", 20);
+			Checkbox("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
+			MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Choose which target the triggerbot should shoot at", "Trigger targets");
+			Checkbox("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
+			Checkbox("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
+			WSlider("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
+		}
 
 		/* Column 2 */
 		TableNextColumn();
+		{
+			SectionTitle("Autostab");
+			Checkbox("Auto backstab###TriggerAutostab", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
+			Checkbox("Rage mode", &Vars::Triggerbot::Stab::RageMode.m_Var); HelpMarker("Stabs whenever possible by aiming toward the back");
+			Checkbox("Silent", &Vars::Triggerbot::Stab::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+			Checkbox("Disguise on kill", &Vars::Triggerbot::Stab::Disguise.m_Var); HelpMarker("Will apply the previous disguise after stabbing");
+			Checkbox("Ignore razorback", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
+			WSlider("Stab range###StabRange", &Vars::Triggerbot::Stab::Range.m_Var, 0.0f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The range at which auto backstab will attempt to stab");
+
+			SectionTitle("Auto Detonate", 20);
+			Checkbox("Autodetonate###TriggerDet", &Vars::Triggerbot::Detonate::Active.m_Var);
+			Checkbox("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs when a player is in range");
+			Checkbox("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares when a player is in range");
+			WSlider("Detonation radius###TriggerDetRadius", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The radius around the projectile that it will detonate if a player is in");
+		}
 
 		/* Column 3 */
 		TableNextColumn();
+		{
+			SectionTitle("Autoblast");
+			Checkbox("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
+			Checkbox("Rage airblast###TriggerAirRage", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
+			Checkbox("Silent###triggerblastsilent", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
+
+			SectionTitle("Autouber", 20);
+			Checkbox("Autouber###Triggeruber", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
+			Checkbox("Only uber friends", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
+			Checkbox("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
+			Checkbox("Vaccinator resistances", &Vars::Triggerbot::Uber::AutoVacc.m_Var); HelpMarker("Auto uber will automatically find the best resistance and pop when needed (This doesn't work properly)");
+			WSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); HelpMarker("The amount of health the heal target must be below to actiavte");
+		}
 
 		EndTable();
 	}
@@ -326,19 +436,239 @@ void CMenu::MenuVisuals()
 /* Tab: HvH */
 void CMenu::MenuHvH()
 {
+	using namespace ImGui;
+	if (BeginTable("HvhTable", 2))
+	{
+		/* Column 1 */
+		TableNextColumn();
+		{
 
+		}
+
+		/* Column 2 */
+		TableNextColumn();
+		{
+
+		}
+
+		EndTable();
+	}
 }
 
 /* Tab: Misc */
 void CMenu::MenuMisc()
 {
+	using namespace ImGui;
+	if (BeginTable("MiscTable", 3))
+	{
+		/* Column 1 */
+		TableNextColumn();
+		{
+			SectionTitle("Movement");
+			Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
+			Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
+			if (Vars::Misc::AutoJump.m_Var)
+			{
+				WCombo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, { "Off", "Legit", "Directional" }); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+			}
+			Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
+			if (Vars::Misc::EdgeJump.m_Var)
+			{
+				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
+			}
+			Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
+			Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
+			Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
+			Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var); HelpMarker("Gives full control if enabled with taunt slide");
+			WCombo("Crouch speed", &Vars::Misc::Roll.m_Var, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
 
+			SectionTitle("Misc", 20);
+			Checkbox("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
+			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
+			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
+			MultiCombo({ "Chat Censor", "Anti-Autobal", "sv_cheats Bypass", "Pseudo Spectator", "Noisemaker Spammer" }, { &Vars::Misc::ChatCensor.m_Var, &Vars::Misc::AntiAutobal.m_Var, &Vars::Misc::CheatsBypass.m_Var, &Vars::Misc::ExtendFreeze.m_Var, &Vars::Misc::NoisemakerSpam.m_Var }, "Enable/Disable Misc. Options", "Misc");
+			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
+			WCombo("Pick Class", &Vars::Misc::AutoJoin.m_Var, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
+			Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+			if (Vars::Misc::RageRetry.m_Var)
+			{
+				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
+			}
+			//Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
+
+			Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
+			if (Vars::Misc::PingReducer.m_Var)
+			{
+				WSlider("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
+			}
+			Checkbox("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
+
+			SectionTitle("Party Networking", 20);
+			Checkbox("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
+			Checkbox("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
+			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
+			Checkbox("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+		}
+
+		/* Column 2 */
+		TableNextColumn();
+		{
+			SectionTitle("Tickbase Exploits");
+			Checkbox("Doubletap", &Vars::Misc::CL_Move::Enabled.m_Var); HelpMarker("Shifts ticks when shooting for a rapid-fire effect");
+			ColorPickerL("DT bar outline colour", Colors::DtOutline);
+			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
+			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to warp");
+			if (Vars::Misc::CL_Move::DTMode.m_Var == 0 || Vars::Misc::CL_Move::DTMode.m_Var == 2)
+			{
+				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
+			}
+
+			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }, { &Vars::Misc::CL_Move::RechargeWhileDead.m_Var, &Vars::Misc::CL_Move::AutoRecharge.m_Var, &Vars::Misc::CL_Move::WaitForDT.m_Var, &Vars::Misc::CL_Move::AntiWarp.m_Var, &Vars::Misc::CL_Move::NotInAir.m_Var }, "Enable various features regarding tickbase exploits", "Options");
+			WCombo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
+			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); HelpMarker("How many ticks to shift");
+			Checkbox("SpeedHack", &Vars::Misc::CL_Move::SEnabled.m_Var); HelpMarker("Speedhack Master Switch");
+			if (Vars::Misc::CL_Move::SEnabled.m_Var)
+			{
+				WSlider("SpeedHack Factor", &Vars::Misc::CL_Move::SFactor.m_Var, 1, 66, "%d");
+			}
+			HelpMarker("High values are not recommended");
+
+			SectionTitle("HvH", 20);
+			Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
+			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, { "None", "Up", "Down", "Fake up", "Fake down", "Random" }); HelpMarker("Which way to look up/down");
+			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, { "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to look horizontally");
+			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, { "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to appear to look horizontally");
+			if (Vars::AntiHack::AntiAim::YawFake.m_Var == 5 || Vars::AntiHack::AntiAim::YawReal.m_Var == 5)
+			{
+				WSlider("Spin Speed", &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, -30.f, 30.f, "%.1f", 0); HelpMarker("You spin me right 'round, baby, right 'round");
+			}
+			if (Vars::AntiHack::AntiAim::Pitch.m_Var == 5 || Vars::AntiHack::AntiAim::YawFake.m_Var == 4 || Vars::AntiHack::AntiAim::YawReal.m_Var == 4)
+			{
+				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.m_Var, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
+			}
+			Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
+			MultiCombo({ "AntiBackstab", "HidePitchOS", "LegJitter", "No Overlap" }, { &Vars::AntiHack::AntiAim::AntiBackstab.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var, &Vars::AntiHack::AntiAim::AntiOverlap.m_Var }, "", "Misc Anti-Aim");
+			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "None", "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
+			if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0)
+			{
+				Vars::Misc::CL_Move::Fakelag.m_Var = true;
+			}
+			else
+			{
+				Vars::Misc::CL_Move::Fakelag.m_Var = false;
+			}
+
+			if (Vars::Misc::CL_Move::Fakelag.m_Var)
+			{
+				SectionTitle("Fakelag", 20);
+				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3)
+				{
+					WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)");
+					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
+					{
+						Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
+						if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+						{
+							InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
+						}
+					}
+				}
+				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+				{
+					WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
+					WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); HelpMarker("Minimum random fakelag value");
+				}
+			}
+
+			SectionTitle("Auto peek", 20);
+			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
+			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
+			Checkbox("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
+		}
+
+		/* Column 3 */
+		TableNextColumn();
+		{
+			SectionTitle("Discord RPC");
+			Checkbox("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
+			Checkbox("Include map", &Vars::Misc::Discord::IncludeMap.m_Var); HelpMarker("Should Discord Rich Presence contain current map name?");
+			Checkbox("Include class", &Vars::Misc::Discord::IncludeClass.m_Var); HelpMarker("Should Discord Rich Presence contain current class?");
+			Checkbox("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var); HelpMarker("Should time since you started playing TF2 be included?");
+			WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });
+
+			SectionTitle("Steam RPC", 20);
+			Checkbox("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
+			WCombo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, { "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }); HelpMarker("Which match group should be used?");
+			Checkbox("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
+			WCombo("Map text", &Vars::Misc::Steam::MapText.m_Var, { "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }); HelpMarker("Which map text should be used?");
+			if (Vars::Misc::Steam::MapText.m_Var == 0)
+			{
+				WInputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); HelpMarker("For when \"Custom\" is selcted in \"Map text\". Sets custom map text.");
+			}
+			WInputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size");
+
+			SectionTitle("Utilities", 20);
+
+			auto a = GetColumnWidth() - 12;
+			if (Button("Full update", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+			if (Button("Reload HUD", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
+			if (Button("Restart sound", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+			if (Button("Stop sound", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+			if (Button("Status", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+			if (Button("Ping", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+			if (Button("Retry", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+			if (Button("Exit", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
+			if (Button("Console", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
+			if (Button("Demo playback", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+			if (Button("Demo trackbar", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
+			if (Button("Itemtest", ImVec2(a, 20)))
+				g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+
+			if (Button("Unlock all achievements", ImVec2(a, 20)))
+			{
+				g_Misc.UnlockAchievements();
+			}
+			if (Button("Lock all achievements", ImVec2(a, 20)))
+			{
+				g_Misc.LockAchievements();
+			}
+		}
+
+		EndTable();
+	}
 }
 
 /* Tab: Configs */
 void CMenu::MenuConfigs()
 {
+	using namespace ImGui;
+	if (BeginTable("ConfigTable", 2))
+	{
+		/* Column 1 */
+		TableNextColumn();
+		{
 
+		}
+
+		/* Column 2 */
+		TableNextColumn();
+		{
+
+		}
+
+		EndTable();
+	}
 }
 
 /* Window for the camera feature */
@@ -512,6 +842,3 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
 }
-
-#undef SLIDER
-#undef TOGGLE

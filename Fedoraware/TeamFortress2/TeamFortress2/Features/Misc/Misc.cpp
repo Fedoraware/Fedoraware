@@ -800,6 +800,38 @@ void CMisc::SteamRPC()
 	                                              std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
 }
 
+void CMisc::UnlockAchievements()
+{
+	using fn = IAchievementMgr * (*)(void);
+	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	if (achievementmgr)
+	{
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+		for (int i = 0; i < achievementmgr->GetAchievementCount(); i++)
+		{
+			achievementmgr->AwardAchievement(achievementmgr->GetAchievementByIndex(i)->GetAchievementID());
+		}
+		g_SteamInterfaces.UserStats->StoreStats();
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+	}
+}
+
+void CMisc::LockAchievements()
+{
+	using fn = IAchievementMgr * (*)(void);
+	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	if (achievementmgr)
+	{
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+		for (int i = 0; i < achievementmgr->GetAchievementCount(); i++)
+		{
+			g_SteamInterfaces.UserStats->ClearAchievement(achievementmgr->GetAchievementByIndex(i)->GetName());
+		}
+		g_SteamInterfaces.UserStats->StoreStats();
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+	}
+}
+
 // Myzarfin added this
 void CNotifications::Think()
 {

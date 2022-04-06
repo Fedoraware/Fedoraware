@@ -229,24 +229,6 @@ namespace ImGui
 		HelpMarker(description.c_str());
 	}
 
-	__inline bool WCombo(const char* label, int* current_item, const char* const items[], int popup_max_height_in_items = -1) {
-
-		SetNextItemWidth(150);
-		return Combo(label, current_item, items, sizeof(items), popup_max_height_in_items);;
-	}
-
-	__inline bool WSlider(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
-	{
-		SetNextItemWidth(150);
-		return SliderFloat(label, v, v_min, v_max, format, flags);
-	}
-
-	__inline bool WSlider(const char* label, int* v, int v_min, int v_max, const char* format = "%d", ImGuiSliderFlags flags = 0)
-	{
-		SetNextItemWidth(150);
-		return SliderInt(label, v, v_min, v_max, format, flags);
-	}
-
 	__inline bool ColorPicker(const char* label, Color_t& color)
 	{
 		bool open = false;
@@ -312,4 +294,42 @@ namespace ImGui
         drawList->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, colCircle);
         drawList->AddText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, ImColor(255, 255, 255), str_id);
     }
+
+#pragma region Width Components
+	__inline bool WCombo(const char* label, int* current_item, std::vector<const char*> items) {
+
+		SetNextItemWidth(150);
+		return Combo(label, current_item, items.data(), items.size(), -1);
+	}
+
+	__inline bool WSlider(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
+	{
+		SetNextItemWidth(150);
+		return SliderFloat(label, v, v_min, v_max, format, flags);
+	}
+
+	__inline bool WSlider(const char* label, int* v, int v_min, int v_max, const char* format = "%d", ImGuiSliderFlags flags = 0)
+	{
+		SetNextItemWidth(150);
+		return SliderInt(label, v, v_min, v_max, format, flags);
+	}
+
+	__inline bool WInputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
+	{
+		SetNextItemWidth(150);
+		return InputText(label, str, flags, callback, user_data);
+	}
+
+	__inline bool WInputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL)
+	{
+		SetNextItemWidth(150);
+		return InputTextWithHint(label, hint, str, flags, callback, user_data);
+	}
+
+	__inline bool WInputInt(const char* label, int* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0)
+	{
+		SetNextItemWidth(150);
+		return InputInt(label, v, step, step_fast, flags);
+	}
+#pragma endregion
 }
