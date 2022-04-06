@@ -790,7 +790,7 @@ void CMenu::MenuVisuals()
 		// Visuals: Misc
 		case VisualsTab::Misc:
 		{
-			if (BeginTable("VisualsMiscTable", 3))
+			if (BeginTable("VisualsMiscTable", 2))
 			{
 				/* Column 1 */
 				TableNextColumn();
@@ -1058,16 +1058,220 @@ void CMenu::MenuVisuals()
 
 				/* Column 2 */
 				TableNextColumn();
+				{
+					SectionTitle("Skybox & Textures");
+					static std::vector skyNames {
+						"Custom",
+						"sky_tf2_04",
+						"sky_upward",
+						"sky_dustbowl_01",
+						"sky_goldrush_01",
+						"sky_granary_01",
+						"sky_well_01",
+						"sky_gravel_01",
+						"sky_badlands_01",
+						"sky_hydro_01",
+						"sky_night_01",
+						"sky_nightfall_01",
+						"sky_trainyard_01",
+						"sky_stormfront_01",
+						"sky_morningsnow_01",
+						"sky_alpinestorm_01",
+						"sky_harvest_01",
+						"sky_harvest_night_01",
+						"sky_halloween",
+						"sky_halloween_night_01",
+						"sky_halloween_night2014_01",
+						"sky_island_01",
+						"sky_rainbow_01"
+					};
+					Checkbox("Skybox changer", &Vars::Visuals::SkyboxChanger.m_Var); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
+					WCombo("Skybox", &Vars::Skybox::SkyboxNum, skyNames);
+					if (Vars::Skybox::SkyboxNum == 0)
+					{
+						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+					}
+					Checkbox("World Textures Override", &Vars::Visuals::OverrideWorldTextures.m_Var); HelpMarker("Turn this off when in-game so you don't drop fps :p");
+					Checkbox("Bypass sv_pure", &Vars::Misc::BypassPure.m_Var); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
+					Checkbox("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
+					WCombo("Precipitation", &Vars::Visuals::Rain.m_Var, { "Off", "Rain", "Snow" });
 
-				/* Column 3 */
-				TableNextColumn();
+					SectionTitle("Custom fog", 20);
+					if (Checkbox("Custom fog", &Vars::Visuals::Fog::CustomFog.m_Var))
+					{
+						if (static auto fog_enable = g_Interfaces.CVars->FindVar("fog_enable"); fog_enable)
+						{
+							fog_enable->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+						}
+						if (static auto fog_enableskybox = g_Interfaces.CVars->FindVar("fog_enableskybox"); fog_enableskybox)
+						{
+							fog_enableskybox->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+						}
+						if (static auto fog_override = g_Interfaces.CVars->FindVar("fog_override"); fog_override)
+						{
+							fog_override->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
+						}
+					}
+
+					if (WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+					{
+						if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensity"); fog_density)
+						{
+							fog_density->SetValue(Vars::Visuals::Fog::FogDensity.m_Var);
+						}
+
+					}
+					if (ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor))
+					{
+						if (static auto fog_color = g_Interfaces.CVars->FindVar("fog_color"); fog_color)
+						{
+							fog_color->SetValue(std::string("").
+								append(std::to_string(Vars::Visuals::Fog::FogColor.r)).
+								append(" ").
+								append(std::to_string(Vars::Visuals::Fog::FogColor.g)).
+								append(" ").
+								append(std::to_string(Vars::Visuals::Fog::FogColor.b)).
+								append(" ").c_str());
+						}
+					}
+					
+					if (WSlider("Fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
+					{
+						if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_start"); fog_start)
+						{
+							fog_start->SetValue(Vars::Visuals::Fog::FogStart.m_Var);
+						}
+					}
+					if (WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
+					{
+						if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_end"); fog_end)
+						{
+							fog_end->SetValue(Vars::Visuals::Fog::FogEnd.m_Var);
+						}
+					}
+					if (WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+					{
+						if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensityskybox"); fog_density)
+						{
+							fog_density->SetValue(Vars::Visuals::Fog::FogDensitySkybox.m_Var);
+						}
+					}
+
+					if (ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox))
+					{
+						if (static auto fog_colorskybox = g_Interfaces.CVars->FindVar("fog_colorskybox"); fog_colorskybox)
+						{
+							fog_colorskybox->SetValue(std::string("").
+								append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.r)).
+								append(" ").
+								append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.g)).
+								append(" ").
+								append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.b)).
+								append(" ").c_str());
+						}
+					}
+
+					if (WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
+					{
+						if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_startskybox"); fog_start)
+						{
+							fog_start->SetValue(Vars::Visuals::Fog::FogStartSkybox.m_Var);
+						}
+					}
+					if (WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
+					{
+						if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_endskybox"); fog_end)
+						{
+							fog_end->SetValue(Vars::Visuals::Fog::FogEndSkybox.m_Var);
+						}
+					}
+
+					SectionTitle("Thirdperson", 20);
+					Checkbox("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
+					InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
+					Checkbox("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your real angles on thirdperson (not what others see)");
+					Checkbox("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.m_Var); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
+					Checkbox("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.m_Var); HelpMarker("Will show the server angles in thirdperson");
+
+					Checkbox("Thirdperson offsets", &Vars::Visuals::ThirdpersonOffset.m_Var); HelpMarker("These will mess you up if you use a small FoV");
+					WSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+					WSlider("Thirdperson right", &Vars::Visuals::ThirdpersonRight.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+					WSlider("Thirdperson up", &Vars::Visuals::ThirdpersonUp.m_Var, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+					Checkbox("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.m_Var);
+					Checkbox("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var);
+					InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
+
+					SectionTitle("Out of FOV arrows", 20);
+					Checkbox("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
+					Checkbox("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
+					WSlider("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
+					WSlider("Arrow angle", &Vars::Visuals::ArrowAngle.m_Var, 5.f, 180.f, "%.2f"); HelpMarker("The angle of the arrow");
+					WSlider("Distance from center", &Vars::Visuals::FovArrowsDist.m_Var, 0.01f, 0.2f, "%.3f"); HelpMarker("How far from the center of the screen the arrows will draw");
+					WSlider("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
+					WSlider("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
+
+					SectionTitle("Spy Warning", 20);
+					Checkbox("Active###spywarn", &Vars::Visuals::SpyWarning.m_Var); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
+					Checkbox("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.m_Var); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
+					Checkbox("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.m_Var); HelpMarker("Will only alert you to visible spies");
+					Checkbox("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.m_Var); HelpMarker("Will ignore spies who are on your friends list");
+					WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.m_Var, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
+				}
 
 				EndTable();
 			}
 			break;
 		}
 
-		case VisualsTab::Radar: break;
+		case VisualsTab::Radar:
+		{
+			if (BeginTable("VisualsRadarTable", 3))
+			{
+				/* Column 1 */
+				TableNextColumn();
+				{
+					SectionTitle("Main");
+					Checkbox("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var); HelpMarker("Will show nearby things relative to your player");
+					WSlider("Size###RadarSize", &Vars::Radar::Main::Size.m_Var, 20, 200); HelpMarker("The size of the radar window");
+					WSlider("Range###RadarRange", &Vars::Radar::Main::Range.m_Var, 50, 3000, "%d"); HelpMarker("The range of the radar");
+					WSlider("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); HelpMarker("The background alpha of the radar");
+					WSlider("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); HelpMarker("The line alpha of the radar");
+					
+					SectionTitle("Players", 20);
+					WCombo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, { "Scoreboard", "Portraits", "Avatar" }); HelpMarker("What sort of icon to represent players with");
+					WCombo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, { "Off", "Rectangle", "Texture" }); HelpMarker("What sort of background to put on players on the radar");
+					Checkbox("Outline###radaro", &Vars::Radar::Players::Outline.m_Var); HelpMarker("Will put an outline on players on the radar");
+					WCombo("Ignore teammates###radarplayersteam", &Vars::Radar::Players::IgnoreTeam.m_Var, { "Off", "All", "Keep friends" }); HelpMarker("Which teammates the radar will ignore drawing on");
+					WCombo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.m_Var, { "Off", "All", "Keep friends" }); HelpMarker("Which cloaked players the radar will ignore drawing on");
+					Checkbox("Health bar###radarhealt", &Vars::Radar::Players::Health.m_Var); HelpMarker("Will show players health on the radar");
+					WSlider("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); HelpMarker("The icon size of players on the radar");
+				}
+
+				/* Column 2 */
+				TableNextColumn();
+				{
+					SectionTitle("Building");
+					Checkbox("Show buildings###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
+					Checkbox("Outline###radarbuildingsao", &Vars::Radar::Buildings::Outline.m_Var);
+					Checkbox("Ignore team###radarbuildingsb", &Vars::Radar::Buildings::IgnoreTeam.m_Var);
+					Checkbox("Health bar###radarbuildingsc", &Vars::Radar::Buildings::Health.m_Var);
+					WSlider("Icon size###buildingsizeiconradar", &Vars::Radar::Buildings::IconSize.m_Var, 12, 30, "%d");
+				}
+
+				/* Column 3 */
+				TableNextColumn();
+				{
+					SectionTitle("World");
+					Checkbox("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
+					Checkbox("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
+					Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
+					WSlider("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d");
+				}
+
+				EndTable();
+			}
+			break;
+		}
 	}
 }
 
@@ -1078,77 +1282,6 @@ void CMenu::MenuHvH()
 	if (BeginTable("HvhTable", 2))
 	{
 		/* Column 1 */
-		TableNextColumn();
-		{
-
-		}
-
-		/* Column 2 */
-		TableNextColumn();
-		{
-
-		}
-
-		EndTable();
-	}
-}
-
-/* Tab: Misc */
-void CMenu::MenuMisc()
-{
-	using namespace ImGui;
-	if (BeginTable("MiscTable", 3))
-	{
-		/* Column 1 */
-		TableNextColumn();
-		{
-			SectionTitle("Movement");
-			Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
-			Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
-			if (Vars::Misc::AutoJump.m_Var)
-			{
-				WCombo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, { "Off", "Legit", "Directional" }); HelpMarker("Will strafe for you in air automatically so that you gain speed");
-			}
-			Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
-			if (Vars::Misc::EdgeJump.m_Var)
-			{
-				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
-			}
-			Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
-			Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
-			Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
-			Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var); HelpMarker("Gives full control if enabled with taunt slide");
-			WCombo("Crouch speed", &Vars::Misc::Roll.m_Var, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
-
-			SectionTitle("Misc", 20);
-			Checkbox("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
-			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
-			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
-			MultiCombo({ "Chat Censor", "Anti-Autobal", "sv_cheats Bypass", "Pseudo Spectator", "Noisemaker Spammer" }, { &Vars::Misc::ChatCensor.m_Var, &Vars::Misc::AntiAutobal.m_Var, &Vars::Misc::CheatsBypass.m_Var, &Vars::Misc::ExtendFreeze.m_Var, &Vars::Misc::NoisemakerSpam.m_Var }, "Enable/Disable Misc. Options", "Misc");
-			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
-			WCombo("Pick Class", &Vars::Misc::AutoJoin.m_Var, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
-			Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
-			if (Vars::Misc::RageRetry.m_Var)
-			{
-				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
-			}
-			//Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
-
-			Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
-			if (Vars::Misc::PingReducer.m_Var)
-			{
-				WSlider("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
-			}
-			Checkbox("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
-
-			SectionTitle("Party Networking", 20);
-			Checkbox("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
-			Checkbox("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
-			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
-			Checkbox("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
-		}
-
-		/* Column 2 */
 		TableNextColumn();
 		{
 			SectionTitle("Tickbase Exploits");
@@ -1185,43 +1318,110 @@ void CMenu::MenuMisc()
 				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.m_Var, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
 			}
 			Checkbox("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
-			MultiCombo({ "AntiBackstab", "HidePitchOS", "LegJitter", "No Overlap" }, { &Vars::AntiHack::AntiAim::AntiBackstab.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var, &Vars::AntiHack::AntiAim::AntiOverlap.m_Var }, "", "Misc Anti-Aim");
-			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "None", "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
-			if (Vars::Misc::CL_Move::FakelagMode.m_Var > 0)
-			{
-				Vars::Misc::CL_Move::Fakelag.m_Var = true;
-			}
-			else
-			{
-				Vars::Misc::CL_Move::Fakelag.m_Var = false;
-			}
+			Checkbox("Anti Overlap", &Vars::AntiHack::AntiAim::AntiOverlap.m_Var); HelpMarker("Prevents your real and fake angles from overlapping");
+			Checkbox("Anti Backstab", &Vars::AntiHack::AntiAim::AntiBackstab.m_Var); HelpMarker("Look towards spies to prevent backstabs");
+			Checkbox("Hide Pitch on Shot", &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var); HelpMarker("Hides your real pitch when shooting");
+			Checkbox("Leg Jitter", &Vars::AntiHack::AntiAim::legjitter.m_Var); HelpMarker("Moves your legs slightly when standing still");
+		}
 
-			if (Vars::Misc::CL_Move::Fakelag.m_Var)
+		/* Column 2 */
+		TableNextColumn();
+		{
+			SectionTitle("Fakelag", 20);
+			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "None", "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
+			Vars::Misc::CL_Move::Fakelag.m_Var = Vars::Misc::CL_Move::FakelagMode.m_Var > 0;
+
+			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3)
 			{
-				SectionTitle("Fakelag", 20);
-				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3)
+				WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)");
+				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
 				{
-					WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)");
-					if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
+					Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
+					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
 					{
-						Checkbox("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
-						if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
-						{
-							InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
-						}
+						InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
 					}
 				}
-				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
-				{
-					WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
-					WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); HelpMarker("Minimum random fakelag value");
-				}
+			}
+			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+			{
+				WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
+				WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); HelpMarker("Minimum random fakelag value");
 			}
 
 			SectionTitle("Auto peek", 20);
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
 			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
 			Checkbox("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
+		}
+
+		EndTable();
+	}
+}
+
+/* Tab: Misc */
+void CMenu::MenuMisc()
+{
+	using namespace ImGui;
+	if (BeginTable("MiscTable", 3))
+	{
+		/* Column 1 */
+		TableNextColumn();
+		{
+			SectionTitle("Movement");
+			Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
+			Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
+			if (Vars::Misc::AutoJump.m_Var)
+			{
+				WCombo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, { "Off", "Legit", "Directional" }); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+			}
+			Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
+			if (Vars::Misc::EdgeJump.m_Var)
+			{
+				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
+			}
+			Checkbox("Auto rocket jump", &Vars::Misc::AutoRocketJump.m_Var); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
+			Checkbox("Anti-AFK", &Vars::Misc::AntiAFK.m_Var); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
+			Checkbox("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
+			Checkbox("Taunt control", &Vars::Misc::TauntControl.m_Var); HelpMarker("Gives full control if enabled with taunt slide");
+			WCombo("Crouch speed", &Vars::Misc::Roll.m_Var, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
+
+			SectionTitle("Votes", 20);
+			Checkbox("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
+			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
+			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
+		}
+
+		/* Column 2 */
+		TableNextColumn();
+		{
+			SectionTitle("Misc");
+			Checkbox("Chat Censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses your");
+			Checkbox("Anti Autobalance", &Vars::Misc::AntiAutobal.m_Var); HelpMarker("Prevents auto balance by reconnecting to the server");
+			Checkbox("sv_cheats Bypass", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Allows you to use some sv_cheats commands (clientside)");
+			Checkbox("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
+			Checkbox("Noisemaker Spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Spams the noisemaker without reducing it's charges");
+			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
+			WCombo("Pick Class", &Vars::Misc::AutoJoin.m_Var, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
+			Checkbox("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+			if (Vars::Misc::RageRetry.m_Var)
+			{
+				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
+			}
+			//Checkbox("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
+
+			Checkbox("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
+			if (Vars::Misc::PingReducer.m_Var)
+			{
+				WSlider("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
+			}
+			Checkbox("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
+
+			SectionTitle("Party Networking", 20);
+			Checkbox("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
+			Checkbox("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
+			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
+			Checkbox("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 		}
 
 		/* Column 3 */

@@ -21,6 +21,10 @@ namespace ImGui
 	__inline void HelpMarker(const char* desc)
 	{
 		// TODO: This
+		if (IsItemHovered())
+		{
+			SetTooltip(desc);
+		}
 	}
 
 	__inline bool SidebarButton(const char* label, bool active = false)
