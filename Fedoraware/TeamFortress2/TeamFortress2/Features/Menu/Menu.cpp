@@ -357,6 +357,60 @@ void CMenu::MenuVisuals()
 			{
 				/* Column 1 */
 				TableNextColumn();
+				{
+					SectionTitle("ESP Main");
+					Checkbox("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
+					Checkbox("Outlined health bars", &Vars::ESP::Main::Outlinedbar.m_Var); HelpMarker("Will outline the health bars");
+					Checkbox("Relative colours", &Vars::ESP::Main::EnableTeamEnemyColors.m_Var); HelpMarker("Chooses colors relative to your team (team/enemy)");
+					if (Vars::ESP::Main::EnableTeamEnemyColors.m_Var)
+					{
+						ColorPickerL("Enemy color", Colors::Enemy);
+						ColorPickerL("Team color", Colors::rTeam, 1);
+					}
+					else
+					{
+						ColorPickerL("RED Team color", Colors::TeamRed);
+						ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
+					}
+
+					SectionTitle("Player ESP", 20);
+					Checkbox("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
+					Checkbox("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
+					Checkbox("Custom Name Color", &Vars::ESP::Players::NameC.m_Var); HelpMarker("Custom color for name esp");
+					if (Vars::ESP::Players::NameC.m_Var)
+					{
+						ColorPickerL("Name ESP Color", Vars::ESP::Players::NameColor);
+					}
+					Checkbox("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.m_Var); HelpMarker("Will draw a box around players name to make it stand out");
+					Checkbox("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.m_Var); HelpMarker("Will draw ESP on local player (thirdperson)");
+					ColorPickerL("Local colour", Colors::Local);
+					WCombo("Ignore team###IgnoreTeamESPp", &Vars::ESP::Players::IgnoreTeammates.m_Var, { "Off", "All", "Only friends" }); HelpMarker("Which teammates the ESP will ignore drawing on");
+					ColorPickerL("Friend colour", Colors::Friend);
+					WCombo("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.m_Var, { "Off", "All", "Only enemies" }); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
+					ColorPickerL("Cloaked colour", Colors::Cloak);
+					WCombo("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.m_Var, { "Off", "Text", "Bar" }); HelpMarker("Will draw how much ubercharge a medic has");
+					ColorPickerL("Ubercharge colour", Colors::UberColor);
+					WCombo("Class###PlayerIconClass", &Vars::ESP::Players::Class.m_Var, { "Off", "Icon", "Text", "Both" }); HelpMarker("Will draw the class the player is");
+					Checkbox("Weapon icons", &Vars::ESP::Players::WeaponIcon.m_Var); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
+					ColorPickerL("Invulnerable colour", Colors::WeaponIcon);
+					Checkbox("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
+					// ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
+					// ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
+					Checkbox("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
+					Checkbox("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
+					ColorPickerL("Condition colour", Colors::Cond);
+					Checkbox("GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
+					Checkbox("Choked Packets", &Vars::ESP::Players::Choked.m_Var); HelpMarker("Shows how many packets the player has choked");
+					ColorPickerL("Choked Bar Top", Colors::ChokedBar.startColour);
+					ColorPickerL("Choked Bar Bottom", Colors::ChokedBar.endColour, 1);
+					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
+					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
+					ColorPickerL("Skellington colour", Colors::Bones);
+					Checkbox("Lines###Playerlines", &Vars::ESP::Players::Lines.m_Var); HelpMarker("Draws lines from the local players position to enemies position");
+					Checkbox("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
+					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					WSlider("ESP alpha###PlayerESPAlpha", &Vars::ESP::Players::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+				}
 
 				/* Column 2 */
 				TableNextColumn();
