@@ -213,13 +213,9 @@ namespace ImGui
 		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
 		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
 		if (BeginCombo(comboName.c_str(), preview.c_str())) {
-			PushStyleColor(ImGuiCol_Header, ImColor(40, 40, 40).Value);
-			PushStyleColor(ImGuiCol_HeaderHovered, ImColor(50, 50, 50).Value);
-			PushStyleColor(ImGuiCol_HeaderActive, ImColor(40, 40, 40).Value);
 			for (size_t i = 0; i < titles.size(); i++) {
 				Selectable((*options[i]) ? tfm::format("+ %s", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
 			}
-			PopStyleColor(3);
 
 			EndCombo();
 		}
@@ -297,7 +293,6 @@ namespace ImGui
 
 #pragma region Width Components
 	__inline bool WCombo(const char* label, int* current_item, std::vector<const char*> items) {
-
 		SetNextItemWidth(150);
 		return Combo(label, current_item, items.data(), items.size(), -1);
 	}
