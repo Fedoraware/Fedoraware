@@ -44,6 +44,7 @@ public:
 
 	float TitleHeight = 22.f;
 	float TabHeight = 30.f;
+	float SubTabHeight = 0.f;
 
 	// Colors
 	ImColor Accent = { 255, 101, 101 };

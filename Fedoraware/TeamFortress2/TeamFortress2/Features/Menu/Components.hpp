@@ -194,7 +194,8 @@ namespace ImGui
 	}
 
 	/* Combobox with multiple selectable items */
-	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, const std::string& description, std::string comboName) {
+	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, const std::string& description,
+	                         const std::string& comboName) {
 		if (titles.size() != options.size()) { return; }
 		
 		std::string preview = "<None>##";
@@ -226,6 +227,24 @@ namespace ImGui
 		PopItemWidth();
 
 		HelpMarker(description.c_str());
+	}
+
+	__inline bool WCombo(const char* label, int* current_item, const char* const items[], int popup_max_height_in_items = -1) {
+
+		SetNextItemWidth(150);
+		return Combo(label, current_item, items, sizeof(items), popup_max_height_in_items);;
+	}
+
+	__inline bool WSlider(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
+	{
+		SetNextItemWidth(150);
+		return SliderFloat(label, v, v_min, v_max, format, flags);
+	}
+
+	__inline bool WSlider(const char* label, int* v, int v_min, int v_max, const char* format = "%d", ImGuiSliderFlags flags = 0)
+	{
+		SetNextItemWidth(150);
+		return SliderInt(label, v, v_min, v_max, format, flags);
 	}
 
 	__inline bool ColorPicker(const char* label, Color_t& color)
