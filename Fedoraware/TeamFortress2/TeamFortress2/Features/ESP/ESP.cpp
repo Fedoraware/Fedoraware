@@ -401,7 +401,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				float flHealth = static_cast<float>(nHealth);
 				float flMaxHealth = static_cast<float>(nMaxHealth);
 
-				Gradient_t clr = flHealth > flMaxHealth ? Colors::OverhealHealthBar : Colors::HealthBar;
+				Gradient_t clr = flHealth > flMaxHealth ? Colors::OverhealHealthBar : Colors::GradientHealthBar;
 
 				if (!Player->IsVulnerable())
 					clr = { Colors::Invuln, Colors::Invuln };

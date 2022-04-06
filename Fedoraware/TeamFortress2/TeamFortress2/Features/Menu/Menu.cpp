@@ -1079,10 +1079,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						ImGui::Checkbox("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Health Bar Top", Colors::HealthBar.startColour);
+						ColorPicker("Health Bar Top", Colors::GradientHealthBar.startColour);
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 44);
 						ImGui::SetNextItemWidth(44);
-						ColorPicker("Health Bar Bottom", Colors::HealthBar.endColour);
+						ColorPicker("Health Bar Bottom", Colors::GradientHealthBar.endColour);
 						ImGui::Checkbox("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
 						ImGui::Checkbox("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
