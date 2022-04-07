@@ -8,6 +8,8 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_color_gradient.h"
 #include "ImGui/imgui_stdlib.h"
+#include "Fonts/IconsMaterialDesign.h"
+
 #include "Components.hpp"
 
 constexpr int MENU_KEY = VK_INSERT;
@@ -22,6 +24,7 @@ ImFont* SegoeBold = nullptr;	// 16px
 ImFont* SectionFont = nullptr;	// 18px
 ImFont* TabFont = nullptr;		// 22px
 ImFont* TitleFont = nullptr;	// 26px
+ImFont* IconFont = nullptr;		// 16px
 
 int unuPrimary = 0;
 int unuSecondary = 0;
@@ -63,6 +66,25 @@ void CMenu::DrawMenu()
 			ImGui::PushFont(TitleFont);
 			const auto titleWidth = ImGui::CalcTextSize("Fedoraware").x;
 			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, "Fedoraware");
+			ImGui::PopFont();
+		}
+
+		// Icons
+		{
+			ImGui::PushFont(IconFont);
+
+			ImGui::SetCursorPos({ windowSize.x - 25, 0 });
+			ImGui::TextUnformatted(ICON_MD_SETTINGS);
+			ImGui::HelpMarker("Settings");
+
+			ImGui::SetCursorPos({ windowSize.x - 50, 0 });
+			ImGui::TextUnformatted(ICON_MD_SAVE);
+			ImGui::HelpMarker("Configs");
+
+			ImGui::SetCursorPos({ windowSize.x - 75, 0 });
+			ImGui::TextUnformatted(ICON_MD_PEOPLE);
+			ImGui::HelpMarker("Playerlist");
+
 			ImGui::PopFont();
 		}
 
@@ -1304,8 +1326,8 @@ void CMenu::MenuHvH()
 			}
 			HelpMarker("High values are not recommended");
 
-			SectionTitle("HvH", 20);
-			Checkbox("Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
+			SectionTitle("Anti Aim", 20);
+			Checkbox("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
 			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, { "None", "Up", "Down", "Fake up", "Fake down", "Random" }); HelpMarker("Which way to look up/down");
 			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, { "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to look horizontally");
 			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, { "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to appear to look horizontally");
@@ -1605,7 +1627,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		auto wideFontConfig = ImFontConfig();
 		wideFontConfig.GlyphExtraSpacing = { 1.f, 0.f };
 
-		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F,0 }; // Basic Latin, Latin Supplement and Cyrillic
+		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F, 0 }; // Basic Latin, Latin Supplement and Cyrillic
 		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
 		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
 		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
@@ -1613,6 +1635,12 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 18.0f, &wideFontConfig, fontRange);
 		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
 		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
+
+		constexpr ImWchar iconRange[]{ICON_MIN_MD, ICON_MAX_MD, 0};
+		ImFontConfig iconConfig;
+		iconConfig.MergeMode = true;
+		iconConfig.PixelSnapH = true;
+		IconFont = io.Fonts->AddFontFromMemoryCompressedTTF(MaterialFont_compressed_data, MaterialFont_compressed_size, 16.f, &iconConfig, iconRange);
 
 		io.Fonts->Build();
 	}

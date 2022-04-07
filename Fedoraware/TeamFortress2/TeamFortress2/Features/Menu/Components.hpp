@@ -213,9 +213,6 @@ namespace ImGui
 		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
 		PushItemWidth(150);
-		PushStyleColor(ImGuiCol_Button, g_Menu.Accent.Value);
-		PushStyleColor(ImGuiCol_ButtonHovered, g_Menu.AccentDark.Value);
-		PushStyleColor(ImGuiCol_ButtonActive, g_Menu.AccentDark.Value);
 		if (BeginCombo(comboName.c_str(), preview.c_str())) {
 			for (size_t i = 0; i < titles.size(); i++) {
 				Selectable((*options[i]) ? tfm::format("+ %s", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
@@ -223,31 +220,35 @@ namespace ImGui
 
 			EndCombo();
 		}
-		PopStyleColor(3);
 		PopItemWidth();
 
 		HelpMarker(description.c_str());
+	}
+	
+	__inline void MultiFlags(std::vector<const char*> flagNames, std::vector<bool> flagBools, const std::string& comboName)
+	{
+		// TODO
 	}
 
 	__inline bool ColorPicker(const char* label, Color_t& color)
 	{
 		bool open = false;
-		ImVec4 tempColor = {};
+		ImVec4 tempColor = mColor(color);
 		PushItemWidth(150);
-		PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
-		if (ColorEdit4(label, reinterpret_cast<float*>(&tempColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
+		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel))
+		{
 			color = vColor(tempColor);
 			open = true;
 		}
-		PopStyleVar();
 		PopItemWidth();
+		HelpMarker(label);
 		return open;
 	}
 
 	/* Inline color picker */
 	__inline bool ColorPickerL(const char* label, Color_t& color, int num = 0)
 	{
-		SameLine(GetContentRegionMax().x - 20 - (num * 24));
+		SameLine(GetContentRegionMax().x - 20 - num * 24);
 		SetNextItemWidth(20);
 		return ColorPicker(label, color);
 	}
