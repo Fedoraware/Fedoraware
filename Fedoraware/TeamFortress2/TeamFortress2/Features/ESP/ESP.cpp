@@ -672,7 +672,7 @@ void CESP::DrawWorld() const
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
 			if (Utils::W2S(Health->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"HEALTH"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"Healthpack"));
 		}
 	}
 
@@ -681,7 +681,7 @@ void CESP::DrawWorld() const
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
 			if (Utils::W2S(Ammo->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"AMMO"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"Ammopack"));
 		}
 	}
 
