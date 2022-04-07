@@ -53,12 +53,14 @@ void CPlayerList::UpdatePlayers()
 
 void CPlayerList::Render()
 {
+	if (!IsOpen) { return; }
+
 	const auto accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
 
 	ImGui::PushFont(g_Menu.Segoe);
-	ImGui::GetStyle().WindowMinSize = ImVec2(200, 24);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
 	ImGui::PushStyleColor(ImGuiCol_Text, accent.Value);
 	if (ImGui::Begin("Playerlist", &g_PlayerList.IsOpen,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
@@ -189,4 +191,8 @@ void CPlayerList::Render()
 		ImGui::PopFont();
 		ImGui::End();
 	}
+
+	ImGui::PopStyleColor();
+	ImGui::PopStyleVar();
+	ImGui::PopFont();
 }

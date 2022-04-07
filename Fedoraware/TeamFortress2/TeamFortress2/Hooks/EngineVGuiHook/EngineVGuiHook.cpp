@@ -9,6 +9,7 @@
 #include "../../Features/PlayerResource/PlayerResource.h"
 #include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Menu/Menu.h"
+#include "../../Features/Menu/SpectatorList/SpectatorList.h"
 #include "../../Features/Radar/Radar.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
@@ -293,8 +294,9 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
-			g_Radar.Run();
+			g_SpectatorList.Run();
 			g_CritHack.Draw();
+			g_Radar.Run();
 			
 			// you can use it for more, i'm sure. - myzarfin
 			g_Notifications.Think();

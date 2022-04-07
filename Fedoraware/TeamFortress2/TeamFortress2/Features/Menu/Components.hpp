@@ -4,12 +4,12 @@
 namespace ImGui
 {
 	/* Color_t to ImVec4 */
-	inline ImVec4 mColor(Color_t color) {
-		return ImVec4(Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a));
+	inline ImVec4 ColorToVec(Color_t color) {
+		return {Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a)};
 	}
 
 	/* ImVec4 to Color_t */
-	inline Color_t vColor(ImVec4 color) {
+	inline Color_t VecToColor(ImVec4 color) {
 		return {
 			static_cast<byte>(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
 			static_cast<byte>(color.y * 256.0f > 255 ? 255 : color.y * 256.0f),
@@ -244,11 +244,11 @@ namespace ImGui
 	__inline bool ColorPicker(const char* label, Color_t& color)
 	{
 		bool open = false;
-		ImVec4 tempColor = mColor(color);
+		ImVec4 tempColor = ColorToVec(color);
 		PushItemWidth(150);
 		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel))
 		{
-			color = vColor(tempColor);
+			color = VecToColor(tempColor);
 			open = true;
 		}
 		PopItemWidth();

@@ -11,6 +11,7 @@
 #include "Fonts/IconsMaterialDesign.h"
 
 #include "Components.hpp"
+#include "ConfigManager/ConfigManager.h"
 
 constexpr int MENU_KEY = VK_INSERT;
 
@@ -45,14 +46,13 @@ void CMenu::DrawMenu()
 		// Icons
 		{
 			ImGui::SetCursorPos({ windowSize.x - 25, 0 });
-			ImGui::IconButton(ICON_MD_SETTINGS);
+			if (ImGui::IconButton(ICON_MD_SETTINGS))
+			{
+				ShowSettings = !ShowSettings;
+			}
 			ImGui::HelpMarker("Settings");
 
 			ImGui::SetCursorPos({ windowSize.x - 50, 0 });
-			ImGui::IconButton(ICON_MD_SAVE);
-			ImGui::HelpMarker("Configs");
-
-			ImGui::SetCursorPos({ windowSize.x - 75, 0 });
 			if (ImGui::IconButton(ICON_MD_PEOPLE))
 			{
 				g_PlayerList.IsOpen = !g_PlayerList.IsOpen;
@@ -87,7 +87,6 @@ void CMenu::DrawMenu()
 			case MenuTab::Visuals: { MenuVisuals(); break; }
 			case MenuTab::HvH: { MenuHvH(); break; }
 			case MenuTab::Misc: { MenuMisc(); break; }
-			case MenuTab::Configs: { MenuConfigs(); break; }
 			}
 
 			ImGui::PopFont();
@@ -1485,26 +1484,148 @@ void CMenu::MenuMisc()
 	}
 }
 
-/* Tab: Configs */
-void CMenu::MenuConfigs()
+/* Settings Window */
+void CMenu::SettingsWindow()
 {
 	using namespace ImGui;
-	if (BeginTable("ConfigTable", 2))
+	if (!ShowSettings) { return; }
+
+	/*PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
+	PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1, 1));
+	PushStyleColor(ImGuiCol_Border, ImVec4(0.43f, 0.43f, 0.50f, 1.00f));*/
+
+	PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
+
+	if (Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
-		/* Column 1 */
-		TableNextColumn();
-		{
+		ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent);
+		SameLine(); Text("Menu accent");
+		static std::wstring selected = {};
+		int nConfig = 0;
 
+		// Load config files
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		{
+			if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+			{
+				continue;
+			}
+			nConfig++;
 		}
 
-		/* Column 2 */
-		TableNextColumn();
+		// Config name field
+		if (nConfig < 100)
 		{
+			std::string output = {};
 
+			PushItemWidth(200);
+			if (InputTextWithHint("###configname", "New config name", &output, ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				const std::wstring outstring(output.begin(), output.end());
+				if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + outstring))
+				{
+					g_CFG.Save(outstring.c_str());
+				}
+			}
+			PopItemWidth();
 		}
 
-		EndTable();
+		// Config list
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		{
+			if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+			{
+				continue;
+			}
+
+			std::wstring s = entry.path().filename().wstring();
+			s.erase(s.end() - 4, s.end());
+			std::string configName(s.begin(), s.end());
+			if (s == selected)
+			{
+				const ImGuiStyle* style2 = &GetStyle();
+				const ImVec4* colors2 = style2->Colors;
+				ImVec4 buttonColor = colors2[ImGuiCol_Button];
+				buttonColor.w *= .5f;
+				PushStyleColor(ImGuiCol_Button, buttonColor);
+				if (Button(configName.c_str(), ImVec2(200, 20)))
+				{
+					selected = s;
+				}
+				PopStyleColor();
+
+				// Save, Load and Remove buttons
+				if (Button("Save", ImVec2(61, 20)))
+				{
+					OpenPopup("Save config?");
+				}
+				SameLine();
+				if (Button("Load", ImVec2(61, 20)))
+				{
+					g_CFG.Load(selected.c_str());
+					selected.clear();
+				}
+				SameLine();
+				if (Button("Remove", ImVec2(62, 20)))
+				{
+					OpenPopup("Remove config?");
+				}
+
+				// Save config dialog
+				if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					Text("Do you really want to override this config?\n\n");
+					Separator();
+					if (Button("Yes, override!", ImVec2(150, 0)))
+					{
+						g_CFG.Save(selected.c_str());
+						selected.clear();
+						CloseCurrentPopup();
+					}
+					SameLine();
+					if (Button("No", ImVec2(120, 0)))
+					{
+						CloseCurrentPopup();
+					}
+					EndPopup();
+				}
+
+				// Delete config dialog
+				if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					Text("Do you really want to delete this config?\n\n");
+					Separator();
+					if (Button("Yes, remove!", ImVec2(150, 0)))
+					{
+						g_CFG.Remove(selected.c_str());
+						selected.clear();
+						CloseCurrentPopup();
+					}
+					SameLine();
+					if (Button("No", ImVec2(150, 0)))
+					{
+						CloseCurrentPopup();
+					}
+					EndPopup();
+				}
+			}
+			else
+			{
+				if (Button(configName.c_str(), ImVec2(200, 20)))
+				{
+					selected = s;
+				}
+			}
+		}
+
+		End();
 	}
+
+	PopStyleVar(3);
 }
 
 /* Window for the camera feature */
@@ -1553,6 +1674,9 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
+	// Load Colors
+	Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
+
 	// Toggle menu
 	if (GetAsyncKeyState(MENU_KEY) & 1)
 	{
@@ -1573,6 +1697,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DrawCameraWindow();
 
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
+		SettingsWindow();
 		g_PlayerList.Render();
 
 		ImGui::PopFont();

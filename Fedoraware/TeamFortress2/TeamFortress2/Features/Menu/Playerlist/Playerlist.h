@@ -10,14 +10,13 @@ struct ListPlayer {
 
 class CPlayerList {
 	bool SortByTeam(const ListPlayer& a, const ListPlayer& b);
-
-	std::array<ListPlayer, 64> PlayerCache;
 	
 public:
 	void UpdatePlayers();
 	void Render();
 
 	bool IsOpen = false;
+	std::array<ListPlayer, 64> PlayerCache;
 };
 
 inline CPlayerList g_PlayerList;

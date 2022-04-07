@@ -11,7 +11,7 @@ class CMenu {
 	void MenuVisuals();
 	void MenuHvH();
 	void MenuMisc();
-	void MenuConfigs();
+	void SettingsWindow();
 	void DrawCameraWindow();
 
 	enum class MenuTab {
@@ -19,8 +19,7 @@ class CMenu {
 		Trigger,
 		Visuals,
 		HvH,
-		Misc,
-		Configs
+		Misc
 	};
 
 	enum class VisualsTab {
@@ -34,6 +33,8 @@ class CMenu {
 
 	MenuTab CurrentTab = MenuTab::Aimbot;
 	VisualsTab CurrentVisualsTab = VisualsTab::Players;
+
+	bool ShowSettings = false;
 
 public:
 	void Render(IDirect3DDevice9* pDevice);
