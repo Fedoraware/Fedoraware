@@ -778,7 +778,11 @@ void CMenu::MenuVisuals()
 	}
 
 	// Visuals: Font
-	case VisualsTab::Font: break;
+	case VisualsTab::Font:
+	{
+
+		break;
+	}
 
 		// Visuals: Misc
 	case VisualsTab::Misc:
@@ -1489,21 +1493,14 @@ void CMenu::SettingsWindow()
 {
 	using namespace ImGui;
 	if (!ShowSettings) { return; }
-
-	/*PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
-	PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
-	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
-	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1, 1));
-	PushStyleColor(ImGuiCol_Border, ImVec4(0.43f, 0.43f, 0.50f, 1.00f));*/
-
-	PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+	
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
 
-	if (Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
+	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
-		ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent);
-		SameLine(); Text("Menu accent");
+		ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent); SameLine(); Text("Menu accent");
+		Checkbox("Modern Toggles", &Vars::Menu::ModernToggles);
 		static std::wstring selected = {};
 		int nConfig = 0;
 
@@ -1625,7 +1622,7 @@ void CMenu::SettingsWindow()
 		End();
 	}
 
-	PopStyleVar(3);
+	PopStyleVar(2);
 }
 
 /* Window for the camera feature */

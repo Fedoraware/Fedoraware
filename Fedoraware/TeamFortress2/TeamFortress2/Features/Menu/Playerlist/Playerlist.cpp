@@ -59,14 +59,10 @@ void CPlayerList::Render()
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
 
-	ImGui::PushFont(g_Menu.Segoe);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
-	ImGui::PushStyleColor(ImGuiCol_Text, accent.Value);
 	if (ImGui::Begin("Playerlist", &g_PlayerList.IsOpen,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
-		ImGui::PopStyleColor();
-		ImGui::PopFont();
 		ImGui::PushFont(g_Menu.Segoe);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -188,11 +184,10 @@ void CPlayerList::Render()
 				ImGui::EndTable();
 			}
 		}
+
 		ImGui::PopFont();
 		ImGui::End();
 	}
 
-	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
-	ImGui::PopFont();
 }

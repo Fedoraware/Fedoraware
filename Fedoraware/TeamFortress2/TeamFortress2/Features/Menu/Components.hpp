@@ -236,9 +236,45 @@ namespace ImGui
 		HelpMarker(description.c_str());
 	}
 	
-	__inline void MultiFlags(std::vector<const char*> flagNames, std::vector<bool> flagBools, const std::string& comboName)
+	__inline void MultiFlags(std::vector<const char*> flagNames, static std::vector<int> flagValues, int* flagVar, const std::string& comboName)
 	{
-		// TODO
+		if (flagNames.size() != flagValues.size()) { return; }
+
+		std::string preview = "<Default>##";
+		if (*flagVar == 0)
+		{
+			preview = "<None>##";
+		} else
+		{
+			for (size_t i = 0; i < flagValues.size(); i++) {
+				if (*flagVar & flagValues[i]) {
+					if (preview == "<Default>##") { preview = ""; }
+					preview += flagNames[i];
+					preview.append(", ");
+				}
+			}
+			preview.pop_back(); preview.pop_back();
+		}
+
+		PushItemWidth(150);
+		if (BeginCombo(comboName.c_str(), preview.c_str())) {
+			for (size_t i = 0; i < flagNames.size(); i++) {
+				const bool flagActive = *flagVar & flagValues[i];
+				if (Selectable(flagActive ? tfm::format("+ %s", flagNames[i]).c_str() : flagNames[i], flagActive, ImGuiSelectableFlags_DontClosePopups))
+				{
+					if (flagActive)
+					{
+						*flagVar &= ~flagValues[i];
+					} else
+					{
+						*flagVar |= flagValues[i];
+					}
+				}
+			}
+
+			EndCombo();
+		}
+		PopItemWidth();
 	}
 
 	__inline bool ColorPicker(const char* label, Color_t& color)
@@ -348,7 +384,15 @@ namespace ImGui
 
 	__inline bool WToggle(const char* label, bool* v)
 	{
-		return ToggleButton(label, v);
+		bool result = false;
+		if (Vars::Menu::ModernToggles)
+		{
+			result = ToggleButton(label, v);
+		} else
+		{
+			result = Checkbox(label, v);
+		}
+		return result;
 	}
 #pragma endregion
 }
