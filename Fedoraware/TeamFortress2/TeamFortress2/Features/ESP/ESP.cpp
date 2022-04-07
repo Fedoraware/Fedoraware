@@ -523,12 +523,9 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				case EBuildingType::SENTRY:
 				{
 					if (bIsMini)
-					{
 						szName = _(L"Mini Sentry");
-						break;
-					}
-
-					szName = _(L"Sentry");
+					else
+						szName = _(L"Sentry");
 					break;
 				}
 				case EBuildingType::DISPENSER:
@@ -538,7 +535,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 				case EBuildingType::TELEPORTER:
 				{
-					szName = _(L"Teleporter");
+					if (Building->GetObjectMode())
+						szName = _(L"Teleporter Out");
+					else
+						szName = _(L"Teleporter In");
 					break;
 				}
 				default:
