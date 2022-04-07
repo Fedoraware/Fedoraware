@@ -1141,14 +1141,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 						ImGui::Checkbox("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
-						ImGui::Checkbox("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
+						ImGui::Checkbox("Healthpacks###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on healthpacks");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Health pack colour", Colors::Health); HelpMarker("Color for health pack ESP");
-						ImGui::Checkbox("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw chams on ammo packs");
+						ColorPicker("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
+						ImGui::Checkbox("Ammopacks###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammopacks");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
-						ColorPicker("Ammo pack colour", Colors::Ammo); HelpMarker("Color for ammo pack ESP");
+						ColorPicker("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
 						WidthSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
 						ImGui::PopStyleVar();
 					}
@@ -1303,7 +1303,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							ImGui::SetNextItemWidth(44);
 							ColorPicker("Outer line color", Colors::NoscopeLines2);
 						}
-						ImGui::Checkbox("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammo packs");
+						ImGui::Checkbox("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammopacks");
 						ImGui::Checkbox("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 						ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 						ImGui::SetNextItemWidth(20);
@@ -2097,8 +2097,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 
 						static const char* chamOptions[]{
-							"Health",
-							"Ammo",
+							"Healthpacks",
+							"Ammopacks",
 							"Projectiles"
 						};
 
@@ -2114,7 +2114,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							{
 								MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "", "Options");
 								ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-								HelpMarker("Which material the chams will apply to the player");
+								HelpMarker("Which material the chams will apply to healthpacks");
 								ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 								ImGui::SetNextItemWidth(20);
 								ColorPicker("Fresnel base colour", Vars::Chams::World::Health.fresnelBase);
@@ -2124,7 +2124,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							{
 								MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "", "Options");
 								ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-								HelpMarker("Which material the chams will apply to the player");
+								HelpMarker("Which material the chams will apply to ammopacks");
 								ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 								ImGui::SetNextItemWidth(20);
 								ColorPicker("Fresnel base colour", Vars::Chams::World::Ammo.fresnelBase);
@@ -2134,7 +2134,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							{
 								MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "", "Options");
 								ImGui::PushItemWidth(100); combo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials)); ImGui::PopItemWidth();
-								HelpMarker("Which material the chams will apply to the player");
+								HelpMarker("Which material the chams will apply to projectiles");
 								ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
 								ImGui::SetNextItemWidth(20);
 								ColorPicker("Fresnel base colour", Vars::Chams::World::Projectiles.fresnelBase);
@@ -2718,8 +2718,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
-							ImGui::Checkbox("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
-							ImGui::Checkbox("Ammo packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
+							ImGui::Checkbox("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
+							ImGui::Checkbox("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
 							static const char* ignoreTeamArr[]{ "Off", "All", "Only enemies" }; ImGui::PushItemWidth(100); ImGui::Combo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, ignoreTeamArr, IM_ARRAYSIZE(ignoreTeamArr)); ImGui::PopItemWidth();
 							WidthSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 
@@ -2907,8 +2907,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 							if (widget_pos.y - winPos.y > 97 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 							ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 							ImGui::Checkbox("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
-							ImGui::Checkbox("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
-							ImGui::Checkbox("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
+							ImGui::Checkbox("Healthpack###radarworldda", &Vars::Radar::World::Health.m_Var);
+							ImGui::Checkbox("Ammopack###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
 							ImGui::PushItemWidth(100); ImGui::SliderInt("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d"); ImGui::PopItemWidth();
 
 							ImGui::PopStyleVar();
