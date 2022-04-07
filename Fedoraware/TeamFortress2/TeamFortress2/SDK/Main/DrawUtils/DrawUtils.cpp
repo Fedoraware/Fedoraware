@@ -204,11 +204,11 @@ void Draw_t::GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, 
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x + w, y + h, 0, 255, horizontal);
 }
 
-void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, const Color_t& overlay_clr, bool horizontal)
+void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, bool horizontal)
 {
 	OutlinedRect(x - 1, y + 1 - (h + 2), w + 2, h + 2, outline_clr);
 	GradientRectWH(x, y - h, w, h, bottom_clr, top_clr, horizontal);
-	Rect(x, y - h, w, h * (1.0f - bwidthp), overlay_clr);
+	Rect(x, y - h, w, h * (1.0f - bwidthp), { 17, 24, 26, 255 });
 }
 
 void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr)

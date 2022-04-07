@@ -410,7 +410,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					flHealth = flMaxHealth;
 
 				float ratio = flHealth / flMaxHealth;
-				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
+				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, false);
 
 				x += 1;
 			}
@@ -423,7 +423,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
 				ratio = chokeCount/22.0f;
-				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
+				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, false);
 
 				x += 1;
 			}
