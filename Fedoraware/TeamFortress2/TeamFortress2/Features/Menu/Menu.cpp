@@ -4,35 +4,18 @@
 #include "../Camera/CameraWindow.h"
 #include "../AttributeChanger/AttributeChanger.h"
 #include "../Misc/Misc.h"
+#include "Playerlist/Playerlist.h"
 
 #include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_color_gradient.h"
 #include "ImGui/imgui_stdlib.h"
 #include "Fonts/IconsMaterialDesign.h"
 
 #include "Components.hpp"
 
 constexpr int MENU_KEY = VK_INSERT;
-static ImGradient titleGradient;
-static ImGradient mainGradient;
 
 int unuPrimary = 0;
 int unuSecondary = 0;
-
-#pragma region Components
-void CMenu::SectionTitle(const char* title, float yOffset = 6)
-{
-	ImGui::Dummy({ 0, yOffset });
-	ImGui::PushFont(SectionFont);
-	const ImVec2 titleSize = ImGui::CalcTextSize(title);
-	ImGui::SameLine((ImGui::GetColumnWidth()) / 2 - (titleSize.x / 2));
-	ImGui::Text(title);
-	ImGui::PopFont();
-
-	const auto widgetPos = ImGui::GetCursorScreenPos();
-	ImGui::GradientRect(&mainGradient, { widgetPos.x, widgetPos.y - 2 }, ImGui::GetColumnWidth(), 3);
-}
-#pragma endregion
 
 /* The main menu */
 void CMenu::DrawMenu()
@@ -48,7 +31,7 @@ void CMenu::DrawMenu()
 		const auto windowPos = ImGui::GetWindowPos();
 
 		// Gradient line
-		ImGui::GradientRect(&titleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
+		ImGui::GradientRect(&TitleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
 		ImGui::Dummy({ 0, 2 });
 
 		// Title Text
@@ -70,7 +53,10 @@ void CMenu::DrawMenu()
 			ImGui::HelpMarker("Configs");
 
 			ImGui::SetCursorPos({ windowSize.x - 75, 0 });
-			ImGui::IconButton(ICON_MD_PEOPLE);
+			if (ImGui::IconButton(ICON_MD_PEOPLE))
+			{
+				g_PlayerList.IsOpen = !g_PlayerList.IsOpen;
+			}
 			ImGui::HelpMarker("Playerlist");
 		}
 
@@ -1587,6 +1573,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DrawCameraWindow();
 
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
+		g_PlayerList.Render();
+
 		ImGui::PopFont();
 	}
 
@@ -1656,7 +1644,7 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		colors[ImGuiCol_Border] = ImColor(110, 110, 128);
 		colors[ImGuiCol_WindowBg] = Background;
 		colors[ImGuiCol_TitleBg] = BackgroundDark;
-		colors[ImGuiCol_TitleBgActive] = Accent;
+		colors[ImGuiCol_TitleBgActive] = BackgroundLight;
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
 		colors[ImGuiCol_Button] = BackgroundLight;
 		colors[ImGuiCol_ButtonHovered] = ImColor(69, 69, 77);
@@ -1680,20 +1668,20 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 
 	// Misc
 	{
-		titleGradient.ClearMarks();
-		titleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		titleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
-		titleGradient.AddMark(0.5f, Accent);
-		titleGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
-		titleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		TitleGradient.ClearMarks();
+		TitleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		TitleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
+		TitleGradient.AddMark(0.5f, Accent);
+		TitleGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
+		TitleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
 
 	{
-		mainGradient.ClearMarks();
-		mainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		mainGradient.AddMark(0.15f, ImColor(0, 0, 0, 0));
-		mainGradient.AddMark(0.45f, Accent);
-		mainGradient.AddMark(0.75f, ImColor(0, 0, 0, 0));
-		mainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		MainGradient.ClearMarks();
+		MainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.15f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.45f, Accent);
+		MainGradient.AddMark(0.75f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
 }

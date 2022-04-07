@@ -103,6 +103,7 @@
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -651,6 +652,7 @@
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\IconsMaterialDesign.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\MaterialFontData.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

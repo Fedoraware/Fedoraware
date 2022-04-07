@@ -1,9 +1,9 @@
 #pragma once
 #include "ImGui/imgui_impl_dx9.h"
 #include "../../SDK/SDK.h"
+#include "ImGui/imgui_color_gradient.h"
 
 class CMenu {
-	void SectionTitle(const char* title, float yOffset);
 	void DrawMenu();
 	void DrawTabbar();
 	void MenuAimbot();
@@ -64,6 +64,10 @@ public:
 	ImFont* TabFont = nullptr;		// 22px
 	ImFont* TitleFont = nullptr;	// 26px
 	ImFont* IconFont = nullptr;		// 16px
+
+	// Gradients
+	ImGradient TitleGradient;
+	ImGradient MainGradient;
 };
 
 inline CMenu g_Menu;

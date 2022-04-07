@@ -36,6 +36,19 @@ namespace ImGui
 		return pressed;
 	}
 
+	__inline void SectionTitle(const char* title, float yOffset = 6)
+	{
+		Dummy({ 0, yOffset });
+		PushFont(g_Menu.SectionFont);
+		const ImVec2 titleSize = CalcTextSize(title);
+		SameLine((GetColumnWidth()) / 2 - (titleSize.x / 2));
+		Text(title);
+		PopFont();
+
+		const auto widgetPos = GetCursorScreenPos();
+		GradientRect(&g_Menu.MainGradient, { widgetPos.x, widgetPos.y - 2 }, GetColumnWidth(), 3);
+	}
+
 	__inline bool SidebarButton(const char* label, bool active = false)
 	{
 		if (active) { PushStyleColor(ImGuiCol_Button, ImColor(38, 38, 38).Value); }
