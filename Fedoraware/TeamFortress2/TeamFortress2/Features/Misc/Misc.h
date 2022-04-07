@@ -19,6 +19,7 @@ static float angleDiffRad(float a1, float a2) noexcept
 class CMisc
 {
 private:
+	void AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoiseMakerSpam(CBaseEntity* pLocal);

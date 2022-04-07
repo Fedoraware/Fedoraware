@@ -346,6 +346,20 @@ public:
 		return fl_length;
 	}
 
+	Vec3 toAngle() const noexcept
+	{
+		return Vec3{ RAD2DEG(atan2(-z, hypot(x, y))),
+					 RAD2DEG(atan2(y, x)),
+					 0.0f };
+	}
+
+	Vec3 fromAngle() const noexcept
+	{
+		return Vec3{ cos(DEG2RAD(x)) * cos(DEG2RAD(y)),
+					 cos(DEG2RAD(x)) * sin(DEG2RAD(y)),
+					 -sin(DEG2RAD(x)) };
+	}
+
 	void Rotate2D(const float& flYaw)
 	{
 		float s, c, r = DEG2RAD(flYaw);

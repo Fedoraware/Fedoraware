@@ -12,6 +12,7 @@ void CMisc::Run(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -303,6 +304,44 @@ void CMisc::NoPush()
 {
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
+}
+
+void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (!Vars::Misc::AccurateMovement.m_Var)
+		return;
+
+	if (!pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost()
+		|| !pLocal->IsOnGround())
+		return;
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	if (pCmd->buttons & (IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
+		return;
+
+	const float Speed = pLocal->GetVecVelocity().Length();
+
+	if (Speed > 13.0f)
+	{
+		Vec3 direction = pLocal->GetVecVelocity().toAngle();
+		direction.y = pCmd->viewangles.y - direction.y;
+
+		const Vec3 negatedDirection = direction.fromAngle() * -Speed;
+		pCmd->forwardmove = negatedDirection.x;
+		pCmd->sidemove = negatedDirection.y;
+	}
+	else
+	{
+		pCmd->forwardmove = 0.0f;
+		pCmd->sidemove = 0.0f;
+	}
 }
 
 void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)

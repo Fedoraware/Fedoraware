@@ -547,6 +547,7 @@ namespace Vars
 
 	namespace Misc
 	{
+		inline CVar<bool> AccurateMovement{ true };
 		inline CVar<bool> AutoJump{ true, L"Auto Jump" };
 		inline CVar<bool> DuckJump{ false };
 		inline CVar<int> AutoStrafe{ 2, L"Auto Strafe" };
