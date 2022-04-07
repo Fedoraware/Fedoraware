@@ -7,8 +7,9 @@ int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
 	{
 	case 0: { return HITBOX_HEAD; }
-	case 1: { return HITBOX_PELVIS; }
-	case 2:
+	case 1: { return HITBOX_SPINE_1; }
+	case 2: { return HITBOX_PELVIS; }
+	case 3:
 	{
 		int nClassNum = pLocal->GetClassNum();
 

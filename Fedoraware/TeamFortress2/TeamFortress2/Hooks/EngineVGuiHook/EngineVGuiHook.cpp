@@ -255,16 +255,15 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
 							yoffset += 20;
 						}
-						if (CollideableMins.IsZero() || CollideableMaxs.IsZero()) {
-							model_t* pModel = Projectile->GetModel();
-							if (pModel) {
-								studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
-								if (pHDR) {
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
-									yoffset += 20;
-								}
+
+						model_t* pModel = Projectile->GetModel();
+						if (pModel) {
+							studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
+							if (pHDR) {
+								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+								yoffset += 20;
+								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
+								yoffset += 20;
 							}
 						}
 					}
