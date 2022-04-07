@@ -214,8 +214,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					              {116, 255, 48, 255}, ALIGN_DEFAULT, "Build : %s %s", __DATE__, __TIME__);
 
 				// debug
+				if (Vars::Visuals::DebugInfo.m_Var)
 				{
-					
 					int yoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
 						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
@@ -240,11 +240,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						Vec3 CollideableMins = Projectile->GetCollideableMins();
 						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
 						if (!CollideableMins.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %f %f %f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %+.2f %+.2f %+.2f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
 							yoffset += 20;
 						}
 						if (!CollideableMaxs.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %f %f %f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
 							yoffset += 20;
 						}
 						if (CollideableMins.IsZero() || CollideableMaxs.IsZero()) {
@@ -252,13 +252,9 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							if (pModel) {
 								studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
 								if (pHDR) {
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %f %f %f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
 									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %f %f %f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmin.x, pHDR->view_bbmin.y, pHDR->view_bbmin.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmax.x, pHDR->view_bbmax.y, pHDR->view_bbmax.z);
+									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
 									yoffset += 20;
 								}
 							}
@@ -284,7 +280,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			};
 			OtherDraws();
 			// blocks my vision to my debug info thanks
-			//if (Vars::Visuals::Damage.m_Var)
+			//if (Vars::Visuals::DebugInfo.m_Var)
 			//{
 			//	if (const auto& pLocal = g_EntityCache.m_pLocal)
 			//	{
