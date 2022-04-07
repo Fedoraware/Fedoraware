@@ -12,6 +12,7 @@ void CMisc::Run(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -305,6 +306,44 @@ void CMisc::NoPush()
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
 }
 
+void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (!Vars::Misc::AccurateMovement.m_Var)
+		return;
+
+	if (!pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost()
+		|| !pLocal->IsOnGround())
+		return;
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	if (pCmd->buttons & (IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
+		return;
+
+	const float Speed = pLocal->GetVecVelocity().Length();
+
+	if (Speed > 13.0f)
+	{
+		Vec3 direction = pLocal->GetVecVelocity().toAngle();
+		direction.y = pCmd->viewangles.y - direction.y;
+
+		const Vec3 negatedDirection = direction.fromAngle() * -Speed;
+		pCmd->forwardmove = negatedDirection.x;
+		pCmd->sidemove = negatedDirection.y;
+	}
+	else
+	{
+		pCmd->forwardmove = 0.0f;
+		pCmd->sidemove = 0.0f;
+	}
+}
+
 void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::AutoJump.m_Var
@@ -314,97 +353,112 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsAGhost())
 		return;
 
-	static bool bJumpState = false;
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	static bool s_bState = false;
+	static float height = pLocal->GetVecVelocity().z;
 
 	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!bJumpState && !pLocal->IsOnGround())
+		if (!s_bState && !pLocal->IsOnGround())
 		{
 			pCmd->buttons &= ~IN_JUMP;
+
+			if (Vars::Misc::DuckJump.m_Var)
+			{
+				if (pLocal->GetVecVelocity().z > height)
+					pCmd->buttons |= IN_DUCK;
+				else
+					pCmd->buttons &= ~IN_DUCK;
+			}
 		}
-
-		else if (bJumpState)
-		{
-			bJumpState = false;
-		}
+		else if (s_bState)
+			s_bState = false;
 	}
-
-	else if (!bJumpState)
-	{
-		bJumpState = true;
-	}
-}
-
-static float angleDiffRad(float a1, float a2) noexcept
-{
-	float delta = Utils::NormalizeRad(a1 - a2);
-	if (a1 > a2)
-	{
-		if (delta >= PI) { delta -= PI * 2; }	
-	}
-	else
-	{
-		if (delta <= -PI) { delta += PI * 2; }
-	}
-	return delta;
+	else if (!s_bState)
+		s_bState = true;
 }
 
 void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
-	{
-		if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->
-			mousedx < -1))
+	if (!Vars::Misc::AutoStrafe.m_Var)
+		return;
 
-			pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
+	if (!pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost()
+		|| pLocal->IsOnGround())
+		return;
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	ConVar* cl_sidespeed = g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
+
+	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
+		return;
+
+	static bool was_jumping = false;
+	bool is_jumping = pCmd->buttons & IN_JUMP;
+
+	switch (Vars::Misc::AutoStrafe.m_Var)
+	{
+	default:
+		break;
+	case 1:
+	{
+		if (pCmd->mousedx && (!is_jumping || was_jumping))
+			pCmd->sidemove = pCmd->mousedx > 1 ? cl_sidespeed->GetFloat() : -cl_sidespeed->GetFloat();
+		was_jumping = is_jumping;
+		break;
 	}
-	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
+	case 2:
 	{
-#
-		static bool was_jumping = false;
-		bool is_jumping = pCmd->buttons & IN_JUMP;
+		const float speed = pLocal->GetVelocity().Length2D();
 
+		if (speed < 2.0f)
+			break;
 
-		if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		auto vel = pLocal->GetVelocity();
+
+		constexpr auto perfectDelta = [](float speed) noexcept
 		{
-			const float speed = pLocal->GetVelocity().Length2D();
-			auto vel = pLocal->GetVelocity();
-
-			if (speed < 2.0f)
-				return;
-
-			constexpr auto perfectDelta = [](float speed) noexcept
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
-				{
-					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-					static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+				static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
+				static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+				static auto wishSpeed = 30.0f;
 
-					static auto wishSpeed = 30.0f;
+				const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
 
-					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
-
-					if (term < 1.0f && term > -1.0f)
-						return acosf(term);
-				}
-				return 0.0f;
-			};
-
-			const float pDelta = perfectDelta(speed);
-			if (pDelta)
-			{
-				const float yaw = DEG2RAD(pCmd->viewangles.y);
-				const float velDir = atan2f(vel.y, vel.x) - yaw;
-				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
-				const float delta = angleDiffRad(velDir, wishAng);
-
-				float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
-
-				pCmd->forwardmove = cosf(moveDir) * 450.f;
-				pCmd->sidemove = -sinf(moveDir) * 450.f;
+				if (term < 1.0f && term > -1.0f)
+					return acosf(term);
 			}
+			return 0.0f;
+		};
+
+		const float pDelta = perfectDelta(speed);
+		if ((!is_jumping || was_jumping) && pDelta)
+		{
+			const float yaw = DEG2RAD(pCmd->viewangles.y);
+			const float velDir = atan2f(vel.y, vel.x) - yaw;
+			const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
+			const float delta = angleDiffRad(velDir, wishAng);
+
+			float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
+
+			pCmd->forwardmove = cosf(moveDir) * cl_sidespeed->GetFloat();
+			pCmd->sidemove = -sinf(moveDir) * cl_sidespeed->GetFloat();
 		}
 		was_jumping = is_jumping;
+		break;
+	}
 	}
 }
 

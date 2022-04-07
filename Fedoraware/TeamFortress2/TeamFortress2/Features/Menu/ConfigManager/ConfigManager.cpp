@@ -589,6 +589,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 			SAVE_VAR(Vars::Visuals::Rain);
+			SAVE_VAR(Vars::Visuals::DebugInfo);
 				
 			// BEAMS I LOVE BEAMS
 			{
@@ -641,7 +642,9 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Misc
 		{
+			SAVE_VAR(Vars::Misc::AccurateMovement);
 			SAVE_VAR(Vars::Misc::AutoJump);
+			SAVE_VAR(Vars::Misc::DuckJump);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
 			SAVE_VAR(Vars::Misc::BypassPure);
@@ -1290,6 +1293,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
+			LOAD_VAR(Vars::Visuals::DebugInfo);
 
 						// BEAMS I LOVE BEAMS
 			{
@@ -1334,7 +1338,9 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Misc
 		{
+			LOAD_VAR(Vars::Misc::AccurateMovement);
 			LOAD_VAR(Vars::Misc::AutoJump);
+			LOAD_VAR(Vars::Misc::DuckJump);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);

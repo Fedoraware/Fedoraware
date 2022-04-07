@@ -410,7 +410,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					flHealth = flMaxHealth;
 
 				float ratio = flHealth / flMaxHealth;
-				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
+				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, false);
 
 				x += 1;
 			}
@@ -423,7 +423,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
 				ratio = chokeCount/22.0f;
-				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, Colors::OutlineESP, false);
+				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, false);
 
 				x += 1;
 			}
@@ -523,12 +523,9 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				case EBuildingType::SENTRY:
 				{
 					if (bIsMini)
-					{
 						szName = _(L"Mini Sentry");
-						break;
-					}
-
-					szName = _(L"Sentry");
+					else
+						szName = _(L"Sentry");
 					break;
 				}
 				case EBuildingType::DISPENSER:
@@ -538,7 +535,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 				case EBuildingType::TELEPORTER:
 				{
-					szName = _(L"Teleporter");
+					if (Building->GetObjectMode())
+						szName = _(L"Teleporter Out");
+					else
+						szName = _(L"Teleporter In");
 					break;
 				}
 				default:
@@ -672,7 +672,7 @@ void CESP::DrawWorld() const
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
 			if (Utils::W2S(Health->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"HEALTH"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"Healthpack"));
 		}
 	}
 
@@ -681,7 +681,7 @@ void CESP::DrawWorld() const
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
 			if (Utils::W2S(Ammo->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"AMMO"));
+				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"Ammopack"));
 		}
 	}
 

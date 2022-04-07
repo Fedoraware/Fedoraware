@@ -213,8 +213,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 
 				// debug
+				if (Vars::Visuals::DebugInfo.m_Var)
 				{
-					/*
 					int yoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
 						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
@@ -227,6 +227,19 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
 							yoffset += 20;
 						}
+						int weaponindex = pWeapon->GetItemDefIndex();
+						if (weaponid) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
+							yoffset += 20;
+						}
+					}
+
+					if (const auto& pLocal = g_EntityCache.m_pLocal) {
+						int tickbase = pLocal->GetTickBase();
+						if (tickbase) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
+							yoffset += 20;
+						}
 					}
 
 					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -234,31 +247,26 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						Vec3 CollideableMins = Projectile->GetCollideableMins();
 						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
 						if (!CollideableMins.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %f %f %f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %+.2f %+.2f %+.2f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
 							yoffset += 20;
 						}
 						if (!CollideableMaxs.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %f %f %f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
 							yoffset += 20;
 						}
-						if (CollideableMins.IsZero() || CollideableMaxs.IsZero()) {
-							model_t* pModel = Projectile->GetModel();
-							if (pModel) {
-								studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
-								if (pHDR) {
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %f %f %f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %f %f %f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmin.x, pHDR->view_bbmin.y, pHDR->view_bbmin.z);
-									yoffset += 20;
-									g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "bbmin = %f %f %f", pHDR->view_bbmax.x, pHDR->view_bbmax.y, pHDR->view_bbmax.z);
-									yoffset += 20;
-								}
+
+						model_t* pModel = Projectile->GetModel();
+						if (pModel) {
+							studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
+							if (pHDR) {
+								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+								yoffset += 20;
+								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
+								yoffset += 20;
 							}
 						}
 					}
-					*/
+					
 				}
 
 				//Current Active Aimbot FOV
@@ -277,17 +285,17 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 			};
 			OtherDraws();
-			
-			if (Vars::Visuals::Damage.m_Var)
-			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
-				{
-					if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
-					{
-						g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
-					}
-				}
-			}
+			// blocks my vision to my debug info thanks
+			//if (Vars::Visuals::DebugInfo.m_Var)
+			//{
+			//	if (const auto& pLocal = g_EntityCache.m_pLocal)
+			//	{
+			//		if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
+			//		{
+			//			g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
+			//		}
+			//	}
+			//}
 			
 			g_Misc.BypassPure();
 			g_ESP.Run();

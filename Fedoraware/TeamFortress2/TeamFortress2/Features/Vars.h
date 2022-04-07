@@ -429,7 +429,7 @@ namespace Vars
 		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
 		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList{ 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-		inline CVar<int> Damage{ 2, L"damage" }; // very awesome stuff here
+		inline CVar<bool> DebugInfo{ false }; // trash
 
 		inline CVar<int> FreecamKey{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed{ 10.f, L"Freecam Speed" };
@@ -549,7 +549,9 @@ namespace Vars
 
 	namespace Misc
 	{
+		inline CVar<bool> AccurateMovement{ true };
 		inline CVar<bool> AutoJump{ true, L"Auto Jump" };
+		inline CVar<bool> DuckJump{ false };
 		inline CVar<int> AutoStrafe{ 2, L"Auto Strafe" };
 		inline CVar<bool> Directional{ false, L"Directional" };
 		inline CVar<bool> TauntSlide{ true, L"Taunt Slide" };

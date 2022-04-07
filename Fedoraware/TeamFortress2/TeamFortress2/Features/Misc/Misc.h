@@ -2,9 +2,24 @@
 
 #include "../../SDK/SDK.h"
 
+static float angleDiffRad(float a1, float a2) noexcept
+{
+	float delta = Utils::NormalizeRad(a1 - a2);
+	if (a1 > a2)
+	{
+		if (delta >= PI) { delta -= PI * 2; }
+	}
+	else
+	{
+		if (delta <= -PI) { delta += PI * 2; }
+	}
+	return delta;
+}
+
 class CMisc
 {
 private:
+	void AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoiseMakerSpam(CBaseEntity* pLocal);

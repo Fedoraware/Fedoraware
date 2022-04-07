@@ -7,8 +7,9 @@ int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
 	{
 	case 0: { return HITBOX_HEAD; }
-	case 1: { return HITBOX_PELVIS; }
-	case 2:
+	case 1: { return HITBOX_SPINE_1; }
+	case 2: { return HITBOX_PELVIS; }
+	case 3:
 	{
 		int nClassNum = pLocal->GetClassNum();
 
@@ -302,26 +303,56 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 				return false;
 		}
 
-		else if (Target.m_nAimedHitbox == HITBOX_PELVIS)
-		{
+		//else if (Target.m_nAimedHitbox == HITBOX_PELVIS)
+		//{
+		//	if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
+		//		
+		//		Vec3 pelvisPos;
+		//		if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
+		//			auto lastTick = g_Backtrack.Record[Target.m_pEntity->GetIndex()].back();
+		//			if (const auto& pHdr = lastTick.HDR) {
+		//				if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet)) {
+		//					if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS)) {
+		//						Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
+		//						Math::VectorTransform(vPos, reinterpret_cast<matrix3x4*>(&lastTick.BoneMatrix)[pBox->bone], vOut);
+		//						pelvisPos = vOut;
+		//					}
+		//				}
+		//			}
+
+
+		//			if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), pelvisPos)) {
+		//				Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pelvisPos);
+		//				return true;
+		//			}
+
+
+		//		}
+		//	}
+		//	if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos) && !ScanHitboxes(
+		//		pLocal, Target))
+		//		return false;
+		//}
+
+		else {
 			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
-				
-				Vec3 pelvisPos;
+
+				Vec3 hitboxPos;
 				if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
 					auto lastTick = g_Backtrack.Record[Target.m_pEntity->GetIndex()].back();
 					if (const auto& pHdr = lastTick.HDR) {
 						if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet)) {
-							if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS)) {
+							if (const auto& pBox = pSet->hitbox(Target.m_nAimedHitbox)) {
 								Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
 								Math::VectorTransform(vPos, reinterpret_cast<matrix3x4*>(&lastTick.BoneMatrix)[pBox->bone], vOut);
-								pelvisPos = vOut;
+								hitboxPos = vOut;
 							}
 						}
 					}
 
 
-					if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), pelvisPos)) {
-						Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pelvisPos);
+					if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), hitboxPos)) {
+						Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxPos);
 						return true;
 					}
 

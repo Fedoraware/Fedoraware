@@ -531,7 +531,7 @@ namespace Utils
 		switch (pWeapon->GetWeaponID())
 		{
 			case TF_WEAPON_ROCKETLAUNCHER:
-			case 109:
+			case TF_WEAPON_FLAME_BALL:
 			case TF_WEAPON_GRENADELAUNCHER:
 			case TF_WEAPON_FLAREGUN:
 			case TF_WEAPON_COMPOUND_BOW:
@@ -540,19 +540,15 @@ namespace Utils
 			case TF_WEAPON_PARTICLE_CANNON:
 			case TF_WEAPON_DRG_POMSON:
 			case TF_WEAPON_RAYGUN_REVENGE:
+			case TF_WEAPON_RAYGUN:
 			case TF_WEAPON_CANNON:
 			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
 			case TF_WEAPON_FLAMETHROWER:
 			case TF_WEAPON_CLEAVER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
 			{
 				return EWeaponType::PROJECTILE;
-			}
-
-			case TF_WEAPON_PIPEBOMBLAUNCHER://dragon's fury
-			{
-				//broken Idk
-				return EWeaponType::UNKNOWN;
 			}
 
 			default:
