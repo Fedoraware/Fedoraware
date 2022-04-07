@@ -314,25 +314,33 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsAGhost())
 		return;
 
-	static bool bJumpState = false;
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	static bool s_bState = false;
+	static float height = pLocal->GetVecVelocity().z;
 
 	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!bJumpState && !pLocal->IsOnGround())
+		if (!s_bState && !pLocal->IsOnGround())
 		{
 			pCmd->buttons &= ~IN_JUMP;
-		}
 
-		else if (bJumpState)
-		{
-			bJumpState = false;
+			if (Vars::Misc::DuckJump.m_Var)
+			{
+				if (pLocal->GetVecVelocity().z > height)
+					pCmd->buttons |= IN_DUCK;
+				else
+					pCmd->buttons &= ~IN_DUCK;
+			}
 		}
+		else if (s_bState)
+			s_bState = false;
 	}
-
-	else if (!bJumpState)
-	{
-		bJumpState = true;
-	}
+	else if (!s_bState)
+		s_bState = true;
 }
 
 void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)

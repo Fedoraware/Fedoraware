@@ -1647,6 +1647,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 						if (Vars::Misc::AutoJump.m_Var)
 						{
+							ImGui::Checkbox("Duck Jump", &Vars::Misc::DuckJump.m_Var); HelpMarker("Will duck when bhopping");
 							const char* autoStrafeModes[]{ "Off", "Legit", "WASD" }; ImGui::PushItemWidth(100); ImGui::Combo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, autoStrafeModes, IM_ARRAYSIZE(autoStrafeModes)); ImGui::PopItemWidth(); HelpMarker("Will strafe for you in air automatically so that you gain speed");
 						}
 						ImGui::Checkbox("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
