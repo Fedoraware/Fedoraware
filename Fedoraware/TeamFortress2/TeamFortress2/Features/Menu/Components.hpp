@@ -27,6 +27,15 @@ namespace ImGui
 		}
 	}
 
+	__inline bool IconButton(const char* icon)
+	{
+		PushFont(g_Menu.IconFont);
+		TextUnformatted(icon);
+		const bool pressed = IsItemClicked();
+		PopFont();
+		return pressed;
+	}
+
 	__inline bool SidebarButton(const char* label, bool active = false)
 	{
 		if (active) { PushStyleColor(ImGuiCol_Button, ImColor(38, 38, 38).Value); }
@@ -42,17 +51,6 @@ namespace ImGui
 		const bool pressed = Button(label, { GetColumnWidth(), g_Menu.TabHeight });
 		if (active) { PopStyleColor(); }
 		return pressed;
-	}
-
-    /* Container for feature groups */
-	__inline bool BeginContainer(const char* str_id)
-	{
-		PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.f, 8.f));
-		PushStyleColor(ImGuiCol_Text, g_Menu.TextDark.Value);
-		const bool open = CollapsingHeader(str_id, ImGuiTreeNodeFlags_DefaultOpen);
-		PopStyleColor();
-		PopStyleVar();
-		return open;
 	}
 
     __inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
@@ -263,7 +261,7 @@ namespace ImGui
 	}
 
     // Source: https://github.com/ocornut/imgui/issues/1537#issuecomment-355569554
-	__inline void ToggleButton(const char* str_id, bool* v)
+	__inline bool ToggleButton(const char* label, bool* v)
     {
 	    const auto p = GetCursorScreenPos();
         auto* drawList = GetWindowDrawList();
@@ -273,16 +271,16 @@ namespace ImGui
         const float width = height * 1.8f;
         const float radius = height * 0.50f;
 		const float bb_width = CalcItemWidth();
-        const ImVec2 labelSize = CalcTextSize(str_id, nullptr, true);
+        const ImVec2 labelSize = CalcTextSize(label, nullptr, true);
 
-        InvisibleButton(str_id, ImVec2(bb_width, height));
+        InvisibleButton(label, ImVec2(width + style.ItemInnerSpacing.x + labelSize.x, height));
         if (IsItemClicked()) { *v = !*v; }
 
         float t = *v ? 1.0f : 0.0f;
 
         ImGuiContext& g = *GImGui;
         constexpr float ANIM_SPEED = 0.08f;
-        if (g.LastActiveId == g.CurrentWindow->GetID(str_id))// && g.LastActiveIdTimer < ANIM_SPEED)
+        if (g.LastActiveId == g.CurrentWindow->GetID(label))
         {
 	        const float tAnim = ImSaturate(g.LastActiveIdTimer / ANIM_SPEED);
             t = *v ? (tAnim) : (1.0f - tAnim);
@@ -293,7 +291,10 @@ namespace ImGui
 
         drawList->AddRectFilled(p, ImVec2(p.x + width, p.y + height), colBg, height * 0.5f);
         drawList->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, colCircle);
-        drawList->AddText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, ImColor(255, 255, 255), str_id);
+        //drawList->AddText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, ImColor(255, 255, 255), label);
+		RenderText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, label);
+
+		return *v;
     }
 
 #pragma region Width Components
@@ -330,6 +331,11 @@ namespace ImGui
 	{
 		SetNextItemWidth(150);
 		return InputInt(label, v, step, step_fast, flags);
+	}
+
+	__inline bool WToggle(const char* label, bool* v)
+	{
+		return ToggleButton(label, v);
 	}
 #pragma endregion
 }

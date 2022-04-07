@@ -3,6 +3,7 @@
 #include "../../SDK/SDK.h"
 
 class CMenu {
+	void SectionTitle(const char* title, float yOffset);
 	void DrawMenu();
 	void DrawTabbar();
 	void MenuAimbot();
@@ -50,10 +51,19 @@ public:
 	ImColor Accent = { 255, 101, 101 };
 	ImColor AccentDark = { 217, 87, 87 };
 	ImColor Background = { 23, 23, 23, 250 };	// Title bar
-	ImColor BackgroundLight = { 51, 51, 56 };	// Tab bar
-	ImColor BackgroundDark = { 31, 31, 31 };	// Background
-	ImColor TextDark = { 13, 13, 13 };
+	ImColor BackgroundLight = { 51, 51, 56 };		// Tab bar
+	ImColor BackgroundDark = { 31, 31, 31 };		// Background
 	ImColor TextLight = { 240, 240, 240 };
+
+	// Fonts
+	ImFont* SegoeLight = nullptr;	// 16px
+	ImFont* Segoe = nullptr;		// 16px
+	ImFont* SegoeBold = nullptr;	// 16px
+
+	ImFont* SectionFont = nullptr;	// 18px
+	ImFont* TabFont = nullptr;		// 22px
+	ImFont* TitleFont = nullptr;	// 26px
+	ImFont* IconFont = nullptr;		// 16px
 };
 
 inline CMenu g_Menu;
