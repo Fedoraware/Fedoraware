@@ -169,26 +169,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				}
 			}
 		}
-	}
 
-	UpdateAntiAFK(pCmd);
-
-	if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var)
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var)
 		{
 			if (!pLocal->IsAlive() && g_GlobalInfo.m_nShifted)
 			{
 				g_GlobalInfo.m_bRecharging = true;
 			}
 		}
-	}
 
-	if (Vars::Misc::CL_Move::AutoRecharge.m_Var)
-	{
-		if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift)
+		if (Vars::Misc::CL_Move::AutoRecharge.m_Var)
 		{
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift)
 			{
 				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons == 0))
 				{
@@ -197,6 +189,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 	}
+
+	UpdateAntiAFK(pCmd);
 
 	if (Vars::Misc::Roll.m_Var && pCmd->buttons & IN_DUCK)
 	{

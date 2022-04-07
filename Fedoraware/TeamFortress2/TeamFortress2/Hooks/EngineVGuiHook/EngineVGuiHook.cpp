@@ -235,6 +235,14 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						}
 					}
 
+					if (const auto& pLocal = g_EntityCache.m_pLocal) {
+						int tickbase = pLocal->GetTickBase();
+						if (tickbase) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
+							yoffset += 20;
+						}
+					}
+
 					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 					{
 						Vec3 CollideableMins = Projectile->GetCollideableMins();
