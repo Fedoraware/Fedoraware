@@ -1643,6 +1643,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 						ImVec2 widget_pos = ImGui::GetCursorScreenPos();
 						if (widget_pos.y - winPos.y > 70 && widget_pos.y < winPos.y + winSize.y - 24)  ImGui::GradientRect(fgDrawList, &normal, widget_pos, ImGui::GetContentRegionMax().x - 12, 3);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+						ImGui::Checkbox("Accurate Movement", &Vars::Misc::AccurateMovement.m_Var); HelpMarker("Will stop you from sliding once you stop pressing movement buttons");
 						ImGui::Checkbox("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 						ImGui::Checkbox("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 						if (Vars::Misc::AutoJump.m_Var)

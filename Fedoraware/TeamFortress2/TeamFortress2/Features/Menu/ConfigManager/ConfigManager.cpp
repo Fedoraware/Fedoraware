@@ -644,6 +644,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Misc
 		{
+			SAVE_VAR(Vars::Misc::AccurateMovement);
 			SAVE_VAR(Vars::Misc::AutoJump);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
@@ -1342,6 +1343,7 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Misc
 		{
+			LOAD_VAR(Vars::Misc::AccurateMovement);
 			LOAD_VAR(Vars::Misc::AutoJump);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
