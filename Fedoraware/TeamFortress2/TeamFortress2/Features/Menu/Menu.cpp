@@ -780,7 +780,119 @@ void CMenu::MenuVisuals()
 	// Visuals: Font
 	case VisualsTab::Font:
 	{
+		if (BeginTable("VisualsWorldTable", 3))
+		{
+			static std::vector fontFlagNames { "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
+			static std::vector fontFlagValues {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
 
+			/* Column 1 */
+			TableNextColumn();
+			{
+				SectionTitle("ESP Font");
+				WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
+				WInputInt("Font height###espfontheight", &Vars::Fonts::FONT_ESP::nTall.m_Var);
+				WInputInt("Font weight###espfontweight", &Vars::Fonts::FONT_ESP::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP::nFlags.m_Var, "Font flags###FONT_ESP");
+
+				SectionTitle("Name Font", 20);
+				WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
+				WInputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
+				WInputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var, "Font flags###FONT_ESP_NAME");
+			}
+
+			/* Column 2 */
+			TableNextColumn();
+			{
+				SectionTitle("Condition Font");
+				WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
+				WInputInt("Font height###espfontcondheight", &Vars::Fonts::FONT_ESP_COND::nTall.m_Var);
+				WInputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_ESP_COND::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_COND::nFlags.m_Var, "Font flags###FONT_ESP_COND");
+
+				SectionTitle("Pickup Font", 20);
+				WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
+				WInputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
+				WInputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var, "Font flags###FONT_ESP_PICKUPS");
+			}
+
+			/* Column 3 */
+			TableNextColumn();
+			{
+				SectionTitle("Menu Font");
+				WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
+				WInputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.m_Var);
+				WInputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_MENU::nFlags.m_Var, "Font flags###FONT_MENU");
+
+				SectionTitle("Indicator Font", 20);
+				WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
+				WInputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
+				WInputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
+				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_INDICATORS::nFlags.m_Var, "Font flags###FONT_INDICATORS");
+				
+				if (Button("Apply settings###fontapply"))
+				{
+					const Font_t fontEsp = {
+						0x0,
+						Vars::Fonts::FONT_ESP::szName.c_str(),
+						Vars::Fonts::FONT_ESP::nTall.m_Var,
+						Vars::Fonts::FONT_ESP::nWeight.m_Var,
+						Vars::Fonts::FONT_ESP::nFlags.m_Var
+					};
+					const Font_t fontEspName = {
+						0x0,
+						Vars::Fonts::FONT_ESP_NAME::szName.c_str(),
+						Vars::Fonts::FONT_ESP_NAME::nTall.m_Var,
+						Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var,
+						Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var
+					};
+					const Font_t fontEspCond = {
+						0x0,
+						Vars::Fonts::FONT_ESP_COND::szName.c_str(),
+						Vars::Fonts::FONT_ESP_COND::nTall.m_Var,
+						Vars::Fonts::FONT_ESP_COND::nWeight.m_Var,
+						Vars::Fonts::FONT_ESP_COND::nFlags.m_Var
+					};
+					const Font_t fontIndicator = {
+						0x0,
+						Vars::Fonts::FONT_INDICATORS::szName.c_str(),
+						Vars::Fonts::FONT_INDICATORS::nTall.m_Var,
+						Vars::Fonts::FONT_INDICATORS::nWeight.m_Var,
+						Vars::Fonts::FONT_INDICATORS::nFlags.m_Var
+					};
+					const Font_t fontEspPickups = {
+						0x0,
+						Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(),
+						Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var,
+						Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var,
+						Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var
+					};
+					const Font_t fontMenu = {
+						0x0,
+						Vars::Fonts::FONT_MENU::szName.c_str(),
+						Vars::Fonts::FONT_MENU::nTall.m_Var,
+						Vars::Fonts::FONT_MENU::nWeight.m_Var,
+						Vars::Fonts::FONT_MENU::nFlags.m_Var
+					};
+
+					const std::vector <Font_t> fonts = {
+						fontEsp,
+						fontEspName,
+						fontEspCond,
+						fontEspPickups,
+						fontMenu,
+						fontIndicator,
+						{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
+					};
+
+					g_Draw.RemakeFonts(fonts);
+				}
+			}
+
+			EndTable();
+		}
 		break;
 	}
 
@@ -853,60 +965,9 @@ void CMenu::MenuVisuals()
 
 					// TODO: Reward this ugly code
 					{
-						static const char* flags[]{ "FBEAM_STARTENTITY", "FBEAM_ENDENTITY","FBEAM_FADEIN","FBEAM_FADEOUT","FBEAM_SINENOISE","FBEAM_SOLID","FBEAM_SHADEIN","FBEAM_SHADEOUT","FBEAM_ONLYNOISEONCE","FBEAM_NOTILE","FBEAM_USE_HITBOXES","FBEAM_STARTVISIBLE","FBEAM_ENDVISIBLE","FBEAM_ISACTIVE","FBEAM_FOREVER","FBEAM_HALOBEAM","FBEAM_REVERSED", };
-						static int fontflags[]{ 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
-						static bool flagbools[17]{
-							(BEAMS::Flags.m_Var & 0x00000001) != 0,
-							(BEAMS::Flags.m_Var & 0x00000002) != 0,
-							(BEAMS::Flags.m_Var & 0x00000004) != 0,
-							(BEAMS::Flags.m_Var & 0x00000008) != 0,
-							(BEAMS::Flags.m_Var & 0x00000010) != 0,
-							(BEAMS::Flags.m_Var & 0x00000020) != 0,
-							(BEAMS::Flags.m_Var & 0x00000040) != 0,
-							(BEAMS::Flags.m_Var & 0x00000080) != 0,
-							(BEAMS::Flags.m_Var & 0x00000100) != 0,
-							(BEAMS::Flags.m_Var & 0x00000200) != 0,
-							(BEAMS::Flags.m_Var & 0x00000400) != 0,
-							(BEAMS::Flags.m_Var & 0x00000800) != 0,
-							(BEAMS::Flags.m_Var & 0x00001000) != 0,
-							(BEAMS::Flags.m_Var & 0x00002000) != 0,
-							(BEAMS::Flags.m_Var & 0x00004000) != 0,
-							(BEAMS::Flags.m_Var & 0x00008000) != 0,
-							(BEAMS::Flags.m_Var & 0x00010000) != 0
-						};
-						static std::string previewValue = "None";
-						std::vector < std::string > vec;
-						if (ImGui::BeginCombo("Beam flags", previewValue.c_str()))
-						{
-							previewValue = "";
-							for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
-							{
-								ImGui::Selectable(flags[i], &flagbools[i]);
-								if (flagbools[i])
-									vec.push_back(flags[i]);
-							}
-							for (size_t i = 0; i < vec.size(); i++)
-							{
-								if (vec.size() == 1)
-									previewValue += vec.at(i);
-								else if (!(i == vec.size() - 1))
-									previewValue += vec.at(i) + ",";
-								else
-									previewValue += vec.at(i);
-							}
-							ImGui::EndCombo();
-						}
-						for (size_t i = 0; i < IM_ARRAYSIZE(flags); i++)
-						{
-							if (flagbools[i])
-							{
-								BEAMS::Flags.m_Var |= fontflags[i];
-							}
-							else
-							{
-								BEAMS::Flags.m_Var &= ~fontflags[i];
-							}
-						}
+						static std::vector flagNames { "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
+						static std::vector flagValues { 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
+						MultiFlags(flagNames, flagValues, &BEAMS::Flags.m_Var, "Beam Flags###BeamFlags");
 					}
 				}
 
