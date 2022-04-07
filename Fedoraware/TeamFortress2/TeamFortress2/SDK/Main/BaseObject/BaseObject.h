@@ -8,6 +8,7 @@ public: //Netvars
 	M_DYNVARGET(Controlled, bool, this, _("DT_ObjectSentrygun"), _("m_bPlayerControlled"))
 		M_DYNVARGET(Constructing, bool, this, _("DT_BaseObject"), _("m_bBuilding"))
 		M_DYNVARGET(MiniBuilding, bool, this, _("DT_BaseObject"), _("m_bMiniBuilding"))
+		M_DYNVARGET(ObjectMode, int, this, _("DT_BaseObject"), _("m_iObjectMode"))
 		M_DYNVARGET(MapPlaced, bool, this, _("DT_BaseObject"), _("m_bWasMapPlaced"))
 		M_DYNVARGET(Sapped, bool, this, _("DT_BaseObject"), _("m_bHasSapper"))
 		M_DYNVARGET(PlasmaDisabled, bool, this, _("DT_BaseObject"), _("m_bPlasmaDisable")) //cowmangler's secondary attack I think
