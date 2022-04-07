@@ -215,7 +215,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				// debug
 				{
-					/*
+					
 					int yoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
 						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
@@ -226,6 +226,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						int weaponid = pWeapon->GetWeaponID();
 						if (weaponid) {
 							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
+							yoffset += 20;
+						}
+						int weaponindex = pWeapon->GetItemDefIndex();
+						if (weaponid) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
 							yoffset += 20;
 						}
 					}
@@ -259,7 +264,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 						}
 					}
-					*/
+					
 				}
 
 				//Current Active Aimbot FOV
@@ -278,17 +283,17 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 			};
 			OtherDraws();
-			
-			if (Vars::Visuals::Damage.m_Var)
-			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
-				{
-					if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
-					{
-						g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
-					}
-				}
-			}
+			// blocks my vision to my debug info thanks
+			//if (Vars::Visuals::Damage.m_Var)
+			//{
+			//	if (const auto& pLocal = g_EntityCache.m_pLocal)
+			//	{
+			//		if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
+			//		{
+			//			g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
+			//		}
+			//	}
+			//}
 			
 			g_Misc.BypassPure();
 			g_ESP.Run();
