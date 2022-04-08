@@ -1661,12 +1661,15 @@ void CMenu::SettingsWindow()
 				{
 					OpenPopup("Save config?");
 				}
+
 				SameLine();
 				if (Button("Load", ImVec2(61, 20)))
 				{
 					g_CFG.Load(selected.c_str());
 					selected.clear();
+					LoadStyle();
 				}
+
 				SameLine();
 				if (Button("Remove", ImVec2(62, 20)))
 				{
@@ -1676,7 +1679,8 @@ void CMenu::SettingsWindow()
 				// Save config dialog
 				if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 				{
-					Text("Do you really want to override this config?\n\n");
+					Text("Do you really want to override this config?");
+
 					Separator();
 					if (Button("Yes, override!", ImVec2(150, 0)))
 					{
@@ -1695,7 +1699,8 @@ void CMenu::SettingsWindow()
 				// Delete config dialog
 				if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 				{
-					Text("Do you really want to delete this config?\n\n");
+					Text("Do you really want to delete this config?");
+
 					Separator();
 					if (Button("Yes, remove!", ImVec2(150, 0)))
 					{
@@ -1824,10 +1829,9 @@ void CMenu::LoadStyle()
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
-		style.ScrollbarSize = 2.f;
 		style.GrabMinSize = 15.f;
-		style.ScrollbarSize = 11.f;
-		style.ScrollbarRounding = 12.f;
+		style.ScrollbarSize = 6.f;
+		style.ScrollbarRounding = 6.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);
 
 		ImVec4* colors = style.Colors;
