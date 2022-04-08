@@ -81,7 +81,7 @@ void CMenu::DrawMenu()
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
 		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar))
 		{
-			ImGui::PushFont(DefaultFont);
+			ImGui::PushFont(Verdana);
 			ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 3.f, 2.f });
 
 			switch (CurrentTab)
@@ -105,7 +105,7 @@ void CMenu::DrawMenu()
 			if (!Vars::Menu::ModernDesign)
 			{
 				const auto hintHeight = ImGui::CalcTextSize(FeatureHint.c_str()).y;
-				drawList->AddText(DefaultFont, DefaultFont->FontSize, { windowPos.x + 15, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
+				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 15, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
 			}
 		}
 
@@ -1802,7 +1802,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 	if (g_Menu.IsOpen)
 	{
-		ImGui::PushFont(DefaultFont);
+		ImGui::PushFont(Verdana);
 		DrawMenu();
 		DrawCameraWindow();
 
@@ -1925,9 +1925,9 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 
 		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F, 0 }; // Basic Latin, Latin Supplement and Cyrillic
 
-		LightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 12.0f, &fontConfig, fontRange);
-		DefaultFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 14.0f, &fontConfig, fontRange);
-		BoldFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 18.0f, &fontConfig, fontRange);
+		VerdanaSmall = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 12.0f, &fontConfig, fontRange);
+		Verdana = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 14.0f, &fontConfig, fontRange);
+		VerdanaBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 18.0f, &fontConfig, fontRange);
 
 		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 16.0f, &fontConfig, fontRange);
 		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 20.0f, &fontConfig, fontRange);

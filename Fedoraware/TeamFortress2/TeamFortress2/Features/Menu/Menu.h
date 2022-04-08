@@ -62,12 +62,12 @@ public:
 	ImColor TextLight = { 240, 240, 240 };
 
 	// Fonts
-	ImFont* LightFont = nullptr;	// 16px
-	ImFont* DefaultFont = nullptr;		// 16px
-	ImFont* BoldFont = nullptr;	// 16px
+	ImFont* VerdanaSmall = nullptr;	// 12px
+	ImFont* Verdana = nullptr;	// 14px
+	ImFont* VerdanaBold = nullptr;		// 18px
 
-	ImFont* SectionFont = nullptr;	// 18px
-	ImFont* TitleFont = nullptr;	// 26px
+	ImFont* SectionFont = nullptr;	// 16px
+	ImFont* TitleFont = nullptr;	// 20px
 	ImFont* IconFont = nullptr;		// 16px
 
 	// Gradients
