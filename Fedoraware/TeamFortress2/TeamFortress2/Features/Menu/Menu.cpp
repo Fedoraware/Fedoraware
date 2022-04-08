@@ -814,13 +814,13 @@ void CMenu::MenuVisuals()
 			if (BeginChild("VisualsFontCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("ESP Font");
-				WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
 				WInputInt("Font height###espfontheight", &Vars::Fonts::FONT_ESP::nTall.m_Var);
 				WInputInt("Font weight###espfontweight", &Vars::Fonts::FONT_ESP::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP::nFlags.m_Var, "Font flags###FONT_ESP");
 
 				SectionTitle("Name Font", 20);
-				WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
 				WInputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
 				WInputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var, "Font flags###FONT_ESP_NAME");
@@ -831,13 +831,13 @@ void CMenu::MenuVisuals()
 			if (BeginChild("VisualsFontCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Condition Font");
-				WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
 				WInputInt("Font height###espfontcondheight", &Vars::Fonts::FONT_ESP_COND::nTall.m_Var);
 				WInputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_ESP_COND::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_COND::nFlags.m_Var, "Font flags###FONT_ESP_COND");
 
 				SectionTitle("Pickup Font", 20);
-				WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
 				WInputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
 				WInputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var, "Font flags###FONT_ESP_PICKUPS");
@@ -848,13 +848,13 @@ void CMenu::MenuVisuals()
 			if (BeginChild("VisualsFontCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Menu Font");
-				WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
 				WInputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.m_Var);
 				WInputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_MENU::nFlags.m_Var, "Font flags###FONT_MENU");
 
 				SectionTitle("Indicator Font", 20);
-				WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
+				WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
 				WInputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
 				WInputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_INDICATORS::nFlags.m_Var, "Font flags###FONT_INDICATORS");

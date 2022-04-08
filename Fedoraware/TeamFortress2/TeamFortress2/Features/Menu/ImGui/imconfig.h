@@ -28,7 +28,6 @@
 
 //---- Don't define obsolete functions/enums/behaviors. Consider enabling from time to time after updating to avoid using soon-to-be obsolete function/names.
 //#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-//#define IMGUI_DISABLE_OBSOLETE_KEYIO                      // 1.87: disable legacy io.KeyMap[]+io.KeysDown[] in favor io.AddKeyEvent(). This will be folded into IMGUI_DISABLE_OBSOLETE_FUNCTIONS in a few versions.
 
 //---- Disable all of Dear ImGui or don't implement standard windows.
 // It is very strongly recommended to NOT disable the demo windows during development. Please read comments in imgui_demo.cpp.
@@ -56,7 +55,7 @@
 //#define IMGUI_USE_BGRA_PACKED_COLOR
 
 //---- Use 32-bit for ImWchar (default is 16-bit) to support unicode planes 1-16. (e.g. point beyond 0xFFFF like emoticons, dingbats, symbols, shapes, ancient languages, etc...)
-#define IMGUI_USE_WCHAR32
+//#define IMGUI_USE_WCHAR32
 
 //---- Avoid multiple STB libraries implementations, or redefine path/filenames to prioritize another version
 // By default the embedded implementations are declared static and not available outside of Dear ImGui sources files.
