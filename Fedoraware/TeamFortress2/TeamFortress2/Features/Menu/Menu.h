@@ -49,6 +49,9 @@ public:
 	float TitleHeight = 22.f;
 	float TabHeight = 30.f;
 	float SubTabHeight = 0.f;
+	float ItemWidth = 130.f;
+
+	std::string FeatureHint;
 
 	// Colors
 	ImColor Accent = { 255, 101, 101 };
@@ -59,18 +62,18 @@ public:
 	ImColor TextLight = { 240, 240, 240 };
 
 	// Fonts
-	ImFont* SegoeLight = nullptr;	// 16px
-	ImFont* Segoe = nullptr;		// 16px
-	ImFont* SegoeBold = nullptr;	// 16px
+	ImFont* LightFont = nullptr;	// 16px
+	ImFont* DefaultFont = nullptr;		// 16px
+	ImFont* BoldFont = nullptr;	// 16px
 
 	ImFont* SectionFont = nullptr;	// 18px
-	ImFont* TabFont = nullptr;		// 22px
 	ImFont* TitleFont = nullptr;	// 26px
 	ImFont* IconFont = nullptr;		// 16px
 
 	// Gradients
 	ImGradient TitleGradient;
 	ImGradient MainGradient;
+	ImGradient TabGradient;
 };
 
 inline CMenu g_Menu;

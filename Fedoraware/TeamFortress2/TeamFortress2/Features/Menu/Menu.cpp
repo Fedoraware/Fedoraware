@@ -26,9 +26,9 @@ float CMenu::GetContentHeight()
 /* The main menu */
 void CMenu::DrawMenu()
 {
-	ImGui::GetStyle().WindowMinSize = ImVec2(800, 500);
+	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
-	ImGui::SetNextWindowSize(ImVec2(1000, 600), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_Once);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
@@ -81,8 +81,8 @@ void CMenu::DrawMenu()
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
 		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar))
 		{
-			ImGui::PushFont(Segoe);
-			ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 4.f, 3.f });
+			ImGui::PushFont(DefaultFont);
+			ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 3.f, 2.f });
 
 			switch (CurrentTab)
 			{
@@ -100,6 +100,15 @@ void CMenu::DrawMenu()
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 
+		// Footer
+		{
+			if (!Vars::Menu::ModernDesign)
+			{
+				const auto hintHeight = ImGui::CalcTextSize(FeatureHint.c_str()).y;
+				drawList->AddText(DefaultFont, DefaultFont->FontSize, { windowPos.x + 15, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
+			}
+		}
+
 		// End
 		ImGui::End();
 	}
@@ -108,7 +117,7 @@ void CMenu::DrawMenu()
 
 void CMenu::DrawTabbar()
 {
-	ImGui::PushFont(TabFont);
+	ImGui::PushFont(SectionFont);
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0, 0 });
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -121,7 +130,7 @@ void CMenu::DrawTabbar()
 			CurrentTab = MenuTab::Aimbot;
 		}
 
-		if (ImGui::TabButton("Trigger", CurrentTab == MenuTab::Trigger))
+		if (ImGui::TabButton("Triggerbot", CurrentTab == MenuTab::Trigger))
 		{
 			CurrentTab = MenuTab::Trigger;
 		}
@@ -145,6 +154,7 @@ void CMenu::DrawTabbar()
 		ImGui::EndTable();
 	}
 
+	ImGui::SetCursorPosY(TabHeight);
 	if (CurrentTab == MenuTab::Visuals)
 	{
 		SubTabHeight = 30.f;
@@ -168,7 +178,7 @@ void CMenu::DrawTabbar()
 				CurrentVisualsTab = VisualsTab::World;
 			}
 
-			if (ImGui::TabButton("Font", CurrentVisualsTab == VisualsTab::Font))
+			if (ImGui::TabButton("Fonts", CurrentVisualsTab == VisualsTab::Font))
 			{
 				CurrentVisualsTab = VisualsTab::Font;
 			}
@@ -219,12 +229,12 @@ void CMenu::MenuAimbot()
 			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
-			SectionTitle("Crits", 20);
+			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (BETA)");
 			MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
-			SectionTitle("Backtrack", 20);
+			SectionTitle("Backtrack");
 			WToggle("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
 		} EndChild();
@@ -273,7 +283,7 @@ void CMenu::MenuAimbot()
 				WSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
 			}
 
-			SectionTitle("Melee", 20);
+			SectionTitle("Melee");
 			{
 				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.m_Var, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 				WCombo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.m_Var, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
@@ -304,7 +314,7 @@ void CMenu::MenuTrigger()
 			InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
 			MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var, &Vars::Triggerbot::Global::IgnoreCloaked.m_Var, &Vars::Triggerbot::Global::IgnoreFriends.m_Var }, "Choose which targets should be ignored", "Ignored targets###TriggerIgnoredTargets");
 
-			SectionTitle("Autoshoot", 20);
+			SectionTitle("Autoshoot");
 			WToggle("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
 			MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Choose which target the triggerbot should shoot at", "Trigger targets");
 			WToggle("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
@@ -324,7 +334,7 @@ void CMenu::MenuTrigger()
 			WToggle("Ignore razorback", &Vars::Triggerbot::Stab::IgnRazor.m_Var); HelpMarker("Will not attempt to backstab snipers wearing the razorback");
 			WSlider("Stab range###StabRange", &Vars::Triggerbot::Stab::Range.m_Var, 0.0f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The range at which auto backstab will attempt to stab");
 
-			SectionTitle("Auto Detonate", 20);
+			SectionTitle("Auto Detonate");
 			WToggle("Autodetonate###TriggerDet", &Vars::Triggerbot::Detonate::Active.m_Var);
 			WToggle("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs when a player is in range");
 			WToggle("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares when a player is in range");
@@ -340,7 +350,7 @@ void CMenu::MenuTrigger()
 			WToggle("Rage airblast###TriggerAirRage", &Vars::Triggerbot::Blast::Rage.m_Var); HelpMarker("Will airblast whenever possible, regardless of FoV");
 			WToggle("Silent###triggerblastsilent", &Vars::Triggerbot::Blast::Silent.m_Var); HelpMarker("Aim changes made by the rage mode setting aren't visible");
 
-			SectionTitle("Autouber", 20);
+			SectionTitle("Autouber");
 			WToggle("Autouber###Triggeruber", &Vars::Triggerbot::Uber::Active.m_Var); HelpMarker("Auto uber master switch");
 			WToggle("Only uber friends", &Vars::Triggerbot::Uber::OnlyFriends.m_Var); HelpMarker("Auto uber will only activate if healing steam friends");
 			WToggle("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
@@ -383,7 +393,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
 				}
 
-				SectionTitle("Player ESP", 20);
+				SectionTitle("Player ESP");
 				WToggle("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
 				WToggle("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
 				WToggle("Custom Name Color", &Vars::ESP::Players::NameC.m_Var); HelpMarker("Custom color for name esp");
@@ -568,7 +578,7 @@ void CMenu::MenuVisuals()
 				WSlider("Hands glow amount", &Vars::Chams::DME::HandsGlowAmount.m_Var, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 				WSlider("Weapon glow amount", &Vars::Chams::DME::WeaponGlowAmount.m_Var, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-				SectionTitle("Backtrack chams", 20);
+				SectionTitle("Backtrack chams");
 				WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.m_Var); HelpMarker("Draws chams to show where a player is");
 				ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);
 				WToggle("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.m_Var); HelpMarker("Only draws the last tick (can save FPS)");
@@ -587,7 +597,7 @@ void CMenu::MenuVisuals()
 				WCombo("Backtrack material", &Vars::Backtrack::BtChams::Material.m_Var, backtrackMaterial);
 				WToggle("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.m_Var); HelpMarker("Draws them through walls");
 
-				SectionTitle("Fakelag chams", 20);
+				SectionTitle("Fakelag chams");
 				WToggle("Fakelag chams", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Draws chams to show your fakelag position");
 				ColorPickerL("Fakelag colour", Vars::Misc::CL_Move::FLGChams::FakelagColor);
 				WCombo("Fakelag material", &Vars::Misc::CL_Move::FLGChams::Material.m_Var, backtrackMaterial);
@@ -602,7 +612,7 @@ void CMenu::MenuVisuals()
 				WToggle("Stencil glow", &Vars::Glow::Main::Stencil.m_Var);
 				if (!Vars::Glow::Main::Stencil.m_Var) { WSlider("Glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); }
 
-				SectionTitle("Player Glow", 20);
+				SectionTitle("Player Glow");
 				WToggle("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.m_Var); HelpMarker("Player glow master switch");
 				WToggle("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.m_Var); HelpMarker("Draw glow on the local player");
 				WToggle("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.m_Var); HelpMarker("Homosapien");
@@ -817,7 +827,7 @@ void CMenu::MenuVisuals()
 				WInputInt("Font weight###espfontweight", &Vars::Fonts::FONT_ESP::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP::nFlags.m_Var, "Font flags###FONT_ESP");
 
-				SectionTitle("Name Font", 20);
+				SectionTitle("Name Font");
 				WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
 				WInputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
 				WInputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var);
@@ -834,7 +844,7 @@ void CMenu::MenuVisuals()
 				WInputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_ESP_COND::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_COND::nFlags.m_Var, "Font flags###FONT_ESP_COND");
 
-				SectionTitle("Pickup Font", 20);
+				SectionTitle("Pickup Font");
 				WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
 				WInputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
 				WInputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var);
@@ -851,7 +861,7 @@ void CMenu::MenuVisuals()
 				WInputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_MENU::nFlags.m_Var, "Font flags###FONT_MENU");
 
-				SectionTitle("Indicator Font", 20);
+				SectionTitle("Indicator Font");
 				WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
 				WInputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
 				WInputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
@@ -966,10 +976,10 @@ void CMenu::MenuVisuals()
 				ColorPickerL("Hitbox matrix edge colour", Colors::HitboxEdge);
 				WToggle("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.m_Var); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 				WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.m_Var, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-
 				WCombo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, { "Off", "Draggable", "Static", "Static + Avatars" });
+				WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
 
-				SectionTitle("BEAMS (I love beams)", 20);
+				SectionTitle("BEAMS (I love beams)");
 				{
 					using namespace Vars::Visuals;
 
@@ -997,13 +1007,13 @@ void CMenu::MenuVisuals()
 					}
 				}
 
-				SectionTitle("Viewmodel Offset", 20);
+				SectionTitle("Viewmodel Offset");
 				WSlider("VM Off X", &Vars::Visuals::VMOffsets.x, -45.f, 45.f);
 				WSlider("VM Off Y", &Vars::Visuals::VMOffsets.y, -45.f, 45.f);
 				WSlider("VM Off Z", &Vars::Visuals::VMOffsets.z, -45.f, 45.f);
 				WSlider("VM Roll", &Vars::Visuals::VMRoll.m_Var, -180, 180);
 
-				SectionTitle("DT Indicator", 20);
+				SectionTitle("DT Indicator");
 				WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.m_Var, { "Off", "Default", "Nitro", "Rijin" }); HelpMarker("Which style to do the bar style");
 				ColorPickerL("DT charging right", Colors::DTBarIndicatorsCharging.endColour);
 				ColorPickerL("DT charging left", Colors::DTBarIndicatorsCharging.startColour, 1);
@@ -1022,7 +1032,7 @@ void CMenu::MenuVisuals()
 					WSlider("DT Bar width###dtBWidth", &Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var, 1, 30);
 				}
 
-				SectionTitle("Attribute Changer", 20);
+				SectionTitle("Attribute Changer");
 
 				static std::vector unuEffects{
 					"None",
@@ -1117,7 +1127,7 @@ void CMenu::MenuVisuals()
 					g_AttributeChanger.m_bLoad = true;
 				}
 
-				SectionTitle("Ragdoll effects", 20);
+				SectionTitle("Ragdoll effects");
 				WToggle("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
 				MultiCombo({ "Burning", "Electrocuted", "Become ash", "Dissolve" }, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::BecomeAsh.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var }, "Ragdoll particle effects", "Effects###RagdollEffects");
 				if (WToggle("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var))
@@ -1131,11 +1141,11 @@ void CMenu::MenuVisuals()
 				}
 				HelpMarker("Will make their ragdoll ice");
 
-				SectionTitle("Freecam", 20);
+				SectionTitle("Freecam");
 				InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);  HelpMarker("Allows you to freely move your camera when holding the key");
 				WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.m_Var, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
-				SectionTitle("Camera", 20);
+				SectionTitle("Camera");
 				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy" }); HelpMarker("What the camera should display");
 				WSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 			} EndChild();
@@ -1181,7 +1191,7 @@ void CMenu::MenuVisuals()
 				WToggle("Medal flip", &Vars::Misc::MedalFlip.m_Var); HelpMarker("Medal go spinny spinny weeeeeee");
 				WCombo("Precipitation", &Vars::Visuals::Rain.m_Var, { "Off", "Rain", "Snow" });
 
-				SectionTitle("Custom fog", 20);
+				SectionTitle("Custom fog");
 				if (WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.m_Var))
 				{
 					if (static auto fog_enable = g_Interfaces.CVars->FindVar("fog_enable"); fog_enable)
@@ -1271,7 +1281,7 @@ void CMenu::MenuVisuals()
 					}
 				}
 
-				SectionTitle("Thirdperson", 20);
+				SectionTitle("Thirdperson");
 				WToggle("Thirdperson", &Vars::Visuals::ThirdPerson.m_Var); HelpMarker("Will move your camera to be in a thirdperson view");
 				InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
 				WToggle("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.m_Var); HelpMarker("Will show your real angles on thirdperson (not what others see)");
@@ -1286,7 +1296,7 @@ void CMenu::MenuVisuals()
 				WToggle("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var);
 				InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
 
-				SectionTitle("Out of FOV arrows", 20);
+				SectionTitle("Out of FOV arrows");
 				WToggle("Active###fovar", &Vars::Visuals::OutOfFOVArrows.m_Var); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
 				WToggle("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.m_Var); HelpMarker("16 missed calls");
 				WSlider("Arrow length", &Vars::Visuals::ArrowLength.m_Var, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
@@ -1295,7 +1305,7 @@ void CMenu::MenuVisuals()
 				WSlider("Max distance", &Vars::Visuals::MaxDist.m_Var, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
 				WSlider("Min distance", &Vars::Visuals::MinDist.m_Var, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
 
-				SectionTitle("Spy Warning", 20);
+				SectionTitle("Spy Warning");
 				WToggle("Active###spywarn", &Vars::Visuals::SpyWarning.m_Var); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
 				WToggle("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.m_Var); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
 				WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.m_Var); HelpMarker("Will only alert you to visible spies");
@@ -1323,7 +1333,7 @@ void CMenu::MenuVisuals()
 				WSlider("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, "%d"); HelpMarker("The background alpha of the radar");
 				WSlider("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.m_Var, 0, 255, "%d"); HelpMarker("The line alpha of the radar");
 
-				SectionTitle("Players", 20);
+				SectionTitle("Players");
 				WCombo("Icon###radari", &Vars::Radar::Players::IconType.m_Var, { "Scoreboard", "Portraits", "Avatar" }); HelpMarker("What sort of icon to represent players with");
 				WCombo("Background###radarb", &Vars::Radar::Players::BackGroundType.m_Var, { "Off", "Rectangle", "Texture" }); HelpMarker("What sort of background to put on players on the radar");
 				WToggle("Outline###radaro", &Vars::Radar::Players::Outline.m_Var); HelpMarker("Will put an outline on players on the radar");
@@ -1395,7 +1405,7 @@ void CMenu::MenuHvH()
 			HelpMarker("High values are not recommended");
 
 			/* Section: Fakelag */
-			SectionTitle("Fakelag", 20);
+			SectionTitle("Fakelag");
 			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "None", "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
 			Vars::Misc::CL_Move::Fakelag.m_Var = Vars::Misc::CL_Move::FakelagMode.m_Var > 0;
 
@@ -1423,7 +1433,7 @@ void CMenu::MenuHvH()
 		if (BeginChild("HvHCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			/* Section: Anti Aim */
-			SectionTitle("Anti Aim", 20);
+			SectionTitle("Anti Aim");
 			WToggle("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
 			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, { "None", "Up", "Down", "Fake up", "Fake down", "Random" }); HelpMarker("Which way to look up/down");
 			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, { "None", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to look horizontally");
@@ -1443,7 +1453,7 @@ void CMenu::MenuHvH()
 			WToggle("Leg Jitter", &Vars::AntiHack::AntiAim::legjitter.m_Var); HelpMarker("Moves your legs slightly when standing still");
 
 			/* Section: Auto Peek */
-			SectionTitle("Auto Peek", 20);
+			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
 			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
 			WToggle("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
@@ -1463,7 +1473,7 @@ void CMenu::MenuMisc()
 		TableNextColumn();
 		if (BeginChild("MiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
-			SectionTitle("Movement");
+			SectionTitle("Automation");
 			WToggle("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 			WToggle("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 			if (Vars::Misc::AutoJump.m_Var)
@@ -1480,8 +1490,15 @@ void CMenu::MenuMisc()
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.m_Var); HelpMarker("Allows you to input in taunts");
 			WToggle("Taunt control", &Vars::Misc::TauntControl.m_Var); HelpMarker("Gives full control if enabled with taunt slide");
 			WCombo("Crouch speed", &Vars::Misc::Roll.m_Var, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
+			WCombo("Pick Class", &Vars::Misc::AutoJoin.m_Var, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
+			WToggle("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
+			if (Vars::Misc::RageRetry.m_Var)
+			{
+				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
+			}
+			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
 
-			SectionTitle("Votes", 20);
+			SectionTitle("Votes");
 			WToggle("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
 			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
 			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
@@ -1491,29 +1508,22 @@ void CMenu::MenuMisc()
 		TableNextColumn();
 		if (BeginChild("MiscCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
-			SectionTitle("Misc");
+			SectionTitle("Chat");
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses your");
+			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
+
+			SectionTitle("Exploits");
 			WToggle("Anti Autobalance", &Vars::Misc::AntiAutobal.m_Var); HelpMarker("Prevents auto balance by reconnecting to the server");
 			WToggle("sv_cheats Bypass", &Vars::Misc::CheatsBypass.m_Var); HelpMarker("Allows you to use some sv_cheats commands (clientside)");
-			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Noisemaker Spam", &Vars::Misc::NoisemakerSpam.m_Var); HelpMarker("Spams the noisemaker without reducing it's charges");
-			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
-			WCombo("Pick Class", &Vars::Misc::AutoJoin.m_Var, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
-			WToggle("Rage retry", &Vars::Misc::RageRetry.m_Var); HelpMarker("Will automatically reconnect when your health is low");
-			if (Vars::Misc::RageRetry.m_Var)
-			{
-				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
-			}
 			//WToggle("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
-
 			WToggle("Ping reducer", &Vars::Misc::PingReducer.m_Var); HelpMarker("Reduces your ping on the scoreboard");
 			if (Vars::Misc::PingReducer.m_Var)
 			{
 				WSlider("Target ping", &Vars::Misc::PingTarget.m_Var, 0, 200); HelpMarker("Target ping that should be reached");
 			}
-			WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
 
-			SectionTitle("Party Networking", 20);
+			SectionTitle("Party Networking");
 			WToggle("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
 			WToggle("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
@@ -1531,7 +1541,7 @@ void CMenu::MenuMisc()
 			WToggle("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.m_Var); HelpMarker("Should time since you started playing TF2 be included?");
 			WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });
 
-			SectionTitle("Steam RPC", 20);
+			SectionTitle("Steam RPC");
 			WToggle("Steam RPC", &Vars::Misc::Steam::EnableRPC.m_Var); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
 			WCombo("Match group", &Vars::Misc::Steam::MatchGroup.m_Var, { "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }); HelpMarker("Which match group should be used?");
 			WToggle("Override in menu", &Vars::Misc::Steam::OverrideMenu.m_Var); HelpMarker("Override match group to \"Main Menu\" when in main menu");
@@ -1542,39 +1552,38 @@ void CMenu::MenuMisc()
 			}
 			WInputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size");
 
-			SectionTitle("Utilities", 20);
-
-			auto a = GetColumnWidth() - 12;
-			if (Button("Full update", ImVec2(a, 20)))
+			SectionTitle("Utilities");
+			const auto btnWidth = GetWindowSize().x - 2 * GetStyle().WindowPadding.x;
+			if (Button("Full update", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
-			if (Button("Reload HUD", ImVec2(a, 20)))
+			if (Button("Reload HUD", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
-			if (Button("Restart sound", ImVec2(a, 20)))
+			if (Button("Restart sound", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
-			if (Button("Stop sound", ImVec2(a, 20)))
+			if (Button("Stop sound", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
-			if (Button("Status", ImVec2(a, 20)))
+			if (Button("Status", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("status");
-			if (Button("Ping", ImVec2(a, 20)))
+			if (Button("Ping", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
-			if (Button("Retry", ImVec2(a, 20)))
+			if (Button("Retry", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
-			if (Button("Exit", ImVec2(a, 20)))
+			if (Button("Exit", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
-			if (Button("Console", ImVec2(a, 20)))
+			if (Button("Console", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
-			if (Button("Demo playback", ImVec2(a, 20)))
+			if (Button("Demo playback", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
-			if (Button("Demo trackbar", ImVec2(a, 20)))
+			if (Button("Demo trackbar", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
-			if (Button("Itemtest", ImVec2(a, 20)))
+			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
 
-			if (Button("Unlock all achievements", ImVec2(a, 20)))
+			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
 				g_Misc.UnlockAchievements();
 			}
-			if (Button("Lock all achievements", ImVec2(a, 20)))
+			if (Button("Lock all achievements", ImVec2(btnWidth, 20)))
 			{
 				g_Misc.LockAchievements();
 			}
@@ -1793,7 +1802,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 	if (g_Menu.IsOpen)
 	{
-		ImGui::PushFont(Segoe);
+		ImGui::PushFont(DefaultFont);
 		DrawMenu();
 		DrawCameraWindow();
 
@@ -1815,7 +1824,10 @@ void CMenu::LoadStyle()
 {
 	// Style & Colors
 	{
+		ItemWidth = 120.f;
+
 		// https://raais.github.io/ImStudio/
+		AccentDark = ImColor(AccentDark.Value.x * 0.8f, AccentDark.Value.y * 0.8f, AccentDark.Value.z * 0.8f, AccentDark.Value.w);
 
 		auto& style = ImGui::GetStyle();
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
@@ -1828,7 +1840,7 @@ void CMenu::LoadStyle()
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
 		style.GrabMinSize = 15.f;
-		style.ScrollbarSize = 6.f;
+		style.ScrollbarSize = 4.f;
 		style.ScrollbarRounding = 6.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);
 
@@ -1850,7 +1862,7 @@ void CMenu::LoadStyle()
 
 		colors[ImGuiCol_SliderGrab] = Accent;
 		colors[ImGuiCol_SliderGrabActive] = AccentDark;
-		colors[ImGuiCol_ResizeGrip] = AccentDark;
+		colors[ImGuiCol_ResizeGrip] = Accent;
 		colors[ImGuiCol_ResizeGripActive] = Accent;
 		colors[ImGuiCol_ResizeGripHovered] = Accent;
 		colors[ImGuiCol_Header] = ImColor(60, 60, 60);
@@ -1860,6 +1872,8 @@ void CMenu::LoadStyle()
 		// Alternative Designs
 		if (Vars::Menu::ModernDesign)
 		{
+			ItemWidth = 150.f;
+
 			style.FrameBorderSize = 0.f;
 			style.FrameRounding = 2.f;
 			style.GrabRounding = 2.f;
@@ -1884,6 +1898,15 @@ void CMenu::LoadStyle()
 		MainGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
 		MainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
+
+	{
+		TabGradient.ClearMarks();
+		TabGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		TabGradient.AddMark(0.2f, ImColor(0, 0, 0, 0));
+		TabGradient.AddMark(0.5f, ImColor(255, 255, 255));
+		TabGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
+		TabGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+	}
 }
 
 void CMenu::Init(IDirect3DDevice9* pDevice)
@@ -1900,19 +1923,16 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		auto fontConfig = ImFontConfig();
 		fontConfig.OversampleH = 2;
 
-		auto wideFontConfig = ImFontConfig();
-		wideFontConfig.GlyphExtraSpacing = { 1.f, 0.f };
-
 		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F, 0 }; // Basic Latin, Latin Supplement and Cyrillic
-		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
-		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
-		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
 
-		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 18.0f, &wideFontConfig, fontRange);
-		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
-		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
+		LightFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 12.0f, &fontConfig, fontRange);
+		DefaultFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 14.0f, &fontConfig, fontRange);
+		BoldFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 18.0f, &fontConfig, fontRange);
 
-		constexpr ImWchar iconRange[]{ICON_MIN_MD, ICON_MAX_MD, 0};
+		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdana.ttf", 16.0f, &fontConfig, fontRange);
+		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\verdanab.ttf", 20.0f, &fontConfig, fontRange);
+
+		constexpr ImWchar iconRange[]{ ICON_MIN_MD, ICON_MAX_MD, 0 };
 		ImFontConfig iconConfig;
 		iconConfig.MergeMode = true;
 		iconConfig.PixelSnapH = true;

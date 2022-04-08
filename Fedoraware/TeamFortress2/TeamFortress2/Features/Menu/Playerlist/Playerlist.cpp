@@ -63,7 +63,7 @@ void CPlayerList::Render()
 	if (ImGui::Begin("Playerlist", &g_PlayerList.IsOpen,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
-		ImGui::PushFont(g_Menu.Segoe);
+		ImGui::PushFont(g_Menu.DefaultFont);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		const auto foregroundDrawList = ImGui::GetForegroundDrawList();
