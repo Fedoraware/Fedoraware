@@ -295,7 +295,7 @@ namespace ImGui
 	/* Inline color picker */
 	__inline bool ColorPickerL(const char* label, Color_t& color, int num = 0)
 	{
-		SameLine(GetContentRegionMax().x - 20 - num * 24);
+		SameLine(GetContentRegionMax().x - 20 - (num * 24));
 		SetNextItemWidth(20);
 		return ColorPicker(label, color);
 	}

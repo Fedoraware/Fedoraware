@@ -361,7 +361,7 @@ void CMenu::MenuVisuals()
 
 	switch (CurrentVisualsTab)
 	{
-		// Visuals: Players
+	// Visuals: Players
 	case VisualsTab::Players:
 	{
 		if (BeginTable("VisualsPlayersTable", 3))
@@ -1598,19 +1598,8 @@ void CMenu::SettingsWindow()
 
 	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
-		ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent); SameLine(); Text("Menu accent");
-		Checkbox("Alternative Design", &Vars::Menu::ModernDesign);
-		if (Button("Apply"))
-		{
-			LoadStyle();
-			if (Vars::Menu::ModernDesign)
-			{
-				auto& style = GetStyle();
-				style.FrameBorderSize = 0.f;
-				style.FrameRounding = 2.f;
-				style.GrabRounding = 2.f;
-			}
-		}
+		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
+		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 
 		Dummy({ 0, 5 });
 		static std::wstring selected = {};
@@ -1835,7 +1824,7 @@ void CMenu::LoadStyle()
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
-		style.ScrollbarSize = 3.f;
+		style.ScrollbarSize = 2.f;
 		style.GrabMinSize = 15.f;
 		style.ScrollbarSize = 11.f;
 		style.ScrollbarRounding = 12.f;
@@ -1865,6 +1854,14 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_Header] = ImColor(60, 60, 60);
 		colors[ImGuiCol_HeaderActive] = ImColor(40, 40, 40);
 		colors[ImGuiCol_HeaderHovered] = ImColor(50, 50, 50);
+
+		// Alternative Designs
+		if (Vars::Menu::ModernDesign)
+		{
+			style.FrameBorderSize = 0.f;
+			style.FrameRounding = 2.f;
+			style.GrabRounding = 2.f;
+		}
 	}
 
 	// Misc
