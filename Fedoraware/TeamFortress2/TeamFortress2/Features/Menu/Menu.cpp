@@ -18,8 +18,6 @@ constexpr int MENU_KEY = VK_INSERT;
 int unuPrimary = 0;
 int unuSecondary = 0;
 
-std::string hint = "Hello world!";
-
 float CMenu::GetContentHeight()
 {
 	return ImGui::GetWindowHeight() - (TabHeight + ImGui::GetStyle().ItemInnerSpacing.y);
