@@ -829,7 +829,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Chams::World::Ammo);
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
-			SAVE_OTHER(Vars::Menu::ModernToggles);
+			SAVE_OTHER(Vars::Menu::ModernDesign);
 		}
 
 		//Fonts
@@ -1525,7 +1525,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 
-			LOAD_OTHER(Vars::Menu::ModernToggles);
+			LOAD_OTHER(Vars::Menu::ModernDesign);
 		}
 
 		//Fonts

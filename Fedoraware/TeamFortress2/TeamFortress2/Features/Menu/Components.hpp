@@ -41,7 +41,7 @@ namespace ImGui
 		Dummy({ 0, yOffset });
 		PushFont(g_Menu.SectionFont);
 		const ImVec2 titleSize = CalcTextSize(title);
-		SameLine((GetColumnWidth()) / 2 - (titleSize.x / 2));
+		SetCursorPosX((GetWindowSize().x - titleSize.x) * .5f);
 		Text(title);
 		PopFont();
 
@@ -384,8 +384,8 @@ namespace ImGui
 
 	__inline bool WToggle(const char* label, bool* v)
 	{
-		bool result = false;
-		if (Vars::Menu::ModernToggles)
+		bool result;
+		if (Vars::Menu::ModernDesign)
 		{
 			result = ToggleButton(label, v);
 		} else

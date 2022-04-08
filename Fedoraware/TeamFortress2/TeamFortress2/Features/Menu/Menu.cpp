@@ -18,6 +18,13 @@ constexpr int MENU_KEY = VK_INSERT;
 int unuPrimary = 0;
 int unuSecondary = 0;
 
+std::string hint = "Hello world!";
+
+float CMenu::GetContentHeight()
+{
+	return ImGui::GetWindowHeight() - (TabHeight + ImGui::GetStyle().ItemInnerSpacing.y);
+}
+
 /* The main menu */
 void CMenu::DrawMenu()
 {
@@ -63,23 +70,22 @@ void CMenu::DrawMenu()
 		// Tabbar
 		ImGui::SetCursorPos({ 0, TitleHeight });
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundLight.Value);
-		if (TabHeight > 5.f)
+		if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight + SubTabHeight }))
 		{
-			if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight + SubTabHeight }))
-			{
-				DrawTabbar();
-			}
-			ImGui::EndChild();
+			DrawTabbar();
 		}
+		ImGui::EndChild();
 		ImGui::PopStyleColor();
 
 		// Main content
 		ImGui::SetCursorPos({ 0, TitleHeight + TabHeight + SubTabHeight });
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 10.f });
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
-		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding))
+		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar))
 		{
 			ImGui::PushFont(Segoe);
+			ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 4.f, 3.f });
+
 			switch (CurrentTab)
 			{
 			case MenuTab::Aimbot: { MenuAimbot(); break; }
@@ -89,6 +95,7 @@ void CMenu::DrawMenu()
 			case MenuTab::Misc: { MenuMisc(); break; }
 			}
 
+			ImGui::PopStyleVar();
 			ImGui::PopFont();
 		}
 		ImGui::EndChild();
@@ -190,14 +197,17 @@ void CMenu::DrawTabbar()
 	ImGui::PopFont();
 }
 
+#pragma region Tabs
 /* Tab: Aimbot */
 void CMenu::MenuAimbot()
 {
 	using namespace ImGui;
+	
 	if (BeginTable("AimbotTable", 3))
 	{
 		/* Column 1 */
 		TableNextColumn();
+		if (BeginChild("AimbotCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Global");
 
@@ -219,10 +229,11 @@ void CMenu::MenuAimbot()
 			SectionTitle("Backtrack", 20);
 			WToggle("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
-		}
+		} EndChild();
 
 		/* Column 2 */
 		TableNextColumn();
+		if (BeginChild("AimbotCol2", { GetColumnWidth(), GetContentHeight()}, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Hitscan");
 			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
@@ -238,10 +249,11 @@ void CMenu::MenuAimbot()
 			WToggle("Auto scope", &Vars::Aimbot::Hitscan::AutoScope.m_Var); HelpMarker("The aimbot will automatically scope in to shoot");
 			WToggle("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.m_Var); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
 			WToggle("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.m_Var); HelpMarker("The aimbot will aim for body when damage is lethal to it");
-		}
+		} EndChild();
 
 		/* Column 3 */
 		TableNextColumn();
+		if (BeginChild("AimbotCol3", { GetColumnWidth(), GetContentHeight()}, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Projectile");
 			WToggle("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
@@ -272,7 +284,7 @@ void CMenu::MenuAimbot()
 			WToggle("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
 			WToggle("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 			WToggle("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
-		}
+		} EndChild();
 
 		/* End */
 		EndTable();
@@ -287,6 +299,7 @@ void CMenu::MenuTrigger()
 	{
 		/* Column 1 */
 		TableNextColumn();
+		if (BeginChild("TriggerCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Global");
 			WToggle("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
@@ -299,10 +312,11 @@ void CMenu::MenuTrigger()
 			WToggle("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
 			WToggle("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
 			WSlider("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
-		}
+		} EndChild();
 
 		/* Column 2 */
 		TableNextColumn();
+		if (BeginChild("TriggerCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Autostab");
 			WToggle("Auto backstab###TriggerAutostab", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
@@ -317,10 +331,11 @@ void CMenu::MenuTrigger()
 			WToggle("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.m_Var); HelpMarker("Detonate sticky bombs when a player is in range");
 			WToggle("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.m_Var); HelpMarker("Detonate detonator flares when a player is in range");
 			WSlider("Detonation radius###TriggerDetRadius", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The radius around the projectile that it will detonate if a player is in");
-		}
+		} EndChild();
 
 		/* Column 3 */
 		TableNextColumn();
+		if (BeginChild("TriggerCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Autoblast");
 			WToggle("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
@@ -333,7 +348,7 @@ void CMenu::MenuTrigger()
 			WToggle("Preserve self", &Vars::Triggerbot::Uber::PopLocal.m_Var); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
 			WToggle("Vaccinator resistances", &Vars::Triggerbot::Uber::AutoVacc.m_Var); HelpMarker("Auto uber will automatically find the best resistance and pop when needed (This doesn't work properly)");
 			WSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, "%.0f%%", 1.0f); HelpMarker("The amount of health the heal target must be below to actiavte");
-		}
+		} EndChild();
 
 		EndTable();
 	}
@@ -353,6 +368,7 @@ void CMenu::MenuVisuals()
 		{
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsPlayersCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("ESP Main");
 				WToggle("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
@@ -406,10 +422,11 @@ void CMenu::MenuVisuals()
 				WToggle("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.m_Var); HelpMarker("Will make players emit a dynamic light around them");
 				WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
 				WSlider("ESP alpha###PlayerESPAlpha", &Vars::ESP::Players::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsPlayersCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Chams Main");
 				WToggle("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.m_Var); HelpMarker("Chams master switch");
@@ -576,10 +593,11 @@ void CMenu::MenuVisuals()
 				WToggle("Fakelag chams", &Vars::Misc::CL_Move::FakelagIndicator.m_Var); HelpMarker("Draws chams to show your fakelag position");
 				ColorPickerL("Fakelag colour", Vars::Misc::CL_Move::FLGChams::FakelagColor);
 				WCombo("Fakelag material", &Vars::Misc::CL_Move::FLGChams::Material.m_Var, backtrackMaterial);
-			}
+			} EndChild();
 
 			/* Column 3 */
 			TableNextColumn();
+			if (BeginChild("VisualsPlayersCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Glow Main");
 				WToggle("Glow", &Vars::Glow::Main::Active.m_Var);
@@ -595,7 +613,7 @@ void CMenu::MenuVisuals()
 				WToggle("Weapon glow###PlayerWeaponGlow", &Vars::Glow::Players::Weapons.m_Var); HelpMarker("Will draw glow on player weapons");
 				WSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 				WCombo("Glow colour###GlowColour", &Vars::Glow::Players::Color.m_Var, { "Team", "Health" }); HelpMarker("Which colour the glow will draw");
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -609,6 +627,7 @@ void CMenu::MenuVisuals()
 		{
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsBuildingsCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Building ESP");
 				WToggle("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
@@ -625,10 +644,11 @@ void CMenu::MenuVisuals()
 				WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
 				WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.m_Var, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
 				WSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the ESP should be");
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsBuildingsCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				static std::vector chamOptions{
 						"Local",
@@ -683,17 +703,18 @@ void CMenu::MenuVisuals()
 					break;
 				}
 				}
-			}
+			} EndChild();
 
 			/* Column 3 */
 			TableNextColumn();
+			if (BeginChild("VisualsBuildingsCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Building Glow");
 				WToggle("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.m_Var);
 				WToggle("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.m_Var);
 				WSlider("Glow alpha###BuildingGlowAlpha", &Vars::Glow::Buildings::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 				WCombo("Glow colour###GlowColourBuildings", &Vars::Glow::Buildings::Color.m_Var, { "Team", "Health" });
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -707,6 +728,7 @@ void CMenu::MenuVisuals()
 		{
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsWorldCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("World ESP");
 				WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
@@ -715,10 +737,11 @@ void CMenu::MenuVisuals()
 				WToggle("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw chams on ammo packs");
 				ColorPickerL("Ammo pack colour", Colors::Ammo); HelpMarker("Color for ammo pack ESP");
 				WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsWorldCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("World Chams");
 				WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.m_Var);
@@ -759,10 +782,11 @@ void CMenu::MenuVisuals()
 
 				}
 				}
-			}
+			} EndChild();
 
 			/* Column 3 */
 			TableNextColumn();
+			if (BeginChild("VisualsWorldCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("World Glow");
 				WToggle("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
@@ -770,7 +794,7 @@ void CMenu::MenuVisuals()
 				WToggle("Ammo packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
 				WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, { "Off", "All", "Only enemies" });
 				WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -780,13 +804,14 @@ void CMenu::MenuVisuals()
 	// Visuals: Font
 	case VisualsTab::Font:
 	{
-		if (BeginTable("VisualsWorldTable", 3))
+		if (BeginTable("VisualsFontTable", 3))
 		{
 			static std::vector fontFlagNames { "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
 			static std::vector fontFlagValues {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
 
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsFontCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("ESP Font");
 				WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
@@ -799,10 +824,11 @@ void CMenu::MenuVisuals()
 				WInputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.m_Var);
 				WInputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var, "Font flags###FONT_ESP_NAME");
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsFontCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Condition Font");
 				WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
@@ -815,10 +841,11 @@ void CMenu::MenuVisuals()
 				WInputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var);
 				WInputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var, "Font flags###FONT_ESP_PICKUPS");
-			}
+			} EndChild();
 
 			/* Column 3 */
 			TableNextColumn();
+			if (BeginChild("VisualsFontCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Menu Font");
 				WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName, g_Interfaces.Engine->IsInGame() ? ImGuiInputTextFlags_ReadOnly : 0);
@@ -889,7 +916,7 @@ void CMenu::MenuVisuals()
 
 					g_Draw.RemakeFonts(fonts);
 				}
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -903,6 +930,7 @@ void CMenu::MenuVisuals()
 		{
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsMiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("World & UI");
 				WSlider("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
@@ -1112,10 +1140,11 @@ void CMenu::MenuVisuals()
 				SectionTitle("Camera", 20);
 				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy" }); HelpMarker("What the camera should display");
 				WSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsMiscCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Skybox & Textures");
 				static std::vector skyNames{
@@ -1274,7 +1303,7 @@ void CMenu::MenuVisuals()
 				WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.m_Var); HelpMarker("Will only alert you to visible spies");
 				WToggle("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.m_Var); HelpMarker("Will ignore spies who are on your friends list");
 				WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.m_Var, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -1287,6 +1316,7 @@ void CMenu::MenuVisuals()
 		{
 			/* Column 1 */
 			TableNextColumn();
+			if (BeginChild("VisualsRadarCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Main");
 				WToggle("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var); HelpMarker("Will show nearby things relative to your player");
@@ -1303,10 +1333,11 @@ void CMenu::MenuVisuals()
 				WCombo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.m_Var, { "Off", "All", "Keep friends" }); HelpMarker("Which cloaked players the radar will ignore drawing on");
 				WToggle("Health bar###radarhealt", &Vars::Radar::Players::Health.m_Var); HelpMarker("Will show players health on the radar");
 				WSlider("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.m_Var, 12, 30, "%d"); HelpMarker("The icon size of players on the radar");
-			}
+			} EndChild();
 
 			/* Column 2 */
 			TableNextColumn();
+			if (BeginChild("VisualsRadarCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("Building");
 				WToggle("Show buildings###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
@@ -1314,17 +1345,18 @@ void CMenu::MenuVisuals()
 				WToggle("Ignore team###radarbuildingsb", &Vars::Radar::Buildings::IgnoreTeam.m_Var);
 				WToggle("Health bar###radarbuildingsc", &Vars::Radar::Buildings::Health.m_Var);
 				WSlider("Icon size###buildingsizeiconradar", &Vars::Radar::Buildings::IconSize.m_Var, 12, 30, "%d");
-			}
+			} EndChild();
 
 			/* Column 3 */
 			TableNextColumn();
+			if (BeginChild("VisualsRadarCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 			{
 				SectionTitle("World");
 				WToggle("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
 				WToggle("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
 				WToggle("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
 				WSlider("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d");
-			}
+			} EndChild();
 
 			EndTable();
 		}
@@ -1337,10 +1369,11 @@ void CMenu::MenuVisuals()
 void CMenu::MenuHvH()
 {
 	using namespace ImGui;
-	if (BeginTable("HvhTable", 2))
+	if (BeginTable("HvHTable", 2))
 	{
 		/* Column 1 */
 		TableNextColumn();
+		if (BeginChild("HvHCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			/* Section: Tickbase Exploits */
 			SectionTitle("Tickbase Exploits");
@@ -1385,10 +1418,11 @@ void CMenu::MenuHvH()
 				WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
 				WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); HelpMarker("Minimum random fakelag value");
 			}
-		}
+		} EndChild();
 
 		/* Column 2 */
 		TableNextColumn();
+		if (BeginChild("HvHCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			/* Section: Anti Aim */
 			SectionTitle("Anti Aim", 20);
@@ -1415,7 +1449,7 @@ void CMenu::MenuHvH()
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
 			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
 			WToggle("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
-		}
+		} EndChild();
 
 		EndTable();
 	}
@@ -1429,6 +1463,7 @@ void CMenu::MenuMisc()
 	{
 		/* Column 1 */
 		TableNextColumn();
+		if (BeginChild("MiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Movement");
 			WToggle("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
@@ -1452,10 +1487,11 @@ void CMenu::MenuMisc()
 			WToggle("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
 			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
 			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
-		}
+		} EndChild();
 
 		/* Column 2 */
 		TableNextColumn();
+		if (BeginChild("MiscCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Misc");
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses your");
@@ -1484,10 +1520,11 @@ void CMenu::MenuMisc()
 			WToggle("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
 			WToggle("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
-		}
+		} EndChild();
 
 		/* Column 3 */
 		TableNextColumn();
+		if (BeginChild("MiscCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Discord RPC");
 			WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
@@ -1543,11 +1580,12 @@ void CMenu::MenuMisc()
 			{
 				g_Misc.LockAchievements();
 			}
-		}
+		} EndChild();
 
 		EndTable();
 	}
 }
+#pragma endregion
 
 /* Settings Window */
 void CMenu::SettingsWindow()
@@ -1561,7 +1599,20 @@ void CMenu::SettingsWindow()
 	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
 		ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent); SameLine(); Text("Menu accent");
-		Checkbox("Modern Toggles", &Vars::Menu::ModernToggles);
+		Checkbox("Alternative Design", &Vars::Menu::ModernDesign);
+		if (Button("Apply"))
+		{
+			LoadStyle();
+			if (Vars::Menu::ModernDesign)
+			{
+				auto& style = GetStyle();
+				style.FrameBorderSize = 0.f;
+				style.FrameRounding = 2.f;
+				style.GrabRounding = 2.f;
+			}
+		}
+
+		Dummy({ 0, 5 });
 		static std::wstring selected = {};
 		int nConfig = 0;
 
@@ -1768,46 +1819,13 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, true);
 }
 
-void CMenu::Init(IDirect3DDevice9* pDevice)
+void CMenu::LoadStyle()
 {
-	// Initialize ImGui and device
-	ImGui::CreateContext();
-	ImGui_ImplWin32_Init(FindWindowA(nullptr, "Team Fortress 2"));
-	ImGui_ImplDX9_Init(pDevice);
-
-	const auto& io = ImGui::GetIO();
-	auto& style = ImGui::GetStyle();
-
-	// Fonts
-	{
-		auto fontConfig = ImFontConfig();
-		fontConfig.OversampleH = 2;
-
-		auto wideFontConfig = ImFontConfig();
-		wideFontConfig.GlyphExtraSpacing = { 1.f, 0.f };
-
-		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F, 0 }; // Basic Latin, Latin Supplement and Cyrillic
-		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
-		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
-		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
-
-		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 18.0f, &wideFontConfig, fontRange);
-		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
-		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
-
-		constexpr ImWchar iconRange[]{ICON_MIN_MD, ICON_MAX_MD, 0};
-		ImFontConfig iconConfig;
-		iconConfig.MergeMode = true;
-		iconConfig.PixelSnapH = true;
-		IconFont = io.Fonts->AddFontFromMemoryCompressedTTF(MaterialFont_compressed_data, MaterialFont_compressed_size, 16.f, &iconConfig, iconRange);
-
-		io.Fonts->Build();
-	}
-
-	// Style
+	// Style & Colors
 	{
 		// https://raais.github.io/ImStudio/
 
+		auto& style = ImGui::GetStyle();
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
 		style.WindowMinSize = ImVec2(700, 700);
 		style.WindowPadding = ImVec2(0, 0);
@@ -1815,9 +1833,9 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
 		style.FrameBorderSize = 1.f;	// Old menu feeling
 		style.FrameRounding = 0.f;
-		style.ChildBorderSize = 0.f;
+		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
-		style.ScrollbarSize = 4.f;
+		style.ScrollbarSize = 3.f;
 		style.GrabMinSize = 15.f;
 		style.ScrollbarSize = 11.f;
 		style.ScrollbarRounding = 12.f;
@@ -1862,9 +1880,47 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	{
 		MainGradient.ClearMarks();
 		MainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		MainGradient.AddMark(0.15f, ImColor(0, 0, 0, 0));
-		MainGradient.AddMark(0.45f, Accent);
-		MainGradient.AddMark(0.75f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.2f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.5f, Accent);
+		MainGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
 		MainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
+}
+
+void CMenu::Init(IDirect3DDevice9* pDevice)
+{
+	// Initialize ImGui and device
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(FindWindowA(nullptr, "Team Fortress 2"));
+	ImGui_ImplDX9_Init(pDevice);
+
+	// Fonts
+	{
+		const auto& io = ImGui::GetIO();
+
+		auto fontConfig = ImFontConfig();
+		fontConfig.OversampleH = 2;
+
+		auto wideFontConfig = ImFontConfig();
+		wideFontConfig.GlyphExtraSpacing = { 1.f, 0.f };
+
+		constexpr ImWchar fontRange[]{ 0x0020, 0x00FF,0x0400, 0x044F, 0 }; // Basic Latin, Latin Supplement and Cyrillic
+		SegoeLight = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 16.0f, &fontConfig, fontRange);
+		Segoe = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 16.0f, &fontConfig, fontRange);
+		SegoeBold = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 16.0f, &fontConfig, fontRange);
+
+		SectionFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeui.ttf", 18.0f, &wideFontConfig, fontRange);
+		TabFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuisl.ttf", 20.0f, &fontConfig, fontRange);
+		TitleFont = io.Fonts->AddFontFromFileTTF(u8"C:\\Windows\\Fonts\\segoeuib.ttf", 22.0f, &fontConfig, fontRange);
+
+		constexpr ImWchar iconRange[]{ICON_MIN_MD, ICON_MAX_MD, 0};
+		ImFontConfig iconConfig;
+		iconConfig.MergeMode = true;
+		iconConfig.PixelSnapH = true;
+		IconFont = io.Fonts->AddFontFromMemoryCompressedTTF(MaterialFont_compressed_data, MaterialFont_compressed_size, 16.f, &iconConfig, iconRange);
+
+		io.Fonts->Build();
+	}
+
+	LoadStyle();
 }

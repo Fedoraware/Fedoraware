@@ -4,6 +4,7 @@
 #include "ImGui/imgui_color_gradient.h"
 
 class CMenu {
+	float GetContentHeight();
 	void DrawMenu();
 	void DrawTabbar();
 	void MenuAimbot();
@@ -13,6 +14,7 @@ class CMenu {
 	void MenuMisc();
 	void SettingsWindow();
 	void DrawCameraWindow();
+	void LoadStyle();
 
 	enum class MenuTab {
 		Aimbot,

@@ -39,7 +39,7 @@ namespace Vars
 		inline int InputBoxH = 14;
 		inline int InputColorBoxW = 30;
 
-		inline bool ModernToggles = false; // sexy checkboxes
+		inline bool ModernDesign = false;
 
 		namespace Colors
 		{
