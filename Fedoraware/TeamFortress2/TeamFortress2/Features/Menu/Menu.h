@@ -49,6 +49,7 @@ public:
 	float TitleHeight = 22.f;
 	float TabHeight = 30.f;
 	float SubTabHeight = 0.f;
+	float FooterHeight = 20.f;
 	float ItemWidth = 130.f;
 
 	std::string FeatureHint;
@@ -63,8 +64,8 @@ public:
 
 	// Fonts
 	ImFont* VerdanaSmall = nullptr;	// 12px
-	ImFont* Verdana = nullptr;	// 14px
-	ImFont* VerdanaBold = nullptr;		// 18px
+	ImFont* Verdana = nullptr;		// 14px
+	ImFont* VerdanaBold = nullptr;	// 18px
 
 	ImFont* SectionFont = nullptr;	// 16px
 	ImFont* TitleFont = nullptr;	// 20px

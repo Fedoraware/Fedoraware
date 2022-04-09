@@ -77,7 +77,7 @@ void CMenu::DrawMenu()
 
 		// Main content
 		ImGui::SetCursorPos({ 0, TitleHeight + TabHeight + SubTabHeight });
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 15.f, 10.f });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8.f, 10.f });
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
 		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar))
 		{
@@ -105,7 +105,7 @@ void CMenu::DrawMenu()
 			if (!Vars::Menu::ModernDesign)
 			{
 				const auto hintHeight = ImGui::CalcTextSize(FeatureHint.c_str()).y;
-				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 15, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
+				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 10, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
 			}
 		}
 
