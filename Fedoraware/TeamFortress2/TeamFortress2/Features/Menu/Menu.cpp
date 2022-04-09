@@ -23,7 +23,7 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
-	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
@@ -946,7 +946,7 @@ void CMenu::MenuVisuals()
 				ColorPickerL("World modulation colour", Colors::WorldModulation);
 				ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1);
 				ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2);
-				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }, { &Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var }, "Removals");
+				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD" }, {&Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var, &Vars::Visuals::RemoveMOTD.m_Var}, "Removals");
 				HelpMarker("Select what you want to remove");
 				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var, &Vars::Visuals::MoveSimLine.m_Var }, "Misc");
 				HelpMarker("What misc visual features should be run");
