@@ -4,7 +4,6 @@
 #include "ImGui/imgui_color_gradient.h"
 
 class CMenu {
-	float GetContentHeight();
 	void DrawMenu();
 	void DrawTabbar();
 	void MenuAimbot();
@@ -13,6 +12,7 @@ class CMenu {
 	void MenuHvH();
 	void MenuMisc();
 	void SettingsWindow();
+	void DebugMenu();
 	void DrawCameraWindow();
 	void LoadStyle();
 
@@ -37,6 +37,7 @@ class CMenu {
 	VisualsTab CurrentVisualsTab = VisualsTab::Players;
 
 	bool ShowSettings = false;
+	bool ShowDebugMenu = false;
 
 public:
 	void Render(IDirect3DDevice9* pDevice);

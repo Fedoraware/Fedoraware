@@ -65,10 +65,9 @@ void CCameraWindow::Update()
 		case 4:
 			{
 				// Teleporter camera
-				const auto Buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
-
+				const auto& buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
 				
-				for (const auto& pBuilding : Buildings)
+				for (const auto& pBuilding : buildings)
 				{
 					if (!pBuilding->IsAlive()) { continue; }
 
@@ -128,7 +127,7 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	} else {
 		// Mirror cam
 		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
-		const Vec3 camAngles = { -viewAngles.x, viewAngles.y + 180.f, viewAngles.z };
+		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
 		mirrorView.angles = camAngles;
 	}
 	mirrorView.width = ViewRect.w;

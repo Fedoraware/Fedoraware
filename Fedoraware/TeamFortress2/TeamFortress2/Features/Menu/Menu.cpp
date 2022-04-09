@@ -45,8 +45,10 @@ void CMenu::DrawMenu()
 
 		// Icons
 		{
+			float currentX = windowSize.x;
+
 			// Settings Icon
-			ImGui::SetCursorPos({ windowSize.x - 25, 0 });
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_SETTINGS))
 			{
 				ShowSettings = !ShowSettings;
@@ -54,12 +56,22 @@ void CMenu::DrawMenu()
 			ImGui::HelpMarker("Settings");
 
 			// Playerlist Icon
-			ImGui::SetCursorPos({ windowSize.x - 50, 0 });
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_PEOPLE))
 			{
 				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
 			}
 			ImGui::HelpMarker("Playerlist");
+
+			#ifdef _DEBUG
+			// Debug Menu
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_CODE))
+			{
+				ShowDebugMenu = !ShowDebugMenu;
+			}
+			ImGui::HelpMarker("Debug Menu");
+			#endif
 		}
 
 		// Tabbar
@@ -1724,6 +1736,38 @@ void CMenu::SettingsWindow()
 	PopStyleVar(2);
 }
 
+/* Debug Menu */
+void CMenu::DebugMenu()
+{
+	#ifdef _DEBUG
+	using namespace ImGui;
+	if (!ShowDebugMenu) { return; }
+
+	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 200));
+
+	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
+	{
+		const auto& pLocal = g_EntityCache.m_pLocal;
+		// Particle tester
+		if (CollapsingHeader("Particles"))
+		{
+			static std::string particleName = "ping_circle";
+
+			InputText("Particle name", &particleName);
+			if (Button("Dispatch") && pLocal != nullptr)
+			{
+				Particles::DispatchParticleEffect(particleName.c_str(), pLocal->GetAbsOrigin(), { });
+			}
+		}
+
+		End();
+	}
+
+	PopStyleVar(2);
+	#endif
+}
+
 /* Window for the camera feature */
 void CMenu::DrawCameraWindow()
 {
@@ -1794,6 +1838,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
+		DebugMenu();
 		g_PlayerList.Render();
 
 		ImGui::PopFont();
