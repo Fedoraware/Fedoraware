@@ -1474,11 +1474,13 @@ void CMenu::MenuMisc()
 		if (BeginChild("MiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
 		{
 			SectionTitle("Automation");
+			WToggle("Accurate Movement", &Vars::Misc::AccurateMovement.m_Var); HelpMarker("Will stop you from sliding once you stop pressing movement buttons");
 			WToggle("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
 			WToggle("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 			if (Vars::Misc::AutoJump.m_Var)
 			{
 				WCombo("Autostrafe", &Vars::Misc::AutoStrafe.m_Var, { "Off", "Legit", "Directional" }); HelpMarker("Will strafe for you in air automatically so that you gain speed");
+				WToggle("Duck Jump", &Vars::Misc::DuckJump.m_Var); HelpMarker("Will duck when bunnyhopping");
 			}
 			WToggle("Edge jump", &Vars::Misc::EdgeJump.m_Var); HelpMarker("Will jump at the very end of whatever platform you're on, allowing you to perfectly make longer jumps.");
 			if (Vars::Misc::EdgeJump.m_Var)
