@@ -14,8 +14,7 @@ class CPlayerList {
 public:
 	void UpdatePlayers();
 	void Render();
-
-	bool IsOpen = false;
+	
 	std::array<ListPlayer, 64> PlayerCache;
 };
 

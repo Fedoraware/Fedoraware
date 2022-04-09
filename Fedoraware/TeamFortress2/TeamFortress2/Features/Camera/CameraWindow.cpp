@@ -1,5 +1,6 @@
 #include "CameraWindow.h"
 #include "../../Hooks/ViewRenderHook/ViewRenderHook.h"
+#include "../ESP/ESP.h"
 
 void CCameraWindow::Init()
 {
@@ -59,6 +60,53 @@ void CCameraWindow::Update()
 				CanDraw = false;
 				break;
 			}
+
+		case 3:
+		case 4:
+			{
+				// Teleporter camera
+				const auto& buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
+				
+				for (const auto& pBuilding : buildings)
+				{
+					if (!pBuilding->IsAlive()) { continue; }
+
+					const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
+					const auto nType = static_cast<EBuildingType>(building->GetType());
+
+					const float distance = pLocal->GetAbsOrigin().DistTo(building->GetAbsOrigin());
+					if (distance > 260.f) { continue; }
+
+					if (nType == EBuildingType::TELEPORTER && building->GetObjectMode() == 0)
+					{
+						Vec3 tpExit;
+						if (Utils::GetTeleporterExit(building->GetOwner()->GetIndex(), &tpExit))
+						{
+							CameraAngles = g_Interfaces.Engine->GetViewAngles();
+							CameraOrigin = Vec3(tpExit.x, tpExit.y, tpExit.z + 70);
+							CanDraw = true;
+
+							if (Vars::Visuals::CameraMode.m_Var == 4)
+							{
+								Vec3 vScreen;
+								if (Utils::W2S(building->GetAbsOrigin(), vScreen))
+								{
+									const float height = Math::RemapValClamped(100.f, 0.f, distance, 100.f, 600.f);
+									const float width = Math::RemapValClamped(100.f, 0.f, distance, 80.f, 400.f);
+									ViewRect.w = width;
+									ViewRect.h = height;
+									ViewRect.x = vScreen.x - (width * 0.5);
+									ViewRect.y = vScreen.y - height;
+								} else { CanDraw = true; }
+							}
+
+							return;
+						}
+					}
+				}
+
+				CanDraw = false;
+			}
 		}
 	}
 }
@@ -79,7 +127,7 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	} else {
 		// Mirror cam
 		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
-		const Vec3 camAngles = { -viewAngles.x, viewAngles.y + 180.f, viewAngles.z };
+		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
 		mirrorView.angles = camAngles;
 	}
 	mirrorView.width = ViewRect.w;

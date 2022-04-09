@@ -282,6 +282,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Melee::RangeCheck);
 				SAVE_VAR(Vars::Aimbot::Melee::PredictSwing);
+				SAVE_VAR(Vars::Aimbot::Melee::WhipTeam);
 			}
 		}
 
@@ -830,6 +831,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
 			SAVE_OTHER(Vars::Menu::ModernDesign);
+			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
 		//Fonts
@@ -981,6 +983,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Melee::RangeCheck);
 				LOAD_VAR(Vars::Aimbot::Melee::PredictSwing);
+				LOAD_VAR(Vars::Aimbot::Melee::WhipTeam);
 			}
 		}
 
@@ -1526,6 +1529,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 
 			LOAD_OTHER(Vars::Menu::ModernDesign);
+			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
 		//Fonts

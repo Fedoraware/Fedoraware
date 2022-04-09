@@ -18,11 +18,6 @@ constexpr int MENU_KEY = VK_INSERT;
 int unuPrimary = 0;
 int unuSecondary = 0;
 
-float CMenu::GetContentHeight()
-{
-	return ImGui::GetWindowHeight() - (TabHeight + ImGui::GetStyle().ItemInnerSpacing.y);
-}
-
 /* The main menu */
 void CMenu::DrawMenu()
 {
@@ -50,19 +45,33 @@ void CMenu::DrawMenu()
 
 		// Icons
 		{
-			ImGui::SetCursorPos({ windowSize.x - 25, 0 });
+			float currentX = windowSize.x;
+
+			// Settings Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_SETTINGS))
 			{
 				ShowSettings = !ShowSettings;
 			}
 			ImGui::HelpMarker("Settings");
 
-			ImGui::SetCursorPos({ windowSize.x - 50, 0 });
+			// Playerlist Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_PEOPLE))
 			{
-				g_PlayerList.IsOpen = !g_PlayerList.IsOpen;
+				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
 			}
 			ImGui::HelpMarker("Playerlist");
+
+			#ifdef _DEBUG
+			// Debug Menu
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_CODE))
+			{
+				ShowDebugMenu = !ShowDebugMenu;
+			}
+			ImGui::HelpMarker("Debug Menu");
+			#endif
 		}
 
 		// Tabbar
@@ -214,8 +223,7 @@ void CMenu::MenuAimbot()
 	if (BeginTable("AimbotTable", 3))
 	{
 		/* Column 1 */
-		TableNextColumn();
-		if (BeginChild("AimbotCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("AimbotCol1"))
 		{
 			SectionTitle("Global");
 
@@ -225,13 +233,16 @@ void CMenu::MenuAimbot()
 			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.m_Var, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
-			MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Choose which targets the Aimbot should aim at", "Aim targets");
-			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Choose which targets should be ignored", "Ignored targets###HitscanIgnoredTargets");
+			MultiCombo({ "Players", "Buildings" }, { &Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var }, "Aim targets");
+			HelpMarker("Choose which targets the Aimbot should aim at");
+			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Ignored targets###HitscanIgnoredTargets");
+			HelpMarker("Choose which targets should be ignored");
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (BETA)");
-			MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc options for crithack", "Misc###CrithackMiscOptions");
+			MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc###CrithackMiscOptions");
+			HelpMarker("Misc options for crithack");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
 			SectionTitle("Backtrack");
@@ -240,8 +251,7 @@ void CMenu::MenuAimbot()
 		} EndChild();
 
 		/* Column 2 */
-		TableNextColumn();
-		if (BeginChild("AimbotCol2", { GetColumnWidth(), GetContentHeight()}, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("AimbotCol2"))
 		{
 			SectionTitle("Hitscan");
 			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
@@ -249,7 +259,8 @@ void CMenu::MenuAimbot()
 			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Auto" }); HelpMarker("Which hitbox the aimbot will target");
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
-			MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Choose what the aimbot should multipoint", "Multipoint");
+			MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
+			HelpMarker("Choose what the aimbot should multipoint");
 			WToggle("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
 			WToggle("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
 			WToggle("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
@@ -260,8 +271,7 @@ void CMenu::MenuAimbot()
 		} EndChild();
 
 		/* Column 3 */
-		TableNextColumn();
-		if (BeginChild("AimbotCol3", { GetColumnWidth(), GetContentHeight()}, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("AimbotCol3"))
 		{
 			SectionTitle("Projectile");
 			WToggle("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.m_Var); HelpMarker("Only target enemy closest to the crosshair");
@@ -306,25 +316,25 @@ void CMenu::MenuTrigger()
 	if (BeginTable("TriggerTable", 3))
 	{
 		/* Column 1 */
-		TableNextColumn();
-		if (BeginChild("TriggerCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("TriggerCol1"))
 		{
 			SectionTitle("Global");
 			WToggle("Triggerbot", &Vars::Triggerbot::Global::Active.m_Var); HelpMarker("Global triggerbot master switch");
 			InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
-			MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var, &Vars::Triggerbot::Global::IgnoreCloaked.m_Var, &Vars::Triggerbot::Global::IgnoreFriends.m_Var }, "Choose which targets should be ignored", "Ignored targets###TriggerIgnoredTargets");
+			MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var, &Vars::Triggerbot::Global::IgnoreCloaked.m_Var, &Vars::Triggerbot::Global::IgnoreFriends.m_Var }, "Ignored targets###TriggerIgnoredTargets");
+			HelpMarker("Choose which targets should be ignored");
 
 			SectionTitle("Autoshoot");
 			WToggle("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.m_Var); HelpMarker("Shoots if mouse is over a target");
-			MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Choose which target the triggerbot should shoot at", "Trigger targets");
+			MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var, &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var }, "Trigger targets");
+			HelpMarker("Choose which target the triggerbot should shoot at");
 			WToggle("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.m_Var); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
 			WToggle("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.m_Var); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
 			WSlider("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
 		} EndChild();
 
 		/* Column 2 */
-		TableNextColumn();
-		if (BeginChild("TriggerCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("TriggerCol2"))
 		{
 			SectionTitle("Autostab");
 			WToggle("Auto backstab###TriggerAutostab", &Vars::Triggerbot::Stab::Active.m_Var); HelpMarker("Auto backstab will attempt to backstab the target if possible");
@@ -342,8 +352,7 @@ void CMenu::MenuTrigger()
 		} EndChild();
 
 		/* Column 3 */
-		TableNextColumn();
-		if (BeginChild("TriggerCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("TriggerCol3"))
 		{
 			SectionTitle("Autoblast");
 			WToggle("Autoblast###Triggreairblast", &Vars::Triggerbot::Blast::Active.m_Var); HelpMarker("Auto airblast master switch");
@@ -375,8 +384,7 @@ void CMenu::MenuVisuals()
 		if (BeginTable("VisualsPlayersTable", 3))
 		{
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsPlayersCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsPlayersCol1"))
 			{
 				SectionTitle("ESP Main");
 				WToggle("ESP###EnableESP", &Vars::ESP::Main::Active.m_Var); HelpMarker("Global ESP master switch");
@@ -433,8 +441,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsPlayersCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsPlayersCol2"))
 			{
 				SectionTitle("Chams Main");
 				WToggle("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.m_Var); HelpMarker("Chams master switch");
@@ -452,42 +459,43 @@ void CMenu::MenuVisuals()
 
 				SectionTitle("Player Chams");
 				WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
-				MultiCombo({ "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Customize Chams", "Flags");
+				MultiCombo({ "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Flags");
+				HelpMarker("Customize Chams");
 				WCombo("Config", &currentSelected, chamOptions);
 
 				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
 				{
 				case 0:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Local.fresnelBase);
 					break;
 				}
 				case 1:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Friend.fresnelBase);
 					break;
 				}
 				case 2:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Enemy.fresnelBase);
 					break;
 				}
 				case 3:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Team.fresnelBase);
 					break;
 				}
 				case 4:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Target.fresnelBase);
 					break;
@@ -574,7 +582,8 @@ void CMenu::MenuVisuals()
 				WCombo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.m_Var, weaponProxyMaterial); HelpMarker("Puts a cool looking animated skin on your weapons");
 				WCombo("Weapon Glow", &Vars::Chams::DME::WeaponGlowOverlay.m_Var, dmeGlowMaterial);
 				ColorPickerL("Weapon glow colour", Colors::WeaponOverlay);
-				MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.m_Var, &Vars::Chams::DME::HandsOverlayRainbow.m_Var, &Vars::Chams::DME::WeaponRainbow.m_Var, &Vars::Chams::DME::WeaponOverlayRainbow.m_Var }, "Rainbow DME chams", "Rainbow DME###RainbowDMEChams");
+				MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.m_Var, &Vars::Chams::DME::HandsOverlayRainbow.m_Var, &Vars::Chams::DME::WeaponRainbow.m_Var, &Vars::Chams::DME::WeaponOverlayRainbow.m_Var }, "Rainbow DME###RainbowDMEChams");
+				HelpMarker("Rainbow DME chams");
 				WSlider("Hands glow amount", &Vars::Chams::DME::HandsGlowAmount.m_Var, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 				WSlider("Weapon glow amount", &Vars::Chams::DME::WeaponGlowAmount.m_Var, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
@@ -604,8 +613,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 3 */
-			TableNextColumn();
-			if (BeginChild("VisualsPlayersCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsPlayersCol3"))
 			{
 				SectionTitle("Glow Main");
 				WToggle("Glow", &Vars::Glow::Main::Active.m_Var);
@@ -634,8 +642,7 @@ void CMenu::MenuVisuals()
 		if (BeginTable("VisualsBuildingsTable", 3))
 		{
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsBuildingsCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsBuildingsCol1"))
 			{
 				SectionTitle("Building ESP");
 				WToggle("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
@@ -655,8 +662,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsBuildingsCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsBuildingsCol2"))
 			{
 				static std::vector chamOptions{
 						"Local",
@@ -677,35 +683,35 @@ void CMenu::MenuVisuals()
 				{
 				case 0:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Local.chamsActive, &Vars::Chams::Buildings::Local.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Local.chamsActive, &Vars::Chams::Buildings::Local.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Local.fresnelBase);
 					break;
 				}
 				case 1:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Friend.chamsActive, &Vars::Chams::Buildings::Friend.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Friend.chamsActive, &Vars::Chams::Buildings::Friend.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Friend.fresnelBase);
 					break;
 				}
 				case 2:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Enemy.chamsActive, &Vars::Chams::Buildings::Enemy.showObstructed }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Enemy.chamsActive, &Vars::Chams::Buildings::Enemy.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Enemy.fresnelBase);
 					break;
 				}
 				case 3:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Team.chamsActive, &Vars::Chams::Buildings::Team.showObstructed, }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Team.chamsActive, &Vars::Chams::Buildings::Team.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Team.fresnelBase);
 					break;
 				}
 				case 4:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Target.chamsActive, &Vars::Chams::Buildings::Target.showObstructed, }, "", "Options");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Target.chamsActive, &Vars::Chams::Buildings::Target.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Target.fresnelBase);
 					break;
@@ -714,8 +720,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 3 */
-			TableNextColumn();
-			if (BeginChild("VisualsBuildingsCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsBuildingsCol3"))
 			{
 				SectionTitle("Building Glow");
 				WToggle("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.m_Var);
@@ -735,28 +740,26 @@ void CMenu::MenuVisuals()
 		if (BeginTable("VisualsWorldTable", 3))
 		{
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsWorldCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsWorldCol1"))
 			{
 				SectionTitle("World ESP");
 				WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
-				WToggle("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
-				ColorPickerL("Health pack colour", Colors::Health); HelpMarker("Color for health pack ESP");
-				WToggle("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw chams on ammo packs");
-				ColorPickerL("Ammo pack colour", Colors::Ammo); HelpMarker("Color for ammo pack ESP");
+				WToggle("Healthpacks###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on healthpacks");
+				ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
+				WToggle("Ammopacks###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammopacks");
+				ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
 				WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsWorldCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsWorldCol2"))
 			{
 				SectionTitle("World Chams");
 				WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.m_Var);
 
 				static std::vector chamOptions{
-					"Health",
-					"Ammo",
+					"Healthpacks",
+					"Ammopacks",
 					"Projectiles"
 				};
 
@@ -768,22 +771,22 @@ void CMenu::MenuVisuals()
 				{
 				case 0:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "Options");
+					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to healthpacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Health.fresnelBase);
 					break;
 				}
 				case 1:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "Options");
+					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to ammopacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Ammo.fresnelBase);
 					break;
 				}
 				case 2:
 				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "Options");
+					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to projectiles");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Projectiles.fresnelBase);
 					WCombo("Team###WorldChamsProjectiles", &Vars::Chams::World::Projectilez.m_Var, { "All", "Enemy only" });
 					break;
@@ -793,13 +796,12 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 3 */
-			TableNextColumn();
-			if (BeginChild("VisualsWorldCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsWorldCol3"))
 			{
 				SectionTitle("World Glow");
 				WToggle("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
-				WToggle("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
-				WToggle("Ammo packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
+				WToggle("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
+				WToggle("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
 				WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, { "Off", "All", "Only enemies" });
 				WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 			} EndChild();
@@ -818,8 +820,7 @@ void CMenu::MenuVisuals()
 			static std::vector fontFlagValues {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
 
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsFontCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsFontCol1"))
 			{
 				SectionTitle("ESP Font");
 				WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
@@ -835,8 +836,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsFontCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsFontCol2"))
 			{
 				SectionTitle("Condition Font");
 				WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
@@ -852,8 +852,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 3 */
-			TableNextColumn();
-			if (BeginChild("VisualsFontCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsFontCol3"))
 			{
 				SectionTitle("Menu Font");
 				WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
@@ -937,20 +936,23 @@ void CMenu::MenuVisuals()
 		if (BeginTable("VisualsMiscTable", 2))
 		{
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsMiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsMiscCol1"))
 			{
 				SectionTitle("World & UI");
 				WSlider("Field of view", &Vars::Visuals::FieldOfView.m_Var, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
 				WCombo("Vision modifiers", &Vars::Visuals::Vision.m_Var, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
-				MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.m_Var, &Vars::Visuals::SkyModulation.m_Var, &Vars::Visuals::PropWireframe.m_Var }, "Select which types of modulation you want to enable", "Modulations");
+				MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.m_Var, &Vars::Visuals::SkyModulation.m_Var, &Vars::Visuals::PropWireframe.m_Var }, "Modulations");
+				HelpMarker("Select which types of modulation you want to enable");
 				ColorPickerL("World modulation colour", Colors::WorldModulation);
 				ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1);
 				ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2);
-				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }, { &Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var }, "Select what you want to remove", "Removals");
-				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var, &Vars::Visuals::MoveSimLine.m_Var }, "What misc visual features should be run", "Misc");
+				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }, { &Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var }, "Removals");
+				HelpMarker("Select what you want to remove");
+				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var, &Vars::Visuals::MoveSimLine.m_Var }, "Misc");
+				HelpMarker("What misc visual features should be run");
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
-				MultiCombo({ "Votes (Console)", "Votes (Text)", "Votes (Chat)", "Votes (Party)", "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Misc::VoteRevealerConsole.m_Var, &Vars::Misc::VoteRevealerText.m_Var, &Vars::Misc::VoteRevealerChat.m_Var, &Vars::Misc::VoteRevealerParty.m_Var, &Vars::Visuals::damageLoggerConsole.m_Var, &Vars::Visuals::damageLoggerText.m_Var, &Vars::Visuals::damageLoggerChat.m_Var, &Vars::Visuals::ChatInfoText.m_Var, &Vars::Visuals::ChatInfoChat.m_Var }, "What & How should events be logged", "Event Logging");
+				MultiCombo({ "Votes (Console)", "Votes (Text)", "Votes (Chat)", "Votes (Party)", "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Misc::VoteRevealerConsole.m_Var, &Vars::Misc::VoteRevealerText.m_Var, &Vars::Misc::VoteRevealerChat.m_Var, &Vars::Misc::VoteRevealerParty.m_Var, &Vars::Visuals::damageLoggerConsole.m_Var, &Vars::Visuals::damageLoggerText.m_Var, &Vars::Visuals::damageLoggerChat.m_Var, &Vars::Visuals::ChatInfoText.m_Var, &Vars::Visuals::ChatInfoChat.m_Var }, "Event Logging");
+				HelpMarker("What & How should events be logged");
 				ColorPickerL("GUI Notif Background", Colors::NotifBG);
 				ColorPickerL("GUI Notif Outline", Colors::NotifOutline, 1);
 				ColorPickerL("GUI Notif Colour", Colors::NotifText, 2);
@@ -970,7 +972,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Inner line color", Colors::NoscopeLines1);
 					ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
 				}
-				WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammo packs");
+				WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammopacks");
 				WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 				ColorPickerL("Hitbox matrix face colour", Colors::HitboxFace);
 				ColorPickerL("Hitbox matrix edge colour", Colors::HitboxEdge);
@@ -1129,7 +1131,8 @@ void CMenu::MenuVisuals()
 
 				SectionTitle("Ragdoll effects");
 				WToggle("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
-				MultiCombo({ "Burning", "Electrocuted", "Become ash", "Dissolve" }, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::BecomeAsh.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var }, "Ragdoll particle effects", "Effects###RagdollEffects");
+				MultiCombo({ "Burning", "Electrocuted", "Become ash", "Dissolve" }, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::BecomeAsh.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var }, "Effects###RagdollEffects");
+				HelpMarker("Ragdoll particle effects");
 				if (WToggle("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var))
 				{
 					Vars::Visuals::RagdollEffects::Ice.m_Var = false;
@@ -1146,13 +1149,12 @@ void CMenu::MenuVisuals()
 				WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.m_Var, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
 				SectionTitle("Camera");
-				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy" }); HelpMarker("What the camera should display");
+				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)"}); HelpMarker("What the camera should display");
 				WSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsMiscCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsMiscCol2"))
 			{
 				SectionTitle("Skybox & Textures");
 				static std::vector skyNames{
@@ -1323,8 +1325,7 @@ void CMenu::MenuVisuals()
 		if (BeginTable("VisualsRadarTable", 3))
 		{
 			/* Column 1 */
-			TableNextColumn();
-			if (BeginChild("VisualsRadarCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsRadarCol1"))
 			{
 				SectionTitle("Main");
 				WToggle("Enable Radar###RadarActive", &Vars::Radar::Main::Active.m_Var); HelpMarker("Will show nearby things relative to your player");
@@ -1344,8 +1345,7 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 2 */
-			TableNextColumn();
-			if (BeginChild("VisualsRadarCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsRadarCol2"))
 			{
 				SectionTitle("Building");
 				WToggle("Show buildings###radarbuildingsa", &Vars::Radar::Buildings::Active.m_Var);
@@ -1356,13 +1356,12 @@ void CMenu::MenuVisuals()
 			} EndChild();
 
 			/* Column 3 */
-			TableNextColumn();
-			if (BeginChild("VisualsRadarCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+			if (TableColumnChild("VisualsRadarCol3"))
 			{
 				SectionTitle("World");
 				WToggle("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
-				WToggle("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
-				WToggle("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
+				WToggle("Healthpack###radarworldda", &Vars::Radar::World::Health.m_Var);
+				WToggle("Ammopack###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
 				WSlider("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d");
 			} EndChild();
 
@@ -1380,8 +1379,7 @@ void CMenu::MenuHvH()
 	if (BeginTable("HvHTable", 2))
 	{
 		/* Column 1 */
-		TableNextColumn();
-		if (BeginChild("HvHCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("HvHCol1"))
 		{
 			/* Section: Tickbase Exploits */
 			SectionTitle("Tickbase Exploits");
@@ -1394,7 +1392,8 @@ void CMenu::MenuHvH()
 				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
 			}
 
-			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }, { &Vars::Misc::CL_Move::RechargeWhileDead.m_Var, &Vars::Misc::CL_Move::AutoRecharge.m_Var, &Vars::Misc::CL_Move::WaitForDT.m_Var, &Vars::Misc::CL_Move::AntiWarp.m_Var, &Vars::Misc::CL_Move::NotInAir.m_Var }, "Enable various features regarding tickbase exploits", "Options");
+			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }, { &Vars::Misc::CL_Move::RechargeWhileDead.m_Var, &Vars::Misc::CL_Move::AutoRecharge.m_Var, &Vars::Misc::CL_Move::WaitForDT.m_Var, &Vars::Misc::CL_Move::AntiWarp.m_Var, &Vars::Misc::CL_Move::NotInAir.m_Var }, "Options");
+			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
 			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.m_Var, 1, 24, "%d"); HelpMarker("How many ticks to shift");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.m_Var); HelpMarker("Speedhack Master Switch");
@@ -1429,8 +1428,7 @@ void CMenu::MenuHvH()
 		} EndChild();
 
 		/* Column 2 */
-		TableNextColumn();
-		if (BeginChild("HvHCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("HvHCol2"))
 		{
 			/* Section: Anti Aim */
 			SectionTitle("Anti Aim");
@@ -1470,11 +1468,12 @@ void CMenu::MenuMisc()
 	if (BeginTable("MiscTable", 3))
 	{
 		/* Column 1 */
-		TableNextColumn();
-		if (BeginChild("MiscCol1", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("MiscCol1"))
 		{
 			SectionTitle("Automation");
 			WToggle("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
+			WToggle("Quick stop", &Vars::Misc::AccurateMovement.m_Var); HelpMarker("Will stop you from sliding once you stop pressing movement buttons");
+			WToggle("Duck Jump", &Vars::Misc::DuckJump.m_Var); HelpMarker("Will duck when bhopping");
 			WToggle("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 			if (Vars::Misc::AutoJump.m_Var)
 			{
@@ -1500,13 +1499,13 @@ void CMenu::MenuMisc()
 
 			SectionTitle("Votes");
 			WToggle("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
-			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "If and where should votes be announced", "Vote announcer");
+			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "Vote announcer");
+			HelpMarker("If and where should votes be announced");
 			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
 		} EndChild();
 
 		/* Column 2 */
-		TableNextColumn();
-		if (BeginChild("MiscCol2", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("MiscCol2"))
 		{
 			SectionTitle("Chat");
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses your");
@@ -1531,8 +1530,7 @@ void CMenu::MenuMisc()
 		} EndChild();
 
 		/* Column 3 */
-		TableNextColumn();
-		if (BeginChild("MiscCol3", { GetColumnWidth(), GetContentHeight() }, !Vars::Menu::ModernDesign))
+		if (TableColumnChild("MiscCol3"))
 		{
 			SectionTitle("Discord RPC");
 			WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.m_Var); HelpMarker("Enable Discord Rich Presence");
@@ -1548,7 +1546,7 @@ void CMenu::MenuMisc()
 			WCombo("Map text", &Vars::Misc::Steam::MapText.m_Var, { "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }); HelpMarker("Which map text should be used?");
 			if (Vars::Misc::Steam::MapText.m_Var == 0)
 			{
-				WInputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); HelpMarker("For when \"Custom\" is selcted in \"Map text\". Sets custom map text.");
+				WInputText("Custom map text", &Vars::Misc::Steam::CustomText.m_Var); HelpMarker(R"(For when "Custom" is selcted in "Map text". Sets custom map text.)");
 			}
 			WInputInt("Group size", &Vars::Misc::Steam::GroupSize.m_Var); HelpMarker("Sets party size");
 
@@ -1609,7 +1607,7 @@ void CMenu::SettingsWindow()
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 
 		Dummy({ 0, 5 });
-		static std::wstring selected = {};
+		static std::wstring selected;
 		int nConfig = 0;
 
 		// Load config files
@@ -1738,6 +1736,38 @@ void CMenu::SettingsWindow()
 	PopStyleVar(2);
 }
 
+/* Debug Menu */
+void CMenu::DebugMenu()
+{
+	#ifdef _DEBUG
+	using namespace ImGui;
+	if (!ShowDebugMenu) { return; }
+
+	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 200));
+
+	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
+	{
+		const auto& pLocal = g_EntityCache.m_pLocal;
+		// Particle tester
+		if (CollapsingHeader("Particles"))
+		{
+			static std::string particleName = "ping_circle";
+
+			InputText("Particle name", &particleName);
+			if (Button("Dispatch") && pLocal != nullptr)
+			{
+				Particles::DispatchParticleEffect(particleName.c_str(), pLocal->GetAbsOrigin(), { });
+			}
+		}
+
+		End();
+	}
+
+	PopStyleVar(2);
+	#endif
+}
+
 /* Window for the camera feature */
 void CMenu::DrawCameraWindow()
 {
@@ -1808,6 +1838,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
+		DebugMenu();
 		g_PlayerList.Render();
 
 		ImGui::PopFont();
@@ -1827,7 +1858,7 @@ void CMenu::LoadStyle()
 		ItemWidth = 120.f;
 
 		// https://raais.github.io/ImStudio/
-		AccentDark = ImColor(AccentDark.Value.x * 0.8f, AccentDark.Value.y * 0.8f, AccentDark.Value.z * 0.8f, AccentDark.Value.w);
+		AccentDark = ImColor(Accent.Value.x * 0.8f, Accent.Value.y * 0.8f, Accent.Value.z * 0.8f, Accent.Value.w);
 
 		auto& style = ImGui::GetStyle();
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
