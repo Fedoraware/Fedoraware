@@ -726,6 +726,28 @@ namespace Utils
 		// Nothing found
 		return -1;
 	}
+
+	// Returns the teleporter exit of a given owner
+	__inline bool GetTeleporterExit(int ownerIdx, Vec3* out)
+	{
+		const auto& buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
+
+		for (const auto& pBuilding : buildings)
+		{
+			if (!pBuilding->IsAlive()) { continue; }
+
+			const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
+			const auto nType = static_cast<EBuildingType>(building->GetType());
+
+			if (nType == EBuildingType::TELEPORTER && building->GetObjectMode() == 1 && building->GetOwner()->GetIndex() == ownerIdx)
+			{
+				*out = building->GetAbsOrigin();
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 namespace Particles {

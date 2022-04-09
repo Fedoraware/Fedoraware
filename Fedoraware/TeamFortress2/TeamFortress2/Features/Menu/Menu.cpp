@@ -1137,7 +1137,7 @@ void CMenu::MenuVisuals()
 				WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.m_Var, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
 				SectionTitle("Camera");
-				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy" }); HelpMarker("What the camera should display");
+				WCombo("Camera mode", &Vars::Visuals::CameraMode.m_Var, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)"}); HelpMarker("What the camera should display");
 				WSlider("Camera FOV", &Vars::Visuals::CameraFOV.m_Var, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 			} EndChild();
 
@@ -1595,7 +1595,7 @@ void CMenu::SettingsWindow()
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 
 		Dummy({ 0, 5 });
-		static std::wstring selected = L"Default";
+		static std::wstring selected;
 		int nConfig = 0;
 
 		// Load config files
