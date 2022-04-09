@@ -53,14 +53,14 @@ void CPlayerList::UpdatePlayers()
 
 void CPlayerList::Render()
 {
-	if (!IsOpen) { return; }
+	if (!Vars::Menu::ShowPlayerlist) { return; }
 
 	const auto accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
-	if (ImGui::Begin("Playerlist", &g_PlayerList.IsOpen,
+	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::PushFont(g_Menu.Verdana);

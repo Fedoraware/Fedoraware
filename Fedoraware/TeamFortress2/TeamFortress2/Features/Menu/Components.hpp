@@ -55,6 +55,13 @@ namespace ImGui
 		GradientRect(&g_Menu.MainGradient, { widgetPos.x, widgetPos.y - 2 }, GetColumnWidth(), 3);
 	}
 
+	__inline bool TableColumnChild(const char* str_id)
+	{
+		TableNextColumn();
+		float contentHeight = GetWindowHeight() - (g_Menu.TabHeight + GetStyle().ItemInnerSpacing.y);
+		return BeginChild(str_id, { GetColumnWidth(), contentHeight }, !Vars::Menu::ModernDesign);
+	}
+
 	__inline bool SidebarButton(const char* label, bool active = false)
 	{
 		if (active) { PushStyleColor(ImGuiCol_Button, ImColor(38, 38, 38).Value); }
@@ -221,7 +228,7 @@ namespace ImGui
 	}
 
 	/* Combobox with multiple selectable items */
-	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options, const std::string& description,
+	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options,
 	                         const std::string& comboName) {
 		if (titles.size() != options.size()) { return; }
 		
@@ -244,8 +251,6 @@ namespace ImGui
 			EndCombo();
 		}
 		PopItemWidth();
-
-		HelpMarker(description.c_str());
 	}
 	
 	__inline void MultiFlags(std::vector<const char*> flagNames, static std::vector<int> flagValues, int* flagVar, const std::string& comboName)
