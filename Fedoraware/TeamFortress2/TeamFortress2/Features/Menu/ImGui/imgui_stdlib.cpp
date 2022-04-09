@@ -1,5 +1,4 @@
-// imgui_stdlib.cpp
-// Wrappers for C++ standard library (STL) types (std::string, etc.)
+// dear imgui: wrappers for C++ standard library (STL) types (std::string, etc.)
 // This is also an example of how you may wrap your own similar types.
 
 // Compatibility:
@@ -17,12 +16,6 @@ struct InputTextCallback_UserData
     std::string*            Str;
     ImGuiInputTextCallback  ChainCallback;
     void*                   ChainCallbackUserData;
-};
-
-struct InputTextCallback_UserDataU8
-{
-    ImGuiInputTextCallback  ChainCallback;
-    void* ChainCallbackUserData;
 };
 
 static int InputTextCallback(ImGuiInputTextCallbackData* data)

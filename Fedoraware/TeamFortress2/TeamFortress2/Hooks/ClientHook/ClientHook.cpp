@@ -2,10 +2,9 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
-#include "../../Features/PlayerList/PlayerList.h"
 #include "../../Features/Resolver/Resolver.h"
+#include "../../Features/Menu/Playerlist/Playerlist.h"
 
 const static std::string clear("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -91,6 +90,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_NET_UPDATE_START:
 		{
 			g_EntityCache.Clear();
+
 			break;
 		}
 
@@ -106,7 +106,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			g_PlayerList.GetPlayers();
+			g_PlayerList.UpdatePlayers();
 
 			g_GlobalInfo.m_bLocalSpectated = false;
 

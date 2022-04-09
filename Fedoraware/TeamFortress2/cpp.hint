@@ -8,3 +8,4 @@
 #define M_VIRTUALGET(name, type, base, fn, index) __inline type Get##name() { void* pBase = base; return GetVFunc<fn>(pBase, index)(pBase); }
 #define NETVAR(_name, type, table, name) inline type &_name() { static int offset = GetNetVar(table, name); return *reinterpret_cast<type *>(reinterpret_cast<DWORD>(this) + offset); }
 #define _(s) XorStr(s).c_str()
+#define TOGGLE(label, v) ImGui::Checkbox(label, v);

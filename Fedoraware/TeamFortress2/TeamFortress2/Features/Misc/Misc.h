@@ -46,6 +46,8 @@ public:
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoPush();
 	void SteamRPC();
+	void UnlockAchievements();
+	void LockAchievements();
 
 	std::vector<std::string> strings;
 	Vec3 PeekReturnPos;

@@ -87,8 +87,6 @@ void Uninitialize()
 {
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
-	g_Menu.m_bOpen = false;
-	g_Menu.menuOpen = false;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
 
@@ -124,7 +122,7 @@ void LoadDefaultConfig()
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		});
-	g_Menu.config = true;
+	g_Menu.ConfigLoaded = true;
 }
 
 DWORD WINAPI MainThread(LPVOID lpParam)
@@ -143,7 +141,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Loaded();
 
-	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
+	while (!GetAsyncKeyState(VK_F11) || g_Menu.IsOpen) {
 		Sleep(1000);
 		UpdateRichPresence();
 	}

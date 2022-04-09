@@ -1,6 +1,5 @@
 #include "ClientModeHook.h"
 
-#include "../../Features/Menu/Menu.h"
 #include "../../Features/Prediction/Prediction.h"
 #include "../../Features/Aimbot/Aimbot.h"
 #include "../../Features/Auto/Auto.h"

@@ -1,23 +1,22 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-// radar
-class CRadar
-{
+class CRadar {
 public:
 	void Run();
-	int m_nRadarX = 100, m_nRadarY = 500;
+
+	int RadarX = 100, RadarY = 500;
 
 private:
 	bool ShouldRun();
-	bool GetDrawPosition(int& x, int& y, CBaseEntity* pEntity);
-	void DragRadar();
-	void DrawPoints(CBaseEntity* pLocal);
 	void DrawRadar();
+	void DragRadar();
+	bool GetDrawPosition(int& x, int& y, CBaseEntity* pEntity);
+	void DrawPoints(CBaseEntity* pLocal);
 
-	int m_nRadarSize, m_nRadarCorrSize;
-	float m_flLocalCos, m_flLocalSin, m_flRange, m_flLocalYaw;
-	Vec3 m_vLocalOrigin;
+	int RadarSize = 0, RadarCorrSize = 0;
+	float LocalCos = 0, LocalSin = 0, Range = 0, LocalYaw = 0;
+	Vec3 LocalOrigin;
 };
 
 inline CRadar g_Radar;

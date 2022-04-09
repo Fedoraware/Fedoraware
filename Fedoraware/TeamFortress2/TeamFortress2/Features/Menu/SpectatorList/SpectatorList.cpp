@@ -1,11 +1,11 @@
 #include "SpectatorList.h"
 
-#include "../Vars.h"
-#include "../Menu/Menu.h"
+#include "../../Vars.h"
+#include "../Menu.h"
 
 bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 {
-	m_vecSpectators.clear();
+	Spectators.clear();
 
 	for (const auto& pTeammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 	{
@@ -14,8 +14,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 		if (pTeammate && !pTeammate->IsAlive() && pObservedPlayer == pLocal)
 		{
-			std::wstring szMode = L"";
-
+			std::wstring szMode;
 			switch (pTeammate->GetObserverMode())
 			{
 			case OBS_MODE_FIRSTPERSON:
@@ -31,16 +30,18 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 			default: continue;
 			}
 
-			PlayerInfo_t PlayerInfo;
-			if (g_Interfaces.Engine->GetPlayerInfo(pTeammate->GetIndex(), &PlayerInfo))
-				m_vecSpectators.push_back({
-					Utils::ConvertUtf8ToWide(PlayerInfo.name), szMode, g_EntityCache.Friends[pTeammate->GetIndex()],
+			PlayerInfo_t playerInfo{ };
+			if (g_Interfaces.Engine->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
+			{
+				Spectators.push_back({
+					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.Friends[pTeammate->GetIndex()],
 					pTeammate->GetTeamNum(), pTeammate->GetIndex()
 				});
+			}
 		}
 	}
 
-	return !m_vecSpectators.empty();
+	return !Spectators.empty();
 }
 
 bool CSpectatorList::ShouldRun()
@@ -50,27 +51,23 @@ bool CSpectatorList::ShouldRun()
 
 void CSpectatorList::Run()
 {
-	if (!ShouldRun())
-		return;
+	if (!ShouldRun()) { return; }
 
-	if (Vars::Visuals::SpectatorList.m_Var == 1)
-		DrawDefault();
-	else
-		DrawClassic();
+	if (Vars::Visuals::SpectatorList.m_Var == 1) { DrawDefault(); }
+	else { DrawClassic(); }
 }
 
 void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 {
-	if (!g_Menu.m_bOpen)
-		return;
+	if (!g_Menu.IsOpen) { return; }
 
 	int mousex, mousey;
 	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
 
-	static POINT delta;
+	static POINT delta{};
 	static bool drag = false;
 	static bool move = false;
-	bool held = GetKey(VK_LBUTTON);
+	const bool held = GetKey(VK_LBUTTON);
 
 	if ((mousex > x && mousex < x + w && mousey > y - offsety && mousey < y - offsety + h) && held)
 	{
@@ -100,47 +97,49 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 void CSpectatorList::DrawDefault()
 {
 	DragSpecList(
-		m_nSpecListX,
-		m_nSpecListY,
-		m_nSpecListW,
-		m_nSpecListTitleBarH,
+		SpecListX,
+		SpecListY,
+		SpecListW,
+		SpecListTitleBarH,
 		0);
 
 	// 38 to 43
-	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, {43, 43, 45, 250});
+	g_Draw.Rect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, {43, 43, 45, 250});
 
 	g_Draw.String(FONT_IMGUI,
-	              m_nSpecListX + (m_nSpecListW / 2),
-	              m_nSpecListY + (m_nSpecListTitleBarH / 2),
+	              SpecListX + (SpecListW / 2),
+	              SpecListY + (SpecListTitleBarH / 2),
 	              Vars::Menu::Colors::MenuAccent,
 	              ALIGN_CENTER,
 	              "%hs", _("Spectators"));
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (!pLocal->IsAlive() || !GetSpectators(pLocal))
-			return;
+		if (!pLocal->IsAlive() || !GetSpectators(pLocal)) { return; }
 
-		int nFontTall = g_Draw.m_vecFonts[FONT_MENU].nTall;
-		int nSpacing = 5;
-		int nModeX = m_nSpecListX + nSpacing;
-		int nModeW = 15;
-		int nNameX = nModeX + nModeW + (nSpacing * 2);
-		int y = m_nSpecListY + m_nSpecListTitleBarH;
-		int h = nFontTall * m_vecSpectators.size();
+		constexpr int nSpacing = 5;
+		constexpr int nModeW = 15;
+		const int nFontTall = g_Draw.m_vecFonts[FONT_MENU].nTall;
+		const int nModeX = SpecListX + nSpacing;
+		const int nNameX = nModeX + nModeW + (nSpacing * 2);
+		int y = SpecListY + SpecListTitleBarH;
+		const int h = nFontTall * Spectators.size();
+
 		// 25 to 31
-		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, {36, 36, 36, 255});
+		g_Draw.Rect(SpecListX, y, SpecListW, h, {36, 36, 36, 255});
 		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, {255, 255, 255, 255});
 
-		for (size_t n = 0; n < m_vecSpectators.size(); n++)
+		for (size_t n = 0; n < Spectators.size(); n++)
 		{
-			if (m_vecSpectators[n].m_sName.length() > 20)
-				m_vecSpectators[n].m_sName.replace(20, m_vecSpectators[n].m_sName.length(), _(L"..."));
+			if (Spectators[n].Name.length() > 20)
+			{
+				Spectators[n].Name.replace(20, Spectators[n].Name.length(), _(L"..."));
+			}
 
-			y = m_nSpecListY + m_nSpecListTitleBarH + (nFontTall * n);
+			y = SpecListY + SpecListTitleBarH + (nFontTall * n);
 
-			g_Draw.String(FONT_MENU, nModeX, y, {255, 255, 255, 255}, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
-			g_Draw.String(FONT_MENU, nNameX, y, {255, 255, 255, 255}, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
+			g_Draw.String(FONT_MENU, nModeX, y, {255, 255, 255, 255}, ALIGN_DEFAULT, Spectators[n].Mode.data());
+			g_Draw.String(FONT_MENU, nNameX, y, {255, 255, 255, 255}, ALIGN_DEFAULT, Spectators[n].Name.data());
 		}
 	}
 }
@@ -149,12 +148,11 @@ void CSpectatorList::DrawClassic()
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (!pLocal->IsAlive() || !GetSpectators(pLocal))
-			return;
+		if (!pLocal->IsAlive() || !GetSpectators(pLocal)) { return; }
 
 		int nDrawY = (g_ScreenSize.h / 2) - 300;
-		int centerr = g_ScreenSize.c;
-		int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
+		const int centerr = g_ScreenSize.c;
+		const int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 
 		g_Draw.String(
 			FONT_ESP_NAME,
@@ -163,40 +161,33 @@ void CSpectatorList::DrawClassic()
 			ALIGN_CENTERHORIZONTAL,
 			L"Spectating you");
 
-		for (const auto& Spectator : m_vecSpectators)
+		for (const auto& Spectator : Spectators)
 		{
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
 			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
-			                                  (Spectator.m_sMode + Spectator.m_sName).c_str(), w, h);
+			                                  (Spectator.Mode + Spectator.Name).c_str(), w, h);
 
-			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
+			const int nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 			if (Vars::Visuals::SpectatorList.m_Var == 3)
 			{
-				//nDrawX -= 55;
-
-
-				PlayerInfo_t pi;
-				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.m_nIndex, &pi))
-					continue;
+				PlayerInfo_t pi{};
+				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
 
 				g_Draw.Avatar(nDrawX - (w / 2) - 25, nDrawY, 24, 24, pi.friendsID);
 				// center - half the width of the string
 				nDrawY += 6;
-
-				//nAddX = 25;
-				//nAddY = 14;
 			}
 
 			g_Draw.String(
 				FONT_ESP_NAME,
 				nDrawX, nDrawY,
-				Spectator.m_bIsFriend
+				Spectator.IsFriend
 					? Colors::Friend
-					: Utils::GetTeamColor(Spectator.m_nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+					: Utils::GetTeamColor(Spectator.Team, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
 				ALIGN_CENTERHORIZONTAL,
-				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());
+				L"[%ls] %ls", Spectator.Mode.data(), Spectator.Name.data());
 
 			nDrawY += nAddY;
 		}

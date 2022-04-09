@@ -11,5 +11,5 @@ void __stdcall SurfaceHook::OnScreenSizeChanged::Hook(int OldWidht, int OldHeigh
 
 void __stdcall SurfaceHook::LockCursor::Hook()
 {
-	g_Menu.menuOpen ? g_Interfaces.Surface->UnlockCursor() : Table.Original<fn>(index)(g_Interfaces.Surface);
+	g_Menu.IsOpen ? g_Interfaces.Surface->UnlockCursor() : Table.Original<fn>(index)(g_Interfaces.Surface);
 }

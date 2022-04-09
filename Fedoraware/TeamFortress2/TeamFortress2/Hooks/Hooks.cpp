@@ -346,11 +346,13 @@ void CHooks::Init()
 	}
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
+	{
 		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);
+	}
 }
 
 void CHooks::Release()
 {
 	MH_Uninitialize();
-	SetWindowLongPtr(WndProc::hwWindow, GWL_WNDPROC, (LONG_PTR)WndProc::Original);
+	SetWindowLongPtr(WndProc::hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(WndProc::Original));
 }

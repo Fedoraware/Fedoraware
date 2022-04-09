@@ -1,7 +1,5 @@
 #include "UniformRandomStreamHook.h"
 
-#include "../../Features/Menu/Menu.h"
-
 int __stdcall UniformRandomStreamHook::RandInt::Hook(int iMinVal, int iMaxVal)
 {
 	if (Vars::Misc::MedalFlip.m_Var && g_Interfaces.EngineVGui->IsGameUIVisible())

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../SDK/SDK.h"
 #include "../Hooks.h"
 #include "../../Utils/MinHook/hook.h"

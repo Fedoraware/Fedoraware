@@ -39,6 +39,8 @@ namespace Vars
 		inline int InputBoxH = 14;
 		inline int InputColorBoxW = 30;
 
+		inline bool ModernDesign = false;
+
 		namespace Colors
 		{
 			inline Color_t MenuAccent = { 255, 101, 101, 255 };

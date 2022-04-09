@@ -1,6 +1,5 @@
 #include "Visuals.h"
 #include "../Vars.h"
-#include "../Menu/Menu.h"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
