@@ -740,10 +740,10 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("World ESP");
 				WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.m_Var); HelpMarker("World ESP master switch");
-				WToggle("Health packs###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on health packs");
-				ColorPickerL("Health pack colour", Colors::Health); HelpMarker("Color for health pack ESP");
-				WToggle("Ammo packs###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw chams on ammo packs");
-				ColorPickerL("Ammo pack colour", Colors::Ammo); HelpMarker("Color for ammo pack ESP");
+				WToggle("Healthpacks###WorldESPHealthPacks", &Vars::ESP::World::HealthText.m_Var); HelpMarker("Will draw ESP on healthpacks");
+				ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
+				WToggle("Ammopacks###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.m_Var); HelpMarker("Will draw ESP on ammopacks");
+				ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
 				WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.m_Var, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
 			} EndChild();
 
@@ -755,8 +755,8 @@ void CMenu::MenuVisuals()
 				WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.m_Var);
 
 				static std::vector chamOptions{
-					"Health",
-					"Ammo",
+					"Healthpacks",
+					"Ammopacks",
 					"Projectiles"
 				};
 
@@ -769,21 +769,21 @@ void CMenu::MenuVisuals()
 				case 0:
 				{
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to healthpacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Health.fresnelBase);
 					break;
 				}
 				case 1:
 				{
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to ammopacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Ammo.fresnelBase);
 					break;
 				}
 				case 2:
 				{
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "", "Options");
-					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
+					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to projectiles");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Projectiles.fresnelBase);
 					WCombo("Team###WorldChamsProjectiles", &Vars::Chams::World::Projectilez.m_Var, { "All", "Enemy only" });
 					break;
@@ -798,8 +798,8 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("World Glow");
 				WToggle("World glow###Worldglowbutton", &Vars::Glow::World::Active.m_Var);
-				WToggle("Health packs###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
-				WToggle("Ammo packs###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
+				WToggle("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.m_Var);
+				WToggle("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.m_Var);
 				WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.m_Var, { "Off", "All", "Only enemies" });
 				WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.m_Var, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 			} EndChild();
@@ -970,7 +970,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Inner line color", Colors::NoscopeLines1);
 					ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
 				}
-				WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammo packs");
+				WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.m_Var); HelpMarker("Displays the respawn time of health and ammopacks");
 				WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.m_Var); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 				ColorPickerL("Hitbox matrix face colour", Colors::HitboxFace);
 				ColorPickerL("Hitbox matrix edge colour", Colors::HitboxEdge);
@@ -1361,8 +1361,8 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("World");
 				WToggle("Active###radarworldd", &Vars::Radar::World::Active.m_Var);
-				WToggle("Health###radarworldda", &Vars::Radar::World::Health.m_Var);
-				WToggle("Ammo###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
+				WToggle("Healthpack###radarworldda", &Vars::Radar::World::Health.m_Var);
+				WToggle("Ammopack###radarworlddb", &Vars::Radar::World::Ammo.m_Var);
 				WSlider("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.m_Var, 12, 30, "%d");
 			} EndChild();
 
@@ -1475,6 +1475,8 @@ void CMenu::MenuMisc()
 		{
 			SectionTitle("Automation");
 			WToggle("No push", &Vars::Misc::NoPush.m_Var); HelpMarker("Will make teammates unable to push you around");
+			WToggle("Quick stop", &Vars::Misc::AccurateMovement.m_Var); HelpMarker("Will stop you from sliding once you stop pressing movement buttons");
+			WToggle("Duck Jump", &Vars::Misc::DuckJump.m_Var); HelpMarker("Will duck when bhopping");
 			WToggle("Bunnyhop", &Vars::Misc::AutoJump.m_Var); HelpMarker("Will jump as soon as you touch the ground again, keeping speed between jumps");
 			if (Vars::Misc::AutoJump.m_Var)
 			{
