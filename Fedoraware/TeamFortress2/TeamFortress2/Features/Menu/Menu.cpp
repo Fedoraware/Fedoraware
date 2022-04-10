@@ -23,6 +23,9 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
+	LoadStyle(); // fix for gradients
+	// might have some negative perf effect, idrc tho im sick of black gradients.
+
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_Once);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
