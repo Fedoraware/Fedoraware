@@ -256,7 +256,7 @@ void CMenu::MenuAimbot()
 			SectionTitle("Hitscan");
 			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
-			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Auto" }); HelpMarker("Which hitbox the aimbot will target");
+			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Pelvis", "Auto"}); HelpMarker("Which hitbox the aimbot will target");
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
 			MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
@@ -1445,11 +1445,8 @@ void CMenu::MenuHvH()
 				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.m_Var, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
 			}
 			WToggle("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
-			WToggle("Anti Overlap", &Vars::AntiHack::AntiAim::AntiOverlap.m_Var); HelpMarker("Prevents your real and fake angles from overlapping");
-			WToggle("Anti Backstab", &Vars::AntiHack::AntiAim::AntiBackstab.m_Var); HelpMarker("Look towards spies to prevent backstabs");
-			WToggle("Hide Pitch on Shot", &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var); HelpMarker("Hides your real pitch when shooting");
-			WToggle("Leg Jitter", &Vars::AntiHack::AntiAim::legjitter.m_Var); HelpMarker("Moves your legs slightly when standing still");
-
+			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::AntiBackstab.m_Var }, "Misc.");
+			
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");

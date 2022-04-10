@@ -260,7 +260,7 @@ bool ModSetChanged() // check if modulation has been switched
 	static auto oldS = Vars::Visuals::SkyModulation.m_Var; static auto oldW = Vars::Visuals::WorldModulation.m_Var;
 	auto curS = Vars::Visuals::SkyModulation.m_Var; auto curW = Vars::Visuals::WorldModulation.m_Var;
 
-	if (curS != oldS || curW != oldW) { oldW = curW; oldS = curS; return true; }
+	if (curS != oldS || curW != oldW) { return true; }
 	return false;
 }
 
