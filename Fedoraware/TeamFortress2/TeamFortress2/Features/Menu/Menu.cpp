@@ -984,31 +984,32 @@ void CMenu::MenuVisuals()
 				WCombo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, { "Off", "Draggable", "Static", "Static + Avatars" });
 				WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
 
-				SectionTitle("BEAMS (I love beams)");
+				SectionTitle("Beams");
 				{
 					using namespace Vars::Visuals;
 
-					WToggle("Enable beams", &BEAMS::Active.m_Var); HelpMarker("I LOVE BEAMS!!!!!!!!!!");
-					WToggle("Rainbow beams", &BEAMS::Rainbow.m_Var);
-					ColorPickerL("Beam colour", BEAMS::BeamColour);
-					WToggle("Custom model", &BEAMS::UseCustomModel.m_Var);
-					if (BEAMS::UseCustomModel.m_Var)
+					WToggle("Enable beams", &Beans::Active.m_Var); HelpMarker("he loves beans?");
+					WToggle("Rainbow beams", &Beans::Rainbow.m_Var);
+					ColorPickerL("Beam colour", Beans::BeamColour);
+					WToggle("Custom model", &Beans::UseCustomModel.m_Var);
+					if (Beans::UseCustomModel.m_Var)
 					{
-						WInputText("Model", &BEAMS::Model);
+						WInputText("Model", &Beans::Model);
 					}
-					WSlider("Beam lifespan", &BEAMS::Life.m_Var, 0.0f, 10.f);
-					WSlider("Beam width", &BEAMS::Width.m_Var, 0.0f, 10.f);
-					WSlider("Beam end width", &BEAMS::EndWidth.m_Var, 0.0f, 10.f);
-					WSlider("Beam fade length", &BEAMS::FadeLength.m_Var, 0.0f, 30.f);
-					WSlider("Beam amplitude", &BEAMS::Amplitude.m_Var, 0.0f, 10.f);
-					WSlider("Beam brightness", &BEAMS::Brightness.m_Var, 0.0f, 255.f);
-					WSlider("Beam speed", &BEAMS::Speed.m_Var, 0.0f, 5.f);
+					WSlider("Beam lifespan", &Beans::Life.m_Var, 0.0f, 10.f);
+					WSlider("Beam width", &Beans::Width.m_Var, 0.0f, 10.f);
+					WSlider("Beam end width", &Beans::EndWidth.m_Var, 0.0f, 10.f);
+					WSlider("Beam fade length", &Beans::FadeLength.m_Var, 0.0f, 30.f);
+					WSlider("Beam amplitude", &Beans::Amplitude.m_Var, 0.0f, 10.f);
+					WSlider("Beam brightness", &Beans::Brightness.m_Var, 0.0f, 255.f);
+					WSlider("Beam speed", &Beans::Speed.m_Var, 0.0f, 5.f);
+					WSlider("Segments", &Beans::segments.m_Var, 1, 10); //what are good values for this
 
 					// TODO: Reward this ugly code
 					{
 						static std::vector flagNames { "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
 						static std::vector flagValues { 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
-						MultiFlags(flagNames, flagValues, &BEAMS::Flags.m_Var, "Beam Flags###BeamFlags");
+						MultiFlags(flagNames, flagValues, &Beans::Flags.m_Var, "Beam Flags###BeamFlags");
 					}
 				}
 

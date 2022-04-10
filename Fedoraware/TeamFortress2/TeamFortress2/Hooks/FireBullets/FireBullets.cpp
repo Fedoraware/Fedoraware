@@ -4,24 +4,24 @@ void DrawBeam(Vector source, Vector end)
 {
 	BeamInfo_t beamInfo;
 	beamInfo.m_nType = 0;
-	beamInfo.m_pszModelName = Vars::Visuals::BEAMS::UseCustomModel.m_Var ? Vars::Visuals::BEAMS::Model.c_str() : "sprites/physbeam.vmt";
+	beamInfo.m_pszModelName = Vars::Visuals::Beans::UseCustomModel.m_Var ? Vars::Visuals::Beans::Model.c_str() : "sprites/physbeam.vmt";
 	beamInfo.m_nModelIndex = -1; // will be set by CreateBeamPoints if its -1
 	beamInfo.m_flHaloScale = 0.0f;
-	beamInfo.m_flLife = Vars::Visuals::BEAMS::Life.m_Var;
-	beamInfo.m_flWidth = Vars::Visuals::BEAMS::Width.m_Var;
-	beamInfo.m_flEndWidth = Vars::Visuals::BEAMS::EndWidth.m_Var;
-	beamInfo.m_flFadeLength = Vars::Visuals::BEAMS::FadeLength.m_Var;
-	beamInfo.m_flAmplitude = Vars::Visuals::BEAMS::Amplitude.m_Var;
-	beamInfo.m_flBrightness = Vars::Visuals::BEAMS::Brightness.m_Var;
-	beamInfo.m_flSpeed = Vars::Visuals::BEAMS::Speed.m_Var;
+	beamInfo.m_flLife = Vars::Visuals::Beans::Life.m_Var;
+	beamInfo.m_flWidth = Vars::Visuals::Beans::Width.m_Var;
+	beamInfo.m_flEndWidth = Vars::Visuals::Beans::EndWidth.m_Var;
+	beamInfo.m_flFadeLength = Vars::Visuals::Beans::FadeLength.m_Var;
+	beamInfo.m_flAmplitude = Vars::Visuals::Beans::Amplitude.m_Var;
+	beamInfo.m_flBrightness = Vars::Visuals::Beans::Brightness.m_Var;
+	beamInfo.m_flSpeed = Vars::Visuals::Beans::Speed.m_Var;
 	beamInfo.m_nStartFrame = 0;
 	beamInfo.m_flFrameRate = 0;
-	beamInfo.m_flRed = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 0) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.r;
-	beamInfo.m_flGreen = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 2) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.g;
-	beamInfo.m_flBlue = Vars::Visuals::BEAMS::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 4) * 128.0f + 128.0f))) : Vars::Visuals::BEAMS::BeamColour.b;
-	beamInfo.m_nSegments = 2;
+	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 0) * 128.0f + 128.0f))) : Vars::Visuals::Beans::BeamColour.r;
+	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 2) * 128.0f + 128.0f))) : Vars::Visuals::Beans::BeamColour.g;
+	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.m_Var ? (static_cast<float>(floor(sin(g_Interfaces.GlobalVars->curtime + 4) * 128.0f + 128.0f))) : Vars::Visuals::Beans::BeamColour.b;
+	beamInfo.m_nSegments = Vars::Visuals::Beans::segments.m_Var;
 	beamInfo.m_bRenderable = true;
-	beamInfo.m_nFlags = Vars::Visuals::BEAMS::Flags.m_Var;
+	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.m_Var;
 	beamInfo.m_vecStart = source;
 	beamInfo.m_vecEnd = end;
 	Beam_t* coolBeam = g_Interfaces.ILOVEBEAMS->CreateBeamPoints(beamInfo);
@@ -36,7 +36,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 {
 	static auto original = Func.Original<fn>();
 
-	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var && !Vars::Visuals::BEAMS::Active.m_Var))
+	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var && !Vars::Visuals::Beans::Active.m_Var))
 	{
 		return original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
@@ -130,7 +130,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 		}
 
 		/*
-				namespace BEAMS
+				namespace Beans
 		{
 			inline CVar<bool> Active{ false, L"Active" };
 			inline CVar<bool> Rainbow { false, L"Rainbow" };
@@ -147,7 +147,7 @@ void __fastcall FireBullets::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeap
 			inline CVar<int> Flags { 65792, L"Flags" }; // FBEAM_ONLYNOISEONCE | FBEAM_REVERSED
 		}*/
 
-		if (Vars::Visuals::BEAMS::Active.m_Var)
+		if (Vars::Visuals::Beans::Active.m_Var)
 		{
 			DrawBeam(trace.vStartPos, trace.vEndPos);
 		}

@@ -589,21 +589,22 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::Rain);
 			SAVE_VAR(Vars::Visuals::DebugInfo);
 				
-			// BEAMS I LOVE BEAMS
+			// Beans I LOVE Beans
 			{
-				SAVE_VAR(Vars::Visuals::BEAMS::Active);
-				SAVE_VAR(Vars::Visuals::BEAMS::Rainbow);
-				SAVE_OTHER(Vars::Visuals::BEAMS::BeamColour);
-				SAVE_VAR(Vars::Visuals::BEAMS::UseCustomModel);
-				SAVE_STRING(Vars::Visuals::BEAMS::Model);
-				SAVE_VAR(Vars::Visuals::BEAMS::Life);
-				SAVE_VAR(Vars::Visuals::BEAMS::Width);
-				SAVE_VAR(Vars::Visuals::BEAMS::EndWidth);
-				SAVE_VAR(Vars::Visuals::BEAMS::FadeLength);
-				SAVE_VAR(Vars::Visuals::BEAMS::Amplitude);
-				SAVE_VAR(Vars::Visuals::BEAMS::Brightness);
-				SAVE_VAR(Vars::Visuals::BEAMS::Speed);
-				SAVE_VAR(Vars::Visuals::BEAMS::Flags);
+				SAVE_VAR(Vars::Visuals::Beans::Active);
+				SAVE_VAR(Vars::Visuals::Beans::Rainbow);
+				SAVE_OTHER(Vars::Visuals::Beans::BeamColour);
+				SAVE_VAR(Vars::Visuals::Beans::UseCustomModel);
+				SAVE_STRING(Vars::Visuals::Beans::Model);
+				SAVE_VAR(Vars::Visuals::Beans::Life);
+				SAVE_VAR(Vars::Visuals::Beans::Width);
+				SAVE_VAR(Vars::Visuals::Beans::EndWidth);
+				SAVE_VAR(Vars::Visuals::Beans::FadeLength);
+				SAVE_VAR(Vars::Visuals::Beans::Amplitude);
+				SAVE_VAR(Vars::Visuals::Beans::Brightness);
+				SAVE_VAR(Vars::Visuals::Beans::Speed);
+				SAVE_VAR(Vars::Visuals::Beans::Flags);
+				SAVE_VAR(Vars::Visuals::Beans::segments);
 			}
 
 			SAVE_VAR(Vars::Visuals::despawnTime);
@@ -1295,21 +1296,22 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::Rain);
 			LOAD_VAR(Vars::Visuals::DebugInfo);
 
-						// BEAMS I LOVE BEAMS
+						// Beans I LOVE Beans
 			{
-				LOAD_VAR(Vars::Visuals::BEAMS::Active);
-				LOAD_VAR(Vars::Visuals::BEAMS::Rainbow);
-				LOAD_OTHER(Vars::Visuals::BEAMS::BeamColour);
-				LOAD_VAR(Vars::Visuals::BEAMS::UseCustomModel);
-				LOAD_STRING(Vars::Visuals::BEAMS::Model);
-				LOAD_VAR(Vars::Visuals::BEAMS::Life);
-				LOAD_VAR(Vars::Visuals::BEAMS::Width);
-				LOAD_VAR(Vars::Visuals::BEAMS::EndWidth);
-				LOAD_VAR(Vars::Visuals::BEAMS::FadeLength);
-				LOAD_VAR(Vars::Visuals::BEAMS::Amplitude);
-				LOAD_VAR(Vars::Visuals::BEAMS::Brightness);
-				LOAD_VAR(Vars::Visuals::BEAMS::Speed);
-				LOAD_VAR(Vars::Visuals::BEAMS::Flags);
+				LOAD_VAR(Vars::Visuals::Beans::Active);
+				LOAD_VAR(Vars::Visuals::Beans::Rainbow);
+				LOAD_OTHER(Vars::Visuals::Beans::BeamColour);
+				LOAD_VAR(Vars::Visuals::Beans::UseCustomModel);
+				LOAD_STRING(Vars::Visuals::Beans::Model);
+				LOAD_VAR(Vars::Visuals::Beans::Life);
+				LOAD_VAR(Vars::Visuals::Beans::Width);
+				LOAD_VAR(Vars::Visuals::Beans::EndWidth);
+				LOAD_VAR(Vars::Visuals::Beans::FadeLength);
+				LOAD_VAR(Vars::Visuals::Beans::Amplitude);
+				LOAD_VAR(Vars::Visuals::Beans::Brightness);
+				LOAD_VAR(Vars::Visuals::Beans::Speed);
+				LOAD_VAR(Vars::Visuals::Beans::Flags);
+				LOAD_VAR(Vars::Visuals::Beans::segments);
 			}
 
 			{
