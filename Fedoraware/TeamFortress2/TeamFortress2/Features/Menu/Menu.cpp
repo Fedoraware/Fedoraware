@@ -9,6 +9,7 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
 #include "Fonts/IconsMaterialDesign.h"
+#include "MaterialEditor/MaterialEditor.h"
 
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
@@ -62,6 +63,14 @@ void CMenu::DrawMenu()
 				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
 			}
 			ImGui::HelpMarker("Playerlist");
+
+			// Material Editor Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_BRUSH))
+			{
+				g_MaterialEditor.IsOpen = !g_MaterialEditor.IsOpen;
+			}
+			ImGui::HelpMarker("Material Editor");
 
 			#ifdef _DEBUG
 			// Debug Menu
@@ -1779,8 +1788,8 @@ void CMenu::DrawCameraWindow()
 		}
 
 		// Draw the camera window
-		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
-		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
+		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_FirstUseEver);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
 		if (ImGui::Begin("Camera", nullptr, windowFlags))
 		{
@@ -1839,6 +1848,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
 		DebugMenu();
+		g_MaterialEditor.Render();
 		g_PlayerList.Render();
 
 		ImGui::PopFont();
@@ -1973,4 +1983,5 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	}
 
 	LoadStyle();
+	g_MaterialEditor.Init();
 }
