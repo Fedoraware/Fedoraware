@@ -1,9 +1,11 @@
 #pragma once
+#include "../../../SDK/SDK.h"
 #include "../ImGui/TextEditor.h"
 
 struct CustomMaterial {
 	std::wstring Path;
 	std::string Name;
+	IMaterial* Material;
 };
 
 class CMaterialEditor {

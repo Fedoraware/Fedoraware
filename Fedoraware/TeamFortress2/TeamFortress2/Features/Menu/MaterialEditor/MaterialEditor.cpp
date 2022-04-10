@@ -22,7 +22,19 @@ void CMaterialEditor::LoadMaterials()
 		std::wstring wMatName = entry.path().filename().wstring();
 		wMatName.erase(wMatName.end() - 4, wMatName.end());
 		const std::string matName(wMatName.begin(), wMatName.end());
-		MaterialList.push_back({ entry.path().wstring(), matName });
+
+		// Create Material
+		IMaterial* lMaterial = nullptr;
+		std::ifstream t(entry.path());
+		if (t.good())
+		{
+			const std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+			const auto kv = new KeyValues(matName.c_str());
+			// kv->LoadFromBuffer(matName.c_str(), str.c_str());
+			lMaterial = g_Interfaces.MatSystem->Create(tfm::format("m_p%s", matName).c_str(), kv);
+		}
+
+		MaterialList.push_back({ entry.path().wstring(), matName, lMaterial });
 	}
 }
 
@@ -38,7 +50,7 @@ void CMaterialEditor::MainWindow()
 	if (!IsOpen) { return; }
 	using namespace ImGui;
 
-	SetNextWindowSize(ImVec2(400, 450), ImGuiCond_Once);
+	SetNextWindowSize(ImVec2(400, 380), ImGuiCond_Once);
 	if (Begin("Material Manager", &IsOpen, ImGuiWindowFlags_NoCollapse))
 	{
 		static CustomMaterial selectedMat;
