@@ -3,12 +3,13 @@
 #include "../ImGui/TextEditor.h"
 
 struct CustomMaterial {
-	std::wstring Path;
-	std::string Name;
-	IMaterial* Material;
+	std::string Name = "Default";
+	std::wstring FileName = L"Default.vmt";
+	IMaterial* Material{ };
 };
 
 class CMaterialEditor {
+	std::wstring GetMaterialPath(const std::wstring& matFileName);
 	void LoadMaterials();
 	void WriteMaterial(const CustomMaterial& material, const std::string& content);
 	void MainWindow();

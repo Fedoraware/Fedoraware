@@ -7,6 +7,12 @@
 #include "../ImGui/imgui_stdlib.h"
 #include "../ConfigManager/ConfigManager.h"
 
+std::wstring CMaterialEditor::GetMaterialPath(const std::wstring& matFileName)
+{
+	std::wstring matPath = MaterialFolder + L"\\" + matFileName;
+	return matPath;
+}
+
 void CMaterialEditor::LoadMaterials()
 {
 	MaterialList.clear();
@@ -19,30 +25,31 @@ void CMaterialEditor::LoadMaterials()
 			continue;
 		}
 
-		std::wstring wMatName = entry.path().filename().wstring();
-		wMatName.erase(wMatName.end() - 4, wMatName.end());
-		const std::string matName(wMatName.begin(), wMatName.end());
+		// Get the material name
+		std::wstring wMatFile = entry.path().filename().wstring();
+		// .erase(wMatName.end() - 4, wMatName.end());
+		std::string matName(wMatFile.begin(), wMatFile.end());
+		matName.erase(matName.end() - 4, matName.end());
 
 		// Create Material
-		IMaterial* lMaterial = nullptr;
-		std::ifstream t(entry.path());
-		if (t.good())
+		std::ifstream inStream(entry.path());
+		if (inStream.good())
 		{
-			const std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+			const std::string str((std::istreambuf_iterator(inStream)), std::istreambuf_iterator<char>());
 			const auto kv = new KeyValues(matName.c_str());
-			// kv->LoadFromBuffer(matName.c_str(), str.c_str());
-			lMaterial = g_Interfaces.MatSystem->Create(tfm::format("m_p%s", matName).c_str(), kv);
+			
+			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
+			IMaterial* newMaterial = g_Interfaces.MatSystem->Create(matName.c_str(), kv);
+			MaterialList.push_back({ matName, wMatFile, newMaterial });
 		}
-
-		MaterialList.push_back({ entry.path().wstring(), matName, lMaterial });
 	}
 }
 
 void CMaterialEditor::WriteMaterial(const CustomMaterial& material, const std::string& content)
 {
-	std::ofstream outfile(material.Path);
-	outfile << content;
-	outfile.close();
+	std::ofstream outStream(GetMaterialPath(material.FileName));
+	outStream << content;
+	outStream.close();
 }
 
 void CMaterialEditor::MainWindow()
@@ -53,34 +60,34 @@ void CMaterialEditor::MainWindow()
 	SetNextWindowSize(ImVec2(400, 380), ImGuiCond_Once);
 	if (Begin("Material Manager", &IsOpen, ImGuiWindowFlags_NoCollapse))
 	{
-		static CustomMaterial selectedMat;
-
-		if (Button("Reload"))
+		// Toolbar
 		{
-			LoadMaterials();
-		}
-
-		SameLine();
-		if (Button("Edit"))
-		{
-			if (std::filesystem::exists(selectedMat.Path))
+			if (Button("Reload"))
 			{
-				std::ifstream t(selectedMat.Path);
-				if (t.good())
+				LoadMaterials();
+			}
+
+			SameLine();
+			if (Button("Edit"))
+			{
+				if (std::filesystem::exists(GetMaterialPath(CurrentMaterial.FileName)))
 				{
-					const std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-					TextEditor.SetText(str);
-					CurrentMaterial = selectedMat;
-					EditorOpen = true;
+					std::ifstream inStream(GetMaterialPath(CurrentMaterial.FileName));
+					if (inStream.good())
+					{
+						const std::string str((std::istreambuf_iterator(inStream)), std::istreambuf_iterator<char>());
+						TextEditor.SetText(str);
+						EditorOpen = true;
+					}
 				}
 			}
-		}
 
-		SameLine();
-		if (Button("Remove") && !selectedMat.Path.empty())
-		{
-			std::filesystem::remove(selectedMat.Path);
-			LoadMaterials();
+			SameLine();
+			if (Button("Remove") && !GetMaterialPath(CurrentMaterial.FileName).empty())
+			{
+				std::filesystem::remove(GetMaterialPath(CurrentMaterial.FileName));
+				LoadMaterials();
+			}
 		}
 
 		PushItemWidth(GetWindowSize().x - 2 * GetStyle().WindowPadding.x);
@@ -92,25 +99,32 @@ void CMaterialEditor::MainWindow()
 			const std::wstring outstring(newName.begin(), newName.end());
 			if (!std::filesystem::exists(MaterialFolder + L"\\" + outstring))
 			{
-				const CustomMaterial newMaterial = { MaterialFolder + L"\\" + outstring + L".vmt", newName};
+				// Create a new CustomMaterial and add it to our list
+				const CustomMaterial newMaterial = {newName, GetMaterialPath(outstring + L".vmt")};
 				WriteMaterial(newMaterial, "\"VertexLitGeneric\"\n{\n}");
 				MaterialList.push_back(newMaterial);
+
+				LoadMaterials();
 			}
 		}
 
 		// Material list
-		if (ListBoxHeader("###MaterialList"))
+		if (BeginChild("ListChild"))
 		{
-			for (auto const& mat : MaterialList)
+			if (ListBoxHeader("###MaterialList", { GetWindowWidth(), GetWindowHeight() }))
 			{
-				if (Selectable(mat.Name.c_str(), selectedMat.Name == mat.Name))
+				for (auto const& mat : MaterialList)
 				{
-					selectedMat = mat;
+					if (Selectable(mat.Name.c_str(), CurrentMaterial.Name == mat.Name))
+					{
+						CurrentMaterial = mat;
+					}
 				}
-			}
 
-			ListBoxFooter();
+				ListBoxFooter();
+			}
 		}
+		EndChild();
 
 		PopItemWidth();
 		End();
@@ -126,7 +140,7 @@ void CMaterialEditor::EditorWindow()
 	PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (Begin("Material Editor", &EditorOpen, ImGuiWindowFlags_NoCollapse))
 	{
-		// TODO: Use a menu bar instead. But it doesn't work for some reason
+		// Toolbar
 		{
 			if (Button("Save"))
 			{
@@ -139,6 +153,8 @@ void CMaterialEditor::EditorWindow()
 				WriteMaterial(CurrentMaterial, TextEditor.GetText());
 				EditorOpen = false;
 			}
+
+			Text("Editing: %s", CurrentMaterial.Name.c_str());
 		}
 
 		// Text editor
