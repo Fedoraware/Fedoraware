@@ -453,13 +453,15 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 2: //Silent
 	{
-		if (Vars::AntiHack::AntiAim::invalidshootpitch.m_Var && Vars::AntiHack::AntiAim::Active.m_Var && ((Vars::AntiHack::AntiAim::YawReal.m_Var && Vars::AntiHack::AntiAim::YawFake.m_Var) || Vars::AntiHack::AntiAim::Pitch.m_Var )) {
+		if (Vars::AntiHack::AntiAim::invalidshootpitch.m_Var && Vars::AntiHack::AntiAim::Active.m_Var && ((Vars::AntiHack::AntiAim::YawReal.m_Var && Vars::AntiHack::AntiAim::YawFake.m_Var) || Vars::AntiHack::AntiAim::Pitch.m_Var)) {
 			g_GlobalInfo.m_bFakeShotPitch = true;
+
 			if (vAngle.x > 0.f)
 				vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, 89.0f, 180.0f, 91.0f);
-			else 
+			else
 				vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, -89.0f, -180.0f, -91.0f);
-			vAngle.y += 180;
+
+			vAngle.y = Math::RemapValClamped(vAngle.y, 0.0f, 180.0f, -180.0f, 0.0f);
 		}
 		Utils::FixMovement(pCmd, vAngle);
 		pCmd->viewangles = vAngle;
