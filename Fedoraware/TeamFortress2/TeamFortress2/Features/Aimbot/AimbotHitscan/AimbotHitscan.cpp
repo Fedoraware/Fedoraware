@@ -108,7 +108,16 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex ==
 					Spy_m_FestiveAmbassador)
 				{
-					if (pWeapon->GetWeaponData().m_nDamage >= Player->GetHealth())
+					// This doesn't work
+					/*if (pWeapon->GetWeaponData().m_nDamage >= Player->GetHealth())
+					{
+						nHitbox = HITBOX_PELVIS;
+					}*/
+					// Min damage is 18, max damage is 51 (non headshot)
+					float flDistTo = Player->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin());
+					int nAmbassadorBodyshotDamage = Math::RemapValClamped(flDistTo, 90, 900, 51, 18);
+
+					if (Player->GetHealth() < (nAmbassadorBodyshotDamage + 2)) // whatever
 					{
 						nHitbox = HITBOX_PELVIS;
 					}
@@ -453,13 +462,15 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 2: //Silent
 	{
-		if (Vars::AntiHack::AntiAim::invalidshootpitch.m_Var && Vars::AntiHack::AntiAim::Active.m_Var && ((Vars::AntiHack::AntiAim::YawReal.m_Var && Vars::AntiHack::AntiAim::YawFake.m_Var) || Vars::AntiHack::AntiAim::Pitch.m_Var )) {
+		if (Vars::AntiHack::AntiAim::invalidshootpitch.m_Var && Vars::AntiHack::AntiAim::Active.m_Var && ((Vars::AntiHack::AntiAim::YawReal.m_Var && Vars::AntiHack::AntiAim::YawFake.m_Var) || Vars::AntiHack::AntiAim::Pitch.m_Var)) {
 			g_GlobalInfo.m_bFakeShotPitch = true;
+
 			if (vAngle.x > 0.f)
 				vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, 89.0f, 180.0f, 91.0f);
-			else 
+			else
 				vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, -89.0f, -180.0f, -91.0f);
-			vAngle.y += 180;
+
+			vAngle.y = Math::RemapValClamped(vAngle.y, 0.0f, 180.0f, -180.0f, 0.0f);
 		}
 		Utils::FixMovement(pCmd, vAngle);
 		pCmd->viewangles = vAngle;
@@ -549,11 +560,12 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 
 	case CLASS_SPY:
 	{
-		if (Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var && !g_GlobalInfo.m_bWeaponCanHeadShot)
+		if (Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var && !pWeapon->AmbassadorCanHeadshot())
 		{
-			if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex ==
-				Spy_m_FestiveAmbassador)
+			if (Target.m_nAimedHitbox == HITBOX_HEAD)
+			{
 				return false;
+			}
 		}
 
 		break;

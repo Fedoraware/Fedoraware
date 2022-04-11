@@ -81,9 +81,9 @@ enum
 struct BeamInfo_t
 {
 	int m_nType;
-	void* m_pStartEnt;
+	CBaseEntity* m_pStartEnt;
 	int m_nStartAttachment;
-	void* m_pEndEnt;
+	CBaseEntity* m_pEndEnt;
 	int m_nEndAttachment;
 	Vector m_vecStart;
 	Vector m_vecEnd;

@@ -24,6 +24,9 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
+	LoadStyle(); // fix for gradients
+	// might have some negative perf effect, idrc tho im sick of black gradients.
+
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
@@ -265,7 +268,7 @@ void CMenu::MenuAimbot()
 			SectionTitle("Hitscan");
 			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.m_Var, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.m_Var, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
-			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Auto" }); HelpMarker("Which hitbox the aimbot will target");
+			WCombo("Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.m_Var, { "Head", "Body", "Pelvis", "Auto"}); HelpMarker("Which hitbox the aimbot will target");
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.m_Var, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
 			MultiCombo({ "Body", "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
@@ -311,6 +314,8 @@ void CMenu::MenuAimbot()
 			WToggle("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
 			WToggle("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 			WToggle("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
+			WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.m_Var); HelpMarker("Will avoid shooting until the last shot hits");
+
 		} EndChild();
 
 		/* End */
@@ -1052,31 +1057,32 @@ void CMenu::MenuVisuals()
 				WCombo("Spectator list", &Vars::Visuals::SpectatorList.m_Var, { "Off", "Draggable", "Static", "Static + Avatars" });
 				WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.m_Var); HelpMarker("Enables the killstreak counter on any weapon");
 
-				SectionTitle("BEAMS (I love beams)");
+				SectionTitle("Beams");
 				{
 					using namespace Vars::Visuals;
 
-					WToggle("Enable beams", &BEAMS::Active.m_Var); HelpMarker("I LOVE BEAMS!!!!!!!!!!");
-					WToggle("Rainbow beams", &BEAMS::Rainbow.m_Var);
-					ColorPickerL("Beam colour", BEAMS::BeamColour);
-					WToggle("Custom model", &BEAMS::UseCustomModel.m_Var);
-					if (BEAMS::UseCustomModel.m_Var)
+					WToggle("Enable beams", &Beans::Active.m_Var); HelpMarker("he loves beans?");
+					WToggle("Rainbow beams", &Beans::Rainbow.m_Var);
+					ColorPickerL("Beam colour", Beans::BeamColour);
+					WToggle("Custom model", &Beans::UseCustomModel.m_Var);
+					if (Beans::UseCustomModel.m_Var)
 					{
-						WInputText("Model", &BEAMS::Model);
+						WInputText("Model", &Beans::Model);
 					}
-					WSlider("Beam lifespan", &BEAMS::Life.m_Var, 0.0f, 10.f);
-					WSlider("Beam width", &BEAMS::Width.m_Var, 0.0f, 10.f);
-					WSlider("Beam end width", &BEAMS::EndWidth.m_Var, 0.0f, 10.f);
-					WSlider("Beam fade length", &BEAMS::FadeLength.m_Var, 0.0f, 30.f);
-					WSlider("Beam amplitude", &BEAMS::Amplitude.m_Var, 0.0f, 10.f);
-					WSlider("Beam brightness", &BEAMS::Brightness.m_Var, 0.0f, 255.f);
-					WSlider("Beam speed", &BEAMS::Speed.m_Var, 0.0f, 5.f);
+					WSlider("Beam lifespan", &Beans::Life.m_Var, 0.0f, 10.f);
+					WSlider("Beam width", &Beans::Width.m_Var, 0.0f, 10.f);
+					WSlider("Beam end width", &Beans::EndWidth.m_Var, 0.0f, 10.f);
+					WSlider("Beam fade length", &Beans::FadeLength.m_Var, 0.0f, 30.f);
+					WSlider("Beam amplitude", &Beans::Amplitude.m_Var, 0.0f, 10.f);
+					WSlider("Beam brightness", &Beans::Brightness.m_Var, 0.0f, 255.f);
+					WSlider("Beam speed", &Beans::Speed.m_Var, 0.0f, 5.f);
+					WSlider("Segments", &Beans::segments.m_Var, 1, 10); //what are good values for this
 
 					// TODO: Reward this ugly code
 					{
 						static std::vector flagNames { "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
 						static std::vector flagValues { 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
-						MultiFlags(flagNames, flagValues, &BEAMS::Flags.m_Var, "Beam Flags###BeamFlags");
+						MultiFlags(flagNames, flagValues, &Beans::Flags.m_Var, "Beam Flags###BeamFlags");
 					}
 				}
 
@@ -1516,11 +1522,8 @@ void CMenu::MenuHvH()
 				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.m_Var, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
 			}
 			WToggle("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
-			WToggle("Anti Overlap", &Vars::AntiHack::AntiAim::AntiOverlap.m_Var); HelpMarker("Prevents your real and fake angles from overlapping");
-			WToggle("Anti Backstab", &Vars::AntiHack::AntiAim::AntiBackstab.m_Var); HelpMarker("Look towards spies to prevent backstabs");
-			WToggle("Hide Pitch on Shot", &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var); HelpMarker("Hides your real pitch when shooting");
-			WToggle("Leg Jitter", &Vars::AntiHack::AntiAim::legjitter.m_Var); HelpMarker("Moves your legs slightly when standing still");
-
+			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::AntiBackstab.m_Var }, "Misc.");
+			
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
@@ -1943,6 +1946,7 @@ void CMenu::LoadStyle()
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
 		style.GrabMinSize = 15.f;
+		style.GrabRounding = 0.f;
 		style.ScrollbarSize = 4.f;
 		style.ScrollbarRounding = 6.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);

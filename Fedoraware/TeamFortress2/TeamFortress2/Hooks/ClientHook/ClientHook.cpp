@@ -29,7 +29,7 @@ void __stdcall ClientHook::PostEntity::Hook()
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_maxdlights 69420"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_dynamic 1"));
-	g_Visuals.ModulateWorld();
+
 }
 
 void __stdcall ClientHook::ShutDown::Hook()
@@ -78,10 +78,6 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 	default: break;
 	}
-
-	g_Visuals.BigHeads(Vars::ESP::Players::Headscale.m_Var,
-	                   Vars::ESP::Players::Torsoscale.m_Var,
-	                   Vars::ESP::Players::Handscale.m_Var);
 
 	Table.Original<fn>(index)(g_Interfaces.Client, FrameStage);
 

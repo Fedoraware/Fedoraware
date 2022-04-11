@@ -127,6 +127,7 @@ namespace Vars
 			inline CVar<bool> ManualZAdjust{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount{ 5.5f, L"Z Adjust factor." };
 			inline CVar<float> predTime{ 2.0f, L"Prediction TIme" };
+			inline CVar<bool> WaitForHit{ false, L"Will wait for the time the projectile is predicted to take to hit the target before attempting to shoot again." };
 		}
 
 		namespace Melee
@@ -233,10 +234,6 @@ namespace Vars
 			inline CVar<bool> Dlights{ false, L"Dlights" };
 			inline CVar<float> DlightRadius{ 200.0f, L"DLight Radius" };
 			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
-			inline CVar<bool> Funnybodypartslol{ false, L"ninja" };
-			inline CVar<float> Headscale{ 1.0f, L"Alpha" };
-			inline CVar<float> Torsoscale{ 1.0f, L"Alpha" };
-			inline CVar<float> Handscale{ 1.0f, L"Alpha" };
 		}
 
 		namespace Buildings
@@ -472,22 +469,22 @@ namespace Vars
 		inline CVar<bool> MoveSimLine{ true, L"Movement Simulation Line" };
 		inline CVar<int> ParticleTracer{ 2, L"Particle tracers" };
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
-		namespace BEAMS
+		namespace Beans
 		{
-			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<bool> Rainbow { false, L"Rainbow" };
+			inline CVar<bool> Active{ false };
+			inline CVar<bool> Rainbow { false };
 			inline Color_t BeamColour{ 255, 255, 255, 255 };
-			inline CVar<bool> UseCustomModel { false, L"Use Custom Model" };
+			inline CVar<bool> UseCustomModel { false };
 			inline std::string Model = "sprites/physbeam.vmt";
-			inline CVar<float> Life { 2.f, L"Life" };
-			inline CVar<float> Width { 2.f, L"Width" };
-			inline CVar<float> EndWidth { 2.f, L"End Width" };
-			inline CVar<float> FadeLength { 10.f, L"Fade Length" };
-			inline CVar<float> Amplitude { 2.f, L"Amplitude" };
-			inline CVar<float> Brightness { 255.f, L"Brightness" };
-			inline CVar<float> Speed { 0.2f, L"Brightness" };
-			inline CVar<int> Flags { 65792, L"Brightness" };
-			
+			inline CVar<float> Life { 2.f };
+			inline CVar<float> Width { 2.f };
+			inline CVar<float> EndWidth{ 2.f };
+			inline CVar<float> FadeLength { 10.f };
+			inline CVar<float> Amplitude { 2.f };
+			inline CVar<float> Brightness { 255.f };
+			inline CVar<float> Speed { 0.2f };
+			inline CVar<int> Flags { 65792 };
+			inline CVar<int> segments{ 2 };
 		}
 		inline CVar<bool> BulletTracerRainbow{ true, L"Rainbow tracers" };
 		inline CVar<bool> AimPosSquare{ true, L"Aim position square" };
