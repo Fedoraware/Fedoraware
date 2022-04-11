@@ -712,7 +712,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				SectionTitle("Building Chams");
 				WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
@@ -828,7 +828,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0;
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				WCombo("Config", &currentSelected, chamOptions);
 				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
