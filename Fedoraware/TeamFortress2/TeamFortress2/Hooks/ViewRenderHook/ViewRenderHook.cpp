@@ -54,12 +54,15 @@ void CustomFogSetup() {
 void __fastcall ViewRenderHook::LevelInit::Hook(void* ecx, void* edx)
 {
 	CustomFogSetup();
+	g_Visuals.StoreMaterialHandles();
 	g_Visuals.OverrideWorldTextures();
 	Func.Original<fn>()(ecx);
+	g_Visuals.ModulateWorld();
 }
 
 void __fastcall ViewRenderHook::LevelShutdown::Hook(void* ecx, void* edx)
 {
+	g_Visuals.ClearMaterialHandles();
 	Func.Original<fn>()(ecx);
 }
 
