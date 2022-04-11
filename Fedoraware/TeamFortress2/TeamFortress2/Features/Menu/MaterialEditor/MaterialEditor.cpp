@@ -7,12 +7,28 @@
 #include "../ImGui/imgui_stdlib.h"
 #include "../ConfigManager/ConfigManager.h"
 
+const std::string defaultMaterial = "\"VertexLitGeneric\"\n{\n}";
+
 std::wstring CMaterialEditor::GetMaterialPath(const std::wstring& matFileName)
 {
 	std::wstring matPath = MaterialFolder + L"\\" + matFileName;
 	return matPath;
 }
 
+IMaterial* CMaterialEditor::GetByName(const std::string& name)
+{
+	for (auto const& mat : MaterialList)
+	{
+		if (mat.Name == name)
+		{
+			return mat.Material;
+		}
+	}
+
+	return nullptr;
+}
+
+/* Reloads all material files and creates the corresponding material */
 void CMaterialEditor::LoadMaterials()
 {
 	MaterialList.clear();
@@ -45,6 +61,7 @@ void CMaterialEditor::LoadMaterials()
 	}
 }
 
+/* Writes the given material to it's file */
 void CMaterialEditor::WriteMaterial(const CustomMaterial& material, const std::string& content)
 {
 	std::ofstream outStream(GetMaterialPath(material.FileName));
@@ -97,14 +114,20 @@ void CMaterialEditor::MainWindow()
 		if (InputTextWithHint("###MaterialName", "New Material name", &newName, ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			const std::wstring outstring(newName.begin(), newName.end());
-			if (!std::filesystem::exists(MaterialFolder + L"\\" + outstring))
+			if (!std::filesystem::exists(GetMaterialPath(outstring + L".vmt")))
 			{
 				// Create a new CustomMaterial and add it to our list
-				const CustomMaterial newMaterial = {newName, GetMaterialPath(outstring + L".vmt")};
-				WriteMaterial(newMaterial, "\"VertexLitGeneric\"\n{\n}");
-				MaterialList.push_back(newMaterial);
+				const auto kv = new KeyValues(newName.c_str());
+				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), defaultMaterial.c_str());
+				IMaterial* defMaterial = g_Interfaces.MatSystem->Create(newName.c_str(), kv);
 
+				const CustomMaterial newMaterial = { newName, outstring + L".vmt", defMaterial };
+
+				WriteMaterial(newMaterial, defaultMaterial);
+				MaterialList.push_back(newMaterial);
 				LoadMaterials();
+
+				newName.clear();
 			}
 		}
 
@@ -145,12 +168,14 @@ void CMaterialEditor::EditorWindow()
 			if (Button("Save"))
 			{
 				WriteMaterial(CurrentMaterial, TextEditor.GetText());
+				LoadMaterials();
 			}
 
 			SameLine();
 			if (Button("Save and close"))
 			{
 				WriteMaterial(CurrentMaterial, TextEditor.GetText());
+				LoadMaterials();
 				EditorOpen = false;
 			}
 

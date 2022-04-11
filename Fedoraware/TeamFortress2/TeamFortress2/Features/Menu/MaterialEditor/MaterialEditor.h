@@ -25,6 +25,7 @@ class CMaterialEditor {
 public:
 	void Render();
 	void Init();
+	IMaterial* GetByName(const std::string& name);
 
 	bool IsOpen = false;
 	std::vector<CustomMaterial> MaterialList;

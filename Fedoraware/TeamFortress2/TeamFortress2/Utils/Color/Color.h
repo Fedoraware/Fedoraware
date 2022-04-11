@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "../Math/Math.h"
 
 #define DEVELOPER_BUILD
@@ -13,13 +15,14 @@ struct Gradient_t {
 	Color_t endColour = { 0,0,0,255 };
 };
 
-// cry
+// cry | Why tf is this inside Color.h?!
 struct Chams_t {
 	bool	showObstructed = false;
 	int		drawMaterial = 0;
 	int		overlayType = 0;
 	bool	chamsActive = false;
 	Color_t fresnelBase = { 0,0,0,255 };
+	std::string customMaterial = "None";
 };
 
 namespace Color
