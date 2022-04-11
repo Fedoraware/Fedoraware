@@ -1872,6 +1872,7 @@ void CMenu::LoadStyle()
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
 		style.GrabMinSize = 15.f;
+		style.GrabRounding = 0.f;
 		style.ScrollbarSize = 4.f;
 		style.ScrollbarRounding = 6.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);
