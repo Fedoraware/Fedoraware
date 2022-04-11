@@ -298,6 +298,13 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 				pCmd->buttons |= IN_JUMP;
 		}
 	}
+
+	if ((nOldFlags & ~FL_ONGROUND) && Vars::Misc::DuckJump.m_Var)
+	{
+		if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+				pCmd->buttons |= IN_DUCK;
+	}
 }
 
 void CMisc::NoPush()
@@ -359,21 +366,12 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 
 	static bool s_bState = false;
-	static float height = pLocal->GetVecVelocity().z;
 
 	if (pCmd->buttons & IN_JUMP)
 	{
 		if (!s_bState && !pLocal->IsOnGround())
 		{
 			pCmd->buttons &= ~IN_JUMP;
-
-			if (Vars::Misc::DuckJump.m_Var)
-			{
-				if (pLocal->GetVecVelocity().z > height)
-					pCmd->buttons |= IN_DUCK;
-				else
-					pCmd->buttons &= ~IN_DUCK;
-			}
 		}
 		else if (s_bState)
 			s_bState = false;
