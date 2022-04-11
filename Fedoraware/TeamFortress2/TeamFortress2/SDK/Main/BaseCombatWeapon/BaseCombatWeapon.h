@@ -56,7 +56,7 @@ public: //Netvars
 public: //Virtuals
 	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 379)
 		M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 329)
-		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 340)
+		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 342)
 		M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
 		M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3& (__thiscall*)(void*), 286)
 
@@ -70,6 +70,19 @@ public: //Everything else, lol
 	__inline float ObservedCritChance()
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
+	}
+	
+	//str8 outta cathook
+	__inline bool AmbassadorCanHeadshot()
+	{
+		if (GetItemDefIndex() == Spy_m_TheAmbassador || GetItemDefIndex() == Spy_m_FestiveAmbassador)
+		{
+			if ((g_Interfaces.GlobalVars->curtime - GetLastFireTime()) <= 1.0)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	__inline CAttributeList* GetAttributeList() {
