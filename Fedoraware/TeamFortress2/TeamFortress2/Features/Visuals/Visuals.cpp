@@ -306,9 +306,13 @@ void ApplySkyboxModulation(const Color_t& clr)
 
 void CVisuals::ModulateWorld()
 {
-	if (ModColChanged() || ModSetChanged()) {
+	static bool oconnectionstate = (g_Interfaces.Engine->IsConnected() && g_Interfaces.Engine->IsInGame());
+	bool connectionstate = (g_Interfaces.Engine->IsConnected() && g_Interfaces.Engine->IsInGame());
+	bool isunchanged = connectionstate == oconnectionstate;
+	if (ModColChanged() || ModSetChanged() || !isunchanged) {
 		Vars::Visuals::WorldModulation.m_Var ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({ 255, 255, 255, 255 });
 		Vars::Visuals::SkyModulation.m_Var ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({ 255, 255, 255, 255 });
+		oconnectionstate = connectionstate;
 	}
 	else if (!Vars::Visuals::WorldModulation.m_Var) { ApplyModulation({ 255, 255, 255, 255 }); } // i don't know why i need to do this
 }
