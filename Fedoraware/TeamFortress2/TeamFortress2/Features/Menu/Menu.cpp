@@ -464,7 +464,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				SectionTitle("Player Chams");
 				WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
@@ -476,13 +476,20 @@ void CMenu::MenuVisuals()
 				{
 				case 0:
 				{
+					// Local
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Local.fresnelBase);
+					if (Vars::Chams::Players::Local.drawMaterial == 8)
+					{
+						static std::string currentMat = "None";
+						MaterialCombo("Custom Mat", &currentMat);
+					}
 					break;
 				}
 				case 1:
 				{
+					// Friends
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Friend.fresnelBase);
@@ -490,6 +497,7 @@ void CMenu::MenuVisuals()
 				}
 				case 2:
 				{
+					// Enemies
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Enemy.fresnelBase);
@@ -497,6 +505,7 @@ void CMenu::MenuVisuals()
 				}
 				case 3:
 				{
+					// Teammates
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Team.fresnelBase);
@@ -504,6 +513,7 @@ void CMenu::MenuVisuals()
 				}
 				case 4:
 				{
+					// Target
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Target.fresnelBase);

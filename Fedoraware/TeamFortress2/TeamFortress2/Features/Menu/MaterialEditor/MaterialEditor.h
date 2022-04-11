@@ -19,7 +19,6 @@ class CMaterialEditor {
 	std::string CurrentFile;
 
 	bool EditorOpen = false;
-	std::vector<CustomMaterial> MaterialList;
 	std::wstring MaterialFolder;
 	CustomMaterial CurrentMaterial;
 
@@ -28,6 +27,7 @@ public:
 	void Init();
 
 	bool IsOpen = false;
+	std::vector<CustomMaterial> MaterialList;
 };
 
 inline CMaterialEditor g_MaterialEditor;

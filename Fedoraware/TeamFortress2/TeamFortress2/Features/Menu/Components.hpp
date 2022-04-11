@@ -227,6 +227,29 @@ namespace ImGui
 		return true;
 	}
 
+	/* Combobox for custom materials */
+	__inline bool MaterialCombo(const char* label, std::string* current_mat, ImGuiComboFlags flags = 0)
+	{
+		bool active = false;
+		PushItemWidth(g_Menu.ItemWidth);
+		if (BeginCombo(label, current_mat->c_str(), flags))
+		{
+			for (const auto& mat : g_MaterialEditor.MaterialList)
+			{
+				if (Selectable(mat.Name.c_str(), mat.Name == *current_mat))
+				{
+					*current_mat = mat.Name;
+					active = true;
+				}
+			}
+
+			EndCombo();
+		}
+		PopItemWidth();
+
+		return active;
+	}
+
 	/* Combobox with multiple selectable items */
 	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options,
 	                         const std::string& comboName) {
