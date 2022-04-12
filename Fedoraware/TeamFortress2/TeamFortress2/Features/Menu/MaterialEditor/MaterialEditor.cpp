@@ -145,6 +145,7 @@ void CMaterialEditor::MainWindow()
 					if (Selectable(mat.Name.c_str(), CurrentMaterial.Name == mat.Name))
 					{
 						CurrentMaterial = mat;
+						EditorOpen = false;
 					}
 				}
 

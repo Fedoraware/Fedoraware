@@ -1963,7 +1963,7 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_PopupBg] = BackgroundDark;
 		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
 		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
-		colors[ImGuiCol_FrameBgActive] = ImColor(60, 60, 60);
+		colors[ImGuiCol_FrameBgActive] = ImColor(70, 70, 70);
 		colors[ImGuiCol_CheckMark] = Accent;
 		colors[ImGuiCol_Text] = TextLight;
 
@@ -1972,9 +1972,9 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_ResizeGrip] = Accent;
 		colors[ImGuiCol_ResizeGripActive] = Accent;
 		colors[ImGuiCol_ResizeGripHovered] = Accent;
-		colors[ImGuiCol_Header] = ImColor(60, 60, 60);
+		colors[ImGuiCol_Header] = ImColor(70, 70, 70);
 		colors[ImGuiCol_HeaderActive] = ImColor(40, 40, 40);
-		colors[ImGuiCol_HeaderHovered] = ImColor(50, 50, 50);
+		colors[ImGuiCol_HeaderHovered] = ImColor(60, 60, 60);
 
 		// Alternative Designs
 		if (Vars::Menu::ModernDesign)
