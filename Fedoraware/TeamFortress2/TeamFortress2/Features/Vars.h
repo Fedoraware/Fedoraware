@@ -127,6 +127,7 @@ namespace Vars
 			inline CVar<bool> ManualZAdjust{ true, L"Toggle for manual z adjust on projectile prediction." };
 			inline CVar<float> ZAdjustAmount{ 5.5f, L"Z Adjust factor." };
 			inline CVar<float> predTime{ 2.0f, L"Prediction TIme" };
+			inline CVar<bool> WaitForHit{ false, L"Will wait for the time the projectile is predicted to take to hit the target before attempting to shoot again." };
 		}
 
 		namespace Melee

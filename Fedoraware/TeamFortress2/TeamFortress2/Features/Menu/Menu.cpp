@@ -305,6 +305,8 @@ void CMenu::MenuAimbot()
 			WToggle("Range check", &Vars::Aimbot::Melee::RangeCheck.m_Var); HelpMarker("Only aim at target if within melee range");
 			WToggle("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.m_Var); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 			WToggle("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.m_Var); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
+			WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.m_Var); HelpMarker("Will avoid shooting until the last shot hits");
+
 		} EndChild();
 
 		/* End */
@@ -1872,6 +1874,7 @@ void CMenu::LoadStyle()
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
 		style.GrabMinSize = 15.f;
+		style.GrabRounding = 0.f;
 		style.ScrollbarSize = 4.f;
 		style.ScrollbarRounding = 6.f;
 		style.ItemSpacing = ImVec2(8.f, 5.f);

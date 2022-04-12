@@ -245,6 +245,68 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
+
+
+void CVisuals::StoreMaterialHandles()
+{
+	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h))
+	{
+		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
+		{
+			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
+				continue;
+			
+			MaterialHandleData data;
+			
+			data.Handle = h;
+
+			data.Material = pMaterial;
+
+			auto sGroup = std::string_view(pMaterial->GetTextureGroupName());
+
+			data.Group = sGroup;
+
+			auto sName = std::string_view(pMaterial->GetName());
+
+			data.Name = sName;
+
+			if (sGroup._Starts_with("SkyBox"))
+			{
+				data.GroupType = CVisuals::MaterialHandleData::EMatGroupType::GROUP_SKY;
+			}
+			else if (sGroup._Starts_with("World"))
+			{
+				data.GroupType = CVisuals::MaterialHandleData::EMatGroupType::GROUP_WORLD;
+			}
+			else
+			{
+				data.GroupType = CVisuals::MaterialHandleData::EMatGroupType::GROUP_OTHER;
+			}
+
+			if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
+				|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
+				|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
+				|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
+				|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
+				|| sName.find("hay") != std::string_view::npos)
+			{
+				data.ShouldOverrideTextures = false;
+			}
+			else
+			{
+				data.ShouldOverrideTextures = true;
+			}
+			
+			MaterialHandleDatas.push_back(data);
+		}
+	}
+}
+
+void CVisuals::ClearMaterialHandles()
+{
+	MaterialHandleDatas.clear();
+}
+
 // this whole section below is for world modulation
 bool ModColChanged() // check if colours have been changed
 {
@@ -266,20 +328,40 @@ bool ModSetChanged() // check if modulation has been switched
 
 void ApplyModulation(const Color_t& clr)
 {
-	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
-		MatSystem->Next(h))
+	//for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
+	//	MatSystem->Next(h))
+	//{
+	//	if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
+	//	{
+	//		if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
+	//			continue;
+
+	//		std::string_view group(pMaterial->GetTextureGroupName());
+
+	//		if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos)
+	//		{
+	//			pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
+	//		}
+	//	}
+	//}
+	if (g_Visuals.MaterialHandleDatas.size() < 1)
 	{
-		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
+		return;
+	}
+
+	for (auto& Material : g_Visuals.MaterialHandleDatas)
+	{
+		if (Material.Material)
 		{
-			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
-				continue;
-
-			std::string_view group(pMaterial->GetTextureGroupName());
-
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos)
+			if (Material.GroupType != CVisuals::MaterialHandleData::EMatGroupType::GROUP_WORLD)
 			{
-				pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
+				continue;
 			}
+			if (Material.Material->IsErrorMaterial() || !Material.Material->IsPrecached())
+			{
+				continue;
+			}
+			Material.Material->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 		}
 	}
 
@@ -287,21 +369,42 @@ void ApplyModulation(const Color_t& clr)
 
 void ApplySkyboxModulation(const Color_t& clr)
 {
-	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
-		MatSystem->Next(h))
+	//for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
+	//	MatSystem->Next(h))
+	//{
+	//	const auto& pMaterial = g_Interfaces.MatSystem->Get(h);
+
+	//	if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
+	//		continue;
+
+	//	std::string_view group(pMaterial->GetTextureGroupName());
+
+	//	if (group._Starts_with("SkyBox"))
+	//	{
+	//		pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
+	//	}
+	//}
+	if (g_Visuals.MaterialHandleDatas.size() < 1)
 	{
-		const auto& pMaterial = g_Interfaces.MatSystem->Get(h);
+		return;
+	}
 
-		if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
-			continue;
-
-		std::string_view group(pMaterial->GetTextureGroupName());
-
-		if (group._Starts_with("SkyBox"))
+	for (auto& Material : g_Visuals.MaterialHandleDatas)
+	{
+		if (Material.Material)
 		{
-			pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
+			if (Material.GroupType != CVisuals::MaterialHandleData::EMatGroupType::GROUP_SKY)
+			{
+				continue;
+			}
+			if (Material.Material->IsErrorMaterial() || !Material.Material->IsPrecached())
+			{
+				continue;
+			}
+			Material.Material->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 		}
 	}
+
 }
 
 void CVisuals::ModulateWorld()
@@ -309,12 +412,21 @@ void CVisuals::ModulateWorld()
 	static bool oconnectionstate = (g_Interfaces.Engine->IsConnected() && g_Interfaces.Engine->IsInGame());
 	bool connectionstate = (g_Interfaces.Engine->IsConnected() && g_Interfaces.Engine->IsInGame());
 	bool isunchanged = connectionstate == oconnectionstate;
+	static bool a = false;
 	if (ModColChanged() || ModSetChanged() || !isunchanged) {
 		Vars::Visuals::WorldModulation.m_Var ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({ 255, 255, 255, 255 });
 		Vars::Visuals::SkyModulation.m_Var ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({ 255, 255, 255, 255 });
 		oconnectionstate = connectionstate;
+		a = false;
 	}
-	else if (!Vars::Visuals::WorldModulation.m_Var) { ApplyModulation({ 255, 255, 255, 255 }); } // i don't know why i need to do this
+	else if (!Vars::Visuals::WorldModulation.m_Var) { 
+		
+		if (!a)
+		{
+			ApplyModulation({ 255, 255, 255, 255 });
+			a = true;
+		}
+	} // i don't know why i need to do this
 }
 
 void CVisuals::RestoreWorldModulation() // keep this because its mentioned in @DLLMain.cpp if you find a better way to do this, remove it ig.
@@ -337,27 +449,18 @@ void CVisuals::OverrideWorldTextures()
 
 	if (Vars::Visuals::OverrideWorldTextures.m_Var)
 	{
-		for (auto h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.
-		     MatSystem->Next(h))
+		for (auto &data : MaterialHandleDatas)
 		{
-			IMaterial* pMaterial = g_Interfaces.MatSystem->Get(h);
-
-			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached()
-				|| pMaterial->IsTranslucent() || pMaterial->IsSpriteCard()
-				|| std::string_view(pMaterial->GetTextureGroupName()).find("World") == std::string_view::npos)
+			if (data.Material == nullptr)
 				continue;
 
-			auto sName = std::string_view(pMaterial->GetName());
-
-			if (sName.find("water") != std::string_view::npos || sName.find("glass") != std::string_view::npos
-				|| sName.find("door") != std::string_view::npos || sName.find("tools") != std::string_view::npos
-				|| sName.find("player") != std::string_view::npos || sName.find("chicken") != std::string_view::npos
-				|| sName.find("wall28") != std::string_view::npos || sName.find("wall26") != std::string_view::npos
-				|| sName.find("decal") != std::string_view::npos || sName.find("overlay") != std::string_view::npos
-				|| sName.find("hay") != std::string_view::npos)
+			if (data.Material->IsTranslucent() || data.Material->IsSpriteCard() || data.GroupType != CVisuals::MaterialHandleData::EMatGroupType::GROUP_WORLD)
 				continue;
 
-			pMaterial->SetShaderAndParams(kv);
+			if (!data.ShouldOverrideTextures)
+				continue;
+
+			data.Material->SetShaderAndParams(kv);
 		}
 	}
 }
