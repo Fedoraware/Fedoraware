@@ -17,12 +17,10 @@ std::wstring CMaterialEditor::GetMaterialPath(const std::wstring& matFileName)
 
 IMaterial* CMaterialEditor::GetByName(const std::string& name)
 {
-	for (auto const& mat : MaterialList)
+	const auto fMat = std::find_if(MaterialList.begin(), MaterialList.end(), [&name](const CustomMaterial& mat) { return mat.Name == name; });
+	if (fMat != MaterialList.end())
 	{
-		if (mat.Name == name)
-		{
-			return mat.Material;
-		}
+		return fMat->Material;
 	}
 
 	return nullptr;
@@ -104,6 +102,12 @@ void CMaterialEditor::MainWindow()
 			{
 				std::filesystem::remove(GetMaterialPath(CurrentMaterial.FileName));
 				LoadMaterials();
+			}
+
+			SameLine();
+			if (Button("Open Folder") && !GetMaterialPath(CurrentMaterial.FileName).empty())
+			{
+				ShellExecuteW(nullptr, L"open", MaterialFolder.c_str(), nullptr, nullptr, SW_SHOWDEFAULT);
 			}
 		}
 

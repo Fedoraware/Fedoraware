@@ -15,7 +15,7 @@ struct Gradient_t {
 	Color_t endColour = { 0,0,0,255 };
 };
 
-// cry | Why tf is this inside Color.h?!
+// cry
 struct Chams_t {
 	bool	showObstructed = false;
 	int		drawMaterial = 0;

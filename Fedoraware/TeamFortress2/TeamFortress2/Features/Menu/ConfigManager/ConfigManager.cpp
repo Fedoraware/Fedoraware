@@ -6,6 +6,7 @@
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
 #include "../../Misc/Misc.h"
+#include "../../../Utils/Base64/Base64.hpp"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
@@ -89,8 +90,10 @@ void CConfigManager::Save(const wchar_t* name, Vec3 val)
 
 void CConfigManager::Save(const wchar_t *name, Chams_t val)
 {
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive, val.fresnelBase.r, val.fresnelBase.g, val.fresnelBase.b);
+	const std::string encName = Base64::Encode(val.customMaterial);
+
+	char buffer[128];
+	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d %s", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive, val.fresnelBase.r, val.fresnelBase.g, val.fresnelBase.b, encName.c_str());
 	m_Write << buffer << "\n";
 }
 
@@ -172,8 +175,11 @@ void CConfigManager::Load(const wchar_t* name, Chams_t& val)
 
 	if (Find(name, line)) {
 		int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
-		swscanf_s(line.c_str(), L"%*ls %d %d %d %d %d %d %d", &a, &b, &c, &d, &e, &f, &g);
-		val = { static_cast<bool>(a), static_cast<int>(b), static_cast<int>(c), static_cast<bool>(d), {static_cast<byte>(e), static_cast<byte>(f), static_cast<byte>(g), 255} };
+		wchar_t wEncName[64]{ };
+		swscanf_s(line.c_str(), L"%*ls %d %d %d %d %d %d %d %ls", &a, &b, &c, &d, &e, &f, &g, wEncName, 64);
+		std::wstring wsString(wEncName);
+		const std::string decName = Base64::Decode(std::string(wsString.begin(), wsString.end()));
+		val = { static_cast<bool>(a), b, c, static_cast<bool>(d), {static_cast<byte>(e), static_cast<byte>(f), static_cast<byte>(g), 255}, decName };
 	}
 }
 
