@@ -335,7 +335,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 		const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
 
-		bool built = Building->GetConstructed() == 1.f;
+		bool built = (!Building->GetCarried() && Building->GetConstructed());
 		if (!built)
 			continue;
 
