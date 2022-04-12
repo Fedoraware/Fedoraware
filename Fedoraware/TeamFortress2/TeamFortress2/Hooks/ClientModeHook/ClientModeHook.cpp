@@ -346,10 +346,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		AntiWarp(pCmd);
 	}*/
 
-
-	if (Vars::Misc::TauntSlide.m_Var)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		if (Vars::Misc::TauntSlide.m_Var)
 		{
 			if (pLocal->IsTaunting())
 			{
@@ -363,8 +362,22 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 				return false;
 			}
 		}
-	}
 
+		static float cycledelta = 0.f;
+		if (!*pSendPacket) {
+			pLocal->m_bClientSideAnimation() = false;
+			pLocal->m_flPlaybackRate() = 0.f;
+			cycledelta += 0.02f;
+		}
+		else {
+			pLocal->m_bClientSideAnimation() = true;
+			pLocal->m_flPlaybackRate() = 1.f;
+
+			pLocal->m_flCycle() += cycledelta;
+			cycledelta = 0.f;
+		}
+	}
+	
 	static bool bWasSet = false;
 
 	if (g_GlobalInfo.m_bSilentTime)

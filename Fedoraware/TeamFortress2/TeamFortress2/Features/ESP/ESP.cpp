@@ -671,8 +671,12 @@ void CESP::DrawWorld() const
 	{
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
-			if (Utils::W2S(Health->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Health, ALIGN_CENTER, _(L"Healthpack"));
+			int x = 0, y = 0, w = 0, h = 0;
+			Vec3 vTrans[8];
+			if (GetDrawBounds(Health, vTrans, x, y, w, h)) {
+				if (Utils::W2S(Health->GetVecOrigin(), vScreen))
+					g_Draw.String(FONT, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, _(L"Health"));
+			} // obviously a health pack isn't going to be upside down, this just looks nicer.
 		}
 	}
 
@@ -680,8 +684,12 @@ void CESP::DrawWorld() const
 	{
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
-			if (Utils::W2S(Ammo->GetWorldSpaceCenter(), vScreen))
-				g_Draw.String(FONT, vScreen.x, vScreen.y, Colors::Ammo, ALIGN_CENTER, _(L"Ammopack"));
+			int x = 0, y = 0, w = 0, h = 0;
+			Vec3 vTrans[8];
+			if (GetDrawBounds(Ammo, vTrans, x, y, w, h)) {
+				if (Utils::W2S(Ammo->GetVecOrigin(), vScreen))
+					g_Draw.String(FONT, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, _(L"Ammo"));
+			}
 		}
 	}
 

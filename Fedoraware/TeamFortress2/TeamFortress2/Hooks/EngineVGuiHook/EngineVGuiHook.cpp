@@ -215,21 +215,21 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				// debug
 				if (Vars::Visuals::DebugInfo.m_Var)
 				{
-					int yoffset = 0;
+					int yoffset = 0, xoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
-						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
+						g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 						yoffset += 20;
 					}
 
 					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
 						int weaponid = pWeapon->GetWeaponID();
 						if (weaponid) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
 							yoffset += 20;
 						}
 						int weaponindex = pWeapon->GetItemDefIndex();
 						if (weaponid) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
 							yoffset += 20;
 						}
 					}
@@ -237,21 +237,53 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					if (const auto& pLocal = g_EntityCache.m_pLocal) {
 						int tickbase = pLocal->GetTickBase();
 						if (tickbase) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
 							yoffset += 20;
 						}
+						int sequence = pLocal->m_nSequence();
+						if (sequence) {
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "sequence = %i", sequence);
+							yoffset += 20;
+						}
+						//int animtime = pLocal->m_flAnimTime();	// unused??? always returns the same value
+						//if (animtime) {
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "animtime = %i", animtime);
+						//	yoffset += 20;
+						//}
+						float cycle = pLocal->m_flCycle();
+						{
+						g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
+						yoffset += 20;
+						}
+						float playbackrate = pLocal->m_flPlaybackRate();
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "playbackrate = %+.1f", playbackrate);
+							yoffset += 20;
+						}
+						bool clientanimations = pLocal->m_bClientSideAnimation();
+						{
+							Color_t clr = clientanimations ? Color_t{ 108, 255, 0, 255 } : Color_t{ 255, 118, 36, 255 };
+							g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
+							yoffset += 20;
+						}
+						/*std::array poseparam = pLocal->GetPoseParam(); // 0 & 1, viewangles, 4 & 5, movement. and the other 20 entries do nothing?????? n1 valve
+						int n = 0;
+						for (; n < 24; n++) {
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "poseparam[%i] = %+.1f", n, poseparam[n]);
+							yoffset += 20;
+						}*/
 					}
 
-					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+					/*for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 					{
 						Vec3 CollideableMins = Projectile->GetCollideableMins();
 						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
 						if (!CollideableMins.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %+.2f %+.2f %+.2f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %+.2f %+.2f %+.2f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
 							yoffset += 20;
 						}
 						if (!CollideableMaxs.IsZero()) {
-							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
 							yoffset += 20;
 						}
 
@@ -259,13 +291,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						if (pModel) {
 							studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
 							if (pHDR) {
-								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
+								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
 								yoffset += 20;
-								g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
+								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
 								yoffset += 20;
 							}
 						}
-					}
+					}*/
 					
 				}
 

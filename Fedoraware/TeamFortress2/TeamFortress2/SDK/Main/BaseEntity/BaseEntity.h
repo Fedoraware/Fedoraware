@@ -197,11 +197,13 @@ public: //Netvars & conditions
 		NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"))
 		NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"))
 		NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"))
-		NETVAR(clientAnimations, bool, _("CBaseAnimating"), _("m_bClientSideAnimation"))
+		NETVAR(m_bClientSideAnimation, bool, _("CBaseAnimating"), _("m_bClientSideAnimation"))
+		NETVAR(m_flPlaybackRate, float, _("CBaseAnimating"), _("m_flPlaybackRate"))
 		NETVAR(m_vecMins, Vec3, _("CBaseEntity"), _("m_vecMins"))
 		NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"))
-		NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence")
-		NETVAR(m_flCycle, int, "CBaseAnimating", "m_flCycle")
+		NETVAR(m_nSequence, int, _("CBaseAnimating"), _("m_nSequence"))
+		NETVAR(m_flCycle, float, _("CBaseAnimating"), _("m_flCycle"))
+		NETVAR(m_flAnimTime, int, _("CBaseAnimating"), _("m_flAnimTime "))
 		NETVAR(m_ConditionList, void*, _("CTFPlayer"), _("m_ConditionList"))
 
 public: //Virtuals
