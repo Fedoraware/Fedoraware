@@ -240,9 +240,41 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
 							yoffset += 20;
 						}
+						int sequence = pLocal->m_nSequence();
+						if (sequence) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "sequence = %i", sequence);
+							yoffset += 20;
+						}
+						//int animtime = pLocal->m_flAnimTime();	// unused??? always returns the same value
+						//if (animtime) {
+						//	g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "animtime = %i", animtime);
+						//	yoffset += 20;
+						//}
+						float cycle = pLocal->m_flCycle();
+						{
+						g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
+						yoffset += 20;
+						}
+						float playbackrate = pLocal->m_flPlaybackRate();
+						{
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "playbackrate = %+.1f", playbackrate);
+							yoffset += 20;
+						}
+						bool clientanimations = pLocal->m_bClientSideAnimation();
+						{
+							Color_t clr = clientanimations ? Color_t{ 108, 255, 0, 255 } : Color_t{ 255, 118, 36, 255 };
+							g_Draw.String(FONT_MENU, 100, yoffset, clr, ALIGN_DEFAULT, "client animating");
+							yoffset += 20;
+						}
+						/*std::array poseparam = pLocal->GetPoseParam(); // 0 & 1, viewangles, 4 & 5, movement. and the other 20 entries do nothing?????? n1 valve
+						int n = 0;
+						for (; n < 24; n++) {
+							g_Draw.String(FONT_MENU, 100, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "poseparam[%i] = %+.1f", n, poseparam[n]);
+							yoffset += 20;
+						}*/
 					}
 
-					for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+					/*for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 					{
 						Vec3 CollideableMins = Projectile->GetCollideableMins();
 						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
@@ -265,7 +297,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								yoffset += 20;
 							}
 						}
-					}
+					}*/
 					
 				}
 
