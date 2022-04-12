@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "../Math/Math.h"
 
 #define DEVELOPER_BUILD
@@ -20,6 +22,7 @@ struct Chams_t {
 	int		overlayType = 0;
 	bool	chamsActive = false;
 	Color_t fresnelBase = { 0,0,0,255 };
+	std::string customMaterial = "None";
 };
 
 namespace Color

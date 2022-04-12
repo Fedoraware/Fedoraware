@@ -125,7 +125,9 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\TextEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\SpectatorList\SpectatorList.cpp" />
@@ -238,7 +240,9 @@
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_rectpack.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\TextEditor.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\SpectatorList\SpectatorList.h" />

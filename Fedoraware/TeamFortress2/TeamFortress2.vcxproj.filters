@@ -105,6 +105,8 @@
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\SpectatorList\SpectatorList.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\ImGui\TextEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -655,6 +657,8 @@
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\SpectatorList\SpectatorList.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\ImGui\TextEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

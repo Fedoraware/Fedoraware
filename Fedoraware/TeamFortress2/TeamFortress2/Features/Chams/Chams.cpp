@@ -1,5 +1,6 @@
 #include "Chams.h"
 #include "../Vars.h"
+#include "../Menu/MaterialEditor/MaterialEditor.h"
 
 bool CChams::ShouldRun()
 {
@@ -171,7 +172,7 @@ Chams_t FetchChams(CBaseObject* pBuilding) {
 	return Vars::Chams::Buildings::Enemy;
 }
 
-IMaterial* CChams::fetchMaterial(Chams_t chams)
+IMaterial* CChams::FetchMaterial(const Chams_t& chams)
 {
 	switch (chams.drawMaterial)
 	{
@@ -203,6 +204,10 @@ IMaterial* CChams::fetchMaterial(Chams_t chams)
 	{
 		return m_pMatPlastic;
 	}
+	case 8:
+	{
+		return g_MaterialEditor.GetByName(chams.customMaterial);
+	}
 	default: return nullptr;
 	}
 }
@@ -229,7 +234,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 			continue;
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Player);
-		auto chamsMaterial = fetchMaterial(chams);
+		auto chamsMaterial = FetchMaterial(chams);
 		bool bIsLocal = Player->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
 
 		//skip if disabled or null material
@@ -341,7 +346,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Building);
-		auto chamsMaterial = fetchMaterial(chams);
+		auto chamsMaterial = FetchMaterial(chams);
 
 		if (!chams.chamsActive || !chams.drawMaterial)
 			continue;
@@ -405,7 +410,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 				continue;
 
 			auto chams = Vars::Chams::World::Health;
-			auto chamsMaterial = fetchMaterial(chams);
+			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Colors::Health;
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 
@@ -446,7 +451,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 				continue;
 
 			auto chams = Vars::Chams::World::Ammo;
-			auto chamsMaterial = fetchMaterial(chams);
+			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Colors::Ammo;
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
@@ -501,7 +506,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 				continue;
 
 			auto chams = Vars::Chams::World::Projectiles;
-			auto chamsMaterial = fetchMaterial(chams);
+			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));

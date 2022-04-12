@@ -416,7 +416,7 @@ namespace Vars
 		inline CVar<int> FieldOfView{ 110, L"Field of View" };
 		inline CVar<int> AimFOVAlpha{ 10, L"Aim FOV Alpha" };
 		inline CVar<bool> RemoveScope{ true, L"Remove Scope" };
-		inline CVar<bool> RemoveMOTD{ true, L"Remove MOTD" };
+		inline CVar<bool> RemoveMOTD{ false, L"Remove MOTD" };
 		inline CVar<bool> ScopeLines{ false, L"Scope lines" };
 		inline CVar<bool> PickupTimers{ false, L"Pickup Timers" };
 		inline CVar<bool> RemoveZoom{ true, L"Remove Zoom" };

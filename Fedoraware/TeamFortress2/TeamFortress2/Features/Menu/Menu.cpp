@@ -9,6 +9,7 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
 #include "Fonts/IconsMaterialDesign.h"
+#include "MaterialEditor/MaterialEditor.h"
 
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
@@ -26,7 +27,7 @@ void CMenu::DrawMenu()
 	LoadStyle(); // fix for gradients
 	// might have some negative perf effect, idrc tho im sick of black gradients.
 
-	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
@@ -65,6 +66,14 @@ void CMenu::DrawMenu()
 				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
 			}
 			ImGui::HelpMarker("Playerlist");
+
+			// Material Editor Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_BRUSH))
+			{
+				g_MaterialEditor.IsOpen = !g_MaterialEditor.IsOpen;
+			}
+			ImGui::HelpMarker("Material Editor");
 
 			#ifdef _DEBUG
 			// Debug Menu
@@ -460,7 +469,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				SectionTitle("Player Chams");
 				WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
@@ -472,37 +481,62 @@ void CMenu::MenuVisuals()
 				{
 				case 0:
 				{
+					// Local
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Local.fresnelBase);
+					if (Vars::Chams::Players::Local.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Players::Local.customMaterial);
+					}
 					break;
 				}
 				case 1:
 				{
+					// Friends
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Friend.fresnelBase);
+					if (Vars::Chams::Players::Friend.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Players::Friend.customMaterial);
+					}
 					break;
 				}
 				case 2:
 				{
+					// Enemies
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Enemy.fresnelBase);
+					if (Vars::Chams::Players::Enemy.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Players::Enemy.customMaterial);
+					}
 					break;
 				}
 				case 3:
 				{
+					// Teammates
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Team.fresnelBase);
+					if (Vars::Chams::Players::Team.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Players::Team.customMaterial);
+					}
 					break;
 				}
 				case 4:
 				{
+					// Target
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Players::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Target.fresnelBase);
+					if (Vars::Chams::Players::Target.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Players::Target.customMaterial);
+					}
 					break;
 				}
 				}
@@ -678,7 +712,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				SectionTitle("Building Chams");
 				WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.m_Var); HelpMarker("Building chams master switch");
@@ -688,37 +722,62 @@ void CMenu::MenuVisuals()
 				{
 				case 0:
 				{
+					// Local
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Local.chamsActive, &Vars::Chams::Buildings::Local.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Local.fresnelBase);
+					if (Vars::Chams::Buildings::Local.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Local.customMaterial);
+					}
 					break;
 				}
 				case 1:
 				{
+					// Friends
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Friend.chamsActive, &Vars::Chams::Buildings::Friend.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Friend.fresnelBase);
+					if (Vars::Chams::Buildings::Friend.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Friend.customMaterial);
+					}
 					break;
 				}
 				case 2:
 				{
+					// Enemy
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Enemy.chamsActive, &Vars::Chams::Buildings::Enemy.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Enemy.fresnelBase);
+					if (Vars::Chams::Buildings::Enemy.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Enemy.customMaterial);
+					}
 					break;
 				}
 				case 3:
 				{
+					// Team
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Team.chamsActive, &Vars::Chams::Buildings::Team.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Team.fresnelBase);
+					if (Vars::Chams::Buildings::Team.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Team.customMaterial);
+					}
 					break;
 				}
 				case 4:
 				{
+					// Target
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Target.chamsActive, &Vars::Chams::Buildings::Target.showObstructed, }, "Options");
 					WCombo("Material", &Vars::Chams::Buildings::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
 					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Target.fresnelBase);
+					if (Vars::Chams::Buildings::Target.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Target.customMaterial);
+					}
 					break;
 				}
 				}
@@ -769,7 +828,7 @@ void CMenu::MenuVisuals()
 				};
 
 				static int currentSelected = 0;
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic" };
+				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
 
 				WCombo("Config", &currentSelected, chamOptions);
 				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
@@ -779,6 +838,10 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to healthpacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Health.fresnelBase);
+					if (Vars::Chams::World::Health.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::World::Health.customMaterial);
+					}
 					break;
 				}
 				case 1:
@@ -786,6 +849,10 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to ammopacks");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Ammo.fresnelBase);
+					if (Vars::Chams::World::Ammo.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::World::Ammo.customMaterial);
+					}
 					break;
 				}
 				case 2:
@@ -793,6 +860,10 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "Options");
 					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to projectiles");
 					ColorPickerL("Fresnel base colour", Vars::Chams::World::Projectiles.fresnelBase);
+					if (Vars::Chams::World::Projectiles.drawMaterial == 8)
+					{
+						MaterialCombo("Custom Material", &Vars::Chams::World::Projectiles.customMaterial);
+					}
 					WCombo("Team###WorldChamsProjectiles", &Vars::Chams::World::Projectilez.m_Var, { "All", "Enemy only" });
 					break;
 
@@ -951,7 +1022,7 @@ void CMenu::MenuVisuals()
 				ColorPickerL("World modulation colour", Colors::WorldModulation);
 				ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1);
 				ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2);
-				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch" }, { &Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var }, "Removals");
+				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD" }, {&Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var, &Vars::Visuals::RemoveMOTD.m_Var}, "Removals");
 				HelpMarker("Select what you want to remove");
 				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var, &Vars::Visuals::MoveSimLine.m_Var }, "Misc");
 				HelpMarker("What misc visual features should be run");
@@ -1782,8 +1853,8 @@ void CMenu::DrawCameraWindow()
 		}
 
 		// Draw the camera window
-		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_Once);
-		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_Once);
+		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_FirstUseEver);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
 		if (ImGui::Begin("Camera", nullptr, windowFlags))
 		{
@@ -1842,6 +1913,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
 		DebugMenu();
+		g_MaterialEditor.Render();
 		g_PlayerList.Render();
 
 		ImGui::PopFont();
@@ -1891,7 +1963,7 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_PopupBg] = BackgroundDark;
 		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
 		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
-		colors[ImGuiCol_FrameBgActive] = ImColor(60, 60, 60);
+		colors[ImGuiCol_FrameBgActive] = ImColor(70, 70, 70);
 		colors[ImGuiCol_CheckMark] = Accent;
 		colors[ImGuiCol_Text] = TextLight;
 
@@ -1900,9 +1972,9 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_ResizeGrip] = Accent;
 		colors[ImGuiCol_ResizeGripActive] = Accent;
 		colors[ImGuiCol_ResizeGripHovered] = Accent;
-		colors[ImGuiCol_Header] = ImColor(60, 60, 60);
+		colors[ImGuiCol_Header] = ImColor(70, 70, 70);
 		colors[ImGuiCol_HeaderActive] = ImColor(40, 40, 40);
-		colors[ImGuiCol_HeaderHovered] = ImColor(50, 50, 50);
+		colors[ImGuiCol_HeaderHovered] = ImColor(60, 60, 60);
 
 		// Alternative Designs
 		if (Vars::Menu::ModernDesign)
@@ -1977,4 +2049,5 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	}
 
 	LoadStyle();
+	g_MaterialEditor.Init();
 }
