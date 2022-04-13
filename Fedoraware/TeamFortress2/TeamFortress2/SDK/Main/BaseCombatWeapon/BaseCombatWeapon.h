@@ -11,6 +11,8 @@ class CBaseCombatWeapon : public CBaseEntity
 public: //Netvars
 	M_DYNVARGET(Clip1, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip1"))
 		M_DYNVARGET(Clip2, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip2"))
+		M_DYNVARGET(nViewModelIndex, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_nViewModelIndex"))
+		M_DYNVARGET(iViewModelIndex, int, this, _("DT_BaseCombatWeapon"), _("m_iViewModelIndex"))
 		M_DYNVARGET(ItemDefIndex, int, this, _("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"))
 		M_DYNVARGET(ChargeBeginTime, float, this, _("DT_WeaponPipebombLauncher"), _("PipebombLauncherLocalData"), _("m_flChargeBeginTime"))
 		M_DYNVARGET(ChargeDamage, float, this, _("DT_TFSniperRifle"), _("SniperRifleLocalData"), _("m_flChargedDamage"))

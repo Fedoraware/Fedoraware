@@ -232,6 +232,16 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
 							yoffset += 20;
 						}
+						int iviewmodel = pWeapon->GetiViewModelIndex();
+						if (iviewmodel) {
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "iviewmodel = %i", iviewmodel);
+							yoffset += 20;
+						}
+						int nviewmodel = pWeapon->GetnViewModelIndex(); // unused?
+						if (nviewmodel) {
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "nviewmodel = %i", nviewmodel);
+							yoffset += 20;
+						}
 					}
 
 					if (const auto& pLocal = g_EntityCache.m_pLocal) {
@@ -250,10 +260,15 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "animtime = %i", animtime);
 						//	yoffset += 20;
 						//}
+						//float laggedmovement = pLocal->m_flLaggedMovementValue(); 
+						//{
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "laggedmovement = %+.1f", laggedmovement);
+						//	yoffset += 20;
+						//}
 						float cycle = pLocal->m_flCycle();
 						{
-						g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
-						yoffset += 20;
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
+							yoffset += 20;
 						}
 						float playbackrate = pLocal->m_flPlaybackRate();
 						{
