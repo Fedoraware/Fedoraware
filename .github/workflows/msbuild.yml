@@ -36,14 +36,14 @@ jobs:
        path: ${{env.SOLUTION_FILE_PATH}}/Release/Fware(Release).dll
     
     # Update version in package.json according to the tag
-    - name: Check package version
-      uses: technote-space/package-version-check-action@v1
-    
-    - name: Changelog
-      uses: scottbrenner/generate-changelog-action@master
-      id: Changelog
-      env:
-        REPO: ${{ github.repository }}
+    #- name: Check package version
+    #  uses: technote-space/package-version-check-action@v1
+    #
+    #- name: Changelog
+    #  uses: scottbrenner/generate-changelog-action@master
+    #  id: Changelog
+    #  env:
+    #    REPO: ${{ github.repository }}
     
     - name: Create Release
       id: create_release
@@ -54,6 +54,6 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         body: |
-          ${{ steps.Changelog.outputs.changelog }}
+          Hello
         draft: false
         prerelease: false
