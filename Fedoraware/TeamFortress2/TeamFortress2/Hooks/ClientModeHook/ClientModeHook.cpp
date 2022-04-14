@@ -363,18 +363,21 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 
-		static float cycledelta = 0.f;
-		if (!*pSendPacket) {
-			pLocal->m_bClientSideAnimation() = false;
-			pLocal->m_flPlaybackRate() = 0.f;
-			cycledelta += 0.02f;
-		}
-		else {
-			pLocal->m_bClientSideAnimation() = true;
-			pLocal->m_flPlaybackRate() = 1.f;
+		if (Vars::Visuals::DebugInfo.m_Var) {
+			static float cycledelta = 0.f;
+			if (!*pSendPacket) {
+				pLocal->m_bClientSideAnimation() = false;
+				pLocal->m_flPlaybackRate() = 0.f;
+				cycledelta += 0.02f;
+			}
+			else {
+				pLocal->m_bClientSideAnimation() = true;
+				pLocal->GetUpdateClientSideAnimation();
+				pLocal->m_flPlaybackRate() = 1.f;
 
-			pLocal->m_flCycle() += cycledelta;
-			cycledelta = 0.f;
+				pLocal->m_flCycle() += cycledelta;
+				cycledelta = 0.f;
+			}
 		}
 	}
 	
