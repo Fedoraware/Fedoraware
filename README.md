@@ -18,6 +18,7 @@
 - The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
 
 ## Guide:
+- Buy rijin instead, if you can not afford rijin use this until you can.
 - We suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
 - Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
 - __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__
