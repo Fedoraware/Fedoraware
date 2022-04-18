@@ -250,11 +250,32 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
 							yoffset += 20;
 						}
-						int sequence = pLocal->m_nSequence();
-						if (sequence) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "sequence = %i", sequence);
+						int tickcount = g_Interfaces.GlobalVars->tickcount;
+						if (tickcount) {
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 							yoffset += 20;
+							float predictedsimtime = TICKS_TO_TIME(tickcount);
+							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "predictedsimtime = %.1f", predictedsimtime);
+							yoffset += 20;
+							float simtime = pLocal->GetSimulationTime();
+							if (simtime) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "simtime = %.1f", simtime);
+								yoffset += 20;
+								float simtimedelta = predictedsimtime - simtime;
+								{
+									Color_t clr = { 255, 255, 255, 255 };
+									if (simtimedelta > 0) { clr = { 255, 0, 246, 255 }; }
+									else if (simtimedelta < 0) { clr = { 255, 139, 26, 255 }; }
+									g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "simtimedelta = %.1f", simtimedelta);
+									yoffset += 20;
+								}
+							}
 						}
+						//int sequence = pLocal->m_nSequence();		// big numbah, maybe more useful when looking at individual anim layers?
+						//if (sequence) {
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "sequence = %i", sequence);
+						//	yoffset += 20;
+						//}
 						//int animtime = pLocal->m_flAnimTime();	// unused??? always returns the same value
 						//if (animtime) {
 						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "animtime = %i", animtime);
