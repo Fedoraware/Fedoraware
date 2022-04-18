@@ -430,6 +430,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Active);
 				SAVE_VAR(Vars::Chams::Players::Wearables);
 				SAVE_VAR(Vars::Chams::Players::Weapons);
+				SAVE_VAR(Vars::Chams::Players::FadeoutTeammates);
 			}
 
 			//Buildings
@@ -1130,6 +1131,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Players::Active);
 				LOAD_VAR(Vars::Chams::Players::Wearables);
 				LOAD_VAR(Vars::Chams::Players::Weapons);
+				LOAD_VAR(Vars::Chams::Players::FadeoutTeammates);
 			}
 
 			//Buildings

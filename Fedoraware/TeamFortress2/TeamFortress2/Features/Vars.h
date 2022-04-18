@@ -275,6 +275,7 @@ namespace Vars
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> Wearables{ true, L"Render Wearables" };
 			inline CVar<bool> Weapons{ true, L"Render Weapons" };
+			inline CVar<bool> FadeoutTeammates{ true };
 
 			// {ignorez, material, overlay type (0 = off), active}
 			inline Chams_t Local{};

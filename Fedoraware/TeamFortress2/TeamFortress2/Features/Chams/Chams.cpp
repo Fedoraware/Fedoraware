@@ -251,8 +251,11 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 			
-
-		g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+		float drawalpha = Color::TOFLOAT(DrawColor.a);
+		if (Player->GetTeamNum() == pLocal->GetTeamNum() && !bIsLocal && Vars::Chams::Players::FadeoutTeammates.m_Var) {
+			drawalpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()), 250.f, 25.f, drawalpha, 0.0f);
+		}
+		g_Interfaces.RenderView->SetBlend(drawalpha);
 		if (chams.drawMaterial != 6)
 		{
 			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),

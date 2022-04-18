@@ -473,7 +473,7 @@ void CMenu::MenuVisuals()
 
 				SectionTitle("Player Chams");
 				WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.m_Var); HelpMarker("Player chams master switch");
-				MultiCombo({ "Render Wearable", "Render Weapon" }, { &Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var }, "Flags");
+				MultiCombo({ "Render Wearable", "Render Weapon", "Fadeout Own Team"}, {&Vars::Chams::Players::Wearables.m_Var, &Vars::Chams::Players::Weapons.m_Var, &Vars::Chams::Players::FadeoutTeammates.m_Var}, "Flags");
 				HelpMarker("Customize Chams");
 				WCombo("Config", &currentSelected, chamOptions);
 
