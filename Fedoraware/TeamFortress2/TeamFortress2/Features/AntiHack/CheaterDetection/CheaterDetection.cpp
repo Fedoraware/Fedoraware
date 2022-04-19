@@ -8,9 +8,9 @@ bool CheaterDetection::shouldScan(int nIndex, CBaseEntity* pSuspect) {
 	return true;
 }
 
-//bool CheaterDetection::isSteamNameDifferent(int nIndex) {
-//
-//}
+bool CheaterDetection::isSteamNameDifferent(int nIndex, PlayerInfo_t pInfo) {
+	return pInfo.name != pInfo.friendsName;
+}
 //
 //bool CheaterDetection::isPitchInvalid(int nIndex) {
 //
@@ -36,26 +36,28 @@ void CheaterDetection::OnTick() {
 		int index = pSuspect->GetIndex();
 		if (index == pLocal->GetIndex() || !shouldScan(index, pSuspect)) { continue; }
 
-		if (lasttick[index].tickbase) {
-			//if (!isknown[index].steamname) {
-			//	isknown[index].steamname = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
-			//	strikes[index] += isSteamNameDifferent(index) ? 1 : 0; // add a strike to this player if they are manipulating their in game name.
-			//}
-			//if (!isknown[index].tickbase) {
-			//	if ((pSuspect->m_nTickBase() - lasttick[index].tickbase) > 16) { // if the player has changed their tickbase by more than 16 ticks from our last scan, mark them.
-			//		isknown[index].tickbase = true;
-			//		strikes[index]++;
-			//	}
-			//}
-			if (!isknown[index].choke) {
-				if (g_GlobalInfo.chokeMap[index].ChokedTicks >= 14) { // if the player has choked 14 or more ticks, mark them
-					isknown[index].choke = true;
-					strikes[index]++;
+		PlayerInfo_t pi;
+		if (g_Interfaces.Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer) {
+			int friendsID = pi.friendsID;
+
+			if (lasttick[friendsID].tickbase) {
+				if (!isknown[friendsID].steamname) {
+					isknown[friendsID].steamname = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
+					strikes[friendsID] += isSteamNameDifferent(index, pi) ? 1 : 0; // add a strike to this player if they are manipulating their in game name.
+				}
+
+				if (!isknown[friendsID].choke) {
+					if (g_GlobalInfo.chokeMap[index].ChokedTicks >= 14) { // if the player has choked 14 or more ticks, mark them
+						isknown[friendsID].choke = true;
+						strikes[friendsID]++;
+					}
 				}
 			}
+
+			lasttick[friendsID] = { pSuspect->m_nTickBase(), pSuspect->GetEyeAngles() };
+			markedcheaters[friendsID] = strikes[friendsID];
 		}
 
-		lasttick[index] = { pSuspect->m_nTickBase(), pSuspect->GetEyeAngles() };
-		markedcheaters[index] = strikes[index];
+		
 	}
 }
