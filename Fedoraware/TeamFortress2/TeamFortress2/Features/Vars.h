@@ -102,7 +102,6 @@ namespace Vars
 			inline CVar<int> ScanHitboxes{ 7 };	// Binary: 00111 {legs, arms, body, pelvis, head}
 			inline CVar<int> SmoothingAmount{ 4, L"Smoothing Amount" };
 			inline CVar<int> TapFire{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
-			inline CVar<bool> ScanHitbox{ true, L"Scan Body" };
 			inline CVar<bool> ScanHead{ true, L"Scan Head" };
 			inline CVar<bool> ScanBuildings{ true, L"Scan Buildings" };
 			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Headshot" };
