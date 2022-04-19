@@ -2,31 +2,44 @@
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
 
+bool ishitboxvalid(int nhitbox, int index){
+	switch (nhitbox) {
+	case HITBOX_HEAD:		return (index & (1 << 0));
+	case HITBOX_PELVIS:		return (index & (1 << 1));
+	case HITBOX_SPINE_0:
+	case HITBOX_SPINE_3:	return (index & (1 << 2));
+	case HITBOX_UPPERARM_L:
+	case HITBOX_HAND_R:		return (index & (1 << 3));
+	case HITBOX_HIP_L:
+	case HITBOX_FOOT_R:		return (index & (1 << 4));
+	}
+	return false;
+};
+
 int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
 	{
 	case 0: { return HITBOX_HEAD; }
 	case 1: { return HITBOX_SPINE_1; }
-	case 2: { return HITBOX_PELVIS; }
-	case 3:
+	case 2:
 	{
 		int nClassNum = pLocal->GetClassNum();
 
 		if (nClassNum == CLASS_SNIPER)
 		{
 			if (g_GlobalInfo.m_nCurItemDefIndex != Sniper_m_TheSydneySleeper)
-				return (pLocal->IsScoped() ? HITBOX_HEAD : HITBOX_PELVIS);
+				return (pLocal->IsScoped() ? HITBOX_HEAD : HITBOX_SPINE_1);
 
-			return HITBOX_PELVIS;
+			return HITBOX_SPINE_1;
 		}
 		if (nClassNum == CLASS_SPY)
 		{
 			bool bIsAmbassador = (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.
 				m_nCurItemDefIndex == Spy_m_FestiveAmbassador);
-			return (bIsAmbassador ? HITBOX_HEAD : HITBOX_PELVIS);
+			return (bIsAmbassador ? HITBOX_HEAD : HITBOX_SPINE_1);
 		}
-		return HITBOX_PELVIS;
+		return HITBOX_SPINE_1;
 	}
 	}
 
@@ -102,7 +115,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			{
 				if (pWeapon->GetChargeDamage() >= Player->GetHealth())
 				{
-					nHitbox = HITBOX_PELVIS;
+					nHitbox = HITBOX_SPINE_1;
 				}
 
 				if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex ==
@@ -119,7 +132,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 					if (Player->GetHealth() < (nAmbassadorBodyshotDamage + 2)) // whatever
 					{
-						nHitbox = HITBOX_PELVIS;
+						nHitbox = HITBOX_SPINE_1;
 					}
 				}
 			}
@@ -180,8 +193,10 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 	for (int nHitbox = Target.m_TargetType == ETargetType::PLAYER ? 1 : 0; nHitbox < Target.m_pEntity->
 		GetNumOfHitboxes(); nHitbox++)
 	{
-		if (Target.m_TargetType == ETargetType::PLAYER && nHitbox == HITBOX_PELVIS)
+		if (Target.m_TargetType == ETargetType::PLAYER && nHitbox == Vars::Aimbot::Hitscan::AimHitbox.m_Var)
 			continue;
+
+		if (Target.m_TargetType == ETargetType::PLAYER && !ishitboxvalid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)) { continue; }
 
 		Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
 
