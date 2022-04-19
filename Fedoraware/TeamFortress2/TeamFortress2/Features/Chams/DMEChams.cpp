@@ -609,7 +609,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}());
 			}
 
-			if (bMatWasForced && (Vars::Chams::DME::Hands.m_Var != 7))
+			if (Vars::Chams::DME::Hands.m_Var != 7)
 			{
 				if (Vars::Chams::DME::HandsRainbow.m_Var)
 				{
@@ -625,12 +625,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
-
-			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-				ModelRenderHook::DrawModelExecute::index)
-				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-			bMatWasForced = true;
 			foundselfillumtint = false;
 			if (Vars::Chams::DME::Hands.m_Var == 7)
 			{
@@ -650,6 +644,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						Color::TOFLOAT(Colors::Hands.b) * 4);
 				}
 			}
+
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
+
+			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+				ModelRenderHook::DrawModelExecute::index)
+				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+			bMatWasForced = true;
 
 			if (Vars::Chams::DME::HandsProxySkin.m_Var && bMatWasForced)
 			{
@@ -850,7 +851,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}());
 				}
 
-				if (bMatWasForced && (Vars::Chams::DME::Weapon.m_Var != 7))
+				if (Vars::Chams::DME::Weapon.m_Var != 7)
 				{
 					if (Vars::Chams::DME::WeaponRainbow.m_Var)
 					{
@@ -866,12 +867,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
-
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index) // base
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-				bMatWasForced = true;
 				foundselfillumtint = false;
 				if (Vars::Chams::DME::Weapon.m_Var == 7)
 				{
@@ -892,6 +887,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
+				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
+
+				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
+					ModelRenderHook::DrawModelExecute::index) // base
+					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				bMatWasForced = true;
+				
 				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
 				{
 
