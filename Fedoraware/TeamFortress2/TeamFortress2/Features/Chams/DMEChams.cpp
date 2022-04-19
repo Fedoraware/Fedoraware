@@ -757,6 +757,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
+				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
@@ -996,6 +997,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
+					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
 					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(

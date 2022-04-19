@@ -319,6 +319,7 @@ namespace Vars
 			inline CVar<bool> HandsProxyWF{ false, L"Proxy wireframe on hands" };
 			inline CVar<bool> HandsRainbow{ false, L"Rainbow hands" };
 			inline CVar<bool> HandsOverlayRainbow{ false, L"Rainbow hands" };
+			inline CVar<bool> HandsOverlayPulse{ false };
 
 			inline CVar<int> Weapon{ 0, L"Weapon" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
 			inline CVar<int> WeaponGlowOverlay{ 0, L"Weapon Glow" }; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
@@ -327,6 +328,7 @@ namespace Vars
 			inline CVar<bool> WeaponsProxyWF{ false, L"Proxy wireframe on weapons" };
 			inline CVar<bool> WeaponRainbow{ false, L"Rainbow weapons" };
 			inline CVar<bool> WeaponOverlayRainbow{ false, L"Rainbow weapons" };
+			inline CVar<bool> WeaponOverlayPulse{ false };
 		}
 	}
 

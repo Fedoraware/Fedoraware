@@ -227,7 +227,6 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 	IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
 	IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
 
-
 	for (const auto& Player : Players)
 	{
 		if (!Player->IsAlive() || Player->IsAGhost())
@@ -237,8 +236,8 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		auto chamsMaterial = FetchMaterial(chams);
 		bool bIsLocal = Player->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
 
-		//skip if disabled or null material
-		if (!chams.chamsActive || !chams.drawMaterial) 
+		//skip if disabled
+		if (!chams.chamsActive/*|| !chams.drawMaterial*/) 
 			continue;
 
 		if (chams.showObstructed)
@@ -351,7 +350,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		auto chams = FetchChams(Building);
 		auto chamsMaterial = FetchMaterial(chams);
 
-		if (!chams.chamsActive || !chams.drawMaterial)
+		if (!chams.chamsActive/* || !chams.drawMaterial*/)
 			continue;
 
 		if (chams.showObstructed)

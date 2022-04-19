@@ -461,6 +461,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::DME::WeaponsProxySkin);
 				SAVE_VAR(Vars::Chams::DME::HandsGlowAmount);
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowAmount);
+				SAVE_VAR(Vars::Chams::DME::WeaponOverlayPulse);
+				SAVE_VAR(Vars::Chams::DME::HandsOverlayPulse);
 			}
 		}
 
@@ -1161,6 +1163,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::DME::WeaponsProxySkin);
 				LOAD_VAR(Vars::Chams::DME::HandsGlowAmount);
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowAmount);
+				LOAD_VAR(Vars::Chams::DME::WeaponOverlayPulse);
+				LOAD_VAR(Vars::Chams::DME::HandsOverlayPulse);
 			}
 		}
 
