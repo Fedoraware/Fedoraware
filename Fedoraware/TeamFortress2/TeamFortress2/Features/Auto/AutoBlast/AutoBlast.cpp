@@ -51,7 +51,13 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(flLatency));
 
 			//I cant remember if the airblast radius range from 2007 SDK was 185.0f or not..
-			if (vEyePos.DistTo(vPredicted) <= 185.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
+			/*
+				Airblast detection is 256^3
+				if the distance between our eyes and the projectile is less than 256 we can airblast this projectile.
+				the game doesn't actually fire from eyeposition iirc, it fires from our pelvis (weird).
+				I've decided to keep most of this code the same, and just set the "airblast range" to 245, as I don't actually think it matters much.
+			*/
+			if (vEyePos.DistTo(vPredicted) <= 245.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
 			{
 				if (Vars::Triggerbot::Blast::Rage.m_Var)
 				{
