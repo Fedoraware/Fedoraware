@@ -14,6 +14,7 @@
 #include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Fedworking/Fedworking.h"
 #include "../../Features/Resolver/Resolver.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
 #include "../../Features/Vars.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
@@ -364,6 +365,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 
 		if (Vars::Visuals::DebugInfo.m_Var) {
+			g_BadActors.OnTick();
+
 			static float cycledelta = 0.f;
 			if (!*pSendPacket) {
 				pLocal->m_bClientSideAnimation() = false;

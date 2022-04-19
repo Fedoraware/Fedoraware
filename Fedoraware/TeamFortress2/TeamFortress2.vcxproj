@@ -96,6 +96,7 @@
   <ItemGroup>
     <!-- <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" /> -->
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
+    <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\CritHack\CritHack.cpp" />
@@ -205,6 +206,7 @@
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
+    <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Features\CritHack\CritHack.h" />

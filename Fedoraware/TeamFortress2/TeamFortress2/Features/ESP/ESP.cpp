@@ -1,4 +1,5 @@
 #include "ESP.h"
+#include "../AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../Vars.h"
 
 bool CESP::ShouldRun()
@@ -245,6 +246,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, nHealth > nMaxHealth ? Colors::Overheal : HealthColor,
 					ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
+				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+			}
+
+			if (Vars::Visuals::DebugInfo.m_Var && g_BadActors.markedcheaters[nIndex])
+			{
+				g_Draw.String(FONT, nTextX, y + nTextOffset, {255,0,0,255}, ALIGN_DEFAULT, "CHEATER");
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
 
