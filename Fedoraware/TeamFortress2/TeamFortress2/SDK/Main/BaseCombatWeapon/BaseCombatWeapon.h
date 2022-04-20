@@ -58,7 +58,7 @@ public: //Netvars
 public: //Virtuals
 	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 379)
 		M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 329)
-		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 342)
+		M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 340)
 		M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
 		M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3& (__thiscall*)(void*), 286)
 
