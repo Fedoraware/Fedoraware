@@ -57,5 +57,4 @@ void CheaterDetection::OnTick() {
 			markedcheaters[friendsID] = strikes[friendsID];
 		}
 	}
-	bannedchar.clear(); // just in case.
 }
