@@ -1,6 +1,7 @@
 #include "ClientHook.h"
 
 #include "../../Features/Misc/Misc.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Resolver/Resolver.h"
