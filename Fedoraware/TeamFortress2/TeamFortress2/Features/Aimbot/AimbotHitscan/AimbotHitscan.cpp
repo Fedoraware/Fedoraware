@@ -205,7 +205,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 
 							Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
 
-							if (Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vHitbox, nHitbox)) // properly check if we hit the hitbox we were scanning and not just a hitbox.
+							if (nHitbox == 0 ? Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vHitbox, nHitbox) : Utils::VisPos(pLocal, Target.m_pEntity, vLocalPos, vHitbox)) // properly check if we hit the hitbox we were scanning and not just a hitbox. (only if the hitbox we are scanning is head)
 							{
 								Target.m_vPos = vHitbox;
 								Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
@@ -218,7 +218,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 									Vec3 vMins = pBox->bbmin;
 									Vec3 vMaxs = pBox->bbmax;
 
-									const float fScale = 1.f;
+									const float fScale = 0.8f;
 									const std::vector<Vec3> vecPoints = {
 										Vec3(((vMins.x + vMaxs.x) * 0.5f), (vMins.y * fScale), ((vMins.z + vMaxs.z) * 0.5f)),
 										Vec3((vMins.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
