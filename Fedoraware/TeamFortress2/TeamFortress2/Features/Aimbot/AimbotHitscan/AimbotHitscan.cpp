@@ -456,8 +456,10 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 			vAngle.y = Math::RemapValClamped(vAngle.y, 0.0f, 180.0f, -180.0f, 0.0f);
 		}
-		Utils::FixMovement(pCmd, vAngle);
-		pCmd->viewangles = vAngle;
+		if (g_GlobalInfo.m_bAttacking) {
+			Utils::FixMovement(pCmd, vAngle);
+			pCmd->viewangles = vAngle;
+		}
 		break;
 	}
 
@@ -684,8 +686,6 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if (g_GlobalInfo.m_bHitscanSilentActive)
 			g_GlobalInfo.m_vAimPos = Target.m_vPos;
 
-		Aim(pCmd, Target.m_vAngleTo);
-
 		if (ShouldFire(pLocal, pWeapon, pCmd, Target))
 		{
 			if (nWeaponID == TF_WEAPON_MINIGUN)
@@ -753,5 +753,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.
 					cl_updaterate->GetFloat()));
 		}
+
+		Aim(pCmd, Target.m_vAngleTo);
 	}
 }
