@@ -5,6 +5,7 @@
 class CAimbotHitscan
 {
 private:
+	int priorityhitbox = 1; // this is the first hitbox we want to scan, just ignore it.
 	int GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	ESortMethod GetSortMethod();
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);

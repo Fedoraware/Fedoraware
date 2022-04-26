@@ -83,6 +83,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
+		priorityhitbox = nHitbox;
 		bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
 
 		for (const auto& Player : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
@@ -199,8 +200,11 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 			if (studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
 				if (Target.m_pEntity->SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
 					if (mstudiohitboxset_t* pSet = pHDR->GetHitboxSet(Target.m_pEntity->GetHitboxSet())){
-						for (int nHitbox = 0; nHitbox < Target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
+						for (int nHitbox = -1; nHitbox < Target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
 						{
+							if (nHitbox == -1) { nHitbox = priorityhitbox; }
+							else if (nHitbox == priorityhitbox) { continue; }
+
 							if (!ishitboxvalid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)) { continue; }
 
 							Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
@@ -308,56 +312,32 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	{
 	case ETargetType::PLAYER:
 	{
+		if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
 
-		// maybe just remove all this shit? no reason to process heads differently imo.
-		//if (Target.m_nAimedHitbox == HITBOX_HEAD)
-		//{
-		//	int nHit = -1;
-
-		//	if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
-		//		if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
-		//			if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(),
-		//				g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition)) {
-		//				Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition);
-		//				return true;
-		//			}
-		//		}
-		//	}
-		//	/*if (!Utils::VisPosHitboxIdOut(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos, nHit))
-		//		return false;*/	// this is useless and done later.
-
-		//	if (!ScanHead(pLocal, Target))
-		//		return false;
-		//}
-
-		//else {
-			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
-
-				Vec3 hitboxPos;
-				if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
-					auto lastTick = g_Backtrack.Record[Target.m_pEntity->GetIndex()].back();
-					if (const auto& pHdr = lastTick.HDR) {
-						if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet)) {
-							if (const auto& pBox = pSet->hitbox(Target.m_nAimedHitbox)) {
-								Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
-								Math::VectorTransform(vPos, reinterpret_cast<matrix3x4*>(&lastTick.BoneMatrix)[pBox->bone], vOut);
-								hitboxPos = vOut;
-							}
+			Vec3 hitboxPos;
+			if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
+				auto lastTick = g_Backtrack.Record[Target.m_pEntity->GetIndex()].back();
+				if (const auto& pHdr = lastTick.HDR) {
+					if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet)) {
+						if (const auto& pBox = pSet->hitbox(Target.m_nAimedHitbox)) {
+							Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
+							Math::VectorTransform(vPos, reinterpret_cast<matrix3x4*>(&lastTick.BoneMatrix)[pBox->bone], vOut);
+							hitboxPos = vOut;
 						}
 					}
-
-
-					if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), hitboxPos)) {
-						Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxPos);
-						return true;
-					}
-
-
 				}
+
+
+				if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), hitboxPos)) {
+					Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxPos);
+					return true;
+				}
+
+
 			}
-			if (/*!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos) && */!ScanHitboxes(pLocal, Target))
-				return false;
-		//}
+		}
+		if (!ScanHitboxes(pLocal, Target))
+			return false;
 
 		break;
 	}
