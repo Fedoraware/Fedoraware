@@ -100,6 +100,7 @@ namespace Vars
 			inline CVar<int> AimMethod{ 2, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{ 2, L"Aim Hitbox" };	//0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{ 7 };	// Binary: 00111 {legs, arms, body, pelvis, head}
+			inline CVar<int> MultiHitboxes{ 5 };	// Binary: 00101 {legs, arms, body, pelvis, head}
 			inline CVar<int> SmoothingAmount{ 4, L"Smoothing Amount" };
 			inline CVar<int> TapFire{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
 			inline CVar<bool> ScanHead{ true, L"Scan Head" };

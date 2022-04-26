@@ -276,7 +276,12 @@ void CMenu::MenuAimbot()
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010}; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::ScanHitboxes.m_Var, "Scan Hitboxes###AimbotHitboxScanning");
 			}
-			MultiCombo({ "Head", "Buildings" }, { &Vars::Aimbot::Hitscan::ScanHead.m_Var, &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
+			{
+				static std::vector flagNames{ "Head", "Body", "Pelvis", "Arms", "Legs" };
+				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
+				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::MultiHitboxes.m_Var, "Multipoint Hitboxes###AimbotMultipointScanning");
+			}
+			MultiCombo({ "Buildings" }, { &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
 			HelpMarker("Choose what the aimbot should multipoint");
 			WToggle("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
 			WToggle("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");

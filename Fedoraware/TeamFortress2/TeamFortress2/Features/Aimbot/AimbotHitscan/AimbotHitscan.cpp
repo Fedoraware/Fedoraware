@@ -7,10 +7,20 @@ bool ishitboxvalid(int nhitbox, int index){
 	case HITBOX_HEAD:		return (index & (1 << 0));
 	case HITBOX_PELVIS:		return (index & (1 << 1));
 	case HITBOX_SPINE_0:
+	case HITBOX_SPINE_1:
+	case HITBOX_SPINE_2:
 	case HITBOX_SPINE_3:	return (index & (1 << 2));
 	case HITBOX_UPPERARM_L:
+	case HITBOX_LOWERARM_L:
+	case HITBOX_HAND_L:
+	case HITBOX_UPPERARM_R:
+	case HITBOX_LOWERARM_R:
 	case HITBOX_HAND_R:		return (index & (1 << 3));
 	case HITBOX_HIP_L:
+	case HITBOX_KNEE_L:
+	case HITBOX_FOOT_L:
+	case HITBOX_HIP_R:
+	case HITBOX_KNEE_R:
 	case HITBOX_FOOT_R:		return (index & (1 << 4));
 	}
 	return false;
@@ -176,88 +186,79 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 {
+
+	Vec3 vLocalPos = pLocal->GetShootPos();
+
 	if (Target.m_TargetType == ETargetType::PLAYER)
 	{
-		if (!Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)
+		if (!Vars::Aimbot::Hitscan::ScanHitboxes.m_Var) // even if they have multibox stuff on, if they are scanning nothing we return false, frick you.
 			return false;
+
+		matrix3x4 BoneMatrix[128];
+		if (model_t* pModel = Target.m_pEntity->GetModel()) {
+			if (studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
+				if (Target.m_pEntity->SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+					if (mstudiohitboxset_t* pSet = pHDR->GetHitboxSet(Target.m_pEntity->GetHitboxSet())){
+						for (int nHitbox = 0; nHitbox < Target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
+						{
+							if (!ishitboxvalid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)) { continue; }
+
+							Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
+
+							if (Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vHitbox, nHitbox)) // properly check if we hit the hitbox we were scanning and not just a hitbox.
+							{
+								Target.m_vPos = vHitbox;
+								Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
+								return true;
+							}
+
+							if (ishitboxvalid(nHitbox, Vars::Aimbot::Hitscan::MultiHitboxes.m_Var)) {
+								if (mstudiobbox_t* pBox = pSet->hitbox(nHitbox))
+								{
+									Vec3 vMins = pBox->bbmin;
+									Vec3 vMaxs = pBox->bbmax;
+
+									const float fScale = 1.f;
+									const std::vector<Vec3> vecPoints = {
+										Vec3(((vMins.x + vMaxs.x) * 0.5f), (vMins.y * fScale), ((vMins.z + vMaxs.z) * 0.5f)),
+										Vec3((vMins.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
+										Vec3((vMaxs.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f))
+									};
+
+									for (const auto& Point : vecPoints)
+									{
+										Vec3 vTransformed = {};
+										Math::VectorTransform(Point, BoneMatrix[pBox->bone], vTransformed);
+
+										if (Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vTransformed, nHitbox))
+										{
+											Target.m_vPos = vTransformed;
+											Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
+											Target.m_bHasMultiPointed = true;
+											return true;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	else if (Target.m_TargetType == ETargetType::BUILDING)
 	{
-		if (!Vars::Aimbot::Hitscan::ScanBuildings.m_Var)
-			return false;
-	}
-
-	Vec3 vLocalPos = pLocal->GetShootPos();
-
-	for (int nHitbox = Target.m_TargetType == ETargetType::PLAYER ? 1 : 0; nHitbox < Target.m_pEntity->
-		GetNumOfHitboxes(); nHitbox++)
-	{
-		if (Target.m_TargetType == ETargetType::PLAYER && nHitbox == Vars::Aimbot::Hitscan::AimHitbox.m_Var)
-			continue;
-
-		if (Target.m_TargetType == ETargetType::PLAYER && !ishitboxvalid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)) { continue; }
-
-		Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
-
-		if (Utils::VisPos(pLocal, Target.m_pEntity, vLocalPos, vHitbox))
+		for (int nHitbox = 0; nHitbox < Target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
 		{
-			Target.m_vPos = vHitbox;
-			Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
-			return true;
-		}
-	}
+			Vec3 vHitbox = Target.m_pEntity->GetHitboxPos(nHitbox);
 
-	return false;
-}
-
-bool CAimbotHitscan::ScanHead(CBaseEntity* pLocal, Target_t& Target)
-{
-	if (!Vars::Aimbot::Hitscan::ScanHead.m_Var)
-		return false;
-
-	model_t* pModel = Target.m_pEntity->GetModel();
-	if (!pModel)
-		return false;
-
-	auto pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
-	if (!pHDR)
-		return false;
-
-	matrix3x4 BoneMatrix[128];
-	if (!Target.m_pEntity->SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime))
-		return false;
-
-	mstudiohitboxset_t* pSet = pHDR->GetHitboxSet(Target.m_pEntity->GetHitboxSet());
-	if (!pSet)
-		return false;
-
-	mstudiobbox_t* pBox = pSet->hitbox(HITBOX_HEAD);
-	if (!pBox)
-		return false;
-
-	Vec3 vLocalPos = pLocal->GetShootPos();
-	Vec3 vMins = pBox->bbmin;
-	Vec3 vMaxs = pBox->bbmax;
-
-	const float fScale = 0.8f;
-	const std::vector<Vec3> vecPoints = {
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), (vMins.y * fScale), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3((vMins.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3((vMaxs.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f))
-	};
-
-	for (const auto& Point : vecPoints)
-	{
-		Vec3 vTransformed = {};
-		Math::VectorTransform(Point, BoneMatrix[pBox->bone], vTransformed);
-
-		if (Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vTransformed, HITBOX_HEAD))
-		{
-			Target.m_vPos = vTransformed;
-			Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
-			Target.m_bHasMultiPointed = true;
-			return true;
+			if (Utils::VisPos(pLocal, Target.m_pEntity, vLocalPos, vHitbox))
+			{
+				Target.m_vPos = vHitbox;
+				Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
+				return true;
+			}
 		}
 	}
 
@@ -307,58 +308,29 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	{
 	case ETargetType::PLAYER:
 	{
-		if (Target.m_nAimedHitbox == HITBOX_HEAD)
-		{
-			int nHit = -1;
 
-			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
-				if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
-					if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(),
-						g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition)) {
-						Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition);
-						return true;
-					}
-				}
-			}
-			if (!Utils::VisPosHitboxIdOut(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos, nHit))
-				return false;
-
-			if (nHit != HITBOX_HEAD && !ScanHead(pLocal, Target))
-				return false;
-		}
-
-		//else if (Target.m_nAimedHitbox == HITBOX_PELVIS)
+		// maybe just remove all this shit? no reason to process heads differently imo.
+		//if (Target.m_nAimedHitbox == HITBOX_HEAD)
 		//{
+		//	int nHit = -1;
+
 		//	if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
-		//		
-		//		Vec3 pelvisPos;
 		//		if (!g_Backtrack.Record[Target.m_pEntity->GetIndex()].empty()) {
-		//			auto lastTick = g_Backtrack.Record[Target.m_pEntity->GetIndex()].back();
-		//			if (const auto& pHdr = lastTick.HDR) {
-		//				if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet)) {
-		//					if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS)) {
-		//						Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
-		//						Math::VectorTransform(vPos, reinterpret_cast<matrix3x4*>(&lastTick.BoneMatrix)[pBox->bone], vOut);
-		//						pelvisPos = vOut;
-		//					}
-		//				}
-		//			}
-
-
-		//			if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), pelvisPos)) {
-		//				Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pelvisPos);
+		//			if (Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(),
+		//				g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition)) {
+		//				Target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), g_Backtrack.Record[Target.m_pEntity->GetIndex()].back().HeadPosition);
 		//				return true;
 		//			}
-
-
 		//		}
 		//	}
-		//	if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos) && !ScanHitboxes(
-		//		pLocal, Target))
+		//	/*if (!Utils::VisPosHitboxIdOut(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos, nHit))
+		//		return false;*/	// this is useless and done later.
+
+		//	if (!ScanHead(pLocal, Target))
 		//		return false;
 		//}
 
-		else {
+		//else {
 			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1) {
 
 				Vec3 hitboxPos;
@@ -383,10 +355,9 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 
 				}
 			}
-			if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos) && !ScanHitboxes(
-				pLocal, Target))
+			if (/*!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos) && */!ScanHitboxes(pLocal, Target))
 				return false;
-		}
+		//}
 
 		break;
 	}
@@ -396,9 +367,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos))
 		{
 			//Sentryguns have hitboxes, it's better to use ScanHitboxes for them
-			if (Target.m_pEntity->GetClassID() == ETFClassID::CObjectSentrygun
-				? !ScanHitboxes(pLocal, Target)
-				: !ScanBuildings(pLocal, Target))
+			if (Target.m_pEntity->GetClassID() == ETFClassID::CObjectSentrygun ? !ScanHitboxes(pLocal, Target) : !ScanBuildings(pLocal, Target))
 				return false;
 		}
 
