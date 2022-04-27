@@ -217,7 +217,7 @@ namespace Vars
 			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<int> IgnoreCloaked{ 2, L"Ignore Cloaked" };	//0 - OFF, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Name{ true, L"Name" };
-			inline CVar<bool> NameC{ false, L"Name Color" };
+			inline CVar<bool> NameCustom{ false, L"Name Color" };
 			inline Color_t NameColor{ 255,255,255,255 };
 			inline CVar<bool> NameBox{ false, L"Name box" };
 			inline CVar<int> Uber{ 2, L"Uber" }; //0 - Off, 1 - Text, 2 - Bar
@@ -241,6 +241,8 @@ namespace Vars
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
 			inline CVar<bool> Name{ true, L"Name" };
+			inline CVar<bool> NameCustom{ false, L"Name Color" };
+			inline Color_t NameColor{ 255,255,255,255 };
 			inline CVar<bool> NameBox{ false, L"Name box" };
 			inline CVar<bool> Health{ false, L"Health" };
 			inline CVar<bool> Owner{ false, L"Owner" };
