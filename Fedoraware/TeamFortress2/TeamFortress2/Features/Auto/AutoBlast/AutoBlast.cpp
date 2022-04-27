@@ -48,7 +48,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			default: break;
 			}
 
-			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(flLatency));
+			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(TIME_TO_TICKS(flLatency) / 66.f));
 
 			//I cant remember if the airblast radius range from 2007 SDK was 185.0f or not..
 			/*
