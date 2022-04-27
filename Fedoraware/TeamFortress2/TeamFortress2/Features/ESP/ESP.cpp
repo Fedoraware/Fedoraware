@@ -309,7 +309,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					if (Vars::ESP::Players::NameC.m_Var)
+					if (Vars::ESP::Players::NameCustom.m_Var)
 					{
 						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor, ALIGN_CENTERHORIZONTAL,
 							Utils::ConvertUtf8ToWide(pi.name).data());
