@@ -428,8 +428,8 @@ void CMenu::MenuVisuals()
 				SectionTitle("Player ESP");
 				WToggle("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.m_Var); HelpMarker("Will draw useful information/indicators on players");
 				WToggle("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.m_Var); HelpMarker("Will draw the players name");
-				WToggle("Custom Name Color", &Vars::ESP::Players::NameC.m_Var); HelpMarker("Custom color for name esp");
-				if (Vars::ESP::Players::NameC.m_Var)
+				WToggle("Custom Name Color", &Vars::ESP::Players::NameCustom.m_Var); HelpMarker("Custom color for name esp");
+				if (Vars::ESP::Players::NameCustom.m_Var)
 				{
 					ColorPickerL("Name ESP Color", Vars::ESP::Players::NameColor);
 				}
@@ -698,6 +698,11 @@ void CMenu::MenuVisuals()
 				WToggle("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.m_Var); HelpMarker("Will draw useful information/indicators on buildings");
 				WToggle("Ignore team buildings###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.m_Var); HelpMarker("Whether or not to draw ESP on your teams buildings");
 				WToggle("Name ESP###BuildingNameESP", &Vars::ESP::Buildings::Name.m_Var); HelpMarker("Will draw the players name");
+				WToggle("Custom Name Color", &Vars::ESP::Buildings::NameCustom.m_Var); HelpMarker("Custom color for name esp");
+				if (Vars::ESP::Buildings::NameCustom.m_Var)
+				{
+					ColorPickerL("Name ESP Color", Vars::ESP::Buildings::NameColor);
+				}
 				WToggle("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.m_Var); HelpMarker("Will draw a box around the buildings name to make it stand out");
 				WToggle("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the building has");
 				WToggle("Health text###buildinghealth", &Vars::ESP::Buildings::Health.m_Var); HelpMarker("Will draw the building's health, as well as its max health");

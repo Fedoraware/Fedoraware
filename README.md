@@ -14,7 +14,7 @@
 
 ## Notes:
 - It is recommended to use dxlevel 90+ due to issues with imgui.
-- You will have issues with injecting if you are on Windows 10 upgraded from Windows 7.
+- You might have issues with injecting if you are on Windows 10 upgraded from Windows 7.
 - The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
 
 ## Guide:
