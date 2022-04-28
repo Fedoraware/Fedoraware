@@ -19,7 +19,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 	if (const auto& pNet = g_Interfaces.Engine->GetNetChannelInfo())
 	{
 		Vec3 vEyePos = pLocal->GetEyePosition();
-		float flLatency = (pNet->GetLatency(FLOW_INCOMING) + pNet->GetLatency(FLOW_OUTGOING));
+		float flLatency = (pNet->GetLatency(FLOW_INCOMING) + pNet->GetLatency(FLOW_OUTGOING)); // pretty sure the game shows the predicted position of projectiles so accounting for incoming ping seems useless.
 		bool bShouldBlast = false;
 
 		for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -48,7 +48,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			default: break;
 			}
 
-			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(TIME_TO_TICKS(flLatency) / 66.f));
+			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(flLatency / 1000.f));
 
 			//I cant remember if the airblast radius range from 2007 SDK was 185.0f or not..
 			/*
