@@ -179,7 +179,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		// Yaw (Real)
 		if (bSendReal) {
 			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
-			case 1: //fake forward for legit aa
+			case 1:
 				{
 					pCmd->viewangles.y += 0.0f;
 					break;
