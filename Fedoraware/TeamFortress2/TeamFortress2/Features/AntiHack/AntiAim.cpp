@@ -71,8 +71,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	// Depending on the edge, choose a direction to face
 	if (edgeRightDist < edgeLeftDist) {
 		edgeToEdgeOn = 1;
-		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 1 ||
-			Vars::AntiHack::AntiAim::Pitch.m_Var == 3 ||
+		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
+			Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
 			g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
 		{
 			edgeToEdgeOn = 2;
@@ -81,8 +81,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	}
 
 	edgeToEdgeOn = 2;
-	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 1 ||
-		Vars::AntiHack::AntiAim::Pitch.m_Var == 3 ||
+	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
+		Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
 		g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
 	{
 		edgeToEdgeOn = 1;
@@ -172,7 +172,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 		}
 
-		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 6 || Vars::AntiHack::AntiAim::YawFake.m_Var == 6) {
+		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 7 || Vars::AntiHack::AntiAim::YawFake.m_Var == 7) {
 			FindEdge(pCmd->viewangles.y);
 		}
 
