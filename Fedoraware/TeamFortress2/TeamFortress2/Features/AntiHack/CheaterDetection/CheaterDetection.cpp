@@ -70,7 +70,7 @@ void CheaterDetection::OnTick() {
 			}
 
 			UserData[friendsID].tickcount = TIME_TO_TICKS(pSuspect->GetSimulationTime()); // maybe this has to account for ping :thinking: // no it does not
-			markedcheaters[friendsID] = strikes[friendsID];
+			markedcheaters[friendsID] = strikes[friendsID] > 2;
 		}
 	}
 }
