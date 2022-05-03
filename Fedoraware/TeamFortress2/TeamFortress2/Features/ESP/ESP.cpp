@@ -321,7 +321,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 
-				if (Vars::Visuals::DebugInfo.m_Var && g_BadActors.markedcheaters[pi.friendsID])
+				if (g_BadActors.markedcheaters[pi.friendsID])
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, { 255,0,0,255 }, ALIGN_DEFAULT, "CHEATER");
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;

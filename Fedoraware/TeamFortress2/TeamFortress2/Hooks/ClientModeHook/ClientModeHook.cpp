@@ -229,6 +229,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_Misc.Run(pCmd);
 	g_Fedworking.Run();
 	g_CameraWindow.Update();
+	g_BadActors.OnTick();
 
 	g_EnginePrediction.Start(pCmd);
 	{
@@ -351,7 +352,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 
 		if (Vars::Visuals::DebugInfo.m_Var) {
-			g_BadActors.OnTick();
 
 			static float cycledelta = 0.f;
 			if (!*pSendPacket) {

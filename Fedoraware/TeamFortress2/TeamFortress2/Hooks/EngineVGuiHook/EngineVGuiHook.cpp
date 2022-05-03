@@ -254,22 +254,22 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						if (tickcount) {
 							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 							yoffset += 20;
-							float predictedsimtime = TICKS_TO_TIME(tickcount);
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "predictedsimtime = %.1f", predictedsimtime);
-							yoffset += 20;
-							float simtime = pLocal->GetSimulationTime();
-							if (simtime) {
-								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "simtime = %.1f", simtime);
-								yoffset += 20;
-								float simtimedelta = predictedsimtime - simtime;
-								{
-									Color_t clr = { 255, 255, 255, 255 };
-									if (simtimedelta > 0) { clr = { 255, 0, 246, 255 }; }
-									else if (simtimedelta < 0) { clr = { 255, 139, 26, 255 }; }
-									g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "simtimedelta = %.1f", simtimedelta);
-									yoffset += 20;
-								}
-							}
+							//float predictedsimtime = TICKS_TO_TIME(tickcount);
+							//g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "predictedsimtime = %.1f", predictedsimtime);
+							//yoffset += 20;
+							//float simtime = pLocal->GetSimulationTime();
+							//if (simtime) {
+							//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "simtime = %.1f", simtime);
+							//	yoffset += 20;
+							//	float simtimedelta = predictedsimtime - simtime;
+							//	{
+							//		Color_t clr = { 255, 255, 255, 255 };
+							//		if (simtimedelta > 0) { clr = { 255, 0, 246, 255 }; }
+							//		else if (simtimedelta < 0) { clr = { 255, 139, 26, 255 }; }
+							//		g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "simtimedelta = %.1f", simtimedelta);
+							//		yoffset += 20;
+							//	}
+							//}
 						}
 						//int sequence = pLocal->m_nSequence();		// big numbah, maybe more useful when looking at individual anim layers?
 						//if (sequence) {
@@ -286,28 +286,64 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "laggedmovement = %+.1f", laggedmovement);
 						//	yoffset += 20;
 						//}
-						float cycle = pLocal->m_flCycle();
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
-							yoffset += 20;
-						}
-						float playbackrate = pLocal->m_flPlaybackRate();
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "playbackrate = %+.1f", playbackrate);
-							yoffset += 20;
-						}
-						bool clientanimations = pLocal->m_bClientSideAnimation();
-						{
-							Color_t clr = clientanimations ? Color_t{ 108, 255, 0, 255 } : Color_t{ 255, 118, 36, 255 };
-							g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
-							yoffset += 20;
-						}
+						//float cycle = pLocal->m_flCycle();
+						//{
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
+						//	yoffset += 20;
+						//}
+						//float playbackrate = pLocal->m_flPlaybackRate();
+						//{
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "playbackrate = %+.1f", playbackrate);
+						//	yoffset += 20;
+						//}
+						//bool clientanimations = pLocal->m_bClientSideAnimation();
+						//{
+						//	Color_t clr = clientanimations ? Color_t{ 108, 255, 0, 255 } : Color_t{ 255, 118, 36, 255 };
+						//	g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
+						//	yoffset += 20;
+						//}
 						/*std::array poseparam = pLocal->GetPoseParam(); // 0 & 1, viewangles, 4 & 5, movement. and the other 20 entries do nothing?????? n1 valve
 						int n = 0;
 						for (; n < 24; n++) {
 							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "poseparam[%i] = %+.1f", n, poseparam[n]);
 							yoffset += 20;
 						}*/
+
+						for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+							if (Player == pLocal) { continue; }
+							xoffset += 170; yoffset = 0;
+
+							PlayerInfo_t pi;
+							if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi)) {
+								if (!pi.fakeplayer) {
+									const char* name = pi.name;
+									if (name) {
+										g_Draw.String(FONT_MENU, xoffset, yoffset, { 84, 0, 255, 255 }, ALIGN_DEFAULT, name);
+										yoffset += 20;
+									}
+								}
+								else {
+									g_Draw.String(FONT_MENU, xoffset, yoffset, { 255, 0, 156, 255 }, ALIGN_DEFAULT, "server-bot");
+									yoffset += 20;
+								}
+
+								if (!Player->IsAlive()) { // dead players should not show up here
+									g_Draw.String(FONT_MENU, xoffset, yoffset, { 80, 80, 80, 255 }, ALIGN_DEFAULT, "DEAD");
+									yoffset += 20;
+								}
+							}
+
+							int tickcount = g_Interfaces.GlobalVars->tickcount;
+							if (tickcount) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "S : %i", tickcount);
+								yoffset += 20;
+								int tickcountplayer = TIME_TO_TICKS(Player->GetSimulationTime());
+								if (tickcountplayer) {
+									g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "P : %i", tickcountplayer);
+									yoffset += 20;
+								}
+							}
+						}
 					}
 
 					/*for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))

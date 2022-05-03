@@ -217,8 +217,9 @@ void __stdcall ModelRenderHook::DrawModelExecute::Hook(const DrawModelState_t& p
 
 void __stdcall ModelRenderHook::ForcedMaterialOverride::Hook(IMaterial* mat, EOverrideType type) {
 	if (!g_DMEChams.m_bRendering) {
-		if (g_Glow.m_bRendering && !g_Glow.IsGlowMaterial(mat) || g_Chams.m_bRendering && !g_Chams.
-			IsChamsMaterial(mat)) { return; }
+		if (g_Glow.m_bRendering && !g_Glow.IsGlowMaterial(mat) || g_Chams.m_bRendering && !g_Chams.IsChamsMaterial(mat)) { 
+			return; 
+		}
 	}
 
 	Table.Original<fn>(index)(g_Interfaces.ModelRender, mat, type);
