@@ -4,7 +4,7 @@
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
 <h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
-<h1 align="center" style="margin-top: 0px;">SE-Owned but awesome</h1>
+<h1 align="center" style="margin-top: 0px;">SE-Owned but bloated</h1>
 <p align="center">
 <a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>  
 <a href="https://discord.gg/kFkk2jahak"><img alt="Fedoraware Discord Server :trollface:" src="https://img.shields.io/discord/937420218672771112?label=Discord&logo=Discord"></a>  
