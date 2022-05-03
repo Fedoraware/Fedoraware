@@ -217,7 +217,7 @@ namespace Vars
 			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<int> IgnoreCloaked{ 2, L"Ignore Cloaked" };	//0 - OFF, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Name{ true, L"Name" };
-			inline CVar<bool> NameC{ false, L"Name Color" };
+			inline CVar<bool> NameCustom{ false, L"Name Color" };
 			inline Color_t NameColor{ 255,255,255,255 };
 			inline CVar<bool> NameBox{ false, L"Name box" };
 			inline CVar<int> Uber{ 2, L"Uber" }; //0 - Off, 1 - Text, 2 - Bar
@@ -241,6 +241,8 @@ namespace Vars
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
 			inline CVar<bool> Name{ true, L"Name" };
+			inline CVar<bool> NameCustom{ false, L"Name Color" };
+			inline Color_t NameColor{ 255,255,255,255 };
 			inline CVar<bool> NameBox{ false, L"Name box" };
 			inline CVar<bool> Health{ false, L"Health" };
 			inline CVar<bool> Owner{ false, L"Owner" };
@@ -661,9 +663,9 @@ namespace Vars
 		namespace AntiAim
 		{
 			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<int> Pitch{ 0, L"Pitch" };		//0 - None, 1 - Up, 2 - Down, 3 - Fake Up, 4 - Fake Down
-			inline CVar<int> YawReal{ 0, L"Yaw Real" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
-			inline CVar<int> YawFake{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
+			inline CVar<int> Pitch{ 0, L"Pitch" };		//0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
+			inline CVar<int> YawReal{ 0, L"Yaw Real" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
+			inline CVar<int> YawFake{ 0, L"Yaw Fake" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<float> SpinSpeed{ 15.f, L"Spin Speed" };
 			inline CVar<int> RandInterval{ 25, L"Random Interval" };
 			inline CVar <bool> AntiBackstab{ false, L"Antibackstab" };

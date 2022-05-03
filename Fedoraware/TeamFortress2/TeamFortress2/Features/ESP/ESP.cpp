@@ -309,7 +309,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					if (Vars::ESP::Players::NameC.m_Var)
+					if (Vars::ESP::Players::NameCustom.m_Var)
 					{
 						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor, ALIGN_CENTERHORIZONTAL,
 							Utils::ConvertUtf8ToWide(pi.name).data());
@@ -569,9 +569,16 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 					g_Draw.Rect(middle - wideth / 2 - 5, y - nTextTopOffset - 2, wideth + 10, 2, LineColor);
 				}
-
-				g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, DrawColor, ALIGN_CENTERHORIZONTAL,
+				if (Vars::ESP::Buildings::NameCustom.m_Var)
+				{
+					g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, Vars::ESP::Buildings::NameColor, ALIGN_CENTERHORIZONTAL,
 					szName);
+				}
+				else
+				{
+					g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, DrawColor, ALIGN_CENTERHORIZONTAL,
+					szName);
+				}
 			}
 
 			if (Vars::ESP::Buildings::Owner.m_Var && !Building->GetMapPlaced())
