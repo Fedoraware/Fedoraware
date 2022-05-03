@@ -27,9 +27,9 @@ bool CheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
 	return false;
 }
 
-bool CheaterDetection::isTickCountManipulated(PlayerData SuspectData, int CurrentTickCount) {
-	int delta = SuspectData.tickcount - CurrentTickCount; // delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
-	if (delta > 14) { return true; } // lets be honest if their tickcount changes by more than 14 they are probably cheating.
+bool CheaterDetection::isTickCountManipulated(int CurrentTickCount) {
+	int delta = g_Interfaces.GlobalVars->tickcount - CurrentTickCount; // delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
+	if (abs(delta) > 14) { return true; } // lets be honest if their tickcount changes by more than 14 they are probably cheating.
 	return false;
 }
 
@@ -43,34 +43,43 @@ void CheaterDetection::OnTick() {
 		if (!pSuspect) { continue; }
 		int index = pSuspect->GetIndex();
 
+
 		PlayerInfo_t pi;
 		if (g_Interfaces.Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer) {
 			int friendsID = pi.friendsID;
-			if (index == pLocal->GetIndex() || !shouldScan(index, friendsID, pSuspect)) { UserData[friendsID].tickcount = 0; continue; }
+
+			if (index == pLocal->GetIndex() || !shouldScan(index, friendsID, pSuspect)) { continue; }
 
 			if (!UserData[friendsID].detections.steamname) {
 				UserData[friendsID].detections.steamname = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
 				strikes[friendsID] += isSteamNameDifferent(pi) ? 1 : 0; // add a strike to this player if they are manipulating their in game name.
 			}
 
-			if (!!UserData[friendsID].detections.invalidpitch) {
+			if (!UserData[friendsID].detections.invalidpitch) {
 				if (isPitchInvalid(pSuspect)) {
 					UserData[friendsID].detections.invalidpitch = true;
-					strikes[friendsID] += 3; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
+					strikes[friendsID] += 5; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
+				}
+			}
+
+			if (!UserData[friendsID].detections.invalidtext) {
+				if (illegalchar[index]) {
+					UserData[friendsID].detections.invalidtext = true;
+					strikes[friendsID] += 5;
+					illegalchar[index] = false;
 				}
 			}
 
 			int currenttickcount = TIME_TO_TICKS(pSuspect->GetSimulationTime());
 
-			if (!UserData[friendsID].detections.tickcountmanip && UserData[friendsID].tickcount) {
-				if (isTickCountManipulated(UserData[friendsID], currenttickcount)) {
-					UserData[friendsID].detections.tickcountmanip = true;
-					strikes[friendsID] += 3;
+			if (g_Interfaces.GlobalVars->tickcount) {
+				if (isTickCountManipulated(currenttickcount)) {
+					g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(g_Interfaces.GlobalVars->tickcount - currenttickcount)).c_str());
+					strikes[friendsID] += 1;
 				}
 			}
 
-			UserData[friendsID].tickcount = TIME_TO_TICKS(pSuspect->GetSimulationTime()); // maybe this has to account for ping :thinking: // no it does not
-			markedcheaters[friendsID] = strikes[friendsID] > 2;
+			markedcheaters[friendsID] = strikes[friendsID] > 4;
 		}
 	}
 }

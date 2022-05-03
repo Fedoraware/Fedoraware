@@ -188,6 +188,15 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 			std::string event(p), name((p += event.size() + 1)), message(p + name.size() + 1);
 			int ent_idx = data[0];
 
+			//if (Vars::Misc::CheaterDetection.m_Var)
+			{
+				std::string newline = "\n";
+				if (strstr(message.c_str(), newline.c_str()))
+				{
+					g_BadActors.illegalchar[ent_idx] = true;
+				}
+			}
+
 			if (Vars::Misc::ChatCensor.m_Var)
 			{
 				std::vector<std::string> badWords{"cheat", "hack", "bot", "aim", "esp", "kick", "hax"};

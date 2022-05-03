@@ -5,12 +5,11 @@ struct Detection {
 	bool steamname;
 	//bool aimbot;
 	bool invalidpitch;
-	bool tickcountmanip;
+	bool invalidtext;
 };
 
 struct PlayerData {
 	int aimSuspicion = 0;
-	int tickcount;
 	Detection detections;
 };
 
@@ -22,9 +21,9 @@ private:
 	bool shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
 	bool isSteamNameDifferent(PlayerInfo_t pInfo);
 	bool isPitchInvalid(CBaseEntity* pSuspect);
-	bool isTickCountManipulated(PlayerData SuspectData, int CurrentTickCount);
+	bool isTickCountManipulated(int CurrentTickCount);
 public:
-	std::map<int, bool> markedcheaters;
+	std::map<int, bool> markedcheaters, illegalchar;
 	void OnTick();
 };
 
