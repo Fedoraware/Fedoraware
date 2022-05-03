@@ -51,7 +51,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	{
 		g_GlobalInfo.m_bForceSendPacket = true; // force uninterrupted connection with server
 		g_GlobalInfo.m_nShifted++; // add ticks to tick counter
-		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS + 1; // set wait condition
+		g_GlobalInfo.m_nWaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.m_Var; // set wait condition (genius)
 		return; // this recharges
 	}
 	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var))
@@ -68,7 +68,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	oClMove(accumulated_extra_samples,
 		(g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
-	if (g_GlobalInfo.m_nWaitForShift)
+	if (g_GlobalInfo.m_nWaitForShift && Vars::Misc::CL_Move::WaitForDT.m_Var)
 	{
 		g_GlobalInfo.m_nWaitForShift--;
 		return;

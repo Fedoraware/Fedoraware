@@ -455,6 +455,7 @@ void CMenu::MenuVisuals()
 				WToggle("Choked Packets", &Vars::ESP::Players::Choked.m_Var); HelpMarker("Shows how many packets the player has choked");
 				ColorPickerL("Choked Bar Top", Colors::ChokedBar.startColour);
 				ColorPickerL("Choked Bar Bottom", Colors::ChokedBar.endColour, 1);
+				WToggle("Cheater Detection", &Vars::ESP::Players::CheaterDetection.m_Var); HelpMarker("Attempts to automatically mark cheaters.");
 				WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.m_Var, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
 				WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.m_Var, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
 				ColorPickerL("Skellington colour", Colors::Bones);

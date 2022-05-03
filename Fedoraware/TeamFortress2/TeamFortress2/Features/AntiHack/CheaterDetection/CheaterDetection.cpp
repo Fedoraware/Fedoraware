@@ -4,7 +4,7 @@
 bool CheaterDetection::shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect) {
 	if (g_EntityCache.Friends[nIndex] || (g_GlobalInfo.ignoredPlayers.find(friendsID) != g_GlobalInfo.ignoredPlayers.end()) || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
 	if (pSuspect->GetDormant()) { return false; } // dont run this player if they are dormant
-	if (!pSuspect->IsAlive() || pSuspect->IsAGhost()) { return false; } // dont run this player if they are dead or ghost
+	if (!pSuspect->IsAlive() || pSuspect->IsAGhost() || pSuspect->IsTaunting()) { return false; } // dont run this player if they are dead / ghost or taunting
 	return true;
 }
 
@@ -23,6 +23,9 @@ bool CheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
 		if (suspectAngles.x >= 90.f || suspectAngles.x <= -90.f) {
 			return true;
 		}
+		if (suspectAngles.z >= 51.f || suspectAngles.z <= -51.f) {
+			return true;
+		}
 	}
 	return false;
 }
@@ -35,7 +38,7 @@ bool CheaterDetection::isTickCountManipulated(int CurrentTickCount) {
 
 void CheaterDetection::OnTick() {
 	auto pLocal = g_EntityCache.m_pLocal;
-	if (!pLocal || !g_Interfaces.Engine->IsConnected()) {
+	if (!pLocal || !g_Interfaces.Engine->IsConnected() || Vars::ESP::Players::CheaterDetection.m_Var) {
 		return;
 	}
 
@@ -74,7 +77,7 @@ void CheaterDetection::OnTick() {
 
 			if (g_Interfaces.GlobalVars->tickcount) {
 				if (isTickCountManipulated(currenttickcount)) {
-					g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(g_Interfaces.GlobalVars->tickcount - currenttickcount)).c_str());
+					//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(g_Interfaces.GlobalVars->tickcount - currenttickcount)).c_str());
 					strikes[friendsID] += 1;
 				}
 			}

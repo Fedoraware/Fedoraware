@@ -234,6 +234,7 @@ namespace Vars
 			inline CVar<bool> Dlights{ false, L"Dlights" };
 			inline CVar<float> DlightRadius{ 200.0f, L"DLight Radius" };
 			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline CVar<bool> CheaterDetection{ true };
 		}
 
 		namespace Buildings
@@ -596,6 +597,7 @@ namespace Vars
 		inline CVar<bool> PartyCrasher{ false, L"Party Crasher" };
 		inline CVar<int> PartyMarker{ false, L"Party Marker" };
 		inline CVar<bool> PartyESP{ false, L"Party ESP" };
+
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };

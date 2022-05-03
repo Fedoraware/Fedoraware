@@ -390,6 +390,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::Bones);
 				SAVE_VAR(Vars::ESP::Players::Dlights);
 				SAVE_VAR(Vars::ESP::Players::DlightRadius);
+				SAVE_VAR(Vars::ESP::Players::CheaterDetection);
+				SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 			}
 
 			//Buildings
@@ -634,7 +636,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::Vision);
-			SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 
 			{
 				SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
@@ -1094,6 +1095,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Bones);
 				LOAD_VAR(Vars::ESP::Players::Dlights);
 				LOAD_VAR(Vars::ESP::Players::DlightRadius);
+				LOAD_VAR(Vars::ESP::Players::CheaterDetection);
 				LOAD_VAR(Vars::ESP::Players::WeaponIcon);
 			}
 
