@@ -26,7 +26,6 @@ private:
 	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
 	void Freecam(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void AutoJoin();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
 	bool steamCleared = false;
