@@ -254,6 +254,37 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 			}
 			break;
 		}
+
+	case 12:
+		{
+			if (Vars::Visuals::RemoveMOTD.m_Var || Vars::Misc::AutoJoin.m_Var)
+			{
+				if (strcmp(reinterpret_cast<char*>(msg_data.m_pData), "info") == 0)
+				{
+					g_Interfaces.Engine->ClientCmd_Unrestricted("closedwelcomemenu");
+					return true;
+				}
+			}
+
+			if(Vars::Misc::AutoJoin.m_Var)
+			{
+				if (strcmp(reinterpret_cast<char*>(msg_data.m_pData), "team") == 0)
+				{
+					g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
+					return true;
+				}
+
+				if (strncmp(reinterpret_cast<char*>(msg_data.m_pData), "class_", 6) == 0)
+				{
+					static std::string classNames[] = { "scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy" };
+					g_Interfaces.Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
+					return true;
+				}
+			}
+
+			break;
+		}
+
 	case 46:
 		{
 			int team = msg_data.ReadByte(), caller = msg_data.ReadByte();

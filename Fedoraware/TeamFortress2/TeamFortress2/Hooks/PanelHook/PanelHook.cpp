@@ -8,7 +8,6 @@ void __stdcall PanelHook::PaintTraverse::Hook(unsigned int vgui_panel, bool forc
 	//Hash::PrintHash();
 	g_CameraWindow.Draw();
 	if (g_Visuals.RemoveScope(vgui_panel)) { return; }
-	if (g_Visuals.RemoveMOTD(vgui_panel)) { return; }
 
 	Table.Original<fn>(index)(g_Interfaces.Panel, vgui_panel, force_repaint, allow_force);
 }
