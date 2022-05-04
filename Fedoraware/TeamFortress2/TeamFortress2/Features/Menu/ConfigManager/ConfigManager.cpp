@@ -206,705 +206,706 @@ CConfigManager::CConfigManager()
 void CConfigManager::Save(const wchar_t *name)
 {
 	m_Write = std::wofstream(m_sConfigPath + L"\\" + name + _(L".fed"));
-
-	if (m_Write.is_open())
-	{
-		//Aimbot
+	if (m_Write) {
+		if (m_Write.is_open())
 		{
-			//Global
+			//Aimbot
 			{
-				SAVE_VAR(Vars::Aimbot::Global::Active);
-				SAVE_VAR(Vars::Aimbot::Global::AimKey);
-				SAVE_VAR(Vars::Aimbot::Global::AimFOV);
-				SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
-				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
-				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
-				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
-				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
-				SAVE_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
-				SAVE_VAR(Vars::Aimbot::Global::hitboxTime);
-			}
-
-			// Backtrack
-			{
-				SAVE_VAR(Vars::Backtrack::Enabled);
-				SAVE_VAR(Vars::Backtrack::Aim);
-				//Bt Chams
+				//Global
 				{
-					SAVE_VAR(Vars::Backtrack::BtChams::Enabled);
-					SAVE_VAR(Vars::Backtrack::BtChams::LastOnly);
-					SAVE_VAR(Vars::Backtrack::BtChams::EnemyOnly);
-					SAVE_VAR(Vars::Backtrack::BtChams::IgnoreZ);
-					SAVE_VAR(Vars::Backtrack::BtChams::Material);
-					SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
+					SAVE_VAR(Vars::Aimbot::Global::Active);
+					SAVE_VAR(Vars::Aimbot::Global::AimKey);
+					SAVE_VAR(Vars::Aimbot::Global::AimFOV);
+					SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
+					SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
+					SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
+					SAVE_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
+					SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
+					SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
+					SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+					SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
+					SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
+					SAVE_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
+					SAVE_VAR(Vars::Aimbot::Global::hitboxTime);
+				}
+
+				// Backtrack
+				{
+					SAVE_VAR(Vars::Backtrack::Enabled);
+					SAVE_VAR(Vars::Backtrack::Aim);
+					//Bt Chams
+					{
+						SAVE_VAR(Vars::Backtrack::BtChams::Enabled);
+						SAVE_VAR(Vars::Backtrack::BtChams::LastOnly);
+						SAVE_VAR(Vars::Backtrack::BtChams::EnemyOnly);
+						SAVE_VAR(Vars::Backtrack::BtChams::IgnoreZ);
+						SAVE_VAR(Vars::Backtrack::BtChams::Material);
+						SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
+					}
+				}
+
+				{
+					SAVE_VAR(Vars::CritHack::Active);
+					SAVE_VAR(Vars::CritHack::indicators);
+					SAVE_VAR(Vars::CritHack::avoidrandom);
+					SAVE_VAR(Vars::CritHack::CritKey);
+				}
+
+				//Hitscan
+				{
+					//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
+					SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
+					SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
+					SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
+					//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
+					SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
+					SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
+					SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
+					SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
+					SAVE_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
+					SAVE_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
+					SAVE_VAR(Vars::Aimbot::Hitscan::WaitForCharge);
+					SAVE_VAR(Vars::Aimbot::Hitscan::SpectatedSmooth);
+					SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
+					SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
+					SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
+
+				}
+
+				//Projectile
+				{
+					//SAVE_VAR(Vars::Aimbot::Projectile::Active);
+					SAVE_VAR(Vars::Aimbot::Projectile::PerformanceMode);
+					SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
+					SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
+					SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
+					SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+					SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
+					SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
+					SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
+					SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
+					SAVE_VAR(Vars::Aimbot::Projectile::predTime);
+					//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
+				}
+
+				//Melee
+				{
+					//SAVE_VAR(Vars::Aimbot::Melee::Active);
+					SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
+					SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
+					//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
+					SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
+					SAVE_VAR(Vars::Aimbot::Melee::RangeCheck);
+					SAVE_VAR(Vars::Aimbot::Melee::PredictSwing);
+					SAVE_VAR(Vars::Aimbot::Melee::WhipTeam);
 				}
 			}
 
+			//Triggerbot
 			{
-				SAVE_VAR(Vars::CritHack::Active);
-				SAVE_VAR(Vars::CritHack::indicators);
-				SAVE_VAR(Vars::CritHack::avoidrandom);
-				SAVE_VAR(Vars::CritHack::CritKey);
-			}
-
-			//Hitscan
-			{
-				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
-				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
-				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
-				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
-				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
-				SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
-				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
-				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
-				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
-				SAVE_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
-				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
-				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForCharge);
-				SAVE_VAR(Vars::Aimbot::Hitscan::SpectatedSmooth);
-				SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
-				SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
-				SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
-				
-			}
-
-			//Projectile
-			{
-				//SAVE_VAR(Vars::Aimbot::Projectile::Active);
-				SAVE_VAR(Vars::Aimbot::Projectile::PerformanceMode);
-				SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
-				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
-				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
-				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
-				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
-				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
-				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
-				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
-				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
-				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
-			}
-
-			//Melee
-			{
-				//SAVE_VAR(Vars::Aimbot::Melee::Active);
-				SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
-				SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
-				//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
-				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
-				SAVE_VAR(Vars::Aimbot::Melee::RangeCheck);
-				SAVE_VAR(Vars::Aimbot::Melee::PredictSwing);
-				SAVE_VAR(Vars::Aimbot::Melee::WhipTeam);
-			}
-		}
-
-		//Triggerbot
-		{
-			//Global
-			{
-				SAVE_VAR(Vars::Triggerbot::Global::Active);
-				SAVE_VAR(Vars::Triggerbot::Global::TriggerKey);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreFriends);
-			}
-
-			//Shoot
-			{
-				SAVE_VAR(Vars::Triggerbot::Shoot::Active);
-				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
-				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
-				SAVE_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
-				SAVE_VAR(Vars::Triggerbot::Shoot::HeadScale);
-			}
-
-			//Stab
-			{
-				SAVE_VAR(Vars::Triggerbot::Stab::Active);
-				SAVE_VAR(Vars::Triggerbot::Stab::RageMode);
-				SAVE_VAR(Vars::Triggerbot::Stab::Silent);
-				SAVE_VAR(Vars::Triggerbot::Stab::Disguise);
-				SAVE_VAR(Vars::Triggerbot::Stab::IgnRazor);
-				SAVE_VAR(Vars::Triggerbot::Stab::Range);
-			}
-
-			//Detonate
-			{
-				SAVE_VAR(Vars::Triggerbot::Detonate::Active);
-				SAVE_VAR(Vars::Triggerbot::Detonate::Stickies);
-				SAVE_VAR(Vars::Triggerbot::Detonate::Flares);
-				SAVE_VAR(Vars::Triggerbot::Detonate::RadiusScale);
-			}
-
-			//Blast
-			{
-				SAVE_VAR(Vars::Triggerbot::Blast::Active);
-				SAVE_VAR(Vars::Triggerbot::Blast::Rage);
-				SAVE_VAR(Vars::Triggerbot::Blast::Silent);
-				SAVE_VAR(Vars::Triggerbot::Blast::Fov);
-			}
-
-			//Uber
-			{
-				SAVE_VAR(Vars::Triggerbot::Uber::Active);
-				SAVE_VAR(Vars::Triggerbot::Uber::OnlyFriends);
-				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
-				SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
-				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
-			}
-		}
-
-		//ESP
-		{
-			//Main
-			{
-				SAVE_VAR(Vars::ESP::Main::Active);
-				SAVE_VAR(Vars::ESP::Main::Outlinedbar);
-				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
-			}
-
-			//Players
-			{
-				SAVE_VAR(Vars::ESP::Players::Active);
-				SAVE_VAR(Vars::ESP::Players::ShowLocal);
-				SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
-				SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
-				SAVE_VAR(Vars::ESP::Players::Name);
-				SAVE_VAR(Vars::ESP::Players::NameCustom);
-				SAVE_OTHER(Vars::ESP::Players::NameColor);
-				SAVE_VAR(Vars::ESP::Players::NameBox);
-				SAVE_VAR(Vars::ESP::Players::Uber);
-				SAVE_VAR(Vars::ESP::Players::Class);
-				SAVE_VAR(Vars::ESP::Players::Health);
-				SAVE_VAR(Vars::ESP::Players::Cond);
-				SAVE_VAR(Vars::ESP::Players::HealthBar);
-				SAVE_VAR(Vars::ESP::Players::Box);
-				SAVE_VAR(Vars::ESP::Players::GUID);
-				SAVE_VAR(Vars::ESP::Players::Choked);
-				SAVE_VAR(Vars::ESP::Players::Alpha);
-				SAVE_VAR(Vars::ESP::Players::Lines);
-				SAVE_VAR(Vars::ESP::Players::Bones);
-				SAVE_VAR(Vars::ESP::Players::Dlights);
-				SAVE_VAR(Vars::ESP::Players::DlightRadius);
-				SAVE_VAR(Vars::ESP::Players::CheaterDetection);
-				SAVE_VAR(Vars::ESP::Players::WeaponIcon);
-			}
-
-			//Buildings
-			{
-				SAVE_VAR(Vars::ESP::Buildings::Active);
-				SAVE_VAR(Vars::ESP::Buildings::IgnoreTeammates);
-				SAVE_VAR(Vars::ESP::Buildings::Name);
-				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
-				SAVE_OTHER(Vars::ESP::Buildings::NameColor);
-				SAVE_VAR(Vars::ESP::Buildings::NameBox);
-				SAVE_VAR(Vars::ESP::Buildings::Health);
-				SAVE_VAR(Vars::ESP::Buildings::Owner);
-				SAVE_VAR(Vars::ESP::Buildings::Level);
-				SAVE_VAR(Vars::ESP::Buildings::Cond);
-				SAVE_VAR(Vars::ESP::Buildings::HealthBar);
-				SAVE_VAR(Vars::ESP::Buildings::Box);
-				SAVE_VAR(Vars::ESP::Buildings::Alpha);
-				SAVE_VAR(Vars::ESP::Buildings::Dlights);
-				SAVE_VAR(Vars::ESP::Buildings::DlightRadius);
-			}
-
-			//World
-			{
-				SAVE_VAR(Vars::ESP::World::Active);
-				SAVE_VAR(Vars::ESP::World::HealthText);
-				SAVE_VAR(Vars::ESP::World::AmmoText);
-				SAVE_VAR(Vars::ESP::World::Alpha);
-			}
-		}
-
-		//Chams
-		{
-			//Main
-			{
-				SAVE_VAR(Vars::Chams::Main::Active);
-			}
-
-			//Players
-			{
-				SAVE_VAR(Vars::Chams::Players::Active);
-				SAVE_VAR(Vars::Chams::Players::Wearables);
-				SAVE_VAR(Vars::Chams::Players::Weapons);
-				SAVE_VAR(Vars::Chams::Players::FadeoutTeammates);
-			}
-
-			//Buildings
-			{
-				SAVE_VAR(Vars::Chams::Buildings::Active);
-				SAVE_VAR(Vars::Chams::Buildings::Material);
-				SAVE_VAR(Vars::Chams::Buildings::IgnoreZ);
-			}
-
-			//World
-			{
-				SAVE_VAR(Vars::Chams::World::Active);
-			}
-
-			//DME
-			{
-				SAVE_VAR(Vars::Chams::DME::Active);
-				SAVE_VAR(Vars::Chams::DME::Hands);
-
-				SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
-				SAVE_VAR(Vars::Chams::DME::Weapon);
-				SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
-				SAVE_VAR(Vars::Chams::DME::HandsRainbow);
-				SAVE_VAR(Vars::Chams::DME::WeaponRainbow);
-				SAVE_VAR(Vars::Chams::DME::HandsOverlayRainbow);
-				SAVE_VAR(Vars::Chams::DME::WeaponOverlayRainbow);
-				SAVE_VAR(Vars::Chams::DME::HandsProxySkin);
-				SAVE_VAR(Vars::Chams::DME::WeaponsProxySkin);
-				SAVE_VAR(Vars::Chams::DME::HandsGlowAmount);
-				SAVE_VAR(Vars::Chams::DME::WeaponGlowAmount);
-				SAVE_VAR(Vars::Chams::DME::WeaponOverlayPulse);
-				SAVE_VAR(Vars::Chams::DME::HandsOverlayPulse);
-			}
-		}
-
-		//Glow
-		{
-			//Main
-			{
-				SAVE_VAR(Vars::Glow::Main::Active);
-				SAVE_VAR(Vars::Glow::Main::Scale);
-			}
-
-			//Players
-			{
-				SAVE_VAR(Vars::Glow::Players::Active);
-				SAVE_VAR(Vars::Glow::Players::ShowLocal);
-				SAVE_VAR(Vars::Glow::Players::LocalRainbow);
-				SAVE_VAR(Vars::Glow::Players::IgnoreTeammates);
-				SAVE_VAR(Vars::Glow::Players::Wearables);
-				SAVE_VAR(Vars::Glow::Players::Weapons);
-				SAVE_VAR(Vars::Glow::Players::Alpha);
-				SAVE_VAR(Vars::Glow::Players::Color);
-			}
-
-			//Buildings
-			{
-				SAVE_VAR(Vars::Glow::Buildings::Active);
-				SAVE_VAR(Vars::Glow::Buildings::IgnoreTeammates);
-				SAVE_VAR(Vars::Glow::Buildings::Alpha);
-				SAVE_VAR(Vars::Glow::Buildings::Color);
-			}
-
-			//World
-			{
-				SAVE_VAR(Vars::Glow::World::Active);
-				SAVE_VAR(Vars::Glow::World::Health);
-				SAVE_VAR(Vars::Glow::World::Ammo);
-				SAVE_VAR(Vars::Glow::World::Projectiles);
-				SAVE_VAR(Vars::Glow::World::Alpha);
-			}
-		}
-
-		//Radar
-		{
-			//Main
-			{
-				SAVE_VAR(Vars::Radar::Main::Active);
-				SAVE_VAR(Vars::Radar::Main::BackAlpha);
-				SAVE_VAR(Vars::Radar::Main::LineAlpha);
-				SAVE_VAR(Vars::Radar::Main::Size);
-				SAVE_VAR(Vars::Radar::Main::Range);
-			}
-
-			//Players
-			{
-				SAVE_VAR(Vars::Radar::Players::Active);
-				SAVE_VAR(Vars::Radar::Players::IconType);
-				SAVE_VAR(Vars::Radar::Players::BackGroundType);
-				SAVE_VAR(Vars::Radar::Players::Outline);
-				SAVE_VAR(Vars::Radar::Players::IgnoreTeam);
-				SAVE_VAR(Vars::Radar::Players::IgnoreCloaked);
-				SAVE_VAR(Vars::Radar::Players::Health);
-			}
-
-			//Buildings
-			{
-				SAVE_VAR(Vars::Radar::Buildings::Active);
-				SAVE_VAR(Vars::Radar::Buildings::Outline);
-				SAVE_VAR(Vars::Radar::Buildings::IgnoreTeam);
-				SAVE_VAR(Vars::Radar::Buildings::Health);
-			}
-
-			//World
-			{
-				SAVE_VAR(Vars::Radar::World::Active);
-				SAVE_VAR(Vars::Radar::World::Health);
-				SAVE_VAR(Vars::Radar::World::Ammo);
-			}
-		}
-
-		//Visuals
-		{
-			SAVE_VAR(Vars::Visuals::RemoveDisguises);
-			SAVE_VAR(Vars::Visuals::RemoveTaunts);
-			SAVE_VAR(Vars::Visuals::FieldOfView);
-			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
-			SAVE_VAR(Vars::Visuals::RemoveScope);
-			SAVE_VAR(Vars::Visuals::ScopeLines);
-			SAVE_VAR(Vars::Visuals::PickupTimers);
-			SAVE_VAR(Vars::Visuals::RemoveZoom);
-			SAVE_VAR(Vars::Visuals::RemovePunch);
-			SAVE_VAR(Vars::Visuals::CrosshairAimPos);
-			SAVE_VAR(Vars::Visuals::ChatInfoText);
-			SAVE_VAR(Vars::Visuals::ChatInfoChat);
-			SAVE_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
-			SAVE_VAR(Vars::Visuals::SpectatorList);
-
-			SAVE_VAR(Vars::Visuals::FreecamKey);
-			SAVE_VAR(Vars::Visuals::FreecamSpeed);
-
-			SAVE_VAR(Vars::Visuals::CameraMode);
-			SAVE_VAR(Vars::Visuals::CameraFOV);
-
-			SAVE_VAR(Vars::Visuals::SpyWarning);
-			SAVE_VAR(Vars::Visuals::SpyWarningAnnounce);
-			SAVE_VAR(Vars::Visuals::SpyWarningStyle);
-			SAVE_VAR(Vars::Visuals::SpyWarningVisibleOnly);
-			SAVE_VAR(Vars::Visuals::SpyWarningIgnoreFriends);
-
-			SAVE_VAR(Vars::Visuals::Snow);
-			SAVE_VAR(Vars::Visuals::ToolTips);
-
-			SAVE_VAR(Vars::Visuals::ThirdPerson);
-			SAVE_VAR(Vars::Visuals::ThirdPersonKey);
-			SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
-			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
-			SAVE_VAR(Vars::Visuals::ThirdPersonServerHitbox);
-			SAVE_VAR(Vars::Visuals::ThirdpersonOffset);
-			SAVE_VAR(Vars::Visuals::ThirdpersonDist);
-			SAVE_VAR(Vars::Visuals::ThirdpersonRight);
-			SAVE_VAR(Vars::Visuals::ThirdpersonUp);
-			SAVE_VAR(Vars::Visuals::ThirdpersonOffsetWithArrows);
-			SAVE_VAR(Vars::Visuals::ThirdpersonArrowOffsetKey);
-			SAVE_VAR(Vars::Visuals::ThirdpersonCrosshair);
-			SAVE_VAR(Vars::Visuals::WorldModulation);
-			SAVE_VAR(Vars::Visuals::SkyModulation);
-			SAVE_VAR(Vars::Visuals::PropWireframe);
-			SAVE_VAR(Vars::Visuals::SkyboxChanger);
-			SAVE_VAR(Vars::Visuals::BulletTracer);
-			SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
-			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
-			SAVE_VAR(Vars::Visuals::ViewmodelSway);
-			SAVE_VAR(Vars::Visuals::MoveSimLine);
-			SAVE_OTHER(Vars::Visuals::VMOffsets);
-			SAVE_VAR(Vars::Visuals::VMRoll);
-			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
-			SAVE_VAR(Vars::Visuals::ArrowLength);
-			SAVE_VAR(Vars::Visuals::ArrowAngle);
-			SAVE_VAR(Vars::Visuals::MaxDist);
-			SAVE_VAR(Vars::Visuals::MinDist);
-			SAVE_VAR(Vars::Visuals::FovArrowsDist);
-			SAVE_VAR(Vars::Visuals::AimPosSquare);
-			SAVE_VAR(Vars::Visuals::Rain);
-			SAVE_VAR(Vars::Visuals::DebugInfo);
-				
-			// Beans I LOVE Beans
-			{
-				SAVE_VAR(Vars::Visuals::Beans::Active);
-				SAVE_VAR(Vars::Visuals::Beans::Rainbow);
-				SAVE_OTHER(Vars::Visuals::Beans::BeamColour);
-				SAVE_VAR(Vars::Visuals::Beans::UseCustomModel);
-				SAVE_STRING(Vars::Visuals::Beans::Model);
-				SAVE_VAR(Vars::Visuals::Beans::Life);
-				SAVE_VAR(Vars::Visuals::Beans::Width);
-				SAVE_VAR(Vars::Visuals::Beans::EndWidth);
-				SAVE_VAR(Vars::Visuals::Beans::FadeLength);
-				SAVE_VAR(Vars::Visuals::Beans::Amplitude);
-				SAVE_VAR(Vars::Visuals::Beans::Brightness);
-				SAVE_VAR(Vars::Visuals::Beans::Speed);
-				SAVE_VAR(Vars::Visuals::Beans::Flags);
-				SAVE_VAR(Vars::Visuals::Beans::segments);
-			}
-
-			SAVE_VAR(Vars::Visuals::despawnTime);
-			SAVE_VAR(Vars::Visuals::damageLoggerText);
-			SAVE_VAR(Vars::Visuals::damageLoggerChat);
-			SAVE_VAR(Vars::Visuals::damageLoggerConsole);
-			SAVE_VAR(Vars::Visuals::ParticleTracer);
-			SAVE_VAR(Vars::Glow::Main::Stencil);
-			SAVE_VAR(Vars::Visuals::Vision);
-
-			{
-				SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Burning);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Dissolve);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
-			}
-
-			{
-				SAVE_VAR(Vars::Visuals::Fog::CustomFog);
-				SAVE_VAR(Vars::Visuals::Fog::FogDensity);
-				SAVE_VAR(Vars::Visuals::Fog::FogDensitySkybox);
-				SAVE_VAR(Vars::Visuals::Fog::FogStart);
-				SAVE_VAR(Vars::Visuals::Fog::FogStartSkybox);
-				SAVE_VAR(Vars::Visuals::Fog::FogEnd);
-				SAVE_VAR(Vars::Visuals::Fog::FogEndSkybox);
-				SAVE_OTHER(Vars::Visuals::Fog::FogColor);
-				SAVE_OTHER(Vars::Visuals::Fog::FogColorSkybox);
-			}
-		}
-
-		//Misc
-		{
-			SAVE_VAR(Vars::Misc::AccurateMovement);
-			SAVE_VAR(Vars::Misc::AutoJump);
-			SAVE_VAR(Vars::Misc::DuckJump);
-			SAVE_VAR(Vars::Misc::TauntSlide);
-			SAVE_VAR(Vars::Misc::TauntControl);
-			SAVE_VAR(Vars::Misc::BypassPure);
-			SAVE_VAR(Vars::Misc::NoisemakerSpam);
-			SAVE_VAR(Vars::Misc::DisableInterpolation);
-			SAVE_VAR(Vars::Misc::MedalFlip);
-			SAVE_VAR(Vars::Misc::AutoRocketJump);
-			SAVE_VAR(Vars::Misc::ChatSpam);
-			SAVE_VAR(Vars::Misc::NoPush);
-			SAVE_VAR(Vars::Misc::AutoStrafe);
-			SAVE_VAR(Vars::Misc::Directional);
-			SAVE_VAR(Vars::Misc::EdgeJump);
-			SAVE_VAR(Vars::Misc::EdgeJumpKey);
-			SAVE_VAR(Vars::Misc::AntiAFK);
-			SAVE_VAR(Vars::Misc::CheatsBypass);
-			SAVE_VAR(Vars::Misc::ChatCensor);
-			SAVE_VAR(Vars::Misc::RageRetry);
-			SAVE_VAR(Vars::Misc::RageRetryHealth);
-			SAVE_VAR(Vars::Misc::MVMRes);
-			SAVE_VAR(Vars::Misc::BeCat);
-			SAVE_VAR(Vars::Misc::VoteRevealerText);
-			SAVE_VAR(Vars::Misc::VoteRevealerConsole);
-			SAVE_VAR(Vars::Misc::VoteRevealerChat);
-			SAVE_VAR(Vars::Misc::VoteRevealerParty);
-			SAVE_VAR(Vars::Misc::AutoVote);
-			SAVE_VAR(Vars::Misc::AnnounceVotes);
-			SAVE_VAR(Vars::Misc::AnnounceVotesText);
-			SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
-			SAVE_VAR(Vars::Misc::AnnounceVotesChat);
-			SAVE_VAR(Vars::Misc::AnnounceVotesParty);
-			SAVE_VAR(Vars::Misc::PingReducer);
-			SAVE_VAR(Vars::Misc::PingTarget);
-			SAVE_VAR(Vars::Misc::ExtendFreeze);
-			SAVE_VAR(Vars::Misc::AutoJoin);
-			SAVE_VAR(Vars::Misc::KillstreakWeapon);
-			SAVE_VAR(Vars::Misc::PartyNetworking);
-			SAVE_VAR(Vars::Misc::PartyMarker);
-			// CL_Move
-			{
-				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
-				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
-				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
-				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
-				SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
-				SAVE_VAR(Vars::Misc::CL_Move::DTBarStyle);
-				SAVE_VAR(Vars::Misc::CL_Move::DTMode);
-				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
-				SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
-				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleX);
-				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleY);
-				SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
-				SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
-				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
-				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekKey);
-				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
-				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekFree);
+				//Global
 				{
-					SAVE_VAR(Vars::Misc::CL_Move::FLGChams::Material);
-					SAVE_OTHER(Vars::Misc::CL_Move::FLGChams::FakelagColor);
+					SAVE_VAR(Vars::Triggerbot::Global::Active);
+					SAVE_VAR(Vars::Triggerbot::Global::TriggerKey);
+					SAVE_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
+					SAVE_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
+					SAVE_VAR(Vars::Triggerbot::Global::IgnoreFriends);
+				}
+
+				//Shoot
+				{
+					SAVE_VAR(Vars::Triggerbot::Shoot::Active);
+					SAVE_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
+					SAVE_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
+					SAVE_VAR(Vars::Triggerbot::Shoot::HeadOnly);
+					SAVE_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+					SAVE_VAR(Vars::Triggerbot::Shoot::HeadScale);
+				}
+
+				//Stab
+				{
+					SAVE_VAR(Vars::Triggerbot::Stab::Active);
+					SAVE_VAR(Vars::Triggerbot::Stab::RageMode);
+					SAVE_VAR(Vars::Triggerbot::Stab::Silent);
+					SAVE_VAR(Vars::Triggerbot::Stab::Disguise);
+					SAVE_VAR(Vars::Triggerbot::Stab::IgnRazor);
+					SAVE_VAR(Vars::Triggerbot::Stab::Range);
+				}
+
+				//Detonate
+				{
+					SAVE_VAR(Vars::Triggerbot::Detonate::Active);
+					SAVE_VAR(Vars::Triggerbot::Detonate::Stickies);
+					SAVE_VAR(Vars::Triggerbot::Detonate::Flares);
+					SAVE_VAR(Vars::Triggerbot::Detonate::RadiusScale);
+				}
+
+				//Blast
+				{
+					SAVE_VAR(Vars::Triggerbot::Blast::Active);
+					SAVE_VAR(Vars::Triggerbot::Blast::Rage);
+					SAVE_VAR(Vars::Triggerbot::Blast::Silent);
+					SAVE_VAR(Vars::Triggerbot::Blast::Fov);
+				}
+
+				//Uber
+				{
+					SAVE_VAR(Vars::Triggerbot::Uber::Active);
+					SAVE_VAR(Vars::Triggerbot::Uber::OnlyFriends);
+					SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
+					SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
+					SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
 				}
 			}
-			//Discord
+
+			//ESP
 			{
-				SAVE_VAR(Vars::Misc::Discord::EnableRPC);
-				SAVE_VAR(Vars::Misc::Discord::IncludeMap);
-				SAVE_VAR(Vars::Misc::Discord::IncludeClass);
-				SAVE_VAR(Vars::Misc::Discord::IncludeTimestamp);
-				SAVE_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+				//Main
+				{
+					SAVE_VAR(Vars::ESP::Main::Active);
+					SAVE_VAR(Vars::ESP::Main::Outlinedbar);
+					SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				}
+
+				//Players
+				{
+					SAVE_VAR(Vars::ESP::Players::Active);
+					SAVE_VAR(Vars::ESP::Players::ShowLocal);
+					SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
+					SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
+					SAVE_VAR(Vars::ESP::Players::Name);
+					SAVE_VAR(Vars::ESP::Players::NameCustom);
+					SAVE_OTHER(Vars::ESP::Players::NameColor);
+					SAVE_VAR(Vars::ESP::Players::NameBox);
+					SAVE_VAR(Vars::ESP::Players::Uber);
+					SAVE_VAR(Vars::ESP::Players::Class);
+					SAVE_VAR(Vars::ESP::Players::Health);
+					SAVE_VAR(Vars::ESP::Players::Cond);
+					SAVE_VAR(Vars::ESP::Players::HealthBar);
+					SAVE_VAR(Vars::ESP::Players::Box);
+					SAVE_VAR(Vars::ESP::Players::GUID);
+					SAVE_VAR(Vars::ESP::Players::Choked);
+					SAVE_VAR(Vars::ESP::Players::Alpha);
+					SAVE_VAR(Vars::ESP::Players::Lines);
+					SAVE_VAR(Vars::ESP::Players::Bones);
+					SAVE_VAR(Vars::ESP::Players::Dlights);
+					SAVE_VAR(Vars::ESP::Players::DlightRadius);
+					SAVE_VAR(Vars::ESP::Players::CheaterDetection);
+					SAVE_VAR(Vars::ESP::Players::WeaponIcon);
+				}
+
+				//Buildings
+				{
+					SAVE_VAR(Vars::ESP::Buildings::Active);
+					SAVE_VAR(Vars::ESP::Buildings::IgnoreTeammates);
+					SAVE_VAR(Vars::ESP::Buildings::Name);
+					SAVE_VAR(Vars::ESP::Buildings::NameCustom);
+					SAVE_OTHER(Vars::ESP::Buildings::NameColor);
+					SAVE_VAR(Vars::ESP::Buildings::NameBox);
+					SAVE_VAR(Vars::ESP::Buildings::Health);
+					SAVE_VAR(Vars::ESP::Buildings::Owner);
+					SAVE_VAR(Vars::ESP::Buildings::Level);
+					SAVE_VAR(Vars::ESP::Buildings::Cond);
+					SAVE_VAR(Vars::ESP::Buildings::HealthBar);
+					SAVE_VAR(Vars::ESP::Buildings::Box);
+					SAVE_VAR(Vars::ESP::Buildings::Alpha);
+					SAVE_VAR(Vars::ESP::Buildings::Dlights);
+					SAVE_VAR(Vars::ESP::Buildings::DlightRadius);
+				}
+
+				//World
+				{
+					SAVE_VAR(Vars::ESP::World::Active);
+					SAVE_VAR(Vars::ESP::World::HealthText);
+					SAVE_VAR(Vars::ESP::World::AmmoText);
+					SAVE_VAR(Vars::ESP::World::Alpha);
+				}
 			}
-			//Steam
+
+			//Chams
 			{
-				SAVE_VAR(Vars::Misc::Steam::EnableRPC);
-				SAVE_VAR(Vars::Misc::Steam::MatchGroup);
-				SAVE_VAR(Vars::Misc::Steam::OverrideMenu);
-				SAVE_VAR(Vars::Misc::Steam::MapText);
-				SAVE_VAR(Vars::Misc::Steam::GroupSize);
-				SAVE_VAR(Vars::Misc::Steam::CustomText);
+				//Main
+				{
+					SAVE_VAR(Vars::Chams::Main::Active);
+				}
+
+				//Players
+				{
+					SAVE_VAR(Vars::Chams::Players::Active);
+					SAVE_VAR(Vars::Chams::Players::Wearables);
+					SAVE_VAR(Vars::Chams::Players::Weapons);
+					SAVE_VAR(Vars::Chams::Players::FadeoutTeammates);
+				}
+
+				//Buildings
+				{
+					SAVE_VAR(Vars::Chams::Buildings::Active);
+					SAVE_VAR(Vars::Chams::Buildings::Material);
+					SAVE_VAR(Vars::Chams::Buildings::IgnoreZ);
+				}
+
+				//World
+				{
+					SAVE_VAR(Vars::Chams::World::Active);
+				}
+
+				//DME
+				{
+					SAVE_VAR(Vars::Chams::DME::Active);
+					SAVE_VAR(Vars::Chams::DME::Hands);
+
+					SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
+					SAVE_VAR(Vars::Chams::DME::Weapon);
+					SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
+					SAVE_VAR(Vars::Chams::DME::HandsRainbow);
+					SAVE_VAR(Vars::Chams::DME::WeaponRainbow);
+					SAVE_VAR(Vars::Chams::DME::HandsOverlayRainbow);
+					SAVE_VAR(Vars::Chams::DME::WeaponOverlayRainbow);
+					SAVE_VAR(Vars::Chams::DME::HandsProxySkin);
+					SAVE_VAR(Vars::Chams::DME::WeaponsProxySkin);
+					SAVE_VAR(Vars::Chams::DME::HandsGlowAmount);
+					SAVE_VAR(Vars::Chams::DME::WeaponGlowAmount);
+					SAVE_VAR(Vars::Chams::DME::WeaponOverlayPulse);
+					SAVE_VAR(Vars::Chams::DME::HandsOverlayPulse);
+				}
 			}
+
+			//Glow
+			{
+				//Main
+				{
+					SAVE_VAR(Vars::Glow::Main::Active);
+					SAVE_VAR(Vars::Glow::Main::Scale);
+				}
+
+				//Players
+				{
+					SAVE_VAR(Vars::Glow::Players::Active);
+					SAVE_VAR(Vars::Glow::Players::ShowLocal);
+					SAVE_VAR(Vars::Glow::Players::LocalRainbow);
+					SAVE_VAR(Vars::Glow::Players::IgnoreTeammates);
+					SAVE_VAR(Vars::Glow::Players::Wearables);
+					SAVE_VAR(Vars::Glow::Players::Weapons);
+					SAVE_VAR(Vars::Glow::Players::Alpha);
+					SAVE_VAR(Vars::Glow::Players::Color);
+				}
+
+				//Buildings
+				{
+					SAVE_VAR(Vars::Glow::Buildings::Active);
+					SAVE_VAR(Vars::Glow::Buildings::IgnoreTeammates);
+					SAVE_VAR(Vars::Glow::Buildings::Alpha);
+					SAVE_VAR(Vars::Glow::Buildings::Color);
+				}
+
+				//World
+				{
+					SAVE_VAR(Vars::Glow::World::Active);
+					SAVE_VAR(Vars::Glow::World::Health);
+					SAVE_VAR(Vars::Glow::World::Ammo);
+					SAVE_VAR(Vars::Glow::World::Projectiles);
+					SAVE_VAR(Vars::Glow::World::Alpha);
+				}
+			}
+
+			//Radar
+			{
+				//Main
+				{
+					SAVE_VAR(Vars::Radar::Main::Active);
+					SAVE_VAR(Vars::Radar::Main::BackAlpha);
+					SAVE_VAR(Vars::Radar::Main::LineAlpha);
+					SAVE_VAR(Vars::Radar::Main::Size);
+					SAVE_VAR(Vars::Radar::Main::Range);
+				}
+
+				//Players
+				{
+					SAVE_VAR(Vars::Radar::Players::Active);
+					SAVE_VAR(Vars::Radar::Players::IconType);
+					SAVE_VAR(Vars::Radar::Players::BackGroundType);
+					SAVE_VAR(Vars::Radar::Players::Outline);
+					SAVE_VAR(Vars::Radar::Players::IgnoreTeam);
+					SAVE_VAR(Vars::Radar::Players::IgnoreCloaked);
+					SAVE_VAR(Vars::Radar::Players::Health);
+				}
+
+				//Buildings
+				{
+					SAVE_VAR(Vars::Radar::Buildings::Active);
+					SAVE_VAR(Vars::Radar::Buildings::Outline);
+					SAVE_VAR(Vars::Radar::Buildings::IgnoreTeam);
+					SAVE_VAR(Vars::Radar::Buildings::Health);
+				}
+
+				//World
+				{
+					SAVE_VAR(Vars::Radar::World::Active);
+					SAVE_VAR(Vars::Radar::World::Health);
+					SAVE_VAR(Vars::Radar::World::Ammo);
+				}
+			}
+
+			//Visuals
+			{
+				SAVE_VAR(Vars::Visuals::RemoveDisguises);
+				SAVE_VAR(Vars::Visuals::RemoveTaunts);
+				SAVE_VAR(Vars::Visuals::FieldOfView);
+				SAVE_VAR(Vars::Visuals::AimFOVAlpha);
+				SAVE_VAR(Vars::Visuals::RemoveScope);
+				SAVE_VAR(Vars::Visuals::ScopeLines);
+				SAVE_VAR(Vars::Visuals::PickupTimers);
+				SAVE_VAR(Vars::Visuals::RemoveZoom);
+				SAVE_VAR(Vars::Visuals::RemovePunch);
+				SAVE_VAR(Vars::Visuals::CrosshairAimPos);
+				SAVE_VAR(Vars::Visuals::ChatInfoText);
+				SAVE_VAR(Vars::Visuals::ChatInfoChat);
+				SAVE_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
+				SAVE_VAR(Vars::Visuals::SpectatorList);
+
+				SAVE_VAR(Vars::Visuals::FreecamKey);
+				SAVE_VAR(Vars::Visuals::FreecamSpeed);
+
+				SAVE_VAR(Vars::Visuals::CameraMode);
+				SAVE_VAR(Vars::Visuals::CameraFOV);
+
+				SAVE_VAR(Vars::Visuals::SpyWarning);
+				SAVE_VAR(Vars::Visuals::SpyWarningAnnounce);
+				SAVE_VAR(Vars::Visuals::SpyWarningStyle);
+				SAVE_VAR(Vars::Visuals::SpyWarningVisibleOnly);
+				SAVE_VAR(Vars::Visuals::SpyWarningIgnoreFriends);
+
+				SAVE_VAR(Vars::Visuals::Snow);
+				SAVE_VAR(Vars::Visuals::ToolTips);
+
+				SAVE_VAR(Vars::Visuals::ThirdPerson);
+				SAVE_VAR(Vars::Visuals::ThirdPersonKey);
+				SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
+				SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
+				SAVE_VAR(Vars::Visuals::ThirdPersonServerHitbox);
+				SAVE_VAR(Vars::Visuals::ThirdpersonOffset);
+				SAVE_VAR(Vars::Visuals::ThirdpersonDist);
+				SAVE_VAR(Vars::Visuals::ThirdpersonRight);
+				SAVE_VAR(Vars::Visuals::ThirdpersonUp);
+				SAVE_VAR(Vars::Visuals::ThirdpersonOffsetWithArrows);
+				SAVE_VAR(Vars::Visuals::ThirdpersonArrowOffsetKey);
+				SAVE_VAR(Vars::Visuals::ThirdpersonCrosshair);
+				SAVE_VAR(Vars::Visuals::WorldModulation);
+				SAVE_VAR(Vars::Visuals::SkyModulation);
+				SAVE_VAR(Vars::Visuals::PropWireframe);
+				SAVE_VAR(Vars::Visuals::SkyboxChanger);
+				SAVE_VAR(Vars::Visuals::BulletTracer);
+				SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
+				SAVE_VAR(Vars::Visuals::AimbotViewmodel);
+				SAVE_VAR(Vars::Visuals::ViewmodelSway);
+				SAVE_VAR(Vars::Visuals::MoveSimLine);
+				SAVE_OTHER(Vars::Visuals::VMOffsets);
+				SAVE_VAR(Vars::Visuals::VMRoll);
+				SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
+				SAVE_VAR(Vars::Visuals::ArrowLength);
+				SAVE_VAR(Vars::Visuals::ArrowAngle);
+				SAVE_VAR(Vars::Visuals::MaxDist);
+				SAVE_VAR(Vars::Visuals::MinDist);
+				SAVE_VAR(Vars::Visuals::FovArrowsDist);
+				SAVE_VAR(Vars::Visuals::AimPosSquare);
+				SAVE_VAR(Vars::Visuals::Rain);
+				SAVE_VAR(Vars::Visuals::DebugInfo);
+
+				// Beans I LOVE Beans
+				{
+					SAVE_VAR(Vars::Visuals::Beans::Active);
+					SAVE_VAR(Vars::Visuals::Beans::Rainbow);
+					SAVE_OTHER(Vars::Visuals::Beans::BeamColour);
+					SAVE_VAR(Vars::Visuals::Beans::UseCustomModel);
+					SAVE_STRING(Vars::Visuals::Beans::Model);
+					SAVE_VAR(Vars::Visuals::Beans::Life);
+					SAVE_VAR(Vars::Visuals::Beans::Width);
+					SAVE_VAR(Vars::Visuals::Beans::EndWidth);
+					SAVE_VAR(Vars::Visuals::Beans::FadeLength);
+					SAVE_VAR(Vars::Visuals::Beans::Amplitude);
+					SAVE_VAR(Vars::Visuals::Beans::Brightness);
+					SAVE_VAR(Vars::Visuals::Beans::Speed);
+					SAVE_VAR(Vars::Visuals::Beans::Flags);
+					SAVE_VAR(Vars::Visuals::Beans::segments);
+				}
+
+				SAVE_VAR(Vars::Visuals::despawnTime);
+				SAVE_VAR(Vars::Visuals::damageLoggerText);
+				SAVE_VAR(Vars::Visuals::damageLoggerChat);
+				SAVE_VAR(Vars::Visuals::damageLoggerConsole);
+				SAVE_VAR(Vars::Visuals::ParticleTracer);
+				SAVE_VAR(Vars::Glow::Main::Stencil);
+				SAVE_VAR(Vars::Visuals::Vision);
+
+				{
+					SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::Burning);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::Dissolve);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
+					SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
+				}
+
+				{
+					SAVE_VAR(Vars::Visuals::Fog::CustomFog);
+					SAVE_VAR(Vars::Visuals::Fog::FogDensity);
+					SAVE_VAR(Vars::Visuals::Fog::FogDensitySkybox);
+					SAVE_VAR(Vars::Visuals::Fog::FogStart);
+					SAVE_VAR(Vars::Visuals::Fog::FogStartSkybox);
+					SAVE_VAR(Vars::Visuals::Fog::FogEnd);
+					SAVE_VAR(Vars::Visuals::Fog::FogEndSkybox);
+					SAVE_OTHER(Vars::Visuals::Fog::FogColor);
+					SAVE_OTHER(Vars::Visuals::Fog::FogColorSkybox);
+				}
+			}
+
+			//Misc
+			{
+				SAVE_VAR(Vars::Misc::AccurateMovement);
+				SAVE_VAR(Vars::Misc::AutoJump);
+				SAVE_VAR(Vars::Misc::DuckJump);
+				SAVE_VAR(Vars::Misc::TauntSlide);
+				SAVE_VAR(Vars::Misc::TauntControl);
+				SAVE_VAR(Vars::Misc::BypassPure);
+				SAVE_VAR(Vars::Misc::NoisemakerSpam);
+				SAVE_VAR(Vars::Misc::DisableInterpolation);
+				SAVE_VAR(Vars::Misc::MedalFlip);
+				SAVE_VAR(Vars::Misc::AutoRocketJump);
+				SAVE_VAR(Vars::Misc::ChatSpam);
+				SAVE_VAR(Vars::Misc::NoPush);
+				SAVE_VAR(Vars::Misc::AutoStrafe);
+				SAVE_VAR(Vars::Misc::Directional);
+				SAVE_VAR(Vars::Misc::EdgeJump);
+				SAVE_VAR(Vars::Misc::EdgeJumpKey);
+				SAVE_VAR(Vars::Misc::AntiAFK);
+				SAVE_VAR(Vars::Misc::CheatsBypass);
+				SAVE_VAR(Vars::Misc::ChatCensor);
+				SAVE_VAR(Vars::Misc::RageRetry);
+				SAVE_VAR(Vars::Misc::RageRetryHealth);
+				SAVE_VAR(Vars::Misc::MVMRes);
+				SAVE_VAR(Vars::Misc::BeCat);
+				SAVE_VAR(Vars::Misc::VoteRevealerText);
+				SAVE_VAR(Vars::Misc::VoteRevealerConsole);
+				SAVE_VAR(Vars::Misc::VoteRevealerChat);
+				SAVE_VAR(Vars::Misc::VoteRevealerParty);
+				SAVE_VAR(Vars::Misc::AutoVote);
+				SAVE_VAR(Vars::Misc::AnnounceVotes);
+				SAVE_VAR(Vars::Misc::AnnounceVotesText);
+				SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
+				SAVE_VAR(Vars::Misc::AnnounceVotesChat);
+				SAVE_VAR(Vars::Misc::AnnounceVotesParty);
+				SAVE_VAR(Vars::Misc::PingReducer);
+				SAVE_VAR(Vars::Misc::PingTarget);
+				SAVE_VAR(Vars::Misc::ExtendFreeze);
+				SAVE_VAR(Vars::Misc::AutoJoin);
+				SAVE_VAR(Vars::Misc::KillstreakWeapon);
+				SAVE_VAR(Vars::Misc::PartyNetworking);
+				SAVE_VAR(Vars::Misc::PartyMarker);
+				// CL_Move
+				{
+					SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
+					SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
+					SAVE_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
+					SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
+					SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
+					SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
+					SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
+					SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
+					SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
+					SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
+					SAVE_VAR(Vars::Misc::CL_Move::DTBarStyle);
+					SAVE_VAR(Vars::Misc::CL_Move::DTMode);
+					SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
+					SAVE_VAR(Vars::Misc::CL_Move::DtbarOutlineWidth);
+					SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleX);
+					SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleY);
+					SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
+					SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
+					SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
+					SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+					SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
+					SAVE_VAR(Vars::Misc::CL_Move::AutoPeekKey);
+					SAVE_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
+					SAVE_VAR(Vars::Misc::CL_Move::AutoPeekFree);
+					{
+						SAVE_VAR(Vars::Misc::CL_Move::FLGChams::Material);
+						SAVE_OTHER(Vars::Misc::CL_Move::FLGChams::FakelagColor);
+					}
+				}
+				//Discord
+				{
+					SAVE_VAR(Vars::Misc::Discord::EnableRPC);
+					SAVE_VAR(Vars::Misc::Discord::IncludeMap);
+					SAVE_VAR(Vars::Misc::Discord::IncludeClass);
+					SAVE_VAR(Vars::Misc::Discord::IncludeTimestamp);
+					SAVE_VAR(Vars::Misc::Discord::WhatImagesShouldBeUsed);
+				}
+				//Steam
+				{
+					SAVE_VAR(Vars::Misc::Steam::EnableRPC);
+					SAVE_VAR(Vars::Misc::Steam::MatchGroup);
+					SAVE_VAR(Vars::Misc::Steam::OverrideMenu);
+					SAVE_VAR(Vars::Misc::Steam::MapText);
+					SAVE_VAR(Vars::Misc::Steam::GroupSize);
+					SAVE_VAR(Vars::Misc::Steam::CustomText);
+				}
+			}
+
+			//AntiHack
+			{
+				//AntiAim
+				{
+					SAVE_VAR(Vars::AntiHack::AntiAim::Active);
+					SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
+					SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
+					SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
+					SAVE_VAR(Vars::AntiHack::AntiAim::SpinSpeed);
+					SAVE_VAR(Vars::AntiHack::AntiAim::RandInterval);
+					SAVE_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
+					SAVE_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
+					SAVE_VAR(Vars::AntiHack::AntiAim::legjitter);
+					SAVE_VAR(Vars::AntiHack::AntiAim::invalidshootpitch);
+				}
+				//Resolver
+				{
+					SAVE_VAR(Vars::AntiHack::Resolver::Resolver);
+				}
+			}
+
+			//Others
+			{
+				SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
+
+				SAVE_OTHER(Colors::OutlineESP);
+				SAVE_OTHER(Colors::DTBarIndicatorsCharged);
+				SAVE_OTHER(Colors::DTBarIndicatorsCharging);
+				SAVE_OTHER(Colors::ChokedBar);
+				SAVE_OTHER(Colors::GradientHealthBar);
+				SAVE_OTHER(Colors::OverhealHealthBar);
+				SAVE_OTHER(Colors::Cond);
+				SAVE_OTHER(Colors::Target);
+				SAVE_OTHER(Colors::Invuln);
+				SAVE_OTHER(Colors::Cloak);
+				SAVE_OTHER(Colors::Friend);
+				SAVE_OTHER(Colors::Local);
+				SAVE_OTHER(Colors::Ignored);
+				SAVE_OTHER(Colors::Overheal);
+				SAVE_OTHER(Colors::Health);
+				SAVE_OTHER(Colors::Ammo);
+				SAVE_OTHER(Colors::UberColor);
+				SAVE_OTHER(Colors::Enemy);
+				SAVE_OTHER(Colors::rTeam);
+				SAVE_OTHER(Colors::TeamRed);
+				SAVE_OTHER(Colors::TeamBlu);
+				SAVE_OTHER(Colors::Hands);
+				SAVE_OTHER(Colors::Weapon);
+				SAVE_OTHER(Colors::HandsOverlay);
+				SAVE_OTHER(Colors::WeaponOverlay);
+				SAVE_OTHER(Colors::WorldModulation);
+				SAVE_OTHER(Colors::SkyModulation);
+				SAVE_OTHER(Colors::StaticPropModulation);
+				SAVE_OTHER(Colors::FOVCircle);
+				SAVE_OTHER(Colors::Bones);
+				SAVE_OTHER(Colors::BulletTracer);
+				SAVE_OTHER(Colors::FresnelBase);
+				SAVE_OTHER(Colors::FresnelBaseHands);
+				SAVE_OTHER(Colors::FresnelBaseWeps);
+				SAVE_OTHER(Colors::FresnelTop);
+				SAVE_OTHER(Colors::AimSquareCol);
+				SAVE_OTHER(Colors::DtOutline);
+				SAVE_OTHER(Colors::NotifBG);
+				SAVE_OTHER(Colors::NotifOutline);
+				SAVE_OTHER(Colors::NotifText);
+				SAVE_OTHER(Colors::WeaponIcon);
+				SAVE_OTHER(Colors::NoscopeLines1);
+				SAVE_OTHER(Colors::NoscopeLines2);
+				SAVE_OTHER(Colors::bonecolor);
+				SAVE_OTHER(Colors::HitboxFace);
+				SAVE_OTHER(Colors::HitboxEdge);
+
+				SAVE_OTHER(Vars::Skybox::SkyboxNum);
+				SAVE_STRING(Vars::Skybox::SkyboxName);
+
+				SAVE_OTHER(Vars::Chams::Players::Local);
+				SAVE_OTHER(Vars::Chams::Players::Enemy);
+				SAVE_OTHER(Vars::Chams::Players::Team);
+				SAVE_OTHER(Vars::Chams::Players::Friend);
+				SAVE_OTHER(Vars::Chams::Players::Target);
+
+				SAVE_OTHER(Vars::Chams::Buildings::Local);
+				SAVE_OTHER(Vars::Chams::Buildings::Enemy);
+				SAVE_OTHER(Vars::Chams::Buildings::Team);
+				SAVE_OTHER(Vars::Chams::Buildings::Friend);
+				SAVE_OTHER(Vars::Chams::Buildings::Target);
+
+				SAVE_OTHER(Vars::Chams::World::Health);
+				SAVE_OTHER(Vars::Chams::World::Ammo);
+				SAVE_OTHER(Vars::Chams::World::Projectiles);
+
+				SAVE_OTHER(Vars::Menu::ModernDesign);
+				SAVE_OTHER(Vars::Menu::ShowPlayerlist);
+			}
+
+			//Fonts
+			{
+				//FONT_ESP
+				{
+					SAVE_STRING(Vars::Fonts::FONT_ESP::szName);
+					SAVE_VAR(Vars::Fonts::FONT_ESP::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_ESP::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_ESP::nFlags);
+				}
+				//FONT_ESP_NAME
+				{
+					SAVE_STRING(Vars::Fonts::FONT_ESP_NAME::szName);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nFlags);
+				}
+				//FONT_ESP_COND
+				{
+					SAVE_STRING(Vars::Fonts::FONT_ESP_COND::szName);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nFlags);
+				}
+				//FONT_ESP_PICKUPS
+				{
+					SAVE_STRING(Vars::Fonts::FONT_ESP_PICKUPS::szName);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nFlags);
+				}
+				//FONT_MENU
+				{
+					SAVE_STRING(Vars::Fonts::FONT_MENU::szName);
+					SAVE_VAR(Vars::Fonts::FONT_MENU::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_MENU::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_MENU::nFlags);
+				}
+				//FONT_INDICATORS
+				{
+					SAVE_STRING(Vars::Fonts::FONT_INDICATORS::szName);
+					SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nTall);
+					SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nWeight);
+					SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nFlags);
+				}
+			}
+
+			m_Write.close();
+			std::wstring wName = name;
+			std::string sName(wName.begin(), wName.end());
+			std::string savedString("Config " + sName + " saved.");
+			g_Notifications.Add(savedString);
 		}
-
-		//AntiHack
-		{
-			//AntiAim
-			{
-				SAVE_VAR(Vars::AntiHack::AntiAim::Active);
-				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
-				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
-				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
-				SAVE_VAR(Vars::AntiHack::AntiAim::SpinSpeed);
-				SAVE_VAR(Vars::AntiHack::AntiAim::RandInterval);
-				SAVE_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
-				SAVE_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
-				SAVE_VAR(Vars::AntiHack::AntiAim::legjitter);
-				SAVE_VAR(Vars::AntiHack::AntiAim::invalidshootpitch);
-			}
-			//Resolver
-			{
-				SAVE_VAR(Vars::AntiHack::Resolver::Resolver);
-			}
-		}
-
-		//Others
-		{
-			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
-
-			SAVE_OTHER(Colors::OutlineESP);
-			SAVE_OTHER(Colors::DTBarIndicatorsCharged);
-			SAVE_OTHER(Colors::DTBarIndicatorsCharging);
-			SAVE_OTHER(Colors::ChokedBar);
-			SAVE_OTHER(Colors::GradientHealthBar);
-			SAVE_OTHER(Colors::OverhealHealthBar);
-			SAVE_OTHER(Colors::Cond);
-			SAVE_OTHER(Colors::Target);
-			SAVE_OTHER(Colors::Invuln);
-			SAVE_OTHER(Colors::Cloak);
-			SAVE_OTHER(Colors::Friend);
-			SAVE_OTHER(Colors::Local);
-			SAVE_OTHER(Colors::Ignored);
-			SAVE_OTHER(Colors::Overheal);
-			SAVE_OTHER(Colors::Health);
-			SAVE_OTHER(Colors::Ammo);
-			SAVE_OTHER(Colors::UberColor);
-			SAVE_OTHER(Colors::Enemy);
-			SAVE_OTHER(Colors::rTeam);
-			SAVE_OTHER(Colors::TeamRed);
-			SAVE_OTHER(Colors::TeamBlu);
-			SAVE_OTHER(Colors::Hands);
-			SAVE_OTHER(Colors::Weapon);
-			SAVE_OTHER(Colors::HandsOverlay);
-			SAVE_OTHER(Colors::WeaponOverlay);
-			SAVE_OTHER(Colors::WorldModulation);
-			SAVE_OTHER(Colors::SkyModulation);
-			SAVE_OTHER(Colors::StaticPropModulation);
-			SAVE_OTHER(Colors::FOVCircle);
-			SAVE_OTHER(Colors::Bones);
-			SAVE_OTHER(Colors::BulletTracer);
-			SAVE_OTHER(Colors::FresnelBase);
-			SAVE_OTHER(Colors::FresnelBaseHands);
-			SAVE_OTHER(Colors::FresnelBaseWeps);
-			SAVE_OTHER(Colors::FresnelTop);
-			SAVE_OTHER(Colors::AimSquareCol);
-			SAVE_OTHER(Colors::DtOutline);
-			SAVE_OTHER(Colors::NotifBG);
-			SAVE_OTHER(Colors::NotifOutline);
-			SAVE_OTHER(Colors::NotifText);
-			SAVE_OTHER(Colors::WeaponIcon);
-			SAVE_OTHER(Colors::NoscopeLines1);
-			SAVE_OTHER(Colors::NoscopeLines2);
-			SAVE_OTHER(Colors::bonecolor);
-			SAVE_OTHER(Colors::HitboxFace);
-			SAVE_OTHER(Colors::HitboxEdge);
-			
-			SAVE_OTHER(Vars::Skybox::SkyboxNum);
-			SAVE_STRING(Vars::Skybox::SkyboxName);
-
-			SAVE_OTHER(Vars::Chams::Players::Local);
-			SAVE_OTHER(Vars::Chams::Players::Enemy);
-			SAVE_OTHER(Vars::Chams::Players::Team);
-			SAVE_OTHER(Vars::Chams::Players::Friend);
-			SAVE_OTHER(Vars::Chams::Players::Target);
-
-			SAVE_OTHER(Vars::Chams::Buildings::Local);
-			SAVE_OTHER(Vars::Chams::Buildings::Enemy);
-			SAVE_OTHER(Vars::Chams::Buildings::Team);
-			SAVE_OTHER(Vars::Chams::Buildings::Friend);
-			SAVE_OTHER(Vars::Chams::Buildings::Target);
-
-			SAVE_OTHER(Vars::Chams::World::Health);
-			SAVE_OTHER(Vars::Chams::World::Ammo);
-			SAVE_OTHER(Vars::Chams::World::Projectiles);
-
-			SAVE_OTHER(Vars::Menu::ModernDesign);
-			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
-		}
-
-		//Fonts
-		{
-			//FONT_ESP
-			{
-				SAVE_STRING(Vars::Fonts::FONT_ESP::szName);
-				SAVE_VAR(Vars::Fonts::FONT_ESP::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_ESP::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_ESP::nFlags);
-			}
-			//FONT_ESP_NAME
-			{
-				SAVE_STRING(Vars::Fonts::FONT_ESP_NAME::szName);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_NAME::nFlags);
-			}
-			//FONT_ESP_COND
-			{
-				SAVE_STRING(Vars::Fonts::FONT_ESP_COND::szName);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_COND::nFlags);
-			}
-			//FONT_ESP_PICKUPS
-			{
-				SAVE_STRING(Vars::Fonts::FONT_ESP_PICKUPS::szName);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_ESP_PICKUPS::nFlags);
-			}
-			//FONT_MENU
-			{
-				SAVE_STRING(Vars::Fonts::FONT_MENU::szName);
-				SAVE_VAR(Vars::Fonts::FONT_MENU::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_MENU::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_MENU::nFlags);
-			}
-			//FONT_INDICATORS
-			{
-				SAVE_STRING(Vars::Fonts::FONT_INDICATORS::szName);
-				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nTall);
-				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nWeight);
-				SAVE_VAR(Vars::Fonts::FONT_INDICATORS::nFlags);
-			}
-		}
-
-		m_Write.close();
 	}
-	std::wstring wName = name;
-	std::string sName(wName.begin(), wName.end());
-	std::string savedString("Config " + sName + " saved.");
-	g_Notifications.Add(savedString);
 }
 
 void CConfigManager::Load(const wchar_t *name)
