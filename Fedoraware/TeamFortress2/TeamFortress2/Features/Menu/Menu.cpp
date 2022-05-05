@@ -281,8 +281,7 @@ void CMenu::MenuAimbot()
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::MultiHitboxes.m_Var, "Multipoint Hitboxes###AimbotMultipointScanning");
 			}
-			MultiCombo({ "Buildings" }, { &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
-			HelpMarker("Choose what the aimbot should multipoint");
+			WToggle("Buildings Multipoint", &Vars::Aimbot::Hitscan::ScanBuildings.m_Var); HelpMarker("Scans the building hitbox to improve hitchance");
 			WToggle("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
 			WToggle("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
 			WToggle("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
@@ -1698,13 +1697,13 @@ void CMenu::SettingsWindow()
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 
 		Dummy({ 0, 5 });
-		static std::wstring selected;
+		static std::string selected;
 		int nConfig = 0;
 
 		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
 		{
-			if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
 				continue;
 			}
@@ -1714,58 +1713,61 @@ void CMenu::SettingsWindow()
 		// Config name field
 		if (nConfig < 100)
 		{
-			std::string output = {};
+			std::string newConfigName = {};
 
 			PushItemWidth(200);
-			if (InputTextWithHint("###configname", "New config name", &output, ImGuiInputTextFlags_EnterReturnsTrue))
+			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				const std::wstring outstring(output.begin(), output.end());
-				if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + outstring))
+				if (!std::filesystem::exists(g_CFG.ConfigPath + "\\" + newConfigName))
 				{
-					g_CFG.Save(outstring.c_str());
+					g_CFG.SaveConfig(newConfigName);
 				}
 			}
 			PopItemWidth();
 		}
 
 		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
 		{
-			if (std::string(std::filesystem::path(entry).filename().string()).find(_(".fed")) == std::string_view::npos)
+			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
 				continue;
 			}
 
-			std::wstring s = entry.path().filename().wstring();
-			s.erase(s.end() - 4, s.end());
-			std::string configName(s.begin(), s.end());
-			if (s == selected)
+			std::string configName = entry.path().filename().string();
+			configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
+
+			if (configName == selected)
 			{
 				const ImGuiStyle* style2 = &GetStyle();
 				const ImVec4* colors2 = style2->Colors;
 				ImVec4 buttonColor = colors2[ImGuiCol_Button];
 				buttonColor.w *= .5f;
 				PushStyleColor(ImGuiCol_Button, buttonColor);
+
+				// Config name button
 				if (Button(configName.c_str(), ImVec2(200, 20)))
 				{
-					selected = s;
+					selected = configName;
 				}
 				PopStyleColor();
 
-				// Save, Load and Remove buttons
+				// Save config button
 				if (Button("Save", ImVec2(61, 20)))
 				{
 					OpenPopup("Save config?");
 				}
 
+				// Load config button
 				SameLine();
 				if (Button("Load", ImVec2(61, 20)))
 				{
-					g_CFG.Load(selected.c_str());
+					g_CFG.LoadConfig(selected);
 					selected.clear();
 					LoadStyle();
 				}
 
+				// Remove config button
 				SameLine();
 				if (Button("Remove", ImVec2(62, 20)))
 				{
@@ -1780,10 +1782,11 @@ void CMenu::SettingsWindow()
 					Separator();
 					if (Button("Yes, override!", ImVec2(150, 0)))
 					{
-						g_CFG.Save(selected.c_str());
+						g_CFG.SaveConfig(selected);
 						selected.clear();
 						CloseCurrentPopup();
 					}
+
 					SameLine();
 					if (Button("No", ImVec2(120, 0)))
 					{
@@ -1800,7 +1803,7 @@ void CMenu::SettingsWindow()
 					Separator();
 					if (Button("Yes, remove!", ImVec2(150, 0)))
 					{
-						g_CFG.Remove(selected.c_str());
+						g_CFG.RemoveConfig(selected);
 						selected.clear();
 						CloseCurrentPopup();
 					}
@@ -1816,12 +1819,12 @@ void CMenu::SettingsWindow()
 			{
 				if (Button(configName.c_str(), ImVec2(200, 20)))
 				{
-					selected = s;
+					selected = configName;
 				}
 			}
 		}
 
-		End();
+		ImGui::End();
 	}
 
 	PopStyleVar(2);
