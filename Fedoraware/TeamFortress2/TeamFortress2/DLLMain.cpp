@@ -105,13 +105,11 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
-	std::wstring defaultConfig = L"default";
-	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
-
-		std::wstring s;
-		StringToWString(s, "default");
-		g_CFG.Load(s.c_str());
+	const std::string defaultConfig = "default";
+	if (std::filesystem::exists(g_CFG.ConfigPath + "\\" + defaultConfig)) {
+		g_CFG.LoadConfig(defaultConfig);
 	}
+
 	g_Draw.RemakeFonts
 	({
 		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
