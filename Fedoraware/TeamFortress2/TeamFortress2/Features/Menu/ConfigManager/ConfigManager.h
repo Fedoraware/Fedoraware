@@ -35,7 +35,7 @@ private:
 public:
 	std::wstring m_sConfigPath;
 	std::string ConfigPath;
-	const std::string ConfigExtension = ".f3d";
+	const std::string ConfigExtension = ".fw";
 
 	CConfigManager();
 	bool SaveConfig(const std::string& configName);

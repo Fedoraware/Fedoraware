@@ -1702,7 +1702,7 @@ void CMenu::SettingsWindow()
 		int nConfig = 0;
 
 		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1728,7 +1728,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{

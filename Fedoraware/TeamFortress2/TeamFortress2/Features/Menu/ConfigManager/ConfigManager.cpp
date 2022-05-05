@@ -1,13 +1,10 @@
 #include "ConfigManager.h"
-#include "ConfigManager.h"
 
 #include <string>
-#include <boost/algorithm/string.hpp>
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
 #include "../../Misc/Misc.h"
-#include "../../../Utils/Base64/Base64.hpp"
 
 #define SAVE_VAR(x) SaveJson(_(#x), x.m_Var)
 #define LOAD_VAR(x) LoadJson(_(#x), x.m_Var)
@@ -17,11 +14,6 @@
 
 #define SAVE_OTHER(x) SaveJson(_(#x), x)
 #define LOAD_OTHER(x) LoadJson(_(#x), x)
-
-//stfu
-#pragma warning (disable : 6328)
-#pragma warning (disable : 6031)
-#pragma warning (disable : 4477)
 
 boost::property_tree::ptree ColorToTree(Color_t color)
 {
@@ -117,7 +109,7 @@ void CConfigManager::SaveJson(const char* name, Chams_t val)
 	WriteTree.put_child(name, chamTree);
 }
 
-void CConfigManager::LoadJson(const char* name, std::string &val)
+void CConfigManager::LoadJson(const char* name, std::string& val)
 {
 	if (auto getValue = ReadTree.get_optional<std::string>(name))
 	{
@@ -125,7 +117,7 @@ void CConfigManager::LoadJson(const char* name, std::string &val)
 	}
 }
 
-void CConfigManager::LoadJson(const char* name, bool &val)
+void CConfigManager::LoadJson(const char* name, bool& val)
 {
 	if (auto getValue = ReadTree.get_optional<bool>(name))
 	{
@@ -133,7 +125,7 @@ void CConfigManager::LoadJson(const char* name, bool &val)
 	}
 }
 
-void CConfigManager::LoadJson(const char* name, int &val)
+void CConfigManager::LoadJson(const char* name, int& val)
 {
 	if (auto getValue = ReadTree.get_optional<int>(name))
 	{
@@ -141,7 +133,7 @@ void CConfigManager::LoadJson(const char* name, int &val)
 	}
 }
 
-void CConfigManager::LoadJson(const char* name, float &val)
+void CConfigManager::LoadJson(const char* name, float& val)
 {
 	if (auto getValue = ReadTree.get_optional<float>(name))
 	{
@@ -149,7 +141,7 @@ void CConfigManager::LoadJson(const char* name, float &val)
 	}
 }
 
-void CConfigManager::LoadJson(const char* name, Color_t &val)
+void CConfigManager::LoadJson(const char* name, Color_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
@@ -157,7 +149,7 @@ void CConfigManager::LoadJson(const char* name, Color_t &val)
 	}
 }
 
-void CConfigManager::LoadJson(const char* name, Gradient_t &val)
+void CConfigManager::LoadJson(const char* name, Gradient_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
@@ -195,7 +187,7 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs");
+	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs"); // Used by attribute changer
 	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
 	if (!std::filesystem::exists(ConfigPath))
@@ -279,7 +271,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
-
 			}
 
 			//Projectile
@@ -714,13 +705,13 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::PartyMarker);
 			// CL_Move
 			{
-				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
-				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
-				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
+				SAVE_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
@@ -732,14 +723,14 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleY);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
-				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekKey);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
@@ -911,7 +902,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 		write_json(ConfigPath + "\\" + configName + ConfigExtension, WriteTree);
 		g_Notifications.Add("Config " + configName + " saved");
-	} catch (...)
+	}
+	catch (...)
 	{
 		return false;
 	}
@@ -988,7 +980,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoRev);
-
 			}
 
 			//Projectile
@@ -1376,7 +1367,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_OTHER(Vars::Visuals::Fog::FogColor);
 				LOAD_OTHER(Vars::Visuals::Fog::FogColorSkybox);
 			}
-
 		}
 
 		//Misc
@@ -1423,16 +1413,16 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::PartyMarker);
 			// CL_Move
 			{
-				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
-				LOAD_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
-				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
+				LOAD_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::AntiWarp);
-				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
@@ -1441,14 +1431,14 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarScaleY);
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarX);
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarY);
-				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTTicks);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekKey);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
@@ -1621,17 +1611,18 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		g_Draw.RemakeFonts
 		({
-			{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
-			{ 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var },
-			{ 0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var },
-			{ 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var },
-			{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
-			{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
-			{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
-			});
+			{0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
+			{0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
+		});
 
 		g_Notifications.Add("Config " + configName + " loaded");
-	} catch (...)
+	}
+	catch (...)
 	{
 		return false;
 	}
