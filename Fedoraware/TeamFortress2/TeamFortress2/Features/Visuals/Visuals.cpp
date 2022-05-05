@@ -111,16 +111,6 @@ bool CVisuals::RemoveScope(int nPanel)
 	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
 }
 
-bool CVisuals::RemoveMOTD(int nPanel)
-{
-	if (!m_nHudMotd && Hash::IsHudMotd(g_Interfaces.Panel->GetName(nPanel)))
-	{
-		m_nHudMotd = nPanel;
-	}
-	return (Vars::Visuals::RemoveMOTD.m_Var && nPanel == m_nHudMotd);
-}
-
-
 void CVisuals::FOV(CViewSetup* pView)
 {
 	CBaseEntity* pLocal = g_EntityCache.m_pLocal;

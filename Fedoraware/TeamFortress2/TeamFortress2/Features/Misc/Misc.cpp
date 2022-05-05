@@ -21,7 +21,6 @@ void CMisc::Run(CUserCmd* pCmd)
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
 	}
-	AutoJoin();
 	ChatSpam();
 	CheatsBypass();
 	NoPush();
@@ -132,7 +131,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
 
 	Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
-	
+
 	target = nullptr;
 
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
@@ -261,29 +260,6 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 	else {
 		g_GlobalInfo.m_bFreecamActive = false;
-	}
-}
-
-const std::string classNames[] = {"scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy"};
-void CMisc::AutoJoin()
-{
-	if (Vars::Misc::AutoJoin.m_Var > 0) {
-		static Timer cmdTimer{ };
-		if (cmdTimer.Run(250)) {
-			bool inTeam = false;
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
-			{
-				inTeam = pLocal->GetTeamNum() != TEAM_NONE && pLocal->IsInValidTeam();
-				if (g_Interfaces.Engine->IsInGame() && !pLocal->IsClass(Vars::Misc::AutoJoin.m_Var - 1)) {
-					const std::string classCmd = "join_class " + classNames[Vars::Misc::AutoJoin.m_Var - 1];
-					g_Interfaces.Engine->ClientCmd_Unrestricted(classCmd.c_str());
-				}
-			}
-
-			if (!inTeam && g_Interfaces.Engine->IsConnected()) {
-				g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
-			}
-		}
 	}
 }
 
@@ -590,7 +566,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return;
-	
+
 	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
 		return;
 
@@ -943,8 +919,8 @@ void CNotifications::Think()
 		delete[] wc; // Memory leak
 
 		g_Draw.Line(x, y, x, y + 19, { Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a });
-		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19, 
-							{ Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a }, 
+		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
+							{ Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a },
 							{ Colors::NotifBG.r, Colors::NotifBG.g,              Colors::NotifBG.b, 1
 		                     }, true);
 		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
