@@ -2,6 +2,7 @@
 #include "ConfigManager.h"
 
 #include <string>
+#include <boost/algorithm/string.hpp>
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
@@ -11,17 +12,32 @@
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
 
+#define SAVE_VAR_J(x) SaveJson(_(#x), x.m_Var)
+#define LOAD_VAR_J(x) LoadJson(_(#x), x.m_Var)
+
 #define SAVE_STRING(x) Save(_(L#x), x)
 #define LOAD_STRING(x) Load(_(L#x), x)
 
 #define SAVE_OTHER(x) Save(_(L#x), x)
 #define LOAD_OTHER(x) Load(_(L#x), x)
 
+#define SAVE_OTHER_J(x) SaveJson(_(#x), x)
+
 //stfu
 #pragma warning (disable : 6328)
 #pragma warning (disable : 6031)
 #pragma warning (disable : 4477)
 
+boost::property_tree::ptree CConfigManager::ColorToTree(Color_t color)
+{
+	boost::property_tree::ptree colorTree;
+	colorTree.put("r", color.r);
+	colorTree.put("g", color.g);
+	colorTree.put("b", color.b);
+	colorTree.put("a", color.a);
+
+	return colorTree;
+}
 
 bool CConfigManager::Find(const wchar_t *name, std::wstring &output)
 {
@@ -46,11 +62,21 @@ void CConfigManager::Save(const wchar_t *name, bool val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::SaveJson(const char* name, bool val)
+{
+	WriteTree.put(name, val);
+}
+
 void CConfigManager::Save(const wchar_t* name, std::string val)
 {
 	char buffer[128];
 	sprintf_s(buffer, "%ls: %s", name, val.c_str());
 	m_Write << buffer << "\n";
+}
+
+void CConfigManager::SaveJson(const char* name, std::string val)
+{
+	WriteTree.put(name, val);
 }
 
 void CConfigManager::Save(const wchar_t *name, int val)
@@ -60,11 +86,21 @@ void CConfigManager::Save(const wchar_t *name, int val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::SaveJson(const char* name, int val)
+{
+	WriteTree.put(name, val);
+}
+
 void CConfigManager::Save(const wchar_t *name, float val)
 {
 	char buffer[64];
 	sprintf_s(buffer, "%ls: %f", name, val);
 	m_Write << buffer << "\n";
+}
+
+void CConfigManager::SaveJson(const char* name, float val)
+{
+	WriteTree.put(name, val);
 }
 
 void CConfigManager::Save(const wchar_t *name, Color_t val)
@@ -74,11 +110,25 @@ void CConfigManager::Save(const wchar_t *name, Color_t val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::SaveJson(const char* name, Color_t val)
+{
+	WriteTree.put_child(name, ColorToTree(val));
+}
+
 void CConfigManager::Save(const wchar_t* name, Gradient_t val)
 {
 	char buffer[64];
 	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d %d", name, val.startColour.r, val.startColour.g, val.startColour.b, val.startColour.a, val.endColour.r, val.endColour.g, val.endColour.b, val.endColour.a);
 	m_Write << buffer << "\n";
+}
+
+void CConfigManager::SaveJson(const char* name, Gradient_t val)
+{
+	boost::property_tree::ptree gradientTree;
+	gradientTree.put_child("startColour", ColorToTree(val.startColour));
+	gradientTree.put_child("endColour", ColorToTree(val.endColour));
+
+	WriteTree.put_child(name, gradientTree);
 }
 
 void CConfigManager::Save(const wchar_t* name, Vec3 val)
@@ -88,6 +138,16 @@ void CConfigManager::Save(const wchar_t* name, Vec3 val)
 	m_Write << buffer << "\n";
 }
 
+void CConfigManager::SaveJson(const char* name, Vec3 val)
+{
+	boost::property_tree::ptree vecTree;
+	vecTree.put("x", val.x);
+	vecTree.put("y", val.y);
+	vecTree.put("z", val.z);
+
+	WriteTree.put_child(name, vecTree);
+}
+
 void CConfigManager::Save(const wchar_t *name, Chams_t val)
 {
 	const std::string encName = Base64::Encode(val.customMaterial);
@@ -95,6 +155,19 @@ void CConfigManager::Save(const wchar_t *name, Chams_t val)
 	char buffer[128];
 	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d %s", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive, val.fresnelBase.r, val.fresnelBase.g, val.fresnelBase.b, encName.c_str());
 	m_Write << buffer << "\n";
+}
+
+void CConfigManager::SaveJson(const char* name, Chams_t val)
+{
+	boost::property_tree::ptree chamTree;
+	chamTree.put("showObstructed", val.showObstructed);
+	chamTree.put("drawMaterial", val.drawMaterial);
+	chamTree.put("overlayType", val.overlayType);
+	chamTree.put("chamsActive", val.chamsActive);
+	chamTree.put_child("fresnelBase", ColorToTree(val.fresnelBase));
+	chamTree.put("customMaterial", val.customMaterial);
+
+	WriteTree.put_child(name, chamTree);
 }
 
 void CConfigManager::Load(const wchar_t* name, std::string& val)
@@ -186,7 +259,14 @@ void CConfigManager::Load(const wchar_t* name, Chams_t& val)
 CConfigManager::CConfigManager()
 {
 	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs");
+	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
+	if (!std::filesystem::exists(ConfigPath))
+	{
+		std::filesystem::create_directory(ConfigPath);
+	}
+
+	// TODO: Remove this
 	if (!std::filesystem::exists(m_sConfigPath))
 	{
 		std::filesystem::create_directory(m_sConfigPath);
@@ -201,6 +281,40 @@ CConfigManager::CConfigManager()
 	{
 		std::filesystem::create_directory(m_sConfigPath + _(L"\\Materials"));
 	}
+}
+
+bool CConfigManager::SaveJson(const std::string& configName)
+{
+	try
+	{
+		WriteTree.clear();
+		SAVE_VAR_J(Vars::Aimbot::Global::Active);
+		SAVE_VAR_J(Vars::Aimbot::Global::AimKey);
+		SAVE_VAR_J(Vars::Aimbot::Global::AimFOV);
+		SAVE_VAR_J(Vars::Aimbot::Global::AutoShoot);
+		SAVE_VAR_J(Vars::Aimbot::Global::AimPlayers);
+		SAVE_VAR_J(Vars::Aimbot::Global::AimBuildings);
+		SAVE_VAR_J(Vars::Aimbot::Global::IgnoreInvlunerable);
+		SAVE_VAR_J(Vars::Aimbot::Global::IgnoreCloaked);
+		SAVE_OTHER_J(Colors::OutlineESP);
+		SAVE_OTHER_J(Colors::DTBarIndicatorsCharged);
+		SAVE_OTHER_J(Colors::DTBarIndicatorsCharging);
+		SAVE_OTHER_J(Colors::ChokedBar);
+		SAVE_OTHER_J(Vars::Chams::Players::Local);
+		SAVE_OTHER_J(Vars::Chams::Players::Enemy);
+		SAVE_OTHER_J(Vars::Chams::Players::Team);
+		SAVE_OTHER_J(Vars::Chams::Players::Friend);
+		SAVE_OTHER_J(Vars::Chams::Players::Target);
+		SAVE_OTHER_J(Colors::GradientHealthBar);
+		SAVE_OTHER_J(Colors::OverhealHealthBar);
+
+		write_json(ConfigPath + "\\" + configName + ".f3d", WriteTree);
+	} catch (...)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void CConfigManager::Save(const wchar_t *name)
@@ -906,6 +1020,24 @@ void CConfigManager::Save(const wchar_t *name)
 			g_Notifications.Add(savedString);
 		}
 	}
+}
+
+bool CConfigManager::LoadJson(const std::string& configName)
+{
+	// Read ptree from json
+	try
+	{
+		ReadTree.clear();
+		read_json(ConfigPath + "\\" + configName + ".f3d", ReadTree);
+
+		LOAD_VAR(Vars::Aimbot::Global::Active);
+		LOAD_VAR(Vars::Aimbot::Global::AimKey);
+	} catch (...)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void CConfigManager::Load(const wchar_t *name)
