@@ -1856,6 +1856,10 @@ void CMenu::DebugMenu()
 		{
 			g_CFG.SaveJson("jsonTest");
 		}
+		if (Button("Load config (JSON)"))
+		{
+			g_CFG.LoadJson("jsonTest");
+		}
 
 		End();
 	}

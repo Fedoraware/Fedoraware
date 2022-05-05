@@ -22,13 +22,14 @@
 #define LOAD_OTHER(x) Load(_(L#x), x)
 
 #define SAVE_OTHER_J(x) SaveJson(_(#x), x)
+#define LOAD_OTHER_J(x) LoadJson(_(#x), x)
 
 //stfu
 #pragma warning (disable : 6328)
 #pragma warning (disable : 6031)
 #pragma warning (disable : 4477)
 
-boost::property_tree::ptree CConfigManager::ColorToTree(Color_t color)
+boost::property_tree::ptree ColorToTree(Color_t color)
 {
 	boost::property_tree::ptree colorTree;
 	colorTree.put("r", color.r);
@@ -37,6 +38,37 @@ boost::property_tree::ptree CConfigManager::ColorToTree(Color_t color)
 	colorTree.put("a", color.a);
 
 	return colorTree;
+}
+
+Color_t TreeToColor(const boost::property_tree::ptree& tree)
+{
+	Color_t treeColor;
+	if (auto getValue = tree.get_optional<byte>("r")) { treeColor.r = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("g")) { treeColor.g = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("b")) { treeColor.b = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("a")) { treeColor.a = *getValue; }
+
+	return treeColor;
+}
+
+boost::property_tree::ptree VecToTree(const Vec3& vec)
+{
+	boost::property_tree::ptree vecTree;
+	vecTree.put("x", vec.x);
+	vecTree.put("y", vec.y);
+	vecTree.put("z", vec.z);
+
+	return vecTree;
+}
+
+Vec3 TreeToVec(const boost::property_tree::ptree& tree)
+{
+	Vec3 treeVec;
+	if (auto getValue = tree.get_optional<float>("x")) { treeVec.x = *getValue; }
+	if (auto getValue = tree.get_optional<float>("y")) { treeVec.y = *getValue; }
+	if (auto getValue = tree.get_optional<float>("z")) { treeVec.z = *getValue; }
+
+	return treeVec;
 }
 
 bool CConfigManager::Find(const wchar_t *name, std::wstring &output)
@@ -147,12 +179,7 @@ void CConfigManager::Save(const wchar_t* name, Vec3 val)
 
 void CConfigManager::SaveJson(const char* name, Vec3 val)
 {
-	boost::property_tree::ptree vecTree;
-	vecTree.put("x", val.x);
-	vecTree.put("y", val.y);
-	vecTree.put("z", val.z);
-
-	WriteTree.put_child(name, vecTree);
+	WriteTree.put_child(name, VecToTree(val));
 }
 
 void CConfigManager::Save(const wchar_t *name, Chams_t val)
@@ -191,12 +218,28 @@ void CConfigManager::Load(const wchar_t* name, std::string& val)
 	}
 }
 
+void CConfigManager::LoadJson(const char* name, std::string &val)
+{
+	if (auto getValue = ReadTree.get_optional<std::string>(name))
+	{
+		val = *getValue;
+	}
+}
+
 void CConfigManager::Load(const wchar_t *name, bool &val)
 {
 	std::wstring line = {};
 
 	if (Find(name, line))
 		swscanf_s(line.c_str(), L"%*ls %d", &val);
+}
+
+void CConfigManager::LoadJson(const char* name, bool &val)
+{
+	if (auto getValue = ReadTree.get_optional<bool>(name))
+	{
+		val = *getValue;
+	}
 }
 
 void CConfigManager::Load(const wchar_t *name, int &val)
@@ -207,12 +250,28 @@ void CConfigManager::Load(const wchar_t *name, int &val)
 		swscanf_s(line.c_str(), L"%*ls %d", &val);
 }
 
+void CConfigManager::LoadJson(const char* name, int &val)
+{
+	if (auto getValue = ReadTree.get_optional<int>(name))
+	{
+		val = *getValue;
+	}
+}
+
 void CConfigManager::Load(const wchar_t *name, float &val)
 {
 	std::wstring line = {};
 
 	if (Find(name, line))
 		swscanf_s(line.c_str(), L"%*ls %f", &val);
+}
+
+void CConfigManager::LoadJson(const char* name, float &val)
+{
+	if (auto getValue = ReadTree.get_optional<float>(name))
+	{
+		val = *getValue;
+	}
 }
 
 void CConfigManager::Load(const wchar_t *name, Color_t &val)
@@ -223,6 +282,14 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Color_t &val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		val = TreeToColor(*getChild);
 	}
 }
 
@@ -239,6 +306,21 @@ void CConfigManager::Load(const wchar_t* name, Gradient_t& val)
 	}
 }
 
+void CConfigManager::LoadJson(const char* name, Gradient_t &val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		if (const auto getStartColor = (*getChild).get_child_optional("startColour"))
+		{
+			val.startColour = TreeToColor(*getStartColor);
+		}
+		if (const auto endColor = (*getChild).get_child_optional("endColour"))
+		{
+			val.endColour = TreeToColor(*endColor);
+		}
+	}
+}
+
 void CConfigManager::Load(const wchar_t* name, Vec3& val)
 {
 	std::wstring line = {};
@@ -247,6 +329,14 @@ void CConfigManager::Load(const wchar_t* name, Vec3& val)
 		float x = 0.f, y = 0.f, z = 0.f;
 		swscanf_s(line.c_str(), L"%*ls %f %f %f", &x, &y, &z);
 		val = { x, y, z };
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Vec3& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		val = TreeToVec(*getChild);
 	}
 }
 
@@ -261,6 +351,19 @@ void CConfigManager::Load(const wchar_t* name, Chams_t& val)
 		std::wstring wsString(wEncName);
 		const std::string decName = Base64::Decode(std::string(wsString.begin(), wsString.end()));
 		val = { static_cast<bool>(a), b, c, static_cast<bool>(d), {static_cast<byte>(e), static_cast<byte>(f), static_cast<byte>(g), 255}, decName };
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Chams_t& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		if (auto getValue = (*getChild).get_optional<bool>("showObstructed")) { val.showObstructed = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("drawMaterial")) { val.drawMaterial = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("overlayType")) { val.overlayType = *getValue; }
+		if (auto getValue = (*getChild).get_optional<bool>("chamsActive")) { val.chamsActive = *getValue; }
+		if (const auto getChildColor = (*getChild).get_child_optional("fresnelBase")) { val.fresnelBase = TreeToColor(*getChildColor); }
+		if (auto getValue = (*getChild).get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
 	}
 }
 
@@ -1038,8 +1141,25 @@ bool CConfigManager::LoadJson(const std::string& configName)
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ".f3d", ReadTree);
 
-		LOAD_VAR(Vars::Aimbot::Global::Active);
-		LOAD_VAR(Vars::Aimbot::Global::AimKey);
+		LOAD_VAR_J(Vars::Aimbot::Global::Active);
+		LOAD_VAR_J(Vars::Aimbot::Global::AimKey);
+		LOAD_VAR_J(Vars::Aimbot::Global::AimFOV);
+		LOAD_VAR_J(Vars::Aimbot::Global::AutoShoot);
+		LOAD_VAR_J(Vars::Aimbot::Global::AimPlayers);
+		LOAD_VAR_J(Vars::Aimbot::Global::AimBuildings);
+		LOAD_VAR_J(Vars::Aimbot::Global::IgnoreInvlunerable);
+		LOAD_VAR_J(Vars::Aimbot::Global::IgnoreCloaked);
+		LOAD_OTHER_J(Colors::OutlineESP);
+		LOAD_OTHER_J(Colors::DTBarIndicatorsCharged);
+		LOAD_OTHER_J(Colors::DTBarIndicatorsCharging);
+		LOAD_OTHER_J(Colors::ChokedBar);
+		LOAD_OTHER_J(Vars::Chams::Players::Local);
+		LOAD_OTHER_J(Vars::Chams::Players::Enemy);
+		LOAD_OTHER_J(Vars::Chams::Players::Team);
+		LOAD_OTHER_J(Vars::Chams::Players::Friend);
+		LOAD_OTHER_J(Vars::Chams::Players::Target);
+		LOAD_OTHER_J(Colors::GradientHealthBar);
+		LOAD_OTHER_J(Colors::OverhealHealthBar);
 	} catch (...)
 	{
 		return false;
