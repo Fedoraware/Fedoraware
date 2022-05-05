@@ -1735,11 +1735,8 @@ void CMenu::SettingsWindow()
 				continue;
 			}
 
-			//std::wstring s = entry.path().filename().wstring();
-			//s.erase(s.end() - 4, s.end());
-			//std::string configName(s.begin(), s.end());
 			std::string configName = entry.path().filename().string();
-			configName.erase(configName.end() - 4, configName.end());
+			configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
 
 			if (configName == selected)
 			{
