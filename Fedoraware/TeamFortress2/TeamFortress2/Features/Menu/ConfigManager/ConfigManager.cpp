@@ -1,6 +1,7 @@
 #include "ConfigManager.h"
 
 #include <string>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
@@ -62,7 +63,7 @@ void CConfigManager::SaveJson(const char* name, bool val)
 	WriteTree.put(name, val);
 }
 
-void CConfigManager::SaveJson(const char* name, std::string val)
+void CConfigManager::SaveJson(const char* name, const std::string& val)
 {
 	WriteTree.put(name, val);
 }
@@ -91,12 +92,12 @@ void CConfigManager::SaveJson(const char* name, Gradient_t val)
 	WriteTree.put_child(name, gradientTree);
 }
 
-void CConfigManager::SaveJson(const char* name, Vec3 val)
+void CConfigManager::SaveJson(const char* name, const Vec3& val)
 {
 	WriteTree.put_child(name, VecToTree(val));
 }
 
-void CConfigManager::SaveJson(const char* name, Chams_t val)
+void CConfigManager::SaveJson(const char* name, const Chams_t& val)
 {
 	boost::property_tree::ptree chamTree;
 	chamTree.put("showObstructed", val.showObstructed);

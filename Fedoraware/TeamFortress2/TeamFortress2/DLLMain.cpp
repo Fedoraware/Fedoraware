@@ -29,8 +29,7 @@ void Sleep(int ms)
 
 int StringToWString(std::wstring& ws, const std::string& s)
 {
-	std::wstring wsTmp(s.begin(), s.end());
-
+	const std::wstring wsTmp(s.begin(), s.end());
 	ws = wsTmp;
 
 	return 0;
@@ -38,8 +37,7 @@ int StringToWString(std::wstring& ws, const std::string& s)
 
 inline void SetupDiscord()
 {
-	DiscordEventHandlers handlers;
-	memset(&handlers, 0, sizeof(handlers));
+	DiscordEventHandlers handlers = {};
 	Discord_Initialize("889495873183154226", &handlers, 0, "");
 }
 
@@ -155,8 +153,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{	
 		Utils::RemovePEH(hinstDLL);
-		if (auto hMainThread = WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0))
+		if (const auto hMainThread = WinAPI::CreateThread(nullptr, 0, MainThread, hinstDLL, 0, nullptr))
+		{
 			WinAPI::CloseHandle(hMainThread);
+		}
 	}
 
 	return TRUE;

@@ -2,11 +2,8 @@
 
 #include "../../../Utils/Color/Color.h"
 
-#include <fstream>
 #include <filesystem>
-
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 class CConfigManager
 {
@@ -15,13 +12,13 @@ private:
 	boost::property_tree::ptree ReadTree;
 
 	void SaveJson(const char* name, bool val);
-	void SaveJson(const char* name, std::string val);
+	void SaveJson(const char* name, const std::string& val);
 	void SaveJson(const char* name, int val);
 	void SaveJson(const char* name, float val);
 	void SaveJson(const char* name, Color_t val);
 	void SaveJson(const char* name, Gradient_t val);
-	void SaveJson(const char* name, Vec3 val);
-	void SaveJson(const char* name, Chams_t val);
+	void SaveJson(const char* name, const Vec3& val);
+	void SaveJson(const char* name, const Chams_t& val);
 	
 	void LoadJson(const char* name, std::string& val);
 	void LoadJson(const char* name, bool& val);

@@ -281,8 +281,7 @@ void CMenu::MenuAimbot()
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::MultiHitboxes.m_Var, "Multipoint Hitboxes###AimbotMultipointScanning");
 			}
-			MultiCombo({ "Buildings" }, { &Vars::Aimbot::Hitscan::ScanBuildings.m_Var }, "Multipoint");
-			HelpMarker("Choose what the aimbot should multipoint");
+			WToggle("Buildings Multipoint", &Vars::Aimbot::Hitscan::ScanBuildings.m_Var); HelpMarker("Scans the building hitbox to improve hitchance");
 			WToggle("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
 			WToggle("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.m_Var); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");
 			WToggle("Smooth if spectated", &Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var); HelpMarker("The aimbot will switch to the smooth method if being spectated");
