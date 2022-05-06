@@ -10,6 +10,7 @@
 #include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/Menu/SpectatorList/SpectatorList.h"
+#include "../../Features/Menu/DTBar/DTBar.h"
 #include "../../Features/Radar/Radar.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
@@ -20,7 +21,9 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 		_(L"vguimatsurface.dll"), _(L"55 8B EC 6A FF 68 ? ? ? ? 64 A1 ? ? ? ? 50 64 89 25 ? ? ? ? 51 56 6A 00")));
 
 	if (!g_ScreenSize.w || !g_ScreenSize.h)
+	{
 		g_ScreenSize.Update();
+	}
 
 	//HACK: for some reason we need to do this
 	{
@@ -44,39 +47,42 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 	{
 		//Update W2S
 		{
-			CViewSetup ViewSetup = {};
+			CViewSetup viewSetup = {};
 
-			if (g_Interfaces.Client->GetPlayerView(ViewSetup))
+			if (g_Interfaces.Client->GetPlayerView(viewSetup))
 			{
-				VMatrix WorldToView = {}, ViewToProjection = {}, WorldToPixels = {};
-				g_Interfaces.RenderView->GetMatricesForView(ViewSetup, &WorldToView, &ViewToProjection,
-				                                            &g_GlobalInfo.m_WorldToProjection, &WorldToPixels);
+				VMatrix worldToView = {}, viewToProjection = {}, worldToPixels = {};
+				g_Interfaces.RenderView->GetMatricesForView(viewSetup, &worldToView, &viewToProjection,
+				                                            &g_GlobalInfo.m_WorldToProjection, &worldToPixels);
 			}
 		}
 
 		StartDrawing(g_Interfaces.Surface);
 		{
-			auto OtherDraws = [&]() -> void
-			{
+			auto OtherDraws = [&]() -> void {
 				if (g_Interfaces.EngineVGui->IsGameUIVisible())
+				{
 					return;
+				}
 
 				//Proj aim line
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
-				
+
 				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero())
 				{
 					if (Vars::Visuals::MoveSimLine.m_Var)
-					for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
 					{
-						Vec3 vScreenpast, vScreenfuture;
-						if (Utils::W2S(g_GlobalInfo.predBeforeLines.at(i), vScreenpast))
+						for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
 						{
-							if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture))
+							Vec3 vScreenpast, vScreenfuture;
+							if (Utils::W2S(g_GlobalInfo.predBeforeLines.at(i), vScreenpast))
 							{
-								g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
-								            {Vars::Aimbot::Projectile::PredictionColor});
+								if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture))
+								{
+									g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
+									            {Vars::Aimbot::Projectile::PredictionColor});
+								}
 							}
 						}
 					}
@@ -128,11 +134,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								color2 = Colors::DTBarIndicatorsCharged.endColour;
 							}
 
+							// Default DT Bar
 							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1)
 							{
-								float maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.m_Var) *
-									Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var;
-								float dtOffset = g_ScreenSize.c - (maxWidth / 2);
+								const auto maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.m_Var * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
+								const float dtOffset = g_ScreenSize.c - (maxWidth / 2);
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
 								tickWidth = (g_GlobalInfo.m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
@@ -146,10 +152,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								                    m_Var, color1, color2, true);
 							}
 
+							// Rijin DT Bar
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3)
 							{
+								g_DTBar.Run();
 								// put this here so we don't move menu if we r using something else, no biggie
-								float rratio = (static_cast<float>(g_GlobalInfo.m_nShifted) / static_cast<float>(
+								const float rratio = (static_cast<float>(g_GlobalInfo.m_nShifted) / static_cast<float>(
 									Vars::Misc::CL_Move::DTTicks.m_Var));
 								static float ratio = 0.f;
 								ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
@@ -160,11 +168,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 								// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
 								//		so i added them
-								int xoff = Vars::Misc::CL_Move::DTBarX.m_Var;
+								const int xoff = Vars::Misc::CL_Move::DTBarX.m_Var;
 								// width offset (is it called width offset who knows)
-								int yoff = Vars::Misc::CL_Move::DTBarY.m_Var; // height offset
-								int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
-								int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
+								const int yoff = Vars::Misc::CL_Move::DTBarY.m_Var; // height offset
+								const int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
+								const int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
 
 								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff,
 								                    nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2),
@@ -209,51 +217,48 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				// Build Date
 				if (g_Menu.IsOpen)
 				{
-					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
+					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, {116, 255, 48, 255}, ALIGN_DEFAULT, _(__DATE__));
 				}
 
-				// debug
+				// Debug info
 				if (Vars::Visuals::DebugInfo.m_Var)
 				{
 					int yoffset = 0, xoffset = 0;
-					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer())) {
-						g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
+					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer()))
+					{
+						g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 						yoffset += 20;
 					}
 
-					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
-						int weaponid = pWeapon->GetWeaponID();
-						if (weaponid) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
-							yoffset += 20;
+					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+					{
+						if (const int weaponid = pWeapon->GetWeaponID())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "weaponid = %i", weaponid);
 						}
-						int weaponindex = pWeapon->GetItemDefIndex();
-						if (weaponid) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
-							yoffset += 20;
+						if (const int weaponindex = pWeapon->GetItemDefIndex())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
 						}
-						int iviewmodel = pWeapon->GetiViewModelIndex();
-						if (iviewmodel) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "iviewmodel = %i", iviewmodel);
-							yoffset += 20;
+						if (const int iviewmodel = pWeapon->GetiViewModelIndex())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "iviewmodel = %i", iviewmodel);
 						}
-						int nviewmodel = pWeapon->GetnViewModelIndex(); // unused?
-						if (nviewmodel) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "nviewmodel = %i", nviewmodel);
-							yoffset += 20;
+						if (const int nviewmodel = pWeapon->GetnViewModelIndex())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "nviewmodel = %i", nviewmodel);
 						}
 					}
 
-					if (const auto& pLocal = g_EntityCache.m_pLocal) {
-						int tickbase = pLocal->GetTickBase();
-						if (tickbase) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
-							yoffset += 20;
+					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					{
+						if (const int tickbase = pLocal->GetTickBase())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "tickbase = %i", tickbase);
 						}
-						int tickcount = g_Interfaces.GlobalVars->tickcount;
-						if (tickcount) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
-							yoffset += 20;
+						if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 							//float predictedsimtime = TICKS_TO_TIME(tickcount);
 							//g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "predictedsimtime = %.1f", predictedsimtime);
 							//yoffset += 20;
@@ -309,37 +314,45 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							yoffset += 20;
 						}*/
 
-						for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+						for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+						{
 							if (Player == pLocal) { continue; }
-							xoffset += 170; yoffset = 0;
+							xoffset += 170;
+							yoffset = 0;
 
-							PlayerInfo_t pi;
-							if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi)) {
-								if (!pi.fakeplayer) {
+							PlayerInfo_t pi{};
+							if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi))
+							{
+								if (!pi.fakeplayer)
+								{
 									const char* name = pi.name;
-									if (name) {
-										g_Draw.String(FONT_MENU, xoffset, yoffset, { 84, 0, 255, 255 }, ALIGN_DEFAULT, name);
+									if (name)
+									{
+										g_Draw.String(FONT_MENU, xoffset, yoffset, {84, 0, 255, 255}, ALIGN_DEFAULT, name);
 										yoffset += 20;
 									}
 								}
-								else {
-									g_Draw.String(FONT_MENU, xoffset, yoffset, { 255, 0, 156, 255 }, ALIGN_DEFAULT, "server-bot");
+								else
+								{
+									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
 									yoffset += 20;
 								}
 
-								if (!Player->IsAlive()) { // dead players should not show up here
-									g_Draw.String(FONT_MENU, xoffset, yoffset, { 80, 80, 80, 255 }, ALIGN_DEFAULT, "DEAD");
+								if (!Player->IsAlive())
+								{
+									// dead players should not show up here
+									g_Draw.String(FONT_MENU, xoffset, yoffset, {80, 80, 80, 255}, ALIGN_DEFAULT, "DEAD");
 									yoffset += 20;
 								}
 							}
-
-							int tickcount = g_Interfaces.GlobalVars->tickcount;
-							if (tickcount) {
-								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "S : %i", tickcount);
+							
+							if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
+							{
+								g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "S : %i", tickcount);
 								yoffset += 20;
-								int tickcountplayer = TIME_TO_TICKS(Player->GetSimulationTime());
-								if (tickcountplayer) {
-									g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "P : %i", tickcountplayer);
+								if (const int tickcountplayer = TIME_TO_TICKS(Player->GetSimulationTime()))
+								{
+									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "P : %i", tickcountplayer);
 									yoffset += 20;
 								}
 							}
@@ -370,7 +383,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 						}
 					}*/
-					
 				}
 
 				//Current Active Aimbot FOV
@@ -378,29 +390,18 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				{
 					if (const auto& pLocal = g_EntityCache.m_pLocal)
 					{
-						float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
-						float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
+						const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
+						const float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
 							/ tanf(
 								DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var) ? 30.0f : flFOV) /
 								2.0f) * g_ScreenSize.w;
-						Color_t clr = Colors::FOVCircle;
+						const Color_t clr = Colors::FOVCircle;
 						g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
 					}
 				}
 			};
 			OtherDraws();
-			// blocks my vision to my debug info thanks
-			//if (Vars::Visuals::DebugInfo.m_Var)
-			//{
-			//	if (const auto& pLocal = g_EntityCache.m_pLocal)
-			//	{
-			//		if (const int nDamage = g_PR->GetDamageByIndex(pLocal->GetIndex()))
-			//		{
-			//			g_Draw.String(FONT_MENU, 5, 17, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("total damage dealt: %d"), nDamage);
-			//		}
-			//	}
-			//}
-			
+
 			g_Misc.BypassPure();
 			g_ESP.Run();
 			g_Visuals.PickupTimers();
@@ -409,7 +410,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpectatorList.Run();
 			g_CritHack.Draw();
 			g_Radar.Run();
-			
+
 			// you can use it for more, i'm sure. - myzarfin
 			g_Notifications.Think();
 
@@ -441,12 +442,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			}
 		}
 
-		//static ConVar* localplayer_visionflags = g_Interfaces.CVars->FindVar("localplayer_visionflags");
-		//if (localplayer_visionflags) {
-		//	localplayer_visionflags->nFlags |= ~(1 << 1); //FCVAR_DEVELOPMENTONLY
-		//	g_Interfaces.CVars->ConsolePrintf("localplayer_visionflags found");
-		//	localplayer_visionflags->SetValue("1");
-		//}
 		FinishDrawing(g_Interfaces.Surface);
 	}
 }

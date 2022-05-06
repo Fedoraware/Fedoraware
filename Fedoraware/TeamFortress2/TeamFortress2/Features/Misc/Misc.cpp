@@ -505,7 +505,7 @@ void CMisc::BypassPure()
 }
 
 const std::string spam_Fed[] = {
-	_("Fedoraware - github.com/M-FeD/Fedoraware"),
+	_("Fedoraware - github.com/tf2cheater2013/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
 	_("Fedoraware - Now available @ https://github.com/tf2cheater2013!"),

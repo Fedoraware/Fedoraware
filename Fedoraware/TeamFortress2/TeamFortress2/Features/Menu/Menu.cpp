@@ -1843,6 +1843,9 @@ void CMenu::DebugMenu()
 	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
+
+		Checkbox("Show Debug info", &Vars::Visuals::DebugInfo.m_Var);
+
 		// Particle tester
 		if (CollapsingHeader("Particles"))
 		{
