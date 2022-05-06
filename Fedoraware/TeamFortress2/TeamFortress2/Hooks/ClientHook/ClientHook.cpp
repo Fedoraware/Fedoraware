@@ -1,5 +1,8 @@
 #include "ClientHook.h"
 
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Visuals/Visuals.h"
@@ -7,13 +10,15 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 
-const static std::string clear("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+const static std::string CLEAR_MSG("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+const static std::vector<std::string> BAD_WORDS{ _("cheat"), _("hack"), _("bot"), _("aim"), _("esp"), _("kick"), _("hax"), _("script")};
 
 static std::string clr({'\x7', '0', 'D', '9', '2', 'F', 'F'});
 static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
@@ -161,73 +166,76 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 }
 
 static int anti_balance_attempts = 0;
-static std::string previous_name = "";
+static std::string previous_name;
 
-bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data)
+bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 {
-	auto buf_data = reinterpret_cast<const char*>(msg_data.m_pData);
+	auto bufData = reinterpret_cast<const char*>(msgData.m_pData);
 
 	switch (type)
 	{
-	case 4:
+	case SayText2:
 		{
-			// Received chat message
-			int nbl = msg_data.GetNumBytesLeft();
-			if (nbl >= 256)
+			int nbl = msgData.GetNumBytesLeft();
+			if (nbl < 5 || nbl >= 256)
 			{
 				break;
 			}
 
-			std::string data;
-			for (int i = 0; i < nbl; i++)
-			{
-				data.push_back(buf_data[i]);
-			}
+			msgData.Seek(0);
+			int entIdx = msgData.ReadByte();
+			msgData.Seek(8);
+			char typeBuffer[256], nameBuffer[256], msgBuffer[256];
+			msgData.ReadString(typeBuffer, 256);
+			msgData.ReadString(nameBuffer, 256);
+			msgData.ReadString(msgBuffer, 256);
 
-			const char* p = data.c_str() + 2;
-			std::string event(p), name((p += event.size() + 1)), message(p + name.size() + 1);
-			int ent_idx = data[0];
-
-			//if (Vars::Misc::CheaterDetection.m_Var)
-			{
-				std::string newline = "\n";
-				if (strstr(message.c_str(), newline.c_str()))
-				{
-					g_BadActors.illegalchar[ent_idx] = true;
-				}
-			}
+			std::string chatType(typeBuffer);
+			std::string playerName(nameBuffer);
+			std::string chatMessage(msgBuffer);
 
 			if (Vars::Misc::ChatCensor.m_Var)
 			{
-				std::vector<std::string> badWords{"cheat", "hack", "bot", "aim", "esp", "kick", "hax"};
-				bool bwFound = false;
-				for (std::string word : badWords)
+				PlayerInfo_t senderInfo{};
+				if (g_Interfaces.Engine->GetPlayerInfo(entIdx, &senderInfo))
 				{
-					if (strstr(message.c_str(), word.c_str()))
+					if (entIdx == g_Interfaces.Engine->GetLocalPlayer()) { break; }
+					if (g_GlobalInfo.ignoredPlayers.find(senderInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()
+						|| (entIdx > 0 && entIdx <= 128 && g_EntityCache.Friends[entIdx]))
 					{
-						bwFound = true;
 						break;
 					}
-				}
 
-				if (bwFound)
-				{
-					std::string cmd = "say \"" + clear + "\"";
-					g_Interfaces.Engine->ServerCmd(cmd.c_str(), true);
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(
-						0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, name, message).c_str());
+					const std::vector<std::string> toReplace = { " ", "4", "3", "0", "6", "5", "7", "@", ".", ",", "-", "!" };
+					const std::vector<std::string> replaceWith = { "", "a", "e", "o", "g", "s", "t", "a", "", "", "", "i" };
+
+					for (std::vector<int>::size_type i = 0; i != toReplace.size(); i++) {
+						boost::replace_all(chatMessage, toReplace[i], replaceWith[i]);
+					}
+
+					for (auto& word : BAD_WORDS)
+					{
+						if (boost::contains(chatMessage, word))
+						{
+							const std::string cmd = "say_team \"" + CLEAR_MSG + "\"";
+							g_Interfaces.Engine->ServerCmd(cmd.c_str(), true);
+							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, playerName, chatMessage).c_str());
+							break;
+						}
+					}
 				}
 			}
-			msg_data.Seek(0);
+
+			msgData.Seek(0);
 			break;
 		}
-	case 5:
+	case TextMsg:
 		{
-			if (Vars::Misc::AntiAutobal.m_Var && msg_data.GetNumBitsLeft() > 35)
+			if (Vars::Misc::AntiAutobal.m_Var && msgData.GetNumBitsLeft() > 35)
 			{
 				INetChannel* server = g_Interfaces.Engine->GetNetChannelInfo();
 
-				std::string data(buf_data);
+				std::string data(bufData);
 
 				if (data.find("TeamChangeP") != data.npos && g_EntityCache.m_pLocal)
 				{
@@ -250,16 +258,16 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 					}
 					anti_balance_attempts++;
 				}
-				msg_data.Seek(0);
+				msgData.Seek(0);
 			}
 			break;
 		}
 
-	case 12:
+	case VGUIMenu:
 		{
 			if (Vars::Visuals::RemoveMOTD.m_Var || Vars::Misc::AutoJoin.m_Var)
 			{
-				if (strcmp(reinterpret_cast<char*>(msg_data.m_pData), "info") == 0)
+				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "info") == 0)
 				{
 					g_Interfaces.Engine->ClientCmd_Unrestricted("closedwelcomemenu");
 					return true;
@@ -268,13 +276,13 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 
 			if(Vars::Misc::AutoJoin.m_Var)
 			{
-				if (strcmp(reinterpret_cast<char*>(msg_data.m_pData), "team") == 0)
+				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "team") == 0)
 				{
 					g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
 					return true;
 				}
 
-				if (strncmp(reinterpret_cast<char*>(msg_data.m_pData), "class_", 6) == 0)
+				if (strncmp(reinterpret_cast<char*>(msgData.m_pData), "class_", 6) == 0)
 				{
 					static std::string classNames[] = { "scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy" };
 					g_Interfaces.Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
@@ -285,13 +293,13 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 			break;
 		}
 
-	case 46:
+	case VoteStart:
 		{
-			int team = msg_data.ReadByte(), caller = msg_data.ReadByte();
+			int team = msgData.ReadByte(), caller = msgData.ReadByte();
 			char reason[64], vote_target[64];
-			msg_data.ReadString(reason, 64);
-			msg_data.ReadString(vote_target, 64);
-			int target = static_cast<unsigned char>(msg_data.ReadByte()) >> 1;
+			msgData.ReadString(reason, 64);
+			msgData.ReadString(vote_target, 64);
+			int target = static_cast<unsigned char>(msgData.ReadByte()) >> 1;
 
 			PlayerInfo_t info_target{}, info_caller{};
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -342,7 +350,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 					if (Vars::Misc::AutoVote.m_Var && bSameTeam && target != g_Interfaces.Engine->GetLocalPlayer())
 					{
 						if (g_GlobalInfo.ignoredPlayers.find(info_target.friendsID) != g_GlobalInfo.ignoredPlayers.end() ||
-							(target > 0 && target <= 129 && g_EntityCache.Friends[target])) {
+							(target > 0 && target <= 128 && g_EntityCache.Friends[target])) {
 							g_Interfaces.Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
 						}
 						else {
@@ -351,12 +359,12 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msg_data
 					}
 				}
 			}
-			msg_data.Seek(0);
+			msgData.Seek(0);
 			break;
 		}
 	}
 
-	return Table.Original<fn>(index)(g_Interfaces.Client, type, msg_data);
+	return Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
 }
 
 void __fastcall ClientHook::DoPrecipitation::Hook(void* ecx, void* edx)

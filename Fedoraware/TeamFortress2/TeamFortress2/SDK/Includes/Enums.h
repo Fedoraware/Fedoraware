@@ -1576,6 +1576,57 @@ enum EObserverModes
 	OBS_MODE_ROAMING,		// free roaming
 };
 
+enum UserMessageType
+{
+	Geiger = 0,
+	Train,
+	HudText,
+	SayText,
+	SayText2,
+	TextMsg,
+	HudMsg,
+	ResetHUD,
+	GameTitle,
+	ItemPickup,
+	ShowMenu,
+	Shake,
+	Fade,
+	VGUIMenu,
+	Rumble,
+	CloseCaption,
+	SendAudio,
+	RawAudio,
+	VoiceMask,
+	RequestState,
+	BarTime,
+	Damage,
+	RadioText,
+	HintText,
+	KeyHintText,
+	ReloadEffect,
+	PlayerAnimEvent,
+	AmmoDenied,
+	UpdateRadar,
+	KillCam,
+	MarkAchievement,
+	CallVoteFailed,
+	VoteStart,
+	VotePass,
+	VoteFailed,
+	VoteSetup,
+	SPHapWeapEvent,
+	HapDmg,
+	HapPunch,
+	HapSetDrag,
+	HapSetConst,
+	HapMeleeContact,
+	PlayerStatsUpdate_DEPRECATED,
+	AchievementEvent,
+	MatchEndConditions,
+	MatchStatsUpdate,
+	PlayerStatsUpdate
+};
+
 inline int g_aWeaponDamageTypes[] =
 {
 	DMG_GENERIC,	// TF_WEAPON_NONE
