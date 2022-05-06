@@ -43,8 +43,8 @@ void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 		Offset(bool*, pEntity, 0xC93) = Vars::Visuals::RagdollEffects::Electrocuted.m_Var;
 		Offset(bool*, pEntity, 0xC99) = Vars::Visuals::RagdollEffects::BecomeAsh.m_Var;
 		Offset(bool*, pEntity, 0xC95) = Vars::Visuals::RagdollEffects::Dissolve.m_Var;
-		Offset(bool*, pEntity, 0xCA0) = Vars::Visuals::RagdollEffects::Gold.m_Var;
-		Offset(bool*, pEntity, 0xCA1) = Vars::Visuals::RagdollEffects::Ice.m_Var;
+		Offset(bool*, pEntity, 0xCA0) = Vars::Visuals::RagdollEffects::RagdollType.m_Var == 1;
+		Offset(bool*, pEntity, 0xCA1) = Vars::Visuals::RagdollEffects::RagdollType.m_Var == 2;
 	}
 
 	Func.Original<fn>()(ecx, edx);

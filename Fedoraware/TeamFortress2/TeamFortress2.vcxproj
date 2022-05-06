@@ -118,6 +118,7 @@
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_draw.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Components.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\IconsMaterialDesign.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Fonts\MaterialFontData.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h">

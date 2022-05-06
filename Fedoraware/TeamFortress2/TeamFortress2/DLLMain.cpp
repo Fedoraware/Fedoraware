@@ -103,9 +103,8 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
-	const std::string defaultConfig = "default";
-	if (std::filesystem::exists(g_CFG.ConfigPath + "\\" + defaultConfig)) {
-		g_CFG.LoadConfig(defaultConfig);
+	if (std::filesystem::exists(g_CFG.ConfigPath + "\\" + g_CFG.CurrentConfig)) {
+		g_CFG.LoadConfig(g_CFG.CurrentConfig);
 	}
 
 	g_Draw.RemakeFonts

@@ -7,11 +7,11 @@
 #include "../ImGui/imgui_stdlib.h"
 #include "../ConfigManager/ConfigManager.h"
 
-const std::string defaultMaterial = "\"VertexLitGeneric\"\n{\n}";
+const std::string DEFAULT_MATERIAL = "\"VertexLitGeneric\"\n{\n}";
 
-std::wstring CMaterialEditor::GetMaterialPath(const std::wstring& matFileName)
+std::string CMaterialEditor::GetMaterialPath(const std::string& matFileName)
 {
-	std::wstring matPath = MaterialFolder + L"\\" + matFileName;
+	std::string matPath = MaterialFolder + "\\" + matFileName;
 	return matPath;
 }
 
@@ -40,9 +40,8 @@ void CMaterialEditor::LoadMaterials()
 		}
 
 		// Get the material name
-		std::wstring wMatFile = entry.path().filename().wstring();
-		// .erase(wMatName.end() - 4, wMatName.end());
-		std::string matName(wMatFile.begin(), wMatFile.end());
+		const std::string matPath = entry.path().filename().string();
+		std::string matName = matPath;
 		matName.erase(matName.end() - 4, matName.end());
 
 		// Create Material
@@ -54,7 +53,7 @@ void CMaterialEditor::LoadMaterials()
 			
 			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
 			IMaterial* newMaterial = g_Interfaces.MatSystem->Create(std::string("m_pmat" + matName).c_str(), kv);
-			MaterialList.push_back({ matName, wMatFile, newMaterial });
+			MaterialList.push_back({ matName, matPath, newMaterial });
 		}
 	}
 }
@@ -107,7 +106,7 @@ void CMaterialEditor::MainWindow()
 			SameLine();
 			if (Button("Open Folder") && !GetMaterialPath(CurrentMaterial.FileName).empty())
 			{
-				ShellExecuteW(nullptr, L"open", MaterialFolder.c_str(), nullptr, nullptr, SW_SHOWDEFAULT);
+				ShellExecuteA(nullptr, "open", MaterialFolder.c_str(), nullptr, nullptr, SW_SHOWDEFAULT);
 			}
 		}
 
@@ -117,17 +116,16 @@ void CMaterialEditor::MainWindow()
 		static std::string newName;
 		if (InputTextWithHint("###MaterialName", "New Material name", &newName, ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			const std::wstring outstring(newName.begin(), newName.end());
-			if (!std::filesystem::exists(GetMaterialPath(outstring + L".vmt")))
+			if (!std::filesystem::exists(GetMaterialPath(newName + ".vmt")))
 			{
 				// Create a new CustomMaterial and add it to our list
 				const auto kv = new KeyValues(newName.c_str());
-				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), defaultMaterial.c_str());
+				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), DEFAULT_MATERIAL.c_str());
 				IMaterial* defMaterial = g_Interfaces.MatSystem->Create(std::string("m_pmat" + newName).c_str(), kv);
 
-				const CustomMaterial newMaterial = { newName, outstring + L".vmt", defMaterial };
+				const CustomMaterial newMaterial = { newName, newName + ".vmt", defMaterial };
 
-				WriteMaterial(newMaterial, defaultMaterial);
+				WriteMaterial(newMaterial, DEFAULT_MATERIAL);
 				MaterialList.push_back(newMaterial);
 				LoadMaterials();
 
@@ -184,6 +182,13 @@ void CMaterialEditor::EditorWindow()
 				EditorOpen = false;
 			}
 
+			SameLine();
+			if (Button("Cancel"))
+			{
+				LoadMaterials();
+				EditorOpen = false;
+			}
+
 			Text("Editing: %s", CurrentMaterial.Name.c_str());
 		}
 
@@ -206,6 +211,6 @@ void CMaterialEditor::Render()
 
 void CMaterialEditor::Init()
 {
-	MaterialFolder = g_CFG.m_sConfigPath + L"\\Materials";
+	MaterialFolder = g_CFG.ConfigPath + "\\Materials";
 	LoadMaterials();
 }

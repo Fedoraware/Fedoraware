@@ -38,7 +38,7 @@ namespace ClientHook
 	{
 		const int index = 36;
 		using fn = bool(__thiscall*)(CBaseClientDLL*, int type, bf_read& msg_data);
-		bool __stdcall Hook(int type, bf_read& msg_data);
+		bool __stdcall Hook(int type, bf_read& msgData);
 	}
 
 	namespace DoPrecipitation

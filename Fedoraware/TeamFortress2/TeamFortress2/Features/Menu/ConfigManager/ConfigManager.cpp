@@ -251,6 +251,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::CritHack::Active);
 				SAVE_VAR(Vars::CritHack::indicators);
 				SAVE_VAR(Vars::CritHack::avoidrandom);
+				SAVE_VAR(Vars::CritHack::AlwaysMelee);
 				SAVE_VAR(Vars::CritHack::CritKey);
 			}
 
@@ -645,8 +646,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Dissolve);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
+				SAVE_VAR(Vars::Visuals::RagdollEffects::RagdollType);
 			}
 
 			{
@@ -683,6 +683,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::ChatCensor);
+			SAVE_VAR(Vars::Misc::ChatNL);
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::MVMRes);
@@ -960,6 +961,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::CritHack::Active);
 				LOAD_VAR(Vars::CritHack::indicators);
 				LOAD_VAR(Vars::CritHack::avoidrandom);
+				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
 			}
 
@@ -1353,8 +1355,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Dissolve);
-				LOAD_VAR(Vars::Visuals::RagdollEffects::Gold);
-				LOAD_VAR(Vars::Visuals::RagdollEffects::Ice);
+				LOAD_VAR(Vars::Visuals::RagdollEffects::RagdollType);
 			}
 
 			{
@@ -1391,6 +1392,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
 			LOAD_VAR(Vars::Misc::ChatCensor);
+			LOAD_VAR(Vars::Misc::ChatNL);
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::MVMRes);
@@ -1621,6 +1623,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
 		});
 
+		CurrentConfig = configName;
 		g_Notifications.Add("Config " + configName + " loaded");
 	}
 	catch (...)

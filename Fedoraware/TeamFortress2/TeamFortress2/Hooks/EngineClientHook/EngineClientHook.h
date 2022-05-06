@@ -12,4 +12,12 @@ namespace EngineClientHook
 		using fn = bool(__thiscall*)(CEngineClient*);
 		bool __stdcall Hook();
 	}
+
+	namespace ClientCmd_Unrestricted
+	{
+		const int index = 106;
+		inline SEOHook::Func Func;
+		using fn = void(__fastcall*)(void*, void*, const char*);
+		void __fastcall Hook(void* ecx, void* edx, const char* szCmdString);
+	}
 }

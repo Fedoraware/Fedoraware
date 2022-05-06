@@ -4,12 +4,12 @@
 
 struct CustomMaterial {
 	std::string Name = "Default";
-	std::wstring FileName = L"Default.vmt";
+	std::string FileName = "Default.vmt";
 	IMaterial* Material{ };
 };
 
 class CMaterialEditor {
-	std::wstring GetMaterialPath(const std::wstring& matFileName);
+	std::string GetMaterialPath(const std::string& matFileName);
 	void LoadMaterials();
 	void WriteMaterial(const CustomMaterial& material, const std::string& content);
 	void MainWindow();
@@ -19,7 +19,7 @@ class CMaterialEditor {
 	std::string CurrentFile;
 
 	bool EditorOpen = false;
-	std::wstring MaterialFolder;
+	std::string MaterialFolder;
 	CustomMaterial CurrentMaterial;
 
 public:

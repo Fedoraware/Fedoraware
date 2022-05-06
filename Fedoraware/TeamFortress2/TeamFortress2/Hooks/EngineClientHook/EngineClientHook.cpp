@@ -1,4 +1,5 @@
 #include "EngineClientHook.h"
+#include <boost/algorithm/string/replace.hpp>
 
 bool __stdcall EngineClientHook::IsPlayingTimeDemo::Hook()
 {
@@ -11,4 +12,18 @@ bool __stdcall EngineClientHook::IsPlayingTimeDemo::Hook()
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.Engine);
+}
+
+void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* edx, const char* szCmdString)
+{
+	std::string cmdString(szCmdString);
+
+	// Allow newlines in chat
+	if (Vars::Misc::ChatNL.m_Var && cmdString.rfind("say", 0) == 0)
+	{
+		boost::replace_all(cmdString, "\\n", "\n");
+		return g_Interfaces.Engine->ServerCmd(cmdString.c_str(), true);
+	}
+
+	Func.Original<fn>()(ecx, edx, cmdString.c_str());
 }

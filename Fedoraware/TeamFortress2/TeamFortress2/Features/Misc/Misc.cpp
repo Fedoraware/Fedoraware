@@ -59,22 +59,19 @@ void CMisc::DetectChoke()
 {
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		if (!player->IsAlive())
+		if (!player->IsAlive() || player->GetDormant())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
 			continue;
 		}
 
-		if (player->GetSimulationTime() == g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime)
+		if (player->GetSimulationTime() == player->GetOldSimulationTime())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks++;
-			// TODO: This could be used to detect cheaters
+			g_GlobalInfo.chokeMap[player->GetIndex()]++;
 		} else
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
 		}
-
-		g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime = player->GetSimulationTime();
 	}
 }
 
@@ -505,7 +502,7 @@ void CMisc::BypassPure()
 }
 
 const std::string spam_Fed[] = {
-	_("Fedoraware - github.com/M-FeD/Fedoraware"),
+	_("Fedoraware - github.com/tf2cheater2013/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
 	_("Fedoraware - Now available @ https://github.com/tf2cheater2013!"),
