@@ -33,6 +33,7 @@ public:
 	std::wstring m_sConfigPath;
 	std::string ConfigPath;
 	const std::string ConfigExtension = ".fw";
+	std::string CurrentConfig = "default";
 
 	CConfigManager();
 	bool SaveConfig(const std::string& configName);

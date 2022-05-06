@@ -253,7 +253,7 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.m_Var);  HelpMarker("Enables the crit hack (BETA)");
-			MultiCombo({ "Indicators", "Avoid Random" }, { &Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var }, "Misc###CrithackMiscOptions");
+			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, {&Vars::CritHack::indicators.m_Var, &Vars::CritHack::avoidrandom.m_Var, &Vars::CritHack::AlwaysMelee.m_Var }, "Misc###CrithackMiscOptions");
 			HelpMarker("Misc options for crithack");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
@@ -1226,15 +1226,7 @@ void CMenu::MenuVisuals()
 				WToggle("Enemy only###RagdollEnemyOnly", &Vars::Visuals::RagdollEffects::EnemyOnly.m_Var); HelpMarker("Only runs it on enemies");
 				MultiCombo({ "Burning", "Electrocuted", "Become ash", "Dissolve" }, { &Vars::Visuals::RagdollEffects::Burning.m_Var, &Vars::Visuals::RagdollEffects::Electrocuted.m_Var, &Vars::Visuals::RagdollEffects::BecomeAsh.m_Var, &Vars::Visuals::RagdollEffects::Dissolve.m_Var }, "Effects###RagdollEffects");
 				HelpMarker("Ragdoll particle effects");
-				if (WToggle("Gold ragdoll", &Vars::Visuals::RagdollEffects::Gold.m_Var))
-				{
-					Vars::Visuals::RagdollEffects::Ice.m_Var = false;
-				}
-				HelpMarker("Will make their ragdoll gold");
-				if (WToggle("Ice ragdoll", &Vars::Visuals::RagdollEffects::Ice.m_Var))
-				{
-					Vars::Visuals::RagdollEffects::Gold.m_Var = false;
-				}
+				WCombo("Ragdoll model", &Vars::Visuals::RagdollEffects::RagdollType.m_Var, { "None", "Gold", "Ice" }); HelpMarker("Which ragdoll model should be used");
 				HelpMarker("Will make their ragdoll ice");
 
 				SectionTitle("Freecam");
@@ -1498,13 +1490,13 @@ void CMenu::MenuHvH()
 
 			/* Section: Fakelag */
 			SectionTitle("Fakelag");
-			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "None", "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
-			Vars::Misc::CL_Move::Fakelag.m_Var = Vars::Misc::CL_Move::FakelagMode.m_Var > 0;
+			WToggle("Enable Fakelag", &Vars::Misc::CL_Move::Fakelag.m_Var);
+			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.m_Var, { "Plain", "Random", "Velocity Based" }); HelpMarker("Controls how fakelag will be controlled.");
 
-			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1 || Vars::Misc::CL_Move::FakelagMode.m_Var == 3)
+			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 0 || Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
 			{
 				WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)");
-				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
+				if (Vars::Misc::CL_Move::FakelagMode.m_Var == 0)
 				{
 					WToggle("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.m_Var); HelpMarker("Fakelag will only activate when an assigned key is held");
 					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var)
@@ -1513,7 +1505,7 @@ void CMenu::MenuHvH()
 					}
 				}
 			}
-			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+			if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
 			{
 				WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.m_Var, Vars::Misc::CL_Move::FakelagMin.m_Var + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
 				WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.m_Var, 1, Vars::Misc::CL_Move::FakelagMax.m_Var - 1, "%d"); HelpMarker("Minimum random fakelag value");
@@ -1710,6 +1702,10 @@ void CMenu::SettingsWindow()
 			nConfig++;
 		}
 
+		// Current config
+		const std::string cfgText = "Loaded: " + g_CFG.CurrentConfig;
+		Text(cfgText.c_str());
+
 		// Config name field
 		if (nConfig < 100)
 		{
@@ -1755,7 +1751,14 @@ void CMenu::SettingsWindow()
 				// Save config button
 				if (Button("Save", ImVec2(61, 20)))
 				{
-					OpenPopup("Save config?");
+					if (configName != g_CFG.CurrentConfig)
+					{
+						OpenPopup("Save config?");
+					} else
+					{
+						g_CFG.SaveConfig(selected);
+						selected.clear();
+					}
 				}
 
 				// Load config button
@@ -1814,6 +1817,16 @@ void CMenu::SettingsWindow()
 					}
 					EndPopup();
 				}
+			}
+			else if (configName == g_CFG.CurrentConfig)
+			{
+				PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
+				std::string buttonText = "> " + configName + " <";
+				if (Button(buttonText.c_str(), ImVec2(200, 20)))
+				{
+					selected = configName;
+				}
+				PopStyleColor();
 			}
 			else
 			{

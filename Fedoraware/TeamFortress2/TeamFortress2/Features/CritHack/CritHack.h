@@ -4,6 +4,7 @@
 class CCritHack {
 	bool AreRandomCritsEnabled();
 	bool IsEnabled();
+	bool ShouldCrit();
 	int NextCritTick(const CUserCmd* pCmd, int loops);
 
 	struct stats_t

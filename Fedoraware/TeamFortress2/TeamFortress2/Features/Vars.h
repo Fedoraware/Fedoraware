@@ -53,6 +53,7 @@ namespace Vars
 		inline CVar<bool> Active{ false, L"Active" };
 		inline CVar<bool> indicators{ true };
 		inline CVar<bool> avoidrandom{ true };
+		inline CVar<bool> AlwaysMelee{ true };
 		inline CVar<int> CritKey{ VK_SHIFT, L"Crit Key" };
 	}
 
@@ -522,8 +523,7 @@ namespace Vars
 			inline CVar<bool> Electrocuted{ false, L"Electrocute ragdoll" };
 			inline CVar<bool> BecomeAsh{ false, L"Ash ragdoll" };
 			inline CVar<bool> Dissolve{ false, L"Dissolve ragdoll" };
-			inline CVar<bool> Gold{ false, L"Gold ragdoll" };
-			inline CVar<bool> Ice{ false, L"Ice ragdoll" };
+			inline CVar<int> RagdollType{ 0 };
 		}
 
 		namespace Skins
@@ -622,7 +622,7 @@ namespace Vars
 			inline CVar<int> DTBarX{ 0,L"DT Offset X" };
 			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
 			inline CVar<bool> Fakelag{ true, L"Fakelag" };
-			inline CVar<int> FakelagMode{ 1, L"Fakelag Mode" }; // 1 - plain, 2 - random, 3 - vel based
+			inline CVar<int> FakelagMode{ 0, L"Fakelag Mode" }; // 0 - plain, 1 - random, 2 - vel based
 			inline CVar<int> FakelagMin{ 1, L"Fakelag Min" }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22, L"Fakelag Max" };
 			inline CVar<bool> FakelagIndicator{ true, L"Fakelag Indicator" };

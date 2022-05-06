@@ -254,13 +254,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	{
 		*pSendPacket = g_GlobalInfo.m_nShifted == 1;
 
-		if (!*pSendPacket)
-			nChoked++;
-
-		else nChoked = 0;
-
-		if (nChoked > 21)
-			*pSendPacket = true;
+		if (!*pSendPacket) {nChoked++; } else { nChoked = 0; }
+		if (nChoked > 21) { *pSendPacket = true; }
 	}
 	else
 	{
@@ -268,62 +263,64 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		static int chockedPackets = 0;
 		static int chockValue = 0;
-		if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::FakelagMode.m_Var > 0) && (Vars::Misc::CL_Move::FakelagMode
-			.m_Var != 1 || (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) && Vars::Misc::CL_Move::FakelagOnKey
-				.
-				m_Var) || !Vars::Misc::CL_Move::FakelagOnKey.m_Var) && (Vars::Misc::CL_Move::FakelagMode.m_Var != 3 || (
-					abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f) && !
-			g_GlobalInfo.m_bForceSendPacket)
-		{
-			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::Fakelag.m_Var)
+			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 0 
+				|| (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) 
+				&& Vars::Misc::CL_Move::FakelagOnKey.m_Var) 
+				|| !Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 2 
+				|| (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f)
+			&& !g_GlobalInfo.m_bForceSendPacket)
 			{
-				
-				if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
-					!g_GlobalInfo.m_bRecharging &&
-					!g_GlobalInfo.m_nShifted &&
-					!g_GlobalInfo.m_bShouldShift &&
-					!g_GlobalInfo.m_bRechargeQueued)
+				if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 				{
-					chockedPackets++;
-
-					if (chockedPackets > chockValue)
+					
+					if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
+						!g_GlobalInfo.m_bRecharging &&
+						!g_GlobalInfo.m_nShifted &&
+						!g_GlobalInfo.m_bShouldShift &&
+						!g_GlobalInfo.m_bRechargeQueued)
 					{
-						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 2)
+						chockedPackets++;
+
+						if (chockedPackets > chockValue)
 						{
-							chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.
-								m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
+							if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
+							{
+								chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.
+									m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
+							}
+							else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
+							*pSendPacket = true;
+							g_GlobalInfo.m_bChoking = false;
+							chockedPackets = 0;
+							g_FakeAng.Run(pCmd);
+							g_FakeAng.DrawChams = true;
 						}
-						else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
-						*pSendPacket = true;
-						g_GlobalInfo.m_bChoking = false;
-						chockedPackets = 0;
-						g_FakeAng.Run(pCmd);
-						g_FakeAng.DrawChams = true;
+						else
+						{
+							*pSendPacket = false;
+							g_GlobalInfo.m_bChoking = true;
+						}
 					}
 					else
 					{
-						*pSendPacket = false;
-						g_GlobalInfo.m_bChoking = true;
+						g_FakeAng.Run(pCmd);
+						*pSendPacket = true;
+						g_GlobalInfo.m_bChoking = false;
+						g_FakeAng.DrawChams = true;
 					}
 				}
-				else
-				{
-					g_FakeAng.Run(pCmd);
-					*pSendPacket = true;
-					g_GlobalInfo.m_bChoking = false;
-					g_FakeAng.DrawChams = true;
-				}
 			}
-		}
-		else if (chockedPackets > 0)	// failsafe
-		{
-			*pSendPacket = true;
-			chockedPackets = 0;
-			g_GlobalInfo.m_bChoking = false;
-		}
-		else { g_GlobalInfo.m_bChoking = false;
-			g_FakeAng.DrawChams = false;
-		}
+			else if (chockedPackets > 0)	// failsafe
+			{
+				*pSendPacket = true;
+				chockedPackets = 0;
+				g_GlobalInfo.m_bChoking = false;
+			}
+			else { g_GlobalInfo.m_bChoking = false;
+				g_FakeAng.DrawChams = false;
+			}
 	}
 
 	if (g_GlobalInfo.m_nShifted > 0) {

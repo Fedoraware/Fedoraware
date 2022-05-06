@@ -226,8 +226,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					int yoffset = 0, xoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer()))
 					{
-						g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "localDamage = %d", localDamage);
-						yoffset += 20;
+						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 					}
 
 					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
