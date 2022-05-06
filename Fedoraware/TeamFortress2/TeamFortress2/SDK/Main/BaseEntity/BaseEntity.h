@@ -81,6 +81,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(HitboxSet, int, this, _("DT_BaseAnimating"), _("m_nHitboxSet"))
 		M_DYNVARGET(TickBase, int, this, _("DT_BasePlayer"), _("localdata"), _("m_nTickBase"))
 		M_DYNVARGET(SimulationTime, float, this, _("DT_BaseEntity"), _("m_flSimulationTime"))
+		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), _("DT_BaseEntity"), _("m_flSimulationTime"));
 		M_DYNVARGET(hOwner, int, this, _("DT_BaseEntity"), _("m_hOwnerEntity"))
 		M_DYNVARGET(Health, int, this, _("DT_BasePlayer"), _("m_iHealth"))
 		M_DYNVARGET(TeamNum, int, this, _("DT_BaseEntity"), _("m_iTeamNum"))

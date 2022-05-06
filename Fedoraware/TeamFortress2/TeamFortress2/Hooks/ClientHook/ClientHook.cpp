@@ -171,6 +171,7 @@ static std::string previous_name;
 bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 {
 	auto bufData = reinterpret_cast<const char*>(msgData.m_pData);
+	msgData.SetAssertOnOverflow(false);
 
 	switch (type)
 	{
@@ -186,8 +187,11 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 			int entIdx = msgData.ReadByte();
 			msgData.Seek(8);
 			char typeBuffer[256], nameBuffer[256], msgBuffer[256];
+			if (msgData.GetNumBytesLeft() == 0) { break; }
 			msgData.ReadString(typeBuffer, 256);
+			if (msgData.GetNumBytesLeft() == 0) { break; }
 			msgData.ReadString(nameBuffer, 256);
+			if (msgData.GetNumBytesLeft() == 0) { break; }
 			msgData.ReadString(msgBuffer, 256);
 
 			std::string chatType(typeBuffer);

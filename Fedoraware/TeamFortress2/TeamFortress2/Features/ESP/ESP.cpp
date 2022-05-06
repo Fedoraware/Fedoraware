@@ -426,10 +426,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				x -= 1;
 				static float ratio = 0.0f;
-				int chokeCount = g_GlobalInfo.chokeMap[nIndex].ChokedTicks;
+				int chokeCount = g_GlobalInfo.chokeMap[nIndex];
 
-				Vec2 position = { (float)x - 2.f - 8.f,  (float)y + (float)h };
-				ratio = chokeCount/22.0f;
+				Vec2 position = { static_cast<float>(x) - 2.f - 8.f,  static_cast<float>(y + h) };
+				ratio = chokeCount / 22.f;
+				Math::Clamp(ratio, 0.f, 22.f);
 				g_Draw.OutlinedGradientBar(position.x, position.y, 2, h, ratio, Colors::ChokedBar.startColour, Colors::ChokedBar.endColour, Colors::OutlineESP, false);
 
 				x += 1;
