@@ -1824,7 +1824,7 @@ void CMenu::SettingsWindow()
 			}
 		}
 
-		ImGui::End();
+		End();
 	}
 
 	PopStyleVar(2);

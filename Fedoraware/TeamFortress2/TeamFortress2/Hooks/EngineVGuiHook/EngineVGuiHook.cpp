@@ -317,7 +317,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 						for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 						{
 							if (Player == pLocal) { continue; }
-							xoffset += 170;
+							xoffset += 140;
 							yoffset = 0;
 
 							PlayerInfo_t pi{};
@@ -328,32 +328,27 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									const char* name = pi.name;
 									if (name)
 									{
-										g_Draw.String(FONT_MENU, xoffset, yoffset, {84, 0, 255, 255}, ALIGN_DEFAULT, name);
-										yoffset += 20;
+										g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {84, 0, 255, 255}, ALIGN_DEFAULT, name);
 									}
 								}
 								else
 								{
-									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
-									yoffset += 20;
+									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
 								}
 
 								if (!Player->IsAlive())
 								{
 									// dead players should not show up here
-									g_Draw.String(FONT_MENU, xoffset, yoffset, {80, 80, 80, 255}, ALIGN_DEFAULT, "DEAD");
-									yoffset += 20;
+									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {80, 80, 80, 255}, ALIGN_DEFAULT, "DEAD");
 								}
 							}
 							
 							if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
 							{
-								g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "S : %i", tickcount);
-								yoffset += 20;
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "S : %i", tickcount);
 								if (const int tickcountplayer = TIME_TO_TICKS(Player->GetSimulationTime()))
 								{
-									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "P : %i", tickcountplayer);
-									yoffset += 20;
+									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "P : %i", tickcountplayer);
 								}
 							}
 						}
