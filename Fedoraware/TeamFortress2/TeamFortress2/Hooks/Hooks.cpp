@@ -155,6 +155,10 @@ void CHooks::Init()
 
 		Table.Init(g_Interfaces.Engine);
 		Table.Hook(IsPlayingTimeDemo::index, &IsPlayingTimeDemo::Hook);
+
+		using namespace ClientCmd_Unrestricted;
+		fn FN = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.Engine, index));
+		Func.Hook(FN, Hook);
 	}
 
 	if (g_Interfaces.ModelRender)

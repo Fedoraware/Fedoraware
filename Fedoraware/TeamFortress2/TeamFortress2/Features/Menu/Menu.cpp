@@ -1591,6 +1591,7 @@ void CMenu::MenuMisc()
 		{
 			SectionTitle("Chat");
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.m_Var); HelpMarker("Clears the chat when someone accuses your");
+			WToggle("Allow Newlines", &Vars::Misc::ChatNL.m_Var); HelpMarker("Allows you to use \\n in the chat");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.m_Var, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
 
 			SectionTitle("Exploits");
