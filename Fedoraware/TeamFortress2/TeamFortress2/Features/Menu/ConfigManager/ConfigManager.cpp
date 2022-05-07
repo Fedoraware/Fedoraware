@@ -551,6 +551,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 		//Visuals
 		{
+			SAVE_VAR(Vars::Visuals::RemoveMOTD);
 			SAVE_VAR(Vars::Visuals::RemoveDisguises);
 			SAVE_VAR(Vars::Visuals::RemoveTaunts);
 			SAVE_VAR(Vars::Visuals::FieldOfView);
@@ -705,6 +706,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::KillstreakWeapon);
 			SAVE_VAR(Vars::Misc::PartyNetworking);
 			SAVE_VAR(Vars::Misc::PartyMarker);
+			SAVE_VAR(Vars::Misc::Roll);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
@@ -1260,6 +1262,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		//Visuals
 		{
+			LOAD_VAR(Vars::Visuals::RemoveMOTD);
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
 			LOAD_VAR(Vars::Visuals::FieldOfView);
@@ -1414,6 +1417,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::KillstreakWeapon);
 			LOAD_VAR(Vars::Misc::PartyNetworking);
 			LOAD_VAR(Vars::Misc::PartyMarker);
+			LOAD_VAR(Vars::Misc::Roll);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
