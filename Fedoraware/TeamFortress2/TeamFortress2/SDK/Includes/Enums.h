@@ -557,8 +557,8 @@ enum struct ETFClassID
 
 enum ETFGrenadeProjectileType
 {
-	TYPE_PIPE, 
-	TYPE_STICKY 
+	TYPE_PIPE,
+	TYPE_STICKY
 };
 
 enum EPlayerControls
@@ -864,7 +864,7 @@ enum ETFWeaponType
 	TF_WEAPON_STICKBOMB,
 #if ppp
 	TF_WEAPON_HANDGUN_SCOUT_SECONDARY,
-#else 
+#else
 	TF_WEAPON_HANDGUN_SCOUT_SEC,
 #endif
 	TF_WEAPON_SODA_POPPER,
@@ -1584,7 +1584,6 @@ enum UserMessageType
 	SayText,
 	SayText2,
 	TextMsg,
-	HudMsg,
 	ResetHUD,
 	GameTitle,
 	ItemPickup,
@@ -1595,36 +1594,73 @@ enum UserMessageType
 	Rumble,
 	CloseCaption,
 	SendAudio,
-	RawAudio,
 	VoiceMask,
 	RequestState,
-	BarTime,
 	Damage,
-	RadioText,
 	HintText,
 	KeyHintText,
-	ReloadEffect,
-	PlayerAnimEvent,
+	HudMsg,
 	AmmoDenied,
+	AchievementEvent,
 	UpdateRadar,
-	KillCam,
-	MarkAchievement,
+	VoiceSubtitle,
+	HudNotify,
+	HudNotifyCustom,
+	PlayerStatsUpdate,
+	MapStatsUpdate,
+	PlayerIgnited,
+	PlayerIgnitedInv,
+	HudArenaNotify,
+	UpdateAchievement,
+	TrainingMsg,
+	TrainingObjective,
+	DamageDodged,
+	PlayerJarated,
+	PlayerExtinguished,
+	PlayerJaratedFade,
+	PlayerShieldBlocked,
+	BreakModel,
+	CheapBreakModel,
+	BreakModel_Pumpkin,
+	BreakModelRocketDud,
 	CallVoteFailed,
 	VoteStart,
 	VotePass,
 	VoteFailed,
 	VoteSetup,
+	PlayerBonusPoints,
+	RDTeamPointsChanged,
+	SpawnFlyingBird,
+	PlayerGodRayEffect,
+	PlayerTeleportHomeEffect,
+	MVMStatsReset,
+	MVMPlayerEvent,
+	MVMResetPlayerStats,
+	MVMWaveFailed,
+	MVMAnnouncement,
+	MVMPlayerUpgradedEvent,
+	MVMVictory,
+	MVMWaveChange,
+	MVMLocalPlayerUpgradesClear,
+	MVMLocalPlayerUpgradesValue,
+	MVMResetPlayerWaveSpendingStats,
+	MVMLocalPlayerWaveSpendingValue,
+	MVMResetPlayerUpgradeSpending,
+	MVMServerKickTimeUpdate,
+	PlayerLoadoutUpdated,
+	PlayerTauntSoundLoopStart,
+	PlayerTauntSoundLoopEnd,
+	ForcePlayerViewAngles,
+	BonusDucks,
+	EOTLDuckEvent,
+	PlayerPickupWeapon,
+	QuestObjectiveCompleted,
 	SPHapWeapEvent,
 	HapDmg,
 	HapPunch,
 	HapSetDrag,
 	HapSetConst,
-	HapMeleeContact,
-	PlayerStatsUpdate_DEPRECATED,
-	AchievementEvent,
-	MatchEndConditions,
-	MatchStatsUpdate,
-	PlayerStatsUpdate
+	HapMeleeContact
 };
 
 inline int g_aWeaponDamageTypes[] =
@@ -1632,7 +1668,7 @@ inline int g_aWeaponDamageTypes[] =
 	DMG_GENERIC,	// TF_WEAPON_NONE
 	DMG_CLUB,		// TF_WEAPON_BAT,
 	DMG_CLUB,		// TF_WEAPON_BAT_WOOD,
-	DMG_CLUB,		// TF_WEAPON_BOTTLE, 
+	DMG_CLUB,		// TF_WEAPON_BOTTLE,
 	DMG_CLUB,		// TF_WEAPON_FIREAXE,
 	DMG_CLUB,		// TF_WEAPON_CLUB,
 	DMG_CLUB,		// TF_WEAPON_CROWBAR,
@@ -1793,11 +1829,11 @@ enum ImageFormat
 	IMAGE_FORMAT_RGBA32323232F,
 
 	// Depth-stencil texture formats for shadow depth mapping
-	IMAGE_FORMAT_NV_DST16,		// 
+	IMAGE_FORMAT_NV_DST16,		//
 	IMAGE_FORMAT_NV_DST24,		//
 	IMAGE_FORMAT_NV_INTZ,		// Vendor-specific depth-stencil texture
-	IMAGE_FORMAT_NV_RAWZ,		// formats for shadow depth mapping 
-	IMAGE_FORMAT_ATI_DST16,		// 
+	IMAGE_FORMAT_NV_RAWZ,		// formats for shadow depth mapping
+	IMAGE_FORMAT_ATI_DST16,		//
 	IMAGE_FORMAT_ATI_DST24,		//
 	IMAGE_FORMAT_NV_NULL,		// Dummy format which takes no video memory
 
