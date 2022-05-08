@@ -1472,6 +1472,7 @@ void CMenu::MenuHvH()
 			ColorPickerL("DT bar outline colour", Colors::DtOutline);
 			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
 			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to warp");
+			WCombo("Teleport Mode", &Vars::Misc::CL_Move::TeleportMode.m_Var, { "Plain", "Smooth" }); HelpMarker("How the teleport should be done");
 			if (Vars::Misc::CL_Move::DTMode.m_Var == 0 || Vars::Misc::CL_Move::DTMode.m_Var == 2)
 			{
 				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
