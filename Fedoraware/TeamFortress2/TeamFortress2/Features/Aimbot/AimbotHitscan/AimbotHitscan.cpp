@@ -83,7 +83,6 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
-		priorityhitbox = nHitbox;
 		bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
 
 		for (const auto& Player : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
@@ -91,7 +90,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
 
-			if (bIsMedigun && pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f)
+			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f || Player == pLocal))
 				continue;
 
 			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
@@ -147,6 +146,8 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 					}
 				}
 			}
+
+			priorityhitbox = nHitbox;
 
 			Vec3 vPos = Player->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
@@ -234,7 +235,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& Target)
 										Vec3 vTransformed = {};
 										Math::VectorTransform(Point, BoneMatrix[pBox->bone], vTransformed);
 
-										if (Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vTransformed, nHitbox))
+										if (nHitbox == 0 ? Utils::VisPosHitboxId(pLocal, Target.m_pEntity, vLocalPos, vTransformed, nHitbox) : Utils::VisPos(pLocal, Target.m_pEntity, vLocalPos, vHitbox)) // there is no need to scan multiple times just because we hit the arm or whatever. Only count as failure if this hitbox was head.
 										{
 											Target.m_vPos = vTransformed;
 											Target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);

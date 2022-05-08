@@ -3,6 +3,28 @@
 
 #include "../MovementSimulation/MovementSimulation.h"
 
+/* these both do the same thing 
+	if ( m_fBBoxVisFlags & VISUALIZE_COLLISION_BOUNDS )
+	{
+		if ( debugoverlay )
+		{
+			debugoverlay->AddBoxOverlay( CollisionProp()->GetCollisionOrigin(), CollisionProp()->OBBMins(),
+				CollisionProp()->OBBMaxs(), CollisionProp()->GetCollisionAngles(), 190, 190, 0, 0, 0.01 );
+		}
+	}
+
+	if ( m_fBBoxVisFlags & VISUALIZE_SURROUNDING_BOUNDS )
+	{
+		Vector vecSurroundMins, vecSurroundMaxs;
+		CollisionProp()->WorldSpaceSurroundingBounds( &vecSurroundMins, &vecSurroundMaxs );
+		if ( debugoverlay )
+		{
+			debugoverlay->AddBoxOverlay( vec3_origin, vecSurroundMins,
+				vecSurroundMaxs, vec3_angle, 0, 255, 255, 0, 0.01 );
+		}
+	}
+*/
+
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
 	g_GlobalInfo.linearPredLine = m_vPosition;
@@ -576,8 +598,67 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	return false;
 }
 
+//bool isposvalid(CBaseEntity* local, CBaseEntity* target, Vec3 position) {
+//
+//}
+//
+//void iteratepositions(CBaseEntity* local, CBaseEntity* target) {
+//
+//}
+
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
+	/*
+	get bbox of player we are scanning.
+	if no points of bbox are visible, quit.
+	if we hit bbox, check our players preferred hitbox.
+	because it's bbox and i have no idea how they work, i guess we could just aim at hitboxes first, and if they miss, use the height on the bbox to aim?
+	i.e; we scan feet & head, neither of the hitboxes are visible, so we try to see if we can hit in the top/bottom 20% of the bbox, if we can, aim there.
+
+	hopefully, when the game checks what hitbox we hit, the shortest line will be to the hitbox we want.
+	*/
+
+	//Vec3 retVec = pEntity->GetWorldSpaceCenter();
+
+	//Vec3 vLocalPos = pLocal->GetShootPos();
+
+	//Vec3 vMins = pEntity->GetCollideableMins();
+	//Vec3 vMaxs = pEntity->GetCollideableMaxs();
+
+	//static float bboxscale = 1.f;
+	//const std::vector<Vec3> vecPoints = {
+	//	Vec3(vMins.x * bboxscale, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
+	//	Vec3(vMaxs.x * bboxscale, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
+	//	Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y * bboxscale, ((vMins.z + vMaxs.z) * 0.5f)),
+	//	Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y * bboxscale, ((vMins.z + vMaxs.z) * 0.5f)),
+	//	Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMins.z * bboxscale),
+	//	Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z * bboxscale)
+	//};
+
+	//const matrix3x4& Transform = pEntity->GetRgflCoordinateFrame();
+
+	//for (const auto& Point : vecPoints)
+	//{
+	//	Vec3 vTransformed = {};
+	//	Math::VectorTransform(Point, Transform, vTransformed);
+
+	//	if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+	//	{
+	//		return vTransformed;
+
+	//		//{	// scan desired shiiizzz
+	//		//	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
+	//		//	{
+	//		//	case 0: {
+
+	//		//	}
+	//		//	}
+
+	//		//}
+	//	}
+	//}
+	//return retVec;
+
 	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
 	{
 	case 0: return pEntity->GetWorldSpaceCenter(); //body
