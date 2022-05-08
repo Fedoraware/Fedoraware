@@ -83,7 +83,6 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
-		priorityhitbox = nHitbox;
 		bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
 
 		for (const auto& Player : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
@@ -147,6 +146,8 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 					}
 				}
 			}
+
+			priorityhitbox = nHitbox;
 
 			Vec3 vPos = Player->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
