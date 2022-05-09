@@ -102,6 +102,20 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
 	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
 
+	if (Vars::AntiHack::AntiAimKey.m_Var)
+		{
+			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
+			{
+				static float flPressedTime = g_Interfaces.Engine->Time();
+				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
+
+				if ((GetAsyncKeyState(Vars::AntiHack::AntiAimKey.m_Var) & 0x8000) && flElapsed > 0.2f) {
+					Vars::AntiHack::AntiAim.m_Var = !Vars::AntiHack::AntiAim.m_Var;
+					flPressedTime = g_Interfaces.Engine->Time();
+				}
+			}
+		}
+	
 	if (!Vars::AntiHack::AntiAim::Active.m_Var || g_GlobalInfo.m_bForceSendPacket || g_GlobalInfo.m_bAvoidingBackstab) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
