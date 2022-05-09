@@ -1518,6 +1518,7 @@ void CMenu::MenuHvH()
 			/* Section: Anti Aim */
 			SectionTitle("Anti Aim");
 			WToggle("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.m_Var);
+			InputKeybind("AntiAim Key", Vars::AntiHack::AntiAimKey); HelpMarker("What key to toggle AntiAim, press ESC if no bind is desired");
 			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.m_Var, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random" }); HelpMarker("Which way to look up/down");
 			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.m_Var, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to look horizontally");
 			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.m_Var, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to appear to look horizontally");
