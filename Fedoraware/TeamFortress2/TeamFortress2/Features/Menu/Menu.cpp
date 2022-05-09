@@ -1472,12 +1472,12 @@ void CMenu::MenuHvH()
 			ColorPickerL("DT bar outline colour", Colors::DtOutline);
 			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
 			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to warp");
-			WCombo("Teleport Mode", &Vars::Misc::CL_Move::TeleportMode.m_Var, { "Plain", "Smooth" }); HelpMarker("How the teleport should be done");
 			if (Vars::Misc::CL_Move::DTMode.m_Var == 0 || Vars::Misc::CL_Move::DTMode.m_Var == 2)
 			{
 				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
 			}
 
+			WCombo("Teleport Mode", &Vars::Misc::CL_Move::TeleportMode.m_Var, { "Plain", "Smooth" }); HelpMarker("How the teleport should be done");
 			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne" }, { &Vars::Misc::CL_Move::RechargeWhileDead.m_Var, &Vars::Misc::CL_Move::AutoRecharge.m_Var, &Vars::Misc::CL_Move::WaitForDT.m_Var, &Vars::Misc::CL_Move::AntiWarp.m_Var, &Vars::Misc::CL_Move::NotInAir.m_Var }, "Options");
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("DT Mode", &Vars::Misc::CL_Move::DTMode.m_Var, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
@@ -1871,6 +1871,12 @@ void CMenu::DebugMenu()
 			{
 				Particles::DispatchParticleEffect(particleName.c_str(), pLocal->GetAbsOrigin(), { });
 			}
+		}
+
+		// Debug options
+		if (CollapsingHeader("Debug options"))
+		{
+			Checkbox("Debug Bool", &Vars::Debug::DebugBool.m_Var);
 		}
 
 		End();

@@ -689,6 +689,7 @@ namespace Vars
 		inline int SkyboxNum = 0;
 		inline std::string SkyboxName = "mr_04";
 	}
+
 	namespace Fonts
 	{
 		namespace FONT_ESP
@@ -733,5 +734,11 @@ namespace Vars
 			inline CVar<int> nWeight = { 0, L"nWeight" };
 			inline CVar<int> nFlags = { FONTFLAG_OUTLINE, L"nFlags" };
 		}
+	}
+
+	// Debug options - Don't save these!
+	namespace Debug
+	{
+		inline CVar<bool> DebugBool{ false };
 	}
 }
