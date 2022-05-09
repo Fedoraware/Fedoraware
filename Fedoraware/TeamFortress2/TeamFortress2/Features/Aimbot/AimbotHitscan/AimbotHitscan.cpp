@@ -105,7 +105,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
 			{
 				int nCond = Player->GetCond();
-				if (nCond & TFCond_Milked || nCond & TFCond_Jarated)
+				if (nCond & TFCond_Milked || nCond & TFCond_Jarated || nCond & TFCond_CloakFlicker)
 				{
 					//pass
 				}
