@@ -768,6 +768,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//AntiAim
 			{
 				SAVE_VAR(Vars::AntiHack::AntiAim::Active);
+				SAVE_VAR(Vars::AntiHack::AntiAimKey);
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
@@ -1479,6 +1480,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//AntiAim
 			{
 				LOAD_VAR(Vars::AntiHack::AntiAim::Active);
+				LOAD_VAR(Vars::AntiHack::AntiAimKey);
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawFake);
