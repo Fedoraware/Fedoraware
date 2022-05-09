@@ -636,13 +636,13 @@ namespace Utils
 
 				else
 				{
-					if (!g_GlobalInfo.m_bWeaponCanAttack && (pCmd->buttons & IN_ATTACK))
-					{
-						if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-							pCmd->buttons |= IN_ATTACK2;
+					//if (!g_GlobalInfo.m_bWeaponCanAttack && (pCmd->buttons & IN_ATTACK))
+					//{
+					//	if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
+					//		pCmd->buttons |= IN_ATTACK2;
 
-						pCmd->buttons &= ~IN_ATTACK;
-					}
+					//	pCmd->buttons &= ~IN_ATTACK;
+					//}
 
 					if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack)
 						return true;

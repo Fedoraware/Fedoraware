@@ -124,8 +124,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.m_Var)
 		return;
 
-	if (g_GlobalInfo.m_bAttacking) { return; }	// not needed but whatever
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
+	if (g_GlobalInfo.m_bAttacking) { return; }
 
 	Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
 
