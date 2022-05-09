@@ -666,6 +666,7 @@ namespace Vars
 		namespace AntiAim
 		{
 			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<int> AntiAimKey				{ 0x0, L"Toggle Key"};
 			inline CVar<int> Pitch{ 0, L"Pitch" };		//0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
 			inline CVar<int> YawReal{ 0, L"Yaw Real" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<int> YawFake{ 0, L"Yaw Fake" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
