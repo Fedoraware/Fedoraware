@@ -82,6 +82,9 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
 
+			if (Player == pLocal)
+				continue;
+
 			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
 				continue;
 

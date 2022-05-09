@@ -90,7 +90,10 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
 
-			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f || Player == pLocal))
+			if (Player == pLocal)
+				continue;
+
+			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f))
 				continue;
 
 			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
