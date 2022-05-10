@@ -587,16 +587,19 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		break;
 	}
 	case 2: {				//	Head
+		Vec3 returnHeadValue; Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
 		for (const auto& Point : vecPointsHead)
 		{
 			Vec3 vTransformed = {};
 			Math::VectorTransform(Point, Transform, vTransformed);
-
 			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 			{
-				return vTransformed;
+				if (returnHeadValue.IsZero() || vTransformed.DistTo(headPos) < returnHeadValue.DistTo(headPos)) {
+					returnHeadValue = vTransformed;
+				}
 			}
 		}
+		return returnHeadValue.IsZero() ? retVec : returnHeadValue;
 		break;
 	}
 	}
