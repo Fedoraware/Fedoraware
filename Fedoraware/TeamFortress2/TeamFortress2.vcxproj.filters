@@ -10,7 +10,6 @@
     <ClCompile Include="TeamFortress2\Features\AntiHack\AntiAim.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
@@ -119,7 +118,6 @@
     <ClInclude Include="TeamFortress2\Features\AntiHack\AntiAim.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
@@ -662,6 +660,7 @@
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\TextEditor.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\DTBar\DTBar.h" />
+    <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

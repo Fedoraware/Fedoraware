@@ -607,6 +607,7 @@ namespace Vars
 			inline CVar<int> SFactor{ 1, L"Speedhack Factor" };
 			inline CVar<bool> NotInAir{ true, L"Dont DT in air" };
 			inline CVar<int> TeleportKey{ 0x52, L"Teleport Key" }; //R
+			inline CVar<int> TeleportMode{ 0 };
 			inline CVar<int> RechargeKey{ 0x48, L"Recharge Key" }; //H
 			inline CVar<int> DoubletapKey{ 0x56, L"Doubletap Key" }; //V
 			inline CVar<int> DTBarStyle{ 3, L"Doubletap bar style" };
@@ -666,6 +667,7 @@ namespace Vars
 		namespace AntiAim
 		{
 			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<int> ToggleKey{ 0 };
 			inline CVar<int> Pitch{ 0, L"Pitch" };		//0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
 			inline CVar<int> YawReal{ 0, L"Yaw Real" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<int> YawFake{ 0, L"Yaw Fake" };	//0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
@@ -688,6 +690,7 @@ namespace Vars
 		inline int SkyboxNum = 0;
 		inline std::string SkyboxName = "mr_04";
 	}
+
 	namespace Fonts
 	{
 		namespace FONT_ESP
@@ -732,5 +735,11 @@ namespace Vars
 			inline CVar<int> nWeight = { 0, L"nWeight" };
 			inline CVar<int> nFlags = { FONTFLAG_OUTLINE, L"nFlags" };
 		}
+	}
+
+	// Debug options - Don't save these!
+	namespace Debug
+	{
+		inline CVar<bool> DebugBool{ false };
 	}
 }

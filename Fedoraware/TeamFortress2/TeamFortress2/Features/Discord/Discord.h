@@ -5,7 +5,7 @@
 class CDiscordRPC
 {
 public:
-	void vFunc();
+	void Update();
 };
 
 inline CDiscordRPC g_DiscordRPC;

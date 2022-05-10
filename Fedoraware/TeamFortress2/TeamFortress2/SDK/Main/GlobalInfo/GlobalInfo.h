@@ -65,6 +65,7 @@ struct GlobalInfo_t
 	Vec3 m_vFreecamPos					= {};
 	std::map<int, DormantData> partyPlayerESP;		// < Player-Index, DormantData >
 	std::map<int, int> chokeMap;
+	int tickShiftQueue = 0; // Ticks that shouls be shifted
 };
 
 inline GlobalInfo_t g_GlobalInfo;

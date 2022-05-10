@@ -1,6 +1,8 @@
 #include "EngineClientHook.h"
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp> // Include for boost::split
+#include <boost/algorithm/string/join.hpp>
+
 bool __stdcall EngineClientHook::IsPlayingTimeDemo::Hook()
 {
 	static DWORD dwInterpolateServerEntities = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 30 8B 0D ? ? ? ? 53 33 DB 89 5D DC 89 5D E0"));
@@ -33,56 +35,51 @@ private:
 
 void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* edx, const char* szCmdString)
 {
-
-	std::vector<std::string> vecArguments;
 	std::string cmdString(szCmdString);
+	std::deque<std::string> cmdArgs;
 
 	// Yes I will use boost for this
-	boost::split(vecArguments, cmdString, split_q());
+	boost::split(cmdArgs, cmdString, split_q());
 	// Splitting it into a vector like this also allows for expansion on this idea
 
 	// This is really bad code. @LNX if u wanna fix this :3
-	if (vecArguments.at(0).find("setcvar") != std::string::npos)
+	if (!cmdArgs.empty())
 	{
-		vecArguments.erase(vecArguments.begin());
-		if (vecArguments.size() < 1)
+		const std::string cmdName = cmdArgs.front();
+		cmdArgs.pop_front();
+
+		if (cmdName == "setcvar")
 		{
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
-			return;
-		}
-		auto cvar = g_Interfaces.CVars->FindVar(vecArguments[0].c_str());
-		std::string cvarname = vecArguments.at(0);
-		if (!cvar)
-		{
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", vecArguments[0].c_str());
-			return;
-		}
-		else
-		{
-			vecArguments.erase(vecArguments.begin());
-			if (vecArguments.size() < 1)
+			// Check if the user provided at least 2 args
+			if (cmdArgs.size() < 2)
 			{
 				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
 				return;
 			}
-			std::string command;
-			for (auto& str : vecArguments)
+
+			// Find the given CVar
+			const auto foundCVar = g_Interfaces.CVars->FindVar(cmdArgs[0].c_str());
+			const std::string cvarName = cmdArgs[0];
+			if (!foundCVar)
 			{
-				command += str + " ";
+				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+				return;
 			}
-			command.pop_back();
-			boost::replace_all(command, "\"", "");
-			cvar->SetValue(command.c_str());
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Set %s to %s\n", cvarname.c_str(), command.c_str());
+
+			std::string newValue = boost::algorithm::join(cmdArgs, " ");
+			boost::replace_all(newValue, "\"", "");
+			foundCVar->SetValue(newValue.c_str());
+			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
+			return;
 		}
-		return;
 	}
 
 	// Allow newlines in chat chad
 	if (Vars::Misc::ChatNL.m_Var && cmdString.rfind("say", 0) == 0)
 	{
 		boost::replace_all(cmdString, "\\n", "\n");
-		return g_Interfaces.Engine->ServerCmd(cmdString.c_str(), true);
+		g_Interfaces.Engine->ServerCmd(cmdString.c_str(), true);
+		return;
 	}
 
 	Func.Original<fn>()(ecx, edx, cmdString.c_str());

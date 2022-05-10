@@ -25,6 +25,7 @@ private:
 	void NoiseMakerSpam(CBaseEntity* pLocal);
 	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
+	void Teleport(const CUserCmd* pCmd);
 	void Freecam(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void InitSpamKV(void* pKV);
 	void ChatSpam();

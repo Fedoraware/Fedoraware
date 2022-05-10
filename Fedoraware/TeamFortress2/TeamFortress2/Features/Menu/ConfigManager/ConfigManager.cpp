@@ -715,6 +715,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportMode);
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
@@ -768,6 +769,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//AntiAim
 			{
 				SAVE_VAR(Vars::AntiHack::AntiAim::Active);
+				SAVE_VAR(Vars::AntiHack::AntiAim::ToggleKey);
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
@@ -1425,6 +1427,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportMode);
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRecharge);
@@ -1479,6 +1482,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//AntiAim
 			{
 				LOAD_VAR(Vars::AntiHack::AntiAim::Active);
+				LOAD_VAR(Vars::AntiHack::AntiAim::ToggleKey);
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawFake);

@@ -28,15 +28,16 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		}
 	}
 
-	auto pLocal = g_EntityCache.m_pLocal;
+	const auto pLocal = g_EntityCache.m_pLocal;
 
-	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.
-		m_bRecharging)
+	// Clear tick shift queue
+	if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bRecharging && g_GlobalInfo.tickShiftQueue > 0)
 	{
-		while (g_GlobalInfo.m_nShifted > 0)
+		while (g_GlobalInfo.tickShiftQueue > 0 && g_GlobalInfo.m_nShifted > 0)
 		{
-			oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == 1));
+			oClMove(accumulated_extra_samples, (g_GlobalInfo.tickShiftQueue == 1));
 			g_GlobalInfo.m_nShifted--;
+			g_GlobalInfo.tickShiftQueue--;
 		}
 		return;
 	}
@@ -46,6 +47,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		// probably perfect method of waiting to ensure we don't mess with fakelag
 		g_GlobalInfo.m_bRechargeQueued = false; // see relevant code @clientmodehook
 		g_GlobalInfo.m_bRecharging = true;
+		g_GlobalInfo.tickShiftQueue = 0;
 	}
 	else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var))
 	{

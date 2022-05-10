@@ -34,7 +34,7 @@ class CBacktrack {
 public:
 	std::vector<TickRecord> Record[64];
 	bool IsGoodTick(int tick) const;
-	void Start(CUserCmd* pCmd);
+	void Start(const CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
 };

@@ -23,6 +23,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	}
 	ChatSpam();
 	CheatsBypass();
+	Teleport(pCmd);
 	NoPush();
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
@@ -180,6 +181,23 @@ void CMisc::CheatsBypass()
 		{
 			sv_cheats->SetValue(0);
 			cheatset = false;
+		}
+	}
+}
+
+void CMisc::Teleport(const CUserCmd* pCmd)
+{
+	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) & 0x8000)
+	{
+		if (Vars::Misc::CL_Move::TeleportMode.m_Var == 0 && g_GlobalInfo.tickShiftQueue == 0 && g_GlobalInfo.m_nShifted > 0)
+		{
+			// Plain teleport
+			g_GlobalInfo.tickShiftQueue = g_GlobalInfo.m_nShifted;
+		}
+		else if (Vars::Misc::CL_Move::TeleportMode.m_Var == 1 && pCmd->command_number % 3 == 0 && g_GlobalInfo.tickShiftQueue == 0)
+		{
+			// Smooth teleport
+			g_GlobalInfo.tickShiftQueue = 2;
 		}
 	}
 }
