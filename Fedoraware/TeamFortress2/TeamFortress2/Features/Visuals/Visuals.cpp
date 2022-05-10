@@ -1,5 +1,6 @@
 #include "Visuals.h"
 #include "../Vars.h"
+#include "../../Utils/KeyHelper/KeyHelper.hpp"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
@@ -138,13 +139,10 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		{
 			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
 			{
-				static float flPressedTime = g_Interfaces.Engine->Time();
-				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
-
-				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && !GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && flElapsed > 0.2f)
+				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.m_Var };
+				if (tpKey.IsPressed())
 				{
 					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
-					flPressedTime = g_Interfaces.Engine->Time();
 				}
 			}
 		}

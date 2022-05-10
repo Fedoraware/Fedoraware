@@ -3,7 +3,6 @@
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
 #include "Features/Chams/DMEChams.h"
-#include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
 #include "Features/Camera/CameraWindow.h"
 #include "Features/Misc/Misc.h"
@@ -11,7 +10,6 @@
 
 #include "Features/Menu/Menu.h"
 
-#include "Features/Menu/InputHelper/InputHelper.h"
 #include "Features/Menu/ConfigManager/ConfigManager.h"
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
 

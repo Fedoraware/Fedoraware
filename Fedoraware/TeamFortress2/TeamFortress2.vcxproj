@@ -128,7 +128,6 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\TextEditor.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.cpp" />
@@ -245,7 +244,6 @@
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\TextEditor.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Playerlist\Playerlist.h" />
@@ -741,6 +739,7 @@
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
     <ClInclude Include="TeamFortress2\Utils\Interface\Interface.h" />
     <ClInclude Include="TeamFortress2\Utils\Json\Json.hpp" />
+    <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Math\Math.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\buffer.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\hde32.h" />
