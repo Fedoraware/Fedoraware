@@ -15,22 +15,22 @@ public:
 	}
 
 	// Is the button currently down?
-	bool IsDown()
+	bool Down()
 	{
 		LastState = KeyState::DOWN;
 		return GetAsyncKeyState(*Key) & 0x8000;
 	}
 
 	// Was the button just pressed? This will only be true once.
-	bool IsPressed()
+	bool Pressed()
 	{
 		return GetAsyncKeyState(*Key) & 0x1;
 	}
 
 	// Was the button just released? This will only be true once.
-	bool IsReleased()
+	bool Released()
 	{
-		if (const bool keyDown = IsDown())
+		if (const bool keyDown = Down())
 		{
 			return false;
 		}

@@ -102,6 +102,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
 	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
 
+	// AA toggle key
+	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.m_Var };
+	if (aaKey.Pressed())
+	{
+		Vars::AntiHack::AntiAim::Active.m_Var = !Vars::AntiHack::AntiAim::Active.m_Var;
+	}
+
 	if (!Vars::AntiHack::AntiAim::Active.m_Var || g_GlobalInfo.m_bForceSendPacket || g_GlobalInfo.m_bAvoidingBackstab) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {

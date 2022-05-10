@@ -8,6 +8,8 @@
 #include "UtlVector/UtlVector.h"
 #include "Hash/Hash.h"
 #include "XorStr/XorStr.h"
+#include "KeyHelper/KeyHelper.hpp"
+#include "Timer/Timer.hpp"
 
 #include "Hash/FNV1A.h"
 #include "TFM/tfm.h"

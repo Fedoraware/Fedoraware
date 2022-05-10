@@ -1,6 +1,5 @@
 #include "Visuals.h"
 #include "../Vars.h"
-#include "../../Utils/KeyHelper/KeyHelper.hpp"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
@@ -140,7 +139,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
 			{
 				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.m_Var };
-				if (tpKey.IsPressed())
+				if (tpKey.Pressed())
 				{
 					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
 				}
