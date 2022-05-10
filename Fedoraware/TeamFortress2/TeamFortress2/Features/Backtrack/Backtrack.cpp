@@ -1,6 +1,6 @@
 #include "Backtrack.h"
 
-static const float LerpTime()
+static float LerpTime()
 {
 	static ConVar* updaterate = g_Interfaces.CVars->FindVar("cl_updaterate");
 	static ConVar* minupdate = g_Interfaces.CVars->FindVar("sv_minupdaterate");
@@ -20,21 +20,29 @@ static const float LerpTime()
 	const float maxRatioValue = cmax->GetFloat();
 
 	if (svMaxUpdateRate && svMinUpdateRate)
+	{
 		updateRateValue = static_cast<int>(maxUpdateValue);
+	}
 
 	if (interpRatioValue == 0)
+	{
 		interpRatioValue = 1.0f;
+	}
 
 	if (cmin && cmax && cmin->GetFloat() != 1)
+	{
 		interpRatioValue = std::clamp(interpRatioValue, minRatioValue, maxRatioValue);
+	}
 
 	return std::max(interpValue, interpRatioValue / static_cast<float>(updateRateValue));
 }
 
-bool CBacktrack::IsGoodTick(const int tick) const {
+bool CBacktrack::IsGoodTick(const int tick) const
+{
 	const auto netChannel = g_Interfaces.Engine->GetNetChannelInfo();
 
-	if (!netChannel) {
+	if (!netChannel)
+	{
 		return false;
 	}
 
@@ -45,15 +53,20 @@ bool CBacktrack::IsGoodTick(const int tick) const {
 	return fabsf(deltaTime) < 0.2f;
 }
 
-void CBacktrack::Start(CUserCmd* pCmd) {
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (!pCmd) {
-			return;
-		}
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
-			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
-				if (CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i)) {
-					if (!(pEntity->GetDormant() && pEntity->IsAlive())) {
+void CBacktrack::Start(const CUserCmd* pCmd)
+{
+	if (!pCmd) { return; }
+
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		{
+			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			{
+				if (CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i))
+				{
+					if (!(pEntity->GetDormant() && pEntity->IsAlive()))
+					{
 						int hitbox = HITBOX_HEAD;
 
 						matrix3x4 bones[128];
@@ -63,70 +76,85 @@ void CBacktrack::Start(CUserCmd* pCmd) {
 						model_t* model = pEntity->GetModel();
 						studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
 
-						if (model && hdr) {
-
+						if (model && hdr)
+						{
 							Record[i].insert(Record[i].begin(), TickRecord(
-								pEntity->GetSimulationTime(),
-								pEntity->GetHitboxPos(hitbox),
-								pEntity->GetAbsOrigin(),
-								*reinterpret_cast<BoneMatrixes*>(&bones),
-								model,
-								hdr,
-								pEntity->GetHitboxSet()));
+								                 pEntity->GetSimulationTime(),
+								                 pEntity->GetHitboxPos(hitbox),
+								                 pEntity->GetAbsOrigin(),
+								                 *reinterpret_cast<BoneMatrixes*>(&bones),
+								                 model,
+								                 hdr,
+								                 pEntity->GetHitboxSet()));
 						}
 
-						if (Record[i].size() > 12) {
+						if (Record[i].size() > 12)
+						{
 							Record[i].pop_back();
 						}
 					}
 				}
 			}
 		}
-
 	}
 }
 
-void CBacktrack::Calculate(CUserCmd* pCmd) {
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+void CBacktrack::Calculate(CUserCmd* pCmd)
+{
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
 		Vec3 newViewDirection;
 		const Vec3 viewDirection = pCmd->viewangles;
 		/*g_Interfaces.Engine->GetViewAngles(viewDirection);*/
 		Math::AngleVectors(viewDirection, &newViewDirection);
-		if (CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon()) {
-			int bestTargetIndex = -1; float bestFieldOfView = FLT_MAX;
-			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
+		if (CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon())
+		{
+			int bestTargetIndex = -1;
+			float bestFieldOfView = FLT_MAX;
+			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			{
 				CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
-				if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE) {
+				if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE)
+				{
 					continue;
 				}
 
-				if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+				{
 					continue;
 				}
 
-				if (Record[i].empty()) {
+				if (Record[i].empty())
+				{
 					continue;
 				}
 
-				if (const float fovDistance = Math::DistPointToLine(pEntity->GetEyePosition(), pLocal->GetEyePosition(), newViewDirection); fovDistance < bestFieldOfView) {
+				if (const float fovDistance = Math::DistPointToLine(pEntity->GetEyePosition(), pLocal->GetEyePosition(), newViewDirection); fovDistance < bestFieldOfView)
+				{
 					bestFieldOfView = fovDistance;
 					bestTargetIndex = i;
 				}
 			}
 
 			float finalTargetIndex = -1;
-			if (bestTargetIndex != -1) {
-				for (auto& i : Record[bestTargetIndex]) {
-					if (const float fieldOfViewDistance = Math::DistPointToLine(i.HeadPosition, pLocal->GetEyePosition(), newViewDirection); fieldOfViewDistance < bestFieldOfView) {
+			if (bestTargetIndex != -1)
+			{
+				for (auto& i : Record[bestTargetIndex])
+				{
+					if (const float fieldOfViewDistance = Math::DistPointToLine(i.HeadPosition, pLocal->GetEyePosition(), newViewDirection); fieldOfViewDistance < bestFieldOfView)
+					{
 						bestFieldOfView = fieldOfViewDistance;
 						finalTargetIndex = i.SimulationTime;
 					}
 					i.AimedAt = true;
 				}
 
-				if (finalTargetIndex != -1) {
-					if (!g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted == 0) {
-						if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+				if (finalTargetIndex != -1)
+				{
+					if (!g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted == 0)
+					{
+						if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking)
+						{
 							pCmd->tick_count = TIME_TO_TICKS(finalTargetIndex);
 						}
 					}
@@ -136,9 +164,12 @@ void CBacktrack::Calculate(CUserCmd* pCmd) {
 	}
 }
 
-void CBacktrack::Run(CUserCmd* pCmd) {
-	if (Vars::Backtrack::Enabled.m_Var) {
-		if (g_EntityCache.m_pLocal && pCmd) {
+void CBacktrack::Run(CUserCmd* pCmd)
+{
+	if (Vars::Backtrack::Enabled.m_Var)
+	{
+		if (g_EntityCache.m_pLocal && pCmd)
+		{
 			Start(pCmd);
 			Calculate(pCmd);
 		}

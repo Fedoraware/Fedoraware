@@ -53,7 +53,7 @@ void ShutdownRichPresence()
 
 void UpdateRichPresence()
 {
-	g_DiscordRPC.vFunc();
+	g_DiscordRPC.Update();
 	g_Misc.SteamRPC();
 }
 

@@ -748,6 +748,24 @@ namespace Utils
 
 		return false;
 	}
+
+	__inline int GetPlayerForUserID(int userID)
+	{
+		for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		{
+			PlayerInfo_t playerInfo{};
+			if (!g_Interfaces.Engine->GetPlayerInfo(i, &playerInfo))
+			{
+				continue;
+			}
+			// Found player
+			if (playerInfo.userID == userID)
+			{
+				return i;
+			}
+		}
+		return 0;
+	};
 }
 
 namespace Particles {
