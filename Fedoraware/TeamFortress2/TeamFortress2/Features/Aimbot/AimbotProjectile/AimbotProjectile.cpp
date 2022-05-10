@@ -233,6 +233,9 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 {
 	auto pNetChannel = g_Interfaces.Engine->GetNetChannelInfo();
 
+	g_GlobalInfo.predBeforeLines.clear();
+	g_GlobalInfo.predFutureLines.clear(); // clear here to stop them from drawing on non move-simmed entities
+
 	if (!pNetChannel)
 		return false;
 
@@ -377,8 +380,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		CMoveData moveData = {};
 		Vec3 worldSpaceCenter = {};
 		bool returnValue = false;
-		g_GlobalInfo.predBeforeLines.clear();
-		g_GlobalInfo.predFutureLines.clear();
 		if (g_MoveSim.Initialize(Predictor.m_pEntity))
 		{
 			int n = 0;
@@ -426,7 +427,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				default: break;
 				}
 
-				Utils::TraceHull(Predictor.m_vPosition, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2),
+				Utils::TraceHull(Predictor.m_vPosition, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f),
 					MASK_SOLID_BRUSHONLY, &TraceFilter, &Trace);
 
 				if (Trace.DidHit())
@@ -457,55 +458,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				if (out.m_flTime < TICKS_TO_TIME(n))
 				{
-					Vec3 vVisCheck = vLocalPos;
-
-					switch (pWeapon->GetWeaponID())
-					{
-					case TF_WEAPON_ROCKETLAUNCHER:
-						//case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
-					case 65: //TF_WEAPON_DIRECTHIT:
-					// dragons furry
-					case 109:
-					case TF_WEAPON_FLAREGUN:
-						//case TF_WEAPON_FLAREGUN_REVENGE:
-					case 84: //TF_WEAPON_RAYGUN_REVENGE:
-					case TF_WEAPON_COMPOUND_BOW:
-					case TF_WEAPON_SYRINGEGUN_MEDIC:
-					{
-						Vec3 vecOffset(23.5f, 12.0f, -3.0f);
-						if (pLocal->IsDucking())
-							vecOffset.z = 8.0f;
-						if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheOriginal) { vecOffset.z = 0.f; }
-
-						Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vVisCheck);
-
-						break;
-					}
-
-					case TF_WEAPON_GRENADELAUNCHER:
-					case TF_WEAPON_PIPEBOMBLAUNCHER:
-					case TF_WEAPON_STICKBOMB:
-					case TF_WEAPON_STICKY_BALL_LAUNCHER:
-					{
-						auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
-						Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward,
-							&vecRight, &vecUp);
-						Vec3 vecVelocity = ((vecForward * ProjInfo.m_flVelocity) - (vecUp * 200.0f));
-						Math::VectorAngles(vecVelocity, vecAngle);
-						out.m_flPitch = -DEG2RAD(vecAngle.x);
-
-						break;
-					}
-					default: break;
-					}
-
-					Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-18.6f, -3.8f, -3.8f), Vec3(18.6f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY,
-						&TraceFilter, &Trace);
-
-					if (Trace.DidHit())
-					{
-						break;
-					}
+					if (!WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, ProjInfo, Predictor)) { break; }
 
 					g_GlobalInfo.m_vPredictedPos = vPredictedPos;
 					g_MoveSim.Restore();
@@ -636,6 +589,72 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	}
 
 	return retVec;
+}
+
+bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Vec3 vPredictedPos, Solution_t& out, const ProjectileInfo_t& ProjInfo, Predictor_t& Predictor) {
+	Vec3 vVisCheck = pLocal->GetEyePosition(); Vec3 predictedViewAngles = { -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f };
+	CTraceFilterWorldAndPropsOnly TraceFilter = {};
+	CGameTrace Trace = {};
+	TraceFilter.pSkip = Predictor.m_pEntity;
+	switch (pWeapon->GetWeaponID())
+	{
+	case TF_WEAPON_RAYGUN_REVENGE:
+	case TF_WEAPON_ROCKETLAUNCHER:
+	case TF_WEAPON_DIRECTHIT: {
+		Vec3 vecOffset(23.5f, 12.0f, -3.0f);	//tf_weaponbase_gun.cpp @L529 & @L760
+		if (pLocal->IsDucking()) {
+			vecOffset.z = 8.0f;
+		}
+		Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
+		break;
+	}
+	case TF_WEAPON_SYRINGEGUN_MEDIC: {
+		Vec3 vecOffset(16.f, 6.f, -8.f);		//tf_weaponbase_gun.cpp @L628
+		Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
+		break;
+	}
+	case TF_WEAPON_COMPOUND_BOW: {
+		Vec3 vecOffset(23.5f, 12.0f, -3.0f);	//tf_weapon_grapplinghook.cpp @L355 ??
+		Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
+		break;
+	}
+	case TF_WEAPON_RAYGUN:
+	case TF_WEAPON_PARTICLE_CANNON:
+	case TF_WEAPON_DRG_POMSON: {
+		Vec3 vecOffset(23.5f, -8.0f, -3.0f);	//tf_weaponbase_gun.cpp @L568
+		if (pLocal->IsDucking()) {
+			vecOffset.z = 8.0f;
+		}
+		Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
+		break;
+	}
+	case TF_WEAPON_GRENADELAUNCHER:
+	case TF_WEAPON_PIPEBOMBLAUNCHER:
+	case TF_WEAPON_STICKBOMB:
+	case TF_WEAPON_STICKY_BALL_LAUNCHER:
+	{
+		auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
+		Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward,
+			&vecRight, &vecUp);
+		Vec3 vecVelocity = ((vecForward * ProjInfo.m_flVelocity) - (vecUp * 200.0f));
+		Math::VectorAngles(vecVelocity, vecAngle);
+		out.m_flPitch = -DEG2RAD(vecAngle.x);
+
+		break;
+	}
+	default: break;
+	}
+
+	//	TODO: find the actual hull size of projectiles
+	//	maybe - https://www.unknowncheats.me/forum/team-fortress-2-a/475502-weapons-projectile-min-max-collideables.html
+	//	UTIL_SetSize( this, -Vector( 1.0f, 1.0f, 1.0f ), Vector( 1.0f, 1.0f, 1.0f ) ); @tf_projectile_base.cpp L117
+	Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY, &TraceFilter, &Trace);
+
+	if (Trace.DidHit())
+	{
+		return false;
+	}
+	return true;
 }
 
 ESortMethod CAimbotProjectile::GetSortMethod()
