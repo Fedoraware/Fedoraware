@@ -388,67 +388,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					break;
 				g_MoveSim.RunTick(moveData, worldSpaceCenter);
 				vPredictedPos = worldSpaceCenter;
-				//Class offsets
 
-				//switch (pLocal->GetClassNum())
-				//{
-				//case CLASS_SOLDIER:
-				//case CLASS_DEMOMAN:
-				//{
-
-				//	if (pLocal->GetClassNum() == CLASS_DEMOMAN && Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && Predictor.m_pEntity->IsOnGround()) {
-				//		vPredictedPos -= Vec3(0.0f, 0.0f, 27.0f);
-				//		break;
-				//	}
-				//	if (Vars::Aimbot::Projectile::AimPosition.m_Var == 0) {
-				//		break;
-				//	}
-				//	vPredictedPos -= Vec3(0.0f, 0.0f, 27.0f);
-
-
-				//	break;
-				//}
-				//case CLASS_SNIPER:
-				//{
-				//	if (Vars::Aimbot::Projectile::AimPosition.m_Var == 1) {
-				//		vPredictedPos.z -= 27.0f;
-				//		break;
-				//	}
-				//	if (Vars::Aimbot::Projectile::AimPosition.m_Var > 0) {
-				//		// thank you spook953
-				//		const float flMaxZ = Predictor.m_pEntity->m_bDucked() ? 62.0f : 82.0f;
-				//		Vec3 vHeadDelta = Predictor.m_pEntity->GetHitboxPos(HITBOX_HEAD) - Predictor.m_pEntity->m_vecOrigin();
-				//		vPredictedPos.x += vHeadDelta.x;
-				//		vPredictedPos.y += vHeadDelta.y;
-				//		vPredictedPos.z += (flMaxZ * 0.475f);
-				//		break;
-				//	}
-
-				//	Vec3 vEntForward = {};
-				//	Math::AngleVectors(Predictor.m_pEntity->GetEyeAngles(), &vEntForward);
-				//	Vec3 vToEnt = Predictor.m_vPosition - pLocal->GetAbsOrigin();
-
-				///*	if (vToEnt.Dot(vEntForward) > 0.1071f)
-				//	{
-				//		vPredictedPos.z += 5.0f;
-				//	}
-
-				//	if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var) {
-				//		vPredictedPos.z += Vars::Aimbot::Projectile::ZAdjustAmount.m_Var;
-				//	}*/
-
-
-				//	break;
-				//}
-				//default:
-				//{
-				//	if (Vars::Aimbot::Projectile::AimPosition.m_Var == 1) {
-				//		vPredictedPos -= Vec3(0.0f, 0.0f, 27.0f);
-				//	}
-				//	break;
-				//}
-				//}
-				
 				Vec3 vAimDelta = Predictor.m_pEntity->GetWorldSpaceCenter() - GetAimPos(pLocal, Predictor.m_pEntity);
 				vPredictedPos.x += vAimDelta.x;
 				vPredictedPos.y += vAimDelta.y;
@@ -609,11 +549,11 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	};
 
 	const std::vector<Vec3> vecPointsHead = {
-		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.2f)) + vMins.z)/2)),
-		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.2f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, (((vMins.z + (vMaxs.z * 0.2f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, (((vMins.z + (vMaxs.z * 0.2f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), (vMins.z + (vMaxs.z * 0.2f))),
+		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
+		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
+		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
+		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
+		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), (vMins.z + (vMaxs.z * 0.1f))),
 		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMins.z)
 	};
 
