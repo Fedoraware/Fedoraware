@@ -134,6 +134,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		// Toggle key
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
 			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
@@ -146,32 +147,38 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 			}
 		}
 
-		bool bIsInThirdPerson = g_Interfaces.Input->CAM_IsThirdPerson();
+		const bool bIsInThirdPerson = g_Interfaces.Input->CAM_IsThirdPerson();
 
 		if (!Vars::Visuals::ThirdPerson.m_Var
 			|| ((!Vars::Visuals::RemoveScope.m_Var || !Vars::Visuals::RemoveZoom.m_Var) && pLocal->IsScoped()))
 		{
 			if (bIsInThirdPerson)
+			{
 				pLocal->ForceTauntCam(0);
+			}
 
 			return;
 		}
 
 		if (!bIsInThirdPerson)
+		{
 			pLocal->ForceTauntCam(1);
+		}
 
+		// Thirdperson angles
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
 		{
 			g_Interfaces.Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
+				{
 					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
+				}
 			}
 		}
 
-
-
+		// Thirdperson offset
 		if (bIsInThirdPerson && Vars::Visuals::ThirdpersonOffset.m_Var) {
 			
 			const Vec3 viewangles = g_Interfaces.Engine->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
