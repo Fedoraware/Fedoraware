@@ -594,6 +594,18 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			Math::VectorTransform(Point, Transform, vTransformed);
 			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 			{
+				// classes that need crouch correction shit [scout, soldier, pyro, demo, medic, sniper] [1, 3, 7, 4, 5, 2]
+				if (pEntity->m_bDucked()) {
+					switch (pEntity->GetClassNum()) {
+					case 1:{ vTransformed.z *= .9f; break; }  //	scout
+					case 3:{ vTransformed.z *= .9f; break; }  //	soldier
+					case 7:{ vTransformed.z *= .95f; break; }  //	pyro
+					case 4:{ vTransformed.z *= .9f; break; }  //	demo
+					case 5:{ vTransformed.z *= .9f; break; }  //	medic
+					case 2:{ vTransformed.z *= .94f; break; }  //	sniper
+					default: break;
+					}
+				}
 				if (returnHeadValue.IsZero() || vTransformed.DistTo(headPos) < returnHeadValue.DistTo(headPos)) {
 					returnHeadValue = vTransformed;
 				}
