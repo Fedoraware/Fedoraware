@@ -111,7 +111,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			|| pLocal->IsAGhost()) { return; }
 
 		if (g_GlobalInfo.m_bAttacking) { return; }
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
 
 		static bool bSendReal = true;
 		bool bPitchSet = true;

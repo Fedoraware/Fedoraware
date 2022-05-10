@@ -37,6 +37,7 @@ private:
 
 private:
 	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity);
+	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Vec3 vPredictedPos, Solution_t& out, const ProjectileInfo_t& ProjInfo, Predictor_t& Predictor);
 	ESortMethod GetSortMethod();
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& Target);

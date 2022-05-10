@@ -90,7 +90,10 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (!Player->IsAlive() || Player->IsAGhost())
 				continue;
 
-			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f || Player == pLocal))
+			if (Player == pLocal)
+				continue;
+
+			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f))
 				continue;
 
 			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
@@ -102,7 +105,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
 			{
 				int nCond = Player->GetCond();
-				if (nCond & TFCond_Milked || nCond & TFCond_Jarated)
+				if (nCond & TFCond_Milked || nCond & TFCond_Jarated || nCond & TFCond_CloakFlicker)
 				{
 					//pass
 				}

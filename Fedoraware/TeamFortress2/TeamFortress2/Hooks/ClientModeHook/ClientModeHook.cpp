@@ -148,6 +148,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			g_GlobalInfo.m_bWeaponCanAttack = pWeapon->CanShoot(pLocal);
 			g_GlobalInfo.m_bWeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
 			g_GlobalInfo.m_WeaponType = Utils::GetWeaponType(pWeapon);
+			g_GlobalInfo.m_bAttacking = Utils::IsAttacking(pCmd, pWeapon);
 
 			if (pWeapon->GetSlot() != SLOT_MELEE)
 			{
