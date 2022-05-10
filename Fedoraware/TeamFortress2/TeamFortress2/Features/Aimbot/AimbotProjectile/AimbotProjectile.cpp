@@ -545,7 +545,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
 		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
 		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), (vMaxs.z * 0.8f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z * 0.9f)
+		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z * .87f)
 	};
 
 	const std::vector<Vec3> vecPointsHead = {
@@ -572,21 +572,40 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
 	{
-	case 0: return retVec;	//	Any
-	case 1: {				//	Feet
+	case 1: {				//	Body
+		Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_SPINE_0);
+		for (const auto& Point : vecPoints)
+		{
+			Vec3 vTransformed = {};
+			Math::VectorTransform(Point, Transform, vTransformed);
+			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+			{
+				if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
+					returnValue = vTransformed;
+				}
+			}
+		}
+		return returnValue.IsZero() ? retVec : returnValue;
+		break;
+	};
+	case 2: {				//	Feet
+		Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_PELVIS);
 		for (const auto& Point : vecPointsFeet)
 		{
 			Vec3 vTransformed = {};
 			Math::VectorTransform(Point, Transform, vTransformed);
-
 			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 			{
-				return vTransformed;
+				spinePos.z = vTransformed.z;
+				if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
+					returnValue = vTransformed;
+				}
 			}
 		}
+		return returnValue.IsZero() ? retVec : returnValue;
 		break;
 	}
-	case 2: {				//	Head
+	case 0: {				//	Head
 		Vec3 returnHeadValue; Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
 		for (const auto& Point : vecPointsHead)
 		{
