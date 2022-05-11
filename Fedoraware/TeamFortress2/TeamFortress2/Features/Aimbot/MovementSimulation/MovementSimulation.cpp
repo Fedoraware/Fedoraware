@@ -185,6 +185,6 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenter
 	Vec3 vMin, vMax;
 	m_pPlayer->GetRenderBounds(vMin, vMax);
 	Vec3 vWorldSpaceCenter = m_MoveData.m_vecAbsOrigin;
-	vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
+	//vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
 	worldSpaceCenterOut = vWorldSpaceCenter;
 }

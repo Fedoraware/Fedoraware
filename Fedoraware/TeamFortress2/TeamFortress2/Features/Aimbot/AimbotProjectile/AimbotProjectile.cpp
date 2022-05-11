@@ -390,10 +390,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				g_MoveSim.RunTick(moveData, worldSpaceCenter);
 				vPredictedPos = worldSpaceCenter;
 
-				Vec3 vAimDelta = Predictor.m_pEntity->GetWorldSpaceCenter() - GetAimPos(pLocal, Predictor.m_pEntity);
-				vPredictedPos.x += vAimDelta.x;
-				vPredictedPos.y += vAimDelta.y;
-				vPredictedPos.z += vAimDelta.z;
+				Vec3 vAimDelta = Predictor.m_pEntity->GetAbsOrigin() - GetAimPos(pLocal, Predictor.m_pEntity);
+				vPredictedPos.x += abs(vAimDelta.x);
+				vPredictedPos.y += abs(vAimDelta.y);
+				vPredictedPos.z += abs(vAimDelta.z);
 
 
 				//Weapon offsets
@@ -472,17 +472,15 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 }
 
 //	Tries to find the best position to aim at on our target.
-//	This sucks
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
-	Vec3 retVec = pEntity->GetWorldSpaceCenter();
+	Vec3 retVec = pEntity->GetAbsOrigin();
 
 	Vec3 vLocalPos = pLocal->GetShootPos();
 
 	Vec3 vMins = pEntity->GetCollideableMins();
 	Vec3 vMaxs = pEntity->GetCollideableMaxs();
 
-	static float bboxscale = 1.f;
 	const std::vector<Vec3> vecPoints = {
 		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
 		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
@@ -492,24 +490,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z)
 	};
 
-	const std::vector<Vec3> vecPointsFeet = {
-		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
-		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, (((vMaxs.z * 0.8f) + vMaxs.z * 0.9f)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), (vMaxs.z * 0.8f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z * .87f)
-	};
-
-	const std::vector<Vec3> vecPointsHead = {
-		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
-		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, (((vMins.z + (vMaxs.z * 0.1f)) + vMins.z)/2)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), (vMins.z + (vMaxs.z * 0.1f))),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMins.z)
-	};
-
+	std::vector<Vec3> visiblePoints{};
 	const matrix3x4& Transform = pEntity->GetRgflCoordinateFrame();
 
 	for (const auto& Point : vecPoints)
@@ -519,74 +500,105 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 		{
-			retVec = vTransformed;
+			visiblePoints.push_back(vTransformed);
 		}
 	}
 
 	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
 	{
-	case 1: {				//	Body
-		Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_SPINE_0);
-		for (const auto& Point : vecPoints)
-		{
-			Vec3 vTransformed = {};
-			Math::VectorTransform(Point, Transform, vTransformed);
-			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-			{
-				if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
-					returnValue = vTransformed;
-				}
-			}
+	case 0: //head
+	{
+		Vec3 hitboxPosition = pEntity->GetHitboxPos(HITBOX_HEAD);
+
+		for (const auto& aimPoint : visiblePoints) {
+			if ((hitboxPosition.z - aimPoint.z) < (hitboxPosition.z - retVec.z)) { retVec = aimPoint; }
 		}
-		return returnValue.IsZero() ? retVec : returnValue;
-		break;
-	};
-	case 2: {				//	Feet
-		Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_PELVIS);
-		for (const auto& Point : vecPointsFeet)
-		{
-			Vec3 vTransformed = {};
-			Math::VectorTransform(Point, Transform, vTransformed);
-			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-			{
-				spinePos.z = vTransformed.z;
-				if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
-					returnValue = vTransformed;
-				}
-			}
-		}
-		return returnValue.IsZero() ? retVec : returnValue;
 		break;
 	}
-	case 0: {				//	Head
-		Vec3 returnHeadValue; Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
-		for (const auto& Point : vecPointsHead)
-		{
-			Vec3 vTransformed = {};
-			Math::VectorTransform(Point, Transform, vTransformed);
-			if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-			{
-				// classes that need crouch correction shit [scout, soldier, pyro, demo, medic, sniper] [1, 3, 7, 4, 5, 2]
-				if (pEntity->m_bDucked()) {
-					switch (pEntity->GetClassNum()) {
-					case 1:{ vTransformed.z *= .9f; break; }  //	scout
-					case 3:{ vTransformed.z *= .9f; break; }  //	soldier
-					case 7:{ vTransformed.z *= .95f; break; }  //	pyro
-					case 4:{ vTransformed.z *= .9f; break; }  //	demo
-					case 5:{ vTransformed.z *= .9f; break; }  //	medic
-					case 2:{ vTransformed.z *= .94f; break; }  //	sniper
-					default: break;
-					}
-				}
-				if (returnHeadValue.IsZero() || vTransformed.DistTo(headPos) < returnHeadValue.DistTo(headPos)) {
-					returnHeadValue = vTransformed;
-				}
-			}
+	case 1:	//body
+	{
+		Vec3 hitboxPosition = pEntity->GetHitboxPos(HITBOX_PELVIS);
+
+		for (const auto& aimPoint : visiblePoints) {
+			if ((hitboxPosition.z - aimPoint.z) < (hitboxPosition.z - retVec.z)) { retVec = Vec3(aimPoint.x, aimPoint.y, hitboxPosition.z); }
 		}
-		return returnHeadValue.IsZero() ? retVec : returnHeadValue;
+		break;
+	}
+	case 2: //feet
+	{
+		Vec3 hitboxPosition = Vec3(pEntity->GetHitboxPos(HITBOX_PELVIS).x, pEntity->GetHitboxPos(HITBOX_PELVIS).y, pEntity->GetHitboxPos(HITBOX_FOOT_L).z);
+
+		for (const auto& aimPoint : visiblePoints) {
+			if ((hitboxPosition.z - aimPoint.z) > (hitboxPosition.z - retVec.z)) { retVec = aimPoint; }
+		}
 		break;
 	}
 	}
+
+	//switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
+	//{
+	//case 1: {				//	Body
+	//	Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_SPINE_0);
+	//	for (const auto& Point : vecPoints)
+	//	{
+	//		Vec3 vTransformed = {};
+	//		Math::VectorTransform(Point, Transform, vTransformed);
+	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+	//		{
+	//			if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
+	//				returnValue = vTransformed;
+	//			}
+	//		}
+	//	}
+	//	return returnValue.IsZero() ? retVec : returnValue;
+	//	break;
+	//};
+	//case 2: {				//	Feet
+	//	Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_PELVIS);
+	//	for (const auto& Point : vecPointsFeet)
+	//	{
+	//		Vec3 vTransformed = {};
+	//		Math::VectorTransform(Point, Transform, vTransformed);
+	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+	//		{
+	//			spinePos.z = vTransformed.z;
+	//			if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
+	//				returnValue = vTransformed;
+	//			}
+	//		}
+	//	}
+	//	return returnValue.IsZero() ? retVec : returnValue;
+	//	break;
+	//}
+	//case 0: {				//	Head
+	//	Vec3 returnHeadValue; Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
+	//	for (const auto& Point : vecPointsHead)
+	//	{
+	//		Vec3 vTransformed = {};
+	//		Math::VectorTransform(Point, Transform, vTransformed);
+	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+	//		{
+	//			// classes that need crouch correction shit [scout, soldier, pyro, demo, medic, sniper] [1, 3, 7, 4, 5, 2]
+	//			if (pEntity->m_bDucked()) {
+	//				switch (pEntity->GetClassNum()) {
+	//				case 1:{ vTransformed.z *= .9f; break; }  //	scout
+	//				case 3:{ vTransformed.z *= .9f; break; }  //	soldier
+	//				case 7:{ vTransformed.z *= .95f; break; }  //	pyro
+	//				case 4:{ vTransformed.z *= .9f; break; }  //	demo
+	//				case 5:{ vTransformed.z *= .9f; break; }  //	medic
+	//				case 2:{ vTransformed.z *= .94f; break; }  //	sniper
+	//				default: break;
+	//				}
+	//			}
+	//			if (returnHeadValue.IsZero() || vTransformed.DistTo(headPos) < returnHeadValue.DistTo(headPos)) {
+	//				returnHeadValue = vTransformed;
+	//			}
+	//		}
+	//	}
+	//	return returnHeadValue.IsZero() ? retVec : returnHeadValue;
+	//	break;
+	//}
+	//}
 
 	return retVec;
 }

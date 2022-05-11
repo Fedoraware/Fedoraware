@@ -327,12 +327,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									const char* name = pi.name;
 									if (name)
 									{
-										g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {84, 0, 255, 255}, ALIGN_DEFAULT, name);
+										g_Draw.String(FONT_MENU, xoffset, yoffset, {84, 0, 255, 255}, ALIGN_DEFAULT, name);
 									}
 								}
 								else
 								{
-									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
+									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
 								}
 
 								if (!Player->IsAlive())
@@ -349,6 +349,27 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								{
 									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "P : %i", tickcountplayer);
 								}
+							}
+
+							//if (const auto rgflcoords = Player->GetRgflCoordinateFrame())
+							//{
+							//	for (int x = 1; x < 4; x++) {
+							//		for (int y = 1; y < 5; y++) {
+							//			if (rfglcoords[x][y]) {
+							//				g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "[%i][%i] : %+.1f", x, y, rfglcoords[x][y]);
+							//			}
+							//		}
+							//	}
+							//}
+							const auto& worldspace = Player->GetAbsOrigin();
+							if (!worldspace.IsZero()) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "abs : [%+.1f] [%+.1f] [%+.1f]", worldspace.x, worldspace.y, worldspace.z);
+							}
+							const auto& mins = Player->GetCollideableMins();
+							const auto& maxs = Player->GetCollideableMaxs();
+							if (!mins.IsZero() && !maxs.IsZero()) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "min : [%+.1f] [%+.1f] [%+.1f]", mins.x, mins.y, mins.z);
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "max : [%+.1f] [%+.1f] [%+.1f]", maxs.x, maxs.y, maxs.z);
 							}
 						}
 					}
