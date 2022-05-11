@@ -504,7 +504,29 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		}
 	}
 
-	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
+	int aimMode = Vars::Aimbot::Projectile::AimPosition.m_Var;
+	if (aimMode == 3) { // auto
+		switch (pLocal->GetClassNum())
+		{
+		case CLASS_SOLDIER:
+		case CLASS_DEMOMAN:
+		{
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->IsOnGround()) {
+				aimMode = 2;
+				break;
+			}
+			aimMode = 1;
+			break;
+		}
+		case CLASS_SNIPER:
+		{
+			aimMode = 0;
+			break;
+		}
+		}
+	}
+
+	switch (aimMode)
 	{
 	case 0: //head
 	{
@@ -534,71 +556,6 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		break;
 	}
 	}
-
-	//switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
-	//{
-	//case 1: {				//	Body
-	//	Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_SPINE_0);
-	//	for (const auto& Point : vecPoints)
-	//	{
-	//		Vec3 vTransformed = {};
-	//		Math::VectorTransform(Point, Transform, vTransformed);
-	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-	//		{
-	//			if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
-	//				returnValue = vTransformed;
-	//			}
-	//		}
-	//	}
-	//	return returnValue.IsZero() ? retVec : returnValue;
-	//	break;
-	//};
-	//case 2: {				//	Feet
-	//	Vec3 returnValue; Vec3 spinePos = pEntity->GetHitboxPos(HITBOX_PELVIS);
-	//	for (const auto& Point : vecPointsFeet)
-	//	{
-	//		Vec3 vTransformed = {};
-	//		Math::VectorTransform(Point, Transform, vTransformed);
-	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-	//		{
-	//			spinePos.z = vTransformed.z;
-	//			if (returnValue.IsZero() || vTransformed.DistTo(spinePos) < returnValue.DistTo(spinePos)) {
-	//				returnValue = vTransformed;
-	//			}
-	//		}
-	//	}
-	//	return returnValue.IsZero() ? retVec : returnValue;
-	//	break;
-	//}
-	//case 0: {				//	Head
-	//	Vec3 returnHeadValue; Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
-	//	for (const auto& Point : vecPointsHead)
-	//	{
-	//		Vec3 vTransformed = {};
-	//		Math::VectorTransform(Point, Transform, vTransformed);
-	//		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
-	//		{
-	//			// classes that need crouch correction shit [scout, soldier, pyro, demo, medic, sniper] [1, 3, 7, 4, 5, 2]
-	//			if (pEntity->m_bDucked()) {
-	//				switch (pEntity->GetClassNum()) {
-	//				case 1:{ vTransformed.z *= .9f; break; }  //	scout
-	//				case 3:{ vTransformed.z *= .9f; break; }  //	soldier
-	//				case 7:{ vTransformed.z *= .95f; break; }  //	pyro
-	//				case 4:{ vTransformed.z *= .9f; break; }  //	demo
-	//				case 5:{ vTransformed.z *= .9f; break; }  //	medic
-	//				case 2:{ vTransformed.z *= .94f; break; }  //	sniper
-	//				default: break;
-	//				}
-	//			}
-	//			if (returnHeadValue.IsZero() || vTransformed.DistTo(headPos) < returnHeadValue.DistTo(headPos)) {
-	//				returnHeadValue = vTransformed;
-	//			}
-	//		}
-	//	}
-	//	return returnHeadValue.IsZero() ? retVec : returnHeadValue;
-	//	break;
-	//}
-	//}
 
 	return retVec;
 }
