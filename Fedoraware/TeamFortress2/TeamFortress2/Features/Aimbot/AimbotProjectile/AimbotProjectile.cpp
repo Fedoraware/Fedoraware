@@ -478,8 +478,10 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 	Vec3 vLocalPos = pLocal->GetShootPos();
 
-	Vec3 vMins = pEntity->GetCollideableMins();
-	Vec3 vMaxs = pEntity->GetCollideableMaxs();
+	const bool bIsDucking = pEntity->IsDucking();
+
+	Vec3 vMins = g_Interfaces.GameMovement->GetPlayerMins(bIsDucking);
+	Vec3 vMaxs = g_Interfaces.GameMovement->GetPlayerMaxs(bIsDucking);
 
 	const std::vector<Vec3> vecPoints = {
 		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
