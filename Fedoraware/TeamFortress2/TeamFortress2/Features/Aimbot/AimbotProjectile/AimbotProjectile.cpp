@@ -525,6 +525,10 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			aimMode = 0;
 			break;
 		}
+		default: {
+			aimMode = 1;
+			break;
+		}
 		}
 	}
 
