@@ -12,6 +12,7 @@
 #include "../../Features/Menu/SpectatorList/SpectatorList.h"
 #include "../../Features/Menu/DTBar/DTBar.h"
 #include "../../Features/Radar/Radar.h"
+#include "../../Features/Followbot/Followbot.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -422,6 +423,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
+			g_Followbot.Draw();
 			g_SpectatorList.Run();
 			g_CritHack.Draw();
 			g_Radar.Run();

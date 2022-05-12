@@ -221,7 +221,7 @@ namespace ImGui
 		}
 
 		SameLine();
-		TextUnformatted(label);
+		Text(label);
 		PopID();
 
 		return true;

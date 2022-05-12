@@ -629,7 +629,7 @@ bool ImGui::ButtonBehavior(const ImRect& bb, ImGuiID id, bool* out_hovered, bool
                 g.ActiveIdClickOffset = g.IO.MousePos - bb.Min;
 
             const int mouse_button = g.ActiveIdMouseButton;
-            IM_ASSERT(mouse_button >= 0 && mouse_button < ImGuiMouseButton_COUNT);
+            //IM_ASSERT(mouse_button >= 0 && mouse_button < ImGuiMouseButton_COUNT);
             if (g.IO.MouseDown[mouse_button])
             {
                 held = true;

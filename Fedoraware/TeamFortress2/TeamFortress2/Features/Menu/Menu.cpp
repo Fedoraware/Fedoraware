@@ -1534,7 +1534,7 @@ void CMenu::MenuHvH()
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
-			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
+			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("Maximum distance that auto peek can walk");
 			WToggle("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
 		} EndChild();
 
@@ -1605,10 +1605,15 @@ void CMenu::MenuMisc()
 			}
 
 			SectionTitle("Party Networking");
-			WToggle("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
-			WToggle("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
+			WToggle("Enable###PartyNet", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
+			WToggle("Party crasher###PartyNet", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
-			WToggle("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+
+			SectionTitle("Followbot");
+			WToggle("Enable Followbot###Followbot", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around");
+			//WToggle("Look at Target###Followbot", &Vars::Misc::Followbot::LookTarget.m_Var); HelpMarker("Will always look at the current target");
+			//WSlider("Follow Distance###Followbot", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
 		} EndChild();
 
 		/* Column 3 */

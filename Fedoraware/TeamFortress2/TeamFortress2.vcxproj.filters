@@ -108,6 +108,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\TextEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\DTBar\DTBar.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Followbot\Followbot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -661,6 +662,7 @@
     <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
+    <ClInclude Include="TeamFortress2\Features\Followbot\Followbot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

@@ -101,6 +101,7 @@
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\CritHack\CritHack.cpp" />
     <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Followbot\Followbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
     <ClCompile Include="TeamFortress2\DLLMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="TeamFortress2\Features\Camera\CameraWindow.h" />
     <ClInclude Include="TeamFortress2\Features\CritHack\CritHack.h" />
     <ClInclude Include="TeamFortress2\Features\Fedworking\Fedworking.h" />
+    <ClInclude Include="TeamFortress2\Features\Followbot\Followbot.h" />
     <ClInclude Include="TeamFortress2\Features\Killstreak\Killstreak.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
