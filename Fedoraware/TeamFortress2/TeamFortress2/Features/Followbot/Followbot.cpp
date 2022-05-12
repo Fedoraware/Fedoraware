@@ -12,6 +12,7 @@ bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 	return true;
 }
 
+// Optimizes the path and removes useless Nodes
 void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 {
 	for (size_t i = 0; i < FollowPath.size(); i++)
@@ -19,12 +20,12 @@ void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 		auto& currentNode = FollowPath[i];
 		if (pLocal->GetAbsOrigin().Dist2D(currentNode.Location) < NODE_DISTANCE)
 		{
-			while (i > 1)
+			int garbageNodes = static_cast<int>(i);
+			while (garbageNodes > 1 && !FollowPath.empty())
 			{
 				FollowPath.pop_front();
-				i--;
+				garbageNodes--;
 			}
-			OptimizePath(pLocal);
 			return;
 		}
 	}
@@ -36,7 +37,7 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 	{
 		if (!pPlayer || !pPlayer->IsAlive()) { continue; }
 		if (pPlayer->GetIndex() == pLocal->GetIndex()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin()) > 250.f) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin()) > 280.f) { continue; }
 
 		if (ValidTarget(pPlayer, pLocal))
 		{
@@ -59,7 +60,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	if (!pLocal || !pLocal->IsAlive()) { return; }
 
 	// Find a new target if we don't have one
-	if (!ValidTarget(CurrentTarget, pLocal))
+	if (!ValidTarget(CurrentTarget, pLocal) || FollowPath.size() >= 300)
 	{
 		FollowPath.clear();
 		CurrentTarget = FindTarget(pLocal);
@@ -68,7 +69,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 
 	// Store the target position and follow him
 	static Timer pathTimer{};
-	if (pathTimer.Run(180))
+	if (pathTimer.Run(100))
 	{
 		FollowPath.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
 	}
@@ -90,16 +91,18 @@ void CFollowbot::Run(CUserCmd* pCmd)
 				if (!pLocal->IsOnGround())
 				{
 					currentNode.OnGround = true;
+				} else
+				{
+					pCmd->buttons |= IN_JUMP;
 				}
-				pCmd->buttons |= IN_JUMP;
 			}
 		} else
 		{
 			FollowPath.pop_front();
 		}
-	}
 
-	//OptimizePath(pLocal);
+		OptimizePath(pLocal);
+	}
 }
 
 void CFollowbot::Draw()

@@ -10,6 +10,7 @@ class CFollowbot {
 		Vec3 Location{};
 		bool OnGround = false;
 	};
+
 	CBaseEntity* CurrentTarget = nullptr;
 
 public:
