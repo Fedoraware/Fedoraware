@@ -24,9 +24,6 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
-	LoadStyle(); // fix for gradients
-	// might have some negative perf effect, idrc tho im sick of black gradients.
-
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
@@ -1933,9 +1930,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	// Load Colors
-	Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
-
 	// Toggle menu
 	if (GetAsyncKeyState(MENU_KEY) & 1)
 	{
@@ -1978,15 +1972,16 @@ void CMenu::LoadStyle()
 		ItemWidth = 120.f;
 
 		// https://raais.github.io/ImStudio/
+		Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
 		AccentDark = ImColor(Accent.Value.x * 0.8f, Accent.Value.y * 0.8f, Accent.Value.z * 0.8f, Accent.Value.w);
 
 		auto& style = ImGui::GetStyle();
-		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
+		style.WindowTitleAlign = ImVec2(0.5f, 0.5f); // Center window title
 		style.WindowMinSize = ImVec2(700, 700);
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
-		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
-		style.FrameBorderSize = 1.f;	// Old menu feeling
+		style.ButtonTextAlign = ImVec2(0.5f, 0.4f); // Center button text
+		style.FrameBorderSize = 1.f; // Old menu feeling
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;

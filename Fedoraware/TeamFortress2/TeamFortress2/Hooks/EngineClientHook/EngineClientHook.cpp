@@ -40,9 +40,7 @@ void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* 
 
 	// Yes I will use boost for this
 	boost::split(cmdArgs, cmdString, split_q());
-	// Splitting it into a vector like this also allows for expansion on this idea
 
-	// This is really bad code. @LNX if u wanna fix this :3
 	if (!cmdArgs.empty())
 	{
 		const std::string cmdName = cmdArgs.front();
