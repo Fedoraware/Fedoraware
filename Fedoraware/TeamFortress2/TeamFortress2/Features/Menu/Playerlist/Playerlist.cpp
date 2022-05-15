@@ -54,6 +54,7 @@ void CPlayerList::UpdatePlayers()
 void CPlayerList::Render()
 {
 	if (!Vars::Menu::ShowPlayerlist) { return; }
+	UpdatePlayers();
 
 	const auto accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),

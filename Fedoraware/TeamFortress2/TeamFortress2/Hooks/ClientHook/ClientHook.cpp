@@ -108,8 +108,6 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			g_PlayerList.UpdatePlayers();
-
 			g_GlobalInfo.m_bLocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
