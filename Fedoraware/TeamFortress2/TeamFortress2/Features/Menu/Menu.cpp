@@ -1611,9 +1611,8 @@ void CMenu::MenuMisc()
 			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 
 			SectionTitle("Followbot");
-			WToggle("Enable Followbot###Followbot", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around");
-			//WToggle("Look at Target###Followbot", &Vars::Misc::Followbot::LookTarget.m_Var); HelpMarker("Will always look at the current target");
-			//WSlider("Follow Distance###Followbot", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
+			WToggle("Enable Followbot###Followbot", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around. Enable 'Duck Jump' for best results.");
+			WSlider("Follow Distance###Followbot", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
 		} EndChild();
 
 		/* Column 3 */

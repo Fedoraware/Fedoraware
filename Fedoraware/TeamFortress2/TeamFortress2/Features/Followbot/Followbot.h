@@ -17,7 +17,7 @@ public:
 	void Run(CUserCmd* pCmd);
 	void Draw();
 
-	std::deque<PathNode> FollowPath; // We have to expose this for drawing
+	std::deque<PathNode> PathNodes; // We have to expose this for drawing
 };
 
 inline CFollowbot g_Followbot;

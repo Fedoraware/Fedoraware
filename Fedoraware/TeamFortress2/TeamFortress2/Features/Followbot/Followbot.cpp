@@ -1,6 +1,6 @@
 #include "Followbot.h"
 
-constexpr float NODE_DISTANCE = 20.f;
+constexpr float NODE_DISTANCE = 17.f;
 
 bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 {
@@ -15,15 +15,15 @@ bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 // Optimizes the path and removes useless Nodes
 void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 {
-	for (size_t i = 0; i < FollowPath.size(); i++)
+	for (size_t i = 0; i < PathNodes.size(); i++)
 	{
-		auto& currentNode = FollowPath[i];
+		auto& currentNode = PathNodes[i];
 		if (pLocal->GetAbsOrigin().Dist2D(currentNode.Location) < NODE_DISTANCE)
 		{
 			int garbageNodes = static_cast<int>(i);
-			while (garbageNodes > 1 && !FollowPath.empty())
+			while (garbageNodes > 1 && !PathNodes.empty())
 			{
-				FollowPath.pop_front();
+				PathNodes.pop_front();
 				garbageNodes--;
 			}
 			return;
@@ -60,9 +60,9 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	if (!pLocal || !pLocal->IsAlive()) { return; }
 
 	// Find a new target if we don't have one
-	if (!ValidTarget(CurrentTarget, pLocal) || FollowPath.size() >= 300)
+	if (!ValidTarget(CurrentTarget, pLocal) || PathNodes.size() >= 300)
 	{
-		FollowPath.clear();
+		PathNodes.clear();
 		CurrentTarget = FindTarget(pLocal);
 	}
 	if (!CurrentTarget) { return; }
@@ -71,12 +71,23 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	static Timer pathTimer{};
 	if (pathTimer.Run(100))
 	{
-		FollowPath.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
+		if (PathNodes.empty())
+		{
+			PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
+		}
+		else
+		{
+			const auto& lastNode = PathNodes.back();
+			if (CurrentTarget->GetAbsOrigin().DistTo(lastNode.Location) >= 5.f)
+			{
+				PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
+			}
+		}
 	}
 
-	if (!FollowPath.empty())
+	if (!PathNodes.empty())
 	{
-		auto& currentNode = FollowPath.front();
+		auto& currentNode = PathNodes.front();
 		const Vec3 localPos = pLocal->GetAbsOrigin();
 
 		if (localPos.Dist2D(currentNode.Location) >= NODE_DISTANCE)
@@ -98,7 +109,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 			}
 		} else
 		{
-			FollowPath.pop_front();
+			PathNodes.pop_front();
 		}
 
 		OptimizePath(pLocal);
@@ -108,9 +119,9 @@ void CFollowbot::Run(CUserCmd* pCmd)
 void CFollowbot::Draw()
 {
 	if (!Vars::Misc::Followbot::Enabled.m_Var || !CurrentTarget) { return; }
-	if (FollowPath.size() < 2) { return; }
+	if (PathNodes.size() < 2) { return; }
 
-	const std::deque<PathNode> tmpPath = FollowPath;
+	const std::deque<PathNode> tmpPath = PathNodes;
 	for (size_t i = 1; i < tmpPath.size(); i++)
 	{
 		auto& currentNode = tmpPath[i];

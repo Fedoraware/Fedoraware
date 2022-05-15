@@ -602,7 +602,6 @@ namespace Vars
 		namespace Followbot
 		{
 			inline CVar<bool> Enabled{ false };
-			inline CVar<bool> LookTarget{ true };
 			inline CVar<float> Distance{ 150.f };
 		}
 
