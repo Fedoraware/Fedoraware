@@ -15,6 +15,7 @@
 #include "../../Features/Fedworking/Fedworking.h"
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
+#include "../../Features/Followbot/Followbot.h"
 
 #include "../../Features/Vars.h"
 #include "../../Features/PlayerResource/PlayerResource.h"
@@ -246,6 +247,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	FastStop(pCmd, g_EntityCache.m_pLocal);
 	g_Misc.RunLate(pCmd);
 	g_Resolver.Update(pCmd);
+	g_Followbot.Run(pCmd);
+
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 

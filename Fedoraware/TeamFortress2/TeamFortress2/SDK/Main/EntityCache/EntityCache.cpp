@@ -180,6 +180,12 @@ void CEntityCache::Clear()
 		Group.second.clear();
 }
 
+bool CEntityCache::IsFriend(int entIdx)
+{
+	if (entIdx < 0 || entIdx >= 129) { return false; }
+	return Friends[entIdx];
+}
+
 const std::vector<CBaseEntity*>& CEntityCache::GetGroup(const EGroupType& Group)
 {
 	return m_vecGroups[Group];

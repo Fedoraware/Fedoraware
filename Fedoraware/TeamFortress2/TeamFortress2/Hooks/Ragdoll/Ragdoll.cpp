@@ -3,7 +3,7 @@
 void Ragdoll::Init()
 {
 	static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8D 4F F8 E8 ? ? ? ? 84 C0 74 78")) + 0x1;
-	static DWORD actual = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
+	static DWORD actual = ((*reinterpret_cast<PDWORD>(dwFn)) + dwFn + 0x4);
 	Func.Hook(reinterpret_cast<void*>(actual), Hook);
 }
 
@@ -23,7 +23,7 @@ void ClearEffects(CBaseEntity* pEntity)
 
 void __fastcall Ragdoll::Hook(void* ecx, void* edx)
 {
-	if (const auto& pEntity = reinterpret_cast<CBaseEntity*>(ecx))
+	if (const auto& pEntity = static_cast<CBaseEntity*>(ecx))
 	{
 		if (Vars::Visuals::RagdollEffects::EnemyOnly.m_Var)
 		{

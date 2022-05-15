@@ -221,7 +221,7 @@ namespace ImGui
 		}
 
 		SameLine();
-		TextUnformatted(label);
+		Text(label);
 		PopID();
 
 		return true;
@@ -276,7 +276,7 @@ namespace ImGui
 		PopItemWidth();
 	}
 	
-	__inline void MultiFlags(std::vector<const char*> flagNames, static std::vector<int> flagValues, int* flagVar, const std::string& comboName)
+	__inline void MultiFlags(std::vector<const char*> flagNames, std::vector<int> flagValues, int* flagVar, const std::string& comboName)
 	{
 		if (flagNames.size() != flagValues.size()) { return; }
 

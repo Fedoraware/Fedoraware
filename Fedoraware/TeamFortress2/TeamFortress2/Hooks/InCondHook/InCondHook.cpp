@@ -14,11 +14,12 @@ bool __fastcall InCondHook::Hook(void* ecx, void* edx, ETFCond nCond)
 		const auto dwRetAddr = reinterpret_cast<DWORD>(_ReturnAddress());
 
 		if (dwRetAddr == dwPlayerShouldDraw || dwRetAddr == dwWearableShouldDraw)
+		{
 			return false;
+		}
 	}
 
-	auto GetOuter = [&ecx]() -> CBaseEntity*
-	{
+	auto GetOuter = [&ecx]() -> CBaseEntity* {
 		static const auto dwShared = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"));
 		static const auto dwBombHeadStage = g_NetVars.get_offset(
 			_("DT_TFPlayer"), _("m_Shared"), _("m_nHalloweenBombHeadStage"));
@@ -30,14 +31,22 @@ bool __fastcall InCondHook::Hook(void* ecx, void* edx, ETFCond nCond)
 	if (nCond == TF_COND_TAUNTING && Vars::Visuals::RemoveTaunts.m_Var)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		{
 			if (const auto& pEntity = GetOuter())
+			{
 				if (pEntity->GetTeamNum() != pLocal->GetTeamNum())
+				{
 					return false;
+				}
+			}
+		}
 	}
 
 	//Just compare entity ptr's, filtering out local is enough. Also prevents T pose.
 	if (nCond == TF_COND_DISGUISED && Vars::Visuals::RemoveDisguises.m_Var && g_EntityCache.m_pLocal != GetOuter())
+	{
 		return false;
+	}
 
 	return Func.Original<fn>()(ecx, edx, nCond);
 }

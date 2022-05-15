@@ -31,14 +31,14 @@ namespace ClientHook
 	{
 		const int index = 35;
 		using fn = void(__thiscall*)(CBaseClientDLL*, EClientFrameStage);
-		void __stdcall Hook(EClientFrameStage FrameStage);
+		void __stdcall Hook(EClientFrameStage frameStage);
 	}
 
 	namespace DispatchUserMessage
 	{
 		const int index = 36;
-		using fn = bool(__thiscall*)(CBaseClientDLL*, int type, bf_read& msg_data);
-		bool __stdcall Hook(int type, bf_read& msgData);
+		using fn = bool(__thiscall*)(CBaseClientDLL*, UserMessageType type, bf_read& msgData);
+		bool __stdcall Hook(UserMessageType type, bf_read& msgData);
 	}
 
 	namespace DoPrecipitation

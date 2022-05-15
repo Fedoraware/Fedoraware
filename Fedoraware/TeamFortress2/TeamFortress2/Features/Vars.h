@@ -593,6 +593,13 @@ namespace Vars
 		inline CVar<int> PartyMarker{ false, L"Party Marker" };
 		inline CVar<bool> PartyESP{ false, L"Party ESP" };
 
+		namespace Followbot
+		{
+			inline CVar<bool> Enabled{ false };
+			inline CVar<bool> FriendsOnly{ false };
+			inline CVar<float> Distance{ 150.f };
+		}
+
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };

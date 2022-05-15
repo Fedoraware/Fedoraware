@@ -396,6 +396,11 @@ public:
 		return (*this - v).LengthSqr();
 	}
 
+	float Dist2D(const Vec3& v) const
+	{
+		return (*this - v).Length2D();
+	}
+
 	float Dot(const Vec3& v) const
 	{
 		return (x * v.x + y * v.y + z * v.z);

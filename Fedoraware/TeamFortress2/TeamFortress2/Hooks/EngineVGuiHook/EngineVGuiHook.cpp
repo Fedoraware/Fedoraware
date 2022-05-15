@@ -12,6 +12,7 @@
 #include "../../Features/Menu/SpectatorList/SpectatorList.h"
 #include "../../Features/Menu/DTBar/DTBar.h"
 #include "../../Features/Radar/Radar.h"
+#include "../../Features/Followbot/Followbot.h"
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -313,14 +314,14 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							yoffset += 20;
 						}*/
 
-						for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+						for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 						{
-							if (Player == pLocal) { continue; }
+							if (player == pLocal) { continue; }
 							xoffset += 140;
 							yoffset = 0;
 
 							PlayerInfo_t pi{};
-							if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi))
+							if (g_Interfaces.Engine->GetPlayerInfo(player->GetIndex(), &pi))
 							{
 								if (!pi.fakeplayer)
 								{
@@ -335,7 +336,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									g_Draw.String(FONT_MENU, xoffset, yoffset, {255, 0, 156, 255}, ALIGN_DEFAULT, "server-bot");
 								}
 
-								if (!Player->IsAlive())
+								if (!player->IsAlive())
 								{
 									// dead players should not show up here
 									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {80, 80, 80, 255}, ALIGN_DEFAULT, "DEAD");
@@ -345,7 +346,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
 							{
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "S : %i", tickcount);
-								if (const int tickcountplayer = TIME_TO_TICKS(Player->GetSimulationTime()))
+								if (const int tickcountplayer = TIME_TO_TICKS(player->GetSimulationTime()))
 								{
 									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, {255, 255, 255, 255}, ALIGN_DEFAULT, "P : %i", tickcountplayer);
 								}
@@ -361,12 +362,12 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							//		}
 							//	}
 							//}
-							const auto& worldspace = Player->GetAbsOrigin();
+							const auto& worldspace = player->GetAbsOrigin();
 							if (!worldspace.IsZero()) {
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "abs : [%+.1f] [%+.1f] [%+.1f]", worldspace.x, worldspace.y, worldspace.z);
 							}
-							const auto& mins = Player->GetCollideableMins();
-							const auto& maxs = Player->GetCollideableMaxs();
+							const auto& mins = player->GetCollideableMins();
+							const auto& maxs = player->GetCollideableMaxs();
 							if (!mins.IsZero() && !maxs.IsZero()) {
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "min : [%+.1f] [%+.1f] [%+.1f]", mins.x, mins.y, mins.z);
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "max : [%+.1f] [%+.1f] [%+.1f]", maxs.x, maxs.y, maxs.z);
@@ -422,6 +423,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();
 			g_PlayerArrows.Run();
+			g_Followbot.Draw();
 			g_SpectatorList.Run();
 			g_CritHack.Draw();
 			g_Radar.Run();

@@ -13,13 +13,13 @@ void __fastcall DrawStaticPropsHook::Hook(void* ecx, void* edx, IClientRenderabl
 
 void __fastcall SetColorModulationHook::Hook(void* ecx, void* edx, const float* pColor)
 {
-	float custom[3] = {
+	const float custom[3] = {
 		Color::TOFLOAT(Colors::StaticPropModulation.r),
 		Color::TOFLOAT(Colors::StaticPropModulation.g),
 		Color::TOFLOAT(Colors::StaticPropModulation.b)
 	};
 
-	bool bShouldUseCustom = Vars::Visuals::WorldModulation.m_Var && bDrawing;
+	const bool bShouldUseCustom = Vars::Visuals::WorldModulation.m_Var && bDrawing;
 	Func.Original<fn>()(ecx, edx, bShouldUseCustom ? custom : pColor);
 }
 

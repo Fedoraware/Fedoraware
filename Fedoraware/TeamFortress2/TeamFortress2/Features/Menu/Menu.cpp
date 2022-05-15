@@ -24,9 +24,6 @@ void CMenu::DrawMenu()
 {
 	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
 
-	LoadStyle(); // fix for gradients
-	// might have some negative perf effect, idrc tho im sick of black gradients.
-
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
@@ -1542,7 +1539,7 @@ void CMenu::MenuHvH()
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
-			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f", 0); HelpMarker("Maximum distance that auto peek can walk");
+			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("Maximum distance that auto peek can walk");
 			WToggle("Free move", &Vars::Misc::CL_Move::AutoPeekFree.m_Var); HelpMarker("Allows you to move freely while peeking");
 		} EndChild();
 
@@ -1608,10 +1605,15 @@ void CMenu::MenuMisc()
 			}
 
 			SectionTitle("Party Networking");
-			WToggle("Enable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
-			WToggle("Party crasher", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
+			WToggle("Enable###PartyNetEnable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
+			WToggle("Party crasher###PartyNetCrash", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
-			WToggle("Party ESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+
+			SectionTitle("Followbot");
+			WToggle("Enable Followbot###FollowbotEnable", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around.");
+			WToggle("Friends only###FollowbotFriends", &Vars::Misc::Followbot::FriendsOnly.m_Var); HelpMarker("Only follow friends");
+			WSlider("Follow Distance###FollowbotDistance", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
 		} EndChild();
 
 		/* Column 3 */
@@ -1933,9 +1935,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	// Load Colors
-	Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
-
 	// Toggle menu
 	if (GetAsyncKeyState(MENU_KEY) & 1)
 	{
@@ -1978,15 +1977,16 @@ void CMenu::LoadStyle()
 		ItemWidth = 120.f;
 
 		// https://raais.github.io/ImStudio/
+		Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
 		AccentDark = ImColor(Accent.Value.x * 0.8f, Accent.Value.y * 0.8f, Accent.Value.z * 0.8f, Accent.Value.w);
 
 		auto& style = ImGui::GetStyle();
-		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);	// Center window title
+		style.WindowTitleAlign = ImVec2(0.5f, 0.5f); // Center window title
 		style.WindowMinSize = ImVec2(700, 700);
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
-		style.ButtonTextAlign = ImVec2(0.5f, 0.4f);		// Center button text
-		style.FrameBorderSize = 1.f;	// Old menu feeling
+		style.ButtonTextAlign = ImVec2(0.5f, 0.4f); // Center button text
+		style.FrameBorderSize = 1.f; // Old menu feeling
 		style.FrameRounding = 0.f;
 		style.ChildBorderSize = 1.f;
 		style.ChildRounding = 0.f;
