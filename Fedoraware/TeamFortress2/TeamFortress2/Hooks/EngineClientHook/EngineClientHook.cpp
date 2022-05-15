@@ -64,7 +64,8 @@ void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* 
 				return;
 			}
 
-			std::string newValue = cmdArgs[1];
+			cmdArgs.pop_front();
+			std::string newValue = boost::algorithm::join(cmdArgs, " ");
 			boost::replace_all(newValue, "\"", "");
 			foundCVar->SetValue(newValue.c_str());
 			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
