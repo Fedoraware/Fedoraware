@@ -279,21 +279,28 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
-	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		if (!Vars::Misc::EdgeJumpKey.m_Var || GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+		// Edge Jump
+		if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
+		{
+			if (!Vars::Misc::EdgeJumpKey.m_Var || GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+			{
+				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+				{
+					pCmd->buttons |= IN_JUMP;
+				}
+			}
+		}
+
+		// Duck Jump
+		if ((nOldFlags & ~FL_ONGROUND) && (Vars::Misc::DuckJump.m_Var || Vars::Misc::Followbot::Enabled.m_Var))
 		{
 			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
-				pCmd->buttons |= IN_JUMP;
-		}
-	}
-
-	if ((nOldFlags & ~FL_ONGROUND) && Vars::Misc::DuckJump.m_Var)
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+			{
 				pCmd->buttons |= IN_DUCK;
+			}
+		}
 	}
 }
 
