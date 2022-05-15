@@ -9,12 +9,14 @@ void __fastcall Scoreboard::KeyValues::Hook(void* ecx, void* edx, const char* ke
 
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwDesired && std::string_view(keyName).find("nemesis") !=
 		std::string_view::npos)
-		*reinterpret_cast<uintptr_t*>(_AddressOfReturnAddress()) = dwJump;
+	{
+		*static_cast<uintptr_t*>(_AddressOfReturnAddress()) = dwJump;
+	}
 }
 
 void Scoreboard::KeyValues::Init()
 {
-	auto FN = reinterpret_cast<fn>(g_Pattern.Find(
+	const auto FN = reinterpret_cast<fn>(g_Pattern.Find(
 		L"client.dll",
 		L"55 8B EC 6A 01 FF 75 08 E8 ? ? ? ? 85 C0 74 0A 8B 4D 0C 89 48 0C C6 40 10 02"));
 	Func.Hook(FN, Hook);
@@ -22,7 +24,7 @@ void Scoreboard::KeyValues::Init()
 
 bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int index)
 {
-	bool bResult = Func.Original<fny>()(ecx, edx, index);
+	const bool bResult = Func.Original<fny>()(ecx, edx, index);
 
 	if (!bResult)
 	{
@@ -31,7 +33,9 @@ bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int in
 		                                     L"89 45 BC E8 ? ? ? ? 3B C7 75 1D 80 7D F8 00 75 17 8B 4D C0");
 
 		if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwDesired)
-			*reinterpret_cast<uintptr_t*>(_AddressOfReturnAddress()) = dwJump;
+		{
+			*static_cast<uintptr_t*>(_AddressOfReturnAddress()) = dwJump;
+		}
 	}
 
 	return bResult;
@@ -39,7 +43,7 @@ bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int in
 
 void Scoreboard::IsPlayerDominated::Init()
 {
-	auto FN = reinterpret_cast<fny>(g_Pattern.Find(
+	const auto FN = reinterpret_cast<fny>(g_Pattern.Find(
 		L"client.dll",
 		L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 75 08 5F 32 C0 5E 5D C2 04 00"));
 	Func.Hook(FN, Hook);

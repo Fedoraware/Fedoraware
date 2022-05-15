@@ -31,7 +31,7 @@ namespace ClientHook
 	{
 		const int index = 35;
 		using fn = void(__thiscall*)(CBaseClientDLL*, EClientFrameStage);
-		void __stdcall Hook(EClientFrameStage FrameStage);
+		void __stdcall Hook(EClientFrameStage frameStage);
 	}
 
 	namespace DispatchUserMessage

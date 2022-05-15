@@ -8,7 +8,6 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Resolver/Resolver.h"
-#include "../../Features/Menu/Playerlist/Playerlist.h"
 
 const static std::string CLEAR_MSG("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -18,12 +17,12 @@ const static std::string CLEAR_MSG("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-const static std::vector<std::string> BAD_WORDS{ _("cheat"), _("hack"), _("bot"), _("aim"), _("esp"), _("kick"), _("hax"), _("script")};
+const static std::vector<std::string> BAD_WORDS{_("cheat"), _("hack"), _("bot"), _("aim"), _("esp"), _("kick"), _("hax"), _("script")};
 
 static std::string clr({'\x7', '0', 'D', '9', '2', 'F', 'F'});
-static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
-static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
-static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
+static std::string yellow({'\x7', 'C', '8', 'A', '9', '0', '0'}); //C8A900
+static std::string white({'\x7', 'F', 'F', 'F', 'F', 'F', 'F'}); //FFFFFF
+static std::string green({'\x7', '3', 'A', 'F', 'F', '4', 'D'}); //3AFF4D
 
 void __stdcall ClientHook::PreEntity::Hook(const char* szMapName)
 {
@@ -35,7 +34,6 @@ void __stdcall ClientHook::PostEntity::Hook()
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_maxdlights 69420"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_dynamic 1"));
-
 }
 
 void __stdcall ClientHook::ShutDown::Hook()
@@ -49,9 +47,9 @@ void __stdcall ClientHook::ShutDown::Hook()
 }
 
 
-void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
+void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage frameStage)
 {
-	switch (FrameStage)
+	switch (frameStage)
 	{
 	case EClientFrameStage::FRAME_RENDER_START:
 		{
@@ -60,7 +58,8 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				// Handle freecam position
-				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000) {
+				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+				{
 					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
 					pLocal->SetAbsOrigin(g_GlobalInfo.m_vFreecamPos);
 				}
@@ -81,13 +80,11 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 			break;
 		}
-
-	default: break;
 	}
 
-	Table.Original<fn>(index)(g_Interfaces.Client, FrameStage);
+	Table.Original<fn>(index)(g_Interfaces.Client, frameStage);
 
-	switch (FrameStage)
+	switch (frameStage)
 	{
 	case EClientFrameStage::FRAME_NET_UPDATE_START:
 		{
@@ -112,33 +109,29 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				for (const auto& Teammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
+				for (const auto& teammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 				{
-					if (Teammate->IsAlive() || g_EntityCache.Friends[Teammate->GetIndex()])
+					if (teammate->IsAlive() || g_EntityCache.Friends[teammate->GetIndex()])
+					{
 						continue;
+					}
 
-					CBaseEntity* pObservedPlayer = g_Interfaces.EntityList->GetClientEntityFromHandle(
-						Teammate->GetObserverTarget());
+					const CBaseEntity* pObservedPlayer = g_Interfaces.EntityList->GetClientEntityFromHandle(teammate->GetObserverTarget());
 
 					if (pObservedPlayer == pLocal)
 					{
-						switch (Teammate->GetObserverMode())
-						{
-						case OBS_MODE_FIRSTPERSON: break;
-						case OBS_MODE_THIRDPERSON: break;
-						default: continue;
-						}
-
 						g_GlobalInfo.m_bLocalSpectated = true;
 						break;
 					}
 				}
 			}
 
-			for (int i =0;i < g_Interfaces.Engine->GetMaxClients(); i++) {
-				if (const auto& Player = g_Interfaces.EntityList->GetClientEntity(i)) {
-					VelFixRecord record = { Player->m_vecOrigin(), Player->m_fFlags(), Player->GetSimulationTime() };
-					g_GlobalInfo.velFixRecord[Player] = record;
+			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			{
+				if (const auto& player = g_Interfaces.EntityList->GetClientEntity(i))
+				{
+					const VelFixRecord record = {player->m_vecOrigin(), player->m_fFlags(), player->GetSimulationTime()};
+					g_GlobalInfo.velFixRecord[player] = record;
 				}
 			}
 
@@ -149,17 +142,26 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		{
 			if (!g_GlobalInfo.unloadWndProcHook)
 			{
-				if (Vars::Visuals::Rain.m_Var > 0) {
+				if (Vars::Visuals::Rain.m_Var > 0)
+				{
 					g_Visuals.rain.Run();
 				}
+
+				// genius method i swear
 				static bool modded = false;
-				if (Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::WorldModulation.m_Var) { g_Visuals.ModulateWorld(); modded = true; }
-				else if (modded) { modded = false; g_Visuals.ModulateWorld(); } // genius method i swear
+				if (Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::WorldModulation.m_Var)
+				{
+					g_Visuals.ModulateWorld();
+					modded = true;
+				}
+				else if (modded)
+				{
+					modded = false;
+					g_Visuals.ModulateWorld();
+				}
 			}
 			break;
 		}
-
-	default: break;
 	}
 }
 
@@ -177,14 +179,14 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 	{
 	case SayText2:
 		{
-			int nbl = msgData.GetNumBytesLeft();
+			const int nbl = msgData.GetNumBytesLeft();
 			if (nbl < 5 || nbl >= 256)
 			{
 				break;
 			}
 
 			msgData.Seek(0);
-			int entIdx = msgData.ReadByte();
+			const int entIdx = msgData.ReadByte();
 			msgData.Seek(8);
 			char typeBuffer[256], nameBuffer[256], msgBuffer[256];
 			if (msgData.GetNumBytesLeft() == 0) { break; }
@@ -210,10 +212,11 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 						break;
 					}
 
-					const std::vector<std::string> toReplace = { " ", "4", "3", "0", "6", "5", "7", "@", ".", ",", "-", "!" };
-					const std::vector<std::string> replaceWith = { "", "a", "e", "o", "g", "s", "t", "a", "", "", "", "i" };
+					const std::vector<std::string> toReplace = {" ", "4", "3", "0", "6", "5", "7", "@", ".", ",", "-", "!"};
+					const std::vector<std::string> replaceWith = {"", "a", "e", "o", "g", "s", "t", "a", "", "", "", "i"};
 
-					for (std::vector<int>::size_type i = 0; i != toReplace.size(); i++) {
+					for (std::vector<int>::size_type i = 0; i != toReplace.size(); i++)
+					{
 						boost::replace_all(chatMessage, toReplace[i], replaceWith[i]);
 					}
 
@@ -229,7 +232,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 					}
 				}
 			}
-			
+
 			break;
 		}
 
@@ -276,7 +279,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 			}
 
 			// Autojoin team / class
-			if(Vars::Misc::AutoJoin.m_Var)
+			if (Vars::Misc::AutoJoin.m_Var)
 			{
 				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "team") == 0)
 				{
@@ -286,7 +289,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 
 				if (strncmp(reinterpret_cast<char*>(msgData.m_pData), "class_", 6) == 0)
 				{
-					static std::string classNames[] = { "scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy" };
+					static std::string classNames[] = {"scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy"};
 					g_Interfaces.Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
 					return true;
 				}
@@ -296,34 +299,30 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 		}
 
 	case ForcePlayerViewAngles:
-	{
-		return Vars::Visuals::PreventForcedAngles.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
-	}
+		{
+			return Vars::Visuals::PreventForcedAngles.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+		}
 
 	case SpawnFlyingBird:
 	case PlayerGodRayEffect:
 	case PlayerTauntSoundLoopStart:
 	case PlayerTauntSoundLoopEnd:
-	{
-		return Vars::Visuals::RemoveTaunts.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
-	}
+		{
+			return Vars::Visuals::RemoveTaunts.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+		}
 
 	case Shake:
 	case Fade:
 	case Rumble:
-	{
-		return Vars::Visuals::RemoveScreenEffects.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
-	}
+		{
+			return Vars::Visuals::RemoveScreenEffects.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+		}
 	}
 
 	msgData.Seek(0);
 	return Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
 }
 
-void __fastcall ClientHook::DoPrecipitation::Hook(void* ecx, void* edx)
-{
-}
+void __fastcall ClientHook::DoPrecipitation::Hook(void* ecx, void* edx) {}
 
-void __fastcall ClientHook::CHud__FindElement::Hook(void* ecx, void* edx, const char* String2)
-{
-}
+void __fastcall ClientHook::CHud__FindElement::Hook(void* ecx, void* edx, const char* String2) {}

@@ -12,12 +12,16 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	if (g_GlobalInfo.m_nShifted > Vars::Misc::CL_Move::DTTicks.m_Var) { g_GlobalInfo.m_nShifted -= 1; oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == Vars::Misc::CL_Move::DTTicks.m_Var + 1)); } // pCode
+	if (g_GlobalInfo.m_nShifted > Vars::Misc::CL_Move::DTTicks.m_Var)
+	{
+		g_GlobalInfo.m_nShifted -= 1;
+		oClMove(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == Vars::Misc::CL_Move::DTTicks.m_Var + 1));
+	} // pCode
 
 	// pSpeedhack
 	if (Vars::Misc::CL_Move::SEnabled.m_Var)
 	{
-		int SpeedTicks{ 0 };
+		int SpeedTicks{0};
 		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
 		g_GlobalInfo.m_nShifted = 0;
 
@@ -68,7 +72,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	}
 
 	oClMove(accumulated_extra_samples,
-		(g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
+	        (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
 
 	if (g_GlobalInfo.m_nWaitForShift && Vars::Misc::CL_Move::WaitForDT.m_Var)
 	{
@@ -79,22 +83,27 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	if (g_GlobalInfo.lateUserCmd != nullptr)
 	{
 		// Shift if attacking normally
-		if (Vars::Misc::CL_Move::NotInAir.m_Var) {
-			if (pLocal) {
-				if (pLocal->IsOnGround()) {
+		if (Vars::Misc::CL_Move::NotInAir.m_Var)
+		{
+			if (pLocal)
+			{
+				if (pLocal->IsOnGround())
+				{
 					g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
-						? true
-						: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+						                              ? true
+						                              : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 				}
-				else {
+				else
+				{
 					g_GlobalInfo.m_bShouldShift = false;
 				}
 			}
 		}
-		else {
+		else
+		{
 			g_GlobalInfo.m_bShouldShift = g_GlobalInfo.m_bShouldShift
-				? true
-				: g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
+				                              ? true
+				                              : g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK;
 		}
 	}
 
@@ -112,7 +121,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			// 0 - On key
 			(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
-			// 2 - Disable on key 
+		// 2 - Disable on key 
 		{
 			while (g_GlobalInfo.m_nShifted > 0)
 			{
@@ -154,7 +163,9 @@ void __cdecl EngineHook::CL_SendMove::Hook(void* ecx, void* edx)
 	if (bOK)
 	{
 		if (extraCommands)
+		{
 			g_Interfaces.ClientState->m_NetChannel->m_nChokedPackets -= extraCommands;
+		}
 		GetVFunc<bool(__thiscall*)(PVOID, INetMessage* msg, bool, bool)>(g_Interfaces.ClientState->m_NetChannel, 37)(
 			g_Interfaces.ClientState->m_NetChannel, &moveMsg, false, false);
 	}
@@ -168,7 +179,9 @@ float __fastcall EngineHook::CL_FireEvents::Hook(void* ecx, void* edx)
 	static DWORD dwGetTime = g_Pattern.Find(_(L"engine.dll"), _(L"D9 43 ? DF F1"));
 
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) == (dwGetTime))
+	{
 		return FLT_MAX;
+	}
 
 	return originalFn(ecx, edx);
 }
@@ -179,9 +192,11 @@ int __cdecl EngineHook::Q_stricmp::Hook(const char* str1, const char* str2)
 
 	static std::map<void*, bool> calls = {};
 
-	if (str2 == "name") {
-		auto retaddress = _ReturnAddress();
-		if (calls.find(retaddress) == calls.end()) {
+	if (strcmp(str2, "name") == 0)
+	{
+		const auto retaddress = _ReturnAddress();
+		if (calls.find(retaddress) == calls.end())
+		{
 			calls[retaddress] = true;
 			printf("%p\n", retaddress);
 		}
@@ -193,7 +208,8 @@ int __cdecl EngineHook::Q_stricmp::Hook(const char* str1, const char* str2)
 void __cdecl EngineHook::UpdateNameFromSteamID::Hook(IConVar* pConvar, CSteamID* pSteamID)
 {
 	//static bool setOnce = false;
-	if (pConvar && pSteamID) {
+	if (pConvar && pSteamID)
+	{
 		//if (!setOnce) {
 		//	Func.Original<fn>()(pConvar, pSteamID);
 		//	setOnce = true;
@@ -205,7 +221,9 @@ void __cdecl EngineHook::UpdateNameFromSteamID::Hook(IConVar* pConvar, CSteamID*
 void __cdecl EngineHook::CL_NameCvarChanged::Hook(IConVar* pConvar)
 {
 	Func.Original<fn>()(pConvar);
-	if (auto name = g_Interfaces.CVars->FindVar("name")) {
+
+	if (const auto name = g_Interfaces.CVars->FindVar("name"))
+	{
 		g_Interfaces.CVars->ConsolePrintf("[FeD] Name set to: %s\n", name->GetString());
 	}
 }

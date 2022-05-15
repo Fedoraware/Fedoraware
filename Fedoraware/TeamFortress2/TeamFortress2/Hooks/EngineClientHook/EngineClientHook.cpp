@@ -10,19 +10,24 @@ bool __stdcall EngineClientHook::IsPlayingTimeDemo::Hook()
 	if (Vars::Misc::DisableInterpolation.m_Var)
 	{
 		if (reinterpret_cast<DWORD>(_ReturnAddress()) == (dwInterpolateServerEntities + 0xB8))
+		{
 			return true;
+		}
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.Engine);
 }
 
-class split_q
-{
+class split_q {
 public:
 	split_q() : in_q(false) {}
-	bool operator() (char ch) const
+
+	bool operator()(char ch) const
 	{
-		if (ch == '\"') in_q = !in_q;
+		if (ch == '\"')
+		{
+			in_q = !in_q;
+		}
 		return !in_q && ch == ' ';
 	}
 
@@ -51,7 +56,7 @@ void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* 
 			// Check if the user provided at least 2 args
 			if (cmdArgs.size() < 2)
 			{
-				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
+				g_Interfaces.CVars->ConsoleColorPrintf({255, 255, 255, 255}, "Usage: setcvar <cvar> <value>\n");
 				return;
 			}
 
@@ -60,15 +65,16 @@ void __fastcall EngineClientHook::ClientCmd_Unrestricted::Hook(void* ecx, void* 
 			const std::string cvarName = cmdArgs[0];
 			if (!foundCVar)
 			{
-				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+				g_Interfaces.CVars->ConsoleColorPrintf({255, 255, 255, 255}, "Could not find %s\n", cvarName.c_str());
 				return;
 			}
 
+			// Set the CVar to the given value
 			cmdArgs.pop_front();
 			std::string newValue = boost::algorithm::join(cmdArgs, " ");
 			boost::replace_all(newValue, "\"", "");
 			foundCVar->SetValue(newValue.c_str());
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255,255,255,255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
+			g_Interfaces.CVars->ConsoleColorPrintf({255, 255, 255, 255}, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
 			return;
 		}
 	}
