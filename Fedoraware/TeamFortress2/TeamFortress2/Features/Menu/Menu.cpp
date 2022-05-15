@@ -1605,14 +1605,15 @@ void CMenu::MenuMisc()
 			}
 
 			SectionTitle("Party Networking");
-			WToggle("Enable###PartyNet", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
-			WToggle("Party crasher###PartyNet", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
+			WToggle("Enable###PartyNetEnable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
+			WToggle("Party crasher###PartyNetCrash", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
 			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 
 			SectionTitle("Followbot");
-			WToggle("Enable Followbot###Followbot", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around. Enable 'Duck Jump' for best results.");
-			WSlider("Follow Distance###Followbot", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
+			WToggle("Enable Followbot###FollowbotEnable", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around. Enable 'Duck Jump' for best results.");
+			WToggle("Friends only###FollowbotFriends", &Vars::Misc::Followbot::FriendsOnly.m_Var); HelpMarker("Only follow friends");
+			WSlider("Follow Distance###FollowbotDistance", &Vars::Misc::Followbot::Distance.m_Var, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
 		} EndChild();
 
 		/* Column 3 */

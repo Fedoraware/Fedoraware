@@ -596,6 +596,7 @@ namespace Vars
 		namespace Followbot
 		{
 			inline CVar<bool> Enabled{ false };
+			inline CVar<bool> FriendsOnly{ false };
 			inline CVar<float> Distance{ 150.f };
 		}
 

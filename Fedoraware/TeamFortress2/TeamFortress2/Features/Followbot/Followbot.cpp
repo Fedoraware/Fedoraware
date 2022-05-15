@@ -1,6 +1,12 @@
 #include "Followbot.h"
 
-constexpr float NODE_DISTANCE = 17.f;
+/*
+ * This followbot is very basic and could need some improvements.
+ * But it's better than nothing...
+ * - lnx00
+ */
+
+constexpr float NODE_DISTANCE = 20.f;
 
 bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 {
@@ -38,6 +44,7 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 		if (!pPlayer || !pPlayer->IsAlive()) { continue; }
 		if (pPlayer->GetIndex() == pLocal->GetIndex()) { continue; }
 		if (pLocal->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin()) > 280.f) { continue; }
+		if (Vars::Misc::Followbot::FriendsOnly.m_Var && !g_EntityCache.IsFriend(pPlayer->GetIndex())) { continue; }
 
 		if (ValidTarget(pPlayer, pLocal))
 		{
@@ -85,6 +92,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 		}
 	}
 
+	// Walk to the next node
 	if (!PathNodes.empty())
 	{
 		auto& currentNode = PathNodes.front();

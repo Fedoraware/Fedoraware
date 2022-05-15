@@ -24,6 +24,7 @@ public:
 
 	void Fill();
 	void Clear();
+	bool IsFriend(int entIdx);
 	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
 
 	bool Friends[129] = { false };
