@@ -575,6 +575,8 @@ namespace Vars
 		inline CVar<bool> VoteRevealerConsole{ false, L"Reveal votes To Console" };
 		inline CVar<bool> VoteRevealerChat{ false, L"Reveal votes To Chat" };
 		inline CVar<bool> VoteRevealerParty{ false, L"Reveal votes To Party" };
+		inline CVar<int> VotingOptions{ 11 }; // 01011 {autovote, party, chat, console, text}
+		inline CVar<bool> VerboseVoting{ false };
 		inline CVar<bool> AutoVote{ false, L"Auto-Vote" };
 		inline CVar<bool> AnnounceVotesText{ true, L"Announce votes to text" };
 		inline CVar<bool> AnnounceVotesConsole{ false, L"Announce votes to console" };
