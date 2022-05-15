@@ -229,8 +229,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 					}
 				}
 			}
-
-			msgData.Seek(0);
+			
 			break;
 		}
 	case TextMsg:
@@ -262,7 +261,6 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 					}
 					anti_balance_attempts++;
 				}
-				msgData.Seek(0);
 			}
 			break;
 		}
@@ -339,7 +337,6 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 					}
 				}
 			}
-			msgData.Seek(0);
 			break;
 		}
 	case ForcePlayerViewAngles:
@@ -361,6 +358,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 	}
 	}
 
+	msgData.Seek(0);
 	return Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
 }
 
