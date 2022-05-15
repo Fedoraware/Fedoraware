@@ -1035,12 +1035,17 @@ void CMenu::MenuVisuals()
 				ColorPickerL("World modulation colour", Colors::WorldModulation);
 				ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1);
 				ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2);
-				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD" }, {&Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var, &Vars::Visuals::RemoveMOTD.m_Var}, "Removals");
+				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD", "Screen Effects", "Angle Forcing"}, {&Vars::Visuals::RemoveScope.m_Var, &Vars::Visuals::RemoveZoom.m_Var, &Vars::Visuals::RemoveDisguises.m_Var, &Vars::Visuals::RemoveTaunts.m_Var, &Vars::Misc::DisableInterpolation.m_Var, &Vars::Visuals::RemovePunch.m_Var, &Vars::Visuals::RemoveMOTD.m_Var, &Vars::Visuals::RemoveScreenEffects.m_Var, &Vars::Visuals::PreventForcedAngles.m_Var }, "Removals");
 				HelpMarker("Select what you want to remove");
 				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.m_Var, &Vars::Visuals::AimPosSquare.m_Var, &Vars::Visuals::BulletTracer.m_Var, &Vars::Visuals::AimbotViewmodel.m_Var, &Vars::Visuals::ViewmodelSway.m_Var, &Vars::Visuals::MoveSimLine.m_Var }, "Misc");
 				HelpMarker("What misc visual features should be run");
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
-				MultiCombo({ "Votes (Console)", "Votes (Text)", "Votes (Chat)", "Votes (Party)", "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Misc::VoteRevealerConsole.m_Var, &Vars::Misc::VoteRevealerText.m_Var, &Vars::Misc::VoteRevealerChat.m_Var, &Vars::Misc::VoteRevealerParty.m_Var, &Vars::Visuals::damageLoggerConsole.m_Var, &Vars::Visuals::damageLoggerText.m_Var, &Vars::Visuals::damageLoggerChat.m_Var, &Vars::Visuals::ChatInfoText.m_Var, &Vars::Visuals::ChatInfoChat.m_Var }, "Event Logging");
+				{
+					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Auto-Cast", "Verbose"};
+					static std::vector flagValues{ 1, 2, 4, 8, 16, 32 };
+					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.m_Var, "Vote Logger###VoteLoggingOptions");
+				}
+				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::damageLoggerConsole.m_Var, &Vars::Visuals::damageLoggerText.m_Var, &Vars::Visuals::damageLoggerChat.m_Var, &Vars::Visuals::ChatInfoText.m_Var, &Vars::Visuals::ChatInfoChat.m_Var }, "Event Logging");
 				HelpMarker("What & How should events be logged");
 				ColorPickerL("GUI Notif Background", Colors::NotifBG);
 				ColorPickerL("GUI Notif Outline", Colors::NotifOutline, 1);
@@ -1578,11 +1583,6 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
 
-			SectionTitle("Votes");
-			WToggle("Auto-Vote", &Vars::Misc::AutoVote.m_Var); HelpMarker("Automatically vote F2 on votes called against friends/ignored and F1 on votes called by friends/randoms/on randoms");
-			MultiCombo({ "Console", "Text", "Chat", "Party" }, { &Vars::Misc::AnnounceVotesConsole.m_Var, &Vars::Misc::AnnounceVotesText.m_Var, &Vars::Misc::AnnounceVotesChat.m_Var, &Vars::Misc::AnnounceVotesParty.m_Var }, "Vote announcer");
-			HelpMarker("If and where should votes be announced");
-			WCombo("Vote announcement mode", &Vars::Misc::AnnounceVotes.m_Var, { "Basic", "Detailed" });
 		} EndChild();
 
 		/* Column 2 */
