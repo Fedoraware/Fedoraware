@@ -14,6 +14,7 @@ static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
 static std::string red({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
 static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 
+// Event info
 void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
 	if (!g_Interfaces.Engine->IsConnected() || !g_Interfaces.Engine->IsInGame())
@@ -23,6 +24,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 	if (const auto pLocal = g_EntityCache.m_pLocal)
 	{
+		// Class change
 		if ((Vars::Visuals::ChatInfoText.m_Var || Vars::Visuals::ChatInfoChat.m_Var) && uNameHash == FNV1A::HashConst("player_changeclass"))
 		{
 			if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(
@@ -50,6 +52,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			}
 		}
 
+		// Vote options
 		if (Vars::Misc::VotingOptions.m_Var && uNameHash == FNV1A::HashConst("vote_cast"))
 		{
 			const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
@@ -60,17 +63,18 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
 				auto voteLine = tfm::format("%s %s voted %s", (pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
-				if (votingOptions & (1 << 0)) // text
+				if (votingOptions & static_cast<int>(VoteOption::Text)) // text
 				{ g_Notifications.Add(voteLine); }
-				if (votingOptions & (1<<1)) // console
+				if (votingOptions & static_cast<int>(VoteOption::Console)) // console
 				{ g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", voteLine).c_str()); }
-				if (votingOptions & (1<<2)) // chat
+				if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
 				{ g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), voteLine.c_str()); }
-				if (votingOptions & (1<<3)) // party
+				if (votingOptions & static_cast<int>(VoteOption::Party)) // party
 				{ g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", voteLine).c_str()); }
 			}
 		}
 
+		// Damage logger
 		if ((Vars::Visuals::damageLoggerConsole.m_Var || Vars::Visuals::damageLoggerChat.m_Var) && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
 			if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
@@ -120,6 +124,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			}
 		}
 
+		// Show Hitboxes on hit
 		if (Vars::Aimbot::Global::showHitboxes.m_Var && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
 			if (Vars::Aimbot::Global::clearPreviousHitbox.m_Var) { g_Interfaces.DebugOverlay->ClearAllOverlays(); }
@@ -134,6 +139,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			g_Visuals.DrawHitboxMatrix(pEntity, Colors::HitboxFace, Colors::HitboxEdge, time);
 		}
 
+		// Catbot identification (Achievement)
 		if (uNameHash == FNV1A::HashConst("achievement_earned"))
 		{
 			const int player = pEvent->GetInt("player", 0xDEAD);
@@ -209,4 +215,66 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		//g_Interfaces.CVars->ConsolePrintf("assister_fallback: %s\nkill_streak_total: %d\nkill_streak_wep: %d\nkill_streak_assist: %d\nkill_streak_victim: %d\nducks_streaked: %d\nduck_streak_assist: %d\nduck_streak_victim: %d\n", assister_fallback, kill_streak_total, kill_streak_wep, kill_streak_assist, kill_streak_victim, ducks_streaked, duck_streak_total, duck_streak_assist, duck_streak_victim);
 		//g_Interfaces.CVars->ConsolePrintf("rocket_jump: %d\nweapon_def_index: %d\ncrit_type: %d\n", rocket_jump, weapon_def_index, crit_type);
 	}*/
+}
+
+// User Message info
+void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
+{
+	switch (type)
+	{
+		case VoteStart:
+		{
+			const int team = msgData.ReadByte();
+			const int caller = msgData.ReadByte();
+			char reason[64], voteTarget[64];
+			msgData.ReadString(reason, 64);
+			msgData.ReadString(voteTarget, 64);
+			const int target = static_cast<unsigned char>(msgData.ReadByte()) >> 1;
+
+			PlayerInfo_t infoTarget{}, infoCaller{};
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			{
+				if (target && caller && g_Interfaces.Engine->GetPlayerInfo(target, &infoTarget) && g_Interfaces.Engine->GetPlayerInfo(caller, &infoCaller))
+				{
+					const bool bSameTeam = team == pLocal->GetTeamNum();
+
+					const auto bluntLine = tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoTarget.name);
+					const auto verboseLine = tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoCaller.friendsID, infoTarget.name, infoTarget.friendsID);
+
+					const int votingOptions = Vars::Misc::VotingOptions.m_Var;
+					const bool verboseVoting = votingOptions & static_cast<int>(VoteOption::Verbose);
+
+					const auto chosenLine = verboseVoting ? verboseLine.c_str() : bluntLine.c_str();
+
+					if (votingOptions & static_cast<int>(VoteOption::Text)) // text
+					{
+						g_Notifications.Add(chosenLine);
+					}
+					if (votingOptions & static_cast<int>(VoteOption::Console)) // console
+					{
+						g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", chosenLine).c_str());
+					}
+					if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
+					{
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), chosenLine);
+					}
+					if (votingOptions & static_cast<int>(VoteOption::Party)) // party
+					{
+						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", chosenLine).c_str());
+					}
+					if (votingOptions & static_cast<int>(VoteOption::AutoVote) && bSameTeam && target != g_Interfaces.Engine->GetLocalPlayer()) // auto-vote
+					{
+						if (g_GlobalInfo.ignoredPlayers.find(infoTarget.friendsID) != g_GlobalInfo.ignoredPlayers.end() ||
+							(target > 0 && target <= 128 && g_EntityCache.Friends[target])) {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
+						}
+						else {
+							g_Interfaces.Engine->ClientCmd_Unrestricted("vote option1"); //f1 on everyone else
+						}
+					}
+				}
+			}
+			break;
+		}
+	}
 }
