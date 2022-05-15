@@ -50,29 +50,24 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			}
 		}
 
-		if ((Vars::Misc::VoteRevealerText.m_Var || Vars::Misc::VoteRevealerChat.m_Var || Vars::Misc::VoteRevealerConsole.m_Var || Vars::Misc::VoteRevealerParty.m_Var) && uNameHash == FNV1A::HashConst("vote_cast"))
+		if (Vars::Misc::VotingOptions.m_Var && uNameHash == FNV1A::HashConst("vote_cast"))
 		{
 			const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt("entityid"));
 			if (pEntity && pEntity->IsPlayer())
 			{
-				const bool bVotedYes = pEvent->GetInt("vote_option") == 0;
+				const bool bVotedYes = pEvent->GetInt("vote_option") == 0; const int votingOptions = Vars::Misc::VotingOptions.m_Var;
 				PlayerInfo_t pi{};
 				g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				std::string voteString = std::string(pEntity->GetTeamNum() != pLocal->GetTeamNum() ? "(Enemy vote) " : "") + std::string(pi.name) + " voted " + std::string(bVotedYes ? "Yes" : "No");
-				if (Vars::Misc::VoteRevealerParty.m_Var)
-				{
-					g_Interfaces.Engine->ClientCmd_Unrestricted(
-						tfm::format("say_party \"%s voted %s\"", pi.name, bVotedYes ? "Yes" : "No").c_str());
-				}
-				if (Vars::Misc::VoteRevealerText.m_Var) {
-					g_Notifications.Add(voteString);
-				}
-				if (Vars::Misc::VoteRevealerConsole.m_Var) {
-					g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, _("%s\n"), voteString.c_str());
-				}
-				if (Vars::Misc::VoteRevealerText.m_Var) {
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pEntity->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
-				}
+				auto voteLine = tfm::format("%s %s voted %s", (pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+
+				if (votingOptions & (1 << 0)) // text
+				{ g_Notifications.Add(voteLine); }
+				if (votingOptions & (1<<1)) // console
+				{ g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", voteLine).c_str()); }
+				if (votingOptions & (1<<2)) // chat
+				{ g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), voteLine.c_str()); }
+				if (votingOptions & (1<<3)) // party
+				{ g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", voteLine).c_str()); }
 			}
 		}
 

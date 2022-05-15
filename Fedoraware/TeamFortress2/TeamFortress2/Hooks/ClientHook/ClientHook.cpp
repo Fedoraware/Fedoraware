@@ -315,7 +315,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 					auto bluntLine = tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name);
 					auto verboseLine = tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID);
 
-					int votingOptions = Vars::Misc::VotingOptions.m_Var; bool verboseVoting = Vars::Misc::VerboseVoting.m_Var;
+					int votingOptions = Vars::Misc::VotingOptions.m_Var; bool verboseVoting = votingOptions & (1 << 5);
 					
 					const auto chosenLine = verboseVoting ?  verboseLine.c_str() : bluntLine.c_str();
 
@@ -342,6 +342,23 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 			msgData.Seek(0);
 			break;
 		}
+	case ForcePlayerViewAngles:
+	{
+		return Vars::Visuals::PreventForcedAngles.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
+	case SpawnFlyingBird:
+	case PlayerGodRayEffect:
+	case PlayerTauntSoundLoopStart:
+	case PlayerTauntSoundLoopEnd:
+	{
+		return Vars::Visuals::RemoveTaunts.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
+	case Shake:
+	case Fade:
+	case Rumble:
+	{
+		return Vars::Visuals::RemoveScreenEffects.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);

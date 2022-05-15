@@ -419,12 +419,14 @@ namespace Vars
 
 	namespace Visuals
 	{
-		inline CVar<bool> RemoveDisguises{ false, L"Remove Disguises" };
+		inline CVar<bool> RemoveDisguises{ true, L"Remove Disguises" };
 		inline CVar<bool> RemoveTaunts{ false, L"Remove Taunts" };
-		inline CVar<int> FieldOfView{ 110, L"Field of View" };
+		inline CVar<int> FieldOfView{ 130, L"Field of View" };
 		inline CVar<int> AimFOVAlpha{ 10, L"Aim FOV Alpha" };
 		inline CVar<bool> RemoveScope{ true, L"Remove Scope" };
 		inline CVar<bool> RemoveMOTD{ false, L"Remove MOTD" };
+		inline CVar<bool> RemoveScreenEffects{ true };
+		inline CVar<bool> PreventForcedAngles{ true };
 		inline CVar<bool> ScopeLines{ false, L"Scope lines" };
 		inline CVar<bool> PickupTimers{ false, L"Pickup Timers" };
 		inline CVar<bool> RemoveZoom{ true, L"Remove Zoom" };
@@ -571,18 +573,7 @@ namespace Vars
 		inline CVar<bool> EdgeJump{ false, L"Edge Jump" };
 		inline CVar<int> EdgeJumpKey{ VK_MENU, L"Edge Jump key" };
 		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
-		inline CVar<bool> VoteRevealerText{ false, L"Reveal votes To Text" };
-		inline CVar<bool> VoteRevealerConsole{ false, L"Reveal votes To Console" };
-		inline CVar<bool> VoteRevealerChat{ false, L"Reveal votes To Chat" };
-		inline CVar<bool> VoteRevealerParty{ false, L"Reveal votes To Party" };
-		inline CVar<int> VotingOptions{ 11 }; // 01011 {autovote, party, chat, console, text}
-		inline CVar<bool> VerboseVoting{ false };
-		inline CVar<bool> AutoVote{ false, L"Auto-Vote" };
-		inline CVar<bool> AnnounceVotesText{ true, L"Announce votes to text" };
-		inline CVar<bool> AnnounceVotesConsole{ false, L"Announce votes to console" };
-		inline CVar<bool> AnnounceVotesChat{ false, L"Announce votes to chat" };
-		inline CVar<bool> AnnounceVotesParty{ false, L"Announce votes to party" };
-		inline CVar<int> AnnounceVotes{ 0, L"Announce votes" }; //0 - basic, 1 detailed
+		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
 		inline CVar<bool> CheatsBypass{ false, L"Force sv_cheats to 1 (clientside only)" };
 		inline CVar<int> Roll{ false, L"Super Crouch Speed" };
 		inline CVar<bool> ChatCensor{ false, L"Chat Censor" };
