@@ -222,6 +222,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
+				SAVE_VAR(Vars::Aimbot::Global::AimStickies);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
@@ -935,6 +936,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AutoShoot);
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
+				LOAD_VAR(Vars::Aimbot::Global::AimStickies);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);

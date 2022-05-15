@@ -186,6 +186,31 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
+	if (Vars::Aimbot::Global::AimStickies.m_Var)
+	{
+		for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+		{
+			if (!(Projectile->GetPipebombType() == TYPE_STICKY))
+				continue;
+
+			const auto owner = g_Interfaces.EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(Projectile->GetThrower()));
+
+			if ((!Projectile->GetTouched()) || (owner->GetTeamNum() == pLocal->GetTeamNum()))
+				continue;
+
+			Vec3 vPos = Projectile->GetWorldSpaceCenter();
+			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
+			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
+
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+				continue;
+
+			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
+
+			g_AimbotGlobal.m_vecTargets.push_back({ Projectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo });
+		}
+	}
+
 	return !g_AimbotGlobal.m_vecTargets.empty();
 }
 
