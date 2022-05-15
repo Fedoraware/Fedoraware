@@ -38,7 +38,7 @@ bool CheaterDetection::isTickCountManipulated(int CurrentTickCount) {
 
 void CheaterDetection::OnTick() {
 	auto pLocal = g_EntityCache.m_pLocal;
-	if (!pLocal || !g_Interfaces.Engine->IsConnected() || Vars::ESP::Players::CheaterDetection.m_Var) {
+	if (!pLocal || !g_Interfaces.Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var) {
 		return;
 	}
 

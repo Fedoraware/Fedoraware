@@ -308,50 +308,26 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 			PlayerInfo_t info_target{}, info_caller{};
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				if (target > 0 && g_Interfaces.Engine->GetPlayerInfo(target, &info_target) && caller > 0 && g_Interfaces.Engine->GetPlayerInfo(caller, &info_caller))
+				if (target && caller && g_Interfaces.Engine->GetPlayerInfo(target, &info_target) && g_Interfaces.Engine->GetPlayerInfo(caller, &info_caller))
 				{
 					bool bSameTeam = team == pLocal->GetTeamNum();
 
-					if (Vars::Misc::AnnounceVotesConsole.m_Var)
-					{
-						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
-							g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
-						}
-						else {
-							g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
-						}
-					}
-					if (Vars::Misc::AnnounceVotesText.m_Var)
-					{
-						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
-							g_Notifications.Add(tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name));
-						}
-						else {
-							g_Notifications.Add(tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID));
-						}
-					}
-					if (Vars::Misc::AnnounceVotesChat.m_Var)
-					{
-						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %scalled a vote on %s%s", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, white, green, info_target.name).c_str());
-						}
-						else {
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %s %s %s[U:1:%s] %scalled a vote on %s%s %s[U:1:%s]", clr, green, bSameTeam ? "" : "(Enemy)", info_caller.name, yellow, info_caller.friendsID, white, green, info_target.name, yellow, info_target.friendsID).c_str());
-						}
-					}
-					if (Vars::Misc::AnnounceVotesParty.m_Var)
-					{
-						if (Vars::Misc::AnnounceVotes.m_Var == 0) {
-							g_Interfaces.Engine->ClientCmd_Unrestricted(
-								tfm::format("say_party \"%s %s called a vote on %s\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name).c_str());
-						}
-						else {
-							g_Interfaces.Engine->ClientCmd_Unrestricted(
-								tfm::format("say_party \"%s %s [U:1:%s] called a vote on %s [U:1:%s]\"", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID).c_str());
-						}
-					}
+					auto bluntLine = tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", info_caller.name, info_target.name);
+					auto verboseLine = tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", info_caller.name, info_caller.friendsID, info_target.name, info_target.friendsID);
 
-					if (Vars::Misc::AutoVote.m_Var && bSameTeam && target != g_Interfaces.Engine->GetLocalPlayer())
+					int votingOptions = Vars::Misc::VotingOptions.m_Var; bool verboseVoting = votingOptions & (1 << 5);
+					
+					const auto chosenLine = verboseVoting ?  verboseLine.c_str() : bluntLine.c_str();
+
+					if (votingOptions & (1 << 0)) // text
+					{ g_Notifications.Add(chosenLine); }
+					if (votingOptions & (1<<1)) // console
+					{ g_Interfaces.CVars->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", chosenLine).c_str()); }
+					if (votingOptions & (1<<2)) // chat
+					{ g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), chosenLine); }
+					if (votingOptions & (1<<3)) // party
+					{ g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", chosenLine).c_str()); }
+					if (votingOptions & (1 << 4) && bSameTeam && target != g_Interfaces.Engine->GetLocalPlayer()) // auto-vote
 					{
 						if (g_GlobalInfo.ignoredPlayers.find(info_target.friendsID) != g_GlobalInfo.ignoredPlayers.end() ||
 							(target > 0 && target <= 128 && g_EntityCache.Friends[target])) {
@@ -366,6 +342,23 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& msgData)
 			msgData.Seek(0);
 			break;
 		}
+	case ForcePlayerViewAngles:
+	{
+		return Vars::Visuals::PreventForcedAngles.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
+	case SpawnFlyingBird:
+	case PlayerGodRayEffect:
+	case PlayerTauntSoundLoopStart:
+	case PlayerTauntSoundLoopEnd:
+	{
+		return Vars::Visuals::RemoveTaunts.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
+	case Shake:
+	case Fade:
+	case Rumble:
+	{
+		return Vars::Visuals::RemoveScreenEffects.m_Var ? true : Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
+	}
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.Client, type, msgData);
