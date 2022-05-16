@@ -607,8 +607,12 @@ namespace Utils
 			else
 			{
 				int ID = pWeapon->GetWeaponID();
-
-				if (ID == TF_WEAPON_COMPOUND_BOW || ID == TF_WEAPON_PIPEBOMBLAUNCHER)
+				switch (ID) {
+				case TF_WEAPON_COMPOUND_BOW:
+				case TF_WEAPON_PIPEBOMBLAUNCHER:
+				case TF_WEAPON_STICKY_BALL_LAUNCHER:
+				case TF_WEAPON_GRENADE_STICKY_BALL:
+				case TF_WEAPON_CANNON:
 				{
 					static bool bCharging = false;
 
@@ -619,9 +623,13 @@ namespace Utils
 						bCharging = false;
 						return true;
 					}
+					break;
 				}
-
-				else if (ID == TF_WEAPON_JAR || ID == TF_WEAPON_JAR_MILK || ID == 107/*pyro's gas thing*/)
+				case TF_WEAPON_JAR:
+				case TF_WEAPON_JAR_MILK:
+				case TF_WEAPON_JAR_GAS:
+				case TF_WEAPON_GRENADE_JAR_GAS:
+				case TF_WEAPON_CLEAVER:
 				{
 					static float flThrowTime = 0.0f;
 
@@ -632,20 +640,14 @@ namespace Utils
 						flThrowTime = 0.0f;
 						return true;
 					}
+					break;
 				}
-
-				else
+				default:
 				{
-					//if (!g_GlobalInfo.m_bWeaponCanAttack && (pCmd->buttons & IN_ATTACK))
-					//{
-					//	if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-					//		pCmd->buttons |= IN_ATTACK2;
-
-					//	pCmd->buttons &= ~IN_ATTACK;
-					//}
-
 					if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack)
-						return true;
+					{ return true; }
+					break;
+				}
 				}
 			}
 		}
