@@ -78,8 +78,15 @@ void CheaterDetection::OnTick() {
 			if (g_Interfaces.GlobalVars->tickcount) {
 				if (isTickCountManipulated(currenttickcount)) {
 					//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(g_Interfaces.GlobalVars->tickcount - currenttickcount)).c_str());
-					strikes[friendsID] += 1;
+					if (UserData[friendsID].areTicksSafe) {
+						strikes[friendsID] += 1;
+						UserData[friendsID].areTicksSafe = false;
+					}
 				}
+				else {
+					UserData[friendsID].areTicksSafe = true;
+				}
+				
 			}
 
 			markedcheaters[friendsID] = strikes[friendsID] > 4;

@@ -11,6 +11,7 @@ struct Detection {
 struct PlayerData {
 	int aimSuspicion = 0;
 	Detection detections;
+	bool areTicksSafe = true;
 };
 
 class CheaterDetection

@@ -48,5 +48,9 @@ bool __fastcall InCondHook::Hook(void* ecx, void* edx, ETFCond nCond)
 		return false;
 	}
 
+	//if (nCond == TF_COND_FEIGN_DEATH) { // stops the death chat message when you kill a dead ringer?
+	//	return false;
+	//}
+
 	return Func.Original<fn>()(ecx, edx, nCond);
 }
