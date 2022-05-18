@@ -1,18 +1,14 @@
 #pragma once
 #include "../AimbotGlobal/AimbotGlobal.h"
 
-class CAimbotProjectile
-{
-private:
-	struct ProjectileInfo_t
-	{
+class CAimbotProjectile {
+	struct ProjectileInfo_t {
 		float m_flVelocity = 0.0f;
 		float m_flGravity = 0.0f;
 		float m_flMaxTime = Vars::Aimbot::Projectile::predTime.m_Var;
 	};
 
-	struct Predictor_t
-	{
+	struct Predictor_t {
 		CBaseEntity* m_pEntity = nullptr;
 		Vec3 m_vPosition = {};
 		Vec3 m_vVelocity = {};
@@ -22,29 +18,27 @@ private:
 		Vec3 Extrapolate(float time);
 	};
 
-	struct Solution_t
-	{
+	struct Solution_t {
 		float m_flPitch = 0.0f;
 		float m_flYaw = 0.0f;
 		float m_flTime = 0.0f;
 	};
 
 	bool GetProjectileInfo(CBaseCombatWeapon* pWeapon, ProjectileInfo_t& out);
-	bool CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& ProjInfo,
+	bool CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& projInfo,
 	                   Solution_t& out);
-	bool SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& Predictor,
-	                     const ProjectileInfo_t& ProjInfo, Solution_t& out);
+	bool SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor,
+	                     const ProjectileInfo_t& projInfo, Solution_t& out);
 
-private:
 	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity);
-	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Vec3 vPredictedPos, Solution_t& out, const ProjectileInfo_t& ProjInfo, Predictor_t& Predictor);
+	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Vec3 vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo, const Predictor_t& predictor);
 	ESortMethod GetSortMethod();
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
-	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& Target);
-	bool GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& Out);
+	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& target);
+	bool GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
 	void Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vAngle);
 	bool ShouldFire(CUserCmd* pCmd);
-	bool IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
+	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 	bool m_bIsFlameThrower;
 
 public:

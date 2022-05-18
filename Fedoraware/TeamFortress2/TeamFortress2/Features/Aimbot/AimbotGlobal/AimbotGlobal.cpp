@@ -5,7 +5,9 @@
 namespace SandvichAimbot
 {
 	bool bIsSandvich;
-	void IsSandvich() {
+
+	void IsSandvich()
+	{
 		bIsSandvich = (g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
 			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_Sandvich ||
 			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
@@ -13,13 +15,16 @@ namespace SandvichAimbot
 			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
 			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_SecondBanana);
 	}
-	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget) {
+
+	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
+	{
 		const int nWeaponID = pWeapon->GetWeaponID();
 		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
-			? (pCmd->buttons & IN_ATTACK)
-			: g_AimbotGlobal.IsKeyDown());
+			                         ? (pCmd->buttons & IN_ATTACK)
+			                         : g_AimbotGlobal.IsKeyDown());
 
-		if (bShouldAim) {
+		if (bShouldAim)
+		{
 			Vec3 tr = pTarget->GetAbsOrigin() - pLocal->GetEyePosition();
 			Vec3 angle;
 			Math::VectorAngles(tr, angle);
@@ -38,8 +43,7 @@ bool CAimbotGlobal::IsKeyDown()
 
 void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 {
-	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool
-	{
+	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
 		switch (Method)
 		{
 		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
@@ -51,8 +55,7 @@ void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 
 const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 {
-	return *std::min_element(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool
-	{
+	return *std::min_element(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
 		switch (Method)
 		{
 		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
@@ -60,8 +63,6 @@ const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 		default: return false;
 		}
 	});
-
-	return {};
 }
 
 bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
