@@ -20,7 +20,9 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 		m_Var)) { return false; }
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -28,13 +30,15 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 void CAuto::Run(CUserCmd* pCmd)
 {
 	if (Vars::Triggerbot::Stab::Disguise.m_Var && g_AutoStab.m_bShouldDisguise)
+	{
 		g_Interfaces.Engine->ClientCmd_Unrestricted(_("lastdisguise"));
+	}
 
 	g_GlobalInfo.m_bAutoBackstabRunning = false;
 	g_AutoStab.m_bShouldDisguise = false;
 
-	auto pLocal = g_EntityCache.m_pLocal;
-	auto pWeapon = g_EntityCache.m_pLocalWeapon;
+	const auto pLocal = g_EntityCache.m_pLocal;
+	const auto pWeapon = g_EntityCache.m_pLocalWeapon;
 
 	if (pLocal && pWeapon)
 	{

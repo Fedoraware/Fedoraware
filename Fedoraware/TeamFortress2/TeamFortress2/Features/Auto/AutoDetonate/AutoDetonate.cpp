@@ -3,8 +3,7 @@
 #include "../../Vars.h"
 
 //credits to KGB
-class CEntitySphereQuery
-{
+class CEntitySphereQuery {
 public:
 	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0,
 	                   const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS)
@@ -29,111 +28,66 @@ private:
 	CBaseEntity* m_pList[MAX_SPHERE_QUERY];
 };
 
+bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBaseEntity*>& entityGroup, float radius)
+{
+	for (const auto& pExplosive : entityGroup)
+	{
+		CBaseEntity* pTarget;
+
+		// Iterate through entities in sphere radius
+		for (CEntitySphereQuery sphere(pExplosive->GetWorldSpaceCenter(), radius);
+		     (pTarget = sphere.GetCurrentEntity()) != nullptr;
+		     sphere.NextEntity())
+		{
+			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
+				GetTeamNum())
+			{
+				continue;
+			}
+
+			const bool bIsPlayer = pTarget->IsPlayer();
+			if (bIsPlayer || pTarget->IsBuilding())
+			{
+				CONTINUE_IF(bIsPlayer && g_AutoGlobal.ShouldIgnore(pTarget))
+
+				CGameTrace trace = {};
+				CTraceFilterWorldAndPropsOnly traceFilter = {};
+				Utils::Trace(pExplosive->GetWorldSpaceCenter(), pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter,
+				             &trace);
+
+				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Detonate::Active.m_Var)
-		return;
+	if (!Vars::Triggerbot::Detonate::Active.m_Var) { return; }
 
-	m_bDetonated = false;
+	bool shouldDetonate = false;
 
-	if (Vars::Triggerbot::Detonate::Stickies.m_Var)
+	// Check sticky detonation
+	if (Vars::Triggerbot::Detonate::Stickies.m_Var
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
 	{
-		m_flRadius = (115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var);
-
-		for (const auto& Sticky : g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES))
-		{
-			CBaseEntity* pEntity = nullptr;
-
-			for (CEntitySphereQuery Sphere(Sticky->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.
-				     GetCurrentEntity()) != nullptr; Sphere.NextEntity())
-			{
-				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->
-					GetTeamNum())
-					continue;
-
-				const bool bIsPlayer = pEntity->IsPlayer();
-				if (bIsPlayer || pEntity->IsBuilding())
-				{
-					if (bIsPlayer)
-					{
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-							continue;
-
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-							continue;
-
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-							continue;
-					}
-
-					CTraceFilterWorldAndPropsOnly Filter = {};
-					CGameTrace Trace = {};
-					Utils::Trace(Sticky->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter,
-					             &Trace);
-
-					if (Trace.flFraction >= 0.99f || Trace.entity == pEntity)
-					{
-						m_bDetonated = true;
-						break;
-					}
-				}
-			}
-
-			if (m_bDetonated)
-				break;
-		}
+		shouldDetonate = true;
 	}
 
-	if (Vars::Triggerbot::Detonate::Flares.m_Var)
+	// Check flare detonation
+	if (Vars::Triggerbot::Detonate::Flares.m_Var
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
 	{
-		m_flRadius = 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var;
-
-		//There should only be one in existance at the time
-		//Old flare will blow up / vanish before the slow shit reloads
-		for (const auto& pFlare : g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES))
-		{
-			CBaseEntity* pEntity = nullptr;
-
-			for (CEntitySphereQuery Sphere(pFlare->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.
-				     GetCurrentEntity()) != nullptr; Sphere.NextEntity())
-			{
-				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->
-					GetTeamNum())
-					continue;
-
-				const bool bIsPlayer = pEntity->IsPlayer();
-				if (bIsPlayer || pEntity->IsBuilding())
-				{
-					if (bIsPlayer)
-					{
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-							continue;
-
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-							continue;
-
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-							continue;
-					}
-
-					CTraceFilterWorldAndPropsOnly Filter = {};
-					CGameTrace Trace = {};
-					Utils::Trace(pFlare->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter,
-					             &Trace);
-
-					if (Trace.flFraction >= 0.99f || (Trace.entity == pEntity && Trace.entity != pLocal))
-					{
-						m_bDetonated = true;
-						break;
-					}
-				}
-			}
-
-			if (m_bDetonated)
-				break;
-		}
+		shouldDetonate = true;
 	}
 
-	if (m_bDetonated)
+	if (shouldDetonate)
+	{
 		pCmd->buttons |= IN_ATTACK2;
+	}
 }

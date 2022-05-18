@@ -3,7 +3,6 @@
 
 class CAuto
 {
-private:
 	bool ShouldRun(CBaseEntity* pLocal);
 
 public:
