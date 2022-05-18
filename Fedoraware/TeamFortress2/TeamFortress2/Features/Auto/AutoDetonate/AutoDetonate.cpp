@@ -28,161 +28,96 @@ private:
 	CBaseEntity* m_pList[MAX_SPHERE_QUERY];
 };
 
+bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBaseEntity*>& entityGroup, float radius)
+{
+	for (const auto& pExplosive : entityGroup)
+	{
+		CBaseEntity* pTarget;
+
+		// Iterate through entities in sphere radius
+		for (CEntitySphereQuery sphere(pExplosive->GetWorldSpaceCenter(), radius);
+		     (pTarget = sphere.GetCurrentEntity()) != nullptr;
+		     sphere.NextEntity())
+		{
+			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
+				GetTeamNum())
+			{
+				continue;
+			}
+
+			const bool bIsPlayer = pTarget->IsPlayer();
+			if (bIsPlayer || pTarget->IsBuilding())
+			{
+				if (bIsPlayer)
+				{
+					PlayerInfo_t pInfo{};
+					if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo))
+					{
+						continue;
+					}
+
+					// Ignore friends
+					if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pTarget->GetIndex()])
+					{
+						continue;
+					}
+
+					// Ignore ignored
+					if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+					{
+						continue;
+					}
+
+					// Ignore cloaked
+					if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
+					{
+						continue;
+					}
+
+					// Ignore invulnerable
+					if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable())
+					{
+						continue;
+					}
+				}
+
+				CGameTrace trace = {};
+				CTraceFilterWorldAndPropsOnly traceFilter = {};
+				Utils::Trace(pExplosive->GetWorldSpaceCenter(), pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter,
+				             &trace);
+
+				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Detonate::Active.m_Var)
+	if (!Vars::Triggerbot::Detonate::Active.m_Var) { return; }
+
+	bool shouldDetonate = false;
+
+	// Check sticky detonation
+	if (Vars::Triggerbot::Detonate::Stickies.m_Var
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
 	{
-		return;
+		shouldDetonate = true;
 	}
 
-	m_bDetonated = false;
-
-	if (Vars::Triggerbot::Detonate::Stickies.m_Var)
+	// Check flare detonation
+	if (Vars::Triggerbot::Detonate::Flares.m_Var
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
 	{
-		m_flRadius = (115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var);
-
-		for (const auto& sticky : g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES))
-		{
-			CBaseEntity* pTarget;
-
-			for (CEntitySphereQuery sphere(sticky->GetWorldSpaceCenter(), m_flRadius); (pTarget = sphere.
-				     GetCurrentEntity()) != nullptr; sphere.NextEntity())
-			{
-				if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
-					GetTeamNum())
-				{
-					continue;
-				}
-				
-				const bool bIsPlayer = pTarget->IsPlayer();
-				if (bIsPlayer || pTarget->IsBuilding())
-				{
-					if (bIsPlayer)
-					{
-						PlayerInfo_t pInfo{};
-						if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo))
-						{
-							continue;
-						}
-
-						// Ignore friends
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pTarget->GetIndex()])
-						{
-							continue;
-						}
-
-						// Ignore ignored
-						if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
-						{
-							continue;
-						}
-
-						// Ignore cloaked
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
-						{
-							continue;
-						}
-
-						// Ignore invulnerable
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable())
-						{
-							continue;
-						}
-					}
-
-					CGameTrace trace = {};
-					CTraceFilterWorldAndPropsOnly traceFilter = {};
-					Utils::Trace(sticky->GetWorldSpaceCenter(), pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter,
-					             &trace);
-
-					if (trace.flFraction >= 0.99f || trace.entity == pTarget)
-					{
-						m_bDetonated = true;
-						break;
-					}
-				}
-			}
-
-			if (m_bDetonated)
-			{
-				break;
-			}
-		}
+		shouldDetonate = true;
 	}
 
-	if (Vars::Triggerbot::Detonate::Flares.m_Var)
-	{
-		m_flRadius = 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var;
-
-		//There should only be one in existance at the time
-		//Old flare will blow up / vanish before the slow shit reloads
-		for (const auto& pFlare : g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES))
-		{
-			CBaseEntity* pEntity = nullptr;
-
-			for (CEntitySphereQuery Sphere(pFlare->GetWorldSpaceCenter(), m_flRadius); (pEntity = Sphere.
-				     GetCurrentEntity()) != nullptr; Sphere.NextEntity())
-			{
-				if (!pEntity || pEntity == pLocal || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->
-					GetTeamNum())
-				{
-					continue;
-				}
-
-				const bool bIsPlayer = pEntity->IsPlayer();
-				if (bIsPlayer || pEntity->IsBuilding())
-				{
-					if (bIsPlayer)
-					{
-						PlayerInfo_t pInfo{};
-						if (!g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pInfo))
-						{
-							continue;
-						}
-
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-						{
-							continue;
-						}
-
-						// Ignore ignored
-						if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
-						{
-							continue;
-						}
-
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-						{
-							continue;
-						}
-
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-						{
-							continue;
-						}
-					}
-
-					CTraceFilterWorldAndPropsOnly Filter = {};
-					CGameTrace Trace = {};
-					Utils::Trace(pFlare->GetWorldSpaceCenter(), pEntity->GetWorldSpaceCenter(), MASK_SOLID, &Filter,
-					             &Trace);
-
-					if (Trace.flFraction >= 0.99f || (Trace.entity == pEntity && Trace.entity != pLocal))
-					{
-						m_bDetonated = true;
-						break;
-					}
-				}
-			}
-
-			if (m_bDetonated)
-			{
-				break;
-			}
-		}
-	}
-
-	if (m_bDetonated)
+	if (shouldDetonate)
 	{
 		pCmd->buttons |= IN_ATTACK2;
 	}
