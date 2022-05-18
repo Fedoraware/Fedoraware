@@ -668,8 +668,6 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
-	PlayerInfo_t info{};
-
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nWeaponID = pWeapon->GetWeaponID();
@@ -682,36 +680,9 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				Player->GetMaxHealth()) && (Player->GetTeamNum() == pLocal->GetTeamNum())))
 				continue;
 
-			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
-				continue;
-
 			if (Player->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
-					continue;
-
-				if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
-				{
-					int nCond = Player->GetCond();
-					if (nCond & TFCond_Milked || nCond & TFCond_Jarated)
-					{
-						//pass
-					}
-					else
-					{
-						continue;
-					}
-				}
-
-				if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
-					continue;
-
-				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && Player->
-					GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum())
-					continue;
-
-				if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
-					continue;
+				CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(Player))
 			}
 
 			Vec3 vPos = Player->GetWorldSpaceCenter();

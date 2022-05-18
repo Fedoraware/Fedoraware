@@ -41,6 +41,7 @@ public:
 	bool IsKeyDown();
 	void SortTargets(const ESortMethod& Method);
 	const Target_t& GetBestTarget(const ESortMethod& Method);
+	bool ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun = false);
 
 public:
 	std::vector<Target_t> m_vecTargets = {};

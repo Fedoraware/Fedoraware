@@ -63,3 +63,29 @@ const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 
 	return {};
 }
+
+bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
+{
+	PlayerInfo_t pInfo{};
+	if (!pTarget) { return true; }
+	if (g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
+	if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable()) { return true; }
+	if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
+	{
+		const int nCond = pTarget->GetCond();
+		if (!(nCond & TFCond_Milked) && !(nCond & TFCond_Jarated) && !(nCond & TFCond_CloakFlicker))
+		{
+			return true;
+		}
+	}
+	if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && pTarget->IsTaunting()) { return true; }
+
+	// Special conditions for mediguns
+	if (!hasMedigun)
+	{
+		if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { return true; }
+		if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+	}
+
+	return false;
+}

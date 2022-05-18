@@ -78,8 +78,6 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
-	PlayerInfo_t info{};
-
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
@@ -96,33 +94,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (bIsMedigun && (pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()) > 472.f))
 				continue;
 
-			if (!g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &info))
-				continue;
-
-			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
-				continue;
-
-			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked())
-			{
-				int nCond = Player->GetCond();
-				if (nCond & TFCond_Milked || nCond & TFCond_Jarated || nCond & TFCond_CloakFlicker)
-				{
-					//pass
-				}
-				else
-				{
-					continue;
-				}
-			}
-
-			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting() && (!bIsMedigun))
-				continue;
-
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()] && (!bIsMedigun))
-				continue;
-
-			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end() && (!bIsMedigun))
-				continue;
+			CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(Player, bIsMedigun))
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var)
 			{
