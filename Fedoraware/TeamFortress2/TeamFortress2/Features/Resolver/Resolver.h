@@ -21,6 +21,7 @@ struct BruteData {
 class CResolver
 {
 public:
+	bool ShouldAutoResolve();
 	void Run();
 	void Update(CUserCmd* pCmd);
 	void OnPlayerHurt(CGameEvent* pEvent);

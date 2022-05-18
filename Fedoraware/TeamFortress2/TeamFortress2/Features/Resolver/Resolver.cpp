@@ -2,6 +2,18 @@
 
 static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
+bool CResolver::ShouldAutoResolve()
+{
+	if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE) { return false; }
+
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	{
+		if (pWeapon->GetClassID() == ETFClassID::CTFMinigun) { return false; }
+	}
+
+	return true;
+}
+
 /* Run the resolver and apply the resolved angles */
 void CResolver::Run()
 {
@@ -15,7 +27,7 @@ void CResolver::Run()
 
 		for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
 		{
-			CBaseEntity* entity = nullptr;
+			CBaseEntity* entity;
 			PlayerInfo_t temp{};
 
 			if (!(entity = g_Interfaces.EntityList->GetClientEntity(i))) {
@@ -118,7 +130,11 @@ void CResolver::Run()
 			}
 			case 6:
 			{
-				*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				// Auto resolver
+				if (ShouldAutoResolve())
+				{
+					*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				}
 				break;
 			}
 			default:
