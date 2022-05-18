@@ -64,14 +64,7 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
 
-	if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-		return false;
-
-	if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-		return false;
-
-	if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-		return false;
+	if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 	return true;
 }

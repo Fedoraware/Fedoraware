@@ -48,16 +48,7 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 			const bool bIsPlayer = pTarget->IsPlayer();
 			if (bIsPlayer || pTarget->IsBuilding())
 			{
-				if (bIsPlayer)
-				{
-					PlayerInfo_t pInfo{};
-
-					CONTINUE_IF(!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo))
-					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pTarget->GetIndex()])
-					CONTINUE_IF(g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
-					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
-					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable())
-				}
+				CONTINUE_IF(bIsPlayer && g_AutoGlobal.ShouldIgnore(pTarget))
 
 				CGameTrace trace = {};
 				CTraceFilterWorldAndPropsOnly traceFilter = {};

@@ -27,9 +27,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		// Ignore ignored players
-		PlayerInfo_t pInfo;
-		g_Interfaces.Engine->GetPlayerInfo(player->GetIndex(), &pInfo);
-		if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { continue; }
+		CONTINUE_IF(g_AutoGlobal.ShouldIgnore(player))
 
 		// Check for any zoomed snipers
 		if (HAS_CONDITION(player, TFCond_Zoomed))
