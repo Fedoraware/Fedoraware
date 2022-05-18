@@ -51,34 +51,12 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 				if (bIsPlayer)
 				{
 					PlayerInfo_t pInfo{};
-					if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo))
-					{
-						continue;
-					}
 
-					// Ignore friends
-					if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pTarget->GetIndex()])
-					{
-						continue;
-					}
-
-					// Ignore ignored
-					if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
-					{
-						continue;
-					}
-
-					// Ignore cloaked
-					if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
-					{
-						continue;
-					}
-
-					// Ignore invulnerable
-					if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable())
-					{
-						continue;
-					}
+					CONTINUE_IF(!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo))
+					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pTarget->GetIndex()])
+					CONTINUE_IF(g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
+					CONTINUE_IF(Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable())
 				}
 
 				CGameTrace trace = {};
