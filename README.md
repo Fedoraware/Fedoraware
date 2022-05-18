@@ -1,10 +1,8 @@
-<h3 align="center">Official fedoraware repository until further notice?</h3>
-
+<h2 align="center" style="margin-top: 0px;">Fedoraware</h2>  
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
-<h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
-<h1 align="center" style="margin-top: 0px;">SE-Owned but bloated</h1>
+<h2 align="center" style="margin-top: 0px;">SE-Owned but <s>bloated</s> totally amazing and good</h2>
 <p align="center">
 <a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>  
 <a href="https://discord.gg/kFkk2jahak"><img alt="Fedoraware Discord Server :trollface:" src="https://img.shields.io/discord/937420218672771112?label=Discord&logo=Discord"></a>  
@@ -18,10 +16,10 @@
 - The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
 
 ## Guide:
-- Buy rijin instead, if you can not afford rijin use this until you can.
+- Buy [Rijin](https://rijin.solutions) instead, if you can not afford Rijin use this until you can.
 - We suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
 - Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
-- __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__
+- __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__ (Dear god please link a config and follow the issue template)
 - Should you choose to compile this cheat yourself, you may enable enhanced instruction sets to possibly increase performance. __Properties -> C/C++ -> Code Generation -> Enable Enhanced Instruction Set__. Be sure to check what's the best instruction set you can use by checking in [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html), otherwise the cheat won't work on your PC. 
 
 ## Media:  
