@@ -428,6 +428,37 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_CritHack.Draw();
 			g_Radar.Run();
 
+			if (Vars::AntiHack::AntiAim::Active.m_Var)
+			{
+				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				{
+					auto GetRotatedPosition = [](Vec3 vStart, const float flRotation, const float flDistance)
+					{
+						const auto rad = DEG2RAD(flRotation);
+						vStart.x += cosf(rad) * flDistance;
+						vStart.y += sinf(rad) * flDistance;
+
+						return vStart;
+					};
+
+					static constexpr Color_t realColour = { 0, 255,0, 255 };
+					static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
+
+					const auto& vOrigin = pLocal->GetAbsOrigin();
+
+					Vec3 vScreen1, vScreen2;
+					if (Utils::W2S(vOrigin, vScreen1))
+					{
+						constexpr auto distance = 50.f;
+						if (Utils::W2S(GetRotatedPosition(vOrigin, g_GlobalInfo.m_vRealViewAngles.y, distance), vScreen2))
+							g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
+
+						if (Utils::W2S(GetRotatedPosition(vOrigin, g_GlobalInfo.m_vFakeViewAngles.y, distance), vScreen2))
+							g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
+					}
+				}
+			}
+
 			// you can use it for more, i'm sure. - myzarfin
 			g_Notifications.Think();
 
