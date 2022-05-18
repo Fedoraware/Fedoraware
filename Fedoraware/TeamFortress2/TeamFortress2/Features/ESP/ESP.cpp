@@ -842,19 +842,20 @@ bool InCond(CBaseEntity* pEntity, int eCond)
 std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 {
 	std::vector<std::wstring> szCond{};
-	int nCond = pEntity->GetCond(), nCondEx = pEntity->GetCondEx(), nCondEx2 = pEntity->GetCondEx2();
-	int nFlag = pEntity->GetFlags();
+	const int nCond = pEntity->GetCond();
+	const int nCondEx = pEntity->GetCondEx();
+	const int nFlag = pEntity->GetFlags();
 
 	if (InCond(pEntity, 61)) {
-		szCond.push_back(L"Blast resistance");
+		szCond.emplace_back(L"Bullet resistance");
 	}
 
 	if (InCond(pEntity, 62)) {
-		szCond.push_back(L"Bullet resistance");
+		szCond.emplace_back(L"Blast resistance");
 	}
 
 	if (InCond(pEntity, 63)) {
-		szCond.push_back(L"Fire resistance");
+		szCond.emplace_back(L"Fire resistance");
 	}
 
 
@@ -863,53 +864,53 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-				szCond.push_back(L"Revved");
+				szCond.emplace_back(L"Revved");
 		}
 	}
 
 	if (nFlag & FL_DUCKING)
 	{
-		szCond.push_back(L"Ducking");
+		szCond.emplace_back(L"Ducking");
 	}
 
 	if (pEntity->GetHealth() > pEntity->GetMaxHealth())
-		szCond.push_back(L"Overhealed");
+		szCond.emplace_back(L"Overhealed");
 
 	if (nCond & TFCond_Ubercharged || nCond & TFCondEx_PhlogUber)
-		szCond.push_back(L"Ubered");
+		szCond.emplace_back(L"Ubered");
 
 	if (nCond & TFCond_MegaHeal)
-		szCond.push_back(L"Megahealed");
+		szCond.emplace_back(L"Megahealed");
 
 	if (nCond & TFCond_Bonked)
-		szCond.push_back(L"Bonked");
+		szCond.emplace_back(L"Bonked");
 
 	if (nCond & TFCond_Kritzkrieged || nCond & TFCond_MiniCrits ||
 		nCondEx & TFCondEx_CritCanteen || nCondEx & TFCondEx_CritOnFirstBlood || nCondEx & TFCondEx_CritOnWin ||
 		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
 		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
-		szCond.push_back(L"Crit boosted");
+		szCond.emplace_back(L"Crit boosted");
 
 	if (nCond & TFCond_Cloaked)
-		szCond.push_back(L"Cloaked");
+		szCond.emplace_back(L"Cloaked");
 
 	if (nCond & TFCond_Zoomed)
-		szCond.push_back(L"Scoped");
+		szCond.emplace_back(L"Scoped");
 
 	if (nCond & TFCond_Taunting)
-		szCond.push_back(L"Taunting");
+		szCond.emplace_back(L"Taunting");
 
 	if (nCond & TFCond_Disguised)
-		szCond.push_back(L"Disguised");
+		szCond.emplace_back(L"Disguised");
 
 	if (nCond & TFCond_Milked)
-		szCond.push_back(L"Milked");
+		szCond.emplace_back(L"Milked");
 
 	if (nCond & TFCond_Jarated)
-		szCond.push_back(L"Jarated");
+		szCond.emplace_back(L"Jarated");
 
 	if (nCond & TFCond_Bleeding)
-		szCond.push_back(L"Bleeding");
+		szCond.emplace_back(L"Bleeding");
 
 	return szCond;
 }
