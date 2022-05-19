@@ -188,7 +188,6 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs"); // Used by attribute changer
 	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
 	if (!std::filesystem::exists(ConfigPath))

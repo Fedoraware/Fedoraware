@@ -132,23 +132,25 @@ void CAttributChanger::Run()
 void CAttributChanger::SaveConfig()
 {
 	if (m_szAttributePath.empty())
-		m_szAttributePath = (g_CFG.m_sConfigPath + _(L"\\FedCore\\ATTRIBUTES.seo"));
+	{
+		m_szAttributePath = (g_CFG.GetConfigPath() + _("\\FedCore\\ATTRIBUTES.seo"));
+	}
 
-	m_Write = std::wofstream(m_szAttributePath, std::ios::out);
+	m_Write = std::ofstream(m_szAttributePath, std::ios::out);
 
 	if (m_Write.is_open())
 	{
 		for (auto& Attribute : m_mapAttributes)
 		{
-			wchar_t szKey[85];
-			wsprintfW(szKey, L"%i", Attribute.second.m_nItemDefIndex);
+			char szKey[85];
+			sprintf(szKey, "%i", Attribute.second.m_nItemDefIndex);
 
-			SaveInt(szKey, L"Index", Attribute.second.m_nItemDefIndex);
-			SaveInt(szKey, L"Effect", Attribute.second.m_nEffect);
-			SaveInt(szKey, L"Particle", Attribute.second.m_nParticle);
-			SaveInt(szKey, L"Sheen", Attribute.second.m_nSheen);
-			SaveBool(szKey, L"Ancient", Attribute.second.m_bAncient);
-			SaveBool(szKey, L"StyleOverride", Attribute.second.m_bStyleOverride);
+			SaveInt(szKey, "Index", Attribute.second.m_nItemDefIndex);
+			SaveInt(szKey, "Effect", Attribute.second.m_nEffect);
+			SaveInt(szKey, "Particle", Attribute.second.m_nParticle);
+			SaveInt(szKey, "Sheen", Attribute.second.m_nSheen);
+			SaveBool(szKey, "Ancient", Attribute.second.m_bAncient);
+			SaveBool(szKey, "StyleOverride", Attribute.second.m_bStyleOverride);
 		}
 
 		m_Write.close();
@@ -158,26 +160,28 @@ void CAttributChanger::SaveConfig()
 void CAttributChanger::LoadConfig()
 {
 	if (m_szAttributePath.empty())
-		m_szAttributePath = (g_CFG.m_sConfigPath + _(L"\\FedCore\\ATTRIBUTES.seo"));
+	{
+		m_szAttributePath = (g_CFG.GetConfigPath() + _("\\FedCore\\ATTRIBUTES.seo"));
+	}
 
-	m_Read = std::wifstream(m_szAttributePath);
+	m_Read = std::ifstream(m_szAttributePath);
 
 	if (m_Read.is_open())
 	{
-		wchar_t *szSection, szSections[MAX_BUFFER];
-		GetPrivateProfileSectionNamesW(szSections, MAX_BUFFER, m_szAttributePath.c_str());
-		szSection = szSections;
+		char szSections[MAX_BUFFER];
+		GetPrivateProfileSectionNamesA(szSections, MAX_BUFFER, m_szAttributePath.c_str());
+		char* szSection = szSections;
 
 		while (*szSection != NULL)
 		{
-			const int nIndex = LoadInt(szSection, L"Index");
+			const int nIndex = LoadInt(szSection, "Index");
 			m_mapAttributes[nIndex] = {
-				nIndex, LoadInt(szSection, L"Effect"),
-				LoadInt(szSection, L"Particle"), LoadInt(szSection, L"Sheen"),
-				LoadBool(szSection, L"Ancient"), LoadBool(szSection, L"StyleOverride")
+				nIndex, LoadInt(szSection, "Effect"),
+				LoadInt(szSection, "Particle"), LoadInt(szSection, "Sheen"),
+				LoadBool(szSection, "Ancient"), LoadBool(szSection, "StyleOverride")
 			};
 
-			szSection += (wcslen(szSection) + 1);
+			szSection += (strlen(szSection) + 1);
 		}
 
 		m_Read.close();

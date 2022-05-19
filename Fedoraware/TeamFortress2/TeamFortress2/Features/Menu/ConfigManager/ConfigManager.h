@@ -7,7 +7,6 @@
 
 class CConfigManager
 {
-private:
 	boost::property_tree::ptree WriteTree;
 	boost::property_tree::ptree ReadTree;
 
@@ -31,8 +30,8 @@ private:
 
 	std::string CurrentConfig = "default";
 	std::string ConfigPath;
+
 public:
-	std::wstring m_sConfigPath;
 	const std::string ConfigExtension = ".fw";
 
 	CConfigManager();
