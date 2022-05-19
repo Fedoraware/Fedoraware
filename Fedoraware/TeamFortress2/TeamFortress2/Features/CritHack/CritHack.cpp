@@ -48,7 +48,7 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 	// Find the next crit tick
 	int foundTick = -1;
 	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
-	for (int i = 0; i < loops; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		const int cmdNum = pCmd->command_number + i;
 		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
