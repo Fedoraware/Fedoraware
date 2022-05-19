@@ -348,18 +348,17 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 				//Prepare the correct texture index for player icon, and draw it
 				{
-					if (Vars::Radar::Players::IconType.m_Var == 2)
+					PlayerInfo_t playerInfo{};
+					if (Vars::Radar::Players::IconType.m_Var == 2 && I::Engine->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
 					{
-						PlayerInfo_t pi{};
-						if (I::Engine->GetPlayerInfo(player->GetIndex(), &pi))
-						{
-							g_Draw.Avatar(nX, nY, nSize, nSize, pi.friendsID);
-						}
+						// Avatar
+						g_Draw.Avatar(nX, nY, nSize, nSize, playerInfo.friendsID);
 					}
 					else
 					{
 						int nTexture = player->GetClassNum();
 
+						// Portrait
 						if (Vars::Radar::Players::IconType.m_Var == 1)
 						{
 							nTexture += 10;
