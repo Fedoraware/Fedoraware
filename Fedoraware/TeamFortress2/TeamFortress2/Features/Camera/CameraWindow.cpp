@@ -1,5 +1,4 @@
 #include "CameraWindow.h"
-#include "../../Hooks/ViewRenderHook/ViewRenderHook.h"
 #include "../ESP/ESP.h"
 
 void CCameraWindow::Init()
@@ -112,7 +111,7 @@ void CCameraWindow::Update()
 }
 
 // Renders another view onto a texture
-void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
+void CCameraWindow::RenderView(void* ecx, void* edx, const CViewSetup& pViewSetup)
 {
 	if (!CameraTex || Vars::Visuals::CameraMode.m_Var == 0 ||
 		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) { return; }
@@ -135,19 +134,16 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	mirrorView.fov = Vars::Visuals::CameraFOV.m_Var;
 	mirrorView.m_flAspectRatio = static_cast<float>(mirrorView.width) / static_cast<float>(mirrorView.height);
 
-	RenderCustomView(ecx, mirrorView, CameraTex);
+	RenderCustomView(ecx, edx, mirrorView, CameraTex);
 }
 
-void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture) {
-	using namespace ViewRenderHook;
-	using namespace RenderView;
-
+void CCameraWindow::RenderCustomView(void* ecx, void* edx, const CViewSetup& pViewSetup, ITexture* pTexture) {
 	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
 
 	renderCtx->PushRenderTargetAndViewport();
 	renderCtx->SetRenderTarget(pTexture);
 
-	Func.Original<fn>()(ecx, pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
+	g_Interfaces.ViewRender->RenderView(pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
 
 	renderCtx->PopRenderTargetAndViewport();
 	renderCtx->Release();

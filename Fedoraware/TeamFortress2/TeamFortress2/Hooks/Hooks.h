@@ -1,52 +1,49 @@
 #pragma once
 
-#include "ClientHook/ClientHook.h"
-#include "ClientModeHook/ClientModeHook.h"
-#include "PredictionHook/PredictionHook.h"
-#include "SurfaceHook/SurfaceHook.h"
-#include "PanelHook/PanelHook.h"
-#include "EngineVGuiHook/EngineVGuiHook.h"
-#include "EngineClientHook/EngineClientHook.h"
-#include "ModelRenderHook/ModelRenderHook.h"
-#include "UniformRandomStreamHook/UniformRandomStreamHook.h"
-#include "GetDrawPositionHook/GetDrawPositionHook.h"
-#include "PerformScreenSpaceEffectsHook/PerformScreenSpaceEffectsHook.h"
-#include "InCondHook/InCondHook.h"
-#include "DrawStaticPropsHook/DrawStaticPropsHook.h"
-#include "EngineHook/EngineHook.h"
-#include "MenuHook/MenuHook.h"
-#include "Scoreboard/Scoreboard.h"
-#include "InputHook/InputHook.h"
-#include "GameMovementHook/GameMovementHook.h"
-#include "FireBullets/FireBullets.h"
-#include "Viewmodel/Viewmodel.h"
-#include "InventoryExpander/InventoryExpander.h"
-#include "IsLocalPlayerUsingVisionFilterFlags/IsLocalPlayerUsingVisionFilterFlags.h"
-#include "Ragdoll/Ragdoll.h"
-#include "ViewRenderHook/ViewRenderHook.h"
-#include "MaterialSystemHook/MaterialSystemHook.h"
-#include "EventManagerHook/EventManagerHook.h"
+#include "../Utils/MinHook/MinHook.h"
+#include "../SDK/SDK.h"
+#include <stdexcept>
 
-class CHooks
+class CHook
 {
 private:
-	HWND m_hwWindow = 0;
-	void* m_pOriginal;
+	void* m_pOriginalFunction = nullptr;
 
 public:
-	void Init();
-	void Release();
-	void Create(void* pSrc, void* pDst)
+	CHook(void* pInitFunction);
+
+	void CreateHook(void* pTarget, void* pDetour)
 	{
-		if (MH_CreateHook(pSrc, pDst, &m_pOriginal) != MH_STATUS::MH_OK)
-			return;
+		if (MH_CreateHook(pTarget, pDetour, &m_pOriginalFunction) != MH_STATUS::MH_OK)
+		{
+			throw std::runtime_error("Failed to create hook");
+		}
+	}
+
+	void DisableHook()
+	{
+		if (MH_DisableHook(m_pOriginalFunction) != MH_STATUS::MH_OK)
+		{
+			throw std::runtime_error("Failed to disable hook");
+		}
 	}
 
 	template <typename FN>
-	inline FN CallOriginal()
+	inline FN Original()
 	{
-		return reinterpret_cast<FN>(m_pOriginal);
+		return reinterpret_cast<FN>(m_pOriginalFunction);
 	}
 };
 
-inline CHooks g_Hooks;
+#define MAKE_HOOK(name, address, type, callconvo, ...) namespace Hooks \
+{\
+	namespace name\
+	{\
+		void Initialize();\
+		inline CHook Hook(Initialize); \
+		using FN = type(callconvo*)(__VA_ARGS__); \
+		type callconvo Detour(__VA_ARGS__); \
+	}\
+} \
+void Hooks::name::Initialize() { Hook.CreateHook(reinterpret_cast<void*>(address), Detour); } \
+type callconvo Hooks::name::Detour(__VA_ARGS__)
