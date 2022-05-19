@@ -18,40 +18,34 @@ void C_PlayerResource::Update() {
 	}
 }
 
-int C_PlayerResource::GetHealth(CBaseEntity* player) {
+int C_PlayerResource::GetHealth(int idx) {
 	CBaseEntity* ent;
-	int idx;
+
 	/* :thinking */
 	////IF_GAME(!IsTF()) return 100;
 	ent = g_Interfaces.EntityList->GetClientEntity(Entity);
 	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
-	if (!player) { return 0; }
-	idx = player->GetIndex();
 	if (idx >= 64 || idx < 0) { return 0; }
 	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iHealth") + 4 * idx);
 }
 
 
-int C_PlayerResource::GetMaxHealth(CBaseEntity* player) {
+int C_PlayerResource::GetMaxHealth(int idx) {
 	CBaseEntity* ent;
-	int idx;
 	/* :thinking */
 	////IF_GAME(!IsTF()) return 100;
 	ent = g_Interfaces.EntityList->GetClientEntity(Entity);
 	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
-	idx = player->GetIndex();
 	if (idx >= 64 || idx < 0) { return 0; }
-	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iMaxHealth") + 4 * idx);
+	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "m_iMaxHealth") + 4 * idx);
 }
 
-int C_PlayerResource::GetMaxBuffedHealth(CBaseEntity* player) {
+int C_PlayerResource::GetMaxBuffedHealth(int idx) {
 	CBaseEntity* ent;
-	int idx;
 
 	////IF_GAME(!IsTF()) return GetMaxHealth(player);
 	ent = g_Interfaces.EntityList->GetClientEntity(Entity);
 	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
-	idx = player->GetIndex();
 	if (idx >= 64 || idx < 0) { return 0; }
 	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "m_iMaxBuffedHealth") + 4 * idx);
 }
@@ -129,13 +123,11 @@ int C_PlayerResource::GetPing(int idx) {
 	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iPing") + 4 * idx);
 }
 
-int C_PlayerResource::GetClass(CBaseEntity* player) {
+int C_PlayerResource::GetClass(int idx) {
 	CBaseEntity* ent;
-	int idx;
 
 	ent = g_Interfaces.EntityList->GetClientEntity(Entity);
 	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
-	idx = player->GetIndex();
 	if (idx >= MAX_PLAYERS || idx < 0) { return 0; }
 	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "m_iPlayerClass") + 4 * idx);
 }
@@ -159,4 +151,29 @@ int C_PlayerResource::GetTeam(int idx) {
 	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
 	if (idx >= MAX_PLAYERS || idx < 0) { return 0; }
 	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iTeam") + 4 * idx);
+}
+
+int C_PlayerResource::GetUserID(int idx)
+{
+	CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(Entity);
+	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE)
+	{ return 0; }
+	if (idx >= MAX_PLAYERS || idx < 0) { return 0; }
+	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iUserID") + 4 * idx);
+}
+
+bool C_PlayerResource::isValid(int idx)
+{
+	CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(Entity);
+	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
+	if (idx >= MAX_PLAYERS || idx < 0) { return 0; }
+	return *(int*)((unsigned)ent + g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bValid") + idx);
+}
+
+const char* C_PlayerResource::GetPlayerName(int idx)
+{
+	CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(Entity);
+	if (!ent || ent->GetClientClass()->m_ClassID != RCC_PLAYERRESOURCE) { return 0; }
+	if (idx >= MAX_PLAYERS || idx < 0) { return 0; }
+	return *(const char**)((unsigned)ent + 0x0554 + 4 * idx);
 }

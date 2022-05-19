@@ -299,7 +299,7 @@ namespace Utils
 			else if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
 				out = Colors::Friend;
 
-			else if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+			else if (g_GlobalInfo.ignoredPlayers[info.friendsID])
 				out = Colors::Ignored;
 
 			else if (pEntity->IsCloaked())
@@ -575,7 +575,7 @@ namespace Utils
 	}
 
 	__inline uintptr_t GetVirtual(void* pBaseClass, unsigned int nIndex)
-	{ 
+	{
 		return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 	}
 
