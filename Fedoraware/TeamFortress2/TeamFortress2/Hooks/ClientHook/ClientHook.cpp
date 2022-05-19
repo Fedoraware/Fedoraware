@@ -8,6 +8,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Resolver/Resolver.h"
+#include "../../Features/Menu/Playerlist/Playerlist.h"
 
 const static std::string CLEAR_MSG("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -135,6 +136,8 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage frameStage)
 				}
 			}
 
+			g_PlayerList.UpdatePlayers();
+
 			break;
 		}
 
@@ -206,7 +209,7 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(UserMessageType type, bf_re
 				if (g_Interfaces.Engine->GetPlayerInfo(entIdx, &senderInfo))
 				{
 					if (entIdx == g_Interfaces.Engine->GetLocalPlayer()) { break; }
-					if (g_GlobalInfo.ignoredPlayers.find(senderInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()
+					if (g_GlobalInfo.ignoredPlayers[senderInfo.friendsID]
 						|| (entIdx > 0 && entIdx <= 128 && g_EntityCache.Friends[entIdx]))
 					{
 						break;
