@@ -14,6 +14,10 @@
 #pragma warning (disable : 26451)
 #pragma warning (disable : 4244)
 
+#undef max
+#undef min
+
+
 class Vec2
 {
 public:
