@@ -12,6 +12,7 @@ void CMisc::Run(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -20,9 +21,9 @@ void CMisc::Run(CUserCmd* pCmd)
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
 	}
-	AutoJoin();
 	ChatSpam();
 	CheatsBypass();
+	Teleport(pCmd);
 	NoPush();
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
@@ -59,22 +60,19 @@ void CMisc::DetectChoke()
 {
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		if (!player->IsAlive())
+		if (!player->IsAlive() || player->GetDormant())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
 			continue;
 		}
 
-		if (player->GetSimulationTime() == g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime)
+		if (player->GetSimulationTime() == player->GetOldSimulationTime())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks++;
-			// TODO: This could be used to detect cheaters
+			g_GlobalInfo.chokeMap[player->GetIndex()]++;
 		} else
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()].ChokedTicks = 0;
+			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
 		}
-
-		g_GlobalInfo.chokeMap[player->GetIndex()].LastSimTime = player->GetSimulationTime();
 	}
 }
 
@@ -127,11 +125,10 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.m_Var)
 		return;
 
-	if (g_GlobalInfo.m_bAttacking) { return; }	// not needed but whatever
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
+	if (g_GlobalInfo.m_bAttacking) { return; }
 
 	Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
-	
+
 	target = nullptr;
 
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
@@ -184,6 +181,23 @@ void CMisc::CheatsBypass()
 		{
 			sv_cheats->SetValue(0);
 			cheatset = false;
+		}
+	}
+}
+
+void CMisc::Teleport(const CUserCmd* pCmd)
+{
+	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) & 0x8000)
+	{
+		if (Vars::Misc::CL_Move::TeleportMode.m_Var == 0 && g_GlobalInfo.tickShiftQueue == 0 && g_GlobalInfo.m_nShifted > 0)
+		{
+			// Plain teleport
+			g_GlobalInfo.tickShiftQueue = g_GlobalInfo.m_nShifted;
+		}
+		else if (Vars::Misc::CL_Move::TeleportMode.m_Var == 1 && pCmd->command_number % 3 == 0 && g_GlobalInfo.tickShiftQueue == 0)
+		{
+			// Smooth teleport
+			g_GlobalInfo.tickShiftQueue = 2;
 		}
 	}
 }
@@ -263,38 +277,29 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 }
 
-const std::string classNames[] = {"scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy"};
-void CMisc::AutoJoin()
-{
-	if (Vars::Misc::AutoJoin.m_Var > 0) {
-		static Timer cmdTimer{ };
-		if (cmdTimer.Run(250)) {
-			bool inTeam = false;
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
-			{
-				inTeam = pLocal->GetTeamNum() != TEAM_NONE && pLocal->IsInValidTeam();
-				if (g_Interfaces.Engine->IsInGame() && !pLocal->IsClass(Vars::Misc::AutoJoin.m_Var - 1)) {
-					const std::string classCmd = "join_class " + classNames[Vars::Misc::AutoJoin.m_Var - 1];
-					g_Interfaces.Engine->ClientCmd_Unrestricted(classCmd.c_str());
-				}
-			}
-
-			if (!inTeam && g_Interfaces.Engine->IsConnected()) {
-				g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
-			}
-		}
-	}
-}
-
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
-	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		if (!Vars::Misc::EdgeJumpKey.m_Var || GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+		// Edge Jump
+		if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
+		{
+			if (!Vars::Misc::EdgeJumpKey.m_Var || GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+			{
+				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+				{
+					pCmd->buttons |= IN_JUMP;
+				}
+			}
+		}
+
+		// Duck Jump
+		if ((nOldFlags & ~FL_ONGROUND) && (Vars::Misc::DuckJump.m_Var || Vars::Misc::Followbot::Enabled.m_Var))
 		{
 			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
-				pCmd->buttons |= IN_JUMP;
+			{
+				pCmd->buttons |= IN_DUCK;
+			}
 		}
 	}
 }
@@ -303,6 +308,44 @@ void CMisc::NoPush()
 {
 	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
+}
+
+void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (!Vars::Misc::AccurateMovement.m_Var)
+		return;
+
+	if (!pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost()
+		|| !pLocal->IsOnGround())
+		return;
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	if (pCmd->buttons & (IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
+		return;
+
+	const float Speed = pLocal->GetVecVelocity().Length();
+
+	if (Speed > 13.0f)
+	{
+		Vec3 direction = pLocal->GetVecVelocity().toAngle();
+		direction.y = pCmd->viewangles.y - direction.y;
+
+		const Vec3 negatedDirection = direction.fromAngle() * -Speed;
+		pCmd->forwardmove = negatedDirection.x;
+		pCmd->sidemove = negatedDirection.y;
+	}
+	else
+	{
+		pCmd->forwardmove = 0.0f;
+		pCmd->sidemove = 0.0f;
+	}
 }
 
 void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
@@ -314,97 +357,103 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsAGhost())
 		return;
 
-	static bool bJumpState = false;
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	static bool s_bState = false;
 
 	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!bJumpState && !pLocal->IsOnGround())
+		if (!s_bState && !pLocal->IsOnGround())
 		{
 			pCmd->buttons &= ~IN_JUMP;
 		}
-
-		else if (bJumpState)
-		{
-			bJumpState = false;
-		}
+		else if (s_bState)
+			s_bState = false;
 	}
-
-	else if (!bJumpState)
-	{
-		bJumpState = true;
-	}
-}
-
-static float angleDiffRad(float a1, float a2) noexcept
-{
-	float delta = Utils::NormalizeRad(a1 - a2);
-	if (a1 > a2)
-	{
-		if (delta >= PI) { delta -= PI * 2; }	
-	}
-	else
-	{
-		if (delta <= -PI) { delta += PI * 2; }
-	}
-	return delta;
+	else if (!s_bState)
+		s_bState = true;
 }
 
 void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (Vars::Misc::AutoStrafe.m_Var == 1) // Normal
-	{
-		if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->
-			mousedx < -1))
+	if (!Vars::Misc::AutoStrafe.m_Var)
+		return;
 
-			pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
+	if (!pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost()
+		|| pLocal->IsOnGround())
+		return;
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		return;
+
+	ConVar* cl_sidespeed = g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
+
+	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
+		return;
+
+	static bool was_jumping = false;
+	bool is_jumping = pCmd->buttons & IN_JUMP;
+
+	switch (Vars::Misc::AutoStrafe.m_Var)
+	{
+	default:
+		break;
+	case 1:
+	{
+		if (pCmd->mousedx && (!is_jumping || was_jumping))
+			pCmd->sidemove = pCmd->mousedx > 1 ? cl_sidespeed->GetFloat() : -cl_sidespeed->GetFloat();
+		was_jumping = is_jumping;
+		break;
 	}
-	if (Vars::Misc::AutoStrafe.m_Var == 2) // Directional
+	case 2:
 	{
-#
-		static bool was_jumping = false;
-		bool is_jumping = pCmd->buttons & IN_JUMP;
+		const float speed = pLocal->GetVelocity().Length2D();
 
+		if (speed < 2.0f)
+			break;
 
-		if (!pLocal->IsOnGround() && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		auto vel = pLocal->GetVelocity();
+
+		constexpr auto perfectDelta = [](float speed) noexcept
 		{
-			const float speed = pLocal->GetVelocity().Length2D();
-			auto vel = pLocal->GetVelocity();
-
-			if (speed < 2.0f)
-				return;
-
-			constexpr auto perfectDelta = [](float speed) noexcept
+			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
-				{
-					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-					static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+				static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
+				static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+				static auto wishSpeed = 30.0f;
 
-					static auto wishSpeed = 30.0f;
+				const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
 
-					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
-
-					if (term < 1.0f && term > -1.0f)
-						return acosf(term);
-				}
-				return 0.0f;
-			};
-
-			const float pDelta = perfectDelta(speed);
-			if (pDelta)
-			{
-				const float yaw = DEG2RAD(pCmd->viewangles.y);
-				const float velDir = atan2f(vel.y, vel.x) - yaw;
-				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
-				const float delta = angleDiffRad(velDir, wishAng);
-
-				float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
-
-				pCmd->forwardmove = cosf(moveDir) * 450.f;
-				pCmd->sidemove = -sinf(moveDir) * 450.f;
+				if (term < 1.0f && term > -1.0f)
+					return acosf(term);
 			}
+			return 0.0f;
+		};
+
+		const float pDelta = perfectDelta(speed);
+		if ((!is_jumping || was_jumping) && pDelta)
+		{
+			const float yaw = DEG2RAD(pCmd->viewangles.y);
+			const float velDir = atan2f(vel.y, vel.x) - yaw;
+			const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
+			const float delta = angleDiffRad(velDir, wishAng);
+
+			float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
+
+			pCmd->forwardmove = cosf(moveDir) * cl_sidespeed->GetFloat();
+			pCmd->sidemove = -sinf(moveDir) * cl_sidespeed->GetFloat();
 		}
 		was_jumping = is_jumping;
+		break;
+	}
 	}
 }
 
@@ -477,7 +526,7 @@ void CMisc::BypassPure()
 }
 
 const std::string spam_Fed[] = {
-	_("Fedoraware - github.com/M-FeD/Fedoraware"),
+	_("Fedoraware - github.com/tf2cheater2013/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
 	_("Fedoraware - Now available @ https://github.com/tf2cheater2013!"),
@@ -538,7 +587,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return;
-	
+
 	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
 		return;
 
@@ -800,34 +849,66 @@ void CMisc::SteamRPC()
 	                                              std::to_string(Vars::Misc::Steam::GroupSize.m_Var).c_str());
 }
 
+void CMisc::UnlockAchievements()
+{
+	using fn = IAchievementMgr * (*)(void);
+	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	if (achievementmgr)
+	{
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+		for (int i = 0; i < achievementmgr->GetAchievementCount(); i++)
+		{
+			achievementmgr->AwardAchievement(achievementmgr->GetAchievementByIndex(i)->GetAchievementID());
+		}
+		g_SteamInterfaces.UserStats->StoreStats();
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+	}
+}
+
+void CMisc::LockAchievements()
+{
+	using fn = IAchievementMgr * (*)(void);
+	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	if (achievementmgr)
+	{
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+		for (int i = 0; i < achievementmgr->GetAchievementCount(); i++)
+		{
+			g_SteamInterfaces.UserStats->ClearAchievement(achievementmgr->GetAchievementByIndex(i)->GetName());
+		}
+		g_SteamInterfaces.UserStats->StoreStats();
+		g_SteamInterfaces.UserStats->RequestCurrentStats();
+	}
+}
+
 // Myzarfin added this
-void Notify::Think()
+void CNotifications::Think()
 {
 	int x{1}, y{1}, size{20};
 	Color_t color;
 	float left;
 
-	if (m_notify_text.size() > (MAX_NOTIFY_SIZE + 1))
-		m_notify_text.erase(m_notify_text.begin());
+	if (m_vNotificationTexts.size() > (MAX_NOTIFY_SIZE + 1))
+		m_vNotificationTexts.erase(m_vNotificationTexts.begin());
 
-	for (size_t i{}; i < m_notify_text.size(); ++i)
+	for (size_t i{}; i < m_vNotificationTexts.size(); ++i)
 	{
-		auto notify = m_notify_text[i];
+		auto notify = m_vNotificationTexts[i];
 
 		notify->m_time -= g_Interfaces.GlobalVars->absoluteframetime;
 
 		if (notify->m_time <= 0.f)
 		{
-			m_notify_text.erase(m_notify_text.begin() + i);
+			m_vNotificationTexts.erase(m_vNotificationTexts.begin() + i);
 		}
 	}
 
-	if (m_notify_text.empty())
+	if (m_vNotificationTexts.empty())
 		return;
 
-	for (size_t i{}; i < m_notify_text.size(); ++i)
+	for (size_t i{}; i < m_vNotificationTexts.size(); ++i)
 	{
-		auto notify = m_notify_text[i];
+		auto notify = m_vNotificationTexts[i];
 
 		left = notify->m_time;
 		color = notify->m_color;
@@ -853,21 +934,15 @@ void Notify::Think()
 		mbstowcs(wc, notify->m_text.c_str(), cSize);
 
 		int w, h;
-		// g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
 		g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
-		// there was no need to do what u did to the font system mfed
 
-		g_Draw.Line(x, y, x, y + 19, {
-			            Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a
-		            });
+		delete[] wc; // Memory leak
+
+		g_Draw.Line(x, y, x, y + 19, { Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a });
 		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
-		                     {
-			                     Colors::NotifBG.r, Colors::NotifBG.g,
-			                     Colors::NotifBG.b, color.a
-		                     }, {
-			                     Colors::NotifBG.r, Colors::NotifBG.g,
-			                     Colors::NotifBG.b, 1
+							{ Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a },
+							{ Colors::NotifBG.r, Colors::NotifBG.g,              Colors::NotifBG.b, 1
 		                     }, true);
 		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
 		              {Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a},

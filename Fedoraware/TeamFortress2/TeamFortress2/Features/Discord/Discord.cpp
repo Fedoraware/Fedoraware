@@ -7,19 +7,16 @@
 inline const char* lol(int nClassNum)
 {
 	//literally just took this from ESP cuz too lazy lol
-	static const char* szClasses[] = { "Unknown Class", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer" };
-
+	static const char* szClasses[] = {"Unknown Class", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer"};
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
 }
 
-void CDiscordRPC::vFunc()
+void CDiscordRPC::Update()
 {
 	if (Vars::Misc::Discord::EnableRPC.m_Var)
 	{
-
-		static int64_t StartTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		DiscordRichPresence discordPresence;
-		memset(&discordPresence, 0, sizeof(discordPresence));
+		static int64_t startTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		DiscordRichPresence discordPresence = {};
 
 		if (g_Interfaces.Engine->IsInGame())
 		{
@@ -28,7 +25,7 @@ void CDiscordRPC::vFunc()
 				char mapName[256];
 				const char* cLevelName = g_Interfaces.Engine->GetLevelName();
 
-				if (cLevelName != NULL)
+				if (cLevelName != nullptr)
 				{
 					std::string sLevelName;
 					sLevelName.append(cLevelName);
@@ -47,10 +44,10 @@ void CDiscordRPC::vFunc()
 			}
 			else
 			{
-				discordPresence.details = NULL;
+				discordPresence.details = nullptr;
 			}
 
-			if (auto pLocal = g_EntityCache.m_pLocal)
+			if (const auto pLocal = g_EntityCache.m_pLocal)
 			{
 				if (Vars::Misc::Discord::IncludeClass.m_Var)
 				{
@@ -63,7 +60,7 @@ void CDiscordRPC::vFunc()
 				}
 				else
 				{
-					discordPresence.state = NULL;
+					discordPresence.state = nullptr;
 				}
 			}
 		}
@@ -73,9 +70,13 @@ void CDiscordRPC::vFunc()
 		}
 
 		if (Vars::Misc::Discord::IncludeTimestamp.m_Var)
-			discordPresence.startTimestamp = StartTime;
+		{
+			discordPresence.startTimestamp = startTime;
+		}
 		else
+		{
 			discordPresence.startTimestamp = NULL;
+		}
 
 		discordPresence.endTimestamp = NULL;
 

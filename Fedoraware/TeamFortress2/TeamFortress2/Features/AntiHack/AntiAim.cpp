@@ -71,8 +71,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	// Depending on the edge, choose a direction to face
 	if (edgeRightDist < edgeLeftDist) {
 		edgeToEdgeOn = 1;
-		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 1 ||
-			Vars::AntiHack::AntiAim::Pitch.m_Var == 3 ||
+		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
+			Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
 			g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
 		{
 			edgeToEdgeOn = 2;
@@ -81,8 +81,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	}
 
 	edgeToEdgeOn = 2;
-	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 1 ||
-		Vars::AntiHack::AntiAim::Pitch.m_Var == 3 ||
+	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
+		Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
 		g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
 	{
 		edgeToEdgeOn = 1;
@@ -102,6 +102,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
 	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
 
+	// AA toggle key
+	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.m_Var };
+	if (aaKey.Pressed())
+	{
+		Vars::AntiHack::AntiAim::Active.m_Var = !Vars::AntiHack::AntiAim::Active.m_Var;
+	}
+
 	if (!Vars::AntiHack::AntiAim::Active.m_Var || g_GlobalInfo.m_bForceSendPacket || g_GlobalInfo.m_bAvoidingBackstab) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
@@ -111,7 +118,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			|| pLocal->IsAGhost()) { return; }
 
 		if (g_GlobalInfo.m_bAttacking) { return; }
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) { if (Utils::IsAttacking(pCmd, pWeapon)) { return; } }
 
 		static bool bSendReal = true;
 		bool bPitchSet = true;
@@ -125,29 +131,35 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
 		case 1:
 			{
+				pCmd->viewangles.x = 0.0f;
+				g_GlobalInfo.m_vRealViewAngles.x = 0.0f;
+				break;
+			}
+		case 2:
+			{
 				pCmd->viewangles.x = -89.0f;
 				g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
 				break;
 			}
-		case 2:
+		case 3:
 			{
 				pCmd->viewangles.x = 89.0f;
 				g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
 				break;
 			}
-		case 3:
+		case 4:
 			{
 				pCmd->viewangles.x = -271.0f;
 				g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
 				break;
 			}
-		case 4:
+		case 5:
 			{
 				pCmd->viewangles.x = 271.0f;
 				g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
 				break;
 			}
-		case 5:
+		case 6:
 			{
 				static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
 				static Timer updateTimer{ };
@@ -166,7 +178,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 		}
 
-		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 6 || Vars::AntiHack::AntiAim::YawFake.m_Var == 6) {
+		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 7 || Vars::AntiHack::AntiAim::YawFake.m_Var == 7) {
 			FindEdge(pCmd->viewangles.y);
 		}
 
@@ -175,20 +187,25 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
 			case 1:
 				{
-					pCmd->viewangles.y += 90.0f;
+					pCmd->viewangles.y += 0.0f;
 					break;
 				}
 			case 2:
 				{
-					pCmd->viewangles.y -= 90.0f;
+					pCmd->viewangles.y += 90.0f;
 					break;
 				}
 			case 3:
 				{
-					pCmd->viewangles.y += 180.0f;
+					pCmd->viewangles.y -= 90.0f;
 					break;
 				}
 			case 4:
+				{
+					pCmd->viewangles.y += 180.0f;
+					break;
+				}
+			case 5:
 				{
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
@@ -198,7 +215,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
-			case 5:
+			case 6:
 				{
 					lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
 					if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
@@ -206,13 +223,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					pCmd->viewangles.y = lastRealAngle;
 					break;
 				}
-			case 6:
+			case 7:
 				{
 					if (edgeToEdgeOn == 1) { pCmd->viewangles.y += 90; }
 					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y -= 90.0f; }
 					break;
 				}
-			case 7:
+			case 8:
 				{
 					if (wasHit)
 					{
@@ -250,22 +267,27 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		// Yaw ( Fake)
 		else {
 			switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
-			case 1:
+			case 1: //fake forward for legit aa
 				{
-					pCmd->viewangles.y += 90.0f;
+					pCmd->viewangles.y += 0.0f;
 					break;
 				}
 			case 2:
 				{
-					pCmd->viewangles.y -= 90.0f;
+					pCmd->viewangles.y += 90.0f;
 					break;
 				}
 			case 3:
 				{
-					pCmd->viewangles.y += 180.0f;
+					pCmd->viewangles.y -= 90.0f;
 					break;
 				}
 			case 4:
+				{
+					pCmd->viewangles.y += 180.0f;
+					break;
+				}
+			case 5:
 				{
 					static Timer updateTimer{ };
 					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
@@ -275,7 +297,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
-			case 5:
+			case 6:
 				{
 					lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
 					if (lastFakeAngle > 180.f) { lastFakeAngle -= 360.f; }
@@ -283,13 +305,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
-			case 6:
+			case 7:
 				{
 					if (edgeToEdgeOn == 1) { pCmd->viewangles.y -= 90; }
 					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += 90.0f; }
 					break;
 				}
-			case 7:
+			case 8:
 				{
 					if (wasHit)
 					{

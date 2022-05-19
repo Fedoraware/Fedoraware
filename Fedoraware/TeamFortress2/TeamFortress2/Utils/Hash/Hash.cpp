@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <xstring>
 
+#include "../../SDK/Interfaces/Interfaces.h"
+
 std::hash<std::string_view> m_Hash;
 
 //OBSOLETE - NOT IN USE ANYMORE
@@ -42,7 +44,8 @@ const char* ToHash[] =
 		"models/props_td/atom_bomb.mdl",
 		"FocusOverlayPanel",
 		"models/props_gameplay/resupply_locker.mdl",
-		"HudScope"
+		"HudScope",
+		"info"
 };
 
 void Hash::PrintHash()
@@ -60,7 +63,7 @@ void Hash::PrintHash()
 				szPrintName += ToHash[n][Char];
 		}
 
-		printf("constexpr int %s = %lu;\n", szPrintName.data(), m_Hash(ToHash[n]));
+		g_Interfaces.CVars->ConsolePrintf("constexpr size_owned %s = %lu;\n", szPrintName.data(), m_Hash(ToHash[n]));
 	}
 
 #endif
@@ -69,6 +72,11 @@ void Hash::PrintHash()
 bool Hash::IsHudScope(const char* szName)
 {
 	return (m_Hash(szName) == HudScope);
+}
+
+bool Hash::IsHudMotd(const char* szName)
+{
+	return (m_Hash(szName) == HudMOTD);
 }
 
 bool Hash::IsResupply(const char* szName)

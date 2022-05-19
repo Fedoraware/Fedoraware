@@ -108,52 +108,54 @@ inline void ShaderStencilState_t::SetStencilState(IMatRenderContext *pRenderCont
 
 namespace Colors
 {
-	inline Color_t White =					{ 255, 255, 255, 255 };
-	inline Color_t OutlineESP =				{ 0, 0, 0, 220 };
-	inline Color_t Cond =					{ 254, 202, 87, 255 };
-	inline Color_t Target =					{ 240, 147, 43, 255 };
-	inline Color_t Invuln =					{ 120, 111, 166, 255 };
-	inline Color_t Cloak =					{ 165, 177, 194, 255 };
-	inline Color_t Friend =					{ 32, 191, 107, 255 };
-	inline Color_t Local =					{ 168, 255, 211, 255 };
-	inline Color_t Ignored =				{ 32, 191, 107, 255 };
-	inline Color_t Overheal =				{ 84, 160, 255, 255 };
-	inline Color_t Health =					{ 0, 230, 64, 255 };
-	inline Color_t Ammo =					{ 191, 191, 191, 255 };
-	inline Color_t UberColor =				{ 224, 86, 253, 255 };
-	inline Color_t TeamRed =				{ 255, 100, 87, 255 };
-	inline Color_t TeamBlu =				{ 30, 144, 255, 255 };
-	inline Color_t Enemy =					{ 255, 100, 87, 255 };
-	inline Color_t rTeam =					{ 30, 144, 255, 255 };
-	inline Color_t Hands =					{ 30, 144, 255, 255 };
-	inline Color_t HandsOverlay =			{ 255, 127, 0, 255 };
-	inline Color_t Weapon =					{ 30, 144, 255, 255 };
-	inline Color_t WeaponOverlay =			{ 255, 127, 0, 255 };
-	inline Color_t WorldModulation =		{ 255, 255, 255, 255 };
-	inline Color_t SkyModulation =			{ 255, 255, 255, 255 };
-	inline Color_t StaticPropModulation =	{ 255, 255, 255, 255 };
-	inline Color_t FOVCircle =				{ 255, 255, 255, 10 };
-	inline Color_t Bones =					{ 255, 255, 255, 255 };
-	inline Color_t BulletTracer =			{ 255, 255, 255, 255 };
-	inline Color_t FresnelBase =			{ 0,0,0,255 };
+	inline Color_t White =						{ 255, 255, 255, 255 };
+	inline Color_t OutlineESP =					{ 0, 0, 0, 255 };
+	inline Gradient_t DTBarIndicatorsCharged = { {106, 255, 131, 180}, {106, 255, 250, 180} };
+	inline Gradient_t DTBarIndicatorsCharging = { {255, 192, 81, 180}, {255, 134, 81, 180} };
+	inline Gradient_t ChokedBar =				{ { 47, 39, 0, 255 }, { 255, 210, 0, 255 } };
+	inline Gradient_t GradientHealthBar =				{ { 255, 0, 0, 255 }, { 0, 202, 124, 255 } };
+	inline Gradient_t OverhealHealthBar =		{ { 0, 202, 124, 255 }, { 167, 255, 237, 255 } };
+	inline Gradient_t UberchargeBar =			{ { 255, 255, 255, 255 }, { 255, 0, 228, 255 } };
+	inline Color_t Cond =						{ 254, 202, 87, 255 };
+	inline Color_t Target =						{ 240, 147, 43, 255 };
+	inline Color_t Invuln =						{ 120, 111, 166, 255 };
+	inline Color_t Cloak =						{ 165, 177, 194, 255 };
+	inline Color_t Friend =						{ 32, 191, 107, 255 };
+	inline Color_t Local =						{ 168, 255, 211, 255 };
+	inline Color_t Ignored =					{ 32, 191, 107, 255 };
+	inline Color_t Overheal =					{ 84, 160, 255, 255 };
+	inline Color_t Health =						{ 0, 230, 64, 255 };
+	inline Color_t Ammo =						{ 191, 191, 191, 255 };
+	inline Color_t UberColor =					{ 224, 86, 253, 255 };
+	inline Color_t TeamRed =					{ 255, 100, 87, 255 };
+	inline Color_t TeamBlu =					{ 30, 144, 255, 255 };
+	inline Color_t Enemy =						{ 255, 100, 87, 255 };
+	inline Color_t rTeam =						{ 30, 144, 255, 255 };
+	inline Color_t Hands =						{ 30, 144, 255, 255 };
+	inline Color_t HandsOverlay =				{ 255, 127, 0, 255 };
+	inline Color_t Weapon =						{ 30, 144, 255, 255 };
+	inline Color_t WeaponOverlay =				{ 255, 127, 0, 255 };
+	inline Color_t WorldModulation =			{ 255, 255, 255, 255 };
+	inline Color_t SkyModulation =				{ 255, 255, 255, 255 };
+	inline Color_t StaticPropModulation =		{ 255, 255, 255, 255 };
+	inline Color_t FOVCircle =					{ 255, 255, 255, 10 };
+	inline Color_t Bones =						{ 255, 255, 255, 255 };
+	inline Color_t BulletTracer =				{ 255, 255, 255, 255 };
+	inline Color_t FresnelBase =				{ 0,0,0,255 };
 	inline Color_t FresnelBaseHands =			{ 0,0,0,255 };
 	inline Color_t FresnelBaseWeps =			{ 0,0,0,255 };
-	inline Color_t FresnelTop = 			{ 0,255,0,255 };
-	inline Color_t AimSquareCol = 			{ 0,255,0,255 };
-	inline Color_t DtChargingLeft =			{ 255, 192, 81, 180};
-	inline Color_t DtChargingRight =		{ 255, 134, 81, 180};
-	inline Color_t DtChargedLeft =			{ 106, 255, 131, 180};
-	inline Color_t DtChargedRight =			{ 106, 255, 250, 180 };
-	inline Color_t DtOutline =				{ 30, 30, 30, 180 };
-	inline Color_t NotifBG =	{ 30, 30, 30, 255 };
-	inline Color_t NotifOutline =		{ 255, 101, 101, 255};
-	inline Color_t NotifText =			{ 255, 255, 255, 255 };
-	inline Color_t HitboxFace =			{ 255, 255, 255, 0 };
-	inline Color_t HitboxEdge =			{ 255, 255, 255, 0 };
-	inline Color_t WeaponIcon = { 255,255,255,255 };
-	inline Color_t NoscopeLines1 = { 0,0,0,255 };
-	inline Color_t NoscopeLines2 = { 0,0,0,100 };
-	inline Color_t bonecolor = { 231, 95, 255, 10 };
+	inline Color_t FresnelTop = 				{ 0,255,0,255 };
+	inline Color_t AimSquareCol = 				{ 0,255,0,255 };
+	inline Color_t DtOutline =					{ 30, 30, 30, 180 };
+	inline Color_t NotifBG =					{ 30, 30, 30, 255 };
+	inline Color_t NotifOutline =				{ 255, 101, 101, 255};
+	inline Color_t NotifText =					{ 255, 255, 255, 255 };
+	inline Color_t HitboxFace =					{ 255, 255, 255, 25 };
+	inline Color_t HitboxEdge =					{ 255, 255, 255, 175 };
+	inline Color_t WeaponIcon =					{ 255,255,255,255 };
+	inline Color_t NoscopeLines1 =				{ 0,0,0,255 };
+	inline Color_t NoscopeLines2 =				{ 0,0,0,100 };
+	inline Color_t bonecolor =					{ 231, 95, 255, 10 };
 }
 
 namespace Utils
@@ -529,7 +531,7 @@ namespace Utils
 		switch (pWeapon->GetWeaponID())
 		{
 			case TF_WEAPON_ROCKETLAUNCHER:
-			case 109:
+			case TF_WEAPON_FLAME_BALL:
 			case TF_WEAPON_GRENADELAUNCHER:
 			case TF_WEAPON_FLAREGUN:
 			case TF_WEAPON_COMPOUND_BOW:
@@ -538,19 +540,15 @@ namespace Utils
 			case TF_WEAPON_PARTICLE_CANNON:
 			case TF_WEAPON_DRG_POMSON:
 			case TF_WEAPON_RAYGUN_REVENGE:
+			case TF_WEAPON_RAYGUN:
 			case TF_WEAPON_CANNON:
 			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
 			case TF_WEAPON_FLAMETHROWER:
 			case TF_WEAPON_CLEAVER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
 			{
 				return EWeaponType::PROJECTILE;
-			}
-
-			case TF_WEAPON_PIPEBOMBLAUNCHER://dragon's fury
-			{
-				//broken Idk
-				return EWeaponType::UNKNOWN;
 			}
 
 			default:
@@ -609,8 +607,12 @@ namespace Utils
 			else
 			{
 				int ID = pWeapon->GetWeaponID();
-
-				if (ID == TF_WEAPON_COMPOUND_BOW || ID == TF_WEAPON_PIPEBOMBLAUNCHER)
+				switch (ID) {
+				case TF_WEAPON_COMPOUND_BOW:
+				case TF_WEAPON_PIPEBOMBLAUNCHER:
+				case TF_WEAPON_STICKY_BALL_LAUNCHER:
+				case TF_WEAPON_GRENADE_STICKY_BALL:
+				case TF_WEAPON_CANNON:
 				{
 					static bool bCharging = false;
 
@@ -621,9 +623,13 @@ namespace Utils
 						bCharging = false;
 						return true;
 					}
+					break;
 				}
-
-				else if (ID == TF_WEAPON_JAR || ID == TF_WEAPON_JAR_MILK || ID == 107/*pyro's gas thing*/)
+				case TF_WEAPON_JAR:
+				case TF_WEAPON_JAR_MILK:
+				case TF_WEAPON_JAR_GAS:
+				case TF_WEAPON_GRENADE_JAR_GAS:
+				case TF_WEAPON_CLEAVER:
 				{
 					static float flThrowTime = 0.0f;
 
@@ -634,20 +640,14 @@ namespace Utils
 						flThrowTime = 0.0f;
 						return true;
 					}
+					break;
 				}
-
-				else
+				default:
 				{
-					if (!g_GlobalInfo.m_bWeaponCanAttack && (pCmd->buttons & IN_ATTACK))
-					{
-						if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-							pCmd->buttons |= IN_ATTACK2;
-
-						pCmd->buttons &= ~IN_ATTACK;
-					}
-
 					if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack)
-						return true;
+					{ return true; }
+					break;
+				}
 				}
 			}
 		}
@@ -728,6 +728,46 @@ namespace Utils
 		// Nothing found
 		return -1;
 	}
+
+	// Returns the teleporter exit of a given owner
+	__inline bool GetTeleporterExit(int ownerIdx, Vec3* out)
+	{
+		const auto& buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
+
+		for (const auto& pBuilding : buildings)
+		{
+			if (!pBuilding->IsAlive()) { continue; }
+
+			const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
+			const auto nType = static_cast<EBuildingType>(building->GetType());
+
+			if (nType == EBuildingType::TELEPORTER && building->GetObjectMode() == 1 && building->GetOwner()->GetIndex() == ownerIdx)
+			{
+				*out = building->GetAbsOrigin();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	__inline int GetPlayerForUserID(int userID)
+	{
+		for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		{
+			PlayerInfo_t playerInfo{};
+			if (!g_Interfaces.Engine->GetPlayerInfo(i, &playerInfo))
+			{
+				continue;
+			}
+			// Found player
+			if (playerInfo.userID == userID)
+			{
+				return i;
+			}
+		}
+		return 0;
+	};
 }
 
 namespace Particles {

@@ -22,6 +22,14 @@ bool CCritHack::IsEnabled()
 	return true;
 }
 
+bool CCritHack::ShouldCrit()
+{
+	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000) { return true; }
+	if (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
+
+	return false;
+}
+
 /* Returns the next crit command number */
 int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 {
@@ -67,12 +75,13 @@ void CCritHack::Run(CUserCmd* pCmd)
 	int nextCrit = NextCritTick(pCmd);
 	if (nextCrit >= 0 && (pCmd->buttons & IN_ATTACK))
 	{
-		if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000)
+		if (ShouldCrit())
 		{
 			// Force next crit
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
-		} else
+		} 
+		else if (Vars::CritHack::avoidrandom.m_Var)
 		{
 			// Prevent crit
 			int tries = 0;
@@ -106,7 +115,7 @@ void CCritHack::Draw()
 	int currentY = (g_ScreenSize.h / 2) + 150;
 
 	// Are we currently forcing crits?
-	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000)
+	if (ShouldCrit())
 	{
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}

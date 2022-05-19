@@ -103,6 +103,7 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFProjectile_SentryRocket:
 			case ETFClassID::CTFProjectile_Flare:
 			case ETFClassID::CTFProjectile_Cleaver:
+			case ETFClassID::CTFProjectile_EnergyBall:
 			case ETFClassID::CTFProjectile_HealingBolt:
 			case ETFClassID::CTFProjectile_ThrowableBreadMonster:
 			{
@@ -177,6 +178,12 @@ void CEntityCache::Clear()
 
 	for (auto& Group : m_vecGroups)
 		Group.second.clear();
+}
+
+bool CEntityCache::IsFriend(int entIdx)
+{
+	if (entIdx < 0 || entIdx >= 129) { return false; }
+	return Friends[entIdx];
 }
 
 const std::vector<CBaseEntity*>& CEntityCache::GetGroup(const EGroupType& Group)

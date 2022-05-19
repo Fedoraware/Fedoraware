@@ -4,8 +4,7 @@
 static CUserCmd DummyCmd = {};
 
 //since we're going to call game functions some entity data will be modified (we'll modify it too), we'll have to restore it after running
-class CPlayerDataBackup
-{
+class CPlayerDataBackup {
 public:
 	Vec3 m_vecOrigin = {};
 	Vec3 m_vecVelocity = {};
@@ -61,7 +60,9 @@ static CPlayerDataBackup PlayerDataBackup = {};
 void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveData)
 {
 	if (!pPlayer || !pMoveData)
+	{
 		return;
+	}
 
 	pMoveData->m_bFirstRunOfFunctions = false;
 	pMoveData->m_bGameCodeMovedPlayer = false;
@@ -92,7 +93,9 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 {
 	if (!g_Interfaces.CTFGameMovement || !pPlayer || pPlayer->deadflag())
+	{
 		return false;
+	}
 
 	//set player
 	m_pPlayer = pPlayer;
@@ -122,19 +125,27 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 		}
 
 		if (pPlayer != g_EntityCache.m_pLocal)
+		{
 			pPlayer->m_hGroundEntity() = 0; //without this nonlocal players get snapped to the floor
+		}
 
 		pPlayer->m_flModelScale() -= 0.03125f; //fixes issues with corners
 
 		if (pPlayer->m_fFlags() & FL_ONGROUND)
+		{
 			pPlayer->m_vecOrigin().z += 0.03125f; //to prevent getting stuck in the ground
+		}
 
 		//for some reason if xy vel is zero it doesn't predict
 		if (fabsf(pPlayer->m_vecVelocity().x) < 0.01f)
+		{
 			pPlayer->m_vecVelocity().x = 0.015f;
+		}
 
 		if (fabsf(pPlayer->m_vecVelocity().y) < 0.01f)
+		{
 			pPlayer->m_vecVelocity().y = 0.015f;
+		}
 	}
 
 	//setup move data
@@ -146,7 +157,9 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 void CMovementSimulation::Restore()
 {
 	if (!m_pPlayer)
+	{
 		return;
+	}
 
 	m_pPlayer->SetCurrentCmd(nullptr);
 
@@ -165,10 +178,14 @@ void CMovementSimulation::Restore()
 void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenterOut)
 {
 	if (!g_Interfaces.CTFGameMovement || !m_pPlayer)
+	{
 		return;
+	}
 
 	if (m_pPlayer->GetClassID() != ETFClassID::CTFPlayer)
+	{
 		return;
+	}
 
 	//make sure frametime and prediction vars are right
 	g_Interfaces.Prediction->m_bInPrediction = true;
@@ -185,6 +202,6 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenter
 	Vec3 vMin, vMax;
 	m_pPlayer->GetRenderBounds(vMin, vMax);
 	Vec3 vWorldSpaceCenter = m_MoveData.m_vecAbsOrigin;
-	vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
+	//vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
 	worldSpaceCenterOut = vWorldSpaceCenter;
 }

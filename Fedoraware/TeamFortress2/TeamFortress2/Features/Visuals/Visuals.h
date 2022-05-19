@@ -5,10 +5,12 @@ class CVisuals
 {
 private:
 	int m_nHudZoom = 0;
+	int m_nHudMotd = 0;
 	IMaterial* m_pMatDev;
 
 public:
 	bool RemoveScope(int nPanel);
+	bool RemoveMOTD(int nPanel);
 	void FOV(CViewSetup* pView);
 	void ThirdPerson(CViewSetup* pView);
 	void ModulateWorld();
@@ -20,8 +22,10 @@ public:
 	void SkyboxChanger();
 	void BigHeads(float headSize, float torsoSize, float handSize);
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
+	
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;
+	
 	class CPrecipitation {
 	private:
 		CBaseEntity* RainEntity = nullptr;
@@ -32,6 +36,7 @@ public:
 		void Run();
 		void Cleanup();
 	};
+	CPrecipitation rain;
 
 	struct PickupData {
 		int Type = 0;
@@ -40,7 +45,28 @@ public:
 	};
 	std::vector<PickupData> PickupDatas;
 
-	CPrecipitation rain;
+	struct MaterialHandleData
+	{
+		enum class EMatGroupType
+		{
+			GROUP_OTHER,
+			GROUP_WORLD,
+			GROUP_SKY
+		};
+
+		MaterialHandle_t Handle;
+		IMaterial* Material;
+		std::string_view Group;
+		std::string_view Name;
+		EMatGroupType	 GroupType;
+		bool			 ShouldOverrideTextures;
+	};
+	std::vector<MaterialHandleData> MaterialHandleDatas;
+
+	void StoreMaterialHandles();
+	void ClearMaterialHandles();
+
+
 };
 
 inline CVisuals g_Visuals;

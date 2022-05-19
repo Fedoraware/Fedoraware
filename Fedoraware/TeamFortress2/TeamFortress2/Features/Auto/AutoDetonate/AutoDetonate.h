@@ -3,12 +3,10 @@
 
 class CAutoDetonate
 {
+	bool CheckDetonation(CBaseEntity* pLocal, const std::vector<CBaseEntity*>& entityGroup, float radius);
+
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
-
-private:
-	float m_flRadius;
-	bool m_bDetonated;
 };
 
 inline CAutoDetonate g_AutoDetonate;

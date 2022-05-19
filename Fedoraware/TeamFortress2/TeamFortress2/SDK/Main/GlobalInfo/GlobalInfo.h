@@ -15,18 +15,12 @@ struct DormantData {
 	float LastUpdate = 0.f;
 };
 
-struct ChokeData {
-	float LastSimTime = 0.f;
-	int ChokedTicks = 0;
-};
-
 struct GlobalInfo_t
 {
 	int m_nCurrentTargetIdx				= 0;
 	int m_nCurItemDefIndex              = 0;
 	int m_nWaitForShift                 = 0;
 	int m_nShifted                      = 0;
-	int dtTicks = MAX_NEW_COMMANDS; // how many to shift
 	int gNotifCounter = 0;
 	int vEyeAngDelay = 25	;
 	bool m_bWeaponCanHeadShot			= false;
@@ -54,7 +48,6 @@ struct GlobalInfo_t
 	float m_flCurAimFOV					= 0.0f;
 	Vec3 m_vPredictedPos				= {};
 	Vec3 m_vAimPos						= {};
-	Vec3 m_vEyeAngDelayed				= {};
 	VMatrix m_WorldToProjection			= {};
 	Vec3 m_vViewAngles					= {};
 	Vec3 m_vRealViewAngles				= {};
@@ -71,7 +64,9 @@ struct GlobalInfo_t
 	bool m_bFreecamActive				= false;
 	Vec3 m_vFreecamPos					= {};
 	std::map<int, DormantData> partyPlayerESP;		// < Player-Index, DormantData >
-	std::map<int, ChokeData> chokeMap;
+	std::map<int, int> chokeMap;
+	int tickShiftQueue = 0; // Ticks that shouls be shifted
+	bool m_bDrawingStaticProps = false;
 };
 
 inline GlobalInfo_t g_GlobalInfo;

@@ -27,14 +27,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
 					return false;
 
-				if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
-					return false;
-
-				if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
-					return false;
-
-				if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
-					return false;
+				if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && g_GlobalInfo.m_bWeaponCanHeadShot && Trace.hitbox !=
 					HITBOX_HEAD)

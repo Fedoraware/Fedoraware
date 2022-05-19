@@ -160,6 +160,13 @@ void Draw_t::DrawFilledTriangle(std::array<Vec2, 3>points, const Color_t& clr)
 	DrawTexturedPolygon(3, vertices.data(), clr);
 }
 
+void Draw_t::DrawOutlinedTriangle(std::array<Vec2, 3>points, const Color_t& clr)
+{
+	Line(points.at(0).x, points.at(0).y, points.at(1).x, points.at(1).y, clr);
+	Line(points.at(1).x, points.at(1).y, points.at(2).x, points.at(2).y, clr);
+	Line(points.at(2).x, points.at(2).y, points.at(0).x, points.at(0).y, clr);
+}
+
 void Draw_t::Rect(int x, int y, int w, int h, const Color_t& clr)
 {
 	g_Interfaces.Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
@@ -180,13 +187,28 @@ void Draw_t::GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, 
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, 0, 255, horizontal);
 }
 
-// above but accounts for alpha
+// above but does alpha better (imo)
 void Draw_t::GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
 {
 	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
 	g_Interfaces.Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
 	g_Interfaces.Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+}
+
+void Draw_t::GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
+{
+	g_Interfaces.Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x + w, y + h, 255, 255, horizontal);
+	g_Interfaces.Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	g_Interfaces.Surface->DrawFilledRectFade(x, y, x + w, y + h, 0, 255, horizontal);
+}
+
+void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, bool horizontal)
+{
+	OutlinedRect(x - 1, y + 1 - (h + 2), w + 2, h + 2, outline_clr);
+	GradientRectWH(x, y - h, w, h, bottom_clr, top_clr, horizontal);
+	Rect(x, y - h, w, h * (1.0f - bwidthp), { 17, 24, 26, 255 });
 }
 
 void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr)

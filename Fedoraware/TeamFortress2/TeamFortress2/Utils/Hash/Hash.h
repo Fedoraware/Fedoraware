@@ -15,6 +15,7 @@ namespace Hash
 	//Panels
 	constexpr size_owned FocusOverlayPanel = 2347069313;
 	constexpr size_owned HudScope = 4197140386;
+	constexpr size_owned HudMOTD = 263456517; // MOTD panel
 
 	//Health packs
 	constexpr size_owned MedKitBanana = 48961140;
@@ -48,4 +49,5 @@ namespace Hash
 	bool IsSpell(const char* szName);
 	bool IsResupply(const char* szName);
 	bool IsHudScope(const char* szName);
+	bool IsHudMotd(const char* szName);
 }

@@ -1,163 +1,217 @@
 #include "ConfigManager.h"
-#include "ConfigManager.h"
 
 #include <string>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
-#include "../../Radar/Radar.h"
-#include "../../SpectatorList/SpectatorList.h"
 #include "../../Misc/Misc.h"
 
-#define SAVE_VAR(x) Save(_(L#x), x.m_Var)
-#define LOAD_VAR(x) Load(_(L#x), x.m_Var)
+#define SAVE_VAR(x) SaveJson(_(#x), x.m_Var)
+#define LOAD_VAR(x) LoadJson(_(#x), x.m_Var)
 
-#define SAVE_STRING(x) Save(_(L#x), x)
-#define LOAD_STRING(x) Load(_(L#x), x)
+#define SAVE_STRING(x) SaveJson(_(#x), x)
+#define LOAD_STRING(x) LoadJson(_(#x), x)
 
-#define SAVE_OTHER(x) Save(_(L#x), x)
-#define LOAD_OTHER(x) Load(_(L#x), x)
+#define SAVE_OTHER(x) SaveJson(_(#x), x)
+#define LOAD_OTHER(x) LoadJson(_(#x), x)
 
-//stfu
-#pragma warning (disable : 6328)
-#pragma warning (disable : 6031)
-#pragma warning (disable : 4477)
-
-
-bool CConfigManager::Find(const wchar_t *name, std::wstring &output)
+boost::property_tree::ptree ColorToTree(Color_t color)
 {
-	m_Read.clear();
-	m_Read.seekg(0, std::ios::beg);
+	boost::property_tree::ptree colorTree;
+	colorTree.put("r", color.r);
+	colorTree.put("g", color.g);
+	colorTree.put("b", color.b);
+	colorTree.put("a", color.a);
 
-	while (std::getline(m_Read, output))
+	return colorTree;
+}
+
+Color_t TreeToColor(const boost::property_tree::ptree& tree)
+{
+	Color_t treeColor;
+	if (auto getValue = tree.get_optional<byte>("r")) { treeColor.r = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("g")) { treeColor.g = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("b")) { treeColor.b = *getValue; }
+	if (auto getValue = tree.get_optional<byte>("a")) { treeColor.a = *getValue; }
+
+	return treeColor;
+}
+
+boost::property_tree::ptree VecToTree(const Vec3& vec)
+{
+	boost::property_tree::ptree vecTree;
+	vecTree.put("x", vec.x);
+	vecTree.put("y", vec.y);
+	vecTree.put("z", vec.z);
+
+	return vecTree;
+}
+
+Vec3 TreeToVec(const boost::property_tree::ptree& tree)
+{
+	Vec3 treeVec;
+	if (auto getValue = tree.get_optional<float>("x")) { treeVec.x = *getValue; }
+	if (auto getValue = tree.get_optional<float>("y")) { treeVec.y = *getValue; }
+	if (auto getValue = tree.get_optional<float>("z")) { treeVec.z = *getValue; }
+
+	return treeVec;
+}
+
+void CConfigManager::SaveJson(const char* name, bool val)
+{
+	WriteTree.put(name, val);
+}
+
+void CConfigManager::SaveJson(const char* name, const std::string& val)
+{
+	WriteTree.put(name, val);
+}
+
+void CConfigManager::SaveJson(const char* name, int val)
+{
+	WriteTree.put(name, val);
+}
+
+void CConfigManager::SaveJson(const char* name, float val)
+{
+	WriteTree.put(name, val);
+}
+
+void CConfigManager::SaveJson(const char* name, Color_t val)
+{
+	WriteTree.put_child(name, ColorToTree(val));
+}
+
+void CConfigManager::SaveJson(const char* name, Gradient_t val)
+{
+	boost::property_tree::ptree gradientTree;
+	gradientTree.put_child("startColour", ColorToTree(val.startColour));
+	gradientTree.put_child("endColour", ColorToTree(val.endColour));
+
+	WriteTree.put_child(name, gradientTree);
+}
+
+void CConfigManager::SaveJson(const char* name, const Vec3& val)
+{
+	WriteTree.put_child(name, VecToTree(val));
+}
+
+void CConfigManager::SaveJson(const char* name, const Chams_t& val)
+{
+	boost::property_tree::ptree chamTree;
+	chamTree.put("showObstructed", val.showObstructed);
+	chamTree.put("drawMaterial", val.drawMaterial);
+	chamTree.put("overlayType", val.overlayType);
+	chamTree.put("chamsActive", val.chamsActive);
+	chamTree.put_child("fresnelBase", ColorToTree(val.fresnelBase));
+	chamTree.put("customMaterial", val.customMaterial);
+
+	WriteTree.put_child(name, chamTree);
+}
+
+void CConfigManager::LoadJson(const char* name, std::string& val)
+{
+	if (auto getValue = ReadTree.get_optional<std::string>(name))
 	{
-		if (output.find(name) != std::wstring::npos)
-			return true;
-	}
-
-	return false;
-}
-
-//int cum = XorStr("hello").Encrypt();
-
-void CConfigManager::Save(const wchar_t *name, bool val)
-{
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %d", name, val);
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Save(const wchar_t* name, std::string val)
-{
-	char buffer[128];
-	sprintf_s(buffer, "%ls: %s", name, val.c_str());
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Save(const wchar_t *name, int val)
-{
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %d", name, val);
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Save(const wchar_t *name, float val)
-{
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %f", name, val);
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Save(const wchar_t *name, Color_t val)
-{
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %d %d %d %d", name, val.r, val.g, val.b, val.a);
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Save(const wchar_t *name, Chams_t val)
-{
-	char buffer[64];
-	sprintf_s(buffer, "%ls: %d %d %d %d %d %d %d", name, val.showObstructed, val.drawMaterial, val.overlayType, val.chamsActive, val.fresnelBase.r, val.fresnelBase.g, val.fresnelBase.b);
-	m_Write << buffer << "\n";
-}
-
-void CConfigManager::Load(const wchar_t* name, std::string& val)
-{
-	std::wstring line = {};
-
-	if (Find(name, line)) {
-		//swscanf_s(line.c_str(), L"%*ls:");
-		std::wstring delimiter = L": ";
-		std::wstring svalue = line.substr(line.find(L": ") + 2, sizeof(line));
-		std::string stringvalue(svalue.begin(), svalue.end());
-		val = stringvalue;
+		val = *getValue;
 	}
 }
 
-void CConfigManager::Load(const wchar_t *name, bool &val)
+void CConfigManager::LoadJson(const char* name, bool& val)
 {
-	std::wstring line = {};
-
-	if (Find(name, line))
-		swscanf_s(line.c_str(), L"%*ls %d", &val);
-}
-
-void CConfigManager::Load(const wchar_t *name, int &val)
-{
-	std::wstring line = {};
-
-	if (Find(name, line))
-		swscanf_s(line.c_str(), L"%*ls %d", &val);
-}
-
-void CConfigManager::Load(const wchar_t *name, float &val)
-{
-	std::wstring line = {};
-
-	if (Find(name, line))
-		swscanf_s(line.c_str(), L"%*ls %f", &val);
-}
-
-void CConfigManager::Load(const wchar_t *name, Color_t &val)
-{
-	std::wstring line = {};
-
-	if (Find(name, line)) {
-		int r = 0, g = 0, b = 0, a = 0;
-		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
-		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	if (auto getValue = ReadTree.get_optional<bool>(name))
+	{
+		val = *getValue;
 	}
 }
 
-void CConfigManager::Load(const wchar_t* name, Chams_t& val)
+void CConfigManager::LoadJson(const char* name, int& val)
 {
-	std::wstring line = {};
+	if (auto getValue = ReadTree.get_optional<int>(name))
+	{
+		val = *getValue;
+	}
+}
 
-	if (Find(name, line)) {
-		int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
-		swscanf_s(line.c_str(), L"%*ls %d %d %d %d %d %d %d", &a, &b, &c, &d, &e, &f, &g);
-		val = { static_cast<bool>(a), static_cast<int>(b), static_cast<int>(c), static_cast<bool>(d), {static_cast<byte>(e), static_cast<byte>(f), static_cast<byte>(g), 255} };
+void CConfigManager::LoadJson(const char* name, float& val)
+{
+	if (auto getValue = ReadTree.get_optional<float>(name))
+	{
+		val = *getValue;
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Color_t& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		val = TreeToColor(*getChild);
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Gradient_t& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		if (const auto getStartColor = (*getChild).get_child_optional("startColour"))
+		{
+			val.startColour = TreeToColor(*getStartColor);
+		}
+		if (const auto endColor = (*getChild).get_child_optional("endColour"))
+		{
+			val.endColour = TreeToColor(*endColor);
+		}
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Vec3& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		val = TreeToVec(*getChild);
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Chams_t& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		if (auto getValue = (*getChild).get_optional<bool>("showObstructed")) { val.showObstructed = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("drawMaterial")) { val.drawMaterial = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("overlayType")) { val.overlayType = *getValue; }
+		if (auto getValue = (*getChild).get_optional<bool>("chamsActive")) { val.chamsActive = *getValue; }
+		if (const auto getChildColor = (*getChild).get_child_optional("fresnelBase")) { val.fresnelBase = TreeToColor(*getChildColor); }
+		if (auto getValue = (*getChild).get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
 	}
 }
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs");
+	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs"); // Used by attribute changer
+	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
-	if (!std::filesystem::exists(m_sConfigPath))
-		std::filesystem::create_directory(m_sConfigPath);
+	if (!std::filesystem::exists(ConfigPath))
+	{
+		std::filesystem::create_directory(ConfigPath);
+	}
 
-	if (!std::filesystem::exists(m_sConfigPath + _(L"\\FedCore")))
-		std::filesystem::create_directory(m_sConfigPath + _(L"\\FedCore"));
+	if (!std::filesystem::exists(ConfigPath + _("\\FedCore")))
+	{
+		std::filesystem::create_directory(ConfigPath + _("\\FedCore"));
+	}
+
+	if (!std::filesystem::exists(ConfigPath + _("\\Materials")))
+	{
+		std::filesystem::create_directory(ConfigPath + _("\\Materials"));
+	}
 }
 
-void CConfigManager::Save(const wchar_t *name)
+bool CConfigManager::SaveConfig(const std::string& configName)
 {
-	m_Write = std::wofstream(m_sConfigPath + L"\\" + name + _(L".fed"));
-
-	if (m_Write.is_open())
+	try
 	{
+		WriteTree.clear();
 		//Aimbot
 		{
 			//Global
@@ -168,6 +222,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
+				SAVE_VAR(Vars::Aimbot::Global::AimStickies);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
@@ -196,6 +251,8 @@ void CConfigManager::Save(const wchar_t *name)
 			{
 				SAVE_VAR(Vars::CritHack::Active);
 				SAVE_VAR(Vars::CritHack::indicators);
+				SAVE_VAR(Vars::CritHack::avoidrandom);
+				SAVE_VAR(Vars::CritHack::AlwaysMelee);
 				SAVE_VAR(Vars::CritHack::CritKey);
 			}
 
@@ -209,7 +266,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
-				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHead);
+				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
 				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForCharge);
@@ -217,7 +274,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
-				
 			}
 
 			//Projectile
@@ -245,6 +301,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Melee::RangeCheck);
 				SAVE_VAR(Vars::Aimbot::Melee::PredictSwing);
+				SAVE_VAR(Vars::Aimbot::Melee::WhipTeam);
 			}
 		}
 
@@ -321,7 +378,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::ESP::Players::Name);
-				SAVE_VAR(Vars::ESP::Players::NameC);
+				SAVE_VAR(Vars::ESP::Players::NameCustom);
 				SAVE_OTHER(Vars::ESP::Players::NameColor);
 				SAVE_VAR(Vars::ESP::Players::NameBox);
 				SAVE_VAR(Vars::ESP::Players::Uber);
@@ -337,9 +394,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::Bones);
 				SAVE_VAR(Vars::ESP::Players::Dlights);
 				SAVE_VAR(Vars::ESP::Players::DlightRadius);
-				SAVE_VAR(Vars::ESP::Players::Headscale);
-				SAVE_VAR(Vars::ESP::Players::Torsoscale);
-				SAVE_VAR(Vars::ESP::Players::Handscale);
+				SAVE_VAR(Vars::ESP::Players::CheaterDetection);
+				SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 			}
 
 			//Buildings
@@ -347,6 +403,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Buildings::Active);
 				SAVE_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Buildings::Name);
+				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
+				SAVE_OTHER(Vars::ESP::Buildings::NameColor);
 				SAVE_VAR(Vars::ESP::Buildings::NameBox);
 				SAVE_VAR(Vars::ESP::Buildings::Health);
 				SAVE_VAR(Vars::ESP::Buildings::Owner);
@@ -380,6 +438,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Active);
 				SAVE_VAR(Vars::Chams::Players::Wearables);
 				SAVE_VAR(Vars::Chams::Players::Weapons);
+				SAVE_VAR(Vars::Chams::Players::FadeoutTeammates);
 			}
 
 			//Buildings
@@ -410,6 +469,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::DME::WeaponsProxySkin);
 				SAVE_VAR(Vars::Chams::DME::HandsGlowAmount);
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowAmount);
+				SAVE_VAR(Vars::Chams::DME::WeaponOverlayPulse);
+				SAVE_VAR(Vars::Chams::DME::HandsOverlayPulse);
 			}
 		}
 
@@ -491,11 +552,14 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Visuals
 		{
+			SAVE_VAR(Vars::Visuals::RemoveMOTD);
 			SAVE_VAR(Vars::Visuals::RemoveDisguises);
 			SAVE_VAR(Vars::Visuals::RemoveTaunts);
 			SAVE_VAR(Vars::Visuals::FieldOfView);
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
 			SAVE_VAR(Vars::Visuals::RemoveScope);
+			SAVE_VAR(Vars::Visuals::RemoveScreenEffects);
+			SAVE_VAR(Vars::Visuals::PreventForcedAngles);
 			SAVE_VAR(Vars::Visuals::ScopeLines);
 			SAVE_VAR(Vars::Visuals::PickupTimers);
 			SAVE_VAR(Vars::Visuals::RemoveZoom);
@@ -542,9 +606,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::MoveSimLine);
-			SAVE_VAR(Vars::Visuals::VMOffX);
-			SAVE_VAR(Vars::Visuals::VMOffY);
-			SAVE_VAR(Vars::Visuals::VMOffZ);
+			SAVE_OTHER(Vars::Visuals::VMOffsets);
 			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
@@ -554,7 +616,26 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 			SAVE_VAR(Vars::Visuals::Rain);
-				
+			SAVE_VAR(Vars::Visuals::DebugInfo);
+
+			// Beans I LOVE Beans
+			{
+				SAVE_VAR(Vars::Visuals::Beans::Active);
+				SAVE_VAR(Vars::Visuals::Beans::Rainbow);
+				SAVE_OTHER(Vars::Visuals::Beans::BeamColour);
+				SAVE_VAR(Vars::Visuals::Beans::UseCustomModel);
+				SAVE_STRING(Vars::Visuals::Beans::Model);
+				SAVE_VAR(Vars::Visuals::Beans::Life);
+				SAVE_VAR(Vars::Visuals::Beans::Width);
+				SAVE_VAR(Vars::Visuals::Beans::EndWidth);
+				SAVE_VAR(Vars::Visuals::Beans::FadeLength);
+				SAVE_VAR(Vars::Visuals::Beans::Amplitude);
+				SAVE_VAR(Vars::Visuals::Beans::Brightness);
+				SAVE_VAR(Vars::Visuals::Beans::Speed);
+				SAVE_VAR(Vars::Visuals::Beans::Flags);
+				SAVE_VAR(Vars::Visuals::Beans::segments);
+			}
+
 			SAVE_VAR(Vars::Visuals::despawnTime);
 			SAVE_VAR(Vars::Visuals::damageLoggerText);
 			SAVE_VAR(Vars::Visuals::damageLoggerChat);
@@ -562,7 +643,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::Vision);
-			SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 
 			{
 				SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
@@ -570,8 +650,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				SAVE_VAR(Vars::Visuals::RagdollEffects::Dissolve);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Gold);
-				SAVE_VAR(Vars::Visuals::RagdollEffects::Ice);
+				SAVE_VAR(Vars::Visuals::RagdollEffects::RagdollType);
 			}
 
 			{
@@ -589,7 +668,9 @@ void CConfigManager::Save(const wchar_t *name)
 
 		//Misc
 		{
+			SAVE_VAR(Vars::Misc::AccurateMovement);
 			SAVE_VAR(Vars::Misc::AutoJump);
+			SAVE_VAR(Vars::Misc::DuckJump);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
 			SAVE_VAR(Vars::Misc::BypassPure);
@@ -606,20 +687,12 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::ChatCensor);
+			SAVE_VAR(Vars::Misc::ChatNL);
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::MVMRes);
 			SAVE_VAR(Vars::Misc::BeCat);
-			SAVE_VAR(Vars::Misc::VoteRevealerText);
-			SAVE_VAR(Vars::Misc::VoteRevealerConsole);
-			SAVE_VAR(Vars::Misc::VoteRevealerChat);
-			SAVE_VAR(Vars::Misc::VoteRevealerParty);
-			SAVE_VAR(Vars::Misc::AutoVote);
-			SAVE_VAR(Vars::Misc::AnnounceVotes);
-			SAVE_VAR(Vars::Misc::AnnounceVotesText);
-			SAVE_VAR(Vars::Misc::AnnounceVotesConsole);
-			SAVE_VAR(Vars::Misc::AnnounceVotesChat);
-			SAVE_VAR(Vars::Misc::AnnounceVotesParty);
+			SAVE_VAR(Vars::Misc::VotingOptions);
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
 			SAVE_VAR(Vars::Misc::ExtendFreeze);
@@ -627,15 +700,25 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::KillstreakWeapon);
 			SAVE_VAR(Vars::Misc::PartyNetworking);
 			SAVE_VAR(Vars::Misc::PartyMarker);
+			SAVE_VAR(Vars::Misc::PartyESP);
+			SAVE_VAR(Vars::Misc::Roll);
+
+			// Followbot
+			{
+				SAVE_VAR(Vars::Misc::Followbot::Enabled);
+				SAVE_VAR(Vars::Misc::Followbot::Distance);
+			}
+
 			// CL_Move
 			{
-				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
-				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
-				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
+				SAVE_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportMode);
+				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
@@ -647,14 +730,14 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarScaleY);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
-				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekKey);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
@@ -688,6 +771,7 @@ void CConfigManager::Save(const wchar_t *name)
 			//AntiAim
 			{
 				SAVE_VAR(Vars::AntiHack::AntiAim::Active);
+				SAVE_VAR(Vars::AntiHack::AntiAim::ToggleKey);
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
@@ -709,6 +793,11 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			SAVE_OTHER(Colors::OutlineESP);
+			SAVE_OTHER(Colors::DTBarIndicatorsCharged);
+			SAVE_OTHER(Colors::DTBarIndicatorsCharging);
+			SAVE_OTHER(Colors::ChokedBar);
+			SAVE_OTHER(Colors::GradientHealthBar);
+			SAVE_OTHER(Colors::OverhealHealthBar);
 			SAVE_OTHER(Colors::Cond);
 			SAVE_OTHER(Colors::Target);
 			SAVE_OTHER(Colors::Invuln);
@@ -739,10 +828,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::FresnelBaseWeps);
 			SAVE_OTHER(Colors::FresnelTop);
 			SAVE_OTHER(Colors::AimSquareCol);
-			SAVE_OTHER(Colors::DtChargingLeft);
-			SAVE_OTHER(Colors::DtChargingRight);
-			SAVE_OTHER(Colors::DtChargedLeft);
-			SAVE_OTHER(Colors::DtChargedRight);
 			SAVE_OTHER(Colors::DtOutline);
 			SAVE_OTHER(Colors::NotifBG);
 			SAVE_OTHER(Colors::NotifOutline);
@@ -754,12 +839,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::HitboxFace);
 			SAVE_OTHER(Colors::HitboxEdge);
 
-			SAVE_OTHER(g_Radar.m_nRadarX);
-			SAVE_OTHER(g_Radar.m_nRadarY);
 			SAVE_OTHER(Vars::Skybox::SkyboxNum);
 			SAVE_STRING(Vars::Skybox::SkyboxName);
-			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
-			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
 
 			SAVE_OTHER(Vars::Chams::Players::Local);
 			SAVE_OTHER(Vars::Chams::Players::Enemy);
@@ -777,7 +858,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Chams::World::Ammo);
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
-
+			SAVE_OTHER(Vars::Menu::ModernDesign);
+			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
 		//Fonts
@@ -826,20 +908,25 @@ void CConfigManager::Save(const wchar_t *name)
 			}
 		}
 
-		m_Write.close();
+		write_json(ConfigPath + "\\" + configName + ConfigExtension, WriteTree);
+		g_Notifications.Add("Config " + configName + " saved");
 	}
-	std::wstring wName = name;
-	std::string sName(wName.begin(), wName.end());
-	std::string savedString("Config " + sName + " saved.");
-	g_notify.Add(savedString);
+	catch (...)
+	{
+		return false;
+	}
+
+	return true;
 }
 
-void CConfigManager::Load(const wchar_t *name)
+bool CConfigManager::LoadConfig(const std::string& configName)
 {
-	m_Read = std::wifstream(m_sConfigPath + L"\\" + name + _(L".fed"));
-
-	if (m_Read.is_open())
+	// Read ptree from json
+	try
 	{
+		ReadTree.clear();
+		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
+
 		//Aimbot
 		{
 			//Global
@@ -850,6 +937,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::AutoShoot);
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
+				LOAD_VAR(Vars::Aimbot::Global::AimStickies);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
@@ -879,6 +967,8 @@ void CConfigManager::Load(const wchar_t *name)
 			{
 				LOAD_VAR(Vars::CritHack::Active);
 				LOAD_VAR(Vars::CritHack::indicators);
+				LOAD_VAR(Vars::CritHack::avoidrandom);
+				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
 			}
 
@@ -892,7 +982,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
-				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHead);
+				LOAD_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				LOAD_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
 				LOAD_VAR(Vars::Aimbot::Hitscan::WaitForCharge);
@@ -900,7 +990,6 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoRev);
-				
 			}
 
 			//Projectile
@@ -928,6 +1017,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Melee::RangeCheck);
 				LOAD_VAR(Vars::Aimbot::Melee::PredictSwing);
+				LOAD_VAR(Vars::Aimbot::Melee::WhipTeam);
 			}
 		}
 
@@ -1004,7 +1094,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::ESP::Players::Name);
-				LOAD_VAR(Vars::ESP::Players::NameC);
+				LOAD_VAR(Vars::ESP::Players::NameCustom);
 				LOAD_OTHER(Vars::ESP::Players::NameColor);
 				LOAD_VAR(Vars::ESP::Players::NameBox);
 				LOAD_VAR(Vars::ESP::Players::Uber);
@@ -1020,6 +1110,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Bones);
 				LOAD_VAR(Vars::ESP::Players::Dlights);
 				LOAD_VAR(Vars::ESP::Players::DlightRadius);
+				LOAD_VAR(Vars::ESP::Players::CheaterDetection);
 				LOAD_VAR(Vars::ESP::Players::WeaponIcon);
 			}
 
@@ -1028,6 +1119,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Buildings::Active);
 				LOAD_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Buildings::Name);
+				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
+				SAVE_OTHER(Vars::ESP::Buildings::NameColor);
 				LOAD_VAR(Vars::ESP::Buildings::NameBox);
 				LOAD_VAR(Vars::ESP::Buildings::Health);
 				LOAD_VAR(Vars::ESP::Buildings::Owner);
@@ -1061,6 +1154,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Players::Active);
 				LOAD_VAR(Vars::Chams::Players::Wearables);
 				LOAD_VAR(Vars::Chams::Players::Weapons);
+				LOAD_VAR(Vars::Chams::Players::FadeoutTeammates);
 			}
 
 			//Buildings
@@ -1090,6 +1184,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::DME::WeaponsProxySkin);
 				LOAD_VAR(Vars::Chams::DME::HandsGlowAmount);
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowAmount);
+				LOAD_VAR(Vars::Chams::DME::WeaponOverlayPulse);
+				LOAD_VAR(Vars::Chams::DME::HandsOverlayPulse);
 			}
 		}
 
@@ -1171,8 +1267,11 @@ void CConfigManager::Load(const wchar_t *name)
 
 		//Visuals
 		{
+			LOAD_VAR(Vars::Visuals::RemoveMOTD);
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
+			LOAD_VAR(Vars::Visuals::RemoveScreenEffects);
+			LOAD_VAR(Vars::Visuals::PreventForcedAngles);
 			LOAD_VAR(Vars::Visuals::FieldOfView);
 			LOAD_VAR(Vars::Visuals::AimFOVAlpha);
 			LOAD_VAR(Vars::Visuals::RemoveScope);
@@ -1224,9 +1323,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::MoveSimLine);
-			LOAD_VAR(Vars::Visuals::VMOffX);
-			LOAD_VAR(Vars::Visuals::VMOffY);
-			LOAD_VAR(Vars::Visuals::VMOffZ);
+			LOAD_OTHER(Vars::Visuals::VMOffsets);
 			LOAD_VAR(Vars::Visuals::VMRoll);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			LOAD_VAR(Vars::Visuals::ArrowLength);
@@ -1242,6 +1339,25 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
+			LOAD_VAR(Vars::Visuals::DebugInfo);
+
+			// Beans I LOVE Beans
+			{
+				LOAD_VAR(Vars::Visuals::Beans::Active);
+				LOAD_VAR(Vars::Visuals::Beans::Rainbow);
+				LOAD_OTHER(Vars::Visuals::Beans::BeamColour);
+				LOAD_VAR(Vars::Visuals::Beans::UseCustomModel);
+				LOAD_STRING(Vars::Visuals::Beans::Model);
+				LOAD_VAR(Vars::Visuals::Beans::Life);
+				LOAD_VAR(Vars::Visuals::Beans::Width);
+				LOAD_VAR(Vars::Visuals::Beans::EndWidth);
+				LOAD_VAR(Vars::Visuals::Beans::FadeLength);
+				LOAD_VAR(Vars::Visuals::Beans::Amplitude);
+				LOAD_VAR(Vars::Visuals::Beans::Brightness);
+				LOAD_VAR(Vars::Visuals::Beans::Speed);
+				LOAD_VAR(Vars::Visuals::Beans::Flags);
+				LOAD_VAR(Vars::Visuals::Beans::segments);
+			}
 
 			{
 				LOAD_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
@@ -1249,8 +1365,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Electrocuted);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::BecomeAsh);
 				LOAD_VAR(Vars::Visuals::RagdollEffects::Dissolve);
-				LOAD_VAR(Vars::Visuals::RagdollEffects::Gold);
-				LOAD_VAR(Vars::Visuals::RagdollEffects::Ice);
+				LOAD_VAR(Vars::Visuals::RagdollEffects::RagdollType);
 			}
 
 			{
@@ -1264,12 +1379,13 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_OTHER(Vars::Visuals::Fog::FogColor);
 				LOAD_OTHER(Vars::Visuals::Fog::FogColorSkybox);
 			}
-			
 		}
 
 		//Misc
 		{
+			LOAD_VAR(Vars::Misc::AccurateMovement);
 			LOAD_VAR(Vars::Misc::AutoJump);
+			LOAD_VAR(Vars::Misc::DuckJump);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);
@@ -1286,20 +1402,12 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
 			LOAD_VAR(Vars::Misc::ChatCensor);
+			LOAD_VAR(Vars::Misc::ChatNL);
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::MVMRes);
 			LOAD_VAR(Vars::Misc::BeCat);
-			LOAD_VAR(Vars::Misc::VoteRevealerText);
-			LOAD_VAR(Vars::Misc::VoteRevealerConsole);
-			LOAD_VAR(Vars::Misc::VoteRevealerChat);
-			LOAD_VAR(Vars::Misc::VoteRevealerParty);
-			LOAD_VAR(Vars::Misc::AutoVote);
-			LOAD_VAR(Vars::Misc::AnnounceVotes);
-			LOAD_VAR(Vars::Misc::AnnounceVotesText);
-			LOAD_VAR(Vars::Misc::AnnounceVotesConsole);
-			LOAD_VAR(Vars::Misc::AnnounceVotesChat);
-			LOAD_VAR(Vars::Misc::AnnounceVotesParty);
+			LOAD_VAR(Vars::Misc::VotingOptions);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
 			LOAD_VAR(Vars::Misc::ExtendFreeze);
@@ -1307,18 +1415,28 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::KillstreakWeapon);
 			LOAD_VAR(Vars::Misc::PartyNetworking);
 			LOAD_VAR(Vars::Misc::PartyMarker);
+			LOAD_VAR(Vars::Misc::PartyESP);
+			LOAD_VAR(Vars::Misc::Roll);
+
+			// Followbot
+			{
+				LOAD_VAR(Vars::Misc::Followbot::Enabled);
+				LOAD_VAR(Vars::Misc::Followbot::Distance);
+			}
+
 			// CL_Move
 			{
-				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
-				LOAD_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);// { 0x46, L"Teleport Key" }; //F
-				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
+				LOAD_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportMode);
+				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::AntiWarp);
-				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarStyle);
 				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
 				LOAD_VAR(Vars::Misc::CL_Move::DtbarOutlineHeight);
@@ -1327,14 +1445,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarScaleY);
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarX);
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarY);
-				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTTicks);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekKey);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoPeekDistance);
@@ -1368,6 +1486,7 @@ void CConfigManager::Load(const wchar_t *name)
 			//AntiAim
 			{
 				LOAD_VAR(Vars::AntiHack::AntiAim::Active);
+				LOAD_VAR(Vars::AntiHack::AntiAim::ToggleKey);
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawFake);
@@ -1389,6 +1508,11 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 			LOAD_OTHER(Colors::OutlineESP);
+			LOAD_OTHER(Colors::DTBarIndicatorsCharged);
+			LOAD_OTHER(Colors::DTBarIndicatorsCharging);
+			LOAD_OTHER(Colors::ChokedBar);
+			LOAD_OTHER(Colors::GradientHealthBar);
+			LOAD_OTHER(Colors::OverhealHealthBar);
 			LOAD_OTHER(Colors::Cond);
 			LOAD_OTHER(Colors::Target);
 			LOAD_OTHER(Colors::Invuln);
@@ -1419,10 +1543,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::FresnelBaseWeps);
 			LOAD_OTHER(Colors::FresnelTop);
 			LOAD_OTHER(Colors::AimSquareCol);
-			LOAD_OTHER(Colors::DtChargingLeft);
-			LOAD_OTHER(Colors::DtChargingRight);
-			LOAD_OTHER(Colors::DtChargedLeft);
-			LOAD_OTHER(Colors::DtChargedRight);
 			LOAD_OTHER(Colors::DtOutline);
 			LOAD_OTHER(Colors::NotifBG);
 			LOAD_OTHER(Colors::NotifOutline);
@@ -1433,12 +1553,6 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::bonecolor);
 			LOAD_OTHER(Colors::HitboxFace);
 			LOAD_OTHER(Colors::HitboxEdge);
-
-			LOAD_OTHER(g_Radar.m_nRadarX);
-			LOAD_OTHER(g_Radar.m_nRadarY);
-
-			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
-			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
 			LOAD_OTHER(Vars::Chams::Players::Local);
 			LOAD_OTHER(Vars::Chams::Players::Enemy);
@@ -1458,6 +1572,9 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(Vars::Skybox::SkyboxNum);
 			LOAD_STRING(Vars::Skybox::SkyboxName);
+
+			LOAD_OTHER(Vars::Menu::ModernDesign);
+			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
 		//Fonts
@@ -1507,25 +1624,29 @@ void CConfigManager::Load(const wchar_t *name)
 			}
 		}
 
-		m_Read.close();
+		g_Draw.RemakeFonts
+		({
+			{0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
+			{0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
+			{0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
+		});
+
+		CurrentConfig = configName;
+		g_Notifications.Add("Config " + configName + " loaded");
 	}
-	g_Draw.RemakeFonts
-	({
-		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
-		{ 0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.m_Var, Vars::Fonts::FONT_ESP_NAME::nWeight.m_Var, Vars::Fonts::FONT_ESP_NAME::nFlags.m_Var },
-		{ 0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.m_Var, Vars::Fonts::FONT_ESP_COND::nWeight.m_Var, Vars::Fonts::FONT_ESP_COND::nFlags.m_Var },
-		{ 0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.m_Var, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.m_Var },
-		{ 0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.m_Var, Vars::Fonts::FONT_MENU::nWeight.m_Var, Vars::Fonts::FONT_MENU::nFlags.m_Var},
-		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
-		{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
-	});
-	std::wstring wName = name;
-	std::string sName(wName.begin(), wName.end());
-	std::string loadString("Config " + sName + " loaded.");
-	g_notify.Add(loadString);
+	catch (...)
+	{
+		return false;
+	}
+
+	return true;
 }
 
-void CConfigManager::Remove(const wchar_t *name)
+void CConfigManager::RemoveConfig(const std::string& configName)
 {
-	std::filesystem::remove(m_sConfigPath + L"\\" + name + _(L".fed"));
+	std::filesystem::remove(ConfigPath + "\\" + configName + ConfigExtension);
 }

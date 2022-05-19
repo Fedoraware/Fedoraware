@@ -1,9 +1,8 @@
-#include "Hooks/Hooks.h"
+#include "Hooks/HookManager.h"
 
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
 #include "Features/Chams/DMEChams.h"
-#include "Features/ChatInfo/ChatInfo.h"
 #include "Features/Visuals/Visuals.h"
 #include "Features/Camera/CameraWindow.h"
 #include "Features/Misc/Misc.h"
@@ -11,7 +10,6 @@
 
 #include "Features/Menu/Menu.h"
 
-#include "Features/Menu/InputHelper/InputHelper.h"
 #include "Features/Menu/ConfigManager/ConfigManager.h"
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
 
@@ -29,8 +27,7 @@ void Sleep(int ms)
 
 int StringToWString(std::wstring& ws, const std::string& s)
 {
-	std::wstring wsTmp(s.begin(), s.end());
-
+	const std::wstring wsTmp(s.begin(), s.end());
 	ws = wsTmp;
 
 	return 0;
@@ -38,8 +35,7 @@ int StringToWString(std::wstring& ws, const std::string& s)
 
 inline void SetupDiscord()
 {
-	DiscordEventHandlers handlers;
-	memset(&handlers, 0, sizeof(handlers));
+	DiscordEventHandlers handlers = {};
 	Discord_Initialize("889495873183154226", &handlers, 0, "");
 }
 
@@ -57,7 +53,7 @@ void ShutdownRichPresence()
 
 void UpdateRichPresence()
 {
-	g_DiscordRPC.vFunc();
+	g_DiscordRPC.Update();
 	g_Misc.SteamRPC();
 }
 
@@ -77,7 +73,7 @@ void Initialize()
 	g_Chams.Init();
 	g_DMEChams.Init();
 	g_CameraWindow.Init();
-	g_Hooks.Init();
+	g_HookManager.Init();
 	g_ConVars.Init();
 
 	InitRichPresence();
@@ -87,15 +83,13 @@ void Uninitialize()
 {
 	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
-	g_Menu.m_bOpen = false;
-	g_Menu.menuOpen = false;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
 
 	Sleep(100);
 
 	g_Events.Destroy();
-	g_Hooks.Release();
+	g_HookManager.Release();
 
 	ShutdownRichPresence();
 
@@ -107,13 +101,10 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
-	std::wstring defaultConfig = L"default";
-	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
-
-		std::wstring s;
-		StringToWString(s, "default");
-		g_CFG.Load(s.c_str());
+	if (std::filesystem::exists(g_CFG.ConfigPath + "\\" + g_CFG.CurrentConfig)) {
+		g_CFG.LoadConfig(g_CFG.CurrentConfig);
 	}
+
 	g_Draw.RemakeFonts
 	({
 		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.m_Var, Vars::Fonts::FONT_ESP::nWeight.m_Var, Vars::Fonts::FONT_ESP::nFlags.m_Var},
@@ -124,7 +115,7 @@ void LoadDefaultConfig()
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		});
-	g_Menu.config = true;
+	g_Menu.ConfigLoaded = true;
 }
 
 DWORD WINAPI MainThread(LPVOID lpParam)
@@ -143,7 +134,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Loaded();
 
-	while (!GetAsyncKeyState(VK_F11) || g_Menu.m_bOpen) {
+	while (!GetAsyncKeyState(VK_F11) || g_Menu.IsOpen) {
 		Sleep(1000);
 		UpdateRichPresence();
 	}
@@ -159,8 +150,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{	
 		Utils::RemovePEH(hinstDLL);
-		if (auto hMainThread = WinAPI::CreateThread(0, 0, MainThread, hinstDLL, 0, 0))
+		if (const auto hMainThread = WinAPI::CreateThread(nullptr, 0, MainThread, hinstDLL, 0, nullptr))
+		{
 			WinAPI::CloseHandle(hMainThread);
+		}
 	}
 
 	return TRUE;

@@ -10,3 +10,16 @@ bool CAutoGlobal::IsKeyDown()
 	default: return (GetAsyncKeyState(Vars::Triggerbot::Global::TriggerKey.m_Var) & 0x8000);
 	}
 }
+
+bool CAutoGlobal::ShouldIgnore(CBaseEntity* pTarget)
+{
+	PlayerInfo_t pInfo{};
+	if (!pTarget) { return true; }
+	if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
+	if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { return true; }
+	if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+	if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked()) { return true; }
+	if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable()) { return true; }
+
+	return false;
+}

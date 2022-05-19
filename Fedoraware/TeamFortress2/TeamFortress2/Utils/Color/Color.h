@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "../Math/Math.h"
 
 #define DEVELOPER_BUILD
@@ -8,6 +10,11 @@ using byte = unsigned char;
 
 struct Color_t { byte r = 0, g = 0, b = 0, a = 0; };
 
+struct Gradient_t {
+	Color_t startColour = { 0,0,0,255 };
+	Color_t endColour = { 0,0,0,255 };
+};
+
 // cry
 struct Chams_t {
 	bool	showObstructed = false;
@@ -15,6 +22,7 @@ struct Chams_t {
 	int		overlayType = 0;
 	bool	chamsActive = false;
 	Color_t fresnelBase = { 0,0,0,255 };
+	std::string customMaterial = "None";
 };
 
 namespace Color

@@ -50,43 +50,40 @@
 #include "imgui.h"
 
 #include <list>
+#include <array>
 
-struct ImGradientMark
-{
-    float color[4];
-    float position; //0 to 1
+struct ImGradientMark {
+	ImVec4 Color;
+	float Position{}; // 0 to 1
 };
 
-class ImGradient
-{
+class ImGradient {
 public:
-    ImGradient();
-    ~ImGradient();
+	ImGradient();
+	~ImGradient();
 
-    void getColorAt(float position, float* color) const;
-    void addMark(float position, ImColor const color);
-    void removeMark(ImGradientMark* mark);
-    void refreshCache();
-    std::list<ImGradientMark*>& getMarks() { return m_marks; }
-public:
-    void computeColorAt(float position, float* color) const;
-    std::list<ImGradientMark*> m_marks;
-    float m_cachedValues[256 * 3];
+	void GetColorAt(float position, ImVec4* color) const;
+	void AddMark(float position, ImColor color);
+	void RemoveMark(ImGradientMark* mark);
+	void ClearMarks();
+	void RefreshCache();
+	std::list<ImGradientMark*>& GetMarks() { return Marks; }
+
+	void ComputeColorAt(float position, ImVec4* color) const;
+	std::list<ImGradientMark*> Marks;
+	std::array<ImVec4, 256> CachedValues;
 };
 
 namespace ImGui
 {
+	void GradientRect(ImGradient* gradient,
+	                  const struct ImVec2& bar_pos,
+	                  float maxWidth,
+	                  float height);
 
-    void GradientRect(ImDrawList* drawList, ImGradient* gradient,
-        struct ImVec2 const& bar_pos,
-        float maxWidth,
-        float height);
+	bool GradientButton(ImGradient* gradient);
 
-    bool GradientButton(ImGradient* gradient);
-
-    bool GradientEditor(const char* label, ImGradient* gradient,
-        ImGradientMark*& draggingMark,
-        ImGradientMark*& selectedMark);
-
-
+	bool GradientEditor(const char* label, ImGradient* gradient,
+	                    ImGradientMark*& draggingMark,
+	                    ImGradientMark*& selectedMark);
 }

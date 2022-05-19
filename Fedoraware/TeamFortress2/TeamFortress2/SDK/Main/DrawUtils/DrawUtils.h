@@ -55,9 +55,12 @@ struct Draw_t
 	void Line(int x, int y, int x1, int y1, const Color_t& clr);
 	void DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr);
 	void DrawFilledTriangle(std::array<Vec2, 3> points, const Color_t& clr);
+	void DrawOutlinedTriangle(std::array<Vec2, 3> points, const Color_t& clr);
 	void Rect(int x, int y, int w, int h, const Color_t& clr);
 	void OutlinedRect(int x, int y, int w, int h, const Color_t& clr);
 	void GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
+	void GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
+	void OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& overlay_clr, bool horizontal);
 	void GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);

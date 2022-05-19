@@ -72,7 +72,6 @@ public: //Netvars & conditions
 		M_DYNVARGET(FeignDeathReady, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bFeignDeathReady"))
 		M_DYNVARGET(StepSize, float, this, _("DT_BasePlayer"), _("localdata"), _("m_flStepSize"))
 		M_DYNVARGET(ConveyorSpeed, float, this, _("DT_FuncConveyor"), _("m_flConveyorSpeed"))
-		M_DYNVARGET(MoveType, MoveType_t, this, _("DT_BaseEntity"), _("movetype"))
 		M_DYNVARGET(MaxSpeed, float, this, _("DT_BasePlayer"), _("m_flMaxspeed"))
 		M_DYNVARGET(State, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerState"))
 		M_DYNVARGET(ViewOffset, Vec3, this, _("DT_BasePlayer"), _("localdata"), _("m_vecViewOffset[0]"))
@@ -82,6 +81,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(HitboxSet, int, this, _("DT_BaseAnimating"), _("m_nHitboxSet"))
 		M_DYNVARGET(TickBase, int, this, _("DT_BasePlayer"), _("localdata"), _("m_nTickBase"))
 		M_DYNVARGET(SimulationTime, float, this, _("DT_BaseEntity"), _("m_flSimulationTime"))
+		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), _("DT_BaseEntity"), _("m_flSimulationTime"));
 		M_DYNVARGET(hOwner, int, this, _("DT_BaseEntity"), _("m_hOwnerEntity"))
 		M_DYNVARGET(Health, int, this, _("DT_BasePlayer"), _("m_iHealth"))
 		M_DYNVARGET(TeamNum, int, this, _("DT_BaseEntity"), _("m_iTeamNum"))
@@ -113,6 +113,7 @@ public: //Netvars & conditions
 		M_OFFSETGET(VecVelocity, Vec3, 0x120)
 		M_OFFSETGET(WaterJumpTime, float, 0x10FC)
 		M_OFFSETGET(SurfaceFriction, float, 0x12D4)
+		M_OFFSETGET(MoveType, MoveType_t, 0x1A4)
 
 		M_CONDGET(OnGround, GetFlags(), FL_ONGROUND)
 		M_CONDGET(InWater, GetFlags(), FL_INWATER)
@@ -197,10 +198,13 @@ public: //Netvars & conditions
 		NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"))
 		NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"))
 		NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"))
+		NETVAR(m_bClientSideAnimation, bool, _("CBaseAnimating"), _("m_bClientSideAnimation"))
+		NETVAR(m_flPlaybackRate, float, _("CBaseAnimating"), _("m_flPlaybackRate"))
 		NETVAR(m_vecMins, Vec3, _("CBaseEntity"), _("m_vecMins"))
 		NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"))
-		NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence")
-		NETVAR(m_flCycle, int, "CBaseAnimating", "m_flCycle")
+		NETVAR(m_nSequence, int, _("CBaseAnimating"), _("m_nSequence"))
+		NETVAR(m_flCycle, float, _("CBaseAnimating"), _("m_flCycle"))
+		NETVAR(m_flAnimTime, int, _("CBaseAnimating"), _("m_flAnimTime "))
 		NETVAR(m_ConditionList, void*, _("CTFPlayer"), _("m_ConditionList"))
 
 public: //Virtuals

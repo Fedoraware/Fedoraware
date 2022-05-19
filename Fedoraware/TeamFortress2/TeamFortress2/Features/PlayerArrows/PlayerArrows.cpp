@@ -4,13 +4,19 @@
 bool CPlayerArrows::ShouldRun(CBaseEntity* pLocal)
 {
 	if (!Vars::Visuals::OutOfFOVArrows.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	{
 		return false;
+	}
 
 	if (!pLocal->IsAlive() || pLocal->IsStunned())
+	{
 		return false;
+	}
 
 	if (pLocal->IsInBumperKart() || pLocal->IsAGhost())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -18,8 +24,8 @@ bool CPlayerArrows::ShouldRun(CBaseEntity* pLocal)
 void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Color_t color)
 {
 	color.a = 150;
-	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float
-	{
+
+	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float {
 		auto vecAngle = Vec3();
 		Math::AngleVectors(vecViewAngle, &vecAngle);
 
@@ -29,13 +35,12 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 		return -atan2(vecAngle.x * vecAim.y - vecAngle.y * vecAim.x, vecAngle.x * vecAim.x + vecAngle.y * vecAim.y);
 	};
 
-	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float
-	{
+	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float {
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	};
 
-	Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
-	Vec3 vecViewAngle = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
+	const Vec3 vecViewAngle = g_Interfaces.Engine->GetViewAngles();
 
 	const float deg = GetClockwiseAngle(vecViewAngle, vecAngleTo);
 	const float xrot = cos(deg - PI / 2);
@@ -67,16 +72,16 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	const auto cy = static_cast<float>(g_ScreenSize.h / 2);
 
 	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var,
-	                                 Vars::Visuals::MinDist.m_Var, 0.0f, 1.0f), 0.0f, 1.0f);
-	Color_t HeatColor = color;
-	HeatColor.a = static_cast<byte>(fMap * 255.0f);
+	const float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var,
+	                                       Vars::Visuals::MinDist.m_Var, 0.0f, 1.0f), 0.0f, 1.0f);
+	Color_t heatColor = color;
+	heatColor.a = static_cast<byte>(fMap * 255.0f);
 
 	if (Vars::Visuals::OutOfFOVArrowsOutline.m_Var)
 	{
-		g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
-		g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
-		g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, HeatColor);
+		g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, heatColor);
+		g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, heatColor);
+		g_Draw.Line(cx + left.x, cy + left.y, cx + right.x, cy + right.y, heatColor);
 	}
 	else
 	{
@@ -85,9 +90,8 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 		t2.Init({cx + right.x, cy + right.y});
 		t3.Init({cx + x2, cy + y2});
 		std::array<Vertex_t, 3> verts{t1, t2, t3};
-		g_Draw.DrawTexturedPolygon(3, verts.data(), HeatColor);
+		g_Draw.DrawTexturedPolygon(3, verts.data(), heatColor);
 	}
-	//g_Draw.
 }
 
 void CPlayerArrows::Run()
@@ -95,24 +99,31 @@ void CPlayerArrows::Run()
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (!ShouldRun(pLocal))
+		{
 			return;
+		}
 
-		Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
+		const Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
 
 		m_vecPlayers.clear();
 
 		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->IsCloaked() || pEnemy->IsAGhost())
+			{
 				continue;
+			}
 
 			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.Friends[pEnemy->GetIndex()])
+			{
 				continue;
+			}
 
 			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
 			Vec3 vScreen;
 
-			if (!Utils::W2S(vEnemyPos, vScreen)) {
+			if (!Utils::W2S(vEnemyPos, vScreen))
+			{
 				m_vecPlayers.push_back(vEnemyPos);
 			}
 
@@ -150,9 +161,11 @@ void CPlayerArrows::Run()
 			/*m_vecPlayers.push_back(vEnemyPos);*/
 		}
 		if (m_vecPlayers.empty())
+		{
 			return;
+		}
 
-		for (const auto& Player : m_vecPlayers)
+		for (const auto& player : m_vecPlayers)
 		{
 			Color_t teamColor;
 			if (!Vars::ESP::Main::EnableTeamEnemyColors.m_Var)
@@ -170,7 +183,8 @@ void CPlayerArrows::Run()
 			{
 				teamColor = Colors::Enemy;
 			}
-			DrawArrowTo(vLocalPos, Player, teamColor);
+
+			DrawArrowTo(vLocalPos, player, teamColor);
 		}
 	}
 }

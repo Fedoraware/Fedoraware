@@ -1,7 +1,6 @@
 #include "DMEChams.h"
 
 #include "../Vars.h"
-#include "../../Hooks/ModelRenderHook/ModelRenderHook.h"
 #include "Chams.h"
 #include "../Glow/Glow.h"
 #include "../Backtrack/Backtrack.h"
@@ -609,7 +608,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}());
 			}
 
-			if (bMatWasForced && (Vars::Chams::DME::Hands.m_Var != 7))
+			if (Vars::Chams::DME::Hands.m_Var != 7)
 			{
 				if (Vars::Chams::DME::HandsRainbow.m_Var)
 				{
@@ -625,12 +624,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
-
-			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-				ModelRenderHook::DrawModelExecute::index)
-				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-			bMatWasForced = true;
 			foundselfillumtint = false;
 			if (Vars::Chams::DME::Hands.m_Var == 7)
 			{
@@ -650,6 +643,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						Color::TOFLOAT(Colors::Hands.b) * 4);
 				}
 			}
+
+			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
+
+			originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+
+			bMatWasForced = true;
 
 			if (Vars::Chams::DME::HandsProxySkin.m_Var && bMatWasForced)
 			{
@@ -705,9 +704,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index)
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
 			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
@@ -757,11 +754,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
+				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index)
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
 
@@ -849,7 +845,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}());
 				}
 
-				if (bMatWasForced && (Vars::Chams::DME::Weapon.m_Var != 7))
+				if (Vars::Chams::DME::Weapon.m_Var != 7)
 				{
 					if (Vars::Chams::DME::WeaponRainbow.m_Var)
 					{
@@ -865,12 +861,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
-
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index) // base
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
-				bMatWasForced = true;
 				foundselfillumtint = false;
 				if (Vars::Chams::DME::Weapon.m_Var == 7)
 				{
@@ -891,6 +881,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
+				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
+
+				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				bMatWasForced = true;
+				
 				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
 				{
 
@@ -945,9 +940,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index)
-						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)
@@ -996,11 +989,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
+					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index) //overlay
-						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 				}
 
 				if (bMatWasForced)

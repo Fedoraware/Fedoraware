@@ -8,22 +8,20 @@ namespace SandvichAimbot
 	extern void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget);
 }
 
-enum struct ETargetType
-{
+enum struct ETargetType {
 	UNKNOWN,
 	PLAYER,
-	BUILDING
+	BUILDING,
+	STICKY
 };
 
-enum struct ESortMethod
-{
+enum struct ESortMethod {
 	UNKNOWN,
 	FOV,
 	DISTANCE
 };
 
-struct Target_t
-{
+struct Target_t {
 	CBaseEntity* m_pEntity = nullptr;
 	ETargetType m_TargetType = ETargetType::UNKNOWN;
 	Vec3 m_vPos = {};
@@ -34,14 +32,13 @@ struct Target_t
 	bool m_bHasMultiPointed = false;
 };
 
-class CAimbotGlobal
-{
+class CAimbotGlobal {
 public:
 	bool IsKeyDown();
 	void SortTargets(const ESortMethod& Method);
 	const Target_t& GetBestTarget(const ESortMethod& Method);
+	bool ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun = false);
 
-public:
 	std::vector<Target_t> m_vecTargets = {};
 };
 

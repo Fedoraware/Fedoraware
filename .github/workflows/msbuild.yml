@@ -20,9 +20,9 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
-    # - name: Restore NuGet packages
-    #   working-directory: ${{env.GITHUB_WORKSPACE}}
-    #   run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -34,3 +34,27 @@ jobs:
       with:
        name: Fedoraware
        path: ${{env.SOLUTION_FILE_PATH}}/Release/Fware(Release).dll
+    
+    # Update version in package.json according to the tag
+    #- name: Check package version
+    #  uses: technote-space/package-version-check-action@v1
+    #
+    #- name: Changelog
+    #  uses: scottbrenner/generate-changelog-action@master
+    #  id: Changelog
+    #  env:
+    #    REPO: ${{ github.repository }}
+    
+    #- name: Create Release
+    #  id: create_release
+    #  uses: actions/create-release@latest
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #  with:
+    #    tag_name: ${{ github.ref }}
+    #    path: ${{env.SOLUTION_FILE_PATH}}/Release/Fware(Release).dll
+    #    release_name: Release ${{ github.ref }}
+    #    body: |
+    #      Hello
+    #    draft: false
+    #    prerelease: false
