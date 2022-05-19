@@ -17,7 +17,7 @@ public:
 	void Event(CGameEvent* pEvent, FNV1A_t uNameHash);
 	void UserMessage(UserMessageType type, bf_read& msgData);
 
-	std::map<int, bool> m_known_bots;
+	std::map<int, bool> KnownBots;
 };
 
 inline CChatInfo g_ChatInfo;

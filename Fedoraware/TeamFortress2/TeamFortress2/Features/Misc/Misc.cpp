@@ -498,7 +498,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 				const float yaw = DEG2RAD(pCmd->viewangles.y);
 				const float velDir = atan2f(vel.y, vel.x) - yaw;
 				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
-				const float delta = Utils::AngleDiffRad(velDir, wishAng);
+				const float delta = Math::AngleDiffRad(velDir, wishAng);
 
 				const float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
 

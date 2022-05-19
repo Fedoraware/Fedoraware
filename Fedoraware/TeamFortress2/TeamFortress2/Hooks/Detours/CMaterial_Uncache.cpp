@@ -22,7 +22,7 @@ MAKE_HOOK(CMaterial_Uncache, UncacheAddress(), void, __fastcall,
 		}
 	}
 
-	if (ecx && !(bPreserveVars < 0 && bPreserveVars > 1))
+	if (ecx)
 	{
 		Hook.Original<FN>()(ecx, edx, bPreserveVars);
 	}
