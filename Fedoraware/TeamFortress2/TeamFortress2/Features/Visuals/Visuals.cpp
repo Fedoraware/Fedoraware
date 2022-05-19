@@ -189,26 +189,31 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 			const Vec3 viewangles = I::Engine->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
 			Vec3 vForward, vRight, vUp;
 			Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
+			static KeyHelper offsetKey{ &Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var };
+
 			if (Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var)
 			{
-				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_UP))
+				if (offsetKey.Down())
 				{
-					arrowUp += 1.5f;
-				}
+					if (GetAsyncKeyState(VK_UP) & 0x8000)
+					{
+						arrowUp += 1.5f;
+					}
 
-				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_DOWN))
-				{
-					arrowUp -= 1.5f;
-				}
+					if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+					{
+						arrowUp -= 1.5f;
+					}
 
-				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_RIGHT))
-				{
-					arrowRight += 1.5f;
-				}
+					if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+					{
+						arrowRight += 1.5f;
+					}
 
-				if (GetAsyncKeyState(Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var) && GetAsyncKeyState(VK_LEFT))
-				{
-					arrowRight -= 1.5f;
+					if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+					{
+						arrowRight -= 1.5f;
+					}
 				}
 
 				pView->origin += vRight * arrowRight;

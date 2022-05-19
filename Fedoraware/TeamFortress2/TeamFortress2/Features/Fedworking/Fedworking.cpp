@@ -125,7 +125,8 @@ void CFedworking::Run()
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		// Party marker
-		if (Vars::Misc::PartyMarker.m_Var && GetAsyncKeyState(Vars::Misc::PartyMarker.m_Var)) {
+		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.m_Var };
+		if (Vars::Misc::PartyMarker.m_Var && markerKey.Pressed()) {
 			const Vec3 viewAngles = I::Engine->GetViewAngles();
 			Vec3 vForward;
 			Math::AngleVectors(viewAngles, &vForward);

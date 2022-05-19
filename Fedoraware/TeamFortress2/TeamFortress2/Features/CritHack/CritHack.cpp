@@ -24,7 +24,8 @@ bool CCritHack::IsEnabled()
 
 bool CCritHack::ShouldCrit()
 {
-	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000) { return true; }
+	static KeyHelper critKey{ &Vars::CritHack::CritKey.m_Var };
+	if (critKey.Down()) { return true; }
 	if (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
 
 	return false;

@@ -200,7 +200,8 @@ void CMisc::CheatsBypass()
 
 void CMisc::Teleport(const CUserCmd* pCmd)
 {
-	if (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var) & 0x8000)
+	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.m_Var };
+	if (tpKey.Down())
 	{
 		if (Vars::Misc::CL_Move::TeleportMode.m_Var == 0 && g_GlobalInfo.tickShiftQueue == 0 && g_GlobalInfo.m_nShifted > 0)
 		{
@@ -252,7 +253,8 @@ void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 
 void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+	static KeyHelper fcKey{ &Vars::Visuals::FreecamKey.m_Var };
+	if (fcKey.Down())
 	{
 		if (g_GlobalInfo.m_bFreecamActive == false)
 		{
@@ -310,7 +312,8 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 		// Edge Jump
 		if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
 		{
-			if (!Vars::Misc::EdgeJumpKey.m_Var || GetAsyncKeyState(Vars::Misc::EdgeJumpKey.m_Var))
+			static KeyHelper edgeKey{ &Vars::Misc::EdgeJumpKey.m_Var };
+			if (!Vars::Misc::EdgeJumpKey.m_Var || edgeKey.Down())
 			{
 				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
 				{
@@ -694,7 +697,8 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 peekStart;
 	static Vec3 peekVector;
 
-	if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::AutoPeekKey.m_Var))
+	static KeyHelper peekKey{ &Vars::Misc::CL_Move::AutoPeekKey.m_Var };
+	if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.m_Var && peekKey.Down())
 	{
 		const Vec3 localPos = pLocal->GetAbsOrigin();
 

@@ -16,6 +16,12 @@ public:
 	// Is the button currently down?
 	bool Down()
 	{
+		if (!*Key)
+		{
+			LastState = KeyState::None;
+			return false;
+		}
+
 		const bool isDown = GetAsyncKeyState(*Key) & 0x8000;
 		LastState = isDown ? KeyState::Down : KeyState::None;
 		return isDown;

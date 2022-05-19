@@ -239,11 +239,17 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		static int chockedPackets = 0;
 		static int chockValue = 0;
-		if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::Fakelag.m_Var)
+		static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
+
+		if (pLocal && pLocal->IsAlive()
+			&& (Vars::Misc::CL_Move::Fakelag.m_Var)
+
+			// Plain: Check fakelag key
 			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 0
-			|| (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)
-			&& Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+			|| (fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var)
 			|| !Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+
+			// Velocity: Check for minimum velocity
 			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 2
 			|| (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f)
 			&& !g_GlobalInfo.m_bForceSendPacket)

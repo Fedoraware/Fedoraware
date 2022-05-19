@@ -1608,7 +1608,7 @@ void CMenu::MenuMisc()
 			WToggle("Enable###PartyNetEnable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
 			WToggle("Party crasher###PartyNetCrash", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
-			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+			WToggle("Party ESP###PartyNetESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 
 			SectionTitle("Followbot");
 			WToggle("Enable Followbot###FollowbotEnable", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around.");
