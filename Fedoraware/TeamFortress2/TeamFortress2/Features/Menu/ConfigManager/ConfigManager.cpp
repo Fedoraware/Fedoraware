@@ -195,9 +195,9 @@ CConfigManager::CConfigManager()
 		std::filesystem::create_directory(ConfigPath);
 	}
 
-	if (!std::filesystem::exists(ConfigPath + _("\\FedCore")))
+	if (!std::filesystem::exists(ConfigPath + _("\\Core")))
 	{
-		std::filesystem::create_directory(ConfigPath + _("\\FedCore"));
+		std::filesystem::create_directory(ConfigPath + _("\\Core"));
 	}
 
 	if (!std::filesystem::exists(ConfigPath + _("\\Materials")))

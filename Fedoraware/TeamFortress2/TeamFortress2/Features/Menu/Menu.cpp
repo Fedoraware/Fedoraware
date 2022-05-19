@@ -1211,17 +1211,17 @@ void CMenu::MenuVisuals()
 
 				if (Button("Apply", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.m_bSet = true;
+					g_AttributeChanger.ShouldSet = true;
 				}
 				SameLine();
 				if (Button("Save", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.m_bSave = true;
+					g_AttributeChanger.ShouldSave = true;
 				}
 				SameLine();
 				if (Button("Load", ImVec2(44, 20)))
 				{
-					g_AttributeChanger.m_bLoad = true;
+					g_AttributeChanger.ShouldLoad = true;
 				}
 
 				SectionTitle("Ragdoll effects");
