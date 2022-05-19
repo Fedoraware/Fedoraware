@@ -13,7 +13,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (!Vars::Aimbot::Global::Active.m_Var)
 		return false;
 
-	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
+	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
 		return false;
 
 	if (!pLocal->IsAlive()
@@ -63,7 +63,7 @@ void CAimbot::Run(CUserCmd* pCmd)
 	g_GlobalInfo.m_bProjectileSilentActive = false;
 	g_GlobalInfo.m_vAimPos = Vec3();
 
-	auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
+	auto pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
 
 	if (pLocal)
 	{

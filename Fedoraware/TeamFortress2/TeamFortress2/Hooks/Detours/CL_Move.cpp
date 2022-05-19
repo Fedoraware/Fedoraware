@@ -130,7 +130,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				g_GlobalInfo.m_nShifted--;
 				//g_GlobalInfo.m_bForceSendPacket = true;
 			}
-			g_Interfaces.Engine->FireEvents();
+			I::Engine->FireEvents();
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
 		g_GlobalInfo.m_bShouldShift = false;

@@ -22,7 +22,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		return;
 	}
 
-	if (const auto& pNet = g_Interfaces.Engine->GetNetChannelInfo())
+	if (const auto& pNet = I::Engine->GetNetChannelInfo())
 	{
 		const Vec3 vEyePos = pLocal->GetEyePosition();
 		const float flLatency = (pNet->GetLatency(FLOW_INCOMING) + pNet->GetLatency(FLOW_OUTGOING));
@@ -78,7 +78,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 					bShouldBlast = true;
 					break;
 				}
-				if (Math::GetFov(g_Interfaces.Engine->GetViewAngles(), vEyePos, vPredicted) <=
+				if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, vPredicted) <=
 					Vars::Triggerbot::Blast::Fov.m_Var)
 				{
 					bShouldBlast = true;

@@ -42,7 +42,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 
 void CMisc::WeaponSway()	//	pasted but looks cool
 {
-	static ConVar* cl_wpn_sway_interp = g_Interfaces.CVars->FindVar("cl_wpn_sway_interp");
+	static ConVar* cl_wpn_sway_interp = I::CVars->FindVar("cl_wpn_sway_interp");
 	if (cl_wpn_sway_interp)
 	{
 		if (Vars::Visuals::ViewmodelSway.m_Var) {
@@ -94,7 +94,7 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 void CMisc::ServerHitbox()
 {
 	// draw our serverside hitbox on local servers, used to test fakelag & antiaim
-	if (g_Interfaces.Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.m_Var)
+	if (I::Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.m_Var)
 	{
 		using GetServerAnimating_t = void* (*)(int);
 		static auto GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(
@@ -105,13 +105,13 @@ void CMisc::ServerHitbox()
 			XorStr(
 				L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97")
 			.c_str()));
-		auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
+		auto pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
 		if (pLocal && pLocal->IsAlive())
 		{
 			void* server_animating = GetServerAnimating(pLocal->GetIndex());
 			if (server_animating)
 			{
-				DrawServerHitboxes(server_animating, g_Interfaces.GlobalVars->interval_per_tick * 2.f, false);
+				DrawServerHitboxes(server_animating, I::GlobalVars->interval_per_tick * 2.f, false);
 			}
 		}
 	}
@@ -159,17 +159,17 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 
 /*
 void CMisc::InstantRespawnMVM() {
-	if (g_Interfaces.Engine->IsInGame() && g_Interfaces.Engine->GetLocalPlayer() && !g_EntityCache.m_pLocal->IsAlive() && Vars::Misc::MVMRes.m_Var) {
+	if (I::Engine->IsInGame() && I::Engine->GetLocalPlayer() && !g_EntityCache.m_pLocal->IsAlive() && Vars::Misc::MVMRes.m_Var) {
 		auto kv = new KeyValues("MVM_Revive_Response");
 		kv->SetInt("accepted", 1);
-		g_Interfaces.Engine->ServerCmdKeyValues(kv);
+		I::Engine->ServerCmdKeyValues(kv);
 	}
 }*/
 
 void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
-	ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
+	ConVar* sv_cheats = I::CVars->FindVar("sv_cheats");
 	if (Vars::Misc::CheatsBypass.m_Var && sv_cheats)
 	{
 		sv_cheats->SetValue(1);
@@ -203,14 +203,14 @@ void CMisc::Teleport(const CUserCmd* pCmd)
 }
 
 void CMisc::PingReducer() {
-	const ConVar* cl_cmdrate = g_Interfaces.CVars->FindVar("cl_cmdrate");
-	CNetChannel* netChannel = g_Interfaces.Engine->GetNetChannelInfo();
+	const ConVar* cl_cmdrate = I::CVars->FindVar("cl_cmdrate");
+	CNetChannel* netChannel = I::Engine->GetNetChannelInfo();
 	if (cl_cmdrate == nullptr || netChannel == nullptr) { return; }
 
 	static Timer updateRateTimer{ };
 	if (updateRateTimer.Run(500)) {
 		if (Vars::Misc::PingReducer.m_Var) {
-			const int currentPing = g_PR->GetPing(g_Interfaces.Engine->GetLocalPlayer());
+			const int currentPing = g_PR->GetPing(I::Engine->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.m_Var <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
 			netChannel->SendNetMsg(cmd);
 		}
@@ -223,10 +223,10 @@ void CMisc::PingReducer() {
 
 void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 {
-	if (Vars::Misc::ExtendFreeze.m_Var && g_Interfaces.Engine->IsInGame() && !pLocal->IsAlive()) {
+	if (Vars::Misc::ExtendFreeze.m_Var && I::Engine->IsInGame() && !pLocal->IsAlive()) {
 		static Timer cmdTimer{ };
 		if (cmdTimer.Run(2000)) {
-			g_Interfaces.Engine->ClientCmd_Unrestricted("extendfreeze");
+			I::Engine->ClientCmd_Unrestricted("extendfreeze");
 		}
 	}
 }
@@ -239,7 +239,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 			g_GlobalInfo.m_bFreecamActive = true;
 		}
 
-		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+		const Vec3 viewAngles = I::Engine->GetViewAngles();
 		const float zMove = sinf(DEG2RAD(viewAngles.x));
 		Vec3 vForward, vRight, vUp;
 		Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
@@ -306,7 +306,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::NoPush()
 {
-	ConVar* noPush = g_Interfaces.CVars->FindVar("tf_avoidteammates_pushaway");
+	ConVar* noPush = I::CVars->FindVar("tf_avoidteammates_pushaway");
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
 }
 
@@ -394,7 +394,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
 		return;
 
-	ConVar* cl_sidespeed = g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
+	ConVar* cl_sidespeed = I::CVars->FindVar(_("cl_sidespeed"));
 
 	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
 		return;
@@ -427,7 +427,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-				static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
+				static auto airVar = I::CVars->FindVar(_("sv_airaccelerate"));
 				static auto wishSpeed = 30.0f;
 
 				const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
@@ -493,12 +493,12 @@ void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 	if (pLocal->GetUsingActionSlot())
 		return;
 
-	if (pLocal->GetNextNoiseMakerTime() < g_Interfaces.GlobalVars->curtime)
+	if (pLocal->GetNextNoiseMakerTime() < I::GlobalVars->curtime)
 	{
 		if (const auto pKV = Utils::InitKeyValue())
 		{
 			InitSpamKV(pKV);
-			g_Interfaces.Engine->ServerCmdKeyValues(pKV);
+			I::Engine->ServerCmdKeyValues(pKV);
 		}
 	}
 }
@@ -570,12 +570,12 @@ void CMisc::ChatSpam()
 	if (Vars::Misc::ChatSpam.m_Var == 0)
 		return;
 
-	float flCurTime = g_Interfaces.Engine->Time();
+	float flCurTime = I::Engine->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend)
 	{
-		g_Interfaces.Engine->ClientCmd_Unrestricted(GetSpam(Vars::Misc::ChatSpam.m_Var).c_str());
+		I::Engine->ClientCmd_Unrestricted(GetSpam(Vars::Misc::ChatSpam.m_Var).c_str());
 		flNextSend = (flCurTime + 4.0f);
 	}
 }
@@ -585,7 +585,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (!Vars::Misc::AutoRocketJump.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
 		return;
 
-	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
+	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
 		return;
 
 	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking())
@@ -644,7 +644,7 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 
 			if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !target->IsVulnerable()) { continue; }
 
-			if (!g_Interfaces.Engine->GetPlayerInfo(target->GetIndex(), &info)) { continue; }
+			if (!I::Engine->GetPlayerInfo(target->GetIndex(), &info)) { continue; }
 
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[target->GetIndex()]) { continue; }
 
@@ -685,7 +685,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 		// We need a peek direction (A / D)
 		if (!Vars::Misc::CL_Move::AutoPeekFree.m_Var && !hasDirection && pLocal->IsOnGround()) {
-			const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+			const Vec3 viewAngles = I::Engine->GetViewAngles();
 			Vec3 vForward, vRight, vUp, vDirection;
 			Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
 
@@ -702,7 +702,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 				}
 
 				traceRay.Init(pLocal->GetEyePosition(), vDirection);
-				g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+				I::EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
 				peekStart = trace.vStartPos;
 				peekVector = trace.vEndPos - trace.vStartPos;
 				hasDirection = true;
@@ -721,11 +721,11 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 				}
 
 				if (targetFound) {
-					g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 68, 189, 50, 100, false, 0.04f);
+					I::DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 68, 189, 50, 100, false, 0.04f);
 					break;
 				}
 
-				g_Interfaces.DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 235, 59, 90, 100, false, 0.04f);
+				I::DebugOverlay->AddLineOverlayAlpha(PeekReturnPos, currentPos, 235, 59, 90, 100, false, 0.04f);
 			}
 
 			if (!targetFound) { isReturning = true; }
@@ -781,7 +781,7 @@ void CMisc::SteamRPC()
 	"TF_RichPresence_State_PlayingCommunity"      "Community - %currentmap%"
 	"TF_RichPresence_State_LoadingCommunity"      "Joining Community Server"
 	*/
-	if (!g_Interfaces.Engine->IsInGame() && Vars::Misc::Steam::OverrideMenu.m_Var)
+	if (!I::Engine->IsInGame() && Vars::Misc::Steam::OverrideMenu.m_Var)
 		g_SteamInterfaces.Friends015->SetRichPresence("state", "MainMenu");
 	else
 	{
@@ -852,7 +852,7 @@ void CMisc::SteamRPC()
 void CMisc::UnlockAchievements()
 {
 	using fn = IAchievementMgr * (*)(void);
-	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	const auto achievementmgr = GetVFunc<fn>(I::Engine, 114)();
 	if (achievementmgr)
 	{
 		g_SteamInterfaces.UserStats->RequestCurrentStats();
@@ -868,7 +868,7 @@ void CMisc::UnlockAchievements()
 void CMisc::LockAchievements()
 {
 	using fn = IAchievementMgr * (*)(void);
-	const auto achievementmgr = GetVFunc<fn>(g_Interfaces.Engine, 114)();
+	const auto achievementmgr = GetVFunc<fn>(I::Engine, 114)();
 	if (achievementmgr)
 	{
 		g_SteamInterfaces.UserStats->RequestCurrentStats();
@@ -895,7 +895,7 @@ void CNotifications::Think()
 	{
 		auto notify = m_vNotificationTexts[i];
 
-		notify->m_time -= g_Interfaces.GlobalVars->absoluteframetime;
+		notify->m_time -= I::GlobalVars->absoluteframetime;
 
 		if (notify->m_time <= 0.f)
 		{
@@ -935,7 +935,7 @@ void CNotifications::Think()
 
 		int w, h;
 
-		g_Interfaces.Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
+		I::Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
 		delete[] wc; // Memory leak
 

@@ -4,7 +4,7 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 
-MAKE_HOOK(ModelRender_ForcedMaterialOverride, Utils::GetVFuncPtr(g_Interfaces.ModelRender, 1), void, __fastcall,
+MAKE_HOOK(ModelRender_ForcedMaterialOverride, Utils::GetVFuncPtr(I::ModelRender, 1), void, __fastcall,
 		  void* ecx, void* edx, IMaterial* mat, EOverrideType type)
 {
 	if (!g_DMEChams.m_bRendering)

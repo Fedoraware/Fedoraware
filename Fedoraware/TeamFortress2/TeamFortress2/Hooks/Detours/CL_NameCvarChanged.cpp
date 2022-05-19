@@ -5,8 +5,8 @@ MAKE_HOOK(CL_NameCvarChanged, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 30 
 {
 	Hook.Original<FN>()(pConvar);
 
-	if (const auto name = g_Interfaces.CVars->FindVar("name"))
+	if (const auto name = I::CVars->FindVar("name"))
 	{
-		g_Interfaces.CVars->ConsolePrintf("[FeD] Name set to: %s\n", name->GetString());
+		I::CVars->ConsolePrintf("[FeD] Name set to: %s\n", name->GetString());
 	}
 }

@@ -10,16 +10,16 @@ void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 		return;
 
 	for (auto szEvent : deqEvents) {
-		g_Interfaces.GameEvent->AddListener(this, szEvent, false);
+		I::GameEvent->AddListener(this, szEvent, false);
 
-		if (!g_Interfaces.GameEvent->FindListener(this, szEvent))
+		if (!I::GameEvent->FindListener(this, szEvent))
 			throw std::runtime_error(tfm::format("failed to add listener: %s", szEvent));
 	}
 }
 
 void CEventListener::Destroy()
 {
-	g_Interfaces.GameEvent->RemoveListener(this);
+	I::GameEvent->RemoveListener(this);
 }
 
 void CEventListener::FireGameEvent(CGameEvent* pEvent) {
@@ -38,15 +38,15 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	if (Vars::Visuals::PickupTimers.m_Var && uNameHash == FNV1A::HashConst("item_pickup"))
 	{
 		const auto itemName = pEvent->GetString("item");
-		if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
+		if (const auto& pEntity = I::EntityList->GetClientEntity(I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
 		{
 			if (std::strstr(itemName, "medkit"))
 			{
-				g_Visuals.PickupDatas.push_back({ 1, g_Interfaces.Engine->Time(), pEntity->GetAbsOrigin() });
+				g_Visuals.PickupDatas.push_back({ 1, I::Engine->Time(), pEntity->GetAbsOrigin() });
 			}
 			else if (std::strstr(itemName, "ammopack"))
 			{
-				g_Visuals.PickupDatas.push_back({ 0, g_Interfaces.Engine->Time(), pEntity->GetAbsOrigin() });
+				g_Visuals.PickupDatas.push_back({ 0, I::Engine->Time(), pEntity->GetAbsOrigin() });
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 
 bool CESP::ShouldRun()
 {
-	if (/*!Vars::ESP::Main::Active.m_Var ||*/ g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (/*!Vars::ESP::Main::Active.m_Var ||*/ I::EngineVGui->IsGameUIVisible())
 		return false;
 
 	return true;
@@ -32,8 +32,8 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 	{
 		bIsPlayer = true;
 		const bool bIsDucking = pEntity->IsDucking();
-		vMins = g_Interfaces.GameMovement->GetPlayerMins(bIsDucking);
-		vMaxs = g_Interfaces.GameMovement->GetPlayerMaxs(bIsDucking);
+		vMins = I::GameMovement->GetPlayerMins(bIsDucking);
+		vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking);
 	}
 
 	else
@@ -122,7 +122,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			continue;
 
 		int nIndex = Player->GetIndex();
-		bool bIsLocal = nIndex == g_Interfaces.Engine->GetLocalPlayer();
+		bool bIsLocal = nIndex == I::Engine->GetLocalPlayer();
 
 		if (!bIsLocal)
 		{
@@ -185,7 +185,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					nTextX += 5;
 			}
 
-			g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.m_Var);
+			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.m_Var);
 
 			if (Vars::ESP::Players::Bones.m_Var)
 			{
@@ -235,7 +235,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
-				if (g_Interfaces.Input->CAM_IsThirdPerson())
+				if (I::Input->CAM_IsThirdPerson())
 					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
 
 				if (Utils::W2S(Player->GetAbsOrigin(), vScreen))
@@ -290,7 +290,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			PlayerInfo_t pi;
-			if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
+			if (I::Engine->GetPlayerInfo(nIndex, &pi))
 			{
 				int middle = x + w / 2;
 				if (Vars::ESP::Players::Name.m_Var)
@@ -299,7 +299,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					if (Vars::ESP::Players::NameBox.m_Var)
 					{
 						int wideth, heighth;
-						g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
+						I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
 							Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = DrawColor;
 						LineColor.a = 180;
@@ -436,7 +436,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				x += 1;
 			}
 
-			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+			I::Surface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
 }
@@ -478,7 +478,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 			const bool bIsMini = Building->GetMiniBuilding();
 
-			g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.m_Var);
+			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.m_Var);
 
 			switch (Vars::ESP::Buildings::Box.m_Var)
 			{
@@ -515,7 +515,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			{
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
-				if (g_Interfaces.Input->CAM_IsThirdPerson())
+				if (I::Input->CAM_IsThirdPerson())
 					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
 
 				if (Utils::W2S(Building->GetAbsOrigin(), vScreen))
@@ -561,7 +561,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				{
 					int wideth, heighth;
 					const int middle = x + w / 2;
-					g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
+					I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
 					Color_t LineColor = DrawColor;
 					LineColor.a = 180;
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
@@ -587,7 +587,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				if (const auto& pOwner = Building->GetOwner())
 				{
 					PlayerInfo_t pi;
-					if (g_Interfaces.Engine->GetPlayerInfo(pOwner->GetIndex(), &pi))
+					if (I::Engine->GetPlayerInfo(pOwner->GetIndex(), &pi))
 					{
 						nTextTopOffset += g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall /
 							4;
@@ -667,7 +667,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				x += 1;
 			}
 
-			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+			I::Surface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
 }
@@ -680,7 +680,7 @@ void CESP::DrawWorld() const
 	Vec3 vScreen = {};
 	const size_t FONT = FONT_ESP_PICKUPS;
 
-	g_Interfaces.Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
+	I::Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
 
 	if (Vars::ESP::World::HealthText.m_Var)
 	{
@@ -708,7 +708,7 @@ void CESP::DrawWorld() const
 		}
 	}
 
-	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
+	I::Surface->DrawSetAlphaMultiplier(1.0f);
 }
 
 typedef int ETFCond;
@@ -927,8 +927,8 @@ const wchar_t* CESP::GetPlayerClass(int nClassNum)
 
 void CESP::CreateDLight(int nIndex, Color_t DrawColor, const Vec3& vOrigin, float flRadius)
 {
-	const auto pLight = g_Interfaces.EngineEffects->CL_AllocDlight(nIndex);
-	pLight->m_flDie = g_Interfaces.Engine->Time() + 0.5f;
+	const auto pLight = I::EngineEffects->CL_AllocDlight(nIndex);
+	pLight->m_flDie = I::Engine->Time() + 0.5f;
 	pLight->m_flRadius = flRadius;
 	pLight->m_Color.r = DrawColor.r;
 	pLight->m_Color.g = DrawColor.g;

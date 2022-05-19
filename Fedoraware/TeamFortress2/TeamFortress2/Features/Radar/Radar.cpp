@@ -72,7 +72,7 @@ void CRadar::DrawRadar()
 void CRadar::DragRadar()
 {
 	int mousex, mousey;
-	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
+	I::Surface->GetCursorPos(mousex, mousey);
 
 	static POINT pCorrect{};
 	static bool isDragging = false;
@@ -158,7 +158,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 {
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
 	LocalOrigin = pLocal->GetAbsOrigin();
-	LocalYaw = g_Interfaces.Engine->GetViewAngles().y * (PI / 180.f);
+	LocalYaw = I::Engine->GetViewAngles().y * (PI / 180.f);
 	Range = static_cast<float>(Vars::Radar::Main::Range.m_Var);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);
 
@@ -351,7 +351,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					if (Vars::Radar::Players::IconType.m_Var == 2)
 					{
 						PlayerInfo_t pi{};
-						if (g_Interfaces.Engine->GetPlayerInfo(player->GetIndex(), &pi))
+						if (I::Engine->GetPlayerInfo(player->GetIndex(), &pi))
 						{
 							g_Draw.Avatar(nX, nY, nSize, nSize, pi.friendsID);
 						}

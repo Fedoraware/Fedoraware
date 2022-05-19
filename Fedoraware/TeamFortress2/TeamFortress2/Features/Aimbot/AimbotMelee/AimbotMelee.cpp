@@ -77,7 +77,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	g_AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
@@ -184,7 +184,7 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	case 0:
 		{
 			pCmd->viewangles = vAngle;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -194,14 +194,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
-				g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+				I::Engine->SetViewAngles(pCmd->viewangles);
 				break;
 			}
 
 			Vec3 vecDelta = vAngle - pCmd->viewangles;
 			Math::ClampAngles(vecDelta);
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.m_Var;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -227,7 +227,7 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	if (!CanMeleeHit(pLocal, pWeapon,
 	                 Vars::Aimbot::Melee::AimMethod.m_Var == 2
 		                 ? Target.m_vAngleTo
-		                 : g_Interfaces.Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
+		                 : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
 	{
 		return false;
 	}
@@ -241,7 +241,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 	{
 		return ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack);
 	}
-	return fabs(pWeapon->GetSmackTime() - g_Interfaces.GlobalVars->curtime) < g_Interfaces.GlobalVars->interval_per_tick
+	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick
 		* 2.0f;
 }
 

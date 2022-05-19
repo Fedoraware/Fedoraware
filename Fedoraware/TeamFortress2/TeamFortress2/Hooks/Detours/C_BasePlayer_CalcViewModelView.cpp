@@ -23,7 +23,7 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B 
 		{
 			if (g_GlobalInfo.vEyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
 			// looks hot ty senator for the idea
-			else { vEyeAngles = g_Interfaces.Engine->GetViewAngles(); }
+			else { vEyeAngles = I::Engine->GetViewAngles(); }
 		}
 	}
 	//VM Offsets

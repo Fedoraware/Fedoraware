@@ -5,7 +5,7 @@
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 
-MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(g_Interfaces.Client, 35), void, __fastcall,
+MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), void, __fastcall,
 		  void* ecx, void* edx, EClientFrameStage curStage)
 {
 	switch (curStage)
@@ -75,7 +75,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(g_Interfaces.Client
 						continue;
 					}
 
-					const CBaseEntity* pObservedPlayer = g_Interfaces.EntityList->GetClientEntityFromHandle(teammate->GetObserverTarget());
+					const CBaseEntity* pObservedPlayer = I::EntityList->GetClientEntityFromHandle(teammate->GetObserverTarget());
 
 					if (pObservedPlayer == pLocal)
 					{
@@ -85,9 +85,9 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(g_Interfaces.Client
 				}
 			}
 
-			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 			{
-				if (const auto& player = g_Interfaces.EntityList->GetClientEntity(i))
+				if (const auto& player = I::EntityList->GetClientEntity(i))
 				{
 					const VelFixRecord record = { player->m_vecOrigin(), player->m_fFlags(), player->GetSimulationTime() };
 					g_GlobalInfo.velFixRecord[player] = record;

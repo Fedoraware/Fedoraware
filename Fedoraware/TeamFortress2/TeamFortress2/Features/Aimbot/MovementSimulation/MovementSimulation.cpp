@@ -92,7 +92,7 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 
 bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 {
-	if (!g_Interfaces.CTFGameMovement || !pPlayer || pPlayer->deadflag())
+	if (!I::CTFGameMovement || !pPlayer || pPlayer->deadflag())
 	{
 		return false;
 	}
@@ -108,9 +108,9 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 	PlayerDataBackup.Store(m_pPlayer);
 
 	//store vars
-	m_bOldInPrediction = g_Interfaces.Prediction->m_bInPrediction;
-	m_bOldFirstTimePredicted = g_Interfaces.Prediction->m_bFirstTimePredicted;
-	m_flOldFrametime = g_Interfaces.GlobalVars->frametime;
+	m_bOldInPrediction = I::Prediction->m_bInPrediction;
+	m_bOldFirstTimePredicted = I::Prediction->m_bFirstTimePredicted;
+	m_flOldFrametime = I::GlobalVars->frametime;
 
 	//the hacks that make it work
 	{
@@ -165,9 +165,9 @@ void CMovementSimulation::Restore()
 
 	PlayerDataBackup.Restore(m_pPlayer);
 
-	g_Interfaces.Prediction->m_bInPrediction = m_bOldInPrediction;
-	g_Interfaces.Prediction->m_bFirstTimePredicted = m_bOldFirstTimePredicted;
-	g_Interfaces.GlobalVars->frametime = m_flOldFrametime;
+	I::Prediction->m_bInPrediction = m_bOldInPrediction;
+	I::Prediction->m_bFirstTimePredicted = m_bOldFirstTimePredicted;
+	I::GlobalVars->frametime = m_flOldFrametime;
 
 	m_pPlayer = nullptr;
 
@@ -177,7 +177,7 @@ void CMovementSimulation::Restore()
 
 void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenterOut)
 {
-	if (!g_Interfaces.CTFGameMovement || !m_pPlayer)
+	if (!I::CTFGameMovement || !m_pPlayer)
 	{
 		return;
 	}
@@ -188,15 +188,15 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenter
 	}
 
 	//make sure frametime and prediction vars are right
-	g_Interfaces.Prediction->m_bInPrediction = true;
-	g_Interfaces.Prediction->m_bFirstTimePredicted = false;
-	g_Interfaces.GlobalVars->frametime = g_Interfaces.Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
+	I::Prediction->m_bInPrediction = true;
+	I::Prediction->m_bFirstTimePredicted = false;
+	I::GlobalVars->frametime = I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
 
 
 	//call CTFGameMovement::ProcessMovement
 	g_GlobalInfo.predBeforeLines.push_back(m_MoveData.m_vecAbsOrigin);
 	reinterpret_cast<void(__thiscall*)(void*, CBaseEntity*, CMoveData*)>(
-		Utils::GetVFuncPtr(g_Interfaces.CTFGameMovement, 1))(g_Interfaces.CTFGameMovement, m_pPlayer, &m_MoveData);
+		Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
 	g_GlobalInfo.predFutureLines.push_back(m_MoveData.m_vecAbsOrigin);
 	moveDataOut = m_MoveData;
 	Vec3 vMin, vMax;

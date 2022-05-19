@@ -17,14 +17,14 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		Vars::Visuals::ThirdpersonOffset.m_Var &&
 		Vars::Visuals::ThirdpersonCrosshair.m_Var &&
-		g_Interfaces.Input->CAM_IsThirdPerson() &&
+		I::Input->CAM_IsThirdPerson() &&
 		(Vars::Visuals::ThirdpersonRight.m_Var > 1.f ||
 		Vars::Visuals::ThirdpersonRight.m_Var < -1.f) &&
 		(Vars::Visuals::ThirdpersonUp.m_Var > 1.f ||
 		Vars::Visuals::ThirdpersonUp.m_Var < -1.f)
 		)
 	{
-		Vec3 viewangles = g_Interfaces.Engine->GetViewAngles();
+		Vec3 viewangles = I::Engine->GetViewAngles();
 		Vec3 vForward{}, vRight{}, vUp{};
 		Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
 		Vec3 vStartPos = pLocal->GetShootPos();

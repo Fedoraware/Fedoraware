@@ -18,7 +18,7 @@ std::array<std::pair<int, int>, 12> redirects{
 
 void CAttributChanger::Run()
 {
-	if (!g_Interfaces.Engine->IsInGame())
+	if (!I::Engine->IsInGame())
 	{
 		return;
 	}
@@ -49,7 +49,7 @@ void CAttributChanger::Run()
 	}
 
 	//Needed here, runs 2 stages before cache is filled
-	if (const auto& pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer()))
+	if (const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer()))
 	{
 		if (!pLocal->IsAlive())
 		{
@@ -60,7 +60,7 @@ void CAttributChanger::Run()
 
 		for (int n = 0; myWeapons[n]; n++)
 		{
-			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(myWeapons[n])))
+			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(myWeapons[n])))
 			{
 				const auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
 				if (!pList || pList->m_Attributes.Count() > 0)
@@ -206,7 +206,7 @@ void CAttributChanger::SetAttribute()
 	auto ForceFullUpdate = reinterpret_cast<FN>(g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D")));
 
 	//Needed here, runs 2 stages before cache is filled
-	if (const auto& pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer()))
+	if (const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer()))
 	{
 		if (const auto& pWeapon = pLocal->GetActiveWeapon())
 		{
@@ -217,7 +217,7 @@ void CAttributChanger::SetAttribute()
 				Vars::Visuals::Skins::Acient.m_Var, Vars::Visuals::Skins::Override.m_Var
 			};
 
-			ForceFullUpdate(g_Interfaces.ClientState);
+			ForceFullUpdate(I::ClientState);
 		}
 	}
 }

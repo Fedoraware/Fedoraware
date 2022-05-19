@@ -9,10 +9,10 @@
 void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo);
 
-MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(g_Interfaces.ModelRender, 19), void, __fastcall,
+MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), void, __fastcall,
 		  void* ecx, void* edx, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
+	CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);
 	DrawFakeAngles(ecx, edx, pEntity, pState, pInfo);
@@ -42,7 +42,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 					return;
 				}
 
-				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 																 {
 																	 switch (Vars::Backtrack::BtChams::Material.m_Var)
 																	 {
@@ -91,20 +91,20 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 																 }());
 				if (bMatWasForced)
 				{
-					g_Interfaces.RenderView->SetColorModulation(
+					I::RenderView->SetColorModulation(
 						Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r),
 						Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g),
 						Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
 				}
 
 
-				if (const auto& pRenderContext = g_Interfaces.MatSystem->GetRenderContext())
+				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
 				{
 					if (Vars::Backtrack::BtChams::IgnoreZ.m_Var)
 						pRenderContext->DepthRange(0.0f, 0.2f);
 				}
 
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
+				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
 
 
@@ -132,13 +132,13 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				if (bMatWasForced)
 				{
-					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					I::ModelRender->ForcedMaterialOverride(nullptr);
+					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}
 
-				g_Interfaces.RenderView->SetBlend(1.0f);
+				I::RenderView->SetBlend(1.0f);
 
-				if (const auto& pRenderContext = g_Interfaces.MatSystem->GetRenderContext())
+				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
 				{
 					if (Vars::Backtrack::BtChams::IgnoreZ.m_Var)
 						pRenderContext->DepthRange(0.0f, 1.0f);
@@ -160,7 +160,7 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 			{
 				bool bMatWasForced = false;
 
-				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 																 {
 																	 switch (Vars::Misc::CL_Move::FLGChams::Material.m_Var)
 																	 {
@@ -209,24 +209,24 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 																 }());
 				if (bMatWasForced)
 				{
-					g_Interfaces.RenderView->SetColorModulation(
+					I::RenderView->SetColorModulation(
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.r),
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.g),
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.b));
 				}
 
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.a)); // this is so much better than having a seperate alpha slider lmao
+				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.a)); // this is so much better than having a seperate alpha slider lmao
 				OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&g_FakeAng.BoneMatrix));
 
 				bMatWasForced = true;
 
 				if (bMatWasForced)
 				{
-					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					I::ModelRender->ForcedMaterialOverride(nullptr);
+					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}
 
-				g_Interfaces.RenderView->SetBlend(1.0f);
+				I::RenderView->SetBlend(1.0f);
 			}
 		}
 	}

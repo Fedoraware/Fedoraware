@@ -1,6 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(StudioRender_SetColorModulation, Utils::GetVFuncPtr(g_Interfaces.StudioRender, 27), void, __fastcall,
+MAKE_HOOK(StudioRender_SetColorModulation, Utils::GetVFuncPtr(I::StudioRender, 27), void, __fastcall,
 		  void* ecx, void* edx, const float* pColor)
 {
 	const float flCustomBlend[3] = {

@@ -14,6 +14,8 @@
 
 void CInterfaces::Init()
 {
+	using namespace I;
+
 	Client = g_Interface.Get<CBaseClientDLL*>(CLIENT, _(CLIENT_DLL_INTERFACE_VERSION));
 	_valid(Client);
 
@@ -119,7 +121,7 @@ void CInterfaces::Init()
 
 	typedef IAchievementMgr* (*getachievementmgr)();
 
-	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(g_Interfaces.Engine, 115));
+	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(I::Engine, 115));
 	_valid(AchievementMgr);
 
 	ILOVEBEAMS = **reinterpret_cast<IViewRenderBeams***>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?") + 0x2);
