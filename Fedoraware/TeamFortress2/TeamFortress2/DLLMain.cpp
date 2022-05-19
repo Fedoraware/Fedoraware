@@ -1,4 +1,4 @@
-#include "Hooks/Hooks.h"
+#include "Hooks/HookManager.h"
 
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
@@ -73,7 +73,7 @@ void Initialize()
 	g_Chams.Init();
 	g_DMEChams.Init();
 	g_CameraWindow.Init();
-	g_Hooks.Init();
+	g_HookManager.Init();
 	g_ConVars.Init();
 
 	InitRichPresence();
@@ -89,7 +89,7 @@ void Uninitialize()
 	Sleep(100);
 
 	g_Events.Destroy();
-	g_Hooks.Release();
+	g_HookManager.Release();
 
 	ShutdownRichPresence();
 
