@@ -3,6 +3,7 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
+#include "../../Features/Menu/Playerlist/Playerlist.h"
 
 MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(g_Interfaces.Client, 35), void, __fastcall,
 		  void* ecx, void* edx, EClientFrameStage curStage)
@@ -93,6 +94,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(g_Interfaces.Client
 				}
 			}
 
+			g_PlayerList.UpdatePlayers();
 			break;
 		}
 

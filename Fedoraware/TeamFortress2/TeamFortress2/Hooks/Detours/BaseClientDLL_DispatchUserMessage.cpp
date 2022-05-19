@@ -63,8 +63,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 				if (g_Interfaces.Engine->GetPlayerInfo(entIdx, &senderInfo))
 				{
 					if (entIdx == g_Interfaces.Engine->GetLocalPlayer()) { break; }
-					if (g_GlobalInfo.ignoredPlayers.find(senderInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()
-						|| (entIdx > 0 && entIdx <= 128 && g_EntityCache.Friends[entIdx]))
+					if (g_GlobalInfo.ignoredPlayers[senderInfo.friendsID] || g_EntityCache.IsFriend(entIdx))
 					{
 						break;
 					}
