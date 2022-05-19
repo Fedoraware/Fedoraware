@@ -5,10 +5,10 @@ class CBaseEntity;
 class C_PlayerResource {
 public:
 	void Update();
-	int GetMaxHealth(CBaseEntity* player);
-	int GetHealth(CBaseEntity* player);
-	int GetMaxBuffedHealth(CBaseEntity* player);
-	int GetClass(CBaseEntity* player);
+	int GetMaxHealth(int idx);
+	int GetHealth(int idx);
+	int GetMaxBuffedHealth(int idx);
+	int GetClass(int idx);
 	int GetTeamByIndex(int idx);
 	int GetScoreByIndex(int idx);
 	int GetKillsByIndex(int idx);
@@ -21,6 +21,9 @@ public:
 	int GetClassByIndex(int idx);
 	int GetTeam(int idx);
 	bool IsAlive(int idx);
+	int GetUserID(int idx);
+	bool isValid(int idx);
+	const char* GetPlayerName(int idx);
 
 	int Entity;
 };
