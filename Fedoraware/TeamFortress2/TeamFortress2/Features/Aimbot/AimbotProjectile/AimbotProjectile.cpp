@@ -723,7 +723,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 			if (pPlayer->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pPlayer))
+				if (g_AimbotGlobal.ShouldIgnore(pPlayer)) { continue; }
 			}
 
 			Vec3 vPos = pPlayer->GetWorldSpaceCenter();

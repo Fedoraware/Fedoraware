@@ -28,9 +28,6 @@
 #undef min
 #undef max
 
-#define CONTINUE_IF(cond) if (cond) { continue; }
-#define BREAK_IF(cond) if (cond) { break; }
-
 inline void Q_memcpy(void* dest, const void* src, int count)
 {
 	int i;
@@ -158,14 +155,23 @@ namespace Utils
 		return (fabs(a - b) <= epsilon * std::max(fabs(a), fabs(b)));
 	}
 
-	inline float ClampFloat(float n, float lower, float upper)
-	{
-		return std::max(lower, std::min(n, upper));
-	}
-
 	inline float NormalizeRad(float a) noexcept
 	{
 		return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
+	}
+
+	__inline float AngleDiffRad(float a1, float a2) noexcept
+	{
+		float delta = NormalizeRad(a1 - a2);
+		if (a1 > a2)
+		{
+			if (delta >= PI) { delta -= PI * 2; }
+		}
+		else
+		{
+			if (delta <= -PI) { delta += PI * 2; }
+		}
+		return delta;
 	}
 
 	inline bool StartsWith(const char* a, const char* b)

@@ -370,22 +370,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		}
 	}
 
-	if (static_cast<int>(g_Misc.strings.size()) > 0)
-	{
-		g_GlobalInfo.gNotifCounter++;
-
-		if (g_GlobalInfo.gNotifCounter > Vars::Visuals::despawnTime.m_Var)
-		{
-			g_GlobalInfo.gNotifCounter = 0;
-
-			g_Misc.strings.pop_back();
-		}
-	}
-	else
-	{
-		g_GlobalInfo.gNotifCounter = 0;
-	}
-
 	g_GlobalInfo.vEyeAngDelay++; // Used for the return delay in the viewmodel aimbot
 	g_GlobalInfo.lateUserCmd = pCmd;
 	if (g_GlobalInfo.m_bForceSendPacket)

@@ -106,7 +106,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun))
+			if (g_AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun)) { continue; }
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var)
 			{

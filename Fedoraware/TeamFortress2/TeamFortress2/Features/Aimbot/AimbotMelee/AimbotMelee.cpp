@@ -97,7 +97,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pTarget))
+			if (g_AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
 
 			Vec3 vPos = pTarget->GetHitboxPos(HITBOX_PELVIS);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
