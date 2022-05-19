@@ -84,7 +84,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	// Special conditions for mediguns
 	if (!hasMedigun)
 	{
-		if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { return true; }
+		if (g_GlobalInfo.ignoredPlayers[pInfo.friendsID]) { return true; }
 		if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
 	}
 
