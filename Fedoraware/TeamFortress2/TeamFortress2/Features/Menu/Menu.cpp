@@ -13,6 +13,7 @@
 
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
+#include "Blur/Blur.h"
 
 constexpr int MENU_KEY = VK_INSERT;
 
@@ -1692,6 +1693,7 @@ void CMenu::SettingsWindow()
 	{
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
+		Checkbox("Blur background", &Vars::Menu::BlurBackground);
 
 		Dummy({ 0, 5 });
 		static std::string selected;
@@ -1950,6 +1952,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 	if (g_Menu.IsOpen)
 	{
+		if (Vars::Menu::BlurBackground)
+		{
+			g_Blur.DrawBackgroundBlur(ImGui::GetBackgroundDrawList(), pDevice);
+		}
+
 		ImGui::PushFont(Verdana);
 		DrawMenu();
 		DrawCameraWindow();

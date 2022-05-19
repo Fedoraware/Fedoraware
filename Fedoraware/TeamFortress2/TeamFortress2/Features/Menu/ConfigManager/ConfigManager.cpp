@@ -858,6 +858,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
 			SAVE_OTHER(Vars::Menu::ModernDesign);
+			SAVE_OTHER(Vars::Menu::BlurBackground);
 			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
@@ -1573,6 +1574,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 
 			LOAD_OTHER(Vars::Menu::ModernDesign);
+			LOAD_OTHER(Vars::Menu::BlurBackground);
 			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
