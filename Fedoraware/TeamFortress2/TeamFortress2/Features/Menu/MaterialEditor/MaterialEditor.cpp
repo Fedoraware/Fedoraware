@@ -211,6 +211,6 @@ void CMaterialEditor::Render()
 
 void CMaterialEditor::Init()
 {
-	MaterialFolder = g_CFG.ConfigPath + "\\Materials";
+	MaterialFolder = g_CFG.GetConfigPath() + "\\Materials";
 	LoadMaterials();
 }

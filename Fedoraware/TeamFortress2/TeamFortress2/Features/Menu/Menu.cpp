@@ -1698,7 +1698,7 @@ void CMenu::SettingsWindow()
 		int nConfig = 0;
 
 		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1708,7 +1708,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Current config
-		const std::string cfgText = "Loaded: " + g_CFG.CurrentConfig;
+		const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
 		Text(cfgText.c_str());
 
 		// Config name field
@@ -1719,7 +1719,7 @@ void CMenu::SettingsWindow()
 			PushItemWidth(200);
 			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				if (!std::filesystem::exists(g_CFG.ConfigPath + "\\" + newConfigName))
+				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
 				{
 					g_CFG.SaveConfig(newConfigName);
 				}
@@ -1728,7 +1728,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1756,7 +1756,7 @@ void CMenu::SettingsWindow()
 				// Save config button
 				if (Button("Save", ImVec2(61, 20)))
 				{
-					if (configName != g_CFG.CurrentConfig)
+					if (configName != g_CFG.GetCurrentConfig())
 					{
 						OpenPopup("Save config?");
 					} else
@@ -1823,7 +1823,7 @@ void CMenu::SettingsWindow()
 					EndPopup();
 				}
 			}
-			else if (configName == g_CFG.CurrentConfig)
+			else if (configName == g_CFG.GetCurrentConfig())
 			{
 				PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 				std::string buttonText = "> " + configName + " <";
