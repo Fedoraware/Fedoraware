@@ -648,7 +648,7 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[target->GetIndex()]) { continue; }
 
-			if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { continue; }
+			if (g_GlobalInfo.ignoredPlayers[info.friendsID]) { continue; }
 
 			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD))) {
 				return true;

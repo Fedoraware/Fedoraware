@@ -3,58 +3,45 @@
 #include "../../Resolver/Resolver.h"
 #include "../../Menu/Menu.h"
 #include "../ImGui/imgui_color_gradient.h"
+#include <mutex>
+#include "../../PlayerResource/PlayerResource.h"
+#include "../ImGui/imgui_internal.h"
 
 struct ImGuiWindow;
 const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
 const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert", "Auto" };
 
-bool CPlayerList::SortByTeam(const ListPlayer& a, const ListPlayer& b)
-{
-	return a.Team < b.Team;
-}
+std::mutex mutex;
 
 void CPlayerList::UpdatePlayers()
 {
-	// TODO: Improve this
-	if (g_Interfaces.Engine->IsInGame() && !g_Interfaces.Engine->IsDrawingLoadingImage() && g_Interfaces.Engine->IsConnected())
+	std::multimap<int, ListPlayer> Buf{};
+	for (int i = 1; i < g_Interfaces.GlobalVars->maxclients; i++)
 	{
-		for (int i = 1; i < PlayerCache.size(); i++)
+		if (g_PR->isValid(i))
 		{
-			CBaseEntity* ent = g_Interfaces.EntityList->GetClientEntity(i);
+			ListPlayer Player{ g_PR->GetPlayerName(i),
+								g_PR->GetUserID(i),
+								g_PR->GetAccountID(i),
+								g_PR->GetPing(i) == 0,
+								Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+								g_PR->GetHealth(i),
+								g_PR->GetMaxHealth(i),
+								g_PR->GetClass(i),
+								g_PR->IsAlive(i)
+			};
 
-			if (!ent || !ent->IsPlayer() || ent == g_EntityCache.m_pLocal)
-			{
-				PlayerCache[i] = ListPlayer{ };
-				continue;
-			}
-
-			ListPlayer player;
-			if (g_Interfaces.Engine->GetPlayerInfo(i, &player.Info))
-			{
-				const int teamNum = ent->GetTeamNum();
-				player.Team = teamNum;
-				player.Color = Utils::GetTeamColor(teamNum, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
-				player.Index = i;
-
-				PlayerCache[i] = player;
-			}
-			else
-			{
-				PlayerCache[i] = ListPlayer{ };
-			}
-		}
-
-		if (!PlayerCache.empty())
-		{
-			std::sort(PlayerCache.begin(), PlayerCache.end(), [](ListPlayer a, ListPlayer b) { return a.Team < b.Team; });
+			Buf.emplace(g_PR->GetTeam(i), Player);
 		}
 	}
+
+	std::lock_guard lock(mutex);
+	Buf.swap(PlayerCache);
 }
 
 void CPlayerList::Render()
 {
 	if (!Vars::Menu::ShowPlayerlist) { return; }
-	UpdatePlayers();
 
 	const auto accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r),
 	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),
@@ -69,7 +56,7 @@ void CPlayerList::Render()
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		const auto foregroundDrawList = ImGui::GetForegroundDrawList();
 		ImGui::GradientRect(&g_Menu.TitleGradient, { winPos.x, winPos.y }, winSize.x, 3);
-		ImGui::Dummy(ImVec2(0, 7));
+		ImGui::Dummy(ImVec2());
 
 		if (!g_Interfaces.Engine->IsInGame())
 		{
@@ -82,106 +69,121 @@ void CPlayerList::Render()
 			ImGui::Text("You're not in game, noob!");
 		}
 
-		else if (g_Interfaces.Engine->IsInGame() && !g_PlayerList.PlayerCache.empty())
+		else
 		{
-			if (ImGui::BeginTable("playerlist", 2,
-				ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter
-				| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersH))
+			const int ColumnCount = Vars::AntiHack::Resolver::Resolver.m_Var ? 4 : 3;
+			if (ImGui::BeginTable("Playerlist", ColumnCount, ImGuiTableFlags_Borders))
 			{
-				ImGui::TableSetupColumn("Player");
-				ImGui::TableSetupColumn("Actions");
-
-				for (const auto& player : PlayerCache) // Print players
+				ImGui::TableSetupColumn("Name");
+				ImGui::TableSetupColumn("Class");
+				ImGui::TableSetupColumn("Health");
+				if (Vars::AntiHack::Resolver::Resolver.m_Var)
 				{
-					if (player.Index == -1)
-					{
-						continue;
-					}
+					ImGui::TableSetupColumn("Resolver");
+				}
+				ImGui::TableHeadersRow();
 
-					bool ignored = (g_GlobalInfo.ignoredPlayers.find(player.Info.friendsID) != g_GlobalInfo.ignoredPlayers.end());
-					auto findResolveMode = g_Resolver.ResolvePlayers.find(player.Info.friendsID);
-					ResolveMode resolveMode;
-					if (findResolveMode != g_Resolver.ResolvePlayers.end())
-					{
-						resolveMode = findResolveMode->second;
-					}
+				std::lock_guard lock(mutex);
 
+				for (const auto& [Team, Player] : PlayerCache)
+				{
 					ImGui::TableNextRow();
 
-					for (int column = 0; column < 2; column++)
+					ImGui::PushID(ImGui::GetCurrentTable()->CurrentRow);
+
+					for (int column = 0; column < ColumnCount; column++)
 					{
 						ImGui::TableSetColumnIndex(column);
-						if (column == 0)
+
+						switch (column)
 						{
-							ImGui::PushStyleColor(ImGuiCol_Text, ImColor(player.Color.r, player.Color.g, player.Color.b, player.Color.a).Value);
-							ImGui::Text("%s", player.Info.name);
-							ImGui::PopStyleColor();
-						}
-						if (column == 1)
-						{
-							if (player.Info.fakeplayer)
+						case 0:
 							{
+								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(Player.Color.r, Player.Color.g, Player.Color.b, Player.Alive ? Player.Color.a : 127).Value);
+								ImGui::Text("%s", Player.Name);
+								ImGui::PopStyleColor();
 								break;
 							}
 
-							ImGui::PushID(player.Info.userID);
-
-							if (ImGui::Button("Profile"))
+						case 1:
 							{
-								g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(
-									"steamid", CSteamID(0x0110000100000000ULL + player.Info.friendsID));
+								ImGui::Text("%s", Utils::GetClassByIndex(Player.Class));
+								break;
 							}
 
-							ImGui::SameLine();
-
-							if (ImGui::Button("Kick"))
+						case 2:
 							{
-								g_Interfaces.Engine->ClientCmd_Unrestricted(
-									tfm::format("callvote kick %i", player.Info.userID).c_str());
+								ImGui::Text("%i/%i", Player.Health, Player.MaxHealth);
+								break;
 							}
 
-							ImGui::SameLine();
-
-							if (Vars::AntiHack::Resolver::Resolver.m_Var)
+						case 3:
 							{
+								auto findResolveMode = g_Resolver.ResolvePlayers.find(Player.FriendsID);
+								ResolveMode resolveMode;
+								if (findResolveMode != g_Resolver.ResolvePlayers.end())
+								{
+									resolveMode = findResolveMode->second;
+								}
+
 								// Pitch resolver
 								ImGui::PushItemWidth(90.f);
-								if (ImGui::Combo("##pitch", &resolveMode.m_Pitch, resolveListPitch,
-									IM_ARRAYSIZE(resolveListPitch)))
+								if (ImGui::Combo("Pitch", &resolveMode.m_Pitch, resolveListPitch,
+												 IM_ARRAYSIZE(resolveListPitch)))
 								{
-									g_Resolver.ResolvePlayers[player.Info.friendsID].m_Pitch = resolveMode.m_Pitch;
+									g_Resolver.ResolvePlayers[Player.FriendsID].m_Pitch = resolveMode.m_Pitch;
 								}
 								ImGui::PopItemWidth();
 								ImGui::SameLine();
 
 								// Yaw resolver
 								ImGui::PushItemWidth(90.f);
-								if (ImGui::Combo("##yaw", &resolveMode.m_Yaw, resolveListYaw,
-									IM_ARRAYSIZE(resolveListYaw)))
+								if (ImGui::Combo("Yaw", &resolveMode.m_Yaw, resolveListYaw,
+												 IM_ARRAYSIZE(resolveListYaw)))
 								{
-									g_Resolver.ResolvePlayers[player.Info.friendsID].m_Yaw = resolveMode.m_Yaw;
+									g_Resolver.ResolvePlayers[Player.FriendsID].m_Yaw = resolveMode.m_Yaw;
 								}
 								ImGui::PopItemWidth();
-								ImGui::SameLine();
+								break;
 							}
 
-							if (ImGui::Checkbox("Ignore", &ignored))
+						default:
 							{
-								if (g_GlobalInfo.ignoredPlayers.find(player.Info.friendsID) == g_GlobalInfo.
-									ignoredPlayers.end())
-								{
-									g_GlobalInfo.ignoredPlayers[player.Info.friendsID] = true;
-								}
-								else
-								{
-									g_GlobalInfo.ignoredPlayers.erase(player.Info.friendsID);
-								}
+								break;
 							}
-
-							ImGui::PopID();
 						}
 					}
+
+					ImGui::SameLine();
+
+					ImGui::Selectable("##contextmenu", false, ImGuiSelectableFlags_SpanAllColumns);
+
+					if (!Player.FakePlayer && ImGui::BeginPopupContextItem())
+					{
+						if (ImGui::Button("Profile"))
+						{
+							g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(
+								"steamid", CSteamID(0x0110000100000000ULL + Player.FriendsID));
+						}
+
+						ImGui::SameLine();
+
+						if (ImGui::Button("Votekick"))
+						{
+							g_Interfaces.Engine->ClientCmd_Unrestricted(
+								tfm::format("callvote kick %i", Player.UserID).c_str());
+						}
+
+						ImGui::SameLine();
+
+						ImGui::Checkbox("Ignore", &g_GlobalInfo.ignoredPlayers[Player.FriendsID]);
+
+						ImGui::EndPopup();
+					}
+
+					ImGui::PopID();
 				}
+
 				ImGui::EndTable();
 			}
 		}

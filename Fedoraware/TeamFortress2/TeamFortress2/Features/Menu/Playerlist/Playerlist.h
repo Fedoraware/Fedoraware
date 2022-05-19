@@ -2,20 +2,23 @@
 #include "../../../SDK/SDK.h"
 
 struct ListPlayer {
-	PlayerInfo_t Info{ };
-	Color_t Color{ };
-	int Team = -1;
-	int Index = -1;
+	const char* Name{};
+	int UserID{};
+	uint32_t FriendsID{};
+	bool FakePlayer{};
+	Color_t Color{};
+	int Health{};
+	int MaxHealth{};
+	int Class{};
+	bool Alive{};
 };
 
 class CPlayerList {
-	bool SortByTeam(const ListPlayer& a, const ListPlayer& b);
-	
 public:
 	void UpdatePlayers();
 	void Render();
-	
-	std::array<ListPlayer, 64> PlayerCache;
+
+	std::multimap<int, ListPlayer> PlayerCache{};
 };
 
 inline CPlayerList g_PlayerList;
