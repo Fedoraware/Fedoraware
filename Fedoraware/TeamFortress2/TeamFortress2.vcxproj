@@ -742,7 +742,6 @@
     <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
     <ClInclude Include="TeamFortress2\Utils\Interface\Interface.h" />
-    <ClInclude Include="TeamFortress2\Utils\Json\Json.hpp" />
     <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Math\Math.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\buffer.h" />
