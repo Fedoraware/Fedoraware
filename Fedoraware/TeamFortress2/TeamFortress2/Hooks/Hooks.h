@@ -4,6 +4,8 @@
 #include "../SDK/SDK.h"
 #include <stdexcept>
 
+//Credits go entirely to spook953
+
 class CHook
 {
 private:
