@@ -9,9 +9,10 @@ inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
 }
 
 
-CHook::CHook(void* pInitFunction)
+CHook::CHook(const std::string& name, void* pInitFunction)
 {
-	GetVecHooks().push_back(pInitFunction);
+	InitFunction = pInitFunction;
+	g_HookManager.GetMapHooks()[name] = this;
 }
 
 bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn function)
@@ -73,7 +74,6 @@ void CHookManager::Release()
 
 void CHookManager::Init()
 {
-	using InitHookFN = void(__cdecl*)();
 	while (!g_dwDirectXDevice)
 	{
 		g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
@@ -81,9 +81,9 @@ void CHookManager::Init()
 	MH_Initialize();
 	{
 		WndProc::Init();
-		for (auto& Hook : GetVecHooks())
+		for (const auto& hook : GetMapHooks())
 		{
-			reinterpret_cast<InitHookFN>(Hook)();
+			hook.second->Init();
 		}
 	}
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)

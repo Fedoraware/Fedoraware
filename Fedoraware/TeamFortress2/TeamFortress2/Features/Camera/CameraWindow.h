@@ -15,8 +15,8 @@ public:
 	void Init();
 	void Draw();
 	void Update();
-	void RenderView(void* ecx, void* edx, const CViewSetup& pViewSetup);
-	void RenderCustomView(void* ecx, void*edx, const CViewSetup& pViewSetup, ITexture* pTexture);
+	void RenderView(void* ecx, const CViewSetup& pViewSetup);
+	void RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture);
 };
 
 inline CCameraWindow g_CameraWindow;

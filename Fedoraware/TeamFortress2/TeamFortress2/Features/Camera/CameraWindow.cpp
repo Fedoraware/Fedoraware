@@ -1,5 +1,7 @@
 #include "CameraWindow.h"
 #include "../ESP/ESP.h"
+#include "../../Hooks/HookManager.h"
+#include "../../Hooks/Hooks.h"
 
 void CCameraWindow::Init()
 {
@@ -111,10 +113,12 @@ void CCameraWindow::Update()
 }
 
 // Renders another view onto a texture
-void CCameraWindow::RenderView(void* ecx, void* edx, const CViewSetup& pViewSetup)
+void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 {
 	if (!CameraTex || Vars::Visuals::CameraMode.m_Var == 0 ||
-		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) { return; }
+		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
+		return;
+	}
 
 	CViewSetup mirrorView = pViewSetup;
 	mirrorView.x = 0;
@@ -123,7 +127,8 @@ void CCameraWindow::RenderView(void* ecx, void* edx, const CViewSetup& pViewSetu
 		// Custom origin & angles
 		mirrorView.origin = CameraOrigin;
 		mirrorView.angles = CameraAngles;
-	} else {
+	}
+	else {
 		// Mirror cam
 		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
 		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
@@ -134,16 +139,19 @@ void CCameraWindow::RenderView(void* ecx, void* edx, const CViewSetup& pViewSetu
 	mirrorView.fov = Vars::Visuals::CameraFOV.m_Var;
 	mirrorView.m_flAspectRatio = static_cast<float>(mirrorView.width) / static_cast<float>(mirrorView.height);
 
-	RenderCustomView(ecx, edx, mirrorView, CameraTex);
+	RenderCustomView(ecx, mirrorView, CameraTex);
 }
 
-void CCameraWindow::RenderCustomView(void* ecx, void* edx, const CViewSetup& pViewSetup, ITexture* pTexture) {
+void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture) {
 	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
 
 	renderCtx->PushRenderTargetAndViewport();
 	renderCtx->SetRenderTarget(pTexture);
 
-	g_Interfaces.ViewRender->RenderView(pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
+	if (const auto renderViewHook = g_HookManager.GetMapHooks()["ViewRender_RenderView"])
+	{
+		renderViewHook->Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
+	}
 
 	renderCtx->PopRenderTargetAndViewport();
 	renderCtx->Release();

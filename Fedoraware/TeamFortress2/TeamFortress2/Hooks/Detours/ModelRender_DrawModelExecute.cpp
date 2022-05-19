@@ -12,11 +12,6 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(g_Interfaces.ModelRender, 19), void, __fastcall,
 		  void* ecx, void* edx, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	if (!g_DMEChams.originalFn)
-	{
-		g_DMEChams.originalFn = Hook.Original<void(__stdcall*)(CModelRender*, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)>();
-	}
-
 	CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);

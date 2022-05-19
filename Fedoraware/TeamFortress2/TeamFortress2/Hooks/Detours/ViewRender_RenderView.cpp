@@ -9,6 +9,6 @@ MAKE_HOOK(ViewRender_RenderView, Utils::GetVFuncPtr(g_Interfaces.ViewRender, 6),
 	{
 		g_CameraWindow.originalFn = Hook.Original<FN>();
 	}
-	Hook.Original<FN>()(ecx, edx, view, nClearFlags, whatToDraw);
-	g_CameraWindow.RenderView(ecx, edx, view);
+	Hook.Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, view, nClearFlags, whatToDraw);
+	g_CameraWindow.RenderView(ecx, view);
 }

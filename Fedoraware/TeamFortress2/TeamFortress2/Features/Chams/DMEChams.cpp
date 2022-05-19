@@ -4,9 +4,8 @@
 #include "Chams.h"
 #include "../Glow/Glow.h"
 #include "../Backtrack/Backtrack.h"
-
-
-
+#include "../../Hooks/HookManager.h"
+#include "../../Hooks/Hooks.h"
 
 
 // I can't believe i'm doing this
@@ -545,6 +544,8 @@ void CDMEChams::Init()
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
+	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+
 	m_bRendering = false;
 	bool foundselfillumtint = false;
 	if (ShouldRun())
@@ -645,8 +646,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 
 			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
-
-			originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+			
+			if (dmeHook)
+			{
+				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+			}
 
 			bMatWasForced = true;
 
@@ -704,7 +708,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				}
 			}
 
 			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
@@ -757,7 +764,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
 				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				}
 			}
 
 
@@ -883,7 +893,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
 
-				originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				}
 				bMatWasForced = true;
 				
 				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
@@ -940,7 +953,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-					originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					if (dmeHook)
+					{
+						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					}
 				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)
@@ -992,7 +1008,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
 					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
 
-					originalFn(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					if (dmeHook)
+					{
+						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					}
 				}
 
 				if (bMatWasForced)

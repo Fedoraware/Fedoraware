@@ -7,14 +7,15 @@
 class CHook
 {
 private:
-	void* m_pOriginalFunction = nullptr;
+	void* OriginalFunction = nullptr;
+	void* InitFunction = nullptr;
 
 public:
-	CHook(void* pInitFunction);
+	CHook(const std::string& name, void* pInitFunction);
 
 	void CreateHook(void* pTarget, void* pDetour)
 	{
-		if (MH_CreateHook(pTarget, pDetour, &m_pOriginalFunction) != MH_STATUS::MH_OK)
+		if (MH_CreateHook(pTarget, pDetour, &OriginalFunction) != MH_STATUS::MH_OK)
 		{
 			throw std::runtime_error("Failed to create hook");
 		}
@@ -22,16 +23,21 @@ public:
 
 	void DisableHook()
 	{
-		if (MH_DisableHook(m_pOriginalFunction) != MH_STATUS::MH_OK)
+		if (MH_DisableHook(OriginalFunction) != MH_STATUS::MH_OK)
 		{
 			throw std::runtime_error("Failed to disable hook");
 		}
 	}
 
+	void Init()
+	{
+		reinterpret_cast<void(__cdecl*)()>(InitFunction)();
+	}
+
 	template <typename FN>
 	inline FN Original()
 	{
-		return reinterpret_cast<FN>(m_pOriginalFunction);
+		return reinterpret_cast<FN>(OriginalFunction);
 	}
 };
 
@@ -40,7 +46,7 @@ public:
 	namespace name\
 	{\
 		void Initialize();\
-		inline CHook Hook(Initialize); \
+		inline CHook Hook(#name, Initialize); \
 		using FN = type(callconvo*)(__VA_ARGS__); \
 		type callconvo Detour(__VA_ARGS__); \
 	}\

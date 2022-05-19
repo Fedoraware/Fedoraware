@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include <string>
 #include <vector>
 //class CHooks
 //{
@@ -22,17 +24,19 @@
 //	}
 //};
 
-inline std::vector<void*>& GetVecHooks()
-{
-	static std::vector<void*> s_vecHooks;
-	return s_vecHooks;
-}
+class CHook;
 
 class CHookManager
 {
 public:
 	void Init();
 	void Release();
+
+	std::map<std::string, CHook*>& GetMapHooks()
+	{
+		static std::map<std::string, CHook*> mapHooks;
+		return mapHooks;
+	}
 };
 
 inline CHookManager g_HookManager;

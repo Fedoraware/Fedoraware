@@ -21,7 +21,6 @@ private:
 	bool ShouldRun();
 
 public:
-	DMEFN originalFn = nullptr;
 	void Init();
 	bool Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 	bool m_bRendering;
