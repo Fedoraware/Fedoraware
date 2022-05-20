@@ -2,23 +2,23 @@
 
 void CConVars::Init()
 {
-	cl_interp = g_Interfaces.CVars->FindVar(_("cl_interp"));
-	cl_sidespeed = g_Interfaces.CVars->FindVar(_("cl_sidespeed"));
-	cl_interp_ratio = g_Interfaces.CVars->FindVar(_("cl_interp_ratio"));
-	cl_updaterate = g_Interfaces.CVars->FindVar(_("cl_updaterate"));
-	tf_crit_cap = g_Interfaces.CVars->FindVar(_("tf_weapon_criticals_bucket_cap"));
-	tf_crit_bottom = g_Interfaces.CVars->FindVar(_("tf_weapon_criticals_bucket_bottom"));
-	tf_crit_default = g_Interfaces.CVars->FindVar(_("tf_weapon_criticals_bucket_default"));
-	sv_gravity = g_Interfaces.CVars->FindVar(_("sv_gravity"));
-	cl_flipviewmodels = g_Interfaces.CVars->FindVar(_("cl_flipviewmodels"));
-	sv_maxunlag = g_Interfaces.CVars->FindVar(_("sv_maxunlag"));
-	tf_enable_glows_after_respawn = g_Interfaces.CVars->FindVar(_("tf_enable_glows_after_respawn"));
-	glow_outline_effect_enable = g_Interfaces.CVars->FindVar(_("glow_outline_effect_enable"));
-	r_drawspecificstaticprop = g_Interfaces.CVars->FindVar(_("r_drawspecificstaticprop"));
-	sv_namechange_cooldown_seconds = g_Interfaces.CVars->FindVar(_("sv_namechange_cooldown_seconds"));
-	afkTimer = g_Interfaces.CVars->FindVar(_("mp_idlemaxtime"));
+	cl_interp = I::CVars->FindVar(_("cl_interp"));
+	cl_sidespeed = I::CVars->FindVar(_("cl_sidespeed"));
+	cl_interp_ratio = I::CVars->FindVar(_("cl_interp_ratio"));
+	cl_updaterate = I::CVars->FindVar(_("cl_updaterate"));
+	tf_crit_cap = I::CVars->FindVar(_("tf_weapon_criticals_bucket_cap"));
+	tf_crit_bottom = I::CVars->FindVar(_("tf_weapon_criticals_bucket_bottom"));
+	tf_crit_default = I::CVars->FindVar(_("tf_weapon_criticals_bucket_default"));
+	sv_gravity = I::CVars->FindVar(_("sv_gravity"));
+	cl_flipviewmodels = I::CVars->FindVar(_("cl_flipviewmodels"));
+	sv_maxunlag = I::CVars->FindVar(_("sv_maxunlag"));
+	tf_enable_glows_after_respawn = I::CVars->FindVar(_("tf_enable_glows_after_respawn"));
+	glow_outline_effect_enable = I::CVars->FindVar(_("glow_outline_effect_enable"));
+	r_drawspecificstaticprop = I::CVars->FindVar(_("r_drawspecificstaticprop"));
+	sv_namechange_cooldown_seconds = I::CVars->FindVar(_("sv_namechange_cooldown_seconds"));
+	afkTimer = I::CVars->FindVar(_("mp_idlemaxtime"));
 
-	ConCommandBase* cmdBase = g_Interfaces.CVars->GetCommands();
+	ConCommandBase* cmdBase = I::CVars->GetCommands();
 	while (cmdBase != nullptr) {
 		constexpr int FCVAR_HIDDEN = (int)EConVarFlags::FCVAR_HIDDEN;
 		constexpr int FCVAR_DEVELOPMENT_ONLY = (int)EConVarFlags::FCVAR_DEVELOPMENT_ONLY;

@@ -16,13 +16,13 @@ MAKE_HOOK(CMaterial_Uncache, UncacheAddress(), void, __fastcall,
 		{
 			if (materialName.find("dme_mat_") == std::string::npos)
 			{
-				g_Interfaces.CVars->ConsolePrintf("Preventing material %s from being uncached\n", ecx->GetName());
+				I::CVars->ConsolePrintf("Preventing material %s from being uncached\n", ecx->GetName());
 				return;
 			}
 		}
 	}
 
-	if (ecx && !(bPreserveVars < 0 && bPreserveVars > 1))
+	if (ecx)
 	{
 		Hook.Original<FN>()(ecx, edx, bPreserveVars);
 	}

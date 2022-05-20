@@ -47,7 +47,7 @@ float CAntiAim::EdgeDistance(float edgeRayYaw) {
 	ray.Init(g_EntityCache.m_pLocal->GetEyePosition(), forward);
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = {};
-	g_Interfaces.EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
+	I::EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
 
 	const float edgeDistance = (trace.vStartPos - trace.vEndPos).Length2D();
 	return edgeDistance;
@@ -346,8 +346,8 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
-		if (const auto pEntity = g_Interfaces.EntityList->GetClientEntity(
-			g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
+		if (const auto pEntity = I::EntityList->GetClientEntity(
+			I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
 		{
 			const auto nAttacker = pEvent->GetInt("attacker");
 			const auto& pLocal = g_EntityCache.m_pLocal;
@@ -355,7 +355,7 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			if (pEntity != pLocal) { return; }
 
 			PlayerInfo_t pi{};
-			g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &pi);
+			I::Engine->GetPlayerInfo(I::Engine->GetLocalPlayer(), &pi);
 			if (nAttacker == pi.userID) { return; }
 
 			wasHit = true;

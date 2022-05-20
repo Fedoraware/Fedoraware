@@ -3,7 +3,7 @@
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/Fedworking/Fedworking.h"
 
-MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(g_Interfaces.GameEvent, 8), bool, __fastcall,
+MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(I::GameEvent, 8), bool, __fastcall,
 		  void* ecx, void* edx, CGameEvent* pEvent)
 {
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());

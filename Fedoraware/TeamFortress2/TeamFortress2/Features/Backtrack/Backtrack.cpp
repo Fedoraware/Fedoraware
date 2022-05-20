@@ -2,13 +2,13 @@
 
 static float LerpTime()
 {
-	static ConVar* updaterate = g_Interfaces.CVars->FindVar("cl_updaterate");
-	static ConVar* minupdate = g_Interfaces.CVars->FindVar("sv_minupdaterate");
-	static ConVar* maxupdate = g_Interfaces.CVars->FindVar("sv_maxupdaterate");
-	static ConVar* lerp = g_Interfaces.CVars->FindVar("cl_interp");
-	static ConVar* cmin = g_Interfaces.CVars->FindVar("sv_client_min_interp_ratio");
-	static ConVar* cmax = g_Interfaces.CVars->FindVar("sv_client_max_interp_ratio");
-	static ConVar* ratio = g_Interfaces.CVars->FindVar("cl_interp_ratio");
+	static ConVar* updaterate = I::CVars->FindVar("cl_updaterate");
+	static ConVar* minupdate = I::CVars->FindVar("sv_minupdaterate");
+	static ConVar* maxupdate = I::CVars->FindVar("sv_maxupdaterate");
+	static ConVar* lerp = I::CVars->FindVar("cl_interp");
+	static ConVar* cmin = I::CVars->FindVar("sv_client_min_interp_ratio");
+	static ConVar* cmax = I::CVars->FindVar("sv_client_max_interp_ratio");
+	static ConVar* ratio = I::CVars->FindVar("cl_interp_ratio");
 
 	const float interpValue = lerp->GetFloat();
 	const float maxUpdateValue = maxupdate->GetFloat();
@@ -39,7 +39,7 @@ static float LerpTime()
 
 bool CBacktrack::IsGoodTick(const int tick) const
 {
-	const auto netChannel = g_Interfaces.Engine->GetNetChannelInfo();
+	const auto netChannel = I::Engine->GetNetChannelInfo();
 
 	if (!netChannel)
 	{
@@ -48,7 +48,7 @@ bool CBacktrack::IsGoodTick(const int tick) const
 
 	const float correct = std::clamp(netChannel->GetLatency(FLOW_OUTGOING) + LerpTime(), 0.f, 1.f);
 
-	const float deltaTime = correct - (g_Interfaces.GlobalVars->curtime - TICKS_TO_TIME(tick));
+	const float deltaTime = correct - (I::GlobalVars->curtime - TICKS_TO_TIME(tick));
 
 	return fabsf(deltaTime) < 0.2f;
 }
@@ -61,9 +61,9 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 	{
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 		{
-			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 			{
-				if (CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i))
+				if (CBaseEntity* pEntity = I::EntityList->GetClientEntity(i))
 				{
 					if (!(pEntity->GetDormant() && pEntity->IsAlive()))
 					{
@@ -74,7 +74,7 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 						pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
 
 						model_t* model = pEntity->GetModel();
-						studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
+						studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
 
 						if (model && hdr)
 						{
@@ -105,15 +105,15 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 	{
 		Vec3 newViewDirection;
 		const Vec3 viewDirection = pCmd->viewangles;
-		/*g_Interfaces.Engine->GetViewAngles(viewDirection);*/
+		/*I::Engine->GetViewAngles(viewDirection);*/
 		Math::AngleVectors(viewDirection, &newViewDirection);
 		if (CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon())
 		{
 			int bestTargetIndex = -1;
 			float bestFieldOfView = FLT_MAX;
-			for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++)
+			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 			{
-				CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
+				CBaseEntity* pEntity = I::EntityList->GetClientEntity(i);
 				if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE)
 				{
 					continue;

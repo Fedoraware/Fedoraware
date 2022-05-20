@@ -19,7 +19,7 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 	if (!Vars::Triggerbot::Global::Active.m_Var || (!g_AutoGlobal.IsKeyDown() && Vars::Triggerbot::Global::TriggerKey.
 		m_Var)) { return false; }
 
-	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
+	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
 	{
 		return false;
 	}
@@ -31,7 +31,7 @@ void CAuto::Run(CUserCmd* pCmd)
 {
 	if (Vars::Triggerbot::Stab::Disguise.m_Var && g_AutoStab.m_bShouldDisguise)
 	{
-		g_Interfaces.Engine->ClientCmd_Unrestricted(_("lastdisguise"));
+		I::Engine->ClientCmd_Unrestricted(_("lastdisguise"));
 	}
 
 	g_GlobalInfo.m_bAutoBackstabRunning = false;

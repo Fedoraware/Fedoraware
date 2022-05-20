@@ -13,6 +13,7 @@
 
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
+#include "Blur/Blur.h"
 
 constexpr int MENU_KEY = VK_INSERT;
 
@@ -1211,17 +1212,17 @@ void CMenu::MenuVisuals()
 
 				if (Button("Apply", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.m_bSet = true;
+					g_AttributeChanger.ShouldSet = true;
 				}
 				SameLine();
 				if (Button("Save", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.m_bSave = true;
+					g_AttributeChanger.ShouldSave = true;
 				}
 				SameLine();
 				if (Button("Load", ImVec2(44, 20)))
 				{
-					g_AttributeChanger.m_bLoad = true;
+					g_AttributeChanger.ShouldLoad = true;
 				}
 
 				SectionTitle("Ragdoll effects");
@@ -1283,15 +1284,15 @@ void CMenu::MenuVisuals()
 				SectionTitle("Custom fog");
 				if (WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.m_Var))
 				{
-					if (static auto fog_enable = g_Interfaces.CVars->FindVar("fog_enable"); fog_enable)
+					if (static auto fog_enable = I::CVars->FindVar("fog_enable"); fog_enable)
 					{
 						fog_enable->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
-					if (static auto fog_enableskybox = g_Interfaces.CVars->FindVar("fog_enableskybox"); fog_enableskybox)
+					if (static auto fog_enableskybox = I::CVars->FindVar("fog_enableskybox"); fog_enableskybox)
 					{
 						fog_enableskybox->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
-					if (static auto fog_override = g_Interfaces.CVars->FindVar("fog_override"); fog_override)
+					if (static auto fog_override = I::CVars->FindVar("fog_override"); fog_override)
 					{
 						fog_override->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
@@ -1299,7 +1300,7 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 				{
-					if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensity"); fog_density)
+					if (static auto fog_density = I::CVars->FindVar("fog_maxdensity"); fog_density)
 					{
 						fog_density->SetValue(Vars::Visuals::Fog::FogDensity.m_Var);
 					}
@@ -1307,7 +1308,7 @@ void CMenu::MenuVisuals()
 				}
 				if (ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor))
 				{
-					if (static auto fog_color = g_Interfaces.CVars->FindVar("fog_color"); fog_color)
+					if (static auto fog_color = I::CVars->FindVar("fog_color"); fog_color)
 					{
 						fog_color->SetValue(std::string("").
 							append(std::to_string(Vars::Visuals::Fog::FogColor.r)).
@@ -1321,21 +1322,21 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_start"); fog_start)
+					if (static auto fog_start = I::CVars->FindVar("fog_start"); fog_start)
 					{
 						fog_start->SetValue(Vars::Visuals::Fog::FogStart.m_Var);
 					}
 				}
 				if (WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_end"); fog_end)
+					if (static auto fog_end = I::CVars->FindVar("fog_end"); fog_end)
 					{
 						fog_end->SetValue(Vars::Visuals::Fog::FogEnd.m_Var);
 					}
 				}
 				if (WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 				{
-					if (static auto fog_density = g_Interfaces.CVars->FindVar("fog_maxdensityskybox"); fog_density)
+					if (static auto fog_density = I::CVars->FindVar("fog_maxdensityskybox"); fog_density)
 					{
 						fog_density->SetValue(Vars::Visuals::Fog::FogDensitySkybox.m_Var);
 					}
@@ -1343,7 +1344,7 @@ void CMenu::MenuVisuals()
 
 				if (ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox))
 				{
-					if (static auto fog_colorskybox = g_Interfaces.CVars->FindVar("fog_colorskybox"); fog_colorskybox)
+					if (static auto fog_colorskybox = I::CVars->FindVar("fog_colorskybox"); fog_colorskybox)
 					{
 						fog_colorskybox->SetValue(std::string("").
 							append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.r)).
@@ -1357,14 +1358,14 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_start = g_Interfaces.CVars->FindVar("fog_startskybox"); fog_start)
+					if (static auto fog_start = I::CVars->FindVar("fog_startskybox"); fog_start)
 					{
 						fog_start->SetValue(Vars::Visuals::Fog::FogStartSkybox.m_Var);
 					}
 				}
 				if (WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_end = g_Interfaces.CVars->FindVar("fog_endskybox"); fog_end)
+					if (static auto fog_end = I::CVars->FindVar("fog_endskybox"); fog_end)
 					{
 						fog_end->SetValue(Vars::Visuals::Fog::FogEndSkybox.m_Var);
 					}
@@ -1608,7 +1609,7 @@ void CMenu::MenuMisc()
 			WToggle("Enable###PartyNetEnable", &Vars::Misc::PartyNetworking.m_Var); HelpMarker("Enables party networking between Fedoraware users");
 			WToggle("Party crasher###PartyNetCrash", &Vars::Misc::PartyCrasher.m_Var); HelpMarker("Annoy your friends by crashing their game");
 			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
-			WToggle("Party ESP###PartyNet", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
+			WToggle("Party ESP###PartyNetESP", &Vars::Misc::PartyESP.m_Var); HelpMarker("Sends player locations to your party members");
 
 			SectionTitle("Followbot");
 			WToggle("Enable Followbot###FollowbotEnable", &Vars::Misc::Followbot::Enabled.m_Var); HelpMarker("Follows a player around.");
@@ -1640,29 +1641,29 @@ void CMenu::MenuMisc()
 			SectionTitle("Utilities");
 			const auto btnWidth = GetWindowSize().x - 2 * GetStyle().WindowPadding.x;
 			if (Button("Full update", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+				I::Engine->ClientCmd_Unrestricted("cl_fullupdate");
 			if (Button("Reload HUD", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("hud_reloadscheme");
+				I::Engine->ClientCmd_Unrestricted("hud_reloadscheme");
 			if (Button("Restart sound", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+				I::Engine->ClientCmd_Unrestricted("snd_restart");
 			if (Button("Stop sound", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+				I::Engine->ClientCmd_Unrestricted("stopsound");
 			if (Button("Status", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+				I::Engine->ClientCmd_Unrestricted("status");
 			if (Button("Ping", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+				I::Engine->ClientCmd_Unrestricted("ping");
 			if (Button("Retry", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+				I::Engine->ClientCmd_Unrestricted("retry");
 			if (Button("Exit", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("exit");
+				I::Engine->ClientCmd_Unrestricted("exit");
 			if (Button("Console", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("showconsole");
+				I::Engine->ClientCmd_Unrestricted("showconsole");
 			if (Button("Demo playback", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui");
+				I::Engine->ClientCmd_Unrestricted("demoui");
 			if (Button("Demo trackbar", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("demoui2");
+				I::Engine->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
-				g_Interfaces.Engine->ClientCmd_Unrestricted("itemtest");
+				I::Engine->ClientCmd_Unrestricted("itemtest");
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
@@ -1692,13 +1693,14 @@ void CMenu::SettingsWindow()
 	{
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
+		Checkbox("Blur background", &Vars::Menu::BlurBackground);
 
 		Dummy({ 0, 5 });
 		static std::string selected;
 		int nConfig = 0;
 
 		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1708,7 +1710,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Current config
-		const std::string cfgText = "Loaded: " + g_CFG.CurrentConfig;
+		const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
 		Text(cfgText.c_str());
 
 		// Config name field
@@ -1719,7 +1721,7 @@ void CMenu::SettingsWindow()
 			PushItemWidth(200);
 			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				if (!std::filesystem::exists(g_CFG.ConfigPath + "\\" + newConfigName))
+				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
 				{
 					g_CFG.SaveConfig(newConfigName);
 				}
@@ -1728,7 +1730,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.ConfigPath))
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1756,7 +1758,7 @@ void CMenu::SettingsWindow()
 				// Save config button
 				if (Button("Save", ImVec2(61, 20)))
 				{
-					if (configName != g_CFG.CurrentConfig)
+					if (configName != g_CFG.GetCurrentConfig())
 					{
 						OpenPopup("Save config?");
 					} else
@@ -1823,7 +1825,7 @@ void CMenu::SettingsWindow()
 					EndPopup();
 				}
 			}
-			else if (configName == g_CFG.CurrentConfig)
+			else if (configName == g_CFG.GetCurrentConfig())
 			{
 				PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 				std::string buttonText = "> " + configName + " <";
@@ -1892,7 +1894,7 @@ void CMenu::DebugMenu()
 /* Window for the camera feature */
 void CMenu::DrawCameraWindow()
 {
-	if (g_Interfaces.Engine->IsInGame() && Vars::Visuals::CameraMode.m_Var != 0)
+	if (I::Engine->IsInGame() && Vars::Visuals::CameraMode.m_Var != 0)
 	{
 		int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
 		if (Vars::Visuals::CameraMode.m_Var <= 1 || g_CameraWindow.CanDraw) {
@@ -1940,7 +1942,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		// TOOD: & 8000?
 		g_Menu.IsOpen = !g_Menu.IsOpen;
-		g_Interfaces.Surface->SetCursorAlwaysVisible(g_Menu.IsOpen);
+		I::Surface->SetCursorAlwaysVisible(g_Menu.IsOpen);
 	}
 
 	// Begin current frame
@@ -1950,6 +1952,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 
 	if (g_Menu.IsOpen)
 	{
+		if (Vars::Menu::BlurBackground)
+		{
+			g_Blur.DrawBackgroundBlur(ImGui::GetBackgroundDrawList(), pDevice);
+		}
+
 		ImGui::PushFont(Verdana);
 		DrawMenu();
 		DrawCameraWindow();

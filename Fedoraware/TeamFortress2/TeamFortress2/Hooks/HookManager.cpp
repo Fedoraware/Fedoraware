@@ -16,7 +16,7 @@ CHook::CHook(const std::string& name, void* pInitFunction)
 
 bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn function)
 {
-	auto pClass = g_Interfaces.Client->GetAllClasses();
+	auto pClass = I::Client->GetAllClasses();
 	if (path.size() < 2)
 		return false;
 	while (pClass)

@@ -188,7 +188,6 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs"); // Used by attribute changer
 	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
 	if (!std::filesystem::exists(ConfigPath))
@@ -196,9 +195,9 @@ CConfigManager::CConfigManager()
 		std::filesystem::create_directory(ConfigPath);
 	}
 
-	if (!std::filesystem::exists(ConfigPath + _("\\FedCore")))
+	if (!std::filesystem::exists(ConfigPath + _("\\Core")))
 	{
-		std::filesystem::create_directory(ConfigPath + _("\\FedCore"));
+		std::filesystem::create_directory(ConfigPath + _("\\Core"));
 	}
 
 	if (!std::filesystem::exists(ConfigPath + _("\\Materials")))
@@ -859,6 +858,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
 			SAVE_OTHER(Vars::Menu::ModernDesign);
+			SAVE_OTHER(Vars::Menu::BlurBackground);
 			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
@@ -1574,6 +1574,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 
 			LOAD_OTHER(Vars::Menu::ModernDesign);
+			LOAD_OTHER(Vars::Menu::BlurBackground);
 			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 

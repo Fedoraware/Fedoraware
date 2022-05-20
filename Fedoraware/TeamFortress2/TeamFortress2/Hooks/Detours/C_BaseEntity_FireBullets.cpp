@@ -73,19 +73,19 @@ void DrawBeam(const Vector& source, const Vector& end)
 	beamInfo.m_flSpeed = Vars::Visuals::Beans::Speed.m_Var;
 	beamInfo.m_nStartFrame = 0;
 	beamInfo.m_flFrameRate = 0;
-	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(g_Interfaces.GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
-	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(g_Interfaces.GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
-	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(g_Interfaces.GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
+	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
+	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
+	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
 	beamInfo.m_nSegments = Vars::Visuals::Beans::segments.m_Var;
 	beamInfo.m_bRenderable = true;
 	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.m_Var;
 	beamInfo.m_vecStart = source;
 	beamInfo.m_vecEnd = end;
 
-	Beam_t* coolBeam = g_Interfaces.ILOVEBEAMS->CreateBeamPoints(beamInfo);
+	Beam_t* coolBeam = I::ILOVEBEAMS->CreateBeamPoints(beamInfo);
 	if (coolBeam)
 	{
-		g_Interfaces.ILOVEBEAMS->DrawBeam(coolBeam);
+		I::ILOVEBEAMS->DrawBeam(coolBeam);
 	}
 }
 
@@ -116,7 +116,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 
 		{
 			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
 
-			g_Interfaces.DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
+			I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
 														   Colors::BulletTracer.a, true, 5);
 		}
 		if (!pLocal->IsInValidTeam())

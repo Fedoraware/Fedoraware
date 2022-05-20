@@ -2,6 +2,18 @@
 
 static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
+bool CResolver::ShouldAutoResolve()
+{
+	if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE) { return false; }
+
+	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	{
+		if (pWeapon->GetClassID() == ETFClassID::CTFMinigun) { return false; }
+	}
+
+	return true;
+}
+
 /* Run the resolver and apply the resolved angles */
 void CResolver::Run()
 {
@@ -13,12 +25,12 @@ void CResolver::Run()
 			localHead = pLocal->GetHitboxPos(HITBOX_HEAD);
 		}
 
-		for (auto i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		for (auto i = 1; i <= I::Engine->GetMaxClients(); i++)
 		{
-			CBaseEntity* entity = nullptr;
+			CBaseEntity* entity;
 			PlayerInfo_t temp{};
 
-			if (!(entity = g_Interfaces.EntityList->GetClientEntity(i))) {
+			if (!(entity = I::EntityList->GetClientEntity(i))) {
 				continue;
 			}
 
@@ -26,7 +38,7 @@ void CResolver::Run()
 				continue;
 			}
 
-			if (!g_Interfaces.Engine->GetPlayerInfo(i, &temp)) {
+			if (!I::Engine->GetPlayerInfo(i, &temp)) {
 				continue;
 			}
 
@@ -118,7 +130,11 @@ void CResolver::Run()
 			}
 			case 6:
 			{
-				*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				// Auto resolver
+				if (ShouldAutoResolve())
+				{
+					*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				}
 				break;
 			}
 			default:
@@ -143,9 +159,9 @@ void CResolver::Update(CUserCmd* pCmd)
 			PlayerInfo_t temp{};
 			const int aimTarget = g_GlobalInfo.m_nCurrentTargetIdx;
 			
-			if (const auto& pTarget = g_Interfaces.EntityList->GetClientEntity(aimTarget))
+			if (const auto& pTarget = I::EntityList->GetClientEntity(aimTarget))
 			{
-				if (g_Interfaces.Engine->GetPlayerInfo(aimTarget, &temp))
+				if (I::Engine->GetPlayerInfo(aimTarget, &temp))
 				{
 					const auto findResolve = g_Resolver.ResolvePlayers.find(temp.friendsID);
 					ResolveMode resolveMode;
@@ -156,7 +172,7 @@ void CResolver::Update(CUserCmd* pCmd)
 
 					if (resolveMode.m_Yaw == 6)
 					{
-						ResolveData[temp.friendsID].LastShot = g_Interfaces.Engine->Time();
+						ResolveData[temp.friendsID].LastShot = I::Engine->Time();
 						ResolveData[temp.friendsID].RequiresUpdate = true;
 					}
 				}
@@ -168,11 +184,11 @@ void CResolver::Update(CUserCmd* pCmd)
 	for (auto& data : ResolveData)
 	{
 		float delay = 1.f;
-		if (const auto nc = g_Interfaces.Engine->GetNetChannelInfo())
+		if (const auto nc = I::Engine->GetNetChannelInfo())
 		{
 			delay = (nc->GetLatency(FLOW_OUTGOING) + nc->GetLatency(FLOW_INCOMING)) + 0.3f;
 		}
-		const float time = g_Interfaces.Engine->Time();
+		const float time = I::Engine->Time();
 		const bool shouldCheck = (time - data.second.LastShot) > delay;
 		const float timeDiff = data.second.LastHit - data.second.LastShot;
 
@@ -195,18 +211,18 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 {
 	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
 
-	const int victim = g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
-	const int attacker = g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
+	const int victim = I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
+	const int attacker = I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
 	const bool bCrit = pEvent->GetBool("crit");
 
-	if (attacker == g_Interfaces.Engine->GetLocalPlayer()) {
+	if (attacker == I::Engine->GetLocalPlayer()) {
 		PlayerInfo_t temp{};
 
-		if (!g_Interfaces.Engine->GetPlayerInfo(victim, &temp)) { return; }
+		if (!I::Engine->GetPlayerInfo(victim, &temp)) { return; }
 		if (ResolveData.find(temp.friendsID) == ResolveData.end()) { return; }
 		if (Vars::Aimbot::Hitscan::AimHitbox.m_Var == 0 && !bCrit) { return; }
 
-		ResolveData[temp.friendsID].LastHit = g_Interfaces.Engine->Time();
+		ResolveData[temp.friendsID].LastHit = I::Engine->Time();
 		// ResolveData[temp.friendsID].RequiresUpdate = false;
 	}
 }

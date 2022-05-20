@@ -24,7 +24,7 @@ static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
 static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
 static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 
-MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Client, 36), bool, __fastcall,
+MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), bool, __fastcall,
 		  void* ecx, void* edx, UserMessageType type, bf_read& msgData)
 {
 	const auto bufData = reinterpret_cast<const char*>(msgData.m_pData);
@@ -60,9 +60,9 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 			if (Vars::Misc::ChatCensor.m_Var)
 			{
 				PlayerInfo_t senderInfo{};
-				if (g_Interfaces.Engine->GetPlayerInfo(entIdx, &senderInfo))
+				if (I::Engine->GetPlayerInfo(entIdx, &senderInfo))
 				{
-					if (entIdx == g_Interfaces.Engine->GetLocalPlayer()) { break; }
+					if (entIdx == I::Engine->GetLocalPlayer()) { break; }
 					if (g_GlobalInfo.ignoredPlayers[senderInfo.friendsID] || g_EntityCache.IsFriend(entIdx))
 					{
 						break;
@@ -81,8 +81,8 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 						if (boost::contains(chatMessage, word))
 						{
 							const std::string cmd = "say_team \"" + CLEAR_MSG + "\"";
-							g_Interfaces.Engine->ServerCmd(cmd.c_str(), true);
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, playerName, chatMessage).c_str());
+							I::Engine->ServerCmd(cmd.c_str(), true);
+							I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, playerName, chatMessage).c_str());
 							break;
 						}
 					}
@@ -96,7 +96,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 		{
 			if (Vars::Misc::AntiAutobal.m_Var && msgData.GetNumBitsLeft() > 35)
 			{
-				const INetChannel* server = g_Interfaces.Engine->GetNetChannelInfo();
+				const INetChannel* server = I::Engine->GetNetChannelInfo();
 				const std::string data(bufData);
 
 				if (data.find("TeamChangeP") != std::string::npos && g_EntityCache.m_pLocal)
@@ -109,11 +109,11 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 					}
 					if (anti_balance_attempts < 2)
 					{
-						g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+						I::Engine->ClientCmd_Unrestricted("retry");
 					}
 					else
 					{
-						g_Interfaces.Engine->ClientCmd_Unrestricted(
+						I::Engine->ClientCmd_Unrestricted(
 							"tf_party_chat \"I will be autobalanced in 3 seconds\"");
 					}
 					anti_balance_attempts++;
@@ -129,7 +129,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 			{
 				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "info") == 0)
 				{
-					g_Interfaces.Engine->ClientCmd_Unrestricted("closedwelcomemenu");
+					I::Engine->ClientCmd_Unrestricted("closedwelcomemenu");
 					return true;
 				}
 			}
@@ -139,14 +139,14 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(g_Interfaces.Cli
 			{
 				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "team") == 0)
 				{
-					g_Interfaces.Engine->ClientCmd_Unrestricted("autoteam");
+					I::Engine->ClientCmd_Unrestricted("autoteam");
 					return true;
 				}
 
 				if (strncmp(reinterpret_cast<char*>(msgData.m_pData), "class_", 6) == 0)
 				{
 					static std::string classNames[] = { "scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy" };
-					g_Interfaces.Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
+					I::Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
 					return true;
 				}
 			}

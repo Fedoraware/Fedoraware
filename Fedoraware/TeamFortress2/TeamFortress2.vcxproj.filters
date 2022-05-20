@@ -44,26 +44,20 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\rpc_connection.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerResource\PlayerResource.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
@@ -94,7 +88,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_ShutDown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_FrameStageNotify.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_DispatchUserMessage.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_OverrideView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_OverideView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_ShouldDrawViewModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_CreateMove.cpp" />
@@ -135,6 +128,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelShutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelInit.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Blur\Blur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -642,7 +636,6 @@
     <ClInclude Include="TeamFortress2\Features\Resolver\Resolver.h" />
     <ClInclude Include="TeamFortress2\Features\CritHack\CritHack.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
-    <ClInclude Include="TeamFortress2\Utils\Json\Json.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imconfig.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imstb_truetype.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\imgui.h" />
@@ -668,6 +661,7 @@
     <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
     <ClInclude Include="TeamFortress2\Features\Followbot\Followbot.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Blur\Blur.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

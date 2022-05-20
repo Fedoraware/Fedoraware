@@ -187,7 +187,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Sniper_m_FestiveHuntsman:
 	case Sniper_m_TheFortifiedCompound:
 		{
-			const float charge = (g_Interfaces.GlobalVars->curtime - pWeapon->GetChargeBeginTime());
+			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
 				Math::RemapValClamped(charge, 0.0f, 1.f, 1800, 2600),
 				Math::RemapValClamped(charge, 0.0f, 1.f, 0.5, 0.1)
@@ -236,7 +236,7 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
-	auto pNetChannel = g_Interfaces.Engine->GetNetChannelInfo();
+	auto pNetChannel = I::Engine->GetNetChannelInfo();
 
 	g_GlobalInfo.predBeforeLines.clear();
 	g_GlobalInfo.predFutureLines.clear(); // clear here to stop them from drawing on non move-simmed entities
@@ -501,8 +501,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 	const bool bIsDucking = pEntity->IsDucking();
 
-	const Vec3 vMins = g_Interfaces.GameMovement->GetPlayerMins(bIsDucking);
-	const Vec3 vMaxs = g_Interfaces.GameMovement->GetPlayerMaxs(bIsDucking);
+	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking);
+	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking);
 
 	const std::vector vecPoints = {
 		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
@@ -690,7 +690,7 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 	Vec3 shootPos;
 	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment(_("muzzle"));
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
-	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
+	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }
 
 bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
@@ -705,7 +705,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	g_AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
@@ -723,7 +723,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 			if (pPlayer->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pPlayer))
+				if (g_AimbotGlobal.ShouldIgnore(pPlayer)) { continue; }
 			}
 
 			Vec3 vPos = pPlayer->GetWorldSpaceCenter();
@@ -857,7 +857,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 	case 0:
 		{
 			pCmd->viewangles = vAngle;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -1007,7 +1007,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				nLastTracerTick = pCmd->tick_count;
 			}
 
-			//g_Interfaces.DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, g_GlobalInfo.m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
+			//I::DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, g_GlobalInfo.m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
 		}
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)

@@ -83,45 +83,48 @@ public:
 	void Init();
 };
 
+namespace I
+{
+	inline CBaseClientDLL* Client = nullptr;
+	inline CClientDLLSharedAppSystems* ClientShared = nullptr;
+	inline CClientState* ClientState = nullptr;
+	inline CClientModeShared* ClientMode = nullptr;
+	inline CEngineClient* Engine = nullptr;
+	inline IVEngineEffects* EngineEffects = nullptr;
+	inline CPanel* Panel = nullptr;
+	inline CSurface* Surface = nullptr;
+	inline CClientEntityList* EntityList = nullptr;
+	inline IEffects* EffectsClient = nullptr;
+	inline CModelInfoClient* ModelInfo = nullptr;
+	inline CEngineTrace* EngineTrace = nullptr;
+	inline CPrediction* Prediction = nullptr;
+	inline CGameMovement* GameMovement = nullptr;
+	inline CMoveHelper* MoveHelper = nullptr;
+	inline ICvar* CVars = nullptr;
+	inline CGlobalVarsBase* GlobalVars = nullptr;
+	inline CEngineVGui* EngineVGui = nullptr;
+	inline int32_t* RandomSeed = nullptr;
+	inline void* DemoPlayer = nullptr;
+	inline IVRenderView* RenderView = nullptr;
+	inline IViewRender* ViewRender = nullptr;
+	inline CDebugOverlay* DebugOverlay = nullptr;
+	inline CGameEventManager* GameEvent = nullptr;
+	inline CModelRender* ModelRender = nullptr;
+	inline CMaterialSystem* MatSystem = nullptr;
+	inline IInput* Input = nullptr;
+	inline IKeyValuesSystem* KeyValuesSystem = nullptr;
+	inline IUniformRandomStream* UniformRandomStream = nullptr;
+	inline void* StudioRender = nullptr;
+	inline IInputSystem* InputSystem = nullptr;
+	inline void* CHud = nullptr;
+	inline void* CTFGameMovement = nullptr;
+	inline IAchievementMgr* AchievementMgr = nullptr;
+	inline IViewRenderBeams* ILOVEBEAMS = nullptr;
+}
 
 class CInterfaces
 {
 public: 
-	CBaseClientDLL*             Client						= nullptr;
-	CClientDLLSharedAppSystems* ClientShared				= nullptr;
-	CClientState*				ClientState					= nullptr;
-	CClientModeShared*          ClientMode					= nullptr;
-	CEngineClient*              Engine						= nullptr;
-	IVEngineEffects*			EngineEffects				= nullptr;
-	CPanel*                     Panel						= nullptr;
-	CSurface*                   Surface						= nullptr;
-	CClientEntityList*          EntityList					= nullptr;
-	IEffects*					EffectsClient				= nullptr;
-	CModelInfoClient*           ModelInfo					= nullptr;
-	CEngineTrace*               EngineTrace					= nullptr;
-	CPrediction*                Prediction					= nullptr;
-	CGameMovement*              GameMovement				= nullptr;
-	CMoveHelper*                MoveHelper					= nullptr;
-	ICvar*                      CVars						= nullptr;
-	CGlobalVarsBase*            GlobalVars					= nullptr;
-	CEngineVGui*                EngineVGui					= nullptr;
-	int32_t*                    RandomSeed					= nullptr;
-	void*                       DemoPlayer					= nullptr;
-	IVRenderView*               RenderView					= nullptr;
-	IViewRender*                ViewRender					= nullptr;
-	CDebugOverlay*              DebugOverlay				= nullptr;
-	CGameEventManager*          GameEvent					= nullptr;
-	CModelRender*               ModelRender					= nullptr;
-	CMaterialSystem*            MatSystem					= nullptr;
-	IInput*						Input						= nullptr;
-	IKeyValuesSystem*			KeyValuesSystem				= nullptr;
-	IUniformRandomStream*		UniformRandomStream			= nullptr;
-	void *						StudioRender				= nullptr;
-	IInputSystem*				InputSystem					= nullptr;
-	void*						CHud						= nullptr;
-	void*						CTFGameMovement				= nullptr;
-	IAchievementMgr*			AchievementMgr				= nullptr;
-	IViewRenderBeams*			ILOVEBEAMS					= nullptr;
 	void Init();
 };
 

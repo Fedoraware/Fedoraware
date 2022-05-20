@@ -6,7 +6,7 @@
 /* Returns whether random crits are enabled on the server */
 bool CCritHack::AreRandomCritsEnabled()
 {
-	if (static auto tf_weapon_criticals = g_Interfaces.CVars->FindVar("tf_weapon_criticals"); tf_weapon_criticals) {
+	if (static auto tf_weapon_criticals = I::CVars->FindVar("tf_weapon_criticals"); tf_weapon_criticals) {
 		return tf_weapon_criticals->GetBool();
 	}
 	return true;
@@ -17,21 +17,22 @@ bool CCritHack::IsEnabled()
 {
 	if (!Vars::CritHack::Active.m_Var) { return false; }
 	if (!AreRandomCritsEnabled()) { return false; }
-	if (!g_Interfaces.Engine->IsInGame()) { return false; }
+	if (!I::Engine->IsInGame()) { return false; }
 
 	return true;
 }
 
 bool CCritHack::ShouldCrit()
 {
-	if (GetAsyncKeyState(Vars::CritHack::CritKey.m_Var) & 0x8000) { return true; }
+	static KeyHelper critKey{ &Vars::CritHack::CritKey.m_Var };
+	if (critKey.Down()) { return true; }
 	if (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
 
 	return false;
 }
 
 /* Returns the next crit command number */
-int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
+int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 16)
 {
 	static int previousWeapon = 0;
 	static int previousCrit = 0;
@@ -48,10 +49,10 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 	// Find the next crit tick
 	int foundTick = -1;
 	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < loops; i++)
 	{
 		const int cmdNum = pCmd->command_number + i;
-		*g_Interfaces.RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
+		*I::RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
 		if (pWeapon->WillCrit())
 		{
 			previousCrit = cmdNum;
@@ -61,7 +62,7 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 4096)
 		}
 	}
 
-	*g_Interfaces.RandomSeed = seedBackup;
+	*I::RandomSeed = seedBackup;
 	return foundTick;
 }
 
@@ -120,7 +121,7 @@ void CCritHack::Draw()
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}
 
-	const float bucketCap = g_Interfaces.CVars->FindVar("tf_weapon_criticals_bucket_cap")->GetFloat();
+	const float bucketCap = I::CVars->FindVar("tf_weapon_criticals_bucket_cap")->GetFloat();
 	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
 }

@@ -6,25 +6,25 @@
 void CCameraWindow::Init()
 {
 	// Create camera texture
-	CameraTex = g_Interfaces.MatSystem->CreateFullFrameRenderTarget("mirrorcam_rt");
+	CameraTex = I::MatSystem->CreateFullFrameRenderTarget("mirrorcam_rt");
 
 	// Create camera material
 	const auto kv = new KeyValues("UnlitGeneric");
 	kv->SetString("$basetexture", "mirrorcam_rt");
-	CameraMat = g_Interfaces.MatSystem->Create("m_cameraMat", kv);
+	CameraMat = I::MatSystem->Create("m_cameraMat", kv);
 }
 
 // Draws camera to the screen
 void CCameraWindow::Draw()
 {
-	if (!CameraMat || !g_Interfaces.Engine->IsInGame() ||
+	if (!CameraMat || !I::Engine->IsInGame() ||
 		Vars::Visuals::CameraMode.m_Var == 0 ||
 		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
 		return;
 	}
 
 	// Draw to screen
-	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
+	const auto renderCtx = I::MatSystem->GetRenderContext();
 	renderCtx->DrawScreenSpaceRectangle(
 		CameraMat,
 		ViewRect.x, ViewRect.y, ViewRect.w + 1, ViewRect.h + 1,
@@ -83,7 +83,7 @@ void CCameraWindow::Update()
 						Vec3 tpExit;
 						if (Utils::GetTeleporterExit(building->GetOwner()->GetIndex(), &tpExit))
 						{
-							CameraAngles = g_Interfaces.Engine->GetViewAngles();
+							CameraAngles = I::Engine->GetViewAngles();
 							CameraOrigin = Vec3(tpExit.x, tpExit.y, tpExit.z + 70);
 							CanDraw = true;
 
@@ -130,7 +130,7 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	}
 	else {
 		// Mirror cam
-		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+		const Vec3 viewAngles = I::Engine->GetViewAngles();
 		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
 		mirrorView.angles = camAngles;
 	}
@@ -143,7 +143,7 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 }
 
 void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture) {
-	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
+	const auto renderCtx = I::MatSystem->GetRenderContext();
 
 	renderCtx->PushRenderTargetAndViewport();
 	renderCtx->SetRenderTarget(pTexture);

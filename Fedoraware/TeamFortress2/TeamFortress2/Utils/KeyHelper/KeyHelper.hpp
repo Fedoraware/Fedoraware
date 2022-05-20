@@ -2,14 +2,13 @@
 #include <Windows.h>
 
 class KeyHelper {
-private:
-	enum class KeyState { NONE, DOWN };
+	enum class KeyState { None, Down };
 
 	int* Key = nullptr;
-	KeyState LastState = KeyState::NONE;
+	KeyState LastState = KeyState::None;
 
 public:
-	KeyHelper(int* vKey)
+	explicit KeyHelper(int* vKey)
 	{
 		Key = vKey;
 	}
@@ -17,28 +16,28 @@ public:
 	// Is the button currently down?
 	bool Down()
 	{
-		LastState = KeyState::DOWN;
-		return GetAsyncKeyState(*Key) & 0x8000;
+		if (!*Key)
+		{
+			LastState = KeyState::None;
+			return false;
+		}
+
+		const bool isDown = GetAsyncKeyState(*Key) & 0x8000;
+		LastState = isDown ? KeyState::Down : KeyState::None;
+		return isDown;
 	}
 
 	// Was the button just pressed? This will only be true once.
 	bool Pressed()
 	{
-		return GetAsyncKeyState(*Key) & 0x1;
+		const bool shouldCheck = LastState == KeyState::None;
+		return Down() && shouldCheck;
 	}
 
 	// Was the button just released? This will only be true once.
 	bool Released()
 	{
-		if (const bool keyDown = Down())
-		{
-			return false;
-		}
-		else
-		{
-			const bool released = !keyDown && LastState == KeyState::DOWN;
-			LastState = KeyState::NONE;
-			return released;
-		}
+		const bool shouldCheck = LastState == KeyState::Down;
+		return !Down() && shouldCheck;
 	}
 };

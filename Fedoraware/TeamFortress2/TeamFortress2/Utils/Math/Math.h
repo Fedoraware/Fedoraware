@@ -972,6 +972,25 @@ namespace Math
 		return (min + 1) + ((static_cast<float>(rand())) / static_cast<float>(RAND_MAX)) * (max - (min + 1));
 	}
 
+	inline float NormalizeRad(float a) noexcept
+	{
+		return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
+	}
+
+	inline float AngleDiffRad(float a1, float a2) noexcept
+	{
+		double delta = NormalizeRad(a1 - a2);
+		if (a1 > a2)
+		{
+			if (delta >= PI) { delta -= PI * 2; }
+		}
+		else
+		{
+			if (delta <= -PI) { delta += PI * 2; }
+		}
+		return static_cast<float>(delta);
+	}
+
 	inline float EaseInBack(float x)
 	{
 		const float c1 = 1.70158f;

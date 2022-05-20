@@ -34,6 +34,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	const auto pLocal = g_EntityCache.m_pLocal;
+	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.m_Var };
 
 	// Clear tick shift queue
 	if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bRecharging && g_GlobalInfo.tickShiftQueue > 0)
@@ -61,7 +62,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		g_GlobalInfo.m_nWaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.m_Var; // set wait condition (genius)
 		return; // this recharges
 	}
-	else if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var))
+	else if (rechargeKey.Down())
 	{
 		// queue recharge
 		g_GlobalInfo.m_bForceSendPacket = true;
@@ -130,7 +131,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				g_GlobalInfo.m_nShifted--;
 				//g_GlobalInfo.m_bForceSendPacket = true;
 			}
-			g_Interfaces.Engine->FireEvents();
+			I::Engine->FireEvents();
 			g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
 		}
 		g_GlobalInfo.m_bShouldShift = false;

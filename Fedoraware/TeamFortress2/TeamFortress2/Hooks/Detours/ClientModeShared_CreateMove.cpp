@@ -70,7 +70,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 }
 
 
-MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMode, 21), bool, __fastcall,
+MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bool, __fastcall,
 		  void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
 	g_GlobalInfo.m_bSilentTime = false;
@@ -84,10 +84,10 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMod
 
 	if (Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd))
 	{
-		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
+		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
 	}
 
-	//static ConVar* engine_no_focus_sleep = g_Interfaces.CVars->FindVar("engine_no_focus_sleep");
+	//static ConVar* engine_no_focus_sleep = I::CVars->FindVar("engine_no_focus_sleep");
 	//if (engine_no_focus_sleep && engine_no_focus_sleep->GetInt() >= 1)
 	//{
 	//	engine_no_focus_sleep->SetValue(0);
@@ -139,7 +139,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMod
 				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.
 					m_Var / 100.f)))
 				{
-					g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+					I::Engine->ClientCmd_Unrestricted("retry");
 				}
 			}
 		}
@@ -239,11 +239,17 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMod
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		static int chockedPackets = 0;
 		static int chockValue = 0;
-		if (pLocal && pLocal->IsAlive() && (Vars::Misc::CL_Move::Fakelag.m_Var)
+		static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
+
+		if (pLocal && pLocal->IsAlive()
+			&& (Vars::Misc::CL_Move::Fakelag.m_Var)
+
+			// Plain: Check fakelag key
 			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 0
-			|| (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)
-			&& Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+			|| (fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var)
 			|| !Vars::Misc::CL_Move::FakelagOnKey.m_Var)
+
+			// Velocity: Check for minimum velocity
 			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 2
 			|| (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f)
 			&& !g_GlobalInfo.m_bForceSendPacket)
@@ -308,7 +314,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMod
 
 	if (Vars::Misc::PartyCrasher.m_Var)
 	{
-		g_Interfaces.Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
+		I::Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -368,22 +374,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(g_Interfaces.ClientMod
 			pCmd->forwardmove = fOldForward;
 			bWasSet = false;
 		}
-	}
-
-	if (static_cast<int>(g_Misc.strings.size()) > 0)
-	{
-		g_GlobalInfo.gNotifCounter++;
-
-		if (g_GlobalInfo.gNotifCounter > Vars::Visuals::despawnTime.m_Var)
-		{
-			g_GlobalInfo.gNotifCounter = 0;
-
-			g_Misc.strings.pop_back();
-		}
-	}
-	else
-	{
-		g_GlobalInfo.gNotifCounter = 0;
 	}
 
 	g_GlobalInfo.vEyeAngDelay++; // Used for the return delay in the viewmodel aimbot

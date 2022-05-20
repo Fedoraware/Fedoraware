@@ -37,10 +37,10 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const int playerIndex = std::stoi(dataVector[4]);
 
 					PlayerInfo_t playerInfo{};
-					g_Interfaces.Engine->GetPlayerInfo(playerIndex, &playerInfo);
+					I::Engine->GetPlayerInfo(playerIndex, &playerInfo);
 
 					if (playerInfo.userID != 0) {
-						CGameEvent* markerEvent = g_Interfaces.GameEvent->CreateNewEvent("show_annotation");
+						CGameEvent* markerEvent = I::GameEvent->CreateNewEvent("show_annotation");
 						if (markerEvent) {
 							markerEvent->SetInt("id", playerIndex);
 							markerEvent->SetFloat("worldPosX", xPos);
@@ -52,7 +52,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 							markerEvent->SetString("text", playerInfo.name);
 							markerEvent->SetString("play_sound", "coach/coach_go_here.wav");
 
-							g_Interfaces.GameEvent->FireEventClientSide(markerEvent);
+							I::GameEvent->FireEventClientSide(markerEvent);
 						}
 					}
 				}
@@ -71,7 +71,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const int playerIndex = std::stoi(dataVector[4]);
 
 					g_GlobalInfo.partyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
-					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = g_Interfaces.Engine->Time();
+					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = I::Engine->Time();
 				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
 			}
 			break;
@@ -97,7 +97,7 @@ void CFedworking::SendESP(CBaseEntity* pPlayer)
 {
 	if (!pPlayer->GetDormant() && pPlayer->IsInValidTeam() && pPlayer->IsAlive()) {
 		const float lastUpdate = g_GlobalInfo.partyPlayerESP[pPlayer->GetIndex()].LastUpdate;
-		if (lastUpdate == 0.f || g_Interfaces.Engine->Time() - lastUpdate >= 0.4f) {
+		if (lastUpdate == 0.f || I::Engine->Time() - lastUpdate >= 0.4f) {
 			const Vec3 playerPos = pPlayer->GetVecOrigin();
 			std::stringstream msg;
 			msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
@@ -113,7 +113,7 @@ void CFedworking::SendMessage(const std::string& pData)
 		std::string cmd = "tf_party_chat \"FED@";
 		cmd.append(encMsg);
 		cmd.append("\"");
-		g_Interfaces.Engine->ClientCmd_Unrestricted(cmd.c_str());
+		I::Engine->ClientCmd_Unrestricted(cmd.c_str());
 	} else {
 		ConsoleLog("Failed to send message! The message was too long.");
 	}
@@ -125,8 +125,9 @@ void CFedworking::Run()
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		// Party marker
-		if (Vars::Misc::PartyMarker.m_Var && GetAsyncKeyState(Vars::Misc::PartyMarker.m_Var)) {
-			const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.m_Var };
+		if (Vars::Misc::PartyMarker.m_Var && markerKey.Pressed()) {
+			const Vec3 viewAngles = I::Engine->GetViewAngles();
 			Vec3 vForward;
 			Math::AngleVectors(viewAngles, &vForward);
 
@@ -135,10 +136,10 @@ void CFedworking::Run()
 			Ray_t traceRay;
 			vForward = pLocal->GetEyePosition() + vForward * MAX_TRACE_LENGTH;
 			traceRay.Init(pLocal->GetEyePosition(), vForward);
-			g_Interfaces.EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+			I::EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
 			if (trace.DidHit()) {
 #ifdef _DEBUG
-				g_Interfaces.DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
+				I::DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
 #endif
 				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
 			}
@@ -161,5 +162,5 @@ void CFedworking::ConsoleLog(const std::string& pMessage)
 	std::string consoleMsg = "[Fedworking] ";
 	consoleMsg.append(pMessage);
 	consoleMsg.append("\n");
-	g_Interfaces.CVars->ConsoleColorPrintf({ 225, 177, 44, 255 }, consoleMsg.c_str());
+	I::CVars->ConsoleColorPrintf({ 225, 177, 44, 255 }, consoleMsg.c_str());
 }

@@ -16,7 +16,7 @@ std::mutex mutex;
 void CPlayerList::UpdatePlayers()
 {
 	std::multimap<int, ListPlayer> Buf{};
-	for (int i = 1; i < g_Interfaces.GlobalVars->maxclients; i++)
+	for (int i = 1; i < I::GlobalVars->maxclients; i++)
 	{
 		if (g_PR->isValid(i))
 		{
@@ -58,7 +58,7 @@ void CPlayerList::Render()
 		ImGui::GradientRect(&g_Menu.TitleGradient, { winPos.x, winPos.y }, winSize.x, 3);
 		ImGui::Dummy(ImVec2());
 
-		if (!g_Interfaces.Engine->IsInGame())
+		if (!I::Engine->IsInGame())
 		{
 			ImGui::Dummy(ImVec2(0, 20));
 			static ImVec2 fontSize = ImGui::CalcTextSize("You're not in game, noob!");
@@ -170,7 +170,7 @@ void CPlayerList::Render()
 
 						if (ImGui::Button("Votekick"))
 						{
-							g_Interfaces.Engine->ClientCmd_Unrestricted(
+							I::Engine->ClientCmd_Unrestricted(
 								tfm::format("callvote kick %i", Player.UserID).c_str());
 						}
 

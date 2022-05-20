@@ -14,7 +14,7 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
 
-MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), void, __fastcall,
+MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
 {
 	static auto StartDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(
@@ -51,19 +51,19 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 		{
 			CViewSetup viewSetup = {};
 
-			if (g_Interfaces.Client->GetPlayerView(viewSetup))
+			if (I::Client->GetPlayerView(viewSetup))
 			{
 				VMatrix worldToView = {}, viewToProjection = {}, worldToPixels = {};
-				g_Interfaces.RenderView->GetMatricesForView(viewSetup, &worldToView, &viewToProjection,
+				I::RenderView->GetMatricesForView(viewSetup, &worldToView, &viewToProjection,
 															&g_GlobalInfo.m_WorldToProjection, &worldToPixels);
 			}
 		}
 
-		StartDrawing(g_Interfaces.Surface);
+		StartDrawing(I::Surface);
 		{
 			auto OtherDraws = [&]() -> void
 			{
-				if (g_Interfaces.EngineVGui->IsGameUIVisible())
+				if (I::EngineVGui->IsGameUIVisible())
 				{
 					return;
 				}
@@ -227,7 +227,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 				if (Vars::Visuals::DebugInfo.m_Var)
 				{
 					int yoffset = 0, xoffset = 0;
-					if (const int localDamage = g_PR->GetDamageByIndex(g_Interfaces.Engine->GetLocalPlayer()))
+					if (const int localDamage = g_PR->GetDamageByIndex(I::Engine->GetLocalPlayer()))
 					{
 						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 					}
@@ -258,7 +258,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 						{
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
 						}
-						if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
+						if (const int tickcount = I::GlobalVars->tickcount)
 						{
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 							//float predictedsimtime = TICKS_TO_TIME(tickcount);
@@ -323,7 +323,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 							yoffset = 0;
 
 							PlayerInfo_t pi{};
-							if (g_Interfaces.Engine->GetPlayerInfo(player->GetIndex(), &pi))
+							if (I::Engine->GetPlayerInfo(player->GetIndex(), &pi))
 							{
 								if (!pi.fakeplayer)
 								{
@@ -345,7 +345,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 								}
 							}
 
-							if (const int tickcount = g_Interfaces.GlobalVars->tickcount)
+							if (const int tickcount = I::GlobalVars->tickcount)
 							{
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "S : %i", tickcount);
 								if (const int tickcountplayer = TIME_TO_TICKS(player->GetSimulationTime()))
@@ -394,7 +394,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 
 						model_t* pModel = Projectile->GetModel();
 						if (pModel) {
-							studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel);
+							studiohdr_t* pHDR = I::ModelInfo->GetStudioModel(pModel);
 							if (pHDR) {
 								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
 								yoffset += 20;
@@ -475,7 +475,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 			}
 		}
 
-		static ConVar* localplayer_visionflags = g_Interfaces.CVars->FindVar("localplayer_visionflags");
+		static ConVar* localplayer_visionflags = I::CVars->FindVar("localplayer_visionflags");
 		if (localplayer_visionflags)
 		{
 			switch (Vars::Visuals::Vision.m_Var)
@@ -494,6 +494,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(g_Interfaces.EngineVGui, 13), voi
 			}
 		}
 
-		FinishDrawing(g_Interfaces.Surface);
+		FinishDrawing(I::Surface);
 	}
 }

@@ -38,7 +38,8 @@ namespace SandvichAimbot
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	return !Vars::Aimbot::Global::AimKey.m_Var ? true : (GetAsyncKeyState(Vars::Aimbot::Global::AimKey.m_Var) & 0x8000);
+	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.m_Var };
+	return !Vars::Aimbot::Global::AimKey.m_Var ? true : aimKey.Down();
 }
 
 void CAimbotGlobal::SortTargets(const ESortMethod& Method)
@@ -69,7 +70,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 {
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
-	if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
+	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable()) { return true; }
 	if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
 	{

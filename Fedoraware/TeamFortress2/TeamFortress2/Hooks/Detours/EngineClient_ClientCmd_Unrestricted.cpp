@@ -24,7 +24,7 @@ private:
 
 };
 
-MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(g_Interfaces.Engine, 106), void, __fastcall,
+MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106), void, __fastcall,
 		  void* ecx, void* edx, const char* szCmdString)
 {
 	std::string cmdString(szCmdString);
@@ -43,16 +43,16 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(g_Interfaces.E
 			// Check if the user provided at least 2 args
 			if (cmdArgs.size() < 2)
 			{
-				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
+				I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
 				return;
 			}
 
 			// Find the given CVar
-			const auto foundCVar = g_Interfaces.CVars->FindVar(cmdArgs[0].c_str());
+			const auto foundCVar = I::CVars->FindVar(cmdArgs[0].c_str());
 			const std::string cvarName = cmdArgs[0];
 			if (!foundCVar)
 			{
-				g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+				I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
 				return;
 			}
 
@@ -61,7 +61,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(g_Interfaces.E
 			std::string newValue = boost::algorithm::join(cmdArgs, " ");
 			boost::replace_all(newValue, "\"", "");
 			foundCVar->SetValue(newValue.c_str());
-			g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
+			I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
 			return;
 		}
 	}
@@ -70,7 +70,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(g_Interfaces.E
 	if (Vars::Misc::ChatNL.m_Var && cmdString.rfind("say", 0) == 0)
 	{
 		boost::replace_all(cmdString, "\\n", "\n");
-		g_Interfaces.Engine->ServerCmd(cmdString.c_str(), true);
+		I::Engine->ServerCmd(cmdString.c_str(), true);
 		return;
 	}
 

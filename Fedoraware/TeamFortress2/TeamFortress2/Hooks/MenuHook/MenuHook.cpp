@@ -37,7 +37,7 @@ LONG __stdcall WndProc::Func(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if (g_Menu.IsOpen)
 	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
-		g_Interfaces.InputSystem->ResetInputStateVFunc();
+		I::InputSystem->ResetInputStateVFunc();
 		return 1;
 	}
 

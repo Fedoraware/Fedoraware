@@ -2,7 +2,7 @@
 
 #include "../../Features/Visuals/Visuals.h"
 
-MAKE_HOOK(ClientModeShared_OverrrideView, Utils::GetVFuncPtr(g_Interfaces.ClientMode, 16), void, __fastcall,
+MAKE_HOOK(ClientModeShared_OverrrideView, Utils::GetVFuncPtr(I::ClientMode, 16), void, __fastcall,
 		  void* ecx, void* edx, CViewSetup* pView)
 {
 	Hook.Original<FN>()(ecx, edx, pView);
