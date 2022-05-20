@@ -305,7 +305,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				}
 			}
 
-			const bool bIsFriend = g_EntityCache.Friends[player->GetIndex()];
+			const bool bIsFriend = g_EntityCache.IsFriend(player->GetIndex());
 
 			switch (Vars::Radar::Players::IgnoreTeam.m_Var)
 			{

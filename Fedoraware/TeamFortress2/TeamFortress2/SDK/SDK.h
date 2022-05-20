@@ -296,7 +296,7 @@ namespace Utils
 			if (g_EntityCache.m_pLocal->GetIndex() == pEntity->GetIndex())
 				out = Colors::Local;
 
-			else if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
+			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.m_pLocal)
 				out = Colors::Friend;
 
 			else if (g_GlobalInfo.ignoredPlayers[info.friendsID])

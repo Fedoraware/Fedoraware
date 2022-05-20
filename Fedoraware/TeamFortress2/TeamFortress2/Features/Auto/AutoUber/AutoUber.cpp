@@ -289,7 +289,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 			return;
 
 		//Dont waste if not a friend, fuck off scrub
-		if (Vars::Triggerbot::Uber::OnlyFriends.m_Var && !g_EntityCache.Friends[pTarget->GetIndex()])
+		if (Vars::Triggerbot::Uber::OnlyFriends.m_Var && !g_EntityCache.IsFriend(pTarget->GetIndex()))
 			return;
 
 		//Check target's status

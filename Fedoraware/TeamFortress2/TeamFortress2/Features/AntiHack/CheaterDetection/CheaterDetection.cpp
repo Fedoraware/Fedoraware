@@ -2,7 +2,7 @@
 
 
 bool CheaterDetection::shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect) {
-	if (g_EntityCache.Friends[nIndex] || g_GlobalInfo.ignoredPlayers[friendsID] || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
+	if (g_EntityCache.IsFriend(nIndex) || g_GlobalInfo.ignoredPlayers[friendsID] || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
 	if (pSuspect->GetDormant()) { return false; } // dont run this player if they are dormant
 	if (!pSuspect->IsAlive() || pSuspect->IsAGhost() || pSuspect->IsTaunting()) { return false; } // dont run this player if they are dead / ghost or taunting
 	return true;

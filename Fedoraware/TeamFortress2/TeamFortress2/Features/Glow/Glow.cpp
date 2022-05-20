@@ -170,8 +170,7 @@ void CGlowEffect::Render()
 						}
 					case 2:
 						{
-							if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->
-								GetIndex()]) { continue; }
+							if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(Player->GetIndex())) { continue; }
 							break;
 						}
 					}

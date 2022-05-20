@@ -278,8 +278,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					}
 					if (votingOptions & static_cast<int>(VoteOption::AutoVote) && bSameTeam && target != I::Engine->GetLocalPlayer()) // auto-vote
 					{
-						if (g_GlobalInfo.ignoredPlayers[infoTarget.friendsID] ||
-							(target > 0 && target <= 128 && g_EntityCache.Friends[target]))
+						if (g_GlobalInfo.ignoredPlayers[infoTarget.friendsID] || g_EntityCache.IsFriend(target))
 						{
 							I::Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
 						}

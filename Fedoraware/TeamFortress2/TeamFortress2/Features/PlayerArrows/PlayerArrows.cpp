@@ -114,7 +114,7 @@ void CPlayerArrows::Run()
 				continue;
 			}
 
-			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.Friends[pEnemy->GetIndex()])
+			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.IsFriend(pEnemy->GetIndex()))
 			{
 				continue;
 			}

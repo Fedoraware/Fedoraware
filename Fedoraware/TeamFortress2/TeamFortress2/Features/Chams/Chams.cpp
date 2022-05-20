@@ -153,13 +153,13 @@ Chams_t FetchChams(CBaseEntity* pEntity) {
 Chams_t FetchChams(CBaseObject* pBuilding) {
 	if (const auto pEntity = pBuilding->GetOwner())
 	{
-		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx) {
+		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
 			return Vars::Chams::Buildings::Target;
 		}
 		if (pEntity->GetIndex() == g_EntityCache.m_pLocal->GetIndex()) {
 			return Vars::Chams::Buildings::Local;
 		}
-		if (g_EntityCache.Friends[pEntity->GetIndex()]) {
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive) {
 			return Vars::Chams::Buildings::Friend;
 		}
 		if (pEntity->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum()) {
