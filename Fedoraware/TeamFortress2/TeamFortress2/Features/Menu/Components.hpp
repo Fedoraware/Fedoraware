@@ -354,12 +354,11 @@ namespace ImGui
     {
 	    const auto p = GetCursorScreenPos();
         auto* drawList = GetWindowDrawList();
-	    const auto style = GetStyle();
+		const auto& style = GetStyle();
 
         const float height = GetFrameHeight();
         const float width = height * 1.8f;
         const float radius = height * 0.50f;
-		const float bb_width = CalcItemWidth();
         const ImVec2 labelSize = CalcTextSize(label, nullptr, true);
 
         InvisibleButton(label, ImVec2(width + style.ItemInnerSpacing.x + labelSize.x, height));
