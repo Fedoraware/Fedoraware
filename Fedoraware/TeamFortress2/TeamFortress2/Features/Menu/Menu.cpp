@@ -87,7 +87,7 @@ void CMenu::DrawMenu()
 		// Tabbar
 		ImGui::SetCursorPos({ 0, TitleHeight });
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundLight.Value);
-		if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight + SubTabHeight }))
+		if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight + SubTabHeight }, false, ImGuiWindowFlags_NoScrollWithMouse))
 		{
 			DrawTabbar();
 		}
@@ -140,6 +140,7 @@ void CMenu::DrawTabbar()
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0, 0 });
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+
 	if (ImGui::BeginTable("TabbarTable", 5))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
@@ -219,7 +220,7 @@ void CMenu::DrawTabbar()
 	{
 		SubTabHeight = 0.f;
 	}
-
+	
 	ImGui::PopStyleVar(3);
 	ImGui::PopFont();
 }
