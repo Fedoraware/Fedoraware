@@ -229,7 +229,7 @@ void CMenu::DrawTabbar()
 void CMenu::MenuAimbot()
 {
 	using namespace ImGui;
-	
+
 	if (BeginTable("AimbotTable", 3))
 	{
 		/* Column 1 */
@@ -707,6 +707,8 @@ void CMenu::MenuVisuals()
 				WToggle("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.m_Var); HelpMarker("Shows who built the building");
 				WToggle("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.m_Var); HelpMarker("Will draw what level the building is");
 				WToggle("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.m_Var); HelpMarker("Will draw what conditions the building is under");
+				WToggle("Teleporter exit direction###Buildingteleexitdir", &Vars::ESP::Buildings::TeleExitDir.m_Var); HelpMarker("Show teleporter exit direction arrow");
+				ColorPickerL("Teleporter exit direction arrow color", Vars::ESP::Buildings::TeleExitDirColor);
 				WToggle("Lines###buildinglines", &Vars::ESP::Buildings::Lines.m_Var); HelpMarker("Draws lines from the local players position to the buildings position");
 				WCombo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.m_Var, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on buildings");
 				WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.m_Var); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
@@ -955,7 +957,7 @@ void CMenu::MenuVisuals()
 				WInputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.m_Var);
 				WInputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.m_Var);
 				MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_INDICATORS::nFlags.m_Var, "Font flags###FONT_INDICATORS");
-				
+
 				if (Button("Apply settings###fontapply"))
 				{
 					const Font_t fontEsp = {
@@ -1536,7 +1538,7 @@ void CMenu::MenuHvH()
 			}
 			WToggle("Resolver", &Vars::AntiHack::Resolver::Resolver.m_Var); HelpMarker("Enables Anti-aim resolver in the playerlist");
 			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.m_Var, &Vars::AntiHack::AntiAim::legjitter.m_Var, &Vars::AntiHack::AntiAim::invalidshootpitch.m_Var, &Vars::AntiHack::AntiAim::AntiBackstab.m_Var }, "Misc.");
-			
+
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
 			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
@@ -1685,7 +1687,7 @@ void CMenu::SettingsWindow()
 {
 	using namespace ImGui;
 	if (!ShowSettings) { return; }
-	
+
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
 

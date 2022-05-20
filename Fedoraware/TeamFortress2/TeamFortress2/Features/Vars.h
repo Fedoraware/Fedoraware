@@ -253,6 +253,8 @@ namespace Vars
 			inline CVar<bool> Level{ true, L"Level" };
 			inline CVar<bool> Cond{ true, L"Cond" };
 			inline CVar<bool> HealthBar{ true, L"Health Bar" };
+			inline CVar<bool> TeleExitDir{ false, L"Teleporter Exit Dir" };
+			inline Color_t TeleExitDirColor{ 255, 255, 255, 255 };
 			inline CVar<bool> Lines{ false, L"Lines" };
 			inline CVar<int> Box{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
 			inline CVar<bool> Dlights{ false, L"Dlights" };

@@ -199,7 +199,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME;
 
 			int nTextX = x + w + 3, nTextOffset = 0, nClassNum = Player->GetClassNum();
-			
+
 			if (Vars::ESP::Players::Uber.m_Var == 2 && nClassNum == CLASS_MEDIC)
 			{
 				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
@@ -683,7 +683,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				g_Draw.String(FONT, nTextX, y + nTextOffset, healthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nHealth, building->GetMaxHealth());
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
-			
+
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"),
@@ -713,7 +713,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				{
 					condStrings.emplace_back(L"Sapped");
 				}
-				else if (building->GetDisabled()) //Building->IsSpook() 
+				else if (building->GetDisabled()) //Building->IsSpook()
 				{
 					condStrings.emplace_back(L"Disabled");
 				}
@@ -757,6 +757,37 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 
 				x += 1;
+			}
+
+			// Teleport exit direction
+			if (Vars::ESP::Buildings::TeleExitDir.m_Var)
+			{
+				if (building->IsTeleporter() && building->GetObjectMode() == 1)
+				{
+					const Vec3 Origin = building->GetAbsOrigin();
+
+					Vec3 Forward{};
+					Vec3 Right{};
+					Vec3 Up{};
+
+					Math::AngleVectors(building->GetAbsAngles(), &Forward, &Right, &Up);
+
+					const Vec3 ArrowTop = Forward * 55.0f + Origin;
+					const Vec3 ArrowLeft = Right * -5.0f + Forward * 32.5f + Origin;
+					const Vec3 ArrowRight = Right * 5.0f + Forward * 32.5f + Origin;
+
+					Vec3 ArrowLeftScrn, ArrowRightScrn, ArrowTopScrn;
+
+					if (Utils::W2S(ArrowLeft, ArrowLeftScrn) &&
+						Utils::W2S(ArrowRight, ArrowRightScrn) &&
+						Utils::W2S(ArrowTop, ArrowTopScrn))
+					{
+						const std::array<Vec2, 3> Points{ Vec2(ArrowLeftScrn.x, ArrowLeftScrn.y),
+													Vec2(ArrowTopScrn.x, ArrowTopScrn.y),
+													Vec2(ArrowRightScrn.x, ArrowRightScrn.y) };
+						g_Draw.DrawOutlinedTriangle(Points, Vars::ESP::Buildings::TeleExitDirColor);
+					}
+				}
 			}
 
 			I::Surface->DrawSetAlphaMultiplier(1.0f);
