@@ -70,7 +70,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 			{
 				for (const auto& teammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 				{
-					if (teammate->IsAlive() || g_EntityCache.Friends[teammate->GetIndex()])
+					if (teammate->IsAlive() || g_EntityCache.IsFriend(teammate->GetIndex()))
 					{
 						continue;
 					}

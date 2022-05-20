@@ -129,6 +129,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelShutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelInit.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Blur\Blur.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LoadWhitelist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

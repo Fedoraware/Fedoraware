@@ -8,7 +8,7 @@
 
 class CHook
 {
-private:
+	std::string Name;
 	void* OriginalFunction = nullptr;
 	void* InitFunction = nullptr;
 
@@ -17,17 +17,17 @@ public:
 
 	void CreateHook(void* pTarget, void* pDetour)
 	{
-		if (MH_CreateHook(pTarget, pDetour, &OriginalFunction) != MH_STATUS::MH_OK)
+		if (MH_CreateHook(pTarget, pDetour, &OriginalFunction) != MH_OK)
 		{
-			throw std::runtime_error("Failed to create hook");
+			throw std::runtime_error("Failed to create hook: " + Name);
 		}
 	}
 
 	void DisableHook()
 	{
-		if (MH_DisableHook(OriginalFunction) != MH_STATUS::MH_OK)
+		if (MH_DisableHook(OriginalFunction) != MH_OK)
 		{
-			throw std::runtime_error("Failed to disable hook");
+			throw std::runtime_error("Failed to disable hook: " + Name);
 		}
 	}
 
@@ -37,7 +37,7 @@ public:
 	}
 
 	template <typename FN>
-	inline FN Original()
+	FN Original()
 	{
 		return reinterpret_cast<FN>(OriginalFunction);
 	}

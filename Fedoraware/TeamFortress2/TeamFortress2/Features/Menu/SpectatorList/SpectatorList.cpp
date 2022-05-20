@@ -34,7 +34,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 			if (I::Engine->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
 			{
 				Spectators.push_back({
-					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.Friends[pTeammate->GetIndex()],
+					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.IsFriend(pTeammate->GetIndex()),
 					pTeammate->GetTeamNum(), pTeammate->GetIndex()
 				});
 			}

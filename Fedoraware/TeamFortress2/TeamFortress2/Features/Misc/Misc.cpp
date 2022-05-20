@@ -524,34 +524,6 @@ void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 	}
 }
 
-void CMisc::BypassPure()
-{
-	if (Vars::Misc::BypassPure.m_Var)
-	{
-		static DWORD dwAddress = 0x0;
-
-		while (!dwAddress)
-		{
-			dwAddress = g_Pattern.Find(_(L"engine.dll"), _(L"A1 ? ? ? ? 56 33 F6 85 C0"));
-		}
-
-		static DWORD* pPure = nullptr;
-
-		while (!pPure)
-		{
-			if (reinterpret_cast<DWORD**>(dwAddress + 0x01))
-			{
-				pPure = *reinterpret_cast<DWORD**>(dwAddress + 0x01);
-			}
-		}
-
-		if (*pPure)
-		{
-			*pPure = 0x0;
-		}
-	}
-}
-
 const std::string SPAM_FED[] = {
 	_("Fedoraware - github.com/tf2cheater2013/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),

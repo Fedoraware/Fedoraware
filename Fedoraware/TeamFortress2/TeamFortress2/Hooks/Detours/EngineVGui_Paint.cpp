@@ -421,8 +421,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 			};
 			OtherDraws();
-
-			g_Misc.BypassPure();
+			
 			g_ESP.Run();
 			g_Visuals.PickupTimers();
 			g_SpyWarning.Run();

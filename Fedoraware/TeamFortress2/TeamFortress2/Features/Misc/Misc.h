@@ -25,7 +25,6 @@ public:
 	void DetectChoke();
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
-	void BypassPure();
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoPush();
