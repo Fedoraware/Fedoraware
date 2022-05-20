@@ -45,10 +45,6 @@ void CPlayerList::Render()
 {
 	if (!Vars::Menu::ShowPlayerlist) { return; }
 
-	const auto accent = ImColor(Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.r),
-	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.g),
-	                            Color::TOFLOAT(Vars::Menu::Colors::MenuAccent.b));
-
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
 	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
 	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
@@ -56,7 +52,6 @@ void CPlayerList::Render()
 		ImGui::PushFont(g_Menu.Verdana);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		const auto foregroundDrawList = ImGui::GetForegroundDrawList();
 		ImGui::GradientRect(&g_Menu.TitleGradient, {winPos.x, winPos.y}, winSize.x, 3);
 		ImGui::Dummy(ImVec2());
 
