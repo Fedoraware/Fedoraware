@@ -1119,8 +1119,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Buildings::Active);
 				LOAD_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Buildings::Name);
-				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
-				SAVE_OTHER(Vars::ESP::Buildings::NameColor);
+				LOAD_VAR(Vars::ESP::Buildings::NameCustom);
+				LOAD_OTHER(Vars::ESP::Buildings::NameColor);
 				LOAD_VAR(Vars::ESP::Buildings::NameBox);
 				LOAD_VAR(Vars::ESP::Buildings::Health);
 				LOAD_VAR(Vars::ESP::Buildings::Owner);
