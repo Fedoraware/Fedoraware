@@ -73,7 +73,7 @@ public: //Everything else, lol
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
 	}
-	
+
 	//str8 outta cathook
 	__inline bool AmbassadorCanHeadshot()
 	{
@@ -180,6 +180,9 @@ public: //Everything else, lol
 					if (!flTimer)
 						flTimer = I::GlobalVars->curtime;
 
+					if (flTimer > I::GlobalVars->curtime)
+						flTimer = 0.0f;
+
 					if ((I::GlobalVars->curtime - flTimer) < 0.4f)
 						return false;
 				}
@@ -195,6 +198,9 @@ public: //Everything else, lol
 				else {
 					if (!flTimer)
 						flTimer = I::GlobalVars->curtime;
+
+					if (flTimer > I::GlobalVars->curtime)
+						flTimer = 0.0f;
 
 					if ((I::GlobalVars->curtime - flTimer) < 2.0f)
 						return false;
