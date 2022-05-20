@@ -2,7 +2,7 @@
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
-<h2 align="center" style="margin-top: 0px;">SE-Owned but body positive</h2>
+<h2 align="center" style="margin-top: 0px;">SE-Owned but coollllll</h2>
 <p align="center">
 <a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>  
 <a href="https://discord.gg/kFkk2jahak"><img alt="Fedoraware Discord Server :trollface:" src="https://img.shields.io/discord/937420218672771112?label=Discord&logo=Discord"></a>  
