@@ -414,6 +414,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Buildings::Alpha);
 				SAVE_VAR(Vars::ESP::Buildings::Dlights);
 				SAVE_VAR(Vars::ESP::Buildings::DlightRadius);
+				SAVE_VAR(Vars::ESP::Buildings::TeleExitDir);
+				SAVE_OTHER(Vars::ESP::Buildings::TeleExitDirColor);
 			}
 
 			//World
@@ -1131,6 +1133,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Buildings::Alpha);
 				LOAD_VAR(Vars::ESP::Buildings::Dlights);
 				LOAD_VAR(Vars::ESP::Buildings::DlightRadius);
+				LOAD_VAR(Vars::ESP::Buildings::TeleExitDir);
+				LOAD_OTHER(Vars::ESP::Buildings::TeleExitDirColor);
 			}
 
 			//World
