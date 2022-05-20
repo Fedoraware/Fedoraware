@@ -299,7 +299,7 @@ namespace Utils
 			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.m_pLocal)
 				out = Colors::Friend;
 
-			else if (g_GlobalInfo.ignoredPlayers[info.friendsID])
+			else if (g_GlobalInfo.IsIgnored(info.friendsID))
 				out = Colors::Ignored;
 
 			else if (pEntity->IsCloaked())

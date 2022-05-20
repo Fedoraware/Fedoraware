@@ -1,6 +1,7 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../PlayerResource/PlayerResource.h"
 
 bool IsHitboxValid(int nHitbox, int index)
 {
@@ -84,6 +85,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
+	// Players
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
@@ -146,12 +148,16 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
+			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
+			const auto& priority = g_GlobalInfo.PlayerPriority[priorityID];
+
 			g_AimbotGlobal.m_vecTargets.push_back({
-				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox
+				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 			});
 		}
 	}
 
+	// Buildings
 	if (Vars::Aimbot::Global::AimBuildings.m_Var)
 	{
 		for (const auto& pBuilding : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ENEMIES))
@@ -176,6 +182,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
+	// Stickies
 	if (Vars::Aimbot::Global::AimStickies.m_Var)
 	{
 		for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))

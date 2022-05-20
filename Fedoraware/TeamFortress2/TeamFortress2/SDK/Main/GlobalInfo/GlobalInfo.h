@@ -15,6 +15,10 @@ struct DormantData {
 	float LastUpdate = 0.f;
 };
 
+struct Priority {
+	int Mode = 2;
+};
+
 struct GlobalInfo_t
 {
 	int m_nCurrentTargetIdx				= 0;
@@ -57,7 +61,6 @@ struct GlobalInfo_t
 	EWeaponType m_WeaponType			= {};
 	CUserCmd* currentUserCmd{ nullptr };
 	CUserCmd* lateUserCmd{ nullptr };
-	std::map<int, bool> ignoredPlayers;
 	std::map < CBaseEntity*, VelFixRecord> velFixRecord;
 	std::vector<Vec3> predBeforeLines;
 	std::vector<Vec3> predFutureLines;
@@ -67,6 +70,12 @@ struct GlobalInfo_t
 	std::map<int, int> chokeMap;
 	int tickShiftQueue = 0; // Ticks that shouls be shifted
 	bool m_bDrawingStaticProps = false;
+	std::map<uint32_t, Priority> PlayerPriority;
+
+	bool IsIgnored(uint32_t friendsID)
+	{
+		return PlayerPriority[friendsID].Mode < 2;
+	}
 };
 
 inline GlobalInfo_t g_GlobalInfo;

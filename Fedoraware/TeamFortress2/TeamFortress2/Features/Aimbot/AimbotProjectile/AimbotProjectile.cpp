@@ -1,5 +1,6 @@
 #include "AimbotProjectile.h"
 #include "../../Vars.h"
+#include "../../PlayerResource/PlayerResource.h"
 
 #include "../MovementSimulation/MovementSimulation.h"
 
@@ -707,26 +708,27 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
+	// Players
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		const int nWeaponID = pWeapon->GetWeaponID();
 		const bool bIsCrossbow = nWeaponID == TF_WEAPON_CROSSBOW;
 
-		for (const auto& pPlayer : g_EntityCache.GetGroup(
+		for (const auto& pTarget : g_EntityCache.GetGroup(
 			     bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
-			if (!pPlayer->IsAlive() || pPlayer->IsAGhost() || pPlayer == pLocal || (bIsCrossbow && (pPlayer->GetHealth() >=
-				pPlayer->GetMaxHealth()) && (pPlayer->GetTeamNum() == pLocal->GetTeamNum())))
+			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal || (bIsCrossbow && (pTarget->GetHealth() >=
+				pTarget->GetMaxHealth()) && (pTarget->GetTeamNum() == pLocal->GetTeamNum())))
 			{
 				continue;
 			}
 
-			if (pPlayer->GetTeamNum() != pLocal->GetTeamNum())
+			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				if (g_AimbotGlobal.ShouldIgnore(pPlayer)) { continue; }
+				if (g_AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
 			}
 
-			Vec3 vPos = pPlayer->GetWorldSpaceCenter();
+			Vec3 vPos = pTarget->GetWorldSpaceCenter();
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = (sortMethod == ESortMethod::FOV) ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			const float flDistTo = (sortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
@@ -736,10 +738,14 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 
-			g_AimbotGlobal.m_vecTargets.push_back({pPlayer, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo});
+			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
+			const auto& priority = g_GlobalInfo.PlayerPriority[priorityID];
+
+			g_AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
 
+	// Buildings
 	if (Vars::Aimbot::Global::AimBuildings.m_Var)
 	{
 		const bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
