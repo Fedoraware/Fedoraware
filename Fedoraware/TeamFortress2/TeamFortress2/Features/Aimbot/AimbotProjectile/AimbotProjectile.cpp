@@ -862,6 +862,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 	{
 	case 0:
 		{
+			// Plain
 			pCmd->viewangles = vAngle;
 			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
@@ -869,6 +870,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 	case 1:
 		{
+			// Silent
 			Utils::FixMovement(pCmd, vAngle);
 			pCmd->viewangles = vAngle;
 			break;
@@ -937,6 +939,45 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 	return false;
 }
 
+void CAimbotProjectile::SplashPrediction(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
+{
+	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	{
+		if (!pEntity || !pEntity->IsAlive()) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
+
+		constexpr float SPLASH_RADIUS = 120.f; // TODO: Find this value
+		const auto& vecOrigin = pEntity->GetAbsOrigin();
+		if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), vecOrigin)) { continue; }
+
+		// Scan every 45 degree angle
+		for (int i = 0; i < 315; i += 45)
+		{
+			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), SPLASH_RADIUS);
+			if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
+			{
+				// We found a target point! Let's bring it closer to the player...
+				float currentRadius = SPLASH_RADIUS;
+				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
+				{
+					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 30.f);
+					currentRadius -= 10.f;
+				}
+
+				// Closest point found. Fire at it!
+				currentRadius = std::clamp(currentRadius + 10.f, 0.f, SPLASH_RADIUS);
+				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
+				I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
+				I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
+				
+				Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
+				Aim(pCmd, pWeapon, vAngleTo);
+				break;
+			}
+		}
+	}
+}
+
 void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	static int nLastTracerTick = pCmd->tick_count;
@@ -953,8 +994,9 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
 		                         : g_AimbotGlobal.IsKeyDown());
+	if (!bShouldAim) { return; }
 
-	if (GetTarget(pLocal, pWeapon, pCmd, target) && bShouldAim)
+	if (GetTarget(pLocal, pWeapon, pCmd, target))
 	{
 		g_GlobalInfo.m_nCurrentTargetIdx = target.m_pEntity->GetIndex();
 
@@ -1033,10 +1075,13 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				}
 			}
 		}
-
 		else
 		{
 			Aim(pCmd, pWeapon, target.m_vAngleTo);
 		}
+	} else
+	{
+		// No target found. Fall back to splash prediction
+		SplashPrediction(pLocal, pWeapon, pCmd);
 	}
 }
