@@ -955,9 +955,6 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	case ETFClassID::CTFRocketLauncher_Mortar:
 	case ETFClassID::CTFStickBomb:
 		splashRadius = 130.f; break;
-
-	case ETFClassID::CTFRocketLauncher_DirectHit:
-		splashRadius = 40.f; break;
 	}
 
 	// Don't do it with the direct hit or if the splash radius is unknown
@@ -966,6 +963,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pEntity || !pEntity->IsAlive()) { continue; }
+		if (!pEntity->IsOnGround()) { continue; }
 		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
 
 		const auto& vecOrigin = pEntity->GetAbsOrigin();
