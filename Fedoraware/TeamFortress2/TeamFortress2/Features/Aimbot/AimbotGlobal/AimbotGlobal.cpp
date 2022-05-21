@@ -44,15 +44,19 @@ bool CAimbotGlobal::IsKeyDown()
 
 void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 {
+	// Sort by preference
 	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
-		if (a.n_Priority.Mode < b.n_Priority.Mode) { return false; }
-
 		switch (Method)
 		{
 		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
 		case ESortMethod::DISTANCE: return (a.m_flDistTo < b.m_flDistTo);
 		default: return false;
 		}
+	});
+
+	// Sort by priority
+	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
+		return (a.n_Priority.Mode > b.n_Priority.Mode);
 	});
 }
 
