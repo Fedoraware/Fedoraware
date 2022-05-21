@@ -944,23 +944,41 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 // Returns the best target for splash damage
 bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
+	if (!Vars::Aimbot::Projectile::SplashPrediction.m_Var) { return false; }
+
+	// TODO: I have no clue if these values are accurate
+	float splashRadius = 0.f;
+	switch (pWeapon->GetClassID())
+	{
+	case ETFClassID::CTFRocketLauncher:
+	case ETFClassID::CTFRocketLauncher_AirStrike:
+	case ETFClassID::CTFRocketLauncher_Mortar:
+	case ETFClassID::CTFStickBomb:
+		splashRadius = 130.f; break;
+
+	case ETFClassID::CTFRocketLauncher_DirectHit:
+		splashRadius = 40.f; break;
+	}
+
+	// Don't do it with the direct hit or if the splash radius is unknown
+	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || splashRadius == 0.f) { return false; }
+
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pEntity || !pEntity->IsAlive()) { continue; }
 		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
 
-		constexpr float SPLASH_RADIUS = 120.f; // TODO: Find this value
 		const auto& vecOrigin = pEntity->GetAbsOrigin();
 		if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), vecOrigin)) { continue; }
 
 		// Scan every 45 degree angle
 		for (int i = 0; i < 315; i += 45)
 		{
-			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), SPLASH_RADIUS);
+			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), splashRadius);
 			if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
 			{
 				// We found a target point! Let's bring it closer to the player...
-				float currentRadius = SPLASH_RADIUS;
+				float currentRadius = splashRadius;
 				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
 				{
 					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 30.f);
@@ -968,7 +986,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				}
 
 				// Closest point found. Fire at it!
-				currentRadius = std::clamp(currentRadius + 10.f, 0.f, SPLASH_RADIUS);
+				currentRadius = std::clamp(currentRadius + 10.f, 0.f, splashRadius);
 				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
 
 				#ifdef _DEBUG
@@ -997,8 +1015,6 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 	{
 		return;
 	}
-
-	//Target_t target = {};
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
