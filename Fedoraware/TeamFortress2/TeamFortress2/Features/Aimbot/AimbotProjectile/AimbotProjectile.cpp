@@ -969,33 +969,33 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
 
 		const auto& vecOrigin = pEntity->GetAbsOrigin();
-		if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), vecOrigin)) { continue; }
+		const auto& shootPos = pLocal->GetShootPos();
 
 		// Scan every 45 degree angle
 		for (int i = 0; i < 315; i += 45)
 		{
 			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), splashRadius);
-			if (Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
+			if (Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
 			{
-				// We found a target point! Let's bring it closer to the player...
+				// We found a target point! Get the closest point possible...
 				float currentRadius = splashRadius;
-				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, pLocal->GetEyePosition(), scanPos))
+				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
 				{
 					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 30.f);
 					currentRadius -= 10.f;
 				}
 
-				// Closest point found. Fire at it!
+				// Closest point found!
 				currentRadius = std::clamp(currentRadius + 10.f, 0.f, splashRadius);
 				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
 
-				#ifdef _DEBUG
-				I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
-				I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
-				#endif
+				if (Vars::Debug::DebugInfo.m_Var)
+				{
+					I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
+					I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
+				}
 
 				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-				// TODO: Respect sorting method
 				outTarget = { pEntity, ETargetType::PLAYER, vecOrigin, vAngleTo };
 				return true;
 			}

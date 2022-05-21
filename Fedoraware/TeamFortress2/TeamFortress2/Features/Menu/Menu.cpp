@@ -1868,7 +1868,7 @@ void CMenu::DebugMenu()
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
 
-		Checkbox("Show Debug info", &Vars::Visuals::DebugInfo.m_Var);
+		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.m_Var);
 
 		// Particle tester
 		if (CollapsingHeader("Particles"))

@@ -224,7 +224,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 
 				// Debug info
-				if (Vars::Visuals::DebugInfo.m_Var)
+				if (Vars::Debug::DebugInfo.m_Var)
 				{
 					int yoffset = 0, xoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(I::Engine->GetLocalPlayer()))

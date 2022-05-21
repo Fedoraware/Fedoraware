@@ -441,7 +441,6 @@ namespace Vars
 		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
 		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList{ 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-		inline CVar<bool> DebugInfo{ false }; // trash
 
 		inline CVar<int> FreecamKey{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed{ 10.f, L"Freecam Speed" };
@@ -745,6 +744,7 @@ namespace Vars
 	// Debug options - Don't save these!
 	namespace Debug
 	{
+		inline CVar<bool> DebugInfo{ false };
 		inline CVar<bool> DebugBool{ false };
 	}
 }
