@@ -172,4 +172,14 @@ namespace Utils
 		strings.push_back(pString.substr(prev));
 		return strings;
 	}
+
+	inline Vec3 GetRotatedPosition(Vec3 vOrigin, const float flRotation, const float flDistance)
+	{
+		const auto rad = DEG2RAD(flRotation);
+		vOrigin.x += cosf(rad) * flDistance;
+		vOrigin.y += sinf(rad) * flDistance;
+
+		return vOrigin;
+
+	}
 }
