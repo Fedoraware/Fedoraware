@@ -817,6 +817,7 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 	return true;
 }
 
+// Returns the best target
 bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
 	if (!GetTargets(pLocal, pWeapon))
@@ -853,6 +854,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	return false;
 }
 
+// Aims at the given angles
 void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vAngle)
 {
 	vAngle -= g_GlobalInfo.m_vPunchAngles;
@@ -939,7 +941,8 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 	return false;
 }
 
-void CAimbotProjectile::SplashPrediction(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
+// Returns the best target for splash damage
+bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
@@ -967,15 +970,21 @@ void CAimbotProjectile::SplashPrediction(CBaseEntity* pLocal, CBaseCombatWeapon*
 				// Closest point found. Fire at it!
 				currentRadius = std::clamp(currentRadius + 10.f, 0.f, SPLASH_RADIUS);
 				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
+
+				#ifdef _DEBUG
 				I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
 				I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
-				
-				Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-				Aim(pCmd, pWeapon, vAngleTo);
-				break;
+				#endif
+
+				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
+				// TODO: Respect sorting method
+				outTarget = { pEntity, ETargetType::PLAYER, vecOrigin, vAngleTo };
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
@@ -989,15 +998,17 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		return;
 	}
 
-	Target_t target = {};
+	//Target_t target = {};
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
 		                         : g_AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
 
-	if (GetTarget(pLocal, pWeapon, pCmd, target))
+	Target_t target{ };
+	if (GetTarget(pLocal, pWeapon, pCmd, target) || GetSplashTarget(pLocal, pWeapon, pCmd, target))
 	{
+		// Aim at the current target or splashtarget
 		g_GlobalInfo.m_nCurrentTargetIdx = target.m_pEntity->GetIndex();
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
@@ -1079,9 +1090,5 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		{
 			Aim(pCmd, pWeapon, target.m_vAngleTo);
 		}
-	} else
-	{
-		// No target found. Fall back to splash prediction
-		SplashPrediction(pLocal, pWeapon, pCmd);
 	}
 }
