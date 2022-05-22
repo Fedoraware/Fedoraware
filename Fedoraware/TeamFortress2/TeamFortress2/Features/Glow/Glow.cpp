@@ -38,16 +38,16 @@ void CGlowEffect::SetScale(int nScale)
 
 void CGlowEffect::Init()
 {
-	m_pMatGlowColor = g_Interfaces.MatSystem->Find(_("dev/glow_color"), TEXTURE_GROUP_OTHER);
-	m_pRtFullFrame = g_Interfaces.MatSystem->FindTexture(_("_rt_FullFrameFB"), TEXTURE_GROUP_RENDER_TARGET);
+	m_pMatGlowColor = I::MatSystem->Find(_("dev/glow_color"), TEXTURE_GROUP_OTHER);
+	m_pRtFullFrame = I::MatSystem->FindTexture(_("_rt_FullFrameFB"), TEXTURE_GROUP_RENDER_TARGET);
 
-	m_pRenderBuffer1 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(
+	m_pRenderBuffer1 = I::MatSystem->CreateNamedRenderTargetTextureEx(
 		_("glow_buffer_1"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer1->IncrementReferenceCount();
 	// This can cause a crash on inject for some reason
-	m_pRenderBuffer2 = g_Interfaces.MatSystem->CreateNamedRenderTargetTextureEx(
+	m_pRenderBuffer2 = I::MatSystem->CreateNamedRenderTargetTextureEx(
 		_("glow_buffer_2"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
@@ -117,10 +117,10 @@ void CGlowEffect::Render()
 		if (/*!Vars::Glow::Main::Active.m_Var ||*/ w < 1 || h < 1 || w > 4096 || h > 2160)
 			return;
 
-		if (g_Interfaces.EngineVGui->IsGameUIVisible())
+		if (I::EngineVGui->IsGameUIVisible())
 			return;
 
-		IMatRenderContext* pRenderContext = g_Interfaces.MatSystem->GetRenderContext();
+		IMatRenderContext* pRenderContext = I::MatSystem->GetRenderContext();
 
 		if (!pRenderContext)
 			return;
@@ -131,8 +131,8 @@ void CGlowEffect::Render()
 		StencilStateDisable.m_bEnable = false;
 
 		float flOriginalColor[3] = {};
-		g_Interfaces.RenderView->GetColorModulation(flOriginalColor);
-		float flOriginalBlend = g_Interfaces.RenderView->GetBlend();
+		I::RenderView->GetColorModulation(flOriginalColor);
+		float flOriginalBlend = I::RenderView->GetBlend();
 
 		if (!g_Chams.m_bHasSetStencil)
 		{
@@ -146,8 +146,8 @@ void CGlowEffect::Render()
 			StencilState.SetStencilState(pRenderContext);
 		}
 
-		g_Interfaces.RenderView->SetBlend(1.0f);
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::RenderView->SetBlend(1.0f);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
 		if (Vars::Glow::Players::Active.m_Var)
 		{
@@ -156,7 +156,7 @@ void CGlowEffect::Render()
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
 
-				bool bIsLocal = Player->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
+				bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
 
 				if (!bIsLocal)
 				{
@@ -170,8 +170,7 @@ void CGlowEffect::Render()
 						}
 					case 2:
 						{
-							if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->
-								GetIndex()]) { continue; }
+							if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(Player->GetIndex())) { continue; }
 							break;
 						}
 					}
@@ -338,7 +337,7 @@ void CGlowEffect::Render()
 		if (m_vecGlowEntities.empty())
 			return;
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(m_pMatGlowColor);
+		I::ModelRender->ForcedMaterialOverride(m_pMatGlowColor);
 
 		pRenderContext->PushRenderTargetAndViewport();
 		{
@@ -349,8 +348,8 @@ void CGlowEffect::Render()
 
 			for (const auto& GlowEntity : m_vecGlowEntities)
 			{
-				g_Interfaces.RenderView->SetBlend(GlowEntity.m_flAlpha);
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(GlowEntity.m_Color.r),
+				I::RenderView->SetBlend(GlowEntity.m_flAlpha);
+				I::RenderView->SetColorModulation(Color::TOFLOAT(GlowEntity.m_Color.r),
 				                                            Color::TOFLOAT(GlowEntity.m_Color.g),
 				                                            Color::TOFLOAT(GlowEntity.m_Color.b));
 				DrawModel(GlowEntity.m_pEntity, STUDIO_RENDER | STUDIO_NOSHADOWS, false);
@@ -405,8 +404,8 @@ void CGlowEffect::Render()
 		}
 		StencilStateDisable.SetStencilState(pRenderContext);
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-		g_Interfaces.RenderView->SetColorModulation(flOriginalColor);
-		g_Interfaces.RenderView->SetBlend(flOriginalBlend);
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+		I::RenderView->SetColorModulation(flOriginalColor);
+		I::RenderView->SetBlend(flOriginalBlend);
 	}
 }

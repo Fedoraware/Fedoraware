@@ -54,7 +54,7 @@
 #include "DirectX/DirectX.h"
 #include "../Features/Vars.h"
 
-#define TICK_INTERVAL		( g_Interfaces.GlobalVars->interval_per_tick )
+#define TICK_INTERVAL		( I::GlobalVars->interval_per_tick )
 #define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
 #ifndef TICKS_TO_TIME
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
@@ -173,7 +173,7 @@ namespace Utils
 		g_KeyValUtils.Initialize(pVals, (char*)szOut);
 		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szMaterial);
 
-		IMaterial* pCreated = g_Interfaces.MatSystem->Create(szOut, pVals);
+		IMaterial* pCreated = I::MatSystem->Create(szOut, pVals);
 		pCreated->IncrementReferenceCount();
 
 		return pCreated;
@@ -222,9 +222,9 @@ namespace Utils
 	{
 		return
 		{
-			static_cast<byte>(floor(sin(g_Interfaces.GlobalVars->curtime + 0.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(g_Interfaces.GlobalVars->curtime + 2.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(g_Interfaces.GlobalVars->curtime + 4.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 0.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 2.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 4.0f) * 127.0f + 128.0f)),
 			255
 		};
 	};
@@ -289,17 +289,17 @@ namespace Utils
 	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)
 	{
 		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
-		PlayerInfo_t info{}; g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &info);
+		PlayerInfo_t info{}; I::Engine->GetPlayerInfo(pEntity->GetIndex(), &info);
 
 		if (pEntity->IsPlayer())
 		{
 			if (g_EntityCache.m_pLocal->GetIndex() == pEntity->GetIndex())
 				out = Colors::Local;
 
-			else if (g_EntityCache.Friends[pEntity->GetIndex()] || pEntity == g_EntityCache.m_pLocal)
+			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.m_pLocal)
 				out = Colors::Friend;
 
-			else if (g_GlobalInfo.ignoredPlayers.find(info.friendsID) != g_GlobalInfo.ignoredPlayers.end())
+			else if (g_GlobalInfo.IsIgnored(info.friendsID))
 				out = Colors::Ignored;
 
 			else if (pEntity->IsCloaked())
@@ -359,14 +359,14 @@ namespace Utils
 	{
 		Ray_t ray;
 		ray.Init(vecStart, vecEnd, vecHullMin, vecHullMax);
-		g_Interfaces.EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
+		I::EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
 	}
 
 	__inline void Trace(const Vec3 &vecStart, const Vec3 &vecEnd, unsigned int nMask, CTraceFilter *pFilter, CGameTrace *pTrace)
 	{
 		Ray_t ray;
 		ray.Init(vecStart, vecEnd);
-		g_Interfaces.EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
+		I::EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
 	}
 
 	__inline int RandInt(int min, int max)
@@ -468,8 +468,8 @@ namespace Utils
 	__inline int SharedRandomInt(unsigned iseed, const char *sharedname, int iMinVal, int iMaxVal, int additionalSeed)
 	{
 		int seed = SeedFileLineHash(iseed, sharedname, additionalSeed);
-		g_Interfaces.UniformRandomStream->SetSeed(seed);
-		return g_Interfaces.UniformRandomStream->RandomInt(iMinVal, iMaxVal);
+		I::UniformRandomStream->SetSeed(seed);
+		return I::UniformRandomStream->RandomInt(iMinVal, iMaxVal);
 	}
 
 	__inline void RandomSeed(int iSeed)
@@ -575,7 +575,7 @@ namespace Utils
 	}
 
 	__inline uintptr_t GetVirtual(void* pBaseClass, unsigned int nIndex)
-	{ 
+	{
 		return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 	}
 
@@ -586,7 +586,7 @@ namespace Utils
 			if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 				return ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack);
 
-			else return fabs(pWeapon->GetSmackTime() - g_Interfaces.GlobalVars->curtime) < g_Interfaces.GlobalVars->interval_per_tick * 2.0f;
+			else return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
 		}
 
 		else
@@ -634,9 +634,9 @@ namespace Utils
 					static float flThrowTime = 0.0f;
 
 					if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack && !flThrowTime)
-						flThrowTime = g_Interfaces.GlobalVars->curtime + 0.16f;
+						flThrowTime = I::GlobalVars->curtime + 0.16f;
 
-					if (flThrowTime && g_Interfaces.GlobalVars->curtime >= flThrowTime) {
+					if (flThrowTime && I::GlobalVars->curtime >= flThrowTime) {
 						flThrowTime = 0.0f;
 						return true;
 					}
@@ -670,7 +670,7 @@ namespace Utils
 		Vec3 move = { cos(yaw) * 450.0f, -sin(yaw) * 450.0f, -cos(pitch) * 450.0f };
 
 		// Only apply upmove in water
-		if (!(g_Interfaces.EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
+		if (!(I::EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
 			move.z = pCmd->upmove;
 		return move;
 	}
@@ -718,7 +718,7 @@ namespace Utils
 				continue;
 			}
 			// Get the weapon
-			auto* weapon = reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
+			auto* weapon = reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
 			// if weapon is what we are looking for, return true
 			if (weapon && weapon->GetWeaponID() == pWeaponID)
 			{
@@ -753,10 +753,10 @@ namespace Utils
 
 	__inline int GetPlayerForUserID(int userID)
 	{
-		for (int i = 1; i <= g_Interfaces.Engine->GetMaxClients(); i++)
+		for (int i = 1; i <= I::Engine->GetMaxClients(); i++)
 		{
 			PlayerInfo_t playerInfo{};
-			if (!g_Interfaces.Engine->GetPlayerInfo(i, &playerInfo))
+			if (!I::Engine->GetPlayerInfo(i, &playerInfo))
 			{
 				continue;
 			}

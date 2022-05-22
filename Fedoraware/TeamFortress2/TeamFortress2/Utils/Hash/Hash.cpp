@@ -63,7 +63,7 @@ void Hash::PrintHash()
 				szPrintName += ToHash[n][Char];
 		}
 
-		g_Interfaces.CVars->ConsolePrintf("constexpr size_owned %s = %lu;\n", szPrintName.data(), m_Hash(ToHash[n]));
+		I::CVars->ConsolePrintf("constexpr size_owned %s = %lu;\n", szPrintName.data(), m_Hash(ToHash[n]));
 	}
 
 #endif

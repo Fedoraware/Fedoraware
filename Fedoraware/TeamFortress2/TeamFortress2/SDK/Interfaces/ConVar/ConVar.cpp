@@ -11,7 +11,7 @@ class CDefaultAccessor : public IConCommandBaseAccessor
 public:
 	virtual bool RegisterConCommandBase(ConCommandBase *pVar)
 	{
-		g_Interfaces.CVars->RegisterConCommand(pVar);
+		I::CVars->RegisterConCommand(pVar);
 		return true;
 		//return false;
 	}
@@ -26,7 +26,7 @@ void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor *pAccessor)
 		return;
 	s_bRegistered = true;
 	s_nCVarFlag = nCVarFlag;
-	s_nDLLIdentifier = g_Interfaces.CVars->AllocateDLLIdentifier();
+	s_nDLLIdentifier = I::CVars->AllocateDLLIdentifier();
 	ConCommandBase *pCur, *pNext;
 	ConCommandBase::s_pAccessor = pAccessor ? pAccessor : &s_DefaultAccessor;
 	pCur = ConCommandBase::s_pConCommandBases;

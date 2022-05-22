@@ -2,7 +2,7 @@
 
 
 bool CheaterDetection::shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect) {
-	if (g_EntityCache.Friends[nIndex] || (g_GlobalInfo.ignoredPlayers.find(friendsID) != g_GlobalInfo.ignoredPlayers.end()) || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
+	if (g_EntityCache.IsFriend(nIndex) || g_GlobalInfo.IsIgnored(friendsID) || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
 	if (pSuspect->GetDormant()) { return false; } // dont run this player if they are dormant
 	if (!pSuspect->IsAlive() || pSuspect->IsAGhost() || pSuspect->IsTaunting()) { return false; } // dont run this player if they are dead / ghost or taunting
 	return true;
@@ -31,14 +31,14 @@ bool CheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
 }
 
 bool CheaterDetection::isTickCountManipulated(int CurrentTickCount) {
-	int delta = g_Interfaces.GlobalVars->tickcount - CurrentTickCount; // delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
+	int delta = I::GlobalVars->tickcount - CurrentTickCount; // delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
 	if (abs(delta) > 14) { return true; } // lets be honest if their tickcount changes by more than 14 they are probably cheating.
 	return false;
 }
 
 void CheaterDetection::OnTick() {
 	auto pLocal = g_EntityCache.m_pLocal;
-	if (!pLocal || !g_Interfaces.Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var) {
+	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var) {
 		return;
 	}
 
@@ -48,7 +48,7 @@ void CheaterDetection::OnTick() {
 
 
 		PlayerInfo_t pi;
-		if (g_Interfaces.Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer) {
+		if (I::Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer) {
 			int friendsID = pi.friendsID;
 
 			if (index == pLocal->GetIndex() || !shouldScan(index, friendsID, pSuspect)) { continue; }
@@ -75,9 +75,9 @@ void CheaterDetection::OnTick() {
 
 			int currenttickcount = TIME_TO_TICKS(pSuspect->GetSimulationTime());
 
-			if (g_Interfaces.GlobalVars->tickcount) {
+			if (I::GlobalVars->tickcount) {
 				if (isTickCountManipulated(currenttickcount)) {
-					//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(g_Interfaces.GlobalVars->tickcount - currenttickcount)).c_str());
+					//I::CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(I::GlobalVars->tickcount - currenttickcount)).c_str());
 					if (UserData[friendsID].areTicksSafe) {
 						strikes[friendsID] += 1;
 						UserData[friendsID].areTicksSafe = false;

@@ -1,6 +1,7 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../PlayerResource/PlayerResource.h"
 
 bool IsHitboxValid(int nHitbox, int index)
 {
@@ -82,8 +83,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	g_AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
+	// Players
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
@@ -106,7 +108,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun))
+			if (g_AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun)) { continue; }
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var)
 			{
@@ -146,12 +148,16 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
+			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
+			const auto& priority = g_GlobalInfo.PlayerPriority[priorityID];
+
 			g_AimbotGlobal.m_vecTargets.push_back({
-				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox
+				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 			});
 		}
 	}
 
+	// Buildings
 	if (Vars::Aimbot::Global::AimBuildings.m_Var)
 	{
 		for (const auto& pBuilding : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ENEMIES))
@@ -176,6 +182,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
+	// Stickies
 	if (Vars::Aimbot::Global::AimStickies.m_Var)
 	{
 		for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -185,7 +192,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			const auto owner = g_Interfaces.EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pProjectile->GetThrower()));
+			const auto owner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pProjectile->GetThrower()));
 
 			if ((!pProjectile->GetTouched()) || (owner->GetTeamNum() == pLocal->GetTeamNum()))
 			{
@@ -223,9 +230,9 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 		matrix3x4 boneMatrix[128];
 		if (const model_t* pModel = target.m_pEntity->GetModel())
 		{
-			if (const studiohdr_t* pHDR = g_Interfaces.ModelInfo->GetStudioModel(pModel))
+			if (const studiohdr_t* pHDR = I::ModelInfo->GetStudioModel(pModel))
 			{
-				if (target.m_pEntity->SetupBones(boneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime))
+				if (target.m_pEntity->SetupBones(boneMatrix, 128, 0x100, I::GlobalVars->curtime))
 				{
 					if (const mstudiohitboxset_t* pSet = pHDR->GetHitboxSet(target.m_pEntity->GetHitboxSet()))
 					{
@@ -449,7 +456,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	case 0: //Plain
 		{
 			pCmd->viewangles = vAngle;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -459,11 +466,11 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
-				g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+				I::Engine->SetViewAngles(pCmd->viewangles);
 				break;
 			}
 			//Calculate delta of current viewangles and wanted angles
-			Vec3 vecDelta = vAngle - g_Interfaces.Engine->GetViewAngles();
+			Vec3 vecDelta = vAngle - I::Engine->GetViewAngles();
 
 			//Clamp, keep the angle in possible bounds
 			Math::ClampAngles(vecDelta);
@@ -472,7 +479,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Hitscan::SmoothingAmount.m_Var;
 
 			//Set the viewangles from engine
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -679,7 +686,7 @@ void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
 	Vec3 shootPos = pLocal->GetShootPos();
 	shootPos.z -= 5.0f;
 	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
-	g_Interfaces.DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
+	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }
 
 

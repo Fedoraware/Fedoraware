@@ -271,20 +271,20 @@ public: //Everything else, lol.
 
 	__inline CBaseEntity* GetGroundEntity() {
 		DYNVAR(pHandle, int, _("DT_BasePlayer"), _("m_hGroundEntity"));
-		return reinterpret_cast<CBaseEntity*>(g_Interfaces.EntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
+		return reinterpret_cast<CBaseEntity*>(I::EntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
 
 	__inline CBaseEntity* FirstMoveChild() {
-		return g_Interfaces.EntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B0) & 0xFFF);
+		return I::EntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B0) & 0xFFF);
 	}
 
 	__inline CBaseEntity* NextMovePeer() {
-		return g_Interfaces.EntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B4) & 0xFFF);
+		return I::EntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B4) & 0xFFF);
 	}
 
 	__inline CBaseCombatWeapon* GetActiveWeapon() {
 		DYNVAR(pHandle, int, _("DT_BaseCombatCharacter"), _("m_hActiveWeapon"));
-		return reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
+		return reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
 
 	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
@@ -299,7 +299,7 @@ public: //Everything else, lol.
 	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot) {
 		static DWORD dwMyWeapons = g_NetVars.get_offset(_("DT_BaseCombatCharacter"), _("m_hMyWeapons"));
 		int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
-		return reinterpret_cast<CBaseCombatWeapon*>(g_Interfaces.EntityList->GetClientEntityFromHandle(hWeapon));
+		return reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(hWeapon));
 	}
 
 	__inline bool InCond(int eCond)
@@ -330,9 +330,9 @@ public: //Everything else, lol.
 
 	__inline bool GetHitboxMinsAndMaxsAndMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4& matrix, Vec3* vCenter) {
 		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
+			if (const auto& pHdr = I::ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
@@ -350,9 +350,9 @@ public: //Everything else, lol.
 
 	__inline bool GetHitboxMinsAndMaxs(const int nHitbox, Vec3& vMins, Vec3& vMaxs, Vec3* vCenter) {
 		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
+			if (const auto& pHdr = I::ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
@@ -461,9 +461,9 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetHitboxPos(const int nHitbox) {
 		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
+			if (const auto& pHdr = I::ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
@@ -480,7 +480,7 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetBonePos(const int nBone) {
 		matrix3x4 BoneMatrix[128];
-		if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime))
+		if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
 			return Vec3(BoneMatrix[nBone][0][3], BoneMatrix[nBone][1][3], BoneMatrix[nBone][2][3]);
 
 		return Vec3(0.0f, 0.0f, 0.0f);
@@ -510,7 +510,7 @@ public: //Everything else, lol.
 
 	__inline int GetNumOfHitboxes() {
 		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
+			if (const auto& pHdr = I::ModelInfo->GetStudioModel(pModel)) {
 				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
 					return pSet->numhitboxes;
 			}
@@ -540,7 +540,7 @@ public: //Everything else, lol.
 	}
 
 	__inline const char* GetModelName() {
-		return g_Interfaces.ModelInfo->GetModelName(GetModel());
+		return I::ModelInfo->GetModelName(GetModel());
 	}
 
 	__inline void SetTickBase(const int nTickBase) {

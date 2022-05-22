@@ -1,4 +1,4 @@
-#include "Hooks/Hooks.h"
+#include "Hooks/HookManager.h"
 
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
@@ -59,9 +59,14 @@ void UpdateRichPresence()
 
 void Loaded()
 {
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware (homemade) Loaded!\n"));
-	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
+	I::CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware (homemade) Loaded!\n"));
+	I::Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
+	const int dxLevel = I::CVars->FindVar("mat_dxlevel")->GetInt();
+	if (dxLevel < 90)
+	{
+		MessageBoxA(nullptr, _("Your DirectX version is too low!\nPlease use at dxlevel 90 or higher"), _("dxlevel too low"), MB_OK | MB_ICONWARNING);
+	}
 }
 
 void Initialize()
@@ -73,7 +78,7 @@ void Initialize()
 	g_Chams.Init();
 	g_DMEChams.Init();
 	g_CameraWindow.Init();
-	g_Hooks.Init();
+	g_HookManager.Init();
 	g_ConVars.Init();
 
 	InitRichPresence();
@@ -81,7 +86,7 @@ void Initialize()
 
 void Uninitialize()
 {
-	g_Interfaces.Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
+	I::Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
 	g_GlobalInfo.unloadWndProcHook = true;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
@@ -89,20 +94,20 @@ void Uninitialize()
 	Sleep(100);
 
 	g_Events.Destroy();
-	g_Hooks.Release();
+	g_HookManager.Release();
 
 	ShutdownRichPresence();
 
 	Sleep(100);
 
 	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
+	I::CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
 }
 
 void LoadDefaultConfig()
 {
-	if (std::filesystem::exists(g_CFG.ConfigPath + "\\" + g_CFG.CurrentConfig)) {
-		g_CFG.LoadConfig(g_CFG.CurrentConfig);
+	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig())) {
+		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 	}
 
 	g_Draw.RemakeFonts

@@ -188,7 +188,6 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 
 CConfigManager::CConfigManager()
 {
-	m_sConfigPath = std::filesystem::current_path().wstring() + _(L"\\FedFigs"); // Used by attribute changer
 	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
 
 	if (!std::filesystem::exists(ConfigPath))
@@ -196,9 +195,9 @@ CConfigManager::CConfigManager()
 		std::filesystem::create_directory(ConfigPath);
 	}
 
-	if (!std::filesystem::exists(ConfigPath + _("\\FedCore")))
+	if (!std::filesystem::exists(ConfigPath + _("\\Core")))
 	{
-		std::filesystem::create_directory(ConfigPath + _("\\FedCore"));
+		std::filesystem::create_directory(ConfigPath + _("\\Core"));
 	}
 
 	if (!std::filesystem::exists(ConfigPath + _("\\Materials")))
@@ -415,6 +414,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Buildings::Alpha);
 				SAVE_VAR(Vars::ESP::Buildings::Dlights);
 				SAVE_VAR(Vars::ESP::Buildings::DlightRadius);
+				SAVE_VAR(Vars::ESP::Buildings::TeleExitDir);
+				SAVE_OTHER(Vars::ESP::Buildings::TeleExitDirColor);
 			}
 
 			//World
@@ -616,7 +617,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 			SAVE_VAR(Vars::Visuals::Rain);
-			SAVE_VAR(Vars::Visuals::DebugInfo);
+			SAVE_VAR(Vars::Debug::DebugInfo);
 
 			// Beans I LOVE Beans
 			{
@@ -859,6 +860,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Chams::World::Projectiles);
 
 			SAVE_OTHER(Vars::Menu::ModernDesign);
+			SAVE_OTHER(Vars::Menu::BlurBackground);
 			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 
@@ -1119,8 +1121,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Buildings::Active);
 				LOAD_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Buildings::Name);
-				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
-				SAVE_OTHER(Vars::ESP::Buildings::NameColor);
+				LOAD_VAR(Vars::ESP::Buildings::NameCustom);
+				LOAD_OTHER(Vars::ESP::Buildings::NameColor);
 				LOAD_VAR(Vars::ESP::Buildings::NameBox);
 				LOAD_VAR(Vars::ESP::Buildings::Health);
 				LOAD_VAR(Vars::ESP::Buildings::Owner);
@@ -1131,6 +1133,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Buildings::Alpha);
 				LOAD_VAR(Vars::ESP::Buildings::Dlights);
 				LOAD_VAR(Vars::ESP::Buildings::DlightRadius);
+				LOAD_VAR(Vars::ESP::Buildings::TeleExitDir);
+				LOAD_OTHER(Vars::ESP::Buildings::TeleExitDirColor);
 			}
 
 			//World
@@ -1339,7 +1343,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
-			LOAD_VAR(Vars::Visuals::DebugInfo);
+			LOAD_VAR(Vars::Debug::DebugInfo);
 
 			// Beans I LOVE Beans
 			{
@@ -1574,6 +1578,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_STRING(Vars::Skybox::SkyboxName);
 
 			LOAD_OTHER(Vars::Menu::ModernDesign);
+			LOAD_OTHER(Vars::Menu::BlurBackground);
 			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 		}
 

@@ -40,6 +40,7 @@ namespace Vars
 		inline int InputColorBoxW = 30;
 
 		inline bool ModernDesign = false;
+		inline bool BlurBackground = false;
 		inline bool ShowPlayerlist = false;
 
 		namespace Colors
@@ -124,6 +125,7 @@ namespace Vars
 			inline CVar<int> AimPosition{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround{ false, L"Aim at feet if target is on the ground." };
+			inline CVar<bool> SplashPrediction{ false, };
 			inline CVar<bool> MovementSimulation{ true, L"move sim" };
 			inline Color_t PredictionColor{ 255,255,255,255 };
 			inline CVar<bool> ManualZAdjust{ true, L"Toggle for manual z adjust on projectile prediction." };
@@ -252,6 +254,8 @@ namespace Vars
 			inline CVar<bool> Level{ true, L"Level" };
 			inline CVar<bool> Cond{ true, L"Cond" };
 			inline CVar<bool> HealthBar{ true, L"Health Bar" };
+			inline CVar<bool> TeleExitDir{ false, L"Teleporter Exit Dir" };
+			inline Color_t TeleExitDirColor{ 255, 255, 255, 255 };
 			inline CVar<bool> Lines{ false, L"Lines" };
 			inline CVar<int> Box{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
 			inline CVar<bool> Dlights{ false, L"Dlights" };
@@ -437,7 +441,6 @@ namespace Vars
 		inline CVar<bool> OutOfFOVArrowsOutline{ false, L"balls" };
 		inline CVar<float> FovArrowsDist{ 0.15f, L"balls" };
 		inline CVar<int> SpectatorList{ 2, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-		inline CVar<bool> DebugInfo{ false }; // trash
 
 		inline CVar<int> FreecamKey{ 0, L"Freecam Key" };
 		inline CVar<float> FreecamSpeed{ 10.f, L"Freecam Speed" };
@@ -741,6 +744,7 @@ namespace Vars
 	// Debug options - Don't save these!
 	namespace Debug
 	{
+		inline CVar<bool> DebugInfo{ false };
 		inline CVar<bool> DebugBool{ false };
 	}
 }

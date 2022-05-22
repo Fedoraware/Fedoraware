@@ -52,7 +52,7 @@ void CMaterialEditor::LoadMaterials()
 			const auto kv = new KeyValues(matName.c_str());
 			
 			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
-			IMaterial* newMaterial = g_Interfaces.MatSystem->Create(std::string("m_pmat" + matName).c_str(), kv);
+			IMaterial* newMaterial = I::MatSystem->Create(std::string("m_pmat" + matName).c_str(), kv);
 			MaterialList.push_back({ matName, matPath, newMaterial });
 		}
 	}
@@ -121,7 +121,7 @@ void CMaterialEditor::MainWindow()
 				// Create a new CustomMaterial and add it to our list
 				const auto kv = new KeyValues(newName.c_str());
 				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), DEFAULT_MATERIAL.c_str());
-				IMaterial* defMaterial = g_Interfaces.MatSystem->Create(std::string("m_pmat" + newName).c_str(), kv);
+				IMaterial* defMaterial = I::MatSystem->Create(std::string("m_pmat" + newName).c_str(), kv);
 
 				const CustomMaterial newMaterial = { newName, newName + ".vmt", defMaterial };
 
@@ -211,6 +211,6 @@ void CMaterialEditor::Render()
 
 void CMaterialEditor::Init()
 {
-	MaterialFolder = g_CFG.ConfigPath + "\\Materials";
+	MaterialFolder = g_CFG.GetConfigPath() + "\\Materials";
 	LoadMaterials();
 }

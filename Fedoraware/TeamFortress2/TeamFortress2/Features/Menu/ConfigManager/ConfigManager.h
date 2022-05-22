@@ -7,7 +7,6 @@
 
 class CConfigManager
 {
-private:
 	boost::property_tree::ptree WriteTree;
 	boost::property_tree::ptree ReadTree;
 
@@ -29,16 +28,19 @@ private:
 	void LoadJson(const char* name, Vec3& val);
 	void LoadJson(const char* name, Chams_t& val);
 
-public:
-	std::wstring m_sConfigPath;
-	std::string ConfigPath;
-	const std::string ConfigExtension = ".fw";
 	std::string CurrentConfig = "default";
+	std::string ConfigPath;
+
+public:
+	const std::string ConfigExtension = ".fw";
 
 	CConfigManager();
 	bool SaveConfig(const std::string& configName);
 	bool LoadConfig(const std::string& configName);
 	void RemoveConfig(const std::string& configName);
+
+	std::string GetCurrentConfig() { return CurrentConfig; }
+	std::string GetConfigPath() { return ConfigPath; }
 };
 
 inline CConfigManager g_CFG;

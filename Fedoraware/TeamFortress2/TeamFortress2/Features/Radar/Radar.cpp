@@ -72,7 +72,7 @@ void CRadar::DrawRadar()
 void CRadar::DragRadar()
 {
 	int mousex, mousey;
-	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
+	I::Surface->GetCursorPos(mousex, mousey);
 
 	static POINT pCorrect{};
 	static bool isDragging = false;
@@ -158,7 +158,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 {
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
 	LocalOrigin = pLocal->GetAbsOrigin();
-	LocalYaw = g_Interfaces.Engine->GetViewAngles().y * (PI / 180.f);
+	LocalYaw = I::Engine->GetViewAngles().y * (PI / 180.f);
 	Range = static_cast<float>(Vars::Radar::Main::Range.m_Var);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);
 
@@ -305,7 +305,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				}
 			}
 
-			const bool bIsFriend = g_EntityCache.Friends[player->GetIndex()];
+			const bool bIsFriend = g_EntityCache.IsFriend(player->GetIndex());
 
 			switch (Vars::Radar::Players::IgnoreTeam.m_Var)
 			{
@@ -348,18 +348,17 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 				//Prepare the correct texture index for player icon, and draw it
 				{
-					if (Vars::Radar::Players::IconType.m_Var == 2)
+					PlayerInfo_t playerInfo{};
+					if (Vars::Radar::Players::IconType.m_Var == 2 && I::Engine->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
 					{
-						PlayerInfo_t pi{};
-						if (g_Interfaces.Engine->GetPlayerInfo(player->GetIndex(), &pi))
-						{
-							g_Draw.Avatar(nX, nY, nSize, nSize, pi.friendsID);
-						}
+						// Avatar
+						g_Draw.Avatar(nX, nY, nSize, nSize, playerInfo.friendsID);
 					}
 					else
 					{
 						int nTexture = player->GetClassNum();
 
+						// Portrait
 						if (Vars::Radar::Players::IconType.m_Var == 1)
 						{
 							nTexture += 10;

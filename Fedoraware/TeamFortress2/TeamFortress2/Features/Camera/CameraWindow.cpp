@@ -1,29 +1,30 @@
 #include "CameraWindow.h"
-#include "../../Hooks/ViewRenderHook/ViewRenderHook.h"
 #include "../ESP/ESP.h"
+#include "../../Hooks/HookManager.h"
+#include "../../Hooks/Hooks.h"
 
 void CCameraWindow::Init()
 {
 	// Create camera texture
-	CameraTex = g_Interfaces.MatSystem->CreateFullFrameRenderTarget("mirrorcam_rt");
+	CameraTex = I::MatSystem->CreateFullFrameRenderTarget("mirrorcam_rt");
 
 	// Create camera material
 	const auto kv = new KeyValues("UnlitGeneric");
 	kv->SetString("$basetexture", "mirrorcam_rt");
-	CameraMat = g_Interfaces.MatSystem->Create("m_cameraMat", kv);
+	CameraMat = I::MatSystem->Create("m_cameraMat", kv);
 }
 
 // Draws camera to the screen
 void CCameraWindow::Draw()
 {
-	if (!CameraMat || !g_Interfaces.Engine->IsInGame() ||
+	if (!CameraMat || !I::Engine->IsInGame() ||
 		Vars::Visuals::CameraMode.m_Var == 0 ||
 		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
 		return;
 	}
 
 	// Draw to screen
-	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
+	const auto renderCtx = I::MatSystem->GetRenderContext();
 	renderCtx->DrawScreenSpaceRectangle(
 		CameraMat,
 		ViewRect.x, ViewRect.y, ViewRect.w + 1, ViewRect.h + 1,
@@ -82,7 +83,7 @@ void CCameraWindow::Update()
 						Vec3 tpExit;
 						if (Utils::GetTeleporterExit(building->GetOwner()->GetIndex(), &tpExit))
 						{
-							CameraAngles = g_Interfaces.Engine->GetViewAngles();
+							CameraAngles = I::Engine->GetViewAngles();
 							CameraOrigin = Vec3(tpExit.x, tpExit.y, tpExit.z + 70);
 							CanDraw = true;
 
@@ -115,7 +116,9 @@ void CCameraWindow::Update()
 void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 {
 	if (!CameraTex || Vars::Visuals::CameraMode.m_Var == 0 ||
-		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) { return; }
+		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
+		return;
+	}
 
 	CViewSetup mirrorView = pViewSetup;
 	mirrorView.x = 0;
@@ -124,9 +127,10 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 		// Custom origin & angles
 		mirrorView.origin = CameraOrigin;
 		mirrorView.angles = CameraAngles;
-	} else {
+	}
+	else {
 		// Mirror cam
-		const Vec3 viewAngles = g_Interfaces.Engine->GetViewAngles();
+		const Vec3 viewAngles = I::Engine->GetViewAngles();
 		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
 		mirrorView.angles = camAngles;
 	}
@@ -139,15 +143,15 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 }
 
 void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture) {
-	using namespace ViewRenderHook;
-	using namespace RenderView;
-
-	const auto renderCtx = g_Interfaces.MatSystem->GetRenderContext();
+	const auto renderCtx = I::MatSystem->GetRenderContext();
 
 	renderCtx->PushRenderTargetAndViewport();
 	renderCtx->SetRenderTarget(pTexture);
 
-	Func.Original<fn>()(ecx, pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
+	if (const auto renderViewHook = g_HookManager.GetMapHooks()["ViewRender_RenderView"])
+	{
+		renderViewHook->Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
+	}
 
 	renderCtx->PopRenderTargetAndViewport();
 	renderCtx->Release();

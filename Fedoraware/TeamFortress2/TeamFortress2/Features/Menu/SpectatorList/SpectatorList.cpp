@@ -9,7 +9,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 	for (const auto& pTeammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 	{
-		CBaseEntity* pObservedPlayer = g_Interfaces.EntityList->GetClientEntityFromHandle(
+		CBaseEntity* pObservedPlayer = I::EntityList->GetClientEntityFromHandle(
 			pTeammate->GetObserverTarget());
 
 		if (pTeammate && !pTeammate->IsAlive() && pObservedPlayer == pLocal)
@@ -31,10 +31,10 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 			}
 
 			PlayerInfo_t playerInfo{ };
-			if (g_Interfaces.Engine->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
+			if (I::Engine->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
 			{
 				Spectators.push_back({
-					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.Friends[pTeammate->GetIndex()],
+					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.IsFriend(pTeammate->GetIndex()),
 					pTeammate->GetTeamNum(), pTeammate->GetIndex()
 				});
 			}
@@ -46,7 +46,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 bool CSpectatorList::ShouldRun()
 {
-	return Vars::Visuals::SpectatorList.m_Var/* && !g_Interfaces.EngineVGui->IsGameUIVisible()*/;
+	return Vars::Visuals::SpectatorList.m_Var/* && !I::EngineVGui->IsGameUIVisible()*/;
 }
 
 void CSpectatorList::Run()
@@ -62,7 +62,7 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 	if (!g_Menu.IsOpen) { return; }
 
 	int mousex, mousey;
-	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
+	I::Surface->GetCursorPos(mousex, mousey);
 
 	static POINT delta{};
 	static bool drag = false;
@@ -166,14 +166,14 @@ void CSpectatorList::DrawClassic()
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
+			I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
 			                                  (Spectator.Mode + Spectator.Name).c_str(), w, h);
 
 			const int nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 			if (Vars::Visuals::SpectatorList.m_Var == 3)
 			{
 				PlayerInfo_t pi{};
-				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
+				if (!I::Engine->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
 
 				g_Draw.Avatar(nDrawX - (w / 2) - 25, nDrawY, 24, 24, pi.friendsID);
 				// center - half the width of the string

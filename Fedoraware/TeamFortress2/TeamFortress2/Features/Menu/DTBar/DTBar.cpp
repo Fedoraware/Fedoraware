@@ -3,7 +3,7 @@
 
 bool CDTBar::ShouldRun()
 {
-	if (g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (I::EngineVGui->IsGameUIVisible())
 	{
 		return false;
 	}
@@ -14,7 +14,7 @@ bool CDTBar::ShouldRun()
 void CDTBar::Dragbar()
 {
 	int mousex, mousey;
-	g_Interfaces.Surface->GetCursorPos(mousex, mousey);
+	I::Surface->GetCursorPos(mousex, mousey);
 
 	static POINT pCorrect{};
 	static bool isDragging = false;

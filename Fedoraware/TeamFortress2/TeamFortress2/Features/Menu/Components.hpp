@@ -159,11 +159,11 @@ namespace ImGui
 		if (GetActiveID() == id) {
 			Button("...", ImVec2(100, 20));
 
-			static float time = g_Interfaces.Engine->Time();
-			const float elapsed = g_Interfaces.Engine->Time() - time;
+			static float time = I::Engine->Time();
+			const float elapsed = I::Engine->Time() - time;
 			static CVar<int>* curr = nullptr, * prevv = curr;
 			if (curr != prevv) {
-				time = g_Interfaces.Engine->Time();
+				time = I::Engine->Time();
 				prevv = curr;
 			}
 
@@ -206,7 +206,7 @@ namespace ImGui
 			}
 
 			if (curr != prevv) {
-				time = g_Interfaces.Engine->Time();
+				time = I::Engine->Time();
 				prevv = curr;
 			}
 
@@ -354,12 +354,11 @@ namespace ImGui
     {
 	    const auto p = GetCursorScreenPos();
         auto* drawList = GetWindowDrawList();
-	    const auto style = GetStyle();
+		const auto& style = GetStyle();
 
         const float height = GetFrameHeight();
         const float width = height * 1.8f;
         const float radius = height * 0.50f;
-		const float bb_width = CalcItemWidth();
         const ImVec2 labelSize = CalcTextSize(label, nullptr, true);
 
         InvisibleButton(label, ImVec2(width + style.ItemInnerSpacing.x + labelSize.x, height));

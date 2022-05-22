@@ -1,13 +1,11 @@
 #include "DMEChams.h"
 
 #include "../Vars.h"
-#include "../../Hooks/ModelRenderHook/ModelRenderHook.h"
 #include "Chams.h"
 #include "../Glow/Glow.h"
 #include "../Backtrack/Backtrack.h"
-
-
-
+#include "../../Hooks/HookManager.h"
+#include "../../Hooks/Hooks.h"
 
 
 // I can't believe i'm doing this
@@ -60,7 +58,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			spectrumSplattered = g_Interfaces.MatSystem->Create("spectrumskinrargh", kv);
+			spectrumSplattered = I::MatSystem->Create("spectrumskinrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -91,7 +89,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			electroSkullsBlue = g_Interfaces.MatSystem->Create("elecrtoskullsrargh", kv);
+			electroSkullsBlue = I::MatSystem->Create("elecrtoskullsrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -122,7 +120,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			frozenAurora = g_Interfaces.MatSystem->Create("frozenaurorarargh", kv);
+			frozenAurora = I::MatSystem->Create("frozenaurorarargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -153,7 +151,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			jazzy = g_Interfaces.MatSystem->Create("jazzyrargh", kv);
+			jazzy = I::MatSystem->Create("jazzyrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -184,7 +182,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			hana = g_Interfaces.MatSystem->Create("hanarargh", kv);
+			hana = I::MatSystem->Create("hanarargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -215,7 +213,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			wtf = g_Interfaces.MatSystem->Create("wtfrargh", kv);
+			wtf = I::MatSystem->Create("wtfrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -246,7 +244,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			ghost = g_Interfaces.MatSystem->Create("ghostrargh", kv);
+			ghost = I::MatSystem->Create("ghostrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -277,7 +275,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			flames = g_Interfaces.MatSystem->Create("flamesrargh", kv);
+			flames = I::MatSystem->Create("flamesrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -308,7 +306,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			spookwood = g_Interfaces.MatSystem->Create("spookwoodrargh", kv);
+			spookwood = I::MatSystem->Create("spookwoodrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -339,7 +337,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			edgy = g_Interfaces.MatSystem->Create("edgyrargh", kv);
+			edgy = I::MatSystem->Create("edgyrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -370,7 +368,7 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			serenity = g_Interfaces.MatSystem->Create("serenityrargh", kv);
+			serenity = I::MatSystem->Create("serenityrargh", kv);
 		}
 		{
 			auto kv = new KeyValues("VertexLitGeneric");
@@ -401,14 +399,14 @@ namespace ProxySkins
 				kv->AddSubkey(Proxies);
 
 			}
-			fade = g_Interfaces.MatSystem->Create("faderargh", kv);
+			fade = I::MatSystem->Create("faderargh", kv);
 		}
 	}
 }
 
 bool CDMEChams::ShouldRun()
 {
-	if (!Vars::Chams::DME::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
+	if (!Vars::Chams::DME::Active.m_Var || I::EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
 		m_Var)
 		return false;
 
@@ -424,7 +422,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatShaded", kv);
+		m_pMatShaded = I::MatSystem->Create("DME_MAT_m_pMatShaded", kv);
 	}
 
 	{
@@ -435,13 +433,13 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatShiny", kv);
+		m_pMatShiny = I::MatSystem->Create("DME_MAT_m_pMatShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFlat", kv);
+		m_pMatFlat = I::MatSystem->Create("DME_MAT_m_pMatFlat", kv);
 	}
 
 	{
@@ -457,7 +455,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFresnel", kv);
+		m_pMatFresnel = I::MatSystem->Create("DME_MAT_m_pMatFresnel", kv);
 	}
 
 	{
@@ -473,7 +471,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel2 = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatFresnel2", kv);
+		m_pMatFresnel2 = I::MatSystem->Create("DME_MAT_m_pMatFresnel2", kv);
 	}
 
 	{
@@ -488,7 +486,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "10");
-		m_pMatBrick = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatBrick", kv);
+		m_pMatBrick = I::MatSystem->Create("DME_MAT_m_pMatBrick", kv);
 	}
 
 	{
@@ -508,7 +506,7 @@ void CDMEChams::Init()
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "-5");
 		kv->SetString("$wireframe", "0");
-		m_pMatScuffed = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
+		m_pMatScuffed = I::MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
 
 	{
@@ -519,7 +517,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShaded = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFShaded", kv);
+		m_pMatWFShaded = I::MatSystem->Create("DME_MAT_m_pMatWFShaded", kv);
 	}
 
 	{
@@ -531,14 +529,14 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShiny = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFShiny", kv);
+		m_pMatWFShiny = I::MatSystem->Create("DME_MAT_m_pMatWFShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$wireframe", "1");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatWFFlat = g_Interfaces.MatSystem->Create("DME_MAT_m_pMatWFFlat", kv);
+		m_pMatWFFlat = I::MatSystem->Create("DME_MAT_m_pMatWFFlat", kv);
 	}
 
 	ProxySkins::Init();
@@ -546,13 +544,15 @@ void CDMEChams::Init()
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
+	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+
 	m_bRendering = false;
 	bool foundselfillumtint = false;
 	if (ShouldRun())
 	{
 		m_bRendering = true;
 
-		CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(pInfo.m_nEntIndex);
+		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 		if (pEntity && pEntity->GetClassID() == ETFClassID::CTFViewModel)
 		{
@@ -560,7 +560,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			if (Vars::Chams::DME::Hands.m_Var)
 			{
-				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 					{
 						switch (Vars::Chams::DME::Hands.m_Var)
 						{
@@ -613,13 +613,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				if (Vars::Chams::DME::HandsRainbow.m_Var)
 				{
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
+					I::RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
 						Color::TOFLOAT(Utils::Rainbow().g),
 						Color::TOFLOAT(Utils::Rainbow().b));
 				}
 				else
 				{
-					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r),
+					I::RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r),
 						Color::TOFLOAT(Colors::Hands.g),
 						Color::TOFLOAT(Colors::Hands.b));
 				}
@@ -645,11 +645,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
+			I::RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
+			
+			if (dmeHook)
+			{
+				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+			}
 
-			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-				ModelRenderHook::DrawModelExecute::index)
-				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
 			bMatWasForced = true;
 
 			if (Vars::Chams::DME::HandsProxySkin.m_Var && bMatWasForced)
@@ -703,12 +705,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (pVar) {
 					pVar->SetIntValue(Vars::Chams::DME::HandsProxyWF.m_Var);
 				}
-				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index)
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+				}
 			}
 
 			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
@@ -758,29 +761,30 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
 
-				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
-				g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+				I::RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
+				I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index)
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+				}
 			}
 
 
 			if (bMatWasForced)
 			{
-				g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				I::ModelRender->ForcedMaterialOverride(nullptr);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			}
 
-			g_Interfaces.RenderView->SetBlend(1.0f);
+			I::RenderView->SetBlend(1.0f);
 
 			return true;
 		}
 
 		if (!pEntity && pInfo.m_pModel)
 		{
-			std::string_view szModelName(g_Interfaces.ModelInfo->GetModelName(pInfo.m_pModel));
+			std::string_view szModelName(I::ModelInfo->GetModelName(pInfo.m_pModel));
 
 			if (szModelName.find(_("weapon")) != std::string_view::npos
 				&& szModelName.find(_("arrow")) == std::string_view::npos
@@ -794,7 +798,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				&& szModelName.find(_("shield")) == std::string_view::npos //same as world model, can't filter
 				&& szModelName.find(_("repair_claw")) == std::string_view::npos)
 			{
-				//g_Interfaces.DebugOverlay->AddTextOverlay(pInfo.m_vOrigin, 0.003f, "%hs", szModelName);
+				//I::DebugOverlay->AddTextOverlay(pInfo.m_vOrigin, 0.003f, "%hs", szModelName);
 
 				bool bMatWasForced = false;
 
@@ -802,7 +806,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 				if (Vars::Chams::DME::Weapon.m_Var)
 				{
-					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+					I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 						{
 							switch (Vars::Chams::DME::Weapon.m_Var)
 							{
@@ -855,13 +859,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				{
 					if (Vars::Chams::DME::WeaponRainbow.m_Var)
 					{
-						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
+						I::RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
 							Color::TOFLOAT(Utils::Rainbow().g),
 							Color::TOFLOAT(Utils::Rainbow().b));
 					}
 					else
 					{
-						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r),
+						I::RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r),
 							Color::TOFLOAT(Colors::Weapon.g),
 							Color::TOFLOAT(Colors::Weapon.b));
 					}
@@ -887,11 +891,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
+				I::RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
 
-				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-					ModelRenderHook::DrawModelExecute::index) // base
-					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+				if (dmeHook)
+				{
+					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+				}
 				bMatWasForced = true;
 				
 				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
@@ -945,12 +950,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					if (pVar) {
 						pVar->SetIntValue(Vars::Chams::DME::WeaponsProxyWF.m_Var);
 					}
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index)
-						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					if (dmeHook)
+					{
+						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+					}
 				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)
@@ -999,21 +1005,22 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
 
-					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(g_Interfaces.GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
-					g_Interfaces.ModelRender->ForcedMaterialOverride(pMaterial);
+					I::RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
+					I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-					ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(
-						ModelRenderHook::DrawModelExecute::index) //overlay
-						(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
+					if (dmeHook)
+					{
+						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+					}
 				}
 
 				if (bMatWasForced)
 				{
-					g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					I::ModelRender->ForcedMaterialOverride(nullptr);
+					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}
 
-				g_Interfaces.RenderView->SetBlend(1.0f);
+				I::RenderView->SetBlend(1.0f);
 
 				return true;
 			}

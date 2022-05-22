@@ -30,6 +30,7 @@ struct Target_t {
 	float m_flDistTo = std::numeric_limits<float>::max();
 	int m_nAimedHitbox = -1;
 	bool m_bHasMultiPointed = false;
+	Priority n_Priority = {};
 };
 
 class CAimbotGlobal {

@@ -3,7 +3,7 @@
 
 bool CPlayerArrows::ShouldRun(CBaseEntity* pLocal)
 {
-	if (!Vars::Visuals::OutOfFOVArrows.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (!Vars::Visuals::OutOfFOVArrows.m_Var || I::EngineVGui->IsGameUIVisible())
 	{
 		return false;
 	}
@@ -40,7 +40,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	};
 
 	const Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
-	const Vec3 vecViewAngle = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vecViewAngle = I::Engine->GetViewAngles();
 
 	const float deg = GetClockwiseAngle(vecViewAngle, vecAngleTo);
 	const float xrot = cos(deg - PI / 2);
@@ -114,7 +114,7 @@ void CPlayerArrows::Run()
 				continue;
 			}
 
-			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.Friends[pEnemy->GetIndex()])
+			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.IsFriend(pEnemy->GetIndex()))
 			{
 				continue;
 			}
@@ -131,7 +131,7 @@ void CPlayerArrows::Run()
 			//	continue;*/
 
 			//Vec3 vAngleToEnemy = Math::CalcAngle(vLocalPos, vEnemyPos);
-			//Vec3 viewangless = g_Interfaces.Engine->GetViewAngles();
+			//Vec3 viewangless = I::Engine->GetViewAngles();
 			//viewangless.x = 0;
 			//float fFovToEnemy = Math::CalcFov(viewangless, vAngleToEnemy);
 

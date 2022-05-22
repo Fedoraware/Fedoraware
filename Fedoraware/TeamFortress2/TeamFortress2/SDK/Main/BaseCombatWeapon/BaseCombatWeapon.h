@@ -3,7 +3,7 @@
 #include "../BaseEntity/BaseEntity.h"
 
 #ifndef TICKS_TO_TIME
-#define TICKS_TO_TIME( t )	( g_Interfaces.GlobalVars->interval_per_tick * ( t ) )
+#define TICKS_TO_TIME( t )	( I::GlobalVars->interval_per_tick * ( t ) )
 #endif
 
 class CBaseCombatWeapon : public CBaseEntity
@@ -73,13 +73,13 @@ public: //Everything else, lol
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
 	}
-	
+
 	//str8 outta cathook
 	__inline bool AmbassadorCanHeadshot()
 	{
 		if (GetItemDefIndex() == Spy_m_TheAmbassador || GetItemDefIndex() == Spy_m_FestiveAmbassador)
 		{
-			if ((g_Interfaces.GlobalVars->curtime - GetLastFireTime()) <= 1.0)
+			if ((I::GlobalVars->curtime - GetLastFireTime()) <= 1.0)
 			{
 				return false;
 			}
@@ -98,7 +98,7 @@ public: //Everything else, lol
 	}
 
 	__inline CBaseEntity* GetHealingTarget() {
-		return g_Interfaces.EntityList->GetClientEntityFromHandle(GetHealingTargetHandle());
+		return I::EntityList->GetClientEntityFromHandle(GetHealingTargetHandle());
 	}
 
 	__inline int GetHealingTargetHandle() {
@@ -148,7 +148,7 @@ public: //Everything else, lol
 
 	__inline bool CanFireCriticalShot(const bool bHeadShot) {
 		bool bResult = false;
-		if (const auto& pOwner = g_Interfaces.EntityList->GetClientEntityFromHandle(GethOwner())) {
+		if (const auto& pOwner = I::EntityList->GetClientEntityFromHandle(GethOwner())) {
 			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
 			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 423)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
@@ -178,9 +178,12 @@ public: //Everything else, lol
 				}
 				else {
 					if (!flTimer)
-						flTimer = g_Interfaces.GlobalVars->curtime;
+						flTimer = I::GlobalVars->curtime;
 
-					if ((g_Interfaces.GlobalVars->curtime - flTimer) < 0.4f)
+					if (flTimer > I::GlobalVars->curtime)
+						flTimer = 0.0f;
+
+					if ((I::GlobalVars->curtime - flTimer) < 0.4f)
 						return false;
 				}
 			}
@@ -194,15 +197,18 @@ public: //Everything else, lol
 				}
 				else {
 					if (!flTimer)
-						flTimer = g_Interfaces.GlobalVars->curtime;
+						flTimer = I::GlobalVars->curtime;
 
-					if ((g_Interfaces.GlobalVars->curtime - flTimer) < 2.0f)
+					if (flTimer > I::GlobalVars->curtime)
+						flTimer = 0.0f;
+
+					if ((I::GlobalVars->curtime - flTimer) < 2.0f)
 						return false;
 				}
 			}
 		}
 
-		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * g_Interfaces.GlobalVars->interval_per_tick;
+		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * I::GlobalVars->interval_per_tick;
 
 		return GetNextPrimaryAttack() <= flCurTime && pLocal->GetNextAttack() <= flCurTime;
 	}
@@ -211,7 +217,7 @@ public: //Everything else, lol
 		if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart())
 			return false;
 
-		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * g_Interfaces.GlobalVars->interval_per_tick;
+		float flCurTime = static_cast<float>(pLocal->GetTickBase()) * I::GlobalVars->interval_per_tick;
 
 		return GetNextSecondaryAttack() <= flCurTime && pLocal->GetNextAttack() <= flCurTime;
 	}
@@ -296,7 +302,7 @@ public: //Everything else, lol
 
 		if (GetClip1() == 0)
 			return false;
-		return (nextAttack <= (TICKS_TO_TIME(g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())->GetTickBase())));
+		return (nextAttack <= (TICKS_TO_TIME(I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer())->GetTickBase())));
 	}
 
 

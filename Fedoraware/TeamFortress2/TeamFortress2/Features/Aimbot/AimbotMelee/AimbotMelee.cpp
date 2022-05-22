@@ -1,5 +1,6 @@
 #include "AimbotMelee.h"
 #include "../../Vars.h"
+#include "../../PlayerResource/PlayerResource.h"
 
 bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
                                int nTargetIndex)
@@ -77,8 +78,9 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	g_AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
+	// Players
 	if (Vars::Aimbot::Global::AimPlayers.m_Var)
 	{
 		const bool bWhipTeam = (pWeapon->GetItemDefIndex() == Soldier_t_TheDisciplinaryAction &&
@@ -97,7 +99,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			CONTINUE_IF(g_AimbotGlobal.ShouldIgnore(pTarget))
+			if (g_AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
 
 			Vec3 vPos = pTarget->GetHitboxPos(HITBOX_PELVIS);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
@@ -109,10 +111,14 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			g_AimbotGlobal.m_vecTargets.push_back({pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo});
+			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
+			const auto& priority = g_GlobalInfo.PlayerPriority[priorityID];
+
+			g_AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
-
+	
+	// Buildings
 	if (Vars::Aimbot::Global::AimBuildings.m_Var)
 	{
 		for (const auto& pBuilding : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ENEMIES))
@@ -184,7 +190,7 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	case 0:
 		{
 			pCmd->viewangles = vAngle;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -194,14 +200,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
-				g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+				I::Engine->SetViewAngles(pCmd->viewangles);
 				break;
 			}
 
 			Vec3 vecDelta = vAngle - pCmd->viewangles;
 			Math::ClampAngles(vecDelta);
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.m_Var;
-			g_Interfaces.Engine->SetViewAngles(pCmd->viewangles);
+			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -227,7 +233,7 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	if (!CanMeleeHit(pLocal, pWeapon,
 	                 Vars::Aimbot::Melee::AimMethod.m_Var == 2
 		                 ? Target.m_vAngleTo
-		                 : g_Interfaces.Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
+		                 : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
 	{
 		return false;
 	}
@@ -241,7 +247,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 	{
 		return ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack);
 	}
-	return fabs(pWeapon->GetSmackTime() - g_Interfaces.GlobalVars->curtime) < g_Interfaces.GlobalVars->interval_per_tick
+	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick
 		* 2.0f;
 }
 

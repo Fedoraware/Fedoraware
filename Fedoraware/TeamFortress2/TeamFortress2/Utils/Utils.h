@@ -3,7 +3,6 @@
 #include "Color/Color.h"
 #include "Interface/Interface.h"
 #include "VFunc/VFunc.h"
-#include "SEOHook/SEOHook.h"
 #include "Pattern/Pattern.h"
 #include "UtlVector/UtlVector.h"
 #include "Hash/Hash.h"
@@ -28,9 +27,6 @@
 
 #undef min
 #undef max
-
-#define CONTINUE_IF(cond) if (cond) { continue; }
-#define BREAK_IF(cond) if (cond) { break; }
 
 inline void Q_memcpy(void* dest, const void* src, int count)
 {
@@ -62,18 +58,14 @@ namespace Utils
 	inline void ReplaceSpecials(std::string& str) // thx cathook
 	{
 		int val;
-		size_t c = 0, len = str.size();
+		size_t c = 0;
+		const size_t len = str.size();
 		for (int i = 0; i + c < len; ++i)
 		{
 			str[i] = str[i + c];
-			if (str[i] != '\\')
-			{
-				continue;
-			}
-			if (i + c + 1 == len)
-			{
-				break;
-			}
+			if (str[i] != '\\') { continue; }
+			if (i + c + 1 == len) { break; }
+
 			switch (str[i + c + 1])
 			{
 			// Several control characters
@@ -159,22 +151,9 @@ namespace Utils
 		return (fabs(a - b) <= epsilon * std::max(fabs(a), fabs(b)));
 	}
 
-	inline float ClampFloat(float n, float lower, float upper)
-	{
-		return std::max(lower, std::min(n, upper));
-	}
-
-	inline float NormalizeRad(float a) noexcept
-	{
-		return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
-	}
-
 	inline bool StartsWith(const char* a, const char* b)
 	{
-		if (strncmp(a, b, strlen(b)) == 0)
-		{
-			return true;
-		}
+		if (strncmp(a, b, strlen(b)) == 0) { return true; }
 		return false;
 	}
 
@@ -192,5 +171,15 @@ namespace Utils
 
 		strings.push_back(pString.substr(prev));
 		return strings;
+	}
+
+	inline Vec3 GetRotatedPosition(Vec3 vOrigin, const float flRotation, const float flDistance)
+	{
+		const auto rad = DEG2RAD(flRotation);
+		vOrigin.x += cosf(rad) * flDistance;
+		vOrigin.y += sinf(rad) * flDistance;
+
+		return vOrigin;
+
 	}
 }

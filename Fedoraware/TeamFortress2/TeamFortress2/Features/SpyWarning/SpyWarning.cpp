@@ -9,7 +9,7 @@
 
 bool CSpyWarning::ShouldRun(CBaseEntity* pLocal)
 {
-	if (!Vars::Visuals::SpyWarning.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (!Vars::Visuals::SpyWarning.m_Var || I::EngineVGui->IsGameUIVisible())
 	{
 		return false;
 	}
@@ -44,7 +44,7 @@ void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 	};
 
 	const Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
-	const Vec3 vecViewAngle = g_Interfaces.Engine->GetViewAngles();
+	const Vec3 vecViewAngle = I::Engine->GetViewAngles();
 
 	const float deg = GetClockwiseAngle(vecViewAngle, vecAngleTo);
 	const float xrot = cos(deg - PI / 2);
@@ -106,7 +106,7 @@ void CSpyWarning::Run()
 				continue;
 			}
 
-			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.Friends[pEnemy->GetIndex()])
+			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.IsFriend(pEnemy->GetIndex()))
 			{
 				continue;
 			}
@@ -150,7 +150,7 @@ void CSpyWarning::Run()
 			{
 				if (!m_vecSpies.empty())
 				{
-					g_Interfaces.Engine->ClientCmd_Unrestricted(_("voicemenu 1 1"));
+					I::Engine->ClientCmd_Unrestricted(_("voicemenu 1 1"));
 				}
 
 				bOldEmpty = m_vecSpies.empty();
@@ -184,7 +184,7 @@ void CSpyWarning::Run()
 			{
 				if (!m_vecSpies.empty())
 				{
-					flTimer = g_Interfaces.GlobalVars->curtime;
+					flTimer = I::GlobalVars->curtime;
 				}
 
 				bOldEmpty = m_vecSpies.empty();
@@ -192,7 +192,7 @@ void CSpyWarning::Run()
 
 			if (flTimer)
 			{
-				const float flAlpha = Math::RemapValClamped(g_Interfaces.GlobalVars->curtime - flTimer, 0.0f, FL_DURATION,
+				const float flAlpha = Math::RemapValClamped(I::GlobalVars->curtime - flTimer, 0.0f, FL_DURATION,
 				                                            0.5f, 0.0f);
 
 				if (flAlpha <= 0.0f)

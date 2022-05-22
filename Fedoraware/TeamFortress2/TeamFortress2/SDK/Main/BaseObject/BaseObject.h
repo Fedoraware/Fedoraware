@@ -32,6 +32,6 @@ public: //Netvars
 public: //Everything else, lol
 	__inline CBaseEntity* GetOwner() {
 		DYNVAR(hBuilder, int, _("DT_BaseObject"), _("m_hBuilder"));
-		return g_Interfaces.EntityList->GetClientEntityFromHandle(hBuilder.GetValue(this));
+		return I::EntityList->GetClientEntityFromHandle(hBuilder.GetValue(this));
 	}
 };

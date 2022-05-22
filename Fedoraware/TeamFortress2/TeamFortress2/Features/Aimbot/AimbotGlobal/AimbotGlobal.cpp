@@ -38,11 +38,13 @@ namespace SandvichAimbot
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	return !Vars::Aimbot::Global::AimKey.m_Var ? true : (GetAsyncKeyState(Vars::Aimbot::Global::AimKey.m_Var) & 0x8000);
+	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.m_Var };
+	return !Vars::Aimbot::Global::AimKey.m_Var ? true : aimKey.Down();
 }
 
 void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 {
+	// Sort by preference
 	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
 		switch (Method)
 		{
@@ -51,11 +53,18 @@ void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 		default: return false;
 		}
 	});
+
+	// Sort by priority
+	std::sort(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
+		return (a.n_Priority.Mode > b.n_Priority.Mode);
+	});
 }
 
 const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 {
 	return *std::min_element(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {
+		if (a.n_Priority.Mode < b.n_Priority.Mode) { return false; }
+
 		switch (Method)
 		{
 		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
@@ -69,7 +78,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 {
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
-	if (!g_Interfaces.Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
+	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable()) { return true; }
 	if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
 	{
@@ -84,7 +93,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	// Special conditions for mediguns
 	if (!hasMedigun)
 	{
-		if (g_GlobalInfo.ignoredPlayers.find(pInfo.friendsID) != g_GlobalInfo.ignoredPlayers.end()) { return true; }
+		if (g_GlobalInfo.IsIgnored(pInfo.friendsID)) { return true; }
 		if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
 	}
 

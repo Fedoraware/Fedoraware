@@ -4,7 +4,7 @@
 
 bool CChams::ShouldRun()
 {
-	return !g_Interfaces.EngineVGui->IsGameUIVisible();
+	return !I::EngineVGui->IsGameUIVisible();
 }
 
 void CChams::DrawModel(CBaseEntity* pEntity)
@@ -30,7 +30,7 @@ void CChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[0 1 0]");
-		m_pMatFresnel = g_Interfaces.MatSystem->Create("m_pMatFresnel", kv);
+		m_pMatFresnel = I::MatSystem->Create("m_pMatFresnel", kv);
 	}
 
 	{
@@ -40,7 +40,7 @@ void CChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = g_Interfaces.MatSystem->Create("m_pMatShaded", kv);
+		m_pMatShaded = I::MatSystem->Create("m_pMatShaded", kv);
 	}
 
 	{
@@ -55,7 +55,7 @@ void CChams::Init()
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "100");
 		kv->SetString("$envmapfresnelminmaxexp", "[0 1 2]");
-		m_pMatBrick = g_Interfaces.MatSystem->Create("m_pMatBrick", kv);
+		m_pMatBrick = I::MatSystem->Create("m_pMatBrick", kv);
 	}
 
 	{
@@ -66,14 +66,14 @@ void CChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = g_Interfaces.MatSystem->Create("m_pMatShiny", kv);
+		m_pMatShiny = I::MatSystem->Create("m_pMatShiny", kv);
 	}
 
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = g_Interfaces.MatSystem->Create("m_pMatFlat", kv);
+		m_pMatFlat = I::MatSystem->Create("m_pMatFlat", kv);
 	}
 
 	{
@@ -87,11 +87,11 @@ void CChams::Init()
 			kv->SetString("$phongfresnelranges", "[0 0 0]");
 			kv->SetString("$basemapalphaphongmask", "1");
 			kv->SetString("$phongwarptexture", "models/player/shared/ice_player_warp");
-			m_pMatPlastic = g_Interfaces.MatSystem->Create("m_pMatPlastic", kv);
+			m_pMatPlastic = I::MatSystem->Create("m_pMatPlastic", kv);
 		}
 	}
 
-	m_pMatBlur = g_Interfaces.MatSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
+	m_pMatBlur = I::MatSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
 }
 
 void CChams::Render()
@@ -106,7 +106,7 @@ void CChams::Render()
 		if (!ShouldRun())
 			return;
 
-		if (const auto& pRenderContext = g_Interfaces.MatSystem->GetRenderContext())
+		if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
 		{
 			//Let's do this in advance if Glow is enabled.
 			/*if (Vars::Glow::Main::Active.m_Var)
@@ -132,13 +132,13 @@ void CChams::Render()
 Chams_t FetchChams(CBaseEntity* pEntity) {
 	if (pEntity)
 	{
-		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx) {
+		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
 			return Vars::Chams::Players::Target;
 		}
 		if (pEntity == g_EntityCache.m_pLocal) {
 			return Vars::Chams::Players::Local;
 		}
-		if (g_EntityCache.Friends[pEntity->GetIndex()]) {
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive) {
 			return Vars::Chams::Players::Friend;
 		}
 		if (pEntity->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum()) {
@@ -153,13 +153,13 @@ Chams_t FetchChams(CBaseEntity* pEntity) {
 Chams_t FetchChams(CBaseObject* pBuilding) {
 	if (const auto pEntity = pBuilding->GetOwner())
 	{
-		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx) {
+		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
 			return Vars::Chams::Buildings::Target;
 		}
 		if (pEntity->GetIndex() == g_EntityCache.m_pLocal->GetIndex()) {
 			return Vars::Chams::Buildings::Local;
 		}
-		if (g_EntityCache.Friends[pEntity->GetIndex()]) {
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive) {
 			return Vars::Chams::Buildings::Friend;
 		}
 		if (pEntity->GetTeamNum() != g_EntityCache.m_pLocal->GetTeamNum()) {
@@ -231,10 +231,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 	{
 		if (!Player->IsAlive() || Player->IsAGhost())
 			continue;
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Player);
 		auto chamsMaterial = FetchMaterial(chams);
-		bool bIsLocal = Player->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
+		bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
 
 		//skip if disabled
 		if (!chams.chamsActive/*|| !chams.drawMaterial*/) 
@@ -243,7 +243,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		if (chams.showObstructed)
 			pRenderContext->DepthRange(0.0f, 0.2f);
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
 		if (!Utils::IsOnScreen(pLocal, Player))
 			continue;
@@ -254,10 +254,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		if (Player->GetTeamNum() == pLocal->GetTeamNum() && !bIsLocal && Vars::Chams::Players::FadeoutTeammates.m_Var && pLocal->IsAlive()) {
 			drawalpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()), 450.f, 100.f, drawalpha, 0.0f);
 		}
-		g_Interfaces.RenderView->SetBlend(drawalpha);
+		I::RenderView->SetBlend(drawalpha);
 		if (chams.drawMaterial != 6)
 		{
-			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
+			I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
 				Color::TOFLOAT(DrawColor.b));
 		}
 		else if (chams.drawMaterial == 6)
@@ -308,10 +308,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 				DrawModel(pWeapon);
 		}
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-		g_Interfaces.RenderView->SetBlend(1.0f);
+		I::RenderView->SetBlend(1.0f);
 
 		pRenderContext->DepthRange(0.0f, 1.0f);
 	}
@@ -346,7 +346,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		if (!built)
 			continue;
 
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Building);
 		auto chamsMaterial = FetchMaterial(chams);
 
@@ -356,14 +356,14 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		if (chams.showObstructed)
 			pRenderContext->DepthRange(0.0f, 0.2f);
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
 		Color_t DrawColor = Utils::GetEntityDrawColor(pBuilding, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
 
-		g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+		I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 		if (chams.drawMaterial != 6)
 		{
-			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
+			I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
 				Color::TOFLOAT(DrawColor.b));
 		}
 		else if (chams.drawMaterial == 6)
@@ -385,10 +385,10 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		DrawModel(pBuilding);
 	}
 
-	g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-	g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+	I::ModelRender->ForcedMaterialOverride(nullptr);
+	I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-	g_Interfaces.RenderView->SetBlend(1.0f);
+	I::RenderView->SetBlend(1.0f);
 
 	if (Vars::Chams::Buildings::IgnoreZ.m_Var)
 		pRenderContext->DepthRange(0.0f, 1.0f);
@@ -414,15 +414,15 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			auto chams = Vars::Chams::World::Health;
 			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Colors::Health;
-			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
+			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
 			if (chams.showObstructed)
 				pRenderContext->DepthRange(0.0f, 0.2f);
 
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 			if (Vars::Chams::World::Health.drawMaterial != 6)
 			{
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+				I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
 					Color::TOFLOAT(DrawColor.g),
 					Color::TOFLOAT(DrawColor.b));
 			}
@@ -455,21 +455,21 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			auto chams = Vars::Chams::World::Ammo;
 			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Colors::Ammo;
-			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
+			I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 
 			if (chams.showObstructed)
 				pRenderContext->DepthRange(0.0f, 0.2f);
 
 			if (chams.drawMaterial != 6)
 			{
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+				I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
 					Color::TOFLOAT(DrawColor.g),
 					Color::TOFLOAT(DrawColor.b));
 			}
 			else
 			{
-				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			}
 
 			if (chams.drawMaterial == 6)
@@ -510,21 +510,21 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			auto chams = Vars::Chams::World::Projectiles;
 			auto chamsMaterial = FetchMaterial(chams);
 			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
-			g_Interfaces.ModelRender->ForcedMaterialOverride(chamsMaterial);
-			g_Interfaces.RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
+			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
+			I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 
 			if (chams.showObstructed)
 				pRenderContext->DepthRange(0.0f, 0.2f);
 
 			if (chams.drawMaterial != 6)
 			{
-				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
+				I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r),
 					Color::TOFLOAT(DrawColor.g),
 					Color::TOFLOAT(DrawColor.b));
 			}
 			else
 			{
-				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			}
 
 			if (chams.drawMaterial == 6)
@@ -546,10 +546,10 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-		g_Interfaces.ModelRender->ForcedMaterialOverride(nullptr);
-		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-	g_Interfaces.RenderView->SetBlend(1.0f);
+	I::RenderView->SetBlend(1.0f);
 
 	pRenderContext->DepthRange(0.0f, 1.0f);
 }
