@@ -73,11 +73,3 @@ DWORD CPattern::Find(LPCWSTR szModuleName, LPCWSTR szPattern)
 
 	return 0x0;
 }
-
-void CPattern::BytePatch(PVOID address, const char* bytes, int length)
-{
-	DWORD d, ds;
-	VirtualProtect(address, length, PAGE_EXECUTE_READWRITE, &d);
-	memcpy(address, bytes, length);
-	VirtualProtect(address, length, d, &ds);
-}

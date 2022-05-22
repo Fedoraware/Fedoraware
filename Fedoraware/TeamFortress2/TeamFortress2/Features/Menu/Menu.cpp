@@ -1889,19 +1889,6 @@ void CMenu::DebugMenu()
 			Checkbox("Debug Bool", &Vars::Debug::DebugBool.m_Var);
 		}
 
-		auto dest = reinterpret_cast<PVOID>(g_Pattern.Find(L"client.dll", L"75 49 8B 45 D8"));
-		static BytePatch bp{ dest, { 0x90 } };
-
-		if (Button("Patch"))
-		{
-			bp.Patch();
-		}
-
-		if (Button("Restore"))
-		{
-			bp.Restore();
-		}
-
 		End();
 	}
 

@@ -2,6 +2,9 @@
 #include <vector>
 #include <Windows.h>
 
+// Parts of this have been inspired by cathook
+// TODO: Store these patches somewhere so we can restore them
+
 class BytePatch {
 	PVOID PatchAddress;
 	std::vector<unsigned char> OriginalBytes;
@@ -18,19 +21,25 @@ class BytePatch {
 	}
 
 public:
-	BytePatch(PVOID address, std::vector<unsigned char> patch)
+	BytePatch(DWORD address, const std::vector<unsigned char>& patch)
 	{
-		PatchAddress = address;
+		assert(address != 0);
+
+		PatchAddress = reinterpret_cast<PVOID>(address);
 		PatchBytes = patch;
 		PatchLength = patch.size();
 		OriginalBytes.resize(patch.size());
 
 		// Copy the original bytes
 		DWORD d, ds;
-		VirtualProtect(address, PatchLength, PAGE_EXECUTE_READWRITE, &d);
-		memcpy(&OriginalBytes[0], address, PatchLength);
-		VirtualProtect(address, PatchLength, d, &ds);
+		VirtualProtect(PatchAddress, PatchLength, PAGE_EXECUTE_READWRITE, &d);
+		memcpy(&OriginalBytes[0], PatchAddress, PatchLength);
+		VirtualProtect(PatchAddress, PatchLength, d, &ds);
+
+		Patch();
 	}
+
+	BytePatch(LPCWSTR szModuleName, LPCWSTR szPattern, const std::vector<unsigned char>& patch) : BytePatch(g_Pattern.Find(szModuleName, szPattern), patch) { }
 
 	void Patch()
 	{
