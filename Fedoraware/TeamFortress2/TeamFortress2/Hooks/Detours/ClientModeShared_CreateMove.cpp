@@ -334,7 +334,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (Vars::Visuals::DebugInfo.m_Var)
+		if (Vars::Debug::DebugInfo.m_Var)
 		{
 
 			static float cycledelta = 0.f;

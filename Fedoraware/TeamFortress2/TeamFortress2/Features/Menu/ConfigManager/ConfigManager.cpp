@@ -617,7 +617,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::FovArrowsDist);
 			SAVE_VAR(Vars::Visuals::AimPosSquare);
 			SAVE_VAR(Vars::Visuals::Rain);
-			SAVE_VAR(Vars::Visuals::DebugInfo);
+			SAVE_VAR(Vars::Debug::DebugInfo);
 
 			// Beans I LOVE Beans
 			{
@@ -1343,7 +1343,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::Vision);
 			LOAD_VAR(Vars::Visuals::Rain);
-			LOAD_VAR(Vars::Visuals::DebugInfo);
+			LOAD_VAR(Vars::Debug::DebugInfo);
 
 			// Beans I LOVE Beans
 			{

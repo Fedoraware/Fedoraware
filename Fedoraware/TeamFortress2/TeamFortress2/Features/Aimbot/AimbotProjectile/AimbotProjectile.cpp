@@ -817,6 +817,7 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 	return true;
 }
 
+// Returns the best target
 bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
 	if (!GetTargets(pLocal, pWeapon))
@@ -853,6 +854,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	return false;
 }
 
+// Aims at the given angles
 void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vAngle)
 {
 	vAngle -= g_GlobalInfo.m_vPunchAngles;
@@ -862,6 +864,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 	{
 	case 0:
 		{
+			// Plain
 			pCmd->viewangles = vAngle;
 			I::Engine->SetViewAngles(pCmd->viewangles);
 			break;
@@ -869,6 +872,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 	case 1:
 		{
+			// Silent
 			Utils::FixMovement(pCmd, vAngle);
 			pCmd->viewangles = vAngle;
 			break;
@@ -937,6 +941,68 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 	return false;
 }
 
+// Returns the best target for splash damage
+bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
+{
+	if (!Vars::Aimbot::Projectile::SplashPrediction.m_Var) { return false; }
+
+	// TODO: I have no clue if these values are accurate
+	float splashRadius = 0.f;
+	switch (pWeapon->GetClassID())
+	{
+	case ETFClassID::CTFRocketLauncher:
+	case ETFClassID::CTFRocketLauncher_AirStrike:
+	case ETFClassID::CTFRocketLauncher_Mortar:
+	case ETFClassID::CTFStickBomb:
+		splashRadius = 130.f; break;
+	}
+
+	// Don't do it with the direct hit or if the splash radius is unknown
+	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || splashRadius == 0.f) { return false; }
+
+	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	{
+		if (!pEntity || !pEntity->IsAlive()) { continue; }
+		if (!pEntity->IsOnGround()) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
+
+		const auto& vecOrigin = pEntity->GetAbsOrigin();
+		const auto& shootPos = pLocal->GetShootPos();
+
+		// Scan every 45 degree angle
+		for (int i = 0; i < 315; i += 45)
+		{
+			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), splashRadius);
+			if (Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
+			{
+				// We found a target point! Get the closest point possible...
+				float currentRadius = splashRadius;
+				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
+				{
+					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 30.f);
+					currentRadius -= 10.f;
+				}
+
+				// Closest point found!
+				currentRadius = std::clamp(currentRadius + 10.f, 0.f, splashRadius);
+				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
+
+				if (Vars::Debug::DebugInfo.m_Var)
+				{
+					I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
+					I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
+				}
+
+				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
+				outTarget = { pEntity, ETargetType::PLAYER, vecOrigin, vAngleTo };
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	static int nLastTracerTick = pCmd->tick_count;
@@ -948,14 +1014,15 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		return;
 	}
 
-	Target_t target = {};
-
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
 		                         : g_AimbotGlobal.IsKeyDown());
+	if (!bShouldAim) { return; }
 
-	if (GetTarget(pLocal, pWeapon, pCmd, target) && bShouldAim)
+	Target_t target{ };
+	if (GetTarget(pLocal, pWeapon, pCmd, target) || GetSplashTarget(pLocal, pWeapon, pCmd, target))
 	{
+		// Aim at the current target or splashtarget
 		g_GlobalInfo.m_nCurrentTargetIdx = target.m_pEntity->GetIndex();
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
@@ -1033,7 +1100,6 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				}
 			}
 		}
-
 		else
 		{
 			Aim(pCmd, pWeapon, target.m_vAngleTo);

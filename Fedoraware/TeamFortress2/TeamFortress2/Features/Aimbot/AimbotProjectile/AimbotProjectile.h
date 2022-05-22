@@ -39,6 +39,7 @@ class CAimbotProjectile {
 	void Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vAngle);
 	bool ShouldFire(CUserCmd* pCmd);
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
+	bool GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
 	bool m_bIsFlameThrower;
 
 public:
