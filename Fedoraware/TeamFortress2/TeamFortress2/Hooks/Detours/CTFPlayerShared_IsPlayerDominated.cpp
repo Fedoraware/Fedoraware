@@ -1,6 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(CTFPlayerShared_IsPlayerDominated, g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 75 08 5F 32 C0 5E 5D C2 04 00"), bool, __fastcall,
+/*MAKE_HOOK(CTFPlayerShared_IsPlayerDominated, g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 75 08 5F 32 C0 5E 5D C2 04 00"), bool, __fastcall,
 		  void* ecx, void* edx, int index)
 {
 	const bool bResult = Hook.Original<FN>()(ecx, edx, index);
@@ -18,4 +18,4 @@ MAKE_HOOK(CTFPlayerShared_IsPlayerDominated, g_Pattern.Find(L"client.dll", L"55 
 	}
 
 	return bResult;
-}
+}*/

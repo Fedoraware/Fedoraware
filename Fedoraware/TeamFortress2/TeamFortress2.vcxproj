@@ -739,6 +739,7 @@
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
     <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
+    <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
