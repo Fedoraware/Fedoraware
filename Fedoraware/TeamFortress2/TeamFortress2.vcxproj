@@ -199,6 +199,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\HookManager.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
     <ClInclude Include="TeamFortress2\Hooks\HookManager.h" />
     <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\PatchManager\PatchManager.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />

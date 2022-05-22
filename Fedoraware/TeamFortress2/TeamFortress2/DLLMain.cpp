@@ -1,4 +1,5 @@
 #include "Hooks/HookManager.h"
+#include "Hooks/PatchManager/PatchManager.h"
 
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
@@ -95,6 +96,7 @@ void Uninitialize()
 
 	g_Events.Destroy();
 	g_HookManager.Release();
+	g_PatchManager.Restore();
 
 	ShutdownRichPresence();
 
