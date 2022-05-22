@@ -1869,6 +1869,7 @@ void CMenu::DebugMenu()
 		const auto& pLocal = g_EntityCache.m_pLocal;
 
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.m_Var);
+		Checkbox("Allow secure servers", I::AllowSecureServers);
 
 		// Particle tester
 		if (CollapsingHeader("Particles"))

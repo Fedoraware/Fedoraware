@@ -67,9 +67,6 @@ void CInterfaces::Init()
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE, _(VENGINE_VGUI_VERSION));
 	_valid(EngineVGui);
 
-	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, _(L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34")) + 0x2);
-	_valid(RandomSeed);
-
 	DemoPlayer = **reinterpret_cast<void***>(g_Pattern.Find(ENGINE, _(L"8B 0D ? ? ? ? 85 C9 74 3B 8B 01 8B 40 18 FF D0 84 C0 74 30")) + 0x2);
 	_valid(DemoPlayer);
 
@@ -87,6 +84,12 @@ void CInterfaces::Init()
 
 	MatSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, _(VMATERIALSYSTEM_INTERFACE));
 	_valid(MatSystem);
+
+	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, _(L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34")) + 0x2);
+	_valid(RandomSeed);
+
+	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, _(L"C6 05 ? ? ? ? ? 8A C3")) + 0x2);
+	_valid(AllowSecureServers);
 
 	auto pdwClient = reinterpret_cast<PDWORD>(Client);     _valid(pdwClient);
 	auto pdwTable = *reinterpret_cast<PDWORD*>(pdwClient); _valid(pdwTable);
