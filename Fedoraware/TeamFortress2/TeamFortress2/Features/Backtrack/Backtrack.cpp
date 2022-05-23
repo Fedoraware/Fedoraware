@@ -194,14 +194,11 @@ void CBacktrack::UpdateDatagram()
 	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
 	if (netChannel)
 	{
-		const int m_nInSequenceNr = netChannel->m_nInSequenceNr;
-		const int inState = netChannel->m_nInReliableState;
-
 		static int lastInSequence = 0;
-		if (m_nInSequenceNr > lastInSequence)
+		if (netChannel->m_nInSequenceNr > lastInSequence)
 		{
-			lastInSequence = m_nInSequenceNr;
-			Sequences.insert(Sequences.begin(), CIncomingSequence(inState, m_nInSequenceNr, I::GlobalVars->realtime));
+			lastInSequence = netChannel->m_nInSequenceNr;
+			Sequences.push_front(CIncomingSequence(netChannel->m_nInReliableState, netChannel->m_nInSequenceNr, I::GlobalVars->realtime));
 		}
 
 		if (Sequences.size() > 2048)
@@ -228,8 +225,6 @@ float CBacktrack::GetLatency()
 // Adjusts the fake latency ping
 void CBacktrack::AdjustPing(INetChannel* netChannel)
 {
-	if (!Vars::Backtrack::Enabled.m_Var) { return; }
-
 	for (const auto& sequence : Sequences)
 	{
 		if (I::GlobalVars->realtime - sequence.CurTime >= GetLatency())
