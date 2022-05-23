@@ -37,7 +37,7 @@ static float LerpTime()
 	return std::max(interpValue, interpRatioValue / static_cast<float>(updateRateValue));
 }
 
-bool CBacktrack::IsGoodTick(const int tick) const
+bool CBacktrack::IsGoodTick(const int tick)
 {
 	const auto netChannel = I::Engine->GetNetChannelInfo();
 
@@ -46,11 +46,11 @@ bool CBacktrack::IsGoodTick(const int tick) const
 		return false;
 	}
 
-	const float correct = std::clamp(netChannel->GetLatency(FLOW_OUTGOING) + LerpTime(), 0.f, 1.f);
+	const float correct = std::clamp(GetLatency() + LerpTime(), 0.f, 1.f);
 
 	const float deltaTime = correct - (I::GlobalVars->curtime - TICKS_TO_TIME(tick));
 
-	return fabsf(deltaTime) < 0.2f;
+	return fabsf(deltaTime) <= TICKS_TO_TIME(1);
 }
 
 void CBacktrack::Start(const CUserCmd* pCmd)
@@ -166,12 +166,72 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 
 void CBacktrack::Run(CUserCmd* pCmd)
 {
-	if (Vars::Backtrack::Enabled.m_Var)
+	if (!Vars::Backtrack::Enabled.m_Var)
 	{
-		if (g_EntityCache.m_pLocal && pCmd)
+		LatencyRampup = 0.f;
+		return;
+	}
+
+	LatencyRampup += I::GlobalVars->interval_per_tick;
+	LatencyRampup = std::min(1.f, LatencyRampup);
+
+	if (g_EntityCache.m_pLocal && pCmd)
+	{
+		UpdateDatagram();
+
+		Start(pCmd);
+		Calculate(pCmd);
+	}
+}
+
+void CBacktrack::UpdateDatagram()
+{
+	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
+	if (netChannel)
+	{
+		const int m_nInSequenceNr = netChannel->m_nInSequenceNr;
+		const int inState = netChannel->m_nInReliableState;
+
+		static int lastInSequence = 0;
+		if (m_nInSequenceNr > lastInSequence)
 		{
-			Start(pCmd);
-			Calculate(pCmd);
+			lastInSequence = m_nInSequenceNr;
+			Sequences.insert(Sequences.begin(), CIncomingSequence(inState, m_nInSequenceNr, I::GlobalVars->realtime));
+		}
+
+		if (Sequences.size() > 2048)
+		{
+			Sequences.pop_back();
+		}
+	}
+}
+
+// TODO: Use this properly!
+float CBacktrack::GetLatency()
+{
+	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
+	float realLatency = 0.f;
+
+	if (netChannel)
+	{
+		realLatency = netChannel->GetLatency(FLOW_OUTGOING);
+	}
+	
+	const float backtrackLatency = LatencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var / 1000.f, 0.f, 0.9f - realLatency);
+	return backtrackLatency;
+}
+
+void CBacktrack::AdjustPing(INetChannel* netChannel)
+{
+	if (!Vars::Backtrack::Enabled.m_Var) { return; }
+
+	for (const auto& sequence : Sequences)
+	{
+		if (I::GlobalVars->realtime - sequence.curtime >= GetLatency())
+		{
+			netChannel->m_nInReliableState = sequence.inreliablestate;
+			netChannel->m_nInSequenceNr = sequence.sequencenr;
+			break;
 		}
 	}
 }

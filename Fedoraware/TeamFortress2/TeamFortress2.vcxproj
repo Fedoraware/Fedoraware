@@ -186,6 +186,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\KeyValues_SetInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_DrawModelExecute.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_ForcedMaterialOverride.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Panel_PaintTraverse.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Prediction_RunCommand.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetAlphaModulation.cpp" />

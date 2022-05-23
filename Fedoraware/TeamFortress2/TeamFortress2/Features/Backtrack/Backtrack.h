@@ -3,6 +3,21 @@
 
 #pragma warning ( disable : 4091 )
 
+class CIncomingSequence
+{
+public:
+	int inreliablestate;
+	int sequencenr;
+	float curtime;
+
+	CIncomingSequence(int instate, int seqnr, float time)
+	{
+		inreliablestate = instate;
+		sequencenr = seqnr;
+		curtime = time;
+	}
+};
+
 typedef struct BoneMatrixes {
 	float BoneMatrix[128][3][4];
 };
@@ -32,11 +47,19 @@ struct TickRecord {
 
 class CBacktrack {
 public:
-	std::vector<TickRecord> Record[64];
-	bool IsGoodTick(int tick) const;
+	bool IsGoodTick(int tick);
 	void Start(const CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
+
+	// Latency
+	void UpdateDatagram();
+	float GetLatency();
+	void AdjustPing(INetChannel* netChannel);
+
+	std::vector<TickRecord> Record[64];
+	float LatencyRampup = 0.f;
+	std::deque<CIncomingSequence> Sequences;
 };
 
 inline CBacktrack g_Backtrack;
