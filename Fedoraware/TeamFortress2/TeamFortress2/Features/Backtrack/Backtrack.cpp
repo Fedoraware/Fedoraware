@@ -46,11 +46,11 @@ bool CBacktrack::IsGoodTick(const int tick)
 		return false;
 	}
 
-	const float correct = std::clamp(GetLatency() + LerpTime(), 0.f, 1.f);
+	const float correct = std::clamp(netChannel->GetLatency(FLOW_OUTGOING) + LerpTime(), 0.f, 1.f);
 
 	const float deltaTime = correct - (I::GlobalVars->curtime - TICKS_TO_TIME(tick));
 
-	return fabsf(deltaTime) <= TICKS_TO_TIME(1);
+	return fabsf(deltaTime) < 0.2f;
 }
 
 void CBacktrack::Start(const CUserCmd* pCmd)
@@ -182,8 +182,13 @@ void CBacktrack::Run(CUserCmd* pCmd)
 		Start(pCmd);
 		Calculate(pCmd);
 	}
+	else
+	{
+		Sequences.clear();
+	}
 }
 
+// Store the last 2048 sequences
 void CBacktrack::UpdateDatagram()
 {
 	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
@@ -206,31 +211,31 @@ void CBacktrack::UpdateDatagram()
 	}
 }
 
-// TODO: Use this properly!
+// Returns the current (custom) backtrack latency
 float CBacktrack::GetLatency()
 {
-	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
 	float realLatency = 0.f;
 
-	if (netChannel)
+	if (const auto netChannel = I::Engine->GetNetChannelInfo())
 	{
-		realLatency = netChannel->GetLatency(FLOW_OUTGOING);
+		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 1.f);
 	}
 	
-	const float backtrackLatency = LatencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var / 1000.f, 0.f, 0.9f - realLatency);
+	const float backtrackLatency = LatencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var / 1000.f, 0.f, 1.f - realLatency);
 	return backtrackLatency;
 }
 
+// Adjusts the fake latency ping
 void CBacktrack::AdjustPing(INetChannel* netChannel)
 {
 	if (!Vars::Backtrack::Enabled.m_Var) { return; }
 
 	for (const auto& sequence : Sequences)
 	{
-		if (I::GlobalVars->realtime - sequence.curtime >= GetLatency())
+		if (I::GlobalVars->realtime - sequence.CurTime >= GetLatency())
 		{
-			netChannel->m_nInReliableState = sequence.inreliablestate;
-			netChannel->m_nInSequenceNr = sequence.sequencenr;
+			netChannel->m_nInReliableState = sequence.IsReliableState;
+			netChannel->m_nInSequenceNr = sequence.SequenceNr;
 			break;
 		}
 	}

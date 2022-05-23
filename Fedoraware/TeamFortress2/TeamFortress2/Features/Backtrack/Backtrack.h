@@ -6,15 +6,15 @@
 class CIncomingSequence
 {
 public:
-	int inreliablestate;
-	int sequencenr;
-	float curtime;
+	int IsReliableState;
+	int SequenceNr;
+	float CurTime;
 
 	CIncomingSequence(int instate, int seqnr, float time)
 	{
-		inreliablestate = instate;
-		sequencenr = seqnr;
-		curtime = time;
+		IsReliableState = instate;
+		SequenceNr = seqnr;
+		CurTime = time;
 	}
 };
 
