@@ -305,6 +305,11 @@ public: //Everything else, lol
 		return (nextAttack <= (TICKS_TO_TIME(I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer())->GetTickBase())));
 	}
 
+	__inline bool IsFlipped()
+	{
+		static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
+		return cl_flipviewmodels->GetBool();
+	}
 
 	CHudTexture* GetWeaponIcon();
 };
