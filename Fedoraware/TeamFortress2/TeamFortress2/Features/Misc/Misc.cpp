@@ -642,7 +642,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (!Vars::Misc::ViewmodelFlip.m_Var) { return; }
+	if (!Vars::Misc::ViewmodelFlip.m_Var || g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE) { return; }
 
 	static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
 	static bool defaultValue = cl_flipviewmodels->GetBool();
@@ -662,10 +662,10 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	};
 
 	const auto angleDelta = mod((aimAngles.y - localAngles.y) + 180.f, 360.f) - 180.f;
-	if (angleDelta < 0.f)
+	if (angleDelta < -5.f)
 	{
 		cl_flipviewmodels->SetValue(true);
-	} else
+	} else if (angleDelta > 5.f)
 	{
 		cl_flipviewmodels->SetValue(false);
 	}

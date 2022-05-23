@@ -4,11 +4,6 @@
 
 class BytePatch;
 
-namespace P
-{
-	
-}
-
 class CPatchManager {
 public:
 	void Init();

@@ -39,7 +39,7 @@ public:
 		Patch();
 	}
 
-	//BytePatch(LPCWSTR szModuleName, LPCWSTR szPattern, const std::vector<unsigned char>& patch) : BytePatch(g_Pattern.Find(szModuleName, szPattern), patch) { }
+	BytePatch(LPCWSTR szModuleName, LPCWSTR szPattern, const std::vector<unsigned char>& patch) : BytePatch(g_Pattern.Find(szModuleName, szPattern), patch) { }
 
 	void Patch()
 	{

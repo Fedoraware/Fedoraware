@@ -15,7 +15,6 @@
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
 
 #include "SDK/Includes/Enums.h"
-
 #include "Utils/Events/Events.h"
 
 #include "SDK/Discord/include/discord_rpc.h"
@@ -81,6 +80,7 @@ void Initialize()
 	g_CameraWindow.Init();
 	g_HookManager.Init();
 	g_ConVars.Init();
+	g_PatchManager.Init();
 
 	InitRichPresence();
 }

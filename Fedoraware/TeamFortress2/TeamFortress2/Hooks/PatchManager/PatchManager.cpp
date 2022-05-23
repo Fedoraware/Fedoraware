@@ -1,10 +1,16 @@
 #include "PatchManager.h"
 
+#include "../../Utils/Pattern/Pattern.h"
 #include "../../Utils/BytePatch/BytePatch.hpp"
 
 void CPatchManager::Init()
 {
+	Restore();
+	GetVecPatches().clear();
+
 	// Initialize all patches
+
+	// Add them to the patch vector
 }
 
 void CPatchManager::Restore()
@@ -13,4 +19,6 @@ void CPatchManager::Restore()
 	{
 		patch->Restore();
 	}
+
+	GetVecPatches().clear();
 }

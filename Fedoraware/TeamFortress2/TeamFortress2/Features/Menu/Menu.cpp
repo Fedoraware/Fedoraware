@@ -308,6 +308,7 @@ void CMenu::MenuAimbot()
 			}
 			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at feet if target is on the ground");
 			WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.m_Var); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
+			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.m_Var); HelpMarker("Automatically flips your viewmodel if it's beneficial");
 			//WToggle("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
 			//if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
 			//{
@@ -1587,7 +1588,6 @@ void CMenu::MenuMisc()
 				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
-			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.m_Var); HelpMarker("Automatically flips your viewmodel if it's beneficial");
 
 		} EndChild();
 
