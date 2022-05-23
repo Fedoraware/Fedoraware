@@ -644,59 +644,30 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::ViewmodelFlip.m_Var) { return; }
 
-	const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
-	if (!pWeapon) { return; }
-
 	static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
 	static bool defaultValue = cl_flipviewmodels->GetBool();
 
-	// Should we test if a flip would help?
-	bool shouldTestViewmodel = true;
-	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
-	{
-		if (!pEntity || !pEntity->IsAlive() || pEntity == pLocal) { continue; }
-
-		const auto aimAngle = Math::CalcAngle(pLocal->GetEyePosition(), pEntity->GetAbsOrigin());
-
-		// TODO: VisPosFraction or VisPos?
-		/*if (Utils::VisPosFraction(pLocal, Utils::GetShootPos(pLocal, pWeapon, aimAngle), pEntity->GetVecOrigin()))
-		{
-			shouldTestViewmodel = true;
-			break;
-		}*/
-
-		auto shootPos = Utils::GetRealShootPos(pLocal, pWeapon, aimAngle);
-		if (Utils::VisPos(pLocal, pEntity, shootPos, pEntity->GetAbsOrigin()))
-		{
-			shouldTestViewmodel = false;
-			break;
-		}
-	}
-
-	bool keepFlipped = false;
-	// Noone is visible, test if flipping helps
-	if (shouldTestViewmodel)
-	{
-		cl_flipviewmodels->SetValue(!cl_flipviewmodels->GetBool());
-		for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
-		{
-			if (!pEntity || !pEntity->IsAlive() || pEntity == pLocal) { continue; }
-
-			const auto aimAngle = Math::CalcAngle(pLocal->GetEyePosition(), pEntity->GetAbsOrigin());
-
-			auto shootPos = Utils::GetRealShootPos(pLocal, pWeapon, aimAngle);
-			if (Utils::VisPos(pLocal, pEntity, shootPos, pEntity->GetAbsOrigin()))
-			{
-				keepFlipped = true;
-				break;
-			}
-		}
-	}
-
-	// Reset status as noone is in range
-	if (!keepFlipped && shouldTestViewmodel)
+	const auto aimTarget = I::EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
+	if (g_GlobalInfo.m_nCurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetAbsOrigin()))
 	{
 		cl_flipviewmodels->SetValue(defaultValue);
+		return;
+	}
+
+	const auto localAngles = I::Engine->GetViewAngles();
+	const auto aimAngles = Math::CalcAngle(pLocal->GetAbsOrigin(), aimTarget->GetAbsOrigin());
+
+	auto mod = [](float a, float n) {
+		return a - std::floor(a / n) * n;
+	};
+
+	const auto angleDelta = mod((aimAngles.y - localAngles.y) + 180.f, 360.f) - 180.f;
+	if (angleDelta < 0.f)
+	{
+		cl_flipviewmodels->SetValue(true);
+	} else
+	{
+		cl_flipviewmodels->SetValue(false);
 	}
 }
 

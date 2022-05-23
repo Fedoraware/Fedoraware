@@ -1587,7 +1587,7 @@ void CMenu::MenuMisc()
 				WSlider("Rage Retry health", &Vars::Misc::RageRetryHealth.m_Var, 1, 99, "%d%%"); HelpMarker("Minimum health percentage that will cause a retry");
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.m_Var); HelpMarker("Causes an infinite respawn/spectator time");
-			WToggle("Viewmodel flip", &Vars::Misc::ViewmodelFlip.m_Var); HelpMarker("Automatically flips your viewmodel if helpful");
+			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.m_Var); HelpMarker("Automatically flips your viewmodel if it's beneficial");
 
 		} EndChild();
 

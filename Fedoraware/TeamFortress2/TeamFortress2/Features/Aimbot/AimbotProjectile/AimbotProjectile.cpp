@@ -977,9 +977,9 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			{
 				// We found a target point! Get the closest point possible...
 				float currentRadius = splashRadius;
-				while (currentRadius > 30.f && Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
+				while (currentRadius > 10.f && Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
 				{
-					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 30.f);
+					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 10.f);
 					currentRadius -= 10.f;
 				}
 
