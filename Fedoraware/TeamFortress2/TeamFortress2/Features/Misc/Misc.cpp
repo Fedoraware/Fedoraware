@@ -648,14 +648,14 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static bool defaultValue = cl_flipviewmodels->GetBool();
 
 	const auto aimTarget = I::EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
-	if (g_GlobalInfo.m_nCurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetAbsOrigin()))
+	if (g_GlobalInfo.m_nCurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter()))
 	{
 		cl_flipviewmodels->SetValue(defaultValue);
 		return;
 	}
 
 	const auto localAngles = I::Engine->GetViewAngles();
-	const auto aimAngles = Math::CalcAngle(pLocal->GetAbsOrigin(), aimTarget->GetAbsOrigin());
+	const auto aimAngles = Math::CalcAngle(pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter());
 
 	auto mod = [](float a, float n) {
 		return a - std::floor(a / n) * n;

@@ -973,6 +973,14 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		for (int i = 0; i < 315; i += 45)
 		{
 			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), splashRadius);
+
+			CGameTrace trace = {};
+			CTraceFilterWorldAndPropsOnly traceFilter = {};
+
+			// Don't predict through walls
+			Utils::Trace(scanPos, pEntity->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
+			if (trace.flFraction < 0.99f && trace.entity != pEntity) { continue; }
+
 			if (Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
 			{
 				// We found a target point! Get the closest point possible...
