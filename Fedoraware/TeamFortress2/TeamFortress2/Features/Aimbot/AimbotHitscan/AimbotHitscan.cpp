@@ -499,11 +499,11 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 					vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, -89.0f, -180.0f, -91.0f);
 				}
 
-				vAngle.y = Math::RemapValClamped(vAngle.y, 0.0f, 180.0f, -180.0f, 0.0f);
+				vAngle.y -= 180.f;
 			}
 			if (g_GlobalInfo.m_bAttacking)
 			{
-				Utils::FixMovement(pCmd, vAngle);
+				Utils::FixMovement(pCmd, pCmd->viewangles);
 				pCmd->viewangles = vAngle;
 			}
 			break;
