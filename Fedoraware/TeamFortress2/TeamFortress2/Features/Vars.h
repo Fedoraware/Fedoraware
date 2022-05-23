@@ -589,6 +589,7 @@ namespace Vars
 		inline CVar<bool> PingReducer{ false, L"Ping reducer" };
 		inline CVar<int> PingTarget{ 0, L"Ping target" };
 		inline CVar<bool> ExtendFreeze{ false, L"Infinite Respawn" };
+		inline CVar<bool> ViewmodelFlip{ false };
 		inline CVar<int> AutoJoin{ false, L"Auto Join" };
 		inline CVar<bool> KillstreakWeapon{ false, L"Killstreak Weapon" };
 		inline CVar<bool> PartyNetworking{ false, L"Party Networking" };

@@ -23,7 +23,7 @@ class BytePatch {
 public:
 	BytePatch(DWORD address, const std::vector<unsigned char>& patch)
 	{
-		assert(address != 0);
+		//assert(address != 0);
 
 		PatchAddress = reinterpret_cast<PVOID>(address);
 		PatchBytes = patch;
@@ -39,7 +39,7 @@ public:
 		Patch();
 	}
 
-	BytePatch(LPCWSTR szModuleName, LPCWSTR szPattern, const std::vector<unsigned char>& patch) : BytePatch(g_Pattern.Find(szModuleName, szPattern), patch) { }
+	//BytePatch(LPCWSTR szModuleName, LPCWSTR szPattern, const std::vector<unsigned char>& patch) : BytePatch(g_Pattern.Find(szModuleName, szPattern), patch) { }
 
 	void Patch()
 	{
