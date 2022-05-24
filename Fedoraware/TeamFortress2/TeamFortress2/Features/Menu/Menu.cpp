@@ -259,7 +259,6 @@ void CMenu::MenuAimbot()
 			SectionTitle("Backtrack");
 			WToggle("Active", &Vars::Backtrack::Enabled.m_Var); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::Aim.m_Var); HelpMarker("Aimbot aims at the last tick if visible");
-			WSlider("Latency###BTLatency", &Vars::Backtrack::Latency.m_Var, 0.f, 1000.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 		} EndChild();
 
 		/* Column 2 */

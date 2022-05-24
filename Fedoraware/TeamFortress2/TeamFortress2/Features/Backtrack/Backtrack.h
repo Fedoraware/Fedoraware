@@ -52,14 +52,7 @@ public:
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
 
-	// Latency
-	void UpdateDatagram();
-	float GetLatency();
-	void AdjustPing(INetChannel* netChannel);
-
 	std::vector<TickRecord> Record[64];
-	float LatencyRampup = 0.f;
-	std::deque<CIncomingSequence> Sequences;
 };
 
 inline CBacktrack g_Backtrack;

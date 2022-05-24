@@ -62,7 +62,6 @@ namespace Vars
 	{
 		inline CVar<bool> Enabled{ false, L"Backtrack master switch" };
 		inline CVar<bool> Aim{ false, L"Aims at last tick" };
-		inline CVar<float> Latency{ 0.f };
 
 		namespace BtChams
 		{
