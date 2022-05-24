@@ -1,7 +1,5 @@
 #include "Backtrack.h"
 
-constexpr int MAX_BACKTRACK_TICKS = 80;
-
 static float LerpTime()
 {
 	static ConVar* updaterate = I::CVars->FindVar("cl_updaterate");
@@ -90,7 +88,7 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 								                 pEntity->GetHitboxSet()));
 						}
 
-						if (Record[i].size() > MAX_BACKTRACK_TICKS)
+						while (Record[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
 						{
 							Record[i].pop_back();
 						}
