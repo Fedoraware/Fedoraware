@@ -65,33 +65,36 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 			{
 				if (CBaseEntity* pEntity = I::EntityList->GetClientEntity(i))
 				{
-					if (!(pEntity->GetDormant() && pEntity->IsAlive()))
+					if (pEntity->GetDormant() || !pEntity->IsAlive())
 					{
-						int hitbox = HITBOX_HEAD;
+						Record[i].clear();
+						continue;
+					}
 
-						matrix3x4 bones[128];
+					int hitbox = HITBOX_HEAD;
 
-						pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
+					matrix3x4 bones[128];
 
-						model_t* model = pEntity->GetModel();
-						studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+					pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
 
-						if (model && hdr)
-						{
-							Record[i].insert(Record[i].begin(), TickRecord(
-								                 pEntity->GetSimulationTime(),
-								                 pEntity->GetHitboxPos(hitbox),
-								                 pEntity->GetAbsOrigin(),
-								                 *reinterpret_cast<BoneMatrixes*>(&bones),
-								                 model,
-								                 hdr,
-								                 pEntity->GetHitboxSet()));
-						}
+					model_t* model = pEntity->GetModel();
+					studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
 
-						while (Record[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
-						{
-							Record[i].pop_back();
-						}
+					if (model && hdr)
+					{
+						Record[i].insert(Record[i].begin(), TickRecord(
+							                 pEntity->GetSimulationTime(),
+							                 pEntity->GetHitboxPos(hitbox),
+							                 pEntity->GetAbsOrigin(),
+							                 *reinterpret_cast<BoneMatrixes*>(&bones),
+							                 model,
+							                 hdr,
+							                 pEntity->GetHitboxSet()));
+					}
+
+					while (Record[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
+					{
+						Record[i].pop_back();
 					}
 				}
 			}
