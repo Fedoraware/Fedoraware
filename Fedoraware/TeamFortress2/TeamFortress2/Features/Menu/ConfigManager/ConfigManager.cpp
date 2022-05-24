@@ -697,6 +697,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
 			SAVE_VAR(Vars::Misc::ExtendFreeze);
+			SAVE_VAR(Vars::Misc::ViewmodelFlip);
 			SAVE_VAR(Vars::Misc::AutoJoin);
 			SAVE_VAR(Vars::Misc::KillstreakWeapon);
 			SAVE_VAR(Vars::Misc::PartyNetworking);
@@ -1415,6 +1416,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);
 			LOAD_VAR(Vars::Misc::ExtendFreeze);
+			LOAD_VAR(Vars::Misc::ViewmodelFlip);
 			LOAD_VAR(Vars::Misc::AutoJoin);
 			LOAD_VAR(Vars::Misc::KillstreakWeapon);
 			LOAD_VAR(Vars::Misc::PartyNetworking);

@@ -166,12 +166,11 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 
 void CBacktrack::Run(CUserCmd* pCmd)
 {
-	if (Vars::Backtrack::Enabled.m_Var)
+	if (!Vars::Backtrack::Enabled.m_Var) { return; }
+
+	if (g_EntityCache.m_pLocal && pCmd)
 	{
-		if (g_EntityCache.m_pLocal && pCmd)
-		{
-			Start(pCmd);
-			Calculate(pCmd);
-		}
+		Start(pCmd);
+		Calculate(pCmd);
 	}
 }

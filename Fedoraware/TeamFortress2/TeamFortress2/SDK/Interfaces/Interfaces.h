@@ -103,7 +103,6 @@ namespace I
 	inline ICvar* CVars = nullptr;
 	inline CGlobalVarsBase* GlobalVars = nullptr;
 	inline CEngineVGui* EngineVGui = nullptr;
-	inline int32_t* RandomSeed = nullptr;
 	inline void* DemoPlayer = nullptr;
 	inline IVRenderView* RenderView = nullptr;
 	inline IViewRender* ViewRender = nullptr;
@@ -120,6 +119,10 @@ namespace I
 	inline void* CTFGameMovement = nullptr;
 	inline IAchievementMgr* AchievementMgr = nullptr;
 	inline IViewRenderBeams* ILOVEBEAMS = nullptr;
+
+	// TODO: These do not belong here
+	inline int32_t* RandomSeed = nullptr;
+	inline bool* AllowSecureServers = nullptr;
 }
 
 class CInterfaces

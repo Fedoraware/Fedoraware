@@ -1,4 +1,5 @@
 #include "Hooks/HookManager.h"
+#include "Hooks/PatchManager/PatchManager.h"
 
 #include "Features/Glow/Glow.h"
 #include "Features/Chams/Chams.h"
@@ -14,7 +15,6 @@
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
 
 #include "SDK/Includes/Enums.h"
-
 #include "Utils/Events/Events.h"
 
 #include "SDK/Discord/include/discord_rpc.h"
@@ -80,6 +80,7 @@ void Initialize()
 	g_CameraWindow.Init();
 	g_HookManager.Init();
 	g_ConVars.Init();
+	g_PatchManager.Init();
 
 	InitRichPresence();
 }
@@ -95,6 +96,7 @@ void Uninitialize()
 
 	g_Events.Destroy();
 	g_HookManager.Release();
+	g_PatchManager.Restore();
 
 	ShutdownRichPresence();
 

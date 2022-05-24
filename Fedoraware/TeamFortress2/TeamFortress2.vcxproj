@@ -187,6 +187,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\KeyValues_SetInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_DrawModelExecute.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_ForcedMaterialOverride.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Panel_PaintTraverse.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Prediction_RunCommand.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetAlphaModulation.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\HookManager.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
@@ -297,6 +299,7 @@
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
     <ClInclude Include="TeamFortress2\Hooks\HookManager.h" />
     <ClInclude Include="TeamFortress2\Hooks\MenuHook\MenuHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\PatchManager\PatchManager.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
@@ -741,6 +744,7 @@
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
     <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
+    <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
