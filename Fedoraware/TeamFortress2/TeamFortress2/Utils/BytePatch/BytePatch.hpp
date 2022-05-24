@@ -2,8 +2,8 @@
 #include <vector>
 #include <Windows.h>
 
-// Parts of this have been inspired by cathook
-// TODO: Store these patches somewhere so we can restore them
+// Use the PatchManager to create and manage your patches.
+// Remember to restore all patches before unloading!
 
 class BytePatch {
 	PVOID PatchAddress;

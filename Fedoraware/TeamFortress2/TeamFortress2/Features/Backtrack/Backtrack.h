@@ -47,7 +47,7 @@ struct TickRecord {
 
 class CBacktrack {
 public:
-	bool IsGoodTick(int tick);
+	bool IsGoodTick(int tick) const;
 	void Start(const CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);

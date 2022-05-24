@@ -37,7 +37,7 @@ static float LerpTime()
 	return std::max(interpValue, interpRatioValue / static_cast<float>(updateRateValue));
 }
 
-bool CBacktrack::IsGoodTick(const int tick)
+bool CBacktrack::IsGoodTick(const int tick) const
 {
 	const auto netChannel = I::Engine->GetNetChannelInfo();
 
