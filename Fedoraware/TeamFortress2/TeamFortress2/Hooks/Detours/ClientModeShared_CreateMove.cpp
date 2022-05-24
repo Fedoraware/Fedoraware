@@ -6,6 +6,7 @@
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
+#include "../../Features/AntiHack/FakeLag/FakeLagHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
@@ -219,12 +220,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	g_Misc.RunLate(pCmd);
 	g_Resolver.Update(pCmd);
 	g_Followbot.Run(pCmd);
-
+	g_FLGHandler.onTick(pCmd, g_EntityCache.m_pLocal, pSendPacket);
 
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
 	static int nChoked = 0;
-
 	if (g_GlobalInfo.m_bShouldShift)
 	{
 		*pSendPacket = g_GlobalInfo.m_nShifted == 1;
@@ -232,79 +232,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		if (!*pSendPacket) { nChoked++; }
 		else { nChoked = 0; }
 		if (nChoked > 21) { *pSendPacket = true; }
-	}
-	else
-	{
-		nChoked = 0;
-		const auto& pLocal = g_EntityCache.m_pLocal;
-		static int chockedPackets = 0;
-		static int chockValue = 0;
-		static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
-
-		if (pLocal && pLocal->IsAlive()
-			&& (Vars::Misc::CL_Move::Fakelag.m_Var)
-
-			// Plain: Check fakelag key
-			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 0
-			|| (fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var)
-			|| !Vars::Misc::CL_Move::FakelagOnKey.m_Var)
-
-			// Velocity: Check for minimum velocity
-			&& (Vars::Misc::CL_Move::FakelagMode.m_Var != 2
-			|| (abs(pLocal->GetVelocity().x) + abs(pLocal->GetVelocity().y) + abs(pLocal->GetVelocity().z)) > 20.0f)
-			&& !g_GlobalInfo.m_bForceSendPacket)
-		{
-			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
-			{
-
-				if (!(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) &&
-					!g_GlobalInfo.m_bRecharging &&
-					!g_GlobalInfo.m_nShifted &&
-					!g_GlobalInfo.m_bShouldShift &&
-					!g_GlobalInfo.m_bRechargeQueued)
-				{
-					chockedPackets++;
-
-					if (chockedPackets > chockValue)
-					{
-						if (Vars::Misc::CL_Move::FakelagMode.m_Var == 1)
-						{
-							chockValue = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.
-										  m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
-						}
-						else { chockValue = Vars::Misc::CL_Move::FakelagValue.m_Var; }
-						*pSendPacket = true;
-						g_GlobalInfo.m_bChoking = false;
-						chockedPackets = 0;
-						g_FakeAng.Run(pCmd);
-						g_FakeAng.DrawChams = true;
-					}
-					else
-					{
-						*pSendPacket = false;
-						g_GlobalInfo.m_bChoking = true;
-					}
-				}
-				else
-				{
-					g_FakeAng.Run(pCmd);
-					*pSendPacket = true;
-					g_GlobalInfo.m_bChoking = false;
-					g_FakeAng.DrawChams = true;
-				}
-			}
-		}
-		else if (chockedPackets > 0)	// failsafe
-		{
-			*pSendPacket = true;
-			chockedPackets = 0;
-			g_GlobalInfo.m_bChoking = false;
-		}
-		else
-		{
-			g_GlobalInfo.m_bChoking = false;
-			g_FakeAng.DrawChams = false;
-		}
 	}
 
 	if (g_GlobalInfo.m_nShifted > 0)
