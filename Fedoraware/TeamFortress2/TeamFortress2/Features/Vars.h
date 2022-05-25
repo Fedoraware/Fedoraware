@@ -40,7 +40,6 @@ namespace Vars
 		inline int InputColorBoxW = 30;
 
 		inline bool ModernDesign = false;
-		inline bool BlurBackground = false;
 		inline bool ShowPlayerlist = false;
 
 		namespace Colors

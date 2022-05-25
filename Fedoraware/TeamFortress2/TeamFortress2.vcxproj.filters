@@ -128,7 +128,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelShutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelInit.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Blur\Blur.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LoadWhitelist.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLagHandler.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
@@ -665,7 +664,6 @@
     <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
     <ClInclude Include="TeamFortress2\Features\Followbot\Followbot.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Blur\Blur.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLagHandler.h" />
     <ClInclude Include="TeamFortress2\Hooks\PatchManager\PatchManager.h" />
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
