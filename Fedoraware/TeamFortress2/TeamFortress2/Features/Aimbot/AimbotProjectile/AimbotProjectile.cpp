@@ -234,7 +234,6 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 	return true;
 }
 
-
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
 	auto pNetChannel = I::Engine->GetNetChannelInfo();
@@ -981,13 +980,16 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			CTraceFilterWorldAndPropsOnly traceFilter = {};
 
 			// Check FOV if enabled
-			const Vec3 vAngleTo = Math::CalcAngle(vLocalShootPos, vTargetOrigin);
+			const Vec3 vAngleTo = Math::CalcAngle(vLocalShootPos, scanPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var) { continue; }
 
 			// Don't predict through walls
 			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
+
+			// Don't predict enemies that are visible
+			if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetOrigin)) { continue; }
 
 			if (Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
 			{
