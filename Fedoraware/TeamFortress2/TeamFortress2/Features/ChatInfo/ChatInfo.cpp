@@ -62,7 +62,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const int votingOptions = Vars::Misc::VotingOptions.m_Var;
 				PlayerInfo_t pi{};
 				I::Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				auto voteLine = tfm::format("%s %s voted %s", (pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+				auto voteLine = tfm::format("%s %s voted %s", (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
 				if (votingOptions & static_cast<int>(VoteOption::Text)) // text
 				{
