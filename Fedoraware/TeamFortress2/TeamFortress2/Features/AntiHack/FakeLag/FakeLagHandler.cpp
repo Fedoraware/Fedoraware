@@ -15,6 +15,14 @@ bool FakeLag::flgLogic(int logic, CBaseEntity* pLocal) {
 }
 
 bool FakeLag::isflgAllowed(KeyHelper fakelagKey) {
+	if (chokeCounter > 21) {
+		return false;
+	}
+
+	if (g_GlobalInfo.m_bAttacking) {
+		return false;
+	}
+
 	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var && Vars::Misc::CL_Move::FakelagMode.m_Var == 0) {
 		return false;
 	}
@@ -25,47 +33,42 @@ bool FakeLag::isflgAllowed(KeyHelper fakelagKey) {
 }
 
 void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
-	if (chokeCounter > 21) {
-		chokeCounter = 0;
-		*pSendPacket = true;
-		return;
-	}
-	else {
-		static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
+	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
 
-		if (pLocal && pLocal->IsAlive() && Vars::Misc::CL_Move::Fakelag.m_Var) {
-			if (!isflgAllowed(fakelagKey)) {
-				*pSendPacket = true;
-				return;
-			}
-
-			if (Vars::Misc::CL_Move::FakelagMode.m_Var != 1) {
-				chosenAmount = Vars::Misc::CL_Move::FakelagValue.m_Var;
-			}
-
-			if (chosenAmount > chokeCounter) {
-				*pSendPacket = false;
-				chokeCounter++;
-			}
-			else {
-				*pSendPacket = true;
-				chosenAmount = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
-				chokeCounter = 0;
-				g_FakeAng.Run(pCmd);
-				g_FakeAng.DrawChams = true;
-			}
-
-		}
-		else if (chokeCounter > 0)	// failsafe
-		{
+	if (pLocal && pLocal->IsAlive() && Vars::Misc::CL_Move::Fakelag.m_Var) {
+		if (!isflgAllowed(fakelagKey)) {
 			*pSendPacket = true;
+			g_FakeAng.Run(pCmd);
 			chokeCounter = 0;
-			g_GlobalInfo.m_bChoking = false;
+			return;
 		}
-		else
-		{
-			g_GlobalInfo.m_bChoking = false;
-			g_FakeAng.DrawChams = false;
+
+		if (Vars::Misc::CL_Move::FakelagMode.m_Var != 1) {
+			chosenAmount = Vars::Misc::CL_Move::FakelagValue.m_Var;
 		}
+
+		if (chosenAmount > chokeCounter) {
+			*pSendPacket = false;
+			chokeCounter++;
+		}
+		else {
+			*pSendPacket = true;
+			chosenAmount = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
+			chokeCounter = 0;
+			g_FakeAng.Run(pCmd);
+			g_FakeAng.DrawChams = true;
+		}
+
+	}
+	else if (chokeCounter > 0)	// failsafe
+	{
+		*pSendPacket = true;
+		chokeCounter = 0;
+		g_GlobalInfo.m_bChoking = false;
+	}
+	else
+	{
+		g_GlobalInfo.m_bChoking = false;
+		g_FakeAng.DrawChams = false;
 	}
 }

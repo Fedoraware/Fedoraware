@@ -62,7 +62,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const int votingOptions = Vars::Misc::VotingOptions.m_Var;
 				PlayerInfo_t pi{};
 				I::Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				auto voteLine = tfm::format("%s %s voted %s", (pEntity->GetTeamNum() != pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+				auto voteLine = tfm::format("[FeD] %s %s voted %s", (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
 				if (votingOptions & static_cast<int>(VoteOption::Text)) // text
 				{
@@ -74,7 +74,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
 				{
-					I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), voteLine.c_str());
+					I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & static_cast<int>(VoteOption::Party)) // party
 				{
