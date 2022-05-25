@@ -42,6 +42,18 @@ void CheaterDetection::OnTick() {
 		return;
 	}
 
+	{	// dont scan anybody if we are running at an fps lower than our updaterate
+		static float lastFrameTime = I::GlobalVars->realtime;
+		if (g_ConVars.cl_updaterate && lastFrameTime) {
+			float realFrameTime = I::GlobalVars->realtime - lastFrameTime;
+			int realFPS = static_cast<int>(1.0f / realFrameTime);
+
+			if (realFPS < g_ConVars.cl_updaterate->GetInt()) {
+				return;
+			}
+		}
+	}
+
 	for (const auto& pSuspect : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
 		if (!pSuspect) { continue; }
 		int index = pSuspect->GetIndex();
@@ -77,8 +89,8 @@ void CheaterDetection::OnTick() {
 
 			if (I::GlobalVars->tickcount) {
 				if (isTickCountManipulated(currenttickcount)) {
-					//I::CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, tfm::format("[%s] DEVIATION(%i)", pi.name, abs(I::GlobalVars->tickcount - currenttickcount)).c_str());
 					if (UserData[friendsID].areTicksSafe) {
+						I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("[Debug] Tickcount for player %s was detected as changing.", pi.name).c_str());
 						strikes[friendsID] += 1;
 						UserData[friendsID].areTicksSafe = false;
 					}
