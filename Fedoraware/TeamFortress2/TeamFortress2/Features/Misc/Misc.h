@@ -17,6 +17,7 @@ class CMisc {
 
 public:
 	void Run(CUserCmd* pCmd);
+	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void RunLate(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();

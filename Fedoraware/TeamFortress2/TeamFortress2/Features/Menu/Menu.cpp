@@ -308,6 +308,7 @@ void CMenu::MenuAimbot()
 			}
 			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var); HelpMarker("Will aim at feet if target is on the ground");
 			WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.m_Var); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
+			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.m_Var); HelpMarker("Automatically flips your viewmodel if it's beneficial");
 			//WToggle("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
 			//if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
 			//{
@@ -1869,6 +1870,7 @@ void CMenu::DebugMenu()
 		const auto& pLocal = g_EntityCache.m_pLocal;
 
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.m_Var);
+		Checkbox("Allow secure servers", I::AllowSecureServers);
 
 		// Particle tester
 		if (CollapsingHeader("Particles"))

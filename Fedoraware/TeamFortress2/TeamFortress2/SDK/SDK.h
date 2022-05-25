@@ -63,6 +63,8 @@
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
+#include <optional>
+
 #include "../Utils/CRC/CRC.h"
 
 #pragma warning (disable : 6385)
@@ -767,7 +769,93 @@ namespace Utils
 			}
 		}
 		return 0;
-	};
+	}
+
+	// Credits to cathook
+	__inline Vec3 GetRealShootPos(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& angle)
+	{
+		Vec3 eyePos = pLocal->GetEyePosition();
+		if (!pLocal || g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE)
+		{
+			return eyePos;
+		}
+
+		Vec3 forward, right, up;
+		Math::AngleVectors(angle, &forward, &right, &up);
+
+		std::optional<Vec3> vecOffset;
+		switch (pWeapon->GetClassID())
+		{
+			// Rocket launchers and flare guns/Pomson
+		case ETFClassID::CTFRocketLauncher:
+		case ETFClassID::CTFRocketLauncher_Mortar:
+		case ETFClassID::CTFRocketLauncher_AirStrike:
+		case ETFClassID::CTFRocketLauncher_DirectHit:
+		case ETFClassID::CTFFlareGun:
+		case ETFClassID::CTFFlareGun_Revenge:
+		case ETFClassID::CTFDRGPomson:
+			// The original shoots centered, rest doesn't
+			if (pWeapon->GetItemDefIndex() != Soldier_m_TheOriginal)
+			{
+				vecOffset = Vector(23.5f, 12.0f, -3.0f);
+				// Ducking changes offset
+				if (pLocal->GetFlags() & FL_DUCKING)
+				{
+					vecOffset->z = 8.0f;
+				}
+			}
+			break;
+
+			// Pill/Pipebomb launchers
+		case ETFClassID::CTFPipebombLauncher:
+		case ETFClassID::CTFGrenadeLauncher:
+		case ETFClassID::CTFCannon:
+			vecOffset = Vector(16.0f, 8.0f, -6.0f);
+			break;
+
+		case ETFClassID::CTFSyringeGun:
+			vecOffset = Vector(16.0f, 6.0f, -8.0f);
+			break;
+
+			// Huntsman
+		case ETFClassID::CTFCompoundBow:
+			vecOffset = Vector(23.5f, -8.0f, -3.0f);
+			break;
+
+		default:
+			break;
+		}
+
+		// We have an offset for the weapon that may or may not need to be applied
+		if (vecOffset)
+		{
+			// Game checks 2000 HU infront of eye for a hit
+			static constexpr float DISTANCE = 2000.0f;
+
+			const Vec3 endpos = eyePos + (forward * DISTANCE);
+			CGameTrace trace;
+			CTraceFilterHitscan traceFilter = {};
+			Ray_t traceRay;
+
+			traceFilter.pSkip = pLocal;
+			traceRay.Init(eyePos, endpos);
+			I::EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
+
+			if (trace.flFraction <= 0.1f)
+			{
+				if (pWeapon->IsFlipped()) { vecOffset->y *= -1.f; }
+
+				eyePos = eyePos + (forward * vecOffset->x) + (right * vecOffset->y) + (up * vecOffset->z);
+				// They decided to do this weird stuff for the pomson instead of fixing their offset
+				if (pWeapon->GetClassID() == ETFClassID::CTFDRGPomson)
+				{
+					eyePos.z -= 13.f;
+				}
+			}
+		}
+
+		return eyePos;
+	}
 }
 
 namespace Particles {

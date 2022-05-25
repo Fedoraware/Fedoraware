@@ -9,7 +9,6 @@ class CPattern
 
 public:
 	DWORD Find(LPCWSTR szModuleName, LPCWSTR szPattern);
-	void BytePatch(PVOID address, const char* bytes, int length);
 };
 
 inline CPattern g_Pattern;

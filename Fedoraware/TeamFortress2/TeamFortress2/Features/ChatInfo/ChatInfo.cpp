@@ -179,12 +179,12 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 							// this will be detected by fedoraware and lmaobox easily.
 							// use 0xCA7 if you want to make more bots do the thing,
 							// most only care about being marked.
-							if (Vars::Misc::BeCat.m_Var)
+							/*if (Vars::Misc::BeCat.m_Var)
 							{
 								auto kv = new KeyValues("AchievementEarned");
 								kv->SetInt("achievementID", 0xCA8);
 								I::Engine->ServerCmdKeyValues(kv);
-							}
+							}*/
 						}
 
 						KnownBots[info.friendsID] = true;

@@ -39,6 +39,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 	{
 		AutoPeek(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
+		ViewmodelFlip(pCmd, pLocal);
 	}
 }
 
@@ -636,6 +637,37 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		{
 			pCmd->buttons |= IN_DUCK;
 		}
+	}
+}
+
+void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (!Vars::Misc::ViewmodelFlip.m_Var || g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE) { return; }
+
+	static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
+	static bool defaultValue = cl_flipviewmodels->GetBool();
+
+	const auto aimTarget = I::EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
+	if (g_GlobalInfo.m_nCurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter()))
+	{
+		cl_flipviewmodels->SetValue(defaultValue);
+		return;
+	}
+
+	const auto localAngles = I::Engine->GetViewAngles();
+	const auto aimAngles = Math::CalcAngle(pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter());
+
+	auto mod = [](float a, float n) {
+		return a - std::floor(a / n) * n;
+	};
+
+	const auto angleDelta = mod((aimAngles.y - localAngles.y) + 180.f, 360.f) - 180.f;
+	if (angleDelta < -5.f)
+	{
+		cl_flipviewmodels->SetValue(true);
+	} else if (angleDelta > 5.f)
+	{
+		cl_flipviewmodels->SetValue(false);
 	}
 }
 
