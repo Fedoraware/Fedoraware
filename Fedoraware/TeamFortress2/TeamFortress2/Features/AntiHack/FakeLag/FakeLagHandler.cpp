@@ -38,6 +38,7 @@ void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
 	if (pLocal && pLocal->IsAlive() && Vars::Misc::CL_Move::Fakelag.m_Var) {
 		if (!isflgAllowed(fakelagKey)) {
 			*pSendPacket = true;
+			g_FakeAng.Run(pCmd);
 			chokeCounter = 0;
 			return;
 		}

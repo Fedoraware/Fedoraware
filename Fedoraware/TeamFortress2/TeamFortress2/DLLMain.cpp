@@ -59,7 +59,7 @@ void UpdateRichPresence()
 
 void Loaded()
 {
-	I::CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware (homemade) Loaded!\n"));
+	I::CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	I::Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	const int dxLevel = I::CVars->FindVar("mat_dxlevel")->GetInt();
