@@ -166,7 +166,6 @@
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Blur\Blur.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
@@ -300,7 +299,6 @@
     <ClInclude Include="TeamFortress2\Features\Discord\Discord.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Blur\Blur.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Components.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\DTBar\DTBar.h" />

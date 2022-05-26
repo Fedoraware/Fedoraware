@@ -21,6 +21,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		Freecam(pCmd, pLocal);
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
+		ViewmodelFlip(pCmd, pLocal);
 	}
 
 	ChatSpam();
@@ -39,7 +40,6 @@ void CMisc::RunLate(CUserCmd* pCmd)
 	{
 		AutoPeek(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
-		ViewmodelFlip(pCmd, pLocal);
 	}
 }
 
