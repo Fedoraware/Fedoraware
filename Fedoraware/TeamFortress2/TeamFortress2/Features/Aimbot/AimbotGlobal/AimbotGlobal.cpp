@@ -83,7 +83,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
 	{
 		const int nCond = pTarget->GetCond();
-		if (!(nCond & TFCond_Milked) && !(nCond & TFCond_Jarated) && !(nCond & TFCond_CloakFlicker))
+		if (nCond & ~(TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
 		{
 			return true;
 		}
