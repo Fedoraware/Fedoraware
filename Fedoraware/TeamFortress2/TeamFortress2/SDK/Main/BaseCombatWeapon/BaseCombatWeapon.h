@@ -313,3 +313,11 @@ public: //Everything else, lol
 
 	CHudTexture* GetWeaponIcon();
 };
+
+class CTFWeaponInvis : public CBaseCombatWeapon
+{
+public:
+	__inline bool HasFeignDeath() {
+		return static_cast<bool>(GetVFunc<bool(__thiscall*)(CTFWeaponInvis*)>(this, 522));
+	}
+};

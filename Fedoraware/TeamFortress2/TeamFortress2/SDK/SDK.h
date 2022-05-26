@@ -523,10 +523,12 @@ namespace Utils
 	}
 
 	__inline bool isFeigningDeath(CBaseEntity* pQuery) {
-		CBaseCombatWeapon* slot4 = pQuery->GetWeaponFromSlot(4);
-		if (slot4->GetItemDefIndex() == 59) {
-			if (pQuery->GetFeignDeathReady()) {
-				return true;
+		CTFWeaponInvis* slot4 = reinterpret_cast<CTFWeaponInvis*>(pQuery->GetWeaponFromSlot(4));
+		if (slot4) {
+			if (slot4->GetWeaponID() == TF_WEAPON_INVIS && slot4->HasFeignDeath()) {
+				if (pQuery->GetFeignDeathReady()) {
+					return true;
+				}
 			}
 		}
 		return false;
