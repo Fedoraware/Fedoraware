@@ -42,10 +42,10 @@ void CheaterDetection::OnTick() {
 		return;
 	}
 
-	{	// dont scan anybody if we are running at an fps lower than our updaterate
+	{	// dont scan anybody if we are running at an fps lower than our updaterate (we dont check this against 66 for servers that run at a higher tickrate :D)
 		static float lastFrameTime = I::GlobalVars->realtime;
 		if (g_ConVars.cl_updaterate && lastFrameTime) {
-			float realFrameTime = I::GlobalVars->realtime - lastFrameTime;
+			float realFrameTime = I::GlobalVars->realtime - lastFrameTime; lastFrameTime = I::GlobalVars->realtime;
 			int realFPS = static_cast<int>(1.0f / realFrameTime);
 
 			if (realFPS < g_ConVars.cl_updaterate->GetInt()) {
