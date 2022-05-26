@@ -113,7 +113,7 @@ void CSpyWarning::Run()
 
 			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
 
-			if (vLocalPos.DistTo(vEnemyPos) > 400.0f)
+			if (vLocalPos.DistTo(vEnemyPos) > 700.0f)
 			{
 				continue;
 			}
