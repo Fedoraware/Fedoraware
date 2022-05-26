@@ -245,8 +245,12 @@ void CMenu::MenuAimbot()
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); HelpMarker("Automatically shoot when a target is found");
 			MultiCombo({ "Players", "Buildings", "Stickies"}, {&Vars::Aimbot::Global::AimPlayers.m_Var, &Vars::Aimbot::Global::AimBuildings.m_Var, &Vars::Aimbot::Global::AimStickies.m_Var}, "Aim targets");
 			HelpMarker("Choose which targets the Aimbot should aim at");
-			MultiCombo({ "Invulnerable", "Cloaked", "Friends", "Taunting" }, { &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var, &Vars::Aimbot::Global::IgnoreCloaked.m_Var, &Vars::Aimbot::Global::IgnoreFriends.m_Var, &Vars::Aimbot::Global::IgnoreTaunting.m_Var }, "Ignored targets###HitscanIgnoredTargets");
-			HelpMarker("Choose which targets should be ignored");
+			{
+				static std::vector flagNames{ "Invulnerable", "Cloaked", "Dead Ringer", "Friends", "Taunting" };
+				static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4 };
+				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Global::IgnoreOptions.m_Var, "Ignored targets###AimbotIgnoredTargets");
+				HelpMarker("Choose which targets should be ignored");
+			}
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
 			SectionTitle("Crits");

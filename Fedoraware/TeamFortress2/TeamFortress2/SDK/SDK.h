@@ -522,6 +522,16 @@ namespace Utils
 		return (trace.flFraction > 0.99f);
 	}
 
+	__inline bool isFeigningDeath(CBaseEntity* pQuery) {
+		CBaseCombatWeapon* slot4 = pQuery->GetWeaponFromSlot(4);
+		if (slot4->GetItemDefIndex() == 59) {
+			if (pQuery->GetFeignDeathReady()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	__inline EWeaponType GetWeaponType(CBaseCombatWeapon *pWeapon)
 	{
 		if (!pWeapon)

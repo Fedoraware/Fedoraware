@@ -1074,6 +1074,10 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Bleeding");
 	}
 
+	if (Utils::isFeigningDeath(pEntity)) {
+		szCond.emplace_back(L"Dead Ringer");
+	}
+
 	return szCond;
 }
 

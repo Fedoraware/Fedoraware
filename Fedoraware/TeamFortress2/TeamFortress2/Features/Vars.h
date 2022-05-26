@@ -85,10 +85,8 @@ namespace Vars
 			inline CVar<bool> AimPlayers{ true, L"Aim Players" };
 			inline CVar<bool> AimBuildings{ true, L"Aim Buildings" };
 			inline CVar<bool> AimStickies{ true };
+			inline CVar<int> IgnoreOptions{ 0b01111 };	//taunting, friends, deadringer,cloaked, invul
 			inline CVar<bool> IgnoreInvlunerable{ true, L"Ignore Invulnerable" };
-			inline CVar<bool> IgnoreCloaked{ false, L"Ignore Cloaked" };
-			inline CVar<bool> IgnoreFriends{ true, L"Ignore Friends" };
-			inline CVar<bool> IgnoreTaunting{ true, L"Ignore Taunting" };
 			inline CVar<bool> BAimLethal{ false, L"Body aim if lethal" }; // This is in global cause i remmebered hunterman exists
 			inline CVar<bool> showHitboxes{ true, L"Show Hitboxes" }; // original codenz
 			inline CVar<bool> clearPreviousHitbox{ true, L"Clear Hitboxes" };

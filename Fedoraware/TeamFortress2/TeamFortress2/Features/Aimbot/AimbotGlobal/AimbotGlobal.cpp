@@ -79,8 +79,8 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
 	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
-	if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !pTarget->IsVulnerable()) { return true; }
-	if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pTarget->IsCloaked())
+	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (INVUL) && !pTarget->IsVulnerable()) { return true; }
+	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (CLOAKED) && pTarget->IsCloaked())
 	{
 		const int nCond = pTarget->GetCond();
 		if (nCond & ~(TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
@@ -88,13 +88,16 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 			return true;
 		}
 	}
-	if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && pTarget->IsTaunting()) { return true; }
+
+	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (DEADRINGER) && Utils::isFeigningDeath(pTarget)) { return true; }
+
+	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (TAUNTING) && pTarget->IsTaunting()) { return true; }
 
 	// Special conditions for mediguns
 	if (!hasMedigun)
 	{
 		if (g_GlobalInfo.IsIgnored(pInfo.friendsID)) { return true; }
-		if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+		if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
 	}
 
 	return false;

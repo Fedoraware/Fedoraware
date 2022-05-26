@@ -222,10 +222,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
 				SAVE_VAR(Vars::Aimbot::Global::AimStickies);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
-				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				SAVE_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
 				SAVE_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
@@ -940,10 +937,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
 				LOAD_VAR(Vars::Aimbot::Global::AimStickies);
-				LOAD_VAR(Vars::Aimbot::Global::IgnoreInvlunerable);
-				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
-				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
-				LOAD_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
 				LOAD_VAR(Vars::Aimbot::Global::clearPreviousHitbox);

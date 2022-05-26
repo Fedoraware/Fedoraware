@@ -21,6 +21,14 @@ enum struct ESortMethod {
 	DISTANCE
 };
 
+enum Ignored {
+	INVUL = 1 << 0,
+	CLOAKED = 1 << 1,
+	DEADRINGER = 1 << 2,
+	FRIENDS = 1 << 3,
+	TAUNTING = 1 << 4
+};
+
 struct Target_t {
 	CBaseEntity* m_pEntity = nullptr;
 	ETargetType m_TargetType = ETargetType::UNKNOWN;
