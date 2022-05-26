@@ -12,9 +12,9 @@ MAKE_HOOK(C_BaseEntity_SetAbsVelocity, g_Pattern.Find(L"client.dll", L"55 8B EC 
 	{
 		if (auto pBasePlayer = static_cast<CBaseEntity*>(ecx))
 		{
-			if (G::velFixRecord.find(pBasePlayer) != G::velFixRecord.end())
+			if (G::VelFixRecords.find(pBasePlayer) != G::VelFixRecords.end())
 			{
-				const auto& Record = G::velFixRecord[pBasePlayer];
+				const auto& Record = G::VelFixRecords[pBasePlayer];
 
 				float flSimTimeDelta = pBasePlayer->GetSimulationTime() - Record.m_flSimulationTime;
 

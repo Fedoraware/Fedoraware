@@ -30,15 +30,15 @@ void CEntityCache::Fill()
 			if (!pEntity)
 				continue;
 
-			if (pEntity->GetDormant() && !G::partyPlayerESP.count(pEntity->GetIndex())) {
+			if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex())) {
 				continue;
 			}
 
 			if (pEntity->GetDormant()) {
-				const float lastUpdate = G::partyPlayerESP[pEntity->GetIndex()].LastUpdate;
+				const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
 				if (I::Engine->Time() - lastUpdate <= 5.0f) {
-					pEntity->SetAbsOrigin(G::partyPlayerESP[pEntity->GetIndex()].Location);
-					pEntity->SetVecOrigin(G::partyPlayerESP[pEntity->GetIndex()].Location);
+					pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
+					pEntity->SetVecOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
 				} else {
 					continue;
 				}

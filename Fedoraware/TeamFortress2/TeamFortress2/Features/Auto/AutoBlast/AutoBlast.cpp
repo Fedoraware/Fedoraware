@@ -5,7 +5,7 @@
 
 void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Blast::Active.m_Var || !G::m_bWeaponCanSecondaryAttack)
+	if (!Vars::Triggerbot::Blast::Active.m_Var || !G::WeaponCanSecondaryAttack)
 	{
 		return;
 	}
@@ -17,7 +17,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		return;
 	}
 
-	if (G::m_nCurItemDefIndex == Pyro_m_ThePhlogistinator)
+	if (G::CurItemDefIndex == Pyro_m_ThePhlogistinator)
 	{
 		return;
 	}
@@ -91,10 +91,10 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		{
 			if (Vars::Triggerbot::Blast::Rage.m_Var && Vars::Triggerbot::Blast::Silent.m_Var)
 			{
-				G::m_bSilentTime = true;
+				G::SilentTime = true;
 			}
 
-			G::m_bAttacking = true;
+			G::IsAttacking = true;
 			pCmd->buttons |= IN_ATTACK2;
 		}
 	}

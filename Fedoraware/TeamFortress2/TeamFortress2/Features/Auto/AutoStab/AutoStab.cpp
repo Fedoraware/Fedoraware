@@ -117,7 +117,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (Vars::Triggerbot::Stab::Silent.m_Var)
 		{
 			Utils::FixMovement(pCmd, vAngleTo);
-			G::m_bSilentTime = true;
+			G::SilentTime = true;
 		}
 
 		pCmd->viewangles = vAngleTo;
@@ -137,7 +137,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.m_Var || !G::m_bWeaponCanAttack || pWeapon->GetWeaponID() !=
+	if (!Vars::Triggerbot::Stab::Active.m_Var || !G::WeaponCanAttack || pWeapon->GetWeaponID() !=
 		TF_WEAPON_KNIFE)
 		return;
 
@@ -147,7 +147,7 @@ void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 	else RunLegit(pLocal, pWeapon, pCmd);
 
 	if (pCmd->buttons & IN_ATTACK)
-		G::m_bAttacking = true;
+		G::IsAttacking = true;
 
-	G::m_bAutoBackstabRunning = true;
+	G::AutoBackstabRunning = true;
 }

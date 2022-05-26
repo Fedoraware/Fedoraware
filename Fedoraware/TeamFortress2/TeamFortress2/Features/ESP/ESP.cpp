@@ -475,7 +475,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				x -= 1;
 				static float ratio = 0.0f;
-				int chokeCount = G::chokeMap[nIndex];
+				int chokeCount = G::ChokeMap[nIndex];
 
 				Vec2 position = {static_cast<float>(x) - 2.f - 8.f, static_cast<float>(y + h)};
 				ratio = chokeCount / 22.f;

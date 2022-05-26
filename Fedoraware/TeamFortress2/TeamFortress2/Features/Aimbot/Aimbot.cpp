@@ -7,7 +7,7 @@
 
 bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	if (G::m_bFreecamActive)
+	if (G::FreecamActive)
 		return false;
 
 	if (!Vars::Aimbot::Global::Active.m_Var)
@@ -25,7 +25,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		|| pLocal->IsAGhost())
 		return false;
 
-	switch (G::m_nCurItemDefIndex)
+	switch (G::CurItemDefIndex)
 	{
 	case Soldier_m_RocketJumper:
 	case Demoman_s_StickyJumper: return false;
@@ -55,13 +55,13 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 void CAimbot::Run(CUserCmd* pCmd)
 {
-	G::m_nCurrentTargetIdx = 0;
-	G::m_flCurAimFOV = 0.0f;
-	G::m_vPredictedPos = Vec3();
-	G::m_bHitscanRunning = false;
-	G::m_bHitscanSilentActive = false;
-	G::m_bProjectileSilentActive = false;
-	G::m_vAimPos = Vec3();
+	G::CurrentTargetIdx = 0;
+	G::CurAimFOV = 0.0f;
+	G::PredictedPos = Vec3();
+	G::HitscanRunning = false;
+	G::HitscanSilentActive = false;
+	G::ProjectileSilentActive = false;
+	G::AimPos = Vec3();
 
 	auto pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
 
@@ -79,10 +79,10 @@ void CAimbot::Run(CUserCmd* pCmd)
 
 		SandvichAimbot::IsSandvich();
 		if (SandvichAimbot::bIsSandvich) {
-			G::m_WeaponType = EWeaponType::HITSCAN;
+			G::CurWeaponType = EWeaponType::HITSCAN;
 		}
 
-		switch (G::m_WeaponType)
+		switch (G::CurWeaponType)
 		{
 		case EWeaponType::HITSCAN:
 			{

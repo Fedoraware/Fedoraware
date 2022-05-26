@@ -12,21 +12,21 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 	{
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			G::m_vPunchAngles = Vec3();
+			G::PunchAngles = Vec3();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				// Handle freecam position
-				if (G::m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+				if (G::FreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
 				{
-					pLocal->SetVecOrigin(G::m_vFreecamPos);
-					pLocal->SetAbsOrigin(G::m_vFreecamPos);
+					pLocal->SetVecOrigin(G::FreecamPos);
+					pLocal->SetAbsOrigin(G::FreecamPos);
 				}
 
 				// Remove punch effect
 				if (Vars::Visuals::RemovePunch.m_Var)
 				{
-					G::m_vPunchAngles = pLocal->GetPunchAngles();
+					G::PunchAngles = pLocal->GetPunchAngles();
 					//Store punch angles to be compesnsated for in aim
 					pLocal->ClearPunchAngle(); //Clear punch angles for visual no-recoil
 				}
@@ -64,7 +64,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			G::m_bLocalSpectated = false;
+			G::LocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
@@ -79,7 +79,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 					if (pObservedPlayer == pLocal)
 					{
-						G::m_bLocalSpectated = true;
+						G::LocalSpectated = true;
 						break;
 					}
 				}
@@ -90,7 +90,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 				if (const auto& player = I::EntityList->GetClientEntity(i))
 				{
 					const VelFixRecord record = { player->m_vecOrigin(), player->m_fFlags(), player->GetSimulationTime() };
-					G::velFixRecord[player] = record;
+					G::VelFixRecords[player] = record;
 				}
 			}
 
@@ -100,7 +100,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			if (!G::unloadWndProcHook)
+			if (!G::UnloadWndProcHook)
 			{
 				if (Vars::Visuals::Rain.m_Var > 0)
 				{

@@ -21,55 +21,54 @@ struct Priority {
 
 namespace G
 {
-	inline int m_nCurrentTargetIdx = 0;
-	inline int m_nCurItemDefIndex = 0;
-	inline int m_nWaitForShift = 0;
-	inline int m_nShifted = 0;
-	inline int gNotifCounter = 0;
-	inline int vEyeAngDelay = 25;
-	inline bool m_bWeaponCanHeadShot = false;
-	inline bool m_bWeaponCanAttack = false;
-	inline bool m_bWeaponCanSecondaryAttack = false;
-	inline bool m_bAAActive = false;
-	inline bool m_bFakeShotPitch = false;
-	inline bool m_bHitscanSilentActive = false;
-	inline bool m_bAvoidingBackstab = false;
-	inline bool m_bProjectileSilentActive = false; //flamethrower
-	inline bool m_bAutoBackstabRunning = false;
-	inline bool m_bHitscanRunning = false;
-	inline bool m_bSilentTime = false;
-	inline bool m_bLocalSpectated = false;
-	inline bool m_bRollExploiting = false;
-	inline bool m_bAttacking = false; // this is only used by aimbot, and is also set to false at the start of a lot of functions, this is not reliable
-	inline bool m_bModulateWorld = true;
-	inline bool m_bShouldShift = false;
-	inline bool m_bRecharging = false;
-	inline bool m_bRechargeQueued = false;
-	inline bool m_bForceSendPacket = false; // might not actually be useful 
-	inline bool m_bForceChokePacket = false; // might not actually be useful 
-	inline bool m_bChoking = false; // might not actually be useful 
-	inline bool unloadWndProcHook = false;
-	inline float m_flCurAimFOV = 0.0f;
-	inline Vec3 m_vPredictedPos = {};
-	inline Vec3 m_vAimPos = {};
-	inline VMatrix m_WorldToProjection = {};
-	inline Vec3 m_vViewAngles = {};
-	inline Vec3 m_vRealViewAngles = {};
-	inline Vec3 m_vFakeViewAngles = {};
-	inline Vec3 m_vPunchAngles = {};
-	inline Vec3 linearPredLine = {}; //clubpenguin > tf2
-	inline EWeaponType m_WeaponType = {};
-	inline CUserCmd* currentUserCmd{ nullptr };
-	inline CUserCmd* lateUserCmd{ nullptr };
-	inline std::map < CBaseEntity*, VelFixRecord> velFixRecord;
-	inline std::vector<Vec3> predBeforeLines;
-	inline std::vector<Vec3> predFutureLines;
-	inline bool m_bFreecamActive = false;
-	inline Vec3 m_vFreecamPos = {};
-	inline std::map<int, DormantData> partyPlayerESP;		// < Player-Index, DormantData >
-	inline std::map<int, int> chokeMap;
-	inline int tickShiftQueue = 0; // Ticks that shouls be shifted
-	inline bool m_bDrawingStaticProps = false;
+	inline int CurrentTargetIdx = 0;
+	inline int CurItemDefIndex = 0;
+	inline int WaitForShift = 0;
+	inline int ShiftedTicks = 0;
+	inline int NotifyCounter = 0;
+	inline int EyeAngDelay = 25;
+	inline bool WeaponCanHeadShot = false;
+	inline bool WeaponCanAttack = false;
+	inline bool WeaponCanSecondaryAttack = false;
+	inline bool AAActive = false;
+	inline bool FakeShotPitch = false;
+	inline bool HitscanSilentActive = false;
+	inline bool AvoidingBackstab = false;
+	inline bool ProjectileSilentActive = false; //flamethrower
+	inline bool AutoBackstabRunning = false;
+	inline bool HitscanRunning = false;
+	inline bool SilentTime = false;
+	inline bool LocalSpectated = false;
+	inline bool RollExploiting = false;
+	inline bool IsAttacking = false; // this is only used by aimbot, and is also set to false at the start of a lot of functions, this is not reliable
+	inline bool ShouldShift = false;
+	inline bool Recharging = false;
+	inline bool RechargeQueued = false;
+	inline bool ForceSendPacket = false; // might not actually be useful 
+	inline bool ForceChokePacket = false; // might not actually be useful 
+	inline bool IsChoking = false; // might not actually be useful 
+	inline bool UnloadWndProcHook = false;
+	inline float CurAimFOV = 0.0f;
+	inline Vec3 PredictedPos = {};
+	inline Vec3 AimPos = {};
+	inline VMatrix WorldToProjection = {};
+	inline Vec3 ViewAngles = {};
+	inline Vec3 RealViewAngles = {};
+	inline Vec3 FakeViewAngles = {};
+	inline Vec3 PunchAngles = {};
+	inline Vec3 LinearPredLine = {}; //clubpenguin > tf2
+	inline EWeaponType CurWeaponType = {};
+	inline CUserCmd* CurrentUserCmd{ nullptr };
+	inline CUserCmd* LastUserCmd{ nullptr };
+	inline std::map < CBaseEntity*, VelFixRecord> VelFixRecords;
+	inline std::vector<Vec3> PredBeforeLines;
+	inline std::vector<Vec3> PredFutureLines;
+	inline bool FreecamActive = false;
+	inline Vec3 FreecamPos = {};
+	inline std::map<int, DormantData> PartyPlayerESP;		// < Player-Index, DormantData >
+	inline std::map<int, int> ChokeMap;
+	inline int TickShiftQueue = 0; // Ticks that shouls be shifted
+	inline bool DrawingStaticProps = false;
 	inline std::map<uint32_t, Priority> PlayerPriority;
 
 	inline bool IsIgnored(uint32_t friendsID)

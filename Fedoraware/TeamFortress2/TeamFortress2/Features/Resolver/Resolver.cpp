@@ -4,7 +4,7 @@ static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
 bool CResolver::ShouldAutoResolve()
 {
-	if (G::m_WeaponType == EWeaponType::PROJECTILE) { return false; }
+	if (G::CurWeaponType == EWeaponType::PROJECTILE) { return false; }
 
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
@@ -152,12 +152,12 @@ void CResolver::Update(CUserCmd* pCmd)
 	// Log shots
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (G::m_nCurrentTargetIdx != 0 &&
-			(pCmd->buttons & IN_ATTACK || G::m_bAttacking) &&
+		if (G::CurrentTargetIdx != 0 &&
+			(pCmd->buttons & IN_ATTACK || G::IsAttacking) &&
 			pLocal->GetActiveWeapon()->CanShoot(pLocal))
 		{
 			PlayerInfo_t temp{};
-			const int aimTarget = G::m_nCurrentTargetIdx;
+			const int aimTarget = G::CurrentTargetIdx;
 			
 			if (const auto& pTarget = I::EntityList->GetClientEntity(aimTarget))
 			{

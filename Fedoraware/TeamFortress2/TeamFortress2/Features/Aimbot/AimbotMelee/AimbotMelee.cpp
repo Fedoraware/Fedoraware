@@ -72,7 +72,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 	if (sortMethod == ESortMethod::FOV)
 	{
-		G::m_flCurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
+		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 	}
 
 	g_AimbotGlobal.m_vecTargets.clear();
@@ -182,7 +182,7 @@ bool CAimbotMelee::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Ta
 
 void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 {
-	vAngle -= G::m_vPunchAngles;
+	vAngle -= G::PunchAngles;
 	Math::ClampAngles(vAngle);
 
 	switch (Vars::Aimbot::Melee::AimMethod.m_Var)
@@ -245,7 +245,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 {
 	if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 	{
-		return ((pCmd->buttons & IN_ATTACK) && G::m_bWeaponCanAttack);
+		return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 	}
 	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick
 		* 2.0f;
@@ -253,7 +253,7 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 
 void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Aimbot::Global::Active.m_Var || G::m_bAutoBackstabRunning || pWeapon->GetWeaponID() ==
+	if (!Vars::Aimbot::Global::Active.m_Var || G::AutoBackstabRunning || pWeapon->GetWeaponID() ==
 		TF_WEAPON_KNIFE)
 	{
 		return;
@@ -267,11 +267,11 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 	if (GetTarget(pLocal, pWeapon, target) && bShouldAim)
 	{
-		G::m_nCurrentTargetIdx = target.m_pEntity->GetIndex();
+		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
 
 		if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)
 		{
-			G::m_vAimPos = target.m_vPos;
+			G::AimPos = target.m_vPos;
 		}
 
 		if (ShouldSwing(pLocal, pWeapon, pCmd, target))
@@ -279,19 +279,19 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			pCmd->buttons |= IN_ATTACK;
 		}
 
-		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && G::m_nShifted && !G::m_nWaitForShift)
+		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
 		{
 			if ((Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
 				(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
 				(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
 			{
-				if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && G::m_nShifted))
+				if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && G::ShiftedTicks))
 				{
-					G::m_bShouldShift = false;
+					G::ShouldShift = false;
 				}
 				else
 				{
-					G::m_bShouldShift = true;
+					G::ShouldShift = true;
 				}
 			}
 		}
@@ -300,7 +300,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 		if (bIsAttacking)
 		{
-			G::m_bAttacking = true;
+			G::IsAttacking = true;
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)
@@ -308,7 +308,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			if (bIsAttacking)
 			{
 				Aim(pCmd, target.m_vAngleTo);
-				G::m_bSilentTime = true;
+				G::SilentTime = true;
 			}
 		}
 

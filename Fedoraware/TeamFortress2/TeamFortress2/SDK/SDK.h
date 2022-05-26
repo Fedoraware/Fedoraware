@@ -204,7 +204,7 @@ namespace Utils
 
 	__inline bool W2S(const Vec3 &vOrigin, Vec3 &m_vScreen)
 	{
-		const matrix3x4 &worldToScreen = G::m_WorldToProjection.As3x4();
+		const matrix3x4 &worldToScreen = G::WorldToProjection.As3x4();
 
 		float w = worldToScreen[3][0] * vOrigin[0] + worldToScreen[3][1] * vOrigin[1] + worldToScreen[3][2] * vOrigin[2] + worldToScreen[3][3];
 		m_vScreen.z = 0;
@@ -311,7 +311,7 @@ namespace Utils
 				out = Colors::Invuln;
 		}
 
-		if (pEntity->GetIndex() == G::m_nCurrentTargetIdx)
+		if (pEntity->GetIndex() == G::CurrentTargetIdx)
 			out = Colors::Target;
 
 		return out;
@@ -576,12 +576,12 @@ namespace Utils
 			}
 		}
 
-		if (G::m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_Sandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_Fishcake ||
-			G::m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
-			G::m_nCurItemDefIndex == Heavy_s_SecondBanana) {
+		if (G::CurItemDefIndex == Heavy_s_RoboSandvich ||
+			G::CurItemDefIndex == Heavy_s_Sandvich ||
+			G::CurItemDefIndex == Heavy_s_FestiveSandvich ||
+			G::CurItemDefIndex == Heavy_s_Fishcake ||
+			G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
+			G::CurItemDefIndex == Heavy_s_SecondBanana) {
 			return EWeaponType::HITSCAN;
 		}
 
@@ -598,14 +598,14 @@ namespace Utils
 		if (pWeapon->GetSlot() == SLOT_MELEE)
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
-				return ((pCmd->buttons & IN_ATTACK) && G::m_bWeaponCanAttack);
+				return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 
 			else return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
 		}
 
 		else
 		{
-			if (G::m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
+			if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{
 				static bool bLoading = false;
 
@@ -647,7 +647,7 @@ namespace Utils
 				{
 					static float flThrowTime = 0.0f;
 
-					if ((pCmd->buttons & IN_ATTACK) && G::m_bWeaponCanAttack && !flThrowTime)
+					if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack && !flThrowTime)
 						flThrowTime = I::GlobalVars->curtime + 0.16f;
 
 					if (flThrowTime && I::GlobalVars->curtime >= flThrowTime) {
@@ -658,7 +658,7 @@ namespace Utils
 				}
 				default:
 				{
-					if ((pCmd->buttons & IN_ATTACK) && G::m_bWeaponCanAttack)
+					if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack)
 					{ return true; }
 					break;
 				}
@@ -787,7 +787,7 @@ namespace Utils
 	__inline Vec3 GetRealShootPos(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& angle)
 	{
 		Vec3 eyePos = pLocal->GetEyePosition();
-		if (!pLocal || G::m_WeaponType != EWeaponType::PROJECTILE)
+		if (!pLocal || G::CurWeaponType != EWeaponType::PROJECTILE)
 		{
 			return eyePos;
 		}

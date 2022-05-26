@@ -9,14 +9,14 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 
 	if (!Vars::Misc::CL_Move::Enabled.m_Var)
 	{
-		G::m_nShifted = 0;
+		G::ShiftedTicks = 0;
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	if (G::m_nShifted > Vars::Misc::CL_Move::DTTicks.m_Var)
+	if (G::ShiftedTicks > Vars::Misc::CL_Move::DTTicks.m_Var)
 	{
-		G::m_nShifted -= 1;
-		oClMove(accumulated_extra_samples, (G::m_nShifted == Vars::Misc::CL_Move::DTTicks.m_Var + 1));
+		G::ShiftedTicks -= 1;
+		oClMove(accumulated_extra_samples, (G::ShiftedTicks == Vars::Misc::CL_Move::DTTicks.m_Var + 1));
 	} // pCode
 
 	// pSpeedhack
@@ -24,7 +24,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	{
 		int SpeedTicks{ 0 };
 		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
-		G::m_nShifted = 0;
+		G::ShiftedTicks = 0;
 
 		while (SpeedTicks < SpeedTicksDesired)
 		{
@@ -37,52 +37,52 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.m_Var };
 
 	// Clear tick shift queue
-	if (G::m_nShifted && !G::m_bRecharging && G::tickShiftQueue > 0)
+	if (G::ShiftedTicks && !G::Recharging && G::TickShiftQueue > 0)
 	{
-		while (G::tickShiftQueue > 0 && G::m_nShifted > 0)
+		while (G::TickShiftQueue > 0 && G::ShiftedTicks > 0)
 		{
-			oClMove(accumulated_extra_samples, (G::tickShiftQueue == 1));
-			G::m_nShifted--;
-			G::tickShiftQueue--;
+			oClMove(accumulated_extra_samples, (G::TickShiftQueue == 1));
+			G::ShiftedTicks--;
+			G::TickShiftQueue--;
 		}
 		return;
 	}
 
-	if (G::m_bRechargeQueued && !G::m_bChoking)
+	if (G::RechargeQueued && !G::IsChoking)
 	{
 		// probably perfect method of waiting to ensure we don't mess with fakelag
-		G::m_bRechargeQueued = false; // see relevant code @clientmodehook
-		G::m_bRecharging = true;
-		G::tickShiftQueue = 0;
+		G::RechargeQueued = false; // see relevant code @clientmodehook
+		G::Recharging = true;
+		G::TickShiftQueue = 0;
 	}
-	else if (G::m_bRecharging && (G::m_nShifted < Vars::Misc::CL_Move::DTTicks.m_Var))
+	else if (G::Recharging && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.m_Var))
 	{
-		G::m_bForceSendPacket = true; // force uninterrupted connection with server
-		G::m_nShifted++; // add ticks to tick counter
-		G::m_nWaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.m_Var; // set wait condition (genius)
+		G::ForceSendPacket = true; // force uninterrupted connection with server
+		G::ShiftedTicks++; // add ticks to tick counter
+		G::WaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.m_Var; // set wait condition (genius)
 		return; // this recharges
 	}
 	else if (rechargeKey.Down())
 	{
 		// queue recharge
-		G::m_bForceSendPacket = true;
-		G::m_bRechargeQueued = true;
+		G::ForceSendPacket = true;
+		G::RechargeQueued = true;
 	}
 	else
 	{
-		G::m_bRecharging = false; // if we are unable to recharge, don't
+		G::Recharging = false; // if we are unable to recharge, don't
 	}
 
 	oClMove(accumulated_extra_samples,
-			(G::m_bShouldShift && !G::m_nWaitForShift) ? true : bFinalTick);
+			(G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
 
-	if (G::m_nWaitForShift && Vars::Misc::CL_Move::WaitForDT.m_Var)
+	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.m_Var)
 	{
-		G::m_nWaitForShift--;
+		G::WaitForShift--;
 		return;
 	}
 
-	if (G::lateUserCmd != nullptr)
+	if (G::LastUserCmd != nullptr)
 	{
 		// Shift if attacking normally
 		if (Vars::Misc::CL_Move::NotInAir.m_Var)
@@ -91,32 +91,32 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 			{
 				if (pLocal->IsOnGround())
 				{
-					G::m_bShouldShift = G::m_bShouldShift
+					G::ShouldShift = G::ShouldShift
 						? true
-						: G::lateUserCmd->buttons & IN_ATTACK;
+						: G::LastUserCmd->buttons & IN_ATTACK;
 				}
 				else
 				{
-					G::m_bShouldShift = false;
+					G::ShouldShift = false;
 				}
 			}
 		}
 		else
 		{
-			G::m_bShouldShift = G::m_bShouldShift
+			G::ShouldShift = G::ShouldShift
 				? true
-				: G::lateUserCmd->buttons & IN_ATTACK;
+				: G::LastUserCmd->buttons & IN_ATTACK;
 		}
 	}
 
 
 	if (!pLocal)
 	{
-		G::m_nShifted = 0; // we do not have charge if we do not exist
+		G::ShiftedTicks = 0; // we do not have charge if we do not exist
 		return;
 	}
 
-	if (G::m_bShouldShift && !G::m_nWaitForShift)
+	if (G::ShouldShift && !G::WaitForShift)
 	{
 		if (
 			(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
@@ -125,15 +125,15 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
 		// 2 - Disable on key 
 		{
-			while (G::m_nShifted > 0)
+			while (G::ShiftedTicks > 0)
 			{
-				oClMove(accumulated_extra_samples, (G::m_nShifted == 1));
-				G::m_nShifted--;
+				oClMove(accumulated_extra_samples, (G::ShiftedTicks == 1));
+				G::ShiftedTicks--;
 				//G::m_bForceSendPacket = true;
 			}
 			I::Engine->FireEvents();
-			G::m_nWaitForShift = DT_WAIT_CALLS;
+			G::WaitForShift = DT_WAIT_CALLS;
 		}
-		G::m_bShouldShift = false;
+		G::ShouldShift = false;
 	}
 }

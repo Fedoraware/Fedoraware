@@ -19,14 +19,14 @@ bool FakeLag::isflgAllowed(KeyHelper fakelagKey) {
 		return false;
 	}
 
-	if (G::m_bAttacking) {
+	if (G::IsAttacking) {
 		return false;
 	}
 
 	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var && Vars::Misc::CL_Move::FakelagMode.m_Var == 0) {
 		return false;
 	}
-	if (G::m_nShifted || G::m_bRechargeQueued) {
+	if (G::ShiftedTicks || G::RechargeQueued) {
 		return false;
 	}
 	return true;
@@ -64,11 +64,11 @@ void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
 	{
 		*pSendPacket = true;
 		chokeCounter = 0;
-		G::m_bChoking = false;
+		G::IsChoking = false;
 	}
 	else
 	{
-		G::m_bChoking = false;
+		G::IsChoking = false;
 		g_FakeAng.DrawChams = false;
 	}
 }

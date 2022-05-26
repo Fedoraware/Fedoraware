@@ -88,7 +88,7 @@ void Initialize()
 void Uninitialize()
 {
 	I::Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_hacked02.mp3");
-	G::unloadWndProcHook = true;
+	G::UnloadWndProcHook = true;
 	Vars::Visuals::SkyboxChanger.m_Var = false;
 	Vars::Visuals::ThirdPerson.m_Var = false;
 

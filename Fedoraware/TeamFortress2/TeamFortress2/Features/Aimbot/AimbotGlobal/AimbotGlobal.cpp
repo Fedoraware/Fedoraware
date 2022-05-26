@@ -8,12 +8,12 @@ namespace SandvichAimbot
 
 	void IsSandvich()
 	{
-		bIsSandvich = (G::m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_Sandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
-			G::m_nCurItemDefIndex == Heavy_s_Fishcake ||
-			G::m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
-			G::m_nCurItemDefIndex == Heavy_s_SecondBanana);
+		bIsSandvich = (G::CurItemDefIndex == Heavy_s_RoboSandvich ||
+			G::CurItemDefIndex == Heavy_s_Sandvich ||
+			G::CurItemDefIndex == Heavy_s_FestiveSandvich ||
+			G::CurItemDefIndex == Heavy_s_Fishcake ||
+			G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
+			G::CurItemDefIndex == Heavy_s_SecondBanana);
 	}
 
 	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
@@ -31,7 +31,7 @@ namespace SandvichAimbot
 			Math::ClampAngles(angle);
 			pCmd->viewangles = angle;
 			pCmd->buttons |= IN_ATTACK2;
-			G::m_bHitscanSilentActive = true;
+			G::HitscanSilentActive = true;
 		}
 	}
 }
