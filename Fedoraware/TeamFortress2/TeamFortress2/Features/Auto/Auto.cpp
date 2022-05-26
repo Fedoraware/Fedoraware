@@ -34,7 +34,7 @@ void CAuto::Run(CUserCmd* pCmd)
 		I::Engine->ClientCmd_Unrestricted(_("lastdisguise"));
 	}
 
-	g_GlobalInfo.m_bAutoBackstabRunning = false;
+	G::m_bAutoBackstabRunning = false;
 	g_AutoStab.m_bShouldDisguise = false;
 
 	const auto pLocal = g_EntityCache.m_pLocal;

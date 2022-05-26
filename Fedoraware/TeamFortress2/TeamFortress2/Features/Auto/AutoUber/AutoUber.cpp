@@ -149,7 +149,7 @@ int ChargeCount()
 {
 	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
 	{
-		if (g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator) { return pWeapon->GetUberCharge() / 0.25f; }
+		if (G::m_nCurItemDefIndex == Medic_s_TheVaccinator) { return pWeapon->GetUberCharge() / 0.25f; }
 		return pWeapon->GetUberCharge() / 1.f;
 	}
 	return 1;
@@ -243,7 +243,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 {
 	if (!Vars::Triggerbot::Uber::Active.m_Var || //Not enabled, return
 		pWeapon->GetWeaponID() != TF_WEAPON_MEDIGUN || //Not medigun, return
-		g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheKritzkrieg || //Kritzkrieg,  return
+		G::m_nCurItemDefIndex == Medic_s_TheKritzkrieg || //Kritzkrieg,  return
 		ChargeCount() < 1) //Not charged
 		return;
 
@@ -253,7 +253,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		m_flHealth = static_cast<float>(pLocal->GetHealth());
 		m_flMaxHealth = static_cast<float>(pLocal->GetMaxHealth());
 
-		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator)
+		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && G::m_nCurItemDefIndex == Medic_s_TheVaccinator)
 		{
 			// Auto vaccinator
 			bool shouldPop = false;
@@ -296,7 +296,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		m_flHealth = static_cast<float>(pTarget->GetHealth());
 		m_flMaxHealth = static_cast<float>(pTarget->GetMaxHealth());
 
-		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && g_GlobalInfo.m_nCurItemDefIndex == Medic_s_TheVaccinator)
+		if (Vars::Triggerbot::Uber::AutoVacc.m_Var && G::m_nCurItemDefIndex == Medic_s_TheVaccinator)
 		{
 			// Auto vaccinator
 			bool shouldPop = false;

@@ -55,7 +55,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			{
 				VMatrix worldToView = {}, viewToProjection = {}, worldToPixels = {};
 				I::RenderView->GetMatricesForView(viewSetup, &worldToView, &viewToProjection,
-															&g_GlobalInfo.m_WorldToProjection, &worldToPixels);
+															&G::m_WorldToProjection, &worldToPixels);
 			}
 		}
 
@@ -72,16 +72,16 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
 
-				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !g_GlobalInfo.m_vPredictedPos.IsZero())
+				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !G::m_vPredictedPos.IsZero())
 				{
 					if (Vars::Visuals::MoveSimLine.m_Var)
 					{
-						for (size_t i = 0; i < g_GlobalInfo.predFutureLines.size(); i++)
+						for (size_t i = 0; i < G::predFutureLines.size(); i++)
 						{
 							Vec3 vScreenpast, vScreenfuture;
-							if (Utils::W2S(g_GlobalInfo.predBeforeLines.at(i), vScreenpast))
+							if (Utils::W2S(G::predBeforeLines.at(i), vScreenpast))
 							{
-								if (Utils::W2S(g_GlobalInfo.predFutureLines.at(i), vScreenfuture))
+								if (Utils::W2S(G::predFutureLines.at(i), vScreenfuture))
 								{
 									g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
 												{ Vars::Aimbot::Projectile::PredictionColor });
@@ -92,13 +92,13 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 				else
 				{
-					if (!g_GlobalInfo.m_vPredictedPos.IsZero())
+					if (!G::m_vPredictedPos.IsZero())
 					{
 						if (Vars::Visuals::AimPosSquare.m_Var)
 						{
 							Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
-							if (Utils::W2S(g_GlobalInfo.linearPredLine, vProjAimStart) && Utils::W2S(
-								g_GlobalInfo.m_vPredictedPos, vProjAimEnd))
+							if (Utils::W2S(G::linearPredLine, vProjAimStart) && Utils::W2S(
+								G::m_vPredictedPos, vProjAimEnd))
 							{
 								g_Draw.Line(
 									vProjAimStart.x,
@@ -126,7 +126,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 							static Color_t color1, color2;
 
-							if (g_GlobalInfo.m_nWaitForShift)
+							if (G::m_nWaitForShift)
 							{
 								color1 = Colors::DTBarIndicatorsCharging.startColour;
 								color2 = Colors::DTBarIndicatorsCharging.endColour;
@@ -144,7 +144,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 								const float dtOffset = g_ScreenSize.c - (maxWidth / 2);
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
-								tickWidth = (g_GlobalInfo.m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
+								tickWidth = (G::m_nShifted * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
 								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
 
 								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2) + 49, maxWidth + 2,
@@ -160,7 +160,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 							{
 								g_DTBar.Run();
 								// put this here so we don't move menu if we r using something else, no biggie
-								const float rratio = (static_cast<float>(g_GlobalInfo.m_nShifted) / static_cast<float>(
+								const float rratio = (static_cast<float>(G::m_nShifted) / static_cast<float>(
 									Vars::Misc::CL_Move::DTTicks.m_Var));
 								static float ratio = 0.f;
 								ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
@@ -188,19 +188,19 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 								g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff,
 											  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT,
 											  _(L"CHARGE"));
-								if (g_GlobalInfo.m_nShifted == 0) // no charge no money
+								if (G::m_nShifted == 0) // no charge no money
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 												  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE,
 												  _(L"NO CHARGE"));
 								}
-								else if (g_GlobalInfo.m_bRecharging && (g_GlobalInfo.m_nWaitForShift || ratio < 1)) // charging 
+								else if (G::m_bRecharging && (G::m_nWaitForShift || ratio < 1)) // charging 
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 												  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE,
 												  _(L"CHARGING"));
 								}
-								else if (!g_GlobalInfo.m_nWaitForShift || ratio != 1) // activates when ready
+								else if (!G::m_nWaitForShift || ratio != 1) // activates when ready
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 												  nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE,
@@ -406,12 +406,12 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 
 				//Current Active Aimbot FOV
-				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
+				if (Vars::Visuals::AimFOVAlpha.m_Var && G::m_flCurAimFOV)
 				{
 					if (const auto& pLocal = g_EntityCache.m_pLocal)
 					{
 						const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
-						const float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
+						const float flR = tanf(DEG2RAD(G::m_flCurAimFOV) / 2.0f)
 							/ tanf(
 							DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var) ? 30.0f : flFOV) /
 							2.0f) * g_ScreenSize.w;
@@ -444,10 +444,10 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 					if (Utils::W2S(vOrigin, vScreen1))
 					{
 						constexpr auto distance = 50.f;
-						if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, g_GlobalInfo.m_vRealViewAngles.y, distance), vScreen2))
+						if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::m_vRealViewAngles.y, distance), vScreen2))
 							g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
 
-						if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, g_GlobalInfo.m_vFakeViewAngles.y, distance), vScreen2))
+						if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::m_vFakeViewAngles.y, distance), vScreen2))
 							g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
 					}
 				}

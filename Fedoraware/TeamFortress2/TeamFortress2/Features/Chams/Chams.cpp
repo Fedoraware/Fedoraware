@@ -132,7 +132,7 @@ void CChams::Render()
 Chams_t FetchChams(CBaseEntity* pEntity) {
 	if (pEntity)
 	{
-		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
+		if (pEntity->GetIndex() == G::m_nCurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
 			return Vars::Chams::Players::Target;
 		}
 		if (pEntity == g_EntityCache.m_pLocal) {
@@ -153,7 +153,7 @@ Chams_t FetchChams(CBaseEntity* pEntity) {
 Chams_t FetchChams(CBaseObject* pBuilding) {
 	if (const auto pEntity = pBuilding->GetOwner())
 	{
-		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
+		if (pEntity->GetIndex() == G::m_nCurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
 			return Vars::Chams::Buildings::Target;
 		}
 		if (pEntity->GetIndex() == g_EntityCache.m_pLocal->GetIndex()) {

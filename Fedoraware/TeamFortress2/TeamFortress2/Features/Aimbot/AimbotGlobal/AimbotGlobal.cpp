@@ -8,12 +8,12 @@ namespace SandvichAimbot
 
 	void IsSandvich()
 	{
-		bIsSandvich = (g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
-			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_Sandvich ||
-			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
-			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_Fishcake ||
-			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
-			g_GlobalInfo.m_nCurItemDefIndex == Heavy_s_SecondBanana);
+		bIsSandvich = (G::m_nCurItemDefIndex == Heavy_s_RoboSandvich ||
+			G::m_nCurItemDefIndex == Heavy_s_Sandvich ||
+			G::m_nCurItemDefIndex == Heavy_s_FestiveSandvich ||
+			G::m_nCurItemDefIndex == Heavy_s_Fishcake ||
+			G::m_nCurItemDefIndex == Heavy_s_TheDalokohsBar ||
+			G::m_nCurItemDefIndex == Heavy_s_SecondBanana);
 	}
 
 	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
@@ -31,7 +31,7 @@ namespace SandvichAimbot
 			Math::ClampAngles(angle);
 			pCmd->viewangles = angle;
 			pCmd->buttons |= IN_ATTACK2;
-			g_GlobalInfo.m_bHitscanSilentActive = true;
+			G::m_bHitscanSilentActive = true;
 		}
 	}
 }
@@ -96,7 +96,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	// Special conditions for mediguns
 	if (!hasMedigun)
 	{
-		if (g_GlobalInfo.IsIgnored(pInfo.friendsID)) { return true; }
+		if (G::IsIgnored(pInfo.friendsID)) { return true; }
 		if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
 	}
 

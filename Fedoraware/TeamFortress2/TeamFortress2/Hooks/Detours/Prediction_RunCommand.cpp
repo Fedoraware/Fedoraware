@@ -29,11 +29,11 @@ MAKE_HOOK(Prediction_RunCommand, Utils::GetVFuncPtr(I::Prediction, 17), void, __
 		const int backupTick = pEntity->GetTickBase();
 		const float curtimeBackup = I::GlobalVars->curtime;
 
-		if (Vars::Misc::CL_Move::Doubletap.m_Var && g_GlobalInfo.m_bShouldShift)
+		if (Vars::Misc::CL_Move::Doubletap.m_Var && G::m_bShouldShift)
 		{
-			if (pCmd->command_number == g_GlobalInfo.lateUserCmd->command_number)
+			if (pCmd->command_number == G::lateUserCmd->command_number)
 			{
-				pEntity->SetTickBase(CalculateTick(I::ClientState->chokedcommands + g_GlobalInfo.m_nShifted + 1,
+				pEntity->SetTickBase(CalculateTick(I::ClientState->chokedcommands + G::m_nShifted + 1,
 										pEntity));
 				I::GlobalVars->curtime = TICKS_TO_TIME(pEntity->GetTickBase());
 			}
@@ -41,9 +41,9 @@ MAKE_HOOK(Prediction_RunCommand, Utils::GetVFuncPtr(I::Prediction, 17), void, __
 
 		Hook.Original<FN>()(ecx, edx, pEntity, pCmd, pMoveHelper);
 
-		if (Vars::Misc::CL_Move::Doubletap.m_Var && g_GlobalInfo.m_bShouldShift)
+		if (Vars::Misc::CL_Move::Doubletap.m_Var && G::m_bShouldShift)
 		{
-			if (pCmd->command_number == g_GlobalInfo.lateUserCmd->command_number)
+			if (pCmd->command_number == G::lateUserCmd->command_number)
 			{
 				pEntity->SetTickBase(backupTick);
 				I::GlobalVars->curtime = curtimeBackup;

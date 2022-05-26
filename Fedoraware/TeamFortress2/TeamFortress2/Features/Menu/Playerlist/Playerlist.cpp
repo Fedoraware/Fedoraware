@@ -123,7 +123,7 @@ void CPlayerList::Render()
 							{
 								/* Priority */
 								ImGui::PushItemWidth(70.f);
-								ImGui::Combo("###Priority", &g_GlobalInfo.PlayerPriority[Player.FriendsID].Mode, priorityModes, IM_ARRAYSIZE(priorityModes));
+								ImGui::Combo("###Priority", &G::PlayerPriority[Player.FriendsID].Mode, priorityModes, IM_ARRAYSIZE(priorityModes));
 								ImGui::PopItemWidth();
 								break;
 							}

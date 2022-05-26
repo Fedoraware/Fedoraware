@@ -29,7 +29,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 
 				if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
-				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && g_GlobalInfo.m_bWeaponCanHeadShot && Trace.hitbox !=
+				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && G::m_bWeaponCanHeadShot && Trace.hitbox !=
 					HITBOX_HEAD)
 					return false;
 
@@ -87,7 +87,7 @@ bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		{
 		case CLASS_SNIPER:
 			{
-				if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped())
+				if (!G::m_bWeaponCanHeadShot && pLocal->IsScoped())
 					return false;
 
 				break;
@@ -95,9 +95,9 @@ bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 		case CLASS_SPY:
 			{
-				if (!g_GlobalInfo.m_bWeaponCanHeadShot)
+				if (!G::m_bWeaponCanHeadShot)
 				{
-					if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex ==
+					if (G::m_nCurItemDefIndex == Spy_m_TheAmbassador || G::m_nCurItemDefIndex ==
 						Spy_m_FestiveAmbassador)
 						return false;
 				}
@@ -117,7 +117,7 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 	if (!Vars::Triggerbot::Shoot::Active.m_Var)
 		return;
 
-	if (Vars::Aimbot::Global::AutoShoot.m_Var && g_GlobalInfo.m_bHitscanRunning)
+	if (Vars::Aimbot::Global::AutoShoot.m_Var && G::m_bHitscanRunning)
 		return;
 
 	if (!pLocal
@@ -128,7 +128,7 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 		|| pLocal->IsInBumperKart())
 		return;
 
-	if (g_GlobalInfo.m_WeaponType != EWeaponType::HITSCAN)
+	if (G::m_WeaponType != EWeaponType::HITSCAN)
 		return;
 
 	float fSimTime = 0.0f;
@@ -137,10 +137,10 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 	{
 		pCmd->buttons |= IN_ATTACK;
 
-		if (g_GlobalInfo.m_bWeaponCanAttack)
-			g_GlobalInfo.m_bAttacking = true;
+		if (G::m_bWeaponCanAttack)
+			G::m_bAttacking = true;
 
-		if (fSimTime && Vars::Misc::DisableInterpolation.m_Var && g_GlobalInfo.m_bWeaponCanAttack)
+		if (fSimTime && Vars::Misc::DisableInterpolation.m_Var && G::m_bWeaponCanAttack)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(fSimTime
 				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.

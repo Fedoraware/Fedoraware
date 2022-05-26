@@ -173,12 +173,12 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Thirdperson angles
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
 		{
-			I::Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
+			I::Prediction->SetLocalViewAngles(G::m_vRealViewAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 				{
-					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
+					pAnimState->m_flCurrentFeetYaw = G::m_vRealViewAngles.y;
 				}
 			}
 		}

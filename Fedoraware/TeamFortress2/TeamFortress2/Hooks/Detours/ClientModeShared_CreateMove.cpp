@@ -40,7 +40,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
+		if (G::m_bShouldShift && G::m_nShifted > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
 		{
 			if (vStartOrigin.IsZero())
 			{
@@ -74,9 +74,9 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bool, __fastcall,
 		  void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
-	g_GlobalInfo.m_bSilentTime = false;
-	g_GlobalInfo.m_bAttacking = false;
-	g_GlobalInfo.m_bFakeShotPitch = false;
+	G::m_bSilentTime = false;
+	G::m_bAttacking = false;
+	G::m_bFakeShotPitch = false;
 
 	if (!pCmd || !pCmd->command_number)
 	{
@@ -103,7 +103,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	g_GlobalInfo.currentUserCmd = pCmd;
+	G::currentUserCmd = pCmd;
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
@@ -113,25 +113,25 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
-			if (g_GlobalInfo.m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
-				g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+			if (G::m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
+				G::m_nWaitForShift = DT_WAIT_CALLS;
 
-			g_GlobalInfo.m_nCurItemDefIndex = nItemDefIndex;
-			g_GlobalInfo.m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
-			g_GlobalInfo.m_bWeaponCanAttack = pWeapon->CanShoot(pLocal);
-			g_GlobalInfo.m_bWeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
-			g_GlobalInfo.m_WeaponType = Utils::GetWeaponType(pWeapon);
-			g_GlobalInfo.m_bAttacking = Utils::IsAttacking(pCmd, pWeapon);
+			G::m_nCurItemDefIndex = nItemDefIndex;
+			G::m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
+			G::m_bWeaponCanAttack = pWeapon->CanShoot(pLocal);
+			G::m_bWeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
+			G::m_WeaponType = Utils::GetWeaponType(pWeapon);
+			G::m_bAttacking = Utils::IsAttacking(pCmd, pWeapon);
 
 			if (pWeapon->GetSlot() != SLOT_MELEE)
 			{
 				if (pWeapon->IsInReload())
-					g_GlobalInfo.m_bWeaponCanAttack = true;
+					G::m_bWeaponCanAttack = true;
 
-				if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheBeggarsBazooka)
+				if (G::m_nCurItemDefIndex != Soldier_m_TheBeggarsBazooka)
 				{
 					if (pWeapon->GetClip1() == 0)
-						g_GlobalInfo.m_bWeaponCanAttack = false;
+						G::m_bWeaponCanAttack = false;
 				}
 			}
 
@@ -147,19 +147,19 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 		if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var)
 		{
-			if (!pLocal->IsAlive() && g_GlobalInfo.m_nShifted)
+			if (!pLocal->IsAlive() && G::m_nShifted)
 			{
-				g_GlobalInfo.m_bRecharging = true;
+				G::m_bRecharging = true;
 			}
 		}
 
 		if (Vars::Misc::CL_Move::AutoRecharge.m_Var)
 		{
-			if (g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_bShouldShift)
+			if (G::m_nShifted && !G::m_bShouldShift)
 			{
 				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons == 0))
 				{
-					g_GlobalInfo.m_bRecharging = true;
+					G::m_bRecharging = true;
 				}
 			}
 		}
@@ -187,7 +187,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 				v = -1.0f * v;
 			}
 
-			g_GlobalInfo.m_bRollExploiting = true;
+			G::m_bRollExploiting = true;
 		}
 
 		if (Vars::Misc::Roll.m_Var == 2)
@@ -222,19 +222,19 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	g_Followbot.Run(pCmd);
 	g_FLGHandler.onTick(pCmd, g_EntityCache.m_pLocal, pSendPacket);
 
-	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
+	G::m_vViewAngles = pCmd->viewangles;
 
 	static int nChoked = 0;
-	if (g_GlobalInfo.m_bShouldShift)
+	if (G::m_bShouldShift)
 	{
-		*pSendPacket = g_GlobalInfo.m_nShifted == 1;
+		*pSendPacket = G::m_nShifted == 1;
 
 		if (!*pSendPacket) { nChoked++; }
 		else { nChoked = 0; }
 		if (nChoked > 21) { *pSendPacket = true; }
 	}
 
-	if (g_GlobalInfo.m_nShifted > 0)
+	if (G::m_nShifted > 0)
 	{
 		g_FakeAng.DrawChams = false;
 	}
@@ -285,7 +285,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	static bool bWasSet = false;
 
-	if (g_GlobalInfo.m_bSilentTime)
+	if (G::m_bSilentTime)
 	{
 		*pSendPacket = false;
 		bWasSet = true;
@@ -303,27 +303,27 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		}
 	}
 
-	g_GlobalInfo.vEyeAngDelay++; // Used for the return delay in the viewmodel aimbot
-	g_GlobalInfo.lateUserCmd = pCmd;
-	if (g_GlobalInfo.m_bForceSendPacket)
+	G::vEyeAngDelay++; // Used for the return delay in the viewmodel aimbot
+	G::lateUserCmd = pCmd;
+	if (G::m_bForceSendPacket)
 	{
 		*pSendPacket = true;
-		g_GlobalInfo.m_bForceSendPacket = false;
+		G::m_bForceSendPacket = false;
 	} // if we are trying to force update do this lol
-	else if (g_GlobalInfo.m_bForceChokePacket)
+	else if (G::m_bForceChokePacket)
 	{
 		*pSendPacket = false;
-		g_GlobalInfo.m_bForceChokePacket = false;
+		G::m_bForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
 
-	if (g_GlobalInfo.m_bSilentTime ||
-		g_GlobalInfo.m_bAAActive ||
-		g_GlobalInfo.m_bFakeShotPitch ||
-		g_GlobalInfo.m_bHitscanSilentActive ||
-		g_GlobalInfo.m_bAvoidingBackstab ||
-		g_GlobalInfo.m_bProjectileSilentActive ||
-		g_GlobalInfo.m_bRollExploiting)
+	if (G::m_bSilentTime ||
+		G::m_bAAActive ||
+		G::m_bFakeShotPitch ||
+		G::m_bHitscanSilentActive ||
+		G::m_bAvoidingBackstab ||
+		G::m_bProjectileSilentActive ||
+		G::m_bRollExploiting)
 	{
 		return false;
 	}

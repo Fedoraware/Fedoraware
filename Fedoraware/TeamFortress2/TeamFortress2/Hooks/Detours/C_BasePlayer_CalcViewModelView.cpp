@@ -6,22 +6,22 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B 
 	static Vec3 m_vEyeAngDelayed;
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (pLocal->IsAlive() && !g_GlobalInfo.m_vAimPos.IsZero() && Vars::Visuals::AimbotViewmodel.m_Var)
+		if (pLocal->IsAlive() && !G::m_vAimPos.IsZero() && Vars::Visuals::AimbotViewmodel.m_Var)
 		{
-			if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE)
+			if (G::m_WeaponType == EWeaponType::PROJECTILE)
 			{
-				vEyeAngles = Math::CalcAngle(vEyePosition, g_GlobalInfo.m_vPredictedPos);
+				vEyeAngles = Math::CalcAngle(vEyePosition, G::m_vPredictedPos);
 			}
 			else
 			{
-				vEyeAngles = Math::CalcAngle(vEyePosition, g_GlobalInfo.m_vAimPos);
+				vEyeAngles = Math::CalcAngle(vEyePosition, G::m_vAimPos);
 			}
 			m_vEyeAngDelayed = vEyeAngles;
-			g_GlobalInfo.vEyeAngDelay = 0;
+			G::vEyeAngDelay = 0;
 		}
 		else if (pLocal->IsAlive())
 		{
-			if (g_GlobalInfo.vEyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
+			if (G::vEyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
 			// looks hot ty senator for the idea
 			else { vEyeAngles = I::Engine->GetViewAngles(); }
 		}

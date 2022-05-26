@@ -26,7 +26,7 @@ bool CCritHack::ShouldCrit()
 {
 	static KeyHelper critKey{ &Vars::CritHack::CritKey.m_Var };
 	if (critKey.Down()) { return true; }
-	if (g_GlobalInfo.m_WeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
+	if (G::m_WeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
 
 	return false;
 }
@@ -102,7 +102,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 void CCritHack::Draw()
 {
 	if (!IsEnabled()) { return; }
-	if (!g_GlobalInfo.currentUserCmd) { return; }
+	if (!G::currentUserCmd) { return; }
 	if (!Vars::CritHack::indicators.m_Var) { return; }
 
 	const auto& pLocal = g_EntityCache.m_pLocal;

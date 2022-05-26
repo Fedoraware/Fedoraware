@@ -12,21 +12,21 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 	{
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			g_GlobalInfo.m_vPunchAngles = Vec3();
+			G::m_vPunchAngles = Vec3();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				// Handle freecam position
-				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+				if (G::m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
 				{
-					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
-					pLocal->SetAbsOrigin(g_GlobalInfo.m_vFreecamPos);
+					pLocal->SetVecOrigin(G::m_vFreecamPos);
+					pLocal->SetAbsOrigin(G::m_vFreecamPos);
 				}
 
 				// Remove punch effect
 				if (Vars::Visuals::RemovePunch.m_Var)
 				{
-					g_GlobalInfo.m_vPunchAngles = pLocal->GetPunchAngles();
+					G::m_vPunchAngles = pLocal->GetPunchAngles();
 					//Store punch angles to be compesnsated for in aim
 					pLocal->ClearPunchAngle(); //Clear punch angles for visual no-recoil
 				}
@@ -64,7 +64,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			g_GlobalInfo.m_bLocalSpectated = false;
+			G::m_bLocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
@@ -79,7 +79,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 					if (pObservedPlayer == pLocal)
 					{
-						g_GlobalInfo.m_bLocalSpectated = true;
+						G::m_bLocalSpectated = true;
 						break;
 					}
 				}
@@ -90,7 +90,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 				if (const auto& player = I::EntityList->GetClientEntity(i))
 				{
 					const VelFixRecord record = { player->m_vecOrigin(), player->m_fFlags(), player->GetSimulationTime() };
-					g_GlobalInfo.velFixRecord[player] = record;
+					G::velFixRecord[player] = record;
 				}
 			}
 
@@ -100,7 +100,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			if (!g_GlobalInfo.unloadWndProcHook)
+			if (!G::unloadWndProcHook)
 			{
 				if (Vars::Visuals::Rain.m_Var > 0)
 				{
