@@ -5,6 +5,6 @@
 MAKE_HOOK(ViewRender_LevelShutdown, Utils::GetVFuncPtr(I::ViewRender, 2), void, __fastcall,
 		  void* ecx, void* edx)
 {
-	g_Visuals.ClearMaterialHandles();
+	F::Visuals.ClearMaterialHandles();
 	Hook.Original<FN>()(ecx, edx);
 }

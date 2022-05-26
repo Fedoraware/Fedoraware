@@ -51,4 +51,4 @@ public:
 	std::vector<Target_t> m_vecTargets = {};
 };
 
-inline CAimbotGlobal g_AimbotGlobal;
+ADD_FEATURE(CAimbotGlobal, AimbotGlobal)

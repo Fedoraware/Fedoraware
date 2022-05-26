@@ -32,7 +32,7 @@ void CRadar::DrawRadar()
 	//If menu is open, check for input and draw the titlebar.
 	//The titlebar also indicates where we can drag / move the radar.
 	int offset = 0;
-	if (g_Menu.IsOpen)
+	if (F::Menu.IsOpen)
 	{
 		//A quick notify, common sense but I made it by accident:
 		//If on drawing, it's important to update position first before drawing

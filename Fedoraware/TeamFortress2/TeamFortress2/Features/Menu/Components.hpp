@@ -28,14 +28,14 @@ namespace ImGui
 				SetTooltip(desc);
 			} else
 			{
-				g_Menu.FeatureHint = desc;
+				F::Menu.FeatureHint = desc;
 			}
 		}
 	}
 
 	__inline bool IconButton(const char* icon)
 	{
-		PushFont(g_Menu.IconFont);
+		PushFont(F::Menu.IconFont);
 		TextUnformatted(icon);
 		const bool pressed = IsItemClicked();
 		PopFont();
@@ -45,20 +45,20 @@ namespace ImGui
 	__inline void SectionTitle(const char* title, float yOffset = 0)
 	{
 		Dummy({ 0, yOffset });
-		PushFont(g_Menu.SectionFont);
+		PushFont(F::Menu.SectionFont);
 		const ImVec2 titleSize = CalcTextSize(title);
 		SetCursorPosX((GetWindowSize().x - titleSize.x) * .5f);
 		Text(title);
 		PopFont();
 
 		const auto widgetPos = GetCursorScreenPos();
-		GradientRect(&g_Menu.MainGradient, { widgetPos.x, widgetPos.y - 2 }, GetColumnWidth(), 3);
+		GradientRect(&F::Menu.MainGradient, { widgetPos.x, widgetPos.y - 2 }, GetColumnWidth(), 3);
 	}
 
 	__inline bool TableColumnChild(const char* str_id)
 	{
 		TableNextColumn();
-		float contentHeight = GetWindowHeight() - (g_Menu.TabHeight + GetStyle().ItemInnerSpacing.y);
+		float contentHeight = GetWindowHeight() - (F::Menu.TabHeight + GetStyle().ItemInnerSpacing.y);
 		return BeginChild(str_id, { GetColumnWidth(), contentHeight }, !Vars::Menu::ModernDesign);
 	}
 
@@ -74,13 +74,13 @@ namespace ImGui
 	{
 		TableNextColumn();
 		if (active) { PushStyleColor(ImGuiCol_Button, GetColorU32(ImGuiCol_ButtonActive)); }
-		const bool pressed = Button(label, { GetColumnWidth(), g_Menu.TabHeight });
+		const bool pressed = Button(label, { GetColumnWidth(), F::Menu.TabHeight });
 		if (active)
 		{
 			PopStyleColor();
 
 			const auto widgetPos = GetCursorScreenPos();
-			GradientRect(&g_Menu.TabGradient, { widgetPos.x, widgetPos.y - 3 }, GetColumnWidth(), 3);
+			GradientRect(&F::Menu.TabGradient, { widgetPos.x, widgetPos.y - 3 }, GetColumnWidth(), 3);
 		}
 		return pressed;
 	}
@@ -231,7 +231,7 @@ namespace ImGui
 	__inline bool MaterialCombo(const char* label, std::string* current_mat, ImGuiComboFlags flags = 0)
 	{
 		bool active = false;
-		PushItemWidth(g_Menu.ItemWidth);
+		PushItemWidth(F::Menu.ItemWidth);
 		if (BeginCombo(label, current_mat->c_str(), flags))
 		{
 			for (const auto& mat : g_MaterialEditor.MaterialList)
@@ -265,7 +265,7 @@ namespace ImGui
 		}
 		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
-		PushItemWidth(g_Menu.ItemWidth);
+		PushItemWidth(F::Menu.ItemWidth);
 		if (BeginCombo(comboName.c_str(), preview.c_str())) {
 			for (size_t i = 0; i < titles.size(); i++) {
 				Selectable((*options[i]) ? tfm::format("+ %s", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
@@ -296,7 +296,7 @@ namespace ImGui
 			preview.pop_back(); preview.pop_back();
 		}
 
-		PushItemWidth(g_Menu.ItemWidth);
+		PushItemWidth(F::Menu.ItemWidth);
 		if (BeginCombo(comboName.c_str(), preview.c_str())) {
 			for (size_t i = 0; i < flagNames.size(); i++) {
 				const bool flagActive = *flagVar & flagValues[i];
@@ -321,7 +321,7 @@ namespace ImGui
 	{
 		bool open = false;
 		ImVec4 tempColor = ColorToVec(color);
-		PushItemWidth(g_Menu.ItemWidth);
+		PushItemWidth(F::Menu.ItemWidth);
 		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel))
 		{
 			color = VecToColor(tempColor);
@@ -375,7 +375,7 @@ namespace ImGui
         }
 
         const ImU32 colBg = IsItemHovered() ? ImColor(60, 60, 60) : ImColor(50, 50, 50);
-        const ImU32 colCircle = (*v) ? g_Menu.Accent : ImColor(180, 180, 180);
+        const ImU32 colCircle = (*v) ? F::Menu.Accent : ImColor(180, 180, 180);
 
         drawList->AddRectFilled(p, ImVec2(p.x + width, p.y + height), colBg, height * 0.5f);
         drawList->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, colCircle);
@@ -387,37 +387,37 @@ namespace ImGui
 
 #pragma region Width Components
 	__inline bool WCombo(const char* label, int* current_item, std::vector<const char*> items) {
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return Combo(label, current_item, items.data(), items.size(), -1);
 	}
 
 	__inline bool WSlider(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
 	{
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return SliderFloat(label, v, v_min, v_max, format, flags);
 	}
 
 	__inline bool WSlider(const char* label, int* v, int v_min, int v_max, const char* format = "%d", ImGuiSliderFlags flags = 0)
 	{
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return SliderInt(label, v, v_min, v_max, format, flags);
 	}
 
 	__inline bool WInputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
 	{
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return InputText(label, str, flags, callback, user_data);
 	}
 
 	__inline bool WInputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL)
 	{
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return InputTextWithHint(label, hint, str, flags, callback, user_data);
 	}
 
 	__inline bool WInputInt(const char* label, int* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0)
 	{
-		SetNextItemWidth(g_Menu.ItemWidth);
+		SetNextItemWidth(F::Menu.ItemWidth);
 		return InputInt(label, v, step, step_fast, flags);
 	}
 

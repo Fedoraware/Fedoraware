@@ -154,9 +154,9 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 
 				if (finalTargetIndex != -1)
 				{
-					if (!g_GlobalInfo.m_bShouldShift && g_GlobalInfo.m_nShifted == 0)
+					if (!G::ShouldShift && G::ShiftedTicks == 0)
 					{
-						if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking)
+						if (pCmd->buttons & IN_ATTACK || G::IsAttacking)
 						{
 							pCmd->tick_count = TIME_TO_TICKS(finalTargetIndex);
 						}

@@ -19,4 +19,4 @@ public:
 	void RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture);
 };
 
-inline CCameraWindow g_CameraWindow;
+ADD_FEATURE(CCameraWindow, CameraWindow)

@@ -3,7 +3,7 @@
 
 MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 53 56 8B D9"), int, __fastcall, INetChannel* netChannel, void* edx, bf_write* datagram)
 {
-	if (!Vars::Backtrack::Enabled.m_Var || !netChannel || netChannel->IsLoopback())
+	if (!Vars::Backtrack::Enabled.m_Var || !netChannel || netChannel->IsLoopback() || Vars::Backtrack::Latency.m_Var == 0.f)
 	{
 		return Hook.Original<FN>()(netChannel, edx, datagram);
 	}
@@ -11,7 +11,7 @@ MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ?
 	const int inSequence = netChannel->m_nInSequenceNr;
 	const int inState = netChannel->m_nInReliableState;
 
-	g_Backtrack.AdjustPing(netChannel);
+	F::Backtrack.AdjustPing(netChannel);
 
 	const int original = Hook.Original<FN>()(netChannel, edx, datagram);
 	netChannel->m_nInSequenceNr = inSequence;

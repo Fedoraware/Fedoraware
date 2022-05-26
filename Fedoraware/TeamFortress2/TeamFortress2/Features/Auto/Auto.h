@@ -9,4 +9,4 @@ public:
 	void Run(CUserCmd* pCmd);
 };
 
-inline CAuto g_Auto;
+ADD_FEATURE(CAuto, Auto)

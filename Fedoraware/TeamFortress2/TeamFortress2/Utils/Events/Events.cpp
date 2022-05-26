@@ -26,12 +26,12 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	if (pEvent == nullptr) { return; }
 
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
-	g_ChatInfo.Event(pEvent, uNameHash);
-	g_AntiAim.Event(pEvent, uNameHash);
+	F::ChatInfo.Event(pEvent, uNameHash);
+	F::AntiAim.Event(pEvent, uNameHash);
 
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
-		g_Resolver.OnPlayerHurt(pEvent);
+		F::Resolver.OnPlayerHurt(pEvent);
 	}
 
 	// Pickup Timers
@@ -42,11 +42,11 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 		{
 			if (std::strstr(itemName, "medkit"))
 			{
-				g_Visuals.PickupDatas.push_back({ 1, I::Engine->Time(), pEntity->GetAbsOrigin() });
+				F::Visuals.PickupDatas.push_back({ 1, I::Engine->Time(), pEntity->GetAbsOrigin() });
 			}
 			else if (std::strstr(itemName, "ammopack"))
 			{
-				g_Visuals.PickupDatas.push_back({ 0, I::Engine->Time(), pEntity->GetAbsOrigin() });
+				F::Visuals.PickupDatas.push_back({ 0, I::Engine->Time(), pEntity->GetAbsOrigin() });
 			}
 		}
 	}

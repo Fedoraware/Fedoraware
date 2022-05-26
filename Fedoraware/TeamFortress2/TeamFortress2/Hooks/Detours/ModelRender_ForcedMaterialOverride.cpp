@@ -7,9 +7,9 @@
 MAKE_HOOK(ModelRender_ForcedMaterialOverride, Utils::GetVFuncPtr(I::ModelRender, 1), void, __fastcall,
 		  void* ecx, void* edx, IMaterial* mat, EOverrideType type)
 {
-	if (!g_DMEChams.m_bRendering)
+	if (!F::DMEChams.m_bRendering)
 	{
-		if (g_Glow.m_bRendering && !g_Glow.IsGlowMaterial(mat) || g_Chams.m_bRendering && !g_Chams.IsChamsMaterial(mat))
+		if (F::Glow.m_bRendering && !F::Glow.IsGlowMaterial(mat) || F::Chams.m_bRendering && !F::Chams.IsChamsMaterial(mat))
 		{
 			return;
 		}

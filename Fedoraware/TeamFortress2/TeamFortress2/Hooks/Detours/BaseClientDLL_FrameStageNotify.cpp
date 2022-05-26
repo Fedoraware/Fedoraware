@@ -12,30 +12,30 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 	{
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			g_GlobalInfo.m_vPunchAngles = Vec3();
+			G::PunchAngles = Vec3();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				// Handle freecam position
-				if (g_GlobalInfo.m_bFreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+				if (G::FreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
 				{
-					pLocal->SetVecOrigin(g_GlobalInfo.m_vFreecamPos);
-					pLocal->SetAbsOrigin(g_GlobalInfo.m_vFreecamPos);
+					pLocal->SetVecOrigin(G::FreecamPos);
+					pLocal->SetAbsOrigin(G::FreecamPos);
 				}
 
 				// Remove punch effect
 				if (Vars::Visuals::RemovePunch.m_Var)
 				{
-					g_GlobalInfo.m_vPunchAngles = pLocal->GetPunchAngles();
+					G::PunchAngles = pLocal->GetPunchAngles();
 					//Store punch angles to be compesnsated for in aim
 					pLocal->ClearPunchAngle(); //Clear punch angles for visual no-recoil
 				}
 			}
 
 			// Resolver
-			g_Resolver.Run();
+			F::Resolver.Run();
 
-			g_Visuals.SkyboxChanger();
+			F::Visuals.SkyboxChanger();
 
 			break;
 		}
@@ -55,7 +55,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 		case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START:
 		{
-			g_AttributeChanger.Run();
+			F::AttributeChanger.Run();
 
 			break;
 		}
@@ -64,7 +64,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			g_GlobalInfo.m_bLocalSpectated = false;
+			G::LocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
@@ -79,7 +79,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 					if (pObservedPlayer == pLocal)
 					{
-						g_GlobalInfo.m_bLocalSpectated = true;
+						G::LocalSpectated = true;
 						break;
 					}
 				}
@@ -90,7 +90,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 				if (const auto& player = I::EntityList->GetClientEntity(i))
 				{
 					const VelFixRecord record = { player->m_vecOrigin(), player->m_fFlags(), player->GetSimulationTime() };
-					g_GlobalInfo.velFixRecord[player] = record;
+					G::VelFixRecords[player] = record;
 				}
 			}
 
@@ -100,24 +100,24 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 		case EClientFrameStage::FRAME_RENDER_START:
 		{
-			if (!g_GlobalInfo.unloadWndProcHook)
+			if (!G::UnloadWndProcHook)
 			{
 				if (Vars::Visuals::Rain.m_Var > 0)
 				{
-					g_Visuals.rain.Run();
+					F::Visuals.rain.Run();
 				}
 
 				// genius method i swear
 				static bool modded = false;
 				if (Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::WorldModulation.m_Var)
 				{
-					g_Visuals.ModulateWorld();
+					F::Visuals.ModulateWorld();
 					modded = true;
 				}
 				else if (modded)
 				{
 					modded = false;
-					g_Visuals.ModulateWorld();
+					F::Visuals.ModulateWorld();
 				}
 			}
 			break;

@@ -13,4 +13,4 @@ public:
 	void Run();
 };
 
-inline CPlayerArrows g_PlayerArrows;
+ADD_FEATURE(CPlayerArrows, PlayerArrows)

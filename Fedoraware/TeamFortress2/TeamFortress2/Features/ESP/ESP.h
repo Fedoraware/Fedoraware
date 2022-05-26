@@ -20,4 +20,4 @@ public:
 	static bool GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h);
 };
 
-inline CESP g_ESP;
+ADD_FEATURE(CESP, ESP)

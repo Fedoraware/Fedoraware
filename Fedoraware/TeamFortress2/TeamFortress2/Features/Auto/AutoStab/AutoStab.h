@@ -16,4 +16,4 @@ public:
 	bool m_bShouldDisguise = false;
 };
 
-inline CAutoStab g_AutoStab;
+ADD_FEATURE(CAutoStab, AutoStab)

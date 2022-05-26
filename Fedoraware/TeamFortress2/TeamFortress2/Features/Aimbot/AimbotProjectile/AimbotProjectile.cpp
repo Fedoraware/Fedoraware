@@ -6,7 +6,7 @@
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
-	g_GlobalInfo.linearPredLine = m_vPosition;
+	G::LinearPredLine = m_vPosition;
 
 	Vec3 vecOut;
 	if (m_pEntity->IsOnGround())
@@ -23,7 +23,7 @@ Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 
 bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, ProjectileInfo_t& out)
 {
-	switch (g_GlobalInfo.m_nCurItemDefIndex)
+	switch (G::CurItemDefIndex)
 	{
 	case Soldier_m_RocketLauncher:
 	case Soldier_m_RocketLauncherR:
@@ -238,8 +238,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 {
 	auto pNetChannel = I::Engine->GetNetChannelInfo();
 
-	g_GlobalInfo.predBeforeLines.clear();
-	g_GlobalInfo.predFutureLines.clear(); // clear here to stop them from drawing on non move-simmed entities
+	G::PredBeforeLines.clear();
+	G::PredFutureLines.clear(); // clear here to stop them from drawing on non move-simmed entities
 
 	if (!pNetChannel)
 	{
@@ -278,7 +278,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					Vec3 vDelta = (vPredictedPos - vLocalPos);
 					float fRange = Math::VectorNormalize(vDelta);
 
-					float fElevationAngle = (fRange * (g_GlobalInfo.m_nCurItemDefIndex == Demoman_m_TheLochnLoad
+					float fElevationAngle = (fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad
 						                                   ? 0.0075f
 						                                   : 0.013f));
 
@@ -343,7 +343,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				case TF_WEAPON_COMPOUND_BOW:
 				case TF_WEAPON_SYRINGEGUN_MEDIC:
 					{
-						if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal)
+						if (G::CurItemDefIndex != Soldier_m_TheOriginal)
 						{
 							Vec3 vecOffset(23.5f, 12.0f, -3.0f);
 
@@ -384,7 +384,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					return false;
 				}
 
-				g_GlobalInfo.m_vPredictedPos = vPredictedPos;
+				G::PredictedPos = vPredictedPos;
 				return true;
 			}
 		}
@@ -395,7 +395,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		CMoveData moveData = {};
 		Vec3 worldSpaceCenter = {};
 
-		if (g_MoveSim.Initialize(predictor.m_pEntity))
+		if (F::MoveSim.Initialize(predictor.m_pEntity))
 		{
 			int n = 0;
 			for (; n < TIME_TO_TICKS(maxTime); n++)
@@ -404,7 +404,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				{
 					break;
 				}
-				g_MoveSim.RunTick(moveData, worldSpaceCenter);
+				F::MoveSim.RunTick(moveData, worldSpaceCenter);
 				vPredictedPos = worldSpaceCenter;
 
 				Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - GetAimPos(pLocal, predictor.m_pEntity);
@@ -425,7 +425,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 						Vec3 toThreat = (vPredictedPos - vLocalPos);
 						float fRange = Math::VectorNormalize(toThreat);
 
-						float fElevationAngle = (fRange * (g_GlobalInfo.m_nCurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f));
+						float fElevationAngle = (fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f));
 
 						if (fElevationAngle > 45.0f)
 						{
@@ -452,7 +452,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				if (trace.DidHit())
 				{
 					vPredictedPos.z = trace.vEndPos.z;
-					g_GlobalInfo.m_vPredictedPos = vPredictedPos;
+					G::PredictedPos = vPredictedPos;
 				}
 
 				switch (pWeapon->GetWeaponID())
@@ -481,12 +481,12 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				{
 					if (!WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor)) { break; }
 
-					g_GlobalInfo.m_vPredictedPos = vPredictedPos;
-					g_MoveSim.Restore();
+					G::PredictedPos = vPredictedPos;
+					F::MoveSim.Restore();
 					return true;
 				}
 			}
-			g_MoveSim.Restore();
+			F::MoveSim.Restore();
 		}
 	}
 	return false;
@@ -685,7 +685,7 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 	{
 		return;
 	}
-	const Vec3 vecPos = g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE ? g_GlobalInfo.m_vPredictedPos : target.m_vPos;
+	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
 	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
 	Vec3 shootPos;
 	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment(_("muzzle"));
@@ -699,10 +699,10 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 	if (sortMethod == ESortMethod::FOV)
 	{
-		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
+		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 	}
 
-	g_AimbotGlobal.m_vecTargets.clear();
+	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
@@ -724,7 +724,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				if (g_AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
+				if (F::AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
 			}
 
 			Vec3 vPos = pTarget->GetWorldSpaceCenter();
@@ -738,9 +738,9 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			}
 
 			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
-			const auto& priority = g_GlobalInfo.PlayerPriority[priorityID];
+			const auto& priority = G::PlayerPriority[priorityID];
 
-			g_AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
+			F::AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
 
@@ -767,11 +767,11 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 
-			g_AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
-	return !g_AimbotGlobal.m_vecTargets.empty();
+	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 
 bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& target)
@@ -826,7 +826,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 
 	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
 	{
-		Target_t target = g_AimbotGlobal.GetBestTarget(GetSortMethod());
+		Target_t target = F::AimbotGlobal.GetBestTarget(GetSortMethod());
 
 		if (!VerifyTarget(pLocal, pWeapon, pCmd, target))
 		{
@@ -836,10 +836,10 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		outTarget = target;
 		return true;
 	}
-	g_AimbotGlobal.SortTargets(GetSortMethod());
+	F::AimbotGlobal.SortTargets(GetSortMethod());
 
 	//instead of this just limit to like 4-6 targets, should save perf without any noticeable changes in functionality
-	for (auto& target : g_AimbotGlobal.m_vecTargets)
+	for (auto& target : F::AimbotGlobal.m_vecTargets)
 	{
 		if (!VerifyTarget(pLocal, pWeapon, pCmd, target))
 		{
@@ -856,7 +856,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 // Aims at the given angles
 void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vAngle)
 {
-	vAngle -= g_GlobalInfo.m_vPunchAngles;
+	vAngle -= G::PunchAngles;
 	Math::ClampAngles(vAngle);
 
 	switch (Vars::Aimbot::Projectile::AimMethod.m_Var)
@@ -883,12 +883,12 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 bool CAimbotProjectile::ShouldFire(CUserCmd* pCmd)
 {
-	return (Vars::Aimbot::Global::AutoShoot.m_Var && g_GlobalInfo.m_bWeaponCanAttack);
+	return (Vars::Aimbot::Global::AutoShoot.m_Var && G::WeaponCanAttack);
 }
 
 bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 {
-	if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
+	if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 	{
 		static bool bLoading = false;
 
@@ -930,7 +930,7 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 
 		else
 		{
-			if ((pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_bWeaponCanAttack)
+			if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack)
 			{
 				return true;
 			}
@@ -1034,43 +1034,43 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
-		                         : g_AimbotGlobal.IsKeyDown());
+		                         : F::AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
 
 	Target_t target{ };
 	if (GetTarget(pLocal, pWeapon, pCmd, target) || GetSplashTarget(pLocal, pWeapon, pCmd, target))
 	{
 		// Aim at the current target or splashtarget
-		g_GlobalInfo.m_nCurrentTargetIdx = target.m_pEntity->GetIndex();
+		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
 		{
-			g_GlobalInfo.m_vAimPos = g_GlobalInfo.m_vPredictedPos;
+			G::AimPos = G::PredictedPos;
 		}
 
 		if (ShouldFire(pCmd))
 		{
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
 			{
 				if (
 					(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
 					(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
 					(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
 				{
-					if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && g_GlobalInfo.m_nShifted))
+					if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && G::ShiftedTicks))
 					{
-						g_GlobalInfo.m_bShouldShift = false;
+						G::ShouldShift = false;
 					}
 					else
 					{
-						g_GlobalInfo.m_bShouldShift = true;
+						G::ShouldShift = true;
 					}
 				}
 			}
 
-			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
+			if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{
 				if (pWeapon->GetClip1() > 0)
 				{
@@ -1091,21 +1091,21 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 		if (bIsAttacking)
 		{
-			g_GlobalInfo.m_bAttacking = true;
+			G::IsAttacking = true;
 			if (Vars::Visuals::BulletTracer.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				ProjectileTracer(pLocal, target);
 				nLastTracerTick = pCmd->tick_count;
 			}
 
-			//I::DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, g_GlobalInfo.m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
+			//I::DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, G::m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
 		}
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
 		{
 			if (m_bIsFlameThrower)
 			{
-				g_GlobalInfo.m_bProjectileSilentActive = true;
+				G::ProjectileSilentActive = true;
 				Aim(pCmd, pWeapon, target.m_vAngleTo);
 			}
 
@@ -1114,7 +1114,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				if (bIsAttacking)
 				{
 					Aim(pCmd, pWeapon, target.m_vAngleTo);
-					g_GlobalInfo.m_bSilentTime = true;
+					G::SilentTime = true;
 				}
 			}
 		}

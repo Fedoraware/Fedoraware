@@ -16,7 +16,7 @@ std::array<std::pair<int, int>, 12> redirects{
 	std::pair{16, 203}, std::pair{4, 194}
 };
 
-void CAttributChanger::Run()
+void CAttributeChanger::Run()
 {
 	if (!I::Engine->IsInGame())
 	{
@@ -141,7 +141,7 @@ void CAttributChanger::Run()
 	}
 }
 
-void CAttributChanger::SaveConfig()
+void CAttributeChanger::SaveConfig()
 {
 	if (AttributePath.empty())
 	{
@@ -169,7 +169,7 @@ void CAttributChanger::SaveConfig()
 	}
 }
 
-void CAttributChanger::LoadConfig()
+void CAttributeChanger::LoadConfig()
 {
 	if (AttributePath.empty())
 	{
@@ -200,7 +200,7 @@ void CAttributChanger::LoadConfig()
 	}
 }
 
-void CAttributChanger::SetAttribute()
+void CAttributeChanger::SetAttribute()
 {
 	using FN = void(__thiscall*)(CClientState*);
 	auto ForceFullUpdate = reinterpret_cast<FN>(g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D")));

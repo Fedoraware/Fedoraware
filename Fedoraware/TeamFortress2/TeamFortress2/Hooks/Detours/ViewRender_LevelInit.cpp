@@ -66,8 +66,8 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 		  void* ecx, void* edx)
 {
 	CustomFogSetup();
-	g_Visuals.StoreMaterialHandles();
-	g_Visuals.OverrideWorldTextures();
+	F::Visuals.StoreMaterialHandles();
+	F::Visuals.OverrideWorldTextures();
 	Hook.Original<FN>()(ecx, edx);
-	g_Visuals.ModulateWorld();
+	F::Visuals.ModulateWorld();
 }

@@ -14,4 +14,4 @@ public:
 	bool DrawChams = false;
 };
 
-inline CFakeAng g_FakeAng;
+ADD_FEATURE(CFakeAng, FakeAng)

@@ -73,7 +73,7 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 		edgeToEdgeOn = 1;
 		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
 			Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
-			g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
+			G::RealViewAngles.x < 10.f) // Check for real up
 		{
 			edgeToEdgeOn = 2;
 		}
@@ -83,7 +83,7 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	edgeToEdgeOn = 2;
 	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
 		Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
-		g_GlobalInfo.m_vRealViewAngles.x < 10.f) // Check for real up
+		G::RealViewAngles.x < 10.f) // Check for real up
 	{
 		edgeToEdgeOn = 1;
 	}
@@ -98,9 +98,9 @@ bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
-	g_GlobalInfo.m_bAAActive = false;
-	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
-	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
+	G::AAActive = false;
+	G::RealViewAngles = G::ViewAngles;
+	G::FakeViewAngles = G::ViewAngles;
 
 	// AA toggle key
 	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.m_Var };
@@ -109,7 +109,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		Vars::AntiHack::AntiAim::Active.m_Var = !Vars::AntiHack::AntiAim::Active.m_Var;
 	}
 
-	if (!Vars::AntiHack::AntiAim::Active.m_Var || g_GlobalInfo.m_bForceSendPacket || g_GlobalInfo.m_bAvoidingBackstab) { return; }
+	if (!Vars::AntiHack::AntiAim::Active.m_Var || G::ForceSendPacket || G::AvoidingBackstab) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (!pLocal->IsAlive()
@@ -117,7 +117,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			|| pLocal->IsInBumperKart()
 			|| pLocal->IsAGhost()) { return; }
 
-		if (g_GlobalInfo.m_bAttacking) { return; }
+		if (G::IsAttacking) { return; }
 
 		static bool bSendReal = true;
 		bool bPitchSet = true;
@@ -132,31 +132,31 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		case 1:
 			{
 				pCmd->viewangles.x = 0.0f;
-				g_GlobalInfo.m_vRealViewAngles.x = 0.0f;
+				G::RealViewAngles.x = 0.0f;
 				break;
 			}
 		case 2:
 			{
 				pCmd->viewangles.x = -89.0f;
-				g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
+				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 3:
 			{
 				pCmd->viewangles.x = 89.0f;
-				g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
+				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 4:
 			{
 				pCmd->viewangles.x = -271.0f;
-				g_GlobalInfo.m_vRealViewAngles.x = 89.0f;
+				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 5:
 			{
 				pCmd->viewangles.x = 271.0f;
-				g_GlobalInfo.m_vRealViewAngles.x = -89.0f;
+				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 6:
@@ -168,7 +168,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
 				}
 				pCmd->viewangles.x = currentAngle;
-				g_GlobalInfo.m_vRealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
+				G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
 				break;
 			}
 		default:
@@ -247,7 +247,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 
 			// Check if our real angle is overlapping with the fake angle
-			if (Vars::AntiHack::AntiAim::YawFake.m_Var != 0 && IsOverlapping(pCmd->viewangles.y, g_GlobalInfo.m_vFakeViewAngles.y))
+			if (Vars::AntiHack::AntiAim::YawFake.m_Var != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
 			{
 				if (Vars::AntiHack::AntiAim::SpinSpeed.m_Var > 0)
 				{
@@ -261,7 +261,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			}
 
-			g_GlobalInfo.m_vRealViewAngles.y = pCmd->viewangles.y;
+			G::RealViewAngles.y = pCmd->viewangles.y;
 		}
 
 		// Yaw ( Fake)
@@ -328,7 +328,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			}
 
-			g_GlobalInfo.m_vFakeViewAngles = pCmd->viewangles;
+			G::FakeViewAngles = pCmd->viewangles;
 		}
 
 		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }
@@ -336,7 +336,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		{
 			*pSendPacket = bSendReal = true;
 		}
-		g_GlobalInfo.m_bAAActive = bPitchSet || bYawSet;
+		G::AAActive = bPitchSet || bYawSet;
 
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}

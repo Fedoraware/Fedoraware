@@ -70,8 +70,8 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const float zPos = std::stof(dataVector[3]);
 					const int playerIndex = std::stoi(dataVector[4]);
 
-					g_GlobalInfo.partyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
-					g_GlobalInfo.partyPlayerESP[playerIndex].LastUpdate = I::Engine->Time();
+					G::PartyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
+					G::PartyPlayerESP[playerIndex].LastUpdate = I::Engine->Time();
 				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
 			}
 			break;
@@ -96,7 +96,7 @@ void CFedworking::SendMarker(const Vec3& pPos, int pPlayerIdx)
 void CFedworking::SendESP(CBaseEntity* pPlayer)
 {
 	if (!pPlayer->GetDormant() && pPlayer->IsInValidTeam() && pPlayer->IsAlive()) {
-		const float lastUpdate = g_GlobalInfo.partyPlayerESP[pPlayer->GetIndex()].LastUpdate;
+		const float lastUpdate = G::PartyPlayerESP[pPlayer->GetIndex()].LastUpdate;
 		if (lastUpdate == 0.f || I::Engine->Time() - lastUpdate >= 0.4f) {
 			const Vec3 playerPos = pPlayer->GetVecOrigin();
 			std::stringstream msg;
@@ -141,7 +141,7 @@ void CFedworking::Run()
 #ifdef _DEBUG
 				I::DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
 #endif
-				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
+				F::Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
 			}
 		}
 

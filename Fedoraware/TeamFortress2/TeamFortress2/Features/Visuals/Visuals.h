@@ -69,4 +69,4 @@ public:
 
 };
 
-inline CVisuals g_Visuals;
+ADD_FEATURE(CVisuals, Visuals)

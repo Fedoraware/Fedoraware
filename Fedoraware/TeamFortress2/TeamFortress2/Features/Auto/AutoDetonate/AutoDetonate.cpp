@@ -48,7 +48,7 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 			const bool bIsPlayer = pTarget->IsPlayer();
 			if (bIsPlayer || pTarget->IsBuilding())
 			{
-				if (bIsPlayer && g_AutoGlobal.ShouldIgnore(pTarget)) { continue; }
+				if (bIsPlayer && F::AutoGlobal.ShouldIgnore(pTarget)) { continue; }
 
 				CGameTrace trace = {};
 				CTraceFilterWorldAndPropsOnly traceFilter = {};

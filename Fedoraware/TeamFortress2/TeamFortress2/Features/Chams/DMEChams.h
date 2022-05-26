@@ -26,4 +26,4 @@ public:
 	bool m_bRendering;
 };
 
-inline CDMEChams g_DMEChams;
+ADD_FEATURE(CDMEChams, DMEChams)

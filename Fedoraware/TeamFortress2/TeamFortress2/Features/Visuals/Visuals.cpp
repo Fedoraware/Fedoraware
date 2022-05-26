@@ -173,12 +173,12 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Thirdperson angles
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
 		{
-			I::Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
+			I::Prediction->SetLocalViewAngles(G::RealViewAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 				{
-					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
+					pAnimState->m_flCurrentFeetYaw = G::RealViewAngles.y;
 				}
 			}
 		}
@@ -370,12 +370,12 @@ void ApplyModulation(const Color_t& clr)
 	//		}
 	//	}
 	//}
-	if (g_Visuals.MaterialHandleDatas.empty())
+	if (F::Visuals.MaterialHandleDatas.empty())
 	{
 		return;
 	}
 
-	for (const auto& material : g_Visuals.MaterialHandleDatas)
+	for (const auto& material : F::Visuals.MaterialHandleDatas)
 	{
 		if (material.Material)
 		{
@@ -409,12 +409,12 @@ void ApplySkyboxModulation(const Color_t& clr)
 	//		pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 	//	}
 	//}
-	if (g_Visuals.MaterialHandleDatas.empty())
+	if (F::Visuals.MaterialHandleDatas.empty())
 	{
 		return;
 	}
 
-	for (const auto& material : g_Visuals.MaterialHandleDatas)
+	for (const auto& material : F::Visuals.MaterialHandleDatas)
 	{
 		if (material.Material)
 		{

@@ -6,6 +6,6 @@ MAKE_HOOK(ClientModeShared_OverrrideView, Utils::GetVFuncPtr(I::ClientMode, 16),
 		  void* ecx, void* edx, CViewSetup* pView)
 {
 	Hook.Original<FN>()(ecx, edx, pView);
-	g_Visuals.FOV(pView);
-	g_Visuals.ThirdPerson(pView);
+	F::Visuals.FOV(pView);
+	F::Visuals.ThirdPerson(pView);
 }

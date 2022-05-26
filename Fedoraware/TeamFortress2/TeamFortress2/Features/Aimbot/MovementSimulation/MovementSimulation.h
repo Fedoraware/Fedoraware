@@ -25,4 +25,4 @@ public:
 	const Vec3& GetOrigin() { return m_MoveData.m_vecAbsOrigin; }
 };
 
-inline CMovementSimulation g_MoveSim;
+ADD_FEATURE(CMovementSimulation, MoveSim)

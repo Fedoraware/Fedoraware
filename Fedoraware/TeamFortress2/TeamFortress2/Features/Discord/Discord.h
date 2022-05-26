@@ -1,4 +1,5 @@
 #pragma once
+#include "../../SDK/SDK.h"
 #include "../../SDK/Discord/include/discord_register.h"
 #include "../../SDK/Discord/include/discord_rpc.h"
 
@@ -8,4 +9,4 @@ public:
 	void Update();
 };
 
-inline CDiscordRPC g_DiscordRPC;
+ADD_FEATURE(CDiscordRPC, DiscordRPC)

@@ -55,7 +55,7 @@ void CDTBar::Dragbar()
 
 void CDTBar::Run()
 {
-	if (ShouldRun() && g_Menu.IsOpen)
+	if (ShouldRun() && F::Menu.IsOpen)
 	{
 		Dragbar();
 	}

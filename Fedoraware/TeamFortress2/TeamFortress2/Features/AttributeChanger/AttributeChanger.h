@@ -25,7 +25,7 @@ struct AttributeInfo_t {
 	bool m_bStyleOverride;
 };
 
-class CAttributChanger {
+class CAttributeChanger {
 public:
 	void Run();
 
@@ -70,4 +70,4 @@ private:
 	}
 };
 
-inline CAttributChanger g_AttributeChanger;
+ADD_FEATURE(CAttributeChanger, AttributeChanger)

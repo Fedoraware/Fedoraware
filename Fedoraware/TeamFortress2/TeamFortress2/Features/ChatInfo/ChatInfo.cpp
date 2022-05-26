@@ -41,7 +41,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::ChatInfoText.m_Var)
 				{
-					g_Notifications.Add(classString);
+					F::Notifications.Add(classString);
 				}
 
 				if (Vars::Visuals::ChatInfoChat.m_Var)
@@ -66,7 +66,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (votingOptions & static_cast<int>(VoteOption::Text)) // text
 				{
-					g_Notifications.Add(voteLine);
+					F::Notifications.Add(voteLine);
 				}
 				if (votingOptions & static_cast<int>(VoteOption::Console)) // console
 				{
@@ -131,7 +131,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::damageLoggerText.m_Var)
 				{
-					g_Notifications.Add(attackString);
+					F::Notifications.Add(attackString);
 				}
 			}
 		}
@@ -148,7 +148,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker")));
 			if (pEntity == pLocal) { return; }
 			if (pLocal != nAttacker) { return; }
-			g_Visuals.DrawHitboxMatrix(pEntity, Colors::HitboxFace, Colors::HitboxEdge, time);
+			F::Visuals.DrawHitboxMatrix(pEntity, Colors::HitboxFace, Colors::HitboxEdge, time);
 		}
 
 		// Catbot identification (Achievement)
@@ -167,7 +167,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				{
 					if (KnownBots.find(info.friendsID) == KnownBots.end())
 					{
-						g_Notifications.Add(tfm::format("%s is a bot!", info.name));
+						F::Notifications.Add(tfm::format("%s is a bot!", info.name));
 						if (Vars::Visuals::ChatInfoText.m_Var)
 						{
 							I::ClientMode->m_pChatElement->ChatPrintf(
@@ -262,7 +262,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 
 					if (votingOptions & static_cast<int>(VoteOption::Text)) // text
 					{
-						g_Notifications.Add(chosenLine);
+						F::Notifications.Add(chosenLine);
 					}
 					if (votingOptions & static_cast<int>(VoteOption::Console)) // console
 					{
@@ -278,7 +278,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					}
 					if (votingOptions & static_cast<int>(VoteOption::AutoVote) && bSameTeam && target != I::Engine->GetLocalPlayer()) // auto-vote
 					{
-						if (g_GlobalInfo.IsIgnored(infoTarget.friendsID) || g_EntityCache.IsFriend(target))
+						if (G::IsIgnored(infoTarget.friendsID) || g_EntityCache.IsFriend(target))
 						{
 							I::Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
 						}

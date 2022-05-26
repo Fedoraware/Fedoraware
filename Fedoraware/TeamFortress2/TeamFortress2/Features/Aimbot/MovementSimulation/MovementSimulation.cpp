@@ -194,10 +194,10 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenter
 
 
 	//call CTFGameMovement::ProcessMovement
-	g_GlobalInfo.predBeforeLines.push_back(m_MoveData.m_vecAbsOrigin);
+	G::PredBeforeLines.push_back(m_MoveData.m_vecAbsOrigin);
 	reinterpret_cast<void(__thiscall*)(void*, CBaseEntity*, CMoveData*)>(
 		Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
-	g_GlobalInfo.predFutureLines.push_back(m_MoveData.m_vecAbsOrigin);
+	G::PredFutureLines.push_back(m_MoveData.m_vecAbsOrigin);
 	moveDataOut = m_MoveData;
 	Vec3 vMin, vMax;
 	m_pPlayer->GetRenderBounds(vMin, vMax);

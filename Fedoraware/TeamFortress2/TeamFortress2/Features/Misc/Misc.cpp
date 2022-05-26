@@ -69,17 +69,17 @@ void CMisc::DetectChoke()
 	{
 		if (!player->IsAlive() || player->GetDormant())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
+			G::ChokeMap[player->GetIndex()] = 0;
 			continue;
 		}
 
 		if (player->GetSimulationTime() == player->GetOldSimulationTime())
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()]++;
+			G::ChokeMap[player->GetIndex()]++;
 		}
 		else
 		{
-			g_GlobalInfo.chokeMap[player->GetIndex()] = 0;
+			G::ChokeMap[player->GetIndex()] = 0;
 		}
 	}
 }
@@ -89,7 +89,7 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static bool pos = true;
 
-	if (g_GlobalInfo.m_bAttacking || g_GlobalInfo.m_bShouldShift) { return; }
+	if (G::IsAttacking || G::ShouldShift) { return; }
 	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.m_Var)
 	{
 		pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
@@ -128,7 +128,7 @@ void CMisc::ServerHitbox()
 
 void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 {
-	g_GlobalInfo.m_bAvoidingBackstab = false;
+	G::AvoidingBackstab = false;
 	Vec3 vTargetPos;
 
 	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.m_Var)
@@ -136,7 +136,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 		return;
 	}
 
-	if (g_GlobalInfo.m_bAttacking) { return; }
+	if (G::IsAttacking) { return; }
 
 	const Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
 	CBaseEntity* target = nullptr;
@@ -165,7 +165,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 	{
 		vTargetPos = target->GetWorldSpaceCenter();
 		const Vec3 vAngleToSpy = Math::CalcAngle(vLocalPos, vTargetPos);
-		g_GlobalInfo.m_bAvoidingBackstab = true;
+		G::AvoidingBackstab = true;
 		Utils::FixMovement(pCmd, vAngleToSpy);
 		pCmd->viewangles = vAngleToSpy;
 	}
@@ -204,15 +204,15 @@ void CMisc::Teleport(const CUserCmd* pCmd)
 	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.m_Var };
 	if (tpKey.Down())
 	{
-		if (Vars::Misc::CL_Move::TeleportMode.m_Var == 0 && g_GlobalInfo.tickShiftQueue == 0 && g_GlobalInfo.m_nShifted > 0)
+		if (Vars::Misc::CL_Move::TeleportMode.m_Var == 0 && G::TickShiftQueue == 0 && G::ShiftedTicks > 0)
 		{
 			// Plain teleport
-			g_GlobalInfo.tickShiftQueue = g_GlobalInfo.m_nShifted;
+			G::TickShiftQueue = G::ShiftedTicks;
 		}
-		else if (Vars::Misc::CL_Move::TeleportMode.m_Var == 1 && pCmd->command_number % 3 == 0 && g_GlobalInfo.tickShiftQueue == 0)
+		else if (Vars::Misc::CL_Move::TeleportMode.m_Var == 1 && pCmd->command_number % 3 == 0 && G::TickShiftQueue == 0)
 		{
 			// Smooth teleport
-			g_GlobalInfo.tickShiftQueue = 2;
+			G::TickShiftQueue = 2;
 		}
 	}
 }
@@ -257,10 +257,10 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static KeyHelper fcKey{ &Vars::Visuals::FreecamKey.m_Var };
 	if (fcKey.Down())
 	{
-		if (g_GlobalInfo.m_bFreecamActive == false)
+		if (G::FreecamActive == false)
 		{
-			g_GlobalInfo.m_vFreecamPos = pLocal->GetVecOrigin();
-			g_GlobalInfo.m_bFreecamActive = true;
+			G::FreecamPos = pLocal->GetVecOrigin();
+			G::FreecamActive = true;
 		}
 
 		const Vec3 viewAngles = I::Engine->GetViewAngles();
@@ -293,7 +293,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 		Math::VectorNormalize(moveVector);
 		moveVector *= Vars::Visuals::FreecamSpeed.m_Var;
-		g_GlobalInfo.m_vFreecamPos += moveVector;
+		G::FreecamPos += moveVector;
 
 		pCmd->buttons = 0;
 		pCmd->forwardmove = 0.f;
@@ -302,7 +302,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 	else
 	{
-		g_GlobalInfo.m_bFreecamActive = false;
+		G::FreecamActive = false;
 	}
 }
 
@@ -580,7 +580,7 @@ void CMisc::ChatSpam()
 
 void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (!Vars::Misc::AutoRocketJump.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
+	if (!Vars::Misc::AutoRocketJump.m_Var || !G::WeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
 	{
 		return;
 	}
@@ -607,8 +607,8 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->buttons &= ~IN_ATTACK;
 		}
 
-		if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka
-			|| g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheCowMangler5000
+		if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka
+			|| G::CurItemDefIndex == Soldier_m_TheCowMangler5000
 			|| pWeapon->GetSlot() != SLOT_PRIMARY)
 		{
 			return;
@@ -621,7 +621,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 			const Vec3 vVelocity = pLocal->GetVelocity();
 			Vec3 vAngles = {vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f};
 
-			if (g_GlobalInfo.m_nCurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
+			if (G::CurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
 			{
 				Vec3 vForward = {}, vRight = {}, vUp = {};
 				Math::AngleVectors(vAngles, &vForward, &vRight, &vUp);
@@ -630,7 +630,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 			Math::ClampAngles(vAngles);
 			pCmd->viewangles = vAngles;
-			g_GlobalInfo.m_bSilentTime = true;
+			G::SilentTime = true;
 		}
 
 		else
@@ -642,13 +642,13 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (!Vars::Misc::ViewmodelFlip.m_Var || g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE) { return; }
+	if (!Vars::Misc::ViewmodelFlip.m_Var || G::CurWeaponType != EWeaponType::PROJECTILE) { return; }
 
 	static auto cl_flipviewmodels = g_ConVars.FindVar("cl_flipviewmodels");
 	static bool defaultValue = cl_flipviewmodels->GetBool();
 
-	const auto aimTarget = I::EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
-	if (g_GlobalInfo.m_nCurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter()))
+	const auto aimTarget = I::EntityList->GetClientEntity(G::CurrentTargetIdx);
+	if (G::CurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter()))
 	{
 		cl_flipviewmodels->SetValue(defaultValue);
 		return;
@@ -675,13 +675,13 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 {
 	if (const auto pWeapon = pLocal->GetActiveWeapon())
 	{
-		if (!g_GlobalInfo.m_bWeaponCanHeadShot && pLocal->IsScoped()) { return false; }
+		if (!G::WeaponCanHeadShot && pLocal->IsScoped()) { return false; }
 		if (!pWeapon->CanShoot(pLocal)) { return false; }
 		
 		for (const auto& target : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!target->IsAlive()) { continue; }
-			if (g_AimbotGlobal.ShouldIgnore(target)) { continue; }
+			if (F::AimbotGlobal.ShouldIgnore(target)) { continue; }
 
 			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD)))
 			{
@@ -781,7 +781,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 		}
 
 		// We've just attacked. Let's return!
-		if (g_GlobalInfo.lateUserCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking)
+		if (G::LastUserCmd->buttons & IN_ATTACK || G::IsAttacking)
 		{
 			isReturning = true;
 		}
@@ -791,9 +791,9 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 			if (localPos.DistTo(PeekReturnPos) < 7.f)
 			{
 				// We reached our destination. Recharge DT if wanted
-				if (Vars::Misc::CL_Move::AutoRecharge.m_Var && isReturning && !g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nShifted)
+				if (Vars::Misc::CL_Move::AutoRecharge.m_Var && isReturning && !G::ShouldShift && !G::ShiftedTicks)
 				{
-					g_GlobalInfo.m_bRechargeQueued = true;
+					G::RechargeQueued = true;
 				}
 				isReturning = false;
 				return;

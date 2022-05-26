@@ -78,4 +78,4 @@ public:
 	ImGradient TabGradient;
 };
 
-inline CMenu g_Menu;
+ADD_FEATURE(CMenu, Menu)

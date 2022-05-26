@@ -48,4 +48,4 @@ public:
 	bool m_bRendering;
 };
 
-inline CGlowEffect g_Glow;
+ADD_FEATURE(CGlowEffect, Glow)

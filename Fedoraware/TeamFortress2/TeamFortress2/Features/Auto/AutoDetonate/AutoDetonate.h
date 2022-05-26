@@ -9,4 +9,4 @@ public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
-inline CAutoDetonate g_AutoDetonate;
+ADD_FEATURE(CAutoDetonate, AutoDetonate)

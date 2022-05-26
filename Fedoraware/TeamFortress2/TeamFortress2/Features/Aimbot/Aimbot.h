@@ -10,4 +10,4 @@ public:
 	void Run(CUserCmd* pCmd);
 };
 
-inline CAimbot g_Aimbot;
+ADD_FEATURE(CAimbot, Aimbot)

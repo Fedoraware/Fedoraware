@@ -64,7 +64,7 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
 
-	if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
+	if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 	return true;
 }
@@ -117,7 +117,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (Vars::Triggerbot::Stab::Silent.m_Var)
 		{
 			Utils::FixMovement(pCmd, vAngleTo);
-			g_GlobalInfo.m_bSilentTime = true;
+			G::SilentTime = true;
 		}
 
 		pCmd->viewangles = vAngleTo;
@@ -137,7 +137,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() !=
+	if (!Vars::Triggerbot::Stab::Active.m_Var || !G::WeaponCanAttack || pWeapon->GetWeaponID() !=
 		TF_WEAPON_KNIFE)
 		return;
 
@@ -147,7 +147,7 @@ void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 	else RunLegit(pLocal, pWeapon, pCmd);
 
 	if (pCmd->buttons & IN_ATTACK)
-		g_GlobalInfo.m_bAttacking = true;
+		G::IsAttacking = true;
 
-	g_GlobalInfo.m_bAutoBackstabRunning = true;
+	G::AutoBackstabRunning = true;
 }

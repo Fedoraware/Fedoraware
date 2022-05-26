@@ -21,4 +21,4 @@ public:
 	void Init();
 };
 
-inline CCritHack g_CritHack;
+ADD_FEATURE(CCritHack, CritHack)

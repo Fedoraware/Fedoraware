@@ -13,4 +13,4 @@ public:
 	void Run();
 };
 
-inline CSpyWarning g_SpyWarning;
+ADD_FEATURE(CSpyWarning, SpyWarning)

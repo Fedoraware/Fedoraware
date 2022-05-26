@@ -30,4 +30,4 @@ public:
 	std::map<int, ResolverData> ResolveData;
 };
 
-inline CResolver g_Resolver;
+ADD_FEATURE(CResolver, Resolver)
