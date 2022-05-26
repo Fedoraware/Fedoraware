@@ -21,7 +21,7 @@ public:
 	ConVar* afkTimer = nullptr;
 
 	void Init();
-	ConVar* FindVar(FNV1A_t hashName);
+	ConVar* FindVar(const char* cvarname);
 
 private:
 	std::map<FNV1A_t, ConVar*> cvarMap;

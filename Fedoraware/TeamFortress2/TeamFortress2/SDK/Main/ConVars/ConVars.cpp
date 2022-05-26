@@ -40,3 +40,10 @@ void CConVars::Init()
 		cmdBase = cmdBase->m_pNext;
 	}
 }
+
+ConVar* CConVars::FindVar(const char* cvarname) {
+	if (!cvarMap[FNV1A::HashConst(cvarname)]) {
+		cvarMap[FNV1A::HashConst(cvarname)] = I::CVars->FindVar(cvarname);
+	}
+	return cvarMap[FNV1A::HashConst(cvarname)];
+}

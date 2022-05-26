@@ -46,7 +46,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 //	pasted but looks cool
 void CMisc::WeaponSway()
 {
-	static ConVar* cl_wpn_sway_interp = I::CVars->FindVar("cl_wpn_sway_interp");
+	static ConVar* cl_wpn_sway_interp = g_ConVars.FindVar("cl_wpn_sway_interp");
 	if (cl_wpn_sway_interp)
 	{
 		if (Vars::Visuals::ViewmodelSway.m_Var)
@@ -183,7 +183,7 @@ void CMisc::InstantRespawnMVM() {
 void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
-	ConVar* sv_cheats = I::CVars->FindVar("sv_cheats");
+	ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats");
 	if (Vars::Misc::CheatsBypass.m_Var && sv_cheats)
 	{
 		sv_cheats->SetValue(1);
@@ -219,7 +219,7 @@ void CMisc::Teleport(const CUserCmd* pCmd)
 
 void CMisc::PingReducer()
 {
-	const ConVar* cl_cmdrate = I::CVars->FindVar("cl_cmdrate");
+	const ConVar* cl_cmdrate = g_ConVars.FindVar("cl_cmdrate");
 	CNetChannel* netChannel = I::Engine->GetNetChannelInfo();
 	if (cl_cmdrate == nullptr || netChannel == nullptr) { return; }
 
@@ -336,7 +336,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::NoPush()
 {
-	ConVar* noPush = I::CVars->FindVar("tf_avoidteammates_pushaway");
+	ConVar* noPush = g_ConVars.FindVar("tf_avoidteammates_pushaway");
 	noPush->SetValue(Vars::Misc::NoPush.m_Var ? 0 : 1);
 }
 
@@ -446,7 +446,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	ConVar* cl_sidespeed = I::CVars->FindVar(_("cl_sidespeed"));
+	ConVar* cl_sidespeed = g_ConVars.FindVar(_("cl_sidespeed"));
 	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
 	{
 		return;
@@ -483,7 +483,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 				if (const auto& pLocal = g_EntityCache.m_pLocal)
 				{
 					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-					static auto airVar = I::CVars->FindVar(_("sv_airaccelerate"));
+					static auto airVar = g_ConVars.FindVar(_("sv_airaccelerate"));
 					static auto wishSpeed = 30.0f;
 
 					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
@@ -644,7 +644,7 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::ViewmodelFlip.m_Var || g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE) { return; }
 
-	static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
+	static auto cl_flipviewmodels = g_ConVars.FindVar("cl_flipviewmodels");
 	static bool defaultValue = cl_flipviewmodels->GetBool();
 
 	const auto aimTarget = I::EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);

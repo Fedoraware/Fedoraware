@@ -2,13 +2,13 @@
 
 static float LerpTime()
 {
-	static ConVar* updaterate = I::CVars->FindVar("cl_updaterate");
-	static ConVar* minupdate = I::CVars->FindVar("sv_minupdaterate");
-	static ConVar* maxupdate = I::CVars->FindVar("sv_maxupdaterate");
-	static ConVar* lerp = I::CVars->FindVar("cl_interp");
-	static ConVar* cmin = I::CVars->FindVar("sv_client_min_interp_ratio");
-	static ConVar* cmax = I::CVars->FindVar("sv_client_max_interp_ratio");
-	static ConVar* ratio = I::CVars->FindVar("cl_interp_ratio");
+	static ConVar* updaterate = g_ConVars.FindVar("cl_updaterate");
+	static ConVar* minupdate = g_ConVars.FindVar("sv_minupdaterate");
+	static ConVar* maxupdate = g_ConVars.FindVar("sv_maxupdaterate");
+	static ConVar* lerp = g_ConVars.FindVar("cl_interp");
+	static ConVar* cmin = g_ConVars.FindVar("sv_client_min_interp_ratio");
+	static ConVar* cmax = g_ConVars.FindVar("sv_client_max_interp_ratio");
+	static ConVar* ratio = g_ConVars.FindVar("cl_interp_ratio");
 
 	const float interpValue = lerp->GetFloat();
 	const float maxUpdateValue = maxupdate->GetFloat();

@@ -1293,15 +1293,15 @@ void CMenu::MenuVisuals()
 				SectionTitle("Custom fog");
 				if (WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.m_Var))
 				{
-					if (static auto fog_enable = I::CVars->FindVar("fog_enable"); fog_enable)
+					if (static auto fog_enable = g_ConVars.FindVar("fog_enable"); fog_enable)
 					{
 						fog_enable->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
-					if (static auto fog_enableskybox = I::CVars->FindVar("fog_enableskybox"); fog_enableskybox)
+					if (static auto fog_enableskybox = g_ConVars.FindVar("fog_enableskybox"); fog_enableskybox)
 					{
 						fog_enableskybox->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
-					if (static auto fog_override = I::CVars->FindVar("fog_override"); fog_override)
+					if (static auto fog_override = g_ConVars.FindVar("fog_override"); fog_override)
 					{
 						fog_override->SetValue(Vars::Visuals::Fog::CustomFog.m_Var);
 					}
@@ -1309,7 +1309,7 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 				{
-					if (static auto fog_density = I::CVars->FindVar("fog_maxdensity"); fog_density)
+					if (static auto fog_density = g_ConVars.FindVar("fog_maxdensity"); fog_density)
 					{
 						fog_density->SetValue(Vars::Visuals::Fog::FogDensity.m_Var);
 					}
@@ -1317,7 +1317,7 @@ void CMenu::MenuVisuals()
 				}
 				if (ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor))
 				{
-					if (static auto fog_color = I::CVars->FindVar("fog_color"); fog_color)
+					if (static auto fog_color = g_ConVars.FindVar("fog_color"); fog_color)
 					{
 						fog_color->SetValue(std::string("").
 							append(std::to_string(Vars::Visuals::Fog::FogColor.r)).
@@ -1331,21 +1331,21 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_start = I::CVars->FindVar("fog_start"); fog_start)
+					if (static auto fog_start = g_ConVars.FindVar("fog_start"); fog_start)
 					{
 						fog_start->SetValue(Vars::Visuals::Fog::FogStart.m_Var);
 					}
 				}
 				if (WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_end = I::CVars->FindVar("fog_end"); fog_end)
+					if (static auto fog_end = g_ConVars.FindVar("fog_end"); fog_end)
 					{
 						fog_end->SetValue(Vars::Visuals::Fog::FogEnd.m_Var);
 					}
 				}
 				if (WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.m_Var, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 				{
-					if (static auto fog_density = I::CVars->FindVar("fog_maxdensityskybox"); fog_density)
+					if (static auto fog_density = g_ConVars.FindVar("fog_maxdensityskybox"); fog_density)
 					{
 						fog_density->SetValue(Vars::Visuals::Fog::FogDensitySkybox.m_Var);
 					}
@@ -1353,7 +1353,7 @@ void CMenu::MenuVisuals()
 
 				if (ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox))
 				{
-					if (static auto fog_colorskybox = I::CVars->FindVar("fog_colorskybox"); fog_colorskybox)
+					if (static auto fog_colorskybox = g_ConVars.FindVar("fog_colorskybox"); fog_colorskybox)
 					{
 						fog_colorskybox->SetValue(std::string("").
 							append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.r)).
@@ -1367,14 +1367,14 @@ void CMenu::MenuVisuals()
 
 				if (WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStart.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_start = I::CVars->FindVar("fog_startskybox"); fog_start)
+					if (static auto fog_start = g_ConVars.FindVar("fog_startskybox"); fog_start)
 					{
 						fog_start->SetValue(Vars::Visuals::Fog::FogStartSkybox.m_Var);
 					}
 				}
 				if (WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.m_Var, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
 				{
-					if (static auto fog_end = I::CVars->FindVar("fog_endskybox"); fog_end)
+					if (static auto fog_end = g_ConVars.FindVar("fog_endskybox"); fog_end)
 					{
 						fog_end->SetValue(Vars::Visuals::Fog::FogEndSkybox.m_Var);
 					}

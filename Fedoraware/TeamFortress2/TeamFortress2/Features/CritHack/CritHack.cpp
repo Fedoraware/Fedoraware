@@ -6,7 +6,7 @@
 /* Returns whether random crits are enabled on the server */
 bool CCritHack::AreRandomCritsEnabled()
 {
-	if (static auto tf_weapon_criticals = I::CVars->FindVar("tf_weapon_criticals"); tf_weapon_criticals) {
+	if (static auto tf_weapon_criticals = g_ConVars.FindVar("tf_weapon_criticals"); tf_weapon_criticals) {
 		return tf_weapon_criticals->GetBool();
 	}
 	return true;
@@ -121,7 +121,7 @@ void CCritHack::Draw()
 		g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}
 
-	const float bucketCap = I::CVars->FindVar("tf_weapon_criticals_bucket_cap")->GetFloat();
+	const float bucketCap = g_ConVars.FindVar("tf_weapon_criticals_bucket_cap")->GetFloat();
 	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
 }

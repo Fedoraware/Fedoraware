@@ -62,7 +62,7 @@ void Loaded()
 	I::CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
 	I::Engine->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
-	const int dxLevel = I::CVars->FindVar("mat_dxlevel")->GetInt();
+	const int dxLevel = g_ConVars.FindVar("mat_dxlevel")->GetInt();
 	if (dxLevel < 90)
 	{
 		MessageBoxA(nullptr, _("Your DirectX version is too low!\nPlease use at dxlevel 90 or higher"), _("dxlevel too low"), MB_OK | MB_ICONWARNING);
