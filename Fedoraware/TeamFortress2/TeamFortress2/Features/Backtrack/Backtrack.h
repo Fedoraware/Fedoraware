@@ -23,7 +23,7 @@ typedef struct BoneMatrixes {
 };
 
 struct TickRecord {
-	TickRecord( const float flSimulationTime, const Vec3& headPos, const Vec3& absOrigin, 
+	TickRecord(const float flSimulationTime, const Vec3& headPos, const Vec3& absOrigin,
 		BoneMatrixes boneMatrix, model_t* model, studiohdr_t* hdr,
 		int hitboxSet) {
 		SimulationTime = flSimulationTime;
@@ -47,12 +47,19 @@ struct TickRecord {
 
 class CBacktrack {
 public:
-	bool IsGoodTick(int tick) const;
+	bool IsGoodTick(int tick);
 	void Start(const CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
 
+	// Latency
+	void UpdateDatagram();
+	float GetLatency();
+	void AdjustPing(INetChannel* netChannel);
+
 	std::vector<TickRecord> Record[64];
+	float LatencyRampup = 0.f;
+	std::deque<CIncomingSequence> Sequences;
 };
 
 inline CBacktrack g_Backtrack;

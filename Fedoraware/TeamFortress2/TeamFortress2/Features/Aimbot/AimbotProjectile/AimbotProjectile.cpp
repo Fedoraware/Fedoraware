@@ -234,7 +234,6 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 	return true;
 }
 
-
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
 	auto pNetChannel = I::Engine->GetNetChannelInfo();
@@ -947,7 +946,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	if (!Vars::Aimbot::Projectile::SplashPrediction.m_Var) { return false; }
 
 	// TODO: I have no clue if these values are accurate
-	float splashRadius = 0.f;
+	std::optional<float> splashRadius;
 	switch (pWeapon->GetClassID())
 	{
 	case ETFClassID::CTFRocketLauncher:
@@ -958,51 +957,62 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	}
 
 	// Don't do it with the direct hit or if the splash radius is unknown
-	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || splashRadius == 0.f) { return false; }
+	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || !splashRadius) { return false; }
 
-	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	const auto sortMethod = GetSortMethod();
+	const auto& vLocalAngles = I::Engine->GetViewAngles();
+	const auto& vLocalShootPos = pLocal->GetShootPos();
+
+	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (!pEntity || !pEntity->IsAlive()) { continue; }
-		if (!pEntity->IsOnGround()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pEntity->GetAbsOrigin()) > 900.f) { continue; }
+		if (!pTarget || !pTarget->IsAlive()) { continue; }
+		if (!pTarget->IsOnGround()) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 900.f) { continue; }
 
-		const auto& vecOrigin = pEntity->GetAbsOrigin();
-		const auto& shootPos = pLocal->GetShootPos();
+		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
 
 		// Scan every 45 degree angle
 		for (int i = 0; i < 315; i += 45)
 		{
-			Vec3 scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), splashRadius);
+			Vec3 scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), *splashRadius);
 
 			CGameTrace trace = {};
 			CTraceFilterWorldAndPropsOnly traceFilter = {};
 
-			// Don't predict through walls
-			Utils::Trace(scanPos, pEntity->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
-			if (trace.flFraction < 0.99f && trace.entity != pEntity) { continue; }
+			// Check FOV if enabled
+			const Vec3 vAngleTo = Math::CalcAngle(vLocalShootPos, scanPos);
+			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var) { continue; }
 
-			if (Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
+			// Don't predict through walls
+			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
+			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
+
+			// Don't predict enemies that are visible
+			if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetOrigin)) { continue; }
+
+			if (Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
 			{
 				// We found a target point! Get the closest point possible...
-				float currentRadius = splashRadius;
-				while (currentRadius > 10.f && Utils::VisPos(pLocal, pEntity, shootPos, scanPos))
+				float currentRadius = *splashRadius;
+				while (currentRadius > 10.f && Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
 				{
-					scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius - 10.f);
+					scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius - 10.f);
 					currentRadius -= 10.f;
 				}
 
 				// Closest point found!
-				currentRadius = std::clamp(currentRadius + 10.f, 0.f, splashRadius);
-				scanPos = Utils::GetRotatedPosition(vecOrigin, static_cast<float>(i), currentRadius);
+				currentRadius = std::clamp(currentRadius + 10.f, 0.f, *splashRadius);
+				scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius);
 
 				if (Vars::Debug::DebugInfo.m_Var)
 				{
-					I::DebugOverlay->AddLineOverlay(vecOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
+					I::DebugOverlay->AddLineOverlay(vTargetOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
 					I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
 				}
 
-				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-				outTarget = { pEntity, ETargetType::PLAYER, vecOrigin, vAngleTo };
+				const Vec3 vAngleToSplash = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
+				outTarget = { pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash };
 				return true;
 			}
 		}

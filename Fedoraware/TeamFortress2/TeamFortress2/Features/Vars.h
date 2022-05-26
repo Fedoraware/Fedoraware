@@ -40,7 +40,6 @@ namespace Vars
 		inline int InputColorBoxW = 30;
 
 		inline bool ModernDesign = false;
-		inline bool BlurBackground = false;
 		inline bool ShowPlayerlist = false;
 
 		namespace Colors
@@ -62,6 +61,7 @@ namespace Vars
 	{
 		inline CVar<bool> Enabled{ false, L"Backtrack master switch" };
 		inline CVar<bool> Aim{ false, L"Aims at last tick" };
+		inline CVar<float> Latency{ 0.f };
 
 		namespace BtChams
 		{
