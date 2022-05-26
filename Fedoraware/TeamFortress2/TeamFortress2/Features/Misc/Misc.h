@@ -36,7 +36,7 @@ public:
 	Vec3 PeekReturnPos;
 };
 
-inline CMisc g_Misc;
+ADD_FEATURE(CMisc, Misc)
 
 constexpr auto MAX_NOTIFY_SIZE = 8;
 
@@ -65,4 +65,4 @@ public:
 	void Think();
 };
 
-inline CNotifications g_Notifications;
+ADD_FEATURE(CNotifications, Notifications)

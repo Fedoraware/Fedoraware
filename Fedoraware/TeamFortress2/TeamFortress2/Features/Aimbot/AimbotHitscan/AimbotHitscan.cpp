@@ -80,7 +80,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 	}
 
-	g_AimbotGlobal.m_vecTargets.clear();
+	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
@@ -108,7 +108,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			if (g_AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun)) { continue; }
+			if (F::AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun)) { continue; }
 
 			if (Vars::Aimbot::Global::BAimLethal.m_Var)
 			{
@@ -151,7 +151,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
 			const auto& priority = G::PlayerPriority[priorityID];
 
-			g_AimbotGlobal.m_vecTargets.push_back({
+			F::AimbotGlobal.m_vecTargets.push_back({
 				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 			});
 		}
@@ -178,7 +178,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			g_AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -209,11 +209,11 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			}
 
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			g_AimbotGlobal.m_vecTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
-	return !g_AimbotGlobal.m_vecTargets.empty();
+	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 
 bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
@@ -358,9 +358,9 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1)
 			{
 				Vec3 hitboxPos;
-				if (!g_Backtrack.Record[target.m_pEntity->GetIndex()].empty())
+				if (!F::Backtrack.Record[target.m_pEntity->GetIndex()].empty())
 				{
-					auto& lastTick = g_Backtrack.Record[target.m_pEntity->GetIndex()].back();
+					auto& lastTick = F::Backtrack.Record[target.m_pEntity->GetIndex()].back();
 					if (const auto& pHdr = lastTick.HDR)
 					{
 						if (const auto& pSet = pHdr->GetHitboxSet(lastTick.HitboxSet))
@@ -426,9 +426,9 @@ bool CAimbotHitscan::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 	}
 
-	g_AimbotGlobal.SortTargets(GetSortMethod());
+	F::AimbotGlobal.SortTargets(GetSortMethod());
 
-	for (auto& target : g_AimbotGlobal.m_vecTargets)
+	for (auto& target : F::AimbotGlobal.m_vecTargets)
 	{
 		if (!VerifyTarget(pLocal, pWeapon, target))
 		{
@@ -704,7 +704,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	const int nWeaponID = pWeapon->GetWeaponID();
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
-		                         : g_AimbotGlobal.IsKeyDown());
+		                         : F::AimbotGlobal.IsKeyDown());
 
 	//Rev minigun if enabled and aimbot active
 	if (bShouldAim)

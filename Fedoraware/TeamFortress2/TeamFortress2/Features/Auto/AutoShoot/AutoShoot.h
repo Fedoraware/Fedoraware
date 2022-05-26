@@ -11,4 +11,4 @@ public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
-inline CAutoShoot g_AutoShoot;
+ADD_FEATURE(CAutoShoot, AutoShoot)

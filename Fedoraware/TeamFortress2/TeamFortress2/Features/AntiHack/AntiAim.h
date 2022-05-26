@@ -12,4 +12,4 @@ public:
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
 };
 
-inline CAntiAim g_AntiAim;
+ADD_FEATURE(CAntiAim, AntiAim)

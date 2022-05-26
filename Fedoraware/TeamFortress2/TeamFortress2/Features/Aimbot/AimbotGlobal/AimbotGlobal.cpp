@@ -21,7 +21,7 @@ namespace SandvichAimbot
 		const int nWeaponID = pWeapon->GetWeaponID();
 		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 			                         ? (pCmd->buttons & IN_ATTACK)
-			                         : g_AimbotGlobal.IsKeyDown());
+			                         : F::AimbotGlobal.IsKeyDown());
 
 		if (bShouldAim)
 		{

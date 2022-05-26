@@ -64,7 +64,7 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
 
-	if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
+	if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 	return true;
 }

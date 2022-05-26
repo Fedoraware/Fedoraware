@@ -141,7 +141,7 @@ void CFedworking::Run()
 #ifdef _DEBUG
 				I::DebugOverlay->AddLineOverlay(trace.vStartPos, trace.vEndPos, 255, 0, 0, false, 1.0f);
 #endif
-				g_Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
+				F::Fedworking.SendMarker(trace.vEndPos, pLocal->GetIndex());
 			}
 		}
 

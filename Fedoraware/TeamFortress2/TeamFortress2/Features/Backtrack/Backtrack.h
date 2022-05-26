@@ -62,4 +62,4 @@ public:
 	std::deque<CIncomingSequence> Sequences;
 };
 
-inline CBacktrack g_Backtrack;
+ADD_FEATURE(CBacktrack, Backtrack)

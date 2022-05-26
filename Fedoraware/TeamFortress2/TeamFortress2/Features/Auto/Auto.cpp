@@ -11,12 +11,12 @@
 bool CAuto::ShouldRun(CBaseEntity* pLocal)
 {
 	/*
-	if (!Vars::Triggerbot::Global::Active.m_Var || !g_AutoGlobal.IsKeyDown()) // this is bad because i say so
+	if (!Vars::Triggerbot::Global::Active.m_Var || !F::AutoGlobal.IsKeyDown()) // this is bad because i say so
 		return false;
 	*/
 
 	// if triggerbot is active and we havent set a key its clear we want to trigger all the time, forcing keybinds is madness (especially when it's not done @ AimbotGlobal.cpp)
-	if (!Vars::Triggerbot::Global::Active.m_Var || (!g_AutoGlobal.IsKeyDown() && Vars::Triggerbot::Global::TriggerKey.
+	if (!Vars::Triggerbot::Global::Active.m_Var || (!F::AutoGlobal.IsKeyDown() && Vars::Triggerbot::Global::TriggerKey.
 		m_Var)) { return false; }
 
 	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
@@ -29,13 +29,13 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 
 void CAuto::Run(CUserCmd* pCmd)
 {
-	if (Vars::Triggerbot::Stab::Disguise.m_Var && g_AutoStab.m_bShouldDisguise)
+	if (Vars::Triggerbot::Stab::Disguise.m_Var && F::AutoStab.m_bShouldDisguise)
 	{
 		I::Engine->ClientCmd_Unrestricted(_("lastdisguise"));
 	}
 
 	G::AutoBackstabRunning = false;
-	g_AutoStab.m_bShouldDisguise = false;
+	F::AutoStab.m_bShouldDisguise = false;
 
 	const auto pLocal = g_EntityCache.m_pLocal;
 	const auto pWeapon = g_EntityCache.m_pLocalWeapon;
@@ -44,11 +44,11 @@ void CAuto::Run(CUserCmd* pCmd)
 	{
 		if (ShouldRun(pLocal))
 		{
-			g_AutoShoot.Run(pLocal, pWeapon, pCmd);
-			g_AutoStab.Run(pLocal, pWeapon, pCmd);
-			g_AutoDetonate.Run(pLocal, pWeapon, pCmd);
-			g_AutoAirblast.Run(pLocal, pWeapon, pCmd);
-			g_AutoUber.Run(pLocal, pWeapon, pCmd);
+			F::AutoShoot.Run(pLocal, pWeapon, pCmd);
+			F::AutoStab.Run(pLocal, pWeapon, pCmd);
+			F::AutoDetonate.Run(pLocal, pWeapon, pCmd);
+			F::AutoAirblast.Run(pLocal, pWeapon, pCmd);
+			F::AutoUber.Run(pLocal, pWeapon, pCmd);
 		}
 	}
 }

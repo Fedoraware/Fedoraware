@@ -8,8 +8,8 @@ MAKE_HOOK(BaseClientDLL_Shutdown, Utils::GetVFuncPtr(I::Client, 7), void, __fast
 {
 	Hook.Original<FN>()(ecx, edx);
 	g_EntityCache.Clear();
-	g_Visuals.rain.Cleanup();
+	F::Visuals.rain.Cleanup();
 	G::PartyPlayerESP.clear();
-	g_Resolver.ResolveData.clear();
+	F::Resolver.ResolveData.clear();
 	G::ChokeMap.clear();
 }

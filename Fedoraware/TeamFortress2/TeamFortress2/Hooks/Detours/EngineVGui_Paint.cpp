@@ -218,7 +218,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 
 				// Build Date
-				if (g_Menu.IsOpen)
+				if (F::Menu.IsOpen)
 				{
 					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
 				}
@@ -422,14 +422,14 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			};
 			OtherDraws();
 			
-			g_ESP.Run();
-			g_Visuals.PickupTimers();
-			g_SpyWarning.Run();
-			g_PlayerArrows.Run();
-			g_Followbot.Draw();
+			F::ESP.Run();
+			F::Visuals.PickupTimers();
+			F::SpyWarning.Run();
+			F::PlayerArrows.Run();
+			F::Followbot.Draw();
 			g_SpectatorList.Run();
-			g_CritHack.Draw();
-			g_Radar.Run();
+			F::CritHack.Draw();
+			F::Radar.Run();
 
 			if (Vars::AntiHack::AntiAim::Active.m_Var)
 			{
@@ -454,13 +454,13 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			}
 
 			// you can use it for more, i'm sure. - myzarfin
-			g_Notifications.Think();
+			F::Notifications.Think();
 
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::ScopeLines.m_Var)
 				{
-					g_Visuals.ScopeLines();
+					F::Visuals.ScopeLines();
 				}
 			}
 		}

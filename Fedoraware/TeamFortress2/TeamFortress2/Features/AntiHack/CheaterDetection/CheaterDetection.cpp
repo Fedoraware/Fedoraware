@@ -1,14 +1,14 @@
 #include "CheaterDetection.h"
 
 
-bool CheaterDetection::shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect) {
+bool CCheaterDetection::shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect) {
 	if (g_EntityCache.IsFriend(nIndex) || G::IsIgnored(friendsID) || markedcheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
 	if (pSuspect->GetDormant()) { return false; } // dont run this player if they are dormant
 	if (!pSuspect->IsAlive() || pSuspect->IsAGhost() || pSuspect->IsTaunting()) { return false; } // dont run this player if they are dead / ghost or taunting
 	return true;
 }
 
-bool CheaterDetection::isSteamNameDifferent(PlayerInfo_t pInfo) {	// this can be falsely triggered by a person being nicknamed without being our steam friend (pending friend) or changing their steam name since joining the game
+bool CCheaterDetection::isSteamNameDifferent(PlayerInfo_t pInfo) {	// this can be falsely triggered by a person being nicknamed without being our steam friend (pending friend) or changing their steam name since joining the game
 	if (const char* steam_name = g_SteamInterfaces.Friends015->GetFriendPersonaName(CSteamID(static_cast<uint64>(pInfo.friendsID + 0x0110000100000000))))
 	{
 		if (strcmp(pInfo.name, steam_name))
@@ -17,7 +17,7 @@ bool CheaterDetection::isSteamNameDifferent(PlayerInfo_t pInfo) {	// this can be
 	return false;
 }
 
-bool CheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
+bool CCheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
 	Vec3 suspectAngles = pSuspect->GetEyeAngles();
 	if (!suspectAngles.IsZero()) {
 		if (suspectAngles.x >= 90.f || suspectAngles.x <= -90.f) {
@@ -30,13 +30,13 @@ bool CheaterDetection::isPitchInvalid(CBaseEntity* pSuspect) {
 	return false;
 }
 
-bool CheaterDetection::isTickCountManipulated(int CurrentTickCount) {
+bool CCheaterDetection::isTickCountManipulated(int CurrentTickCount) {
 	int delta = I::GlobalVars->tickcount - CurrentTickCount; // delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
 	if (abs(delta) > 14) { return true; } // lets be honest if their tickcount changes by more than 14 they are probably cheating.
 	return false;
 }
 
-void CheaterDetection::OnTick() {
+void CCheaterDetection::OnTick() {
 	auto pLocal = g_EntityCache.m_pLocal;
 	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var) {
 		return;

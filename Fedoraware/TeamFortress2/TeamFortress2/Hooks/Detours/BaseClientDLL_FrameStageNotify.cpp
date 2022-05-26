@@ -33,9 +33,9 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 			}
 
 			// Resolver
-			g_Resolver.Run();
+			F::Resolver.Run();
 
-			g_Visuals.SkyboxChanger();
+			F::Visuals.SkyboxChanger();
 
 			break;
 		}
@@ -55,7 +55,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 
 		case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START:
 		{
-			g_AttributeChanger.Run();
+			F::AttributeChanger.Run();
 
 			break;
 		}
@@ -104,20 +104,20 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 			{
 				if (Vars::Visuals::Rain.m_Var > 0)
 				{
-					g_Visuals.rain.Run();
+					F::Visuals.rain.Run();
 				}
 
 				// genius method i swear
 				static bool modded = false;
 				if (Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::WorldModulation.m_Var)
 				{
-					g_Visuals.ModulateWorld();
+					F::Visuals.ModulateWorld();
 					modded = true;
 				}
 				else if (modded)
 				{
 					modded = false;
-					g_Visuals.ModulateWorld();
+					F::Visuals.ModulateWorld();
 				}
 			}
 			break;

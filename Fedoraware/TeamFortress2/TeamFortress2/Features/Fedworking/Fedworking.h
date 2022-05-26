@@ -14,4 +14,4 @@ public:
 	void Run();
 };
 
-inline CFedworking g_Fedworking;
+ADD_FEATURE(CFedworking, Fedworking)

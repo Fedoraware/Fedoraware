@@ -200,27 +200,27 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	}
 
 	g_PR->Update();
-	g_Misc.Run(pCmd);
-	g_Fedworking.Run();
-	g_CameraWindow.Update();
-	g_BadActors.OnTick();
+	F::Misc.Run(pCmd);
+	F::Fedworking.Run();
+	F::CameraWindow.Update();
+	F::BadActors.OnTick();
 
-	g_EnginePrediction.Start(pCmd);
+	F::EnginePrediction.Start(pCmd);
 	{
-		g_Aimbot.Run(pCmd);
-		g_Backtrack.Run(pCmd);
-		g_Auto.Run(pCmd);
-		g_AntiAim.Run(pCmd, pSendPacket);
-		g_Misc.EdgeJump(pCmd, nOldFlags);
+		F::Aimbot.Run(pCmd);
+		F::Backtrack.Run(pCmd);
+		F::Auto.Run(pCmd);
+		F::AntiAim.Run(pCmd, pSendPacket);
+		F::Misc.EdgeJump(pCmd, nOldFlags);
 	}
-	g_EnginePrediction.End(pCmd);
-	g_CritHack.Run(pCmd);
+	F::EnginePrediction.End(pCmd);
+	F::CritHack.Run(pCmd);
 
 	FastStop(pCmd, g_EntityCache.m_pLocal);
-	g_Misc.RunLate(pCmd);
-	g_Resolver.Update(pCmd);
-	g_Followbot.Run(pCmd);
-	g_FLGHandler.onTick(pCmd, g_EntityCache.m_pLocal, pSendPacket);
+	F::Misc.RunLate(pCmd);
+	F::Resolver.Update(pCmd);
+	F::Followbot.Run(pCmd);
+	F::FakeLag.onTick(pCmd, g_EntityCache.m_pLocal, pSendPacket);
 
 	G::ViewAngles = pCmd->viewangles;
 
@@ -236,7 +236,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	if (G::ShiftedTicks > 0)
 	{
-		g_FakeAng.DrawChams = false;
+		F::FakeAng.DrawChams = false;
 	}
 
 	if (Vars::Misc::PartyCrasher.m_Var)

@@ -2,7 +2,7 @@
 #include "../../Visuals/FakeAngleManager/FakeAng.h"
 
 
-bool FakeLag::flgLogic(int logic, CBaseEntity* pLocal) {
+bool CFakeLag::flgLogic(int logic, CBaseEntity* pLocal) {
 	switch (logic) {
 	case 0:		// 
 	case 1: {	// these two don't have logic lol (maybe add some?)
@@ -14,7 +14,7 @@ bool FakeLag::flgLogic(int logic, CBaseEntity* pLocal) {
 	}
 }
 
-bool FakeLag::isflgAllowed(KeyHelper fakelagKey) {
+bool CFakeLag::isflgAllowed(KeyHelper fakelagKey) {
 	if (chokeCounter > 21) {
 		return false;
 	}
@@ -32,13 +32,13 @@ bool FakeLag::isflgAllowed(KeyHelper fakelagKey) {
 	return true;
 }
 
-void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
+void CFakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
 	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
 
 	if (pLocal && pLocal->IsAlive() && Vars::Misc::CL_Move::Fakelag.m_Var) {
 		if (!isflgAllowed(fakelagKey)) {
 			*pSendPacket = true;
-			g_FakeAng.Run(pCmd);
+			F::FakeAng.Run(pCmd);
 			chokeCounter = 0;
 			return;
 		}
@@ -55,8 +55,8 @@ void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
 			*pSendPacket = true;
 			chosenAmount = (rand() % (Vars::Misc::CL_Move::FakelagMax.m_Var - Vars::Misc::CL_Move::FakelagMin.m_Var)) + Vars::Misc::CL_Move::FakelagMin.m_Var;
 			chokeCounter = 0;
-			g_FakeAng.Run(pCmd);
-			g_FakeAng.DrawChams = true;
+			F::FakeAng.Run(pCmd);
+			F::FakeAng.DrawChams = true;
 		}
 
 	}
@@ -69,6 +69,6 @@ void FakeLag::onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket) {
 	else
 	{
 		G::IsChoking = false;
-		g_FakeAng.DrawChams = false;
+		F::FakeAng.DrawChams = false;
 	}
 }

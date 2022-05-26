@@ -49,10 +49,10 @@ void CPlayerList::Render()
 	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
 	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
-		ImGui::PushFont(g_Menu.Verdana);
+		ImGui::PushFont(F::Menu.Verdana);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		ImGui::GradientRect(&g_Menu.TitleGradient, {winPos.x, winPos.y}, winSize.x, 3);
+		ImGui::GradientRect(&F::Menu.TitleGradient, {winPos.x, winPos.y}, winSize.x, 3);
 		ImGui::Dummy(ImVec2());
 
 		// Check if we are in-game
@@ -131,9 +131,9 @@ void CPlayerList::Render()
 						case 4:
 							{
 								/* Resolver */
-								auto findResolveMode = g_Resolver.ResolvePlayers.find(Player.FriendsID);
+								auto findResolveMode = F::Resolver.ResolvePlayers.find(Player.FriendsID);
 								ResolveMode resolveMode;
-								if (findResolveMode != g_Resolver.ResolvePlayers.end())
+								if (findResolveMode != F::Resolver.ResolvePlayers.end())
 								{
 									resolveMode = findResolveMode->second;
 								}
@@ -143,7 +143,7 @@ void CPlayerList::Render()
 								if (ImGui::Combo("Pitch", &resolveMode.m_Pitch, resolveListPitch,
 								                 IM_ARRAYSIZE(resolveListPitch)))
 								{
-									g_Resolver.ResolvePlayers[Player.FriendsID].m_Pitch = resolveMode.m_Pitch;
+									F::Resolver.ResolvePlayers[Player.FriendsID].m_Pitch = resolveMode.m_Pitch;
 								}
 								ImGui::PopItemWidth();
 								ImGui::SameLine();
@@ -153,7 +153,7 @@ void CPlayerList::Render()
 								if (ImGui::Combo("Yaw", &resolveMode.m_Yaw, resolveListYaw,
 								                 IM_ARRAYSIZE(resolveListYaw)))
 								{
-									g_Resolver.ResolvePlayers[Player.FriendsID].m_Yaw = resolveMode.m_Yaw;
+									F::Resolver.ResolvePlayers[Player.FriendsID].m_Yaw = resolveMode.m_Yaw;
 								}
 								ImGui::PopItemWidth();
 								break;

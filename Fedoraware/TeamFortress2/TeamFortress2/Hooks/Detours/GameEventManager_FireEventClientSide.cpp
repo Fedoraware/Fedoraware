@@ -7,7 +7,7 @@ MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(I::GameEvent,
 		  void* ecx, void* edx, CGameEvent* pEvent)
 {
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
-	g_Killstreaker.FireEvents(pEvent, uNameHash);
+	F::Killstreaker.FireEvents(pEvent, uNameHash);
 
 	if (uNameHash == FNV1A::HashConst("party_chat"))
 	{
@@ -18,7 +18,7 @@ MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(I::GameEvent,
 		{
 			if (Vars::Misc::PartyNetworking.m_Var)
 			{
-				g_Fedworking.HandleMessage(msg);
+				F::Fedworking.HandleMessage(msg);
 			}
 			return false;
 		}

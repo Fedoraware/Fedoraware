@@ -20,4 +20,4 @@ public:
 	std::deque<PathNode> PathNodes; // We have to expose this for drawing
 };
 
-inline CFollowbot g_Followbot;
+ADD_FEATURE(CFollowbot, Followbot)

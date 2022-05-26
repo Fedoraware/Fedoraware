@@ -14,7 +14,7 @@ struct PlayerData {
 	bool areTicksSafe = true;
 };
 
-class CheaterDetection
+class CCheaterDetection
 {
 private:
 	std::map<int, int> strikes;
@@ -28,4 +28,4 @@ public:
 	void OnTick();
 };
 
-inline CheaterDetection g_BadActors; // funny name f&ck you
+ADD_FEATURE(CCheaterDetection, BadActors)

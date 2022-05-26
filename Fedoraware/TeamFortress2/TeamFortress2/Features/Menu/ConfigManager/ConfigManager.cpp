@@ -908,7 +908,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		}
 
 		write_json(ConfigPath + "\\" + configName + ConfigExtension, WriteTree);
-		g_Notifications.Add("Config " + configName + " saved");
+		F::Notifications.Add("Config " + configName + " saved");
 	}
 	catch (...)
 	{
@@ -1635,7 +1635,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		});
 
 		CurrentConfig = configName;
-		g_Notifications.Add("Config " + configName + " loaded");
+		F::Notifications.Add("Config " + configName + " loaded");
 	}
 	catch (...)
 	{

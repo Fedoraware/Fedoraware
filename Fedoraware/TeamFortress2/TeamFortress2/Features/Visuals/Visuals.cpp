@@ -370,12 +370,12 @@ void ApplyModulation(const Color_t& clr)
 	//		}
 	//	}
 	//}
-	if (g_Visuals.MaterialHandleDatas.empty())
+	if (F::Visuals.MaterialHandleDatas.empty())
 	{
 		return;
 	}
 
-	for (const auto& material : g_Visuals.MaterialHandleDatas)
+	for (const auto& material : F::Visuals.MaterialHandleDatas)
 	{
 		if (material.Material)
 		{
@@ -409,12 +409,12 @@ void ApplySkyboxModulation(const Color_t& clr)
 	//		pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 	//	}
 	//}
-	if (g_Visuals.MaterialHandleDatas.empty())
+	if (F::Visuals.MaterialHandleDatas.empty())
 	{
 		return;
 	}
 
-	for (const auto& material : g_Visuals.MaterialHandleDatas)
+	for (const auto& material : F::Visuals.MaterialHandleDatas)
 	{
 		if (material.Material)
 		{

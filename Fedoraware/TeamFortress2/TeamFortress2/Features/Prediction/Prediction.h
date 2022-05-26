@@ -17,4 +17,4 @@ public:
 	void End(CUserCmd* pCmd);
 };
 
-inline CEnginePrediction g_EnginePrediction;
+ADD_FEATURE(CEnginePrediction, EnginePrediction)

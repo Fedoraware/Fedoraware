@@ -56,9 +56,9 @@ void CResolver::Run()
 			auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
 				get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
 
-			auto findResolve = g_Resolver.ResolvePlayers.find(temp.friendsID);
+			auto findResolve = F::Resolver.ResolvePlayers.find(temp.friendsID);
 			ResolveMode resolveMode;
-			if (findResolve != g_Resolver.ResolvePlayers.end())
+			if (findResolve != F::Resolver.ResolvePlayers.end())
 			{
 				resolveMode = findResolve->second;
 			}
@@ -163,9 +163,9 @@ void CResolver::Update(CUserCmd* pCmd)
 			{
 				if (I::Engine->GetPlayerInfo(aimTarget, &temp))
 				{
-					const auto findResolve = g_Resolver.ResolvePlayers.find(temp.friendsID);
+					const auto findResolve = F::Resolver.ResolvePlayers.find(temp.friendsID);
 					ResolveMode resolveMode;
-					if (findResolve != g_Resolver.ResolvePlayers.end())
+					if (findResolve != F::Resolver.ResolvePlayers.end())
 					{
 						resolveMode = findResolve->second;
 					}

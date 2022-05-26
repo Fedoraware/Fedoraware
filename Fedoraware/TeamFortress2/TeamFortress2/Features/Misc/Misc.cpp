@@ -681,7 +681,7 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 		for (const auto& target : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!target->IsAlive()) { continue; }
-			if (g_AimbotGlobal.ShouldIgnore(target)) { continue; }
+			if (F::AimbotGlobal.ShouldIgnore(target)) { continue; }
 
 			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD)))
 			{

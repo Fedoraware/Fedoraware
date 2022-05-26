@@ -53,8 +53,8 @@ void ShutdownRichPresence()
 
 void UpdateRichPresence()
 {
-	g_DiscordRPC.Update();
-	g_Misc.SteamRPC();
+	F::DiscordRPC.Update();
+	F::Misc.SteamRPC();
 }
 
 void Loaded()
@@ -74,10 +74,10 @@ void Initialize()
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
 	g_NetVars.Init();
-	g_Glow.Init();
-	g_Chams.Init();
-	g_DMEChams.Init();
-	g_CameraWindow.Init();
+	F::Glow.Init();
+	F::Chams.Init();
+	F::DMEChams.Init();
+	F::CameraWindow.Init();
 	g_HookManager.Init();
 	g_ConVars.Init();
 	g_PatchManager.Init();
@@ -102,7 +102,7 @@ void Uninitialize()
 
 	Sleep(100);
 
-	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
+	F::Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
 	I::CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("Fedoraware Unloaded!\n"));
 }
 
@@ -122,7 +122,7 @@ void LoadDefaultConfig()
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.m_Var, Vars::Fonts::FONT_INDICATORS::nWeight.m_Var, Vars::Fonts::FONT_INDICATORS::nFlags.m_Var},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		});
-	g_Menu.ConfigLoaded = true;
+	F::Menu.ConfigLoaded = true;
 }
 
 DWORD WINAPI MainThread(LPVOID lpParam)
@@ -141,7 +141,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Loaded();
 
-	while (!GetAsyncKeyState(VK_F11) || g_Menu.IsOpen) {
+	while (!GetAsyncKeyState(VK_F11) || F::Menu.IsOpen) {
 		Sleep(1000);
 		UpdateRichPresence();
 	}

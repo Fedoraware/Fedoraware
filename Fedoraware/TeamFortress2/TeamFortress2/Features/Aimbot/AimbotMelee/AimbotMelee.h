@@ -17,4 +17,4 @@ public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
-inline CAimbotMelee g_AimbotMelee;
+ADD_FEATURE(CAimbotMelee, AimbotMelee)

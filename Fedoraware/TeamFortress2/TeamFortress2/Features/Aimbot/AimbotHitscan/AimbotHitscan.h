@@ -21,4 +21,4 @@ public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
-inline CAimbotHitscan g_AimbotHitscan;
+ADD_FEATURE(CAimbotHitscan, AimbotHitscan)

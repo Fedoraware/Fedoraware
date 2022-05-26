@@ -8,4 +8,4 @@ public:
 	bool ShouldIgnore(CBaseEntity* pTarget);
 };
 
-inline CAutoGlobal g_AutoGlobal;
+ADD_FEATURE(CAutoGlobal, AutoGlobal)

@@ -86,19 +86,19 @@ void CAimbot::Run(CUserCmd* pCmd)
 		{
 		case EWeaponType::HITSCAN:
 			{
-				g_AimbotHitscan.Run(pLocal, pWeapon, pCmd);
+				F::AimbotHitscan.Run(pLocal, pWeapon, pCmd);
 				break;
 			}
 
 		case EWeaponType::PROJECTILE:
 			{
-				g_AimbotProjectile.Run(pLocal, pWeapon, pCmd);
+				F::AimbotProjectile.Run(pLocal, pWeapon, pCmd);
 				break;
 			}
 
 		case EWeaponType::MELEE:
 			{
-				g_AimbotMelee.Run(pLocal, pWeapon, pCmd);
+				F::AimbotMelee.Run(pLocal, pWeapon, pCmd);
 				break;
 			}
 

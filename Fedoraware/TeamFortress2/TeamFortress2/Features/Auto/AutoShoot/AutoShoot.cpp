@@ -27,7 +27,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
 					return false;
 
-				if (g_AutoGlobal.ShouldIgnore(pEntity)) { return false; }
+				if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && G::WeaponCanHeadShot && Trace.hitbox !=
 					HITBOX_HEAD)

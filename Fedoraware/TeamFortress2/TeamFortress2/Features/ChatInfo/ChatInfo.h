@@ -20,4 +20,4 @@ public:
 	std::map<int, bool> KnownBots;
 };
 
-inline CChatInfo g_ChatInfo;
+ADD_FEATURE(CChatInfo, ChatInfo)

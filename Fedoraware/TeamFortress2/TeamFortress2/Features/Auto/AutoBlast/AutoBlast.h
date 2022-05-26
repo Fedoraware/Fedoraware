@@ -9,4 +9,4 @@ public:
 	int id;
 };
 
-inline CAutoAirblast g_AutoAirblast;
+ADD_FEATURE(CAutoAirblast, AutoAirblast)

@@ -11,7 +11,7 @@ MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ?
 	const int inSequence = netChannel->m_nInSequenceNr;
 	const int inState = netChannel->m_nInReliableState;
 
-	g_Backtrack.AdjustPing(netChannel);
+	F::Backtrack.AdjustPing(netChannel);
 
 	const int original = Hook.Original<FN>()(netChannel, edx, datagram);
 	netChannel->m_nInSequenceNr = inSequence;

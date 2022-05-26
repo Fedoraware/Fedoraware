@@ -42,4 +42,4 @@ public:
 	bool m_bRendering;
 };
 
-inline CChams g_Chams;
+ADD_FEATURE(CChams, Chams)

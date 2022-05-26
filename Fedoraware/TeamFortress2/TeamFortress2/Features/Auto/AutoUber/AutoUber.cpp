@@ -27,7 +27,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		// Ignore ignored players
-		if (g_AutoGlobal.ShouldIgnore(player)) { continue; }
+		if (F::AutoGlobal.ShouldIgnore(player)) { continue; }
 
 		// Check for any zoomed snipers
 		if (HAS_CONDITION(player, TFCond_Zoomed))

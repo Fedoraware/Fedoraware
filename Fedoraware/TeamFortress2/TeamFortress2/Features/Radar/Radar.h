@@ -19,4 +19,4 @@ private:
 	Vec3 LocalOrigin;
 };
 
-inline CRadar g_Radar;
+ADD_FEATURE(CRadar, Radar)

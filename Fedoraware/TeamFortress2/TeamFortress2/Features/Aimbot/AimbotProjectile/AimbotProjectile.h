@@ -46,4 +46,4 @@ public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
-inline CAimbotProjectile g_AimbotProjectile;
+ADD_FEATURE(CAimbotProjectile, AimbotProjectile)

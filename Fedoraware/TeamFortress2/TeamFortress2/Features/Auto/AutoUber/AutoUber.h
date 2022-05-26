@@ -11,4 +11,4 @@ private:
 	float m_flHealth = 0.0f, m_flMaxHealth = 0.0f;
 };
 
-inline CAutoUber g_AutoUber;
+ADD_FEATURE(CAutoUber, AutoUber)

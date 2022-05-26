@@ -395,7 +395,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		CMoveData moveData = {};
 		Vec3 worldSpaceCenter = {};
 
-		if (g_MoveSim.Initialize(predictor.m_pEntity))
+		if (F::MoveSim.Initialize(predictor.m_pEntity))
 		{
 			int n = 0;
 			for (; n < TIME_TO_TICKS(maxTime); n++)
@@ -404,7 +404,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				{
 					break;
 				}
-				g_MoveSim.RunTick(moveData, worldSpaceCenter);
+				F::MoveSim.RunTick(moveData, worldSpaceCenter);
 				vPredictedPos = worldSpaceCenter;
 
 				Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - GetAimPos(pLocal, predictor.m_pEntity);
@@ -482,11 +482,11 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					if (!WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor)) { break; }
 
 					G::PredictedPos = vPredictedPos;
-					g_MoveSim.Restore();
+					F::MoveSim.Restore();
 					return true;
 				}
 			}
-			g_MoveSim.Restore();
+			F::MoveSim.Restore();
 		}
 	}
 	return false;
@@ -702,7 +702,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
 	}
 
-	g_AimbotGlobal.m_vecTargets.clear();
+	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
@@ -724,7 +724,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				if (g_AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
+				if (F::AimbotGlobal.ShouldIgnore(pTarget)) { continue; }
 			}
 
 			Vec3 vPos = pTarget->GetWorldSpaceCenter();
@@ -740,7 +740,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
 			const auto& priority = G::PlayerPriority[priorityID];
 
-			g_AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
+			F::AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
 
@@ -767,11 +767,11 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 
-			g_AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
-	return !g_AimbotGlobal.m_vecTargets.empty();
+	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 
 bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& target)
@@ -826,7 +826,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 
 	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
 	{
-		Target_t target = g_AimbotGlobal.GetBestTarget(GetSortMethod());
+		Target_t target = F::AimbotGlobal.GetBestTarget(GetSortMethod());
 
 		if (!VerifyTarget(pLocal, pWeapon, pCmd, target))
 		{
@@ -836,10 +836,10 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		outTarget = target;
 		return true;
 	}
-	g_AimbotGlobal.SortTargets(GetSortMethod());
+	F::AimbotGlobal.SortTargets(GetSortMethod());
 
 	//instead of this just limit to like 4-6 targets, should save perf without any noticeable changes in functionality
-	for (auto& target : g_AimbotGlobal.m_vecTargets)
+	for (auto& target : F::AimbotGlobal.m_vecTargets)
 	{
 		if (!VerifyTarget(pLocal, pWeapon, pCmd, target))
 		{
@@ -1034,7 +1034,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
-		                         : g_AimbotGlobal.IsKeyDown());
+		                         : F::AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
 
 	Target_t target{ };

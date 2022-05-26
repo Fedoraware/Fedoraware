@@ -1221,17 +1221,17 @@ void CMenu::MenuVisuals()
 
 				if (Button("Apply", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.ShouldSet = true;
+					F::AttributeChanger.ShouldSet = true;
 				}
 				SameLine();
 				if (Button("Save", ImVec2(45, 20)))
 				{
-					g_AttributeChanger.ShouldSave = true;
+					F::AttributeChanger.ShouldSave = true;
 				}
 				SameLine();
 				if (Button("Load", ImVec2(44, 20)))
 				{
-					g_AttributeChanger.ShouldLoad = true;
+					F::AttributeChanger.ShouldLoad = true;
 				}
 
 				SectionTitle("Ragdoll effects");
@@ -1676,11 +1676,11 @@ void CMenu::MenuMisc()
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
-				g_Misc.UnlockAchievements();
+				F::Misc.UnlockAchievements();
 			}
 			if (Button("Lock all achievements", ImVec2(btnWidth, 20)))
 			{
-				g_Misc.LockAchievements();
+				F::Misc.LockAchievements();
 			}
 		} EndChild();
 
@@ -1906,23 +1906,23 @@ void CMenu::DrawCameraWindow()
 	if (I::Engine->IsInGame() && Vars::Visuals::CameraMode.m_Var != 0)
 	{
 		int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
-		if (Vars::Visuals::CameraMode.m_Var <= 1 || g_CameraWindow.CanDraw) {
+		if (Vars::Visuals::CameraMode.m_Var <= 1 || F::CameraWindow.CanDraw) {
 			windowFlags |= ImGuiWindowFlags_NoBackground;
 		}
 
 		// Draw the camera window
-		ImGui::SetNextWindowSize({ static_cast<float>(g_CameraWindow.ViewRect.w), static_cast<float>(g_CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos({ static_cast<float>(g_CameraWindow.ViewRect.x), static_cast<float>(g_CameraWindow.ViewRect.y) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize({ static_cast<float>(F::CameraWindow.ViewRect.w), static_cast<float>(F::CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ static_cast<float>(F::CameraWindow.ViewRect.x), static_cast<float>(F::CameraWindow.ViewRect.y) }, ImGuiCond_FirstUseEver);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
 		if (ImGui::Begin("Camera", nullptr, windowFlags))
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();
 
-			g_CameraWindow.ViewRect.x = static_cast<int>(winPos.x);
-			g_CameraWindow.ViewRect.y = static_cast<int>(winPos.y);
-			g_CameraWindow.ViewRect.w = static_cast<int>(winSize.x);
-			g_CameraWindow.ViewRect.h = static_cast<int>(winSize.y);
+			F::CameraWindow.ViewRect.x = static_cast<int>(winPos.x);
+			F::CameraWindow.ViewRect.y = static_cast<int>(winPos.y);
+			F::CameraWindow.ViewRect.w = static_cast<int>(winSize.x);
+			F::CameraWindow.ViewRect.h = static_cast<int>(winSize.y);
 
 			ImGui::End();
 		}
@@ -1950,8 +1950,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	if (GetAsyncKeyState(MENU_KEY) & 1)
 	{
 		// TOOD: & 8000?
-		g_Menu.IsOpen = !g_Menu.IsOpen;
-		I::Surface->SetCursorAlwaysVisible(g_Menu.IsOpen);
+		F::Menu.IsOpen = !F::Menu.IsOpen;
+		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);
 	}
 
 	// Begin current frame
@@ -1959,7 +1959,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	if (g_Menu.IsOpen)
+	if (F::Menu.IsOpen)
 	{
 		ImGui::PushFont(Verdana);
 		DrawMenu();

@@ -6,8 +6,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 // Prepares the menu for unloading
 void MenuHook::Unload()
 {
-	g_Menu.IsOpen = true;
-	g_Menu.Unload = true;
+	F::Menu.IsOpen = true;
+	F::Menu.Unload = true;
 }
 
 MAKE_HOOK(WINAPI_EndScene, Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXDevice), 42), HRESULT, __stdcall,
@@ -19,7 +19,7 @@ MAKE_HOOK(WINAPI_EndScene, Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirec
 		return Hook.Original<FN>()(pDevice);
 	}
 
-	g_Menu.Render(pDevice);
+	F::Menu.Render(pDevice);
 	return Hook.Original<FN>()(pDevice);
 }
 
@@ -34,7 +34,7 @@ MAKE_HOOK(WINAPI_Reset, Utils::GetVFuncPtr(reinterpret_cast<void**>(g_dwDirectXD
 
 LONG __stdcall WndProc::Func(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (g_Menu.IsOpen)
+	if (F::Menu.IsOpen)
 	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		I::InputSystem->ResetInputStateVFunc();

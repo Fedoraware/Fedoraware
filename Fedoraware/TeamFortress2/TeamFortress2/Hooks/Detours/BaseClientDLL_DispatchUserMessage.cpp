@@ -30,7 +30,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 	const auto bufData = reinterpret_cast<const char*>(msgData.m_pData);
 	msgData.SetAssertOnOverflow(false);
 
-	g_ChatInfo.UserMessage(type, msgData);
+	F::ChatInfo.UserMessage(type, msgData);
 
 	switch (type)
 	{

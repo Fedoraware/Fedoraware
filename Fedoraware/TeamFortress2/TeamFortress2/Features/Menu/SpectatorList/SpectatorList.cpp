@@ -59,7 +59,7 @@ void CSpectatorList::Run()
 
 void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 {
-	if (!g_Menu.IsOpen) { return; }
+	if (!F::Menu.IsOpen) { return; }
 
 	int mousex, mousey;
 	I::Surface->GetCursorPos(mousex, mousey);

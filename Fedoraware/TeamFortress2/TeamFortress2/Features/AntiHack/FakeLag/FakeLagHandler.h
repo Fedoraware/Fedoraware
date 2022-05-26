@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class FakeLag
+class CFakeLag
 {
 public:
 	void onTick(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket);
@@ -12,4 +12,4 @@ private:
 	int chosenAmount = 0;
 };
 
-inline FakeLag g_FLGHandler;
+ADD_FEATURE(CFakeLag, FakeLag)

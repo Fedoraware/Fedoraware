@@ -18,4 +18,4 @@ public:
 	void FireEvents(CGameEvent* pEvent, const FNV1A_t uNameHash);
 };
 
-inline CKillstreaker g_Killstreaker;
+ADD_FEATURE(CKillstreaker, Killstreaker)
