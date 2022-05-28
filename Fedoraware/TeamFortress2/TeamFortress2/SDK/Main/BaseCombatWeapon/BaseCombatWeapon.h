@@ -276,11 +276,11 @@ public: //Everything else, lol
 		return GetVFunc<fn_t>(pWeapon, 463, 0)(pWeapon);
 	}
 
-	__inline bool CanFireCriticalShot(CBaseEntity* pWeapon)
-	{
-		typedef bool (*fn_t)(CBaseEntity*);
-		return GetVFunc<fn_t>(pWeapon, 491, 0)(pWeapon);
-	}
+	//__inline bool CanFireCriticalShot(CBaseEntity* pWeapon)		// this does not fucking work no matter what i do and i have no idea why :DDD
+	//{
+	//	typedef bool (*fn_t)(CBaseEntity*, bool, CBaseEntity*);
+	//	return GetVFunc<fn_t>(this, 491)(pWeapon, false, nullptr);
+	//}
 
 	__inline Vec3 GetSpreadAngles() {
 		Vec3 vOut; GetSpreadAngles(vOut); return vOut;
