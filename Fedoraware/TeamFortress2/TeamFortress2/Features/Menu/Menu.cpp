@@ -68,7 +68,7 @@ void CMenu::DrawMenu()
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_BRUSH))
 			{
-				g_MaterialEditor.IsOpen = !g_MaterialEditor.IsOpen;
+				F::MaterialEditor.IsOpen = !F::MaterialEditor.IsOpen;
 			}
 			ImGui::HelpMarker("Material Editor");
 
@@ -1970,8 +1970,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
 		DebugMenu();
-		g_MaterialEditor.Render();
-		g_PlayerList.Render();
+		F::MaterialEditor.Render();
+		F::PlayerList.Render();
 
 		ImGui::PopFont();
 	}
@@ -2107,5 +2107,5 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 	}
 
 	LoadStyle();
-	g_MaterialEditor.Init();
+	F::MaterialEditor.Init();
 }

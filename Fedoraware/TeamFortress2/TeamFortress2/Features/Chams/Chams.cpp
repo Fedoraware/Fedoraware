@@ -206,7 +206,7 @@ IMaterial* CChams::FetchMaterial(const Chams_t& chams)
 	}
 	case 8:
 	{
-		return g_MaterialEditor.GetByName(chams.customMaterial);
+		return F::MaterialEditor.GetByName(chams.customMaterial);
 	}
 	default: return nullptr;
 	}

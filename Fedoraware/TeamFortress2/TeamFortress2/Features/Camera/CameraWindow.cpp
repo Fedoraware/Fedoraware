@@ -52,7 +52,7 @@ void CCameraWindow::Update()
 						continue;
 
 					if (pLocal->GetAbsOrigin().DistTo(player->GetAbsOrigin()) <= 350.f) {
-						CameraOrigin = player->GetHitboxPos(HITBOX_HEAD);
+						CameraOrigin = player->GetEyePosition();
 						CameraAngles = player->GetEyeAngles();
 						CanDraw = true;
 						return;

@@ -94,7 +94,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 				}
 			}
 
-			g_PlayerList.UpdatePlayers();
+			F::PlayerList.UpdatePlayers();
 			break;
 		}
 

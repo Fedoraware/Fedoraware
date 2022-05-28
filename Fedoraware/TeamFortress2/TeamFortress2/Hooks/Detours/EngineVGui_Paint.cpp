@@ -158,7 +158,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 							// Rijin DT Bar
 							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3)
 							{
-								g_DTBar.Run();
+								F::DTBar.Run();
 								// put this here so we don't move menu if we r using something else, no biggie
 								const float rratio = (static_cast<float>(G::ShiftedTicks) / static_cast<float>(
 									Vars::Misc::CL_Move::DTTicks.m_Var));
@@ -427,7 +427,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::SpyWarning.Run();
 			F::PlayerArrows.Run();
 			F::Followbot.Draw();
-			g_SpectatorList.Run();
+			F::SpectatorList.Run();
 			F::CritHack.Draw();
 			F::Radar.Run();
 
