@@ -5,7 +5,7 @@ class CAimbotProjectile {
 	struct ProjectileInfo_t {
 		float m_flVelocity = 0.0f;
 		float m_flGravity = 0.0f;
-		float m_flMaxTime = Vars::Aimbot::Projectile::predTime.m_Var;
+		float m_flMaxTime = 0.0f;
 	};
 
 	struct Predictor_t {

@@ -236,11 +236,10 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
-	auto pNetChannel = I::Engine->GetNetChannelInfo();
+	const INetChannel* pNetChannel = I::Engine->GetNetChannelInfo();
 
-	G::PredBeforeLines.clear();
-	G::PredFutureLines.clear(); // clear here to stop them from drawing on non move-simmed entities
-
+	G::PredBeforeLines.clear(); G::PredFutureLines.clear();
+	
 	if (!pNetChannel)
 	{
 		return false;
@@ -248,206 +247,129 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	Ray_t traceRay = {};
 	CGameTrace trace = {};
-	CTraceFilterWorldAndPropsOnly traceFilter = {};
-
+	static CTraceFilterWorldAndPropsOnly traceFilter = {};
 	traceFilter.pSkip = predictor.m_pEntity;
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
-	float maxTime = projInfo.m_flMaxTime;
-	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
-	if (predictor.m_pEntity->GetClassID() == ETFClassID::CObjectSentrygun || predictor.m_pEntity->GetClassID() ==
-		ETFClassID::CObjectDispenser ||
-		predictor.m_pEntity->GetClassID() == ETFClassID::CObjectTeleporter || predictor.m_pEntity->GetClassID() !=
-		ETFClassID::CTFPlayer ||
-		!Vars::Aimbot::Projectile::MovementSimulation.m_Var)
-	{
-		float TIME_STEP = 0.015f;
+	const float maxTime = predictor.m_pEntity->IsPlayer() ? Vars::Aimbot::Projectile::predTime.m_Var : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
+	const float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
-		for (float fPredTime = 0.0f; fPredTime < maxTime; fPredTime += TIME_STEP)
+	/*
+		This can't predict NPC's
+	*/
+	const bool useTPred = predictor.m_pEntity->IsPlayer() ? true : false;
+
+	if (!useTPred) {
+		Vec3 staticPos = predictor.m_vPosition;
+
+		// get angle offsets for demoman weapons?weew
+		switch (pWeapon->GetWeaponID())
 		{
-			float fCorrectTime = (fPredTime + fLatency);
-			Vec3 vPredictedPos = predictor.Extrapolate(fCorrectTime);
+		case TF_WEAPON_GRENADELAUNCHER:
+		case TF_WEAPON_PIPEBOMBLAUNCHER:
+		case TF_WEAPON_STICKBOMB:
+		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+		{
+			Vec3 vDelta = (staticPos - vLocalPos);
+			const float fRange = Math::VectorNormalize(vDelta);
+			const float fElevationAngle = std::min(fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f), 45.f); // if our angle is above 45 degree will we even hit them? shouldn't we just return???
 
-			switch (pWeapon->GetWeaponID())
-			{
-			case TF_WEAPON_GRENADELAUNCHER:
-			case TF_WEAPON_PIPEBOMBLAUNCHER:
-			case TF_WEAPON_STICKBOMB:
-			case TF_WEAPON_STICKY_BALL_LAUNCHER:
-				{
-					Vec3 vDelta = (vPredictedPos - vLocalPos);
-					float fRange = Math::VectorNormalize(vDelta);
+			float s = 0.0f, c = 0.0f;
+			Math::SinCos((fElevationAngle * PI / 180.0f), &s, &c);
 
-					float fElevationAngle = (fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad
-						                                   ? 0.0075f
-						                                   : 0.013f));
+			const float fElevation = (fRange * (s / c));
+			staticPos.z += (c > 0.0f ? fElevation : 0.0f);
+			break;
+		}
 
-					if (fElevationAngle > 45.0f)
-					{
-						fElevationAngle = 45.0f;
-					}
+		default: break;
+		}
 
-					float s = 0.0f, c = 0.0f;
-					Math::SinCos((fElevationAngle * PI / 180.0f), &s, &c);
+		// trace hull of projectile
+		Utils::TraceHull(predictor.m_vPosition, staticPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+		if (trace.DidHit())
+		{
+			staticPos.z = trace.vEndPos.z;
+		}
 
-					float fElevation = (fRange * (s / c));
-					vPredictedPos.z += (c > 0.0f ? fElevation : 0.0f);
-					break;
-				}
+		switch (pWeapon->GetWeaponID())
+		{
+		case TF_WEAPON_GRENADELAUNCHER:
+		case TF_WEAPON_PIPEBOMBLAUNCHER:
+		case TF_WEAPON_STICKBOMB:
+		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+		{
+			Vec3 vecOffset(16.0f, 8.0f, -6.0f);
+			Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
+			break;
+		}
 
-			default: break;
-			}
+		default: break;
+		}
 
-			Utils::TraceHull(predictor.m_vPosition, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2),
-			                 MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+		if (!CalcProjAngle(vLocalPos, staticPos, projInfo, out))
+		{
+			return false;
+		}
+		
+		if (out.m_flTime > maxTime) {
+			return false;
+		}
 
-			if (trace.DidHit())
-			{
-				vPredictedPos.z = trace.vEndPos.z;
-			}
-
-			switch (pWeapon->GetWeaponID())
-			{
-			case TF_WEAPON_GRENADELAUNCHER:
-			case TF_WEAPON_PIPEBOMBLAUNCHER:
-			case TF_WEAPON_STICKBOMB:
-			case TF_WEAPON_STICKY_BALL_LAUNCHER:
-				{
-					Vec3 vecOffset(16.0f, 8.0f, -6.0f);
-					Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
-					break;
-				}
-
-			default: break;
-			}
-
-			if (!CalcProjAngle(vLocalPos, vPredictedPos, projInfo, out))
-			{
-				return false;
-			}
-
-			if (out.m_flTime < fCorrectTime)
-			{
-				Vec3 vVisCheck = vLocalPos;
-
-				switch (pWeapon->GetWeaponID())
-				{
-				case TF_WEAPON_ROCKETLAUNCHER:
-				//case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
-				case TF_WEAPON_DIRECTHIT:
-				// dragons furry
-				case 109:
-				case TF_WEAPON_FLAREGUN:
-				//case TF_WEAPON_FLAREGUN_REVENGE:
-				case TF_WEAPON_RAYGUN_REVENGE:
-				case TF_WEAPON_COMPOUND_BOW:
-				case TF_WEAPON_SYRINGEGUN_MEDIC:
-					{
-						if (G::CurItemDefIndex != Soldier_m_TheOriginal)
-						{
-							Vec3 vecOffset(23.5f, 12.0f, -3.0f);
-
-							if (pLocal->IsDucking())
-							{
-								vecOffset.z = 8.0f;
-							}
-
-							Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vVisCheck);
-						}
-
-						break;
-					}
-
-				case TF_WEAPON_GRENADELAUNCHER:
-				case TF_WEAPON_PIPEBOMBLAUNCHER:
-				case TF_WEAPON_STICKBOMB:
-				case TF_WEAPON_STICKY_BALL_LAUNCHER:
-					{
-						auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
-						Math::AngleVectors({-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f}, &vecForward,
-						                   &vecRight, &vecUp);
-						Vec3 vecVelocity = ((vecForward * projInfo.m_flVelocity) - (vecUp * 200.0f));
-						Math::VectorAngles(vecVelocity, vecAngle);
-						out.m_flPitch = -DEG2RAD(vecAngle.x);
-
-						break;
-					}
-
-				default: break;
-				}
-
-				Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2), MASK_SOLID_BRUSHONLY,
-				                 &traceFilter, &trace);
-
-				if (trace.DidHit())
-				{
-					return false;
-				}
-
-				G::PredictedPos = vPredictedPos;
-				return true;
-			}
+		if (WillProjectileHit(pLocal, pWeapon, pCmd, staticPos, out, projInfo, predictor)){
+			G::PredictedPos = staticPos;
+			return true;
 		}
 	}
-	else
-	{
+	else {
 		Vec3 vPredictedPos = {};
 		CMoveData moveData = {};
-		Vec3 worldSpaceCenter = {};
+		Vec3 absOrigin = {};
 
 		if (F::MoveSim.Initialize(predictor.m_pEntity))
 		{
-			int n = 0;
-			for (; n < TIME_TO_TICKS(maxTime); n++)
+			for (int n = 0; n < TIME_TO_TICKS(maxTime); n++)
 			{
 				if (predictor.m_pEntity == nullptr)
 				{
 					break;
 				}
-				F::MoveSim.RunTick(moveData, worldSpaceCenter);
-				vPredictedPos = worldSpaceCenter;
+				F::MoveSim.RunTick(moveData, absOrigin);
+				vPredictedPos = absOrigin;
 
-				Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - GetAimPos(pLocal, predictor.m_pEntity);
+				const Vec3 aimPosition = GetAimPos(pLocal, predictor.m_pEntity);
+				if (aimPosition.IsZero()) { return false; } // don't remove.
+
+				const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
 				vPredictedPos.x += abs(vAimDelta.x);
 				vPredictedPos.y += abs(vAimDelta.y);
 				vPredictedPos.z += abs(vAimDelta.z);
 
 
-				//Weapon offsets
+				// get angle offsets for demoman weapons?
 				switch (pWeapon->GetWeaponID())
 				{
-				// This is from tf_bot_behaviour :/
 				case TF_WEAPON_GRENADELAUNCHER:
 				case TF_WEAPON_PIPEBOMBLAUNCHER:
 				case TF_WEAPON_STICKBOMB:
 				case TF_WEAPON_STICKY_BALL_LAUNCHER:
-					{
-						Vec3 toThreat = (vPredictedPos - vLocalPos);
-						float fRange = Math::VectorNormalize(toThreat);
+				{
+					Vec3 vDelta = (vPredictedPos - vLocalPos);
+					const float fRange = Math::VectorNormalize(vDelta);
+					const float fElevationAngle = std::min(fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f), 45.f); // if our angle is above 45 degree will we even hit them? shouldn't we just return???
 
-						float fElevationAngle = (fRange * (G::CurItemDefIndex == Demoman_m_TheLochnLoad ? 0.0075f : 0.013f));
+					float s = 0.0f, c = 0.0f;
+					Math::SinCos((fElevationAngle * PI / 180.0f), &s, &c);
 
-						if (fElevationAngle > 45.0f)
-						{
-							fElevationAngle = 45.0f;
-						}
-
-						float s = 0.0f, c = 0.0f;
-						Math::SinCos((fElevationAngle * PI / 180.0f), &s, &c);
-
-						if (c > 0.0f)
-						{
-							float elevation = fRange * s / c;
-							vPredictedPos.z += elevation;
-						}
-						break;
-					}
-
+					const float fElevation = (fRange * (s / c));
+					vPredictedPos.z += (c > 0.0f ? fElevation : 0.0f);
+					break;
+				}
 				default: break;
 				}
 
 				Utils::TraceHull(predictor.m_vPosition, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f),
-				                 MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+					MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
 
 				if (trace.DidHit())
 				{
@@ -461,18 +383,18 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				case TF_WEAPON_PIPEBOMBLAUNCHER:
 				case TF_WEAPON_STICKBOMB:
 				case TF_WEAPON_STICKY_BALL_LAUNCHER:
-					{
-						Vec3 vecOffset(16.0f, 8.0f, -6.0f);
-						Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
-						break;
-					}
+				{
+					Vec3 vecOffset(16.0f, 8.0f, -6.0f);
+					Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
+					break;
+				}
 
 				default: break;
 				}
 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, projInfo, out))
 				{
-					break;
+					return false;
 				}
 
 				out.m_flTime += fLatency;
@@ -646,13 +568,16 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	Vec3 vVisCheck = pLocal->GetEyePosition();
 	const Vec3 predictedViewAngles = {-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f};
 	CGameTrace trace = {};
-	CTraceFilterWorldAndPropsOnly traceFilter = {};
+	static CTraceFilterWorldAndPropsOnly traceFilter = {};
 	traceFilter.pSkip = predictor.m_pEntity;
-	switch (pWeapon->GetWeaponID())
+
+	// this shit's messy
 	{
-	case TF_WEAPON_RAYGUN_REVENGE:
-	case TF_WEAPON_ROCKETLAUNCHER:
-	case TF_WEAPON_DIRECTHIT:
+		switch (pWeapon->GetWeaponID())
+		{
+		case TF_WEAPON_RAYGUN_REVENGE:
+		case TF_WEAPON_ROCKETLAUNCHER:
+		case TF_WEAPON_DIRECTHIT:
 		{
 			Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
 			if (pLocal->IsDucking())
@@ -662,21 +587,21 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
-	case TF_WEAPON_SYRINGEGUN_MEDIC:
+		case TF_WEAPON_SYRINGEGUN_MEDIC:
 		{
 			const Vec3 vecOffset(16.f, 6.f, -8.f); //tf_weaponbase_gun.cpp @L628
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
-	case TF_WEAPON_COMPOUND_BOW:
+		case TF_WEAPON_COMPOUND_BOW:
 		{
 			const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
-	case TF_WEAPON_RAYGUN:
-	case TF_WEAPON_PARTICLE_CANNON:
-	case TF_WEAPON_DRG_POMSON:
+		case TF_WEAPON_RAYGUN:
+		case TF_WEAPON_PARTICLE_CANNON:
+		case TF_WEAPON_DRG_POMSON:
 		{
 			Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L568
 			if (pLocal->IsDucking())
@@ -686,21 +611,22 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
-	case TF_WEAPON_GRENADELAUNCHER:
-	case TF_WEAPON_PIPEBOMBLAUNCHER:
-	case TF_WEAPON_STICKBOMB:
-	case TF_WEAPON_STICKY_BALL_LAUNCHER:
+		case TF_WEAPON_GRENADELAUNCHER:
+		case TF_WEAPON_PIPEBOMBLAUNCHER:
+		case TF_WEAPON_STICKBOMB:
+		case TF_WEAPON_STICKY_BALL_LAUNCHER:
 		{
 			auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
-			Math::AngleVectors({-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f}, &vecForward,
-			                   &vecRight, &vecUp);
+			Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward,
+				&vecRight, &vecUp);
 			const Vec3 vecVelocity = ((vecForward * projInfo.m_flVelocity) - (vecUp * 200.0f));
 			Math::VectorAngles(vecVelocity, vecAngle);
 			out.m_flPitch = -DEG2RAD(vecAngle.x);
 
 			break;
 		}
-	default: break;
+		default: break;
+		}
 	}
 
 	//	TODO: find the actual hull size of projectiles
