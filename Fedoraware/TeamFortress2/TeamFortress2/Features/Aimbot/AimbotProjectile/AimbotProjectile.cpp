@@ -502,7 +502,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 	const bool bIsDucking = pEntity->IsDucking();
 
-	float bboxScale = 0.95f; // stop shoot flor (:D)
+	float bboxScale = Vars::Aimbot::Projectile::ScanScale.m_Var; // stop shoot flor (:D)
 
 	// this way overshoots players that are crouching and I don't know why.
 	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking) * bboxScale;
