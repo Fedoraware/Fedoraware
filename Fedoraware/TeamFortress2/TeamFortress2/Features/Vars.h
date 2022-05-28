@@ -122,6 +122,8 @@ namespace Vars
 			inline CVar<int> SortMethod{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod{ 1, L"Aim Method" };	//0 - Normal,	1 - Silent
 			inline CVar<int> AimPosition{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
+			inline CVar<int> ScanPoints{ 3 }; //how many "visible points" need to be reached before we stop searching.
+			inline CVar<float> ScanScale{ 0.95f }; // how to scale the points.
 			//inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
 			inline CVar<bool> FeetAimIfOnGround{ false, L"Aim at feet if target is on the ground." };
 			inline CVar<bool> SplashPrediction{ false, };

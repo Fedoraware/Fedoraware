@@ -496,42 +496,69 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
 	Vec3 retVec = pEntity->GetAbsOrigin();
+	Vec3 localPos = pLocal->GetAbsOrigin();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
 	const bool bIsDucking = pEntity->IsDucking();
 
-	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking);
-	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking);
+	float bboxScale = 0.95f; // stop shoot flor (:D)
 
-	const std::vector vecPoints = {
-		Vec3(vMins.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(vMaxs.x, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y, ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y, ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMins.z),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z)
+	// this way overshoots players that are crouching and I don't know why.
+	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking) * bboxScale;
+	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking) * bboxScale;
+
+	const std::vector vecPoints = {	// oh you don't like 11 points because it fucks your fps??? TOO BAD!
+		Vec3(vMins.x + vMaxs.x / 2, vMins.y + vMaxs.y / 2 , vMaxs.z),				//	middles (scan first bc they are more accurate)
+		Vec3(vMins.x + vMaxs.x / 2, vMins.y + vMaxs.y / 2 , vMins.z),				//	-
+		Vec3(vMins.x + vMaxs.x / 2, vMins.y + vMaxs.y / 2 , vMins.z + vMaxs.z / 2),	//	-
+		Vec3(vMins.x, vMins.y, vMaxs.z),											//	top four corners
+		Vec3(vMins.x, vMaxs.y, vMaxs.z),											//	-
+		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),											//	-
+		Vec3(vMaxs.x, vMins.y, vMaxs.z),											//	-
+		Vec3(vMins.x, vMins.y, vMins.z),											//	bottom four corners
+		Vec3(vMins.x, vMaxs.y, vMins.z),											//	-
+		Vec3(vMaxs.x, vMaxs.y, vMins.z),											//	-
+		Vec3(vMaxs.x, vMins.y, vMins.z)												//	-
 	};
 
 	std::vector<Vec3> visiblePoints{};
 	const matrix3x4& transform = pEntity->GetRgflCoordinateFrame();
 
+	int pointsFound = 0;
 	for (const auto& point : vecPoints)
 	{
+		if (pointsFound >= Vars::Aimbot::Projectile::ScanPoints.m_Var) { break; }
+
 		Vec3 vTransformed = {};
 		Math::VectorTransform(point, transform, vTransformed);
 
 		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 		{
 			visiblePoints.push_back(vTransformed);
+			pointsFound++;
 		}
 	}
 
-	int aimMode = Vars::Aimbot::Projectile::AimPosition.m_Var;
+	int aimMode = Vars::Aimbot::Projectile::AimPosition.m_Var; int classNum = pLocal->GetClassNum();
+
+	switch (classNum)
+	{
+	case CLASS_SOLDIER:
+	case CLASS_DEMOMAN:
+	{
+		if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->IsOnGround())
+		{
+			aimMode = 2;
+			break;
+		}
+	}
+	}
+
 	if (aimMode == 3)
 	{
 		// auto
-		switch (pLocal->GetClassNum())
+		switch (classNum)
 		{
 		case CLASS_SOLDIER:
 		case CLASS_DEMOMAN:
@@ -561,11 +588,16 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	{
 	case 0: //head
 		{
-			const Vec3 hitboxPosition = pEntity->GetHitboxPos(HITBOX_HEAD);
-
 			for (const auto& aimPoint : visiblePoints)
 			{
-				if ((hitboxPosition.z - aimPoint.z) < (hitboxPosition.z - retVec.z)) { retVec = aimPoint; }
+				if (!(abs(aimPoint.z) > abs(retVec.z))) {
+					if (abs(aimPoint.z) < abs(retVec.z)) {
+						retVec = aimPoint;
+					}
+					//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
+					//	retVec = aimPoint;
+					//}
+				}
 			}
 			break;
 		}
@@ -573,19 +605,29 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		{
 			const Vec3 hitboxPosition = pEntity->GetHitboxPos(HITBOX_PELVIS);
 
-			for (const auto& aimPoint : visiblePoints)
-			{
-				if ((hitboxPosition.z - aimPoint.z) < (hitboxPosition.z - retVec.z)) { retVec = Vec3(aimPoint.x, aimPoint.y, hitboxPosition.z); }
-			}
+			//for (Vec3 aimPoint : visiblePoints)
+			//{
+			//	aimPoint.z = hitboxPosition.z;
+			//	if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
+			//		retVec = aimPoint;
+			//	}
+			//}
+			retVec = visiblePoints.at(0);
+			retVec.z = hitboxPosition.z;
 			break;
 		}
 	case 2: //feet
 		{
-			const auto hitboxPosition = Vec3(pEntity->GetHitboxPos(HITBOX_PELVIS).x, pEntity->GetHitboxPos(HITBOX_PELVIS).y, pEntity->GetHitboxPos(HITBOX_FOOT_L).z);
-
 			for (const auto& aimPoint : visiblePoints)
 			{
-				if ((hitboxPosition.z - aimPoint.z) > (hitboxPosition.z - retVec.z)) { retVec = aimPoint; }
+				if (!(abs(aimPoint.z) < abs(retVec.z))) {
+					if (abs(aimPoint.z) > abs(retVec.z)) {
+						retVec = aimPoint;
+					}
+					//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
+					//	retVec = aimPoint;
+					//}
+				}
 			}
 			break;
 		}
