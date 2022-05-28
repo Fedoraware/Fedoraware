@@ -936,15 +936,16 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
 		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 700.f) { continue; }
 
+		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
 
 		// Don't predict enemies that are visible
-		if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetOrigin)) { continue; }
+		if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetCenter)) { continue; }
 
 		// Scan every 45 degree angle
 		for (int i = 0; i < 315; i += 45)
 		{
-			Vec3 scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), *splashRadius);
+			Vec3 scanPos = Utils::GetRotatedPosition(vTargetCenter, static_cast<float>(i), *splashRadius);
 
 			CGameTrace trace = {};
 			CTraceFilterWorldAndPropsOnly traceFilter = {};
@@ -959,13 +960,13 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
 
 			// Is the predicted position even visible? | TODO: Use trace hull
-			if (!Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos)) { continue; }
+			if (!Utils::WillProjectileHit(pLocal, pWeapon, scanPos)) { continue; }
 
 			// Get the closest point to the target | TODO: Use trace hull
 			float currentRadius = *splashRadius;
-			while (currentRadius > 10.f && Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
+			while (currentRadius > 10.f && Utils::WillProjectileHit(pLocal, pWeapon, scanPos))
 			{
-				scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius - 10.f);
+				scanPos = Utils::GetRotatedPosition(vTargetCenter, static_cast<float>(i), currentRadius - 10.f);
 				currentRadius -= 10.f;
 			}
 
