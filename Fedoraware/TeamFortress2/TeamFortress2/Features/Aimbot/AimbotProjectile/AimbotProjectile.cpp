@@ -540,6 +540,10 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		}
 	}
 
+	if (pointsFound == 0 || visiblePoints.empty()) {
+		return retVec; // return here if we found no points, visiblePoints will be empty, and my special egg code further down will crash the cheat.
+	}
+
 	int aimMode = Vars::Aimbot::Projectile::AimPosition.m_Var; int classNum = pLocal->GetClassNum();
 
 	switch (classNum)
