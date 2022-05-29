@@ -74,13 +74,22 @@ void Initialize()
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
 	g_NetVars.Init();
-	F::Glow.Init();
-	F::Chams.Init();
-	F::DMEChams.Init();
-	F::CameraWindow.Init();
-	g_HookManager.Init();
+
+	// Initialize features
+	{
+		F::Glow.Init();
+		F::Chams.Init();
+		F::DMEChams.Init();
+		F::CameraWindow.Init();
+	}
+
+	// Initialize hooks & memory stuff
+	{
+		g_HookManager.Init();
+		g_PatchManager.Init();
+	}
+
 	g_ConVars.Init();
-	g_PatchManager.Init();
 
 	InitRichPresence();
 }

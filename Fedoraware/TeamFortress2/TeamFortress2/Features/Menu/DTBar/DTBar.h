@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class CDTBar{
+class CDTBar {
 	bool ShouldRun();
 	void Dragbar();
 	bool buttonPressed = false;
@@ -12,4 +12,4 @@ public:
 	int BarY = g_ScreenSize.c + 80;
 };
 
-inline CDTBar g_DTBar;
+ADD_FEATURE(CDTBar, DTBar)
