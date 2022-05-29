@@ -316,6 +316,22 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 							yoffset += 20;
 						}*/
 
+						if (const auto rgflcoords = pLocal->GetRgflCoordinateFrame())
+						{
+							for (int x = 0; x < 3; x++) {
+								for (int y = 0; y < 4; y++) {
+									if (rgflcoords[x][y]) {
+										g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "[%i][%i] : %+.1f", x, y, rgflcoords[x][y]);
+									}
+								}
+							}
+						}
+						const auto& worldspace = pLocal->GetAbsOrigin();
+						if (!worldspace.IsZero())
+						{
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "abs : [%+.1f] [%+.1f] [%+.1f]", worldspace.x, worldspace.y, worldspace.z);
+						}
+
 						for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 						{
 							if (player == pLocal) { continue; }
