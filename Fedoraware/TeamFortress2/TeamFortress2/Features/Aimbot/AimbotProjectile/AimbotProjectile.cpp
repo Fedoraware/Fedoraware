@@ -417,7 +417,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 //	Tries to find the best position to aim at on our target.
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
-	Vec3 retVec = pEntity->GetAbsOrigin();
+	Vec3 retVec = Vec3(0, 0, 0);
 	Vec3 localPos = pLocal->GetAbsOrigin();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
@@ -516,14 +516,15 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		{
 			for (const auto& aimPoint : visiblePoints)
 			{
-				if (!(abs(aimPoint.z) > abs(retVec.z))) {
-					if (abs(aimPoint.z) < abs(retVec.z)) {
-						retVec = aimPoint;
-					}
-					//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
-					//	retVec = aimPoint;
-					//}
+				if (abs(aimPoint.z) < abs(retVec.z)) {
+					retVec = aimPoint;
 				}
+				//if (!(abs(aimPoint.z) > abs(retVec.z))) {
+				//	
+				//	//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
+				//	//	retVec = aimPoint;
+				//	//}
+				//}
 			}
 			break;
 		}
@@ -546,14 +547,15 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		{
 			for (const auto& aimPoint : visiblePoints)
 			{
-				if (!(abs(aimPoint.z) < abs(retVec.z))) {
-					if (abs(aimPoint.z) > abs(retVec.z)) {
-						retVec = aimPoint;
-					}
-					//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
-					//	retVec = aimPoint;
-					//}
+				if (abs(aimPoint.z) > abs(retVec.z)) {
+					retVec = aimPoint;
 				}
+				//if (!(abs(aimPoint.z) < abs(retVec.z))) {
+				//	
+				//	//else if (aimPoint.DistTo(localPos) < retVec.DistTo(localPos)) {
+				//	//	retVec = aimPoint;
+				//	//}
+				//}
 			}
 			break;
 		}
