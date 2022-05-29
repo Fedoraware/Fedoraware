@@ -15,7 +15,7 @@ struct DormantData {
 };
 
 struct Priority {
-	int Mode = 2;
+	int Mode = 2; // 0 - Friend, 1 - Ignore, 2 - Default, 3 - Rage, 4 - Cheater
 };
 
 namespace G
@@ -80,7 +80,7 @@ namespace G
 	inline std::map<int, DormantData> PartyPlayerESP; // <Index, DormantData>
 	inline std::map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
-	inline std::map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <Index, Priority>
+	inline std::map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{
