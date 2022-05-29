@@ -338,7 +338,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				vPredictedPos = absOrigin;
 
 				const Vec3 aimPosition = GetAimPos(pLocal, predictor.m_pEntity);
-				if (aimPosition.IsZero()) { return false; } // don't remove.
+				if (aimPosition.IsZero()) { break; } // don't remove.
 
 				const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
 				vPredictedPos.x += abs(vAimDelta.x);
@@ -394,7 +394,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, projInfo, out))
 				{
-					return false;
+					break;
 				}
 
 				out.m_flTime += fLatency;
