@@ -338,7 +338,9 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				vPredictedPos = absOrigin;
 
 				const Vec3 aimPosition = GetAimPos(pLocal, predictor.m_pEntity);
-				if (aimPosition.IsZero()) { break; } // don't remove.
+				if (aimPosition.IsZero()) { 
+					break; 
+				} // don't remove.
 
 				const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
 				vPredictedPos.x += abs(vAimDelta.x);
@@ -417,7 +419,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 //	Tries to find the best position to aim at on our target.
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
-	Vec3 retVec = Vec3(0, 0, 0);
+	Vec3 retVec = pLocal->GetAbsOrigin();
 	Vec3 localPos = pLocal->GetAbsOrigin();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
@@ -463,7 +465,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	}
 
 	if (pointsFound == 0 || visiblePoints.empty()) {
-		return retVec; // return here if we found no points, visiblePoints will be empty, and my special egg code further down will crash the cheat.
+		return Vec3(0, 0, 0); // return here if we found no points, visiblePoints will be empty, and my special egg code further down will crash the cheat.
 	}
 
 	int aimMode = Vars::Aimbot::Projectile::AimPosition.m_Var; int classNum = pLocal->GetClassNum();
