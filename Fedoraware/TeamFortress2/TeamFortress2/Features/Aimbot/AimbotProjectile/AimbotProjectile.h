@@ -30,8 +30,8 @@ class CAimbotProjectile {
 	bool SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor,
 	                     const ProjectileInfo_t& projInfo, Solution_t& out);
 
-	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3 targetPredPos);
-	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Vec3 vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo, const Predictor_t& predictor);
+	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos);
+	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo, const Predictor_t& predictor);
 	ESortMethod GetSortMethod();
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& target);

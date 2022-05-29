@@ -235,8 +235,7 @@ namespace Utils
 
 	__inline void GetProjectileFireSetup(CBaseEntity *pPlayer, const Vec3 &vViewAngles, Vec3 vOffset, Vec3 *vSrc)
 	{
-		if (g_ConVars.cl_flipviewmodels->GetInt())
-			vOffset.y *= -1.0f;
+		if (g_ConVars.cl_flipviewmodels->GetBool()) { vOffset.y *= -1.0f; }
 
 		Vec3 vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 		Math::AngleVectors(vViewAngles, &vecForward, &vecRight, &vecUp);

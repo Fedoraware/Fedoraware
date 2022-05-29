@@ -6,7 +6,7 @@
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
-#include "../../Features/AntiHack/FakeLag/FakeLagHandler.h"
+#include "../../Features/AntiHack/FakeLag/FakeLag.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
@@ -220,7 +220,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::Misc.RunLate(pCmd);
 	F::Resolver.Update(pCmd);
 	F::Followbot.Run(pCmd);
-	F::FakeLag.onTick(pCmd, g_EntityCache.m_pLocal, pSendPacket);
+	F::FakeLag.OnTick(pCmd, pSendPacket);
 
 	G::ViewAngles = pCmd->viewangles;
 
