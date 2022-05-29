@@ -632,7 +632,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	//	TODO: find the actual hull size of projectiles
 	//	maybe - https://www.unknowncheats.me/forum/team-fortress-2-a/475502-weapons-projectile-min-max-collideables.html
 	//	UTIL_SetSize( this, -Vector( 1.0f, 1.0f, 1.0f ), Vector( 1.0f, 1.0f, 1.0f ) ); @tf_projectile_base.cpp L117
-	Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+	Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SHOT_HULL, &traceFilter, &trace);
 
 	return !trace.DidHit();
 }
@@ -934,7 +934,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 700.f) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 800.f) { continue; }
 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
@@ -959,10 +959,10 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
 
-			// Is the predicted position even visible? | TODO: Use trace hull
+			// Is the predicted position even visible?
 			if (!Utils::WillProjectileHit(pLocal, pWeapon, scanPos)) { continue; }
 
-			// Get the closest point to the target | TODO: Use trace hull
+			// Get the closest point to the target
 			float currentRadius = *splashRadius;
 			while (currentRadius > 10.f && Utils::WillProjectileHit(pLocal, pWeapon, scanPos))
 			{
@@ -970,7 +970,10 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				currentRadius -= 10.f;
 			}
 
-			// We found the closest point!
+			/*
+			 *	We found the closest point!
+			 *	Now we need to get the shoot pos/angles relative to vTargetOrigin instead of vTargetCenter
+			 */
 			currentRadius = std::clamp(currentRadius + 10.f, 0.f, *splashRadius);
 			scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius);
 

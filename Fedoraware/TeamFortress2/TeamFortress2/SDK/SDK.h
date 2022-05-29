@@ -845,7 +845,7 @@ namespace Utils
 			}
 		}
 
-		TraceHull(shootPos, targetPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+		TraceHull(shootPos, targetPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SHOT_HULL, &traceFilter, &trace);
 		return !trace.DidHit();
 	}
 }
