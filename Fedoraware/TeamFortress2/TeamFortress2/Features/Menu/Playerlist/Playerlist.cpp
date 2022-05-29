@@ -16,29 +16,33 @@ std::mutex mutex;
 
 void CPlayerList::UpdatePlayers()
 {
-	std::multimap<int, ListPlayer> listBuffer{};
-	for (int i = 1; i < I::GlobalVars->maxclients; i++)
+	static Timer updateTimer{};
+	if (updateTimer.Run(1000))
 	{
-		if (g_PR->isValid(i))
+		std::multimap<int, ListPlayer> listBuffer{};
+		for (int i = 1; i < I::GlobalVars->maxclients; i++)
 		{
-			ListPlayer player{
-				g_PR->GetPlayerName(i),
-				g_PR->GetUserID(i),
-				g_PR->GetAccountID(i),
-				g_PR->GetPing(i) == 0,
-				Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
-				g_PR->GetHealth(i),
-				g_PR->GetMaxHealth(i),
-				g_PR->GetClass(i),
-				g_PR->IsAlive(i)
-			};
+			if (g_PR->isValid(i))
+			{
+				ListPlayer player{
+					g_PR->GetPlayerName(i),
+					g_PR->GetUserID(i),
+					g_PR->GetAccountID(i),
+					g_PR->GetPing(i) == 0,
+					Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+					g_PR->GetHealth(i),
+					g_PR->GetMaxHealth(i),
+					g_PR->GetClass(i),
+					g_PR->IsAlive(i)
+				};
 
-			listBuffer.emplace(g_PR->GetTeam(i), player);
+				listBuffer.emplace(g_PR->GetTeam(i), player);
+			}
 		}
-	}
 
-	std::lock_guard lock(mutex);
-	listBuffer.swap(PlayerCache);
+		std::lock_guard lock(mutex);
+		listBuffer.swap(PlayerCache);
+	}
 }
 
 void CPlayerList::Render()

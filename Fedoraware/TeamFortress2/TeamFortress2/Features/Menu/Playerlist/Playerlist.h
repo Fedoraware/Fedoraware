@@ -21,4 +21,4 @@ public:
 	std::multimap<int, ListPlayer> PlayerCache{};
 };
 
-inline CPlayerList g_PlayerList;
+ADD_FEATURE(CPlayerList, PlayerList)

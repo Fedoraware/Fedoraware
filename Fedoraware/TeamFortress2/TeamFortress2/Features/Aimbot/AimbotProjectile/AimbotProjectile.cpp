@@ -634,13 +634,9 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	//	TODO: find the actual hull size of projectiles
 	//	maybe - https://www.unknowncheats.me/forum/team-fortress-2-a/475502-weapons-projectile-min-max-collideables.html
 	//	UTIL_SetSize( this, -Vector( 1.0f, 1.0f, 1.0f ), Vector( 1.0f, 1.0f, 1.0f ) ); @tf_projectile_base.cpp L117
-	Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+	Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SHOT_HULL, &traceFilter, &trace);
 
-	if (trace.DidHit())
-	{
-		return false;
-	}
-	return true;
+	return !trace.DidHit();
 }
 
 ESortMethod CAimbotProjectile::GetSortMethod()
@@ -939,16 +935,19 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (!pTarget || !pTarget->IsAlive()) { continue; }
-		if (!pTarget->IsOnGround()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 900.f) { continue; }
+		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
+		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 800.f) { continue; }
 
+		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
+
+		// Don't predict enemies that are visible
+		if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetCenter)) { continue; }
 
 		// Scan every 45 degree angle
 		for (int i = 0; i < 315; i += 45)
 		{
-			Vec3 scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), *splashRadius);
+			Vec3 scanPos = Utils::GetRotatedPosition(vTargetCenter, static_cast<float>(i), *splashRadius);
 
 			CGameTrace trace = {};
 			CTraceFilterWorldAndPropsOnly traceFilter = {};
@@ -958,37 +957,37 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var) { continue; }
 
-			// Don't predict through walls
+			// Can the target receive splash damage? (Don't predict through walls)
 			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
 
-			// Don't predict enemies that are visible
-			if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetOrigin)) { continue; }
+			// Is the predicted position even visible?
+			if (!Utils::WillProjectileHit(pLocal, pWeapon, scanPos)) { continue; }
 
-			if (Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
+			// Get the closest point to the target
+			float currentRadius = *splashRadius;
+			while (currentRadius > 10.f && Utils::WillProjectileHit(pLocal, pWeapon, scanPos))
 			{
-				// We found a target point! Get the closest point possible...
-				float currentRadius = *splashRadius;
-				while (currentRadius > 10.f && Utils::VisPos(pLocal, pTarget, vLocalShootPos, scanPos))
-				{
-					scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius - 10.f);
-					currentRadius -= 10.f;
-				}
-
-				// Closest point found!
-				currentRadius = std::clamp(currentRadius + 10.f, 0.f, *splashRadius);
-				scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius);
-
-				if (Vars::Debug::DebugInfo.m_Var)
-				{
-					I::DebugOverlay->AddLineOverlay(vTargetOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
-					I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
-				}
-
-				const Vec3 vAngleToSplash = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-				outTarget = { pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash };
-				return true;
+				scanPos = Utils::GetRotatedPosition(vTargetCenter, static_cast<float>(i), currentRadius - 10.f);
+				currentRadius -= 10.f;
 			}
+
+			/*
+			 *	We found the closest point!
+			 *	Now we need to get the shoot pos/angles relative to vTargetOrigin instead of vTargetCenter
+			 */
+			currentRadius = std::clamp(currentRadius + 10.f, 0.f, *splashRadius);
+			scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius);
+
+			if (Vars::Debug::DebugInfo.m_Var)
+			{
+				I::DebugOverlay->AddLineOverlay(vTargetOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
+				I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
+			}
+
+			const Vec3 vAngleToSplash = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
+			outTarget = { pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash };
+			return true;
 		}
 	}
 

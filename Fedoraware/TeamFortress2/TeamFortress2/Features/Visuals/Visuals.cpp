@@ -106,12 +106,14 @@ void CVisuals::SkyboxChanger()
 
 bool CVisuals::RemoveScope(int nPanel)
 {
+	if (!Vars::Visuals::RemoveScope.m_Var) { return false; }
+
 	if (!m_nHudZoom && Hash::IsHudScope(I::Panel->GetName(nPanel)))
 	{
 		m_nHudZoom = nPanel;
 	}
 
-	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
+	return (nPanel == m_nHudZoom);
 }
 
 void CVisuals::FOV(CViewSetup* pView)

@@ -31,4 +31,4 @@ public:
 	std::vector<CustomMaterial> MaterialList;
 };
 
-inline CMaterialEditor g_MaterialEditor;
+ADD_FEATURE(CMaterialEditor, MaterialEditor)
