@@ -3,29 +3,33 @@
 MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 70 8B 55 0C 53 8B 5D 08 89 4D FC 8B 02 89 45 E8 8B 42 04 89 45 EC 8B 42 08 89 45 F0 56 57"), void, __fastcall,
 		  void* ecx, void* edx, CBaseEntity* pOwner, const Vec3& vEyePosition, Vec3& vEyeAngles)
 {
-	static Vec3 m_vEyeAngDelayed;
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (Vars::Visuals::AimbotViewmodel.m_Var)
 	{
-		if (pLocal->IsAlive() && !G::AimPos.IsZero() && Vars::Visuals::AimbotViewmodel.m_Var)
+		static Vec3 m_vEyeAngDelayed;
+		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
-			if (G::CurWeaponType == EWeaponType::PROJECTILE)
+			if (pLocal->IsAlive() && !G::AimPos.IsZero())
 			{
-				vEyeAngles = Math::CalcAngle(vEyePosition, G::PredictedPos);
+				if (G::CurWeaponType == EWeaponType::PROJECTILE)
+				{
+					vEyeAngles = Math::CalcAngle(vEyePosition, G::PredictedPos);
+				}
+				else
+				{
+					vEyeAngles = Math::CalcAngle(vEyePosition, G::AimPos);
+				}
+				m_vEyeAngDelayed = vEyeAngles;
+				G::EyeAngDelay = 0;
 			}
-			else
+			else if (pLocal->IsAlive())
 			{
-				vEyeAngles = Math::CalcAngle(vEyePosition, G::AimPos);
+				if (G::EyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
+				// looks hot ty senator for the idea
+				else { vEyeAngles = I::Engine->GetViewAngles(); }
 			}
-			m_vEyeAngDelayed = vEyeAngles;
-			G::EyeAngDelay = 0;
-		}
-		else if (pLocal->IsAlive())
-		{
-			if (G::EyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
-			// looks hot ty senator for the idea
-			else { vEyeAngles = I::Engine->GetViewAngles(); }
 		}
 	}
+
 	//VM Offsets
 
 	Vec3 vForward = {}, vRight = {}, vUp = {};
