@@ -19,7 +19,7 @@ namespace SandvichAimbot
 	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
 	{
 		const int nWeaponID = pWeapon->GetWeaponID();
-		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
+		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
 			                         ? (pCmd->buttons & IN_ATTACK)
 			                         : F::AimbotGlobal.IsKeyDown());
 
@@ -38,8 +38,8 @@ namespace SandvichAimbot
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.m_Var };
-	return !Vars::Aimbot::Global::AimKey.m_Var ? true : aimKey.Down();
+	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.Value };
+	return !Vars::Aimbot::Global::AimKey.Value ? true : aimKey.Down();
 }
 
 void CAimbotGlobal::SortTargets(const ESortMethod& Method)
@@ -79,8 +79,8 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
 	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
-	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (INVUL) && !pTarget->IsVulnerable()) { return true; }
-	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (CLOAKED) && pTarget->IsCloaked())
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (INVUL) && !pTarget->IsVulnerable()) { return true; }
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (CLOAKED) && pTarget->IsCloaked())
 	{
 		const int nCond = pTarget->GetCond();
 		if (nCond & ~(TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
@@ -89,15 +89,15 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 		}
 	}
 
-	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (DEADRINGER) && Utils::isFeigningDeath(pTarget)) { return true; }
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (DEADRINGER) && Utils::isFeigningDeath(pTarget)) { return true; }
 
-	if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (TAUNTING) && pTarget->IsTaunting()) { return true; }
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (TAUNTING) && pTarget->IsTaunting()) { return true; }
 
 	// Special conditions for mediguns
 	if (!hasMedigun)
 	{
 		if (G::IsIgnored(pInfo.friendsID)) { return true; }
-		if (Vars::Aimbot::Global::IgnoreOptions.m_Var & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+		if (Vars::Aimbot::Global::IgnoreOptions.Value & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
 	}
 
 	return false;

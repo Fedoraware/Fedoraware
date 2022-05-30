@@ -44,7 +44,7 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 		if (!pPlayer || !pPlayer->IsAlive()) { continue; }
 		if (pPlayer->GetIndex() == pLocal->GetIndex()) { continue; }
 		if (pLocal->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin()) > 280.f) { continue; }
-		if (Vars::Misc::Followbot::FriendsOnly.m_Var && !g_EntityCache.IsFriend(pPlayer->GetIndex())) { continue; }
+		if (Vars::Misc::Followbot::FriendsOnly.Value && !g_EntityCache.IsFriend(pPlayer->GetIndex())) { continue; }
 
 		if (ValidTarget(pPlayer, pLocal))
 		{
@@ -57,7 +57,7 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 
 void CFollowbot::Run(CUserCmd* pCmd)
 {
-	if (!Vars::Misc::Followbot::Enabled.m_Var)
+	if (!Vars::Misc::Followbot::Enabled.Value)
 	{
 		CurrentTarget = nullptr;
 		return;
@@ -100,7 +100,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 
 		if (localPos.Dist2D(currentNode.Location) >= NODE_DISTANCE)
 		{
-			if (localPos.DistTo(CurrentTarget->GetAbsOrigin()) >= Vars::Misc::Followbot::Distance.m_Var)
+			if (localPos.DistTo(CurrentTarget->GetAbsOrigin()) >= Vars::Misc::Followbot::Distance.Value)
 			{
 				Utils::WalkTo(pCmd, pLocal, currentNode.Location);
 			}
@@ -126,7 +126,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 
 void CFollowbot::Draw()
 {
-	if (!Vars::Misc::Followbot::Enabled.m_Var || !CurrentTarget) { return; }
+	if (!Vars::Misc::Followbot::Enabled.Value || !CurrentTarget) { return; }
 	if (PathNodes.size() < 2) { return; }
 
 	const std::deque<PathNode> tmpPath = PathNodes;

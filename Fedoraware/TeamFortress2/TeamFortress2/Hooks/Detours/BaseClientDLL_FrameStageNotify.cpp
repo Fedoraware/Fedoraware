@@ -17,14 +17,14 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 			if (const auto& pLocal = g_EntityCache.m_pLocal)
 			{
 				// Handle freecam position
-				if (G::FreecamActive && Vars::Visuals::FreecamKey.m_Var && GetAsyncKeyState(Vars::Visuals::FreecamKey.m_Var) & 0x8000)
+				if (G::FreecamActive && Vars::Visuals::FreecamKey.Value && GetAsyncKeyState(Vars::Visuals::FreecamKey.Value) & 0x8000)
 				{
 					pLocal->SetVecOrigin(G::FreecamPos);
 					pLocal->SetAbsOrigin(G::FreecamPos);
 				}
 
 				// Remove punch effect
-				if (Vars::Visuals::RemovePunch.m_Var)
+				if (Vars::Visuals::RemovePunch.Value)
 				{
 					G::PunchAngles = pLocal->GetPunchAngles();
 					//Store punch angles to be compesnsated for in aim
@@ -102,14 +102,14 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		{
 			if (!G::UnloadWndProcHook)
 			{
-				if (Vars::Visuals::Rain.m_Var > 0)
+				if (Vars::Visuals::Rain.Value > 0)
 				{
 					F::Visuals.rain.Run();
 				}
 
 				// genius method i swear
 				static bool modded = false;
-				if (Vars::Visuals::SkyModulation.m_Var || Vars::Visuals::WorldModulation.m_Var)
+				if (Vars::Visuals::SkyModulation.Value || Vars::Visuals::WorldModulation.Value)
 				{
 					F::Visuals.ModulateWorld();
 					modded = true;

@@ -16,8 +16,8 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 	*/
 
 	// if triggerbot is active and we havent set a key its clear we want to trigger all the time, forcing keybinds is madness (especially when it's not done @ AimbotGlobal.cpp)
-	if (!Vars::Triggerbot::Global::Active.m_Var || (!F::AutoGlobal.IsKeyDown() && Vars::Triggerbot::Global::TriggerKey.
-		m_Var)) { return false; }
+	if (!Vars::Triggerbot::Global::Active.Value || (!F::AutoGlobal.IsKeyDown() && Vars::Triggerbot::Global::TriggerKey.
+		Value)) { return false; }
 
 	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
 	{
@@ -29,7 +29,7 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 
 void CAuto::Run(CUserCmd* pCmd)
 {
-	if (Vars::Triggerbot::Stab::Disguise.m_Var && F::AutoStab.m_bShouldDisguise)
+	if (Vars::Triggerbot::Stab::Disguise.Value && F::AutoStab.m_bShouldDisguise)
 	{
 		I::Engine->ClientCmd_Unrestricted(_("lastdisguise"));
 	}

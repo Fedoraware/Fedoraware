@@ -15,7 +15,7 @@ bool CCritHack::AreRandomCritsEnabled()
 /* Returns whether the crithack should run */
 bool CCritHack::IsEnabled()
 {
-	if (!Vars::CritHack::Active.m_Var) { return false; }
+	if (!Vars::CritHack::Active.Value) { return false; }
 	if (!AreRandomCritsEnabled()) { return false; }
 	if (!I::Engine->IsInGame()) { return false; }
 
@@ -24,9 +24,9 @@ bool CCritHack::IsEnabled()
 
 bool CCritHack::ShouldCrit()
 {
-	static KeyHelper critKey{ &Vars::CritHack::CritKey.m_Var };
+	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
 	if (critKey.Down()) { return true; }
-	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.m_Var) { return true; }
+	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.Value) { return true; }
 
 	return false;
 }
@@ -82,7 +82,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
 		} 
-		else if (Vars::CritHack::avoidrandom.m_Var)
+		else if (Vars::CritHack::avoidrandom.Value)
 		{
 			// Prevent crit
 			int tries = 0;
@@ -101,7 +101,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 
 void CCritHack::Draw()
 {
-	if (!Vars::CritHack::indicators.m_Var) { return; }
+	if (!Vars::CritHack::indicators.Value) { return; }
 	if (!IsEnabled() || !G::CurrentUserCmd) { return; }
 
 	const auto& pLocal = g_EntityCache.m_pLocal;

@@ -46,14 +46,14 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 bool CSpectatorList::ShouldRun()
 {
-	return Vars::Visuals::SpectatorList.m_Var/* && !I::EngineVGui->IsGameUIVisible()*/;
+	return Vars::Visuals::SpectatorList.Value/* && !I::EngineVGui->IsGameUIVisible()*/;
 }
 
 void CSpectatorList::Run()
 {
 	if (!ShouldRun()) { return; }
 
-	if (Vars::Visuals::SpectatorList.m_Var == 1) { DrawDefault(); }
+	if (Vars::Visuals::SpectatorList.Value == 1) { DrawDefault(); }
 	else { DrawClassic(); }
 }
 
@@ -170,7 +170,7 @@ void CSpectatorList::DrawClassic()
 			                                  (Spectator.Mode + Spectator.Name).c_str(), w, h);
 
 			const int nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
-			if (Vars::Visuals::SpectatorList.m_Var == 3)
+			if (Vars::Visuals::SpectatorList.Value == 3)
 			{
 				PlayerInfo_t pi{};
 				if (!I::Engine->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
@@ -185,7 +185,7 @@ void CSpectatorList::DrawClassic()
 				nDrawX, nDrawY,
 				Spectator.IsFriend
 					? Colors::Friend
-					: Utils::GetTeamColor(Spectator.Team, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+					: Utils::GetTeamColor(Spectator.Team, Vars::ESP::Main::EnableTeamEnemyColors.Value),
 				ALIGN_CENTERHORIZONTAL,
 				L"[%ls] %ls", Spectator.Mode.data(), Spectator.Name.data());
 

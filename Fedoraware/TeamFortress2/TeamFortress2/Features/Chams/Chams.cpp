@@ -214,7 +214,7 @@ IMaterial* CChams::FetchMaterial(const Chams_t& chams)
 
 void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Players::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
+	if (!Vars::Chams::Players::Active.Value || !Vars::Chams::Main::Active.Value)
 		return;
 
 	const auto& Players = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
@@ -248,10 +248,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		if (!Utils::IsOnScreen(pLocal, Player))
 			continue;
 
-		Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+		Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 			
 		float drawalpha = Color::TOFLOAT(DrawColor.a);
-		if (Player->GetTeamNum() == pLocal->GetTeamNum() && !bIsLocal && Vars::Chams::Players::FadeoutTeammates.m_Var && pLocal->IsAlive()) {
+		if (Player->GetTeamNum() == pLocal->GetTeamNum() && !bIsLocal && Vars::Chams::Players::FadeoutTeammates.Value && pLocal->IsAlive()) {
 			drawalpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()), 450.f, 100.f, drawalpha, 0.0f);
 		}
 		I::RenderView->SetBlend(drawalpha);
@@ -270,7 +270,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 			}
 			if (foundenvmaptint)
 			{
-				if (bIsLocal && Vars::Glow::Players::LocalRainbow.m_Var)
+				if (bIsLocal && Vars::Glow::Players::LocalRainbow.Value)
 				{
 					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r),
 						Color::TOFLOAT(Utils::Rainbow().g),
@@ -286,7 +286,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		DrawModel(Player);
 
-		if (Vars::Chams::Players::Wearables.m_Var)
+		if (Vars::Chams::Players::Wearables.Value)
 		{
 			CBaseEntity* pAttachment = Player->FirstMoveChild();
 
@@ -302,7 +302,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 			}
 		}
 
-		if (Vars::Chams::Players::Weapons.m_Var)
+		if (Vars::Chams::Players::Weapons.Value)
 		{
 			if (const auto& pWeapon = Player->GetActiveWeapon())
 				DrawModel(pWeapon);
@@ -319,7 +319,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Buildings::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
+	if (!Vars::Chams::Buildings::Active.Value || !Vars::Chams::Main::Active.Value)
 		return;
 
 	const auto& Buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
@@ -358,7 +358,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
-		Color_t DrawColor = Utils::GetEntityDrawColor(pBuilding, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+		Color_t DrawColor = Utils::GetEntityDrawColor(pBuilding, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 		I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 		if (chams.drawMaterial != 6)
@@ -390,13 +390,13 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 	I::RenderView->SetBlend(1.0f);
 
-	if (Vars::Chams::Buildings::IgnoreZ.m_Var)
+	if (Vars::Chams::Buildings::IgnoreZ.Value)
 		pRenderContext->DepthRange(0.0f, 1.0f);
 }
 
 void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::World::Active.m_Var || !Vars::Chams::Main::Active.m_Var)
+	if (!Vars::Chams::World::Active.Value || !Vars::Chams::Main::Active.Value)
 		return;
 
 	bool foundselfillumtint = false;
@@ -500,7 +500,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 			
 			int nTeam = Projectile->GetTeamNum();
 
-			if (Vars::Chams::World::Projectilez.m_Var == 2 && nTeam == pLocal->GetTeamNum())
+			if (Vars::Chams::World::Projectilez.Value == 2 && nTeam == pLocal->GetTeamNum())
 				continue;
 
 
@@ -509,7 +509,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 			auto chams = Vars::Chams::World::Projectiles;
 			auto chamsMaterial = FetchMaterial(chams);
-			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+			Color_t DrawColor = Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 			I::RenderView->SetBlend(Color::TOFLOAT(DrawColor.a));
 

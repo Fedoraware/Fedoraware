@@ -13,13 +13,13 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	}
 
 	// Is a fakelag key set and pressed?
-	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.m_Var };
-	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.m_Var && Vars::Misc::CL_Move::FakelagMode.m_Var == 0) {
+	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.Value };
+	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.Value && Vars::Misc::CL_Move::FakelagMode.Value == 0) {
 		return false;
 	}
 
 	// Do we have enough velocity for velocity mode?
-	if (Vars::Misc::CL_Move::FakelagMode.m_Var == FL_Velocity && pLocal->GetVecVelocity().Length2D() < 20.f)
+	if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Velocity && pLocal->GetVecVelocity().Length2D() < 20.f)
 	{
 		return false;
 	}
@@ -33,7 +33,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 }
 
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
-	if (!Vars::Misc::CL_Move::Fakelag.m_Var) { return; }
+	if (!Vars::Misc::CL_Move::Fakelag.Value) { return; }
 
 	const auto& pLocal = g_EntityCache.m_pLocal;
 	if (!pLocal || !pLocal->IsAlive())
@@ -62,8 +62,8 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 	}
 
 	// Set the selected choke amount (if not random)
-	if (Vars::Misc::CL_Move::FakelagMode.m_Var != FL_Random) {
-		ChosenAmount = Vars::Misc::CL_Move::FakelagValue.m_Var;
+	if (Vars::Misc::CL_Move::FakelagMode.Value != FL_Random) {
+		ChosenAmount = Vars::Misc::CL_Move::FakelagValue.Value;
 	}
 
 	if (ChosenAmount > ChokeCounter) {
@@ -75,9 +75,9 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 		*pSendPacket = true;
 
 		// Set a new random amount (if desired)
-		if (Vars::Misc::CL_Move::FakelagMode.m_Var == FL_Random)
+		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random)
 		{
-			ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.m_Var, Vars::Misc::CL_Move::FakelagMax.m_Var);
+			ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value);
 		}
 
 		ChokeCounter = 0;

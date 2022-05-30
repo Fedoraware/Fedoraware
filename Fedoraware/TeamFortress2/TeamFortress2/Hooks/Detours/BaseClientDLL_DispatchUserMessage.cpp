@@ -57,7 +57,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 			std::string playerName(nameBuffer);
 			std::string chatMessage(msgBuffer);
 
-			if (Vars::Misc::ChatCensor.m_Var)
+			if (Vars::Misc::ChatCensor.Value)
 			{
 				PlayerInfo_t senderInfo{};
 				if (I::Engine->GetPlayerInfo(entIdx, &senderInfo))
@@ -94,7 +94,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 
 		case TextMsg:
 		{
-			if (Vars::Misc::AntiAutobal.m_Var && msgData.GetNumBitsLeft() > 35)
+			if (Vars::Misc::AntiAutobal.Value && msgData.GetNumBitsLeft() > 35)
 			{
 				const INetChannel* server = I::Engine->GetNetChannelInfo();
 				const std::string data(bufData);
@@ -125,7 +125,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 		case VGUIMenu:
 		{
 			// Remove MOTD
-			if (Vars::Visuals::RemoveMOTD.m_Var || Vars::Misc::AutoJoin.m_Var)
+			if (Vars::Visuals::RemoveMOTD.Value || Vars::Misc::AutoJoin.Value)
 			{
 				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "info") == 0)
 				{
@@ -135,7 +135,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 			}
 
 			// Autojoin team / class
-			if (Vars::Misc::AutoJoin.m_Var)
+			if (Vars::Misc::AutoJoin.Value)
 			{
 				if (strcmp(reinterpret_cast<char*>(msgData.m_pData), "team") == 0)
 				{
@@ -146,7 +146,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 				if (strncmp(reinterpret_cast<char*>(msgData.m_pData), "class_", 6) == 0)
 				{
 					static std::string classNames[] = { "scout", "soldier", "pyro", "demoman", "heavyweapons", "engineer", "medic", "sniper", "spy" };
-					I::Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.m_Var - 1]).c_str());
+					I::Engine->ClientCmd_Unrestricted(std::string("join_class").append(" ").append(classNames[Vars::Misc::AutoJoin.Value - 1]).c_str());
 					return true;
 				}
 			}
@@ -156,7 +156,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 
 		case ForcePlayerViewAngles:
 		{
-			return Vars::Visuals::PreventForcedAngles.m_Var ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
+			return Vars::Visuals::PreventForcedAngles.Value ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
 		}
 
 		case SpawnFlyingBird:
@@ -164,14 +164,14 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 		case PlayerTauntSoundLoopStart:
 		case PlayerTauntSoundLoopEnd:
 		{
-			return Vars::Visuals::RemoveTaunts.m_Var ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
+			return Vars::Visuals::RemoveTaunts.Value ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
 		}
 
 		case Shake:
 		case Fade:
 		case Rumble:
 		{
-			return Vars::Visuals::RemoveScreenEffects.m_Var ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
+			return Vars::Visuals::RemoveScreenEffects.Value ? true : Hook.Original<FN>()(ecx, edx, type, msgData);
 		}
 	}
 

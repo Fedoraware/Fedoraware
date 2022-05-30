@@ -17,7 +17,7 @@ bool CResolver::ShouldAutoResolve()
 /* Run the resolver and apply the resolved angles */
 void CResolver::Run()
 {
-	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	Vec3 localHead;
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -146,7 +146,7 @@ void CResolver::Run()
 /* Update resolver data (for Bruteforce) */
 void CResolver::Update(CUserCmd* pCmd)
 {
-	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	// Log shots
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -208,7 +208,7 @@ void CResolver::Update(CUserCmd* pCmd)
 /* Called when the someone was damaged. Did we hit? */
 void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 {
-	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	const int victim = I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
 	const int attacker = I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
@@ -219,7 +219,7 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 
 		if (!I::Engine->GetPlayerInfo(victim, &temp)) { return; }
 		if (ResolveData.find(temp.friendsID) == ResolveData.end()) { return; }
-		if (Vars::Aimbot::Hitscan::AimHitbox.m_Var == 0 && !bCrit) { return; }
+		if (Vars::Aimbot::Hitscan::AimHitbox.Value == 0 && !bCrit) { return; }
 
 		ResolveData[temp.friendsID].LastHit = I::Engine->Time();
 		// ResolveData[temp.friendsID].RequiresUpdate = false;

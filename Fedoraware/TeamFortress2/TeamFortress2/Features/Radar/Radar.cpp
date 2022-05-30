@@ -11,7 +11,7 @@ void CRadar::Run()
 
 	//Update some members before we do anything.
 	//The radar draw point and background drawing is done with this information.
-	RadarSize = Vars::Radar::Main::Size.m_Var;
+	RadarSize = Vars::Radar::Main::Size.Value;
 	RadarCorrSize = (RadarSize * 2);
 
 	//Draw background, handle input.
@@ -22,7 +22,7 @@ void CRadar::Run()
 
 bool CRadar::ShouldRun()
 {
-	if (!Vars::Radar::Main::Active.m_Var) { return false; }
+	if (!Vars::Radar::Main::Active.Value) { return false; }
 
 	return true;
 }
@@ -49,7 +49,7 @@ void CRadar::DrawRadar()
 	                    RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize - offset,
 	                    Vars::Menu::Colors::MenuAccent, {43, 43, 45, 250}, true);
 	//Build the bg color with the wanted alpha.
-	const Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.m_Var)};
+	const Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.Value)};
 
 
 	//Background
@@ -57,15 +57,15 @@ void CRadar::DrawRadar()
 
 	//Outline
 	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarCorrSize, RadarCorrSize, {
-		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
 	                    });
 
 	//Center lines
 	g_Draw.Line(RadarX, RadarY - RadarSize, RadarX, RadarY + RadarSize - 1, {
-		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
 	            });
 	g_Draw.Line(RadarX - RadarSize, RadarY, RadarX + RadarSize - 1, RadarY, {
-		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.m_Var)
+		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
 	            });
 }
 
@@ -159,14 +159,14 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
 	LocalOrigin = pLocal->GetAbsOrigin();
 	LocalYaw = I::Engine->GetViewAngles().y * (PI / 180.f);
-	Range = static_cast<float>(Vars::Radar::Main::Range.m_Var);
+	Range = static_cast<float>(Vars::Radar::Main::Range.Value);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);
 
-	if (Vars::Radar::World::Active.m_Var)
+	if (Vars::Radar::World::Active.Value)
 	{
-		const int nSize = Vars::Radar::World::IconSize.m_Var;
+		const int nSize = Vars::Radar::World::IconSize.Value;
 
-		if (Vars::Radar::World::Ammo.m_Var)
+		if (Vars::Radar::World::Ammo.Value)
 		{
 			for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 			{
@@ -179,7 +179,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			}
 		}
 
-		if (Vars::Radar::World::Health.m_Var)
+		if (Vars::Radar::World::Health.Value)
 		{
 			for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 			{
@@ -193,9 +193,9 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		}
 	}
 
-	if (Vars::Radar::Buildings::Active.m_Var)
+	if (Vars::Radar::Buildings::Active.Value)
 	{
-		const auto& buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.m_Var
+		const auto& buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.Value
 			                                              ? EGroupType::BUILDINGS_ENEMIES
 			                                              : EGroupType::BUILDINGS_ALL);
 
@@ -208,9 +208,9 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				int nX = -1, nY = -1;
 				if (GetDrawPosition(nX, nY, pObject))
 				{
-					Color_t clrDraw = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+					Color_t clrDraw = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
-					const int nSize = Vars::Radar::Buildings::IconSize.m_Var;
+					const int nSize = Vars::Radar::Buildings::IconSize.Value;
 					nX -= (nSize / 2), nY -= (nSize / 2);
 
 					switch (pObject->GetClassID())
@@ -219,7 +219,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						{
 							int nTexture = (pObject->GetLevel() + 40);
 
-							if (Vars::Radar::Buildings::Outline.m_Var)
+							if (Vars::Radar::Buildings::Outline.Value)
 							{
 								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 							}
@@ -229,7 +229,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						}
 					case ETFClassID::CObjectDispenser:
 						{
-							if (Vars::Radar::Buildings::Outline.m_Var)
+							if (Vars::Radar::Buildings::Outline.Value)
 							{
 								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, 44);
 							}
@@ -247,7 +247,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 								nTexture -= 1; //In that case, -1 from "nTexture" so we get entrace texture ID
 							}
 
-							if (Vars::Radar::Buildings::Outline.m_Var)
+							if (Vars::Radar::Buildings::Outline.Value)
 							{
 								g_Draw.Texture(nX - 2, nY - 2, nSize + 4, nSize + 4, clrBlack, nTexture);
 							}
@@ -258,7 +258,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					default: break;
 					}
 
-					if (Vars::Radar::Buildings::Health.m_Var)
+					if (Vars::Radar::Buildings::Health.Value)
 					{
 						const int nHealth = pObject->GetHealth();
 						const int nMaxHealth = pObject->GetMaxHealth();
@@ -280,7 +280,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		}
 	}
 
-	if (Vars::Radar::Players::Active.m_Var)
+	if (Vars::Radar::Players::Active.Value)
 	{
 		for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
@@ -290,7 +290,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			const int nEntTeam = player->GetTeamNum();
 			const int nLocalTeam = pLocal->GetTeamNum();
 
-			switch (Vars::Radar::Players::IgnoreCloaked.m_Var)
+			switch (Vars::Radar::Players::IgnoreCloaked.Value)
 			{
 			case 0: { break; }
 			case 1:
@@ -307,7 +307,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 			const bool bIsFriend = g_EntityCache.IsFriend(player->GetIndex());
 
-			switch (Vars::Radar::Players::IgnoreTeam.m_Var)
+			switch (Vars::Radar::Players::IgnoreTeam.Value)
 			{
 			case 0: { break; }
 			case 1:
@@ -325,21 +325,21 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			int nX = -1, nY = -1;
 			if (GetDrawPosition(nX, nY, player))
 			{
-				const int nSize = Vars::Radar::Players::IconSize.m_Var;
+				const int nSize = Vars::Radar::Players::IconSize.Value;
 				nX -= (nSize / 2), nY -= (nSize / 2);
 
-				Color_t clrDraw = Utils::GetEntityDrawColor(player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+				Color_t clrDraw = Utils::GetEntityDrawColor(player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 				//Background
 				//Just a filled rect or a bit better looking texture RN
 				//TODO:
 				//Add circle background, and add outline for that
 				//I think I saw a nice circle texture actually, gonna try to find that again later.
-				if (Vars::Radar::Players::BackGroundType.m_Var)
+				if (Vars::Radar::Players::BackGroundType.Value)
 				{
 					int nTexture = 0;
 
-					if (Vars::Radar::Players::BackGroundType.m_Var == 2) { nTexture += (nEntTeam + 50); }
+					if (Vars::Radar::Players::BackGroundType.Value == 2) { nTexture += (nEntTeam + 50); }
 
 					nTexture
 						? g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture)
@@ -349,7 +349,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				//Prepare the correct texture index for player icon, and draw it
 				{
 					PlayerInfo_t playerInfo{};
-					if (Vars::Radar::Players::IconType.m_Var == 2 && I::Engine->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
+					if (Vars::Radar::Players::IconType.Value == 2 && I::Engine->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
 					{
 						// Avatar
 						g_Draw.Avatar(nX, nY, nSize, nSize, playerInfo.friendsID);
@@ -359,7 +359,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						int nTexture = player->GetClassNum();
 
 						// Portrait
-						if (Vars::Radar::Players::IconType.m_Var == 1)
+						if (Vars::Radar::Players::IconType.Value == 1)
 						{
 							nTexture += 10;
 
@@ -372,16 +372,16 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 				//TODO:
 				//Correct this for the circle once it's added.
-				if (Vars::Radar::Players::Outline.m_Var)
+				if (Vars::Radar::Players::Outline.Value)
 				{
 					//idk if this is kinda slow
-					Color_t clrOutLine = Vars::Radar::Players::BackGroundType.m_Var == 1 ? clrBlack : clrDraw;
+					Color_t clrOutLine = Vars::Radar::Players::BackGroundType.Value == 1 ? clrBlack : clrDraw;
 					g_Draw.OutlinedRect(nX, nY, nSize, nSize, clrOutLine);
 				}
 
 				//TODO:
 				//Make the healthbar toggleable from left side to bottom.
-				if (Vars::Radar::Players::Health.m_Var)
+				if (Vars::Radar::Players::Health.Value)
 				{
 					const int nHealth = player->GetHealth();
 					const int nMaxHealth = player->GetMaxHealth();

@@ -28,7 +28,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 {
 	auto OriginalFn = Hooks::ModelRender_DrawModelExecute::Hook.Original<Hooks::ModelRender_DrawModelExecute::FN>();
 
-	if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::BtChams::Enabled.m_Var)
+	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::BtChams::Enabled.Value)
 	{
 		if (pEntity && pEntity->GetClassID() == ETFClassID::CTFPlayer)
 		{
@@ -36,7 +36,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 			{
 				bool bMatWasForced = false;
 
-				if (Vars::Backtrack::BtChams::EnemyOnly.m_Var && g_EntityCache.m_pLocal && pEntity->GetTeamNum() ==
+				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.m_pLocal && pEntity->GetTeamNum() ==
 					g_EntityCache.m_pLocal->GetTeamNum())
 				{
 					return;
@@ -44,7 +44,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 																 {
-																	 switch (Vars::Backtrack::BtChams::Material.m_Var)
+																	 switch (Vars::Backtrack::BtChams::Material.Value)
 																	 {
 																		 case 0:
 																		 {
@@ -100,7 +100,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
 				{
-					if (Vars::Backtrack::BtChams::IgnoreZ.m_Var)
+					if (Vars::Backtrack::BtChams::IgnoreZ.Value)
 						pRenderContext->DepthRange(0.0f, 0.2f);
 				}
 
@@ -108,7 +108,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 
 
-				if (Vars::Backtrack::BtChams::LastOnly.m_Var)
+				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
 					if (!F::Backtrack.Record[pEntity->GetIndex()].empty())
 					{
@@ -140,7 +140,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
 				{
-					if (Vars::Backtrack::BtChams::IgnoreZ.m_Var)
+					if (Vars::Backtrack::BtChams::IgnoreZ.Value)
 						pRenderContext->DepthRange(0.0f, 1.0f);
 				}
 			}
@@ -152,7 +152,7 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 {
 	auto OriginalFn = Hooks::ModelRender_DrawModelExecute::Hook.Original<Hooks::ModelRender_DrawModelExecute::FN>();
 
-	if (Vars::Misc::CL_Move::Fakelag.m_Var && Vars::Misc::CL_Move::FakelagIndicator.m_Var && F::FakeAng.DrawChams)
+	if (Vars::Misc::CL_Move::Fakelag.Value && Vars::Misc::CL_Move::FakelagIndicator.Value && F::FakeAng.DrawChams)
 	{
 		if (pEntity && pEntity == g_EntityCache.m_pLocal)
 		{
@@ -162,7 +162,7 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 
 				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 																 {
-																	 switch (Vars::Misc::CL_Move::FLGChams::Material.m_Var)
+																	 switch (Vars::Misc::CL_Move::FLGChams::Material.Value)
 																	 {
 																		 case 0:
 																		 {

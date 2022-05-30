@@ -71,8 +71,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	// Depending on the edge, choose a direction to face
 	if (edgeRightDist < edgeLeftDist) {
 		edgeToEdgeOn = 1;
-		if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
-			Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
+		if (Vars::AntiHack::AntiAim::Pitch.Value == 2 ||
+			Vars::AntiHack::AntiAim::Pitch.Value == 4 ||
 			G::RealViewAngles.x < 10.f) // Check for real up
 		{
 			edgeToEdgeOn = 2;
@@ -81,8 +81,8 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 	}
 
 	edgeToEdgeOn = 2;
-	if (Vars::AntiHack::AntiAim::Pitch.m_Var == 2 ||
-		Vars::AntiHack::AntiAim::Pitch.m_Var == 4 ||
+	if (Vars::AntiHack::AntiAim::Pitch.Value == 2 ||
+		Vars::AntiHack::AntiAim::Pitch.Value == 4 ||
 		G::RealViewAngles.x < 10.f) // Check for real up
 	{
 		edgeToEdgeOn = 1;
@@ -93,7 +93,7 @@ bool CAntiAim::FindEdge(float edgeOrigYaw) {
 
 bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 {
-	if (!Vars::AntiHack::AntiAim::AntiOverlap.m_Var) { return false; }
+	if (!Vars::AntiHack::AntiAim::AntiOverlap.Value) { return false; }
 	return std::abs(a - b) < epsilon;
 }
 
@@ -103,13 +103,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	G::FakeViewAngles = G::ViewAngles;
 
 	// AA toggle key
-	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.m_Var };
+	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.Value };
 	if (aaKey.Pressed())
 	{
-		Vars::AntiHack::AntiAim::Active.m_Var = !Vars::AntiHack::AntiAim::Active.m_Var;
+		Vars::AntiHack::AntiAim::Active.Value = !Vars::AntiHack::AntiAim::Active.Value;
 	}
 
-	if (!Vars::AntiHack::AntiAim::Active.m_Var || G::ForceSendPacket || G::AvoidingBackstab) { return; }
+	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab) { return; }
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (!pLocal->IsAlive()
@@ -128,7 +128,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		const float fOldForwardMove = pCmd->forwardmove;
 
 		// Pitch
-		switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
+		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
 		case 1:
 			{
 				pCmd->viewangles.x = 0.0f;
@@ -163,7 +163,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			{
 				static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
 				static Timer updateTimer{ };
-				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
 				{
 					currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
 				}
@@ -178,13 +178,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 		}
 
-		if (Vars::AntiHack::AntiAim::YawReal.m_Var == 7 || Vars::AntiHack::AntiAim::YawFake.m_Var == 7) {
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) {
 			FindEdge(pCmd->viewangles.y);
 		}
 
 		// Yaw (Real)
 		if (bSendReal) {
-			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
+			switch (Vars::AntiHack::AntiAim::YawReal.Value) {
 			case 1:
 				{
 					pCmd->viewangles.y += 0.0f;
@@ -208,7 +208,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 5:
 				{
 					static Timer updateTimer{ };
-					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
 					{
 						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
@@ -217,7 +217,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 6:
 				{
-					lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
+					lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
 					if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
 					if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
 					pCmd->viewangles.y = lastRealAngle;
@@ -247,9 +247,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 
 			// Check if our real angle is overlapping with the fake angle
-			if (Vars::AntiHack::AntiAim::YawFake.m_Var != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
+			if (Vars::AntiHack::AntiAim::YawFake.Value != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
 			{
-				if (Vars::AntiHack::AntiAim::SpinSpeed.m_Var > 0)
+				if (Vars::AntiHack::AntiAim::SpinSpeed.Value > 0)
 				{
 					pCmd->viewangles.y += 50.f;
 					lastRealAngle += 50.f;
@@ -266,7 +266,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 		// Yaw ( Fake)
 		else {
-			switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
+			switch (Vars::AntiHack::AntiAim::YawFake.Value) {
 			case 1: //fake forward for legit aa
 				{
 					pCmd->viewangles.y += 0.0f;
@@ -290,7 +290,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 5:
 				{
 					static Timer updateTimer{ };
-					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.m_Var * 10))
+					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
 					{
 						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
 					}
@@ -299,7 +299,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			case 6:
 				{
-					lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.m_Var;
+					lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
 					if (lastFakeAngle > 180.f) { lastFakeAngle -= 360.f; }
 					if (lastFakeAngle < -180.f) { lastFakeAngle += 360.f; }
 					pCmd->viewangles.y = lastFakeAngle;
@@ -332,7 +332,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		}
 
 		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }
-		if (Vars::AntiHack::AntiAim::YawFake.m_Var == 0)
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 0)
 		{
 			*pSendPacket = bSendReal = true;
 		}

@@ -7,23 +7,23 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 {
 	static auto oClMove = Hook.Original<FN>();
 
-	if (!Vars::Misc::CL_Move::Enabled.m_Var)
+	if (!Vars::Misc::CL_Move::Enabled.Value)
 	{
 		G::ShiftedTicks = 0;
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	if (G::ShiftedTicks > Vars::Misc::CL_Move::DTTicks.m_Var)
+	if (G::ShiftedTicks > Vars::Misc::CL_Move::DTTicks.Value)
 	{
 		G::ShiftedTicks -= 1;
-		oClMove(accumulated_extra_samples, (G::ShiftedTicks == Vars::Misc::CL_Move::DTTicks.m_Var + 1));
+		oClMove(accumulated_extra_samples, (G::ShiftedTicks == Vars::Misc::CL_Move::DTTicks.Value + 1));
 	} // pCode
 
 	// pSpeedhack
-	if (Vars::Misc::CL_Move::SEnabled.m_Var)
+	if (Vars::Misc::CL_Move::SEnabled.Value)
 	{
 		int SpeedTicks{ 0 };
-		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.m_Var;
+		int SpeedTicksDesired = Vars::Misc::CL_Move::SFactor.Value;
 		G::ShiftedTicks = 0;
 
 		while (SpeedTicks < SpeedTicksDesired)
@@ -34,7 +34,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	const auto pLocal = g_EntityCache.m_pLocal;
-	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.m_Var };
+	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
 
 	// Clear tick shift queue
 	if (G::ShiftedTicks && !G::Recharging && G::TickShiftQueue > 0)
@@ -55,11 +55,11 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		G::Recharging = true;
 		G::TickShiftQueue = 0;
 	}
-	else if (G::Recharging && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.m_Var))
+	else if (G::Recharging && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value))
 	{
 		G::ForceSendPacket = true; // force uninterrupted connection with server
 		G::ShiftedTicks++; // add ticks to tick counter
-		G::WaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.m_Var; // set wait condition (genius)
+		G::WaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
 		return; // this recharges
 	}
 	else if (rechargeKey.Down())
@@ -76,7 +76,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	oClMove(accumulated_extra_samples,
 			(G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
 
-	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.m_Var)
+	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value)
 	{
 		G::WaitForShift--;
 		return;
@@ -85,7 +85,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	if (G::LastUserCmd != nullptr)
 	{
 		// Shift if attacking normally
-		if (Vars::Misc::CL_Move::NotInAir.m_Var)
+		if (Vars::Misc::CL_Move::NotInAir.Value)
 		{
 			if (pLocal)
 			{
@@ -119,10 +119,10 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	if (G::ShouldShift && !G::WaitForShift)
 	{
 		if (
-			(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
+			(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
 			// 0 - On key
-			(Vars::Misc::CL_Move::DTMode.m_Var == 1) || // 1 - Always
-			(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
+			(Vars::Misc::CL_Move::DTMode.Value == 1) || // 1 - Always
+			(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
 		// 2 - Disable on key 
 		{
 			while (G::ShiftedTicks > 0)

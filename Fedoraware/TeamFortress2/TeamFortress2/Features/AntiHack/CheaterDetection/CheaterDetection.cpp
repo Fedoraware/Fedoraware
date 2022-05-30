@@ -49,7 +49,7 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.m_pLocal;
-	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var)
+	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.Value)
 	{
 		return;
 	}

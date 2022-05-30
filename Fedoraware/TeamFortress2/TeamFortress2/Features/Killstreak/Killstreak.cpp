@@ -19,7 +19,7 @@ int CKillstreaker::GetCurrentWeaponStreak()
 
 void CKillstreaker::ApplyKillstreak()
 {
-	if (Vars::Misc::KillstreakWeapon.m_Var)
+	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
 		const auto& resource = I::EntityList->GetClientEntity(g_PR->Entity);
@@ -86,7 +86,7 @@ void CKillstreaker::PlayerSpawn(CGameEvent* pEvent)
 
 void CKillstreaker::FireEvents(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
-	if (Vars::Misc::KillstreakWeapon.m_Var)
+	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		if (uNameHash == FNV1A::HashConst("player_death"))
 		{

@@ -169,7 +169,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 
 void CBacktrack::Run(CUserCmd* pCmd)
 {
-	if (!Vars::Backtrack::Enabled.m_Var)
+	if (!Vars::Backtrack::Enabled.Value)
 	{
 		LatencyRampup = 0.f;
 		return;
@@ -221,7 +221,7 @@ float CBacktrack::GetLatency()
 		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
 	}
 	
-	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var * 0.001f, 0.f, 0.9f - realLatency);
+	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.Value * 0.001f, 0.f, 0.9f - realLatency);
 }
 
 // Adjusts the fake latency ping
