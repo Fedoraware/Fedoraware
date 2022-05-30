@@ -22,10 +22,10 @@ int unuSecondary = 0;
 /* The main menu */
 void CMenu::DrawMenu()
 {
-	ImGui::GetStyle().WindowMinSize = ImVec2(700, 500);
-
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 700, 500 });
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+
 	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
 		const auto drawList = ImGui::GetWindowDrawList();
@@ -63,6 +63,14 @@ void CMenu::DrawMenu()
 				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
 			}
 			ImGui::HelpMarker("Playerlist");
+
+			// Keybinds Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_KEYBOARD))
+			{
+				Vars::Menu::ShowKeybinds = !Vars::Menu::ShowKeybinds;
+			}
+			ImGui::HelpMarker("Keybinds");
 
 			// Material Editor Icon
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
@@ -130,7 +138,8 @@ void CMenu::DrawMenu()
 		// End
 		ImGui::End();
 	}
-	ImGui::PopStyleVar();
+
+	ImGui::PopStyleVar(2);
 }
 
 void CMenu::DrawTabbar()
@@ -1932,6 +1941,42 @@ void CMenu::DrawCameraWindow()
 	}
 }
 
+void CMenu::DrawKeybinds()
+{
+	if (!Vars::Menu::ShowKeybinds) { return; }
+
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.35f));
+	ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.f, 0.f, 0.f, 0.5f));
+	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.f, 0.f, 0.f, 0.5f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4.f, 4.f });
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::SetNextWindowSize({ 200.f, 0.f });
+
+	if (ImGui::Begin("Keybinds", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
+	{
+		auto drawOption = [](const char* name, bool active) {
+			ImGui::Text(name);
+			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::GetStyle().WindowPadding.x - ImGui::CalcTextSize(active ? "[On]" : "[Off]").x);
+			ImGui::Text(active ? "[On]" : "[Off]");
+		};
+
+		auto isActive = [](bool active, bool needsKey, int key) {
+			return active && (!needsKey || GetAsyncKeyState(key) & 0x8000);
+		};
+
+		drawOption("Aimbot", isActive(Vars::Aimbot::Global::Active.m_Var, Vars::Aimbot::Global::AimKey.m_Var, Vars::Aimbot::Global::AimKey.m_Var));
+		drawOption("Auto Shoot", Vars::Aimbot::Global::AutoShoot.m_Var);
+		drawOption("Double Tap", isActive(Vars::Misc::CL_Move::DTMode.m_Var != 3, Vars::Misc::CL_Move::DTMode.m_Var == 0, Vars::Misc::CL_Move::DoubletapKey.m_Var));
+		drawOption("Anti Aim", Vars::AntiHack::AntiAim::Active.m_Var);
+		drawOption("Fakelag", isActive(Vars::Misc::CL_Move::Fakelag.m_Var, Vars::Misc::CL_Move::FakelagOnKey.m_Var, Vars::Misc::CL_Move::FakelagKey.m_Var));
+		drawOption("Triggerbot", isActive(Vars::Triggerbot::Global::Active.m_Var, Vars::Triggerbot::Global::TriggerKey.m_Var, Vars::Triggerbot::Global::TriggerKey.m_Var));
+	}
+
+	ImGui::End();
+	ImGui::PopStyleVar(2);
+	ImGui::PopStyleColor(3);
+}
+
 void CMenu::Render(IDirect3DDevice9* pDevice)
 {
 	static bool initialized = false;
@@ -1951,7 +1996,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	// Toggle menu
 	if (GetAsyncKeyState(MENU_KEY) & 1)
 	{
-		// TOOD: & 8000?
 		F::Menu.IsOpen = !F::Menu.IsOpen;
 		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);
 	}
@@ -1960,23 +2004,23 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	ImGui::PushFont(Verdana);
+
+	DrawKeybinds();
 
 	if (F::Menu.IsOpen)
 	{
-		ImGui::PushFont(Verdana);
 		DrawMenu();
 		DrawCameraWindow();
 
-		// TODO: Draw DT-Bar, Playerlist, Spectator list etc.
 		SettingsWindow();
 		DebugMenu();
 		F::MaterialEditor.Render();
 		F::PlayerList.Render();
-
-		ImGui::PopFont();
 	}
 
 	// End frame and render
+	ImGui::PopFont();
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
@@ -1995,7 +2039,7 @@ void CMenu::LoadStyle()
 
 		auto& style = ImGui::GetStyle();
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f); // Center window title
-		style.WindowMinSize = ImVec2(700, 700);
+		style.WindowMinSize = ImVec2(100, 100);
 		style.WindowPadding = ImVec2(0, 0);
 		style.WindowBorderSize = 1.f;
 		style.ButtonTextAlign = ImVec2(0.5f, 0.4f); // Center button text

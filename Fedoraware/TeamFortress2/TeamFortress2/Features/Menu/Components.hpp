@@ -20,7 +20,6 @@ namespace ImGui
 
 	__inline void HelpMarker(const char* desc)
 	{
-		// TODO: This
 		if (IsItemHovered())
 		{
 			if (Vars::Menu::ModernDesign)

@@ -41,6 +41,7 @@ namespace Vars
 
 		inline bool ModernDesign = false;
 		inline bool ShowPlayerlist = false;
+		inline bool ShowKeybinds = false;
 
 		namespace Colors
 		{

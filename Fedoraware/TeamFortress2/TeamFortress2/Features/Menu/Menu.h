@@ -14,6 +14,7 @@ class CMenu {
 	void SettingsWindow();
 	void DebugMenu();
 	void DrawCameraWindow();
+	void DrawKeybinds();
 	void LoadStyle();
 
 	enum class MenuTab {

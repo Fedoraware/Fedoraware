@@ -861,6 +861,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 			SAVE_OTHER(Vars::Menu::ModernDesign);
 			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
+			SAVE_OTHER(Vars::Menu::ShowKeybinds);
 		}
 
 		//Fonts
@@ -1578,6 +1579,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 			LOAD_OTHER(Vars::Menu::ModernDesign);
 			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
+			LOAD_OTHER(Vars::Menu::ShowKeybinds);
 		}
 
 		//Fonts
