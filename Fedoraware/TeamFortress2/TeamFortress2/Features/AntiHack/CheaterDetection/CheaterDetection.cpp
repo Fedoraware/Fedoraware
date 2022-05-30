@@ -127,8 +127,11 @@ void CCheaterDetection::OnTick()
 				}
 			}
 
-			MarkedCheaters[friendsID] = Strikes[friendsID] > 4;
-			G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
+			if (Strikes[friendsID] > 4)
+			{
+				MarkedCheaters[friendsID] = true;
+				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
+			}
 		}
 	}
 }
