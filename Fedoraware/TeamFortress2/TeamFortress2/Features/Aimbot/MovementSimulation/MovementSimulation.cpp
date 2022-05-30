@@ -124,7 +124,7 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 			pPlayer->m_bInDuckJump() = false;
 		}
 
-		if (pPlayer != g_EntityCache.m_pLocal)
+		if (pPlayer != g_EntityCache.GetLocal())
 		{
 			pPlayer->m_hGroundEntity() = 0; //without this nonlocal players get snapped to the floor
 		}

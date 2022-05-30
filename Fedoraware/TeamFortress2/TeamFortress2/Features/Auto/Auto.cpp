@@ -37,8 +37,8 @@ void CAuto::Run(CUserCmd* pCmd)
 	G::AutoBackstabRunning = false;
 	F::AutoStab.m_bShouldDisguise = false;
 
-	const auto pLocal = g_EntityCache.m_pLocal;
-	const auto pWeapon = g_EntityCache.m_pLocalWeapon;
+	const auto pLocal = g_EntityCache.GetLocal();
+	const auto pWeapon = g_EntityCache.GetWeapon();
 
 	if (pLocal && pWeapon)
 	{

@@ -97,7 +97,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 
 	{
 		return Hook.Original<FN>()(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		const Vec3 vStart = info.m_vecSrc;
 		const Vec3 vEnd = vStart + info.m_vecDirShooting * info.m_flDistance;

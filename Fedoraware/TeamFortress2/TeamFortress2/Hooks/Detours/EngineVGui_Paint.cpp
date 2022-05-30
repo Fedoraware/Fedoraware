@@ -115,8 +115,8 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.Value)
 				{
-					const auto& pLocal = g_EntityCache.m_pLocal;
-					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
+					const auto& pLocal = g_EntityCache.GetLocal();
+					const auto& pWeapon = g_EntityCache.GetWeapon();
 
 					if (pLocal && pWeapon)
 					{
@@ -232,7 +232,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 					}
 
-					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+					if (const auto& pWeapon = g_EntityCache.GetWeapon())
 					{
 						if (const int weaponid = pWeapon->GetWeaponID())
 						{
@@ -252,7 +252,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						}
 					}
 
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
 						if (const int tickbase = pLocal->GetTickBase())
 						{
@@ -424,7 +424,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				//Current Active Aimbot FOV
 				if (Vars::Visuals::AimFOVAlpha.Value && G::CurAimFOV)
 				{
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
 						const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.Value);
 						const float flR = tanf(DEG2RAD(G::CurAimFOV) / 2.0f)
@@ -449,7 +449,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 			if (Vars::AntiHack::AntiAim::Active.Value)
 			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				if (const auto& pLocal = g_EntityCache.GetLocal())
 				{
 					static constexpr Color_t realColour = { 0, 255,0, 255 };
 					static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
@@ -472,7 +472,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			// you can use it for more, i'm sure. - myzarfin
 			F::Notifications.Think();
 
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
 				if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.Value && Vars::Visuals::ScopeLines.Value)
 				{

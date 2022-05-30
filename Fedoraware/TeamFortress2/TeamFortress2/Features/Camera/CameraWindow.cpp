@@ -39,7 +39,7 @@ void CCameraWindow::Draw()
 void CCameraWindow::Update()
 {
 	if (Vars::Visuals::CameraMode.Value <= 1) { return; }
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		switch (Vars::Visuals::CameraMode.Value) {
 		case 2:
 			{

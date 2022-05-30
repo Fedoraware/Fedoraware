@@ -118,7 +118,7 @@ bool CVisuals::RemoveScope(int nPanel)
 
 void CVisuals::FOV(CViewSetup* pView)
 {
-	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 	if (pLocal && pView)
 	{
@@ -139,7 +139,7 @@ void CVisuals::FOV(CViewSetup* pView)
 
 void CVisuals::ThirdPerson(CViewSetup* pView)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		// Toggle key
 		if (Vars::Visuals::ThirdPersonKey.Value)

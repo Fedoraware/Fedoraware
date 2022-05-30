@@ -17,7 +17,7 @@ void CRadar::Run()
 	//Draw background, handle input.
 	DrawRadar();
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) { DrawPoints(pLocal); }
+	if (const auto& pLocal = g_EntityCache.GetLocal()) { DrawPoints(pLocal); }
 }
 
 bool CRadar::ShouldRun()
@@ -284,7 +284,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	{
 		for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
-			if (!player->IsAlive() || player == g_EntityCache.m_pObservedTarget || player->IsAGhost() || player ==
+			if (!player->IsAlive() || player == g_EntityCache.GetObservedTarget() || player->IsAGhost() || player ==
 				pLocal) { continue; }
 
 			const int nEntTeam = player->GetTeamNum();

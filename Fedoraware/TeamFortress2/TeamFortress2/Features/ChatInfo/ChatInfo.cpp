@@ -21,7 +21,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		return;
 	}
 
-	if (const auto pLocal = g_EntityCache.m_pLocal)
+	if (const auto pLocal = g_EntityCache.GetLocal())
 	{
 		// Class change
 		if ((Vars::Visuals::ChatInfoText.Value || Vars::Visuals::ChatInfoChat.Value) && uNameHash == FNV1A::HashConst("player_changeclass"))
@@ -245,7 +245,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 			const int target = static_cast<unsigned char>(msgData.ReadByte()) >> 1;
 
 			PlayerInfo_t infoTarget{}, infoCaller{};
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
 				if (target && caller && I::Engine->GetPlayerInfo(target, &infoTarget) && I::Engine->GetPlayerInfo(caller, &infoCaller))
 				{

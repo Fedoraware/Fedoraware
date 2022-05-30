@@ -36,8 +36,8 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 			{
 				bool bMatWasForced = false;
 
-				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.m_pLocal && pEntity->GetTeamNum() ==
-					g_EntityCache.m_pLocal->GetTeamNum())
+				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.GetLocal() && pEntity->GetTeamNum() ==
+					g_EntityCache.GetLocal()->GetTeamNum())
 				{
 					return;
 				}
@@ -154,7 +154,7 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 
 	if (Vars::Misc::CL_Move::Fakelag.Value && Vars::Misc::CL_Move::FakelagIndicator.Value && F::FakeAng.DrawChams)
 	{
-		if (pEntity && pEntity == g_EntityCache.m_pLocal)
+		if (pEntity && pEntity == g_EntityCache.GetLocal())
 		{
 			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
 			{

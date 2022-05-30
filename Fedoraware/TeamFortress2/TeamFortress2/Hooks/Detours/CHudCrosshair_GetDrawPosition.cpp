@@ -14,7 +14,7 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 		}
 	}
 	else if (
-		const auto& pLocal = g_EntityCache.m_pLocal;
+		const auto& pLocal = g_EntityCache.GetLocal();
 		Vars::Visuals::ThirdpersonOffset.Value &&
 		Vars::Visuals::ThirdpersonCrosshair.Value &&
 		I::Input->CAM_IsThirdPerson() &&

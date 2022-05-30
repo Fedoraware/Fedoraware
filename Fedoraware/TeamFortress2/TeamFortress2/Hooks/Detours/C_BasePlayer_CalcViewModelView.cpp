@@ -4,7 +4,7 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B 
 		  void* ecx, void* edx, CBaseEntity* pOwner, const Vec3& vEyePosition, Vec3& vEyeAngles)
 {
 	static Vec3 m_vEyeAngDelayed;
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (pLocal->IsAlive() && !G::AimPos.IsZero() && Vars::Visuals::AimbotViewmodel.Value)
 		{

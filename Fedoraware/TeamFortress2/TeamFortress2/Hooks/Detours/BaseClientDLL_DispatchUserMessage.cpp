@@ -99,7 +99,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 				const INetChannel* server = I::Engine->GetNetChannelInfo();
 				const std::string data(bufData);
 
-				if (data.find("TeamChangeP") != std::string::npos && g_EntityCache.m_pLocal)
+				if (data.find("TeamChangeP") != std::string::npos && g_EntityCache.GetLocal())
 				{
 					const std::string serverName(server->GetAddress());
 					if (serverName != previous_name)

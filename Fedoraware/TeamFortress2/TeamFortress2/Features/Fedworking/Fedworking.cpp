@@ -123,7 +123,7 @@ void CFedworking::Run()
 {
 	if (!Vars::Misc::PartyNetworking.Value) { return; }
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		// Party marker
 		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.Value };
 		if (Vars::Misc::PartyMarker.Value && markerKey.Pressed()) {

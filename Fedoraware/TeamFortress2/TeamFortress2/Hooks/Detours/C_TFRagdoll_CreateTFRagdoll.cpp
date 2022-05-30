@@ -25,7 +25,7 @@ MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, CreateTFRagdollAddress(), void, __fastcal
 	{
 		if (Vars::Visuals::RagdollEffects::EnemyOnly.Value)
 		{
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
 				if (Offset(int*, pEntity, 0xCBC) == pLocal->GetTeamNum())
 				{

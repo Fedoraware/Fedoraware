@@ -47,7 +47,7 @@ void CDiscordRPC::Update()
 				discordPresence.details = nullptr;
 			}
 
-			if (const auto pLocal = g_EntityCache.m_pLocal)
+			if (const auto pLocal = g_EntityCache.GetLocal())
 			{
 				if (Vars::Misc::Discord::IncludeClass.Value)
 				{

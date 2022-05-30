@@ -48,7 +48,7 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 
 void CCheaterDetection::OnTick()
 {
-	const auto pLocal = g_EntityCache.m_pLocal;
+	const auto pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.Value)
 	{
 		return;

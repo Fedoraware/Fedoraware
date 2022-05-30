@@ -105,11 +105,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	G::CurrentUserCmd = pCmd;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		nOldFlags = pLocal->GetFlags();
 
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
@@ -216,7 +216,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::EnginePrediction.End(pCmd);
 	F::CritHack.Run(pCmd);
 
-	FastStop(pCmd, g_EntityCache.m_pLocal);
+	FastStop(pCmd, g_EntityCache.GetLocal());
 	F::Misc.RunLate(pCmd);
 	F::Resolver.Update(pCmd);
 	F::Followbot.Run(pCmd);
@@ -244,7 +244,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		I::Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (Vars::Misc::TauntSlide.Value)
 		{

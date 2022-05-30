@@ -138,7 +138,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 
 int CurrentResistance()
 {
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
 		return pWeapon->GetChargeResistType();
 	}
@@ -147,7 +147,7 @@ int CurrentResistance()
 
 int ChargeCount()
 {
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
 		if (G::CurItemDefIndex == Medic_s_TheVaccinator) { return pWeapon->GetUberCharge() / 0.25f; }
 		return pWeapon->GetUberCharge() / 1.f;

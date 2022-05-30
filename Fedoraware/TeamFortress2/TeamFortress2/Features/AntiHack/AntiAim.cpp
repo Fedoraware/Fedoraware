@@ -43,8 +43,8 @@ float CAntiAim::EdgeDistance(float edgeRayYaw) {
 	forward.x = cp * cy;
 	forward.y = cp * sy;
 	forward.z = -sp;
-	forward = forward * 300.0f + g_EntityCache.m_pLocal->GetEyePosition();
-	ray.Init(g_EntityCache.m_pLocal->GetEyePosition(), forward);
+	forward = forward * 300.0f + g_EntityCache.GetLocal()->GetEyePosition();
+	ray.Init(g_EntityCache.GetLocal()->GetEyePosition(), forward);
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = {};
 	I::EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
@@ -111,7 +111,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab) { return; }
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		if (!pLocal->IsAlive()
 			|| pLocal->IsTaunting()
 			|| pLocal->IsInBumperKart()
@@ -350,7 +350,7 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
 		{
 			const auto nAttacker = pEvent->GetInt("attacker");
-			const auto& pLocal = g_EntityCache.m_pLocal;
+			const auto& pLocal = g_EntityCache.GetLocal();
 			if (!pLocal) { return; }
 			if (pEntity != pLocal) { return; }
 

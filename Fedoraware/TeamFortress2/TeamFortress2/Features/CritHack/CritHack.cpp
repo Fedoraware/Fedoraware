@@ -37,7 +37,7 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 67)
 	static int previousWeapon = 0;
 	static int previousCrit = 0;
 
-	const auto& pLocal = g_EntityCache.m_pLocal;
+	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return -1; }
 
 	const auto& pWeapon = pLocal->GetActiveWeapon();
@@ -70,7 +70,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 {
 	if (!IsEnabled()) { return; }
 
-	const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
+	const auto& pWeapon = g_EntityCache.GetWeapon();
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
 	int nextCrit = NextCritTick(pCmd);
@@ -104,7 +104,7 @@ void CCritHack::Draw()
 	if (!Vars::CritHack::indicators.Value) { return; }
 	if (!IsEnabled() || !G::CurrentUserCmd) { return; }
 
-	const auto& pLocal = g_EntityCache.m_pLocal;
+	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !pLocal->IsAlive()) { return; }
 
 	const auto& pWeapon = pLocal->GetActiveWeapon();

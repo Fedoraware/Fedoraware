@@ -268,7 +268,7 @@ namespace Utils
 	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
 	{
 		if (otherColors) {
-			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+			if (const auto& pLocal = g_EntityCache.GetLocal()) {
 				// Enemy/Team based colors
 				auto lPlayerTeam = pLocal->GetTeamNum();
 				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::rTeam;
@@ -296,10 +296,10 @@ namespace Utils
 
 		if (pEntity->IsPlayer())
 		{
-			if (g_EntityCache.m_pLocal->GetIndex() == pEntity->GetIndex())
+			if (g_EntityCache.GetLocal()->GetIndex() == pEntity->GetIndex())
 				out = Colors::Local;
 
-			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.m_pLocal)
+			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.GetLocal())
 				out = Colors::Friend;
 
 			else if (G::IsIgnored(info.friendsID))

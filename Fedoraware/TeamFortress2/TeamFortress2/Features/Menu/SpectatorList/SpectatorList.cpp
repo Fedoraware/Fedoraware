@@ -113,7 +113,7 @@ void CSpectatorList::DrawDefault()
 	              ALIGN_CENTER,
 	              "%hs", _("Spectators"));
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (!pLocal->IsAlive() || !GetSpectators(pLocal)) { return; }
 
@@ -146,7 +146,7 @@ void CSpectatorList::DrawDefault()
 
 void CSpectatorList::DrawClassic()
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (!pLocal->IsAlive() || !GetSpectators(pLocal)) { return; }
 

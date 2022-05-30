@@ -11,7 +11,7 @@ extern int attackStringH;
 
 void CMisc::Run(CUserCmd* pCmd)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
@@ -36,7 +36,7 @@ void CMisc::Run(CUserCmd* pCmd)
 
 void CMisc::RunLate(CUserCmd* pCmd)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		AutoPeek(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
@@ -173,7 +173,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 
 /*
 void CMisc::InstantRespawnMVM() {
-	if (I::Engine->IsInGame() && I::Engine->GetLocalPlayer() && !g_EntityCache.m_pLocal->IsAlive() && Vars::Misc::MVMRes.m_Var) {
+	if (I::Engine->IsInGame() && I::Engine->GetLocalPlayer() && !g_EntityCache.GetLocal()->IsAlive() && Vars::Misc::MVMRes.m_Var) {
 		auto kv = new KeyValues("MVM_Revive_Response");
 		kv->SetInt("accepted", 1);
 		I::Engine->ServerCmdKeyValues(kv);
@@ -308,7 +308,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		// Edge Jump
 		if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.Value)
@@ -480,7 +480,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 			const auto vel = pLocal->GetVelocity();
 
 			constexpr auto perfectDelta = [](float speed) noexcept {
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				if (const auto& pLocal = g_EntityCache.GetLocal())
 				{
 					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
 					static auto airVar = g_ConVars.FindVar(_("sv_airaccelerate"));
@@ -595,7 +595,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
 		if (pWeapon->IsInReload())
 		{

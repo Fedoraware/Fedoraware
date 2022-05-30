@@ -6,7 +6,7 @@ bool CResolver::ShouldAutoResolve()
 {
 	if (G::CurWeaponType == EWeaponType::PROJECTILE) { return false; }
 
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
 		if (pWeapon->GetClassID() == ETFClassID::CTFMinigun) { return false; }
 	}
@@ -20,7 +20,7 @@ void CResolver::Run()
 	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	Vec3 localHead;
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		localHead = pLocal->GetEyePosition();
 	}
@@ -149,7 +149,7 @@ void CResolver::Update(CUserCmd* pCmd)
 	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	// Log shots
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (G::CurrentTargetIdx != 0 &&
 			(pCmd->buttons & IN_ATTACK || G::IsAttacking) &&

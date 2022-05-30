@@ -1881,7 +1881,7 @@ void CMenu::DebugMenu()
 
 	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
-		const auto& pLocal = g_EntityCache.m_pLocal;
+		const auto& pLocal = g_EntityCache.GetLocal();
 
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.Value);
 		Checkbox("Allow secure servers", I::AllowSecureServers);

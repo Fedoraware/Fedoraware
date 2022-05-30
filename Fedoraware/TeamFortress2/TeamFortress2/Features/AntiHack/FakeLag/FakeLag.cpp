@@ -35,7 +35,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 	if (!Vars::Misc::CL_Move::Fakelag.Value) { return; }
 
-	const auto& pLocal = g_EntityCache.m_pLocal;
+	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !pLocal->IsAlive())
 	{
 		if (ChokeCounter > 0)

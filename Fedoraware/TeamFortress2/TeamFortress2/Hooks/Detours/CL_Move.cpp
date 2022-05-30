@@ -33,7 +33,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		}
 	}
 
-	const auto pLocal = g_EntityCache.m_pLocal;
+	const auto pLocal = g_EntityCache.GetLocal();
 	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
 
 	// Clear tick shift queue

@@ -109,7 +109,7 @@ void CGlowEffect::Render()
 	if (!Vars::Glow::Main::Active.Value)
 		return;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;

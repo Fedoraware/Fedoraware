@@ -63,7 +63,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 		return;
 	}
 
-	const auto& pLocal = g_EntityCache.m_pLocal;
+	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !pLocal->IsAlive()) { return; }
 
 	// Find a new target if we don't have one
