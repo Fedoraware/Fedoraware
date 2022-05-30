@@ -121,12 +121,12 @@ void CFedworking::SendMessage(const std::string& pData)
 
 void CFedworking::Run()
 {
-	if (!Vars::Misc::PartyNetworking.m_Var) { return; }
+	if (!Vars::Misc::PartyNetworking.Value) { return; }
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		// Party marker
-		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.m_Var };
-		if (Vars::Misc::PartyMarker.m_Var && markerKey.Pressed()) {
+		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.Value };
+		if (Vars::Misc::PartyMarker.Value && markerKey.Pressed()) {
 			const Vec3 viewAngles = I::Engine->GetViewAngles();
 			Vec3 vForward;
 			Math::AngleVectors(viewAngles, &vForward);
@@ -146,7 +146,7 @@ void CFedworking::Run()
 		}
 
 		// Party ESP
-		if (Vars::Misc::PartyESP.m_Var) {
+		if (Vars::Misc::PartyESP.Value) {
 			SendESP(pLocal);
 			for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{

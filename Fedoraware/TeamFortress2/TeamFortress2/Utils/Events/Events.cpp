@@ -35,7 +35,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	}
 
 	// Pickup Timers
-	if (Vars::Visuals::PickupTimers.m_Var && uNameHash == FNV1A::HashConst("item_pickup"))
+	if (Vars::Visuals::PickupTimers.Value && uNameHash == FNV1A::HashConst("item_pickup"))
 	{
 		const auto itemName = pEvent->GetString("item");
 		if (const auto& pEntity = I::EntityList->GetClientEntity(I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))

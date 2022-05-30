@@ -4,9 +4,9 @@
 
 MAKE_HOOK(ClientModeShared_OverrideView, Utils::GetVFuncPtr(I::ClientMode, 24), bool, __fastcall, void* ecx, void* edx)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::RemoveZoom.m_Var && !I::
+		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.Value && Vars::Visuals::RemoveZoom.Value && !I::
 			Input->CAM_IsThirdPerson())
 		{
 			return true;

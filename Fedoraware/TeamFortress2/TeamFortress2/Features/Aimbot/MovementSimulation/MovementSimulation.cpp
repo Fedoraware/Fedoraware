@@ -124,7 +124,7 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 			pPlayer->m_bInDuckJump() = false;
 		}
 
-		if (pPlayer != g_EntityCache.m_pLocal)
+		if (pPlayer != g_EntityCache.GetLocal())
 		{
 			pPlayer->m_hGroundEntity() = 0; //without this nonlocal players get snapped to the floor
 		}
@@ -175,7 +175,7 @@ void CMovementSimulation::Restore()
 	memset(&PlayerDataBackup, 0, sizeof(CPlayerDataBackup));
 }
 
-void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenterOut)
+void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 {
 	if (!I::CTFGameMovement || !m_pPlayer)
 	{
@@ -199,9 +199,5 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenter
 		Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
 	G::PredFutureLines.push_back(m_MoveData.m_vecAbsOrigin);
 	moveDataOut = m_MoveData;
-	Vec3 vMin, vMax;
-	m_pPlayer->GetRenderBounds(vMin, vMax);
-	Vec3 vWorldSpaceCenter = m_MoveData.m_vecAbsOrigin;
-	//vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
-	worldSpaceCenterOut = vWorldSpaceCenter;
+	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;
 }

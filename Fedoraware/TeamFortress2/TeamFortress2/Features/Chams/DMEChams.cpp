@@ -406,8 +406,8 @@ namespace ProxySkins
 
 bool CDMEChams::ShouldRun()
 {
-	if (!Vars::Chams::DME::Active.m_Var || I::EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
-		m_Var)
+	if (!Vars::Chams::DME::Active.Value || I::EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
+		Value)
 		return false;
 
 	return true;
@@ -558,11 +558,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		{
 			bool bMatWasForced = false;
 
-			if (Vars::Chams::DME::Hands.m_Var)
+			if (Vars::Chams::DME::Hands.Value)
 			{
 				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 					{
-						switch (Vars::Chams::DME::Hands.m_Var)
+						switch (Vars::Chams::DME::Hands.Value)
 						{
 						case 1:
 						{
@@ -609,9 +609,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}());
 			}
 
-			if (Vars::Chams::DME::Hands.m_Var != 7)
+			if (Vars::Chams::DME::Hands.Value != 7)
 			{
-				if (Vars::Chams::DME::HandsRainbow.m_Var)
+				if (Vars::Chams::DME::HandsRainbow.Value)
 				{
 					I::RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
 						Color::TOFLOAT(Utils::Rainbow().g),
@@ -626,7 +626,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 
 			foundselfillumtint = false;
-			if (Vars::Chams::DME::Hands.m_Var == 7)
+			if (Vars::Chams::DME::Hands.Value == 7)
 			{
 				IMaterial* mat = m_pMatFresnel;
 				IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
@@ -654,13 +654,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			bMatWasForced = true;
 
-			if (Vars::Chams::DME::HandsProxySkin.m_Var && bMatWasForced)
+			if (Vars::Chams::DME::HandsProxySkin.Value && bMatWasForced)
 			{
 
 				IMaterial* pMaterial = nullptr;
 				{
 					using namespace ProxySkins;
-					switch (Vars::Chams::DME::HandsProxySkin.m_Var) {
+					switch (Vars::Chams::DME::HandsProxySkin.Value) {
 					case 1:
 						pMaterial = spectrumSplattered;
 						break;
@@ -703,7 +703,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				bool found = false;
 				auto pVar = pMaterial->FindVar("$wireframe", &found);
 				if (pVar) {
-					pVar->SetIntValue(Vars::Chams::DME::HandsProxyWF.m_Var);
+					pVar->SetIntValue(Vars::Chams::DME::HandsProxyWF.Value);
 				}
 				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				I::ModelRender->ForcedMaterialOverride(pMaterial);
@@ -714,7 +714,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-			if (Vars::Chams::DME::HandsGlowOverlay.m_Var && bMatWasForced)
+			if (Vars::Chams::DME::HandsGlowOverlay.Value && bMatWasForced)
 			{
 				// Overlay
 				IMaterial* pMaterial = m_pMatScuffed;
@@ -724,7 +724,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 				if (found)
 				{
-					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
+					if (Vars::Chams::DME::HandsOverlayRainbow.Value)
 					{
 						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
 							Color::TOFLOAT(Utils::Rainbow().g) * 4,
@@ -740,7 +740,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 				if (found2)
 				{
-					if (Vars::Chams::DME::HandsOverlayRainbow.m_Var)
+					if (Vars::Chams::DME::HandsOverlayRainbow.Value)
 					{
 						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
 							Color::TOFLOAT(Utils::Rainbow().g) * 4,
@@ -757,11 +757,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
 				if (foundfresnelranges)
 				{
-					phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::HandsGlowAmount.m_Var, 10 / Vars::Chams::DME::HandsGlowAmount.m_Var);
+					phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::HandsGlowAmount.Value, 10 / Vars::Chams::DME::HandsGlowAmount.Value);
 				}
-				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.m_Var == 2);
+				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::HandsGlowOverlay.Value == 2);
 
-				I::RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.m_Var ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
+				I::RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.Value ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
 				I::ModelRender->ForcedMaterialOverride(pMaterial);
 
 				if (dmeHook)
@@ -804,11 +804,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 				int _case = 0;
 
-				if (Vars::Chams::DME::Weapon.m_Var)
+				if (Vars::Chams::DME::Weapon.Value)
 				{
 					I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 						{
-							switch (Vars::Chams::DME::Weapon.m_Var)
+							switch (Vars::Chams::DME::Weapon.Value)
 							{
 							case 1:
 							{
@@ -855,9 +855,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 						}());
 				}
 
-				if (Vars::Chams::DME::Weapon.m_Var != 7)
+				if (Vars::Chams::DME::Weapon.Value != 7)
 				{
-					if (Vars::Chams::DME::WeaponRainbow.m_Var)
+					if (Vars::Chams::DME::WeaponRainbow.Value)
 					{
 						I::RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
 							Color::TOFLOAT(Utils::Rainbow().g),
@@ -872,7 +872,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 
 				foundselfillumtint = false;
-				if (Vars::Chams::DME::Weapon.m_Var == 7)
+				if (Vars::Chams::DME::Weapon.Value == 7)
 				{
 					IMaterial* mat = m_pMatFresnel2;
 					IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
@@ -899,13 +899,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 				bMatWasForced = true;
 				
-				if (Vars::Chams::DME::WeaponsProxySkin.m_Var && bMatWasForced)
+				if (Vars::Chams::DME::WeaponsProxySkin.Value && bMatWasForced)
 				{
 
 					IMaterial* pMaterial = nullptr;
 					{
 						using namespace ProxySkins;
-						switch (Vars::Chams::DME::WeaponsProxySkin.m_Var) {
+						switch (Vars::Chams::DME::WeaponsProxySkin.Value) {
 						case 1:
 							pMaterial = spectrumSplattered;
 							break;
@@ -948,7 +948,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					bool found = false;
 					auto pVar = pMaterial->FindVar("$wireframe", &found);
 					if (pVar) {
-						pVar->SetIntValue(Vars::Chams::DME::WeaponsProxyWF.m_Var);
+						pVar->SetIntValue(Vars::Chams::DME::WeaponsProxyWF.Value);
 					}
 					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
@@ -959,7 +959,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				if (Vars::Chams::DME::WeaponGlowOverlay.m_Var && bMatWasForced)
+				if (Vars::Chams::DME::WeaponGlowOverlay.Value && bMatWasForced)
 				{
 					IMaterial* pMaterial = m_pMatScuffed;
 					bool found = false;
@@ -968,7 +968,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
 					if (found)
 					{
-						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
+						if (Vars::Chams::DME::WeaponOverlayRainbow.Value)
 						{
 							pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
 								Color::TOFLOAT(Utils::Rainbow().g) * 4,
@@ -984,7 +984,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
 					if (found2)
 					{
-						if (Vars::Chams::DME::WeaponOverlayRainbow.m_Var)
+						if (Vars::Chams::DME::WeaponOverlayRainbow.Value)
 						{
 							pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
 								Color::TOFLOAT(Utils::Rainbow().g) * 4,
@@ -1001,11 +1001,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
 					if (foundfresnelranges)
 					{
-						phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::WeaponGlowAmount.m_Var, 10 / Vars::Chams::DME::WeaponGlowAmount.m_Var);
+						phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::WeaponGlowAmount.Value, 10 / Vars::Chams::DME::WeaponGlowAmount.Value);
 					}
-					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.m_Var == 2);
+					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Vars::Chams::DME::WeaponGlowOverlay.Value == 2);
 
-					I::RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.m_Var ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
+					I::RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.Value ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 
 					if (dmeHook)

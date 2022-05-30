@@ -6,7 +6,7 @@ bool CResolver::ShouldAutoResolve()
 {
 	if (G::CurWeaponType == EWeaponType::PROJECTILE) { return false; }
 
-	if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
 		if (pWeapon->GetClassID() == ETFClassID::CTFMinigun) { return false; }
 	}
@@ -17,129 +17,128 @@ bool CResolver::ShouldAutoResolve()
 /* Run the resolver and apply the resolved angles */
 void CResolver::Run()
 {
-	if (Vars::AntiHack::Resolver::Resolver.m_Var)
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
+
+	Vec3 localHead;
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		Vec3 localHead;
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-			localHead = pLocal->GetHitboxPos(HITBOX_HEAD);
+		localHead = pLocal->GetEyePosition();
+	}
+
+	for (auto i = 1; i <= I::Engine->GetMaxClients(); i++)
+	{
+		CBaseEntity* entity;
+		PlayerInfo_t temp{};
+
+		if (!(entity = I::EntityList->GetClientEntity(i))) {
+			continue;
 		}
 
-		for (auto i = 1; i <= I::Engine->GetMaxClients(); i++)
+		if (entity->GetDormant()) {
+			continue;
+		}
+
+		if (!I::Engine->GetPlayerInfo(i, &temp)) {
+			continue;
+		}
+
+		if (!entity->GetLifeState() == LIFE_ALIVE) {
+			continue;
+		}
+
+		if (entity->IsTaunting()) {
+			continue;
+		}
+
+		const Vector vX = entity->GetEyeAngles();
+		auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
+			get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
+		auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
+			get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
+
+		auto findResolve = F::Resolver.ResolvePlayers.find(temp.friendsID);
+		ResolveMode resolveMode;
+		if (findResolve != F::Resolver.ResolvePlayers.end())
 		{
-			CBaseEntity* entity;
-			PlayerInfo_t temp{};
+			resolveMode = findResolve->second;
+		}
 
-			if (!(entity = I::EntityList->GetClientEntity(i))) {
-				continue;
-			}
-
-			if (entity->GetDormant()) {
-				continue;
-			}
-
-			if (!I::Engine->GetPlayerInfo(i, &temp)) {
-				continue;
-			}
-
-			if (!entity->GetLifeState() == LIFE_ALIVE) {
-				continue;
-			}
-
-			if (entity->IsTaunting()) {
-				continue;
-			}
-
-			const Vector vX = entity->GetEyeAngles();
-			auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-				get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
-			auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-				get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
-
-			auto findResolve = F::Resolver.ResolvePlayers.find(temp.friendsID);
-			ResolveMode resolveMode;
-			if (findResolve != F::Resolver.ResolvePlayers.end())
+		// Pitch resolver 
+		switch (resolveMode.m_Pitch)
+		{
+		case 1:
+		{
+			*m_angEyeAnglesX = -89; // Up
+			break;
+		}
+		case 2:
+		{
+			*m_angEyeAnglesX = 89; // Down
+			break;
+		}
+		case 3:
+		{
+			*m_angEyeAnglesX = 0; // Zero
+			break;
+		}
+		case 4:
+		{
+			// Auto (Will resolve fake up/down)
+			if (vX.x >= 90)
 			{
-				resolveMode = findResolve->second;
+				*m_angEyeAnglesX = -89;
 			}
 
-			// Pitch resolver 
-			switch (resolveMode.m_Pitch)
+			if (vX.x <= -90)
 			{
-			case 1:
-			{
-				*m_angEyeAnglesX = -89; // Up
-				break;
+				*m_angEyeAnglesX = 89;
 			}
-			case 2:
-			{
-				*m_angEyeAnglesX = 89; // Down
-				break;
-			}
-			case 3:
-			{
-				*m_angEyeAnglesX = 0; // Zero
-				break;
-			}
-			case 4:
-			{
-				// Auto (Will resolve fake up/down)
-				if (vX.x >= 90)
-				{
-					*m_angEyeAnglesX = -89;
-				}
+			break;
+		}
+		default:
+			break;
+		}
 
-				if (vX.x <= -90)
-				{
-					*m_angEyeAnglesX = 89;
-				}
-				break;
-			}
-			default:
-				break;
-			}
-
-			// Yaw resolver
-			const Vec3 vAngleTo = Math::CalcAngle(entity->GetHitboxPos(HITBOX_HEAD), localHead);
-			switch (resolveMode.m_Yaw)
+		// Yaw resolver
+		const Vec3 vAngleTo = Math::CalcAngle(entity->GetEyePosition(), localHead);
+		switch (resolveMode.m_Yaw)
+		{
+		case 1:
+		{
+			*m_angEyeAnglesY = vAngleTo.y; // Forward
+			break;
+		}
+		case 2:
+		{
+			*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
+			break;
+		}
+		case 3:
+		{
+			*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
+			break;
+		}
+		case 4:
+		{
+			*m_angEyeAnglesY = vAngleTo.y + 90.f; // Right
+			break;
+		}
+		case 5:
+		{
+			*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
+			break;
+		}
+		case 6:
+		{
+			// Auto resolver
+			if (ShouldAutoResolve())
 			{
-			case 1:
-			{
-				*m_angEyeAnglesY = vAngleTo.y; // Forward
-				break;
+				*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
 			}
-			case 2:
-			{
-				*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
-				break;
-			}
-			case 3:
-			{
-				*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
-				break;
-			}
-			case 4:
-			{
-				*m_angEyeAnglesY = vAngleTo.y + 90.f; // Right
-				break;
-			}
-			case 5:
-			{
-				*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
-				break;
-			}
-			case 6:
-			{
-				// Auto resolver
-				if (ShouldAutoResolve())
-				{
-					*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
-				}
-				break;
-			}
-			default:
-				break;
-			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
 }
@@ -147,10 +146,10 @@ void CResolver::Run()
 /* Update resolver data (for Bruteforce) */
 void CResolver::Update(CUserCmd* pCmd)
 {
-	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	// Log shots
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (G::CurrentTargetIdx != 0 &&
 			(pCmd->buttons & IN_ATTACK || G::IsAttacking) &&
@@ -209,7 +208,7 @@ void CResolver::Update(CUserCmd* pCmd)
 /* Called when the someone was damaged. Did we hit? */
 void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 {
-	if (!Vars::AntiHack::Resolver::Resolver.m_Var) { return; }
+	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	const int victim = I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"));
 	const int attacker = I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
@@ -220,7 +219,7 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 
 		if (!I::Engine->GetPlayerInfo(victim, &temp)) { return; }
 		if (ResolveData.find(temp.friendsID) == ResolveData.end()) { return; }
-		if (Vars::Aimbot::Hitscan::AimHitbox.m_Var == 0 && !bCrit) { return; }
+		if (Vars::Aimbot::Hitscan::AimHitbox.Value == 0 && !bCrit) { return; }
 
 		ResolveData[temp.friendsID].LastHit = I::Engine->Time();
 		// ResolveData[temp.friendsID].RequiresUpdate = false;

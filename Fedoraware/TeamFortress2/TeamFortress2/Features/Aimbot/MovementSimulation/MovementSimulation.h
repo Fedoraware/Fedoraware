@@ -21,7 +21,7 @@ public:
 	bool Initialize(CBaseEntity* pPlayer);
 	bool InitializeForProjaim(CBaseEntity* pPlayer);
 	void Restore();
-	void RunTick(CMoveData& moveDataOut, Vec3& worldSpaceCenterOut);
+	void RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin);
 	const Vec3& GetOrigin() { return m_MoveData.m_vecAbsOrigin; }
 };
 

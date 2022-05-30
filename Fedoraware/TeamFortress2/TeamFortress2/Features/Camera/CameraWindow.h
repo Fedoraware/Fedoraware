@@ -11,7 +11,6 @@ public:
 	Vec3 CameraAngles;
 	bool CanDraw = false;
 	Rect_t ViewRect = { 50, 50, 800, 400 };
-	RenderViewFN originalFn = nullptr;
 	void Init();
 	void Draw();
 	void Update();

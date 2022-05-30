@@ -3,7 +3,7 @@
 
 bool CPlayerArrows::ShouldRun(CBaseEntity* pLocal)
 {
-	if (!Vars::Visuals::OutOfFOVArrows.m_Var || I::EngineVGui->IsGameUIVisible())
+	if (!Vars::Visuals::OutOfFOVArrows.Value || I::EngineVGui->IsGameUIVisible())
 	{
 		return false;
 	}
@@ -46,15 +46,15 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	const float xrot = cos(deg - PI / 2);
 	const float yrot = sin(deg - PI / 2);
 
-	const float x1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 5.0f) * xrot;
-	const float y1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 5.0f) * yrot;
-	const float x2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 15.0f) * xrot;
-	const float y2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.m_Var + 15.0f) * yrot;
+	const float x1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.Value + 5.0f) * xrot;
+	const float y1 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.Value + 5.0f) * yrot;
+	const float x2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.Value + 15.0f) * xrot;
+	const float y2 = (g_ScreenSize.w * Vars::Visuals::FovArrowsDist.Value + 15.0f) * yrot;
 
 	//constexpr float arrow_angle = DEG2RAD(60.0f);
-	const float arrowAngle = DEG2RAD(Vars::Visuals::ArrowAngle.m_Var);
+	const float arrowAngle = DEG2RAD(Vars::Visuals::ArrowAngle.Value);
 	//constexpr float arrow_length = 20.0f;
-	const float arrowLength = Vars::Visuals::ArrowLength.m_Var;
+	const float arrowLength = Vars::Visuals::ArrowLength.Value;
 
 	const Vec3 line{x2 - x1, y2 - y1, 0.0f};
 	const float length = line.Length();
@@ -72,12 +72,12 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	const auto cy = static_cast<float>(g_ScreenSize.h / 2);
 
 	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-	const float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.m_Var,
-	                                       Vars::Visuals::MinDist.m_Var, 0.0f, 1.0f), 0.0f, 1.0f);
+	const float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.Value,
+	                                       Vars::Visuals::MinDist.Value, 0.0f, 1.0f), 0.0f, 1.0f);
 	Color_t heatColor = color;
 	heatColor.a = static_cast<byte>(fMap * 255.0f);
 
-	if (Vars::Visuals::OutOfFOVArrowsOutline.m_Var)
+	if (Vars::Visuals::OutOfFOVArrowsOutline.Value)
 	{
 		g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, heatColor);
 		g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, heatColor);
@@ -96,7 +96,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 
 void CPlayerArrows::Run()
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (!ShouldRun(pLocal))
 		{
@@ -114,7 +114,7 @@ void CPlayerArrows::Run()
 				continue;
 			}
 
-			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.IsFriend(pEnemy->GetIndex()))
+			if (Vars::Visuals::SpyWarningIgnoreFriends.Value && g_EntityCache.IsFriend(pEnemy->GetIndex()))
 			{
 				continue;
 			}
@@ -168,7 +168,7 @@ void CPlayerArrows::Run()
 		for (const auto& player : m_vecPlayers)
 		{
 			Color_t teamColor;
-			if (!Vars::ESP::Main::EnableTeamEnemyColors.m_Var)
+			if (!Vars::ESP::Main::EnableTeamEnemyColors.Value)
 			{
 				if (pLocal->GetTeamNum() == 2)
 				{

@@ -8,7 +8,7 @@
 MAKE_HOOK(IsLocalPlayerUsingVisionFilterFlags, g_Pattern.Find(L"client.dll", L"55 8B EC 8A 45 ? 56 8B 35"), bool, __cdecl,
 		  int nFlags, bool bWeaponsCheck)
 {
-	switch (Vars::Visuals::Vision.m_Var)
+	switch (Vars::Visuals::Vision.Value)
 	{
 		case 1:
 		{

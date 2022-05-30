@@ -235,8 +235,7 @@ namespace Utils
 
 	__inline void GetProjectileFireSetup(CBaseEntity *pPlayer, const Vec3 &vViewAngles, Vec3 vOffset, Vec3 *vSrc)
 	{
-		if (g_ConVars.cl_flipviewmodels->GetInt())
-			vOffset.y *= -1.0f;
+		if (g_ConVars.cl_flipviewmodels->GetBool()) { vOffset.y *= -1.0f; }
 
 		Vec3 vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 		Math::AngleVectors(vViewAngles, &vecForward, &vecRight, &vecUp);
@@ -269,7 +268,7 @@ namespace Utils
 	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
 	{
 		if (otherColors) {
-			if (const auto& pLocal = g_EntityCache.m_pLocal) {
+			if (const auto& pLocal = g_EntityCache.GetLocal()) {
 				// Enemy/Team based colors
 				auto lPlayerTeam = pLocal->GetTeamNum();
 				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::rTeam;
@@ -297,10 +296,10 @@ namespace Utils
 
 		if (pEntity->IsPlayer())
 		{
-			if (g_EntityCache.m_pLocal->GetIndex() == pEntity->GetIndex())
+			if (g_EntityCache.GetLocal()->GetIndex() == pEntity->GetIndex())
 				out = Colors::Local;
 
-			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.m_pLocal)
+			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.GetLocal())
 				out = Colors::Friend;
 
 			else if (G::IsIgnored(info.friendsID))
@@ -785,90 +784,68 @@ namespace Utils
 		return 0;
 	}
 
-	// Credits to cathook
-	__inline Vec3 GetRealShootPos(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& angle)
+	__inline bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& targetPos)
 	{
-		Vec3 eyePos = pLocal->GetEyePosition();
-		if (!pLocal || G::CurWeaponType != EWeaponType::PROJECTILE)
-		{
-			return eyePos;
-		}
+		CGameTrace trace{};
+		static CTraceFilterWorldAndPropsOnly traceFilter = {};
+		traceFilter.pSkip = pLocal;
 
-		Vec3 forward, right, up;
-		Math::AngleVectors(angle, &forward, &right, &up);
+		Vec3 shootPos = pLocal->GetEyePosition();
+		const Vec3 aimAngles = Math::CalcAngle(shootPos, targetPos);
 
-		std::optional<Vec3> vecOffset;
-		switch (pWeapon->GetClassID())
 		{
-			// Rocket launchers and flare guns/Pomson
-		case ETFClassID::CTFRocketLauncher:
-		case ETFClassID::CTFRocketLauncher_Mortar:
-		case ETFClassID::CTFRocketLauncher_AirStrike:
-		case ETFClassID::CTFRocketLauncher_DirectHit:
-		case ETFClassID::CTFFlareGun:
-		case ETFClassID::CTFFlareGun_Revenge:
-		case ETFClassID::CTFDRGPomson:
-			// The original shoots centered, rest doesn't
-			if (pWeapon->GetItemDefIndex() != Soldier_m_TheOriginal)
+			switch (pWeapon->GetWeaponID())
 			{
-				vecOffset = Vector(23.5f, 12.0f, -3.0f);
-				// Ducking changes offset
-				if (pLocal->GetFlags() & FL_DUCKING)
+			case TF_WEAPON_RAYGUN_REVENGE:
+			case TF_WEAPON_ROCKETLAUNCHER:
+			case TF_WEAPON_DIRECTHIT:
+			{
+				Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
+				if (pLocal->IsDucking())
 				{
-					vecOffset->z = 8.0f;
+					vecOffset.z = 8.0f;
 				}
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
 			}
-			break;
-
-			// Pill/Pipebomb launchers
-		case ETFClassID::CTFPipebombLauncher:
-		case ETFClassID::CTFGrenadeLauncher:
-		case ETFClassID::CTFCannon:
-			vecOffset = Vector(16.0f, 8.0f, -6.0f);
-			break;
-
-		case ETFClassID::CTFSyringeGun:
-			vecOffset = Vector(16.0f, 6.0f, -8.0f);
-			break;
-
-			// Huntsman
-		case ETFClassID::CTFCompoundBow:
-			vecOffset = Vector(23.5f, -8.0f, -3.0f);
-			break;
-
-		default:
-			break;
-		}
-
-		// We have an offset for the weapon that may or may not need to be applied
-		if (vecOffset)
-		{
-			// Game checks 2000 HU infront of eye for a hit
-			static constexpr float DISTANCE = 2000.0f;
-
-			const Vec3 endpos = eyePos + (forward * DISTANCE);
-			CGameTrace trace;
-			CTraceFilterHitscan traceFilter = {};
-			Ray_t traceRay;
-
-			traceFilter.pSkip = pLocal;
-			traceRay.Init(eyePos, endpos);
-			I::EngineTrace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &trace);
-
-			if (trace.flFraction <= 0.1f)
+			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			{
-				if (pWeapon->IsFlipped()) { vecOffset->y *= -1.f; }
-
-				eyePos = eyePos + (forward * vecOffset->x) + (right * vecOffset->y) + (up * vecOffset->z);
-				// They decided to do this weird stuff for the pomson instead of fixing their offset
-				if (pWeapon->GetClassID() == ETFClassID::CTFDRGPomson)
+				const Vec3 vecOffset(16.f, 6.f, -8.f); //tf_weaponbase_gun.cpp @L628
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_COMPOUND_BOW:
+			{
+				const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_RAYGUN:
+			case TF_WEAPON_PARTICLE_CANNON:
+			case TF_WEAPON_DRG_POMSON:
+			{
+				Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L568
+				if (pLocal->IsDucking())
 				{
-					eyePos.z -= 13.f;
+					vecOffset.z = 8.0f;
 				}
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_GRENADELAUNCHER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			{
+				// TODO: Implement this
+				break;
+			}
+			default: break;
 			}
 		}
 
-		return eyePos;
+		TraceHull(shootPos, targetPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f), MASK_SHOT_HULL, &traceFilter, &trace);
+		return !trace.DidHit();
 	}
 }
 

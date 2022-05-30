@@ -212,9 +212,9 @@ void CAttributeChanger::SetAttribute()
 		{
 			const int nIndex = pWeapon->GetItemDefIndex();
 			AttributeMap[nIndex] = {
-				nIndex, Vars::Visuals::Skins::Effect.m_Var,
-				Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var,
-				Vars::Visuals::Skins::Acient.m_Var, Vars::Visuals::Skins::Override.m_Var
+				nIndex, Vars::Visuals::Skins::Effect.Value,
+				Vars::Visuals::Skins::Particle.Value, Vars::Visuals::Skins::Sheen.Value,
+				Vars::Visuals::Skins::Acient.Value, Vars::Visuals::Skins::Override.Value
 			};
 
 			ForceFullUpdate(I::ClientState);

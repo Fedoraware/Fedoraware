@@ -3,10 +3,10 @@
 MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 70 8B 55 0C 53 8B 5D 08 89 4D FC 8B 02 89 45 E8 8B 42 04 89 45 EC 8B 42 08 89 45 F0 56 57"), void, __fastcall,
 		  void* ecx, void* edx, CBaseEntity* pOwner, const Vec3& vEyePosition, Vec3& vEyeAngles)
 {
-	if (Vars::Visuals::AimbotViewmodel.m_Var)
+	if (Vars::Visuals::AimbotViewmodel.Value)
 	{
 		static Vec3 m_vEyeAngDelayed;
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
 			if (pLocal->IsAlive() && !G::AimPos.IsZero())
 			{
@@ -43,7 +43,7 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, g_Pattern.Find(L"client.dll", L"55 8B 
 		(vUp * Vars::Visuals::VMOffsets.z)
 		);
 
-	vEyeAngles.z += Vars::Visuals::VMRoll.m_Var; //VM Roll
+	vEyeAngles.z += Vars::Visuals::VMRoll.Value; //VM Roll
 
 	Hook.Original<FN>()(ecx, edx, pOwner, vNewEyePosition, vEyeAngles);
 }

@@ -57,9 +57,9 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 {
 	if (!pCmd) { return; }
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
 			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 			{
@@ -104,7 +104,7 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 
 void CBacktrack::Calculate(CUserCmd* pCmd)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		Vec3 newViewDirection;
 		const Vec3 viewDirection = pCmd->viewangles;
@@ -169,7 +169,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 
 void CBacktrack::Run(CUserCmd* pCmd)
 {
-	if (!Vars::Backtrack::Enabled.m_Var)
+	if (!Vars::Backtrack::Enabled.Value)
 	{
 		LatencyRampup = 0.f;
 		return;
@@ -178,7 +178,7 @@ void CBacktrack::Run(CUserCmd* pCmd)
 	LatencyRampup += I::GlobalVars->interval_per_tick;
 	LatencyRampup = std::min(1.f, LatencyRampup);
 
-	if (g_EntityCache.m_pLocal && pCmd)
+	if (g_EntityCache.GetLocal() && pCmd)
 	{
 		UpdateDatagram();
 
@@ -221,7 +221,7 @@ float CBacktrack::GetLatency()
 		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
 	}
 	
-	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.m_Var * 0.001f, 0.f, 0.9f - realLatency);
+	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.Value * 0.001f, 0.f, 0.9f - realLatency);
 }
 
 // Adjusts the fake latency ping

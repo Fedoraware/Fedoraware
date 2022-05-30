@@ -80,11 +80,11 @@ void CVisuals::SkyboxChanger()
 		"sky_island_01",
 		"sky_rainbow_01"
 	};
-	if (Vars::Visuals::SkyboxChanger.m_Var)
+	if (Vars::Visuals::SkyboxChanger.Value)
 	{
 		if (Vars::Skybox::SkyboxNum == 0)
 		{
-			if (Vars::Misc::BypassPure.m_Var)
+			if (Vars::Misc::BypassPure.Value)
 			{
 				LoadSkys(Vars::Skybox::SkyboxName.c_str());
 			}
@@ -106,56 +106,58 @@ void CVisuals::SkyboxChanger()
 
 bool CVisuals::RemoveScope(int nPanel)
 {
+	if (!Vars::Visuals::RemoveScope.Value) { return false; }
+
 	if (!m_nHudZoom && Hash::IsHudScope(I::Panel->GetName(nPanel)))
 	{
 		m_nHudZoom = nPanel;
 	}
 
-	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
+	return (nPanel == m_nHudZoom);
 }
 
 void CVisuals::FOV(CViewSetup* pView)
 {
-	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 	if (pLocal && pView)
 	{
-		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var))
+		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value))
 		{
 			return;
 		}
 
-		pView->fov = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
+		pView->fov = static_cast<float>(Vars::Visuals::FieldOfView.Value);
 
 		if (pLocal->IsAlive())
 		{
-			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
-			pLocal->m_iDefaultFOV() = Vars::Visuals::FieldOfView.m_Var;
+			pLocal->SetFov(Vars::Visuals::FieldOfView.Value);
+			pLocal->m_iDefaultFOV() = Vars::Visuals::FieldOfView.Value;
 		}
 	}
 }
 
 void CVisuals::ThirdPerson(CViewSetup* pView)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		// Toggle key
-		if (Vars::Visuals::ThirdPersonKey.m_Var)
+		if (Vars::Visuals::ThirdPersonKey.Value)
 		{
 			if (!I::EngineVGui->IsGameUIVisible() && !I::Surface->IsCursorVisible())
 			{
-				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.m_Var};
+				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.Value};
 				if (tpKey.Pressed())
 				{
-					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
+					Vars::Visuals::ThirdPerson.Value = !Vars::Visuals::ThirdPerson.Value;
 				}
 			}
 		}
 
 		const bool bIsInThirdPerson = I::Input->CAM_IsThirdPerson();
 
-		if (!Vars::Visuals::ThirdPerson.m_Var
-			|| ((!Vars::Visuals::RemoveScope.m_Var || !Vars::Visuals::RemoveZoom.m_Var) && pLocal->IsScoped()))
+		if (!Vars::Visuals::ThirdPerson.Value
+			|| ((!Vars::Visuals::RemoveScope.Value || !Vars::Visuals::RemoveZoom.Value) && pLocal->IsScoped()))
 		{
 			if (bIsInThirdPerson)
 			{
@@ -171,10 +173,10 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		}
 
 		// Thirdperson angles
-		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
+		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.Value)
 		{
 			I::Prediction->SetLocalViewAngles(G::RealViewAngles);
-			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
+			if (Vars::Visuals::ThirdPersonInstantYaw.Value)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 				{
@@ -184,14 +186,14 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		}
 
 		// Thirdperson offset
-		if (bIsInThirdPerson && Vars::Visuals::ThirdpersonOffset.m_Var)
+		if (bIsInThirdPerson && Vars::Visuals::ThirdpersonOffset.Value)
 		{
 			const Vec3 viewangles = I::Engine->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
 			Vec3 vForward, vRight, vUp;
 			Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
-			static KeyHelper offsetKey{ &Vars::Visuals::ThirdpersonArrowOffsetKey.m_Var };
+			static KeyHelper offsetKey{ &Vars::Visuals::ThirdpersonArrowOffsetKey.Value };
 
-			if (Vars::Visuals::ThirdpersonOffsetWithArrows.m_Var)
+			if (Vars::Visuals::ThirdpersonOffsetWithArrows.Value)
 			{
 				if (offsetKey.Down())
 				{
@@ -218,13 +220,13 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 
 				pView->origin += vRight * arrowRight;
 				pView->origin += vUp * arrowUp;
-				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.m_Var;
+				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.Value;
 			}
 			else
 			{
-				pView->origin += vRight * Vars::Visuals::ThirdpersonRight.m_Var;
-				pView->origin += vUp * Vars::Visuals::ThirdpersonUp.m_Var;
-				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.m_Var;
+				pView->origin += vRight * Vars::Visuals::ThirdpersonRight.Value;
+				pView->origin += vUp * Vars::Visuals::ThirdpersonUp.Value;
+				pView->origin += vForward * Vars::Visuals::ThirdpersonDist.Value;
 			}
 		}
 	}
@@ -338,10 +340,10 @@ bool ModColChanged() // check if colours have been changed
 
 bool ModSetChanged() // check if modulation has been switched
 {
-	static auto oldS = Vars::Visuals::SkyModulation.m_Var;
-	static auto oldW = Vars::Visuals::WorldModulation.m_Var;
-	const auto curS = Vars::Visuals::SkyModulation.m_Var;
-	const auto curW = Vars::Visuals::WorldModulation.m_Var;
+	static auto oldS = Vars::Visuals::SkyModulation.Value;
+	static auto oldW = Vars::Visuals::WorldModulation.Value;
+	const auto curS = Vars::Visuals::SkyModulation.Value;
+	const auto curW = Vars::Visuals::WorldModulation.Value;
 
 	if (curS != oldS || curW != oldW)
 	{
@@ -440,12 +442,12 @@ void CVisuals::ModulateWorld()
 
 	if (ModColChanged() || ModSetChanged() || !isUnchanged)
 	{
-		Vars::Visuals::WorldModulation.m_Var ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({255, 255, 255, 255});
-		Vars::Visuals::SkyModulation.m_Var ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({255, 255, 255, 255});
+		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({255, 255, 255, 255});
+		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({255, 255, 255, 255});
 		oConnectionState = connectionState;
 		shouldModulate = false;
 	}
-	else if (!Vars::Visuals::WorldModulation.m_Var)
+	else if (!Vars::Visuals::WorldModulation.Value)
 	{
 		if (!shouldModulate)
 		{
@@ -474,7 +476,7 @@ void CVisuals::OverrideWorldTextures()
 		kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
 	}
 
-	if (Vars::Visuals::OverrideWorldTextures.m_Var)
+	if (Vars::Visuals::OverrideWorldTextures.Value)
 	{
 		for (const auto& data : MaterialHandleDatas)
 		{
@@ -500,7 +502,7 @@ void CVisuals::OverrideWorldTextures()
 
 void CVisuals::PickupTimers()
 {
-	if (!Vars::Visuals::PickupTimers.m_Var) { return; }
+	if (!Vars::Visuals::PickupTimers.Value) { return; }
 
 	for (auto pickupData = PickupDatas.begin(); pickupData != PickupDatas.end();)
 	{
@@ -574,7 +576,7 @@ void CVisuals::CPrecipitation::Run()
 
 		static auto dwOff = GetNetVar("CPrecipitation", "m_nPrecipType");
 
-		*reinterpret_cast<int*>(RainEntity + dwOff) = Vars::Visuals::Rain.m_Var - 1;
+		*reinterpret_cast<int*>(RainEntity + dwOff) = Vars::Visuals::Rain.Value - 1;
 
 		RainEntity->Networkable()->PreDataUpdate(DATA_UPDATE_CREATED);
 		RainEntity->Networkable()->OnPreDataChanged(DATA_UPDATE_CREATED);

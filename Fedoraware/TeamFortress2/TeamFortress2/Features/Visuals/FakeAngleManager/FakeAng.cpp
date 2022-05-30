@@ -1,7 +1,7 @@
 #include "FakeAng.h"
 
 void CFakeAng::Run(CUserCmd* pCmd) {
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		if (!pCmd) {
 			return;
 		}

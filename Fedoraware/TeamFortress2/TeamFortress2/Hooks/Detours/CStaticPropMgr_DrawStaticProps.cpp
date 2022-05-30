@@ -4,6 +4,6 @@ MAKE_HOOK(CStaticPropMgr_DrawStaticProps, g_Pattern.Find(_(L"engine.dll"), _(L"5
 		  void* ecx, void* edx, IClientRenderable** pProps, int count, bool bShadowDepth, bool drawVCollideWireframe)
 {
 	G::DrawingStaticProps = true;
-	Hook.Original<FN>()(ecx, edx, pProps, count, bShadowDepth, Vars::Visuals::PropWireframe.m_Var);
+	Hook.Original<FN>()(ecx, edx, pProps, count, bShadowDepth, Vars::Visuals::PropWireframe.Value);
 	G::DrawingStaticProps = false;
 }

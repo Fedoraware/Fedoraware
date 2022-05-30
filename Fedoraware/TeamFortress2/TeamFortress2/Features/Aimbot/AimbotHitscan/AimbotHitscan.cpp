@@ -31,7 +31,7 @@ bool IsHitboxValid(int nHitbox, int index)
 
 int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
+	switch (Vars::Aimbot::Hitscan::AimHitbox.Value)
 	{
 	case 0: { return HITBOX_HEAD; }
 	case 1: { return HITBOX_SPINE_1; }
@@ -63,7 +63,7 @@ int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 ESortMethod CAimbotHitscan::GetSortMethod()
 {
-	switch (Vars::Aimbot::Hitscan::SortMethod.m_Var)
+	switch (Vars::Aimbot::Hitscan::SortMethod.Value)
 	{
 	case 0: return ESortMethod::FOV;
 	case 1: return ESortMethod::DISTANCE;
@@ -77,7 +77,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 	if (sortMethod == ESortMethod::FOV)
 	{
-		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
+		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.Value;
 	}
 
 	F::AimbotGlobal.m_vecTargets.clear();
@@ -86,7 +86,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
 	// Players
-	if (Vars::Aimbot::Global::AimPlayers.m_Var)
+	if (Vars::Aimbot::Global::AimPlayers.Value)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
 		const bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
@@ -110,7 +110,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			if (F::AimbotGlobal.ShouldIgnore(pTarget, bIsMedigun)) { continue; }
 
-			if (Vars::Aimbot::Global::BAimLethal.m_Var)
+			if (Vars::Aimbot::Global::BAimLethal.Value)
 			{
 				if (pWeapon->GetChargeDamage() >= pTarget->GetHealth())
 				{
@@ -143,7 +143,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -158,7 +158,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	}
 
 	// Buildings
-	if (Vars::Aimbot::Global::AimBuildings.m_Var)
+	if (Vars::Aimbot::Global::AimBuildings.Value)
 	{
 		for (const auto& pBuilding : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ENEMIES))
 		{
@@ -171,7 +171,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -183,7 +183,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	}
 
 	// Stickies
-	if (Vars::Aimbot::Global::AimStickies.m_Var)
+	if (Vars::Aimbot::Global::AimStickies.Value)
 	{
 		for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 		{
@@ -203,7 +203,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -222,7 +222,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 
 	if (target.m_TargetType == ETargetType::PLAYER)
 	{
-		if (!Vars::Aimbot::Hitscan::ScanHitboxes.m_Var) // even if they have multibox stuff on, if they are scanning nothing we return false, frick you.
+		if (!Vars::Aimbot::Hitscan::ScanHitboxes.Value) // even if they have multibox stuff on, if they are scanning nothing we return false, frick you.
 		{
 			return false;
 		}
@@ -241,7 +241,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 							if (nHitbox == -1) { nHitbox = PriorityHitbox; }
 							else if (nHitbox == PriorityHitbox) { continue; }
 
-							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.m_Var)) { continue; }
+							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value)) { continue; }
 
 							Vec3 vHitbox = target.m_pEntity->GetHitboxPos(nHitbox);
 
@@ -253,7 +253,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 								return true;
 							}
 
-							if (IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::MultiHitboxes.m_Var))
+							if (IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::MultiHitboxes.Value))
 							{
 								if (const mstudiobbox_t* pBox = pSet->hitbox(nHitbox))
 								{
@@ -312,7 +312,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 
 bool CAimbotHitscan::ScanBuildings(CBaseEntity* pLocal, Target_t& target)
 {
-	if (!Vars::Aimbot::Hitscan::ScanBuildings.m_Var)
+	if (!Vars::Aimbot::Hitscan::ScanBuildings.Value)
 	{
 		return false;
 	}
@@ -355,7 +355,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	{
 	case ETargetType::PLAYER:
 		{
-			if (Vars::Backtrack::Enabled.m_Var && Vars::Backtrack::Aim.m_Var && Vars::Aimbot::Hitscan::AimMethod.m_Var != 1)
+			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value && Vars::Aimbot::Hitscan::AimMethod.Value != 1)
 			{
 				Vec3 hitboxPos;
 				if (!F::Backtrack.Record[target.m_pEntity->GetIndex()].empty())
@@ -447,9 +447,9 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	vAngle -= G::PunchAngles;
 	Math::ClampAngles(vAngle);
 
-	const int nAimMethod = (Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var && G::LocalSpectated)
+	const int nAimMethod = (Vars::Aimbot::Hitscan::SpectatedSmooth.Value && G::LocalSpectated)
 		                       ? 1
-		                       : Vars::Aimbot::Hitscan::AimMethod.m_Var;
+		                       : Vars::Aimbot::Hitscan::AimMethod.Value;
 
 	switch (nAimMethod)
 	{
@@ -462,7 +462,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 1: //Smooth
 		{
-			if (Vars::Aimbot::Hitscan::SmoothingAmount.m_Var == 0)
+			if (Vars::Aimbot::Hitscan::SmoothingAmount.Value == 0)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
@@ -476,7 +476,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			Math::ClampAngles(vecDelta);
 
 			//Basic smooth by dividing the delta by wanted smooth amount
-			pCmd->viewangles += vecDelta / Vars::Aimbot::Hitscan::SmoothingAmount.m_Var;
+			pCmd->viewangles += vecDelta / Vars::Aimbot::Hitscan::SmoothingAmount.Value;
 
 			//Set the viewangles from engine
 			I::Engine->SetViewAngles(pCmd->viewangles);
@@ -485,8 +485,8 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 2: //Silent
 		{
-			if (Vars::AntiHack::AntiAim::invalidshootpitch.m_Var && Vars::AntiHack::AntiAim::Active.m_Var && ((Vars::AntiHack::AntiAim::YawReal.m_Var && Vars::AntiHack::AntiAim::YawFake.m_Var) ||
-				Vars::AntiHack::AntiAim::Pitch.m_Var))
+			if (Vars::AntiHack::AntiAim::invalidshootpitch.Value && Vars::AntiHack::AntiAim::Active.Value && ((Vars::AntiHack::AntiAim::YawReal.Value && Vars::AntiHack::AntiAim::YawFake.Value) ||
+				Vars::AntiHack::AntiAim::Pitch.Value))
 			{
 				G::FakeShotPitch = true;
 
@@ -515,7 +515,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& target)
 {
-	if (!Vars::Aimbot::Global::AutoShoot.m_Var)
+	if (!Vars::Aimbot::Global::AutoShoot.Value)
 	{
 		return false;
 	}
@@ -541,7 +541,7 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 		{
 			const bool bIsScoped = pLocal->IsScoped();
 
-			if (Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var)
+			if (Vars::Aimbot::Hitscan::WaitForHeadshot.Value)
 			{
 				if (G::CurItemDefIndex != Sniper_m_TheClassic
 					&& G::CurItemDefIndex != Sniper_m_TheSydneySleeper
@@ -551,7 +551,7 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 				}
 			}
 
-			if (Vars::Aimbot::Hitscan::WaitForCharge.m_Var && bIsScoped)
+			if (Vars::Aimbot::Hitscan::WaitForCharge.Value && bIsScoped)
 			{
 				const int nHealth = target.m_pEntity->GetHealth();
 				const bool bIsCritBoosted = pLocal->IsCritBoostedNoMini();
@@ -606,7 +606,7 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 
 	case CLASS_SPY:
 		{
-			if (Vars::Aimbot::Hitscan::WaitForHeadshot.m_Var && !pWeapon->AmbassadorCanHeadshot())
+			if (Vars::Aimbot::Hitscan::WaitForHeadshot.Value && !pWeapon->AmbassadorCanHeadshot())
 			{
 				if (target.m_nAimedHitbox == HITBOX_HEAD)
 				{
@@ -620,9 +620,9 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	default: break;
 	}
 
-	const int nAimMethod = (Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var && G::LocalSpectated)
+	const int nAimMethod = (Vars::Aimbot::Hitscan::SpectatedSmooth.Value && G::LocalSpectated)
 		                       ? 1
-		                       : Vars::Aimbot::Hitscan::AimMethod.m_Var;
+		                       : Vars::Aimbot::Hitscan::AimMethod.Value;
 
 	if (nAimMethod == 1)
 	{
@@ -685,7 +685,7 @@ void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
 
 	Vec3 shootPos = pLocal->GetShootPos();
 	shootPos.z -= 5.0f;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }
 
@@ -694,7 +694,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 {
 	static int nLastTracerTick = pCmd->tick_count;
 
-	if (!Vars::Aimbot::Global::Active.m_Var)
+	if (!Vars::Aimbot::Global::Active.Value)
 	{
 		return;
 	}
@@ -702,14 +702,14 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	Target_t target = {};
 
 	const int nWeaponID = pWeapon->GetWeaponID();
-	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
+	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
 		                         : F::AimbotGlobal.IsKeyDown());
 
 	//Rev minigun if enabled and aimbot active
 	if (bShouldAim)
 	{
-		if (Vars::Aimbot::Hitscan::AutoRev.m_Var && nWeaponID == TF_WEAPON_MINIGUN)
+		if (Vars::Aimbot::Hitscan::AutoRev.Value && nWeaponID == TF_WEAPON_MINIGUN)
 		{
 			pCmd->buttons |= IN_ATTACK2;
 		}
@@ -728,13 +728,13 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		{
 			const bool bScoped = pLocal->IsScoped();
 
-			if (Vars::Aimbot::Hitscan::AutoScope.m_Var && !bScoped)
+			if (Vars::Aimbot::Hitscan::AutoScope.Value && !bScoped)
 			{
 				pCmd->buttons |= IN_ATTACK2;
 				return;
 			}
 
-			if (Vars::Aimbot::Hitscan::ScopedOnly.m_Var && !bScoped)
+			if (Vars::Aimbot::Hitscan::ScopedOnly.Value && !bScoped)
 			{
 				return;
 			}
@@ -750,9 +750,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
 		G::HitscanRunning = true;
-		G::HitscanSilentActive = Vars::Aimbot::Hitscan::AimMethod.m_Var == 2;
+		G::HitscanSilentActive = Vars::Aimbot::Hitscan::AimMethod.Value == 2;
 
-		if (Vars::Aimbot::Hitscan::SpectatedSmooth.m_Var && G::LocalSpectated)
+		if (Vars::Aimbot::Hitscan::SpectatedSmooth.Value && G::LocalSpectated)
 		{
 			G::HitscanSilentActive = false;
 		}
@@ -777,14 +777,14 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
+			if (Vars::Misc::CL_Move::Enabled.Value && Vars::Misc::CL_Move::Doubletap.Value && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
 			{
 				if (
-					(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
-					(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
-					(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
+					(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
+					(Vars::Misc::CL_Move::DTMode.Value == 1) ||
+					(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
 				{
-					if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && G::ShiftedTicks))
+					if ((Vars::Misc::CL_Move::NotInAir.Value && !pLocal->IsOnGround() && G::ShiftedTicks))
 					{
 						G::ShouldShift = false;
 					}
@@ -795,9 +795,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				}
 			}
 
-			if (Vars::Aimbot::Hitscan::TapFire.m_Var && nWeaponID == TF_WEAPON_MINIGUN)
+			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN)
 			{
-				const bool bDo = Vars::Aimbot::Hitscan::TapFire.m_Var == 1
+				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1
 					                 ? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
 					                 : true;
 
@@ -826,14 +826,14 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if (bIsAttacking)
 		{
 			G::IsAttacking = true;
-			if (Vars::Visuals::BulletTracer.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1)
+			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				//bulletTracer(pLocal, Target);
 				nLastTracerTick = pCmd->tick_count;
 			}
 		}
 
-		if (Vars::Misc::DisableInterpolation.m_Var && target.m_TargetType == ETargetType::PLAYER && bIsAttacking)
+		if (Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(target.m_pEntity->GetSimulationTime() +
 				std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.

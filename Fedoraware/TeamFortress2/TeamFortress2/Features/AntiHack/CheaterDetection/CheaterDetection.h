@@ -2,29 +2,28 @@
 #include "../../../SDK/SDK.h"
 
 struct Detection {
-	bool steamname;
-	//bool aimbot;
-	bool invalidpitch;
-	bool invalidtext;
+	bool SteamName;
+	//bool Aimbot;
+	bool InvalidPitch;
+	bool InvalidText;
 };
 
 struct PlayerData {
-	int aimSuspicion = 0;
-	Detection detections;
-	bool areTicksSafe = true;
+	int AimSuspicion = 0;
+	Detection Detections{ };
+	bool AreTicksSafe = true;
 };
 
-class CCheaterDetection
-{
-private:
-	std::map<int, int> strikes;
+class CCheaterDetection {
+	std::map<int, int> Strikes;
 	std::map<int, PlayerData> UserData;
-	bool shouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
-	bool isSteamNameDifferent(PlayerInfo_t pInfo);
-	bool isPitchInvalid(CBaseEntity* pSuspect);
-	bool isTickCountManipulated(int CurrentTickCount);
+	bool ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
+	bool IsSteamNameDifferent(PlayerInfo_t pInfo);
+	bool IsPitchInvalid(CBaseEntity* pSuspect);
+	bool IsTickCountManipulated(int currentTickCount);
+
 public:
-	std::map<int, bool> markedcheaters, illegalchar;
+	std::map<int, bool> MarkedCheaters, IllegalChar;
 	void OnTick();
 };
 

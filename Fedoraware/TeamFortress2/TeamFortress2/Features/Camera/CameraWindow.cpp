@@ -18,8 +18,8 @@ void CCameraWindow::Init()
 void CCameraWindow::Draw()
 {
 	if (!CameraMat || !I::Engine->IsInGame() ||
-		Vars::Visuals::CameraMode.m_Var == 0 ||
-		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
+		Vars::Visuals::CameraMode.Value == 0 ||
+		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw)) {
 		return;
 	}
 
@@ -38,9 +38,9 @@ void CCameraWindow::Draw()
 // Updates camera data (Origin and Angles)
 void CCameraWindow::Update()
 {
-	if (Vars::Visuals::CameraMode.m_Var <= 1) { return; }
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		switch (Vars::Visuals::CameraMode.m_Var) {
+	if (Vars::Visuals::CameraMode.Value <= 1) { return; }
+	if (const auto& pLocal = g_EntityCache.GetLocal()) {
+		switch (Vars::Visuals::CameraMode.Value) {
 		case 2:
 			{
 				// Spy camera
@@ -52,7 +52,7 @@ void CCameraWindow::Update()
 						continue;
 
 					if (pLocal->GetAbsOrigin().DistTo(player->GetAbsOrigin()) <= 350.f) {
-						CameraOrigin = player->GetHitboxPos(HITBOX_HEAD);
+						CameraOrigin = player->GetEyePosition();
 						CameraAngles = player->GetEyeAngles();
 						CanDraw = true;
 						return;
@@ -87,7 +87,7 @@ void CCameraWindow::Update()
 							CameraOrigin = Vec3(tpExit.x, tpExit.y, tpExit.z + 70);
 							CanDraw = true;
 
-							if (Vars::Visuals::CameraMode.m_Var == 4)
+							if (Vars::Visuals::CameraMode.Value == 4)
 							{
 								Vec3 vScreen;
 								if (Utils::W2S(building->GetAbsOrigin(), vScreen))
@@ -115,15 +115,15 @@ void CCameraWindow::Update()
 // Renders another view onto a texture
 void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 {
-	if (!CameraTex || Vars::Visuals::CameraMode.m_Var == 0 ||
-		(Vars::Visuals::CameraMode.m_Var > 1 && !CanDraw)) {
+	if (!CameraTex || Vars::Visuals::CameraMode.Value == 0 ||
+		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw)) {
 		return;
 	}
 
 	CViewSetup mirrorView = pViewSetup;
 	mirrorView.x = 0;
 	mirrorView.y = 0;
-	if (Vars::Visuals::CameraMode.m_Var != 1) {
+	if (Vars::Visuals::CameraMode.Value != 1) {
 		// Custom origin & angles
 		mirrorView.origin = CameraOrigin;
 		mirrorView.angles = CameraAngles;
@@ -136,7 +136,7 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	}
 	mirrorView.width = ViewRect.w;
 	mirrorView.height = ViewRect.h;
-	mirrorView.fov = Vars::Visuals::CameraFOV.m_Var;
+	mirrorView.fov = Vars::Visuals::CameraFOV.Value;
 	mirrorView.m_flAspectRatio = static_cast<float>(mirrorView.width) / static_cast<float>(mirrorView.height);
 
 	RenderCustomView(ecx, mirrorView, CameraTex);

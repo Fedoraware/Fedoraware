@@ -14,12 +14,12 @@ int CKillstreaker::GetCurrentStreak()
 
 int CKillstreaker::GetCurrentWeaponStreak()
 {
-	return KillstreakMap[g_EntityCache.m_pLocalWeapon->GetIndex()];
+	return KillstreakMap[g_EntityCache.GetWeapon()->GetIndex()];
 }
 
 void CKillstreaker::ApplyKillstreak()
 {
-	if (Vars::Misc::KillstreakWeapon.m_Var)
+	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
 		const auto& resource = I::EntityList->GetClientEntity(g_PR->Entity);
@@ -59,13 +59,13 @@ void CKillstreaker::PlayerDeath(CGameEvent* pEvent)
 
 	if (attacker != I::Engine->GetLocalPlayer() ||
 		attacker == userid ||
-		!g_EntityCache.m_pLocal || !g_EntityCache.m_pLocalWeapon || !g_EntityCache.m_pLocal->IsAlive())
+		!g_EntityCache.GetLocal() || !g_EntityCache.GetWeapon() || !g_EntityCache.GetLocal()->IsAlive())
 	{
 		return;
 	}
 
 	Killstreak++;
-	KillstreakMap[g_EntityCache.m_pLocalWeapon->GetIndex()]++;
+	KillstreakMap[g_EntityCache.GetWeapon()->GetIndex()]++;
 
 	pEvent->SetInt("kill_streak_total", GetCurrentStreak());
 	pEvent->SetInt("kill_streak_wep", GetCurrentWeaponStreak());
@@ -86,7 +86,7 @@ void CKillstreaker::PlayerSpawn(CGameEvent* pEvent)
 
 void CKillstreaker::FireEvents(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
-	if (Vars::Misc::KillstreakWeapon.m_Var)
+	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		if (uNameHash == FNV1A::HashConst("player_death"))
 		{

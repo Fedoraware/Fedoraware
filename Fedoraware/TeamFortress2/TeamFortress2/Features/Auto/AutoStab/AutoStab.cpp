@@ -32,7 +32,7 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles,
                            CBaseEntity** pEntityOut)
 {
-	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.m_Var);
+	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
 
 	if (flRange <= 0.0f)
 		return false;
@@ -76,7 +76,7 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	if (!TraceMelee(pLocal, pWeapon, pCmd->viewangles, &pEnemy))
 		return;
 
-	if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == CLASS_SNIPER &&
+	if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
 		pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 		return;
 
@@ -87,7 +87,7 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	pCmd->buttons |= IN_ATTACK;
 	m_bShouldDisguise = true;
 
-	if (Vars::Misc::DisableInterpolation.m_Var)
+	if (Vars::Misc::DisableInterpolation.Value)
 	{
 		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
 			+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate
@@ -99,7 +99,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 {
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == CLASS_SNIPER &&
+		if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
 			pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 			continue;
 
@@ -114,7 +114,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 			continue;
 
-		if (Vars::Triggerbot::Stab::Silent.m_Var)
+		if (Vars::Triggerbot::Stab::Silent.Value)
 		{
 			Utils::FixMovement(pCmd, vAngleTo);
 			G::SilentTime = true;
@@ -124,7 +124,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		pCmd->buttons |= IN_ATTACK;
 		m_bShouldDisguise = true;
 
-		if (Vars::Misc::DisableInterpolation.m_Var)
+		if (Vars::Misc::DisableInterpolation.Value)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
 				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.
@@ -137,11 +137,11 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.m_Var || !G::WeaponCanAttack || pWeapon->GetWeaponID() !=
+	if (!Vars::Triggerbot::Stab::Active.Value || !G::WeaponCanAttack || pWeapon->GetWeaponID() !=
 		TF_WEAPON_KNIFE)
 		return;
 
-	if (Vars::Triggerbot::Stab::RageMode.m_Var)
+	if (Vars::Triggerbot::Stab::RageMode.Value)
 		RunRage(pLocal, pWeapon, pCmd);
 
 	else RunLegit(pLocal, pWeapon, pCmd);

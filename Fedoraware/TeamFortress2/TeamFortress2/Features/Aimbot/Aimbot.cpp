@@ -10,7 +10,7 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (G::FreecamActive)
 		return false;
 
-	if (!Vars::Aimbot::Global::Active.m_Var)
+	if (!Vars::Aimbot::Global::Active.Value)
 		return false;
 
 	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())

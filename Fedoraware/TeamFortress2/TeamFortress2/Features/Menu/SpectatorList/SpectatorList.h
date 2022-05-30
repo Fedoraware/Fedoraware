@@ -25,4 +25,4 @@ public:
 	void DrawClassic();
 };
 
-inline CSpectatorList g_SpectatorList;
+ADD_FEATURE(CSpectatorList, SpectatorList)
