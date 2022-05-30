@@ -381,7 +381,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Players::NameBox);
 				SAVE_VAR(Vars::ESP::Players::Uber);
 				SAVE_VAR(Vars::ESP::Players::Class);
-				SAVE_VAR(Vars::ESP::Players::Health);
+				SAVE_VAR(Vars::ESP::Players::HealthText);
 				SAVE_VAR(Vars::ESP::Players::Cond);
 				SAVE_VAR(Vars::ESP::Players::HealthBar);
 				SAVE_VAR(Vars::ESP::Players::Box);
@@ -1099,7 +1099,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Players::NameBox);
 				LOAD_VAR(Vars::ESP::Players::Uber);
 				LOAD_VAR(Vars::ESP::Players::Class);
-				LOAD_VAR(Vars::ESP::Players::Health);
+				LOAD_VAR(Vars::ESP::Players::HealthText);
 				LOAD_VAR(Vars::ESP::Players::Cond);
 				LOAD_VAR(Vars::ESP::Players::HealthBar);
 				LOAD_VAR(Vars::ESP::Players::Box);

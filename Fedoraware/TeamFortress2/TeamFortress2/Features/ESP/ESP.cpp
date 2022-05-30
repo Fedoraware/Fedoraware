@@ -273,7 +273,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Health Text
-			if (Vars::ESP::Players::Health.m_Var)
+			if (Vars::ESP::Players::HealthText.m_Var == 1)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, nHealth > nMaxHealth ? Colors::Overheal : healthColor,
 				              ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
@@ -444,7 +444,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			// Healthbar
+			// Health bar
 			if (Vars::ESP::Players::HealthBar.m_Var)
 			{
 				x -= 1;
@@ -466,6 +466,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				float ratio = flHealth / flMaxHealth;
 				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, false);
+
+				if (Vars::ESP::Players::HealthText.m_Var == 2)
+				{
+					g_Draw.String(FONT, x - 2, (y + h) - (ratio * h) - 15, nHealth > nMaxHealth ? Colors::Overheal : healthColor, ALIGN_CENTERHORIZONTAL, "%d", nHealth);
+				}
 
 				x += 1;
 			}

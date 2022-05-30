@@ -454,7 +454,7 @@ void CMenu::MenuVisuals()
 				WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.m_Var); HelpMarker("Will draw a bar visualizing how much health the player has");
 				ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
 				ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
-				WToggle("Health text###ESPPlayerHealthText", &Vars::ESP::Players::Health.m_Var); HelpMarker("Will draw the players health, as well as their max health");
+				WCombo("Health Text###ESPPlayerHealthText", &Vars::ESP::Players::HealthText.m_Var, { "Off", "Default", "Bar" }); HelpMarker("Draws the player health as a text");
 				WToggle("Condition", &Vars::ESP::Players::Cond.m_Var); HelpMarker("Will draw what conditions the player is under");
 				ColorPickerL("Condition colour", Colors::Cond);
 				WToggle("GUID", &Vars::ESP::Players::GUID.m_Var); HelpMarker("Show's the players Steam ID");
