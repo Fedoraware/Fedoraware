@@ -503,7 +503,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			}
 			if (G::IsAttacking)
 			{
-				Utils::FixMovement(pCmd, pCmd->viewangles);
+				Utils::FixMovement(pCmd, vAngle);
 				pCmd->viewangles = vAngle;
 			}
 			break;
