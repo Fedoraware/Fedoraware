@@ -20,7 +20,7 @@ int CEnginePrediction::GetTickbase(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CEnginePrediction::Start(CUserCmd* pCmd)
 {
-	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 	if (pLocal && pLocal->IsAlive() && I::MoveHelper)
 	{
@@ -60,7 +60,7 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 
 void CEnginePrediction::End(CUserCmd* pCmd)
 {
-	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 	if (pLocal && pLocal->IsAlive() && I::MoveHelper)
 	{

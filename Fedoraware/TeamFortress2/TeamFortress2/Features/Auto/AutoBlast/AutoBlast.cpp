@@ -5,7 +5,7 @@
 
 void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Blast::Active.m_Var || !G::WeaponCanSecondaryAttack)
+	if (!Vars::Triggerbot::Blast::Active.Value || !G::WeaponCanSecondaryAttack)
 	{
 		return;
 	}
@@ -72,14 +72,14 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			*/
 			if (vEyePos.DistTo(vPredicted) <= 245.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
 			{
-				if (Vars::Triggerbot::Blast::Rage.m_Var)
+				if (Vars::Triggerbot::Blast::Rage.Value)
 				{
 					pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
 					bShouldBlast = true;
 					break;
 				}
 				if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, vPredicted) <=
-					Vars::Triggerbot::Blast::Fov.m_Var)
+					Vars::Triggerbot::Blast::Fov.Value)
 				{
 					bShouldBlast = true;
 					break;
@@ -89,7 +89,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (bShouldBlast)
 		{
-			if (Vars::Triggerbot::Blast::Rage.m_Var && Vars::Triggerbot::Blast::Silent.m_Var)
+			if (Vars::Triggerbot::Blast::Rage.Value && Vars::Triggerbot::Blast::Silent.Value)
 			{
 				G::SilentTime = true;
 			}

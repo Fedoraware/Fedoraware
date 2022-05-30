@@ -21,7 +21,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 				if (!pEntity->IsAlive())
 					return false;
 
-				if (!Vars::Triggerbot::Shoot::TriggerPlayers.m_Var)
+				if (!Vars::Triggerbot::Shoot::TriggerPlayers.Value)
 					return false;
 
 				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
@@ -29,11 +29,11 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 
 				if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
-				if (Vars::Triggerbot::Shoot::HeadOnly.m_Var && G::WeaponCanHeadShot && Trace.hitbox !=
+				if (Vars::Triggerbot::Shoot::HeadOnly.Value && G::WeaponCanHeadShot && Trace.hitbox !=
 					HITBOX_HEAD)
 					return false;
 
-				if (Trace.hitbox == HITBOX_HEAD && Vars::Triggerbot::Shoot::HeadScale.m_Var < 1.0f)
+				if (Trace.hitbox == HITBOX_HEAD && Vars::Triggerbot::Shoot::HeadScale.Value < 1.0f)
 				{
 					Vec3 vMins = {}, vMaxs = {}, vCenter = {};
 					matrix3x4 Matrix = {};
@@ -41,14 +41,14 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 					if (!pEntity->GetHitboxMinsAndMaxsAndMatrix(HITBOX_HEAD, vMins, vMaxs, Matrix, &vCenter))
 						return false;
 
-					vMins *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
-					vMaxs *= Vars::Triggerbot::Shoot::HeadScale.m_Var;
+					vMins *= Vars::Triggerbot::Shoot::HeadScale.Value;
+					vMaxs *= Vars::Triggerbot::Shoot::HeadScale.Value;
 
 					if (!Math::RayToOBB(vFrom, vForward, vCenter, vMins, vMaxs, Matrix))
 						return false;
 				}
 
-				if (Vars::Misc::DisableInterpolation.m_Var)
+				if (Vars::Misc::DisableInterpolation.Value)
 					*pSimTime = pEntity->GetSimulationTime();
 
 				break;
@@ -61,7 +61,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 				if (!pEntity->IsAlive())
 					return false;
 
-				if (!Vars::Triggerbot::Shoot::TriggerBuildings.m_Var)
+				if (!Vars::Triggerbot::Shoot::TriggerBuildings.Value)
 					return false;
 
 				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
@@ -81,7 +81,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 
 bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	if (Vars::Triggerbot::Shoot::WaitForCharge.m_Var)
+	if (Vars::Triggerbot::Shoot::WaitForCharge.Value)
 	{
 		switch (pLocal->GetClassNum())
 		{
@@ -114,10 +114,10 @@ bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Shoot::Active.m_Var)
+	if (!Vars::Triggerbot::Shoot::Active.Value)
 		return;
 
-	if (Vars::Aimbot::Global::AutoShoot.m_Var && G::HitscanRunning)
+	if (Vars::Aimbot::Global::AutoShoot.Value && G::HitscanRunning)
 		return;
 
 	if (!pLocal
@@ -140,7 +140,7 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 		if (G::WeaponCanAttack)
 			G::IsAttacking = true;
 
-		if (fSimTime && Vars::Misc::DisableInterpolation.m_Var && G::WeaponCanAttack)
+		if (fSimTime && Vars::Misc::DisableInterpolation.Value && G::WeaponCanAttack)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(fSimTime
 				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.

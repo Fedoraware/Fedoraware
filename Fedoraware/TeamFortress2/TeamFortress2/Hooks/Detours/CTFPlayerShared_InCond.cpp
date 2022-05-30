@@ -185,9 +185,9 @@ MAKE_HOOK(CTFPlayerShared_InCond, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC
 	};
 
 	//Compare team's, removing team's taunt is useless
-	if (nCond == TF_COND_TAUNTING && Vars::Visuals::RemoveTaunts.m_Var)
+	if (nCond == TF_COND_TAUNTING && Vars::Visuals::RemoveTaunts.Value)
 	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
+		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
 			if (const auto& pEntity = GetOuter())
 			{
@@ -200,7 +200,7 @@ MAKE_HOOK(CTFPlayerShared_InCond, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC
 	}
 
 	//Just compare entity ptr's, filtering out local is enough. Also prevents T pose.
-	if (nCond == TF_COND_DISGUISED && Vars::Visuals::RemoveDisguises.m_Var && g_EntityCache.m_pLocal != GetOuter())
+	if (nCond == TF_COND_DISGUISED && Vars::Visuals::RemoveDisguises.Value && g_EntityCache.GetLocal() != GetOuter())
 	{
 		return false;
 	}

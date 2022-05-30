@@ -14,7 +14,7 @@ bool CESP::ShouldRun()
 
 void CESP::Run()
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (ShouldRun())
 		{
@@ -106,7 +106,7 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 		float w_ = righ - left;
 		const float h_ = top - bottom;
 
-		if (bIsPlayer && Vars::ESP::Players::Box.m_Var != 3)
+		if (bIsPlayer && Vars::ESP::Players::Box.Value != 3)
 		{
 			x_ += (righ - left) / 8.0f;
 			w_ -= (righ - left) / 8.0f * 2.0f;
@@ -125,7 +125,7 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 
 void CESP::DrawPlayers(CBaseEntity* pLocal)
 {
-	if (!Vars::ESP::Players::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
+	if (!Vars::ESP::Players::Active.Value || !Vars::ESP::Main::Active.Value)
 	{
 		return;
 	}
@@ -142,7 +142,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 		if (!bIsLocal)
 		{
-			switch (Vars::ESP::Players::IgnoreCloaked.m_Var)
+			switch (Vars::ESP::Players::IgnoreCloaked.Value)
 			{
 			case 0: { break; }
 			case 1:
@@ -157,7 +157,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			switch (Vars::ESP::Players::IgnoreTeammates.m_Var)
+			switch (Vars::ESP::Players::IgnoreTeammates.Value)
 			{
 			case 0: break;
 			case 1:
@@ -175,18 +175,18 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 		else
 		{
-			if (!Vars::ESP::Players::ShowLocal.m_Var)
+			if (!Vars::ESP::Players::ShowLocal.Value)
 			{
 				continue;
 			}
 		}
 
-		Color_t drawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+		Color_t drawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 		// Player lights
-		if (Vars::ESP::Players::Dlights.m_Var)
+		if (Vars::ESP::Players::Dlights.Value)
 		{
-			CreateDLight(nIndex, drawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.m_Var);
+			CreateDLight(nIndex, drawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.Value);
 		}
 
 		int x = 0, y = 0, w = 0, h = 0;
@@ -200,7 +200,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 			int nTextX = x + w + 3, nTextOffset = 0, nClassNum = Player->GetClassNum();
 
-			if (Vars::ESP::Players::Uber.m_Var == 2 && nClassNum == CLASS_MEDIC)
+			if (Vars::ESP::Players::Uber.Value == 2 && nClassNum == CLASS_MEDIC)
 			{
 				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
 				{
@@ -208,12 +208,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.m_Var);
+			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.Value);
 
 			// Bone ESP
-			if (Vars::ESP::Players::Bones.m_Var)
+			if (Vars::ESP::Players::Bones.Value)
 			{
-				const Color_t clrBone = Vars::ESP::Players::Bones.m_Var == 1 ? Colors::Bones : healthColor;
+				const Color_t clrBone = Vars::ESP::Players::Bones.Value == 1 ? Colors::Bones : healthColor;
 
 				DrawBones(Player, {8, 7, 6, 4}, clrBone);
 				DrawBones(Player, {11, 10, 9, 4}, clrBone);
@@ -223,14 +223,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Box ESP (Outlined, Rect, 3D)
-			switch (Vars::ESP::Players::Box.m_Var)
+			switch (Vars::ESP::Players::Box.Value)
 			{
 			case 1:
 				{
 					int height = h + 1; //don't ask me /shrug
 
 					g_Draw.OutlinedRect(x, y, w, height, drawColor);
-					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, height + 2, Colors::OutlineESP);
 					}
@@ -240,7 +240,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			case 2:
 				{
 					g_Draw.CornerRect(x, y, w, h, 3, 5, drawColor);
-					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
 					}
@@ -257,7 +257,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Player lines
-			if (Vars::ESP::Players::Lines.m_Var)
+			if (Vars::ESP::Players::Lines.Value)
 			{
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
@@ -273,7 +273,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Health Text
-			if (Vars::ESP::Players::Health.m_Var)
+			if (Vars::ESP::Players::HealthText.Value == 1)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, nHealth > nMaxHealth ? Colors::Overheal : healthColor,
 				              ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
@@ -281,18 +281,18 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Ubercharge status/bar
-			if (Vars::ESP::Players::Uber.m_Var && nClassNum == CLASS_MEDIC)
+			if (Vars::ESP::Players::Uber.Value && nClassNum == CLASS_MEDIC)
 			{
 				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
 				{
-					if (Vars::ESP::Players::Uber.m_Var == 1)
+					if (Vars::ESP::Players::Uber.Value == 1)
 					{
 						g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::UberColor, ALIGN_DEFAULT, L"%.0f%%",
 						              pMedGun->GetUberCharge() * 100.0f);
 						nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 					}
 
-					if (Vars::ESP::Players::Uber.m_Var == 2 && pMedGun->GetUberCharge())
+					if (Vars::ESP::Players::Uber.Value == 2 && pMedGun->GetUberCharge())
 					{
 						x += w + 1;
 
@@ -314,7 +314,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						g_Draw.Rect(x + RECT_WIDTH, y + nHeight - nHeight * ratio, RECT_WIDTH, nHeight * ratio,
 						            Colors::UberColor);
 
-						if (Vars::ESP::Main::Outlinedbar.m_Var)
+						if (Vars::ESP::Main::Outlinedbar.Value)
 						{
 							g_Draw.OutlinedRect(x + RECT_WIDTH - 1, y + nHeight - nHeight * ratio - 1, RECT_WIDTH + 2,
 							                    nHeight * ratio + 2, Colors::OutlineESP);
@@ -330,10 +330,10 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				// Name ESP
 				int middle = x + w / 2;
-				if (Vars::ESP::Players::Name.m_Var)
+				if (Vars::ESP::Players::Name.Value)
 				{
 					int offset = g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall / 4;
-					if (Vars::ESP::Players::NameBox.m_Var)
+					if (Vars::ESP::Players::NameBox.Value)
 					{
 						int wideth, heighth;
 						I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
@@ -346,7 +346,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					if (Vars::ESP::Players::NameCustom.m_Var)
+					if (Vars::ESP::Players::NameCustom.Value)
 					{
 						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor, ALIGN_CENTERHORIZONTAL,
 						              Utils::ConvertUtf8ToWide(pi.name).data());
@@ -359,14 +359,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 
 				// Cheater detection ESP
-				if (F::BadActors.MarkedCheaters[pi.friendsID] && Vars::ESP::Players::CheaterDetection.m_Var)
+				if (F::BadActors.MarkedCheaters[pi.friendsID] && Vars::ESP::Players::CheaterDetection.Value)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, {255, 0, 0, 255}, ALIGN_DEFAULT, "CHEATER");
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 
 				// GUID ESP
-				if (Vars::ESP::Players::GUID.m_Var)
+				if (Vars::ESP::Players::GUID.Value)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "%s", pi.guid);
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
@@ -374,15 +374,15 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Class ESP
-			if (Vars::ESP::Players::Class.m_Var)
+			if (Vars::ESP::Players::Class.Value)
 			{
-				if (Vars::ESP::Players::Class.m_Var == 1 || Vars::ESP::Players::Class.m_Var == 3)
+				if (Vars::ESP::Players::Class.Value == 1 || Vars::ESP::Players::Class.Value == 3)
 				{
-					int offset = Vars::ESP::Players::Name.m_Var
+					int offset = Vars::ESP::Players::Name.Value
 						             ? g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall * 0.3f
 						             : 0;
 
-					if (offset && Vars::ESP::Players::NameBox.m_Var)
+					if (offset && Vars::ESP::Players::NameBox.Value)
 					{
 						offset += 2;
 					}
@@ -392,7 +392,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					               nClassNum);
 				}
 
-				if (Vars::ESP::Players::Class.m_Var >= 2)
+				if (Vars::ESP::Players::Class.Value >= 2)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%ls",
 					              GetPlayerClass(nClassNum));
@@ -401,7 +401,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Weapon icons
-			if (Vars::ESP::Players::WeaponIcon.m_Var)
+			if (Vars::ESP::Players::WeaponIcon.Value)
 			{
 				const auto& pWeapon = Player->GetActiveWeapon();
 				if (pWeapon)
@@ -428,7 +428,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Player conditions
-			if (Vars::ESP::Players::Cond.m_Var)
+			if (Vars::ESP::Players::Cond.Value)
 			{
 				size_t FONT = FONT_ESP_COND;
 				int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
@@ -444,8 +444,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			// Healthbar
-			if (Vars::ESP::Players::HealthBar.m_Var)
+			// Health bar
+			if (Vars::ESP::Players::HealthBar.Value)
 			{
 				x -= 1;
 
@@ -467,11 +467,16 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				float ratio = flHealth / flMaxHealth;
 				g_Draw.OutlinedGradientBar(x - 2 - 2, y + h, 2, h, ratio, clr.startColour, clr.endColour, Colors::OutlineESP, false);
 
+				if (Vars::ESP::Players::HealthText.Value == 2)
+				{
+					g_Draw.String(FONT, x - 2, (y + h) - (ratio * h) - 15, nHealth > nMaxHealth ? Colors::Overheal : healthColor, ALIGN_CENTERHORIZONTAL, "%d", nHealth);
+				}
+
 				x += 1;
 			}
 
 			// Choked packets indicator/bar
-			if (Vars::ESP::Players::Choked.m_Var)
+			if (Vars::ESP::Players::Choked.Value)
 			{
 				x -= 1;
 				static float ratio = 0.0f;
@@ -492,12 +497,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 void CESP::DrawBuildings(CBaseEntity* pLocal) const
 {
-	if (!Vars::ESP::Buildings::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
+	if (!Vars::ESP::Buildings::Active.Value || !Vars::ESP::Main::Active.Value)
 	{
 		return;
 	}
 
-	const auto buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.m_Var
+	const auto buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.Value
 		                                              ? EGroupType::BUILDINGS_ENEMIES
 		                                              : EGroupType::BUILDINGS_ALL);
 
@@ -510,13 +515,13 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 		const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
 
-		Color_t drawColor = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+		Color_t drawColor = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 		// Building lights
-		if (Vars::ESP::Buildings::Dlights.m_Var)
+		if (Vars::ESP::Buildings::Dlights.Value)
 		{
 			CreateDLight(building->GetIndex(), drawColor, building->GetAbsOrigin(),
-			             Vars::ESP::Buildings::DlightRadius.m_Var);
+			             Vars::ESP::Buildings::DlightRadius.Value);
 		}
 
 		int x = 0, y = 0, w = 0, h = 0;
@@ -536,10 +541,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 			const bool bIsMini = building->GetMiniBuilding();
 
-			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.m_Var);
+			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.Value);
 
 			// Box ESP (Rect, Corners, 3D)
-			switch (Vars::ESP::Buildings::Box.m_Var)
+			switch (Vars::ESP::Buildings::Box.Value)
 			{
 			case 1:
 				{
@@ -547,7 +552,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 					g_Draw.OutlinedRect(x, y, w, h, drawColor);
 
-					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
 					}
@@ -559,7 +564,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				{
 					g_Draw.CornerRect(x, y, w, h, 3, 5, drawColor);
 
-					if (Vars::ESP::Main::Outlinedbar.m_Var)
+					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
 					}
@@ -575,7 +580,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Building lines
-			if (Vars::ESP::Buildings::Lines.m_Var)
+			if (Vars::ESP::Buildings::Lines.Value)
 			{
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
@@ -591,7 +596,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Name ESP
-			if (Vars::ESP::Buildings::Name.m_Var)
+			if (Vars::ESP::Buildings::Name.Value)
 			{
 				const wchar_t* szName;
 
@@ -634,7 +639,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 
 				nTextTopOffset += g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall / 4;
-				if (Vars::ESP::Buildings::NameBox.m_Var)
+				if (Vars::ESP::Buildings::NameBox.Value)
 				{
 					int wideth, heighth;
 					const int middle = x + w / 2;
@@ -647,7 +652,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 					g_Draw.Rect(middle - wideth / 2 - 5, y - nTextTopOffset - 2, wideth + 10, 2, LineColor);
 				}
-				if (Vars::ESP::Buildings::NameCustom.m_Var)
+				if (Vars::ESP::Buildings::NameCustom.Value)
 				{
 					g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, Vars::ESP::Buildings::NameColor, ALIGN_CENTERHORIZONTAL,
 					              szName);
@@ -660,7 +665,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Building owner ESP
-			if (Vars::ESP::Buildings::Owner.m_Var && !building->GetMapPlaced())
+			if (Vars::ESP::Buildings::Owner.Value && !building->GetMapPlaced())
 			{
 				if (const auto& pOwner = building->GetOwner())
 				{
@@ -678,7 +683,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			const float flConstructed = building->GetConstructed() * 100.0f;
 
 			// Health text
-			if (Vars::ESP::Buildings::Health.m_Var)
+			if (Vars::ESP::Buildings::Health.Value)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, healthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nHealth, building->GetMaxHealth());
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
@@ -692,7 +697,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Building level
-			if (Vars::ESP::Buildings::Level.m_Var && !bIsMini)
+			if (Vars::ESP::Buildings::Level.Value && !bIsMini)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%d/3",
 				              building->GetLevel());
@@ -700,7 +705,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Building conditions
-			if (Vars::ESP::Buildings::Cond.m_Var)
+			if (Vars::ESP::Buildings::Cond.Value)
 			{
 				std::vector<std::wstring> condStrings{};
 
@@ -729,7 +734,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Healthbar
-			if (Vars::ESP::Buildings::HealthBar.m_Var)
+			if (Vars::ESP::Buildings::HealthBar.Value)
 			{
 				x -= 1;
 
@@ -750,7 +755,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				g_Draw.Rect(x - RECT_WIDTH - 2, y + nHeight - nHeight * ratio, RECT_WIDTH, nHeight * ratio,
 				            healthColor);
 
-				if (Vars::ESP::Main::Outlinedbar.m_Var)
+				if (Vars::ESP::Main::Outlinedbar.Value)
 				{
 					g_Draw.OutlinedRect(x - RECT_WIDTH - 2 - 1, y + nHeight - nHeight * ratio - 1, RECT_WIDTH + 2,
 					                    nHeight * ratio + 2, Colors::OutlineESP);
@@ -760,7 +765,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			}
 
 			// Teleport exit direction
-			if (Vars::ESP::Buildings::TeleExitDir.m_Var)
+			if (Vars::ESP::Buildings::TeleExitDir.Value)
 			{
 				if (building->IsTeleporter() && building->GetObjectMode() == 1)
 				{
@@ -797,7 +802,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 void CESP::DrawWorld() const
 {
-	if (!Vars::ESP::World::Active.m_Var || !Vars::ESP::Main::Active.m_Var)
+	if (!Vars::ESP::World::Active.Value || !Vars::ESP::Main::Active.Value)
 	{
 		return;
 	}
@@ -805,10 +810,10 @@ void CESP::DrawWorld() const
 	Vec3 vScreen = {};
 	constexpr size_t FONT = FONT_ESP_PICKUPS;
 
-	I::Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.m_Var);
+	I::Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
 
 	// Health Text
-	if (Vars::ESP::World::HealthText.m_Var)
+	if (Vars::ESP::World::HealthText.Value)
 	{
 		for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
@@ -825,7 +830,7 @@ void CESP::DrawWorld() const
 	}
 
 	// Ammo Text
-	if (Vars::ESP::World::AmmoText.m_Var)
+	if (Vars::ESP::World::AmmoText.Value)
 	{
 		for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{

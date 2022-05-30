@@ -20,7 +20,7 @@
 
 static void UpdateAntiAFK(CUserCmd* pCmd)
 {
-	if (Vars::Misc::AntiAFK.m_Var && g_ConVars.afkTimer->GetInt() != 0)
+	if (Vars::Misc::AntiAFK.Value && g_ConVars.afkTimer->GetInt() != 0)
 	{
 		static float last_time = 0.0f;
 		static int buttones = 0;
@@ -40,7 +40,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
-		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.m_Var && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
+		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
 		{
 			if (vStartOrigin.IsZero())
 			{
@@ -105,11 +105,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	G::CurrentUserCmd = pCmd;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		nOldFlags = pLocal->GetFlags();
 
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
@@ -135,17 +135,17 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 				}
 			}
 
-			if (Vars::Misc::RageRetry.m_Var)
+			if (Vars::Misc::RageRetry.Value)
 			{
 				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.
-					m_Var / 100.f)))
+					Value / 100.f)))
 				{
 					I::Engine->ClientCmd_Unrestricted("retry");
 				}
 			}
 		}
 
-		if (Vars::Misc::CL_Move::RechargeWhileDead.m_Var)
+		if (Vars::Misc::CL_Move::RechargeWhileDead.Value)
 		{
 			if (!pLocal->IsAlive() && G::ShiftedTicks)
 			{
@@ -153,7 +153,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (Vars::Misc::CL_Move::AutoRecharge.m_Var)
+		if (Vars::Misc::CL_Move::AutoRecharge.Value)
 		{
 			if (G::ShiftedTicks && !G::ShouldShift)
 			{
@@ -167,7 +167,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	UpdateAntiAFK(pCmd);
 
-	if (Vars::Misc::Roll.m_Var && pCmd->buttons & IN_DUCK)
+	if (Vars::Misc::Roll.Value && pCmd->buttons & IN_DUCK)
 	{
 		Vec3 ang = vOldAngles;
 		float v = fOldForward;
@@ -180,7 +180,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 			if ((pCmd->buttons & IN_FORWARD) && !(pCmd->buttons & IN_ATTACK))
 			{
-				if ((Vars::Misc::Roll.m_Var == 2 && !fake) || !(Vars::Misc::Roll.m_Var != 2))
+				if ((Vars::Misc::Roll.Value == 2 && !fake) || !(Vars::Misc::Roll.Value != 2))
 				{
 					ang.y = ang.y + 180.0f;
 				}
@@ -190,7 +190,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			G::RollExploiting = true;
 		}
 
-		if (Vars::Misc::Roll.m_Var == 2)
+		if (Vars::Misc::Roll.Value == 2)
 		{
 			*pSendPacket = fake;
 			fake = !fake;
@@ -216,7 +216,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::EnginePrediction.End(pCmd);
 	F::CritHack.Run(pCmd);
 
-	FastStop(pCmd, g_EntityCache.m_pLocal);
+	FastStop(pCmd, g_EntityCache.GetLocal());
 	F::Misc.RunLate(pCmd);
 	F::Resolver.Update(pCmd);
 	F::Followbot.Run(pCmd);
@@ -239,18 +239,18 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		F::FakeAng.DrawChams = false;
 	}
 
-	if (Vars::Misc::PartyCrasher.m_Var)
+	if (Vars::Misc::PartyCrasher.Value)
 	{
 		I::Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (Vars::Misc::TauntSlide.m_Var)
+		if (Vars::Misc::TauntSlide.Value)
 		{
 			if (pLocal->IsTaunting())
 			{
-				if (Vars::Misc::TauntControl.m_Var)
+				if (Vars::Misc::TauntControl.Value)
 					pCmd->viewangles.x = (pCmd->buttons & IN_BACK)
 					? 91.0f
 					: (pCmd->buttons & IN_FORWARD)
@@ -261,7 +261,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (Vars::Debug::DebugInfo.m_Var)
+		if (Vars::Debug::DebugInfo.Value)
 		{
 
 			static float cycledelta = 0.f;

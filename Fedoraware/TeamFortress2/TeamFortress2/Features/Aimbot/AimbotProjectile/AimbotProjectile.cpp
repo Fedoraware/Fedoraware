@@ -251,7 +251,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	traceFilter.pSkip = predictor.m_pEntity;
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
-	const float maxTime = predictor.m_pEntity->IsPlayer() ? Vars::Aimbot::Projectile::predTime.m_Var : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
+	const float maxTime = predictor.m_pEntity->IsPlayer() ? Vars::Aimbot::Projectile::predTime.Value : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
 	const float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
 	/*
@@ -427,7 +427,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	const bool bIsDucking = pEntity->m_bDucked();
 
-	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.m_Var; // stop shoot flor (:D)
+	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.Value; // stop shoot flor (:D)
 
 	// this way overshoots players that are crouching and I don't know why.
 	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking) * bboxScale;
@@ -453,7 +453,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	for (const auto& point : vecPoints)
 	{
-		if (visiblePoints.size() >= Vars::Aimbot::Projectile::ScanPoints.m_Var) { break; }
+		if (visiblePoints.size() >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
 
 		Vec3 vTransformed = {};
 		Math::VectorTransform(point, transform, vTransformed);
@@ -467,14 +467,14 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
 
-	int aimMethod = Vars::Aimbot::Projectile::AimPosition.m_Var;
+	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
 	const int classNum = pLocal->GetClassNum();
 
 	switch (classNum) {
 	case CLASS_SOLDIER:
 	case CLASS_DEMOMAN:
 	{
-		if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->IsOnGround()) {
+		if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround()) {
 			aimMethod = 2;
 		}
 		break;
@@ -611,7 +611,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 
 ESortMethod CAimbotProjectile::GetSortMethod()
 {
-	switch (Vars::Aimbot::Projectile::SortMethod.m_Var)
+	switch (Vars::Aimbot::Projectile::SortMethod.Value)
 	{
 	case 0: return ESortMethod::FOV;
 	case 1: return ESortMethod::DISTANCE;
@@ -626,7 +626,7 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 		return;
 	}
 	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 	Vec3 shootPos;
 	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment(_("muzzle"));
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
@@ -639,7 +639,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 	if (sortMethod == ESortMethod::FOV)
 	{
-		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.m_Var;
+		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.Value;
 	}
 
 	F::AimbotGlobal.m_vecTargets.clear();
@@ -648,7 +648,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
 
 	// Players
-	if (Vars::Aimbot::Global::AimPlayers.m_Var)
+	if (Vars::Aimbot::Global::AimPlayers.Value)
 	{
 		const int nWeaponID = pWeapon->GetWeaponID();
 		const bool bIsCrossbow = nWeaponID == TF_WEAPON_CROSSBOW;
@@ -672,7 +672,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			const float flFOVTo = (sortMethod == ESortMethod::FOV) ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			const float flDistTo = (sortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -685,7 +685,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	}
 
 	// Buildings
-	if (Vars::Aimbot::Global::AimBuildings.m_Var)
+	if (Vars::Aimbot::Global::AimBuildings.Value)
 	{
 		const bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
 
@@ -702,7 +702,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var)
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -764,7 +764,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		return false;
 	}
 
-	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
+	if (Vars::Aimbot::Projectile::PerformanceMode.Value)
 	{
 		Target_t target = F::AimbotGlobal.GetBestTarget(GetSortMethod());
 
@@ -799,7 +799,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 	vAngle -= G::PunchAngles;
 	Math::ClampAngles(vAngle);
 
-	switch (Vars::Aimbot::Projectile::AimMethod.m_Var)
+	switch (Vars::Aimbot::Projectile::AimMethod.Value)
 	{
 	case 0:
 		{
@@ -823,7 +823,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 bool CAimbotProjectile::ShouldFire(CUserCmd* pCmd)
 {
-	return (Vars::Aimbot::Global::AutoShoot.m_Var && G::WeaponCanAttack);
+	return (Vars::Aimbot::Global::AutoShoot.Value && G::WeaponCanAttack);
 }
 
 bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
@@ -883,7 +883,7 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 // Returns the best target for splash damage
 bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
-	if (!Vars::Aimbot::Projectile::SplashPrediction.m_Var) { return false; }
+	if (!Vars::Aimbot::Projectile::SplashPrediction.Value) { return false; }
 
 	// TODO: I have no clue if these values are accurate
 	std::optional<float> splashRadius;
@@ -925,7 +925,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			// Check FOV if enabled
 			const Vec3 vAngleTo = Math::CalcAngle(vLocalShootPos, scanPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.m_Var) { continue; }
+			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value) { continue; }
 
 			// Can the target receive splash damage? (Don't predict through walls)
 			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
@@ -949,7 +949,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			currentRadius = std::clamp(currentRadius + 10.f, 0.f, *splashRadius);
 			scanPos = Utils::GetRotatedPosition(vTargetOrigin, static_cast<float>(i), currentRadius);
 
-			if (Vars::Debug::DebugInfo.m_Var)
+			if (Vars::Debug::DebugInfo.Value)
 			{
 				I::DebugOverlay->AddLineOverlay(vTargetOrigin, scanPos, 255, 0, 0, false, MAXIMUM_TICK_INTERVAL);
 				I::DebugOverlay->AddTextOverlay(scanPos, MAXIMUM_TICK_INTERVAL, "X");
@@ -970,12 +970,12 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 	m_bIsFlameThrower = false;
 
-	if (!Vars::Aimbot::Global::Active.m_Var)
+	if (!Vars::Aimbot::Global::Active.Value)
 	{
 		return;
 	}
 
-	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON
+	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
 		                         ? (pCmd->buttons & IN_ATTACK)
 		                         : F::AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
@@ -986,7 +986,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		// Aim at the current target or splashtarget
 		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
 
-		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
+		if (Vars::Aimbot::Projectile::AimMethod.Value == 1)
 		{
 			G::AimPos = G::PredictedPos;
 		}
@@ -995,14 +995,14 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		{
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
+			if (Vars::Misc::CL_Move::Enabled.Value && Vars::Misc::CL_Move::Doubletap.Value && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
 			{
 				if (
-					(Vars::Misc::CL_Move::DTMode.m_Var == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) ||
-					(Vars::Misc::CL_Move::DTMode.m_Var == 1) ||
-					(Vars::Misc::CL_Move::DTMode.m_Var == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)))
+					(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
+					(Vars::Misc::CL_Move::DTMode.Value == 1) ||
+					(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
 				{
-					if ((Vars::Misc::CL_Move::NotInAir.m_Var && !pLocal->IsOnGround() && G::ShiftedTicks))
+					if ((Vars::Misc::CL_Move::NotInAir.Value && !pLocal->IsOnGround() && G::ShiftedTicks))
 					{
 						G::ShouldShift = false;
 					}
@@ -1035,7 +1035,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		if (bIsAttacking)
 		{
 			G::IsAttacking = true;
-			if (Vars::Visuals::BulletTracer.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1)
+			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				ProjectileTracer(pLocal, target);
 				nLastTracerTick = pCmd->tick_count;
@@ -1044,7 +1044,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			//I::DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, G::m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
 		}
 
-		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
+		if (Vars::Aimbot::Projectile::AimMethod.Value == 1)
 		{
 			if (m_bIsFlameThrower)
 			{

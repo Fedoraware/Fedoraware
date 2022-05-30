@@ -14,19 +14,23 @@ enum struct EGroupType
 class CEntityCache
 {
 private:
-	std::map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
-	void UpdateFriends();
-
-public:
 	CBaseEntity* m_pLocal = nullptr;
 	CBaseCombatWeapon* m_pLocalWeapon = nullptr;
 	CBaseEntity* m_pObservedTarget = nullptr;
 
+	std::map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
+	void UpdateFriends();
+
+public:
 	void Fill();
 	void Clear();
 	bool IsFriend(int entIdx);
-	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
 
+	CBaseEntity* GetLocal() { return m_pLocal; }
+	CBaseCombatWeapon* GetWeapon() { return m_pLocalWeapon; }
+	CBaseEntity* GetObservedTarget() { return m_pObservedTarget; }
+
+	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
 	bool Friends[129] = { false };
 };
 

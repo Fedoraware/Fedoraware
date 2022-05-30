@@ -20,7 +20,6 @@ namespace ImGui
 
 	__inline void HelpMarker(const char* desc)
 	{
-		// TODO: This
 		if (IsItemHovered())
 		{
 			if (Vars::Menu::ModernDesign)
@@ -193,11 +192,11 @@ namespace ImGui
 
 							if (n == VK_ESCAPE && bAllowNone) {
 								ClearActiveID();
-								output.m_Var = 0x0;
+								output.Value = 0x0;
 								break;
 							}
 
-							output.m_Var = n;
+							output.Value = n;
 							ClearActiveID();
 							break;
 						}
@@ -216,7 +215,7 @@ namespace ImGui
 				ClearActiveID();
 			}
 		}
-		else if (Button(VK2STR(output.m_Var), ImVec2(100, 20))) {
+		else if (Button(VK2STR(output.Value), ImVec2(100, 20))) {
 			SetActiveID(id, GetCurrentWindow());
 		}
 

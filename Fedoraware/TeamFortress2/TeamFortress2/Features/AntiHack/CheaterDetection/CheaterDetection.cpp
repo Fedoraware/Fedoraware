@@ -48,8 +48,8 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 
 void CCheaterDetection::OnTick()
 {
-	const auto pLocal = g_EntityCache.m_pLocal;
-	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.m_Var)
+	const auto pLocal = g_EntityCache.GetLocal();
+	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.Value)
 	{
 		return;
 	}
@@ -127,8 +127,11 @@ void CCheaterDetection::OnTick()
 				}
 			}
 
-			MarkedCheaters[friendsID] = Strikes[friendsID] > 4;
-			G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
+			if (Strikes[friendsID] > 4)
+			{
+				MarkedCheaters[friendsID] = true;
+				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
+			}
 		}
 	}
 }

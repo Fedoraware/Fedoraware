@@ -3,7 +3,7 @@
 MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 57 E8 ? ? ? ? 8B 08 89 4D C8 8B 48 04 8B 40 08"), void, __cdecl,
 		  float* pX, float* pY, bool* pbBehindCamera, Vec3 angleCrosshairOffset)
 {
-	if (Vars::Visuals::CrosshairAimPos.m_Var && !G::AimPos.IsZero())
+	if (Vars::Visuals::CrosshairAimPos.Value && !G::AimPos.IsZero())
 	{
 		Vec3 vScreen;
 		if (Utils::W2S(G::AimPos, vScreen))
@@ -14,14 +14,14 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 		}
 	}
 	else if (
-		const auto& pLocal = g_EntityCache.m_pLocal;
-		Vars::Visuals::ThirdpersonOffset.m_Var &&
-		Vars::Visuals::ThirdpersonCrosshair.m_Var &&
+		const auto& pLocal = g_EntityCache.GetLocal();
+		Vars::Visuals::ThirdpersonOffset.Value &&
+		Vars::Visuals::ThirdpersonCrosshair.Value &&
 		I::Input->CAM_IsThirdPerson() &&
-		(Vars::Visuals::ThirdpersonRight.m_Var > 1.f ||
-		Vars::Visuals::ThirdpersonRight.m_Var < -1.f) &&
-		(Vars::Visuals::ThirdpersonUp.m_Var > 1.f ||
-		Vars::Visuals::ThirdpersonUp.m_Var < -1.f)
+		(Vars::Visuals::ThirdpersonRight.Value > 1.f ||
+		Vars::Visuals::ThirdpersonRight.Value < -1.f) &&
+		(Vars::Visuals::ThirdpersonUp.Value > 1.f ||
+		Vars::Visuals::ThirdpersonUp.Value < -1.f)
 		)
 	{
 		Vec3 viewangles = I::Engine->GetViewAngles();

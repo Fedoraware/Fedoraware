@@ -106,10 +106,10 @@ void CGlowEffect::Render()
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
 
-	if (!Vars::Glow::Main::Active.m_Var)
+	if (!Vars::Glow::Main::Active.Value)
 		return;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;
@@ -125,7 +125,7 @@ void CGlowEffect::Render()
 		if (!pRenderContext)
 			return;
 
-		SetScale(Vars::Glow::Main::Scale.m_Var);
+		SetScale(Vars::Glow::Main::Scale.Value);
 
 		ShaderStencilState_t StencilStateDisable = {};
 		StencilStateDisable.m_bEnable = false;
@@ -149,7 +149,7 @@ void CGlowEffect::Render()
 		I::RenderView->SetBlend(1.0f);
 		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-		if (Vars::Glow::Players::Active.m_Var)
+		if (Vars::Glow::Players::Active.Value)
 		{
 			for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
@@ -160,7 +160,7 @@ void CGlowEffect::Render()
 
 				if (!bIsLocal)
 				{
-					switch (Vars::Glow::Players::IgnoreTeammates.m_Var)
+					switch (Vars::Glow::Players::IgnoreTeammates.Value)
 					{
 					case 0: break;
 					case 1:
@@ -178,7 +178,7 @@ void CGlowEffect::Render()
 
 				else
 				{
-					if (!Vars::Glow::Players::ShowLocal.m_Var)
+					if (!Vars::Glow::Players::ShowLocal.Value)
 						continue;
 				}
 
@@ -187,9 +187,9 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Players::Color.m_Var == 0)
+				if (Vars::Glow::Players::Color.Value == 0)
 				{
-					if (Vars::Glow::Players::LocalRainbow.m_Var)
+					if (Vars::Glow::Players::LocalRainbow.Value)
 					{
 						if (bIsLocal)
 						{
@@ -197,12 +197,12 @@ void CGlowEffect::Render()
 						}
 						else
 						{
-							DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+							DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 						}
 					}
 					else
 					{
-						DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+						DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 					}
 				}
 				else
@@ -210,12 +210,12 @@ void CGlowEffect::Render()
 					DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
 				}
 
-				m_vecGlowEntities.push_back({Player, DrawColor, Vars::Glow::Players::Alpha.m_Var});
+				m_vecGlowEntities.push_back({Player, DrawColor, Vars::Glow::Players::Alpha.Value});
 
 				if (!F::Chams.HasDrawn(Player))
 					DrawModel(Player, STUDIO_RENDER, true);
 
-				if (Vars::Glow::Players::Wearables.m_Var)
+				if (Vars::Glow::Players::Wearables.Value)
 				{
 					CBaseEntity* pAttachment = Player->FirstMoveChild();
 
@@ -226,7 +226,7 @@ void CGlowEffect::Render()
 
 						if (pAttachment->IsWearable())
 						{
-							m_vecGlowEntities.push_back({pAttachment, DrawColor, Vars::Glow::Players::Alpha.m_Var});
+							m_vecGlowEntities.push_back({pAttachment, DrawColor, Vars::Glow::Players::Alpha.Value});
 
 							if (!F::Chams.HasDrawn(pAttachment))
 								DrawModel(pAttachment, STUDIO_RENDER, true);
@@ -236,11 +236,11 @@ void CGlowEffect::Render()
 					}
 				}
 
-				if (Vars::Glow::Players::Weapons.m_Var)
+				if (Vars::Glow::Players::Weapons.Value)
 				{
 					if (const auto& pWeapon = Player->GetActiveWeapon())
 					{
-						m_vecGlowEntities.push_back({pWeapon, DrawColor, Vars::Glow::Players::Alpha.m_Var});
+						m_vecGlowEntities.push_back({pWeapon, DrawColor, Vars::Glow::Players::Alpha.Value});
 
 						if (!F::Chams.HasDrawn(pWeapon))
 							DrawModel(pWeapon, STUDIO_RENDER, true);
@@ -249,14 +249,14 @@ void CGlowEffect::Render()
 			}
 		}
 
-		if (Vars::Glow::Buildings::Active.m_Var)
+		if (Vars::Glow::Buildings::Active.Value)
 		{
 			for (const auto& Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
 			{
 				if (!Building->IsAlive())
 					continue;
 
-				if (Vars::Glow::Buildings::IgnoreTeammates.m_Var && Building->GetTeamNum() == pLocal->GetTeamNum())
+				if (Vars::Glow::Buildings::IgnoreTeammates.Value && Building->GetTeamNum() == pLocal->GetTeamNum())
 					continue;
 
 				if (!Utils::IsOnScreen(pLocal, Building))
@@ -264,49 +264,49 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Buildings::Color.m_Var == 0)
-					DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.m_Var);
+				if (Vars::Glow::Buildings::Color.Value == 0)
+					DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 				else DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
 
-				m_vecGlowEntities.push_back({Building, DrawColor, Vars::Glow::Buildings::Alpha.m_Var});
+				m_vecGlowEntities.push_back({Building, DrawColor, Vars::Glow::Buildings::Alpha.Value});
 
 				if (!F::Chams.HasDrawn(Building))
 					DrawModel(Building, STUDIO_RENDER, true);
 			}
 		}
 
-		if (Vars::Glow::World::Active.m_Var)
+		if (Vars::Glow::World::Active.Value)
 		{
-			if (Vars::Glow::World::Health.m_Var)
+			if (Vars::Glow::World::Health.Value)
 			{
 				for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 				{
 					if (!Utils::IsOnScreen(pLocal, Health))
 						continue;
 
-					m_vecGlowEntities.push_back({Health, Colors::Health, Vars::Glow::World::Alpha.m_Var});
+					m_vecGlowEntities.push_back({Health, Colors::Health, Vars::Glow::World::Alpha.Value});
 
 					if (!F::Chams.HasDrawn(Health))
 						DrawModel(Health, STUDIO_RENDER, true);
 				}
 			}
 
-			if (Vars::Glow::World::Ammo.m_Var)
+			if (Vars::Glow::World::Ammo.Value)
 			{
 				for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 				{
 					if (!Utils::IsOnScreen(pLocal, Ammo))
 						continue;
 
-					m_vecGlowEntities.push_back({Ammo, Colors::Ammo, Vars::Glow::World::Alpha.m_Var});
+					m_vecGlowEntities.push_back({Ammo, Colors::Ammo, Vars::Glow::World::Alpha.Value});
 
 					if (!F::Chams.HasDrawn(Ammo))
 						DrawModel(Ammo, STUDIO_RENDER, true);
 				}
 			}
 
-			if (Vars::Glow::World::Projectiles.m_Var)
+			if (Vars::Glow::World::Projectiles.Value)
 			{
 				for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 				{
@@ -315,15 +315,15 @@ void CGlowEffect::Render()
 
 					int nTeam = Projectile->GetTeamNum();
 
-					if (Vars::Glow::World::Projectiles.m_Var == 2 && nTeam == pLocal->GetTeamNum())
+					if (Vars::Glow::World::Projectiles.Value == 2 && nTeam == pLocal->GetTeamNum())
 						continue;
 
 					if (!Utils::IsOnScreen(pLocal, Projectile))
 						continue;
 
 					m_vecGlowEntities.push_back({
-						Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
-						Vars::Glow::World::Alpha.m_Var
+						Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.Value),
+						Vars::Glow::World::Alpha.Value
 					});
 
 					if (!F::Chams.HasDrawn(Projectile))
@@ -359,7 +359,7 @@ void CGlowEffect::Render()
 		}
 		pRenderContext->PopRenderTargetAndViewport();
 
-		if (!Vars::Glow::Main::Stencil.m_Var) {
+		if (!Vars::Glow::Main::Stencil.Value) {
 			pRenderContext->PushRenderTargetAndViewport();
 			{
 				pRenderContext->Viewport(0, 0, w, h);
@@ -388,7 +388,7 @@ void CGlowEffect::Render()
 		StencilState.m_ZFailOp = STENCILOPERATION_KEEP;
 		StencilState.SetStencilState(pRenderContext);
 
-		if (Vars::Glow::Main::Stencil.m_Var)
+		if (Vars::Glow::Main::Stencil.Value)
 		{
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);

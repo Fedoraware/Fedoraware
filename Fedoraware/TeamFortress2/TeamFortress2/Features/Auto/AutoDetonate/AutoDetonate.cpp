@@ -68,20 +68,20 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Detonate::Active.m_Var) { return; }
+	if (!Vars::Triggerbot::Detonate::Active.Value) { return; }
 
 	bool shouldDetonate = false;
 
 	// Check sticky detonation
-	if (Vars::Triggerbot::Detonate::Stickies.m_Var
-		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
+	if (Vars::Triggerbot::Detonate::Stickies.Value
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.Value))
 	{
 		shouldDetonate = true;
 	}
 
 	// Check flare detonation
-	if (Vars::Triggerbot::Detonate::Flares.m_Var
-		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var))
+	if (Vars::Triggerbot::Detonate::Flares.Value
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.Value))
 	{
 		shouldDetonate = true;
 	}

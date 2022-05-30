@@ -72,9 +72,9 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
 
-				if (Vars::Aimbot::Projectile::MovementSimulation.m_Var && !G::PredictedPos.IsZero())
+				if (Vars::Aimbot::Projectile::MovementSimulation.Value && !G::PredictedPos.IsZero())
 				{
-					if (Vars::Visuals::MoveSimLine.m_Var)
+					if (Vars::Visuals::MoveSimLine.Value)
 					{
 						for (size_t i = 0; i < G::PredFutureLines.size(); i++)
 						{
@@ -94,7 +94,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				{
 					if (!G::PredictedPos.IsZero())
 					{
-						if (Vars::Visuals::AimPosSquare.m_Var)
+						if (Vars::Visuals::AimPosSquare.Value)
 						{
 							Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 							if (Utils::W2S(G::LinearPredLine, vProjAimStart) && Utils::W2S(
@@ -113,10 +113,10 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 
 				//Tickbase info
-				if (Vars::Misc::CL_Move::Enabled.m_Var)
+				if (Vars::Misc::CL_Move::Enabled.Value)
 				{
-					const auto& pLocal = g_EntityCache.m_pLocal;
-					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
+					const auto& pLocal = g_EntityCache.GetLocal();
+					const auto& pWeapon = g_EntityCache.GetWeapon();
 
 					if (pLocal && pWeapon)
 					{
@@ -138,30 +138,30 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 							}
 
 							// Default DT Bar
-							if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 1)
+							if (Vars::Misc::CL_Move::DTBarStyle.Value == 1)
 							{
-								const auto maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.m_Var * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
+								const auto maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
 								const float dtOffset = g_ScreenSize.c - (maxWidth / 2);
 								static float tickWidth = 0.f;
 								static float barWidth = 0.f;
-								tickWidth = (G::ShiftedTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.m_Var);
+								tickWidth = (G::ShiftedTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
 								barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
 
 								g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2) + 49, maxWidth + 2,
-													Vars::Misc::CL_Move::DtbarOutlineHeight.m_Var + 2,
+													Vars::Misc::CL_Move::DtbarOutlineHeight.Value + 2,
 													{ 50, 50, 50, 210 });
 								g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth,
 													(g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.
-													m_Var, color1, color2, true);
+													Value, color1, color2, true);
 							}
 
 							// Rijin DT Bar
-							else if (Vars::Misc::CL_Move::DTBarStyle.m_Var == 3)
+							else if (Vars::Misc::CL_Move::DTBarStyle.Value == 3)
 							{
 								F::DTBar.Run();
 								// put this here so we don't move menu if we r using something else, no biggie
 								const float rratio = (static_cast<float>(G::ShiftedTicks) / static_cast<float>(
-									Vars::Misc::CL_Move::DTTicks.m_Var));
+									Vars::Misc::CL_Move::DTTicks.Value));
 								static float ratio = 0.f;
 								ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
 
@@ -171,11 +171,11 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 								// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
 								//		so i added them
-								const int xoff = Vars::Misc::CL_Move::DTBarX.m_Var;
+								const int xoff = Vars::Misc::CL_Move::DTBarX.Value;
 								// width offset (is it called width offset who knows)
-								const int yoff = Vars::Misc::CL_Move::DTBarY.m_Var; // height offset
-								const int yscale = Vars::Misc::CL_Move::DTBarScaleY.m_Var; // height of bar
-								const int xscale = Vars::Misc::CL_Move::DTBarScaleX.m_Var; // width of bar
+								const int yoff = Vars::Misc::CL_Move::DTBarY.Value; // height offset
+								const int yscale = Vars::Misc::CL_Move::DTBarScaleY.Value; // height of bar
+								const int xscale = Vars::Misc::CL_Move::DTBarScaleX.Value; // width of bar
 
 								g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff,
 													nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2),
@@ -220,11 +220,11 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				// Build Date
 				if (F::Menu.IsOpen)
 				{
-					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.m_Var, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
+					g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.Value, { 116, 255, 48, 255 }, ALIGN_DEFAULT, _(__DATE__));
 				}
 
 				// Debug info
-				if (Vars::Debug::DebugInfo.m_Var)
+				if (Vars::Debug::DebugInfo.Value)
 				{
 					int yoffset = 0, xoffset = 0;
 					if (const int localDamage = g_PR->GetDamageByIndex(I::Engine->GetLocalPlayer()))
@@ -232,7 +232,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 					}
 
-					if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon)
+					if (const auto& pWeapon = g_EntityCache.GetWeapon())
 					{
 						if (const int weaponid = pWeapon->GetWeaponID())
 						{
@@ -252,7 +252,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						}
 					}
 
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
 						if (const int tickbase = pLocal->GetTickBase())
 						{
@@ -422,14 +422,14 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 
 				//Current Active Aimbot FOV
-				if (Vars::Visuals::AimFOVAlpha.m_Var && G::CurAimFOV)
+				if (Vars::Visuals::AimFOVAlpha.Value && G::CurAimFOV)
 				{
-					if (const auto& pLocal = g_EntityCache.m_pLocal)
+					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
-						const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
+						const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.Value);
 						const float flR = tanf(DEG2RAD(G::CurAimFOV) / 2.0f)
 							/ tanf(
-							DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var) ? 30.0f : flFOV) /
+							DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
 							2.0f) * g_ScreenSize.w;
 						const Color_t clr = Colors::FOVCircle;
 						g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
@@ -447,9 +447,9 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::CritHack.Draw();
 			F::Radar.Run();
 
-			if (Vars::AntiHack::AntiAim::Active.m_Var)
+			if (Vars::AntiHack::AntiAim::Active.Value)
 			{
-				if (const auto& pLocal = g_EntityCache.m_pLocal)
+				if (const auto& pLocal = g_EntityCache.GetLocal())
 				{
 					static constexpr Color_t realColour = { 0, 255,0, 255 };
 					static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
@@ -472,9 +472,9 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			// you can use it for more, i'm sure. - myzarfin
 			F::Notifications.Think();
 
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
-				if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::ScopeLines.m_Var)
+				if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.Value && Vars::Visuals::ScopeLines.Value)
 				{
 					F::Visuals.ScopeLines();
 				}
@@ -484,7 +484,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 		static ConVar* localplayer_visionflags = I::CVars->FindVar("localplayer_visionflags");
 		if (localplayer_visionflags)
 		{
-			switch (Vars::Visuals::Vision.m_Var)
+			switch (Vars::Visuals::Vision.Value)
 			{
 				case 1:
 					localplayer_visionflags->SetValue(1);

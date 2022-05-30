@@ -61,24 +61,24 @@ void DrawBeam(const Vector& source, const Vector& end)
 {
 	BeamInfo_t beamInfo;
 	beamInfo.m_nType = 0;
-	beamInfo.m_pszModelName = Vars::Visuals::Beans::UseCustomModel.m_Var ? Vars::Visuals::Beans::Model.c_str() : "sprites/physbeam.vmt";
+	beamInfo.m_pszModelName = Vars::Visuals::Beans::UseCustomModel.Value ? Vars::Visuals::Beans::Model.c_str() : "sprites/physbeam.vmt";
 	beamInfo.m_nModelIndex = -1; // will be set by CreateBeamPoints if its -1
 	beamInfo.m_flHaloScale = 0.0f;
-	beamInfo.m_flLife = Vars::Visuals::Beans::Life.m_Var;
-	beamInfo.m_flWidth = Vars::Visuals::Beans::Width.m_Var;
-	beamInfo.m_flEndWidth = Vars::Visuals::Beans::EndWidth.m_Var;
-	beamInfo.m_flFadeLength = Vars::Visuals::Beans::FadeLength.m_Var;
-	beamInfo.m_flAmplitude = Vars::Visuals::Beans::Amplitude.m_Var;
-	beamInfo.m_flBrightness = Vars::Visuals::Beans::Brightness.m_Var;
-	beamInfo.m_flSpeed = Vars::Visuals::Beans::Speed.m_Var;
+	beamInfo.m_flLife = Vars::Visuals::Beans::Life.Value;
+	beamInfo.m_flWidth = Vars::Visuals::Beans::Width.Value;
+	beamInfo.m_flEndWidth = Vars::Visuals::Beans::EndWidth.Value;
+	beamInfo.m_flFadeLength = Vars::Visuals::Beans::FadeLength.Value;
+	beamInfo.m_flAmplitude = Vars::Visuals::Beans::Amplitude.Value;
+	beamInfo.m_flBrightness = Vars::Visuals::Beans::Brightness.Value;
+	beamInfo.m_flSpeed = Vars::Visuals::Beans::Speed.Value;
 	beamInfo.m_nStartFrame = 0;
 	beamInfo.m_flFrameRate = 0;
-	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
-	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
-	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.m_Var ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
-	beamInfo.m_nSegments = Vars::Visuals::Beans::segments.m_Var;
+	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
+	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
+	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
+	beamInfo.m_nSegments = Vars::Visuals::Beans::segments.Value;
 	beamInfo.m_bRenderable = true;
-	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.m_Var;
+	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.Value;
 	beamInfo.m_vecStart = source;
 	beamInfo.m_vecEnd = end;
 
@@ -93,11 +93,11 @@ void DrawBeam(const Vector& source, const Vector& end)
 MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 57 8B F9 8B 4B"), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
-	if (!pWeapon || (!Vars::Visuals::ParticleTracer.m_Var && !Vars::Visuals::BulletTracer.m_Var && !Vars::Visuals::Beans::Active.m_Var))
+	if (!pWeapon || (!Vars::Visuals::ParticleTracer.Value && !Vars::Visuals::BulletTracer.Value && !Vars::Visuals::Beans::Active.Value))
 	{
 		return Hook.Original<FN>()(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
 	}
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		const Vec3 vStart = info.m_vecSrc;
 		const Vec3 vEnd = vStart + info.m_vecDirShooting * info.m_flDistance;
@@ -112,9 +112,9 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 
 		const int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
 		pWeapon->GetAttachment(iAttachment, trace.vStartPos);
 
-		if (Vars::Visuals::BulletTracer.m_Var)
+		if (Vars::Visuals::BulletTracer.Value)
 		{
-			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.m_Var ? Utils::Rainbow() : Colors::BulletTracer;
+			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 
 			I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
 														   Colors::BulletTracer.a, true, 5);
@@ -126,7 +126,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 
 
 		const int team = pLocal->GetTeamNum();
 
-		switch (Vars::Visuals::ParticleTracer.m_Var)
+		switch (Vars::Visuals::ParticleTracer.Value)
 		{
 		//Machina
 			case 1:
@@ -186,7 +186,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 
 				break;
 		}
 
-		if (Vars::Visuals::Beans::Active.m_Var)
+		if (Vars::Visuals::Beans::Active.Value)
 		{
 			DrawBeam(trace.vStartPos, trace.vEndPos);
 		}

@@ -29,7 +29,7 @@ void CPlayerList::UpdatePlayers()
 					g_PR->GetUserID(i),
 					g_PR->GetAccountID(i),
 					g_PR->GetPing(i) == 0,
-					Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.m_Var),
+					Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
 					g_PR->GetHealth(i),
 					g_PR->GetMaxHealth(i),
 					g_PR->GetClass(i),
@@ -73,14 +73,14 @@ void CPlayerList::Render()
 
 		else
 		{
-			const int columnCount = Vars::AntiHack::Resolver::Resolver.m_Var ? 5 : 4;
+			const int columnCount = Vars::AntiHack::Resolver::Resolver.Value ? 5 : 4;
 			if (ImGui::BeginTable("Playerlist", columnCount, ImGuiTableFlags_Borders))
 			{
 				ImGui::TableSetupColumn("Name");
 				ImGui::TableSetupColumn("Class");
 				ImGui::TableSetupColumn("Health");
 				ImGui::TableSetupColumn("Priority");
-				if (Vars::AntiHack::Resolver::Resolver.m_Var)
+				if (Vars::AntiHack::Resolver::Resolver.Value)
 				{
 					ImGui::TableSetupColumn("Resolver");
 				}

@@ -13,14 +13,14 @@ inline const char* lol(int nClassNum)
 
 void CDiscordRPC::Update()
 {
-	if (Vars::Misc::Discord::EnableRPC.m_Var)
+	if (Vars::Misc::Discord::EnableRPC.Value)
 	{
 		static int64_t startTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		DiscordRichPresence discordPresence = {};
 
 		if (I::Engine->IsInGame())
 		{
-			if (Vars::Misc::Discord::IncludeMap.m_Var)
+			if (Vars::Misc::Discord::IncludeMap.Value)
 			{
 				char mapName[256];
 				const char* cLevelName = I::Engine->GetLevelName();
@@ -47,9 +47,9 @@ void CDiscordRPC::Update()
 				discordPresence.details = nullptr;
 			}
 
-			if (const auto pLocal = g_EntityCache.m_pLocal)
+			if (const auto pLocal = g_EntityCache.GetLocal())
 			{
-				if (Vars::Misc::Discord::IncludeClass.m_Var)
+				if (Vars::Misc::Discord::IncludeClass.Value)
 				{
 					if (pLocal->IsAlive())
 					{
@@ -69,7 +69,7 @@ void CDiscordRPC::Update()
 			discordPresence.state = "Main Menu";
 		}
 
-		if (Vars::Misc::Discord::IncludeTimestamp.m_Var)
+		if (Vars::Misc::Discord::IncludeTimestamp.Value)
 		{
 			discordPresence.startTimestamp = startTime;
 		}
@@ -80,7 +80,7 @@ void CDiscordRPC::Update()
 
 		discordPresence.endTimestamp = NULL;
 
-		switch (Vars::Misc::Discord::WhatImagesShouldBeUsed.m_Var)
+		switch (Vars::Misc::Discord::WhatImagesShouldBeUsed.Value)
 		{
 		case 0:
 			discordPresence.smallImageKey = "tf2";

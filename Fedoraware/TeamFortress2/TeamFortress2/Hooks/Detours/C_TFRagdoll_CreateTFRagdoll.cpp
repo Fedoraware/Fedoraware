@@ -23,9 +23,9 @@ MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, CreateTFRagdollAddress(), void, __fastcal
 {
 	if (const auto& pEntity = static_cast<CBaseEntity*>(ecx))
 	{
-		if (Vars::Visuals::RagdollEffects::EnemyOnly.m_Var)
+		if (Vars::Visuals::RagdollEffects::EnemyOnly.Value)
 		{
-			if (const auto& pLocal = g_EntityCache.m_pLocal)
+			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
 				if (Offset(int*, pEntity, 0xCBC) == pLocal->GetTeamNum())
 				{
@@ -37,12 +37,12 @@ MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, CreateTFRagdollAddress(), void, __fastcal
 
 		ClearEffects(pEntity);
 
-		Offset(bool*, pEntity, 0xC92) = Vars::Visuals::RagdollEffects::Burning.m_Var;
-		Offset(bool*, pEntity, 0xC93) = Vars::Visuals::RagdollEffects::Electrocuted.m_Var;
-		Offset(bool*, pEntity, 0xC99) = Vars::Visuals::RagdollEffects::BecomeAsh.m_Var;
-		Offset(bool*, pEntity, 0xC95) = Vars::Visuals::RagdollEffects::Dissolve.m_Var;
-		Offset(bool*, pEntity, 0xCA0) = Vars::Visuals::RagdollEffects::RagdollType.m_Var == 1;
-		Offset(bool*, pEntity, 0xCA1) = Vars::Visuals::RagdollEffects::RagdollType.m_Var == 2;
+		Offset(bool*, pEntity, 0xC92) = Vars::Visuals::RagdollEffects::Burning.Value;
+		Offset(bool*, pEntity, 0xC93) = Vars::Visuals::RagdollEffects::Electrocuted.Value;
+		Offset(bool*, pEntity, 0xC99) = Vars::Visuals::RagdollEffects::BecomeAsh.Value;
+		Offset(bool*, pEntity, 0xC95) = Vars::Visuals::RagdollEffects::Dissolve.Value;
+		Offset(bool*, pEntity, 0xCA0) = Vars::Visuals::RagdollEffects::RagdollType.Value == 1;
+		Offset(bool*, pEntity, 0xCA1) = Vars::Visuals::RagdollEffects::RagdollType.Value == 2;
 	}
 
 	Hook.Original<FN>()(ecx, edx);

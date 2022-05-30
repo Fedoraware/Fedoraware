@@ -16,7 +16,7 @@ MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(I::GameEvent,
 		// Handle networking
 		if (Utils::StartsWith(msg, "FED@"))
 		{
-			if (Vars::Misc::PartyNetworking.m_Var)
+			if (Vars::Misc::PartyNetworking.Value)
 			{
 				F::Fedworking.HandleMessage(msg);
 			}
