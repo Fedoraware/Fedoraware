@@ -255,14 +255,12 @@ namespace Utils
 		return (WinAPI::GetForegroundWindow() == hwGame);
 	}
 
+	// 55 8B EC FF 15 D8 A5 8C 10 FF 75 08 8B C8 8B 10 FF 52 04 5D C3
 	__inline void* InitKeyValue()
 	{
-		typedef PDWORD(__cdecl* Init_t)(int);
-		static DWORD dwInitLocation = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 83 C4 14 85 C0 74 10 68")) + 0x1;
-		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
-		static Init_t InitKeyValues = (Init_t)dwInit;
-
-		return InitKeyValues(32);
+		static auto FN = reinterpret_cast< PDWORD( __cdecl * )( int ) >(
+			g_Pattern.Find( _( L"client.dll" ), _( L"55 8B EC FF 15 D8 A5 8C 10 FF 75 08 8B C8 8B 10 FF 52 04 5D C3" ) ) );
+		return FN(32);
 	}
 
 	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
@@ -850,65 +848,46 @@ namespace Utils
 }
 
 namespace Particles {
-	inline void DispatchEffect(const char* pName, const CEffectData& data)
-	{
-		using DispatchEffect_Fn = int(__cdecl*)(const char*, const CEffectData&);
-		static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 83 C4 08 EB 15") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static DispatchEffect_Fn fn = (DispatchEffect_Fn)b;
-
-		fn(pName, data);
+	__forceinline void DispatchEffect( const char* pName, const CEffectData& data ) {
+		static auto FN = reinterpret_cast< int( __cdecl* )( const char*, const CEffectData& ) > (
+			g_Pattern.Find( L"client.dll", L"55 8B EC 83 EC 20 56 8D 4D E0" )
+		);
+		FN( pName, data );
+	}
+	__forceinline int GetParticleSystemIndex( const char* pParticleSystemName ) {
+		static auto FN = reinterpret_cast< int( __cdecl* )( const char* ) > (
+			g_Pattern.Find( L"client.dll", L"55 8B EC 56 8B 75 08 85 F6 74 22 8B 0D E4 BC C4" )
+		);
+		return FN( pParticleSystemName );
 	}
 
-	inline int GetParticleSystemIndex(const char* pParticleSystemName)
-	{
-		using GetParticleSystemIndex_Fn = int(__cdecl*)(const char*);
-		static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? D9 EE 83 C4 04 50") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static GetParticleSystemIndex_Fn fn = (GetParticleSystemIndex_Fn)b;
-
-		return fn(pParticleSystemName);
-	}
-
-	inline void DispatchParticleEffect(int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity)
-	{
-		//E8 ? ? ? ? 83 C4 2C F6 46 30 01
-
+	__forceinline void DispatchParticleEffect( int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity ) {
 		CEffectData data;
 		data.m_nHitBox = iEffectIndex;
 		data.m_vOrigin = vecOrigin;
 		data.m_vStart = vecStart;
 		data.m_vAngles = vecAngles;
 
-		if (pEntity) {
-			data.m_nEntIndex = pEntity->GetIndex();
-			data.m_fFlags |= (1 << 0);
+		if ( pEntity ) {
+			data.m_nEntIndex = pEntity->GetIndex( );
+			data.m_fFlags |= ( 1 << 0 );
 			data.m_nDamageType = 2;
-		}
-		else {
+		} else {
 			data.m_nEntIndex = 0;
 		}
 
 		data.m_bCustomColors = true;
 
-		DispatchEffect("ParticleEffect", data);
+		DispatchEffect( "ParticleEffect", data );
 	}
-
-
-	inline void DispatchParticleEffect(const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity = 0);
-	inline void DispatchParticleEffect(const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity)
-	{
-		//E8 ? ? ? ? 83 C4 20 8D 4D CC
-
-		int iIndex = GetParticleSystemIndex(pszParticleName);
-		DispatchParticleEffect(iIndex, vecOrigin, vecOrigin, vecAngles, pEntity);
+	__forceinline void DispatchParticleEffect( const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity ) {
+		int iIndex = GetParticleSystemIndex( pszParticleName );
+		DispatchParticleEffect( iIndex, vecOrigin, vecOrigin, vecAngles, pEntity );
 	}
-
-
-	inline void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz) {
-		using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
-		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(L"client.dll", _(L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83")));
-		UTIL_ParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
-
+	__forceinline void ParticleTracer( const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz ) {
+		static auto UTIL_ParticleTracer = reinterpret_cast< void( __cdecl* )( const char*, const Vec3&, const Vec3&, int, int, bool ) >( 
+			g_Pattern.Find( L"client.dll", _( L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83" ) ) 
+		);
+		UTIL_ParticleTracer( pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz );
 	}
 }
