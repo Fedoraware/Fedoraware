@@ -3,6 +3,7 @@
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
 #include "../AttributeChanger/AttributeChanger.h"
+#include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
 #include "Playerlist/Playerlist.h"
 
@@ -1916,16 +1917,12 @@ void CMenu::DrawCameraWindow()
 {
 	if (I::Engine->IsInGame() && Vars::Visuals::CameraMode.Value != 0)
 	{
-		int windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
-		if (Vars::Visuals::CameraMode.Value <= 1 || F::CameraWindow.CanDraw) {
-			windowFlags |= ImGuiWindowFlags_NoBackground;
-		}
-
 		// Draw the camera window
 		ImGui::SetNextWindowSize({ static_cast<float>(F::CameraWindow.ViewRect.w), static_cast<float>(F::CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos({ static_cast<float>(F::CameraWindow.ViewRect.x), static_cast<float>(F::CameraWindow.ViewRect.y) }, ImGuiCond_FirstUseEver);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 60.f, 60.f });
-		if (ImGui::Begin("Camera", nullptr, windowFlags))
+		if (ImGui::Begin("Camera", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();
@@ -1938,6 +1935,7 @@ void CMenu::DrawCameraWindow()
 			ImGui::End();
 		}
 		ImGui::PopStyleVar();
+		ImGui::PopStyleColor();
 	}
 }
 
@@ -2006,9 +2004,11 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	ImGui::NewFrame();
 	ImGui::PushFont(Verdana);
 
+	// Window that should always be visible
 	DrawKeybinds();
+	F::Radar.DrawWindow();
 
-	if (F::Menu.IsOpen)
+	if (IsOpen)
 	{
 		DrawMenu();
 		DrawCameraWindow();

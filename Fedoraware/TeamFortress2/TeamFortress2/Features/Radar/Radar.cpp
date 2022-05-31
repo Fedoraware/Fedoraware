@@ -27,27 +27,36 @@ bool CRadar::ShouldRun()
 	return true;
 }
 
+void CRadar::DrawWindow()
+{
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.f));
+	ImGui::SetNextWindowSize({ static_cast<float>(RadarSize) * 2, static_cast<float>(RadarSize) * 2 });
+
+	const int titleFlags = F::Menu.IsOpen ? 0 : ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground;
+	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | titleFlags))
+	{
+		RadarX = static_cast<int>(ImGui::GetWindowPos().x) + RadarSize;
+		RadarY = static_cast<int>(ImGui::GetWindowPos().y) + RadarSize;
+	}
+	ImGui::End();
+
+	ImGui::PopStyleColor();
+}
+
 void CRadar::DrawRadar()
 {
-	//If menu is open, check for input and draw the titlebar.
-	//The titlebar also indicates where we can drag / move the radar.
-	int offset = 0;
-	if (F::Menu.IsOpen)
+	// Title gradient
+	if (!F::Menu.IsOpen)
 	{
-		//A quick notify, common sense but I made it by accident:
-		//If on drawing, it's important to update position first before drawing
-		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
-		DragRadar();
-		g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize - 24, RadarSize * 2, 24, {43, 43, 45, 250});
-		offset = 21;
+		g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3,
+			RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },
+			Vars::Menu::Colors::MenuAccent, true);
+
+		g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3,
+			RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize,
+			Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
 	}
 
-	g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3 - offset,
-	                    RadarX - RadarSize + RadarSize, RadarY - RadarSize - offset, {43, 43, 45, 250},
-	                    Vars::Menu::Colors::MenuAccent, true);
-	g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3 - offset,
-	                    RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize - offset,
-	                    Vars::Menu::Colors::MenuAccent, {43, 43, 45, 250}, true);
 	//Build the bg color with the wanted alpha.
 	const Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.Value)};
 

@@ -2,6 +2,7 @@
 
 #include "../../Includes/Includes.h"
 
+class KeyValues;
 class CNetChannel;
 
 class ISpatialLeafEnumerator
@@ -145,9 +146,9 @@ public:
 		return GetVFunc<FN>(this, 106)(this, szCommandString);
 	}
 
-	void ServerCmdKeyValues(void* pKV)
+	void ServerCmdKeyValues(KeyValues* pKV)
 	{
-		typedef void(__thiscall* FN)(void*, void*);
+		typedef void(__thiscall* FN)(void*, KeyValues*);
 		GetVFunc<FN>(this, 127)(this, pKV);
 		//using fn = void(__stdcall*)(void*); // KeyValues* not void* but I don't know what consequences including KeyValues.h will have here
 		//static fn ServerCmdKeyValuesFn = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC B9 ? ? ? ? 5D E9 ? ? ? ? CC CC 55 8B EC 8A 45 08"));

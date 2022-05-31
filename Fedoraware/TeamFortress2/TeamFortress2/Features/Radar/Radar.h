@@ -2,12 +2,6 @@
 #include "../../SDK/SDK.h"
 
 class CRadar {
-public:
-	void Run();
-
-	int RadarX = 100, RadarY = 500;
-
-private:
 	bool ShouldRun();
 	void DrawRadar();
 	void DragRadar();
@@ -17,6 +11,12 @@ private:
 	int RadarSize = 0, RadarCorrSize = 0;
 	float LocalCos = 0, LocalSin = 0, Range = 0, LocalYaw = 0;
 	Vec3 LocalOrigin;
+
+public:
+	void Run();
+	void DrawWindow();
+
+	int RadarX = 100, RadarY = 500;
 };
 
 ADD_FEATURE(CRadar, Radar)
