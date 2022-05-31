@@ -3,7 +3,6 @@
 #include "../Vars.h"
 #include "../ChatInfo/ChatInfo.h"
 #include "../../Utils/Timer/Timer.hpp"
-#include "../PlayerResource/PlayerResource.h"
 #include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 
 extern int attackStringW;
@@ -228,7 +227,7 @@ void CMisc::PingReducer()
 	{
 		if (Vars::Misc::PingReducer.Value)
 		{
-			const int currentPing = g_PR->GetPing(I::Engine->GetLocalPlayer());
+			const int currentPing = g_EntityCache.GetPR()->GetPing(I::Engine->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.Value <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
 			netChannel->SendNetMsg(cmd);
 		}

@@ -1,5 +1,4 @@
 #include "Killstreak.h"
-#include "../PlayerResource/PlayerResource.h"
 
 void CKillstreaker::ResetKillstreak()
 {
@@ -22,14 +21,10 @@ void CKillstreaker::ApplyKillstreak()
 	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
-		const auto& resource = I::EntityList->GetClientEntity(g_PR->Entity);
-		if (!pLocal || !resource || resource->GetClientClass()->m_ClassID != static_cast<int>(ETFClassID::CTFPlayerResource))
-		{
-			return;
-		}
+		//const auto& resource = I::EntityList->GetClientEntity(g_EntityCache.GetPR()->Entity);
+		if (!pLocal) { return; }
 
-		const auto streaksResource = reinterpret_cast<int*>(reinterpret_cast<unsigned>(resource) + g_NetVars.get_offset("DT_TFPlayerResource", "m_iStreaks") + 4 * I::Engine->GetLocalPlayer());
-
+		int* streaksResource = g_EntityCache.GetPR()->GetStreaks(I::Engine->GetLocalPlayer());
 		if (*streaksResource != GetCurrentStreak())
 		{
 			streaksResource[0] = GetCurrentStreak();
@@ -37,6 +32,7 @@ void CKillstreaker::ApplyKillstreak()
 			streaksResource[2] = GetCurrentStreak();
 			streaksResource[3] = GetCurrentStreak();
 		}
+
 		static auto streaksOffset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nStreaks");
 		const auto streaksPlayer = reinterpret_cast<int*>(pLocal + streaksOffset);
 		streaksPlayer[0] = GetCurrentStreak();

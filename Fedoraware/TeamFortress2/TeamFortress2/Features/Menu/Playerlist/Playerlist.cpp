@@ -4,7 +4,6 @@
 #include "../../Menu/Menu.h"
 #include "../ImGui/imgui_color_gradient.h"
 #include <mutex>
-#include "../../PlayerResource/PlayerResource.h"
 #include "../ImGui/imgui_internal.h"
 
 struct ImGuiWindow;
@@ -22,21 +21,22 @@ void CPlayerList::UpdatePlayers()
 		std::multimap<int, ListPlayer> listBuffer{};
 		for (int i = 1; i < I::GlobalVars->maxclients; i++)
 		{
-			if (g_PR->isValid(i))
+			const auto pr = g_EntityCache.GetPR();
+			if (pr->GetValid(i))
 			{
-				ListPlayer player{
-					g_PR->GetPlayerName(i),
-					g_PR->GetUserID(i),
-					g_PR->GetAccountID(i),
-					g_PR->GetPing(i) == 0,
-					Utils::GetTeamColor(g_PR->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
-					g_PR->GetHealth(i),
-					g_PR->GetMaxHealth(i),
-					g_PR->GetClass(i),
-					g_PR->IsAlive(i)
+				ListPlayer player {
+					pr->GetPlayerName(i),
+					pr->GetUserID(i),
+					pr->GetAccountID(i),
+					pr->GetPing(i) == 0,
+					Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
+					pr->GetHealth(i),
+					pr->GetMaxHealth(i),
+					pr->GetClass(i),
+					pr->IsAlive(i)
 				};
 
-				listBuffer.emplace(g_PR->GetTeam(i), player);
+				listBuffer.emplace(pr->GetTeam(i), player);
 			}
 		}
 

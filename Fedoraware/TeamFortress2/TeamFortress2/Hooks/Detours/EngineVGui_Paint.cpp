@@ -6,7 +6,6 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/PlayerResource/PlayerResource.h"
 #include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/Menu/SpectatorList/SpectatorList.h"
@@ -227,7 +226,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				if (Vars::Debug::DebugInfo.Value)
 				{
 					int yoffset = 0, xoffset = 0;
-					if (const int localDamage = g_PR->GetDamageByIndex(I::Engine->GetLocalPlayer()))
+					if (const int localDamage = g_EntityCache.GetPR()->GetDamage(I::Engine->GetLocalPlayer()))
 					{
 						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
 					}

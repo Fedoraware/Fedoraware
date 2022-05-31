@@ -16,7 +16,6 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
-#include "../../Features/PlayerResource/PlayerResource.h"
 
 static void UpdateAntiAFK(CUserCmd* pCmd)
 {
@@ -199,7 +198,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		pCmd->viewangles = ang;
 	}
 
-	g_PR->Update();
 	F::Misc.Run(pCmd);
 	F::Fedworking.Run();
 	F::CameraWindow.Update();

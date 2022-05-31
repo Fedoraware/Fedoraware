@@ -44,63 +44,129 @@ public:
 	NETVAR(m_iConnectionState, void*, "CTFPlayerResource", "m_iConnectionState");
 	NETVAR(m_flConnectTime, void*, "CTFPlayerResource", "m_flConnectTime");
 
-	int GetTeam(int idx)
-	{
-		static auto offset = g_NetVars.get_offset("CTFPlayerResource", "m_iTeam");
-		return *reinterpret_cast<int*>(this + offset + 4 * idx);
-	}
+	/* CPlayerResource */
 
-	int GetScore(int idx)
+	int GetPing(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CTFPlayerResource", "m_iTotalScore");
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iPing");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
 	}
 
 	int GetKills(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CPlayerResource", "m_iScore");
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iScore");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
 	}
 
 	int GetDeaths(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CPlayerResource", "m_iDeaths");
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iDeaths");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
 	}
 
-	int GetLevel(int idx)
+	bool GetConnected(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CTFPlayerResource", "m_iPlayerLevel");
-		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+		if (!this) { return false; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bConnected");
+		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
 	}
 
-	int GetHealth(int idx)
+	int GetTeam(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CPlayerResource", "m_iHealth");
-		return *reinterpret_cast<int*>(this + offset + 4 * idx);
-	}
-
-	int GetDamage(int idx)
-	{
-		static auto offset = g_NetVars.get_offset("CTFPlayerResource", "m_iDamage");
-		return *reinterpret_cast<int*>(this + offset + 4 * idx);
-	}
-
-	int GetPing(int idx)
-	{
-		static auto offset = g_NetVars.get_offset("CPlayerResource", "m_iPing");
-		return *reinterpret_cast<int*>(this + offset + 4 * idx);
-	}
-
-	int GetClass(int idx)
-	{
-		static auto offset = g_NetVars.get_offset("CTFPlayerResource", "m_iPlayerClass");
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iTeam");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
 	}
 
 	bool IsAlive(int idx)
 	{
-		static auto offset = g_NetVars.get_offset("CPlayerResource", "m_bAlive");
+		if (!this) { return false; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bAlive");
+		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
+	}
+
+	int GetHealth(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iHealth");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	unsigned GetAccountID(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iAccountID");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	bool GetValid(int idx)
+	{
+		if (!this) { return false; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bValid");
+		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
+	}
+
+	int GetUserID(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iUserID");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	/* CTFPlayerResource */
+
+	int GetScore(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iTotalScore");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	int GetLevel(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iPlayerLevel");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	int GetDamage(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iDamage");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	int GetClass(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iPlayerClass");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	int GetMaxHealth(int idx)
+	{
+		if (!this) { return 0; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iMaxHealth");
+		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	int* GetStreaks(int idx)
+	{
+		if (!this) { return nullptr; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iStreaks");
+		return reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	/* Other */
+
+	const char* GetPlayerName(int idx)
+	{
+		if (!this) { return ""; }
+
+		static auto offset = 0x0554;
+		return *reinterpret_cast<const char**>((unsigned)this + offset + 4 * idx);
 	}
 };
