@@ -510,10 +510,10 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (aimMethod) {
 	case 0: {	//head
-		Math::VectorTransform(vecPoints.at(0), transform, HeadPoint);
-		for (const auto& aimPoint : visiblePoints) {
-			if (aimPoint.DistTo(HeadPoint) < retVec.DistTo(HeadPoint)) {
-				retVec = aimPoint;
+		Math::VectorTransform(vecPoints.at(0), transform, HeadPoint);			//	get transformed location of our "best point" for our selected prio hitbox
+		for (const auto& aimPoint : visiblePoints) {							//	iterate through visible points
+			if (aimPoint.DistTo(HeadPoint) < retVec.DistTo(HeadPoint)) {		//	if the distance to our best point is lower than the previous selected point,
+				retVec = aimPoint;												//	set the new point to our currently selected point
 			}
 		}
 		break;
