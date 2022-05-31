@@ -30,7 +30,7 @@ void CRadar::DrawWindow()
 	ImGui::SetNextWindowSizeConstraints({ 20.f, 20.f }, { 400.f, 400.f }, SquareConstraints);
 
 	const int activeFlags = F::Menu.IsOpen ? 0 : ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize;
-	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | activeFlags))
+	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | activeFlags))
 	{
 		RadarX = static_cast<int>(ImGui::GetWindowPos().x) + RadarSize;
 		RadarY = static_cast<int>(ImGui::GetWindowPos().y) + RadarSize;

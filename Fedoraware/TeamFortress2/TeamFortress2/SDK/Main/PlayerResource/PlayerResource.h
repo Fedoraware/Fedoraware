@@ -119,9 +119,7 @@ public:
 	const char* GetPlayerName(int idx)
 	{
 		if (!this) { return ""; }
-
-		static auto offset = 0x0554;
-		return *reinterpret_cast<const char**>(this + offset + 4 * idx);
+		return *reinterpret_cast<const char**>(this + 0x0554 + 4 * idx);
 	}
 
 	/* CTFPlayerResource */
