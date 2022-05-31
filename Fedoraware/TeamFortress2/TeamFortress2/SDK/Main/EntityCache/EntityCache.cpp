@@ -134,6 +134,12 @@ void CEntityCache::Fill()
 				break;
 			}
 
+			case ETFClassID::CTFPlayerResource:
+			{
+				m_pPlayerResource = reinterpret_cast<CTFPlayerResource*>(pEntity);
+				break;
+			}
+
 			default: break;
 			}
 		}

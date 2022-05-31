@@ -1,6 +1,7 @@
 #pragma once
 #include "../BaseEntity/BaseEntity.h"
 #include "../BaseCombatWeapon/BaseCombatWeapon.h"
+#include "../PlayerResource/PlayerResource.h"
 #include "../BaseObject/BaseObject.h"
 
 enum struct EGroupType
@@ -13,10 +14,10 @@ enum struct EGroupType
 
 class CEntityCache
 {
-private:
 	CBaseEntity* m_pLocal = nullptr;
 	CBaseCombatWeapon* m_pLocalWeapon = nullptr;
 	CBaseEntity* m_pObservedTarget = nullptr;
+	CTFPlayerResource* m_pPlayerResource = nullptr;
 
 	std::unordered_map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
 	void UpdateFriends();
@@ -29,6 +30,7 @@ public:
 	CBaseEntity* GetLocal() { return m_pLocal; }
 	CBaseCombatWeapon* GetWeapon() { return m_pLocalWeapon; }
 	CBaseEntity* GetObservedTarget() { return m_pObservedTarget; }
+	CTFPlayerResource* GetPR() { return m_pPlayerResource; }
 
 	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
 	bool Friends[129] = { false };
