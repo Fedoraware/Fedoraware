@@ -243,6 +243,16 @@ namespace Utils
 		*vSrc = pPlayer->GetShootPos() + (vecForward * vOffset.x) + (vecRight * vOffset.y) + (vecUp * vOffset.z);
 	}
 
+	__inline void GetProjectileFireSetup(CBaseEntity* pPlayer, const Vec3& vViewAngles, Vec3 vOffset, Vec3* vSrc, const bool flipped)
+	{
+		if (flipped) { vOffset.y *= -1.0f; }
+
+		Vec3 vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
+		Math::AngleVectors(vViewAngles, &vecForward, &vecRight, &vecUp);
+
+		*vSrc = pPlayer->GetShootPos() + (vecForward * vOffset.x) + (vecRight * vOffset.y) + (vecUp * vOffset.z);
+	}
+
 	__inline bool IsGameWindowInFocus()
 	{
 		static HWND hwGame = 0;
