@@ -1,45 +1,50 @@
 #include "TraceFilters.h"
 
-bool CTraceFilterHitscan::ShouldHitEntity(void *pEntityHandle, int nContentsMask)
-{
-	CBaseEntity *pEntity = reinterpret_cast<CBaseEntity *>(pEntityHandle);
+bool CTraceFilterHitscan::ShouldHitEntity( void* pEntityHandle, int nContentsMask ) {
+	CBaseEntity* pEntity = reinterpret_cast< CBaseEntity* >( pEntityHandle );
+	CBaseEntity* pLocal = reinterpret_cast< CBaseEntity* >( this->pSkip );
 
-	switch (pEntity->GetClientClass()->m_ClassID)
-	{
-		//wtf are these? =D
-		case 55: //CFuncAreaPortalWindow
-		case 64: //CFuncRespawnRoomVisualizer
-		case 117: //CSniperDot
-		case 225: //CTFKnife (This had something to do with medic's MvM shield, if I am not very fucking wrong)
-		{
+	switch ( pEntity->GetClassID( ) ) {
+		case ETFClassID::CFuncAreaPortalWindow:
+		case ETFClassID::CFuncRespawnRoomVisualizer:
+		case ETFClassID::CSniperDot:
+		case ETFClassID::CTFMedigunShield:
+		case ETFClassID::CTFReviveMarker: {
 			return false;
 		}
 	}
 
-	return (pEntityHandle != pSkip);
+	if ( pLocal && pLocal->GetClassNum( ) == CLASS_SNIPER ) {
+		switch ( pEntity->GetClassID( ) ) {
+			case ETFClassID::CTFPlayer:
+			case ETFClassID::CObjectSentrygun:
+			case ETFClassID::CObjectDispenser:
+			case ETFClassID::CObjectTeleporter:
+			{
+				if ( pLocal->GetTeamNum( ) == pEntity->GetTeamNum( ) )
+					return false;
+			} break;
+			default:
+			break;
+		}
+	}
+
+	return ( pEntityHandle != pSkip );
 }
 
-ETraceType CTraceFilterHitscan::GetTraceType() const
-{
+ETraceType CTraceFilterHitscan::GetTraceType( ) const {
 	return TRACE_EVERYTHING;
 }
 
-bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity(void *pEntityHandle, int nContentsMask)
-{
-	CBaseEntity *pEntity = reinterpret_cast<CBaseEntity *>(pEntityHandle);
+bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity( void* pEntityHandle, int nContentsMask ) {
+	CBaseEntity* pEntity = reinterpret_cast< CBaseEntity* >( pEntityHandle );
 
-	switch (pEntity->GetClientClass()->m_ClassID)
-	{
-		case 55:
-		case 64:
-		case 117:
-		case 225: {
-			return false;
-		}
-	}
-
-	switch (pEntity->GetClassID())
-	{
+	switch ( pEntity->GetClassID( ) ) {
+		case ETFClassID::CFuncAreaPortalWindow:
+		case ETFClassID::CFuncRespawnRoomVisualizer:
+		case ETFClassID::CSniperDot:
+		case ETFClassID::CTFMedigunShield:
+		case ETFClassID::CTFReviveMarker:
 		case ETFClassID::CTFAmmoPack:
 		case ETFClassID::CTFProjectile_Arrow:
 		case ETFClassID::CTFProjectile_BallOfFire:
@@ -59,15 +64,17 @@ bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity(void *pEntityHandle, int nCo
 		case ETFClassID::CMerasmusDancer:
 		case ETFClassID::CEyeballBoss:
 		case ETFClassID::CHeadlessHatman:
-		case ETFClassID::CZombie: {
+		case ETFClassID::CZombie:
+		{
 			return false;
-		}
+		} break;
+		default:
+		break;
 	}
 
-	return !(pEntityHandle == pSkip);
+	return !( pEntityHandle == pSkip );
 }
 
-ETraceType CTraceFilterWorldAndPropsOnly::GetTraceType() const
-{
+ETraceType CTraceFilterWorldAndPropsOnly::GetTraceType( ) const {
 	return TRACE_EVERYTHING;
 }
