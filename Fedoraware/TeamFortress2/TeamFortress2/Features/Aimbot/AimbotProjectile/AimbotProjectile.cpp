@@ -260,8 +260,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	*/
 	const bool useTPred = !predictor.m_pEntity->GetVecVelocity().IsZero() ? true : false;
 
-	if (!useTPred) {
-		Vec3 staticPos = predictor.m_vPosition;
+	if (!useTPred) {//
+		Vec3 staticPos = predictor.m_pEntity->IsPlayer() ? GetAimPos(pLocal, predictor.m_pEntity, predictor.m_vPosition) : predictor.m_vPosition;
 
 		// get angle offsets for demoman weapons?weew
 		switch (pWeapon->GetWeaponID())
@@ -450,7 +450,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	std::vector<Vec3> visiblePoints{};
 	matrix3x4& transform = pEntity->GetRgflCoordinateFrame(); 
-	transform[0][3] = targetPredPos.x; transform[1][3] = targetPredPos.y; transform[2][3] = targetPredPos.z;	// set up our points around the player current position
+	if (!pEntity->GetVecVelocity().IsZero()) {
+		transform[0][3] = targetPredPos.x; transform[1][3] = targetPredPos.y; transform[2][3] = targetPredPos.z;	// set up our points around the player current position
+	}
 
 	for (const auto& point : vecPoints)
 	{
