@@ -17,9 +17,13 @@ std::string CMaterialEditor::GetMaterialPath(const std::string& matFileName)
 
 IMaterial* CMaterialEditor::GetByName(const std::string& name)
 {
+	static CustomMaterial* lastMaterial = nullptr;
+	if (lastMaterial && lastMaterial->Name == name) { return lastMaterial->Material; }
+
 	const auto fMat = std::find_if(MaterialList.begin(), MaterialList.end(), [&name](const CustomMaterial& mat) { return mat.Name == name; });
 	if (fMat != MaterialList.end())
 	{
+		lastMaterial = &*fMat;
 		return fMat->Material;
 	}
 
