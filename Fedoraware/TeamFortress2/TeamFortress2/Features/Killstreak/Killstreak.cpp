@@ -21,7 +21,6 @@ void CKillstreaker::ApplyKillstreak()
 	if (Vars::Misc::KillstreakWeapon.Value)
 	{
 		const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
-		//const auto& resource = I::EntityList->GetClientEntity(g_EntityCache.GetPR()->Entity);
 		if (!pLocal) { return; }
 
 		int* streaksResource = g_EntityCache.GetPR()->GetStreaks(I::Engine->GetLocalPlayer());
