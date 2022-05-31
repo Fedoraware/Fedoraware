@@ -237,10 +237,6 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
 	const INetChannel* pNetChannel = I::Engine->GetNetChannelInfo();
-	static ConVar* cl_flipviewmodels = g_ConVars.cl_flipviewmodels;
-	static int oldValue = cl_flipviewmodels->GetInt();	// "wahh what if they change the value"
-														// too bad?
-	cl_flipviewmodels->SetValue(oldValue);
 
 	G::PredBeforeLines.clear(); G::PredFutureLines.clear();
 	
@@ -265,7 +261,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const bool useTPred = !predictor.m_pEntity->GetVecVelocity().IsZero() ? true : false;
 
 	if (!useTPred) {
-		Vec3 staticPos = predictor.m_pEntity->IsPlayer() ? GetAimPos(pLocal, predictor.m_pEntity, predictor.m_vPosition) : predictor.m_vPosition;
+		Vec3 staticPos = predictor.m_vPosition;
 
 		// get angle offsets for demoman weapons?weew
 		switch (pWeapon->GetWeaponID())
@@ -297,38 +293,33 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			staticPos.z = trace.vEndPos.z;
 		}
 
-		for (int n = 0; n <= 1; n++)
+		switch (pWeapon->GetWeaponID())
 		{
-			out.m_bFlipped = n;
-			switch (pWeapon->GetWeaponID())
-			{
-			case TF_WEAPON_GRENADELAUNCHER:
-			case TF_WEAPON_PIPEBOMBLAUNCHER:
-			case TF_WEAPON_STICKBOMB:
-			case TF_WEAPON_STICKY_BALL_LAUNCHER:
-			{
-				Vec3 vecOffset(16.0f, 8.0f, -6.0f);
-				Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos, out.m_bFlipped);
-				break;
-			}
+		case TF_WEAPON_GRENADELAUNCHER:
+		case TF_WEAPON_PIPEBOMBLAUNCHER:
+		case TF_WEAPON_STICKBOMB:
+		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+		{
+			Vec3 vecOffset(16.0f, 8.0f, -6.0f);
+			Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
+			break;
+		}
 
-			default: break;
-			}
+		default: break;
+		}
 
-			if (!CalcProjAngle(vLocalPos, staticPos, projInfo, out))
-			{
-				return false;
-			}
+		if (!CalcProjAngle(vLocalPos, staticPos, projInfo, out))
+		{
+			return false;
+		}
+		
+		if (out.m_flTime > maxTime) {
+			return false;
+		}
 
-			if (out.m_flTime > maxTime) {
-				return false;
-			}
-
-			if (WillProjectileHit(pLocal, pWeapon, pCmd, staticPos, out, projInfo, predictor, out.m_bFlipped)) {
-				G::PredictedPos = staticPos;
-				cl_flipviewmodels->SetValue(out.m_bFlipped);
-				return true;
-			}
+		if (WillProjectileHit(pLocal, pWeapon, pCmd, staticPos, out, projInfo, predictor)){
+			G::PredictedPos = staticPos;
+			return true;
 		}
 	}
 	else {
@@ -345,7 +336,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					break;
 				}
 				F::MoveSim.RunTick(moveData, absOrigin);
-
 				vPredictedPos = absOrigin;
 
 				const Vec3 aimPosition = GetAimPos(pLocal, predictor.m_pEntity, vPredictedPos);
@@ -359,7 +349,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				//vPredictedPos.z += abs(vAimDelta.z);
 				vPredictedPos = aimPosition;
 
-				
 
 				// get angle offsets for demoman weapons?
 				switch (pWeapon->GetWeaponID())
@@ -416,7 +405,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				if (out.m_flTime < TICKS_TO_TIME(n))
 				{
-					if (!WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor, out.m_bFlipped)) { continue; }
+					if (!WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor)) { break; }
 
 					G::PredictedPos = vPredictedPos;
 					F::MoveSim.Restore();
@@ -546,7 +535,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	return retVec;
 }
 
-bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo, const Predictor_t& predictor, const bool flipped)
+bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo,
+                                          const Predictor_t& predictor)
 {
 	Vec3 vVisCheck = pLocal->GetEyePosition();
 	const Vec3 predictedViewAngles = {-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f};
@@ -567,19 +557,19 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			{
 				vecOffset.z = 8.0f;
 			}
-			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck, flipped);
+			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
 		case TF_WEAPON_SYRINGEGUN_MEDIC:
 		{
 			const Vec3 vecOffset(16.f, 6.f, -8.f); //tf_weaponbase_gun.cpp @L628
-			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck, flipped);
+			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
 		case TF_WEAPON_COMPOUND_BOW:
 		{
 			const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
-			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck, flipped);
+			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
 		case TF_WEAPON_RAYGUN:
@@ -591,7 +581,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			{
 				vecOffset.z = 8.0f;
 			}
-			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck, flipped);
+			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
 		case TF_WEAPON_GRENADELAUNCHER:
