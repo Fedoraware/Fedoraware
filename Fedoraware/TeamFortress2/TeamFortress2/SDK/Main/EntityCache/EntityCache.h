@@ -18,7 +18,7 @@ private:
 	CBaseCombatWeapon* m_pLocalWeapon = nullptr;
 	CBaseEntity* m_pObservedTarget = nullptr;
 
-	std::map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
+	std::unordered_map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
 	void UpdateFriends();
 
 public:

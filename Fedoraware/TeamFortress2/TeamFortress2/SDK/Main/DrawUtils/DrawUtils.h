@@ -45,7 +45,7 @@ enum EStringAlign
 struct Draw_t
 {
 	std::vector<Font_t>   m_vecFonts = { };
-	std::map<uint64, int> m_mapAvatars = { };
+	std::unordered_map<uint64, int> m_mapAvatars = { };
 
 	void InitFonts(const std::vector<Font_t>& fonts);
 	void RemakeFonts(const std::vector<Font_t>& fonts);

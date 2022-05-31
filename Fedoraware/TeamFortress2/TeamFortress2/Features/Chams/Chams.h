@@ -9,7 +9,7 @@ private:
 
 	IMaterialVar *m_pMatFresnelHDRSelfillumTint, *m_pMatFresnelHDREnvmapTint;
 
-	std::map<CBaseEntity*, bool> m_DrawnEntities;
+	std::unordered_map<CBaseEntity*, bool> m_DrawnEntities;
 
 private:
 	bool ShouldRun();

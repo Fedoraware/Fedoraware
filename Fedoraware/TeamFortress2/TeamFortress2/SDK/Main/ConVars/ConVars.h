@@ -24,7 +24,7 @@ public:
 	ConVar* FindVar(const char* cvarname);
 
 private:
-	std::map<FNV1A_t, ConVar*> cvarMap;
+	std::unordered_map<FNV1A_t, ConVar*> cvarMap;
 };
 
 inline CConVars g_ConVars;

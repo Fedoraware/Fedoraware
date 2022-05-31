@@ -74,13 +74,13 @@ namespace G
 	inline CUserCmd* LastUserCmd{ nullptr };
 
 	inline EWeaponType CurWeaponType = {};
-	inline std::map < CBaseEntity*, VelFixRecord> VelFixRecords;
+	inline std::unordered_map <CBaseEntity*, VelFixRecord> VelFixRecords;
 	inline bool FreecamActive = false;
 	inline Vec3 FreecamPos = {};
-	inline std::map<int, DormantData> PartyPlayerESP; // <Index, DormantData>
-	inline std::map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
+	inline std::unordered_map<int, DormantData> PartyPlayerESP; // <Index, DormantData>
+	inline std::unordered_map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
-	inline std::map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
+	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{
