@@ -85,7 +85,7 @@ public:
 	{
 		if (!this) { return false; }
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bAlive");
-		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
+		return *reinterpret_cast<bool*>(this + offset + idx);
 	}
 
 	int GetHealth(int idx)
@@ -106,7 +106,7 @@ public:
 	{
 		if (!this) { return false; }
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bValid");
-		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
+		return *reinterpret_cast<bool*>(this + offset + idx);
 	}
 
 	int GetUserID(int idx)
@@ -114,6 +114,14 @@ public:
 		if (!this) { return 0; }
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_iUserID");
 		return *reinterpret_cast<int*>(this + offset + 4 * idx);
+	}
+
+	const char* GetPlayerName(int idx)
+	{
+		if (!this) { return ""; }
+
+		static auto offset = 0x0554;
+		return *reinterpret_cast<const char**>(this + offset + 4 * idx);
 	}
 
 	/* CTFPlayerResource */
@@ -158,15 +166,5 @@ public:
 		if (!this) { return nullptr; }
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iStreaks");
 		return reinterpret_cast<int*>(this + offset + 4 * idx);
-	}
-
-	/* Other */
-
-	const char* GetPlayerName(int idx)
-	{
-		if (!this) { return ""; }
-
-		static auto offset = 0x0554;
-		return *reinterpret_cast<const char**>((unsigned)this + offset + 4 * idx);
 	}
 };
