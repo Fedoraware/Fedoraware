@@ -255,9 +255,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
 	/*
-		This can't predict NPC's
+			This should now be able to predict anything that moves.
+			Should also stop wasting time predicting static players.
 	*/
-	const bool useTPred = predictor.m_pEntity->IsPlayer() ? true : false;
+	const bool useTPred = !predictor.m_pEntity->GetVecVelocity().IsZero() ? true : false;
 
 	if (!useTPred) {
 		Vec3 staticPos = predictor.m_vPosition;
