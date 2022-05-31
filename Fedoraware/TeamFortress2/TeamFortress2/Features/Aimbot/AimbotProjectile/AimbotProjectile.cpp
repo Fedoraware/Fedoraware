@@ -261,7 +261,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const bool useTPred = !predictor.m_pEntity->GetVecVelocity().IsZero() ? true : false;
 
 	if (!useTPred) {//
-		Vec3 staticPos = predictor.m_pEntity->IsPlayer() ? GetAimPos(pLocal, predictor.m_pEntity, predictor.m_vPosition) : predictor.m_vPosition;
+		Vec3 staticPos = predictor.m_pEntity->IsPlayer() ? GetAimPos(pLocal, predictor.m_pEntity, predictor.m_vPosition) : GetAimPosBuilding(pLocal, predictor.m_pEntity);
+		if (staticPos.IsZero()) {
+			return false;
+		}
 
 		// get angle offsets for demoman weapons?weew
 		switch (pWeapon->GetWeaponID())
@@ -535,6 +538,44 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	}
 	}
 	return retVec;
+}
+
+Vec3 CAimbotProjectile::GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEntity) {
+	Vec3 retVec = pLocal->GetAbsOrigin();
+	Vec3 localPos = pLocal->GetAbsOrigin();
+
+	const Vec3 vLocalPos = pLocal->GetShootPos();
+
+	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.Value;
+
+	const Vec3 vMins = pEntity->GetCollideableMins() * bboxScale;
+	const Vec3 vMaxs = pEntity->GetCollideableMaxs() * bboxScale;
+
+	const std::vector vecPoints = {
+		Vec3(vMaxs.x / 2, vMaxs.y / 2, vMaxs.z / 2),								//	middle
+		Vec3(vMins.x, vMins.y, vMaxs.z),											//	top four corners
+		Vec3(vMins.x, vMaxs.y, vMaxs.z),											//	-
+		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),											//	-
+		Vec3(vMaxs.x, vMins.y, vMaxs.z),											//	-
+		Vec3(vMins.x, vMins.y, vMins.z),											//	bottom four corners
+		Vec3(vMins.x, vMaxs.y, vMins.z),											//	-
+		Vec3(vMaxs.x, vMaxs.y, vMins.z),											//	-
+		Vec3(vMaxs.x, vMins.y, vMins.z)												//	-
+	};
+
+	const matrix3x4& transform = pEntity->GetRgflCoordinateFrame();
+
+	for (const auto& point : vecPoints)
+	{
+		Vec3 vTransformed = {};
+		Math::VectorTransform(point, transform, vTransformed);
+
+		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+		{
+			return vTransformed; // just return the first point we see
+		}
+	}
+	return Vec3(0, 0, 0);
 }
 
 bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo,
