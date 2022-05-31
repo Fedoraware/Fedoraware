@@ -5,14 +5,11 @@
 constexpr Color_t clrBlack = {0, 0, 0, 255};
 constexpr Color_t clrWhite = {255, 255, 255, 255};
 
+static void SquareConstraints(ImGuiSizeCallbackData* data) { data->DesiredSize.x = data->DesiredSize.y = std::max(data->DesiredSize.x, data->DesiredSize.y); }
+
 void CRadar::Run()
 {
 	if (!ShouldRun()) { return; }
-
-	//Update some members before we do anything.
-	//The radar draw point and background drawing is done with this information.
-	RadarSize = Vars::Radar::Main::Size.Value;
-	RadarCorrSize = (RadarSize * 2);
 
 	//Draw background, handle input.
 	DrawRadar();
@@ -30,13 +27,15 @@ bool CRadar::ShouldRun()
 void CRadar::DrawWindow()
 {
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.f));
-	ImGui::SetNextWindowSize({ static_cast<float>(RadarSize) * 2, static_cast<float>(RadarSize) * 2 });
+	ImGui::SetNextWindowSizeConstraints({ 20.f, 20.f }, { 400.f, 400.f }, SquareConstraints);
 
-	const int titleFlags = F::Menu.IsOpen ? 0 : ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground;
-	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | titleFlags))
+	const int activeFlags = F::Menu.IsOpen ? 0 : ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize;
+	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | activeFlags))
 	{
 		RadarX = static_cast<int>(ImGui::GetWindowPos().x) + RadarSize;
 		RadarY = static_cast<int>(ImGui::GetWindowPos().y) + RadarSize;
+
+		RadarSize = static_cast<int>(ImGui::GetWindowSize().x * 0.5f);
 	}
 	ImGui::End();
 
@@ -62,10 +61,10 @@ void CRadar::DrawRadar()
 
 
 	//Background
-	g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize, RadarCorrSize, RadarCorrSize, clrBack);
+	g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize, RadarSize * 2, RadarSize * 2, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarCorrSize, RadarCorrSize, {
+	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarSize * 2, RadarSize * 2, {
 		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
 	                    });
 

@@ -8,7 +8,7 @@ class CRadar {
 	bool GetDrawPosition(int& x, int& y, CBaseEntity* pEntity);
 	void DrawPoints(CBaseEntity* pLocal);
 
-	int RadarSize = 0, RadarCorrSize = 0;
+	int RadarSize = 0;
 	float LocalCos = 0, LocalSin = 0, Range = 0, LocalYaw = 0;
 	Vec3 LocalOrigin;
 

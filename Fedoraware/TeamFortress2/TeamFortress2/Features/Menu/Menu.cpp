@@ -1438,7 +1438,6 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("Main");
 				WToggle("Enable Radar###RadarActive", &Vars::Radar::Main::Active.Value); HelpMarker("Will show nearby things relative to your player");
-				WSlider("Size###RadarSize", &Vars::Radar::Main::Size.Value, 20, 200); HelpMarker("The size of the radar window");
 				WSlider("Range###RadarRange", &Vars::Radar::Main::Range.Value, 50, 3000, "%d"); HelpMarker("The range of the radar");
 				WSlider("Background alpha###RadarBGA", &Vars::Radar::Main::BackAlpha.Value, 0, 255, "%d"); HelpMarker("The background alpha of the radar");
 				WSlider("Line alpha###RadarLineA", &Vars::Radar::Main::LineAlpha.Value, 0, 255, "%d"); HelpMarker("The line alpha of the radar");

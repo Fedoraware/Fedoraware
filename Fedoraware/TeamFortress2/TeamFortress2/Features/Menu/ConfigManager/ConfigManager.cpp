@@ -518,8 +518,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::Radar::Main::Active);
 				SAVE_VAR(Vars::Radar::Main::BackAlpha);
-				SAVE_VAR(Vars::Radar::Main::LineAlpha);
-				SAVE_VAR(Vars::Radar::Main::Size);
 				SAVE_VAR(Vars::Radar::Main::Range);
 			}
 
@@ -1237,7 +1235,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Radar::Main::Active);
 				LOAD_VAR(Vars::Radar::Main::BackAlpha);
 				LOAD_VAR(Vars::Radar::Main::LineAlpha);
-				LOAD_VAR(Vars::Radar::Main::Size);
 				LOAD_VAR(Vars::Radar::Main::Range);
 			}
 
