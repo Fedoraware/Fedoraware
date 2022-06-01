@@ -861,7 +861,7 @@ namespace Particles {
 		return FN( pParticleSystemName );
 	}
 
-	__forceinline void DispatchParticleEffect( int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity ) {
+	__forceinline void DispatchParticleEffect( int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity = 0 ) {
 		CEffectData data;
 		data.m_nHitBox = iEffectIndex;
 		data.m_vOrigin = vecOrigin;
@@ -880,7 +880,7 @@ namespace Particles {
 
 		DispatchEffect( "ParticleEffect", data );
 	}
-	__forceinline void DispatchParticleEffect( const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity ) {
+	__forceinline void DispatchParticleEffect( const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity = 0 ) {
 		int iIndex = GetParticleSystemIndex( pszParticleName );
 		DispatchParticleEffect( iIndex, vecOrigin, vecOrigin, vecAngles, pEntity );
 	}
