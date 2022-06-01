@@ -1,26 +1,46 @@
 #include "../Hooks.h"
 
-class CTFPlayerInventory;
-class CTFInventoryManager;
+// This code looks really bad
 
-DWORD GetMaxItemCountAddress( ) {
-	static auto GetInventoryManager = reinterpret_cast< CTFInventoryManager * ( __thiscall* )( ) >( 
-		g_Pattern.Find( L"client.dll", L"B8 20 D5 C7 10 C3" ) );
+class CTFPlayerInventory
+{
+};
 
-	auto inventory_manager = GetInventoryManager();
-	if ( inventory_manager == nullptr ) {
-		return NULL;
-	}
+class CTFInventoryManager
+{
+public:
+	static CTFInventoryManager* Get();
+	CTFPlayerInventory* GetPlayerInventory();
+};
 
-	auto player_inventory = reinterpret_cast< CTFInventoryManager* >( reinterpret_cast<DWORD>(inventory_manager) + 0x108 );
-	if ( player_inventory == nullptr ) {
-		return NULL;
-	}
-
-	return Utils::GetVFuncPtr( player_inventory, 9 );
+CTFInventoryManager* CTFInventoryManager::Get()
+{
+	using FN = CTFInventoryManager * (__thiscall*)();
+	static DWORD dwFn = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 8B 4F 38 8B") + 0x1;
+	static DWORD dwEstimate = *reinterpret_cast<PDWORD>(dwFn) + dwFn + 0x4;
+	const auto getInventoryManager = reinterpret_cast<FN>(dwEstimate);
+	const auto wea = getInventoryManager();
+	return wea;
 }
 
-MAKE_HOOK( CTFPlayerInventory_GetMaxItemCount, GetMaxItemCountAddress( ), int, __fastcall,
-	void* ecx, void* edx ) {
+CTFPlayerInventory* CTFInventoryManager::GetPlayerInventory()
+{
+	return reinterpret_cast<CTFPlayerInventory*>(this + 0x108);
+}
+
+uintptr_t GetMaxItemCountAddress()
+{
+	CTFInventoryManager* InventoryManager = nullptr;
+	InventoryManager = CTFInventoryManager::Get();
+
+	CTFPlayerInventory* playerinventory = nullptr;
+	playerinventory = InventoryManager->GetPlayerInventory();
+
+	return Utils::GetVFuncPtr(playerinventory, 9);
+}
+
+MAKE_HOOK(CTFPlayerInventory_GetMaxItemCount, GetMaxItemCountAddress(), int, __fastcall,
+		  void* ecx, void* edx)
+{
 	return 3000;
 }

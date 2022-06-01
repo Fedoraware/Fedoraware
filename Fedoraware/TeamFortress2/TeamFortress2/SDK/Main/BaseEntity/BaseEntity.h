@@ -289,8 +289,11 @@ public: //Everything else, lol.
 
 	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
 	{
-		static auto FN = reinterpret_cast< float( __thiscall * )( CBaseEntity*, bool )>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 14 83 3D ? ? ? ? ? 56 8B F1 75 09 D9 EE 5E 8B E5 5D")));
-		return FN(this, bIgnoreSpecialAbility);
+		typedef float(__thiscall* CalculateMaxSpeedFn)(CBaseEntity*, bool);
+		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1")) + 0x1;
+		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
+		CalculateMaxSpeedFn maxSpeed = (CalculateMaxSpeedFn)dwEstimate;
+		return maxSpeed(this, bIgnoreSpecialAbility);
 	}
 
 	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot) {
