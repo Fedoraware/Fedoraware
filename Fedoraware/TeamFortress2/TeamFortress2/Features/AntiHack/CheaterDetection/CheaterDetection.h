@@ -15,15 +15,15 @@ struct PlayerData {
 };
 
 class CCheaterDetection {
-	std::map<int, int> Strikes;
-	std::map<int, PlayerData> UserData;
+	std::unordered_map<int, int> Strikes;
+	std::unordered_map<int, PlayerData> UserData;
 	bool ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
 	bool IsSteamNameDifferent(PlayerInfo_t pInfo);
 	bool IsPitchInvalid(CBaseEntity* pSuspect);
 	bool IsTickCountManipulated(int currentTickCount);
 
 public:
-	std::map<int, bool> MarkedCheaters, IllegalChar;
+	std::unordered_map<int, bool> MarkedCheaters, IllegalChar;
 	void OnTick();
 };
 

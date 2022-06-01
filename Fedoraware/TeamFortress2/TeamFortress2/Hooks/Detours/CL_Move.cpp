@@ -36,7 +36,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	const auto pLocal = g_EntityCache.GetLocal();
 	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
 
-	// Clear tick shift queue
+	// Clear tick shift queue (for teleport)
 	if (G::ShiftedTicks && !G::Recharging && G::TickShiftQueue > 0)
 	{
 		while (G::TickShiftQueue > 0 && G::ShiftedTicks > 0)
@@ -48,6 +48,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		return;
 	}
 
+	// Prepare for a recharge (Is a recharge queued?)
 	if (G::RechargeQueued && !G::IsChoking)
 	{
 		// probably perfect method of waiting to ensure we don't mess with fakelag
@@ -55,6 +56,8 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		G::Recharging = true;
 		G::TickShiftQueue = 0;
 	}
+
+	// Recharge ticks
 	else if (G::Recharging && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value))
 	{
 		G::ForceSendPacket = true; // force uninterrupted connection with server
@@ -62,19 +65,22 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		G::WaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
 		return; // this recharges
 	}
+
+	// Queue a recharge if the recharge key was pressed
 	else if (rechargeKey.Down())
 	{
 		// queue recharge
 		G::ForceSendPacket = true;
 		G::RechargeQueued = true;
 	}
+
+	// We're unable to recharge
 	else
 	{
-		G::Recharging = false; // if we are unable to recharge, don't
+		G::Recharging = false;
 	}
 
-	oClMove(accumulated_extra_samples,
-			(G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
+	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
 
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value)
 	{
@@ -116,14 +122,17 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		return;
 	}
 
+	// Should we shift?
 	if (G::ShouldShift && !G::WaitForShift)
 	{
-		if (
+		if (// 0 - On key
 			(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
-			// 0 - On key
-			(Vars::Misc::CL_Move::DTMode.Value == 1) || // 1 - Always
+
+			// 1 - Always
+			(Vars::Misc::CL_Move::DTMode.Value == 1) ||
+
+			// 2 - Disable on key 
 			(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
-		// 2 - Disable on key 
 		{
 			while (G::ShiftedTicks > 0)
 			{
@@ -131,6 +140,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				G::ShiftedTicks--;
 				//G::m_bForceSendPacket = true;
 			}
+
 			I::Engine->FireEvents();
 			G::WaitForShift = DT_WAIT_CALLS;
 		}

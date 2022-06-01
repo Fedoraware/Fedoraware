@@ -5,14 +5,11 @@
 constexpr Color_t clrBlack = {0, 0, 0, 255};
 constexpr Color_t clrWhite = {255, 255, 255, 255};
 
+static void SquareConstraints(ImGuiSizeCallbackData* data) { data->DesiredSize.x = data->DesiredSize.y = std::max(data->DesiredSize.x, data->DesiredSize.y); }
+
 void CRadar::Run()
 {
 	if (!ShouldRun()) { return; }
-
-	//Update some members before we do anything.
-	//The radar draw point and background drawing is done with this information.
-	RadarSize = Vars::Radar::Main::Size.Value;
-	RadarCorrSize = (RadarSize * 2);
 
 	//Draw background, handle input.
 	DrawRadar();
@@ -27,36 +24,47 @@ bool CRadar::ShouldRun()
 	return true;
 }
 
+void CRadar::DrawWindow()
+{
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.f));
+	ImGui::SetNextWindowSizeConstraints({ 20.f, 20.f }, { 400.f, 400.f }, SquareConstraints);
+
+	const int activeFlags = F::Menu.IsOpen ? 0 : ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize;
+	if (ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | activeFlags))
+	{
+		RadarX = static_cast<int>(ImGui::GetWindowPos().x) + RadarSize;
+		RadarY = static_cast<int>(ImGui::GetWindowPos().y) + RadarSize;
+
+		RadarSize = static_cast<int>(ImGui::GetWindowSize().x * 0.5f);
+	}
+	ImGui::End();
+
+	ImGui::PopStyleColor();
+}
+
 void CRadar::DrawRadar()
 {
-	//If menu is open, check for input and draw the titlebar.
-	//The titlebar also indicates where we can drag / move the radar.
-	int offset = 0;
-	if (F::Menu.IsOpen)
+	// Title gradient
+	if (!F::Menu.IsOpen)
 	{
-		//A quick notify, common sense but I made it by accident:
-		//If on drawing, it's important to update position first before drawing
-		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
-		DragRadar();
-		g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize - 24, RadarSize * 2, 24, {43, 43, 45, 250});
-		offset = 21;
+		g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3,
+			RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },
+			Vars::Menu::Colors::MenuAccent, true);
+
+		g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3,
+			RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize,
+			Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
 	}
 
-	g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3 - offset,
-	                    RadarX - RadarSize + RadarSize, RadarY - RadarSize - offset, {43, 43, 45, 250},
-	                    Vars::Menu::Colors::MenuAccent, true);
-	g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3 - offset,
-	                    RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize - offset,
-	                    Vars::Menu::Colors::MenuAccent, {43, 43, 45, 250}, true);
 	//Build the bg color with the wanted alpha.
 	const Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.Value)};
 
 
 	//Background
-	g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize, RadarCorrSize, RadarCorrSize, clrBack);
+	g_Draw.Rect(RadarX - RadarSize, RadarY - RadarSize, RadarSize * 2, RadarSize * 2, clrBack);
 
 	//Outline
-	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarCorrSize, RadarCorrSize, {
+	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarSize * 2, RadarSize * 2, {
 		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
 	                    });
 

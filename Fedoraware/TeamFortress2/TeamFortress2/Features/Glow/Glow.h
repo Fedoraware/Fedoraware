@@ -23,7 +23,7 @@ private:
 	};
 
 	std::vector<GlowEnt_t> m_vecGlowEntities;
-	std::map<CBaseEntity*, bool> m_DrawnEntities;
+	std::unordered_map<CBaseEntity*, bool> m_DrawnEntities;
 
 private:
 	void DrawModel(CBaseEntity* pEntity, int nFlags, bool bIsDrawingModels);

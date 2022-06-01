@@ -36,7 +36,7 @@ private:
 	void SaveConfig();
 	void LoadConfig();
 
-	std::map<int, AttributeInfo_t> AttributeMap;
+	std::unordered_map<int, AttributeInfo_t> AttributeMap;
 
 	std::ifstream ReadStream;
 	std::ofstream WriteStream;

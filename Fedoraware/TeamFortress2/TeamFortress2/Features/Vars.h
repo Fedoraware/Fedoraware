@@ -383,7 +383,6 @@ namespace Vars
 			inline CVar<bool> Active{true};
 			inline CVar<int> BackAlpha{128};
 			inline CVar<int> LineAlpha{255};
-			inline CVar<int> Size{100};
 			inline CVar<int> Range{1500};
 		}
 

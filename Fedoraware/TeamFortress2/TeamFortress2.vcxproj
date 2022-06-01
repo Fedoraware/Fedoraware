@@ -184,7 +184,6 @@
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerResource\PlayerResource.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
@@ -324,7 +323,6 @@
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
     <ClInclude Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.h" />
-    <ClInclude Include="TeamFortress2\Features\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
@@ -783,6 +781,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\EntityCache\EntityCache.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\GlobalInfo\GlobalInfo.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\KeyValues\KeyValues.h" />
+    <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />

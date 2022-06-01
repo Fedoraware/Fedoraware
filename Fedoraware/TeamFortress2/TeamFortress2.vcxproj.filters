@@ -56,7 +56,6 @@
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
-    <ClCompile Include="TeamFortress2\Features\PlayerResource\PlayerResource.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
@@ -621,7 +620,6 @@
     <ClInclude Include="TeamFortress2\Hooks\IsLocalPlayerUsingVisionFilterFlags\IsLocalPlayerUsingVisionFilterFlags.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Hooks\Ragdoll\Ragdoll.h" />
-    <ClInclude Include="TeamFortress2\Features\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\proxyfnhook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv_redef.h" />
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
@@ -667,6 +665,7 @@
     <ClInclude Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.h" />
     <ClInclude Include="TeamFortress2\Hooks\PatchManager\PatchManager.h" />
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

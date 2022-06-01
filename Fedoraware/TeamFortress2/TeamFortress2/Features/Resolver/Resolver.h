@@ -26,8 +26,8 @@ public:
 	void Update(CUserCmd* pCmd);
 	void OnPlayerHurt(CGameEvent* pEvent);
 
-	std::map<int, ResolveMode> ResolvePlayers;
-	std::map<int, ResolverData> ResolveData;
+	std::unordered_map<int, ResolveMode> ResolvePlayers;
+	std::unordered_map<int, ResolverData> ResolveData;
 };
 
 ADD_FEATURE(CResolver, Resolver)

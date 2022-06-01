@@ -1,7 +1,5 @@
 #include "AimbotProjectile.h"
 #include "../../Vars.h"
-#include "../../PlayerResource/PlayerResource.h"
-
 #include "../MovementSimulation/MovementSimulation.h"
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
@@ -721,7 +719,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 
-			const uint32_t priorityID = g_PR->isValid(pTarget->GetIndex()) ? g_PR->GetAccountID(pTarget->GetIndex()) : 0;
+			const uint32_t priorityID = g_EntityCache.GetPR()->GetValid(pTarget->GetIndex()) ? g_EntityCache.GetPR()->GetAccountID(pTarget->GetIndex()) : 0;
 			const auto& priority = G::PlayerPriority[priorityID];
 
 			F::AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
