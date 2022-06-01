@@ -531,6 +531,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Radar::Players::IgnoreTeam);
 				SAVE_VAR(Vars::Radar::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::Radar::Players::Health);
+				SAVE_VAR(Vars::Radar::Players::Height);
 			}
 
 			//Buildings
@@ -1248,6 +1249,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Radar::Players::IgnoreTeam);
 				LOAD_VAR(Vars::Radar::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::Radar::Players::Health);
+				LOAD_VAR(Vars::Radar::Players::Height);
 			}
 
 			//Buildings
