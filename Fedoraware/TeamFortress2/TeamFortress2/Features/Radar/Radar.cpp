@@ -26,6 +26,8 @@ bool CRadar::ShouldRun()
 
 void CRadar::DrawWindow()
 {
+	if (!Vars::Radar::Main::Active.Value) { return; }
+
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.f));
 	ImGui::SetNextWindowSizeConstraints({ 20.f, 20.f }, { 400.f, 400.f }, SquareConstraints);
 

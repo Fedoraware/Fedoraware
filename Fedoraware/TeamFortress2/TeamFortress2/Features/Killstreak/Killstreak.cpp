@@ -32,12 +32,14 @@ void CKillstreaker::ApplyKillstreak()
 			streaksResource[3] = GetCurrentStreak();
 		}
 
-		static auto streaksOffset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nStreaks");
-		const auto streaksPlayer = reinterpret_cast<int*>(pLocal + streaksOffset);
-		streaksPlayer[0] = GetCurrentStreak();
-		streaksPlayer[1] = GetCurrentStreak();
-		streaksPlayer[2] = GetCurrentStreak();
-		streaksPlayer[3] = GetCurrentStreak();
+		const auto streaksPlayer = pLocal->GetStreaks();
+		if (streaksPlayer)
+		{
+			streaksPlayer[0] = GetCurrentStreak();
+			streaksPlayer[1] = GetCurrentStreak();
+			streaksPlayer[2] = GetCurrentStreak();
+			streaksPlayer[3] = GetCurrentStreak();
+		}
 	}
 }
 
