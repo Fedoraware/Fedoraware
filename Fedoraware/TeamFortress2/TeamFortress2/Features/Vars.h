@@ -396,6 +396,7 @@ namespace Vars
 			inline CVar<int> IgnoreCloaked{0}; //0 - Off, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Health{false};
 			inline CVar<int> IconSize{24};
+			inline CVar<bool> Height{ true };
 		}
 
 		namespace Buildings
@@ -592,6 +593,7 @@ namespace Vars
 		inline CVar<bool> PartyCrasher{false};
 		inline CVar<int> PartyMarker{false};
 		inline CVar<bool> PartyESP{false};
+		inline CVar<int> SoundBlock{ 0 };
 
 		namespace Followbot
 		{

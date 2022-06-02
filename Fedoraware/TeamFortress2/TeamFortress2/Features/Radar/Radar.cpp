@@ -26,6 +26,8 @@ bool CRadar::ShouldRun()
 
 void CRadar::DrawWindow()
 {
+	if (!Vars::Radar::Main::Active.Value) { return; }
+
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.f));
 	ImGui::SetNextWindowSizeConstraints({ 20.f, 20.f }, { 400.f, 400.f }, SquareConstraints);
 
@@ -77,45 +79,7 @@ void CRadar::DrawRadar()
 	            });
 }
 
-void CRadar::DragRadar()
-{
-	int mousex, mousey;
-	I::Surface->GetCursorPos(mousex, mousey);
-
-	static POINT pCorrect{};
-	static bool isDragging = false;
-	static bool isMoving = false;
-	const bool bHeld = (GetAsyncKeyState(VK_LBUTTON) & 0x8000);
-
-	if ((mousex > (RadarX - RadarSize) &&
-		mousex < (RadarX - RadarSize) + (RadarSize * 2) &&
-		mousey > (RadarY - RadarSize) - 24 &&
-		mousey < (RadarY - RadarSize)) && bHeld)
-	{
-		isDragging = true;
-
-		if (!isMoving)
-		{
-			pCorrect.x = mousex - RadarX;
-			pCorrect.y = mousey - (RadarY - RadarSize);
-			isMoving = true;
-		}
-	}
-
-	if (isDragging)
-	{
-		RadarX = (mousex + RadarSize) - (RadarSize) - pCorrect.x;
-		RadarY = (mousey + RadarSize) - pCorrect.y;
-	}
-
-	if (!bHeld)
-	{
-		isDragging = false;
-		isMoving = false;
-	}
-}
-
-bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)
+bool CRadar::GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity)
 {
 	//Calculate the delta and initial position of the entity
 	const Vec3 vDelta = pEntity->GetAbsOrigin() - LocalOrigin;
@@ -157,6 +121,7 @@ bool CRadar::GetDrawPosition(int& x, int& y, CBaseEntity* pEntity)
 
 	x = RadarX + static_cast<int>(vPos.x / Range * static_cast<float>(RadarSize));
 	y = RadarY + static_cast<int>(vPos.y / Range * static_cast<float>(RadarSize));
+	z = vDelta.z;
 
 	//Just confirm that they were both set.
 	return (x != -1 && y != -1);
@@ -170,6 +135,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	Range = static_cast<float>(Vars::Radar::Main::Range.Value);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);
 
+	// Draw Ammo & Health
 	if (Vars::Radar::World::Active.Value)
 	{
 		const int nSize = Vars::Radar::World::IconSize.Value;
@@ -178,8 +144,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		{
 			for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 			{
-				int nX = -1, nY = -1;
-				if (GetDrawPosition(nX, nY, ammo))
+				int nX = -1, nY = -1, nZ = 0;
+				if (GetDrawPosition(nX, nY, nZ, ammo))
 				{
 					nX -= (nSize / 2), nY -= (nSize / 2);
 					g_Draw.Texture(nX, nY, nSize, nSize, clrWhite, 55);
@@ -191,8 +157,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		{
 			for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 			{
-				int nX = -1, nY = -1;
-				if (GetDrawPosition(nX, nY, health))
+				int nX = -1, nY = -1, nZ = 0;
+				if (GetDrawPosition(nX, nY, nZ, health))
 				{
 					nX -= (nSize / 2), nY -= (nSize / 2);
 					g_Draw.Texture(nX, nY, nSize, nSize, clrWhite, 50);
@@ -201,6 +167,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		}
 	}
 
+	// Draw buildings
 	if (Vars::Radar::Buildings::Active.Value)
 	{
 		const auto& buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.Value
@@ -213,8 +180,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 			{
 				if (!pObject->IsAlive()) { continue; }
 
-				int nX = -1, nY = -1;
-				if (GetDrawPosition(nX, nY, pObject))
+				int nX = -1, nY = -1, nZ = 0;
+				if (GetDrawPosition(nX, nY, nZ, pObject))
 				{
 					Color_t clrDraw = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
@@ -288,6 +255,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		}
 	}
 
+	// Draw Players
 	if (Vars::Radar::Players::Active.Value)
 	{
 		for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
@@ -330,8 +298,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				}
 			}
 
-			int nX = -1, nY = -1;
-			if (GetDrawPosition(nX, nY, player))
+			int nX = -1, nY = -1, nZ = 0;
+			if (GetDrawPosition(nX, nY, nZ, player))
 			{
 				const int nSize = Vars::Radar::Players::IconSize.Value;
 				nX -= (nSize / 2), nY -= (nSize / 2);
@@ -419,6 +387,15 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 						g_Draw.Rect(((nX - nWidth) - 1), (nY + (nSize + 1) - (nSize * flRatio)), nWidth,
 						            (nSize * flRatio), Colors::Overheal);
 					}
+				}
+
+				// Draw height indicator (higher / lower)
+				if (Vars::Radar::Players::Height.Value && std::abs(nZ) > 30.f)
+				{
+					const int triOffset = nZ > 0 ? -5 : 5;
+					const int yPos = nZ > 0 ? nY : nY + nSize;
+
+					g_Draw.DrawFilledTriangle({ Vec2(nX, yPos), Vec2(nX + nSize * 0.5f, yPos + triOffset), Vec2(nX + nSize, yPos) }, clrDraw);
 				}
 			}
 		}

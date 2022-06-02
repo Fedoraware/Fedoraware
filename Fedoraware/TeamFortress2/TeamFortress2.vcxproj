@@ -200,13 +200,13 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_PostEntity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_PreEntity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_ShutDown.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CanJoinParty.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CHudCrosshair_GetDrawPosition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_CreateMove.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_DoPostScreenSpaceEffects.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_OverideView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_ShouldDrawViewModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_StartMessageMode.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_FireEvents.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LoadWhitelist.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_Move.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_NameCvarChanged.cpp" />

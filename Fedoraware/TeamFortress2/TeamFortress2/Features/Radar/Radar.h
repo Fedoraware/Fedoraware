@@ -4,8 +4,7 @@
 class CRadar {
 	bool ShouldRun();
 	void DrawRadar();
-	void DragRadar();
-	bool GetDrawPosition(int& x, int& y, CBaseEntity* pEntity);
+	bool GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity);
 	void DrawPoints(CBaseEntity* pLocal);
 
 	int RadarSize = 0;

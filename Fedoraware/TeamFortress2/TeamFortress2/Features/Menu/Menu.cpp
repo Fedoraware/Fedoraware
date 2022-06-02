@@ -1450,6 +1450,7 @@ void CMenu::MenuVisuals()
 				WCombo("Ignore cloaked###radarplayerscloaked", &Vars::Radar::Players::IgnoreCloaked.Value, { "Off", "All", "Keep friends" }); HelpMarker("Which cloaked players the radar will ignore drawing on");
 				WToggle("Health bar###radarhealt", &Vars::Radar::Players::Health.Value); HelpMarker("Will show players health on the radar");
 				WSlider("Icon size###playersizeiconradar", &Vars::Radar::Players::IconSize.Value, 12, 30, "%d"); HelpMarker("The icon size of players on the radar");
+				WToggle("Height indicator###RadarPlayersZ", &Vars::Radar::Players::Height.Value); HelpMarker("Shows a little arrow indicating the height of the player");
 			} EndChild();
 
 			/* Column 2 */
@@ -1604,6 +1605,8 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 
+			SectionTitle("Sound");
+			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
 		} EndChild();
 
 		/* Column 2 */

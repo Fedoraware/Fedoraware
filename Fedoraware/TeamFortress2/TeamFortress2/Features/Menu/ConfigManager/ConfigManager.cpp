@@ -531,6 +531,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Radar::Players::IgnoreTeam);
 				SAVE_VAR(Vars::Radar::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::Radar::Players::Health);
+				SAVE_VAR(Vars::Radar::Players::Height);
 			}
 
 			//Buildings
@@ -702,6 +703,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::PartyMarker);
 			SAVE_VAR(Vars::Misc::PartyESP);
 			SAVE_VAR(Vars::Misc::Roll);
+			SAVE_VAR(Vars::Misc::SoundBlock);
 
 			// Followbot
 			{
@@ -1248,6 +1250,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Radar::Players::IgnoreTeam);
 				LOAD_VAR(Vars::Radar::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::Radar::Players::Health);
+				LOAD_VAR(Vars::Radar::Players::Height);
 			}
 
 			//Buildings
@@ -1419,6 +1422,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::PartyMarker);
 			LOAD_VAR(Vars::Misc::PartyESP);
 			LOAD_VAR(Vars::Misc::Roll);
+			LOAD_VAR(Vars::Misc::SoundBlock);
 
 			// Followbot
 			{
