@@ -1605,6 +1605,8 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 
+			SectionTitle("Sound");
+			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
 		} EndChild();
 
 		/* Column 2 */

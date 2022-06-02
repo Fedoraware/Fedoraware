@@ -593,6 +593,7 @@ namespace Vars
 		inline CVar<bool> PartyCrasher{false};
 		inline CVar<int> PartyMarker{false};
 		inline CVar<bool> PartyESP{false};
+		inline CVar<int> SoundBlock{ 0 };
 
 		namespace Followbot
 		{
