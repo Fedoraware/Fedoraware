@@ -116,7 +116,6 @@ void CCheaterDetection::OnTick()
 				{
 					if (UserData[friendsID].AreTicksSafe)
 					{
-						I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("[Debug] Tickcount for player %s was detected as changing.", pi.name).c_str());
 						Strikes[friendsID] += 1;
 						UserData[friendsID].AreTicksSafe = false;
 					}

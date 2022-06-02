@@ -261,22 +261,16 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 		if (Vars::Debug::DebugInfo.Value)
 		{
-
-			static float cycledelta = 0.f;
-			if (!*pSendPacket)
-			{
-				pLocal->m_bClientSideAnimation() = false;
-				pLocal->m_flPlaybackRate() = 0.f;
-				cycledelta += 0.02f;
-			}
-			else
-			{
-				pLocal->m_bClientSideAnimation() = true;
-				pLocal->GetUpdateClientSideAnimation();
-				pLocal->m_flPlaybackRate() = 1.f;
-
-				pLocal->m_flCycle() += cycledelta;
-				cycledelta = 0.f;
+			if (CTFPlayerAnimState* animState = pLocal->GetAnimState()){
+				{	// fix fake stand
+					Activity mainAct = animState->GetCurrentMainActivity();
+					if (mainAct == ACT_MP_STAND_IDLE)
+					{
+						if (pLocal->m_bDucking() || pLocal->IsDucking() || pLocal->m_bDucked()) {
+							animState->ClearAnimationState();
+						}
+					}
+				}
 			}
 		}
 	}

@@ -320,7 +320,7 @@ void CMenu::MenuAimbot()
 				WCombo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.Value, { "Plain", "Silent" });
 				WCombo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto"});
 				WSlider("Point Amount", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, 11, "%d", ImGuiSliderFlags_AlwaysClamp);
-				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.5f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.6f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 			}
 			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at feet if target is on the ground");
 			WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");

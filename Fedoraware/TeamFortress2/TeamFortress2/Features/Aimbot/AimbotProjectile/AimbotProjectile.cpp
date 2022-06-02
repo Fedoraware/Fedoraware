@@ -432,28 +432,29 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.Value; // stop shoot flor (:D)
 
 	// this way overshoots players that are crouching and I don't know why.
-	const Vec3 vMins = I::GameMovement->GetPlayerMins(bIsDucking) * bboxScale;
 	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking) * bboxScale;
+	const Vec3 vMins = Vec3(-vMaxs.x, -vMaxs.y, vMaxs.z - vMaxs.z * bboxScale);
 
 	const std::vector vecPoints = {	// oh you don't like 11 points because it fucks your fps??? TOO BAD!//
-		Vec3(0, 0, vMaxs.z),				//	middles (scan first bc they are more accurate)
-		Vec3(0, 0, vMins.z),				//	-
-		Vec3(0, 0, vMaxs.z / 2),			//	-
-		Vec3(vMins.x, vMins.y, vMaxs.z),	//	top four corners
-		Vec3(vMins.x, vMaxs.y, vMaxs.z),	//	-
-		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),	//	-
-		Vec3(vMaxs.x, vMins.y, vMaxs.z),	//	-
-		Vec3(vMins.x, vMins.y, vMins.z),	//	bottom four corners
-		Vec3(vMins.x, vMaxs.y, vMins.z),	//	-
-		Vec3(vMaxs.x, vMaxs.y, vMins.z),	//	-
-		Vec3(vMaxs.x, vMins.y, vMins.z)		//	-
+		Vec3(0, 0, vMaxs.z),					//	middles (scan first bc they are more accurate)
+		Vec3(0, 0, vMins.z),					//	-
+		Vec3(0, 0, (vMins.z + vMaxs.z) / 2),	//	-
+		Vec3(vMins.x, vMins.y, vMaxs.z),		//	top four corners
+		Vec3(vMins.x, vMaxs.y, vMaxs.z),		//	-
+		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),		//	-
+		Vec3(vMaxs.x, vMins.y, vMaxs.z),		//	-
+		Vec3(vMins.x, vMins.y, vMins.z),		//	bottom four corners
+		Vec3(vMins.x, vMaxs.y, vMins.z),		//	-
+		Vec3(vMaxs.x, vMaxs.y, vMins.z),		//	-
+		Vec3(vMaxs.x, vMins.y, vMins.z)			//	-
 	};
 
 	std::vector<Vec3> visiblePoints{};
-	matrix3x4& transform = pEntity->GetRgflCoordinateFrame(); 
-	if (!pEntity->GetVecVelocity().IsZero()) {
-		transform[0][3] = targetPredPos.x; transform[1][3] = targetPredPos.y; transform[2][3] = targetPredPos.z;	// set up our points around the player current position
-	}
+	const matrix3x4 transform = {
+		1.f, 0, 0, targetPredPos.x,
+		0, 1.f, 0, targetPredPos.y,
+		0, 0, 1, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z
+	};
 
 	for (const auto& point : vecPoints)
 	{
@@ -467,7 +468,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 			visiblePoints.push_back(vTransformed);
 		}
 	}
-	if (visiblePoints.empty()) { return Vec3(0, 0, 0); }
+	if (visiblePoints.empty()) { 
+		return Vec3(0, 0, 0); 
+	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
 
