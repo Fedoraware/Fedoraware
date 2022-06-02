@@ -206,7 +206,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_OverideView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_ShouldDrawViewModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_StartMessageMode.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_FireEvents.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LoadWhitelist.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_Move.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_NameCvarChanged.cpp" />
