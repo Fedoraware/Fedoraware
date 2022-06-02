@@ -453,7 +453,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	const matrix3x4 transform = {
 		1.f, 0, 0, targetPredPos.x,
 		0, 1.f, 0, targetPredPos.y,
-		0, 0, 1, targetPredPos.z
+		0, 0, 1, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z
 	};
 
 	for (const auto& point : vecPoints)
