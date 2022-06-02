@@ -130,7 +130,7 @@
     <ClCompile Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\EmitSound.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CanJoinParty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
