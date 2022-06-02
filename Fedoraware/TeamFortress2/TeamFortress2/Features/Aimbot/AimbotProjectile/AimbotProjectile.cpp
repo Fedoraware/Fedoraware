@@ -450,10 +450,11 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	};
 
 	std::vector<Vec3> visiblePoints{};
-	matrix3x4& transform = pEntity->GetRgflCoordinateFrame(); 
-	if (!pEntity->GetVecVelocity().IsZero()) {
-		transform[0][3] = targetPredPos.x; transform[1][3] = targetPredPos.y; transform[2][3] = targetPredPos.z;	// set up our points around the player current position
-	}
+	const matrix3x4 transform = {
+		1.f, 0, 0, targetPredPos.x,
+		0, 1.f, 0, targetPredPos.y,
+		0, 0, 1, targetPredPos.z
+	};
 
 	for (const auto& point : vecPoints)
 	{
@@ -467,7 +468,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 			visiblePoints.push_back(vTransformed);
 		}
 	}
-	if (visiblePoints.empty()) { return Vec3(0, 0, 0); }
+	if (visiblePoints.empty()) { 
+		return Vec3(0, 0, 0); 
+	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
 

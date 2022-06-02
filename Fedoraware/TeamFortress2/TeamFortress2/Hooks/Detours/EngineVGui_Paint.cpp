@@ -229,7 +229,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
-						g_Draw.Rect(0, yoffset, 120, 75, { 0, 0, 0, 200});
 						// header
 						{
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player");
@@ -238,12 +237,17 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						{
 							const bool alive = pLocal->IsAlive();
 							Color_t clr = alive ? Color_t{ 153, 232, 0, 255} : Color_t{ 167, 0, 0, 255};
-							//	g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
 						}
 						if (const int tickcount = I::GlobalVars->tickcount)
 						{
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
+						}
+						// rfgl
+						if (const matrix3x4& RgflCoordinateFrame = pLocal->GetRgflCoordinateFrame()) {
+							for (int i = 0; i < 3; i++) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%i  : [%.1f, %.1f, %.1f, %.1f]", i, RgflCoordinateFrame[i][0], RgflCoordinateFrame[i][1], RgflCoordinateFrame[i][2], RgflCoordinateFrame[i][3]);
+							}//
 						}
 					}
 				}
