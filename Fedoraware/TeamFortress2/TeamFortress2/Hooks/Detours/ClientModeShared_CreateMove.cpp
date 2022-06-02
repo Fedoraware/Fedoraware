@@ -263,6 +263,15 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		{
 
 			static float cycledelta = 0.f;
+			if (CTFPlayerAnimState* animState = pLocal->GetAnimState()){	// fix that fake stand shit
+				Activity mainAct = animState->GetCurrentMainActivity();
+				if (mainAct == ACT_MP_STAND_IDLE)
+				{
+					if (pLocal->m_bDucking() || pLocal->IsDucking() || pLocal->m_bDucked()) {
+						animState->ClearAnimationState();
+					}
+				}
+			}
 			if (!*pSendPacket)
 			{
 				pLocal->m_bClientSideAnimation() = false;

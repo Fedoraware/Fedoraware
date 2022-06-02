@@ -225,199 +225,27 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				// Debug info
 				if (Vars::Debug::DebugInfo.Value)
 				{
-					int yoffset = 0, xoffset = 0;
-					if (const int localDamage = g_EntityCache.GetPR()->GetDamage(I::Engine->GetLocalPlayer()))
-					{
-						g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "localDamage = %d", localDamage);
-					}
-
-					if (const auto& pWeapon = g_EntityCache.GetWeapon())
-					{
-						if (const int weaponid = pWeapon->GetWeaponID())
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "weaponid = %i", weaponid);
-						}
-						if (const int weaponindex = pWeapon->GetItemDefIndex())
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "weaponindex = %i", weaponindex);
-						}
-						if (const int iviewmodel = pWeapon->GetiViewModelIndex())
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "iviewmodel = %i", iviewmodel);
-						}
-						if (const int nviewmodel = pWeapon->GetnViewModelIndex())
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "nviewmodel = %i", nviewmodel);
-						}
-					}
+					int yoffset = 20, xoffset = 10;
 
 					if (const auto& pLocal = g_EntityCache.GetLocal())
 					{
-						if (const int tickbase = pLocal->GetTickBase())
+						g_Draw.Rect(0, yoffset, 120, 75, { 0, 0, 0, 200});
+						// header
 						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickbase = %i", tickbase);
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player");
+						}
+						// alive
+						{
+							const bool alive = pLocal->IsAlive();
+							Color_t clr = alive ? Color_t{ 153, 232, 0, 255} : Color_t{ 167, 0, 0, 255};
+							//	g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
 						}
 						if (const int tickcount = I::GlobalVars->tickcount)
 						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
-							//float predictedsimtime = TICKS_TO_TIME(tickcount);
-							//g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "predictedsimtime = %.1f", predictedsimtime);
-							//yoffset += 20;
-							//float simtime = pLocal->GetSimulationTime();
-							//if (simtime) {
-							//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "simtime = %.1f", simtime);
-							//	yoffset += 20;
-							//	float simtimedelta = predictedsimtime - simtime;
-							//	{
-							//		Color_t clr = { 255, 255, 255, 255 };
-							//		if (simtimedelta > 0) { clr = { 255, 0, 246, 255 }; }
-							//		else if (simtimedelta < 0) { clr = { 255, 139, 26, 255 }; }
-							//		g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "simtimedelta = %.1f", simtimedelta);
-							//		yoffset += 20;
-							//	}
-							//}
-						}
-						//int sequence = pLocal->m_nSequence();		// big numbah, maybe more useful when looking at individual anim layers?
-						//if (sequence) {
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "sequence = %i", sequence);
-						//	yoffset += 20;
-						//}
-						//int animtime = pLocal->m_flAnimTime();	// unused??? always returns the same value
-						//if (animtime) {
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "animtime = %i", animtime);
-						//	yoffset += 20;
-						//}
-						//float laggedmovement = pLocal->m_flLaggedMovementValue(); 
-						//{
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "laggedmovement = %+.1f", laggedmovement);
-						//	yoffset += 20;
-						//}
-						//float cycle = pLocal->m_flCycle();
-						//{
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "cycle = %+.1f", cycle);
-						//	yoffset += 20;
-						//}
-						//float playbackrate = pLocal->m_flPlaybackRate();
-						//{
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "playbackrate = %+.1f", playbackrate);
-						//	yoffset += 20;
-						//}
-						//bool clientanimations = pLocal->m_bClientSideAnimation();
-						//{
-						//	Color_t clr = clientanimations ? Color_t{ 108, 255, 0, 255 } : Color_t{ 255, 118, 36, 255 };
-						//	g_Draw.String(FONT_MENU, xoffset, yoffset, clr, ALIGN_DEFAULT, "client animating");
-						//	yoffset += 20;
-						//}
-						/*std::array poseparam = pLocal->GetPoseParam(); // 0 & 1, viewangles, 4 & 5, movement. and the other 20 entries do nothing?????? n1 valve
-						int n = 0;
-						for (; n < 24; n++) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "poseparam[%i] = %+.1f", n, poseparam[n]);
-							yoffset += 20;
-						}*/
-
-						if (const auto rgflcoords = pLocal->GetRgflCoordinateFrame())
-						{
-							for (int x = 0; x < 3; x++) {
-								for (int y = 0; y < 4; y++) {
-									if (rgflcoords[x][y]) {
-										g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "[%i][%i] : %+.1f", x, y, rgflcoords[x][y]);
-									}
-								}
-							}
-						}
-						const auto& worldspace = pLocal->GetAbsOrigin();
-						if (!worldspace.IsZero())
-						{
-							g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "abs : [%+.1f] [%+.1f] [%+.1f]", worldspace.x, worldspace.y, worldspace.z);
-						}
-
-						for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
-						{
-							if (player == pLocal) { continue; }
-							xoffset += 140;
-							yoffset = 0;
-
-							PlayerInfo_t pi{};
-							if (I::Engine->GetPlayerInfo(player->GetIndex(), &pi))
-							{
-								if (!pi.fakeplayer)
-								{
-									const char* name = pi.name;
-									if (name)
-									{
-										g_Draw.String(FONT_MENU, xoffset, yoffset, { 84, 0, 255, 255 }, ALIGN_DEFAULT, name);
-									}
-								}
-								else
-								{
-									g_Draw.String(FONT_MENU, xoffset, yoffset, { 255, 0, 156, 255 }, ALIGN_DEFAULT, "server-bot");
-								}
-
-								if (!player->IsAlive())
-								{
-									// dead players should not show up here
-									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 80, 80, 80, 255 }, ALIGN_DEFAULT, "DEAD");
-								}
-							}
-
-							if (const int tickcount = I::GlobalVars->tickcount)
-							{
-								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "S : %i", tickcount);
-								if (const int tickcountplayer = TIME_TO_TICKS(player->GetSimulationTime()))
-								{
-									g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "P : %i", tickcountplayer);
-								}
-							}
-
-							//if (const auto rgflcoords = Player->GetRgflCoordinateFrame())
-							//{
-							//	for (int x = 1; x < 4; x++) {
-							//		for (int y = 1; y < 5; y++) {
-							//			if (rfglcoords[x][y]) {
-							//				g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "[%i][%i] : %+.1f", x, y, rfglcoords[x][y]);
-							//			}
-							//		}
-							//	}
-							//}
-							const auto& worldspace = player->GetAbsOrigin();
-							if (!worldspace.IsZero())
-							{
-								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "abs : [%+.1f] [%+.1f] [%+.1f]", worldspace.x, worldspace.y, worldspace.z);
-							}
-							const auto& mins = player->GetCollideableMins();
-							const auto& maxs = player->GetCollideableMaxs();
-							if (!mins.IsZero() && !maxs.IsZero())
-							{
-								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "min : [%+.1f] [%+.1f] [%+.1f]", mins.x, mins.y, mins.z);
-								g_Draw.String(FONT_MENU, xoffset, yoffset += 20, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "max : [%+.1f] [%+.1f] [%+.1f]", maxs.x, maxs.y, maxs.z);
-							}
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 						}
 					}
-
-					/*for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
-					{
-						Vec3 CollideableMins = Projectile->GetCollideableMins();
-						Vec3 CollideableMaxs = Projectile->GetCollideableMaxs();
-						if (!CollideableMins.IsZero()) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "mins = %+.2f %+.2f %+.2f", CollideableMins.x, CollideableMins.y, CollideableMins.z);
-							yoffset += 20;
-						}
-						if (!CollideableMaxs.IsZero()) {
-							g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "maxs = %+.2f %+.2f %+.2f", CollideableMaxs.x, CollideableMaxs.y, CollideableMaxs.z);
-							yoffset += 20;
-						}
-
-						model_t* pModel = Projectile->GetModel();
-						if (pModel) {
-							studiohdr_t* pHDR = I::ModelInfo->GetStudioModel(pModel);
-							if (pHDR) {
-								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmin = %+.2f %+.2f %+.2f", pHDR->hull_min.x, pHDR->hull_min.y, pHDR->hull_min.z);
-								yoffset += 20;
-								g_Draw.String(FONT_MENU, xoffset, yoffset, { 255,255,255,255 }, ALIGN_DEFAULT, "hullmax = %+.2f %+.2f %+.2f", pHDR->hull_max.x, pHDR->hull_max.y, pHDR->hull_max.z);
-								yoffset += 20;
-							}
-						}
-					}*/
 				}
 
 				//Current Active Aimbot FOV
