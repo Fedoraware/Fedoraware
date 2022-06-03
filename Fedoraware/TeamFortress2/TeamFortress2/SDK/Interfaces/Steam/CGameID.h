@@ -67,7 +67,7 @@ public:
 	static const char *Render(uint64 ulGameID);		// static method to render a uint64 representation of a Game ID to a string
 
 	// must include checksum_crc.h first to get this functionality
-#if defined( CHECKSUM_CRC_H )
+#if FALSE
 	CGameID(uint32 nAppID, const char *pchModPath)
 	{
 		m_ulGameID = 0;

@@ -477,8 +477,14 @@ namespace Utils
 
 	__inline void RandomSeed(int iSeed)
 	{
-		static auto RandomSeedFn = reinterpret_cast<void(__cdecl *)(int)>(reinterpret_cast<DWORD>(WinAPI::GetProcessAddr(reinterpret_cast<DWORD>(GetModuleHandleW(XorStr(L"vstdlib.dll").c_str())), XorStr("RandomSeed").c_str())));
+		static auto RandomSeedFn = reinterpret_cast<void(*)(uint32_t)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomSeed"));
 		RandomSeedFn(iSeed);
+	}
+
+	__inline float RandomFloat(float min, float max)
+	{
+		static auto RandomFloatFn = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomFloat"));
+		return RandomFloatFn(min, max);
 	}
 
 	__inline bool VisPos(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)
