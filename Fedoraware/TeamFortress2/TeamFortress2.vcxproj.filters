@@ -132,6 +132,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CanJoinParty.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
+    <ClCompile Include="TeamFortress2\Features\NoSpread\NoSpread.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\Input_CreateMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -668,6 +670,7 @@
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
+    <ClInclude Include="TeamFortress2\Features\NoSpread\NoSpread.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

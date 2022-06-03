@@ -1,8 +1,24 @@
 #include "../Hooks.h"
+#include "../../Features/NoSpread/NoSpread.h"
 
-inline CUserCmd* GetCmds()
+#define VERIFIED_CMD_SIZE 90
+
+inline CVerifiedUserCmd* GetVerifiedCmds(IInput* input)
 {
-	return *reinterpret_cast<CUserCmd**>(reinterpret_cast<uintptr_t>(I::Input) + 0xFC);
+	return *reinterpret_cast<CVerifiedUserCmd**>(reinterpret_cast<uintptr_t>(input) + 0x100);
+}
+
+inline CUserCmd* GetCmds(IInput* input)
+{
+	return *reinterpret_cast<CUserCmd**>(reinterpret_cast<uintptr_t>(input) + 0xFC);
+}
+
+void WriteCmd(IInput* input, const CUserCmd* cmd, int sequence_nr)
+{
+	// Write the usercmd
+	GetVerifiedCmds(input)[sequence_nr % VERIFIED_CMD_SIZE].m_cmd = *cmd;
+	GetVerifiedCmds(input)[sequence_nr % VERIFIED_CMD_SIZE].m_crc = cmd->GetChecksum();
+	GetCmds(input)[sequence_nr % VERIFIED_CMD_SIZE] = *cmd;
 }
 
 MAKE_HOOK(Input_CreateMove, Utils::GetVFuncPtr(I::Input, 3), void, __fastcall, IInput* input, void* edx, int sequence_number, float input_sample_time, bool active)
@@ -11,7 +27,7 @@ MAKE_HOOK(Input_CreateMove, Utils::GetVFuncPtr(I::Input, 3), void, __fastcall, I
 	Hook.Original<FN>()(input, edx, sequence_number, input_sample_time, active);
 
 	CUserCmd* pCmd = nullptr;
-	const auto cmds = GetCmds();
+	const auto cmds = *reinterpret_cast<CUserCmd**>(reinterpret_cast<uintptr_t>(input) + 0xFC);
 
 	if (sequence_number > 0 && cmds)
 	{
@@ -21,9 +37,11 @@ MAKE_HOOK(Input_CreateMove, Utils::GetVFuncPtr(I::Input, 3), void, __fastcall, I
 	if (!pCmd) { return; }
 	G::LateUserCmd = pCmd;
 
+	// Run late features
+	{
+		F::NoSpread.RunLate(pCmd);
+	}
+
 	// Write the UserCmd
-	const auto verifiedCmds = *reinterpret_cast<CVerifiedUserCmd**>(reinterpret_cast<uintptr_t>(input) + 0x100);
-	verifiedCmds[sequence_number % 90].m_cmd = *pCmd;
-	verifiedCmds[sequence_number % 90].m_crc = pCmd->GetChecksum();
-	cmds[sequence_number % 90] = *pCmd;
+	WriteCmd(input, pCmd, sequence_number);
 }

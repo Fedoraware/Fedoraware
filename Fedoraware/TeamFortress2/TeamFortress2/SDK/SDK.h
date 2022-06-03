@@ -481,10 +481,10 @@ namespace Utils
 		RandomSeedFn(iSeed);
 	}
 
-	__inline float RandomFloat(float min, float max)
+	__inline float RandomFloat(float flMinVal = 0.0f, float flMaxVal = 1.0f)
 	{
 		static auto RandomFloatFn = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomFloat"));
-		return RandomFloatFn(min, max);
+		return RandomFloatFn(flMinVal, flMaxVal);
 	}
 
 	__inline bool VisPos(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)

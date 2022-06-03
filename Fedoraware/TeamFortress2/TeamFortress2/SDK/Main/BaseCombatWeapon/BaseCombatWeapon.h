@@ -20,6 +20,7 @@ public: //Netvars
 		M_DYNVARGET(NextSecondaryAttack, float, this, _("DT_BaseCombatWeapon"), _("LocalActiveWeaponData"), _("m_flNextSecondaryAttack"))
 		M_DYNVARGET(NextPrimaryAttack, float, this, _("DT_BaseCombatWeapon"), _("LocalActiveWeaponData"), _("m_flNextPrimaryAttack"))
 		M_DYNVARGET(ChargeResistType, int, this, _("DT_WeaponMedigun"), _("m_nChargeResistType"))
+		M_DYNVARGET(ReloadMode, int, this, _("DT_TFWeaponBase"), _("m_iReloadMode"))
 		//M_DYNVARGET(LastCritCheckTime, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flLastCritCheckTime"))
 		//M_DYNVARGET(ObservedCritChance, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flObservedCritChance"))
 
