@@ -9,6 +9,8 @@ class CPattern
 
 public:
 	DWORD Find(LPCWSTR szModuleName, LPCWSTR szPattern);
+	// Cry about it myzarfin
+	DWORD E8(LPCWSTR szModuleName, LPCWSTR szPattern);
 };
 
 inline CPattern g_Pattern;

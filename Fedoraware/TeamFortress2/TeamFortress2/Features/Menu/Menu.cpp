@@ -2094,11 +2094,18 @@ void CMenu::LoadStyle()
 	// Misc
 	{
 		TitleGradient.ClearMarks();
-		TitleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
+		constexpr float fifth = 0.2f;
+		TitleGradient.AddMark(0.f, ImColor(231, 14, 4, 255));
+		TitleGradient.AddMark(fifth * 1, ImColor(243, 71, 0, 255));
+		TitleGradient.AddMark(fifth * 2, ImColor(250, 232, 1, 255));
+		TitleGradient.AddMark(fifth * 3, ImColor(34, 101, 16, 255));
+		TitleGradient.AddMark(fifth * 4, ImColor(14, 53, 137, 255));
+		TitleGradient.AddMark(1.0f, ImColor(144, 28, 226, 255));
+		/*TitleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
 		TitleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
 		TitleGradient.AddMark(0.5f, Accent);
 		TitleGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
-		TitleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		TitleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));*/
 	}
 
 	{
