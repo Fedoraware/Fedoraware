@@ -667,6 +667,7 @@
     <ClInclude Include="TeamFortress2\Hooks\PatchManager\PatchManager.h" />
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

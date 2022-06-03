@@ -182,8 +182,4 @@ public:
 		float brightness) = 0;
 };
 
-namespace I {
-	inline IViewRenderBeams* ViewRenderBeams;
-}
-
 #endif

@@ -498,6 +498,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineClient\EngineClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineTrace\EngineTrace.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineVGui\EngineVGui.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />

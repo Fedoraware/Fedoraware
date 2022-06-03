@@ -82,10 +82,10 @@ void DrawBeam(const Vector& source, const Vector& end)
 	beamInfo.m_vecStart = source;
 	beamInfo.m_vecEnd = end;
 
-	Beam_t* coolBeam = I::ILOVEBEAMS->CreateBeamPoints(beamInfo);
+	Beam_t* coolBeam = I::ViewRenderBeams->CreateBeamPoints(beamInfo);
 	if (coolBeam)
 	{
-		I::ILOVEBEAMS->DrawBeam(coolBeam);
+		I::ViewRenderBeams->DrawBeam(coolBeam);
 	}
 }
 

@@ -32,6 +32,7 @@
 #include "EffectsClient/EffectsClient.h"
 #include "AchievementMgr/AchievementMgr.h"
 #include "ViewRenderBeams/ViewRenderBeams.h"
+#include "EngineSound/EngineSound.h"
 
 class CClockDriftMgr
 {
@@ -118,7 +119,8 @@ namespace I
 	inline void* CHud = nullptr;
 	inline void* CTFGameMovement = nullptr;
 	inline IAchievementMgr* AchievementMgr = nullptr;
-	inline IViewRenderBeams* ILOVEBEAMS = nullptr;
+	inline IViewRenderBeams* ViewRenderBeams = nullptr;
+	inline IEngineSound* EngineSound = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
