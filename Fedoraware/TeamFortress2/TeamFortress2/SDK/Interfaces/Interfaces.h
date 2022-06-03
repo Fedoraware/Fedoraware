@@ -67,6 +67,16 @@ public:
 	int				lastoutgoingcommand;	// 0x4B24
 	int				chokedcommands;			// 0x4B28
 	int				last_command_ack;		// 0x4B2C
+
+	int GetSignonState()
+	{
+		return *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(this) + 304);
+	}
+
+	int GetServerCount()
+	{
+		return *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(this) + 320);
+	}
 };
 
 class CSteamInterfaces
