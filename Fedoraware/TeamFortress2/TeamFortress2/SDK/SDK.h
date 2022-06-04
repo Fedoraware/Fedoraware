@@ -222,13 +222,13 @@ namespace Utils
 		return false;
 	}
 
-	__inline Color_t Rainbow()
+	__inline Color_t Rainbow(float offset = 0.f)
 	{
 		return
 		{
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 0.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 2.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 4.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 0.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 2.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 4.0f) * 127.0f + 128.0f)),
 			255
 		};
 	};
