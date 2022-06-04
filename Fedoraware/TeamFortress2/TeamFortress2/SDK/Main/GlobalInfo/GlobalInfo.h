@@ -72,7 +72,6 @@ namespace G
 
 	inline CUserCmd* CurrentUserCmd{ nullptr }; // Unreliable! Only use this if you really have to.
 	inline CUserCmd* LastUserCmd{ nullptr };
-	inline CUserCmd* LateUserCmd{ nullptr }; // User cmd from Input_CreateMove
 
 	inline EWeaponType CurWeaponType = {};
 	inline std::unordered_map <CBaseEntity*, VelFixRecord> VelFixRecords;
