@@ -7,26 +7,29 @@ const static std::vector<std::string> NOISEMAKER_SOUNDS{ "items/halloween", "ite
 MAKE_HOOK(CSoundEmitterSystem_EmitSound, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 8D 8D 7C FF FF FF E8 ? ? ? ? 8D 4D C4"), void, __fastcall,
 		  void* ecx, void* edx, IRecipientFilter& filter, int entindex, const EmitSound_t& ep)
 {
-	std::string soundName(ep.m_pSoundName);
-	boost::algorithm::to_lower(soundName);
-
-	// Footsteps
-	if (Vars::Misc::SoundBlock.Value & (1 << 0))
+	if (ep.m_pSoundName)
 	{
-		if (soundName.find("footsteps") != std::string::npos)
-		{
-			return;
-		}
-	}
+		std::string soundName(ep.m_pSoundName);
+		boost::algorithm::to_lower(soundName);
 
-	// Noisemaker
-	if (Vars::Misc::SoundBlock.Value & (1 << 1))
-	{
-		for (auto& sound : NOISEMAKER_SOUNDS)
+		// Footsteps
+		if (Vars::Misc::SoundBlock.Value & (1 << 0))
 		{
-			if (soundName.find(sound) != std::string::npos)
+			if (soundName.find("footsteps") != std::string::npos)
 			{
 				return;
+			}
+		}
+
+		// Noisemaker
+		if (Vars::Misc::SoundBlock.Value & (1 << 1))
+		{
+			for (auto& sound : NOISEMAKER_SOUNDS)
+			{
+				if (soundName.find(sound) != std::string::npos)
+				{
+					return;
+				}
 			}
 		}
 	}
