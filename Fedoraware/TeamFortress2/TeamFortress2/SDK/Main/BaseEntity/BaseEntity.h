@@ -306,7 +306,7 @@ public: //Everything else, lol.
 	__inline bool InCond(int eCond)
 	{
 		using fn = bool(__thiscall*)(CBaseEntity*, int);
-		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"clientt.dll", L"55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"));
+		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"));
 		return FN(this, eCond);
 	}
 
