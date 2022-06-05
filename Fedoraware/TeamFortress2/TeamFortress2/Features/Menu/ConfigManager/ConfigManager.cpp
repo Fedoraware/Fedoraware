@@ -287,6 +287,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanScale);
+				SAVE_VAR(Vars::Aimbot::Projectile::NoSpread);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -1007,6 +1008,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanScale);
+				LOAD_VAR(Vars::Aimbot::Projectile::NoSpread);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 

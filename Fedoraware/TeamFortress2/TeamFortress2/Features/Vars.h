@@ -130,6 +130,7 @@ namespace Vars
 			inline CVar<float> ZAdjustAmount{5.5f};
 			inline CVar<float> predTime{2.0f};
 			inline CVar<bool> WaitForHit{false};
+			inline CVar<bool> NoSpread{ false };
 		}
 
 		namespace Melee

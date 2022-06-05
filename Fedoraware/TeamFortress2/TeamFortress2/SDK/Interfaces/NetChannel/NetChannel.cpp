@@ -52,3 +52,50 @@ bool NET_SetConVar::ReadFromBuffer(bf_read& buffer)
     }
     return !buffer.IsOverflowed();
 }
+
+bool NET_SignonState::WriteToBuffer(bf_write& buffer)
+{
+    buffer.WriteUBitLong(GetType(), 6);
+    buffer.WriteByte(m_nSignonState);
+    buffer.WriteLong(m_nSpawnCount);
+
+    return !buffer.IsOverflowed();
+}
+
+bool NET_SignonState::ReadFromBuffer(bf_read& buffer)
+{
+    /*m_nSignonState = buffer.ReadByte();
+    m_nSpawnCount = buffer.ReadLong();
+*/
+    return true;
+}
+
+const char* NET_SignonState::ToString(void) const
+{
+    return tfm::format("net_SignonState: state %i, count %i", m_nSignonState, m_nSpawnCount).c_str();
+}
+
+#define NET_TICK_SCALEUP	100000.0f
+
+bool NET_Tick::WriteToBuffer(bf_write& buffer)
+{
+    buffer.WriteUBitLong(GetType(), NETMSG_TYPE_BITS);
+    buffer.WriteLong(m_nTick);
+    buffer.WriteUBitLong(std::clamp((int)(NET_TICK_SCALEUP * m_flHostFrameTime), 0, 65535), 16);
+    buffer.WriteUBitLong(std::clamp((int)(NET_TICK_SCALEUP * m_flHostFrameTimeStdDeviation), 0, 65535), 16);
+    return !buffer.IsOverflowed();
+}
+
+bool NET_Tick::ReadFromBuffer(bf_read& buffer)
+{
+    m_nTick = buffer.ReadLong();
+    m_flHostFrameTime = (float)buffer.ReadUBitLong(16) / NET_TICK_SCALEUP;
+    m_flHostFrameTimeStdDeviation = (float)buffer.ReadUBitLong(16) / NET_TICK_SCALEUP;
+    return !buffer.IsOverflowed();
+}
+
+
+const char* NET_Tick::ToString(void) const
+{
+    return tfm::format("%s: tick %i", GetName(), m_nTick).c_str();
+}

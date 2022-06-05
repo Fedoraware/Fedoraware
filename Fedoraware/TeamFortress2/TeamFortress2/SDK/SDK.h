@@ -222,13 +222,13 @@ namespace Utils
 		return false;
 	}
 
-	__inline Color_t Rainbow()
+	__inline Color_t Rainbow(float offset = 0.f)
 	{
 		return
 		{
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 0.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 2.0f) * 127.0f + 128.0f)),
-			static_cast<byte>(floor(sin(I::GlobalVars->curtime + 4.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 0.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 2.0f) * 127.0f + 128.0f)),
+			static_cast<byte>(floor(sin(I::GlobalVars->curtime + offset + 4.0f) * 127.0f + 128.0f)),
 			255
 		};
 	};
@@ -477,8 +477,14 @@ namespace Utils
 
 	__inline void RandomSeed(int iSeed)
 	{
-		static auto RandomSeedFn = reinterpret_cast<void(__cdecl *)(int)>(reinterpret_cast<DWORD>(WinAPI::GetProcessAddr(reinterpret_cast<DWORD>(GetModuleHandleW(XorStr(L"vstdlib.dll").c_str())), XorStr("RandomSeed").c_str())));
+		static auto RandomSeedFn = reinterpret_cast<void(*)(uint32_t)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomSeed"));
 		RandomSeedFn(iSeed);
+	}
+
+	__inline float RandomFloat(float flMinVal = 0.0f, float flMaxVal = 1.0f)
+	{
+		static auto RandomFloatFn = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomFloat"));
+		return RandomFloatFn(flMinVal, flMaxVal);
 	}
 
 	__inline bool VisPos(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)

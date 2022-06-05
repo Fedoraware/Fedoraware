@@ -33,6 +33,17 @@ void CMenu::DrawMenu()
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
+		// Prepare Gradient colors
+		{
+			TitleGradient.ClearMarks();
+			TitleGradient.AddMark(0.f, ImGui::ColorToVec(Utils::Rainbow(0.f)));
+			TitleGradient.AddMark(0.2f, ImGui::ColorToVec(Utils::Rainbow(1.f)));
+			TitleGradient.AddMark(0.4f, ImGui::ColorToVec(Utils::Rainbow(2.f)));
+			TitleGradient.AddMark(0.6f, ImGui::ColorToVec(Utils::Rainbow(3.f)));
+			TitleGradient.AddMark(0.8f, ImGui::ColorToVec(Utils::Rainbow(4.f)));
+			TitleGradient.AddMark(1.0f, ImGui::ColorToVec(Utils::Rainbow(5.f)));
+		}
+
 		// Gradient line
 		ImGui::GradientRect(&TitleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
 		ImGui::Dummy({ 0, 2 });
@@ -325,6 +336,7 @@ void CMenu::MenuAimbot()
 			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at feet if target is on the ground");
 			WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
 			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Automatically flips your viewmodel if it's beneficial");
+			WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
 			//WToggle("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
 			//if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
 			//{
@@ -2093,14 +2105,7 @@ void CMenu::LoadStyle()
 
 	// Misc
 	{
-		TitleGradient.ClearMarks();
-		constexpr float fifth = 0.2f;
-		TitleGradient.AddMark(0.f, ImColor(231, 14, 4, 255));
-		TitleGradient.AddMark(fifth * 1, ImColor(243, 71, 0, 255));
-		TitleGradient.AddMark(fifth * 2, ImColor(250, 232, 1, 255));
-		TitleGradient.AddMark(fifth * 3, ImColor(34, 101, 16, 255));
-		TitleGradient.AddMark(fifth * 4, ImColor(14, 53, 137, 255));
-		TitleGradient.AddMark(1.0f, ImColor(144, 28, 226, 255));
+		//TitleGradient.ClearMarks();
 		/*TitleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
 		TitleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
 		TitleGradient.AddMark(0.5f, Accent);

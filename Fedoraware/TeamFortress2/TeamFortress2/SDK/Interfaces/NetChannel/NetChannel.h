@@ -669,4 +669,43 @@ public:
 	CVar_t ConVar;
 };
 
+class NET_SignonState : public CNetMessage
+{
+	DECLARE_NET_MESSAGE(SignonState);
+
+	int	GetGroup() const { return INetChannelInfo::SIGNON; }
+
+	NET_SignonState() {};
+	NET_SignonState(int state, int spawncount) { m_nSignonState = state; m_nSpawnCount = spawncount; };
+
+public:
+	int			m_nSignonState;			// See SIGNONSTATE_ defines
+	int			m_nSpawnCount;			// server spawn count (session number)
+};
+
+class NET_Tick : public CNetMessage
+{
+	DECLARE_NET_MESSAGE(Tick);
+
+	NET_Tick()
+	{
+		m_bReliable = false;
+		m_flHostFrameTime = 0;
+		m_flHostFrameTimeStdDeviation = 0;
+	};
+
+	NET_Tick(int tick, float hostFrametime, float hostFrametime_stddeviation)
+	{
+		m_bReliable = false;
+		m_nTick = tick;
+		m_flHostFrameTime = hostFrametime;
+		m_flHostFrameTimeStdDeviation = hostFrametime_stddeviation;
+	};
+
+public:
+	int			m_nTick;
+	float		m_flHostFrameTime;
+	float		m_flHostFrameTimeStdDeviation;
+};
+
 #endif
