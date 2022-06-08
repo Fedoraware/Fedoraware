@@ -419,6 +419,34 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	return false;
 }
 
+bool IsPointAllowed(int nHitbox) {
+	switch (nHitbox) {
+	case 0: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
+	case 1: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
+	case 2: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
+	case 3:
+	case 4:
+	case 5:
+	case 6: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
+	case 7:
+	case 8:
+	case 9:
+	case 10: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
+	case 11:
+	case 12:
+	case 13:
+	case 14: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
+	}
+	return true; // never
+}
+
+Vec3 getHeadOffset(CBaseEntity* pEntity) {
+	const Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
+	const Vec3 entPos = pEntity->GetAbsOrigin();
+	const Vec3 delta = entPos - headPos;
+	return delta * -1.f;
+}
+
 //	Tries to find the best position to aim at on our target.
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos)
 {
@@ -435,18 +463,24 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking) * bboxScale;
 	const Vec3 vMins = Vec3(-vMaxs.x, -vMaxs.y, vMaxs.z - vMaxs.z * bboxScale);
 
-	const std::vector vecPoints = {	// oh you don't like 11 points because it fucks your fps??? TOO BAD!//
-		Vec3(0, 0, vMaxs.z),					//	middles (scan first bc they are more accurate)
-		Vec3(0, 0, vMins.z),					//	-
-		Vec3(0, 0, (vMins.z + vMaxs.z) / 2),	//	-
-		Vec3(vMins.x, vMins.y, vMaxs.z),		//	top four corners
-		Vec3(vMins.x, vMaxs.y, vMaxs.z),		//	-
-		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),		//	-
-		Vec3(vMaxs.x, vMins.y, vMaxs.z),		//	-
-		Vec3(vMins.x, vMins.y, vMins.z),		//	bottom four corners
-		Vec3(vMins.x, vMaxs.y, vMins.z),		//	-
-		Vec3(vMaxs.x, vMaxs.y, vMins.z),		//	-
-		Vec3(vMaxs.x, vMins.y, vMins.z)			//	-
+	const Vec3 headDelta = getHeadOffset(pEntity);
+
+	const std::vector vecPoints = {	// oh you don't like 15 points because it fucks your fps??? TOO BAD!//
+		Vec3(headDelta.x, headDelta.y, vMaxs.z),				//	head bone probably
+		Vec3(0, 0, (vMins.z + vMaxs.z) / 2),					//	middles (scan first bc they are more accurate)
+		Vec3(0, 0, vMins.z),									//	-
+		Vec3(vMins.x, vMins.y, vMaxs.z),						//	top four corners
+		Vec3(vMins.x, vMaxs.y, vMaxs.z),						//	-
+		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),						//	-
+		Vec3(vMaxs.x, vMins.y, vMaxs.z),						//	-
+		Vec3(vMins.x, vMins.y, (vMins.z + vMaxs.z) / 2),		//	middle four corners
+		Vec3(vMins.x, vMaxs.y, (vMins.z + vMaxs.z) / 2),		//	-
+		Vec3(vMaxs.x, vMaxs.y, (vMins.z + vMaxs.z) / 2),		//	-
+		Vec3(vMaxs.x, vMins.y, (vMins.z + vMaxs.z) / 2),		//	-
+		Vec3(vMins.x, vMins.y, vMins.z),						//	bottom four corners
+		Vec3(vMins.x, vMaxs.y, vMins.z),						//	-
+		Vec3(vMaxs.x, vMaxs.y, vMins.z),						//	-
+		Vec3(vMaxs.x, vMins.y, vMins.z)							//	-
 	};
 
 	std::vector<Vec3> visiblePoints{};
@@ -456,17 +490,24 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		0, 0, 1, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z
 	};
 
+	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
+	int curPoint = 0, testPoints = 0; //maybe better way to do this
 	for (const auto& point : vecPoints)
 	{
+		if (testPoints > Vars::Aimbot::Projectile::VisTestPoints.Value) { break; }
 		if (visiblePoints.size() >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
+		if (!IsPointAllowed(curPoint)) { curPoint++; continue; }
 
 		Vec3 vTransformed = {};
 		Math::VectorTransform(point, transform, vTransformed);
 
 		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
 		{
+			if (curPoint == aimMethod && aimMethod < 3) { return vTransformed; }	// return this value now if it is going to get returned anyway, avoid useless scanning.
 			visiblePoints.push_back(vTransformed);
 		}
+		curPoint++;
+		testPoints++;	// Only increment this if we actually tested.
 	}
 	if (visiblePoints.empty()) { 
 		return Vec3(0, 0, 0); 
@@ -474,7 +515,6 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
 
-	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
 	const int classNum = pLocal->GetClassNum();
 
 	switch (classNum) {
@@ -520,7 +560,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		break;
 	}
 	case 1: {	//torso
-		Math::VectorTransform(vecPoints.at(2), transform, TorsoPoint);
+		Math::VectorTransform(vecPoints.at(1), transform, TorsoPoint);
 		for (const auto& aimPoint : visiblePoints) {
 			if (aimPoint.DistTo(TorsoPoint) < retVec.DistTo(TorsoPoint)) {
 				retVec = aimPoint;
@@ -529,7 +569,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		break;
 	}
 	case 2: {	//feet
-		Math::VectorTransform(vecPoints.at(1), transform, FeetPoint);
+		Math::VectorTransform(vecPoints.at(2), transform, FeetPoint);
 		for (const auto& aimPoint : visiblePoints) {
 			if (aimPoint.DistTo(FeetPoint) < retVec.DistTo(FeetPoint)) {
 				retVec = aimPoint;
@@ -809,18 +849,6 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		return false;
 	}
 
-	if (Vars::Aimbot::Projectile::PerformanceMode.Value)
-	{
-		Target_t target = F::AimbotGlobal.GetBestTarget(GetSortMethod());
-
-		if (!VerifyTarget(pLocal, pWeapon, pCmd, target))
-		{
-			return false;
-		}
-
-		outTarget = target;
-		return true;
-	}
 	F::AimbotGlobal.SortTargets(GetSortMethod());
 
 	//instead of this just limit to like 4-6 targets, should save perf without any noticeable changes in functionality

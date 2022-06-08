@@ -75,7 +75,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				//This could use alot of improvement, but still subjectively better than a flying rec
 				//Credits to JAGNEmk aka me x)
 
-				if (Vars::Aimbot::Projectile::MovementSimulation.Value && !G::PredictedPos.IsZero())
+				if (!G::PredictedPos.IsZero())
 				{
 					if (Vars::Visuals::MoveSimLine.Value)
 					{

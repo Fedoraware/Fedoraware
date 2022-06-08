@@ -319,29 +319,29 @@ void CMenu::MenuAimbot()
 		if (TableColumnChild("AimbotCol3"))
 		{
 			SectionTitle("Projectile");
-			WToggle("Performance mode", &Vars::Aimbot::Projectile::PerformanceMode.Value); HelpMarker("Only target enemy closest to the crosshair");
-			WToggle("Movement simulation", &Vars::Aimbot::Projectile::MovementSimulation.Value); HelpMarker("Uses game functions to predict where the player will be");
+			WSlider("Prediction Time", &Vars::Aimbot::Projectile::predTime.Value, 0.1f, 10.f, "%.1f");
 			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
-			if (Vars::Aimbot::Projectile::MovementSimulation.Value)
-			{
-				WSlider("Prediction Time", &Vars::Aimbot::Projectile::predTime.Value, 0.1f, 10.f, "%.1f");
-			}
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
 				WCombo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.Value, { "Plain", "Silent" });
-				WCombo("Hitbox###ProjectileHitbox", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto"});
-				WSlider("Point Amount", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, 11, "%d", ImGuiSliderFlags_AlwaysClamp);
-				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.6f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+				WCombo("Priority Hitbox###ProjectileHitboxPriority", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto"});
+				{
+					static std::vector flagNames{ "Head", "Body", "Feet" };
+					static std::vector flagValues{ (1<<0), (1<<1), (1<<2)}; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
+					MultiFlags(flagNames, flagValues, &Vars::Aimbot::Projectile::AllowedHitboxes.Value, "Allowed Hitboxes###ProjectileHitboxScanning"); HelpMarker("Controls what hitboxes the cheat is allowed to consider shooting at.");
+				}
+				WSlider("Point VisTest Limit", &Vars::Aimbot::Projectile::VisTestPoints.Value, 3, 15, "%d", ImGuiSliderFlags_AlwaysClamp);	HelpMarker("Controls how many points the cheat is allowed to consider.");
+				WSlider("Point Scan Limit", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, Vars::Aimbot::Projectile::VisTestPoints.Value, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how many visible points the cheat needs to find before it picks one to aim at.");
+				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.7f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls the size of the hitbox as it's given to the cheat.");
 			}
 			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at feet if target is on the ground");
-			WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
-			WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Automatically flips your viewmodel if it's beneficial");
-			WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
-			//WToggle("Custom huntsman Z-Adjust", &Vars::Aimbot::Projectile::ManualZAdjust.m_Var); HelpMarker("Enables the ability to adjust the Z-Position for huntsman");
-			//if (Vars::Aimbot::Projectile::ManualZAdjust.m_Var)
-			//{
-			//	WSlider("Z-Value###ZAdjustValue", &Vars::Aimbot::Projectile::ZAdjustAmount.m_Var, 0.f, 10.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Manual Z-Adjust for projectiles");
-			//}
+
+			SectionTitle("Splash Prediction");
+			{
+				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
+				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Automatically flips your viewmodel if it's beneficial");
+				WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
+			}
 
 			SectionTitle("Melee");
 			{
@@ -352,7 +352,7 @@ void CMenu::MenuAimbot()
 			WToggle("Range check", &Vars::Aimbot::Melee::RangeCheck.Value); HelpMarker("Only aim at target if within melee range");
 			WToggle("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.Value); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 			WToggle("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.Value); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
-			WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.Value); HelpMarker("Will avoid shooting until the last shot hits");
+			//WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.Value); HelpMarker("Will avoid shooting until the last shot hits");
 
 		} EndChild();
 

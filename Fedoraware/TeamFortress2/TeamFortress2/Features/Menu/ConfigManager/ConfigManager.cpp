@@ -275,15 +275,13 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//Projectile
 			{
 				//SAVE_VAR(Vars::Aimbot::Projectile::Active);
-				SAVE_VAR(Vars::Aimbot::Projectile::PerformanceMode);
 				SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
+				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
+				SAVE_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
-				SAVE_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
-				SAVE_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
-				SAVE_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanScale);
@@ -996,15 +994,13 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//Projectile
 			{
 				//LOAD_VAR(Vars::Aimbot::Projectile::Active);
-				LOAD_VAR(Vars::Aimbot::Projectile::PerformanceMode);
 				LOAD_VAR(Vars::Aimbot::Projectile::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimPosition);
+				LOAD_VAR(Vars::Aimbot::Projectile::VisTestPoints);
+				LOAD_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
-				LOAD_VAR(Vars::Aimbot::Projectile::ManualZAdjust);
-				LOAD_VAR(Vars::Aimbot::Projectile::ZAdjustAmount);
 				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
-				LOAD_VAR(Vars::Aimbot::Projectile::MovementSimulation);
 				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanScale);

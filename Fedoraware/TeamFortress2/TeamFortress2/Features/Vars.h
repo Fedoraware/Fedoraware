@@ -115,21 +115,17 @@ namespace Vars
 		namespace Projectile
 		{
 			//inline CVar<bool> Active			{ true };
-			inline CVar<bool> PerformanceMode{true};
 			inline CVar<int> SortMethod{0}; //0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod{1}; //0 - Normal,	1 - Silent
-			inline CVar<int> AimPosition{2}; //0 - Body,		1 - Feet,	2 - Auto
+			inline CVar<int> AimPosition{2}; // 0/head, 1/body, 2/feet, 3/auto
+			inline CVar<int> VisTestPoints{3}; //how many points are we allowed to vis test before we stop scanning.
 			inline CVar<int> ScanPoints{3}; //how many "visible points" need to be reached before we stop searching.
 			inline CVar<float> ScanScale{0.95f}; // how to scale the points.
-			//inline CVar<float> AimFOV			{ 25.0f };
+			inline CVar<int> AllowedHitboxes{ 0b111 }; // 111, Feet, Body, Head.
 			inline CVar<bool> FeetAimIfOnGround{false};
-			inline CVar<bool> SplashPrediction{false,};
-			inline CVar<bool> MovementSimulation{true};
+			inline CVar<bool> SplashPrediction{false};
 			inline Color_t PredictionColor{255, 255, 255, 255};
-			inline CVar<bool> ManualZAdjust{true};
-			inline CVar<float> ZAdjustAmount{5.5f};
 			inline CVar<float> predTime{2.0f};
-			inline CVar<bool> WaitForHit{false};
 			inline CVar<bool> NoSpread{ false };
 		}
 
