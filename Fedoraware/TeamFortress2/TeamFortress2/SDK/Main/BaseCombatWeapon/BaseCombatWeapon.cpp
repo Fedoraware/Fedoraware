@@ -90,7 +90,7 @@ CHudTexture* CBaseCombatWeapon::GetWeaponIcon()
 			singlecase(648, "d_wrap_assassin");
 			singlecase(939, "d_skull");
 			singlecase(880, "d_freedom_staff");
-			singlecase(949, "d_memory_maker"); //dunno if this is right but i dont have the weapon so
+			singlecase(954, "d_memory_maker"); //Scout_t_TheMemoryMaker = 954, killme
 			singlecase(1013, "d_ham_shank");
 			singlecase(1123, "d_necro_smasher");
 			singlecase(1127, "d_crossing_guard");//dunno if this is right but i dont have the weapon so
