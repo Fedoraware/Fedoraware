@@ -72,7 +72,9 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	else if (rechargeKey.Down() && !G::RechargeQueued && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value))
 	{
 		// queue recharge
-		I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); cyoadown = true;
+		if (pLocal->IsOnGround() && !(G::WeaponCanSecondaryAttack && G::LastUserCmd->buttons & IN_ATTACK2)) {
+			I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); cyoadown = true;
+		}
 		G::ForceSendPacket = true;
 		G::RechargeQueued = true;
 	}

@@ -40,36 +40,32 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 //	67.5(surfaceFriction)				=	acceleration
 void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	static Vec3 vStartOrigin = {};
+	static bool CyoaState = false;
+	static Vec3 vStartOrigin = {}; static Vec3 predEndPoint = {};
+	static Vec3 currentPos{};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive())
 	{
 		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
 		{
-			if (vStartOrigin.IsZero())
+			if (nShiftTick == 0)
 			{
 				vStartOrigin = pLocal->GetVecOrigin();
-			}
-
-			if (vStartVel.IsZero())
-			{
 				vStartVel = pLocal->GetVecVelocity();
+				predEndPoint = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.Value));
+				I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); CyoaState = true;
 			}
-
-			const Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(3 - nShiftTick));
-			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(3));
-
-			const float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.5, 1.2f, 0.0f);
-			const float flScaleScale = Math::RemapValClamped(vStartVel.Length2D(), 0.0f, 540.0f, 0.5f, 2.0f);
-			Utils::WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
-
+			currentPos = pLocal->GetVecOrigin();
+			if (CyoaState) { I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 0"); CyoaState = false; nShiftTick++; return; }
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)(0.001f/(Vars::Misc::CL_Move::DTTicks.Value)) );
 			nShiftTick++;
 		}
 		else
 		{
 			vStartOrigin = Vec3(0, 0, 0);
 			vStartVel = Vec3(0, 0, 0);
+			predEndPoint = Vec3(0, 0, 0);
 			nShiftTick = 0;
 		}
 	}
