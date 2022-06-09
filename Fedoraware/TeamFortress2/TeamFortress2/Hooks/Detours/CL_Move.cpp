@@ -3,7 +3,7 @@
 #include "../../Features/Misc/Misc.h"
 
 MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? ? 02 0F 8C ? ? 00 00 E8 ? ? ? 00 84 C0"), void, __cdecl,
-		  float accumulated_extra_samples, bool bFinalTick)
+	float accumulated_extra_samples, bool bFinalTick)
 {
 	static auto oClMove = Hook.Original<FN>();
 
@@ -48,8 +48,10 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		return;
 	}
 
+	static bool cyoadown = false;
+
 	// Prepare for a recharge (Is a recharge queued?)
-	if (G::RechargeQueued && !G::IsChoking)
+	if (G::RechargeQueued && !G::IsChoking && !G::TickShiftQueue)
 	{
 		// probably perfect method of waiting to ensure we don't mess with fakelag
 		G::RechargeQueued = false; // see relevant code @clientmodehook
@@ -62,14 +64,15 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	{
 		G::ForceSendPacket = true; // force uninterrupted connection with server
 		G::ShiftedTicks++; // add ticks to tick counter
-		G::WaitForShift = 67 - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
+		G::WaitForShift = 33 - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
 		return; // this recharges
 	}
 
 	// Queue a recharge if the recharge key was pressed
-	else if (rechargeKey.Down())
+	else if (rechargeKey.Down() && !G::RechargeQueued && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value))
 	{
 		// queue recharge
+		I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); cyoadown = true;
 		G::ForceSendPacket = true;
 		G::RechargeQueued = true;
 	}
@@ -78,6 +81,10 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	else
 	{
 		G::Recharging = false;
+	}
+
+	if (cyoadown && (!G::Recharging && !G::RechargeQueued)) {
+		I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 0"); cyoadown = false;
 	}
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
