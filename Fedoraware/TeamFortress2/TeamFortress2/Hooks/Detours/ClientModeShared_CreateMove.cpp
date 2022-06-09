@@ -32,6 +32,12 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 }
 
 //	TODO: make this p
+//	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
+//	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
+//	wishspeed = side/forwardmove from pCmd
+//	accel = sv_accelerate value
+//	10 * .015 * 450 * surfaceFriction	=	acceleration
+//	67.5(surfaceFriction)				=	acceleration
 void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static Vec3 vStartOrigin = {};
