@@ -66,6 +66,15 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				{
 					if (!I::Engine->IsInGame())
 					{
+						static bool bOpenedMenuOnce = false;
+						if (!bOpenedMenuOnce) 
+						{
+							g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 150, {255,255,255,255}, ALIGN_CENTERHORIZONTAL, "Press insert to open the menu");
+						}
+						if (F::Menu.IsOpen) 
+						{
+							bOpenedMenuOnce = true;
+						}
 						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 200, Utils::Rainbow(), EStringAlign::ALIGN_CENTERHORIZONTAL, "Happy pride month!!!!!!");
 					}
 					return;
