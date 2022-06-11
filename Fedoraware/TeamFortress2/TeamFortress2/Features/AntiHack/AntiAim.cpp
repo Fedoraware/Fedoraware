@@ -138,25 +138,21 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		case 2:
 			{
 				pCmd->viewangles.x = -89.0f;
-				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 3:
 			{
 				pCmd->viewangles.x = 89.0f;
-				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 4:
 			{
 				pCmd->viewangles.x = -271.0f;
-				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 5:
 			{
 				pCmd->viewangles.x = 271.0f;
-				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 6:
@@ -324,7 +320,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 9:
 				{
 				static int Timer = 0;
-				if (*pSendPacket = bSendReal = false)
+				if (*pSendPacket == bSendReal == false)
 				if (Timer++ >= 30)
 				{
 			       pCmd->viewangles.y = 135.f;
@@ -332,7 +328,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				   break;
 				   //this
 				}
-				else if (*pSendPacket = bSendReal = false)
+				else if (*pSendPacket == bSendReal == false)
 				{
 				   pCmd->viewangles.y = 0.f;
 				   //static fake
@@ -344,7 +340,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			   }
 			   else 
 			   {
-				  *pSendPacket = bSendReal = false;
+				  *pSendPacket == bSendReal == false;
 				  pCmd->viewangles.y = 135.f;
 			      Timer = 0;
 				  break;
@@ -356,7 +352,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 10:
 					{
 				static int Timer = 0;
-				if (*pSendPacket = bSendReal = false)
+				if (*pSendPacket == bSendReal == false)
 				if (Timer++ >= 30)
 				{
 			       pCmd->viewangles.y = 45.f;
@@ -364,7 +360,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				   break;
 				   //this
 				}
-				else if (*pSendPacket = bSendReal = false)
+				else if (*pSendPacket == bSendReal == false)
 				{
 				   pCmd->viewangles.y = 180.f;
 				   //static fake
@@ -376,7 +372,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			   }
 			   else 
 			   {
-				  *pSendPacket = bSendReal = false;
+				  *pSendPacket == bSendReal == false;
 				  pCmd->viewangles.y = 45.f;
 			      Timer = 0;
 				  break;
