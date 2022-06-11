@@ -324,7 +324,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 9:
 				{
 				static int Timer = 0;
-				if (*pSendPacket == bSendReal == false)
+				if (*pSendPacket = bSendReal = false)
 				if (Timer++ >= 30)
 				{
 			       pCmd->viewangles.y = 135.f;
@@ -332,7 +332,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				   break;
 				   //this
 				}
-				else if (*pSendPacket == bSendReal == false)
+				else if (*pSendPacket = bSendReal = false)
 				{
 				   pCmd->viewangles.y = 0.f;
 				   //static fake
@@ -340,11 +340,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			   else if (pCmd->viewangles.y == 0.f)
 			   {
-				  *pSendPacket == bSendReal == true;
+				  *pSendPacket = bSendReal = true;
 			   }
 			   else 
 			   {
-				  *pSendPacket == bSendReal == false;
+				  *pSendPacket = bSendReal = false;
 				  pCmd->viewangles.y = 135.f;
 			      Timer = 0;
 				  break;
@@ -356,7 +356,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			case 10:
 					{
 				static int Timer = 0;
-				if (*pSendPacket == bSendReal == false)
+				if (*pSendPacket = bSendReal = false)
 				if (Timer++ >= 30)
 				{
 			       pCmd->viewangles.y = 45.f;
@@ -364,7 +364,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				   break;
 				   //this
 				}
-				else if (*pSendPacket == bSendReal == false)
+				else if (*pSendPacket = bSendReal = false)
 				{
 				   pCmd->viewangles.y = 180.f;
 				   //static fake
@@ -372,11 +372,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				}
 			   else if (pCmd->viewangles.y == 180.f)
 			   {
-				  *pSendPacket == bSendReal == true;
+				  *pSendPacket = bSendReal = true;
 			   }
 			   else 
 			   {
-				  *pSendPacket == bSendReal == false;
+				  *pSendPacket = bSendReal = false;
 				  pCmd->viewangles.y = 45.f;
 			      Timer = 0;
 				  break;
