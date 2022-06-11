@@ -72,7 +72,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	else if (rechargeKey.Down() && !G::RechargeQueued && (G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value))
 	{
 		// queue recharge
-		I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); cyoadown = true;
 		G::ForceSendPacket = true;
 		G::RechargeQueued = true;
 	}
@@ -83,11 +82,14 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		G::Recharging = false;
 	}
 
-	if (cyoadown && (!G::Recharging && !G::RechargeQueued)) {
-		I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 0"); cyoadown = false;
-	}
-
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
+
+	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
+	if (tpKey.Down() && Vars::Misc::CL_Move::TeleportMode.Value == 1 && G::ShiftedTicks > 0)
+	{
+		oClMove(0, false);
+		G::ShiftedTicks--;
+	}
 
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value)
 	{
@@ -143,7 +145,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		{
 			while (G::ShiftedTicks > 0)
 			{
-				oClMove(accumulated_extra_samples, (G::ShiftedTicks == 1));
+				oClMove(0, (G::ShiftedTicks == 1));
 				G::ShiftedTicks--;
 				//G::m_bForceSendPacket = true;
 			}

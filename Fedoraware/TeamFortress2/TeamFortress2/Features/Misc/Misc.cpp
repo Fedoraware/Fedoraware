@@ -200,6 +200,7 @@ void CMisc::CheatsBypass()
 
 void CMisc::Teleport(const CUserCmd* pCmd)
 {
+	// Stupid
 	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
 	if (tpKey.Down())
 	{
@@ -207,12 +208,7 @@ void CMisc::Teleport(const CUserCmd* pCmd)
 		{
 			// Plain teleport
 			G::TickShiftQueue = G::ShiftedTicks;
-		}
-		else if (Vars::Misc::CL_Move::TeleportMode.Value == 1 && pCmd->command_number % 3 == 0 && G::TickShiftQueue == 0)
-		{
-			// Smooth teleport
-			G::TickShiftQueue = 2;
-		}
+		} // Why do it like this wtf?
 	}
 }
 
