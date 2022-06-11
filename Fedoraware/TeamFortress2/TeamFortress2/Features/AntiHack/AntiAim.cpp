@@ -359,25 +359,25 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				if (*pSendPacket == bSendReal == false)
 				if (Timer++ >= 30)
 				{
-			       pCmd->viewangles.y = 180.f;
+			       pCmd->viewangles.y = 45.f;
 				   Timer = 0;
 				   break;
 				   //this
 				}
 				else if (*pSendPacket == bSendReal == false)
 				{
-				   pCmd->viewangles.y = 45.f;
+				   pCmd->viewangles.y = 180.f;
 				   //static fake
 				   break;
 				}
-			   else if (pCmd->viewangles.y == 45.f)
+			   else if (pCmd->viewangles.y == 180.f)
 			   {
 				  *pSendPacket == bSendReal == true;
 			   }
 			   else 
 			   {
 				  *pSendPacket == bSendReal == false;
-				  pCmd->viewangles.y = 180.f;
+				  pCmd->viewangles.y = 45.f;
 			      Timer = 0;
 				  break;
 				  //and this should match
