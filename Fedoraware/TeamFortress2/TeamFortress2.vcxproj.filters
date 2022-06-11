@@ -132,6 +132,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CanJoinParty.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
