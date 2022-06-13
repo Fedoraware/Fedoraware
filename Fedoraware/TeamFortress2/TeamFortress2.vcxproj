@@ -214,6 +214,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_Uncache.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_DrawStaticProps.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameMovement_Duck.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerInventory_GetMaxItemCount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />

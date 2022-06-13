@@ -138,25 +138,21 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		case 2:
 			{
 				pCmd->viewangles.x = -89.0f;
-				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 3:
 			{
 				pCmd->viewangles.x = 89.0f;
-				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 4:
 			{
 				pCmd->viewangles.x = -271.0f;
-				G::RealViewAngles.x = 89.0f;
 				break;
 			}
 		case 5:
 			{
 				pCmd->viewangles.x = 271.0f;
-				G::RealViewAngles.x = -89.0f;
 				break;
 			}
 		case 6:
@@ -321,6 +317,70 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 					pCmd->viewangles.y = lastFakeAngle;
 					break;
 				}
+			case 9:
+				{
+				static int Timer = 0;
+				if (*pSendPacket == bSendReal == false)
+				if (Timer++ >= 30)
+				{
+			       pCmd->viewangles.y = 135.f;
+				   Timer = 0;
+				   break;
+				   //this
+				}
+				else if (*pSendPacket == bSendReal == false)
+				{
+				   pCmd->viewangles.y = 0.f;
+				   //static fake
+				   break;
+				}
+			   else if (pCmd->viewangles.y == 0.f)
+			   {
+				  *pSendPacket = bSendReal = true;
+			   }
+			   else 
+			   {
+				  *pSendPacket == bSendReal == false;
+				  pCmd->viewangles.y = 135.f;
+			      Timer = 0;
+				  break;
+				  //and this should match
+				  //same number doesn't matter - or +
+			   }
+				//this is op asf
+			}
+			case 10:
+					{
+				static int Timer = 0;
+				if (*pSendPacket == bSendReal == false)
+				if (Timer++ >= 30)
+				{
+			       pCmd->viewangles.y = 45.f;
+				   Timer = 0;
+				   break;
+				   //this
+				}
+				else if (*pSendPacket == bSendReal == false)
+				{
+				   pCmd->viewangles.y = 180.f;
+				   //static fake
+				   break;
+				}
+			   else if (pCmd->viewangles.y == 180.f)
+			   {
+				  *pSendPacket = bSendReal = true;
+			   }
+			   else 
+			   {
+				  *pSendPacket == bSendReal == false;
+				  pCmd->viewangles.y = 45.f;
+			      Timer = 0;
+				  break;
+				  //and this should match
+				  //same number doesn't matter - or +
+			   }
+				//this is op asf
+			}
 			default:
 				{
 					bYawSet = false;
