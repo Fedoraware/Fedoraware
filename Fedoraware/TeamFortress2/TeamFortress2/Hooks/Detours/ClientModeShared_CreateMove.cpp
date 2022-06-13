@@ -210,6 +210,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		F::Aimbot.Run(pCmd);
 		F::Backtrack.Run(pCmd);
 		F::Auto.Run(pCmd);
+		F::FakeLag.OnTick(pCmd, pSendPacket);
 		F::AntiAim.Run(pCmd, pSendPacket);
 		F::Misc.EdgeJump(pCmd, nOldFlags);
 	}
@@ -220,7 +221,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::Misc.RunLate(pCmd);
 	F::Resolver.Update(pCmd);
 	F::Followbot.Run(pCmd);
-	F::FakeLag.OnTick(pCmd, pSendPacket);
 
 	G::ViewAngles = pCmd->viewangles;
 

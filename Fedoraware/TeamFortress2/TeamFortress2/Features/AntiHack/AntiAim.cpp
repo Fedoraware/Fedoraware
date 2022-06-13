@@ -1,4 +1,5 @@
 #include "AntiAim.h"
+#include "FakeLag/FakeLag.h"
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
 
@@ -97,10 +98,167 @@ bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 	return std::abs(a - b) < epsilon;
 }
 
+// if (!Vars::FakeLag::Enabled.Value){
+void setPacket(bool* pSendPacket) {
+	static bool previousState = true; previousState = !previousState;
+	*pSendPacket = previousState;
+	return;
+}
+
+void CAntiAim::setAngle(CUserCmd* pCmd, const bool* pSendPacket, bool& bPitchSet, bool& bYawSet) {
+	int pitchIndex = Vars::AntiHack::AntiAim::Pitch.Value;
+	int sendIndex = *pSendPacket ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
+	Vec3& recordAngle = *pSendPacket ? G::RealViewAngles : G::FakeViewAngles;
+	float& recordYaw = *pSendPacket ? lastRealAngle : lastFakeAngle;
+
+	// Pitch
+	{
+		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
+		case 1:
+		{
+			pCmd->viewangles.x = 0.0f;
+			break;
+		}
+		case 2:
+		{
+			pCmd->viewangles.x = -89.0f;
+			break;
+		}
+		case 3:
+		{
+			pCmd->viewangles.x = 89.0f;
+			break;
+		}
+		case 4:
+		{
+			pCmd->viewangles.x = -271.0f;
+			G::RealViewAngles.x = 89.f;
+			break;
+		}
+		case 5:
+		{
+			pCmd->viewangles.x = 271.0f;
+			G::RealViewAngles.x = -89.f;
+			break;
+		}
+		case 6:
+		{
+			static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+			static Timer updateTimer{ };
+			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
+			{
+				currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+			}
+			pCmd->viewangles.x = currentAngle;
+			G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
+			break;
+		}
+		default:
+		{
+			bPitchSet = false;
+			break;
+		}
+		}
+	}
+
+	// Yaw
+	{
+		if (sendIndex) {
+			FindEdge(pCmd->viewangles.y);
+		}
+
+		switch (sendIndex) {
+		case 1:	//	forward
+		{
+			pCmd->viewangles.y += 0.0f;
+			break;
+		}
+		case 2:	//	left
+		{
+			pCmd->viewangles.y += 90.0f;
+			break;
+		}
+		case 3:	//	right
+		{
+			pCmd->viewangles.y -= 90.0f;
+			break;
+		}
+		case 4:	//	backwards
+		{
+			pCmd->viewangles.y += 180.0f;
+			break;
+		}
+		case 5:	//	random
+		{
+			static Timer updateTimer{ };
+			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
+			{
+				recordYaw = Utils::RandFloatRange(-180.0f, 180.0f);
+			}
+			pCmd->viewangles.y = recordYaw;
+			break;
+		}
+		case 6:	//	spin
+		{
+			recordYaw += Vars::AntiHack::AntiAim::SpinSpeed.Value;
+			if (recordYaw > 180.f) { recordYaw -= 360.f; }
+			if (recordYaw < -180.f) { recordYaw += 360.f; }
+			pCmd->viewangles.y = recordYaw;
+			break;
+		}
+		case 7:
+		{
+			if (edgeToEdgeOn == 1) { pCmd->viewangles.y += *pSendPacket ? 90 : -90.f; }
+			else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += *pSendPacket ? -90 : 90.f; }
+			break;
+		}
+		case 8:
+		{
+			if (wasHit)
+			{
+				recordYaw = Utils::RandFloatRange(-180.0f, 180.0f);
+				wasHit = false;
+			}
+			pCmd->viewangles.y = recordYaw;
+			break;
+		}
+		default:
+		{
+			bYawSet = false;
+			break;
+		}
+		}
+
+		// Check if our real angle is overlapping with the fake angle
+		if (IsOverlapping(G::RealViewAngles.y, G::FakeViewAngles.y) && !*pSendPacket)
+		{
+			if (Vars::AntiHack::AntiAim::SpinSpeed.Value > 0)
+			{
+				pCmd->viewangles.y += 50.f;
+				recordYaw += 50.f;
+			}
+			else
+			{
+				pCmd->viewangles.y -= 50.f;
+				recordYaw -= 50.f;
+			}
+		}
+
+		if (*pSendPacket) {
+			G::RealViewAngles.y = pCmd->viewangles.y;
+		}
+		else {
+			G::FakeViewAngles.y = pCmd->viewangles.y;
+		}
+	}
+
+	return;
+}
+
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	G::AAActive = false;
-	G::RealViewAngles = G::ViewAngles;
-	G::FakeViewAngles = G::ViewAngles;
+	//G::RealViewAngles = G::ViewAngles;
+	//G::FakeViewAngles = G::ViewAngles;
 
 	// AA toggle key
 	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.Value };
@@ -119,283 +277,25 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 		if (G::IsAttacking) { return; }
 
-		static bool bSendReal = true;
+		if (G::ShiftedTicks) {
+			setPacket(pSendPacket);
+		}
+		else  if (!(F::FakeLag.IsAllowed(pLocal) && Vars::Misc::CL_Move::Fakelag.Value)) {	//	if we cant lag
+			setPacket(pSendPacket);
+		}
+
+
 		bool bPitchSet = true;
 		bool bYawSet = true;
+
+
 
 		const Vec3 vOldAngles = pCmd->viewangles;
 		const float fOldSideMove = pCmd->sidemove;
 		const float fOldForwardMove = pCmd->forwardmove;
 
-		// Pitch
-		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
-		case 1:
-			{
-				pCmd->viewangles.x = 0.0f;
-				G::RealViewAngles.x = 0.0f;
-				break;
-			}
-		case 2:
-			{
-				pCmd->viewangles.x = -89.0f;
-				break;
-			}
-		case 3:
-			{
-				pCmd->viewangles.x = 89.0f;
-				break;
-			}
-		case 4:
-			{
-				pCmd->viewangles.x = -271.0f;
-				break;
-			}
-		case 5:
-			{
-				pCmd->viewangles.x = 271.0f;
-				break;
-			}
-		case 6:
-			{
-				static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-				static Timer updateTimer{ };
-				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-				{
-					currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-				}
-				pCmd->viewangles.x = currentAngle;
-				G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
-				break;
-			}
-		default:
-			{
-				bPitchSet = false;
-				break;
-			}
-		}
+		setAngle(pCmd, pSendPacket, bPitchSet, bYawSet);
 
-		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) {
-			FindEdge(pCmd->viewangles.y);
-		}
-
-		// Yaw (Real)
-		if (bSendReal) {
-			switch (Vars::AntiHack::AntiAim::YawReal.Value) {
-			case 1:
-				{
-					pCmd->viewangles.y += 0.0f;
-					break;
-				}
-			case 2:
-				{
-					pCmd->viewangles.y += 90.0f;
-					break;
-				}
-			case 3:
-				{
-					pCmd->viewangles.y -= 90.0f;
-					break;
-				}
-			case 4:
-				{
-					pCmd->viewangles.y += 180.0f;
-					break;
-				}
-			case 5:
-				{
-					static Timer updateTimer{ };
-					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-					{
-						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-					}
-					pCmd->viewangles.y = lastRealAngle;
-					break;
-				}
-			case 6:
-				{
-					lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
-					if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
-					if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
-					pCmd->viewangles.y = lastRealAngle;
-					break;
-				}
-			case 7:
-				{
-					if (edgeToEdgeOn == 1) { pCmd->viewangles.y += 90; }
-					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y -= 90.0f; }
-					break;
-				}
-			case 8:
-				{
-					if (wasHit)
-					{
-						lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-						wasHit = false;
-					}
-					pCmd->viewangles.y = lastRealAngle;
-					break;
-				}
-			default:
-				{
-					bYawSet = false;
-					break;
-				}
-			}
-
-			// Check if our real angle is overlapping with the fake angle
-			if (Vars::AntiHack::AntiAim::YawFake.Value != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
-			{
-				if (Vars::AntiHack::AntiAim::SpinSpeed.Value > 0)
-				{
-					pCmd->viewangles.y += 50.f;
-					lastRealAngle += 50.f;
-				}
-				else
-				{
-					pCmd->viewangles.y -= 50.f;
-					lastRealAngle -= 50.f;
-				}
-			}
-
-			G::RealViewAngles.y = pCmd->viewangles.y;
-		}
-
-		// Yaw ( Fake)
-		else {
-			switch (Vars::AntiHack::AntiAim::YawFake.Value) {
-			case 1: //fake forward for legit aa
-				{
-					pCmd->viewangles.y += 0.0f;
-					break;
-				}
-			case 2:
-				{
-					pCmd->viewangles.y += 90.0f;
-					break;
-				}
-			case 3:
-				{
-					pCmd->viewangles.y -= 90.0f;
-					break;
-				}
-			case 4:
-				{
-					pCmd->viewangles.y += 180.0f;
-					break;
-				}
-			case 5:
-				{
-					static Timer updateTimer{ };
-					if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-					{
-						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-					}
-					pCmd->viewangles.y = lastFakeAngle;
-					break;
-				}
-			case 6:
-				{
-					lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
-					if (lastFakeAngle > 180.f) { lastFakeAngle -= 360.f; }
-					if (lastFakeAngle < -180.f) { lastFakeAngle += 360.f; }
-					pCmd->viewangles.y = lastFakeAngle;
-					break;
-				}
-			case 7:
-				{
-					if (edgeToEdgeOn == 1) { pCmd->viewangles.y -= 90; }
-					else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += 90.0f; }
-					break;
-				}
-			case 8:
-				{
-					if (wasHit)
-					{
-						lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-						wasHit = false;
-					}
-					pCmd->viewangles.y = lastFakeAngle;
-					break;
-				}
-			case 9:
-				{
-				static int Timer = 0;
-				if (*pSendPacket == bSendReal == false)
-				if (Timer++ >= 30)
-				{
-			       pCmd->viewangles.y = 135.f;
-				   Timer = 0;
-				   break;
-				   //this
-				}
-				else if (*pSendPacket == bSendReal == false)
-				{
-				   pCmd->viewangles.y = 0.f;
-				   //static fake
-				   break;
-				}
-			   else if (pCmd->viewangles.y == 0.f)
-			   {
-				  *pSendPacket = bSendReal = true;
-			   }
-			   else 
-			   {
-				  *pSendPacket == bSendReal == false;
-				  pCmd->viewangles.y = 135.f;
-			      Timer = 0;
-				  break;
-				  //and this should match
-				  //same number doesn't matter - or +
-			   }
-				//this is op asf
-			}
-			case 10:
-					{
-				static int Timer = 0;
-				if (*pSendPacket == bSendReal == false)
-				if (Timer++ >= 30)
-				{
-			       pCmd->viewangles.y = 45.f;
-				   Timer = 0;
-				   break;
-				   //this
-				}
-				else if (*pSendPacket == bSendReal == false)
-				{
-				   pCmd->viewangles.y = 180.f;
-				   //static fake
-				   break;
-				}
-			   else if (pCmd->viewangles.y == 180.f)
-			   {
-				  *pSendPacket = bSendReal = true;
-			   }
-			   else 
-			   {
-				  *pSendPacket == bSendReal == false;
-				  pCmd->viewangles.y = 45.f;
-			      Timer = 0;
-				  break;
-				  //and this should match
-				  //same number doesn't matter - or +
-			   }
-				//this is op asf
-			}
-			default:
-				{
-					bYawSet = false;
-					break;
-				}
-			}
-
-			G::FakeViewAngles = pCmd->viewangles;
-		}
-
-		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }
-		if (Vars::AntiHack::AntiAim::YawFake.Value == 0)
-		{
-			*pSendPacket = bSendReal = true;
-		}
 		G::AAActive = bPitchSet || bYawSet;
 
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
