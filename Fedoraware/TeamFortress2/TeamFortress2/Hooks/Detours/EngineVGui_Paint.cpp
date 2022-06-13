@@ -203,7 +203,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 												  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE,
 												  _(L"CHARGING"));
 								}
-								else if (!G::WaitForShift || ratio != 1) // activates when ready
+								else if (!G::WaitForShift && ratio == 1) // activates when ready
 								{
 									g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
 												  nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE,

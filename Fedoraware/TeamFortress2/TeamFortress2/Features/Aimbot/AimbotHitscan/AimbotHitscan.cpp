@@ -692,6 +692,14 @@ void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
 void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	static int nLastTracerTick = pCmd->tick_count;
+	static int nextSafeTick = pCmd->tick_count;
+
+	if (abs(nextSafeTick - pCmd->tick_count) > 100) {
+		nextSafeTick = pCmd->tick_count;
+	}
+	else if (pCmd->tick_count < nextSafeTick) {
+		return;
+	}
 
 	if (!Vars::Aimbot::Global::Active.Value)
 	{
@@ -825,6 +833,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if (bIsAttacking)
 		{
 			G::IsAttacking = true;
+			nextSafeTick = pCmd->tick_count; // just in case.weew
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				//bulletTracer(pLocal, Target);

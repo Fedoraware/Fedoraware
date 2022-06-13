@@ -7,17 +7,23 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 {
 	static auto oClMove = Hook.Original<FN>();
 
-	if (!Vars::Misc::CL_Move::Enabled.Value)
+	const auto pLocal = g_EntityCache.GetLocal();
+
+	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
+	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
+
+
+	if (!Vars::Misc::CL_Move::Enabled.Value)	// return the normal CL_Move if we don't want to manipulate it.
 	{
-		G::ShiftedTicks = 0;
+		G::ShiftedTicks = 0;					// cough
 		return oClMove(accumulated_extra_samples, bFinalTick);
 	}
 
-	if (G::ShiftedTicks > Vars::Misc::CL_Move::DTTicks.Value)
+	while (G::ShiftedTicks > Vars::Misc::CL_Move::DTTicks.Value)	//	get rid of ticks we aren't going to use.
 	{
-		G::ShiftedTicks -= 1;
-		oClMove(accumulated_extra_samples, (G::ShiftedTicks == Vars::Misc::CL_Move::DTTicks.Value + 1));
-	} // pCode
+		G::ShiftedTicks --;
+		oClMove(accumulated_extra_samples, (G::ShiftedTicks == Vars::Misc::CL_Move::DTTicks.Value));
+	}
 
 	// pSpeedhack
 	if (Vars::Misc::CL_Move::SEnabled.Value)
@@ -33,25 +39,36 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		}
 	}
 
-	const auto pLocal = g_EntityCache.GetLocal();
-	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
-
-	// Clear tick shift queue (for teleport)
-	if (G::ShiftedTicks && !G::Recharging && G::TickShiftQueue > 0)
+	static bool streaming = false;
+	// Teleport
+	if ((tpKey.Down() || streaming) && G::ShiftedTicks > 0 && !G::Recharging && !G::RechargeQueued)
 	{
-		while (G::TickShiftQueue > 0 && G::ShiftedTicks > 0)
-		{
-			oClMove(accumulated_extra_samples, (G::TickShiftQueue == 1));
-			G::ShiftedTicks--;
-			G::TickShiftQueue--;
+		switch (Vars::Misc::CL_Move::TeleportMode.Value) {
+		case 0: {	// plain
+			while (G::ShiftedTicks > 0) {
+				oClMove(0, G::ShiftedTicks == 1);
+				G::ShiftedTicks--;
+			}
+			break;
+		}
+		case 1: {	// smooth
+			streaming = true;
+			static int wishSpeed = 2;
+			int speed = 0;
+			while (speed < wishSpeed && G::ShiftedTicks) {
+				oClMove(0, G::ShiftedTicks == 1);
+				G::ShiftedTicks--;
+				speed++;
+			}
+			streaming = G::ShiftedTicks;
+			break;
+		}
 		}
 		return;
 	}
 
-	static bool cyoadown = false;
-
 	// Prepare for a recharge (Is a recharge queued?)
-	if (G::RechargeQueued && !G::IsChoking && !G::TickShiftQueue)
+	if (G::RechargeQueued && !G::IsChoking)
 	{
 		// probably perfect method of waiting to ensure we don't mess with fakelag
 		G::RechargeQueued = false; // see relevant code @clientmodehook
@@ -83,13 +100,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
-
-	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
-	if (tpKey.Down() && Vars::Misc::CL_Move::TeleportMode.Value == 1 && G::ShiftedTicks > 0)
-	{
-		oClMove(0, false);
-		G::ShiftedTicks--;
-	}
 
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value)
 	{
