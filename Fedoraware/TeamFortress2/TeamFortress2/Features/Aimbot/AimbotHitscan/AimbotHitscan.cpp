@@ -259,7 +259,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 									const Vec3 vMins = pBox->bbmin;
 									const Vec3 vMaxs = pBox->bbmax;
 
-									constexpr float fScale = 0.8f;
+									const float fScale = Vars::Aimbot::Hitscan::PointScale.Value;
 									const std::vector<Vec3> vecPoints = {
 										Vec3(((vMins.x + vMaxs.x) * 0.5f), (vMins.y * fScale), ((vMins.z + vMaxs.z) * 0.5f)),
 										Vec3((vMins.x * fScale), ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),

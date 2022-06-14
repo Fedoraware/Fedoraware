@@ -101,6 +101,7 @@ namespace Vars
 			inline CVar<int> AimHitbox{2}; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{7}; // Binary: 00111 {legs, arms, body, pelvis, head}
 			inline CVar<int> MultiHitboxes{5}; // Binary: 00101 {legs, arms, body, pelvis, head}
+			inline CVar<float> PointScale{.56f};
 			inline CVar<int> SmoothingAmount{4};
 			inline CVar<int> TapFire{1}; //0 - Off, 1 - Distance, 2 - Always
 			inline CVar<bool> ScanBuildings{true};

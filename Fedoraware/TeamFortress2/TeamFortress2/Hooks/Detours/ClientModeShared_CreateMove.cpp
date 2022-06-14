@@ -38,9 +38,11 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 //	accel = sv_accelerate value
 //	10 * .015 * 450 * surfaceFriction	=	acceleration
 //	67.5(surfaceFriction)				=	acceleration
+//	acceleration = 60
+//	surfaceFriction = 1.125	// this doesn't account for ice, etc. (it is also possible that the reason our accel is lower is because we are locked below 450 with our actual acceleration)
+//	if our forward velocity is 400, to get it to 0, we would need to spend ~7 ticks of time decelerating.
 void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	static bool CyoaState = false;
 	static Vec3 vStartOrigin = {}; static Vec3 predEndPoint = {};
 	static Vec3 currentPos{};
 	static Vec3 vStartVel = {};
@@ -54,11 +56,9 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				vStartOrigin = pLocal->GetVecOrigin();
 				vStartVel = pLocal->GetVecVelocity();
 				predEndPoint = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.Value));
-				I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 1"); CyoaState = true;
 			}
 			currentPos = pLocal->GetVecOrigin();
-			if (CyoaState) { I::Engine->ClientCmd_Unrestricted("cyoa_pda_open 0"); CyoaState = false; nShiftTick++; return; }
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)(0.001f/(Vars::Misc::CL_Move::DTTicks.Value)) );
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)(1.f/(Vars::Misc::CL_Move::DTTicks.Value)) );
 			nShiftTick++;
 		}
 		else
@@ -204,6 +204,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::Fedworking.Run();
 	F::CameraWindow.Update();
 	F::BadActors.OnTick();
+	F::Misc.AutoPeek(pCmd, g_EntityCache.GetLocal());	// running this after prediction, and then feeding it data for our predicted next tick is not safe, and it makes us miss :D
 
 	F::EnginePrediction.Start(pCmd);
 	{

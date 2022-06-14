@@ -37,7 +37,6 @@ void CMisc::RunLate(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		AutoPeek(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 	}
 }
