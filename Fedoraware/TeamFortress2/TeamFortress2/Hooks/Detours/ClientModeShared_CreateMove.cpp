@@ -210,7 +210,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		F::Aimbot.Run(pCmd);
 		F::Backtrack.Run(pCmd);
 		F::Auto.Run(pCmd);
-		F::FakeLag.OnTick(pCmd, pSendPacket);
 		F::AntiAim.Run(pCmd, pSendPacket);
 		F::Misc.EdgeJump(pCmd, nOldFlags);
 	}
@@ -221,6 +220,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::Misc.RunLate(pCmd);
 	F::Resolver.Update(pCmd);
 	F::Followbot.Run(pCmd);
+	F::FakeLag.OnTick(pCmd, pSendPacket);
 
 	G::ViewAngles = pCmd->viewangles;
 
@@ -261,20 +261,10 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (Vars::Debug::DebugInfo.Value)
-		{
-			if (CTFPlayerAnimState* animState = pLocal->GetAnimState()){
-				{	// fix fake stand
-					Activity mainAct = animState->GetCurrentMainActivity();
-					if (mainAct == ACT_MP_STAND_IDLE)
-					{
-						if (pLocal->m_bDucking() || pLocal->IsDucking() || pLocal->m_bDucked()) {
-							animState->ClearAnimationState();
-						}
-					}
-				}
-			}
-		}
+		//if (Vars::Debug::DebugInfo.Value)
+		//{
+		//	
+		//}
 	}
 
 	static bool bWasSet = false;
