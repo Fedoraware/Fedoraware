@@ -21,6 +21,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
 		ViewmodelFlip(pCmd, pLocal);
+		AutoPeek(pCmd, pLocal);
 	}
 
 	ChatSpam();

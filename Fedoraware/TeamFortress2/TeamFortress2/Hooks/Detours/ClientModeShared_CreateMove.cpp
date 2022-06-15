@@ -204,7 +204,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	F::Fedworking.Run();
 	F::CameraWindow.Update();
 	F::BadActors.OnTick();
-	F::Misc.AutoPeek(pCmd, g_EntityCache.GetLocal());	// running this after prediction, and then feeding it data for our predicted next tick is not safe, and it makes us miss :D
 
 	F::EnginePrediction.Start(pCmd);
 	{
