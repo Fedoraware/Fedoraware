@@ -76,6 +76,7 @@ const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 
 bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
 	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
@@ -93,8 +94,8 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (TAUNTING) && pTarget->IsTaunting()) { return true; }
 
-	// Special conditions for mediguns
-	if (!hasMedigun)
+	// Special conditions for mediguns //
+	if (!hasMedigun || (pLocal && pLocal->GetTeamNum() != pTarget->GetTeamNum()))
 	{
 		if (G::IsIgnored(pInfo.friendsID)) { return true; }
 		if (Vars::Aimbot::Global::IgnoreOptions.Value & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
