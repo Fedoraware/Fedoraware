@@ -318,8 +318,10 @@ bool CAimbotHitscan::ScanBuildings(CBaseEntity* pLocal, Target_t& target)
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
-	const Vec3 vMins = target.m_pEntity->GetCollideableMins();
-	const Vec3 vMaxs = target.m_pEntity->GetCollideableMaxs();
+	const float pointScale = Vars::Aimbot::Hitscan::PointScale.Value;
+
+	const Vec3 vMins = target.m_pEntity->GetCollideableMins() * pointScale;
+	const Vec3 vMaxs = target.m_pEntity->GetCollideableMaxs() * pointScale;
 
 	const std::vector<Vec3> vecPoints = {
 		Vec3(vMins.x * 0.9f, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
