@@ -27,380 +27,52 @@ namespace ProxySkins
 	static IMaterial* serenity = nullptr;
 	static IMaterial* fade = nullptr;
 
+	static KeyValues* Proxies = new KeyValues("Proxies");
+
+	IMaterial* CreateProxySkin(const char* materialPath, const char* materialName) {
+		auto kv = new KeyValues("VertexLitGeneric");
+		kv->SetString("$basetexture", materialPath);
+		kv->SetString("$additive", "1");
+		kv->SetString("$scrollanglevar", "0");
+		kv->SetString("$wireframe", "0");
+		kv->AddSubkey(Proxies);
+		return I::MatSystem->Create(tfm::format("DMEProxy_%s", materialName).c_str(), kv);
+	}
+
 	void Init()
 	{
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2203845847/2203845847_spectrum");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
+		{	// initialise proxies subkey
+			g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
 			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
+				KeyValues* Sine = new KeyValues("Sine");
+				g_KeyValUtils.Initialize(Sine, (char*)"sine");
+				Sine->SetString("resultvar", "$scrollanglevar");
+				Sine->SetString("sineperiod", "50000");
+				Sine->SetString("sinemin", "0");
+				Sine->SetString("sinemax", "360");
+				Proxies->AddSubkey(Sine);
 			}
-			spectrumSplattered = I::MatSystem->Create("spectrumskinrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1326382486/1326382486_electro_skulls_blu");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
 			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
+				KeyValues* TextureScroll = new KeyValues("TextureScroll");
+				g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
+				TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
+				TextureScroll->SetString("texturescrollrate", "0.1");
+				TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
+				Proxies->AddSubkey(TextureScroll);
 			}
-			electroSkullsBlue = I::MatSystem->Create("elecrtoskullsrargh", kv);
 		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1193300219/1193300219_cow");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
 
-			}
-			frozenAurora = I::MatSystem->Create("frozenaurorarargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/1558054217/1558054217_a");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			jazzy = I::MatSystem->Create("jazzyrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2017/1183962036/1183962036_aes_blue");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			hana = I::MatSystem->Create("hanarargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2596228713/2596228713_main_blu");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			wtf = I::MatSystem->Create("wtfrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2021/2594850983/2594850983_pattern_red");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			ghost = I::MatSystem->Create("ghostrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2020/2223065529/2223065529_helldriver_flames");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			flames = I::MatSystem->Create("flamesrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/screamfortress_2018/1180839618/1180839618_spooky_wood");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			spookwood = I::MatSystem->Create("spookwoodrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/500642896/500642896");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			edgy = I::MatSystem->Create("edgyrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			serenity = I::MatSystem->Create("serenityrargh", kv);
-		}
-		{
-			auto kv = new KeyValues("VertexLitGeneric");
-			kv->SetString("$basetexture", "patterns/workshop/smissmas_2020/2265040710/2265040710_serenity");
-			kv->SetString("$additive", "1");
-			kv->SetString("$scrollanglevar", "0");
-			kv->SetString("$wireframe", "0");
-			KeyValues* Proxies = new KeyValues("Proxies");
-			{
-				g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
-				{
-					KeyValues* Sine = new KeyValues("Sine");
-					g_KeyValUtils.Initialize(Sine, (char*)"sine");
-					Sine->SetString("resultvar", "$scrollanglevar");
-					Sine->SetString("sineperiod", "50000");
-					Sine->SetString("sinemin", "0");
-					Sine->SetString("sinemax", "360");
-					Proxies->AddSubkey(Sine);
-				}
-				{
-					KeyValues* TextureScroll = new KeyValues("TextureScroll");
-					g_KeyValUtils.Initialize(TextureScroll, (char*)"texturescroll");
-					TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
-					TextureScroll->SetString("texturescrollrate", "0.1");
-					TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-					Proxies->AddSubkey(TextureScroll);
-				}
-				kv->AddSubkey(Proxies);
-
-			}
-			fade = I::MatSystem->Create("faderargh", kv);
-		}
+		spectrumSplattered = CreateProxySkin("patterns/workshop/screamfortress_2020/2203845847/2203845847_spectrum", "spectrumSplattered");
+		electroSkullsBlue = CreateProxySkin("patterns/workshop/screamfortress_2018/1326382486/1326382486_electro_skulls_blu", "electroSkullsBlue");
+		frozenAurora = CreateProxySkin("patterns/workshop/smissmas_2017/1193300219/1193300219_cow", "frozenAurora");
+		jazzy = CreateProxySkin("patterns/workshop/smissmas_2020/1558054217/1558054217_a", "jazzy");
+		wtf = CreateProxySkin("patterns/workshop/screamfortress_2021/2596228713/2596228713_main_blu", "wtf");
+		ghost = CreateProxySkin("patterns/workshop/screamfortress_2021/2594850983/2594850983_pattern_red", "ghost");
+		flames = CreateProxySkin("patterns/workshop/screamfortress_2020/2223065529/2223065529_helldriver_flames", "flames");
+		spookwood = CreateProxySkin("patterns/workshop/screamfortress_2018/1180839618/1180839618_spooky_wood", "spookwood");
+		edgy = CreateProxySkin("patterns/workshop/500642896/500642896", "edgy");
+		serenity = CreateProxySkin("patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2", "serenity");
+		fade = CreateProxySkin("patterns/workshop/smissmas_2020/2265040710/2265040710_serenity", "fade");
 	}
 }
 
@@ -460,22 +132,6 @@ void CDMEChams::Init()
 
 	{
 		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
-		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
-		kv->SetString("$envmapfresnel", "1");
-		kv->SetString("$phong", "1");
-		kv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
-		kv->SetString("$selfillumtint", "[0 0 0]");
-		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel2 = I::MatSystem->Create("DME_MAT_m_pMatFresnel2", kv);
-	}
-
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "brick/brickwall031b");
 		kv->SetString("$bumpmap", "vgui/white_additive");
 		kv->SetString("$color2", "[10 10 10]");
@@ -506,7 +162,7 @@ void CDMEChams::Init()
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "-5");
 		kv->SetString("$wireframe", "0");
-		m_pMatScuffed = I::MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
+		m_pMatOverlay = I::MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
 	}
 
 	{
@@ -542,103 +198,135 @@ void CDMEChams::Init()
 	ProxySkins::Init();
 }
 
+IMaterial* CDMEChams::GetChamMaterial(int nIndex) {
+	switch (nIndex)
+	{
+	case 1:
+	{
+		return m_pMatShaded;
+	}
+	case 2:
+	{
+		return m_pMatShiny;
+	}
+	case 3:
+	{
+		return m_pMatFlat;
+	}
+	case 4:
+	{
+		return m_pMatWFShaded;
+	}
+	case 5:
+	{
+		return m_pMatWFShiny;
+	}
+	case 6:
+	{
+		return m_pMatWFFlat;
+	}
+	case 7:
+	{
+		return m_pMatFresnel;
+	}
+	case 8:
+	{
+		return m_pMatBrick;
+	}
+	default: return nullptr;
+	}
+}
+
+IMaterial* CDMEChams::GetProxyMaterial(int nIndex) {
+	using namespace ProxySkins;
+	switch (nIndex) {
+	case 1:
+		return spectrumSplattered;
+	case 2:
+		return electroSkullsBlue;
+	case 3:
+		return frozenAurora;
+	case 4:
+		return jazzy;
+	case 5:
+		return hana;
+	case 6:
+		return wtf;
+	case 7:
+		return ghost;
+	case 8:
+		return flames;
+	case 9:
+		return spookwood;
+	case 10:
+		return edgy;
+	case 11:
+		return serenity;
+	case 12:
+		return fade;
+	default:
+		return nullptr;
+	}
+}
+
+int GetType(int EntIndex) {
+	CBaseEntity* pEntity = I::EntityList->GetClientEntity(EntIndex);
+	if (!pEntity) { return 0; }
+	switch (pEntity->GetClassID()) {
+	case ETFClassID::CTFViewModel: {
+		return 1;
+	}
+	case ETFClassID::CBasePlayer:
+	case ETFClassID::CTFPlayer: {
+		return 2;
+	}
+	case ETFClassID::CTFRagdoll: {
+		return 3;
+	}
+	default: {
+		return 0;
+	}
+	}
+}
+
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 
 	m_bRendering = false;
-	bool foundselfillumtint = false;
 	if (ShouldRun())
 	{
 		m_bRendering = true;
 
-		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
+		const int drawType = GetType(pInfo.m_nEntIndex);
 
-		if (pEntity && pEntity->GetClassID() == ETFClassID::CTFViewModel)
+		if (drawType == 1)
 		{
-			bool bMatWasForced = false;
+			const int chamsIndex = Vars::Chams::DME::Hands.Value;
+			const bool rainbow = Vars::Chams::DME::HandsRainbow.Value;
 
-			if (Vars::Chams::DME::Hands.Value)
+			IMaterial* chamsMaterial = GetChamMaterial(chamsIndex);
+			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
+
+			if (chamsIndex != 7)
 			{
-				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-					{
-						switch (Vars::Chams::DME::Hands.Value)
-						{
-						case 1:
-						{
-							bMatWasForced = true;
-							return m_pMatShaded;
-						}
-						case 2:
-						{
-							bMatWasForced = true;
-							return m_pMatShiny;
-						}
-						case 3:
-						{
-							bMatWasForced = true;
-							return m_pMatFlat;
-						}
-						case 4:
-						{
-							bMatWasForced = true;
-							return m_pMatWFShaded;
-						}
-						case 5:
-						{
-							bMatWasForced = true;
-							return m_pMatWFShiny;
-						}
-						case 6:
-						{
-							bMatWasForced = true;
-							return m_pMatWFFlat;
-						}
-						case 7:
-						{
-							bMatWasForced = true;
-							return m_pMatFresnel;
-						}
-						case 8:
-						{
-							bMatWasForced = true;
-							return m_pMatBrick;
-						}
-						default: return nullptr;
-						}
-					}());
+				I::RenderView->SetColorModulation(
+					Color::TOFLOAT(rainbow ? Utils::Rainbow().r : Colors::Hands.r),
+					Color::TOFLOAT(rainbow ? Utils::Rainbow().g : Colors::Hands.g),
+					Color::TOFLOAT(rainbow ? Utils::Rainbow().b : Colors::Hands.b));
 			}
-
-			if (Vars::Chams::DME::Hands.Value != 7)
+			else
 			{
-				if (Vars::Chams::DME::HandsRainbow.Value)
-				{
-					I::RenderView->SetColorModulation(Color::TOFLOAT(Utils::Rainbow().r),
-						Color::TOFLOAT(Utils::Rainbow().g),
-						Color::TOFLOAT(Utils::Rainbow().b));
-				}
-				else
-				{
-					I::RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r),
-						Color::TOFLOAT(Colors::Hands.g),
-						Color::TOFLOAT(Colors::Hands.b));
-				}
-			}
-
-			foundselfillumtint = false;
-			if (Vars::Chams::DME::Hands.Value == 7)
-			{
-				IMaterial* mat = m_pMatFresnel;
-				IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
-				if (foundselfillumtint)
+				bool found1, found2;
+				IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), &found2);
+				if (found2)
 				{
 					fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseHands.r) * 4,
 						Color::TOFLOAT(Colors::FresnelBaseHands.g) * 4,
 						Color::TOFLOAT(Colors::FresnelBaseHands.b) * 4);
 				}
-				bool found = false;
-				IMaterialVar* envmap = mat->FindVar(_("$envmaptint"), &found);
-				if (found)
+				IMaterialVar* envmap = chamsMaterial->FindVar(_("$envmaptint"), &found1);
+				if (found1)
 				{
 					envmap->SetVecValue(Color::TOFLOAT(Colors::Hands.r) * 4, Color::TOFLOAT(Colors::Hands.g) * 4,
 						Color::TOFLOAT(Colors::Hands.b) * 4);
@@ -647,115 +335,51 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			I::RenderView->SetBlend(Color::TOFLOAT(Colors::Hands.a));
 			
-			if (dmeHook)
-			{
+			if (dmeHook) {
 				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
-			bMatWasForced = true;
 
-			if (Vars::Chams::DME::HandsProxySkin.Value && bMatWasForced)
+			if (Vars::Chams::DME::HandsProxySkin.Value)
 			{
 
-				IMaterial* pMaterial = nullptr;
-				{
-					using namespace ProxySkins;
-					switch (Vars::Chams::DME::HandsProxySkin.Value) {
-					case 1:
-						pMaterial = spectrumSplattered;
-						break;
-					case 2:
-						pMaterial = electroSkullsBlue;
-						break;
-					case 3:
-						pMaterial = frozenAurora;
-						break;
-					case 4:
-						pMaterial = jazzy;
-						break;
-					case 5:
-						pMaterial = hana;
-						break;
-					case 6:
-						pMaterial = wtf;
-						break;
-					case 7:
-						pMaterial = ghost;
-						break;
-					case 8:
-						pMaterial = flames;
-						break;
-					case 9:
-						pMaterial = spookwood;
-						break;
-					case 10:
-						pMaterial = edgy;
-						break;
-					case 11:
-						pMaterial = serenity;
-						break;
-					case 12:
-						pMaterial = fade;
-						break;
-					default: break;
-					}
-				}
-				bool found = false;
-				auto pVar = pMaterial->FindVar("$wireframe", &found);
+				IMaterial* pMaterial = GetProxyMaterial(Vars::Chams::DME::HandsProxySkin.Value);
+
+				auto pVar = pMaterial->FindVar("$wireframe", nullptr);
 				if (pVar) {
 					pVar->SetIntValue(Vars::Chams::DME::HandsProxyWF.Value);
 				}
 				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-				if (dmeHook)
-				{
+				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
 
-			if (Vars::Chams::DME::HandsGlowOverlay.Value && bMatWasForced)
+			if (Vars::Chams::DME::HandsGlowOverlay.Value)
 			{
 				// Overlay
-				IMaterial* pMaterial = m_pMatScuffed;
-				bool found = false;
-				bool found2 = false;
-				bool found3 = false;
-				IMaterialVar* pVar = pMaterial->FindVar(_("$phongtint"), &found);
-				if (found)
+				IMaterial* pMaterial = m_pMatOverlay;
+
+				IMaterialVar* phongtint = pMaterial->FindVar(_("$phongtint"), nullptr);
+				if (phongtint)
 				{
-					if (Vars::Chams::DME::HandsOverlayRainbow.Value)
-					{
-						pVar->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-							Color::TOFLOAT(Utils::Rainbow().g) * 4,
-							Color::TOFLOAT(Utils::Rainbow().b) * 4);
-					}
-					else
-					{
-						pVar->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r),
-							Color::TOFLOAT(Colors::HandsOverlay.g),
-							Color::TOFLOAT(Colors::HandsOverlay.b));
-					}
+					phongtint->SetVecValue(
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().r : Colors::HandsOverlay.r),
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().g : Colors::HandsOverlay.g),
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().b : Colors::HandsOverlay.b));
 				}
-				IMaterialVar* pVar2 = pMaterial->FindVar(_("$envmaptint"), &found2);
-				if (found2)
+				IMaterialVar* envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr);
+				if (envmaptint)
 				{
-					if (Vars::Chams::DME::HandsOverlayRainbow.Value)
-					{
-						pVar2->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r) * 4,
-							Color::TOFLOAT(Utils::Rainbow().g) * 4,
-							Color::TOFLOAT(Utils::Rainbow().b) * 4);
-					}
-					else
-					{
-						pVar2->SetVecValue(Color::TOFLOAT(Colors::HandsOverlay.r),
-							Color::TOFLOAT(Colors::HandsOverlay.g),
-							Color::TOFLOAT(Colors::HandsOverlay.b));
-					}
+					envmaptint->SetVecValue(
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().r : Colors::HandsOverlay.r),
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().g : Colors::HandsOverlay.g),
+						Color::TOFLOAT(rainbow ? Utils::Rainbow().b : Colors::HandsOverlay.b));
 				}
-				bool foundfresnelranges = false;
-				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", &foundfresnelranges);
-				if (foundfresnelranges)
+				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr);
+				if (phongfresnelranges)
 				{
 					phongfresnelranges->SetVecValue(0, 0.5 / Vars::Chams::DME::HandsGlowAmount.Value, 10 / Vars::Chams::DME::HandsGlowAmount.Value);
 				}
@@ -764,25 +388,21 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				I::RenderView->SetBlend(Vars::Chams::DME::HandsOverlayPulse.Value ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::HandsOverlay.a));
 				I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-				if (dmeHook)
-				{
+				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
 
 
-			if (bMatWasForced)
-			{
-				I::ModelRender->ForcedMaterialOverride(nullptr);
-				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-			}
+			I::ModelRender->ForcedMaterialOverride(nullptr);
+			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
 			I::RenderView->SetBlend(1.0f);
 
 			return true;
 		}
 
-		if (!pEntity && pInfo.m_pModel)
+		if (!drawType && pInfo.m_pModel)
 		{
 			std::string_view szModelName(I::ModelInfo->GetModelName(pInfo.m_pModel));
 
@@ -843,7 +463,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 							case 7:
 							{
 								bMatWasForced = true;
-								return m_pMatFresnel2;
+								return m_pMatFresnel;
 							}
 							case 8:
 							{
@@ -871,12 +491,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 
-				foundselfillumtint = false;
 				if (Vars::Chams::DME::Weapon.Value == 7)
 				{
-					IMaterial* mat = m_pMatFresnel2;
-					IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), &foundselfillumtint);
-					if (foundselfillumtint)
+					IMaterial* mat = m_pMatFresnel;
+					IMaterialVar* fresnelSelfillumtint = mat->FindVar(_("$selfillumtint"), nullptr);
+					if (fresnelSelfillumtint)
 					{
 						fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(Colors::FresnelBaseWeps.r) * 4,
 							Color::TOFLOAT(Colors::FresnelBaseWeps.g) * 4,
@@ -893,10 +512,10 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Colors::Weapon.a));
 
-				if (dmeHook)
-				{
+				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
+
 				bMatWasForced = true;
 				
 				if (Vars::Chams::DME::WeaponsProxySkin.Value && bMatWasForced)
@@ -953,15 +572,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-					if (dmeHook)
-					{
+					if (dmeHook) {
 						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 					}
 				}
 
 				if (Vars::Chams::DME::WeaponGlowOverlay.Value && bMatWasForced)
 				{
-					IMaterial* pMaterial = m_pMatScuffed;
+					IMaterial* pMaterial = m_pMatOverlay;
 					bool found = false;
 					bool found2 = false;
 					bool found3 = false;
@@ -1008,8 +626,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					I::RenderView->SetBlend(Vars::Chams::DME::WeaponOverlayPulse.Value ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(Colors::WeaponOverlay.a));
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 
-					if (dmeHook)
-					{
+					if (dmeHook) {
 						dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 					}
 				}

@@ -10,15 +10,16 @@ public:
 	IMaterial* m_pMatShiny;
 	IMaterial* m_pMatFlat;
 	IMaterial* m_pMatFresnel;
-	IMaterial* m_pMatFresnel2;
 	IMaterial* m_pMatBrick;
-	IMaterial* m_pMatScuffed;
+	IMaterial* m_pMatOverlay;
 	IMaterial* m_pMatWFShaded;
 	IMaterial* m_pMatWFShiny;
 	IMaterial* m_pMatWFFlat;
 	IMaterial* m_pMatProxy;
 private:
 	bool ShouldRun();
+	IMaterial* GetChamMaterial(int nIndex);
+	IMaterial* GetProxyMaterial(int nIndex);
 
 public:
 	void Init();

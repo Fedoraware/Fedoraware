@@ -79,7 +79,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 																		 case 6:
 																		 {
 																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatScuffed;
+																			 return F::DMEChams.m_pMatOverlay;
 																		 }
 																		 case 7:
 																		 {
@@ -197,7 +197,7 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 																		 case 6:
 																		 {
 																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatScuffed;
+																			 return F::DMEChams.m_pMatOverlay;
 																		 }
 																		 case 7:
 																		 {
