@@ -2,8 +2,15 @@
 #include "../../Visuals/FakeAngleManager/FakeAng.h"
 
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
+
+	const int doubleTapAllowed = 22 - G::ShiftedTicks;
+
 	// Failsafe, in case we're trying to choke too many ticks
 	if (ChokeCounter > 22) {
+		return false;
+	}
+
+	if (ChokeCounter >= ChosenAmount) {
 		return false;
 	}
 
@@ -25,7 +32,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	}
 
 	// Are we recharging or shifting ticks?
-	if (G::ShiftedTicks || G::RechargeQueued) {
+	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || (!Vars::Misc::CL_Move::RetainFakelag.Value && G::ShiftedTicks)) {
 		return false;
 	}
 
@@ -35,12 +42,16 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 	if (!Vars::Misc::CL_Move::Fakelag.Value) { return; }
 
+	// Set the selected choke amount (if not random)
+	if (Vars::Misc::CL_Move::FakelagMode.Value != FL_Random) {
+		ChosenAmount = Vars::Misc::CL_Move::FakelagValue.Value;
+	}
+
 	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !pLocal->IsAlive())
 	{
 		if (ChokeCounter > 0)
 		{
-			// Failsafe
 			*pSendPacket = true;
 			ChokeCounter = 0;
 		}
@@ -56,32 +67,13 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 	// Are we even allowed to choke?
 	if (!IsAllowed(pLocal)) {
 		*pSendPacket = true;
-		F::FakeAng.Run(pCmd);
+		// Set a new random amount (if desired)
+		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random) { ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value); }
+		F::FakeAng.Run(pCmd); F::FakeAng.DrawChams = true;
 		ChokeCounter = 0;
 		return;
 	}
 
-	// Set the selected choke amount (if not random)
-	if (Vars::Misc::CL_Move::FakelagMode.Value != FL_Random) {
-		ChosenAmount = Vars::Misc::CL_Move::FakelagValue.Value;
-	}
-
-	if (ChosenAmount > ChokeCounter) {
-		// We choked the desired amount
-		*pSendPacket = false;
-		ChokeCounter++;
-	}
-	else {
-		*pSendPacket = true;
-
-		// Set a new random amount (if desired)
-		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random)
-		{
-			ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value);
-		}
-
-		ChokeCounter = 0;
-		F::FakeAng.Run(pCmd);
-		F::FakeAng.DrawChams = true;
-	}
+	*pSendPacket = false;
+	ChokeCounter++;
 }

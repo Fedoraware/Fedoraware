@@ -613,6 +613,7 @@ namespace Vars
 			inline CVar<int> RechargeKey{0x48}; //H
 			inline CVar<int> DoubletapKey{0x56}; //V
 			inline CVar<int> DTBarStyle{3};
+			inline CVar<bool> RetainFakelag{ true };
 			inline CVar<bool> RechargeWhileDead{false};
 			inline CVar<bool> AutoRecharge{false}; //H
 			inline CVar<bool> AntiWarp{true}; //H
