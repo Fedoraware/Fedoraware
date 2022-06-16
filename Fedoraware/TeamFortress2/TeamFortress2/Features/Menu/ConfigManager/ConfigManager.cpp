@@ -861,6 +861,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Chams::Players::Team);
 			SAVE_OTHER(Vars::Chams::Players::Friend);
 			SAVE_OTHER(Vars::Chams::Players::Target);
+			SAVE_OTHER(Vars::Chams::Players::Ragdoll);
 			SAVE_OTHER(Vars::Chams::DME::Hands);
 			SAVE_OTHER(Vars::Chams::DME::Weapon);
 
@@ -1579,6 +1580,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_OTHER(Vars::Chams::Players::Team);
 			LOAD_OTHER(Vars::Chams::Players::Friend);
 			LOAD_OTHER(Vars::Chams::Players::Target);
+			LOAD_OTHER(Vars::Chams::Players::Ragdoll);
 			LOAD_OTHER(Vars::Chams::DME::Hands);
 			LOAD_OTHER(Vars::Chams::DME::Weapon);
 

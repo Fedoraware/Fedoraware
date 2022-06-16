@@ -506,8 +506,9 @@ void CMenu::MenuVisuals()
 					"Enemies",
 					"Teammates",
 					"Target",
-					"VM Weapon",
-					"ViewModel"
+					"Ragdolls",
+					"ViewModel",
+					"VM Weapon"
 				};
 				static std::vector DMEProxyMaterials{
 					"None",
@@ -530,7 +531,7 @@ void CMenu::MenuVisuals()
 					"Wireframe Glow"
 				};
 
-				static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.weapon 6.hands
+				static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.ragdolls 6.hands 7.weapon
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
@@ -550,10 +551,13 @@ void CMenu::MenuVisuals()
 							return Vars::Chams::Players::Target;
 						}
 						case 5: {
-							return Vars::Chams::DME::Weapon;
+							return Vars::Chams::Players::Ragdoll;
 						}
 						case 6: {
 							return Vars::Chams::DME::Hands;
+						}
+						case 7: {
+							return Vars::Chams::DME::Weapon;
 						}
 						}
 					}());

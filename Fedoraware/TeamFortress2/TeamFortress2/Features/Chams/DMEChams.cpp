@@ -66,6 +66,7 @@ namespace ProxySkins
 		electroSkullsBlue = CreateProxySkin("patterns/workshop/screamfortress_2018/1326382486/1326382486_electro_skulls_blu", "electroSkullsBlue");
 		frozenAurora = CreateProxySkin("patterns/workshop/smissmas_2017/1193300219/1193300219_cow", "frozenAurora");
 		jazzy = CreateProxySkin("patterns/workshop/smissmas_2020/1558054217/1558054217_a", "jazzy");
+		hana = CreateProxySkin("patterns/workshop/smissmas_2017/1183962036/1183962036_aes_blue", "hana");
 		wtf = CreateProxySkin("patterns/workshop/screamfortress_2021/2596228713/2596228713_main_blu", "wtf");
 		ghost = CreateProxySkin("patterns/workshop/screamfortress_2021/2594850983/2594850983_pattern_red", "ghost");
 		flames = CreateProxySkin("patterns/workshop/screamfortress_2020/2223065529/2223065529_helldriver_flames", "flames");
@@ -283,10 +284,15 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFRagdoll: {
 		return 3;
 	}
-	default: {
-		return -1;
+	case ETFClassID::CTFWearable: {
+		return 4;
 	}
 	}
+	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
+	if (pWeapon && (pWeapon->GetItemDefIndex() >= 0 && pWeapon->GetItemDefIndex() <= 30758)) {
+		return 5;
+	}
+	return -1;
 }
 
 Chams_t GetPlayerChams(CBaseEntity* pEntity) {
@@ -323,9 +329,25 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	case 2: {
 		return pEntity ? GetPlayerChams(pEntity) : Chams_t();
 	}
-	//case 3: {
-	//	//return Vars::Chams::DME::Ragdolls
-	//}
+	case 3: {
+		return Vars::Chams::Players::Ragdoll;
+	}
+	case 4: {
+		if (!Vars::Chams::Players::Wearables.Value) { return Chams_t(); }
+		if (!pEntity) { return Chams_t(); }
+		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
+			return GetPlayerChams(pOwner);
+		}
+		return Chams_t();
+	}
+	case 5: {
+		if (!Vars::Chams::Players::Weapons.Value) { return Chams_t(); }
+		if (!pEntity) { return Chams_t(); }
+		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
+			return GetPlayerChams(pOwner);
+		}
+		return Chams_t();
+	}
 	default:
 		return Chams_t();
 	}
@@ -334,6 +356,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+	const auto& pRenderContext = I::MatSystem->GetRenderContext();
 
 	m_bRendering = false;
 	if (ShouldRun())
@@ -363,6 +386,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		if (drawType == -1) { return false; }
 
 		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
+		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 		Chams_t chams = pEntity ? getChamsType(drawType, pEntity) : getChamsType(drawType);
 
@@ -378,6 +402,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			const bool rainbowOverlay = chams.overlayRainbow;
 
 			IMaterial* chamsMaterial = GetChamMaterial(chams.drawMaterial);
+
+			//if (pRenderContext) {
+			//	pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
+			//}
+
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
 			if (chams.drawMaterial != 7)
@@ -387,7 +416,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().g : chams.colour.g),
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().b : chams.colour.b));
 			}
-			else
+			else if (chams.drawMaterial == 7)
 			{
 				IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr);
 				if (fresnelSelfillumtint)
@@ -408,6 +437,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 
 			I::RenderView->SetBlend(Color::TOFLOAT(chams.colour.a));
+			if (pEntity && pLocal) {
+				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+					I::RenderView->SetBlend(Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, chams.colour.a, 0.0f));
+				}
+			}
+			
 
 			if (dmeHook) {
 				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
@@ -464,7 +499,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-
+			//pRenderContext->DepthRange(0.0f, 1.f);
 			I::ModelRender->ForcedMaterialOverride(nullptr);
 			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 

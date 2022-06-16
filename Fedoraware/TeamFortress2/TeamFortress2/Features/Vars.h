@@ -287,6 +287,7 @@ namespace Vars
 			inline Chams_t Enemy{};
 			inline Chams_t Team{};
 			inline Chams_t Target{};
+			inline Chams_t Ragdoll{};
 		}
 
 		namespace Buildings

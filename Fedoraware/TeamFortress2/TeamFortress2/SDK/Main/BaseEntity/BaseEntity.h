@@ -205,7 +205,8 @@ public: //Netvars & conditions
 		NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"))
 		NETVAR(m_nSequence, int, _("CBaseAnimating"), _("m_nSequence"))
 		NETVAR(m_flCycle, float, _("CBaseAnimating"), _("m_flCycle"))
-		NETVAR(m_flAnimTime, int, _("CBaseAnimating"), _("m_flAnimTime "))
+		NETVAR(m_flAnimTime, int, _("CBaseAnimating"), _("m_flAnimTime"))
+		NETVAR(m_hOwnerEntity, int, _("CBaseAnimating"), _("m_hOwnerEntity"))
 		NETVAR(m_ConditionList, void*, _("CTFPlayer"), _("m_ConditionList"))
 
 public: //Virtuals
