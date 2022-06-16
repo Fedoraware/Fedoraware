@@ -416,9 +416,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (proxyIndex)
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
-				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
-				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				I::ModelRender->ForcedMaterialOverride(pMaterial);
+				if (pMaterial) {
+					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
+					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+					I::ModelRender->ForcedMaterialOverride(pMaterial);
+				}
 
 				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
