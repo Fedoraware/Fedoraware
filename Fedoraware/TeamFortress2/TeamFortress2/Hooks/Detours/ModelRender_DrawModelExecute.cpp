@@ -17,8 +17,14 @@ MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);
 	DrawFakeAngles(ecx, edx, pEntity, pState, pInfo);
 
-	if ((F::Chams.HasDrawn(pEntity) || F::Glow.HasDrawn(pEntity)) && !F::Glow.m_bDrawingGlow) { return; }
-	if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
+	//if ((F::Chams.HasDrawn(pEntity) || F::Glow.HasDrawn(pEntity)) && !F::Glow.m_bDrawingGlow) { return; }
+	//if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
+
+	if (!F::Glow.m_bRendering) {
+		if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
+	}
+
+	if (F::Glow.HasDrawn(pEntity) && !F::Glow.m_bDrawingGlow) { return; }
 
 	Hook.Original<FN>()(ecx, edx, pState, pInfo, pBoneToWorld);
 }

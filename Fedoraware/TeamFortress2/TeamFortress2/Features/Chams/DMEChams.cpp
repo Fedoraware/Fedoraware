@@ -388,17 +388,16 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 			else
 			{
-				bool found1, found2;
-				IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), &found2);
-				if (found2)
+				IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr);
+				if (fresnelSelfillumtint)
 				{
 					fresnelSelfillumtint->SetVecValue(
 						Color::TOFLOAT(chams.fresnelBase.r) * 4,
 						Color::TOFLOAT(chams.fresnelBase.g) * 4,
 						Color::TOFLOAT(chams.fresnelBase.b) * 4);
 				}
-				IMaterialVar* envmap = chamsMaterial->FindVar(_("$envmaptint"), &found1);
-				if (found1)
+				IMaterialVar* envmap = chamsMaterial->FindVar(_("$envmaptint"), nullptr);
+				if (envmap)
 				{
 					envmap->SetVecValue(
 						Color::TOFLOAT(chams.colour.r) * 4,
@@ -416,7 +415,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			if (proxyIndex)
 			{
-
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
 				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
