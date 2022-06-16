@@ -340,6 +340,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		if (drawType == -1) { return false; }
 
 		Chams_t chams = getChamsType(drawType);
+
+		if (!chams.chamsActive) { return false; }
 		
 		// I wanted these to be 1 line each leave me alone.
 		const int proxyIndex = (drawType <= 1) ? (drawType ? Vars::Chams::DME::HandsProxySkin.Value : Vars::Chams::DME::WeaponsProxySkin.Value) : 0;

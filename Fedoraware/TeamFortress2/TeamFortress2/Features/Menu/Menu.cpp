@@ -505,101 +505,10 @@ void CMenu::MenuVisuals()
 					"Friends",
 					"Enemies",
 					"Teammates",
-					"Target"
+					"Target",
+					"VM Weapon",
+					"ViewModel"
 				};
-
-				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
-
-				SectionTitle("Player Chams");
-				WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.Value); HelpMarker("Player chams master switch");
-				MultiCombo({ "Render Wearable", "Render Weapon", "Fadeout Own Team"}, {&Vars::Chams::Players::Wearables.Value, &Vars::Chams::Players::Weapons.Value, &Vars::Chams::Players::FadeoutTeammates.Value}, "Flags");
-				HelpMarker("Customize Chams");
-				WCombo("Config", &currentSelected, chamOptions);
-
-				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
-				{
-				case 0:
-				{
-					// Local
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Local.chamsActive, &Vars::Chams::Players::Local.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Players::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Local.fresnelBase);
-					if (Vars::Chams::Players::Local.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Players::Local.customMaterial);
-					}
-					break;
-				}
-				case 1:
-				{
-					// Friends
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Friend.chamsActive, &Vars::Chams::Players::Friend.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Players::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Friend.fresnelBase);
-					if (Vars::Chams::Players::Friend.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Players::Friend.customMaterial);
-					}
-					break;
-				}
-				case 2:
-				{
-					// Enemies
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Enemy.chamsActive, &Vars::Chams::Players::Enemy.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Players::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Enemy.fresnelBase);
-					if (Vars::Chams::Players::Enemy.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Players::Enemy.customMaterial);
-					}
-					break;
-				}
-				case 3:
-				{
-					// Teammates
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Team.chamsActive, &Vars::Chams::Players::Team.showObstructed, }, "Options");
-					WCombo("Material", &Vars::Chams::Players::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Team.fresnelBase);
-					if (Vars::Chams::Players::Team.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Players::Team.customMaterial);
-					}
-					break;
-				}
-				case 4:
-				{
-					// Target
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Players::Target.chamsActive, &Vars::Chams::Players::Target.showObstructed, }, "Options");
-					WCombo("Material", &Vars::Chams::Players::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the player");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Players::Target.fresnelBase);
-					if (Vars::Chams::Players::Target.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Players::Target.customMaterial);
-					}
-					break;
-				}
-				}
-
-				SectionTitle("DME Chams");
-				WToggle("DME chams###dmeactive", &Vars::Chams::DME::Active.Value); HelpMarker("DME chams master switch");
-				ColorPickerL("Weapon colour", Colors::Weapon);
-				ColorPickerL("Hand colour", Colors::Hands, 1);
-
-				static std::vector DMEMaterials{
-					"Original",
-					"Shaded",
-					"Shiny",
-					"Flat",
-					"Wireframe shaded",
-					"Wireframe shiny",
-					"Wireframe flat",
-					"Fresnel",
-					"Brick",
-					"What",
-					"Wacky"
-				};
-
 				static std::vector DMEProxyMaterials{
 					"None",
 					"Spectrum splattered",
@@ -621,25 +530,67 @@ void CMenu::MenuVisuals()
 					"Wireframe Glow"
 				};
 
-				WCombo("Hand material", &Vars::Chams::DME::Hands.drawMaterial, DMEMaterials);
-				ColorPickerL("Fresnel Hands Base", Vars::Chams::DME::Hands.fresnelBase); HelpMarker("What material to put on your viewmodels arms/hands");
-				WCombo("Hand proxy material", &Vars::Chams::DME::HandsProxySkin.Value, DMEProxyMaterials); HelpMarker("Puts a cool looking animated skin on your hands");
-
+				static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.weapon 6.hands
+				Chams_t& currentStruct = ([&]() -> Chams_t&
+					{
+						switch (currentSelected) {
+						case 0: {
+							return Vars::Chams::Players::Local;
+						}
+						case 1: {
+							return Vars::Chams::Players::Friend;
+						}
+						case 2: {
+							return Vars::Chams::Players::Enemy;
+						}
+						case 3: {
+							return Vars::Chams::Players::Team;
+						}
+						case 4: {
+							return Vars::Chams::Players::Target;
+						}
+						case 5: {
+							return Vars::Chams::DME::Weapon;
+						}
+						case 6: {
+							return Vars::Chams::DME::Hands;
+						}
+						}
+					}());
+				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 				
-				WCombo("Hand Glow", &Vars::Chams::DME::Hands.overlayType, dmeGlowMaterial);
-				ColorPickerL("Hand glow colour", Vars::Chams::DME::Hands.overlayColour);
+				//WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.Value); HelpMarker("Player chams master switch");
 
-				WCombo("Weapon material", &Vars::Chams::DME::Weapon.drawMaterial, DMEMaterials);
-				ColorPickerL("Fresnel Weapons Base", Vars::Chams::DME::Weapon.fresnelBase); HelpMarker("What material to put on your viewmodels weapon");
+				MultiCombo({ "Render Wearable", "Render Weapon", "Fadeout Own Team"}, {&Vars::Chams::Players::Wearables.Value, &Vars::Chams::Players::Weapons.Value, &Vars::Chams::Players::FadeoutTeammates.Value}, "Flags");
+				HelpMarker("Customize Chams");
+				WCombo("Config", &currentSelected, chamOptions);
+				{
+					ColorPickerL("Colour", currentStruct.colour, 1);
+					MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
 
-				WCombo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.Value, DMEProxyMaterials); HelpMarker("Puts a cool looking animated skin on your weapons");
-				WCombo("Weapon Glow", &Vars::Chams::DME::Weapon.overlayType, dmeGlowMaterial);
-				ColorPickerL("Weapon glow colour", Vars::Chams::DME::Weapon.overlayColour);
-				MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.Value, &Vars::Chams::DME::HandsOverlayRainbow.Value, &Vars::Chams::DME::WeaponRainbow.Value, &Vars::Chams::DME::WeaponOverlayRainbow.Value }, "Rainbow DME###RainbowDMEChams");
-				MultiCombo({ "Hand Overlay", "Weapon Overlay" }, { &Vars::Chams::DME::HandsOverlayPulse.Value, &Vars::Chams::DME::WeaponOverlayPulse.Value }, "Pulse Overlay###PulseDMEOverlay");
-				HelpMarker("Rainbow DME chams");
-				WSlider("Hands glow amount", &Vars::Chams::DME::HandsGlowAmount.Value, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
-				WSlider("Weapon glow amount", &Vars::Chams::DME::WeaponGlowAmount.Value, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
+					if (currentStruct.drawMaterial == 7)
+					ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					if (currentStruct.drawMaterial == 9)
+					{
+						MaterialCombo("Custom Material", &currentStruct.customMaterial);
+					}
+					WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
+					ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
+					WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
+					WToggle("Pulse Glow", &currentStruct.overlayPulse);
+					WSlider("Glow Amount", &currentStruct.overlayIntensity, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+
+					if (currentSelected == 5 || currentSelected == 6) {
+						int& proxySkinIndex = currentSelected == 5 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;
+						WCombo("Proxy Material", &proxySkinIndex, DMEProxyMaterials);
+
+					}
+				}
+			
+				SectionTitle("Chams Misc");
+
+				WToggle("DME chams###dmeactive", &Vars::Chams::DME::Active.Value); HelpMarker("DME chams master switch");
 
 				SectionTitle("Backtrack chams");
 				WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
