@@ -290,21 +290,22 @@ int GetType(int EntIndex) {
 }
 
 Chams_t GetPlayerChams(CBaseEntity* pEntity) {
-	if (pEntity)
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (pEntity && pLocal)
 	{
 		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
 			return Vars::Chams::Players::Target;
 		}
-		if (pEntity == g_EntityCache.GetLocal()) {
+		if (pEntity == pLocal) {
 			return Vars::Chams::Players::Local;
 		}
 		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive) {
 			return Vars::Chams::Players::Friend;
 		}
-		if (pEntity->GetTeamNum() != g_EntityCache.GetLocal()->GetTeamNum()) {
+		if (pEntity->GetTeamNum() != pLocal->GetTeamNum()) {
 			return Vars::Chams::Players::Enemy;
 		}
-		if (pEntity->GetTeamNum() == g_EntityCache.GetLocal()->GetTeamNum()) {
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
 			return Vars::Chams::Players::Team;
 		}
 	}
