@@ -104,7 +104,13 @@ void CConfigManager::SaveJson(const char* name, const Chams_t& val)
 	chamTree.put("drawMaterial", val.drawMaterial);
 	chamTree.put("overlayType", val.overlayType);
 	chamTree.put("chamsActive", val.chamsActive);
+	chamTree.put("rainbow", val.rainbow);
+	chamTree.put("overlayRainbow", val.overlayRainbow);
+	chamTree.put("overlayPulse", val.overlayPulse);
+	chamTree.put("overlayIntensity", val.overlayIntensity);
 	chamTree.put_child("fresnelBase", ColorToTree(val.fresnelBase));
+	chamTree.put_child("colour", ColorToTree(val.colour));
+	chamTree.put_child("overlayColour", ColorToTree(val.overlayColour));
 	chamTree.put("customMaterial", val.customMaterial);
 
 	WriteTree.put_child(name, chamTree);
@@ -181,7 +187,13 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 		if (auto getValue = (*getChild).get_optional<int>("drawMaterial")) { val.drawMaterial = *getValue; }
 		if (auto getValue = (*getChild).get_optional<int>("overlayType")) { val.overlayType = *getValue; }
 		if (auto getValue = (*getChild).get_optional<bool>("chamsActive")) { val.chamsActive = *getValue; }
+		if (auto getValue = (*getChild).get_optional<bool>("rainbow")) { val.rainbow = *getValue; }
+		if (auto getValue = (*getChild).get_optional<bool>("overlayRainbow")) { val.overlayRainbow = *getValue; }
+		if (auto getValue = (*getChild).get_optional<bool>("overlayPulse")) { val.overlayPulse = *getValue; }
+		if (auto getValue = (*getChild).get_optional<float>("overlayIntensity")) { val.overlayIntensity = *getValue; }
 		if (const auto getChildColor = (*getChild).get_child_optional("fresnelBase")) { val.fresnelBase = TreeToColor(*getChildColor); }
+		if (const auto getChildColor = (*getChild).get_child_optional("colour")) { val.colour = TreeToColor(*getChildColor); }
+		if (const auto getChildColor = (*getChild).get_child_optional("overlayColour")) { val.overlayColour = TreeToColor(*getChildColor); }
 		if (auto getValue = (*getChild).get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
 	}
 }
@@ -456,10 +468,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//DME
 			{
 				SAVE_VAR(Vars::Chams::DME::Active);
-				SAVE_VAR(Vars::Chams::DME::Hands);
 
 				SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
-				SAVE_VAR(Vars::Chams::DME::Weapon);
 				SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				SAVE_VAR(Vars::Chams::DME::HandsRainbow);
 				SAVE_VAR(Vars::Chams::DME::WeaponRainbow);
@@ -851,6 +861,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Chams::Players::Team);
 			SAVE_OTHER(Vars::Chams::Players::Friend);
 			SAVE_OTHER(Vars::Chams::Players::Target);
+			SAVE_OTHER(Vars::Chams::DME::Hands);
+			SAVE_OTHER(Vars::Chams::DME::Weapon);
 
 			SAVE_OTHER(Vars::Chams::Buildings::Local);
 			SAVE_OTHER(Vars::Chams::Buildings::Enemy);
@@ -1178,9 +1190,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//DME
 			{
 				LOAD_VAR(Vars::Chams::DME::Active);
-				LOAD_VAR(Vars::Chams::DME::Hands);
 				LOAD_VAR(Vars::Chams::DME::HandsGlowOverlay);
-				LOAD_VAR(Vars::Chams::DME::Weapon);
 				LOAD_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 				LOAD_VAR(Vars::Chams::DME::HandsRainbow);
 				LOAD_VAR(Vars::Chams::DME::WeaponRainbow);
@@ -1569,6 +1579,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_OTHER(Vars::Chams::Players::Team);
 			LOAD_OTHER(Vars::Chams::Players::Friend);
 			LOAD_OTHER(Vars::Chams::Players::Target);
+			LOAD_OTHER(Vars::Chams::DME::Hands);
+			LOAD_OTHER(Vars::Chams::DME::Weapon);
 
 			LOAD_OTHER(Vars::Chams::Buildings::Local);
 			LOAD_OTHER(Vars::Chams::Buildings::Enemy);

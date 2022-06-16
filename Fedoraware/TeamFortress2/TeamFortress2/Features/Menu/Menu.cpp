@@ -586,7 +586,7 @@ void CMenu::MenuVisuals()
 				ColorPickerL("Weapon colour", Colors::Weapon);
 				ColorPickerL("Hand colour", Colors::Hands, 1);
 
-				static std::vector handsMaterial{
+				static std::vector DMEMaterials{
 					"Original",
 					"Shaded",
 					"Shiny",
@@ -599,10 +599,8 @@ void CMenu::MenuVisuals()
 					"What",
 					"Wacky"
 				};
-				WCombo("Hand material", &Vars::Chams::DME::Hands.Value, handsMaterial);
-				ColorPickerL("Fresnel Hands Base", Colors::FresnelBaseHands); HelpMarker("What material to put on your viewmodels arms/hands");
 
-				static std::vector handsProxyMaterial{
+				static std::vector DMEProxyMaterials{
 					"None",
 					"Spectrum splattered",
 					"Electro skulls",
@@ -617,50 +615,26 @@ void CMenu::MenuVisuals()
 					"Starlight serenity",
 					"Fade"
 				};
-				WCombo("Hand proxy material", &Vars::Chams::DME::HandsProxySkin.Value, handsProxyMaterial); HelpMarker("Puts a cool looking animated skin on your hands");
-
 				static std::vector dmeGlowMaterial{
 					"None",
 					"Fresnel Glow",
 					"Wireframe Glow"
 				};
-				WCombo("Hand Glow", &Vars::Chams::DME::HandsGlowOverlay.Value, dmeGlowMaterial);
-				ColorPickerL("Hand glow colour", Colors::HandsOverlay);
 
-				static std::vector weaponMaterial{
-					"Original",
-					"Shaded",
-					"Shiny",
-					"Flat",
-					"Wireframe shaded",
-					"Wireframe shiny",
-					"Wireframe flat",
-					"Fresnel",
-					"Brick",
-					"What",
-					"Wacky"
-				};
-				WCombo("Weapon material", &Vars::Chams::DME::Weapon.Value, weaponMaterial);
-				ColorPickerL("Fresnel Weapons Base", Colors::FresnelBaseWeps); HelpMarker("What material to put on your viewmodels weapon");
+				WCombo("Hand material", &Vars::Chams::DME::Hands.drawMaterial, DMEMaterials);
+				ColorPickerL("Fresnel Hands Base", Vars::Chams::DME::Hands.fresnelBase); HelpMarker("What material to put on your viewmodels arms/hands");
+				WCombo("Hand proxy material", &Vars::Chams::DME::HandsProxySkin.Value, DMEProxyMaterials); HelpMarker("Puts a cool looking animated skin on your hands");
 
-				static std::vector weaponProxyMaterial{
-					"None",
-					"Spectrum splattered",
-					"Electro skulls",
-					"Jazzy",
-					"Frozen aurora",
-					"Hana",
-					"IDK",
-					"Ghost thing",
-					"Flames",
-					"Spook wood",
-					"Edgy",
-					"Starlight serenity",
-					"Fade"
-				};
-				WCombo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.Value, weaponProxyMaterial); HelpMarker("Puts a cool looking animated skin on your weapons");
-				WCombo("Weapon Glow", &Vars::Chams::DME::WeaponGlowOverlay.Value, dmeGlowMaterial);
-				ColorPickerL("Weapon glow colour", Colors::WeaponOverlay);
+				
+				WCombo("Hand Glow", &Vars::Chams::DME::Hands.overlayType, dmeGlowMaterial);
+				ColorPickerL("Hand glow colour", Vars::Chams::DME::Hands.overlayColour);
+
+				WCombo("Weapon material", &Vars::Chams::DME::Weapon.drawMaterial, DMEMaterials);
+				ColorPickerL("Fresnel Weapons Base", Vars::Chams::DME::Weapon.fresnelBase); HelpMarker("What material to put on your viewmodels weapon");
+
+				WCombo("Weapon proxy material", &Vars::Chams::DME::WeaponsProxySkin.Value, DMEProxyMaterials); HelpMarker("Puts a cool looking animated skin on your weapons");
+				WCombo("Weapon Glow", &Vars::Chams::DME::Weapon.overlayType, dmeGlowMaterial);
+				ColorPickerL("Weapon glow colour", Vars::Chams::DME::Weapon.overlayColour);
 				MultiCombo({ "Hands", "Hands overlay", "Weapon", "Weapon overlay" }, { &Vars::Chams::DME::HandsRainbow.Value, &Vars::Chams::DME::HandsOverlayRainbow.Value, &Vars::Chams::DME::WeaponRainbow.Value, &Vars::Chams::DME::WeaponOverlayRainbow.Value }, "Rainbow DME###RainbowDMEChams");
 				MultiCombo({ "Hand Overlay", "Weapon Overlay" }, { &Vars::Chams::DME::HandsOverlayPulse.Value, &Vars::Chams::DME::WeaponOverlayPulse.Value }, "Pulse Overlay###PulseDMEOverlay");
 				HelpMarker("Rainbow DME chams");

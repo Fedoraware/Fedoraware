@@ -315,7 +315,9 @@ namespace Vars
 		{
 			inline CVar<bool> Active{true};
 
-			inline CVar<int> Hands{0}; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
+			inline Chams_t Hands{};
+			inline Chams_t Weapon{};
+
 			inline CVar<int> HandsGlowOverlay{0}; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
 			inline CVar<int> HandsProxySkin{0};
 			inline CVar<float> HandsGlowAmount{1};
@@ -324,7 +326,6 @@ namespace Vars
 			inline CVar<bool> HandsOverlayRainbow{false};
 			inline CVar<bool> HandsOverlayPulse{false};
 
-			inline CVar<int> Weapon{0}; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
 			inline CVar<int> WeaponGlowOverlay{0}; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
 			inline CVar<int> WeaponsProxySkin{0};
 			inline CVar<float> WeaponGlowAmount{1};

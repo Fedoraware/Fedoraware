@@ -18,10 +18,16 @@ struct Gradient_t {
 // cry
 struct Chams_t {
 	bool	showObstructed = false;
-	int		drawMaterial = 0;
+	int		drawMaterial = 0;	// 1/shaded, 2/shiny, 3/flat, 4/wfshaded, 5/wfshiny, 6/wfflat, 7/fresnel, 8/brick
 	int		overlayType = 0;
 	bool	chamsActive = false;
+	bool	rainbow = false;
+	bool	overlayPulse = false;
+	bool	overlayRainbow = false;
+	float	overlayIntensity = 1;
 	Color_t fresnelBase = { 0,0,0,255 };
+	Color_t colour = { 0,0,0,255 };
+	Color_t overlayColour = { 0,0,0,255 };
 	std::string customMaterial = "None";
 };
 
