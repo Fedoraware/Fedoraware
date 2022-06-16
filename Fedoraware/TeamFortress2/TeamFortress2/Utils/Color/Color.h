@@ -26,8 +26,8 @@ struct Chams_t {
 	bool	overlayRainbow = false;
 	float	overlayIntensity = 1;
 	Color_t fresnelBase = { 0,0,0,255 };
-	Color_t colour = { 0,0,0,255 };
-	Color_t overlayColour = { 0,0,0,255 };
+	Color_t colour = { 255, 255, 255, 255 };
+	Color_t overlayColour = { 255, 255, 255, 255 };
 	std::string customMaterial = "None";
 };
 

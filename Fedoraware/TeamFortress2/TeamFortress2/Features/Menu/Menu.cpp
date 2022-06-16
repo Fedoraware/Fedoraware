@@ -579,7 +579,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
 					WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
 					WToggle("Pulse Glow", &currentStruct.overlayPulse);
-					WSlider("Glow Amount", &currentStruct.overlayIntensity, 150, 1, "%.0f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+					WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 					if (currentSelected == 5 || currentSelected == 6) {
 						int& proxySkinIndex = currentSelected == 5 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;

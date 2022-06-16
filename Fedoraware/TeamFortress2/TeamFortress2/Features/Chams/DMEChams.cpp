@@ -289,7 +289,29 @@ int GetType(int EntIndex) {
 	}
 }
 
-Chams_t getChamsType(int nIndex) {
+Chams_t GetPlayerChams(CBaseEntity* pEntity) {
+	if (pEntity)
+	{
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
+			return Vars::Chams::Players::Target;
+		}
+		if (pEntity == g_EntityCache.GetLocal()) {
+			return Vars::Chams::Players::Local;
+		}
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive) {
+			return Vars::Chams::Players::Friend;
+		}
+		if (pEntity->GetTeamNum() != g_EntityCache.GetLocal()->GetTeamNum()) {
+			return Vars::Chams::Players::Enemy;
+		}
+		if (pEntity->GetTeamNum() == g_EntityCache.GetLocal()->GetTeamNum()) {
+			return Vars::Chams::Players::Team;
+		}
+	}
+	return Chams_t();
+}
+
+Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	switch (nIndex) {
 	case 0: {
 		return Vars::Chams::DME::Weapon;
@@ -297,9 +319,9 @@ Chams_t getChamsType(int nIndex) {
 	case 1: {
 		return Vars::Chams::DME::Hands;
 	}
-	//case 2: {
-	//	//return GetPlayerChams()
-	//}
+	case 2: {
+		return pEntity ? GetPlayerChams(pEntity) : Chams_t();
+	}
 	//case 3: {
 	//	//return Vars::Chams::DME::Ragdolls
 	//}
@@ -339,7 +361,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		}
 		if (drawType == -1) { return false; }
 
-		Chams_t chams = getChamsType(drawType);
+		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
+
+		Chams_t chams = pEntity ? getChamsType(drawType, pEntity) : getChamsType(drawType);
 
 		if (!chams.chamsActive) { return false; }
 		
