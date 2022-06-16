@@ -585,8 +585,8 @@ void CMenu::MenuVisuals()
 					WToggle("Pulse Glow", &currentStruct.overlayPulse);
 					WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-					if (currentSelected == 5 || currentSelected == 6) {
-						int& proxySkinIndex = currentSelected == 5 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;
+					if (currentSelected == 7 || currentSelected == 6) {
+						int& proxySkinIndex = currentSelected == 7 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;
 						WCombo("Proxy Material", &proxySkinIndex, DMEProxyMaterials);
 
 					}

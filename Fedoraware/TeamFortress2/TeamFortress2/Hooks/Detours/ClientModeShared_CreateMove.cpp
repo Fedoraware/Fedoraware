@@ -47,6 +47,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 currentPos{};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
+	static float scale = 0.01825f;
 	if (pLocal && pLocal->IsAlive())
 	{
 		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
@@ -58,7 +59,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				predEndPoint = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.Value));
 			}
 			currentPos = pLocal->GetVecOrigin();
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)(7.3f/(Vars::Misc::CL_Move::DTTicks.Value)) );
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)((scale*vStartVel.Length2D()) / (Vars::Misc::CL_Move::DTTicks.Value)));
 			nShiftTick++;
 		}
 		else
