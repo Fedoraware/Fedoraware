@@ -289,7 +289,7 @@ int GetType(int EntIndex) {
 	}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
-	if (pWeapon && (pWeapon->GetItemDefIndex() >= 0 && pWeapon->GetItemDefIndex() <= 30758)) {
+	if (pWeapon && (pWeapon->GetItemDefIndex() >= 0 && pWeapon->GetItemDefIndex() < 30758)) {
 		return 5;
 	}
 	return -1;
@@ -436,13 +436,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				}
 			}
 
-			I::RenderView->SetBlend(Color::TOFLOAT(chams.colour.a));
+			float alpha = Color::TOFLOAT(chams.colour.a);
 			if (pEntity && pLocal) {
 				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
-					I::RenderView->SetBlend(Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, chams.colour.a, 0.0f));
+					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
 				}
 			}
-			
+			I::RenderView->SetBlend(alpha);
+
 
 			if (dmeHook) {
 				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);

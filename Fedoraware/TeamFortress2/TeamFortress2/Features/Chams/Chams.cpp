@@ -233,56 +233,12 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 			continue;
 		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 		auto chams = FetchChams(Player);
-		auto chamsMaterial = FetchMaterial(chams);
-		bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
-
-		//skip if disabled
-		if (!chams.chamsActive/*|| !chams.drawMaterial*/) 
-			continue;
 
 		if (chams.showObstructed)
 			pRenderContext->DepthRange(0.0f, 0.2f);
 
-		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
-
 		if (!Utils::IsOnScreen(pLocal, Player))
 			continue;
-
-		Color_t DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
-			
-		float drawalpha = Color::TOFLOAT(DrawColor.a);
-		if (Player->GetTeamNum() == pLocal->GetTeamNum() && !bIsLocal && Vars::Chams::Players::FadeoutTeammates.Value && pLocal->IsAlive()) {
-			drawalpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(Player->GetWorldSpaceCenter()), 450.f, 100.f, drawalpha, 0.0f);
-		}
-		I::RenderView->SetBlend(drawalpha);
-		if (chams.drawMaterial != 6)
-		{
-			I::RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-				Color::TOFLOAT(DrawColor.b));
-		}
-		else if (chams.drawMaterial == 6)
-		{
-			if (foundselfillumtint)
-			{
-				fresnelSelfillumtint->SetVecValue(Color::TOFLOAT(chams.fresnelBase.r),
-					Color::TOFLOAT(chams.fresnelBase.g),
-					Color::TOFLOAT(chams.fresnelBase.b));
-			}
-			if (foundenvmaptint)
-			{
-				if (bIsLocal && Vars::Glow::Players::LocalRainbow.Value)
-				{
-					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(Utils::Rainbow().r),
-						Color::TOFLOAT(Utils::Rainbow().g),
-						Color::TOFLOAT(Utils::Rainbow().b));
-				}
-				else
-				{
-					fresnelEnvmaptint->SetVecValue(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g),
-						Color::TOFLOAT(DrawColor.b));
-				}
-			}
-		}
 
 		DrawModel(Player);
 
