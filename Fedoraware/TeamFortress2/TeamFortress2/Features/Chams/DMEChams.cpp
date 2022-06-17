@@ -442,7 +442,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (drawType == 5 || drawType == 4) {
 					pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity());
 				}
-				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && (pOwner && pOwner != pLocal) && Vars::Chams::Players::FadeoutTeammates.Value) {
+				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && (!pOwner || pOwner != pLocal) && Vars::Chams::Players::FadeoutTeammates.Value) {
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
 				}
 			}
