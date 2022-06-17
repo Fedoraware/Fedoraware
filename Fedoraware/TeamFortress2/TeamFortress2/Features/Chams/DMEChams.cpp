@@ -287,6 +287,25 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFWearable: {
 		return 4;
 	}
+	case ETFClassID::CTFAmmoPack: {
+		return 6;
+	}
+	case ETFClassID::CBaseAnimating:
+	{
+		const auto szName = pEntity->GetModelName();
+
+		if (Hash::IsAmmo(szName))
+		{
+			return 6;
+		}
+
+		if (Hash::IsHealth(szName))
+		{
+			return 7;
+		}
+
+		break;
+	}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
 	if (pWeapon && (pWeapon->GetItemDefIndex() >= 0 && pWeapon->GetItemDefIndex() < 30758)) {
