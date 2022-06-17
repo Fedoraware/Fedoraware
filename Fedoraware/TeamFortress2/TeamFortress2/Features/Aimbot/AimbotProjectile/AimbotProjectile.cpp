@@ -249,7 +249,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	traceFilter.pSkip = predictor.m_pEntity;
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
-	const float maxTime = predictor.m_pEntity->IsPlayer() ? Vars::Aimbot::Projectile::predTime.Value : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
+	const float maxTime = predictor.m_pEntity->IsPlayer() ? (projInfo.m_flMaxTime == 0.f ? Vars::Aimbot::Projectile::predTime.Value : projInfo.m_flMaxTime) : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
 	const float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
 	/*
