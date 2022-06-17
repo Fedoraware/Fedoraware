@@ -438,7 +438,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			float alpha = Color::TOFLOAT(chams.colour.a);
 			if (pEntity && pLocal) {
-				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+				CBaseEntity* pOwner{};
+				if (drawType == 5 || drawType == 4) {
+					pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity());
+				}
+				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && (pOwner && pOwner != pLocal) && Vars::Chams::Players::FadeoutTeammates.Value) {
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
 				}
 			}

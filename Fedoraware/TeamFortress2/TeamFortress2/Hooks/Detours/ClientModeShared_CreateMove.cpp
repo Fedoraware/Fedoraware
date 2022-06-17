@@ -47,7 +47,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 currentPos{};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
-	static float scale = 0.01825f;
+	static float scale = 0.018f;//
 	if (pLocal && pLocal->IsAlive())
 	{
 		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
@@ -115,7 +115,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
-			if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
+			if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1() || (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart()))
 				G::WaitForShift = DT_WAIT_CALLS;
 
 			G::CurItemDefIndex = nItemDefIndex;
