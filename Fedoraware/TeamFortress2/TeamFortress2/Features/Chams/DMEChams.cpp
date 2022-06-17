@@ -94,115 +94,106 @@ IMaterial* CreateNRef(char const* szName, void* pKV) {
 
 void CDMEChams::Init()
 {
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", kv);
-	}
+	static KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
+	static KeyValues* m_pMatFresnelkv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatBrickkv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatOverlaykv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatWFShadedkv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatWFShinykv = new KeyValues("VertexLitGeneric");
+	static KeyValues* m_pMatWFFlatkv = new KeyValues("UnlitGeneric");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", kv);
-	}
+	static bool setup = false;
 
+	if (!setup)
 	{
-		auto kv = new KeyValues("UnlitGeneric");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", kv);
-	}
+		m_pMatShadedkv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatShadedkv->SetString("$bumpmap", "vgui/white_additive");
+		m_pMatShadedkv->SetString("$selfillum", "1");
+		m_pMatShadedkv->SetString("$selfillumfresnel", "1");
+		m_pMatShadedkv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
-		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
-		kv->SetString("$envmapfresnel", "1");
-		kv->SetString("$phong", "1");
-		kv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
-		kv->SetString("$selfillumtint", "[0 0 0]");
-		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", kv);
-	}
+		m_pMatShinykv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatShinykv->SetString("$bumpmap", "vgui/white_additive");
+		m_pMatShinykv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		m_pMatShinykv->SetString("$selfillum", "1");
+		m_pMatShinykv->SetString("$selfillumfresnel", "1");
+		m_pMatShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "brick/brickwall031b");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$color2", "[10 10 10]");
-		kv->SetString("$additive", "1");
-		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
-		kv->SetString("$envmapfresnel", "1");
-		kv->SetString("$envmaptint", "[4 4 0]");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$rimlight", "1");
-		kv->SetString("$rimlightboost", "10");
-		m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", kv);
-	}
+		m_pMatFlatkv->SetString("$basetexture", "vgui/white_additive");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$basetexture", "models/player/shared/ice_player");
-		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
-		kv->SetString("$translucent", "1");
-		kv->SetString("$additive", "1");
-		kv->SetString("$phong", "1");
-		kv->SetString("$phongfresnelranges", "[0 0.5 10]");
-		kv->SetString("$phongtint", "[0 0 0]");
-		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
-		kv->SetString("$envmapfresnel", "1");
-		kv->SetString("$envmaptint", "[0 0 0]");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumtint", "[0 0 0]");
-		kv->SetString("$rimlight", "1");
-		kv->SetString("$rimlightboost", "-5");
-		kv->SetString("$wireframe", "0");
-		m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", kv);
-	}
+		m_pMatFresnelkv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatFresnelkv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		m_pMatFresnelkv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		m_pMatFresnelkv->SetString("$envmapfresnel", "1");
+		m_pMatFresnelkv->SetString("$phong", "1");
+		m_pMatFresnelkv->SetString("$phongfresnelranges", "[0 0.05 0.1]");
+		m_pMatFresnelkv->SetString("$selfillum", "1");
+		m_pMatFresnelkv->SetString("$selfillumfresnel", "1");
+		m_pMatFresnelkv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
+		m_pMatFresnelkv->SetString("$selfillumtint", "[0 0 0]");
+		m_pMatFresnelkv->SetString("$envmaptint", "[1 1 1]");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$wireframe", "1");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", kv);
-	}
+		m_pMatBrickkv->SetString("$basetexture", "brick/brickwall031b");
+		m_pMatBrickkv->SetString("$bumpmap", "vgui/white_additive");
+		m_pMatBrickkv->SetString("$color2", "[10 10 10]");
+		m_pMatBrickkv->SetString("$additive", "1");
+		m_pMatBrickkv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		m_pMatBrickkv->SetString("$envmapfresnel", "1");
+		m_pMatBrickkv->SetString("$envmaptint", "[4 4 0]");
+		m_pMatBrickkv->SetString("$selfillum", "1");
+		m_pMatBrickkv->SetString("$rimlight", "1");
+		m_pMatBrickkv->SetString("$rimlightboost", "10");
 
-	{
-		auto kv = new KeyValues("VertexLitGeneric");
-		kv->SetString("$wireframe", "1");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		kv->SetString("$bumpmap", "vgui/white_additive");
-		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
-		kv->SetString("$selfillum", "1");
-		kv->SetString("$selfillumfresnel", "1");
-		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", kv);
-	}
+		m_pMatOverlaykv->SetString("$basetexture", "models/player/shared/ice_player");
+		m_pMatOverlaykv->SetString("$bumpmap", "models/player/shared/shared_normal");
+		m_pMatOverlaykv->SetString("$translucent", "1");
+		m_pMatOverlaykv->SetString("$additive", "1");
+		m_pMatOverlaykv->SetString("$phong", "1");
+		m_pMatOverlaykv->SetString("$phongfresnelranges", "[0 0.5 10]");
+		m_pMatOverlaykv->SetString("$phongtint", "[0 0 0]");
+		m_pMatOverlaykv->SetString("$envmap", "skybox/sky_dustbowl_01");
+		m_pMatOverlaykv->SetString("$envmapfresnel", "1");
+		m_pMatOverlaykv->SetString("$envmaptint", "[0 0 0]");
+		m_pMatOverlaykv->SetString("$selfillum", "1");
+		m_pMatOverlaykv->SetString("$selfillumtint", "[0 0 0]");
+		m_pMatOverlaykv->SetString("$rimlight", "1");
+		m_pMatOverlaykv->SetString("$rimlightboost", "-5");
+		m_pMatOverlaykv->SetString("$wireframe", "0");
 
-	{
-		auto kv = new KeyValues("UnlitGeneric");
-		kv->SetString("$wireframe", "1");
-		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", kv);
-	}
+		m_pMatWFShadedkv->SetString("$wireframe", "1");
+		m_pMatWFShadedkv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatWFShadedkv->SetString("$bumpmap", "vgui/white_additive");
+		m_pMatWFShadedkv->SetString("$selfillum", "1");
+		m_pMatWFShadedkv->SetString("$selfillumfresnel", "1");
+		m_pMatWFShadedkv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
 
-	ProxySkins::Init();
+		m_pMatWFShinykv->SetString("$wireframe", "1");
+		m_pMatWFShinykv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatWFShinykv->SetString("$bumpmap", "vgui/white_additive");
+		m_pMatWFShinykv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		m_pMatWFShinykv->SetString("$selfillum", "1");
+		m_pMatWFShinykv->SetString("$selfillumfresnel", "1");
+		m_pMatWFShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+
+		m_pMatWFFlatkv->SetString("$wireframe", "1");
+		m_pMatWFFlatkv->SetString("$basetexture", "vgui/white_additive");
+
+		m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv);
+		m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv);
+		m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv);
+		m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv);
+		m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv);
+		m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv);
+		m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv);
+		m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv);
+		m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv);
+
+		ProxySkins::Init();
+
+		setup = true;
+	}
 }
 
 IMaterial* CDMEChams::GetChamMaterial(int nIndex) {
@@ -384,7 +375,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 	const auto& pRenderContext = I::MatSystem->GetRenderContext();
 
 	m_bRendering = false;
-	if (ShouldRun())
+	if (ShouldRun() && pRenderContext)
 	{
 		m_bRendering = true;
 
@@ -428,9 +419,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			IMaterial* chamsMaterial = GetChamMaterial(chams.drawMaterial);
 
-			//if (pRenderContext) {
-			//	pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
-			//}
+			if (chamsMaterial) {
+				chamsMaterial->IncrementReferenceCount();
+			}
+
+			pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
 
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
@@ -483,6 +476,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
+
+					pMaterial->IncrementReferenceCount();
+
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
 					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
@@ -498,38 +494,42 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				// Overlay
 				IMaterial* pMaterial = m_pMatOverlay;
 
-				IMaterialVar* phongtint = pMaterial->FindVar(_("$phongtint"), nullptr);
-				if (phongtint)
-				{
-					phongtint->SetVecValue(
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
-				}
-				IMaterialVar* envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr);
-				if (envmaptint)
-				{
-					envmaptint->SetVecValue(
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
-						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
-				}
-				IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr);
-				if (phongfresnelranges)
-				{
-					phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
-				}
-				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chams.overlayType == 2);
+				if (pMaterial) {
+					pMaterial->IncrementReferenceCount();
 
-				I::RenderView->SetBlend(chams.overlayPulse ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(chams.overlayColour.a));
-				I::ModelRender->ForcedMaterialOverride(pMaterial);
+					IMaterialVar* phongtint = pMaterial->FindVar(_("$phongtint"), nullptr);
+					if (phongtint)
+					{
+						phongtint->SetVecValue(
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
+					}
+					IMaterialVar* envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr);
+					if (envmaptint)
+					{
+						envmaptint->SetVecValue(
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
+							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
+					}
+					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr);
+					if (phongfresnelranges)
+					{
+						phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
+					}
+					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chams.overlayType == 2);
+
+					I::RenderView->SetBlend(chams.overlayPulse ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(chams.overlayColour.a));
+					I::ModelRender->ForcedMaterialOverride(pMaterial);
+				}
 
 				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
 
-			//pRenderContext->DepthRange(0.0f, 1.f);
+			pRenderContext->DepthRange(0.0f, 1.f);
 			I::ModelRender->ForcedMaterialOverride(nullptr);
 			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
