@@ -133,6 +133,10 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CanJoinParty.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerInventory_OnHasNewItems.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CEconNotification_HasNewItems_CEconNotification_HasNewItems.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -669,6 +673,7 @@
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

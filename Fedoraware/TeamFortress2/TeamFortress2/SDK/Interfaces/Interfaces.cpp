@@ -132,6 +132,9 @@ void CInterfaces::Init()
 
 	EngineSound = g_Interface.Get<IEngineSound*>(L"engine.dll", "IEngineSoundClient003");
 	_valid(EngineSound);
+
+	TFGameRules = *reinterpret_cast<CTFGameRules**>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB ? ? ? ? ?") + 0x1);
+	_valid(TFGameRules);
 }
 
 void CSteamInterfaces::Init()

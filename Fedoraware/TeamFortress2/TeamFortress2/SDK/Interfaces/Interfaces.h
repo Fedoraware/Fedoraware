@@ -33,6 +33,7 @@
 #include "AchievementMgr/AchievementMgr.h"
 #include "ViewRenderBeams/ViewRenderBeams.h"
 #include "EngineSound/EngineSound.h"
+#include "CTFGameRules/CTFGameRules.h"
 
 class CClockDriftMgr
 {
@@ -131,6 +132,7 @@ namespace I
 	inline IAchievementMgr* AchievementMgr = nullptr;
 	inline IViewRenderBeams* ViewRenderBeams = nullptr;
 	inline IEngineSound* EngineSound = nullptr;
+	inline CTFGameRules* TFGameRules = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
