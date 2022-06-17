@@ -18,7 +18,7 @@ public:
 	IMaterial* m_pMatProxy;
 private:
 	bool ShouldRun();
-	IMaterial* GetChamMaterial(int nIndex);
+	IMaterial* GetChamMaterial(const Chams_t& chams);
 	IMaterial* GetProxyMaterial(int nIndex);
 
 public:

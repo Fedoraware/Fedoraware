@@ -165,7 +165,7 @@ public: //Everything else, lol
 	}
 
 	__inline bool CanShoot(CBaseEntity* pLocal) {
-		if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart())
+		if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart() || pLocal->m_fFlags() & FL_FROZEN)
 			return false;
 
 		if (pLocal->GetClassNum() == CLASS_SPY)

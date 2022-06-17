@@ -10,7 +10,7 @@ bool CChams::ShouldRun()
 void CChams::DrawModel(CBaseEntity* pEntity)
 {
 	m_bRendering = true;
-	pEntity->DrawModel(STUDIO_RENDER);
+	pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
 	m_DrawnEntities[pEntity] = true;
 	m_bRendering = false;
 }
@@ -222,20 +222,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 	if (Players.empty())
 		return;
 
-	bool foundselfillumtint = false;
-	bool foundenvmaptint = false;
-	IMaterialVar* fresnelSelfillumtint = m_pMatFresnel->FindVar(_("$selfillumtint"), &foundselfillumtint);
-	IMaterialVar* fresnelEnvmaptint = m_pMatFresnel->FindVar(_("$envmaptint"), &foundenvmaptint);
-
 	for (const auto& Player : Players)
 	{
 		if (!Player->IsAlive() || Player->IsAGhost())
 			continue;
-		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-		auto chams = FetchChams(Player);
-
-		if (chams.showObstructed)
-			pRenderContext->DepthRange(0.0f, 0.2f);
 
 		if (!Utils::IsOnScreen(pLocal, Player))
 			continue;

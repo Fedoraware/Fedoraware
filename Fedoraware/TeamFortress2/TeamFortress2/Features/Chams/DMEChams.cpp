@@ -2,6 +2,7 @@
 
 #include "../Vars.h"
 #include "Chams.h"
+#include "../Menu/MaterialEditor/MaterialEditor.h"
 #include "../Glow/Glow.h"
 #include "../Backtrack/Backtrack.h"
 #include "../../Hooks/HookManager.h"
@@ -196,8 +197,8 @@ void CDMEChams::Init()
 	}
 }
 
-IMaterial* CDMEChams::GetChamMaterial(int nIndex) {
-	switch (nIndex)
+IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
+	switch (chams.drawMaterial)
 	{
 	case 1:
 	{
@@ -230,6 +231,10 @@ IMaterial* CDMEChams::GetChamMaterial(int nIndex) {
 	case 8:
 	{
 		return m_pMatBrick;
+	}
+	case 9:
+	{
+		return F::MaterialEditor.GetByName(chams.customMaterial);
 	}
 	default: return nullptr;
 	}
@@ -287,8 +292,7 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFAmmoPack: {
 		return 6;
 	}
-	case ETFClassID::CBaseAnimating:
-	{
+	case ETFClassID::CBaseAnimating: {
 		const auto szName = pEntity->GetModelName();
 
 		if (Hash::IsAmmo(szName))
@@ -303,9 +307,28 @@ int GetType(int EntIndex) {
 
 		break;
 	}
+	case ETFClassID::CObjectSentrygun:
+	case ETFClassID::CObjectDispenser:
+	case ETFClassID::CObjectTeleporter: {
+		return 8;
+	}
+	case ETFClassID::CTFProjectile_Rocket:
+	case ETFClassID::CTFGrenadePipebombProjectile:
+	case ETFClassID::CTFProjectile_Jar:
+	case ETFClassID::CTFProjectile_JarGas:
+	case ETFClassID::CTFProjectile_JarMilk:
+	case ETFClassID::CTFProjectile_Arrow:
+	case ETFClassID::CTFProjectile_SentryRocket:
+	case ETFClassID::CTFProjectile_Flare:
+	case ETFClassID::CTFProjectile_Cleaver:
+	case ETFClassID::CTFProjectile_EnergyBall:
+	case ETFClassID::CTFProjectile_HealingBolt:
+	case ETFClassID::CTFProjectile_ThrowableBreadMonster: {
+		return 9;
+	}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
-	if (pWeapon && (pWeapon->GetItemDefIndex() >= 0 && pWeapon->GetItemDefIndex() < 30758)) {
+	if (pWeapon) {
 		return 5;
 	}
 	return -1;
@@ -364,6 +387,28 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		}
 		return Chams_t();
 	}
+	case 6: {
+		return Vars::Chams::World::Ammo;
+	}
+	case 7: {
+		return Vars::Chams::World::Health;
+	}
+	case 8: {
+		if (!pEntity) { return Chams_t(); }
+		const auto& Building = reinterpret_cast<CBaseObject*>(pEntity);
+		if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
+		if (CBaseEntity* pOwner = Building->GetOwner()) {
+			return GetPlayerChams(pOwner);
+		}
+		return Chams_t();
+	}
+	case 9: {
+		if (!pEntity) { return Chams_t(); }
+		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower()))) {
+			return GetPlayerChams(pOwner);
+		}
+		return Chams_t();
+	}
 	default:
 		return Chams_t();
 	}
@@ -417,7 +462,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			const bool rainbow = chams.rainbow;
 			const bool rainbowOverlay = chams.overlayRainbow;
 
-			IMaterial* chamsMaterial = GetChamMaterial(chams.drawMaterial);
+			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
 			if (chamsMaterial) {
 				chamsMaterial->IncrementReferenceCount();
