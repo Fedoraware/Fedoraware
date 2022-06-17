@@ -2,6 +2,7 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -87,6 +88,10 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 						}
 					}
 				}
+			}
+
+			if (boost::contains(chatMessage, "\n")) {
+				F::BadActors.IllegalChar[entIdx] = true;
 			}
 
 			break;
