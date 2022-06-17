@@ -455,7 +455,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
-	const bool bIsDucking = pEntity->m_bDucked();
+	const bool bIsDucking = (pEntity->m_bDucked() || pEntity->m_fFlags() & FL_DUCKING);
 
 	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.Value; // stop shoot flor (:D)
 

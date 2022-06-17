@@ -86,6 +86,12 @@ bool CDMEChams::ShouldRun()
 	return true;
 }
 
+IMaterial* CreateNRef(char const* szName, void* pKV) {
+	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
+	returnMaterial->IncrementReferenceCount();
+	return returnMaterial;
+}
+
 void CDMEChams::Init()
 {
 	{
@@ -95,7 +101,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = I::MatSystem->Create("DME_MAT_m_pMatShaded", kv);
+		m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", kv);
 	}
 
 	{
@@ -106,13 +112,13 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = I::MatSystem->Create("DME_MAT_m_pMatShiny", kv);
+		m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = I::MatSystem->Create("DME_MAT_m_pMatFlat", kv);
+		m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", kv);
 	}
 
 	{
@@ -128,7 +134,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[1 1 1]");
-		m_pMatFresnel = I::MatSystem->Create("DME_MAT_m_pMatFresnel", kv);
+		m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", kv);
 	}
 
 	{
@@ -143,7 +149,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "10");
-		m_pMatBrick = I::MatSystem->Create("DME_MAT_m_pMatBrick", kv);
+		m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", kv);
 	}
 
 	{
@@ -163,7 +169,7 @@ void CDMEChams::Init()
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "-5");
 		kv->SetString("$wireframe", "0");
-		m_pMatOverlay = I::MatSystem->Create("DME_MAT_m_pMatScuffed", kv);
+		m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", kv);
 	}
 
 	{
@@ -174,7 +180,7 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShaded = I::MatSystem->Create("DME_MAT_m_pMatWFShaded", kv);
+		m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", kv);
 	}
 
 	{
@@ -186,14 +192,14 @@ void CDMEChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatWFShiny = I::MatSystem->Create("DME_MAT_m_pMatWFShiny", kv);
+		m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", kv);
 	}
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$wireframe", "1");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatWFFlat = I::MatSystem->Create("DME_MAT_m_pMatWFFlat", kv);
+		m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", kv);
 	}
 
 	ProxySkins::Init();
