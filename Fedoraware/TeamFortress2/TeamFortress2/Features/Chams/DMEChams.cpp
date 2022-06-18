@@ -500,14 +500,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			if (chamsMaterial == m_pMatFresnel)
 			{
-				if (IMaterialVar* envmap = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
-					envmap->SetVecValue(
+				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
+					$envmaptint->SetVecValue(
 						Color::TOFLOAT(chams.colour.r) * 4,
 						Color::TOFLOAT(chams.colour.g) * 4,
 						Color::TOFLOAT(chams.colour.b) * 4);
 				}
-				if (IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
-					fresnelSelfillumtint->SetVecValue(
+				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
+					$selfillumtint->SetVecValue(
 						Color::TOFLOAT(chams.fresnelBase.r) * 4,
 						Color::TOFLOAT(chams.fresnelBase.g) * 4,
 						Color::TOFLOAT(chams.fresnelBase.b) * 4);
@@ -559,40 +559,35 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				// Overlay
 				IMaterial* pMaterial = m_pMatOverlay;
-				bool draw = false;
 
 				if (pMaterial) {
 					pMaterial->IncrementReferenceCount();
 
-					IMaterialVar* phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false);
-					if (phongtint)
+					if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))
 					{
-						phongtint->SetVecValue(
+						$phongtint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 					}
-					IMaterialVar* envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false);
-					if (envmaptint)
+					if (IMaterialVar* $envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false))
 					{
-						envmaptint->SetVecValue(
+						$envmaptint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 					}
-					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr, false);
-					if (phongfresnelranges)
+					if (IMaterialVar* $phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr, false))
 					{
-						phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
+						$phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chams.overlayType == 2);
 
 					I::RenderView->SetBlend(chams.overlayPulse ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(chams.overlayColour.a));
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
-					draw = (phongfresnelranges && envmaptint && phongtint);
 				}
 
-				if (dmeHook && draw) {
+				if (dmeHook) {
 					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
