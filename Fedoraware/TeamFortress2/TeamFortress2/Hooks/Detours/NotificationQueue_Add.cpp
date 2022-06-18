@@ -9,7 +9,7 @@ MAKE_HOOK(NotificationQueue_Add, g_Pattern.Find(L"client.dll", L"55 8B EC 8B 0D 
 	{
 		for (const auto& Notification : G::NotificationVector)
 		{
-			if (Notification == pNotification)
+			if (Notification == pNotification && Vars::Misc::AutoAcceptItemDrops.Value)
 			{
 				pNotification->Accept();
 				pNotification->Trigger();

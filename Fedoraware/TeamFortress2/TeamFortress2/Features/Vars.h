@@ -595,6 +595,7 @@ namespace Vars
 		inline CVar<bool> PartyESP{false};
 		inline CVar<int> SoundBlock{ 0 };
 		inline CVar<bool> ForceMedievalChat{false};
+		inline CVar<bool> AutoAcceptItemDrops{ true };
 
 		namespace Followbot
 		{
