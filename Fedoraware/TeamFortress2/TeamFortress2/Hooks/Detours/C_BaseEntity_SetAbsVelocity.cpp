@@ -6,7 +6,7 @@
 MAKE_HOOK(C_BaseEntity_SetAbsVelocity, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 F3 0F"), void, __fastcall,
 		  void* ecx, void* edx, const Vec3& vecAbsVelocity)
 {
-	static DWORD dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 8D 47 ? 39 05") - 0x3;
+	static DWORD dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 53 8B CF E8 ? ? ? ? 8D 47 F8 39 05 ? ? ? ?") + 0x5;
 
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall)
 	{

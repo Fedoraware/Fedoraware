@@ -40,11 +40,8 @@ KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 
 KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
 {
-	using fn = KeyValues * (__thiscall*)(KeyValues*, KeyValues*);
-	static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? EB 92") + 0x1;
-	static DWORD b = *(PDWORD)a + a + 4;
-	static fn FN = reinterpret_cast<fn>(b);
-	return FN(this, pSubkey);
+	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? EB 92"));
+	return KeyValues__AddSubkey(this, pSubkey);
 }
 
 int KeyValues::GetInt(const char* keyName, int defaultValue)

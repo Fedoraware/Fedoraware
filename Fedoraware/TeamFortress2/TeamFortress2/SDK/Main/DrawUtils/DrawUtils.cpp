@@ -269,6 +269,13 @@ CHudTexture* Draw_t::GetIcon(const char* szIcon, int eIconFormat /* = 0*/)
 	return GetIconFn(szIcon, eIconFormat);
 }
 
+int Draw_t::CreateTextureFromArray(const unsigned char* rgba, int w, int h)
+{
+	int nTextureIdOut = I::Surface->CreateNewTextureID(true);
+	I::Surface->DrawSetTextureRGBAEx(nTextureIdOut, rgba, w, h, IMAGE_FORMAT_RGBA8888);
+	return nTextureIdOut;
+}
+
 void Draw_t::DrawHudTexture(float x0, float y0, float s0, CHudTexture* texture, Color_t col0)
 {
 	if (!texture)

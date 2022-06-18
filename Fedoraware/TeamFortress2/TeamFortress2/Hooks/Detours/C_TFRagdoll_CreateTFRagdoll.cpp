@@ -1,11 +1,5 @@
 #include "../Hooks.h"
 
-DWORD CreateTFRagdollAddress()
-{
-	static DWORD dwFn = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 8D 4F F8 E8 ? ? ? ? 84 C0 74 78") + 0x1;
-	return *(PDWORD)dwFn + dwFn + 0x4;
-}
-
 #define Offset(type, ent, offset) *reinterpret_cast<type>(ent + offset)
 
 void ClearEffects(CBaseEntity* pEntity)
@@ -18,7 +12,7 @@ void ClearEffects(CBaseEntity* pEntity)
 	Offset(bool*, pEntity, 0xCA1) = false; // Ice
 }
 
-MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, CreateTFRagdollAddress(), void, __fastcall,
+MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 8D 4F F8 E8 ? ? ? ? 84 C0 74 78"), void, __fastcall,
 		  void* ecx, void* edx)
 {
 	if (const auto& pEntity = static_cast<CBaseEntity*>(ecx))

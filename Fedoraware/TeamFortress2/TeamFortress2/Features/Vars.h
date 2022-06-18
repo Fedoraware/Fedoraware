@@ -41,6 +41,8 @@ namespace Vars
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
 
+		inline CVar<bool> ShowDVD{ true };
+
 		namespace Colors
 		{
 			inline Color_t MenuAccent = {255, 101, 101, 255};
@@ -595,6 +597,7 @@ namespace Vars
 		inline CVar<bool> PartyESP{false};
 		inline CVar<int> SoundBlock{ 0 };
 		inline CVar<bool> ForceMedievalChat{false};
+		inline CVar<bool> AutoAcceptItemDrops{ true };
 
 		namespace Followbot
 		{

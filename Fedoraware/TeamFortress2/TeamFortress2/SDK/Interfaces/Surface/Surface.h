@@ -208,6 +208,12 @@ public:
 		return GetVFunc<FN>(this, 108)(this, alpha);
 	}
 
+	void DrawSetTextureRGBAEx(int id, const unsigned char* rgba, int wide, int tall, ImageFormat imageFormat)
+	{
+		typedef void(__thiscall* FN)(PVOID, int id, const unsigned char* rgba, int wide, int tall, ImageFormat imageFormat);
+		return GetVFunc<FN>(this, 119)(this, id, rgba, wide, tall, imageFormat);
+	}
+
 	void DestroyTextureID(int id) {
 		typedef void(__thiscall* FN)(PVOID, int);
 		return GetVFunc<FN>(this, 141)(this, id);
