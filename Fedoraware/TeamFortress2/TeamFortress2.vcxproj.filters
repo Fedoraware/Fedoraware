@@ -137,6 +137,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerInventory_OnHasNewItems.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconNotification_HasNewItems_CEconNotification_HasNewItems.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\NotificationQueue_Add.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -674,6 +675,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\PlayerResource\PlayerResource.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
+    <ClInclude Include="TeamFortress2\SDK\Main\CEconNotification.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
