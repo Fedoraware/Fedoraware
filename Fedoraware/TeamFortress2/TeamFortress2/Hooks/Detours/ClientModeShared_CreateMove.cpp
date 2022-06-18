@@ -16,6 +16,9 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
+#include "../../Features/Discord/Discord.h"
+
+#include "../../SDK/Discord/include/discord_rpc.h"
 
 static void UpdateAntiAFK(CUserCmd* pCmd)
 {
@@ -29,6 +32,12 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 			pCmd->buttons |= 1 << 27;
 		}
 	}
+}
+
+void UpdateRichPresence()
+{
+	F::DiscordRPC.Update();
+	F::Misc.SteamRPC();
 }
 
 //	TODO: make this p
@@ -111,6 +120,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	{
 		nOldFlags = pLocal->GetFlags();
 
+		static Timer RichPresenceTimer{};
+		if (RichPresenceTimer.Run(1000)) {
+			UpdateRichPresence();
+		}
+
 		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
@@ -163,6 +177,20 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 				{
 					G::Recharging = true;
 				}
+			}
+		}
+
+		if (const INetChannel* NetChannel = I::Engine->GetNetChannelInfo()) {
+			static const char* OServerAddress = NetChannel->GetAddress();
+			const char* CServerAddress = NetChannel->GetAddress();
+
+			static const char* OMap = I::Engine->GetLevelName();
+			const char* CMap = I::Engine->GetLevelName();
+
+			if (OServerAddress != CServerAddress || OMap != CMap) {
+				OServerAddress = CServerAddress;
+				OMap = CMap;
+				G::LoadInCount++;
 			}
 		}
 	}

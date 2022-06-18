@@ -51,12 +51,6 @@ void ShutdownRichPresence()
 	Discord_Shutdown();
 }
 
-void UpdateRichPresence()
-{
-	F::DiscordRPC.Update();
-	F::Misc.SteamRPC();
-}
-
 void Loaded()
 {
 	I::CVars->ConsoleColorPrintf({ 255, 193, 75, 255 }, _("Fedoraware Loaded!\n"));
@@ -151,8 +145,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	Loaded();
 
 	while (!GetAsyncKeyState(VK_F11) || F::Menu.IsOpen) {
-		Sleep(1000);
-		UpdateRichPresence();
+		Sleep(20);
 	}
 
 	Uninitialize();

@@ -118,6 +118,7 @@ void CDMEChams::Init()
 		m_pMatShinykv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatShinykv->SetString("$bumpmap", "vgui/white_additive");
 		m_pMatShinykv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		m_pMatShinykv->SetString("$envmaptint", "[1 1 1]");
 		m_pMatShinykv->SetString("$selfillum", "1");
 		m_pMatShinykv->SetString("$selfillumfresnel", "1");
 		m_pMatShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
@@ -142,7 +143,7 @@ void CDMEChams::Init()
 		m_pMatBrickkv->SetString("$additive", "1");
 		m_pMatBrickkv->SetString("$envmap", "cubemaps/cubemap_sheen001");
 		m_pMatBrickkv->SetString("$envmapfresnel", "1");
-		m_pMatBrickkv->SetString("$envmaptint", "[4 4 0]");
+		m_pMatBrickkv->SetString("$envmaptint", "[1 1 1]");
 		m_pMatBrickkv->SetString("$selfillum", "1");
 		m_pMatBrickkv->SetString("$rimlight", "1");
 		m_pMatBrickkv->SetString("$rimlightboost", "10");
@@ -156,7 +157,7 @@ void CDMEChams::Init()
 		m_pMatOverlaykv->SetString("$phongtint", "[0 0 0]");
 		m_pMatOverlaykv->SetString("$envmap", "skybox/sky_dustbowl_01");
 		m_pMatOverlaykv->SetString("$envmapfresnel", "1");
-		m_pMatOverlaykv->SetString("$envmaptint", "[0 0 0]");
+		m_pMatOverlaykv->SetString("$envmaptint", "[1 1 1]");
 		m_pMatOverlaykv->SetString("$selfillum", "1");
 		m_pMatOverlaykv->SetString("$selfillumtint", "[0 0 0]");
 		m_pMatOverlaykv->SetString("$rimlight", "1");
@@ -174,6 +175,7 @@ void CDMEChams::Init()
 		m_pMatWFShinykv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatWFShinykv->SetString("$bumpmap", "vgui/white_additive");
 		m_pMatWFShinykv->SetString("$envmap", "cubemaps/cubemap_sheen001");
+		m_pMatWFShinykv->SetString("$envmaptint", "[1 1 1]");
 		m_pMatWFShinykv->SetString("$selfillum", "1");
 		m_pMatWFShinykv->SetString("$selfillumfresnel", "1");
 		m_pMatWFShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
@@ -181,20 +183,21 @@ void CDMEChams::Init()
 		m_pMatWFFlatkv->SetString("$wireframe", "1");
 		m_pMatWFFlatkv->SetString("$basetexture", "vgui/white_additive");
 
-		m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv);
-		m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv);
-		m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv);
-		m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv);
-		m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv);
-		m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv);
-		m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv);
-		m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv);
-		m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv);
-
-		ProxySkins::Init();
-
 		setup = true;
 	}
+
+
+	m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv);
+	m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv);
+	m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv);
+	m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv);
+	m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv);
+	m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv);
+	m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv);
+	m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv);
+	m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv);
+
+	ProxySkins::Init();
 }
 
 IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
@@ -357,6 +360,29 @@ Chams_t GetPlayerChams(CBaseEntity* pEntity) {
 	return Chams_t();
 }
 
+Chams_t GetBuildingChams(CBaseEntity* pEntity) {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (pEntity && pLocal)
+	{
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
+			return Vars::Chams::Buildings::Target;
+		}
+		if (pEntity->GetIndex() == pLocal->GetIndex()) {
+			return Vars::Chams::Buildings::Local;
+		}
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive) {
+			return Vars::Chams::Buildings::Friend;
+		}
+		if (pEntity->GetTeamNum() != pLocal->GetTeamNum()) {
+			return Vars::Chams::Buildings::Enemy;
+		}
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+			return Vars::Chams::Buildings::Team;
+		}
+	}
+	return Chams_t();
+}
+
 Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	switch (nIndex) {
 	case 0: {
@@ -385,6 +411,12 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
 			return GetPlayerChams(pOwner);
 		}
+		else if (int teamNum = pEntity->GetTeamNum()) {	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
+			CBaseEntity* pLocal = g_EntityCache.GetLocal();
+			if (pLocal) {
+				return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+			}
+		}
 		return Chams_t();
 	}
 	case 6: {
@@ -398,7 +430,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		const auto& Building = reinterpret_cast<CBaseObject*>(pEntity);
 		if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
 		if (CBaseEntity* pOwner = Building->GetOwner()) {
-			return GetPlayerChams(pOwner);
+			return GetBuildingChams(pOwner);
 		}
 		return Chams_t();
 	}
@@ -472,40 +504,31 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
-			if (chams.drawMaterial != 7)
+			if (chamsMaterial == m_pMatFresnel)
 			{
+				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
+					$envmaptint->SetVecValue(
+						Color::TOFLOAT(chams.colour.r) * 4,
+						Color::TOFLOAT(chams.colour.g) * 4,
+						Color::TOFLOAT(chams.colour.b) * 4);
+				}
+				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
+					$selfillumtint->SetVecValue(
+						Color::TOFLOAT(chams.fresnelBase.r) * 4,
+						Color::TOFLOAT(chams.fresnelBase.g) * 4,
+						Color::TOFLOAT(chams.fresnelBase.b) * 4);
+				}
+			}
+			else {
 				I::RenderView->SetColorModulation(
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().r : chams.colour.r),
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().g : chams.colour.g),
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().b : chams.colour.b));
 			}
-			else if (chams.drawMaterial == 7)
-			{
-				IMaterialVar* fresnelSelfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr);
-				if (fresnelSelfillumtint)
-				{
-					fresnelSelfillumtint->SetVecValue(
-						Color::TOFLOAT(chams.fresnelBase.r) * 4,
-						Color::TOFLOAT(chams.fresnelBase.g) * 4,
-						Color::TOFLOAT(chams.fresnelBase.b) * 4);
-				}
-				IMaterialVar* envmap = chamsMaterial->FindVar(_("$envmaptint"), nullptr);
-				if (envmap)
-				{
-					envmap->SetVecValue(
-						Color::TOFLOAT(chams.colour.r) * 4,
-						Color::TOFLOAT(chams.colour.g) * 4,
-						Color::TOFLOAT(chams.colour.b) * 4);
-				}
-			}
 
 			float alpha = Color::TOFLOAT(chams.colour.a);
 			if (pEntity && pLocal) {
-				CBaseEntity* pOwner{};
-				if (drawType == 5 || drawType == 4) {
-					pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity());
-				}
-				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && (!pOwner || pOwner != pLocal) && Vars::Chams::Players::FadeoutTeammates.Value) {
+				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value) {
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
 				}
 			}
@@ -542,26 +565,23 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				if (pMaterial) {
 					pMaterial->IncrementReferenceCount();
 
-					IMaterialVar* phongtint = pMaterial->FindVar(_("$phongtint"), nullptr);
-					if (phongtint)
+					if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))
 					{
-						phongtint->SetVecValue(
+						$phongtint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 					}
-					IMaterialVar* envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr);
-					if (envmaptint)
+					if (IMaterialVar* $envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false))
 					{
-						envmaptint->SetVecValue(
+						$envmaptint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 					}
-					IMaterialVar* phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr);
-					if (phongfresnelranges)
+					if (IMaterialVar* $phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr, false))
 					{
-						phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
+						$phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
 					}
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chams.overlayType == 2);
 

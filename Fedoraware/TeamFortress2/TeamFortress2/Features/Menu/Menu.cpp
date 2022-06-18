@@ -680,83 +680,62 @@ void CMenu::MenuVisuals()
 			/* Column 2 */
 			if (TableColumnChild("VisualsBuildingsCol2"))
 			{
-				static std::vector chamOptions{
-						"Local",
-						"Friends",
-						"Enemies",
-						"Teammates",
-						"Target"
-				};
-
-				static int currentSelected = 0; // 0 - local, 1 - friends, 2 - enemy, 3 - team
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
-
 				SectionTitle("Building Chams");
 				WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.Value); HelpMarker("Building chams master switch");
 
+				static std::vector chamOptions{
+					"Local",
+					"Friends",
+					"Enemies",
+					"Teammates",
+					"Target"
+				};
+				static std::vector dmeGlowMaterial{
+					"None",
+					"Fresnel Glow",
+					"Wireframe Glow"
+				};
+
+				static int currentSelected = 0; //
+				Chams_t& currentStruct = ([&]() -> Chams_t&
+					{
+						switch (currentSelected) {
+						case 0: {
+							return Vars::Chams::Buildings::Local;
+						}
+						case 1: {
+							return Vars::Chams::Buildings::Friend;
+						}
+						case 2: {
+							return Vars::Chams::Buildings::Enemy;
+						}
+						case 3: {
+							return Vars::Chams::Buildings::Team;
+						}
+						case 4: {
+							return Vars::Chams::Buildings::Target;
+						}
+						}
+					}());
+				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
+
 				WCombo("Config", &currentSelected, chamOptions);
-				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
 				{
-				case 0:
-				{
-					// Local
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Local.chamsActive, &Vars::Chams::Buildings::Local.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Buildings::Local.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Local.fresnelBase);
-					if (Vars::Chams::Buildings::Local.drawMaterial == 8)
+					ColorPickerL("Colour", currentStruct.colour, 1);
+					MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
+
+					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
+					if (currentStruct.drawMaterial == 7)
+						ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					if (currentStruct.drawMaterial == 9)
 					{
-						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Local.customMaterial);
+						MaterialCombo("Custom Material", &currentStruct.customMaterial);
 					}
-					break;
-				}
-				case 1:
-				{
-					// Friends
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Friend.chamsActive, &Vars::Chams::Buildings::Friend.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Buildings::Friend.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Friend.fresnelBase);
-					if (Vars::Chams::Buildings::Friend.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Friend.customMaterial);
-					}
-					break;
-				}
-				case 2:
-				{
-					// Enemy
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Enemy.chamsActive, &Vars::Chams::Buildings::Enemy.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::Buildings::Enemy.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Enemy.fresnelBase);
-					if (Vars::Chams::Buildings::Enemy.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Enemy.customMaterial);
-					}
-					break;
-				}
-				case 3:
-				{
-					// Team
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Team.chamsActive, &Vars::Chams::Buildings::Team.showObstructed, }, "Options");
-					WCombo("Material", &Vars::Chams::Buildings::Team.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Team.fresnelBase);
-					if (Vars::Chams::Buildings::Team.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Team.customMaterial);
-					}
-					break;
-				}
-				case 4:
-				{
-					// Target
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::Buildings::Target.chamsActive, &Vars::Chams::Buildings::Target.showObstructed, }, "Options");
-					WCombo("Material", &Vars::Chams::Buildings::Target.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to the building");
-					ColorPickerL("Fresnel base colour", Vars::Chams::Buildings::Target.fresnelBase);
-					if (Vars::Chams::Buildings::Target.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::Buildings::Target.customMaterial);
-					}
-					break;
-				}
+					WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
+					ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
+					WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
+					WToggle("Pulse Glow", &currentStruct.overlayPulse);
+					WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 				}
 			} EndChild();
 
@@ -803,48 +782,46 @@ void CMenu::MenuVisuals()
 					"Ammopacks",
 					"Projectiles"
 				};
+				static std::vector dmeGlowMaterial{
+					"None",
+					"Fresnel Glow",
+					"Wireframe Glow"
+				};
 
-				static int currentSelected = 0;
-				static std::vector pchamsMaterials{ "None", "Shaded", "Shiny", "Flat", "Brick", "Blur", "Fresnel", "Plastic", "Custom" };
+				static int currentSelected = 0; //
+				Chams_t& currentStruct = ([&]() -> Chams_t&
+					{
+						switch (currentSelected) {
+						case 0: {
+							return Vars::Chams::World::Health;
+						}
+						case 1: {
+							return Vars::Chams::World::Ammo;
+						}
+						case 2: {
+							return Vars::Chams::World::Projectiles;
+						}
+						}
+					}());
+				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
 				WCombo("Config", &currentSelected, chamOptions);
-				switch (currentSelected) // please find a better way to do this, i have tried so many things and i cant get it to work properly
 				{
-				case 0:
-				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Health.chamsActive, &Vars::Chams::World::Health.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::World::Health.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to healthpacks");
-					ColorPickerL("Fresnel base colour", Vars::Chams::World::Health.fresnelBase);
-					if (Vars::Chams::World::Health.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::World::Health.customMaterial);
-					}
-					break;
-				}
-				case 1:
-				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Ammo.chamsActive, &Vars::Chams::World::Ammo.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::World::Ammo.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to ammopacks");
-					ColorPickerL("Fresnel base colour", Vars::Chams::World::Ammo.fresnelBase);
-					if (Vars::Chams::World::Ammo.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::World::Ammo.customMaterial);
-					}
-					break;
-				}
-				case 2:
-				{
-					MultiCombo({ "Active", "Obstructed" }, { &Vars::Chams::World::Projectiles.chamsActive, &Vars::Chams::World::Projectiles.showObstructed }, "Options");
-					WCombo("Material", &Vars::Chams::World::Projectiles.drawMaterial, pchamsMaterials); HelpMarker("Which material the chams will apply to projectiles");
-					ColorPickerL("Fresnel base colour", Vars::Chams::World::Projectiles.fresnelBase);
-					if (Vars::Chams::World::Projectiles.drawMaterial == 8)
-					{
-						MaterialCombo("Custom Material", &Vars::Chams::World::Projectiles.customMaterial);
-					}
-					WCombo("Team###WorldChamsProjectiles", &Vars::Chams::World::Projectilez.Value, { "All", "Enemy only" });
-					break;
+					ColorPickerL("Colour", currentStruct.colour, 1);
+					MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
 
-				}
+					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
+					if (currentStruct.drawMaterial == 7)
+						ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					if (currentStruct.drawMaterial == 9)
+					{
+						MaterialCombo("Custom Material", &currentStruct.customMaterial);
+					}
+					WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
+					ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
+					WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
+					WToggle("Pulse Glow", &currentStruct.overlayPulse);
+					WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 				}
 			} EndChild();
 
