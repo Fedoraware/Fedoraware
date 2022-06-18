@@ -1637,6 +1637,7 @@ void CMenu::SettingsWindow()
 	{
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
+		WToggle("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
 
 		Dummy({ 0, 5 });
 		static std::string selected;

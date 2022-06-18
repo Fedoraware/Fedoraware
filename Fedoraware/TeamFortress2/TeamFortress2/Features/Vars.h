@@ -41,6 +41,8 @@ namespace Vars
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
 
+		inline CVar<bool> ShowDVD{ true };
+
 		namespace Colors
 		{
 			inline Color_t MenuAccent = {255, 101, 101, 255};

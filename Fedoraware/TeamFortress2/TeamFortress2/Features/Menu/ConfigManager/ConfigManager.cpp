@@ -716,6 +716,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::SoundBlock);
 			SAVE_VAR(Vars::Misc::ForceMedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
+			SAVE_VAR(Vars::Menu::ShowDVD);
 
 			// Followbot
 			{
@@ -1439,6 +1440,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::SoundBlock);
 			LOAD_VAR(Vars::Misc::ForceMedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
+			LOAD_VAR(Vars::Menu::ShowDVD);
 
 			// Followbot
 			{
