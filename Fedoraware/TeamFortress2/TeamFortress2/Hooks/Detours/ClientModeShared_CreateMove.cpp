@@ -57,9 +57,9 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
 	static float scale = 0.018f;//
-	if (pLocal && pLocal->IsAlive())
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned())
 	{
-		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetVecVelocity().Length2D() > 10.f && pLocal->IsOnGround())
+		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetMoveType() == MOVETYPE_WALK)
 		{
 			if (nShiftTick == 0)
 			{
@@ -73,9 +73,6 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 		}
 		else
 		{
-			vStartOrigin = Vec3(0, 0, 0);
-			vStartVel = Vec3(0, 0, 0);
-			predEndPoint = Vec3(0, 0, 0);
 			nShiftTick = 0;
 		}
 	}
