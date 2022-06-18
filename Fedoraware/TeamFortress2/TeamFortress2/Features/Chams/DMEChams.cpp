@@ -360,6 +360,29 @@ Chams_t GetPlayerChams(CBaseEntity* pEntity) {
 	return Chams_t();
 }
 
+Chams_t GetBuildingChams(CBaseEntity* pEntity) {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (pEntity && pLocal)
+	{
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
+			return Vars::Chams::Buildings::Target;
+		}
+		if (pEntity->GetIndex() == pLocal->GetIndex()) {
+			return Vars::Chams::Buildings::Local;
+		}
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive) {
+			return Vars::Chams::Buildings::Friend;
+		}
+		if (pEntity->GetTeamNum() != pLocal->GetTeamNum()) {
+			return Vars::Chams::Buildings::Enemy;
+		}
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+			return Vars::Chams::Buildings::Team;
+		}
+	}
+	return Chams_t();
+}
+
 Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	switch (nIndex) {
 	case 0: {
@@ -401,7 +424,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		const auto& Building = reinterpret_cast<CBaseObject*>(pEntity);
 		if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
 		if (CBaseEntity* pOwner = Building->GetOwner()) {
-			return GetPlayerChams(pOwner);
+			return GetBuildingChams(pOwner);
 		}
 		return Chams_t();
 	}
