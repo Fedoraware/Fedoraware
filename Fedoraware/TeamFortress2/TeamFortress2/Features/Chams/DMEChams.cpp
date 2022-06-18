@@ -411,6 +411,12 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
 			return GetPlayerChams(pOwner);
 		}
+		else if (int teamNum = pEntity->GetTeamNum()) {	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
+			CBaseEntity* pLocal = g_EntityCache.GetLocal();
+			if (pLocal) {
+				return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+			}
+		}
 		return Chams_t();
 	}
 	case 6: {
@@ -522,11 +528,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			float alpha = Color::TOFLOAT(chams.colour.a);
 			if (pEntity && pLocal) {
-				CBaseEntity* pOwner{};
-				if (drawType == 5 || drawType == 4) {
-					pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity());
-				}
-				if (pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && (!pOwner || pOwner != pLocal) && Vars::Chams::Players::FadeoutTeammates.Value) {
+				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value) {
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
 				}
 			}
