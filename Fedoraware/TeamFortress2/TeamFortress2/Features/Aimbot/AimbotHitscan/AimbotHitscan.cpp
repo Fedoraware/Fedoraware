@@ -806,12 +806,12 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			if (Vars::Aimbot::Hitscan::TapFire.Value)//
 			{
-				const float spread = pWeapon->GetWeaponSpread();
+				const float spread = 1 - pWeapon->GetWeaponSpread();
 				const float scale = 0.004f; // overkill calculated is maxaccuratedistance / spread, ~0.003125
 				const float dist = pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin());
-				const float time = scale * dist * spread;
+				const float time = scale * dist * pWeapon->GetWeaponSpread();
 
-				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1 ? dist > 12500.f * spread : true;
+				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1 ? dist > 1100.f * spread : true;
 
 				if (bDo && spread)
 				{

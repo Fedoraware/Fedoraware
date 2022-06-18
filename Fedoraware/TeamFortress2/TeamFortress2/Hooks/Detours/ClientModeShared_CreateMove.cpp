@@ -16,6 +16,9 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
+#include "../../Features/Discord/Discord.h"
+
+#include "../../SDK/Discord/include/discord_rpc.h"
 
 static void UpdateAntiAFK(CUserCmd* pCmd)
 {
@@ -29,6 +32,12 @@ static void UpdateAntiAFK(CUserCmd* pCmd)
 			pCmd->buttons |= 1 << 27;
 		}
 	}
+}
+
+void UpdateRichPresence()
+{
+	F::DiscordRPC.Update();
+	F::Misc.SteamRPC();
 }
 
 //	TODO: make this p
@@ -110,6 +119,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		nOldFlags = pLocal->GetFlags();
+
+		static Timer RichPresenceTimer{};
+		if (RichPresenceTimer.Run(1000)) {
+			UpdateRichPresence();
+		}
 
 		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
