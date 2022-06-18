@@ -819,7 +819,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 					if (pWeapon->GetWeaponData().m_nBulletsPerShot > 1)
 					{
-						if (flTimeSinceLastShot <= time)
+						if (flTimeSinceLastShot <= std::min(time, 0.25f))
 						{
 							pCmd->buttons &= ~IN_ATTACK;
 						}
