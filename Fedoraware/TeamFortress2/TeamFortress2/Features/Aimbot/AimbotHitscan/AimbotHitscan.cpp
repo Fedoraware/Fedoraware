@@ -804,19 +804,22 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				}
 			}
 
-			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN)
+			if (Vars::Aimbot::Hitscan::TapFire.Value)//
 			{
-				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1
-					                 ? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
-					                 : true;
+				const float spread = pWeapon->GetWeaponSpread();
+				const float scale = 0.004f; // overkill calculated is maxaccuratedistance / spread, ~0.003125
+				const float dist = pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin());
+				const float time = scale * dist * spread;
 
-				if (bDo && pWeapon->GetWeaponSpread())
+				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1 ? dist > 12500.f * spread : true;
+
+				if (bDo && spread)
 				{
 					const float flTimeSinceLastShot = (pLocal->GetTickBase() * TICK_INTERVAL) - pWeapon->GetLastFireTime();
 
 					if (pWeapon->GetWeaponData().m_nBulletsPerShot > 1)
 					{
-						if (flTimeSinceLastShot <= 0.25f)
+						if (flTimeSinceLastShot <= time)
 						{
 							pCmd->buttons &= ~IN_ATTACK;
 						}
