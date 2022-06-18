@@ -239,7 +239,11 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	G::PredBeforeLines.clear(); G::PredFutureLines.clear();
 	
-	if (!pNetChannel || !cl_flipviewmodels || !G::WeaponCanAttack)
+	if (!G::WeaponCanAttack) {
+		return true;	// we can't attack, so it shouldn't matter if we say we've solved it, also shouldn't f wit da chammies iykyk
+	}
+
+	if (!pNetChannel || !cl_flipviewmodels)
 	{
 		return false;
 	}
@@ -1060,7 +1064,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 	m_bIsFlameThrower = false;
 
-	if (!Vars::Aimbot::Global::Active.Value || !G::WeaponCanAttack)
+	if (!Vars::Aimbot::Global::Active.Value)
 	{
 		return;
 	}
