@@ -31,12 +31,14 @@ enum EEconItemQuality
 };
 
 
+
 MAKE_HOOK(CBackpackPanel_GetItemQualityForBorder, g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B 75 08 57 8B F9 8B CE E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? A1 ? ? ? ? 8B 40 30 85 C0 7F 0D"), int, __fastcall,
 		  void* ecx, void* edx, void* pItemPanel)
 {
-	Hook.Original<FN>()(ecx, edx, pItemPanel);
-	static int counter = 0;
-	counter++;
-	if (counter > 22) counter = 0;
-	return counter;
+	if (!I::BackpackPanel)
+	{
+		I::BackpackPanel = ecx;
+	}
+	return G::BackpackQuality;
 }
+

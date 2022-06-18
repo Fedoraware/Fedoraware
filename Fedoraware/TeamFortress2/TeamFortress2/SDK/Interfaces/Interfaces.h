@@ -133,6 +133,7 @@ namespace I
 	inline IViewRenderBeams* ViewRenderBeams = nullptr;
 	inline IEngineSound* EngineSound = nullptr;
 	inline CTFGameRules* TFGameRules = nullptr;
+	inline void* BackpackPanel = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
