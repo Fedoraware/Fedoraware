@@ -123,8 +123,8 @@ void CChams::Render()
 			//}
 
 			RenderPlayers(pLocal, pRenderContext);
-			RenderBuildings(pLocal, pRenderContext);
-			RenderWorld(pLocal, pRenderContext);
+			//RenderBuildings(pLocal, pRenderContext);
+			//RenderWorld(pLocal, pRenderContext);
 		}
 	}
 }
@@ -214,44 +214,60 @@ IMaterial* CChams::FetchMaterial(const Chams_t& chams)
 
 void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Players::Active.Value || !Vars::Chams::Main::Active.Value)
+	if (!Vars::Chams::Main::Active.Value)
 		return;
 
-	const auto& Players = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
+	std::vector<CBaseEntity*> Entities = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
+	
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL)) {
+		Entities.push_back(Entity);
+	}
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH)) {
+		Entities.push_back(Entity);
+	}
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO)) {
+		Entities.push_back(Entity);
+	}
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)) {
+		Entities.push_back(Entity);
+	}
 
-	if (Players.empty())
+	if (Entities.empty())
 		return;
 
-	for (const auto& Player : Players)
+	for (const auto& Entity : Entities)
 	{
-		if (!Player->IsAlive() || Player->IsAGhost())
+		const bool isPlayer = Entity->IsPlayer();
+		if (isPlayer && (!Entity->IsAlive() || Entity->IsAGhost()))
 			continue;
 
-		if (!Utils::IsOnScreen(pLocal, Player))
+		if (!Utils::IsOnScreen(pLocal, Entity))
 			continue;
 
-		DrawModel(Player);
+		DrawModel(Entity);
 
-		if (Vars::Chams::Players::Wearables.Value)
-		{
-			CBaseEntity* pAttachment = Player->FirstMoveChild();
-
-			for (int n = 0; n < 32; n++)
+		if (isPlayer) {
+			if (Vars::Chams::Players::Wearables.Value)
 			{
-				if (!pAttachment)
-					continue;
+				CBaseEntity* pAttachment = Entity->FirstMoveChild();
 
-				if (pAttachment->IsWearable())
-					DrawModel(pAttachment);
+				for (int n = 0; n < 32; n++)
+				{
+					if (!pAttachment)
+						continue;
 
-				pAttachment = pAttachment->NextMovePeer();
+					if (pAttachment->IsWearable())
+						DrawModel(pAttachment);
+
+					pAttachment = pAttachment->NextMovePeer();
+				}
 			}
-		}
 
-		if (Vars::Chams::Players::Weapons.Value)
-		{
-			if (const auto& pWeapon = Player->GetActiveWeapon())
-				DrawModel(pWeapon);
+			if (Vars::Chams::Players::Weapons.Value)
+			{
+				if (const auto& pWeapon = Entity->GetActiveWeapon())
+					DrawModel(pWeapon);
+			}
 		}
 
 		I::ModelRender->ForcedMaterialOverride(nullptr);
