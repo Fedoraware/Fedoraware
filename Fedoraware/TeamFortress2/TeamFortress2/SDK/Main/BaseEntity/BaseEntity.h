@@ -138,6 +138,21 @@ public: //Netvars & conditions
 		M_CONDGET(BlastImmune, GetCondEx2(), TFCondEx2_BlastImmune)
 		M_CONDGET(BulletImmune, GetCondEx2(), TFCondEx2_BulletImmune)
 		M_CONDGET(FireImmune, GetCondEx2(), TFCondEx2_FireImmune)
+		M_CONDGET(StrengthRune, GetCondEx2(), TFCondEx2_StrengthRune)
+		M_CONDGET(HasteRune, GetCondEx2(), TFCondEx2_HasteRune)
+		M_CONDGET(RegenRune, GetCondEx2(), TFCondEx2_RegenRune)
+		M_CONDGET(ResistRune, GetCondEx2(), TFCondEx2_ResistRune)
+		M_CONDGET(VampireRune, GetCondEx2(), TFCondEx2_VampireRune)
+		M_CONDGET(ReflectRune, GetCondEx2(), TFCondEx2_ReflectRune)
+		M_CONDGET(PrecisionRune, GetCondEx3(), TFCondEx3_PrecisionRune)
+		M_CONDGET(AgilityRune, GetCondEx3(), TFCondEx3_AgilityRune)
+		M_CONDGET(KnockoutRune, GetCondEx3(), TFCondEx3_KnockoutRune)
+		M_CONDGET(ImbalanceRune, GetCondEx3(), TFCondEx3_ImbalanceRune)
+		M_CONDGET(CritTempRune, GetCondEx3(), TFCondEx3_CritboostedTempRune)
+		M_CONDGET(KingRune, GetCondEx3(), TFCondEx3_KingRune)
+		M_CONDGET(PlagueRune, GetCondEx3(), TFCondEx3_PlagueRune)
+		M_CONDGET(SupernovaRune, GetCondEx3(), TFCondEx3_SupernovaRune)
+		M_CONDGET(BuffedByKing, GetCondEx3(), TFCondEx3_KingBuff)
 
 		// thanks litebase this is just better ngl
 		NETVAR(m_vecOrigin, Vec3, _("CBaseEntity"), _("m_vecOrigin"))
@@ -423,7 +438,8 @@ public: //Everything else, lol.
 			nCondEx & TFCondEx_CritDemoCharge ||
 			nCondEx & TFCondEx_CritOnFlagCapture ||
 			nCondEx & TFCondEx_HalloweenCritCandy ||
-			nCondEx & TFCondEx_PyroCrits);
+			nCondEx & TFCondEx_PyroCrits ||
+			IsCritTempRune());
 	}
 
 	__inline bool IsCritBoostedNoMini() {
@@ -437,7 +453,29 @@ public: //Everything else, lol.
 			nCondEx & TFCondEx_CritDemoCharge ||
 			nCondEx & TFCondEx_CritOnFlagCapture ||
 			nCondEx & TFCondEx_HalloweenCritCandy ||
-			nCondEx & TFCondEx_PyroCrits);
+			nCondEx & TFCondEx_PyroCrits ||
+			IsCritTempRune());
+	}
+
+	__inline const wchar_t* GetRune() {
+		if (IsStrengthRune())	{ return (L"Strength Rune"); }
+		if (IsHasteRune())		{ return (L"Haste Rune"); }
+		if (IsRegenRune())		{ return (L"Regen Rune"); }
+		if (IsResistRune())		{ return (L"Resist Rune"); }
+		if (IsVampireRune())	{ return (L"Vampire Rune"); }
+		if (IsReflectRune())	{ return (L"Reflect Rune"); }
+		if (IsPrecisionRune())	{ return (L"Precision Rune"); }
+		if (IsAgilityRune())	{ return (L"Agility Rune"); }
+		if (IsKnockoutRune())	{ return (L"Knockout Rune"); }
+		if (IsImbalanceRune())	{ return (L"Imbalance Rune"); }
+		if (IsKingRune())		{ return (L"King"); }
+		if (IsPlagueRune())		{ return (L"Plague Rune"); }
+		if (IsSupernovaRune())	{ return (L"Supernova Rune"); }
+		return nullptr;
+	}
+
+	__inline bool IsKingBuffed() {
+		return IsBuffedByKing();
 	}
 
 	__inline bool IsPlayer() {

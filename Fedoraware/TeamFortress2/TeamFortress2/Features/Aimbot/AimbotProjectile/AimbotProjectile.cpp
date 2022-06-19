@@ -392,14 +392,14 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					default: break;
 					}
 
-					Utils::TraceHull(predictor.m_vPosition, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f),
-						MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
+					//Utils::TraceHull(predictor.m_vPosition, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f),
+					//	MASK_SOLID_BRUSHONLY, &traceFilter, &trace);
 
-					if (trace.DidHit())
-					{
-						vPredictedPos.z = trace.vEndPos.z;
+					//if (trace.DidHit())
+					//{
+					//	vPredictedPos.z = trace.vEndPos.z;
 						G::PredictedPos = vPredictedPos;
-					}
+					//}
 
 					switch (pWeapon->GetWeaponID())
 					{
@@ -826,6 +826,11 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 	if (!GetProjectileInfo(pWeapon, projInfo))
 	{
 		return false;
+	}
+
+	if (pLocal->IsPrecisionRune() && !m_bIsFlameThrower) {
+		projInfo.m_flVelocity *= 2.5f;
+
 	}
 
 	auto vVelocity = Vec3();
