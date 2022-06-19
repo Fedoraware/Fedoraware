@@ -20,7 +20,7 @@ struct Chams_t {
 	bool	showObstructed = false;
 	int		drawMaterial = 0;	// 1/shaded, 2/shiny, 3/flat, 4/wfshaded, 5/wfshiny, 6/wfflat, 7/fresnel, 8/brick
 	int		overlayType = 0;
-	bool	chamsActive = false;
+	bool	chamsActive = true;	// start all chams as active because I don't trust this cheat.
 	bool	rainbow = false;
 	bool	overlayPulse = false;
 	bool	overlayRainbow = false;
