@@ -480,6 +480,9 @@ namespace Vars
 		inline CVar<bool> MoveSimLine{true};
 		inline CVar<int> ParticleTracer{2};
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
+
+		inline CVar<bool> DoPostProcessing{ true };
+
 		namespace Beans
 		{
 			inline CVar<bool> Active{false};

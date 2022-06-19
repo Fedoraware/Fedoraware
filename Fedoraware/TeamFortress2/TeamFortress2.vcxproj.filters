@@ -139,6 +139,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\NotificationQueue_Add.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBackpackPanel_GetItemQualityForBorder.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\DoEnginePostProcessing.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

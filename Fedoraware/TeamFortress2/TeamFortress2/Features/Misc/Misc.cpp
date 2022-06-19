@@ -27,7 +27,6 @@ void CMisc::Run(CUserCmd* pCmd)
 	ChatSpam();
 	CheatsBypass();
 	Teleport(pCmd);
-	NoPush();
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
 	WeaponSway();
@@ -327,12 +326,6 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 			}
 		}
 	}
-}
-
-void CMisc::NoPush()
-{
-	ConVar* noPush = g_ConVars.FindVar("tf_avoidteammates_pushaway");
-	noPush->SetValue(Vars::Misc::NoPush.Value ? 0 : 1);
 }
 
 void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
