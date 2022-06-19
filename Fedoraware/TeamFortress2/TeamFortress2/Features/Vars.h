@@ -318,8 +318,8 @@ namespace Vars
 		{
 			inline CVar<bool> Active{true};
 
-			inline Chams_t Hands{};
-			inline Chams_t Weapon{};
+			inline Chams_t Hands{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
+			inline Chams_t Weapon{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
 
 			inline CVar<int> HandsGlowOverlay{0}; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
 			inline CVar<int> HandsProxySkin{0};
