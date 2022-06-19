@@ -1001,14 +1001,17 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const auto sortMethod = GetSortMethod();
 	const auto& vLocalAngles = I::Engine->GetViewAngles();
 	const auto& vLocalShootPos = pLocal->GetShootPos();
+	const auto& vLocalOrigin = pLocal->GetAbsOrigin();
 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 800.f) { continue; }
 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
+
+		if (vLocalOrigin.DistTo(vTargetOrigin) > 800.f) { continue; } // Don't shoot too far
+		if (vLocalOrigin.z < vTargetOrigin.z - 45.f) { continue; } // Don't shoot from below
 
 		// Don't predict enemies that are visible
 		if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetCenter)) { continue; }
