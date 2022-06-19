@@ -677,6 +677,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\CEconNotification.h" />
+    <ClInclude Include="DVD Icon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
