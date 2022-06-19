@@ -102,6 +102,11 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		{
 			if (!G::UnloadWndProcHook)
 			{
+				if (G::ShouldUpdateMaterialCache)
+				{
+					F::Visuals.ClearMaterialHandles();
+					F::Visuals.StoreMaterialHandles();
+				}
 				if (Vars::Visuals::Rain.Value > 0)
 				{
 					F::Visuals.rain.Run();

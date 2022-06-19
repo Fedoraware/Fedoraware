@@ -9,7 +9,12 @@ struct MaterialMatrixMode_t;
 struct MaterialIndexFormat_t;
 struct IMesh;
 struct MaterialHeightClipMode_t;
-struct MaterialFogMode_t;
+enum MaterialFogMode_t
+{
+	MATERIAL_FOG_NONE,
+	MATERIAL_FOG_LINEAR,
+	MATERIAL_FOG_LINEAR_BELOW_FOG_Z,
+};
 struct MaterialCullMode_t;
 struct LightDesc_t;
 struct IVertexBuffer;

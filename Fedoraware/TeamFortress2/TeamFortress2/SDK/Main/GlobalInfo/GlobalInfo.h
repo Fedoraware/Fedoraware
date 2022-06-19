@@ -85,6 +85,8 @@ namespace G
 
 	inline int BackpackQuality = 1;
 
+	inline bool ShouldUpdateMaterialCache = false;
+
 	inline bool IsIgnored(uint32_t friendsID)
 	{
 		return PlayerPriority[friendsID].Mode < 2;

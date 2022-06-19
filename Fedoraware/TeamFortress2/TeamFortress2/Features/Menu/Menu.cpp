@@ -973,9 +973,18 @@ void CMenu::MenuVisuals()
 				WCombo("Vision modifiers", &Vars::Visuals::Vision.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 				MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
 				HelpMarker("Select which types of modulation you want to enable");
-				ColorPickerL("World modulation colour", Colors::WorldModulation);
-				ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1);
-				ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2);
+				if (ColorPickerL("World modulation colour", Colors::WorldModulation))
+				{
+					G::ShouldUpdateMaterialCache = true;
+				}
+				if (ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1))
+				{
+					G::ShouldUpdateMaterialCache = true;
+				}
+				if (ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2))
+				{
+					G::ShouldUpdateMaterialCache = true;
+				}
 				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD", "Screen Effects", "Angle Forcing"}, {&Vars::Visuals::RemoveScope.Value, &Vars::Visuals::RemoveZoom.Value, &Vars::Visuals::RemoveDisguises.Value, &Vars::Visuals::RemoveTaunts.Value, &Vars::Misc::DisableInterpolation.Value, &Vars::Visuals::RemovePunch.Value, &Vars::Visuals::RemoveMOTD.Value, &Vars::Visuals::RemoveScreenEffects.Value, &Vars::Visuals::PreventForcedAngles.Value }, "Removals");
 				HelpMarker("Select what you want to remove");
 				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.Value, &Vars::Visuals::AimPosSquare.Value, &Vars::Visuals::BulletTracer.Value, &Vars::Visuals::AimbotViewmodel.Value, &Vars::Visuals::ViewmodelSway.Value, &Vars::Visuals::MoveSimLine.Value }, "Misc");
@@ -1222,94 +1231,16 @@ void CMenu::MenuVisuals()
 				WCombo("Precipitation", &Vars::Visuals::Rain.Value, { "Off", "Rain", "Snow" });
 
 				SectionTitle("Custom fog");
-				if (WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.Value))
-				{
-					if (static auto fog_enable = g_ConVars.FindVar("fog_enable"); fog_enable)
-					{
-						fog_enable->SetValue(Vars::Visuals::Fog::CustomFog.Value);
-					}
-					if (static auto fog_enableskybox = g_ConVars.FindVar("fog_enableskybox"); fog_enableskybox)
-					{
-						fog_enableskybox->SetValue(Vars::Visuals::Fog::CustomFog.Value);
-					}
-					if (static auto fog_override = g_ConVars.FindVar("fog_override"); fog_override)
-					{
-						fog_override->SetValue(Vars::Visuals::Fog::CustomFog.Value);
-					}
-				}
-
-				if (WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
-				{
-					if (static auto fog_density = g_ConVars.FindVar("fog_maxdensity"); fog_density)
-					{
-						fog_density->SetValue(Vars::Visuals::Fog::FogDensity.Value);
-					}
-
-				}
-				if (ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor))
-				{
-					if (static auto fog_color = g_ConVars.FindVar("fog_color"); fog_color)
-					{
-						fog_color->SetValue(std::string("").
-							append(std::to_string(Vars::Visuals::Fog::FogColor.r)).
-							append(" ").
-							append(std::to_string(Vars::Visuals::Fog::FogColor.g)).
-							append(" ").
-							append(std::to_string(Vars::Visuals::Fog::FogColor.b)).
-							append(" ").c_str());
-					}
-				}
-
-				if (WSlider("Fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
-				{
-					if (static auto fog_start = g_ConVars.FindVar("fog_start"); fog_start)
-					{
-						fog_start->SetValue(Vars::Visuals::Fog::FogStart.Value);
-					}
-				}
-				if (WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
-				{
-					if (static auto fog_end = g_ConVars.FindVar("fog_end"); fog_end)
-					{
-						fog_end->SetValue(Vars::Visuals::Fog::FogEnd.Value);
-					}
-				}
-				if (WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
-				{
-					if (static auto fog_density = g_ConVars.FindVar("fog_maxdensityskybox"); fog_density)
-					{
-						fog_density->SetValue(Vars::Visuals::Fog::FogDensitySkybox.Value);
-					}
-				}
-
-				if (ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox))
-				{
-					if (static auto fog_colorskybox = g_ConVars.FindVar("fog_colorskybox"); fog_colorskybox)
-					{
-						fog_colorskybox->SetValue(std::string("").
-							append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.r)).
-							append(" ").
-							append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.g)).
-							append(" ").
-							append(std::to_string(Vars::Visuals::Fog::FogColorSkybox.b)).
-							append(" ").c_str());
-					}
-				}
-
-				if (WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
-				{
-					if (static auto fog_start = g_ConVars.FindVar("fog_startskybox"); fog_start)
-					{
-						fog_start->SetValue(Vars::Visuals::Fog::FogStartSkybox.Value);
-					}
-				}
-				if (WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None))
-				{
-					if (static auto fog_end = g_ConVars.FindVar("fog_endskybox"); fog_end)
-					{
-						fog_end->SetValue(Vars::Visuals::Fog::FogEndSkybox.Value);
-					}
-				}
+				WToggle("Disable fog", &Vars::Visuals::Fog::DisableFog.Value);
+				WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.Value);
+				WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+				ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor);
+				WSlider("Fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+				WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+				WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Skybox fog requires r_3dsky 1");
+				ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox);
+				WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStartSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+				WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
 
 				SectionTitle("Thirdperson");
 				WToggle("Thirdperson", &Vars::Visuals::ThirdPerson.Value); HelpMarker("Will move your camera to be in a thirdperson view");

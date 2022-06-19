@@ -547,6 +547,7 @@ namespace Vars
 
 		namespace Fog
 		{
+			inline CVar<bool> DisableFog{ false };
 			inline CVar<bool> CustomFog{false};
 			inline Color_t FogColor{255, 255, 255, 255};
 			inline Color_t FogColorSkybox{255, 255, 255, 255};

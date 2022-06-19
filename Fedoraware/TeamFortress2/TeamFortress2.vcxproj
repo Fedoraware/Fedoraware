@@ -215,6 +215,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_NameCvarChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_SendMove.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_Uncache.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_DrawStaticProps.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameMovement_Duck.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
