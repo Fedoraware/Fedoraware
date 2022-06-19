@@ -24,11 +24,13 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 		Vars::Visuals::ThirdpersonUp.Value < -1.f)
 		)
 	{
-		Vec3 viewangles = I::Engine->GetViewAngles();
+		const Vec3 viewangles = I::Engine->GetViewAngles();
 		Vec3 vForward{}, vRight{}, vUp{};
 		Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
-		Vec3 vStartPos = pLocal->GetShootPos();
-		Vec3 vEndPos = (vStartPos + vForward * 8192);
+
+		const Vec3 vStartPos = pLocal->GetShootPos();
+		const Vec3 vEndPos = (vStartPos + vForward * 8192);
+
 		CGameTrace trace = { };
 		CTraceFilterHitscan filter = { };
 		filter.pSkip = pLocal;
