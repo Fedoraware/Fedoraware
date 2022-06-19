@@ -13,7 +13,7 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
 
-#include "../../../DVD Icon.h"
+#include "../../Resources/DVD-Icon.h"
 
 MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
 		  void* ecx, void* edx, int iMode)

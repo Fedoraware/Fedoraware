@@ -287,7 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
-    <ClInclude Include="DVD Icon.h" />
+    <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.h" />
