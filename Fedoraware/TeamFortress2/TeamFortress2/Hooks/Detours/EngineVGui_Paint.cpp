@@ -13,7 +13,7 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
 
-#include "../../../DVD Icon.h"
+#include "../../Resources/DVD-Icon.h"
 
 MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
@@ -71,27 +71,27 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 					if (!I::Engine->IsInGame())
 					{
 						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 200, Utils::Rainbow(), EStringAlign::ALIGN_CENTERHORIZONTAL, "Happy pride month!!!!!!");
+
+						// DVD Logo
 						if (iDVD && F::Menu.IsOpen && Vars::Menu::ShowDVD.Value)
 						{
-							const int nDvdWidth = 170;
-							const int nDvdHeight = 100;
-							static int iDvdX = 1, iDvdY = 1;
-							static bool bUpwards = false, bRightwards = true;
-							if (iDvdY <= 0 || iDvdY >= (g_ScreenSize.h - nDvdHeight))
+							static Vec2 logoPos = { 1, 1 };
+							static Vec2 logoVelocity = { 1, -1 };
+							
+							if (logoPos.y <= 0 || logoPos.y >= (g_ScreenSize.h - DVDIcon::Height))
 							{
-								bUpwards = !bUpwards;
+								logoVelocity.y = -logoVelocity.y;
 							}
-							if (iDvdX <= 0 || iDvdX >= (g_ScreenSize.w - nDvdWidth))
+							if (logoPos.x <= 0 || logoPos.x >= (g_ScreenSize.w - DVDIcon::Width))
 							{
-								bRightwards = !bRightwards;
+								logoVelocity.x = -logoVelocity.x;
 							}
+							logoPos += logoVelocity;
 
-							bUpwards ? iDvdY-- : iDvdY++;
-							bRightwards ? iDvdX-- : iDvdX++;
 							I::Surface->DrawSetTexture(iDVD);
-							Color_t rainbow = Utils::Rainbow();
+							const Color_t rainbow = Utils::Rainbow();
 							I::Surface->SetDrawColor(rainbow.r, rainbow.g, rainbow.b, 255);
-							I::Surface->DrawTexturedRect(iDvdX, iDvdY, nDvdWidth, nDvdHeight);
+							I::Surface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
 						}
 					}
 					return;

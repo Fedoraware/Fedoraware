@@ -22,7 +22,7 @@ MAKE_HOOK(Panel_PaintTraverse, Utils::GetVFuncPtr(I::Panel, 41), void, __stdcall
 				static int count = 0;
 				count++;
 
-				if (count > 6) count = 0;
+				if (count > 6) { count = 0; }
 				switch (count)
 				{
 					case 0: G::BackpackQuality = 22; break;

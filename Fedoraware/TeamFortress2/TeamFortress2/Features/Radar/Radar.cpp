@@ -390,7 +390,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				}
 
 				// Draw height indicator (higher / lower)
-				if (Vars::Radar::Players::Height.Value && std::abs(nZ) > 30.f)
+				if (Vars::Radar::Players::Height.Value && std::abs(nZ) > 80.f)
 				{
 					const int triOffset = nZ > 0 ? -5 : 5;
 					const int yPos = nZ > 0 ? nY : nY + nSize;

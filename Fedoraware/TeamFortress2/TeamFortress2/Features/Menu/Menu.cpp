@@ -341,7 +341,7 @@ void CMenu::MenuAimbot()
 			{
 				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
 				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Automatically flips your viewmodel if it's beneficial");
-				WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
+				//WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
 			}
 
 			SectionTitle("Melee");
@@ -535,31 +535,33 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-						case 0: {
-							return Vars::Chams::Players::Local;
+							case 0: {
+								return Vars::Chams::Players::Local;
+							}
+							case 1: {
+								return Vars::Chams::Players::Friend;
+							}
+							case 2: {
+								return Vars::Chams::Players::Enemy;
+							}
+							case 3: {
+								return Vars::Chams::Players::Team;
+							}
+							case 4: {
+								return Vars::Chams::Players::Target;
+							}
+							case 5: {
+								return Vars::Chams::Players::Ragdoll;
+							}
+							case 6: {
+								return Vars::Chams::DME::Hands;
+							}
+							case 7: {
+								return Vars::Chams::DME::Weapon;
+							}
 						}
-						case 1: {
-							return Vars::Chams::Players::Friend;
-						}
-						case 2: {
-							return Vars::Chams::Players::Enemy;
-						}
-						case 3: {
-							return Vars::Chams::Players::Team;
-						}
-						case 4: {
-							return Vars::Chams::Players::Target;
-						}
-						case 5: {
-							return Vars::Chams::Players::Ragdoll;
-						}
-						case 6: {
-							return Vars::Chams::DME::Hands;
-						}
-						case 7: {
-							return Vars::Chams::DME::Weapon;
-						}
-						}
+
+						return Vars::Chams::Players::Local;
 					}());
 				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 				
@@ -574,7 +576,9 @@ void CMenu::MenuVisuals()
 
 					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
 					if (currentStruct.drawMaterial == 7)
-					ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					{
+						ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					}
 					if (currentStruct.drawMaterial == 9)
 					{
 						MaterialCombo("Custom Material", &currentStruct.customMaterial);
@@ -700,22 +704,24 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-						case 0: {
-							return Vars::Chams::Buildings::Local;
+							case 0: {
+								return Vars::Chams::Buildings::Local;
+							}
+							case 1: {
+								return Vars::Chams::Buildings::Friend;
+							}
+							case 2: {
+								return Vars::Chams::Buildings::Enemy;
+							}
+							case 3: {
+								return Vars::Chams::Buildings::Team;
+							}
+							case 4: {
+								return Vars::Chams::Buildings::Target;
+							}
 						}
-						case 1: {
-							return Vars::Chams::Buildings::Friend;
-						}
-						case 2: {
-							return Vars::Chams::Buildings::Enemy;
-						}
-						case 3: {
-							return Vars::Chams::Buildings::Team;
-						}
-						case 4: {
-							return Vars::Chams::Buildings::Target;
-						}
-						}
+
+						return Vars::Chams::Buildings::Local;
 					}());
 				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
@@ -726,7 +732,9 @@ void CMenu::MenuVisuals()
 
 					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
 					if (currentStruct.drawMaterial == 7)
+					{
 						ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					}
 					if (currentStruct.drawMaterial == 9)
 					{
 						MaterialCombo("Custom Material", &currentStruct.customMaterial);
@@ -792,16 +800,18 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-						case 0: {
-							return Vars::Chams::World::Health;
+							case 0: {
+								return Vars::Chams::World::Health;
+							}
+							case 1: {
+								return Vars::Chams::World::Ammo;
+							}
+							case 2: {
+								return Vars::Chams::World::Projectiles;
+							}
 						}
-						case 1: {
-							return Vars::Chams::World::Ammo;
-						}
-						case 2: {
-							return Vars::Chams::World::Projectiles;
-						}
-						}
+
+						return Vars::Chams::World::Health;
 					}());
 				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
@@ -812,7 +822,9 @@ void CMenu::MenuVisuals()
 
 					WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
 					if (currentStruct.drawMaterial == 7)
+					{
 						ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+					}
 					if (currentStruct.drawMaterial == 9)
 					{
 						MaterialCombo("Custom Material", &currentStruct.customMaterial);
@@ -1467,7 +1479,7 @@ void CMenu::MenuMisc()
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
 			WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
-			WToggle("Force Medieval Chat", &Vars::Misc::ForceMedievalChat.Value); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
+			WCombo("Mediaval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
 
 			SectionTitle("Exploits");
 			WToggle("Anti Autobalance", &Vars::Misc::AntiAutobal.Value); HelpMarker("Prevents auto balance by reconnecting to the server");
@@ -1568,7 +1580,7 @@ void CMenu::SettingsWindow()
 	{
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
-		WToggle("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
+		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
 
 		Dummy({ 0, 5 });
 		static std::string selected;

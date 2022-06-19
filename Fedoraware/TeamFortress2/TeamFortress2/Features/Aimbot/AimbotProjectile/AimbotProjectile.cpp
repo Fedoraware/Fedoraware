@@ -506,9 +506,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	std::vector<Vec3> visiblePoints{};
 	const matrix3x4 transform = {
-		1.f, 0, 0, targetPredPos.x,
-		0, 1.f, 0, targetPredPos.y,
-		0, 0, 1, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z
+		{1.f, 0, 0, targetPredPos.x},
+		{0, 1.f, 0, targetPredPos.y},
+		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z}
 	};
 
 	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
@@ -1001,14 +1001,17 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const auto sortMethod = GetSortMethod();
 	const auto& vLocalAngles = I::Engine->GetViewAngles();
 	const auto& vLocalShootPos = pLocal->GetShootPos();
+	const auto& vLocalOrigin = pLocal->GetAbsOrigin();
 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 800.f) { continue; }
 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
+
+		if (vLocalOrigin.DistTo(vTargetOrigin) > 800.f) { continue; } // Don't shoot too far
+		if (vLocalOrigin.z < vTargetOrigin.z - 45.f) { continue; } // Don't shoot from below
 
 		// Don't predict enemies that are visible
 		if (Utils::VisPos(pLocal, pTarget, pLocal->GetShootPos(), vTargetCenter)) { continue; }
