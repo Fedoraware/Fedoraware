@@ -4,6 +4,7 @@
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 
 	const int doubleTapAllowed = 22 - G::ShiftedTicks;
+	const bool retainFakelagTest = Vars::Misc::CL_Move::RetainFakelag.Value ?  true : !G::ShiftedTicks;
 
 	// Failsafe, in case we're trying to choke too many ticks
 	if (ChokeCounter > 22) {
@@ -32,7 +33,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	}
 
 	// Are we recharging or shifting ticks?
-	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || (!Vars::Misc::CL_Move::RetainFakelag.Value && G::ShiftedTicks)) {
+	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) {
 		return false;
 	}
 
@@ -50,15 +51,11 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 	const auto& pLocal = g_EntityCache.GetLocal();
 	if (!pLocal || !pLocal->IsAlive())
 	{
-		if (ChokeCounter > 0)
-		{
-			*pSendPacket = true;
-			ChokeCounter = 0;
-		}
-		else
-		{
-			F::FakeAng.DrawChams = false;
-		}
+
+		*pSendPacket = true;
+		ChokeCounter = 0;
+
+		F::FakeAng.DrawChams = false;
 
 		G::IsChoking = false;
 		return;

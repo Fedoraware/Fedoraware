@@ -10,11 +10,23 @@ bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSusp
 
 bool CCheaterDetection::IsSteamNameDifferent(PlayerInfo_t pInfo)
 {
+	const CSteamID SteamID = CSteamID(static_cast<uint64>(pInfo.friendsID + 0x0110000100000000));
+
 	// this can be falsely triggered by a person being nicknamed without being our steam friend (pending friend) or changing their steam name since joining the game
-	if (const char* steamName = g_SteamInterfaces.Friends015->GetFriendPersonaName(CSteamID(static_cast<uint64>(pInfo.friendsID + 0x0110000100000000))))
+	if (const char* steamName = g_SteamInterfaces.Friends015->GetFriendPersonaName(SteamID))
 	{
 		if (strcmp(pInfo.name, steamName) != 0)
 		{
+			for (int personaNum = 0; personaNum <= 5; personaNum++) {
+				if (const char* historicalName = g_SteamInterfaces.Friends015->GetFriendPersonaNameHistory(SteamID, personaNum)) {
+					if (strcmp(pInfo.name, historicalName) == 0) {
+						return false;
+					}
+				}
+				else {
+					break;
+				}
+			}
 			return true;
 		}
 	}
@@ -42,7 +54,7 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 {
 	const int delta = I::GlobalVars->tickcount - currentTickCount;
 	// delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
-	if (abs(delta) > 14) { return true; } // lets be honest if their tickcount changes by more than 14 they are probably cheating.
+	if (abs(delta) > 20) { return true; } // who knew players lagged that much
 	return false;
 }
 
@@ -86,7 +98,7 @@ void CCheaterDetection::OnTick()
 			if (!UserData[friendsID].Detections.SteamName)
 			{
 				UserData[friendsID].Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
-				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 1 : 0; // add a strike to this player if they are manipulating their in game name.
+				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
 			}
 
 			if (!UserData[friendsID].Detections.InvalidPitch)
