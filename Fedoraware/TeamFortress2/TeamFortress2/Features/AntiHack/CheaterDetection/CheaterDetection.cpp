@@ -1,5 +1,10 @@
 #include "CheaterDetection.h"
 
+void conLogDetection(const char* text) {
+	I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
+	I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
+}
+
 bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect)
 {
 	if (g_EntityCache.IsFriend(nIndex) || G::IsIgnored(friendsID) || MarkedCheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
@@ -27,6 +32,7 @@ bool CCheaterDetection::IsSteamNameDifferent(PlayerInfo_t pInfo)
 					break;
 				}
 			}
+			conLogDetection(tfm::format("%s was detected as name changing (%s => %s).\n", pInfo.name, pInfo.name, steamName).c_str());
 			return true;
 		}
 	}
@@ -86,7 +92,7 @@ bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData pData)
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !I::Engine->IsConnected() || !Vars::ESP::Players::CheaterDetection.Value)
+	if (!pLocal || !I::Engine->IsConnected())
 	{
 		return;
 	}
@@ -131,6 +137,7 @@ void CCheaterDetection::OnTick()
 			{
 				if (IsPitchInvalid(pSuspect))
 				{
+					conLogDetection(tfm::format("%s was detected for sending an OOB pitch.\n", pi.name).c_str());
 					userData.Detections.InvalidPitch = true;
 					Strikes[friendsID] += 5; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
 				}
@@ -140,6 +147,7 @@ void CCheaterDetection::OnTick()
 			{
 				if (IllegalChar[index])
 				{
+					conLogDetection(tfm::format("%s was detected as sending an illegal character.\n", pi.name).c_str());
 					userData.Detections.InvalidText = true;
 					Strikes[friendsID] += 5;
 					IllegalChar[index] = false;
@@ -154,6 +162,7 @@ void CCheaterDetection::OnTick()
 				{
 					if (userData.AreTicksSafe)
 					{
+						conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
 						Strikes[friendsID]++;
 						userData.AreTicksSafe = false;
 					}
@@ -165,11 +174,13 @@ void CCheaterDetection::OnTick()
 			}
 
 			if (IsBhopping(pSuspect, userData)) {
+				conLogDetection(tfm::format("%s was detected as bhopping.\n", pi.name).c_str());
 				Strikes[friendsID]++;
 			}
 
 			if (Strikes[friendsID] > 4)
 			{
+				conLogDetection(tfm::format("%s was marked as a cheater.\n", pi.name).c_str());
 				MarkedCheaters[friendsID] = true;
 				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
 			}
