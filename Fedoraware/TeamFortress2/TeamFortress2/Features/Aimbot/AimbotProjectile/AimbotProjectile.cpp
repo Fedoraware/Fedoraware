@@ -701,11 +701,16 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			hullSize = { 8.f, 8.f, 8.f };
 
 			auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
-			Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward,
-				&vecRight, &vecUp);
+			Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);
 			const Vec3 vecVelocity = ((vecForward * projInfo.m_flVelocity) - (vecUp * 200.0f));
 			Math::VectorAngles(vecVelocity, vecAngle);
 			out.m_flPitch = -DEG2RAD(vecAngle.x);
+
+			float fRight = g_ConVars.cl_flipviewmodels->GetInt() ? -8.f : 8.f;
+			vVisCheck += vecForward * 16.0f + vecRight * fRight + vecUp * -6.0f;
+
+			Utils::TraceHull(pLocal->GetEyePosition(), vVisCheck, hullSize, hullSize * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
+			return !trace.DidHit();
 
 			break;
 		}
