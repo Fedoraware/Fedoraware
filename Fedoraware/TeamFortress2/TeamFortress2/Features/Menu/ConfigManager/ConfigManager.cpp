@@ -718,6 +718,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
 			SAVE_VAR(Vars::Menu::ShowDVD);
+			SAVE_VAR(Vars::Misc::RegionChanger);
+			SAVE_VAR(Vars::Misc::RegionsAllowed);
 
 			// Followbot
 			{
@@ -1443,6 +1445,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
 			LOAD_VAR(Vars::Menu::ShowDVD);
+			LOAD_VAR(Vars::Misc::RegionChanger);
+			LOAD_VAR(Vars::Misc::RegionsAllowed);
 
 			// Followbot
 			{

@@ -89,6 +89,42 @@ struct ShaderStencilState_t
 	void SetStencilState(IMatRenderContext *pRenderContext);
 };
 
+// sto and sto 2, tyo tyo1 tyo2
+enum DataCenter_t
+{
+	DC_AMS = (1 << 0),
+	DC_ATL = (1 << 1),
+	DC_BOM = (1 << 2),
+	DC_DXB = (1 << 3),
+	DC_EAT = (1 << 4),
+	DC_MWH = (1 << 5),
+	DC_FRA = (1 << 6),
+	DC_GNRT = (1 << 7),
+	DC_GRU = (1 << 8),
+	DC_HKG = (1 << 9),
+	DC_IAD = (1 << 10),
+	DC_JNB = (1 << 11),
+	DC_LAX = (1 << 12),
+	DC_LHR = (1 << 13),
+	DC_LIM = (1 << 14),
+	DC_LUX = (1 << 15),
+	DC_MAA = (1 << 16),
+	DC_MAD = (1 << 17),
+	DC_MAN = (1 << 18),
+	DC_OKC = (1 << 19),
+	DC_ORD = (1 << 20),
+	DC_PAR = (1 << 21),
+	DC_SCL = (1 << 22),
+	DC_SEA = (1 << 23),
+	DC_SGP = (1 << 24),
+	DC_STO = (1 << 25),
+	DC_SYD = (1 << 26),
+	DC_TYO = (1 << 27),
+	DC_VIE = (1 << 28),
+	DC_WAW = (1 << 29)
+};
+
+
 inline ShaderStencilState_t::ShaderStencilState_t()
 {
 	m_bEnable = false;

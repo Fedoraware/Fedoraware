@@ -603,6 +603,8 @@ namespace Vars
 		//inline CVar<bool> ForceMedievalChat{false};
 		inline CVar<int> MedievalChat{ 0 };
 		inline CVar<bool> AutoAcceptItemDrops{ true };
+		inline CVar<bool> RegionChanger{ false };
+		inline CVar<int> RegionsAllowed{ 0 };
 
 		namespace Followbot
 		{

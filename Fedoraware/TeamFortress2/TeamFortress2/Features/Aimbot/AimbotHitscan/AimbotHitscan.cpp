@@ -193,6 +193,11 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			const auto owner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pProjectile->GetThrower()));
 
+			if (!owner)
+			{
+				continue;
+			}
+
 			if ((!pProjectile->GetTouched()) || (owner->GetTeamNum() == pLocal->GetTeamNum()))
 			{
 				continue;

@@ -238,6 +238,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Input_GetUserCmd.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\IsLocalPlayerUsingVisionFilterFlags.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\KeyValues_SetInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_DrawModelExecute.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_ForcedMaterialOverride.cpp" />
@@ -679,6 +680,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamNetworking003.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamNetworking004.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamNetworking005.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamNetworkingUtils.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamOAuth001.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamRemoteStorage001.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamRemoteStorage002.h" />

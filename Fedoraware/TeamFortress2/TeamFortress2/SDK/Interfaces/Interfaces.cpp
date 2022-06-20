@@ -163,6 +163,11 @@ void CSteamInterfaces::Init()
 	User       = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, _(STEAMUSER_INTERFACE_VERSION_017)));
 	_validS(User);
 
+	// Credits to spook953 for teaching me how this works
+	static auto fn = reinterpret_cast<ISteamNetworkingUtils*(__cdecl*)()>(GetProcAddress(GetModuleHandleA("steamnetworkingsockets.dll"), "SteamNetworkingUtils_LibV4"));
+	NetworkingUtils = fn();
+	_validS(NetworkingUtils);
+
 	/*Networking = reinterpret_cast<ISteamNetworking004*>(Client->GetISteamNetworking(hsNewUser, hsNewPipe, _(STEAMNETWORKINGUTILS_INTERFACE_VERSION)));
 	_validS(Networking);*/
 }

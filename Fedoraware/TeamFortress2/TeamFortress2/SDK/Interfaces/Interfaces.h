@@ -34,6 +34,7 @@
 #include "ViewRenderBeams/ViewRenderBeams.h"
 #include "EngineSound/EngineSound.h"
 #include "CTFGameRules/CTFGameRules.h"
+#include "Steam/ISteamNetworkingUtils.h"
 
 class CClockDriftMgr
 {
@@ -91,6 +92,7 @@ public:
 	ISteamUser017* User = nullptr;
 	ISteamUtils007* Utils007 = nullptr;
 	ISteamNetworking004* Networking = nullptr;
+	ISteamNetworkingUtils* NetworkingUtils = nullptr;
 
 	void Init();
 };
