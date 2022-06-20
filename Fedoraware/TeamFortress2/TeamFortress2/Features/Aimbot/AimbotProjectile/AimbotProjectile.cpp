@@ -706,11 +706,14 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			Math::VectorAngles(vecVelocity, vecAngle);
 			out.m_flPitch = -DEG2RAD(vecAngle.x);
 
+			// see relevant code @tf_weaponbase_gun.cpp L684
 			float fRight = g_ConVars.cl_flipviewmodels->GetInt() ? -8.f : 8.f;
 			vVisCheck += vecForward * 16.0f + vecRight * fRight + vecUp * -6.0f;
 
 			Utils::TraceHull(pLocal->GetEyePosition(), vVisCheck, hullSize, hullSize * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
-			return !trace.DidHit();
+			if (trace.DidHit()) {
+				return false;
+			}
 
 			break;
 		}
