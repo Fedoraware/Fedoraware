@@ -58,6 +58,31 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 	return false;
 }
 
+bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData pData)
+{
+	const bool onGround = pSuspect->m_fFlags() & FL_ONGROUND;
+	bool doReport = false;
+	if (onGround) {
+		pData.GroundTicks++;
+	}
+	else {
+		if (pData.GroundTicks == 1) {
+			pData.BHopSuspicion++;
+		}
+		pData.GroundTicks = 0;
+	}
+
+	if (pData.BHopSuspicion >= 5) {
+		doReport = true;
+		pData.BHopSuspicion = 0;
+	}
+	else if (pData.GroundTicks) {
+		pData.BHopSuspicion = 0;
+	}
+
+	return doReport;
+}
+
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.GetLocal();
@@ -87,7 +112,6 @@ void CCheaterDetection::OnTick()
 		if (!pSuspect) { continue; }
 		int index = pSuspect->GetIndex();
 
-
 		PlayerInfo_t pi{ };
 		if (I::Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer)
 		{
@@ -95,26 +119,28 @@ void CCheaterDetection::OnTick()
 
 			if (index == pLocal->GetIndex() || !ShouldScan(index, friendsID, pSuspect)) { continue; }
 
-			if (!UserData[friendsID].Detections.SteamName)
+			PlayerData userData = UserData[friendsID];
+
+			if (userData.Detections.SteamName)
 			{
-				UserData[friendsID].Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
+				userData.Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
 				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
 			}
 
-			if (!UserData[friendsID].Detections.InvalidPitch)
+			if (userData.Detections.InvalidPitch)
 			{
 				if (IsPitchInvalid(pSuspect))
 				{
-					UserData[friendsID].Detections.InvalidPitch = true;
+					userData.Detections.InvalidPitch = true;
 					Strikes[friendsID] += 5; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
 				}
 			}
 
-			if (!UserData[friendsID].Detections.InvalidText)
+			if (!userData.Detections.InvalidText)
 			{
 				if (IllegalChar[index])
 				{
-					UserData[friendsID].Detections.InvalidText = true;
+					userData.Detections.InvalidText = true;
 					Strikes[friendsID] += 5;
 					IllegalChar[index] = false;
 				}
@@ -126,16 +152,20 @@ void CCheaterDetection::OnTick()
 			{
 				if (IsTickCountManipulated(currenttickcount))
 				{
-					if (UserData[friendsID].AreTicksSafe)
+					if (userData.AreTicksSafe)
 					{
-						Strikes[friendsID] += 1;
-						UserData[friendsID].AreTicksSafe = false;
+						Strikes[friendsID]++;
+						userData.AreTicksSafe = false;
 					}
 				}
 				else
 				{
-					UserData[friendsID].AreTicksSafe = true;
+					userData.AreTicksSafe = true;
 				}
+			}
+
+			if (IsBhopping(pSuspect, userData)) {
+				Strikes[friendsID]++;
 			}
 
 			if (Strikes[friendsID] > 4)
