@@ -299,7 +299,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						float flUber = pMedGun->GetUberCharge() * (pMedGun->GetItemDefIndex() == Medic_s_TheVaccinator
 							                                           ? 400.0f
 							                                           : 100.0f);
-						float flMaxUber = 100.0f;
+
+						float flMaxUber = (pMedGun->GetItemDefIndex() == Medic_s_TheVaccinator ? 400.0f : 100.0f);
 
 						if (flUber > flMaxUber)
 						{
