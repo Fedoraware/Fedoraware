@@ -236,10 +236,10 @@ void CCheaterDetection::OnTick()
 				Strikes[friendsID]++;
 			}
 
-			if (IsAimbotting(pSuspect, userData)) {
-				conLogDetection(tfm::format("%s was detected as aimbotting.\n", pi.name).c_str());
-				Strikes[friendsID]++;
-			}
+			//if (IsAimbotting(pSuspect, userData)) {
+			//	conLogDetection(tfm::format("%s was detected as aimbotting.\n", pi.name).c_str());
+			//	Strikes[friendsID]++;
+			//}
 
 			if (Strikes[friendsID] > 4)
 			{
