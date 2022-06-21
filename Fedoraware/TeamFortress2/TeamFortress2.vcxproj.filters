@@ -143,7 +143,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Pong\Pong.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -683,7 +683,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\CEconNotification.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
-    <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\ISteamNetworkingUtils.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
