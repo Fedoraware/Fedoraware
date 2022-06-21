@@ -3,18 +3,19 @@
 
 struct Detection {
 	bool SteamName;
-	//bool Aimbot;
 	bool InvalidPitch;
 	bool InvalidText;
-	bool BHop;
 };
 
 struct PlayerData {
-	int AimSuspicion = 0;		//	unused
-	int GroundTicks = 0;		//	counts how many ticks our target has been on the ground
-	int BHopSuspicion = 0;		//	maxes out at 5, resets, adds a strike
-	Detection Detections{ };	//	
-	bool AreTicksSafe = true;	//	stops us from striking a player multiple times for the same tickshift
+	Vec3 StoredAngle = Vec3(0, 0, 0);	//	stores our suspects "flick" angle
+	int FlickTime = 0;					//	counts how many ticks since our target has flicked, only values of 1 are important
+	int GroundTicks = 0;				//	counts how many ticks our target has been on the ground
+	int BHopSuspicion = 0;				//	maxes out at 5, resets, adds a strike
+	Detection Detections{ };			//	
+	bool AreTicksSafe = true;			//	stops us from striking a player multiple times for the same tickshift
+	int NonDormantTimer = 0;			//	stores how many ticks we have properly scanned this player for without striking them
+	int OldStrikes = 0;					//	this is awful, stores how many strikes the player had on our previous check
 };
 
 class CCheaterDetection {
@@ -25,6 +26,7 @@ class CCheaterDetection {
 	bool IsPitchInvalid(CBaseEntity* pSuspect);
 	bool IsTickCountManipulated(int currentTickCount);
 	bool IsBhopping(CBaseEntity* pSuspect, PlayerData pData);
+	bool IsAimbotting(CBaseEntity* pSuspect, PlayerData pData);
 
 public:
 	std::unordered_map<int, bool> MarkedCheaters, IllegalChar;

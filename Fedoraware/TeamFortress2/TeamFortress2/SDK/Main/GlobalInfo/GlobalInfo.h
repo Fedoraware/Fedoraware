@@ -9,6 +9,12 @@ struct VelFixRecord {
 	float m_flSimulationTime;
 };
 
+struct PlayerCache {
+	Vec3 m_vecOrigin;
+	Vec3 m_vecVelocity;
+	Vec3 eyePosition;
+};
+
 struct DormantData {
 	Vec3 Location;
 	float LastUpdate = 0.f;
@@ -76,6 +82,7 @@ namespace G
 
 	inline EWeaponType CurWeaponType = {};
 	inline std::unordered_map <CBaseEntity*, VelFixRecord> VelFixRecords;
+	inline std::unordered_map <CBaseEntity*, std::unordered_map<int, PlayerCache>> Cache;	// caches movement, angles, add more if you want. format is <Entity, <tickcount, pData>>
 	inline bool FreecamActive = false;
 	inline Vec3 FreecamPos = {};
 	inline std::unordered_map<int, DormantData> PartyPlayerESP; // <Index, DormantData>

@@ -89,6 +89,45 @@ bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData pData)
 	return doReport;
 }
 
+bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData pData) {
+	const PlayerCache suspectCache = G::Cache[pSuspect][I::GlobalVars->tickcount - 1];	// get the cache info for one tick ago.
+	if (suspectCache.eyePosition.IsZero()) {
+		return false;
+	}
+	const Vec3 oldViewAngles = suspectCache.eyePosition;
+	const Vec3 curViewAngles = pSuspect->GetShootPos();
+
+	const float oldViewYaw = abs(oldViewAngles.y);
+	const float oldViewPitch = oldViewAngles.x;		// there is no reason to treat pitch the same as yaw as you can't go from 180 to -180 without cheats
+	
+	const float curViewYaw = abs(curViewAngles.y);
+	const float curViewPitch = curViewAngles.x;
+
+	const float aimDelta = sqrt(std::pow((curViewYaw - oldViewYaw), 2.f) + std::pow((curViewPitch - oldViewPitch), 2.f));
+	const float maxAimDelta = sqrt(std::pow(30.f, 2.f) + std::pow(30.f, 2.f));
+	
+	if (aimDelta > maxAimDelta && pData.StoredAngle.IsZero()) {	// just look at the math
+		pData.FlickTime = 0;		// consider our player as having flicked
+		pData.StoredAngle = curViewAngles;
+		if (aimDelta > maxAimDelta * 2.f) {
+			return true;			// return true if it was ridiculously high
+		}
+		return false;
+	}
+
+	if (!pData.StoredAngle.IsZero()) {
+		if (pData.FlickTime > 1) {
+			pData.StoredAngle.Clear();
+		}
+		else if ((curViewAngles - pData.StoredAngle).IsZero()) {
+			pData.StoredAngle.Clear();
+			return true;		// if they flicked back within one tick lets just mark them again.
+		}
+	}
+
+	return false;
+}
+
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.GetLocal();
@@ -111,6 +150,17 @@ void CCheaterDetection::OnTick()
 				return;
 			}
 		}
+
+		if (const INetChannel* NetChannel = I::Engine->GetNetChannelInfo()) {
+			const float lastReceivedUpdate = NetChannel->GetTimeSinceLastReceived();
+			const float maxReceiveTime = I::GlobalVars->interval_per_tick * 2;
+			const bool isTimingOut = NetChannel->IsTimingOut();
+			const bool shouldSkip = (lastReceivedUpdate > maxReceiveTime) || isTimingOut;
+
+			if (shouldSkip) {
+				return;
+			}
+		}
 	}
 
 	for (const auto& pSuspect : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
@@ -130,6 +180,7 @@ void CCheaterDetection::OnTick()
 			if (userData.Detections.SteamName)
 			{
 				userData.Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
+				userData.NonDormantTimer = 0;
 				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
 			}
 
@@ -139,6 +190,7 @@ void CCheaterDetection::OnTick()
 				{
 					conLogDetection(tfm::format("%s was detected for sending an OOB pitch.\n", pi.name).c_str());
 					userData.Detections.InvalidPitch = true;
+					userData.NonDormantTimer = 0;
 					Strikes[friendsID] += 5; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
 				}
 			}
@@ -149,6 +201,7 @@ void CCheaterDetection::OnTick()
 				{
 					conLogDetection(tfm::format("%s was detected as sending an illegal character.\n", pi.name).c_str());
 					userData.Detections.InvalidText = true;
+					userData.NonDormantTimer = 0;
 					Strikes[friendsID] += 5;
 					IllegalChar[index] = false;
 				}
@@ -164,6 +217,7 @@ void CCheaterDetection::OnTick()
 					{
 						conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
 						Strikes[friendsID]++;
+						userData.NonDormantTimer = 0;
 						userData.AreTicksSafe = false;
 					}
 				}
@@ -176,6 +230,13 @@ void CCheaterDetection::OnTick()
 			if (IsBhopping(pSuspect, userData)) {
 				conLogDetection(tfm::format("%s was detected as bhopping.\n", pi.name).c_str());
 				Strikes[friendsID]++;
+				userData.NonDormantTimer = 0;
+			}
+
+			if (IsAimbotting(pSuspect, userData)) {
+				conLogDetection(tfm::format("%s was detected as aimbotting.\n", pi.name).c_str());
+				Strikes[friendsID]++;
+				userData.NonDormantTimer = 0;
 			}
 
 			if (Strikes[friendsID] > 4)
@@ -184,6 +245,14 @@ void CCheaterDetection::OnTick()
 				MarkedCheaters[friendsID] = true;
 				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
 			}
+			else if (userData.NonDormantTimer >= (67 * 120) && userData.OldStrikes == Strikes[friendsID] && Strikes[friendsID]) {
+				Strikes[friendsID]--;
+				userData.NonDormantTimer = 0;
+				conLogDetection(tfm::format("%s has had their suspicion reduced due to good behaviour.\n", pi.name).c_str());
+			}
+
+			userData.NonDormantTimer++;
+			userData.OldStrikes = Strikes[friendsID];
 		}
 	}
 }

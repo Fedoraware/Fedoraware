@@ -239,6 +239,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Input_GetUserCmd.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\IsLocalPlayerUsingVisionFilterFlags.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\KeyValues_SetInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_DrawModelExecute.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ModelRender_ForcedMaterialOverride.cpp" />

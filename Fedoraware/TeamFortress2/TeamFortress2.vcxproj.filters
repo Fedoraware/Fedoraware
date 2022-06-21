@@ -144,6 +144,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Pong\Pong.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
