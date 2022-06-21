@@ -257,7 +257,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				{
 					int yoffset = 20, xoffset = 10;
 
-					if (const auto& pLocal = g_EntityCache.GetLocal())
+					if (CBaseEntity* pLocal = g_EntityCache.GetLocal())
 					{
 						// header
 						{
@@ -273,11 +273,17 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 						{
 							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "tickcount = %i", tickcount);
 						}
-						// rfgl
-						if (const matrix3x4& RgflCoordinateFrame = pLocal->GetRgflCoordinateFrame()) {
-							for (int i = 0; i < 3; i++) {
-								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%i  : [%.1f, %.1f, %.1f, %.1f]", i, RgflCoordinateFrame[i][0], RgflCoordinateFrame[i][1], RgflCoordinateFrame[i][2], RgflCoordinateFrame[i][3]);
-							}//
+						
+						for (CBaseEntity* eProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)) {
+							Vec3 mins = eProjectile->GetCollideableMins();
+							Vec3 maxs = eProjectile->GetCollideableMaxs();
+							if (maxs.IsZero() && mins.IsZero()) {
+								eProjectile->GetRenderBounds(mins, maxs);
+							}
+							if (!maxs.IsZero() && !mins.IsZero()) {
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "mins : [%.1f, %.1f, %.1f]", mins.x, mins.y, mins.z);
+								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "maxs : [%.1f, %.1f, %.1f]", maxs.x, maxs.y, maxs.z);
+							}
 						}
 					}
 				}
