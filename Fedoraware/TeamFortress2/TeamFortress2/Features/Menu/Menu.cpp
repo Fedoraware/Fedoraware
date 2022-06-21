@@ -5,12 +5,13 @@
 #include "../AttributeChanger/AttributeChanger.h"
 #include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
-#include "Playerlist/Playerlist.h"
 
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
 #include "Fonts/IconsMaterialDesign.h"
+#include "Playerlist/Playerlist.h"
 #include "MaterialEditor/MaterialEditor.h"
+#include "Pong/Pong.h"
 
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
@@ -1560,6 +1561,8 @@ void CMenu::MenuMisc()
 				I::Engine->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("itemtest");
+			if (Button("Pong", ImVec2(btnWidth, 20)))
+				F::Pong.IsOpen = !F::Pong.IsOpen;
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
@@ -1893,6 +1896,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DebugMenu();
 		F::MaterialEditor.Render();
 		F::PlayerList.Render();
+		F::Pong.Render();
 	}
 
 	// End frame and render
