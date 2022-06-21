@@ -1,8 +1,10 @@
 #include "CheaterDetection.h"
 
 void conLogDetection(const char* text) {
+	static std::string clr({ '\x7', 'C', 'C', '0', '0', 'F', 'F' });
 	I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
 	I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
+	I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[CheaterDetection] \x1 %s", clr, text).c_str());
 }
 
 bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect)
@@ -185,7 +187,6 @@ void CCheaterDetection::OnTick()
 			if (userData.Detections.SteamName)
 			{
 				userData.Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
-				userData.NonDormantTimer = 0;
 				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
 			}
 
@@ -195,7 +196,6 @@ void CCheaterDetection::OnTick()
 				{
 					conLogDetection(tfm::format("%s was detected for sending an OOB pitch.\n", pi.name).c_str());
 					userData.Detections.InvalidPitch = true;
-					userData.NonDormantTimer = 0;
 					Strikes[friendsID] += 5; // because this cannot be falsely triggered, anyone detected by it should be marked as a cheater instantly 
 				}
 			}
@@ -206,7 +206,6 @@ void CCheaterDetection::OnTick()
 				{
 					conLogDetection(tfm::format("%s was detected as sending an illegal character.\n", pi.name).c_str());
 					userData.Detections.InvalidText = true;
-					userData.NonDormantTimer = 0;
 					Strikes[friendsID] += 5;
 					IllegalChar[index] = false;
 				}
@@ -222,7 +221,6 @@ void CCheaterDetection::OnTick()
 					{
 						conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
 						Strikes[friendsID]++;
-						userData.NonDormantTimer = 0;
 						userData.AreTicksSafe = false;
 					}
 				}
@@ -235,13 +233,11 @@ void CCheaterDetection::OnTick()
 			if (IsBhopping(pSuspect, userData)) {
 				conLogDetection(tfm::format("%s was detected as bhopping.\n", pi.name).c_str());
 				Strikes[friendsID]++;
-				userData.NonDormantTimer = 0;
 			}
 
 			if (IsAimbotting(pSuspect, userData)) {
 				conLogDetection(tfm::format("%s was detected as aimbotting.\n", pi.name).c_str());
 				Strikes[friendsID]++;
-				userData.NonDormantTimer = 0;
 			}
 
 			if (Strikes[friendsID] > 4)
@@ -254,6 +250,10 @@ void CCheaterDetection::OnTick()
 				Strikes[friendsID]--;
 				userData.NonDormantTimer = 0;
 				conLogDetection(tfm::format("%s has had their suspicion reduced due to good behaviour.\n", pi.name).c_str());
+			}
+
+			if (userData.OldStrikes != Strikes[friendsID]) {
+				userData.NonDormantTimer = 0;
 			}
 
 			userData.NonDormantTimer++;
