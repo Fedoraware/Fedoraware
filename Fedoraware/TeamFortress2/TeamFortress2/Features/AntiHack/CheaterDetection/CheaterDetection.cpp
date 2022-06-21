@@ -94,11 +94,12 @@ bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData& pData)
 
 bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData) {
 	const PlayerCache suspectCache = G::Cache[pSuspect][I::GlobalVars->tickcount - 1];	// get the cache info for one tick ago.
-	//if (suspectCache.eyePosition.IsZero()) {
-	//	return false;
-	//}
+	if (suspectCache.eyePosition.IsZero()) {
+		return false;
+	}
 
 	if ((suspectCache.playersPredictedTick - TIME_TO_TICKS(pSuspect->GetSimulationTime())) > 1) {
+		pData.StoredAngle.Clear();
 		return false;
 	}
 
@@ -112,7 +113,7 @@ bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData) {
 	const float curViewPitch = curViewAngles.x;
 
 	const float aimDelta = abs(curViewYaw - oldViewYaw) + abs(curViewPitch - oldViewPitch);
-	const float maxAimDelta = 35.f;
+	const float maxAimDelta = 90.f;
 	
 	if (aimDelta > maxAimDelta && pData.StoredAngle.IsZero()) {	// just look at the math
 		pData.FlickTime = 0;		// consider our player as having flicked
