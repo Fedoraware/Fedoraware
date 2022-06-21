@@ -14,6 +14,7 @@ struct PlayerCache {
 	Vec3 m_vecVelocity;
 	Vec3 eyePosition;
 	int playersPredictedTick;
+	bool didDamage = false;
 };
 
 struct DormantData {

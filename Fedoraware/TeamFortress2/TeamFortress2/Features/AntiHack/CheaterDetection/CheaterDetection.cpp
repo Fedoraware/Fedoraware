@@ -64,15 +64,15 @@ bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
 	return false;
 }
 
-bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData pData)
+bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData& pData)
 {
 	const bool onGround = pSuspect->m_fFlags() & FL_ONGROUND;
 	bool doReport = false;
 	if (onGround) {
 		pData.GroundTicks++;
 	}
-	else {
-		if (pData.GroundTicks == 1) {
+	else if (pData.GroundTicks) {
+		if (pData.GroundTicks <= 2) {
 			pData.BHopSuspicion++;
 		}
 		pData.GroundTicks = 0;
@@ -82,25 +82,26 @@ bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData pData)
 		doReport = true;
 		pData.BHopSuspicion = 0;
 	}
-	else if (pData.GroundTicks) {
+	else if (pData.GroundTicks > 2) {
 		pData.BHopSuspicion = 0;
+		pData.GroundTicks = 0;
 	}
 
 	return doReport;
 }
 
-bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData pData) {
+bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData) {
 	const PlayerCache suspectCache = G::Cache[pSuspect][I::GlobalVars->tickcount - 1];	// get the cache info for one tick ago.
-	if (suspectCache.eyePosition.IsZero()) {
-		return false;
-	}
+	//if (suspectCache.eyePosition.IsZero()) {
+	//	return false;
+	//}
 
-	if ((suspectCache.playersPredictedTick - TIME_TO_TICKS(pSuspect->GetSimulationTime())) > 2) {
+	if ((suspectCache.playersPredictedTick - TIME_TO_TICKS(pSuspect->GetSimulationTime())) > 1) {
 		return false;
 	}
 
 	const Vec3 oldViewAngles = suspectCache.eyePosition;
-	const Vec3 curViewAngles = pSuspect->GetShootPos();
+	const Vec3 curViewAngles = pSuspect->GetEyeAngles();
 
 	const float oldViewYaw = abs(oldViewAngles.y);
 	const float oldViewPitch = oldViewAngles.x;		// there is no reason to treat pitch the same as yaw as you can't go from 180 to -180 without cheats
@@ -108,15 +109,12 @@ bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData pData) {
 	const float curViewYaw = abs(curViewAngles.y);
 	const float curViewPitch = curViewAngles.x;
 
-	const float aimDelta = sqrt(std::pow((curViewYaw - oldViewYaw), 2.f) + std::pow((curViewPitch - oldViewPitch), 2.f));
-	const float maxAimDelta = sqrt(std::pow(30.f, 2.f) + std::pow(30.f, 2.f));
+	const float aimDelta = abs(curViewYaw - oldViewYaw) + abs(curViewPitch - oldViewPitch);
+	const float maxAimDelta = 35.f;
 	
 	if (aimDelta > maxAimDelta && pData.StoredAngle.IsZero()) {	// just look at the math
 		pData.FlickTime = 0;		// consider our player as having flicked
 		pData.StoredAngle = curViewAngles;
-		if (aimDelta > maxAimDelta * 2.f) {
-			return true;			// return true if it was ridiculously high
-		}
 		return false;
 	}
 
@@ -124,11 +122,13 @@ bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData pData) {
 		if (pData.FlickTime > 1) {
 			pData.StoredAngle.Clear();
 		}
-		else if ((curViewAngles - pData.StoredAngle).IsZero()) {
+		else if ((pData.StoredAngle - curViewAngles).IsZero()) {
 			pData.StoredAngle.Clear();
-			return true;		// if they flicked back within one tick lets just mark them again.
+			return true;
 		}
 	}
+
+	pData.FlickTime++;
 
 	return false;
 }
@@ -180,7 +180,7 @@ void CCheaterDetection::OnTick()
 
 			if (index == pLocal->GetIndex() || !ShouldScan(index, friendsID, pSuspect)) { continue; }
 
-			PlayerData userData = UserData[friendsID];
+			PlayerData& userData = UserData[friendsID];
 
 			if (userData.Detections.SteamName)
 			{
@@ -259,5 +259,25 @@ void CCheaterDetection::OnTick()
 			userData.NonDormantTimer++;
 			userData.OldStrikes = Strikes[friendsID];
 		}
+	}
+}
+
+void CCheaterDetection::Event(CGameEvent* pEvent) {
+	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
+	const CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return; }
+	int entID{};
+
+	if (uNameHash == FNV1A::HashConst("player_hurt")) {
+		entID = I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
+	}
+	else if (uNameHash == FNV1A::HashConst("player_death")) {
+		entID = pEvent->GetInt("inflictor_entindex");
+	}
+
+	if (CBaseEntity* pInflictor = I::EntityList->GetClientEntity(entID)) {
+		if (pInflictor == pLocal) { return; }
+		PlayerCache suspectCache = G::Cache[pInflictor][I::GlobalVars->tickcount];	// get the cache info for our current tick
+		suspectCache.didDamage = true;
 	}
 }

@@ -94,14 +94,10 @@ void appendCache() {
 			openCache.erase(openCache.begin());	// delete the first value if our cache lasts longer than a second.
 		}
 
-		const PlayerCache inputData = {
-			pCaching->m_vecOrigin(),
-			pCaching->m_vecVelocity(),
-			pCaching->GetEyePosition(),
-			TIME_TO_TICKS(pCaching->GetSimulationTime())
-		};
-
-		openCache[tickcount] = inputData;
+		openCache[tickcount].m_vecOrigin = pCaching->m_vecOrigin();
+		openCache[tickcount].m_vecVelocity = pCaching->m_vecVelocity();
+		openCache[tickcount].eyePosition = pCaching->GetEyeAngles();
+		openCache[tickcount].playersPredictedTick = TIME_TO_TICKS(pCaching->GetSimulationTime());
 	}
 }
 

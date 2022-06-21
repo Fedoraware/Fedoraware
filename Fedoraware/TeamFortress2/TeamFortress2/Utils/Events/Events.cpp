@@ -3,6 +3,7 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Visuals/Visuals.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -33,6 +34,10 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	{
 		F::Resolver.OnPlayerHurt(pEvent);
 	}
+
+	//if (uNameHash == FNV1A::HashConst("player_hurt") || uNameHash == FNV1A::HashConst("player_death")) {
+	//	F::BadActors.Event(pEvent);
+	//}
 
 	// Pickup Timers
 	if (Vars::Visuals::PickupTimers.Value && uNameHash == FNV1A::HashConst("item_pickup"))

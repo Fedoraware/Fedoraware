@@ -25,12 +25,13 @@ class CCheaterDetection {
 	bool IsSteamNameDifferent(PlayerInfo_t pInfo);
 	bool IsPitchInvalid(CBaseEntity* pSuspect);
 	bool IsTickCountManipulated(int currentTickCount);
-	bool IsBhopping(CBaseEntity* pSuspect, PlayerData pData);
-	bool IsAimbotting(CBaseEntity* pSuspect, PlayerData pData);
+	bool IsBhopping(CBaseEntity* pSuspect, PlayerData& pData);
+	bool IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData);
 
 public:
 	std::unordered_map<int, bool> MarkedCheaters, IllegalChar;
 	void OnTick();
+	void Event(CGameEvent* pEvent);
 };
 
 ADD_FEATURE(CCheaterDetection, BadActors)
