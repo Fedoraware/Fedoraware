@@ -13,6 +13,7 @@ struct PlayerCache {
 	Vec3 m_vecOrigin;
 	Vec3 m_vecVelocity;
 	Vec3 eyePosition;
+	int playersPredictedTick;
 };
 
 struct DormantData {

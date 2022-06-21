@@ -97,7 +97,8 @@ void appendCache() {
 		const PlayerCache inputData = {
 			pCaching->m_vecOrigin(),
 			pCaching->m_vecVelocity(),
-			pCaching->GetEyePosition()
+			pCaching->GetEyePosition(),
+			TIME_TO_TICKS(pCaching->GetSimulationTime())
 		};
 
 		openCache[tickcount] = inputData;

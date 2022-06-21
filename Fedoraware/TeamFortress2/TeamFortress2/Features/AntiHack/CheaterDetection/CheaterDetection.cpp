@@ -94,6 +94,11 @@ bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData pData) {
 	if (suspectCache.eyePosition.IsZero()) {
 		return false;
 	}
+
+	if ((suspectCache.playersPredictedTick - TIME_TO_TICKS(pSuspect->GetSimulationTime())) > 2) {
+		return false;
+	}
+
 	const Vec3 oldViewAngles = suspectCache.eyePosition;
 	const Vec3 curViewAngles = pSuspect->GetShootPos();
 
