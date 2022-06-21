@@ -809,27 +809,41 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 				}
 			}
 
-			if (Vars::Aimbot::Hitscan::TapFire.Value)//
+			/*
+			// Get circular gaussian spread. Under some cases we fire a bullet right down the crosshair:
+			//	- The first bullet of a spread weapon (except for rapid fire spread weapons like the minigun)
+			//	- The first bullet of a non-spread weapon if it's been >1.25 second since firing
+			bool bFirePerfect = false;
+			if ( iBullet == 0 && pWpn )
 			{
-				const float spread = 1 - pWeapon->GetWeaponSpread();
-				const float scale = 0.004f; // overkill calculated is maxaccuratedistance / spread, ~0.003125
-				const float dist = pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin());
-				const float time = scale * dist * pWeapon->GetWeaponSpread();
+				float flTimeSinceLastShot = (gpGlobals->curtime - pWpn->m_flLastFireTime );
+				if ( nBulletsPerShot > 1 && flTimeSinceLastShot > 0.25 )
+				{
+					bFirePerfect = true;
+				}
+				else if ( nBulletsPerShot == 1 && flTimeSinceLastShot > 1.25 )
+				{
+					bFirePerfect = true;
+				}
+			}
+			*/
 
-				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1 ? dist > 1100.f * spread : true;
+			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN)
+			{
+				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1
+					? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
+					: true;
 
-				if (bDo && spread)
+				if (bDo && pWeapon->GetWeaponSpread())
 				{
 					const float flTimeSinceLastShot = (pLocal->GetTickBase() * TICK_INTERVAL) - pWeapon->GetLastFireTime();
 
 					if (pWeapon->GetWeaponData().m_nBulletsPerShot > 1)
 					{
-						if (flTimeSinceLastShot <= std::min(time, 0.25f))
-						{
+						if (flTimeSinceLastShot <= pLocal->IsPrecisionRune() ? 0.015f : 0.25f) {
 							pCmd->buttons &= ~IN_ATTACK;
 						}
 					}
-
 					else if (flTimeSinceLastShot <= 1.25f)
 					{
 						pCmd->buttons &= ~IN_ATTACK;

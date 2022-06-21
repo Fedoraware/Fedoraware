@@ -54,18 +54,21 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Soldier_m_Warhawk:
 		{
 			out = {1100.0f, 0.0f};
+			m_bIsBoosted = true;
 			break;
 		}
 
 	case Soldier_m_TheDirectHit:
 		{
 			out = {1980.0f, 0.0f};
+			m_bIsBoosted = true;
 			break;
 		}
 
 	case Soldier_m_TheLibertyLauncher:
 		{
 			out = {1540.0f, 0.0f};
+			m_bIsBoosted = true;
 			break;
 		}
 
@@ -83,6 +86,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Demoman_m_ButcherBird:
 		{
 			out = {1216.f, 0.4f};
+			m_bIsBoosted = true;
 			break;
 		}
 
@@ -96,12 +100,14 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Demoman_m_TheLooseCannon:
 		{
 			out = {1453.9f, 0.4f};
+			m_bIsBoosted = true;
 			break;
 		}
 
 	case Demoman_m_TheLochnLoad:
 		{
 			out = {1513.3f, 0.4f};
+			m_bIsBoosted = true;
 			break;
 		}
 
@@ -838,7 +844,7 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 		return false;
 	}
 
-	if (pLocal->IsPrecisionRune() && !m_bIsFlameThrower) {
+	if (pLocal->IsPrecisionRune() && m_bIsBoosted) {
 		projInfo.m_flVelocity *= 2.5f;
 
 	}
