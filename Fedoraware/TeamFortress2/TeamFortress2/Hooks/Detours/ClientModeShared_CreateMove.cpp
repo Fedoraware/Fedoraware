@@ -75,10 +75,16 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			{
 				vStartOrigin = pLocal->GetVecOrigin();
 				vStartVel = pLocal->GetVecVelocity();
-				predEndPoint = vStartOrigin + (vStartVel * TICKS_TO_TIME(Vars::Misc::CL_Move::DTTicks.Value));
+				predEndPoint = vStartOrigin + vStartVel;
+				nShiftTick++;
+				return;
+			}
+			if (nShiftTick == 1) {
+				G::ShouldStop = true;
+				nShiftTick++;
 			}
 			currentPos = pLocal->GetVecOrigin();
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (float)((scale*vStartVel.Length2D()) / (Vars::Misc::CL_Move::DTTicks.Value)));
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1 / (Vars::Misc::CL_Move::DTTicks.Value)));
 			nShiftTick++;
 		}
 		else
@@ -359,7 +365,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		G::ForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
-	if (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value) {
+	if (G::ShouldStop || (G::RechargeQueued && Vars::Misc::CL_Move::StopMovement.Value)) {
+		G::ShouldStop = false;
 		stopMovement(pCmd);
 		return false;
 	}

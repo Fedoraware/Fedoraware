@@ -44,6 +44,7 @@ namespace G
 	inline bool AutoBackstabRunning = false;
 	inline bool LocalSpectated = false; // Is the local player being spectated?
 	inline bool RollExploiting = false; // Are we performing the roll exploit?
+	inline bool ShouldStop = false;		// Stops our players movement, takes 1 tick.
 	inline bool UnloadWndProcHook = false;
 
 	/* Double tap / Tick shift */
