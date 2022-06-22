@@ -62,33 +62,48 @@ void stopMovement(CUserCmd* pCmd) {
 //	if our forward velocity is 400, to get it to 0, we would need to spend ~7 ticks of time decelerating.
 void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	static Vec3 vStartOrigin = {}; static Vec3 predEndPoint = {};
-	static Vec3 currentPos{};
-	static Vec3 vStartVel = {};
-	static int nShiftTick = 0;
-	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned())
-	{
-		if (G::ShouldShift && G::ShiftedTicks > 0 && Vars::Misc::CL_Move::AntiWarp.Value && pLocal->GetMoveType() == MOVETYPE_WALK)
-		{
-			if (nShiftTick == 0)
-			{
-				vStartOrigin = pLocal->GetVecOrigin();
-				vStartVel = pLocal->GetVecVelocity();
-				predEndPoint = vStartOrigin + vStartVel;
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned()) {
+		const int stopType = (
+			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
+			pLocal->GetMoveType() == MOVETYPE_WALK ? 1 : 2 : 0
+			); // 0.none, 1.ground, 2.midair
+		static Vec3 predEndPoint = {};
+		static Vec3 currentPos{};
+		static int nShiftTick = 0;
+
+		switch (stopType) {
+		case 0: {
+			nShiftTick = 0;
+			return;
+		}
+		case 1: {
+			switch (nShiftTick) {
+			case 0: {
+				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
 				nShiftTick++;
 				return;
 			}
-			if (nShiftTick == 1) {
+			case 1: {
 				G::ShouldStop = true;
 				nShiftTick++;
+				break;
 			}
-			currentPos = pLocal->GetVecOrigin();
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1 / (Vars::Misc::CL_Move::DTTicks.Value)));
-			nShiftTick++;
+			default: {
+				nShiftTick++;
+				break;
+			}
+			}
+
+			currentPos = pLocal->GetVecOrigin();//
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value)));
+			return;
 		}
-		else
-		{
-			nShiftTick = 0;
+		//case 2: {
+		//	return;
+		//}
+		default: {
+			return;
+		}
 		}
 	}
 }
@@ -122,6 +137,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	G::SilentTime = false;
 	G::IsAttacking = false;
 	G::FakeShotPitch = false;
+	G::SafeTick = !G::IsAttacking;//
 
 	if (!pCmd || !pCmd->command_number)
 	{

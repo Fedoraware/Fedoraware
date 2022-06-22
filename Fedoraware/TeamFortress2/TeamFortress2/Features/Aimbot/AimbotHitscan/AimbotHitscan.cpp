@@ -521,7 +521,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& target)
 {
-	if (!Vars::Aimbot::Global::AutoShoot.Value)
+	if (!Vars::Aimbot::Global::AutoShoot.Value || !G::SafeTick)
 	{
 		return false;
 	}
