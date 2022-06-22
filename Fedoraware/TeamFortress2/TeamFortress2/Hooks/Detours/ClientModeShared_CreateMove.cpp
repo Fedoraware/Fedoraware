@@ -364,7 +364,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		G::ForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
-	if (G::ShouldStop || (G::RechargeQueued && Vars::Misc::CL_Move::StopMovement.Value)) {
+	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value)) {
 		G::ShouldStop = false;
 		stopMovement(pCmd);
 		return false;
