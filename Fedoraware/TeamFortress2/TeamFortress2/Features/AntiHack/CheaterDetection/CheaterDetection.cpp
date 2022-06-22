@@ -15,31 +15,31 @@ bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSusp
 	return true;
 }
 
-bool CCheaterDetection::IsSteamNameDifferent(PlayerInfo_t pInfo)
-{
-	const CSteamID SteamID = CSteamID(static_cast<uint64>(pInfo.friendsID + 0x0110000100000000));
-
-	// this can be falsely triggered by a person being nicknamed without being our steam friend (pending friend) or changing their steam name since joining the game
-	if (const char* steamName = g_SteamInterfaces.Friends015->GetFriendPersonaName(SteamID))
-	{
-		if (strcmp(pInfo.name, steamName) != 0)
-		{
-			for (int personaNum = 0; personaNum <= 5; personaNum++) {
-				if (const char* historicalName = g_SteamInterfaces.Friends015->GetFriendPersonaNameHistory(SteamID, personaNum)) {
-					if (strcmp(pInfo.name, historicalName) == 0) {
-						return false;
-					}
-				}
-				else {
-					break;
-				}
-			}
-			conLogDetection(tfm::format("%s was detected as name changing (%s => %s).\n", pInfo.name, pInfo.name, steamName).c_str());
-			return true;
-		}
-	}
-	return false;
-}
+//bool CCheaterDetection::IsSteamNameDifferent(PlayerInfo_t pInfo)
+//{
+//	const CSteamID SteamID = CSteamID(static_cast<uint64>(pInfo.friendsID + 0x0110000100000000));
+//
+//	// this can be falsely triggered by a person being nicknamed without being our steam friend (pending friend) or changing their steam name since joining the game
+//	if (const char* steamName = g_SteamInterfaces.Friends015->GetFriendPersonaName(SteamID))
+//	{
+//		if (strcmp(pInfo.name, steamName) != 0)
+//		{
+//			for (int personaNum = 0; personaNum <= 5; personaNum++) {
+//				if (const char* historicalName = g_SteamInterfaces.Friends015->GetFriendPersonaNameHistory(SteamID, personaNum)) {
+//					if (strcmp(pInfo.name, historicalName) == 0) {
+//						return false;
+//					}
+//				}
+//				else {
+//					break;
+//				}
+//			}
+//			conLogDetection(tfm::format("%s was detected as name changing (%s => %s).\n", pInfo.name, pInfo.name, steamName).c_str());
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 bool CCheaterDetection::IsPitchInvalid(CBaseEntity* pSuspect)
 {
@@ -185,11 +185,11 @@ void CCheaterDetection::OnTick()
 
 			PlayerData& userData = UserData[friendsID];
 
-			if (userData.Detections.SteamName)
-			{
-				userData.Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
-				Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
-			}
+			//if (userData.Detections.SteamName)
+			//{
+			//	userData.Detections.SteamName = true; // to prevent false positives and needless rescanning, set this to true after the first scan.
+			//	Strikes[friendsID] += IsSteamNameDifferent(pi) ? 5 : 0; // add 5 strikes to this player if they are manipulating their in game name.
+			//}
 
 			if (userData.Detections.InvalidPitch)
 			{
@@ -201,16 +201,16 @@ void CCheaterDetection::OnTick()
 				}
 			}
 
-			if (!userData.Detections.InvalidText)
-			{
-				if (IllegalChar[index])
-				{
-					conLogDetection(tfm::format("%s was detected as sending an illegal character.\n", pi.name).c_str());
-					userData.Detections.InvalidText = true;
-					Strikes[friendsID] += 5;
-					IllegalChar[index] = false;
-				}
-			}
+			//if (!userData.Detections.InvalidText)
+			//{
+			//	if (IllegalChar[index])
+			//	{
+			//		conLogDetection(tfm::format("%s was detected as sending an illegal character.\n", pi.name).c_str());
+			//		userData.Detections.InvalidText = true;
+			//		Strikes[friendsID] += 5;
+			//		IllegalChar[index] = false;
+			//	}
+			//}
 
 			const int currenttickcount = TIME_TO_TICKS(pSuspect->GetSimulationTime());
 

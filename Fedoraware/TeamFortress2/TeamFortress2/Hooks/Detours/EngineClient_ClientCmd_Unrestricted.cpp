@@ -66,13 +66,5 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 		}
 	}
 
-	// Allow newlines in chat chad
-	if (Vars::Misc::ChatNL.Value && cmdString.rfind("say", 0) == 0)
-	{
-		boost::replace_all(cmdString, "\\n", "\n");
-		I::Engine->ServerCmd(cmdString.c_str(), true);
-		return;
-	}
-
 	Hook.Original<FN>()(ecx, edx, cmdString.c_str());
 }

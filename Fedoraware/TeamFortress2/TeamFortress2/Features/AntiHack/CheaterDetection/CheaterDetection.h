@@ -2,9 +2,9 @@
 #include "../../../SDK/SDK.h"
 
 struct Detection {
-	bool SteamName;
+	//bool SteamName;
 	bool InvalidPitch;
-	bool InvalidText;
+	//bool InvalidText;
 };
 
 struct PlayerData {
@@ -22,7 +22,7 @@ class CCheaterDetection {
 	std::unordered_map<int, int> Strikes;
 	std::unordered_map<int, PlayerData> UserData;
 	bool ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
-	bool IsSteamNameDifferent(PlayerInfo_t pInfo);
+	//bool IsSteamNameDifferent(PlayerInfo_t pInfo);
 	bool IsPitchInvalid(CBaseEntity* pSuspect);
 	bool IsTickCountManipulated(int currentTickCount);
 	bool IsBhopping(CBaseEntity* pSuspect, PlayerData& pData);

@@ -698,7 +698,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::ChatCensor);
-			SAVE_VAR(Vars::Misc::ChatNL);
+			//SAVE_VAR(Vars::Misc::ChatNL);
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::MVMRes);
@@ -1425,7 +1425,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::AntiAFK);
 			LOAD_VAR(Vars::Misc::CheatsBypass);
 			LOAD_VAR(Vars::Misc::ChatCensor);
-			LOAD_VAR(Vars::Misc::ChatNL);
+			//LOAD_VAR(Vars::Misc::ChatNL);
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::MVMRes);

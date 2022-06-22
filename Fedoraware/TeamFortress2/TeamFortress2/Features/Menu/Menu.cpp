@@ -1487,7 +1487,7 @@ void CMenu::MenuMisc()
 		{
 			SectionTitle("Chat");
 			WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
-			WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
+			//WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
 			WCombo("Mediaval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
 

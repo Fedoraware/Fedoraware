@@ -583,7 +583,7 @@ namespace Vars
 		inline CVar<bool> CheatsBypass{false};
 		inline CVar<int> Roll{false};
 		inline CVar<bool> ChatCensor{false};
-		inline CVar<bool> ChatNL{true};
+		//inline CVar<bool> ChatNL{true};
 		inline CVar<bool> AntiAutobal{false};
 		inline CVar<bool> RageRetry{false};
 		inline CVar<int> RageRetryHealth{20};
