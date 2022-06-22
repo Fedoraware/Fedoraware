@@ -100,8 +100,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_ClientCmd_Unrestricted.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_Move.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_SendMove.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\UpdateNameFromSteamID.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_NameCvarChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineVGui_Paint.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
@@ -145,6 +143,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Pong\Pong.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\UTIL_TraceLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

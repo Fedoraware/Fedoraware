@@ -40,6 +40,16 @@ void UpdateRichPresence()
 	F::Misc.SteamRPC();
 }
 
+void stopMovement(CUserCmd* pCmd) {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (pLocal) {
+		const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
+		pCmd->viewangles.y = direction;
+		pCmd->viewangles.x = 90;
+		pCmd->sidemove = 0; pCmd->forwardmove = 0;
+	}
+}
+
 //	TODO: make this p
 //	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
 //	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
@@ -349,6 +359,10 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		G::ForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
+	if (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value) {
+		stopMovement(pCmd);
+		return false;
+	}
 
 	if (G::SilentTime ||
 		G::AAActive ||

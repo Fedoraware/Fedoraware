@@ -620,6 +620,7 @@ namespace Vars
 			inline CVar<bool> SEnabled{false};
 			inline CVar<int> SFactor{1};
 			inline CVar<bool> NotInAir{true};
+			inline CVar<bool> StopMovement{true};
 			inline CVar<int> TeleportKey{0x52}; //R
 			inline CVar<int> TeleportMode{0};
 			inline CVar<int> RechargeKey{0x48}; //H
