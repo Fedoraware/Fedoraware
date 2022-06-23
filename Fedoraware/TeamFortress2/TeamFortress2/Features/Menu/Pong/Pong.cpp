@@ -12,16 +12,23 @@ void CPong::Render()
 	{
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowPos = ImGui::GetWindowPos();
+		const auto windowSize = ImGui::GetWindowSize();
 		const auto cursorPos = ImGui::GetMousePos();
 
 		// Draw Player
-		drawList->AddRectFilled({ windowPos.x + 20.f, windowPos.y + PlayerY - 20.f }, { windowPos.x + 25.f, windowPos.y + PlayerY + 20.f }, ImColor(255, 255, 255));
+		drawList->AddRectFilled({ windowPos.x + 20.f, windowPos.y + PlayerY - (0.5f * RacketSize.y) },
+			{ windowPos.x + 20.f + RacketSize.x, windowPos.y + PlayerY + (0.5f * RacketSize.y) },
+			ImColor(255, 255, 255));
 
 		// Draw Enemy
-		drawList->AddRectFilled({ windowPos.x + 580.f, windowPos.y + EnemyY - 20.f }, { windowPos.x + 575.f, windowPos.y + EnemyY + 20.f }, ImColor(255, 255, 255));
+		drawList->AddRectFilled({ windowPos.x + (windowSize.x - 20.f), windowPos.y + EnemyY - (0.5f * RacketSize.y) },
+			{ windowPos.x + (windowSize.x - 20.f - RacketSize.x), windowPos.y + EnemyY + (0.5f * RacketSize.y) },
+			ImColor(255, 255, 255));
 
 		// Draw Ball
-		drawList->AddCircleFilled({ windowPos.x + BallPos.x, windowPos.y + BallPos.y }, 5.f, ImColor(255, 255, 255));
+		drawList->AddCircleFilled({ windowPos.x + BallPos.x, windowPos.y + BallPos.y },
+			BallSize,
+			ImColor(255, 255, 255));
 
 		// Draw Scores
 		drawList->AddText({ windowPos.x + 20.f, windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(PlayerScore).c_str());
@@ -30,7 +37,7 @@ void CPong::Render()
 		static Timer updateTimer{ };
 		if (updateTimer.Run(5))
 		{
-			BallPos += BallVelocity * BallMultiplier;
+			BallPos += BallVelocity * std::max(BallMultiplier, 1.f);
 			EnemyY += EnemyVelocity;
 			PlayerY += PlayerVelocity;
 
@@ -40,41 +47,49 @@ void CPong::Render()
 
 		/* Collisions */
 
-		// Enemy
-		if (BallPos.x + 5.f >= 575.f && BallPos.x + 5.f <= 580.f
-			&& BallPos.y < EnemyY + 20.f && BallPos.y > EnemyY - 20.f)
+		// X-Walls (Loss)
+		if (BallPos.x + BallSize >= windowSize.x - 7.f)
 		{
+			PlayerScore++;
+			BallMultiplier -= 0.02f;
+			Reset();
+		} else if (BallPos.x - BallSize <= 0.f)
+		{
+			EnemyScore++;
+			BallMultiplier -= 0.04f;
+			Reset();
+		}
+
+		// Y-Walls (Bounce)
+		if (BallPos.y - 25.f - BallSize <= 0.f)
+		{
+			BallVelocity.y = 1.f;
+		} else if (BallPos.y + BallSize >= windowSize.y)
+		{
+			BallVelocity.y = -1.f;
+		}
+
+		// Enemy
+		if (BallPos.x + BallSize >= windowSize.x - 20.f - RacketSize.x
+			&& BallPos.y - BallSize < EnemyY + (0.5f * RacketSize.y) && BallPos.y + BallSize > EnemyY - (0.5f * RacketSize.y))
+		{
+			if (BallVelocity.x > 0)
+			{
+				I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			}
 			BallVelocity.x = -1.f;
 		}
 
 		// Player
-		if (BallPos.x - 5.f <= 25.f && BallPos.x - 5.f >= 20.f
-			&& BallPos.y < PlayerY + 20.f && BallPos.y > PlayerY - 20.f)
+		if (BallPos.x - BallSize <= 20.f + RacketSize.x
+			&& BallPos.y - BallSize < PlayerY + (0.5f * RacketSize.y) && BallPos.y + BallSize > PlayerY - (0.5f * RacketSize.y))
 		{
+			if (BallVelocity.x < 0)
+			{
+				I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			}
 			BallVelocity.x = 1.f;
 			BallMultiplier += 0.02f;
-		}
-
-		// X-Walls (Loss)
-		if (BallPos.x + 5.f >= 600.f)
-		{
-			PlayerScore++;
-			BallPos = { 300.f, 200.f };
-			BallVelocity = { 1.f, -1.f };
-		} else if (BallPos.x - 5.f <= 0.f)
-		{
-			EnemyScore++;
-			BallPos = { 300.f, 200.f };
-			BallVelocity = { 1.f, -1.f };
-		}
-
-		// Y-Walls (Bounce)
-		if (BallPos.y - 30.f <= 0.f)
-		{
-			BallVelocity.y = 1.f;
-		} else if (BallPos.y + 5.f >= 400.f)
-		{
-			BallVelocity.y = -1.f;
 		}
 
 		// Enemy controller
@@ -101,9 +116,11 @@ void CPong::Render()
 			PlayerVelocity = 0.f;
 		}
 
+		// Reset if one player winds
 		if (PlayerScore >= 10 || EnemyScore >= 10)
 		{
-			Reset();
+			Init();
+			I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
 		}
 	}
 	ImGui::End();
@@ -111,7 +128,7 @@ void CPong::Render()
 	ImGui::PopStyleColor();
 }
 
-void CPong::Reset()
+void CPong::Init()
 {
 	PlayerScore = 0;
 	EnemyScore = 0;
@@ -119,4 +136,11 @@ void CPong::Reset()
 	EnemyY = 200.f;
 	BallPos = { 300.f, 200.f };
 	BallVelocity = { 1.f, -1.f };
+}
+
+void CPong::Reset()
+{
+	BallPos = { 300.f, 200.f };
+	BallVelocity = { 1.f, -1.f };
+	I::Engine->ClientCmd_Unrestricted("play ui/chat_display_text");
 }

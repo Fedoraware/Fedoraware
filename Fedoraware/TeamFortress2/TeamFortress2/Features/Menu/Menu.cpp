@@ -1549,6 +1549,8 @@ void CMenu::MenuMisc()
 				I::Engine->ClientCmd_Unrestricted("status");
 			if (Button("Ping", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("ping");
+			if (Button("Pong", ImVec2(btnWidth, 20)))
+				F::Pong.IsOpen = !F::Pong.IsOpen;
 			if (Button("Retry", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("retry");
 			if (Button("Exit", ImVec2(btnWidth, 20)))
@@ -1561,8 +1563,6 @@ void CMenu::MenuMisc()
 				I::Engine->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("itemtest");
-			if (Button("Pong", ImVec2(btnWidth, 20)))
-				F::Pong.IsOpen = !F::Pong.IsOpen;
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
