@@ -521,8 +521,8 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& target)
 {
-	if (!Vars::Aimbot::Global::AutoShoot.Value || !G::SafeTick)
-	{
+	if (!Vars::Aimbot::Global::AutoShoot.Value)
+	{//
 		return false;
 	}
 
@@ -828,7 +828,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			}
 			*/
 
-			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN)
+			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN && !pLocal->IsPrecisionRune())
 			{
 				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1
 					? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
@@ -840,7 +840,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 					if (pWeapon->GetWeaponData().m_nBulletsPerShot > 1)
 					{
-						if (flTimeSinceLastShot <= pLocal->IsPrecisionRune() ? 0.015f : 0.25f) {
+						if (flTimeSinceLastShot <= 0.25f) {
 							pCmd->buttons &= ~IN_ATTACK;
 						}
 					}
