@@ -2,6 +2,7 @@
 #include "../../../SDK/SDK.h"
 
 class CPong {
+	void Init();
 	void Reset();
 
 	int PlayerScore = 0;

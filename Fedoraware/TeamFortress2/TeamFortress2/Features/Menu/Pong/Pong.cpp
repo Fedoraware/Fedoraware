@@ -37,7 +37,7 @@ void CPong::Render()
 		static Timer updateTimer{ };
 		if (updateTimer.Run(5))
 		{
-			BallPos += BallVelocity * BallMultiplier;
+			BallPos += BallVelocity * std::max(BallMultiplier, 1.f);
 			EnemyY += EnemyVelocity;
 			PlayerY += PlayerVelocity;
 
@@ -47,32 +47,17 @@ void CPong::Render()
 
 		/* Collisions */
 
-		// Enemy
-		if (BallPos.x + BallSize >= windowSize.x - 20.f - RacketSize.x
-			&& BallPos.y - BallSize < EnemyY + (0.5f * RacketSize.y) && BallPos.y + BallSize > EnemyY - (0.5f * RacketSize.y))
-		{
-			BallVelocity.x = -1.f;
-		}
-
-		// Player
-		if (BallPos.x - BallSize <= 20.f + RacketSize.x
-			&& BallPos.y - BallSize < PlayerY + (0.5f * RacketSize.y) && BallPos.y + BallSize > PlayerY - (0.5f * RacketSize.y))
-		{
-			BallVelocity.x = 1.f;
-			BallMultiplier += 0.02f;
-		}
-
 		// X-Walls (Loss)
-		if (BallPos.x + BallSize >= windowSize.x)
+		if (BallPos.x + BallSize >= windowSize.x - 7.f)
 		{
 			PlayerScore++;
-			BallPos = { 300.f, 200.f };
-			BallVelocity = { 1.f, -1.f };
+			BallMultiplier -= 0.02f;
+			Reset();
 		} else if (BallPos.x - BallSize <= 0.f)
 		{
 			EnemyScore++;
-			BallPos = { 300.f, 200.f };
-			BallVelocity = { 1.f, -1.f };
+			BallMultiplier -= 0.04f;
+			Reset();
 		}
 
 		// Y-Walls (Bounce)
@@ -82,6 +67,29 @@ void CPong::Render()
 		} else if (BallPos.y + BallSize >= windowSize.y)
 		{
 			BallVelocity.y = -1.f;
+		}
+
+		// Enemy
+		if (BallPos.x + BallSize >= windowSize.x - 20.f - RacketSize.x
+			&& BallPos.y - BallSize < EnemyY + (0.5f * RacketSize.y) && BallPos.y + BallSize > EnemyY - (0.5f * RacketSize.y))
+		{
+			if (BallVelocity.x > 0)
+			{
+				I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			}
+			BallVelocity.x = -1.f;
+		}
+
+		// Player
+		if (BallPos.x - BallSize <= 20.f + RacketSize.x
+			&& BallPos.y - BallSize < PlayerY + (0.5f * RacketSize.y) && BallPos.y + BallSize > PlayerY - (0.5f * RacketSize.y))
+		{
+			if (BallVelocity.x < 0)
+			{
+				I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			}
+			BallVelocity.x = 1.f;
+			BallMultiplier += 0.02f;
 		}
 
 		// Enemy controller
@@ -111,7 +119,8 @@ void CPong::Render()
 		// Reset if one player winds
 		if (PlayerScore >= 10 || EnemyScore >= 10)
 		{
-			Reset();
+			Init();
+			I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
 		}
 	}
 	ImGui::End();
@@ -119,7 +128,7 @@ void CPong::Render()
 	ImGui::PopStyleColor();
 }
 
-void CPong::Reset()
+void CPong::Init()
 {
 	PlayerScore = 0;
 	EnemyScore = 0;
@@ -127,4 +136,11 @@ void CPong::Reset()
 	EnemyY = 200.f;
 	BallPos = { 300.f, 200.f };
 	BallVelocity = { 1.f, -1.f };
+}
+
+void CPong::Reset()
+{
+	BallPos = { 300.f, 200.f };
+	BallVelocity = { 1.f, -1.f };
+	I::Engine->ClientCmd_Unrestricted("play ui/chat_display_text");
 }
