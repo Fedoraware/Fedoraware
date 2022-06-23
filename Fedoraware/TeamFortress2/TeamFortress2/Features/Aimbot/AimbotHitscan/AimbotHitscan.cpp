@@ -73,12 +73,7 @@ ESortMethod CAimbotHitscan::GetSortMethod()
 bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	const ESortMethod sortMethod = GetSortMethod();
-
-	if (sortMethod == ESortMethod::FOV)
-	{
-		G::CurAimFOV = Vars::Aimbot::Global::AimFOV.Value;
-	}
-
+	G::CurAimFOV = Vars::Aimbot::Global::AimFOV.Value;
 	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
@@ -139,13 +134,15 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			Vec3 vPos = pTarget->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
-			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
-			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
+			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
+			
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+			if (flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
+
+			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
 			const uint32_t priorityID = g_EntityCache.GetPR()->GetValid(pTarget->GetIndex()) ? g_EntityCache.GetPR()->GetAccountID(pTarget->GetIndex()) : 0;
 			const auto& priority = G::PlayerPriority[priorityID];
@@ -168,9 +165,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			Vec3 vPos = pBuilding->GetWorldSpaceCenter();
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
-			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
+			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+			if (flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
@@ -205,9 +202,9 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			Vec3 vPos = pProjectile->GetWorldSpaceCenter();
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
-			const float flFOVTo = sortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
+			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 
-			if (sortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+			if (flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
