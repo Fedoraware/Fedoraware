@@ -1,10 +1,12 @@
 #include "Fedworking.h"
+#include "../Menu/Pong/Pong.h"
 #include "../../Utils/Base64/Base64.hpp"
 
 enum MessageType {
 	None,
 	Marker,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
-	ESP		// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
+	ESP,	// [ Type, X-Pos, Y-Pos, Z-Pos, Player-IDX ]
+	Pong
 };
 
 void CFedworking::HandleMessage(const char* pMessage)
@@ -77,6 +79,12 @@ void CFedworking::HandleMessage(const char* pMessage)
 			break;
 		}
 
+	case Pong:
+		{
+			F::Pong.ReceiveData(dataVector);
+			break;
+		}
+
 	default:
 		{
 			// Unknown message type
@@ -104,6 +112,13 @@ void CFedworking::SendESP(CBaseEntity* pPlayer)
 			SendMessage(msg.str());
 		}
 	}
+}
+
+void CFedworking::SendPong(const std::string& pData)
+{
+	std::stringstream msg;
+	msg << Pong << "&" << pData;
+	SendMessage(msg.str());
 }
 
 void CFedworking::SendMessage(const std::string& pData)
