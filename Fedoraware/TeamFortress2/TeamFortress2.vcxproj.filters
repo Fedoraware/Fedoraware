@@ -144,7 +144,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\Pong\Pong.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ISteamNetworkingUtils_GetDirectPingToPOP.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\UTIL_TraceLine.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\M_ChatPrintF.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseHudChat_ChatPrintf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

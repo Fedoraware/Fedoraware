@@ -9,7 +9,7 @@ struct ChatFlags_t {
 	const char* Name;
 };
 
-MAKE_HOOK(M_ChatPrintF, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), void, __cdecl,
+MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), void, __cdecl,
 	void* ecx, int index, int filter, const char* fmt, void* junk)
 {
 	va_list marker;
