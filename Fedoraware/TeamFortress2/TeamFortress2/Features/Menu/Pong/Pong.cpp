@@ -358,9 +358,13 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 
 				// Update local data
 				LeftY = playerY;
-				LeftVelocity = playerVel;
-				BallPos = { ballX, ballY };
+				LeftVelocity = playerVel * 0.8f;
 				BallVelocity = { ballVelX, ballVelY };
+
+				if (std::abs(ballX - BallPos.x) > 7.f || std::abs(ballY - BallPos.y) > 7.f)
+				{
+					BallPos = { ballX, ballY };
+				}
 
 				// Start the match if required
 				if (IsMultiplayer && CurrentState != GameState::Match)
@@ -388,7 +392,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 
 				// Update local data
 				RightY = playerY;
-				RightVelocity = playerVel;
+				RightVelocity = playerVel * 0.8f;
 			}
 			break;
 		}
