@@ -5,7 +5,9 @@
 enum MessageType {
 	Broadcast,	// [ Type, SubType, SenderID ]
 	Request,	// [ Type, SubType, SenderID, TargetID ]
-	Update		// [ Type, SubType, SenderID, ... ]
+	Update,		// [ Type, SubType, SenderID, PlayerY, PlayerVel, BallPosX, BallPosY, BallVelX, BallVelY ]
+	Response,	// [ Type, SubType, SenderID, PlayerY, PlayerVel ]
+	Pong		// [ Type, SubType, SenderID, Score, BallVelX, BallVelY ]
 };
 
 enum class GameState {
@@ -20,6 +22,7 @@ static int EnemyID = 0;
 
 static GameState CurrentState = GameState::None;
 static bool IsMultiplayer = false;
+static bool IsHost = false;
 static std::map<int, float> FoundMatches; // <PlayerID, Time>
 
 void CPong::Render()
@@ -52,7 +55,7 @@ void CPong::Render()
 			UpdateNetwork();
 
 			// Reset if one player winds
-			if (PlayerScore >= 10 || EnemyScore >= 10)
+			if (LeftScore >= 10 || RightScore >= 10)
 			{
 				Init();
 				I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
@@ -132,13 +135,13 @@ void CPong::DrawGame()
 	const auto windowPos = ImGui::GetWindowPos();
 
 	// Draw Player
-	drawList->AddRectFilled({ windowPos.x + XOffset, windowPos.y + PlayerY - (0.5f * RacketSize.y) },
-		{ windowPos.x + XOffset + RacketSize.x, windowPos.y + PlayerY + (0.5f * RacketSize.y) },
+	drawList->AddRectFilled({ windowPos.x + XOffset, windowPos.y + LeftY - (0.5f * RacketSize.y) },
+		{ windowPos.x + XOffset + RacketSize.x, windowPos.y + LeftY + (0.5f * RacketSize.y) },
 		ImColor(255, 255, 255));
 
 	// Draw Enemy
-	drawList->AddRectFilled({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + EnemyY - (0.5f * RacketSize.y) },
-		{ windowPos.x + (WindowSize.x - XOffset - RacketSize.x), windowPos.y + EnemyY + (0.5f * RacketSize.y) },
+	drawList->AddRectFilled({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + RightY - (0.5f * RacketSize.y) },
+		{ windowPos.x + (WindowSize.x - XOffset - RacketSize.x), windowPos.y + RightY + (0.5f * RacketSize.y) },
 		ImColor(255, 255, 255));
 
 	// Draw Ball
@@ -147,8 +150,8 @@ void CPong::DrawGame()
 		ImColor(255, 255, 255));
 
 	// Draw Scores
-	drawList->AddText({ windowPos.x + XOffset, windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(PlayerScore).c_str());
-	drawList->AddText({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(EnemyScore).c_str());
+	drawList->AddText({ windowPos.x + XOffset, windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(LeftScore).c_str());
+	drawList->AddText({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(RightScore).c_str());
 }
 
 /* Updates game movements every 5ms */
@@ -158,11 +161,11 @@ void CPong::UpdateGame()
 	if (updateTimer.Run(5))
 	{
 		BallPos += BallVelocity;
-		EnemyY += EnemyVelocity;
-		PlayerY += PlayerVelocity;
+		RightY += RightVelocity;
+		LeftY += LeftVelocity;
 
-		Math::Clamp(EnemyY, 25.f, WindowSize.y);
-		Math::Clamp(PlayerY, 25.f, WindowSize.y);
+		Math::Clamp(RightY, 25.f, WindowSize.y);
+		Math::Clamp(LeftY, 25.f, WindowSize.y);
 	}
 }
 
@@ -170,14 +173,14 @@ void CPong::UpdateGame()
 void CPong::CheckCollisions()
 {
 	// X-Walls (Loss)
-	if (BallPos.x + BallSize >= WindowSize.x)
+	if (BallPos.x + BallSize >= WindowSize.x && (!IsMultiplayer || IsHost))
 	{
-		PlayerScore++;
+		LeftScore++;
 		Reset();
 	}
-	else if (BallPos.x - BallSize <= 0.f)
+	else if (BallPos.x - BallSize <= 0.f && (!IsMultiplayer || !IsHost))
 	{
-		EnemyScore++;
+		RightScore++;
 		Reset();
 	}
 
@@ -191,9 +194,9 @@ void CPong::CheckCollisions()
 		BallVelocity.y = -1.f;
 	}
 
-	// Enemy
+	// Enemy (Right)
 	if (BallPos.x + BallSize >= WindowSize.x - XOffset - RacketSize.x
-		&& BallPos.y - BallSize < EnemyY + (0.5f * RacketSize.y) && BallPos.y + BallSize > EnemyY - (0.5f * RacketSize.y))
+		&& BallPos.y - BallSize < RightY + (0.5f * RacketSize.y) && BallPos.y + BallSize > RightY - (0.5f * RacketSize.y))
 	{
 		if (BallVelocity.x > 0)
 		{
@@ -202,9 +205,9 @@ void CPong::CheckCollisions()
 		BallVelocity.x = -1.f;
 	}
 
-	// Player
+	// Player (Left)
 	if (BallPos.x - BallSize <= XOffset + RacketSize.x
-		&& BallPos.y - BallSize < PlayerY + (0.5f * RacketSize.y) && BallPos.y + BallSize > PlayerY - (0.5f * RacketSize.y))
+		&& BallPos.y - BallSize < LeftY + (0.5f * RacketSize.y) && BallPos.y + BallSize > LeftY - (0.5f * RacketSize.y))
 	{
 		if (BallVelocity.x < 0)
 		{
@@ -220,42 +223,64 @@ void CPong::UpdateInput()
 	const auto windowPos = ImGui::GetWindowPos();
 	const auto cursorPos = ImGui::GetMousePos();
 
-	// Enemy controller
-	if (BallPos.y > EnemyY)
+	// Local match
+	if (!IsMultiplayer)
 	{
-		EnemyVelocity = 1.f;
-	}
-	else if (BallPos.y < EnemyY)
-	{
-		EnemyVelocity = -1.f;
-	}
-	else
-	{
-		EnemyVelocity = 0.f;
+		// Enemy controller (CPU)
+		if (BallPos.y > RightY)
+		{
+			RightVelocity = 1.f;
+		}
+		else if (BallPos.y < RightY)
+		{
+			RightVelocity = -1.f;
+		}
+		else
+		{
+			RightVelocity = 0.f;
+		}
 	}
 
-	// Player controller
-	if (cursorPos.y - windowPos.y < PlayerY)
+	if (!IsMultiplayer || IsHost)
 	{
-		PlayerVelocity = -1.f;
-	}
-	else if (cursorPos.y - windowPos.y > PlayerY)
+		// Player controller (Left)
+		if (cursorPos.y - windowPos.y < LeftY)
+		{
+			LeftVelocity = -1.f;
+		}
+		else if (cursorPos.y - windowPos.y > LeftY)
+		{
+			LeftVelocity = 1.f;
+		}
+		else
+		{
+			LeftVelocity = 0.f;
+		}
+	} else
 	{
-		PlayerVelocity = 1.f;
-	}
-	else
-	{
-		PlayerVelocity = 0.f;
+		// Player controller (Right)
+		if (cursorPos.y - windowPos.y < LeftY)
+		{
+			RightVelocity = -1.f;
+		}
+		else if (cursorPos.y - windowPos.y > LeftY)
+		{
+			RightVelocity = 1.f;
+		}
+		else
+		{
+			RightVelocity = 0.f;
+		}
 	}
 }
 
 /* Initializes a new game */
 void CPong::Init()
 {
-	PlayerScore = 0;
-	EnemyScore = 0;
-	PlayerY = 200.f;
-	EnemyY = 200.f;
+	LeftScore = 0;
+	RightScore = 0;
+	LeftY = 200.f;
+	RightY = 200.f;
 	BallPos = { 300.f, 200.f };
 	BallVelocity = { 1.f, -1.f };
 }
@@ -304,16 +329,46 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 				{
 					EnemyID = senderID;
 					CurrentState = GameState::Match;
+					Init();
+					UpdateNetwork();
+					IsHost = true;
 				}
 
 				// Remove this match from the available matches
 				FoundMatches[targetID] = 0.f;
 			}
-		break;
+			break;
 		}
 
 	case Update:
 		{
+			if (senderID == EnemyID && dataVector.size() == 9)
+			{
+				const float playerY = std::stof(dataVector[3]);
+				const float playerVel = std::stof(dataVector[4]);
+				const float ballX = std::stof(dataVector[5]);
+				const float ballY = std::stof(dataVector[6]);
+				const float ballVelX = std::stof(dataVector[7]);
+				const float ballVelY = std::stof(dataVector[8]);
+
+				// Update local data
+				LeftY = playerY;
+				LeftVelocity = playerVel;
+				BallPos = { ballX, ballY };
+				BallVelocity = { ballVelX, ballVelY };
+
+				if (IsMultiplayer && CurrentState != GameState::Match)
+				{
+					// Start the match
+					CurrentState = GameState::Match;
+					IsHost = false;
+					Init();
+				} else
+				{
+					// Send a response
+					SendResponse(RightY, RightVelocity);
+				}
+			}
 			break;
 		}
 	}
@@ -323,6 +378,7 @@ void CPong::Disonnect()
 {
 	EnemyID = 0;
 	IsMultiplayer = false;
+	IsHost = false;
 	FoundMatches.clear();
 }
 
@@ -334,6 +390,9 @@ void CPong::UpdateNetwork()
 		if (CurrentState == GameState::Hosting)
 		{
 			BroadcastMatch();
+		} else if (CurrentState == GameState::Match)
+		{
+			SendMatch(LeftY, LeftVelocity, BallPos, BallVelocity);
 		}
 	}
 }
@@ -352,5 +411,23 @@ void CPong::JoinMatch(int targetID)
 	F::Fedworking.SendPong(msg.str());
 
 	EnemyID = targetID;
+}
+
+void CPong::SendMatch(float playerY, float playerVel, const Vec2& ballPos, const Vec2& ballVel)
+{
+	std::stringstream msg;
+	msg << Update << "&" << PlayerID << "&" <<
+		static_cast<int>(playerY) << "&" << static_cast<int>(playerVel) << "&" <<
+		static_cast<int>(ballPos.x) << "&" << static_cast<int>(ballPos.y) << "&" <<
+		static_cast<int>(ballVel.x) << "&" << static_cast<int>(ballVel.y);
+	F::Fedworking.SendPong(msg.str());
+}
+
+void CPong::SendResponse(float playerY, float playerVel)
+{
+	std::stringstream msg;
+	msg << Response << "&" << PlayerID << "&" <<
+		static_cast<int>(playerY) << "&" << static_cast<int>(playerVel);
+	F::Fedworking.SendPong(msg.str());
 }
 #pragma endregion

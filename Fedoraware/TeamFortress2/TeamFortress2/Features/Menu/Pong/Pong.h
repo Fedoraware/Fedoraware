@@ -15,15 +15,17 @@ class CPong {
 	void UpdateNetwork();
 	void BroadcastMatch();
 	void JoinMatch(int targetID);
+	void SendMatch(float playerY, float playerVel, const Vec2& ballPos, const Vec2& ballVel);
+	void SendResponse(float playerY, float playerVel);
 
-	int PlayerScore = 0;
-	int EnemyScore = 0;
+	int LeftScore = 0;
+	int RightScore = 0;
 
-	float PlayerY = 200.f;
-	float EnemyY = 200.f;
+	float LeftY = 200.f;
+	float RightY = 200.f;
 
-	float PlayerVelocity = 0.f;
-	float EnemyVelocity = 0.f;
+	float LeftVelocity = 0.f;
+	float RightVelocity = 0.f;
 
 	Vec2 RacketSize = { 5, 40 };
 	float XOffset = 20.f;
