@@ -61,5 +61,5 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElem
 		}
 	}
 
-	Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, final_msg.c_str());
+	Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
 }
