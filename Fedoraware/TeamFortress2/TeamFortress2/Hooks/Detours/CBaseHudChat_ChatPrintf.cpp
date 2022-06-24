@@ -15,7 +15,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElem
 	va_list marker;
 	char buffer[4096];
 	va_start(marker, fmt);
-	_vsnprintf_s(buffer, sizeof(buffer), fmt, marker);
+	vsnprintf_s(buffer, sizeof(buffer), fmt, marker);
 	va_end(marker);
 
 	if (strlen(buffer) > 0 && buffer[strlen(buffer) - 1] == '\n') {
