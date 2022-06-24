@@ -58,7 +58,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 			std::string playerName(nameBuffer);
 			std::string chatMessage(msgBuffer);
 
-			if (Vars::Misc::ChatCensor.Value)
+			/*if (Vars::Misc::ChatCensor.Value)
 			{
 				PlayerInfo_t senderInfo{};
 				if (I::Engine->GetPlayerInfo(entIdx, &senderInfo))
@@ -88,7 +88,7 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 						}
 					}
 				}
-			}
+			}*/
 
 			if (boost::contains(chatMessage, "\n")) {
 				F::BadActors.IllegalChar[entIdx] = true;

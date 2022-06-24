@@ -292,6 +292,9 @@ void CMenu::MenuAimbot()
 		{
 			SectionTitle("Hitscan");
 			WCombo("Sort method###HitscanSortMethod", &Vars::Aimbot::Hitscan::SortMethod.Value, { "FOV", "Distance" }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+			if (Vars::Aimbot::Hitscan::SortMethod.Value == 1) {
+				WToggle("Respect FOV", &Vars::Aimbot::Hitscan::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
+			}
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
 			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto"}); // this could probably be removed entirely since it actually does nothing.
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
@@ -325,6 +328,9 @@ void CMenu::MenuAimbot()
 			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
+				if (Vars::Aimbot::Projectile::SortMethod.Value == 1) {
+					WToggle("Respect FOV", &Vars::Aimbot::Projectile::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
+				}
 				WCombo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.Value, { "Plain", "Silent" });
 				WCombo("Priority Hitbox###ProjectileHitboxPriority", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto"});
 				{
@@ -348,6 +354,9 @@ void CMenu::MenuAimbot()
 			SectionTitle("Melee");
 			{
 				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.Value, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
+				if (Vars::Aimbot::Melee::SortMethod.Value == 1) {
+					WToggle("Respect FOV", &Vars::Aimbot::Melee::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
+				}
 				WCombo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
 			}
 			WSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
@@ -1004,8 +1013,8 @@ void CMenu::MenuVisuals()
 				HelpMarker("What misc visual features should be run");
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				{
-					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Auto-Cast", "Verbose"};
-					static std::vector flagValues{ 1, 2, 4, 8, 16, 32 };
+					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
+					static std::vector flagValues{ 1, 2, 4, 8, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}
 				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::damageLoggerConsole.Value, &Vars::Visuals::damageLoggerText.Value, &Vars::Visuals::damageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
@@ -1457,6 +1466,7 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
 			WToggle("Anti-AFK", &Vars::Misc::AntiAFK.Value); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
+			WToggle("Auto Vote", &Vars::Misc::AutoVote.Value); HelpMarker("Automatically votes yes/no depending on the target");
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.Value); HelpMarker("Allows you to input in taunts");
 			WToggle("Taunt control", &Vars::Misc::TauntControl.Value); HelpMarker("Gives full control if enabled with taunt slide");
 			WCombo("Crouch speed", &Vars::Misc::Roll.Value, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");
@@ -1486,8 +1496,9 @@ void CMenu::MenuMisc()
 		if (TableColumnChild("MiscCol2"))
 		{
 			SectionTitle("Chat");
+
 			WToggle("Chat Flags", &Vars::Misc::ChatFlags.Value);
-			WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
+			//WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
 			//WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
 			WCombo("Mediaval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
@@ -1550,6 +1561,8 @@ void CMenu::MenuMisc()
 				I::Engine->ClientCmd_Unrestricted("status");
 			if (Button("Ping", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("ping");
+			if (Button("Pong", ImVec2(btnWidth, 20)))
+				F::Pong.IsOpen = !F::Pong.IsOpen;
 			if (Button("Retry", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("retry");
 			if (Button("Exit", ImVec2(btnWidth, 20)))
@@ -1562,8 +1575,6 @@ void CMenu::MenuMisc()
 				I::Engine->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::Engine->ClientCmd_Unrestricted("itemtest");
-			if (Button("Pong", ImVec2(btnWidth, 20)))
-				F::Pong.IsOpen = !F::Pong.IsOpen;
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{

@@ -268,6 +268,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
@@ -289,6 +290,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Projectile::Active);
 				SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Projectile::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
 				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
@@ -306,6 +308,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Melee::Active);
 				SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Melee::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
 				//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
@@ -681,6 +684,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		{
 			SAVE_VAR(Vars::Misc::AccurateMovement);
 			SAVE_VAR(Vars::Misc::AutoJump);
+			SAVE_VAR(Vars::Misc::AutoVote);
 			SAVE_VAR(Vars::Misc::DuckJump);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
@@ -719,7 +723,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
 			SAVE_VAR(Vars::Menu::ShowDVD);
-			SAVE_VAR(Vars::Misc::RegionChanger);
+			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
 
 			// Followbot
@@ -1410,6 +1414,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		{
 			LOAD_VAR(Vars::Misc::AccurateMovement);
 			LOAD_VAR(Vars::Misc::AutoJump);
+			LOAD_VAR(Vars::Misc::AutoVote);
 			LOAD_VAR(Vars::Misc::DuckJump);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
@@ -1448,7 +1453,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
 			LOAD_VAR(Vars::Menu::ShowDVD);
-			LOAD_VAR(Vars::Misc::RegionChanger);
+			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
 
 			// Followbot

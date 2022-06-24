@@ -99,6 +99,7 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{0}; //0 - FOV,		1 - Distance
+			inline CVar<bool> RespectFOV{true};
 			inline CVar<int> AimMethod{2}; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{2}; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{7}; // Binary: 00111 {legs, arms, body, pelvis, head}
@@ -119,6 +120,7 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{0}; //0 - FOV,		1 - Distance
+			inline CVar<bool> RespectFOV{true};
 			inline CVar<int> AimMethod{1}; //0 - Normal,	1 - Silent
 			inline CVar<int> AimPosition{3}; // 0/head, 1/body, 2/feet, 3/auto
 			inline CVar<int> VisTestPoints{15}; //how many points are we allowed to vis test before we stop scanning.
@@ -129,13 +131,14 @@ namespace Vars
 			inline CVar<bool> SplashPrediction{false};
 			inline Color_t PredictionColor{255, 255, 255, 255};
 			inline CVar<float> predTime{2.0f};
-			inline CVar<bool> NoSpread{ false };
+			inline CVar<bool> NoSpread{false};
 		}
 
 		namespace Melee
 		{
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{1}; //0 - FOV,		1 - Distance
+			inline CVar<bool> RespectFOV{false};
 			inline CVar<int> AimMethod{2}; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> SmoothingAmount{8};
 			inline CVar<bool> RangeCheck{false};
@@ -480,7 +483,6 @@ namespace Vars
 		inline CVar<bool> MoveSimLine{false};
 		inline CVar<int> ParticleTracer{2};
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
-
 		inline CVar<bool> DoPostProcessing{ false };
 
 		namespace Beans
@@ -547,7 +549,7 @@ namespace Vars
 
 		namespace Fog
 		{
-			inline CVar<bool> DisableFog{ false };
+			inline CVar<bool> DisableFog{false};
 			inline CVar<bool> CustomFog{false};
 			inline Color_t FogColor{255, 255, 255, 255};
 			inline Color_t FogColorSkybox{255, 255, 255, 255};
@@ -564,6 +566,7 @@ namespace Vars
 	{
 		inline CVar<bool> AccurateMovement{false};
 		inline CVar<bool> AutoJump{false};
+		inline CVar<bool> AutoVote{false};
 		inline CVar<bool> DuckJump{false};
 		inline CVar<int> AutoStrafe{2};
 		inline CVar<bool> Directional{false};
