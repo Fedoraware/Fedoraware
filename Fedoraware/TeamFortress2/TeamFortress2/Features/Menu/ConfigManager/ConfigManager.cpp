@@ -268,6 +268,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
@@ -289,6 +290,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Projectile::Active);
 				SAVE_VAR(Vars::Aimbot::Projectile::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Projectile::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
 				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
@@ -306,6 +308,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Melee::Active);
 				SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Melee::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
 				//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
