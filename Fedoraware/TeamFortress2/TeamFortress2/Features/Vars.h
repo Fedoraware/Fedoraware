@@ -600,6 +600,7 @@ namespace Vars
 		inline CVar<int> PartyMarker{false};
 		inline CVar<bool> PartyESP{false};
 		inline CVar<int> SoundBlock{ 0 };
+		inline CVar<bool> ChatFlags{ false };
 		//inline CVar<bool> ForceMedievalChat{false};
 		inline CVar<int> MedievalChat{ 0 };
 		inline CVar<bool> AutoAcceptItemDrops{ true };
