@@ -41,7 +41,7 @@ namespace Vars
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
 
-		inline CVar<bool> ShowDVD{ true };
+		inline CVar<bool> ShowDVD{ false };
 
 		namespace Colors
 		{
@@ -52,9 +52,9 @@ namespace Vars
 	namespace CritHack
 	{
 		inline CVar<bool> Active{false};
-		inline CVar<bool> indicators{true};
-		inline CVar<bool> avoidrandom{true};
-		inline CVar<bool> AlwaysMelee{true};
+		inline CVar<bool> indicators{false};
+		inline CVar<bool> avoidrandom{false};
+		inline CVar<bool> AlwaysMelee{false};
 		inline CVar<int> CritKey{VK_SHIFT};
 	}
 
@@ -67,9 +67,9 @@ namespace Vars
 		namespace BtChams
 		{
 			inline CVar<bool> Enabled{false};
-			inline CVar<bool> LastOnly{true};
-			inline CVar<bool> EnemyOnly{true};
-			inline CVar<bool> IgnoreZ{true};
+			inline CVar<bool> LastOnly{false};
+			inline CVar<bool> EnemyOnly{false};
+			inline CVar<bool> IgnoreZ{false};
 			inline CVar<int> Material{1};
 			inline Color_t BacktrackColor{255, 255, 255, 255};
 		}
@@ -79,37 +79,37 @@ namespace Vars
 	{
 		namespace Global
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> AimKey{VK_XBUTTON1};
 			inline CVar<float> AimFOV{15.0f};
-			inline CVar<bool> AutoShoot{true};
-			inline CVar<bool> AimPlayers{true};
-			inline CVar<bool> AimBuildings{true};
-			inline CVar<bool> AimStickies{true};
-			inline CVar<int> IgnoreOptions{0b01111}; //taunting, friends, deadringer,cloaked, invul
-			inline CVar<bool> IgnoreInvlunerable{true};
+			inline CVar<bool> AutoShoot{false};
+			inline CVar<bool> AimPlayers{false};
+			inline CVar<bool> AimBuildings{false};
+			inline CVar<bool> AimStickies{false};
+			inline CVar<int> IgnoreOptions{0b00000}; //taunting, friends, deadringer,cloaked, invul
+			inline CVar<bool> IgnoreInvlunerable{false};
 			inline CVar<bool> BAimLethal{false}; // This is in global cause i remmebered hunterman exists
-			inline CVar<bool> showHitboxes{true}; // original codenz
-			inline CVar<bool> clearPreviousHitbox{true};
+			inline CVar<bool> showHitboxes{false}; // original codenz
+			inline CVar<bool> clearPreviousHitbox{false};
 			inline CVar<int> hitboxTime{2};
 		}
 
 
 		namespace Hitscan
 		{
-			//inline CVar<bool> Active			{ true };
+			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{0}; //0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod{2}; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{2}; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{7}; // Binary: 00111 {legs, arms, body, pelvis, head}
 			inline CVar<int> MultiHitboxes{5}; // Binary: 00101 {legs, arms, body, pelvis, head}
-			inline CVar<float> PointScale{.56f};
+			inline CVar<float> PointScale{.54f};
 			inline CVar<int> SmoothingAmount{4};
-			inline CVar<int> TapFire{1}; //0 - Off, 1 - Distance, 2 - Always
-			inline CVar<bool> ScanBuildings{true};
-			inline CVar<bool> WaitForHeadshot{true};
-			inline CVar<bool> WaitForCharge{true};
-			inline CVar<bool> SpectatedSmooth{true};
+			inline CVar<int> TapFire{0}; //0 - Off, 1 - Distance, 2 - Always
+			inline CVar<bool> ScanBuildings{false};
+			inline CVar<bool> WaitForHeadshot{false};
+			inline CVar<bool> WaitForCharge{false};
+			inline CVar<bool> SpectatedSmooth{false};
 			inline CVar<bool> ScopedOnly{false};
 			inline CVar<bool> AutoScope{false};
 			inline CVar<bool> AutoRev{false};
@@ -117,14 +117,14 @@ namespace Vars
 
 		namespace Projectile
 		{
-			//inline CVar<bool> Active			{ true };
+			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{0}; //0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod{1}; //0 - Normal,	1 - Silent
 			inline CVar<int> AimPosition{3}; // 0/head, 1/body, 2/feet, 3/auto
 			inline CVar<int> VisTestPoints{15}; //how many points are we allowed to vis test before we stop scanning.
 			inline CVar<int> ScanPoints{15}; //how many "visible points" need to be reached before we stop searching.
 			inline CVar<float> ScanScale{0.95f}; // how to scale the points.
-			inline CVar<int> AllowedHitboxes{ 0b111 }; // 111, Feet, Body, Head.
+			inline CVar<int> AllowedHitboxes{ 0b000 }; // 111, Feet, Body, Head.
 			inline CVar<bool> FeetAimIfOnGround{false};
 			inline CVar<bool> SplashPrediction{false};
 			inline Color_t PredictionColor{255, 255, 255, 255};
@@ -134,13 +134,13 @@ namespace Vars
 
 		namespace Melee
 		{
-			//inline CVar<bool> Active			{ true };
+			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{1}; //0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod{2}; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> SmoothingAmount{8};
-			inline CVar<bool> RangeCheck{true};
-			inline CVar<bool> PredictSwing{true};
-			inline CVar<bool> WhipTeam{true};
+			inline CVar<bool> RangeCheck{false};
+			inline CVar<bool> PredictSwing{false};
+			inline CVar<bool> WhipTeam{false};
 		}
 	}
 
@@ -148,9 +148,9 @@ namespace Vars
 	{
 		namespace Global
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> TriggerKey{VK_XBUTTON2};
-			inline CVar<bool> IgnoreInvlunerable{true};
+			inline CVar<bool> IgnoreInvlunerable{false};
 			inline CVar<bool> IgnoreCloaked{false};
 			inline CVar<bool> IgnoreFriends{false};
 		}
@@ -158,45 +158,45 @@ namespace Vars
 		namespace Shoot
 		{
 			inline CVar<bool> Active{false};
-			inline CVar<bool> TriggerPlayers{true};
-			inline CVar<bool> TriggerBuildings{true};
+			inline CVar<bool> TriggerPlayers{false};
+			inline CVar<bool> TriggerBuildings{false};
 			inline CVar<bool> HeadOnly{false};
-			inline CVar<bool> WaitForCharge{true};
+			inline CVar<bool> WaitForCharge{false};
 			inline CVar<float> HeadScale{0.7f};
 		}
 
 		namespace Stab
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<bool> RageMode{false};
-			inline CVar<bool> Silent{true};
+			inline CVar<bool> Silent{false};
 			inline CVar<bool> Disguise{false};
-			inline CVar<bool> IgnRazor{true};
+			inline CVar<bool> IgnRazor{false};
 			inline CVar<float> Range{0.9f};
 		}
 
 		namespace Detonate
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> Stickies{true};
-			inline CVar<bool> Flares{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> Stickies{false};
+			inline CVar<bool> Flares{false};
 			inline CVar<float> RadiusScale{1.0f};
 		}
 
 		namespace Blast
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<bool> Rage{false};
-			inline CVar<bool> Silent{true};
+			inline CVar<bool> Silent{false};
 			inline CVar<int> Fov{55};
 		}
 
 		namespace Uber
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> OnlyFriends{true};
-			inline CVar<bool> PopLocal{true};
-			inline CVar<bool> AutoVacc{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> OnlyFriends{false};
+			inline CVar<bool> PopLocal{false};
+			inline CVar<bool> AutoVacc{false};
 			inline CVar<float> HealthLeft{35.0f};
 		}
 	}
@@ -205,28 +205,28 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> Outlinedbar{true}; //0 - OFF, 1 - Text Only, 2 - All
+			inline CVar<bool> Active{false};
+			inline CVar<bool> Outlinedbar{ false };
 			inline CVar<bool> EnableTeamEnemyColors{false};
 		}
 
 
 		namespace Players
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> ShowLocal{true};
-			inline CVar<int> IgnoreTeammates{2}; //0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<int> IgnoreCloaked{2}; //0 - OFF, 1 - All, 2 - Enemies Only
-			inline CVar<bool> Name{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> ShowLocal{false};
+			inline CVar<int> IgnoreTeammates{0}; //0 - OFF, 1 - All, 2 - Keep Friends
+			inline CVar<int> IgnoreCloaked{0}; //0 - OFF, 1 - All, 2 - Enemies Only
+			inline CVar<bool> Name{false};
 			inline CVar<bool> NameCustom{false};
 			inline Color_t NameColor{255, 255, 255, 255};
 			inline CVar<bool> NameBox{false};
-			inline CVar<int> Uber{2}; //0 - Off, 1 - Text, 2 - Bar
-			inline CVar<int> Class{1}; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
+			inline CVar<int> Uber{0}; //0 - Off, 1 - Text, 2 - Bar
+			inline CVar<int> Class{0}; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
 			inline CVar<bool> WeaponIcon{false};
 			inline CVar<int> HealthText{0}; // 0 - Off, 1 - Default, 2 - Bar
-			inline CVar<bool> Cond{true};
-			inline CVar<bool> HealthBar{true};
+			inline CVar<bool> Cond{false};
+			inline CVar<bool> HealthBar{false};
 			inline CVar<int> Box{0}; //0 - OFF, 1 - Simple, 2 - Corners
 			inline CVar<int> Bones{0};
 			inline CVar<bool> GUID{false};
@@ -235,22 +235,22 @@ namespace Vars
 			inline CVar<bool> Dlights{false};
 			inline CVar<float> DlightRadius{200.0f};
 			inline CVar<float> Alpha{1.0f};
-			inline CVar<bool> CheaterDetection{true};
+			inline CVar<bool> CheaterDetection{false};
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> IgnoreTeammates{true};
-			inline CVar<bool> Name{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> IgnoreTeammates{false};
+			inline CVar<bool> Name{false};
 			inline CVar<bool> NameCustom{false};
 			inline Color_t NameColor{255, 255, 255, 255};
 			inline CVar<bool> NameBox{false};
 			inline CVar<bool> Health{false};
 			inline CVar<bool> Owner{false};
-			inline CVar<bool> Level{true};
-			inline CVar<bool> Cond{true};
-			inline CVar<bool> HealthBar{true};
+			inline CVar<bool> Level{false};
+			inline CVar<bool> Cond{false};
+			inline CVar<bool> HealthBar{false};
 			inline CVar<bool> TeleExitDir{false};
 			inline Color_t TeleExitDirColor{255, 255, 255, 255};
 			inline CVar<bool> Lines{false};
@@ -262,9 +262,9 @@ namespace Vars
 
 		namespace World
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> HealthText{true};
-			inline CVar<bool> AmmoText{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> HealthText{false};
+			inline CVar<bool> AmmoText{false};
 			inline CVar<float> Alpha{1.0f};
 		}
 	}
@@ -273,15 +273,15 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 		}
 
 		namespace Players
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> Wearables{true};
-			inline CVar<bool> Weapons{true};
-			inline CVar<bool> FadeoutTeammates{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> Wearables{false};
+			inline CVar<bool> Weapons{false};
+			inline CVar<bool> FadeoutTeammates{false};
 
 			// {ignorez, material, overlay type (0 = off), active}
 			inline Chams_t Local{};
@@ -300,14 +300,14 @@ namespace Vars
 			inline Chams_t Team{};
 			inline Chams_t Target{};
 
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> Material{3}; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{false};
 		}
 
 		namespace World
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> Projectilez{2};
 			inline Chams_t Health{};
 			inline Chams_t Ammo{};
@@ -316,10 +316,10 @@ namespace Vars
 
 		namespace DME
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 
-			inline Chams_t Hands{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
-			inline Chams_t Weapon{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
+			inline Chams_t Hands{ 1, 0, 0, true };
+			inline Chams_t Weapon{ 1, 0, 0, true };
 
 			inline CVar<int> HandsGlowOverlay{0}; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
 			inline CVar<int> HandsProxySkin{0};
@@ -343,36 +343,36 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<bool> Stencil{false};
 			inline CVar<int> Scale{5};
 		}
 
 		namespace Players
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> ShowLocal{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> ShowLocal{false};
 			inline CVar<bool> LocalRainbow{false};
 			inline CVar<int> IgnoreTeammates{2}; //0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<bool> Wearables{true};
-			inline CVar<bool> Weapons{true};
+			inline CVar<bool> Wearables{false};
+			inline CVar<bool> Weapons{false};
 			inline CVar<float> Alpha{1.0f};
 			inline CVar<int> Color{0}; //0 - Team, 1 - Health
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> IgnoreTeammates{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> IgnoreTeammates{false};
 			inline CVar<float> Alpha{1.0f};
 			inline CVar<int> Color{0}; //0 - Team, 1 - Health
 		}
 
 		namespace World
 		{
-			inline CVar<bool> Active{true};
-			inline CVar<bool> Health{true};
-			inline CVar<bool> Ammo{true};
+			inline CVar<bool> Active{false};
+			inline CVar<bool> Health{false};
+			inline CVar<bool> Ammo{false};
 			inline CVar<int> Projectiles{1}; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{1.0f};
 		}
@@ -382,7 +382,7 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> BackAlpha{128};
 			inline CVar<int> LineAlpha{255};
 			inline CVar<int> Range{1500};
@@ -390,22 +390,22 @@ namespace Vars
 
 		namespace Players
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<int> IconType{1}; //0 - Scoreboard, 1 - Portraits, 2 - Avatars
 			inline CVar<int> BackGroundType{2}; //0 - Off, 1 - Rect, 2 - Texture
-			inline CVar<bool> Outline{true};
+			inline CVar<bool> Outline{false};
 			inline CVar<int> IgnoreTeam{2}; //0 - Off, 1 - All, 2 - Keep Friends
 			inline CVar<int> IgnoreCloaked{0}; //0 - Off, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Health{false};
 			inline CVar<int> IconSize{24};
-			inline CVar<bool> Height{ true };
+			inline CVar<bool> Height{ false };
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active{true};
+			inline CVar<bool> Active{false};
 			inline CVar<bool> Outline{false};
-			inline CVar<bool> IgnoreTeam{true};
+			inline CVar<bool> IgnoreTeam{false};
 			inline CVar<bool> Health{false};
 			inline CVar<int> IconSize{18};
 		}
@@ -413,27 +413,27 @@ namespace Vars
 		namespace World
 		{
 			inline CVar<bool> Active{false};
-			inline CVar<bool> Health{true};
-			inline CVar<bool> Ammo{true};
+			inline CVar<bool> Health{false};
+			inline CVar<bool> Ammo{false};
 			inline CVar<int> IconSize{14};
 		}
 	}
 
 	namespace Visuals
 	{
-		inline CVar<bool> RemoveDisguises{true};
+		inline CVar<bool> RemoveDisguises{false};
 		inline CVar<bool> RemoveTaunts{false};
 		inline CVar<int> FieldOfView{130};
 		inline CVar<int> AimFOVAlpha{10};
-		inline CVar<bool> RemoveScope{true};
+		inline CVar<bool> RemoveScope{false};
 		inline CVar<bool> RemoveMOTD{false};
-		inline CVar<bool> RemoveScreenEffects{true};
-		inline CVar<bool> PreventForcedAngles{true};
+		inline CVar<bool> RemoveScreenEffects{false};
+		inline CVar<bool> PreventForcedAngles{false};
 		inline CVar<bool> ScopeLines{false};
 		inline CVar<bool> PickupTimers{false};
-		inline CVar<bool> RemoveZoom{true};
-		inline CVar<bool> RemovePunch{true};
-		inline CVar<bool> CrosshairAimPos{true};
+		inline CVar<bool> RemoveZoom{false};
+		inline CVar<bool> RemovePunch{false};
+		inline CVar<bool> CrosshairAimPos{false};
 		inline CVar<bool> ChatInfoText{false};
 		inline CVar<bool> ChatInfoChat{false};
 		inline CVar<bool> OutOfFOVArrowsOutline{false};
@@ -446,19 +446,19 @@ namespace Vars
 		inline CVar<int> CameraMode{0};
 		inline CVar<float> CameraFOV{90.f};
 
-		inline CVar<bool> SpyWarning{true};
-		inline CVar<bool> SpyWarningAnnounce{true};
+		inline CVar<bool> SpyWarning{false};
+		inline CVar<bool> SpyWarningAnnounce{false};
 		inline CVar<int> SpyWarningStyle{0}; //0 - Indicator, 1 - Flash
-		inline CVar<bool> SpyWarningVisibleOnly{true};
-		inline CVar<bool> SpyWarningIgnoreFriends{true};
+		inline CVar<bool> SpyWarningVisibleOnly{false};
+		inline CVar<bool> SpyWarningIgnoreFriends{false};
 
-		inline CVar<bool> Snow{true};
+		inline CVar<bool> Snow{false};
 		inline CVar<bool> ToolTips{false};
 
 		inline CVar<bool> ThirdPerson{false};
 		inline CVar<int> ThirdPersonKey{VK_B};
-		inline CVar<bool> ThirdPersonSilentAngles{true};
-		inline CVar<bool> ThirdPersonInstantYaw{true};
+		inline CVar<bool> ThirdPersonSilentAngles{false};
+		inline CVar<bool> ThirdPersonInstantYaw{false};
 		inline CVar<bool> ThirdPersonServerHitbox{false};
 		inline CVar<bool> ThirdpersonOffset{false};
 		inline CVar<float> ThirdpersonDist{200.f};
@@ -472,16 +472,16 @@ namespace Vars
 		inline CVar<bool> WorldModulation{false};
 		inline CVar<bool> PropWireframe{false};
 		inline CVar<bool> OverrideWorldTextures{false};
-		inline CVar<bool> SkyboxChanger{true};
-		inline CVar<bool> SkyModulation{true};
+		inline CVar<bool> SkyboxChanger{false};
+		inline CVar<bool> SkyModulation{false};
 		inline CVar<bool> BulletTracer{false};
-		inline CVar<bool> AimbotViewmodel{true};
+		inline CVar<bool> AimbotViewmodel{false};
 		inline CVar<bool> ViewmodelSway{false};
-		inline CVar<bool> MoveSimLine{true};
+		inline CVar<bool> MoveSimLine{false};
 		inline CVar<int> ParticleTracer{2};
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 
-		inline CVar<bool> DoPostProcessing{ true };
+		inline CVar<bool> DoPostProcessing{ false };
 
 		namespace Beans
 		{
@@ -501,9 +501,9 @@ namespace Vars
 			inline CVar<int> segments{2};
 		}
 
-		inline CVar<bool> BulletTracerRainbow{true};
-		inline CVar<bool> AimPosSquare{true};
-		inline CVar<bool> OutOfFOVArrows{true};
+		inline CVar<bool> BulletTracerRainbow{false};
+		inline CVar<bool> AimPosSquare{false};
+		inline CVar<bool> OutOfFOVArrows{false};
 		inline CVar<float> ArrowLength{21.f};
 		inline CVar<float> ArrowAngle{100.f};
 		inline CVar<float> MaxDist{1000.f};
@@ -562,20 +562,20 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> AccurateMovement{true};
-		inline CVar<bool> AutoJump{true};
+		inline CVar<bool> AccurateMovement{false};
+		inline CVar<bool> AutoJump{false};
 		inline CVar<bool> DuckJump{false};
 		inline CVar<int> AutoStrafe{2};
 		inline CVar<bool> Directional{false};
-		inline CVar<bool> TauntSlide{true};
-		inline CVar<bool> TauntControl{true};
-		inline CVar<bool> BypassPure{true};
+		inline CVar<bool> TauntSlide{false};
+		inline CVar<bool> TauntControl{false};
+		inline CVar<bool> BypassPure{false};
 		inline CVar<bool> NoisemakerSpam{false};
-		inline CVar<bool> DisableInterpolation{true};
-		inline CVar<bool> MedalFlip{true};
+		inline CVar<bool> DisableInterpolation{false};
+		inline CVar<bool> MedalFlip{false};
 		inline CVar<bool> AutoRocketJump{false};
 		inline CVar<int> ChatSpam{0};
-		inline CVar<bool> NoPush{true};
+		inline CVar<bool> NoPush{false};
 		inline CVar<bool> EdgeJump{false};
 		inline CVar<int> EdgeJumpKey{VK_MENU};
 		inline CVar<bool> AntiAFK{false};
@@ -583,11 +583,11 @@ namespace Vars
 		inline CVar<bool> CheatsBypass{false};
 		inline CVar<int> Roll{false};
 		inline CVar<bool> ChatCensor{false};
-		//inline CVar<bool> ChatNL{true};
+		//inline CVar<bool> ChatNL{false};
 		inline CVar<bool> AntiAutobal{false};
 		inline CVar<bool> RageRetry{false};
 		inline CVar<int> RageRetryHealth{20};
-		inline CVar<bool> MVMRes{true};
+		inline CVar<bool> MVMRes{false};
 		inline CVar<bool> BeCat{false};
 		inline CVar<bool> PingReducer{false};
 		inline CVar<int> PingTarget{0};
@@ -603,7 +603,7 @@ namespace Vars
 		inline CVar<bool> ChatFlags{ false };
 		//inline CVar<bool> ForceMedievalChat{false};
 		inline CVar<int> MedievalChat{ 0 };
-		inline CVar<bool> AutoAcceptItemDrops{ true };
+		inline CVar<bool> AutoAcceptItemDrops{ false };
 		inline CVar<bool> RegionChanger{ false };
 		inline CVar<int> RegionsAllowed{ 0 };
 
@@ -616,21 +616,21 @@ namespace Vars
 
 		namespace CL_Move
 		{
-			inline CVar<bool> Enabled{true};
-			inline CVar<bool> Doubletap{true};
+			inline CVar<bool> Enabled{false};
+			inline CVar<bool> Doubletap{false};
 			inline CVar<bool> SEnabled{false};
 			inline CVar<int> SFactor{1};
-			inline CVar<bool> NotInAir{true};
-			inline CVar<bool> StopMovement{true};
+			inline CVar<bool> NotInAir{false};
+			inline CVar<bool> StopMovement{false};
 			inline CVar<int> TeleportKey{0x52}; //R
 			inline CVar<int> TeleportMode{0};
 			inline CVar<int> RechargeKey{0x48}; //H
 			inline CVar<int> DoubletapKey{0x56}; //V
 			inline CVar<int> DTBarStyle{3};
-			inline CVar<bool> RetainFakelag{ true };
+			inline CVar<bool> RetainFakelag{ false };
 			inline CVar<bool> RechargeWhileDead{false};
 			inline CVar<bool> AutoRecharge{false}; //H
-			inline CVar<bool> AntiWarp{true}; //H
+			inline CVar<bool> AntiWarp{false}; //H
 			inline CVar<int> DTMode{0}; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
 			inline CVar<int> DtbarOutlineHeight{5};
 			inline CVar<int> DtbarOutlineWidth{4};
@@ -639,13 +639,13 @@ namespace Vars
 			inline CVar<int> DTBarScaleX{100};
 			inline CVar<int> DTBarY{60};
 			inline CVar<int> DTBarX{0};
-			inline CVar<bool> WaitForDT{true};
-			inline CVar<bool> Fakelag{true};
+			inline CVar<bool> WaitForDT{false};
+			inline CVar<bool> Fakelag{false};
 			inline CVar<int> FakelagMode{0}; // 0 - plain, 1 - random, 2 - vel based
 			inline CVar<int> FakelagMin{1}; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{22};
-			inline CVar<bool> FakelagIndicator{true};
-			inline CVar<bool> FakelagOnKey{true}; // dont show when fakelagmode=2|3
+			inline CVar<bool> FakelagIndicator{false};
+			inline CVar<bool> FakelagOnKey{false}; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey{0x54}; //T
 			inline CVar<int> FakelagValue{1}; // dont show when fakelagmode=2
 			inline CVar<int> AutoPeekKey{false};
@@ -662,16 +662,16 @@ namespace Vars
 
 		namespace Discord
 		{
-			inline CVar<bool> EnableRPC{true};
-			inline CVar<bool> IncludeClass{true};
-			inline CVar<bool> IncludeMap{true};
-			inline CVar<bool> IncludeTimestamp{true};
+			inline CVar<bool> EnableRPC{false};
+			inline CVar<bool> IncludeClass{false};
+			inline CVar<bool> IncludeMap{false};
+			inline CVar<bool> IncludeTimestamp{false};
 			inline CVar<int> WhatImagesShouldBeUsed{0}; // 0 - Big fedora, small TF2 logo; 1 - Big TF2 logo, small fedora
 		}
 
 		namespace Steam
 		{
-			inline CVar<bool> EnableRPC{true};
+			inline CVar<bool> EnableRPC{false};
 			inline CVar<int> MatchGroup{0}; // 0 - Special Event; 1 - MvM Mann Up; 2 - Competitive; 3 - Casual; 4 - MvM Boot Camp;
 			inline CVar<bool> OverrideMenu{false}; // Override matchgroup when in main menu
 			inline CVar<int> MapText{1}; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;

@@ -1,4 +1,5 @@
 #include "../Hooks.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
 // @https://www.unknowncheats.me/forum/team-fortress-2-a/488217-chat-flags-titles.html
 //	i swear its not pasted i just used this as inspiration, credits myzarfin.
@@ -32,6 +33,7 @@ MAKE_HOOK(M_ChatPrintF, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), v
 	if (Vars::Misc::ChatFlags.Value) {
 		ChatFlags_t flag;
 		bool set = false;
+		PlayerInfo_t pi{ };
 
 		if (index == I::Engine->GetLocalPlayer()) {
 			//#A043E7
@@ -41,6 +43,11 @@ MAKE_HOOK(M_ChatPrintF, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), v
 		else if (g_EntityCache.IsFriend(index)) {
 			//#699A00
 			flag = { { '\x7', '6', '9', '9', 'A', '0', '0' }, ("[Friend]") };
+			set = true;
+		}
+		else if (I::Engine->GetPlayerInfo(index, &pi) && F::BadActors.MarkedCheaters[pi.friendsID]) {
+			//#9B0000
+			flag = { { '\x7', '9', 'B', '0', '0', '0', '0' }, ("[Cheater]") };
 			set = true;
 		}
 
