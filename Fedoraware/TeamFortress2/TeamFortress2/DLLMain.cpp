@@ -111,7 +111,7 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
-	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig())) {
+	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig() + ".fw")) {
 		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 	}
 
