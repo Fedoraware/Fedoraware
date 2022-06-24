@@ -30,7 +30,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElem
 
 	std::string final_msg = msg;
 
-	if (Vars::Misc::ChatFlags.Value) {
+	if (Vars::Misc::ChatFlags.Value && iPlayerIndex) {
 		ChatFlags_t flag;
 		bool set = false;
 		PlayerInfo_t pi{ };

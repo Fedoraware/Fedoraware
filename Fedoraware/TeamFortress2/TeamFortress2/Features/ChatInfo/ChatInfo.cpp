@@ -47,7 +47,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				if (Vars::Visuals::ChatInfoChat.Value)
 				{
 					const std::string changeClassString(blue + "[FeD] " + red + pi.name + yellow + " is now a " + red + Utils::GetClassByIndex(pEvent->GetInt("class")));
-					I::ClientMode->m_pChatElement->ChatPrintf(nIndex, changeClassString.c_str());
+					I::ClientMode->m_pChatElement->ChatPrintf(0, changeClassString.c_str());
 				}
 			}
 		}
@@ -74,7 +74,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
 				{
-					I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
+					I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & static_cast<int>(VoteOption::Party)) // party
 				{
@@ -120,7 +120,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::damageLoggerChat.Value)
 				{
-					I::ClientMode->m_pChatElement->ChatPrintf(nIndex,
+					I::ClientMode->m_pChatElement->ChatPrintf(0,
 					                                          chatAttackString.c_str());
 				}
 
@@ -171,7 +171,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 						if (Vars::Visuals::ChatInfoText.Value)
 						{
 							I::ClientMode->m_pChatElement->ChatPrintf(
-								player, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
+								0, tfm::format("%s[FeD]\x3 %s%s is a bot!", blue, info.name, yellow).c_str());
 						}
 
 						{
@@ -270,7 +270,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					}
 					if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
 					{
-						I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), chosenLine);
+						I::ClientMode->m_pChatElement->ChatPrintf(0, chosenLine);
 					}
 					if (votingOptions & static_cast<int>(VoteOption::Party)) // party
 					{
