@@ -10,6 +10,11 @@ class CPong {
 	void CheckCollisions();
 	void UpdateInput();
 
+	// Networking
+	void UpdateNetwork();
+	void BroadcastMatch();
+	void JoinMatch(int targetID);
+
 	int PlayerScore = 0;
 	int EnemyScore = 0;
 

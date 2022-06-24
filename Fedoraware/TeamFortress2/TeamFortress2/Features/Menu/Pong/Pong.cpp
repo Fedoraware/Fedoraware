@@ -3,9 +3,9 @@
 #include "../../Fedworking/Fedworking.h"
 
 enum MessageType {
-	Broadcast,
-	Handshake,
-	Update
+	Broadcast,	// [ Type, SubType, SenderID ]
+	Request,	// [ Type, SubType, SenderID, TargetID ]
+	Update		// [ Type, SubType, SenderID, ... ]
 };
 
 enum class GameState {
@@ -16,8 +16,11 @@ enum class GameState {
 };
 
 static int PlayerID = Utils::RandInt(100, 999);
+static int EnemyID = 0;
+
 static GameState CurrentState = GameState::None;
 static bool IsMultiplayer = false;
+static std::map<int, float> FoundMatches; // <PlayerID, Time>
 
 void CPong::Render()
 {
@@ -37,6 +40,7 @@ void CPong::Render()
 			UpdateGame();
 			CheckCollisions();
 			UpdateInput();
+			UpdateNetwork();
 
 			// Reset if one player winds
 			if (PlayerScore >= 10 || EnemyScore >= 10)
@@ -49,11 +53,6 @@ void CPong::Render()
 	ImGui::End();
 
 	ImGui::PopStyleColor();
-}
-
-void CPong::ReceiveData(const std::vector<std::string>& dataVector)
-{
-
 }
 
 /* Draw the main menu */
@@ -94,7 +93,17 @@ void CPong::DrawMenu()
 
 		if (CurrentState == GameState::Joining)
 		{
-			ImGui::Text("Searching for match in your party...");
+			ImGui::Text("Searching for matches in your party...");
+
+			for (const auto& match : FoundMatches)
+			{
+				if (I::Engine->Time() - match.second > 15.f) { continue; }
+				
+				if (ImGui::Button(tfm::format("Match #%i", match.first).c_str()))
+				{
+					JoinMatch(match.first);
+				}
+			}
 		}
 
 		if (ImGui::Button("Cancel"))
@@ -250,3 +259,83 @@ void CPong::Reset()
 	BallVelocity = { 1.f, -1.f };
 	I::Engine->ClientCmd_Unrestricted("play ui/chat_display_text");
 }
+
+#pragma region Networking
+void CPong::ReceiveData(const std::vector<std::string>& dataVector)
+{
+	int subType, senderID;
+	try
+	{
+		subType = std::stoi(dataVector[1]);
+		senderID = std::stoi(dataVector[2]);
+	}
+	catch (...) { return; }
+
+	// Ignore our own messages
+	if (senderID == PlayerID) { return; }
+
+	switch (subType)
+	{
+	case Broadcast:
+		{
+			if (dataVector.size() == 3)
+			{
+				FoundMatches[senderID] = I::Engine->Time();
+			}
+			break;
+		}
+
+	case Request:
+		{
+			if (dataVector.size() == 4)
+			{
+				const int targetID = std::stoi(dataVector[3]);
+
+				// Did we host this match?
+				if (targetID == PlayerID)
+				{
+					EnemyID = senderID;
+					CurrentState = GameState::Match;
+				}
+
+				// Remove this match from the available matches
+				FoundMatches[targetID] = 0.f;
+			}
+		break;
+		}
+
+	case Update:
+		{
+			break;
+		}
+	}
+}
+
+void CPong::UpdateNetwork()
+{
+	static Timer netTimer{ };
+	if (netTimer.Run(500))
+	{
+		if (CurrentState == GameState::Hosting)
+		{
+			BroadcastMatch();
+		}
+	}
+}
+
+void CPong::BroadcastMatch()
+{
+	std::stringstream msg;
+	msg << Broadcast << "&" << PlayerID;
+	F::Fedworking.SendPong(msg.str());
+}
+
+void CPong::JoinMatch(int targetID)
+{
+	std::stringstream msg;
+	msg << Request << "&" << PlayerID << "&" << targetID;
+	F::Fedworking.SendPong(msg.str());
+
+	EnemyID = targetID;
+}
+#pragma endregion
