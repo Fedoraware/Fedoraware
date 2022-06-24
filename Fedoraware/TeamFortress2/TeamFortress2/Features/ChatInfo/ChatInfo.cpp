@@ -13,6 +13,14 @@ static std::string white({'\x7', 'F', 'F', 'F', 'F', 'F', 'F'}); //FFFFFF
 static std::string red({'\x7', 'F', 'F', '3', 'A', '3', 'A'}); //FF3A3A
 static std::string green({'\x7', '3', 'A', 'F', 'F', '4', 'D'}); //3AFF4D
 
+enum VoteLogger {
+	VoteText = 1 << 0,
+	VoteConsole = 1 << 1,
+	VoteChat = 1 << 2,
+	VoteParty = 1 << 3,
+	VoteVerbose = 1 << 5
+};
+
 // Event info
 void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
@@ -64,19 +72,19 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
 				auto voteLine = tfm::format("[FeD] %s %s voted %s", (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
-				if (votingOptions & static_cast<int>(VoteOption::Text)) // text
+				if (votingOptions & VoteText) // text
 				{
 					F::Notifications.Add(voteLine);
 				}
-				if (votingOptions & static_cast<int>(VoteOption::Console)) // console
+				if (votingOptions & VoteConsole) // console
 				{
 					I::CVars->ConsoleColorPrintf({133, 255, 66, 255}, tfm::format("%s \n", voteLine).c_str());
 				}
-				if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
+				if (votingOptions & VoteChat) // chat
 				{
 					I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), tfm::format("%s[FeD] \x3%s %svoted %s%s", blue, pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 				}
-				if (votingOptions & static_cast<int>(VoteOption::Party)) // party
+				if (votingOptions & VoteParty) // party
 				{
 					I::Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", voteLine).c_str());
 				}
@@ -257,27 +265,36 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					                                     infoTarget.friendsID);
 
 					const int votingOptions = Vars::Misc::VotingOptions.Value;
-					const bool verboseVoting = votingOptions & static_cast<int>(VoteOption::Verbose);
+					const bool verboseVoting = votingOptions & VoteVerbose;
 
 					const auto chosenLine = verboseVoting ? verboseLine.c_str() : bluntLine.c_str();
 
-					if (votingOptions & static_cast<int>(VoteOption::Text)) // text
+					// Log to Text/Notifications
+					if (votingOptions & VoteText)
 					{
 						F::Notifications.Add(chosenLine);
 					}
-					if (votingOptions & static_cast<int>(VoteOption::Console)) // console
+
+					// Log to Console
+					if (votingOptions & VoteConsole)
 					{
 						I::CVars->ConsoleColorPrintf({133, 255, 66, 255}, tfm::format("%s \n", chosenLine).c_str());
 					}
-					if (votingOptions & static_cast<int>(VoteOption::Chat)) // chat
+
+					// Log to Chat
+					if (votingOptions & VoteChat)
 					{
 						I::ClientMode->m_pChatElement->ChatPrintf(pLocal->GetIndex(), chosenLine);
 					}
-					if (votingOptions & static_cast<int>(VoteOption::Party)) // party
+
+					// Log to Party
+					if (votingOptions & VoteParty)
 					{
 						I::Engine->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", chosenLine).c_str());
 					}
-					if (votingOptions & static_cast<int>(VoteOption::AutoVote) && bSameTeam && target != I::Engine->GetLocalPlayer()) // auto-vote
+
+					// Auto Vote
+					if (Vars::Misc::AutoVote.Value && bSameTeam && target != I::Engine->GetLocalPlayer())
 					{
 						if (G::IsIgnored(infoTarget.friendsID) || g_EntityCache.IsFriend(target))
 						{

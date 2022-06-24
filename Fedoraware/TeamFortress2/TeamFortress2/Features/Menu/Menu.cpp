@@ -1013,8 +1013,8 @@ void CMenu::MenuVisuals()
 				HelpMarker("What misc visual features should be run");
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				{
-					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Auto Vote", "Verbose"};
-					static std::vector flagValues{ 1, 2, 4, 8, 16, 32 };
+					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
+					static std::vector flagValues{ 1, 2, 4, 8, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}
 				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::damageLoggerConsole.Value, &Vars::Visuals::damageLoggerText.Value, &Vars::Visuals::damageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
@@ -1466,6 +1466,7 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
 			WToggle("Anti-AFK", &Vars::Misc::AntiAFK.Value); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
+			WToggle("Auto Vote", &Vars::Misc::AutoVote.Value); HelpMarker("Automatically votes yes/no depending on the target");
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.Value); HelpMarker("Allows you to input in taunts");
 			WToggle("Taunt control", &Vars::Misc::TauntControl.Value); HelpMarker("Gives full control if enabled with taunt slide");
 			WCombo("Crouch speed", &Vars::Misc::Roll.Value, { "Off", "Backwards", "Fake forward" }); HelpMarker("Allows you to go at normal walking speed when crouching (affects many things, use with caution)");

@@ -41,7 +41,7 @@ namespace Vars
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
 
-		inline CVar<bool> ShowDVD{ true };
+		inline CVar<bool> ShowDVD{true};
 
 		namespace Colors
 		{
@@ -126,12 +126,12 @@ namespace Vars
 			inline CVar<int> VisTestPoints{15}; //how many points are we allowed to vis test before we stop scanning.
 			inline CVar<int> ScanPoints{15}; //how many "visible points" need to be reached before we stop searching.
 			inline CVar<float> ScanScale{0.95f}; // how to scale the points.
-			inline CVar<int> AllowedHitboxes{ 0b111 }; // 111, Feet, Body, Head.
+			inline CVar<int> AllowedHitboxes{0b111}; // 111, Feet, Body, Head.
 			inline CVar<bool> FeetAimIfOnGround{false};
 			inline CVar<bool> SplashPrediction{false};
 			inline Color_t PredictionColor{255, 255, 255, 255};
 			inline CVar<float> predTime{2.0f};
-			inline CVar<bool> NoSpread{ false };
+			inline CVar<bool> NoSpread{false};
 		}
 
 		namespace Melee
@@ -321,8 +321,8 @@ namespace Vars
 		{
 			inline CVar<bool> Active{true};
 
-			inline Chams_t Hands{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
-			inline Chams_t Weapon{ 1,0,0,1,0,0,0,1,{0,0,0,255},{255,255,255,255},{255,255,255,255},"None" };
+			inline Chams_t Hands{true, 0, 0, true, false, false, false, 1, {0, 0, 0, 255}, {255, 255, 255, 255}, {255, 255, 255, 255}, "None"};
+			inline Chams_t Weapon{true, 0, 0, true, false, false, false, 1, {0, 0, 0, 255}, {255, 255, 255, 255}, {255, 255, 255, 255}, "None"};
 
 			inline CVar<int> HandsGlowOverlay{0}; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
 			inline CVar<int> HandsProxySkin{0};
@@ -401,7 +401,7 @@ namespace Vars
 			inline CVar<int> IgnoreCloaked{0}; //0 - Off, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Health{false};
 			inline CVar<int> IconSize{24};
-			inline CVar<bool> Height{ true };
+			inline CVar<bool> Height{true};
 		}
 
 		namespace Buildings
@@ -484,7 +484,7 @@ namespace Vars
 		inline CVar<int> ParticleTracer{2};
 		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
 
-		inline CVar<bool> DoPostProcessing{ true };
+		inline CVar<bool> DoPostProcessing{true};
 
 		namespace Beans
 		{
@@ -550,7 +550,7 @@ namespace Vars
 
 		namespace Fog
 		{
-			inline CVar<bool> DisableFog{ false };
+			inline CVar<bool> DisableFog{false};
 			inline CVar<bool> CustomFog{false};
 			inline Color_t FogColor{255, 255, 255, 255};
 			inline Color_t FogColorSkybox{255, 255, 255, 255};
@@ -567,6 +567,7 @@ namespace Vars
 	{
 		inline CVar<bool> AccurateMovement{true};
 		inline CVar<bool> AutoJump{true};
+		inline CVar<bool> AutoVote{false};
 		inline CVar<bool> DuckJump{false};
 		inline CVar<int> AutoStrafe{2};
 		inline CVar<bool> Directional{false};
@@ -602,12 +603,12 @@ namespace Vars
 		inline CVar<bool> PartyCrasher{false};
 		inline CVar<int> PartyMarker{false};
 		inline CVar<bool> PartyESP{false};
-		inline CVar<int> SoundBlock{ 0 };
+		inline CVar<int> SoundBlock{0};
 		//inline CVar<bool> ForceMedievalChat{false};
-		inline CVar<int> MedievalChat{ 0 };
-		inline CVar<bool> AutoAcceptItemDrops{ true };
-		inline CVar<bool> RegionChanger{ false };
-		inline CVar<int> RegionsAllowed{ 0 };
+		inline CVar<int> MedievalChat{0};
+		inline CVar<bool> AutoAcceptItemDrops{true};
+		inline CVar<bool> RegionChanger{false};
+		inline CVar<int> RegionsAllowed{0};
 
 		namespace Followbot
 		{
@@ -629,7 +630,7 @@ namespace Vars
 			inline CVar<int> RechargeKey{0x48}; //H
 			inline CVar<int> DoubletapKey{0x56}; //V
 			inline CVar<int> DTBarStyle{3};
-			inline CVar<bool> RetainFakelag{ true };
+			inline CVar<bool> RetainFakelag{true};
 			inline CVar<bool> RechargeWhileDead{false};
 			inline CVar<bool> AutoRecharge{false}; //H
 			inline CVar<bool> AntiWarp{true}; //H

@@ -32,7 +32,7 @@ namespace G
 	inline int CurItemDefIndex = 0; // DefIndex of the current weapon
 	inline int NotifyCounter = 0;
 	inline int EyeAngDelay = 25;
-	inline int LoadInCount = 0;	//	increments each time we change server / map.
+	inline int LoadInCount = 0; //	increments each time we change server / map.
 	inline bool WeaponCanHeadShot = false; // Can the current weapon headshot?
 	inline bool WeaponCanAttack = false; // Can the current weapon attack?
 	inline bool WeaponCanSecondaryAttack = false;
@@ -44,8 +44,8 @@ namespace G
 	inline bool AutoBackstabRunning = false;
 	inline bool LocalSpectated = false; // Is the local player being spectated?
 	inline bool RollExploiting = false; // Are we performing the roll exploit?
-	inline bool ShouldStop = false;		// Stops our players movement, takes 1 tick.
-	inline bool SafeTick = false;		// Are we being effected by sv_maxusrcmdprocessticks_holdaim.
+	inline bool ShouldStop = false; // Stops our players movement, takes 1 tick.
+	inline bool SafeTick = false; // Are we being effected by sv_maxusrcmdprocessticks_holdaim.
 	inline bool UnloadWndProcHook = false;
 
 	/* Double tap / Tick shift */
@@ -80,12 +80,12 @@ namespace G
 	inline std::vector<Vec3> PredBeforeLines;
 	inline std::vector<Vec3> PredFutureLines;
 
-	inline CUserCmd* CurrentUserCmd{ nullptr }; // Unreliable! Only use this if you really have to.
-	inline CUserCmd* LastUserCmd{ nullptr };
+	inline CUserCmd* CurrentUserCmd{nullptr}; // Unreliable! Only use this if you really have to.
+	inline CUserCmd* LastUserCmd{nullptr};
 
 	inline EWeaponType CurWeaponType = {};
-	inline std::unordered_map <CBaseEntity*, VelFixRecord> VelFixRecords;
-	inline std::unordered_map <CBaseEntity*, std::unordered_map<int, PlayerCache>> Cache;	// caches movement, angles, add more if you want. format is <Entity, <tickcount, pData>>
+	inline std::unordered_map<CBaseEntity*, VelFixRecord> VelFixRecords;
+	inline std::unordered_map<CBaseEntity*, std::unordered_map<int, PlayerCache>> Cache; // caches movement, angles, add more if you want. format is <Entity, <tickcount, pData>>
 	inline bool FreecamActive = false;
 	inline Vec3 FreecamPos = {};
 	inline std::unordered_map<int, DormantData> PartyPlayerESP; // <Index, DormantData>
