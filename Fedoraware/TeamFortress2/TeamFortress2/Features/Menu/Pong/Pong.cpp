@@ -7,7 +7,7 @@ enum MessageType {
 	Request,	// [ Type, SubType, SenderID, TargetID ]
 	Update,		// [ Type, SubType, SenderID, PlayerY, PlayerVel, BallPosX, BallPosY, BallVelX, BallVelY ]
 	Response,	// [ Type, SubType, SenderID, PlayerY, PlayerVel ]
-	Pong		// [ Type, SubType, SenderID, PlayerY, Score, BallVelX, BallVelY ]
+	Pong		// [ Type, SubType, SenderID, PlayerY, Score, BallVelX ]
 };
 
 enum class GameState {
@@ -90,7 +90,7 @@ void CPong::DrawMenu()
 			}
 
 			ImGui::SameLine();
-			if (ImGui::Button("Join Math"))
+			if (ImGui::Button("Join Match"))
 			{
 				CurrentState = GameState::Joining;
 				IsMultiplayer = true;
@@ -204,6 +204,11 @@ void CPong::CheckCollisions()
 			I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
 		}
 		BallVelocity.x = -1.f;
+
+		if (IsMultiplayer && !IsHost)
+		{
+			SendPong(RightY, RightScore, BallVelocity.x);
+		}
 	}
 
 	// Player (Left)
@@ -387,6 +392,29 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			}
 			break;
 		}
+
+	case Pong:
+		{
+			if (senderID == EnemyID && dataVector.size() == 6)
+			{
+				const float playerY = std::stof(dataVector[3]);
+				const int score = std::stoi(dataVector[4]);
+				const float ballVelX = std::stof(dataVector[5]);
+
+				if (IsHost)
+				{
+					RightY = playerY;
+					RightScore = score;
+				} else
+				{
+					LeftY = playerY;
+					LeftScore = score;
+				}
+
+				BallVelocity.x = ballVelX;
+			}
+			break;
+		}
 	}
 }
 
@@ -413,6 +441,7 @@ void CPong::UpdateNetwork()
 	}
 }
 
+/* Broadcast out match */
 void CPong::BroadcastMatch()
 {
 	std::stringstream msg;
@@ -420,6 +449,7 @@ void CPong::BroadcastMatch()
 	F::Fedworking.SendPong(msg.str());
 }
 
+/* Request to join a match */
 void CPong::JoinMatch(int targetID)
 {
 	std::stringstream msg;
@@ -429,6 +459,7 @@ void CPong::JoinMatch(int targetID)
 	EnemyID = targetID;
 }
 
+/* Sent by the host */
 void CPong::SendMatch(float playerY, float playerVel, const Vec2& ballPos, const Vec2& ballVel)
 {
 	std::stringstream msg;
@@ -439,11 +470,21 @@ void CPong::SendMatch(float playerY, float playerVel, const Vec2& ballPos, const
 	F::Fedworking.SendPong(msg.str());
 }
 
+/* Send after we've received data from the host */
 void CPong::SendResponse(float playerY, float playerVel)
 {
 	std::stringstream msg;
 	msg << Response << "&" << PlayerID << "&" <<
 		static_cast<int>(playerY) << "&" << static_cast<int>(playerVel);
+	F::Fedworking.SendPong(msg.str());
+}
+
+/* Sent once a player hits the ball */
+void CPong::SendPong(float playerY, int score, float ballVelX)
+{
+	std::stringstream msg;
+	msg << Pong << "&" << static_cast<int>(playerY) << "&" << score << "&" <<
+		static_cast<int>(ballVelX);
 	F::Fedworking.SendPong(msg.str());
 }
 #pragma endregion

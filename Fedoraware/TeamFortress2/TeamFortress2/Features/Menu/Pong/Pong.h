@@ -17,6 +17,7 @@ class CPong {
 	void JoinMatch(int targetID);
 	void SendMatch(float playerY, float playerVel, const Vec2& ballPos, const Vec2& ballVel);
 	void SendResponse(float playerY, float playerVel);
+	void SendPong(float playerY, int score, float ballVelX);
 
 	int LeftScore = 0;
 	int RightScore = 0;
