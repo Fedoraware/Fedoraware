@@ -4,6 +4,7 @@
 class CPong {
 	void Init();
 	void Reset();
+	void DrawMenu();
 	void DrawGame();
 	void UpdateGame();
 	void CheckCollisions();
@@ -30,6 +31,8 @@ class CPong {
 
 public:
 	void Render();
+	void ReceiveData(const std::vector<std::string>& dataVector);
+
 	bool IsOpen = false;
 };
 

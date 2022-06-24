@@ -1,5 +1,23 @@
 #include "Pong.h"
 #include "../Menu.h"
+#include "../../Fedworking/Fedworking.h"
+
+enum MessageType {
+	Broadcast,
+	Handshake,
+	Update
+};
+
+enum class GameState {
+	None,
+	Hosting,
+	Joining,
+	Match
+};
+
+static int PlayerID = Utils::RandInt(100, 999);
+static GameState CurrentState = GameState::None;
+static bool IsMultiplayer = false;
 
 void CPong::Render()
 {
@@ -10,21 +28,81 @@ void CPong::Render()
 	
 	if (ImGui::Begin("Pong", &IsOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
 	{
-		DrawGame();
-		UpdateGame();
-		CheckCollisions();
-		UpdateInput();
-
-		// Reset if one player winds
-		if (PlayerScore >= 10 || EnemyScore >= 10)
+		if (CurrentState != GameState::Match)
 		{
-			Init();
-			I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
+			DrawMenu();
+		} else if (CurrentState == GameState::Match)
+		{
+			DrawGame();
+			UpdateGame();
+			CheckCollisions();
+			UpdateInput();
+
+			// Reset if one player winds
+			if (PlayerScore >= 10 || EnemyScore >= 10)
+			{
+				Init();
+				I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
+			}
 		}
 	}
 	ImGui::End();
 
 	ImGui::PopStyleColor();
+}
+
+void CPong::ReceiveData(const std::vector<std::string>& dataVector)
+{
+
+}
+
+/* Draw the main menu */
+void CPong::DrawMenu()
+{
+	if (CurrentState == GameState::None)
+	{
+		if (ImGui::Button("Singleplayer"))
+		{
+			Init();
+			CurrentState = GameState::Match;
+			IsMultiplayer = false;
+		}
+
+		if (Vars::Misc::PartyNetworking.Value)
+		{
+			if (ImGui::Button("Host Match"))
+			{
+				CurrentState = GameState::Hosting;
+				IsMultiplayer = true;
+			}
+
+			if (ImGui::Button("Join Math"))
+			{
+				CurrentState = GameState::Joining;
+				IsMultiplayer = true;
+			}
+		} else
+		{
+			ImGui::Text("Enable 'Party Networking' to play online!");
+		}
+	} else
+	{
+		if (CurrentState == GameState::Hosting)
+		{
+			ImGui::Text("Hosting match in your party...");
+		}
+
+		if (CurrentState == GameState::Joining)
+		{
+			ImGui::Text("Searching for match in your party...");
+		}
+
+		if (ImGui::Button("Cancel"))
+		{
+			CurrentState = GameState::None;
+			IsMultiplayer = false;
+		}
+	}
 }
 
 /* Draws the players, ball and scores */
