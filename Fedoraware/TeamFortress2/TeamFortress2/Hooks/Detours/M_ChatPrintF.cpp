@@ -31,17 +31,20 @@ MAKE_HOOK(M_ChatPrintF, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), v
 
 	if (Vars::Misc::ChatFlags.Value) {
 		ChatFlags_t flag;
+		bool set = false;
 
 		if (index == I::Engine->GetLocalPlayer()) {
 			//#A043E7
 			flag = { { '\x7', 'A', '0', '4', '3', 'E', '7' }, ("[You]") };
+			set = true;
 		}
 		else if (g_EntityCache.IsFriend(index)) {
 			//#699A00
 			flag = { { '\x7', '6', '9', '9', 'A', '0', '0' }, ("[Friend]") };
+			set = true;
 		}
 
-		if (flag.Name) {
+		if (set) {
 			final_msg = flag.Colour + flag.Name + (" \x3") + final_msg;
 
 			if (auto offset = final_msg.find(":")) {
