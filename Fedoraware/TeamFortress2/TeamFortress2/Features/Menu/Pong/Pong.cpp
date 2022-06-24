@@ -24,7 +24,16 @@ static std::map<int, float> FoundMatches; // <PlayerID, Time>
 
 void CPong::Render()
 {
-	if (!IsOpen) { return; }
+	if (!IsOpen)
+	{
+		if (IsMultiplayer)
+		{
+			Disonnect();
+		}
+
+		CurrentState = GameState::None;
+		return;
+	}
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 1.f));
 	ImGui::SetNextWindowSize({ WindowSize.x, WindowSize.y });
@@ -69,12 +78,14 @@ void CPong::DrawMenu()
 
 		if (Vars::Misc::PartyNetworking.Value)
 		{
+			ImGui::SameLine();
 			if (ImGui::Button("Host Match"))
 			{
 				CurrentState = GameState::Hosting;
 				IsMultiplayer = true;
 			}
 
+			ImGui::SameLine();
 			if (ImGui::Button("Join Math"))
 			{
 				CurrentState = GameState::Joining;
@@ -146,7 +157,7 @@ void CPong::UpdateGame()
 	static Timer updateTimer{ };
 	if (updateTimer.Run(5))
 	{
-		BallPos += BallVelocity * std::max(BallMultiplier, 1.f);
+		BallPos += BallVelocity;
 		EnemyY += EnemyVelocity;
 		PlayerY += PlayerVelocity;
 
@@ -162,13 +173,11 @@ void CPong::CheckCollisions()
 	if (BallPos.x + BallSize >= WindowSize.x)
 	{
 		PlayerScore++;
-		BallMultiplier -= 0.02f;
 		Reset();
 	}
 	else if (BallPos.x - BallSize <= 0.f)
 	{
 		EnemyScore++;
-		BallMultiplier -= 0.04f;
 		Reset();
 	}
 
@@ -202,7 +211,6 @@ void CPong::CheckCollisions()
 			I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
 		}
 		BallVelocity.x = 1.f;
-		BallMultiplier += 0.02f;
 	}
 }
 
@@ -309,6 +317,13 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			break;
 		}
 	}
+}
+
+void CPong::Disonnect()
+{
+	EnemyID = 0;
+	IsMultiplayer = false;
+	FoundMatches.clear();
 }
 
 void CPong::UpdateNetwork()
