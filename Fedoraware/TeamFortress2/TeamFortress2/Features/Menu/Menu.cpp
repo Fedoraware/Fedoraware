@@ -1013,7 +1013,7 @@ void CMenu::MenuVisuals()
 				HelpMarker("What misc visual features should be run");
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				{
-					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Auto-Cast", "Verbose"};
+					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Auto Vote", "Verbose"};
 					static std::vector flagValues{ 1, 2, 4, 8, 16, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}

@@ -238,6 +238,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 	case VoteStart:
 		{
 			const int team = msgData.ReadByte();
+			const int voteID = msgData.ReadLong();
 			const int caller = msgData.ReadByte();
 			char reason[64], voteTarget[64];
 			msgData.ReadString(reason, 64);
@@ -280,11 +281,11 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					{
 						if (G::IsIgnored(infoTarget.friendsID) || g_EntityCache.IsFriend(target))
 						{
-							I::Engine->ClientCmd_Unrestricted("vote option2"); //f2 on ignored and steam friends
+							I::Engine->ClientCmd_Unrestricted(tfm::format("vote %d option2", voteID).c_str()); //f2 on ignored and steam friends
 						}
 						else
 						{
-							I::Engine->ClientCmd_Unrestricted("vote option1"); //f1 on everyone else
+							I::Engine->ClientCmd_Unrestricted(tfm::format("vote %d option1", voteID).c_str()); //f1 on everyone else
 						}
 					}
 				}
