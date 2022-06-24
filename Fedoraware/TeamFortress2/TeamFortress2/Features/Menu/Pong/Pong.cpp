@@ -7,7 +7,7 @@ enum MessageType {
 	Request,	// [ Type, SubType, SenderID, TargetID ]
 	Update,		// [ Type, SubType, SenderID, PlayerY, PlayerVel, BallPosX, BallPosY, BallVelX, BallVelY ]
 	Response,	// [ Type, SubType, SenderID, PlayerY, PlayerVel ]
-	Pong		// [ Type, SubType, SenderID, Score, BallVelX, BallVelY ]
+	Pong		// [ Type, SubType, SenderID, PlayerY, Score, BallVelX, BallVelY ]
 };
 
 enum class GameState {
@@ -52,7 +52,6 @@ void CPong::Render()
 			UpdateGame();
 			CheckCollisions();
 			UpdateInput();
-			UpdateNetwork();
 
 			// Reset if one player winds
 			if (LeftScore >= 10 || RightScore >= 10)
@@ -61,6 +60,8 @@ void CPong::Render()
 				I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
 			}
 		}
+
+		UpdateNetwork();
 	}
 	ImGui::End();
 
@@ -259,11 +260,11 @@ void CPong::UpdateInput()
 	} else
 	{
 		// Player controller (Right)
-		if (cursorPos.y - windowPos.y < LeftY)
+		if (cursorPos.y - windowPos.y < RightY)
 		{
 			RightVelocity = -1.f;
 		}
-		else if (cursorPos.y - windowPos.y > LeftY)
+		else if (cursorPos.y - windowPos.y > RightY)
 		{
 			RightVelocity = 1.f;
 		}
@@ -330,7 +331,6 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 					EnemyID = senderID;
 					CurrentState = GameState::Match;
 					Init();
-					UpdateNetwork();
 					IsHost = true;
 				}
 
@@ -357,17 +357,33 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 				BallPos = { ballX, ballY };
 				BallVelocity = { ballVelX, ballVelY };
 
+				// Start the match if required
 				if (IsMultiplayer && CurrentState != GameState::Match)
 				{
-					// Start the match
 					CurrentState = GameState::Match;
 					IsHost = false;
 					Init();
-				} else
+				}
+
+				// Send a response
+				if (!IsHost)
 				{
-					// Send a response
 					SendResponse(RightY, RightVelocity);
 				}
+			}
+			break;
+		}
+
+	case Response:
+		{
+			if (senderID == EnemyID && dataVector.size() == 5)
+			{
+				const float playerY = std::stof(dataVector[3]);
+				const float playerVel = std::stof(dataVector[4]);
+
+				// Update local data
+				RightY = playerY;
+				RightVelocity = playerVel;
 			}
 			break;
 		}
@@ -385,12 +401,12 @@ void CPong::Disonnect()
 void CPong::UpdateNetwork()
 {
 	static Timer netTimer{ };
-	if (netTimer.Run(500))
+	if (netTimer.Run(CurrentState == GameState::Match ? 300 : 500))
 	{
 		if (CurrentState == GameState::Hosting)
 		{
 			BroadcastMatch();
-		} else if (CurrentState == GameState::Match)
+		} else if (CurrentState == GameState::Match && IsHost)
 		{
 			SendMatch(LeftY, LeftVelocity, BallPos, BallVelocity);
 		}
