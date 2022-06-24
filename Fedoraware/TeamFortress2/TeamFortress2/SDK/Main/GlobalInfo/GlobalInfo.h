@@ -65,7 +65,6 @@ namespace G
 	inline bool IsAttacking = false; // this is only used by aimbot, and is also set to false at the start of a lot of functions, this is not reliable
 	inline bool HitscanRunning = false;
 	inline bool SilentTime = false;
-	inline float CurAimFOV = 0.0f;
 	inline Vec3 AimPos = {};
 	inline VMatrix WorldToProjection = {};
 
