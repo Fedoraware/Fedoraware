@@ -147,6 +147,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 		}
 
 		Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
+		if (!Utils::VisPos(pLocal, pEnemy, vLocalPos, vEnemyPos)) { continue; }
 		if (!target && vLocalPos.DistTo(vEnemyPos) < 150.f)
 		{
 			target = pEnemy;

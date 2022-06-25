@@ -51,7 +51,9 @@ namespace ProxySkins
 				Sine->SetString("sineperiod", "50000");
 				Sine->SetString("sinemin", "0");
 				Sine->SetString("sinemax", "360");
-				Proxies->AddSubkey(Sine);
+				if (Sine) {
+					Proxies->AddSubkey(Sine);
+				}
 			}
 			{
 				KeyValues* TextureScroll = new KeyValues("TextureScroll");
@@ -59,7 +61,9 @@ namespace ProxySkins
 				TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
 				TextureScroll->SetString("texturescrollrate", "0.1");
 				TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-				Proxies->AddSubkey(TextureScroll);
+				if (TextureScroll) {
+					Proxies->AddSubkey(TextureScroll);
+				}
 			}
 		}
 
