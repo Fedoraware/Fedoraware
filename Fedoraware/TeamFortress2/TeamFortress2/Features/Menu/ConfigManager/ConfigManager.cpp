@@ -1420,6 +1420,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);
+			LOAD_VAR(Vars::Misc::MenuKey);
 			LOAD_VAR(Vars::Misc::NoisemakerSpam);
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);
