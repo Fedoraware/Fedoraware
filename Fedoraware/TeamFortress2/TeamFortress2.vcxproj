@@ -196,7 +196,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\BaseAnimating_SetupBones.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseAnimating_SetupBones.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_DispatchUserMessage.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_FrameStageNotify.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_PostEntity.cpp" />

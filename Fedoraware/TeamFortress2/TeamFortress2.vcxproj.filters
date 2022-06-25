@@ -146,7 +146,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseHudChat_ChatPrintf.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_SendNetMsg.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\BaseAnimating_SetupBones.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseAnimating_SetupBones.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
   </ItemGroup>
   <ItemGroup>
