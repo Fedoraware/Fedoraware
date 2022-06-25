@@ -121,7 +121,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\Surface_OnScreenSizeChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\UniformRandomStream_RandInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelShutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelInit.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LoadWhitelist.cpp" />
@@ -147,6 +146,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseHudChat_ChatPrintf.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_SendNetMsg.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\BaseAnimating_SetupBones.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

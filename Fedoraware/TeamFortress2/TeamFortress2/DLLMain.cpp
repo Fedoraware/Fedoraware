@@ -133,7 +133,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	//"mss32.dll" being one of the last modules to be loaded
 	//So wait for that before proceeding, after it's up everything else should be too
 	//Allows us to correctly use autoinject and just start the game.
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll"))) {
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll")) || !WinAPI::GetModuleHandleW(_(L"materialsystem.dll"))) {
 		Sleep(5000);
 	}
 
