@@ -44,8 +44,9 @@ void stopMovement(CUserCmd* pCmd) {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (pLocal) {
 		const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
-		pCmd->viewangles.y = direction;
 		pCmd->viewangles.x = 90;
+		pCmd->viewangles.y = direction;
+		pCmd->viewangles.z = 0;
 		pCmd->sidemove = 0; pCmd->forwardmove = 0;
 	}
 }
@@ -62,7 +63,7 @@ void stopMovement(CUserCmd* pCmd) {
 //	if our forward velocity is 400, to get it to 0, we would need to spend ~7 ticks of time decelerating.
 void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned()) {
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
 			pLocal->GetMoveType() == MOVETYPE_WALK ? 1 : 2 : 0
@@ -92,10 +93,10 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 				nShiftTick++;
 				break;
 			}
-			}
+			}//
 
 			currentPos = pLocal->GetVecOrigin();//
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value)));
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value + nShiftTick)));
 			return;
 		}
 		//case 2: {

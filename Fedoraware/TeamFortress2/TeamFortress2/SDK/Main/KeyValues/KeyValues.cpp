@@ -27,7 +27,7 @@ void KeyValues::Initialize(char* name)
 KeyValues::KeyValues(const char* name)
 {
 	char _name[128];
-	sprintf_s(_name, sizeof(_name), name);
+	sprintf(_name, name);
 	this->Initialize((char*)_name);
 }
 

@@ -1496,6 +1496,8 @@ void CMenu::MenuMisc()
 		if (TableColumnChild("MiscCol2"))
 		{
 			SectionTitle("Chat");
+
+			WToggle("Chat Flags", &Vars::Misc::ChatFlags.Value);
 			//WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
 			//WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
