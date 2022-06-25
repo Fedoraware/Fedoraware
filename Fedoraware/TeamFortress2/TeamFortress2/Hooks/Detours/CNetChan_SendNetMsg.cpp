@@ -16,12 +16,6 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 56 8B F1
 		}
 	}
 	}
-	if (msg.GetType() == clc_VoiceData) {			//should stop Msg from loopback: clc_VoiceData msg rejected (%i bytes)
-		bVoice = true;
-	}
-	else if (msg.GetType() == clc_FileCRCCheck) {	//dont return CRC checks
-		return false;
-	}
 
 	return Hook.Original<FN>()(CNetChan, edi, msg, bForceReliable, bVoice);
 }
