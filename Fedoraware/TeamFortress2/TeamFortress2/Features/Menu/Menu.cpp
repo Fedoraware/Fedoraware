@@ -16,8 +16,6 @@
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
 
-constexpr int MENU_KEY = VK_INSERT;
-
 int unuPrimary = 0;
 int unuSecondary = 0;
 
@@ -1529,6 +1527,8 @@ void CMenu::MenuMisc()
 		/* Column 3 */
 		if (TableColumnChild("MiscCol3"))
 		{
+			SectionTitle("Menu Customization");
+			InputKeybind("Menu key", Vars::Misc::MenuKey); HelpMarker("The key to open the menu");
 			SectionTitle("Discord RPC");
 			WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.Value); HelpMarker("Enable Discord Rich Presence");
 			WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
@@ -1882,8 +1882,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	// Toggle menu
-	if (GetAsyncKeyState(MENU_KEY) & 1)
+	// Toggle menu (default is 'insert' can be changed in menu
+	if (GetAsyncKeyState(Vars::Misc::MenuKey.Value) & 1)
 	{
 		F::Menu.IsOpen = !F::Menu.IsOpen;
 		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);
