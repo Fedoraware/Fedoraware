@@ -355,6 +355,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Detonate::Stickies);
 				SAVE_VAR(Vars::Triggerbot::Detonate::Flares);
 				SAVE_VAR(Vars::Triggerbot::Detonate::RadiusScale);
+				SAVE_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
@@ -1086,6 +1087,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Detonate::Stickies);
 				LOAD_VAR(Vars::Triggerbot::Detonate::Flares);
 				LOAD_VAR(Vars::Triggerbot::Detonate::RadiusScale);
+				LOAD_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
