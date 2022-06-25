@@ -148,7 +148,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_SetupBones.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_Material_DeleteIfUnreferenced.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_DeleteIfUnreferenced.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
