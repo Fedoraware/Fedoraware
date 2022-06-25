@@ -1,11 +1,7 @@
 #include "Hooks/HookManager.h"
 #include "Hooks/PatchManager/PatchManager.h"
 
-#include "Features/Glow/Glow.h"
-#include "Features/Chams/Chams.h"
-#include "Features/Chams/DMEChams.h"
 #include "Features/Visuals/Visuals.h"
-#include "Features/Camera/CameraWindow.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
 
@@ -68,14 +64,6 @@ void Initialize()
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
 	g_NetVars.Init();
-
-	// Initialize features
-	{
-		F::Glow.Init();
-		F::Chams.Init();
-		F::DMEChams.Init();
-		F::CameraWindow.Init();
-	}
 
 	// Initialize hooks & memory stuff
 	{
