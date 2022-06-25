@@ -64,6 +64,10 @@ public:                                     \
     DECLARE_BASE_MESSAGE(net_##name); \
     void *m_pMessageHandler;
 
+//#define DECLARE_SVC_MESSAGE( name )		\
+//	DECLARE_BASE_MESSAGE( svc_##name );	\
+//	void *m_pMessageHandler;
+
 class INetMessage;
 class CNetMessage;
 class INetChannel;
@@ -706,6 +710,19 @@ public:
 	int			m_nTick;
 	float		m_flHostFrameTime;
 	float		m_flHostFrameTimeStdDeviation;
+};
+
+class SVC_FixAngle : public CNetMessage
+{
+	SVC_FixAngle() { m_bReliable = false; };
+	SVC_FixAngle(bool bRelative, QAngle angle)
+	{
+		m_bReliable = false; m_bRelative = bRelative; m_Angle = angle;
+	}
+
+public:
+	bool			m_bRelative;
+	QAngle			m_Angle;
 };
 
 #endif
