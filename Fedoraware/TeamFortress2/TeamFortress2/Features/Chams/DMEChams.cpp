@@ -415,12 +415,6 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
 			return GetPlayerChams(pOwner);
 		}
-		else if (int teamNum = pEntity->GetTeamNum()) {	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
-			CBaseEntity* pLocal = g_EntityCache.GetLocal();
-			if (pLocal) {
-				return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
-			}
-		}
 		return Chams_t();
 	}
 	case 6: {
@@ -435,6 +429,12 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 		if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
 		if (CBaseEntity* pOwner = Building->GetOwner()) {
 			return GetBuildingChams(pOwner);
+		}
+		else if (int teamNum = pEntity->GetTeamNum()) {	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
+			CBaseEntity* pLocal = g_EntityCache.GetLocal();
+			if (pLocal) {
+				return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+			}
 		}
 		return Chams_t();
 	}
