@@ -1536,7 +1536,7 @@ void CMenu::MenuMisc()
 		if (TableColumnChild("MiscCol3"))
 		{
 			SectionTitle("Menu Customization");
-			InputKeybind("Menu key", Vars::Misc::MenuKey); HelpMarker("The key to open the menu");
+			InputKeybind("Menu key", Vars::Misc::MenuKey, false, true); HelpMarker("The key to open the menu");
 			SectionTitle("Discord RPC");
 			WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.Value); HelpMarker("Enable Discord Rich Presence");
 			WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
