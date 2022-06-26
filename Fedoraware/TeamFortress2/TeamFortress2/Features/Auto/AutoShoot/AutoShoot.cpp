@@ -81,32 +81,46 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 
 bool CAutoShoot::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	if (Vars::Triggerbot::Shoot::WaitForCharge.Value)
+	switch (G::CurItemDefIndex)
 	{
-		switch (pLocal->GetClassNum())
+	case Sniper_m_TheMachina:
+	case Sniper_m_ShootingStar:
+	{
+		if (!pLocal->IsScoped())
+			return false;
+
+		break;
+	}
+	default: break;
+	}
+
+	switch (pLocal->GetClassNum())
+	{
+	case CLASS_SNIPER:
+	{
+		if (Vars::Triggerbot::Shoot::WaitForHeadshot.Value)
 		{
-		case CLASS_SNIPER:
-			{
-				if (!G::WeaponCanHeadShot && pLocal->IsScoped())
-					return false;
-
-				break;
-			}
-
-		case CLASS_SPY:
-			{
-				if (!G::WeaponCanHeadShot)
-				{
-					if (G::CurItemDefIndex == Spy_m_TheAmbassador || G::CurItemDefIndex ==
-						Spy_m_FestiveAmbassador)
-						return false;
-				}
-
-				break;
-			}
-
-		default: break;
+			if (!G::WeaponCanHeadShot && pLocal->IsScoped())
+				return false;
 		}
+
+		if (!pLocal->IsScoped() && Vars::Triggerbot::Shoot::ScopeOnly.Value)
+			return false;
+
+		break;
+	}
+	case CLASS_SPY:
+	{
+		if (!G::WeaponCanHeadShot && Vars::Triggerbot::Shoot::WaitForHeadshot.Value)
+		{
+			if (G::CurItemDefIndex == Spy_m_TheAmbassador || G::CurItemDefIndex ==
+				Spy_m_FestiveAmbassador)
+				return false;
+		}
+
+		break;
+	}
+	default: break;
 	}
 
 	return true;
