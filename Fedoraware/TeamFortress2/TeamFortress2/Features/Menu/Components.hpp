@@ -84,7 +84,7 @@ namespace ImGui
 		return pressed;
 	}
 
-    __inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
+    __inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false)
 	{
 		auto VK2STR = [&](const short key) -> const char* {
 			switch (key) {
@@ -140,6 +140,21 @@ namespace ImGui
 			case VK_PRIOR: return "Page Up";
 			case VK_NEXT: return "Page Down";
 			default: break;
+			}
+
+			if (bAllowSpecial)
+			{
+				switch (key)
+				{
+				case VK_INSERT: return "Insert";
+				case VK_DELETE: return "Delete";
+				case VK_HOME: return "Home";
+				case VK_END: return "End";
+				case VK_F9: return "F9";
+				case VK_F10: return "F10";
+				//case VK_F11: return "F10"; // Reserved for uninject
+				case VK_F12: return "F12";
+				}
 			}
 
 			WCHAR output[16] = { L"\0" };
