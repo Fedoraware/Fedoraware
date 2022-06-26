@@ -235,6 +235,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_DeleteIfUnreferenced.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_PlayerResource_GetTeamColor.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFRagdoll_CreateTFRagdoll.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
@@ -254,6 +255,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\NotificationQueue_Add.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Panel_PaintTraverse.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Prediction_RunCommand.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\SectionedListPanel_SetItemFgColor.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetAlphaModulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetColorModulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Surface_OnScreenSizeChanged.cpp" />
