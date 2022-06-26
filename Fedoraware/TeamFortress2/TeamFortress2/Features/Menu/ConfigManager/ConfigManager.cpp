@@ -374,6 +374,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
 				SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
+				SAVE_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 			}
 		}
 
@@ -1108,6 +1109,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Uber::PopLocal);
 				LOAD_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
+				LOAD_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 			}
 		}
 
