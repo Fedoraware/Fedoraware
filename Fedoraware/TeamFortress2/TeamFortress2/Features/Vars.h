@@ -612,6 +612,7 @@ namespace Vars
 		inline CVar<bool> AutoAcceptItemDrops{ false };
 		inline CVar<bool> RegionChanger{ false };
 		inline CVar<int> RegionsAllowed{ 0 };
+		inline CVar<bool> AutoCasualQueue{ false };
 
 		namespace Followbot
 		{
