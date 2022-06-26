@@ -1,6 +1,8 @@
 #pragma once
 #include "../../Includes/Includes.h"
 
+// wtf epic cathook pasting
+
 class CTFParty
 {
 public:
