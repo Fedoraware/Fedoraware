@@ -164,7 +164,8 @@ namespace Vars
 			inline CVar<bool> TriggerPlayers{false};
 			inline CVar<bool> TriggerBuildings{false};
 			inline CVar<bool> HeadOnly{false};
-			inline CVar<bool> WaitForCharge{false};
+			inline CVar<bool> WaitForHeadshot{false};
+			inline CVar<bool> ScopeOnly{ false };
 			inline CVar<float> HeadScale{0.7f};
 		}
 

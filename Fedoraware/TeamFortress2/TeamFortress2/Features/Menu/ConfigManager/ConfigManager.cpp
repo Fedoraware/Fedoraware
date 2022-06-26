@@ -335,7 +335,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				SAVE_VAR(Vars::Triggerbot::Shoot::ScopeOnly);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
@@ -1067,7 +1068,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				LOAD_VAR(Vars::Triggerbot::Shoot::ScopeOnly);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
