@@ -57,7 +57,6 @@
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
@@ -154,6 +153,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\SectionedListPanel_SetItemFgColor.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_PlayerResource_GetTeamColor.cpp" />
+    <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -647,7 +647,6 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_recv_redef.h" />
     <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
-    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.h" />
     <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
@@ -694,6 +693,9 @@
     <ClInclude Include="TeamFortress2\SDK\Main\CEconNotification.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
+    <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
