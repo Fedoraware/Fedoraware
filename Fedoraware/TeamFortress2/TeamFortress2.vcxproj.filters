@@ -153,6 +153,9 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_PlayerResource_GetTeamColor.cpp" />
     <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\TF_IsHolidayActive.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\disconnect.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
