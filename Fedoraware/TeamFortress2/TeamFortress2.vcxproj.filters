@@ -150,8 +150,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_DeleteIfUnreferenced.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
+    <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -692,6 +691,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\CEconNotification.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
+    <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

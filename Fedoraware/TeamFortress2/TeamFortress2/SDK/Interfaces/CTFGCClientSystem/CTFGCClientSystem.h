@@ -18,11 +18,10 @@ public:
 class CTFGCClientSystem
 {
 public:
-    CTFGCClientSystem() = delete;
-    static CTFGCClientSystem* GTFGCClientSystem();
-    void AbandonCurrentMatch();
-    bool BConnectedToMatchServer(bool flag);
-    bool BHaveLiveMatch();
-    CTFParty* GetParty();
-    int JoinMMMatch();
+    void PreInitGC()
+    {
+	    
+    }
+
+
 };

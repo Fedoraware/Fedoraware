@@ -145,6 +145,7 @@
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.cpp" />
+    <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\CritHack\CritHack.cpp" />
@@ -196,9 +197,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_SetupBones.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_DispatchUserMessage.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_FrameStageNotify.cpp" />
@@ -296,6 +295,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
+    <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
