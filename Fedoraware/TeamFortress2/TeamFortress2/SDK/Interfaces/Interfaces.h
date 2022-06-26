@@ -35,6 +35,7 @@
 #include "EngineSound/EngineSound.h"
 #include "CTFGameRules/CTFGameRules.h"
 #include "Steam/ISteamNetworkingUtils.h"
+#include "CTFGCClientSystem/CTFGCClientSystem.h"
 
 class CClockDriftMgr
 {
@@ -136,6 +137,7 @@ namespace I
 	inline IEngineSound* EngineSound = nullptr;
 	inline CTFGameRules* TFGameRules = nullptr;
 	inline void* BackpackPanel = nullptr;
+	inline CTFGCClientSystem* TFGCClientSystem = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
