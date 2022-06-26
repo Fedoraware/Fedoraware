@@ -335,7 +335,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				SAVE_VAR(Vars::Triggerbot::Shoot::ScopeOnly);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
@@ -355,6 +356,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Detonate::Stickies);
 				SAVE_VAR(Vars::Triggerbot::Detonate::Flares);
 				SAVE_VAR(Vars::Triggerbot::Detonate::RadiusScale);
+				SAVE_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
@@ -372,6 +374,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
 				SAVE_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
+				SAVE_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 			}
 		}
 
@@ -631,7 +634,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::Rain);
 			SAVE_VAR(Vars::Debug::DebugInfo);
 			SAVE_VAR(Vars::Visuals::DoPostProcessing);
-
+			SAVE_VAR(Vars::Visuals::EquipRegionUnlock);
 			// Beans I LOVE Beans
 			{
 				SAVE_VAR(Vars::Visuals::Beans::Active);
@@ -726,6 +729,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Menu::ShowDVD);
 			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
+			SAVE_VAR(Vars::Misc::AutoCasualQueue);
 
 			// Followbot
 			{
@@ -1067,7 +1071,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				LOAD_VAR(Vars::Triggerbot::Shoot::ScopeOnly);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
@@ -1087,6 +1092,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Detonate::Stickies);
 				LOAD_VAR(Vars::Triggerbot::Detonate::Flares);
 				LOAD_VAR(Vars::Triggerbot::Detonate::RadiusScale);
+				LOAD_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
@@ -1104,6 +1110,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Uber::PopLocal);
 				LOAD_VAR(Vars::Triggerbot::Uber::AutoVacc);
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
+				LOAD_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 			}
 		}
 
@@ -1370,6 +1377,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::Rain);
 			LOAD_VAR(Vars::Debug::DebugInfo);
 			LOAD_VAR(Vars::Visuals::DoPostProcessing);
+			LOAD_VAR(Vars::Visuals::EquipRegionUnlock);
 
 			// Beans I LOVE Beans
 			{
@@ -1457,6 +1465,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Menu::ShowDVD);
 			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
+			LOAD_VAR(Vars::Misc::AutoCasualQueue);
 
 			// Followbot
 			{

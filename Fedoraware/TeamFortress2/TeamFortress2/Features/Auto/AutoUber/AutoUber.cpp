@@ -257,6 +257,9 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		{
 			// Auto vaccinator
 			bool shouldPop = false;
+
+
+
 			DoResistSwitching(pCmd);
 
 			int optResistance = OptimalResistance(pLocal, &shouldPop);
@@ -295,6 +298,22 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		//Check target's status
 		m_flHealth = static_cast<float>(pTarget->GetHealth());
 		m_flMaxHealth = static_cast<float>(pTarget->GetMaxHealth());
+
+		int iTargetIndex = pTarget->GetIndex();
+
+		if (Vars::Triggerbot::Uber::VoiceCommand.Value)
+		{
+			for (auto& iEntity : G::MedicCallers)
+			{
+				if (iEntity == iTargetIndex)
+				{
+					pCmd->buttons |= IN_ATTACK2;
+					break;
+				}
+			}
+		}
+		G::MedicCallers.clear();
+
 
 		if (Vars::Triggerbot::Uber::AutoVacc.Value && G::CurItemDefIndex == Medic_s_TheVaccinator)
 		{

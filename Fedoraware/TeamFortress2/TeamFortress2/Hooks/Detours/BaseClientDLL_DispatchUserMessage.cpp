@@ -97,6 +97,20 @@ MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), 
 			break;
 		}
 
+		case VoiceSubtitle:
+		{
+			int iEntityID = msgData.ReadByte();
+			int iVoiceMenu = msgData.ReadByte();
+			int iCommandID = msgData.ReadByte();
+
+			if (iVoiceMenu == 1 && iCommandID == 6)
+			{
+				G::MedicCallers.push_back(iEntityID);
+			}
+			
+			break;
+		}
+
 		case TextMsg:
 		{
 			if (Vars::Misc::AntiAutobal.Value && msgData.GetNumBitsLeft() > 35)

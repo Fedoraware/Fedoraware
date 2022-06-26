@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../SDK/SDK.h"
 
 class CMisc {
@@ -28,7 +27,6 @@ public:
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void NoPush();
 	void SteamRPC();
 	void UnlockAchievements();
 	void LockAchievements();

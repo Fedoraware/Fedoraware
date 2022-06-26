@@ -12,6 +12,7 @@
 #include "../../Features/Menu/DTBar/DTBar.h"
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
+#include "../../Features/AutoQueue/AutoQueue.h"
 
 #include "../../Resources/DVD-Icon.h"
 
@@ -66,6 +67,8 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			
 			auto OtherDraws = [&]() -> void
 			{
+				F::AutoQueue.Run();
+
 				if (I::EngineVGui->IsGameUIVisible())
 				{
 					if (!I::Engine->IsInGame())

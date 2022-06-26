@@ -389,7 +389,8 @@ void CMenu::MenuTrigger()
 			MultiCombo({ "Players", "Buildings" }, { &Vars::Triggerbot::Shoot::TriggerPlayers.Value, &Vars::Triggerbot::Shoot::TriggerBuildings.Value }, "Trigger targets");
 			HelpMarker("Choose which target the triggerbot should shoot at");
 			WToggle("Head only###TriggerHeadOnly", &Vars::Triggerbot::Shoot::HeadOnly.Value); HelpMarker("Auto shoot will only shoot if you are aiming at the head");
-			WToggle("Wait for charge###TriggerbotWaitForCharge", &Vars::Triggerbot::Shoot::WaitForCharge.Value); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to kill in one hit / is fully charged");
+			WToggle("Wait for Headshot###TriggerbotWaitForHeadshot", &Vars::Triggerbot::Shoot::WaitForHeadshot.Value); HelpMarker("Auto shoot will only shoot if the sniper is charged enough to headshot");
+			WToggle("Scoped Only###TriggerbotScopedOnly", &Vars::Triggerbot::Shoot::ScopeOnly.Value); HelpMarker("Auto shoot will only shoot while scoped");
 			WSlider("Head scale###TriggerHeadScale", &Vars::Triggerbot::Shoot::HeadScale.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The scale at which the auto shoot will try to shoot the targets head");
 		} EndChild();
 
@@ -409,6 +410,7 @@ void CMenu::MenuTrigger()
 			WToggle("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.Value); HelpMarker("Detonate sticky bombs when a player is in range");
 			WToggle("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.Value); HelpMarker("Detonate detonator flares when a player is in range");
 			WSlider("Detonation radius###TriggerDetRadius", &Vars::Triggerbot::Detonate::RadiusScale.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The radius around the projectile that it will detonate if a player is in");
+			WToggle("Detonate on Stickies###DestroySticky", &Vars::Triggerbot::Detonate::DestroySticky.Value); HelpMarker("Detonate on enemy stickies when using Quickiebomb Launcher or Scottish Resistance");
 		} EndChild();
 
 		/* Column 3 */
@@ -425,6 +427,7 @@ void CMenu::MenuTrigger()
 			WToggle("Preserve self", &Vars::Triggerbot::Uber::PopLocal.Value); HelpMarker("Auto uber will activate if local player's health falls below the percentage");
 			WToggle("Vaccinator resistances", &Vars::Triggerbot::Uber::AutoVacc.Value); HelpMarker("Auto uber will automatically find the best resistance and pop when needed (This doesn't work properly)");
 			WSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.Value, 1.f, 99.f, "%.0f%%", 1.0f); HelpMarker("The amount of health the heal target must be below to actiavte");
+			WToggle("Activate charge trigger", &Vars::Triggerbot::Uber::VoiceCommand.Value); HelpMarker("Will ubercharge regardless of anything if your target says activate charge");
 		} EndChild();
 
 		EndTable();
@@ -1100,6 +1103,8 @@ void CMenu::MenuVisuals()
 
 				SectionTitle("Attribute Changer");
 
+				WToggle("Equip region unlock", &Vars::Visuals::EquipRegionUnlock.Value); HelpMarker("This doesn't let you add the equip regions back once you turn it on.");
+
 				static std::vector unuEffects{
 					"None",
 					"Hot",
@@ -1413,7 +1418,7 @@ void CMenu::MenuHvH()
 			SectionTitle("Anti Aim");
 			WToggle("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.Value);
 			InputKeybind("Anti-aim Key", Vars::AntiHack::AntiAim::ToggleKey); HelpMarker("The key to toggle anti aim");
-			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.Value, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random" }); HelpMarker("Which way to look up/down");
+			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.Value, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random", "Half Up" }); HelpMarker("Which way to look up/down");
 			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to look horizontally");
 			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt" }); HelpMarker("Which way to appear to look horizontally");
 			if (Vars::AntiHack::AntiAim::YawFake.Value == 6 || Vars::AntiHack::AntiAim::YawReal.Value == 6)
@@ -1475,6 +1480,7 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
+			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
 
 			SectionTitle("Datacenters");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
@@ -1487,6 +1493,9 @@ void CMenu::MenuMisc()
 
 			SectionTitle("Sound");
 			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
+
+			
+
 		} EndChild();
 
 		/* Column 2 */

@@ -93,7 +93,11 @@ namespace G
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
 
+	inline bool ShouldAutoQueue = false;
+
 	inline int BackpackQuality = 1;
+
+	inline std::vector<int> MedicCallers;
 
 	inline bool ShouldUpdateMaterialCache = false;
 
