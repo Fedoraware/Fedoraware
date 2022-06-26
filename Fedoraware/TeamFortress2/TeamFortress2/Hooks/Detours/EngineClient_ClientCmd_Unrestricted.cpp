@@ -59,6 +59,16 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 			return;
 		}
 
+		if (cmdName == "argh")
+		{
+			static auto CEconItem__CEconItem = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"53 8B D9 56 57 BE ? ? ? ? C7 03 ? ? ? ? 8D 7B 08 C7 03 ? ? ? ? C7 43 ? ? ? ? ? 6A 01 6A 00 6A 00 8B CF E8 ? ? ? ?"));
+			static auto TFInventoryManager = *reinterpret_cast<void**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
+			static auto CInventoryManager_GetItemByBackpackPosition = reinterpret_cast<void* (__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 8B 01"));
+			static auto CPlayerInventory__AddEconItem = reinterpret_cast<bool(__thiscall*)(void*, void*, bool, int, bool)>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 8B F1 8D 8D ? ? ? ? 57 E8 ? ? ? ? 8B 7D 08 8D 85 ? ? ? ? 57 50 8B CE E8 ? ? ? ?"));
+
+			return;
+		}
+
 		if (cmdName == "setcvar")
 		{
 			// Check if the user provided at least 2 args

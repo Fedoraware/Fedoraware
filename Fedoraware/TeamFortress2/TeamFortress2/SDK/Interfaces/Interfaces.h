@@ -44,7 +44,7 @@ private:
 		// This controls how much it smoothes out the samples from the server.
 		NUM_CLOCKDRIFT_SAMPLES = 16
 	};
-
+public:
 	// This holds how many ticks the client is ahead each time we get a server tick.
 	// We average these together to get our estimate of how far ahead we are.
 	float m_ClockOffsets[NUM_CLOCKDRIFT_SAMPLES];
