@@ -28,4 +28,10 @@ public:
         static auto FN = reinterpret_cast<int(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"8B 89 ? ? ? ? 85 C9 74 12 68 ? ? ? ? E8 ? ? ? ? 85 C0 74 04 8B 40 18 C3"));
         return FN(this);
     }
+
+    bool JoinMMMatch()
+    {
+        static auto FN = reinterpret_cast<bool(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"56 8B F1 57 8D 8E ? ? ? ? E8 ? ? ? ? 84 C0 74 32"));
+        return FN(this);
+    }
 };
