@@ -1104,6 +1104,8 @@ void CMenu::MenuVisuals()
 
 				SectionTitle("Attribute Changer");
 
+				WToggle("Equip region unlock", &Vars::Visuals::EquipRegionUnlock.Value); HelpMarker("This doesn't let you add the equip regions back once you turn it on.");
+
 				static std::vector unuEffects{
 					"None",
 					"Hot",

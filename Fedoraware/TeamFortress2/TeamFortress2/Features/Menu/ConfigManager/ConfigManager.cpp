@@ -632,7 +632,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::Rain);
 			SAVE_VAR(Vars::Debug::DebugInfo);
 			SAVE_VAR(Vars::Visuals::DoPostProcessing);
-
+			SAVE_VAR(Vars::Visuals::EquipRegionUnlock);
 			// Beans I LOVE Beans
 			{
 				SAVE_VAR(Vars::Visuals::Beans::Active);
@@ -1371,6 +1371,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::Rain);
 			LOAD_VAR(Vars::Debug::DebugInfo);
 			LOAD_VAR(Vars::Visuals::DoPostProcessing);
+			LOAD_VAR(Vars::Visuals::EquipRegionUnlock);
 
 			// Beans I LOVE Beans
 			{

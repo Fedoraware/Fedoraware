@@ -526,6 +526,7 @@ namespace Vars
 		inline CVar<int> Vision{false};
 
 		inline CVar<int> Rain{false};
+		inline CVar<bool> EquipRegionUnlock{ false };
 
 		namespace RagdollEffects
 		{
