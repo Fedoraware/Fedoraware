@@ -46,7 +46,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 			}
 
 			const bool bIsPlayer = pTarget->IsPlayer();
-			if (bIsPlayer || pTarget->IsBuilding())
+			bool CanDestroySticky = (G::CurItemDefIndex == Demoman_s_TheQuickiebombLauncher || G::CurItemDefIndex == Demoman_s_TheScottishResistance && Vars::Triggerbot::Detonate::DestroySticky.Value);
+			if (bIsPlayer || pTarget->IsBuilding() || pTarget->GetPipebombType() == TYPE_STICKY && CanDestroySticky)
 			{
 				if (bIsPlayer && F::AutoGlobal.ShouldIgnore(pTarget)) { continue; }
 

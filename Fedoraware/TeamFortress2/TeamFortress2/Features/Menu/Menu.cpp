@@ -412,6 +412,7 @@ void CMenu::MenuTrigger()
 			WToggle("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.Value); HelpMarker("Detonate sticky bombs when a player is in range");
 			WToggle("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.Value); HelpMarker("Detonate detonator flares when a player is in range");
 			WSlider("Detonation radius###TriggerDetRadius", &Vars::Triggerbot::Detonate::RadiusScale.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The radius around the projectile that it will detonate if a player is in");
+			WToggle("Detonate on Stickies###DestroySticky", &Vars::Triggerbot::Detonate::DestroySticky.Value); HelpMarker("Detonate on enemy stickies when using Quickiebomb Launcher or Scottish Resistance");
 		} EndChild();
 
 		/* Column 3 */

@@ -184,6 +184,7 @@ namespace Vars
 			inline CVar<bool> Stickies{false};
 			inline CVar<bool> Flares{false};
 			inline CVar<float> RadiusScale{1.0f};
+			inline CVar<bool> DestroySticky{false};
 		}
 
 		namespace Blast
