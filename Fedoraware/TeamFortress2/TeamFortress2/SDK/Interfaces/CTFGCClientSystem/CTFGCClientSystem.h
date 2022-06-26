@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Includes/Includes.h"
+#include "../CTFPartyClient/CTFPartyClient.h"
 
 class CTFGCClientSystem
 {
@@ -10,9 +11,9 @@ public:
         return FN(this);
     }
 
-    void* GetParty()
+    CTFPartyClient* GetParty()
     {
-        static auto FN = reinterpret_cast<void* (__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"8B 89 ? ? ? ? 85 C9 74 1D 68 ? ? ? ? E8 ? ? ? ? 85 C0 74 0F 8B 48 18 85 C9 74 08 8B 40 04 8B 44 88 FC C3"));
+        static auto FN = reinterpret_cast<CTFPartyClient*(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"8B 89 ? ? ? ? 85 C9 74 1D 68 ? ? ? ? E8 ? ? ? ? 85 C0 74 0F 8B 48 18 85 C9 74 08 8B 40 04 8B 44 88 FC C3"));
         return FN(this);
     }
 
