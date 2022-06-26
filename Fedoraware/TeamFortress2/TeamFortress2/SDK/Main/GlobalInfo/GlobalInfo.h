@@ -101,6 +101,8 @@ namespace G
 
 	inline bool ShouldUpdateMaterialCache = false;
 
+	inline std::string DisconnectReason = "";
+
 	inline bool IsIgnored(uint32_t friendsID)
 	{
 		return PlayerPriority[friendsID].Mode < 2;

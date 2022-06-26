@@ -198,6 +198,7 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_SetupBones.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_DispatchUserMessage.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFRagdoll_CreateTFRagdoll.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DoEnginePostProcessing.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_ClientCmd_Unrestricted.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_IsPlayingTimeDemo.cpp" />

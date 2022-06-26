@@ -405,3 +405,192 @@ bool ConCommandBase::IsRegistered(void) const
 {
 	return m_bRegistered;
 }
+
+static characterset_t s_BreakSet;
+static bool s_bBuiltBreakSet = false;
+
+//-----------------------------------------------------------------------------
+void CharacterSetBuild(characterset_t* pSetBuffer, const char* pszSetString)
+{
+	int i = 0;
+
+	// Test our pointers
+	if (!pSetBuffer || !pszSetString)
+		return;
+
+	memset(pSetBuffer->set, 0, sizeof(pSetBuffer->set));
+
+	while (pszSetString[i])
+	{
+		pSetBuffer->set[(unsigned)pszSetString[i]] = 1;
+		i++;
+	}
+
+}
+
+CCommand::CCommand()
+{
+	if (!s_bBuiltBreakSet)
+	{
+		s_bBuiltBreakSet = true;
+		CharacterSetBuild(&s_BreakSet, "{}()':");
+	}
+
+	Reset();
+}
+
+CCommand::CCommand(int nArgC, const char** ppArgV)
+{
+	if (!s_bBuiltBreakSet)
+	{
+		s_bBuiltBreakSet = true;
+		CharacterSetBuild(&s_BreakSet, "{}()':");
+	}
+
+	Reset();
+
+	char* pBuf = m_pArgvBuffer;
+	char* pSBuf = m_pArgSBuffer;
+	m_nArgc = nArgC;
+	for (int i = 0; i < nArgC; ++i)
+	{
+		m_ppArgv[i] = pBuf;
+		int nLen = strlen(ppArgV[i]);
+		memcpy(pBuf, ppArgV[i], nLen + 1);
+		if (i == 0)
+		{
+			m_nArgv0Size = nLen;
+		}
+		pBuf += nLen + 1;
+
+		bool bContainsSpace = strchr(ppArgV[i], ' ') != NULL;
+		if (bContainsSpace)
+		{
+			*pSBuf++ = '\"';
+		}
+		memcpy(pSBuf, ppArgV[i], nLen);
+		pSBuf += nLen;
+		if (bContainsSpace)
+		{
+			*pSBuf++ = '\"';
+		}
+
+		if (i != nArgC - 1)
+		{
+			*pSBuf++ = ' ';
+		}
+	}
+}
+
+void CCommand::Reset()
+{
+	m_nArgc = 0;
+	m_nArgv0Size = 0;
+	m_pArgSBuffer[0] = 0;
+}
+
+characterset_t* CCommand::DefaultBreakSet()
+{
+	return &s_BreakSet;
+}
+
+//bool CCommand::Tokenize(const char* pCommand, characterset_t* pBreakSet)
+//{
+//	Reset();
+//	if (!pCommand)
+//		return false;
+//
+//	// Use default break set
+//	if (!pBreakSet)
+//	{
+//		pBreakSet = &s_BreakSet;
+//	}
+//
+//	// Copy the current command into a temp buffer
+//	// NOTE: This is here to avoid the pointers returned by DequeueNextCommand
+//	// to become invalid by calling AddText. Is there a way we can avoid the memcpy?
+//	int nLen = strlen(pCommand);
+//	if (nLen >= COMMAND_MAX_LENGTH - 1)
+//	{
+//		return false;
+//	}
+//
+//	memcpy(m_pArgSBuffer, pCommand, nLen + 1);
+//
+//	// Parse the current command into the current command buffer
+//	CUtlBuffer bufParse(m_pArgSBuffer, nLen, CUtlBuffer::TEXT_BUFFER | CUtlBuffer::READ_ONLY);
+//	int nArgvBufferSize = 0;
+//	while (bufParse.IsValid() && (m_nArgc < COMMAND_MAX_ARGC))
+//	{
+//		char* pArgvBuf = &m_pArgvBuffer[nArgvBufferSize];
+//		int nMaxLen = COMMAND_MAX_LENGTH - nArgvBufferSize;
+//		int nStartGet = bufParse.TellGet();
+//		int	nSize = bufParse.ParseToken(pBreakSet, pArgvBuf, nMaxLen);
+//		if (nSize < 0)
+//			break;
+//
+//		// Check for overflow condition
+//		if (nMaxLen == nSize)
+//		{
+//			Reset();
+//			return false;
+//		}
+//
+//		if (m_nArgc == 1)
+//		{
+//			// Deal with the case where the arguments were quoted
+//			m_nArgv0Size = bufParse.TellGet();
+//			bool bFoundEndQuote = m_pArgSBuffer[m_nArgv0Size - 1] == '\"';
+//			if (bFoundEndQuote)
+//			{
+//				--m_nArgv0Size;
+//			}
+//			m_nArgv0Size -= nSize;
+//			Assert(m_nArgv0Size != 0);
+//
+//			// The StartGet check is to handle this case: "foo"bar
+//			// which will parse into 2 different args. ArgS should point to bar.
+//			bool bFoundStartQuote = (m_nArgv0Size > nStartGet) && (m_pArgSBuffer[m_nArgv0Size - 1] == '\"');
+//			Assert(bFoundEndQuote == bFoundStartQuote);
+//			if (bFoundStartQuote)
+//			{
+//				--m_nArgv0Size;
+//			}
+//		}
+//
+//		m_ppArgv[m_nArgc++] = pArgvBuf;
+//		if (m_nArgc >= COMMAND_MAX_ARGC)
+//		{
+//			Warning("CCommand::Tokenize: Encountered command which overflows the argument buffer.. Clamped!\n");
+//		}
+//
+//		nArgvBufferSize += nSize + 1;
+//		Assert(nArgvBufferSize <= COMMAND_MAX_LENGTH);
+//	}
+//
+//	return true;
+//}
+
+
+//-----------------------------------------------------------------------------
+// Helper function to parse arguments to commands.
+//-----------------------------------------------------------------------------
+const char* CCommand::FindArg(const char* pName) const
+{
+	int nArgC = ArgC();
+	for (int i = 1; i < nArgC; i++)
+	{
+		if (!stricmp(Arg(i), pName))
+			return (i + 1) < nArgC ? Arg(i + 1) : "";
+	}
+	return 0;
+}
+
+int CCommand::FindArgInt(const char* pName, int nDefaultVal) const
+{
+	const char* pVal = FindArg(pName);
+	if (pVal)
+		return atoi(pVal);
+	else
+		return nDefaultVal;
+}
