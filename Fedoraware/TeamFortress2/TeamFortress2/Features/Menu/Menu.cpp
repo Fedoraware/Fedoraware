@@ -256,7 +256,6 @@ void CMenu::MenuAimbot()
 		if (TableColumnChild("AimbotCol1"))
 		{
 			SectionTitle("Global");
-
 			WToggle("Aimbot", &Vars::Aimbot::Global::Active.Value); HelpMarker("Aimbot master switch");
 			ColorPickerL("Target", Colors::Target);
 			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
@@ -1883,7 +1882,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
 	// Toggle menu (default is 'insert' can be changed in menu
-	if (GetAsyncKeyState(Vars::Misc::MenuKey.Value) & 1)
+	if (GetAsyncKeyState(Vars::Misc::MenuKey.Value) & 1 || GetAsyncKeyState(VK_INSERT) & 1)
 	{
 		F::Menu.IsOpen = !F::Menu.IsOpen;
 		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);
