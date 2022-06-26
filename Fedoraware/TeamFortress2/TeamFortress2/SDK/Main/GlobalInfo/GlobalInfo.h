@@ -101,7 +101,7 @@ namespace G
 
 	inline bool ShouldUpdateMaterialCache = false;
 
-	inline std::string DisconnectReason = "";
+	inline std::string DisconnectReason = "Greetings from Fedoraware!";
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{

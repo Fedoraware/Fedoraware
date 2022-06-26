@@ -4,6 +4,7 @@ void CAutoQueue::Run()
 {
 	if (!I::EngineVGui->IsGameUIVisible() || I::Engine->IsInGame()) { return; }
 
+	// Auto queue
 	if (Vars::Misc::AutoCasualQueue.Value)
 	{
 		static auto CCasualSidePanel__OnCommand = reinterpret_cast<void(__stdcall*)(const char* pCommand)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B 75 08 57 8B F9 81 FE ? ? ? ? 74 20 68 ? ? ? ? 56 E8 ? ? ? ? 83 C4 08 85 C0 74 0E 56 8B CF E8 ? ? ? ? 5F 5E 5D C2 04 00 6A 07"));
@@ -18,5 +19,16 @@ void CAutoQueue::Run()
 			I::TFPartyClient->LoadSavedCasualCriteria();
 			CCasualSidePanel__OnCommand("find_game");
 		}
+	}
+
+	// Join message spam | Credits to lnx00 for this cool exploit :D
+	if (Vars::Misc::JoinSpam.Value)
+	{
+		static Timer spamTimer{ };
+		if (spamTimer.Run(250))
+		{
+			I::TFGCClientSystem->JoinMMMatch();
+		}
+
 	}
 }
