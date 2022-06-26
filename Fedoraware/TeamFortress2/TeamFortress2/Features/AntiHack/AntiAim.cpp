@@ -173,6 +173,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
 			break;
 		}
+		case 7://Half Up
+		{
+			pCmd->viewangles.x = -45.0f;
+			G::RealViewAngles.x = -45.0f;
+			break;
+		}
 		default:
 		{
 			bPitchSet = false;
