@@ -88,6 +88,9 @@ void CInterfaces::Init()
 	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);;
 	_valid(TFGCClientSystem);
 
+	TFPartyClient = reinterpret_cast<CTFPartyClient*(__cdecl*)()>(g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? FF 70 24"))();
+	_valid(TFPartyClient);
+
 	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, _(L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34")) + 0x2);
 	_valid(RandomSeed);
 

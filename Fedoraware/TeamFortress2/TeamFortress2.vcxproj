@@ -273,7 +273,6 @@
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
@@ -517,6 +516,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\DebugOverlay\DebugOverlay.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EffectsClient\EffectsClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineClient\EngineClient.h" />

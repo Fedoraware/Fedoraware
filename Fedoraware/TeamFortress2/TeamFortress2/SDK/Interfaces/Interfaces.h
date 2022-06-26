@@ -36,6 +36,7 @@
 #include "CTFGameRules/CTFGameRules.h"
 #include "Steam/ISteamNetworkingUtils.h"
 #include "CTFGCClientSystem/CTFGCClientSystem.h"
+#include "CTFPartyClient/CTFPartyClient.h"
 
 class CClockDriftMgr
 {
@@ -138,6 +139,7 @@ namespace I
 	inline CTFGameRules* TFGameRules = nullptr;
 	inline void* BackpackPanel = nullptr;
 	inline CTFGCClientSystem* TFGCClientSystem = nullptr;
+	inline CTFPartyClient* TFPartyClient = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
