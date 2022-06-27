@@ -16,6 +16,8 @@
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
 
+#include <mutex>
+
 int unuPrimary = 0;
 int unuSecondary = 0;
 
@@ -1879,14 +1881,12 @@ void CMenu::DrawKeybinds()
 
 void CMenu::Render(IDirect3DDevice9* pDevice)
 {
-	static bool initialized = false;
 	if (!ConfigLoaded) { return; }
 
-	if (!initialized)
-	{
+	static std::once_flag initFlag;
+	std::call_once(initFlag, [&] {
 		Init(pDevice);
-		initialized = true;
-	}
+	});
 
 	pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
 	pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
