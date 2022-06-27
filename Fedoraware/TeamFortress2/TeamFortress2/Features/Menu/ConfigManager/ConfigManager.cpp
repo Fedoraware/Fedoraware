@@ -223,6 +223,12 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 	try
 	{
 		WriteTree.clear();
+		// Menu
+		{
+			SAVE_VAR(Vars::Menu::ShowDVD);
+			SAVE_VAR(Vars::Menu::MenuKey);
+		}
+
 		//Aimbot
 		{
 			//Global
@@ -692,7 +698,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
 			SAVE_VAR(Vars::Misc::BypassPure);
-			SAVE_VAR(Vars::Misc::MenuKey);
 			SAVE_VAR(Vars::Misc::NoisemakerSpam);
 			SAVE_VAR(Vars::Misc::DisableInterpolation);
 			SAVE_VAR(Vars::Misc::MedalFlip);
@@ -726,7 +731,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::ChatFlags);
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
-			SAVE_VAR(Vars::Menu::ShowDVD);
 			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
 			SAVE_VAR(Vars::Misc::AutoCasualQueue);
@@ -961,6 +965,12 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 	{
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
+
+		// Menu
+		{
+			LOAD_VAR(Vars::Menu::ShowDVD);
+			LOAD_VAR(Vars::Menu::MenuKey);
+		}
 
 		//Aimbot
 		{
@@ -1429,7 +1439,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);
-			LOAD_VAR(Vars::Misc::MenuKey);
 			LOAD_VAR(Vars::Misc::NoisemakerSpam);
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);

@@ -43,6 +43,7 @@ namespace Vars
 		inline bool ShowKeybinds = false;
 
 		inline CVar<bool> ShowDVD{ false };
+		inline CVar<int> MenuKey{ 0 };
 
 		namespace Colors
 		{
@@ -576,7 +577,6 @@ namespace Vars
 		inline CVar<int> AutoStrafe{2};
 		inline CVar<bool> Directional{false};
 		inline CVar<bool> TauntSlide{false};
-		inline CVar<int> MenuKey{ VK_INSERT };
 		inline CVar<bool> TauntControl{false};
 		inline CVar<bool> BypassPure{false};
 		inline CVar<bool> NoisemakerSpam{false};
