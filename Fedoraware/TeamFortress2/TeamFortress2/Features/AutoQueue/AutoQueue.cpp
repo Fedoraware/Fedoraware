@@ -21,6 +21,15 @@ void CAutoQueue::Run()
 		}
 	}
 
+	// Auto accept
+	if (Vars::Misc::AutoAccept.Value)
+	{
+		if (I::TFGCClientSystem->GetNumMatchInvites() > 0)
+		{
+			I::TFGCClientSystem->JoinMMMatch();
+		}
+	}
+
 	// Join message spam | Credits to lnx00 for this cool exploit :D
 	if (Vars::Misc::JoinSpam.Value)
 	{

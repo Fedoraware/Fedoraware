@@ -1481,6 +1481,7 @@ void CMenu::MenuMisc()
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
 			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
+			WToggle("Auto accept casual match", &Vars::Misc::AutoAccept.Value); HelpMarker("Automatically accepts pending casual mask");
 
 			SectionTitle("Datacenters");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
