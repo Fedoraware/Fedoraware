@@ -702,6 +702,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::DisableInterpolation);
 			SAVE_VAR(Vars::Misc::MedalFlip);
 			SAVE_VAR(Vars::Misc::AutoRocketJump);
+			SAVE_VAR(Vars::Misc::AutoScoutJump);
 			SAVE_VAR(Vars::Misc::ChatSpam);
 			SAVE_VAR(Vars::Misc::NoPush);
 			SAVE_VAR(Vars::Misc::AutoStrafe);
@@ -1443,6 +1444,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);
 			LOAD_VAR(Vars::Misc::AutoRocketJump);
+			LOAD_VAR(Vars::Misc::AutoScoutJump);
 			LOAD_VAR(Vars::Misc::ChatSpam);
 			LOAD_VAR(Vars::Misc::NoPush);
 			LOAD_VAR(Vars::Misc::EdgeJump);
