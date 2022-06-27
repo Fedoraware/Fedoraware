@@ -133,28 +133,21 @@ namespace ImGui
 			case VK_9: return "9";
 			case VK_ESCAPE: return "Escape";
 			case VK_SHIFT: return "Shift";
-			case VK_LSHIFT: return "Shift";
-			case VK_RSHIFT: return "Shift";
+			case VK_LSHIFT: return "LShift";
+			case VK_RSHIFT: return "RShift";
 			case VK_CONTROL: return "Control";
 			case VK_MENU: return "LAlt";
 			case VK_PRIOR: return "Page Up";
 			case VK_NEXT: return "Page Down";
+			case VK_INSERT: return "Insert";
+			case VK_DELETE: return "Delete";
+			case VK_HOME: return "Home";
+			case VK_END: return "End";
+			case VK_F9: return "F9";
+			case VK_F10: return "F10";
+			case VK_F11: return "F11";
+			case VK_F12: return "F12";
 			default: break;
-			}
-
-			if (bAllowSpecial)
-			{
-				switch (key)
-				{
-				case VK_INSERT: return "Insert";
-				case VK_DELETE: return "Delete";
-				case VK_HOME: return "Home";
-				case VK_END: return "End";
-				case VK_F9: return "F9";
-				case VK_F10: return "F10";
-				//case VK_F11: return "F10"; // Reserved for uninject
-				case VK_F12: return "F12";
-				}
 			}
 
 			WCHAR output[16] = { L"\0" };
@@ -164,7 +157,7 @@ namespace ImGui
 				return outputt;
 			}
 
-			return "VK2STR_FAILED";
+			return "Unknown";
 		};
 
 		const auto id = GetID(label);
@@ -194,7 +187,16 @@ namespace ImGui
 						n == VK_CONTROL ||
 						n == VK_MENU ||
 						n == VK_PRIOR ||
-						n == VK_NEXT) {
+						n == VK_NEXT ||
+						n == VK_DELETE ||
+						n == VK_HOME ||
+						n == VK_END ||
+						bAllowSpecial && (
+							n == VK_INSERT ||
+							n == VK_F9 ||
+							n == VK_F10 ||
+							n== VK_F12
+							)) {
 						if ((!IsItemHovered() && GetIO().MouseClicked[0])) {
 							ClearActiveID();
 							break;

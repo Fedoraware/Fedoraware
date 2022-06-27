@@ -26,6 +26,7 @@ public:
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void SteamRPC();
 	void UnlockAchievements();

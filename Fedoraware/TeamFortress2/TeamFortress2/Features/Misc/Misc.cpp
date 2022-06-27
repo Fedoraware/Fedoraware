@@ -38,6 +38,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		AutoRocketJump(pCmd, pLocal);
+		AutoScoutJump(pCmd, pLocal);
 	}
 }
 
@@ -627,6 +628,31 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->buttons |= IN_DUCK;
 		}
 	}
+}
+
+void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	static int iJumpKey = VK_RBUTTON;
+	static KeyHelper jumpKey{ &iJumpKey };
+	if (!Vars::Misc::AutoScoutJump.Value || !G::WeaponCanAttack || !jumpKey.Pressed())
+	{
+		return;
+	}
+
+	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
+	{
+		return;
+	}
+
+	if (pLocal->GetClassNum() != CLASS_SCOUT || G::CurItemDefIndex != Scout_m_ForceANature || pLocal->IsDucking())
+	{
+		return;
+	}
+
+	pCmd->buttons |= IN_ATTACK | IN_JUMP | IN_FORWARD;
+	pCmd->forwardmove = 10.f;
+	pCmd->viewangles.x = 25.f;
+	G::SilentTime = true;
 }
 
 void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
