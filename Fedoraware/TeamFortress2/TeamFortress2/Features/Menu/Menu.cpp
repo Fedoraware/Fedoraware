@@ -1792,6 +1792,9 @@ void CMenu::DebugMenu()
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.Value);
 		Checkbox("Allow secure servers", I::AllowSecureServers);
 
+		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
+		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
+
 		// Particle tester
 		if (CollapsingHeader("Particles"))
 		{
