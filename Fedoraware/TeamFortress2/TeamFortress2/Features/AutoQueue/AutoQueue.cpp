@@ -25,7 +25,7 @@ void CAutoQueue::Run()
 	if (Vars::Misc::AutoAccept.Value)
 	{
 		if (I::TFPartyClient->BInStandbyQueue() 	||
-			I::TFGCClientSystem->BHaveLiveMatch() 	||
+			!I::TFGCClientSystem->BHaveLiveMatch() 	||
 			I::TFGCClientSystem->GetNumMatchInvites())
 		{
 			I::TFGCClientSystem->JoinMMMatch();
