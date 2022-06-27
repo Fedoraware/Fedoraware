@@ -692,6 +692,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
 			SAVE_VAR(Vars::Misc::BypassPure);
+			SAVE_VAR(Vars::Misc::MenuKey);
 			SAVE_VAR(Vars::Misc::NoisemakerSpam);
 			SAVE_VAR(Vars::Misc::DisableInterpolation);
 			SAVE_VAR(Vars::Misc::MedalFlip);
@@ -1427,6 +1428,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);
+			LOAD_VAR(Vars::Misc::MenuKey);
 			LOAD_VAR(Vars::Misc::NoisemakerSpam);
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);
