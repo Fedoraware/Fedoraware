@@ -296,6 +296,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				SAVE_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanPoints);
@@ -364,6 +365,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Blast::Active);
 				SAVE_VAR(Vars::Triggerbot::Blast::Rage);
 				SAVE_VAR(Vars::Triggerbot::Blast::Silent);
+				SAVE_VAR(Vars::Triggerbot::Blast::ExtinguishPlayers);
 				SAVE_VAR(Vars::Triggerbot::Blast::Fov);
 			}
 
@@ -1032,6 +1034,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				LOAD_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanPoints);
@@ -1099,6 +1102,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Blast::Active);
 				LOAD_VAR(Vars::Triggerbot::Blast::Rage);
 				LOAD_VAR(Vars::Triggerbot::Blast::Silent);
+				LOAD_VAR(Vars::Triggerbot::Blast::ExtinguishPlayers);
 				LOAD_VAR(Vars::Triggerbot::Blast::Fov);
 			}
 

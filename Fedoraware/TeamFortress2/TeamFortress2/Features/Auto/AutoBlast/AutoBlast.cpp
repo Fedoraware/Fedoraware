@@ -87,6 +87,30 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			}
 		}
 
+		if (Vars::Triggerbot::Blast::ExtinguishPlayers.Value)
+		{
+			for (const auto& pBurningPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
+			{
+				Vec3 vPredicted = (pBurningPlayer->GetAbsOrigin() + pBurningPlayer->GetVelocity().Scale(flLatency / 1000.f));
+
+				//245.f
+				if (vEyePos.DistTo(vPredicted) <= 260.0f && Utils::VisPos(pLocal, pBurningPlayer, vEyePos, vPredicted))
+				{
+					if (Vars::Triggerbot::Blast::Rage.Value)
+					{
+						pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
+						bShouldBlast = true;
+						break;
+					}
+					if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, vPredicted) <= Vars::Triggerbot::Blast::Fov.Value)
+					{
+						bShouldBlast = true;
+						break;
+					}
+				}
+			}
+		}
+
 		if (bShouldBlast)
 		{
 			if (Vars::Triggerbot::Blast::Rage.Value && Vars::Triggerbot::Blast::Silent.Value)
