@@ -16,7 +16,7 @@
 #include "Components.hpp"
 #include "ConfigManager/ConfigManager.h"
 
-constexpr int MENU_KEY = VK_INSERT;
+#include <mutex>
 
 int unuPrimary = 0;
 int unuSecondary = 0;
@@ -258,7 +258,6 @@ void CMenu::MenuAimbot()
 		if (TableColumnChild("AimbotCol1"))
 		{
 			SectionTitle("Global");
-
 			WToggle("Aimbot", &Vars::Aimbot::Global::Active.Value); HelpMarker("Aimbot master switch");
 			ColorPickerL("Target", Colors::Target);
 			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
@@ -1470,7 +1469,8 @@ void CMenu::MenuMisc()
 			{
 				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
 			}
-			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press mouse2 with a rocket launcher");
+			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press RMB with a rocket launcher");
+			WToggle("Auto FaN jump", &Vars::Misc::AutoScoutJump.Value); HelpMarker("Performans a FaN jump when pressing RMB");
 			WToggle("Anti-AFK", &Vars::Misc::AntiAFK.Value); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
 			WToggle("Auto Vote", &Vars::Misc::AutoVote.Value); HelpMarker("Automatically votes yes/no depending on the target");
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.Value); HelpMarker("Allows you to input in taunts");
@@ -1485,6 +1485,7 @@ void CMenu::MenuMisc()
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
 			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
+			WToggle("Auto accept casual match", &Vars::Misc::AutoAccept.Value); HelpMarker("Automatically accepts pending casual mask");
 
 			SectionTitle("Datacenters");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
@@ -1616,6 +1617,9 @@ void CMenu::SettingsWindow()
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
+
+		SetNextItemWidth(100);
+		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);
 
 		Dummy({ 0, 5 });
 		static std::string selected;
@@ -1789,6 +1793,9 @@ void CMenu::DebugMenu()
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.Value);
 		Checkbox("Allow secure servers", I::AllowSecureServers);
 
+		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
+		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
+
 		// Particle tester
 		if (CollapsingHeader("Particles"))
 		{
@@ -1879,22 +1886,21 @@ void CMenu::DrawKeybinds()
 
 void CMenu::Render(IDirect3DDevice9* pDevice)
 {
-	static bool initialized = false;
 	if (!ConfigLoaded) { return; }
 
-	if (!initialized)
-	{
+	static std::once_flag initFlag;
+	std::call_once(initFlag, [&] {
 		Init(pDevice);
-		initialized = true;
-	}
+	});
 
 	pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
 	pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	// Toggle menu
-	if (GetAsyncKeyState(MENU_KEY) & 1)
+	// Toggle menu (default is 'insert' can be changed in menu)
+	static KeyHelper menuKey{ &Vars::Menu::MenuKey.Value };
+	if (menuKey.Pressed() || GetAsyncKeyState(VK_INSERT) & 0x1)
 	{
 		F::Menu.IsOpen = !F::Menu.IsOpen;
 		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);

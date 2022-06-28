@@ -223,6 +223,12 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 	try
 	{
 		WriteTree.clear();
+		// Menu
+		{
+			SAVE_VAR(Vars::Menu::ShowDVD);
+			SAVE_VAR(Vars::Menu::MenuKey);
+		}
+
 		//Aimbot
 		{
 			//Global
@@ -698,6 +704,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::DisableInterpolation);
 			SAVE_VAR(Vars::Misc::MedalFlip);
 			SAVE_VAR(Vars::Misc::AutoRocketJump);
+			SAVE_VAR(Vars::Misc::AutoScoutJump);
 			SAVE_VAR(Vars::Misc::ChatSpam);
 			SAVE_VAR(Vars::Misc::NoPush);
 			SAVE_VAR(Vars::Misc::AutoStrafe);
@@ -727,10 +734,10 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::ChatFlags);
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
-			SAVE_VAR(Vars::Menu::ShowDVD);
 			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
 			SAVE_VAR(Vars::Misc::AutoCasualQueue);
+			SAVE_VAR(Vars::Misc::AutoAccept);
 
 			// Followbot
 			{
@@ -961,6 +968,12 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 	{
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
+
+		// Menu
+		{
+			LOAD_VAR(Vars::Menu::ShowDVD);
+			LOAD_VAR(Vars::Menu::MenuKey);
+		}
 
 		//Aimbot
 		{
@@ -1435,6 +1448,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);
 			LOAD_VAR(Vars::Misc::AutoRocketJump);
+			LOAD_VAR(Vars::Misc::AutoScoutJump);
 			LOAD_VAR(Vars::Misc::ChatSpam);
 			LOAD_VAR(Vars::Misc::NoPush);
 			LOAD_VAR(Vars::Misc::EdgeJump);
@@ -1465,9 +1479,10 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
 			LOAD_VAR(Vars::Menu::ShowDVD);
-			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
+			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this ???? why
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
 			LOAD_VAR(Vars::Misc::AutoCasualQueue);
+			LOAD_VAR(Vars::Misc::AutoAccept);
 
 			// Followbot
 			{

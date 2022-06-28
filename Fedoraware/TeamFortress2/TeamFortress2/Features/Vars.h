@@ -43,6 +43,7 @@ namespace Vars
 		inline bool ShowKeybinds = false;
 
 		inline CVar<bool> ShowDVD{ false };
+		inline CVar<int> MenuKey{ 0 };
 
 		namespace Colors
 		{
@@ -570,28 +571,29 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> AccurateMovement{ false };
-		inline CVar<bool> AutoJump{ false };
-		inline CVar<bool> AutoVote{ false };
-		inline CVar<bool> DuckJump{ false };
-		inline CVar<int> AutoStrafe{ 2 };
-		inline CVar<bool> Directional{ false };
-		inline CVar<bool> TauntSlide{ false };
-		inline CVar<bool> TauntControl{ false };
-		inline CVar<bool> BypassPure{ false };
-		inline CVar<bool> NoisemakerSpam{ false };
-		inline CVar<bool> DisableInterpolation{ false };
-		inline CVar<bool> MedalFlip{ false };
-		inline CVar<bool> AutoRocketJump{ false };
-		inline CVar<int> ChatSpam{ 0 };
-		inline CVar<bool> NoPush{ false };
-		inline CVar<bool> EdgeJump{ false };
-		inline CVar<int> EdgeJumpKey{ VK_MENU };
-		inline CVar<bool> AntiAFK{ false };
-		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
-		inline CVar<bool> CheatsBypass{ false };
-		inline CVar<int> Roll{ false };
-		inline CVar<bool> ChatCensor{ false };
+		inline CVar<bool> AccurateMovement{false};
+		inline CVar<bool> AutoJump{false};
+		inline CVar<bool> AutoVote{false};
+		inline CVar<bool> DuckJump{false};
+		inline CVar<int> AutoStrafe{2};
+		inline CVar<bool> Directional{false};
+		inline CVar<bool> TauntSlide{false};
+		inline CVar<bool> TauntControl{false};
+		inline CVar<bool> BypassPure{false};
+		inline CVar<bool> NoisemakerSpam{false};
+		inline CVar<bool> DisableInterpolation{false};
+		inline CVar<bool> MedalFlip{false};
+		inline CVar<bool> AutoRocketJump{false};
+		inline CVar<bool> AutoScoutJump{ false };
+		inline CVar<int> ChatSpam{0};
+		inline CVar<bool> NoPush{false};
+		inline CVar<bool> EdgeJump{false};
+		inline CVar<int> EdgeJumpKey{VK_MENU};
+		inline CVar<bool> AntiAFK{false};
+		inline CVar<int> VotingOptions{0b000011}; // 000011 {verbose, autovote, party, chat, console, text}
+		inline CVar<bool> CheatsBypass{false};
+		inline CVar<int> Roll{false};
+		inline CVar<bool> ChatCensor{false};
 		//inline CVar<bool> ChatNL{false};
 		inline CVar<bool> AntiAutobal{ false };
 		inline CVar<bool> RageRetry{ false };
@@ -617,6 +619,7 @@ namespace Vars
 		inline CVar<int> RegionsAllowed{ 0 };
 		inline CVar<bool> AutoCasualQueue{ false};
 		inline CVar<bool> JoinSpam{ false };
+		inline CVar<bool> AutoAccept{ false };
 
 		namespace Followbot
 		{
