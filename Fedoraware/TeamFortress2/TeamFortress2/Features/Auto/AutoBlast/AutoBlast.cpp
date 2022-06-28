@@ -91,6 +91,9 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		{
 			for (const auto& pBurningPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 			{
+				if (!pBurningPlayer->InCond(TFCond_OnFire))
+					continue;
+
 				Vec3 vPredicted = (pBurningPlayer->GetAbsOrigin() + pBurningPlayer->GetVelocity().Scale(flLatency / 1000.f));
 
 				//245.f
