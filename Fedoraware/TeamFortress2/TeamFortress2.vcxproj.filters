@@ -146,7 +146,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_SendNetMsg.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_SetupBones.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMaterial_DeleteIfUnreferenced.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\SectionedListPanel_SetItemFgColor.cpp" />
@@ -156,7 +155,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_VoiceStatus.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
