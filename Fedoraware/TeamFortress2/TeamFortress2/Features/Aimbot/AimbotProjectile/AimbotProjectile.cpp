@@ -199,6 +199,28 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			};
 			break;
 		}
+	case Demoman_s_StickybombLauncher:
+	case Demoman_s_TheScottishResistance:
+	{
+		//Probably wrong
+		const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
+		out = {
+			Math::RemapValClamped(charge, 0.0f, 1.f, 925.38, 2409.2),
+			Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+		};
+		break;
+	}
+	case Demoman_s_TheQuickiebombLauncher:
+	{
+		//Probably wrong
+		const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
+		out = {
+			Math::RemapValClamped(charge, 0.0f, 1.f, 930.88, 2409.2),
+			Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+		};
+
+		break;
+	}
 	}
 
 	return out.m_flVelocity;
@@ -956,7 +978,7 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 
 	else
 	{
-		if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW)
+		if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER)
 		{
 			static bool bCharging = false;
 
@@ -1136,7 +1158,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 			else
 			{
-				if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW && pWeapon->GetChargeBeginTime() > 0.0f)
+				if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER && pWeapon->GetChargeBeginTime() > 0.0f)
 				{
 					pCmd->buttons &= ~IN_ATTACK;
 				}
