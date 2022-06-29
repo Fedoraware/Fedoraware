@@ -19,6 +19,7 @@ struct ListPlayer {
 	int MaxHealth{};
 	int Class{};
 	bool Alive{};
+	bool FakePlayer{};
 };
 
 std::mutex mutex;
@@ -38,21 +39,19 @@ void CPlayerList::UpdatePlayers()
 				PlayerInfo_t info{};
 				if (I::Engine->GetPlayerInfo(i, &info))
 				{
-					if (!info.fakeplayer)
-					{
-						ListPlayer player{
-							pr->GetPlayerName(i),
-							pr->GetUserID(i),
-							pr->GetAccountID(i),
-							Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
-							pr->GetHealth(i),
-							pr->GetMaxHealth(i),
-							pr->GetClass(i),
-							pr->IsAlive(i)
-						};
+					ListPlayer player{
+						pr->GetPlayerName(i),
+						pr->GetUserID(i),
+						pr->GetAccountID(i),
+						Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
+						pr->GetHealth(i),
+						pr->GetMaxHealth(i),
+						pr->GetClass(i),
+						pr->IsAlive(i),
+						info.fakeplayer
+					};
 
-						listBuffer.emplace(pr->GetTeam(i), player);
-					}
+					listBuffer.emplace(pr->GetTeam(i), player);
 				}
 			}
 		}
@@ -89,8 +88,10 @@ void CPlayerList::Render()
 		}
 		else
 		{
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5, 5 });
 			const int columnCount = Vars::AntiHack::Resolver::Resolver.Value ? 6 : 4;
-			if (ImGui::BeginTable("Playerlist", columnCount, ImGuiTableFlags_Borders))
+			if (ImGui::BeginTable("Playerlist", columnCount, 
+				ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable))
 			{
 				ImGui::TableSetupColumn("Name");
 				ImGui::TableSetupColumn("Class");
@@ -110,11 +111,16 @@ void CPlayerList::Render()
 					ImGui::TableNextRow();
 
 					ImGui::PushID(ImGui::GetCurrentTable()->CurrentRow);
-					ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5, 5 });
 
 					for (int column = 0; column < columnCount; column++)
 					{
 						ImGui::TableSetColumnIndex(column);
+
+						// don't show priority or resolver for bots
+						if (Player.FakePlayer && column > 2)
+						{
+							continue;
+						}
 
 						switch (column)
 						{
@@ -218,15 +224,15 @@ void CPlayerList::Render()
 					ImGui::SameLine();
 					ImGui::Selectable("##contextmenu", false, ImGuiSelectableFlags_SpanAllColumns);
 
-					if (ImGui::BeginPopupContextItem())
+					if (!Player.FakePlayer && ImGui::BeginPopupContextItem())
 					{
-						if (ImGui::MenuItem("Profile"))
+						if (ImGui::Selectable("Profile"))
 						{
 							g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(
 								"steamid", CSteamID(0x0110000100000000ULL + Player.FriendsID));
 						}
 
-						if (ImGui::MenuItem("Votekick"))
+						if (ImGui::Selectable("Votekick"))
 						{
 							I::Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", Player.UserID).c_str());
 						}
@@ -235,11 +241,12 @@ void CPlayerList::Render()
 					}
 
 					ImGui::PopID();
-					ImGui::PopStyleVar();
 				}
 
 				ImGui::EndTable();
 			}
+
+			ImGui::PopStyleVar();
 		}
 
 		ImGui::PopFont();
