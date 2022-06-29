@@ -96,7 +96,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			}//
 
 			currentPos = pLocal->GetVecOrigin();//
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value + nShiftTick)));
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value - 1)));
 			return;
 		}
 		//case 2: {
