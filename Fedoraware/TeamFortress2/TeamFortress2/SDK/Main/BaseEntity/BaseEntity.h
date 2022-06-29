@@ -129,6 +129,7 @@ public: //Netvars & conditions
 		M_CONDGET(Disguised, GetCond(), TFCond_Disguised)
 		M_CONDGET(Cloaked, GetCond(), TFCond_Cloaked)
 		M_CONDGET(Taunting, GetCond(), TFCond_Taunting)
+		M_CONDGET(OnFire, GetCond(), TFCond_OnFire)
 		M_CONDGET(Stunned, GetCond(), TFCond_Stunned)
 		M_CONDGET(Slowed, GetCond(), TFCond_Slowed)
 		M_CONDGET(MegaHealed, GetCond(), TFCond_MegaHeal)
