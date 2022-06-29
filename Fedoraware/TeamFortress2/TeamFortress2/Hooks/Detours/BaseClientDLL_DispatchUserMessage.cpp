@@ -25,7 +25,7 @@ static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900
 static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
 static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 
-MAKE_HOOK(BaseClientDLL_FispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), bool, __fastcall,
+MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::Client, 36), bool, __fastcall,
 		  void* ecx, void* edx, UserMessageType type, bf_read& msgData)
 {
 	const auto bufData = reinterpret_cast<const char*>(msgData.m_pData);

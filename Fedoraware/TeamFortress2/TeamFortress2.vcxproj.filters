@@ -156,6 +156,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_VoiceStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

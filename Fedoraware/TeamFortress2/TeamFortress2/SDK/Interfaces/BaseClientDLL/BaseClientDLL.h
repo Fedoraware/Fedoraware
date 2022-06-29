@@ -16,6 +16,11 @@ public:
 		return GetVFunc<FN>(this, 23)(this, buf, from, to, isnewcommand);
 	}
 
+	//void CHLClient::VoiceStatus(int entindex, qboolean bTalking)
+	//{
+	//	GetClientVoiceMgr()->UpdateSpeakerStatus(entindex, !!bTalking);
+	//}
+
 	bool GetPlayerView(CViewSetup &playerView)
 	{
 		typedef bool (__thiscall *FN)(PVOID, CViewSetup &);
