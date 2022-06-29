@@ -71,7 +71,7 @@ public:
 	{
 		if (!this) { return false; }
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "baseclass", "m_bConnected");
-		return *reinterpret_cast<bool*>(this + offset + 4 * idx);
+		return *reinterpret_cast<bool*>(this + offset + idx);
 	}
 
 	int GetTeam(int idx)
