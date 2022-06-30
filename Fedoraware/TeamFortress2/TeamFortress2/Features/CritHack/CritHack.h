@@ -5,6 +5,7 @@ class CCritHack {
 	bool AreRandomCritsEnabled();
 	bool IsEnabled();
 	bool ShouldCrit();
+	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 	int NextCritTick(const CUserCmd* pCmd, int loops);
 
 	struct stats_t

@@ -22,6 +22,60 @@ bool CCritHack::IsEnabled()
 	return true;
 }
 
+bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
+{
+	if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
+	{
+		static bool bLoading = false;
+
+		if (pWeapon->GetClip1() > 0)
+		{
+			bLoading = true;
+		}
+
+		if (!(pCmd->buttons & IN_ATTACK) && bLoading)
+		{
+			bLoading = false;
+			return true;
+		}
+	}
+
+	else
+	{
+		if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER)
+		{
+			static bool bCharging = false;
+
+			if (pWeapon->GetChargeBeginTime() > 0.0f)
+			{
+				bCharging = true;
+			}
+
+			if (!(pCmd->buttons & IN_ATTACK) && bCharging)
+			{
+				bCharging = false;
+				return true;
+			}
+		}
+
+		//pssst..
+		//Dragon's Fury has a gauge (seen on the weapon model) maybe it would help for pSilent hmm..
+		/*
+		if (pWeapon->GetWeaponID() == 109) {
+		}*/
+
+		else
+		{
+			if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 bool CCritHack::ShouldCrit()
 {
 	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
@@ -74,7 +128,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
 	int nextCrit = NextCritTick(pCmd);
-	if (nextCrit >= 0 && (pCmd->buttons & IN_ATTACK))
+	if (nextCrit >= 0 && IsAttacking(pCmd, pWeapon))
 	{
 		if (ShouldCrit())
 		{
