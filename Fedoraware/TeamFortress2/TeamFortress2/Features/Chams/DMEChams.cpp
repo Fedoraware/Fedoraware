@@ -190,61 +190,26 @@ void CDMEChams::Init()
 		setup = true;
 	}
 
+	v_MatList.push_back(nullptr);
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv)); 
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv));
+	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv));
 
-	m_pMatShaded = CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv);
-	m_pMatShiny = CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv);
-	m_pMatFlat = CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv);
-	m_pMatFresnel = CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv);
-	m_pMatBrick = CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv);
-	m_pMatOverlay = CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv);
-	m_pMatWFShaded = CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv);
-	m_pMatWFShiny = CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv);
-	m_pMatWFFlat = CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv);
 
 	ProxySkins::Init();
 }
 
 IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
-	switch (chams.drawMaterial)
-	{
-	case 1:
-	{
-		return m_pMatShaded;
-	}
-	case 2:
-	{
-		return m_pMatShiny;
-	}
-	case 3:
-	{
-		return m_pMatFlat;
-	}
-	case 4:
-	{
-		return m_pMatWFShaded;
-	}
-	case 5:
-	{
-		return m_pMatWFShiny;
-	}
-	case 6:
-	{
-		return m_pMatWFFlat;
-	}
-	case 7:
-	{
-		return m_pMatFresnel;
-	}
-	case 8:
-	{
-		return m_pMatBrick;
-	}
-	case 9:
-	{
+	if (chams.drawMaterial == 9) {
 		return F::MaterialEditor.GetByName(chams.customMaterial);
 	}
-	default: return nullptr;
-	}
+	return v_MatList.at(chams.drawMaterial) ? v_MatList.at(chams.drawMaterial) : nullptr;	//	this check is only if we end up out of range, unless it crashes
 }
 
 IMaterial* CDMEChams::GetProxyMaterial(int nIndex) {
@@ -515,7 +480,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
 
-			if (chamsMaterial == m_pMatFresnel)
+			if (chamsMaterial == v_MatList.at(7))
 			{
 				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
 					$envmaptint->SetVecValue(
@@ -571,7 +536,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (chams.overlayType)
 			{
 				// Overlay
-				IMaterial* pMaterial = m_pMatOverlay;
+				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
 					pMaterial->IncrementReferenceCount();

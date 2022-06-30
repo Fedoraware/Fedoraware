@@ -40,62 +40,17 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 		{
 			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
 			{
-				bool bMatWasForced = false;
-
 				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.GetLocal() && pEntity->GetTeamNum() ==
 					g_EntityCache.GetLocal()->GetTeamNum())
 				{
 					return;
 				}
 
-				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-																 {
-																	 switch (Vars::Backtrack::BtChams::Material.Value)
-																	 {
-																		 case 0:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatShaded;
-																		 }
-																		 case 1:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatShiny;
-																		 }
-																		 case 2:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatFlat;
-																		 }
-																		 case 3:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFShaded;
-																		 }
-																		 case 4:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFShiny;
-																		 }
-																		 case 5:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFFlat;
-																		 }
-																		 case 6:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatOverlay;
-																		 }
-																		 case 7:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatBrick;
-																		 }
-																		 default: return nullptr;
-																	 }
-																 }());
-				if (bMatWasForced)
+				IMaterial* chosenMat = F::DMEChams.v_MatList.at(Vars::Backtrack::BtChams::Material.Value) ? F::DMEChams.v_MatList.at(Vars::Backtrack::BtChams::Material.Value) : nullptr;
+
+				I::ModelRender->ForcedMaterialOverride(chosenMat);
+
+				if (chosenMat)
 				{
 					I::RenderView->SetColorModulation(
 						Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r),
@@ -133,15 +88,8 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 					}
 				}
 
-
-				bMatWasForced = true;
-
-				if (bMatWasForced)
-				{
-					I::ModelRender->ForcedMaterialOverride(nullptr);
-					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				}
-
+				I::ModelRender->ForcedMaterialOverride(nullptr);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				I::RenderView->SetBlend(1.0f);
 
 				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
@@ -164,56 +112,10 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 		{
 			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
 			{
-				bool bMatWasForced = false;
+				IMaterial* chosenMat = F::DMEChams.v_MatList.at(Vars::Misc::CL_Move::FLGChams::Material.Value) ? F::DMEChams.v_MatList.at(Vars::Misc::CL_Move::FLGChams::Material.Value) : nullptr;
 
-				I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
-																 {
-																	 switch (Vars::Misc::CL_Move::FLGChams::Material.Value)
-																	 {
-																		 case 0:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatShaded;
-																		 }
-																		 case 1:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatShiny;
-																		 }
-																		 case 2:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatFlat;
-																		 }
-																		 case 3:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFShaded;
-																		 }
-																		 case 4:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFShiny;
-																		 }
-																		 case 5:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatWFFlat;
-																		 }
-																		 case 6:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatOverlay;
-																		 }
-																		 case 7:
-																		 {
-																			 bMatWasForced = true;
-																			 return F::DMEChams.m_pMatBrick;
-																		 }
-																		 default: return nullptr;
-																	 }
-																 }());
-				if (bMatWasForced)
+				I::ModelRender->ForcedMaterialOverride(chosenMat);
+				if (chosenMat)
 				{
 					I::RenderView->SetColorModulation(
 						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.r),
@@ -224,13 +126,8 @@ void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelS
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.a)); // this is so much better than having a seperate alpha slider lmao
 				OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
 
-				bMatWasForced = true;
-
-				if (bMatWasForced)
-				{
-					I::ModelRender->ForcedMaterialOverride(nullptr);
-					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-				}
+				I::ModelRender->ForcedMaterialOverride(nullptr);
+				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
 				I::RenderView->SetBlend(1.0f);
 			}
