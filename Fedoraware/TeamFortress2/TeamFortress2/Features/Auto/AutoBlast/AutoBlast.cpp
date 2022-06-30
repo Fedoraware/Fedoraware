@@ -22,6 +22,9 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		return;
 	}
 
+	if (Vars::Triggerbot::Blast::DisableOnAttack.Value && pCmd->buttons & IN_ATTACK)
+		return;
+
 	if (const auto& pNet = I::Engine->GetNetChannelInfo())
 	{
 		const Vec3 vEyePos = pLocal->GetEyePosition();
@@ -91,21 +94,19 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		{
 			for (const auto& pBurningPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 			{
-				if (!pBurningPlayer->IsOnFire())
+				if (!pBurningPlayer->IsOnFire() || !pBurningPlayer->IsAlive())
 					continue;
 
-				Vec3 vPredicted = (pBurningPlayer->GetAbsOrigin() + pBurningPlayer->GetVelocity().Scale(flLatency / 1000.f));
-
-				//245.f
-				if (vEyePos.DistTo(vPredicted) <= 260.0f && Utils::VisPos(pLocal, pBurningPlayer, vEyePos, vPredicted))
+				//I'm pretty positive the range could be increased but for accuracy reasons I'll leave it alone
+				if (vEyePos.DistTo(pBurningPlayer->m_vecOrigin()) <= 260.0f && Utils::VisPos(pLocal, pBurningPlayer, vEyePos, pBurningPlayer->m_vecOrigin()))
 				{
 					if (Vars::Triggerbot::Blast::Rage.Value)
 					{
-						pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
+						pCmd->viewangles = Math::CalcAngle(vEyePos, pBurningPlayer->m_vecOrigin());
 						bShouldBlast = true;
 						break;
 					}
-					if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, vPredicted) <= Vars::Triggerbot::Blast::Fov.Value)
+					if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, pBurningPlayer->m_vecOrigin()) <= Vars::Triggerbot::Blast::Fov.Value)
 					{
 						bShouldBlast = true;
 						break;

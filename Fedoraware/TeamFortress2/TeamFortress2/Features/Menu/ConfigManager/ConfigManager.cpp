@@ -372,6 +372,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Blast::Rage);
 				SAVE_VAR(Vars::Triggerbot::Blast::Silent);
 				SAVE_VAR(Vars::Triggerbot::Blast::ExtinguishPlayers);
+				SAVE_VAR(Vars::Triggerbot::Blast::DisableOnAttack);
 				SAVE_VAR(Vars::Triggerbot::Blast::Fov);
 			}
 
@@ -1116,6 +1117,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Blast::Rage);
 				LOAD_VAR(Vars::Triggerbot::Blast::Silent);
 				LOAD_VAR(Vars::Triggerbot::Blast::ExtinguishPlayers);
+				LOAD_VAR(Vars::Triggerbot::Blast::DisableOnAttack);
 				LOAD_VAR(Vars::Triggerbot::Blast::Fov);
 			}
 
