@@ -87,12 +87,12 @@ void CMisc::DetectChoke()
 void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static bool pos = true;
-
+	const float scale = pLocal->IsDucking() ? 14.f : 2.f;
 	if (G::IsAttacking || G::ShouldShift) { return; }
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.Value)
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::legjitter.Value && I::GlobalVars->tickcount % 2)
 	{
-		pos ? pCmd->forwardmove = 2.f : pCmd->forwardmove = -2.f;
-		pos ? pCmd->sidemove = 2.f : pCmd->sidemove = -2.f;
+		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
+		pos ? pCmd->sidemove = scale : pCmd->sidemove = -scale;
 		pos = !pos;
 	}
 }

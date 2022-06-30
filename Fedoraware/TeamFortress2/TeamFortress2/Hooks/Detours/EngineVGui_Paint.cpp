@@ -13,6 +13,8 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/AutoQueue/AutoQueue.h"
+#include "../../Features/Chams/DMEChams.h"
+#include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 
 #include "../../Resources/DVD-Icon.h"
 
@@ -258,7 +260,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				// Debug info
 				if (Vars::Debug::DebugInfo.Value)
 				{
-					int yoffset = 20, xoffset = 10;
+					int yoffset = 10, xoffset = 10;
 
 					if (CBaseEntity* pLocal = g_EntityCache.GetLocal())
 					{
@@ -289,6 +291,60 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecViewOffset	: [%.1f, %.1f, %.1f]", m_vecViewOffset.x, m_vecViewOffset.y, m_vecViewOffset.z);
 							if (!m_vecOrigin.IsZero())
 								g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecOrigin		: [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z);
+						}
+
+						xoffset = 120;
+						for (IMaterial* scanMat : F::DMEChams.v_MatList) {
+							if (!scanMat) { continue; }
+							yoffset = 10; xoffset += 150;
+							const char* matName = scanMat->GetName();
+							const char* matGroupName = scanMat->GetTextureGroupName();
+							const char* GetShaderName = scanMat->GetShaderName();
+							std::vector<std::pair<const char*, bool>> flags;
+							flags.push_back({ _("InMaterialPage"), scanMat->InMaterialPage() });
+							flags.push_back({ _("IsTranslucent"), scanMat->IsTranslucent() });
+							flags.push_back({ _("IsAlphaTested"), scanMat->IsAlphaTested() });
+							flags.push_back({ _("IsVertexLit"), scanMat->IsVertexLit() });
+							flags.push_back({ _("HasProxy"), scanMat->HasProxy() });
+							flags.push_back({ _("UsesEnvCubemap"), scanMat->UsesEnvCubemap() });
+							flags.push_back({ _("IsErrorMaterial"), scanMat->IsErrorMaterial() });
+							flags.push_back({ _("WasReloadedFromWhitelist"), scanMat->WasReloadedFromWhitelist() });
+							flags.push_back({ _("IsPrecached"), scanMat->IsPrecached() });
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", matName);
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", matGroupName);
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", GetShaderName);
+							for (std::pair<const char*, bool> flag : flags) {
+								if (flag.second) {
+									g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", flag.first);
+								}
+							}
+						}
+						xoffset = 120;
+						for (CustomMaterial customMat : F::MaterialEditor.MaterialList) {
+							IMaterial* scanMat = customMat.Material;
+							if (!scanMat) { continue; }
+							yoffset = 115; xoffset += 150;
+							const char* matName = scanMat->GetName();
+							const char* matGroupName = scanMat->GetTextureGroupName();
+							const char* GetShaderName = scanMat->GetShaderName();
+							std::vector<std::pair<const char*, bool>> flags;
+							flags.push_back({ _("InMaterialPage"), scanMat->InMaterialPage() });
+							flags.push_back({ _("IsTranslucent"), scanMat->IsTranslucent() });
+							flags.push_back({ _("IsAlphaTested"), scanMat->IsAlphaTested() });
+							flags.push_back({ _("IsVertexLit"), scanMat->IsVertexLit() });
+							flags.push_back({ _("HasProxy"), scanMat->HasProxy() });
+							flags.push_back({ _("UsesEnvCubemap"), scanMat->UsesEnvCubemap() });
+							flags.push_back({ _("IsErrorMaterial"), scanMat->IsErrorMaterial() });
+							flags.push_back({ _("WasReloadedFromWhitelist"), scanMat->WasReloadedFromWhitelist() });
+							flags.push_back({ _("IsPrecached"), scanMat->IsPrecached() });
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", matName);
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", matGroupName);
+							g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", GetShaderName);
+							for (std::pair<const char*, bool> flag : flags) {
+								if (flag.second) {
+									g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "%s", flag.first);
+								}
+							}
 						}
 						
 						//for (CBaseEntity* eProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)) {
