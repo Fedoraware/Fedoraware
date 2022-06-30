@@ -742,6 +742,17 @@ namespace Utils
 		pCmd->upmove = result.z * scale;
 	}
 
+	__inline void StopMovement(CUserCmd* pCmd, bool Safe = true) {
+		if (Safe && G::IsAttacking) { return; }
+		if (CBaseEntity* pLocal = g_EntityCache.GetLocal()) {
+			const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
+			pCmd->viewangles.x = 90;
+			pCmd->viewangles.y = direction;
+			pCmd->viewangles.z = 0;
+			pCmd->sidemove = 0; pCmd->forwardmove = 0;
+		}
+	}
+
 	__inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& pDestination)
 	{
 		Vec3 localPos = pLocal->GetVecOrigin();

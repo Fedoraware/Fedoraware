@@ -40,17 +40,6 @@ void UpdateRichPresence()
 	F::Misc.SteamRPC();
 }
 
-void stopMovement(CUserCmd* pCmd) {
-	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	if (pLocal) {
-		const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
-		pCmd->viewangles.x = 90;
-		pCmd->viewangles.y = direction;
-		pCmd->viewangles.z = 0;
-		pCmd->sidemove = 0; pCmd->forwardmove = 0;
-	}
-}
-
 //	TODO: make this p
 //	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
 //	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
@@ -385,7 +374,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value)) {
 		G::ShouldStop = false;
-		stopMovement(pCmd);
+		Utils::StopMovement(pCmd, !G::ShouldShift);
 		return false;
 	}
 

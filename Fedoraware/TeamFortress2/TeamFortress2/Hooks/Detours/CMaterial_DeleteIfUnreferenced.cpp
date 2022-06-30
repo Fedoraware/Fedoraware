@@ -5,12 +5,14 @@ MAKE_HOOK(CMaterial_DeleteIfUnreferenced, g_Pattern.Find(L"materialsystem.dll", 
 {
 	if (eax) {
 		const std::string materialName = eax->GetName();
-		if (materialName.find("m_pmat") != std::string::npos || materialName.find("glow") != std::string::npos)
+		if (materialName.find("m_pmat") != std::string::npos || materialName.find("glow_color") != std::string::npos)
 		{
-			I::CVars->ConsolePrintf("Preventing material %s from being deleted\n", materialName);
 			return;
 		}
 	}
 
-	return Hook.Original<FN>()(eax);
+	if (eax)
+	{
+		return Hook.Original<FN>()(eax);
+	}
 }

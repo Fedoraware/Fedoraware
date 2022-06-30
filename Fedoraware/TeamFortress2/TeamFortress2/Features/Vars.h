@@ -572,7 +572,7 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> AccurateMovement{false};
+		inline CVar<int> AccurateMovement{false};
 		inline CVar<bool> AutoJump{false};
 		inline CVar<bool> AutoVote{false};
 		inline CVar<bool> DuckJump{false};

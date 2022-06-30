@@ -360,14 +360,23 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	const float Speed = pLocal->GetVecVelocity().Length();
 
-	if (Speed > 13.0f)
-	{
-		Vec3 direction = pLocal->GetVecVelocity().toAngle();
-		direction.y = pCmd->viewangles.y - direction.y;
 
-		const Vec3 negatedDirection = direction.fromAngle() * -Speed;
-		pCmd->forwardmove = negatedDirection.x;
-		pCmd->sidemove = negatedDirection.y;
+	if (Speed > 10.0f)
+	{
+		switch (Vars::Misc::AccurateMovement.Value) {
+		case 1: {
+			Vec3 direction = pLocal->GetVecVelocity().toAngle();
+			direction.y = pCmd->viewangles.y - direction.y;
+			const Vec3 negatedDirection = direction.fromAngle() * -Speed;
+			pCmd->forwardmove = negatedDirection.x;
+			pCmd->sidemove = negatedDirection.y;
+			break;
+		}
+		case 2: {
+			G::ShouldStop = true;
+			break;
+		}
+		}
 	}
 	else
 	{
