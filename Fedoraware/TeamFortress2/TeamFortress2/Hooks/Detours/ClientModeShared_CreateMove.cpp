@@ -96,7 +96,10 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			}//
 
 			currentPos = pLocal->GetVecOrigin();//
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / (Vars::Misc::CL_Move::DTTicks.Value - 1)));
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / currentPos.Dist2D(predEndPoint)));
+			//	the "slight stop" that u can see when we do this is due to (i believe) the player reaching the desired point, and then constantly accelerating backwards, meaning their velocity-
+			//	when they finish shifting ticks, is lower than when they started.
+			//	alot of things worked better than (1/dist) as the scale, but caused issues on different classes, for now this is the best I can get it to.
 			return;
 		}
 		//case 2: {
