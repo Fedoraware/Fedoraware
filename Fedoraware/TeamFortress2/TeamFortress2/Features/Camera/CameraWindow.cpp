@@ -148,13 +148,7 @@ void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, IT
 	renderCtx->PushRenderTargetAndViewport();
 	renderCtx->SetRenderTarget(pTexture);
 
-
-	static CHook* renderViewHook = nullptr;
-	if (!renderViewHook)
-	{
-		renderViewHook = g_HookManager.GetMapHooks()["ViewRender_RenderView"];
-	}
-	if (renderViewHook)
+	if (const auto renderViewHook = g_HookManager.GetMapHooks()["ViewRender_RenderView"])
 	{
 		renderViewHook->Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, pViewSetup, VIEW_CLEAR_COLOR | VIEW_CLEAR_DEPTH | VIEW_CLEAR_STENCIL, RENDERVIEW_UNSPECIFIED);
 	}

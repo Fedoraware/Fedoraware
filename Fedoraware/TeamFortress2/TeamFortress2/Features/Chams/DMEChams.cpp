@@ -417,11 +417,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	static CHook* dmeHook = nullptr;
-	if (!dmeHook)
-	{
-		dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
-	}
+	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MatSystem->GetRenderContext();
 
 	m_bRendering = false;
