@@ -196,6 +196,7 @@ namespace Vars
 			inline CVar<bool> Rage{ false };
 			inline CVar<bool> Silent{ false };
 			inline CVar<bool> ExtinguishPlayers{ false };
+			inline CVar<bool> DisableOnAttack{ false };
 			inline CVar<int> Fov{ 55 };
 		}
 
