@@ -256,6 +256,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseHudChat_ChatPrintf.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\NetChannel_SendDatagram.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\NotificationQueue_Add.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\OpenVoiceMenu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Panel_PaintTraverse.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Prediction_RunCommand.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\SectionedListPanel_SetItemFgColor.cpp" />
