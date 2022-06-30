@@ -69,6 +69,16 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 			return;
 		}
 
+		if (cmdName == "poop")
+		{
+			if (I::TFGCClientSystem)
+			{
+				*((bool*)I::TFGCClientSystem + 1440) = !*((bool*)I::TFGCClientSystem + 1440);
+				I::CVars->ConsolePrintf("%d", *((bool*)I::TFGCClientSystem + 1440));
+			}
+			return;
+		}
+
 		if (cmdName == "setcvar")
 		{
 			// Check if the user provided at least 2 args

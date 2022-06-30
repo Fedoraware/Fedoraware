@@ -157,6 +157,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\OpenVoiceMenu.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
