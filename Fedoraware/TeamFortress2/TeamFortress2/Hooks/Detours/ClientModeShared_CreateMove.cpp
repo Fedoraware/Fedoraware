@@ -345,10 +345,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		//if (Vars::Debug::DebugInfo.Value)
-		//{
-		//	
-		//}
+		if (const ConVar* debugMode = I::CVars->FindVar("debugMode")) {
+			Vars::Debug::DebugInfo.Value = Vars::Debug::DebugBool.Value = debugMode->GetInt();
+		}
 	}
 
 	static bool bWasSet = false;
