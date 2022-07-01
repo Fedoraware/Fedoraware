@@ -31,12 +31,12 @@ void CAttributeChanger::Run()
 			return;
 		}
 
-		const auto myWeapons = pLocal->GetMyWeapons();
+		const auto myWeapons = reinterpret_cast<size_t*>(pLocal + 0xCF8);
 		for (int n = 0; myWeapons[n]; n++)
 		{
 			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(myWeapons[n])))
 			{
-				const auto pList = pWeapon->GetAttributeList();
+				const auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
 				if (!pList || pList->m_Attributes.Count() > 0)
 				{
 					continue;

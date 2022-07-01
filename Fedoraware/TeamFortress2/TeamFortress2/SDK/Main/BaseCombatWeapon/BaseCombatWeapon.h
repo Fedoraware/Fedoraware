@@ -27,7 +27,6 @@ public: //Netvars
 		M_OFFSETGET(UberCharge, float, 0xC6C) //DT_WeaponMedigun -> NonLocalTFWeaponMedigundata -> m_flChargeLevel
 		//M_OFFSETGET(HealingTarget, int, 0xC48) //DT_WeaponMedigun -> m_hHealingTarget
 		M_OFFSETGET(Healing, int, 0xC51) //DT_WeaponMedigun -> m_bHealing
-		M_OFFSETGET(AttributeList, CAttributeList*, 0x9C4)
 
 			// pretty srue these are all wrong but i have no idea how to do the thing to find out what they are
 		// you add 1c idiot
@@ -89,10 +88,10 @@ public: //Everything else, lol
 		return true;
 	}
 
-	/*__inline CAttributeList* GetAttributeList() {
+	__inline CAttributeList* GetAttributeList() {
 		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_AttributeList"));
 		return reinterpret_cast<CAttributeList*>(this + dwOff);
-	}*/
+	}
 
 	__inline void SetItemDefIndex(const int nIndex) {
 		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
