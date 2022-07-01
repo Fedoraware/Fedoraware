@@ -81,6 +81,12 @@ public:
 	{
 		return *reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(this) + 320);
 	}
+
+	void ForceFullUpdate()
+	{
+		using FN = void(__thiscall*)(CClientState*);
+		return reinterpret_cast<FN>(g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D")))(this);
+	}
 };
 
 class CSteamInterfaces
