@@ -620,7 +620,7 @@ namespace Vars
 		inline CVar<int> RegionsAllowed{ 0 };
 		inline CVar<bool> AutoCasualQueue{ false};
 		inline CVar<bool> JoinSpam{ false };
-		inline CVar<bool> AutoAccept{ false };
+		inline CVar<bool> AntiVAC{ false };
 
 		namespace Followbot
 		{

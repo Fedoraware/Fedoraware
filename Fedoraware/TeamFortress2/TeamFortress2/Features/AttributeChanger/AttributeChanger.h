@@ -17,32 +17,21 @@ enum AttributeID {
 };
 
 struct AttributeInfo_t {
-	int m_nItemDefIndex;
-	int m_nEffect;
-	int m_nParticle;
-	int m_nSheen;
-	bool m_bAncient;
-	bool m_bStyleOverride;
+	int ItemDefIndex;
+	int Effect;
+	int Particle;
+	int Sheen;
+	bool Ancient;
+	bool StyleOverride;
 };
 
 class CAttributeChanger {
-public:
-	void Run();
-
-	bool ShouldSave = false, ShouldLoad = true, ShouldSet = false;
-
-private:
-	void SetAttribute();
-	void SaveConfig();
-	void LoadConfig();
-
 	std::unordered_map<int, AttributeInfo_t> AttributeMap;
 
 	std::ifstream ReadStream;
 	std::ofstream WriteStream;
 	std::string AttributePath;
-
-private:
+	
 	__inline void SaveInt(const char* szSection, const char* szItem, int value)
 	{
 		const std::string szToSave = std::to_string(value);
@@ -68,6 +57,14 @@ private:
 		GetPrivateProfileStringA(szSection, szItem, "false", szReturn, 69, AttributePath.c_str());
 		return (strcmp(szReturn, "true") == 0) ? true : false;
 	}
+
+public:
+	void Run();
+	void Init();
+
+	void SetAttribute();
+	void SaveConfig();
+	void LoadConfig();
 };
 
 ADD_FEATURE(CAttributeChanger, AttributeChanger)

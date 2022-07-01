@@ -113,16 +113,8 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 					F::Visuals.rain.Run();
 				}
 
-				// genius method i swear
-				static bool modded = false;
 				if (Vars::Visuals::SkyModulation.Value || Vars::Visuals::WorldModulation.Value)
 				{
-					F::Visuals.ModulateWorld();
-					modded = true;
-				}
-				else if (modded)
-				{
-					modded = false;
 					F::Visuals.ModulateWorld();
 				}
 			}

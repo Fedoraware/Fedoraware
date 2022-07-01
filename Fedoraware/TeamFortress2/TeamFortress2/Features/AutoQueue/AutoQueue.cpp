@@ -1,5 +1,8 @@
 #include "AutoQueue.h"
 
+#include <chrono>
+#include <thread>
+
 void CAutoQueue::Run()
 {
 	if (!I::EngineVGui->IsGameUIVisible() || I::Engine->IsInGame()) { return; }
@@ -22,21 +25,35 @@ void CAutoQueue::Run()
 	}
 
 	// Auto accept
-	if (Vars::Misc::AutoAccept.Value)
+	if (Vars::Misc::AntiVAC.Value)
 	{
-		if (I::TFPartyClient->BInStandbyQueue() 	||
-			!I::TFGCClientSystem->BHaveLiveMatch() 	||
-			I::TFGCClientSystem->GetNumMatchInvites())
+		static auto fps_max = g_ConVars.FindVar("fps_max");
+		static auto host_timescale = g_ConVars.FindVar("host_timescale");
+		static auto sv_cheats = g_ConVars.FindVar("sv_cheats");
+		static bool lastConnect = false;
+
+		if (I::TFGCClientSystem->GetNumMatchInvites() > 0 && !I::Engine->IsConnected())
+		{
+			sv_cheats->SetValue(1);
+			fps_max->SetValue(1);
+			host_timescale->SetValue(25);
+		} else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::Engine->IsConnected() && lastConnect)
 		{
 			I::TFGCClientSystem->JoinMMMatch();
+		} else if (I::Engine->IsInGame() && (fps_max->GetInt() < 60 || host_timescale->GetFloat() > 1.f))
+		{
+			fps_max->SetValue(1000);
+			host_timescale->SetValue(1);
 		}
+
+		lastConnect = I::Engine->IsConnected();
 	}
 
-	// Join message spam | Credits to lnx00 for this cool exploit :D
+	// Join message spam
 	if (Vars::Misc::JoinSpam.Value)
 	{
 		static Timer spamTimer{ };
-		if (spamTimer.Run(250))
+		if (spamTimer.Run(200))
 		{
 			I::TFGCClientSystem->JoinMMMatch();
 		}

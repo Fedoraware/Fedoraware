@@ -55,7 +55,7 @@ void Loaded()
 	const int dxLevel = g_ConVars.FindVar("mat_dxlevel")->GetInt();
 	if (dxLevel < 90)
 	{
-		MessageBoxA(nullptr, _("Your DirectX version is too low!\nPlease use at dxlevel 90 or higher"), _("dxlevel too low"), MB_OK | MB_ICONWARNING);
+		MessageBoxA(nullptr, _("Your DirectX version is too low!\nPlease use dxlevel 90 or higher"), _("dxlevel too low"), MB_OK | MB_ICONWARNING);
 	}
 }
 

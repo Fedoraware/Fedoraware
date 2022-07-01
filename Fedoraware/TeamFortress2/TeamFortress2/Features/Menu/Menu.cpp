@@ -1190,17 +1190,17 @@ void CMenu::MenuVisuals()
 
 				if (Button("Apply", ImVec2(45, 20)))
 				{
-					F::AttributeChanger.ShouldSet = true;
+					F::AttributeChanger.SetAttribute();
 				}
 				SameLine();
 				if (Button("Save", ImVec2(45, 20)))
 				{
-					F::AttributeChanger.ShouldSave = true;
+					F::AttributeChanger.SaveConfig();
 				}
 				SameLine();
 				if (Button("Load", ImVec2(44, 20)))
 				{
-					F::AttributeChanger.ShouldLoad = true;
+					F::AttributeChanger.LoadConfig();
 				}
 
 				SectionTitle("Ragdoll effects");
@@ -1484,7 +1484,7 @@ void CMenu::MenuMisc()
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
 			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
-			WToggle("Auto accept casual match", &Vars::Misc::AutoAccept.Value); HelpMarker("Automatically accepts pending casual mask");
+			WToggle("Auto VAC Bypass", &Vars::Misc::AntiVAC.Value); HelpMarker("Tries to join a server while having a VAC ban");
 
 			SectionTitle("Datacenters");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
