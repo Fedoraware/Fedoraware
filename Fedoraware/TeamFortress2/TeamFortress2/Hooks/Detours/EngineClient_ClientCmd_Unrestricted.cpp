@@ -38,8 +38,8 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 		const std::string cmdName = cmdArgs.front();
 		cmdArgs.pop_front();
 
-		if (cmdName == "queue")
-		{
+		switch (FNV1A::HashConst(cmdName.c_str())) {
+		case FNV1A::HashConst("queue"): {
 			static auto CTFGCClientSystem__PreInitGC = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"56 8B F1 80 BE ? ? ? ? ? 0F 85 ? ? ? ? 68 ? ? ? ?"));
 			static auto CCasualSidePanel__OnCommand = reinterpret_cast<void(__stdcall*)(const char* pCommand)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B 75 08 57 8B F9 81 FE ? ? ? ? 74 20 68 ? ? ? ? 56 E8 ? ? ? ? 83 C4 08 85 C0 74 0E 56 8B CF E8 ? ? ? ? 5F 5E 5D C2 04 00 6A 07"));
 			static void* m_pSOCache = *reinterpret_cast<void**>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 85 C9 74 3D 68 ? ? ? ?") + 0x1);
@@ -58,9 +58,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 
 			return;
 		}
-
-		if (cmdName == "argh")
-		{
+		case FNV1A::HashConst("argh"): {
 			static auto CEconItem__CEconItem = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"53 8B D9 56 57 BE ? ? ? ? C7 03 ? ? ? ? 8D 7B 08 C7 03 ? ? ? ? C7 43 ? ? ? ? ? 6A 01 6A 00 6A 00 8B CF E8 ? ? ? ?"));
 			static auto TFInventoryManager = *reinterpret_cast<void**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
 			static auto CInventoryManager_GetItemByBackpackPosition = reinterpret_cast<void* (__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 8B 01"));
@@ -68,9 +66,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 
 			return;
 		}
-
-		if (cmdName == "poop")
-		{
+		case FNV1A::HashConst("poop"): {
 			if (I::TFGCClientSystem)
 			{
 				*((bool*)I::TFGCClientSystem + 1440) = !*((bool*)I::TFGCClientSystem + 1440);
@@ -78,9 +74,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 			}
 			return;
 		}
-
-		if (cmdName == "setcvar")
-		{
+		case FNV1A::HashConst("setcvar"): {
 			// Check if the user provided at least 2 args
 			if (cmdArgs.size() < 2)
 			{
@@ -104,6 +98,7 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 			foundCVar->SetValue(newValue.c_str());
 			I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
 			return;
+		}
 		}
 	}
 

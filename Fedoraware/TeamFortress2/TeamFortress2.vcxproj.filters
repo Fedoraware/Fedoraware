@@ -134,7 +134,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconNotification_HasNewItems_CEconNotification_HasNewItems.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\NotificationQueue_Add.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CBackpackPanel_GetItemQualityForBorder.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DoEnginePostProcessing.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />

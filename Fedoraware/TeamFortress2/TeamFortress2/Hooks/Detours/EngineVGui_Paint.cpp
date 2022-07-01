@@ -75,6 +75,59 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				{
 					if (!I::Engine->IsInGame())
 					{
+						static bool bOpenedMenuOnce = false;
+						if (F::Menu.IsOpen)
+						{
+							bOpenedMenuOnce = true;
+						}
+
+						static time_t curTime = time(0);
+						static tm* curCalTime = localtime(&curTime);
+
+						if (curCalTime->tm_mon == 11) {
+							if (!bOpenedMenuOnce) {
+								g_Draw.String(FONT_MENU, g_ScreenSize.c, 150, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, "Happy Non-Discriminatory December Seasonal Holiday!");
+							}
+							{	//	menu snow
+								struct snowFlake {
+									std::pair<int, int> position;
+								};
+
+								static std::vector<snowFlake> vSnowFlakes;
+								constexpr int snowCount = 1000;
+
+								static bool bInit = false;
+								if (!bInit) {
+									for (int i = 0; i < snowCount; i++) {
+										vSnowFlakes.push_back({ {Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f)} });
+									}
+									bInit = true;
+								}
+
+								for (snowFlake& flake : vSnowFlakes) {
+									//	do gravity
+									constexpr int drift = 1;
+									flake.position.first += Utils::RandFloatRange(-drift, drift);
+									flake.position.second += drift;
+
+									//	calculate alpha
+									float Alpha = Math::MapFloat(flake.position.second, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
+									//
+									//	recreate snow flakes that are gone
+									if (Alpha <= 0.f || flake.position.first >= g_ScreenSize.w || flake.position.first <= 0) {
+										flake = { {
+												Utils::RandIntSimple(0, g_ScreenSize.w),
+												Utils::RandIntSimple(0, 100),
+										},
+										};
+									}//
+
+									Color_t flakeColour = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
+									g_Draw.String(FONT_MENU, flake.position.first, flake.position.second, flakeColour, ALIGN_DEFAULT, "*");
+								}
+							}
+						}
+
 						// DVD Logo
 						if (iDVD && F::Menu.IsOpen && Vars::Menu::ShowDVD.Value)
 						{
