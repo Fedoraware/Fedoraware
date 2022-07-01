@@ -75,8 +75,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				{
 					if (!I::Engine->IsInGame())
 					{
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 200, Utils::Rainbow(), EStringAlign::ALIGN_CENTERHORIZONTAL, "Happy pride month!!!!!!");
-
 						// DVD Logo
 						if (iDVD && F::Menu.IsOpen && Vars::Menu::ShowDVD.Value)
 						{
