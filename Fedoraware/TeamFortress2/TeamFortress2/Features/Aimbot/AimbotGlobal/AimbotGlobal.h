@@ -26,7 +26,8 @@ enum Ignored {
 	CLOAKED = 1 << 1,
 	DEADRINGER = 1 << 2,
 	FRIENDS = 1 << 3,
-	TAUNTING = 1 << 4
+	TAUNTING = 1 << 4,
+	VACCINATOR = 1 << 5
 };
 
 struct Target_t {
