@@ -40,9 +40,9 @@ void CAutoQueue::Run()
 		} else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::Engine->IsConnected() && lastConnect)
 		{
 			I::TFGCClientSystem->JoinMMMatch();
-		} else if (I::Engine->IsInGame() && (fps_max->GetInt() < 60 || host_timescale->GetFloat() > 1.f))
+		} else if (I::Engine->IsConnected() && !lastConnect)
 		{
-			fps_max->SetValue(1000);
+			fps_max->SetValue(0);
 			host_timescale->SetValue(1);
 		}
 
