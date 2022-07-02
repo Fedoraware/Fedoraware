@@ -1,4 +1,4 @@
-	#include "AimbotGlobal.h"
+#include "AimbotGlobal.h"
 
 #include "../../Vars.h"
 
