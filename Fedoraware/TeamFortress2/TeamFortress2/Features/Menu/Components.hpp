@@ -250,11 +250,11 @@ namespace ImGui
 		PushItemWidth(F::Menu.ItemWidth);
 		if (BeginCombo(label, current_mat->c_str(), flags))
 		{
-			for (const auto& mat : F::MaterialEditor.MaterialList)
+			for (const auto& [name, mat] : F::MaterialEditor.MaterialMap)
 			{
-				if (Selectable(mat.Name.c_str(), mat.Name == *current_mat))
+				if (Selectable(name.c_str(), name == *current_mat))
 				{
-					*current_mat = mat.Name;
+					*current_mat = name;
 					active = true;
 				}
 			}

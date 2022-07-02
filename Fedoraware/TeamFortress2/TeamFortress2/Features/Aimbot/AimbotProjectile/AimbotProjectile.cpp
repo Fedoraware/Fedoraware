@@ -1158,7 +1158,8 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 			else
 			{
-				if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER && pWeapon->GetChargeBeginTime() > 0.0f)
+				if ((pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER)
+					&& pWeapon->GetChargeBeginTime() > 0.0f)
 				{
 					pCmd->buttons &= ~IN_ATTACK;
 				}

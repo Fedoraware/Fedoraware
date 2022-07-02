@@ -3,9 +3,8 @@
 #include "../ImGui/TextEditor.h"
 
 struct CustomMaterial {
-	std::string Name = "Default";
 	std::string FileName = "Default.vmt";
-	IMaterial* Material{ };
+	IMaterial* Material = nullptr;
 };
 
 class CMaterialEditor {
@@ -28,7 +27,7 @@ public:
 	IMaterial* GetByName(const std::string& name);
 
 	bool IsOpen = false;
-	std::vector<CustomMaterial> MaterialList;
+	std::unordered_map<std::string, CustomMaterial> MaterialMap;
 };
 
 ADD_FEATURE(CMaterialEditor, MaterialEditor)

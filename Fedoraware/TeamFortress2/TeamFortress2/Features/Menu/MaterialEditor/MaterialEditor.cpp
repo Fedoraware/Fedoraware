@@ -18,23 +18,13 @@ std::string CMaterialEditor::GetMaterialPath(const std::string& matFileName)
 
 IMaterial* CMaterialEditor::GetByName(const std::string& name)
 {
-	static CustomMaterial* lastMaterial = nullptr;
-	if (lastMaterial && lastMaterial->Name == name) { return lastMaterial->Material; }
-
-	const auto fMat = std::find_if(MaterialList.begin(), MaterialList.end(), [&name](const CustomMaterial& mat) { return mat.Name == name; });
-	if (fMat != MaterialList.end())
-	{
-		lastMaterial = &*fMat;
-		return fMat->Material;
-	}
-
-	return nullptr;
+	return MaterialMap[name].Material;
 }
 
 /* Reloads all material files and creates the corresponding material */
 void CMaterialEditor::LoadMaterials()
 {
-	MaterialList.clear();
+	MaterialMap.clear();
 
 	// Load material files
 	for (const auto& entry : std::filesystem::directory_iterator(MaterialFolder))
@@ -58,7 +48,7 @@ void CMaterialEditor::LoadMaterials()
 			
 			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
 			IMaterial* newMaterial = F::DMEChams.CreateNRef(std::string("m_pmat" + matName).c_str(), kv);
-			MaterialList.push_back({ matName, matPath, newMaterial });
+			MaterialMap[matName] = { matPath, newMaterial };
 		}
 	}
 }
@@ -123,15 +113,15 @@ void CMaterialEditor::MainWindow()
 		{
 			if (!std::filesystem::exists(GetMaterialPath(newName + ".vmt")))
 			{
-				// Create a new CustomMaterial and add it to our list
+				// Create a new CustomMaterial and add it to our map
 				const auto kv = new KeyValues(newName.c_str());
 				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), DEFAULT_MATERIAL.c_str());
 				IMaterial* defMaterial = F::DMEChams.CreateNRef(std::string("m_pmat" + newName).c_str(), kv);
 
-				const CustomMaterial newMaterial = { newName, newName + ".vmt", defMaterial };
+				const CustomMaterial newMaterial = { newName + ".vmt", defMaterial };
 
 				WriteMaterial(newMaterial, DEFAULT_MATERIAL);
-				MaterialList.push_back(newMaterial);
+				MaterialMap[newName] = newMaterial;
 				LoadMaterials();
 
 				newName.clear();
@@ -143,9 +133,9 @@ void CMaterialEditor::MainWindow()
 		{
 			if (ListBoxHeader("###MaterialList", { GetWindowWidth(), GetWindowHeight() }))
 			{
-				for (auto const& mat : MaterialList)
+				for (auto const& [name, mat] : MaterialMap)
 				{
-					if (Selectable(mat.Name.c_str(), CurrentMaterial.Name == mat.Name))
+					if (Selectable(name.c_str(), CurrentMaterial.FileName == mat.FileName))
 					{
 						CurrentMaterial = mat;
 						EditorOpen = false;
@@ -194,7 +184,7 @@ void CMaterialEditor::EditorWindow()
 				EditorOpen = false;
 			}
 
-			Text("Editing: %s", CurrentMaterial.Name.c_str());
+			Text("Editing: %s", CurrentMaterial.FileName.c_str());
 		}
 
 		// Text editor

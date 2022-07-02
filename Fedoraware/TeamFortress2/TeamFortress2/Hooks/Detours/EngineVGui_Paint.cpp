@@ -371,8 +371,8 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 							}
 						}
 						xoffset = 120;
-						for (CustomMaterial customMat : F::MaterialEditor.MaterialList) {
-							IMaterial* scanMat = customMat.Material;
+						for (const auto& [name, mat] : F::MaterialEditor.MaterialMap) {
+							IMaterial* scanMat = mat.Material;
 							if (!scanMat) { continue; }
 							yoffset = 115; xoffset += 150;
 							const char* matName = scanMat->GetName();
