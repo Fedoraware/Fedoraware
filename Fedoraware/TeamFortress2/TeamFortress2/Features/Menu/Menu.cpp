@@ -1469,7 +1469,7 @@ void CMenu::MenuMisc()
 				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
 			}
 			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press RMB with a rocket launcher");
-			WToggle("Auto FaN jump", &Vars::Misc::AutoScoutJump.Value); HelpMarker("Performans a FaN jump when pressing RMB");
+			WToggle("Auto FaN jump", &Vars::Misc::AutoScoutJump.Value); HelpMarker("Performs an FaN jump when pressing RMB");
 			WToggle("Anti-AFK", &Vars::Misc::AntiAFK.Value); HelpMarker("Will make you jump every now and then so you don't get kicked for idling");
 			WToggle("Auto Vote", &Vars::Misc::AutoVote.Value); HelpMarker("Automatically votes yes/no depending on the target");
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.Value); HelpMarker("Allows you to input in taunts");
@@ -1484,7 +1484,7 @@ void CMenu::MenuMisc()
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
 			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
-			WToggle("Auto VAC Bypass", &Vars::Misc::AntiVAC.Value); HelpMarker("Tries to join a server while having a VAC ban");
+			WToggle("Auto VAC Join", &Vars::Misc::AntiVAC.Value); HelpMarker("Tries to join a server while having a VAC ban");
 
 			SectionTitle("Datacenters");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
