@@ -191,15 +191,15 @@ void CDMEChams::Init()
 	}
 
 	v_MatList.push_back(nullptr);
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatShaded", m_pMatShadedkv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatShiny", m_pMatShinykv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatFlat", m_pMatFlatkv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFShaded", m_pMatWFShadedkv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFShiny", m_pMatWFShinykv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatWFFlat", m_pMatWFFlatkv)); 
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatFresnel", m_pMatFresnelkv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatBrick", m_pMatBrickkv));
-	v_MatList.push_back(CreateNRef("DME_MAT_m_pMatScuffed", m_pMatOverlaykv));
+	v_MatList.push_back(CreateNRef("m_pMatShaded", m_pMatShadedkv));
+	v_MatList.push_back(CreateNRef("m_pMatShiny", m_pMatShinykv));
+	v_MatList.push_back(CreateNRef("m_pMatFlat", m_pMatFlatkv));
+	v_MatList.push_back(CreateNRef("m_pMatWFShaded", m_pMatWFShadedkv));
+	v_MatList.push_back(CreateNRef("m_pMatWFShiny", m_pMatWFShinykv));
+	v_MatList.push_back(CreateNRef("m_pMatWFFlat", m_pMatWFFlatkv)); 
+	v_MatList.push_back(CreateNRef("m_pMatFresnel", m_pMatFresnelkv));
+	v_MatList.push_back(CreateNRef("m_pMatBrick", m_pMatBrickkv));
+	v_MatList.push_back(CreateNRef("m_pMatScuffed", m_pMatOverlaykv));
 
 
 	ProxySkins::Init();
