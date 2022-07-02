@@ -6,6 +6,7 @@
 #include <numeric>
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Chams/DMEChams.h"
+#include "../../Features/Glow/Glow.h"
 
 class split_q
 {
@@ -113,31 +114,31 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 				std::vector<std::pair<const char*, float>> fFlags;
 				IMaterialVar** aParam = scanMat->GetShaderParams();
 				{
-					bFlags.push_back({ _("InMaterialPage"), scanMat->InMaterialPage() });
-					bFlags.push_back({ _("IsTranslucent"), scanMat->IsTranslucent() });
-					bFlags.push_back({ _("IsAlphaTested"), scanMat->IsAlphaTested() });
-					bFlags.push_back({ _("IsVertexLit"), scanMat->IsVertexLit() });
-					bFlags.push_back({ _("HasProxy"), scanMat->HasProxy() });
-					bFlags.push_back({ _("UsesEnvCubemap"), scanMat->UsesEnvCubemap() });
-					bFlags.push_back({ _("NeedsTangentSpace"), scanMat->NeedsTangentSpace() });
-					bFlags.push_back({ _("NeedsPowerOfTwoFrameBufferTexture"), scanMat->NeedsPowerOfTwoFrameBufferTexture() });
-					bFlags.push_back({ _("NeedsFullFrameBufferTexture"), scanMat->NeedsFullFrameBufferTexture() });
-					bFlags.push_back({ _("NeedsSoftwareSkinning"), scanMat->NeedsSoftwareSkinning() });
-					bFlags.push_back({ _("IsTwoSided"), scanMat->IsTwoSided() });
-					bFlags.push_back({ _("NeedsLightmapBlendAlpha"), scanMat->NeedsLightmapBlendAlpha() });
-					bFlags.push_back({ _("NeedsSoftwareLighting"), scanMat->NeedsSoftwareLighting() });
-					bFlags.push_back({ _("IsErrorMaterial"), scanMat->IsErrorMaterial() });
-					bFlags.push_back({ _("IsSpriteCard"), scanMat->IsSpriteCard() });
-					bFlags.push_back({ _("WasReloadedFromWhitelist"), scanMat->WasReloadedFromWhitelist() });
-					bFlags.push_back({ _("IsPrecached"), scanMat->IsPrecached() });
-					iFlags.push_back({ _("GetMappingWidth"), scanMat->GetMappingWidth() });
-					iFlags.push_back({ _("GetMappingHeight"), scanMat->GetMappingHeight() });
-					iFlags.push_back({ _("GetNumAnimationFrames"), scanMat->GetNumAnimationFrames() });
-					iFlags.push_back({ _("GetEnumerationID"), scanMat->GetEnumerationID() });
-					iFlags.push_back({ _("GetNumPasses"), scanMat->GetNumPasses() });
-					iFlags.push_back({ _("GetTextureMemoryBytes"), scanMat->GetTextureMemoryBytes() });
-					iFlags.push_back({ _("ShaderParamCount"), scanMat->ShaderParamCount() });
-					fFlags.push_back({ _("GetAlphaModulation"), scanMat->GetAlphaModulation() });
+					bFlags.push_back({ "InMaterialPage", scanMat->InMaterialPage() });
+					bFlags.push_back({ "IsTranslucent", scanMat->IsTranslucent() });
+					bFlags.push_back({ "IsAlphaTested", scanMat->IsAlphaTested() });
+					bFlags.push_back({ "IsVertexLit", scanMat->IsVertexLit() });
+					bFlags.push_back({ "HasProxy", scanMat->HasProxy() });
+					bFlags.push_back({ "UsesEnvCubemap", scanMat->UsesEnvCubemap() });
+					bFlags.push_back({ "NeedsTangentSpace", scanMat->NeedsTangentSpace() });
+					bFlags.push_back({ "NeedsPowerOfTwoFrameBufferTexture", scanMat->NeedsPowerOfTwoFrameBufferTexture() });
+					bFlags.push_back({ "NeedsFullFrameBufferTexture", scanMat->NeedsFullFrameBufferTexture() });
+					bFlags.push_back({ "NeedsSoftwareSkinning", scanMat->NeedsSoftwareSkinning() });
+					bFlags.push_back({ "IsTwoSided", scanMat->IsTwoSided() });
+					bFlags.push_back({ "NeedsLightmapBlendAlpha", scanMat->NeedsLightmapBlendAlpha() });
+					bFlags.push_back({ "NeedsSoftwareLighting", scanMat->NeedsSoftwareLighting() });
+					bFlags.push_back({ "IsErrorMaterial", scanMat->IsErrorMaterial() });
+					bFlags.push_back({ "IsSpriteCard", scanMat->IsSpriteCard() });
+					bFlags.push_back({ "WasReloadedFromWhitelist", scanMat->WasReloadedFromWhitelist() });
+					bFlags.push_back({ "IsPrecached", scanMat->IsPrecached() });
+					iFlags.push_back({ "GetMappingWidth", scanMat->GetMappingWidth() });
+					iFlags.push_back({ "GetMappingHeight", scanMat->GetMappingHeight() });
+					iFlags.push_back({ "GetNumAnimationFrames", scanMat->GetNumAnimationFrames() });
+					iFlags.push_back({ "GetEnumerationID", scanMat->GetEnumerationID() });
+					iFlags.push_back({ "GetNumPasses", scanMat->GetNumPasses() });
+					iFlags.push_back({ "GetTextureMemoryBytes", scanMat->GetTextureMemoryBytes() });
+					iFlags.push_back({ "ShaderParamCount", scanMat->ShaderParamCount() });
+					fFlags.push_back({ "GetAlphaModulation", scanMat->GetAlphaModulation() });
 				}
 
 				I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", matName);
@@ -159,6 +160,10 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106
 					}
 
 					I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %s\n", aParam[idxParam]->GetName(), aParam[idxParam]->GetStringValue());
+				}
+				for (int flagIndex = -1; flagIndex < 31; flagIndex++) {
+					const bool bOn = scanMat->GetMaterialVarFlag((EMaterialVarFlags)flagIndex);
+					I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%d : %s\n", flagIndex, bOn ? "TRUE" : "FALSE");
 				}
 				scanMat->Refresh();
 			}

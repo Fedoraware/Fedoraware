@@ -91,10 +91,33 @@ bool CDMEChams::ShouldRun()
 	return true;
 }
 
-IMaterial* CreateNRef(char const* szName, void* pKV) {
+IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
+	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
+	if (auto var = returnMaterial->FindVar("$flags", nullptr))
+		$flags = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
+		$flags_defined = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags2", nullptr))
+		$flags2 = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
+		$flags_defined2 = std::stoi(var->GetStringValue());
+	backupInformation[returnMaterial] = {
+		$flags, $flags_defined, $flags2, $flags_defined2,	
+	};
 	return returnMaterial;
+}
+
+void CDMEChams::ValidateMaterial(IMaterial* mTarget, ChamInfo backupInfo) {
+	if (auto $flags = mTarget->FindVar("$flags", nullptr))
+		$flags->SetIntValue(backupInfo.$flags);
+	if (auto $flags_defined = mTarget->FindVar("$flags_defined", nullptr))
+		$flags_defined->SetIntValue(backupInfo.$flags_defined);
+	if (auto $flags2 = mTarget->FindVar("$flags2", nullptr))
+		$flags2->SetIntValue(backupInfo.$flags2);
+	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
+		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
 }
 
 void CDMEChams::Init()
@@ -473,6 +496,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
 			if (chamsMaterial) {
+				ValidateMaterial(chamsMaterial, backupInformation[chamsMaterial]);
 				chamsMaterial->IncrementReferenceCount();
 			}
 
@@ -520,6 +544,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
+					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
 
 					pMaterial->IncrementReferenceCount();
 
@@ -539,6 +564,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
+					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
+
 					pMaterial->IncrementReferenceCount();
 
 					if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))

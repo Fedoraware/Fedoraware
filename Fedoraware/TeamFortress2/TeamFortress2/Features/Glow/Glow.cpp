@@ -1,6 +1,7 @@
 #include "Glow.h"
 #include "../Vars.h"
 #include "../Chams/Chams.h"
+#include "../Chams/DMEChams.h"
 
 void CGlowEffect::DrawModel(CBaseEntity* pEntity, int nFlags, bool bIsDrawingModels)
 {
@@ -53,49 +54,29 @@ void CGlowEffect::Init()
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
-	m_pMatBlurX = Utils::CreateMaterial
-	({
-		_("\"BlurFilterX\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_1\"\
-		\n}\n")
-	});
+	static KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
+	static KeyValues* m_pMatBlurXwfkv = new KeyValues("BlurFilterX");
+	static KeyValues* m_pMatBlurYkv = new KeyValues("BlurFilterY");
+	static KeyValues* m_pMatBlurYwfkv = new KeyValues("BlurFilterY");
+	static KeyValues* m_pMatHaloAddToScreenkv = new KeyValues("UnlitGeneric");
 
-	m_pMatBlurXwf = Utils::CreateMaterial
-	({
-		_("\"BlurFilterX\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_1\"\
-		\n\t\"$wireframe\" \"1\"\
-		\n}\n")
-	});
-
-	m_pMatBlurY = Utils::CreateMaterial
-	({
-		_("\"BlurFilterY\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_2\"\
-		\n}\n")
-	});
-
-	m_pMatBlurYwf = Utils::CreateMaterial
-	({
-		_("\"BlurFilterY\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_2\"\
-		\n\t\"$wireframe\" \"1\"\
-		\n}\n")
-	});
+	m_pMatBlurXkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatBlurXwfkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatBlurXwfkv->SetString("$wireframe", "1");
+	
+	m_pMatBlurYkv->SetString("$basetexture", "glow_buffer_2");
+	m_pMatBlurYwfkv->SetString("$basetexture", "glow_buffer_2");
+	m_pMatBlurYwfkv->SetString("$wireframe", "1");
 
 
-	m_pMatHaloAddToScreen = Utils::CreateMaterial
-	({
-		_("\"UnlitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"glow_buffer_1\"\
-		\n\t\"$additive\" \"1\"\
-		\n}\n")
-	});
+	m_pMatHaloAddToScreenkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatHaloAddToScreenkv->SetString("$additive", "1");
+
+	m_pMatBlurX = F::DMEChams.CreateNRef("m_pMatBlurX", m_pMatBlurXkv);
+	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv);
+	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv);
+	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv);
+	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv);
 }
 
 void CGlowEffect::Render()
@@ -155,6 +136,12 @@ void CGlowEffect::Render()
 			{
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
+				//
+				//F::DMEChams.ValidateMaterial(m_pMatBlurX, F::DMEChams.backupInformation[m_pMatBlurX]);
+				//F::DMEChams.ValidateMaterial(m_pMatBlurXwf, F::DMEChams.backupInformation[m_pMatBlurXwf]);
+				//F::DMEChams.ValidateMaterial(m_pMatBlurY, F::DMEChams.backupInformation[m_pMatBlurY]);
+				//F::DMEChams.ValidateMaterial(m_pMatBlurYwf, F::DMEChams.backupInformation[m_pMatBlurYwf]);
+				//F::DMEChams.ValidateMaterial(m_pMatHaloAddToScreen, F::DMEChams.backupInformation[m_pMatHaloAddToScreen]);
 
 				bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
 

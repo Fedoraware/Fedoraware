@@ -6,6 +6,7 @@
 #include "../ImGui/imgui_impl_win32.h"
 #include "../ImGui/imgui_stdlib.h"
 #include "../ConfigManager/ConfigManager.h"
+#include "../../Chams/DMEChams.h"
 
 const std::string DEFAULT_MATERIAL = "\"VertexLitGeneric\"\n{\n}";
 
@@ -56,7 +57,7 @@ void CMaterialEditor::LoadMaterials()
 			const auto kv = new KeyValues(matName.c_str());
 			
 			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
-			IMaterial* newMaterial = I::MatSystem->Create(std::string("m_pmat" + matName).c_str(), kv);
+			IMaterial* newMaterial = F::DMEChams.CreateNRef(std::string("m_pmat" + matName).c_str(), kv);
 			MaterialList.push_back({ matName, matPath, newMaterial });
 		}
 	}
@@ -125,7 +126,7 @@ void CMaterialEditor::MainWindow()
 				// Create a new CustomMaterial and add it to our list
 				const auto kv = new KeyValues(newName.c_str());
 				g_KeyValUtils.LoadFromBuffer(kv, newName.c_str(), DEFAULT_MATERIAL.c_str());
-				IMaterial* defMaterial = I::MatSystem->Create(std::string("m_pmat" + newName).c_str(), kv);
+				IMaterial* defMaterial = F::DMEChams.CreateNRef(std::string("m_pmat" + newName).c_str(), kv);
 
 				const CustomMaterial newMaterial = { newName, newName + ".vmt", defMaterial };
 
