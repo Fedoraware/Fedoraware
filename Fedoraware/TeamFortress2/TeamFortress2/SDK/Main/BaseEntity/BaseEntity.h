@@ -154,6 +154,9 @@ public: //Netvars & conditions
 		M_CONDGET(PlagueRune, GetCondEx3(), TFCondEx3_PlagueRune)
 		M_CONDGET(SupernovaRune, GetCondEx3(), TFCondEx3_SupernovaRune)
 		M_CONDGET(BuffedByKing, GetCondEx3(), TFCondEx3_KingBuff)
+		M_CONDGET(BlastResist, GetCondEx(), TFCondEx_ExplosiveCharge)
+		M_CONDGET(BulletResist, GetCondEx(), TFCondEx_BulletCharge)
+		M_CONDGET(FireResist, GetCondEx(), TFCondEx_FireCharge)
 
 		// thanks litebase this is just better ngl
 		NETVAR(m_vecOrigin, Vec3, _("CBaseEntity"), _("m_vecOrigin"))

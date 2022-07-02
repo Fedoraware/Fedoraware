@@ -1,4 +1,4 @@
-#include "AimbotGlobal.h"
+	#include "AimbotGlobal.h"
 
 #include "../../Vars.h"
 
@@ -77,6 +77,8 @@ const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	CBaseCombatWeapon* pWeapon = g_EntityCache.GetWeapon();
+
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
 	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
@@ -99,6 +101,41 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	{
 		if (G::IsIgnored(pInfo.friendsID)) { return true; }
 		if (Vars::Aimbot::Global::IgnoreOptions.Value & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+	}
+
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (VACCINATOR))
+	{
+		switch (G::CurWeaponType)
+		{
+		case EWeaponType::HITSCAN:
+		{
+			if (G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist())
+				return true;
+
+			break;
+		}
+		case EWeaponType::PROJECTILE:
+		{
+			if (pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER || pWeapon->GetWeaponID() == TF_WEAPON_FLAREGUN)
+			{
+				if (pTarget->IsFireResist())
+					return true;
+			}
+			else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW)//Right?
+			{
+				if (pTarget->IsBulletResist())
+					return true;
+			}
+			else
+			{
+				if (pTarget->IsBlastResist())
+					return true;
+			}
+
+			break;
+		}
+		default: break;
+		}
 	}
 
 	return false;
