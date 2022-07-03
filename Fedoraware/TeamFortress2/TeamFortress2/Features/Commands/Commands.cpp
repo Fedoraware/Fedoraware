@@ -56,7 +56,26 @@ void CCommands::Init()
 		std::string newValue = boost::algorithm::join(args, " ");
 		boost::replace_all(newValue, "\"", "");
 		foundCVar->SetValue(newValue.c_str());
-		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to %s\n", cvarName.c_str(), newValue.c_str());
+		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to: %s\n", cvarName.c_str(), newValue.c_str());
+	});
+
+	Register("getcvar", [](std::deque<std::string> args) {
+		// Check if the user provided 1 arg
+		if (args.size() != 1)
+		{
+			I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: getcvar <cvar>\n");
+			return;
+		}
+
+		const auto foundCVar = I::CVars->FindVar(args[0].c_str());
+		const std::string cvarName = args[0];
+		if (!foundCVar)
+		{
+			I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+			return;
+		}
+
+		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Value of %s is: %s\n", cvarName.c_str(), foundCVar->GetString());
 	});
 
 	Register("f_dumpmaterials", [](const std::deque<std::string>& args) {
