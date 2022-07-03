@@ -1487,10 +1487,8 @@ void CMenu::MenuMisc()
 			}
 			WToggle("Pseudo Spectator", &Vars::Misc::ExtendFreeze.Value); HelpMarker("Causes an infinite respawn/spectator time");
 			WToggle("Auto accept item drops", &Vars::Misc::AutoAcceptItemDrops.Value); HelpMarker("Automatically accepts all item drops");
-			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
-			WToggle("Auto VAC Join", &Vars::Misc::AntiVAC.Value); HelpMarker("Tries to join a server while having a VAC ban");
 
-			SectionTitle("Datacenters");
+			SectionTitle("Queueing");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
 
 			MultiFlags({ "Amsterdam", "Atlanta", "Mumbai", "Dubai", "Moses Lake", "Washington", "Frankfurt", "Tokyo (GNRT)", "Sao Paulo", "Hong Kong", "Virginia", "Johannesburg", "Los Angeles", "London", "Lima", "Luxembourg", "Chennai", "Madrid", "Manilla", "Oklahoma City", "Chicago", "Paris", "Santiago", "Seattle", "Singapore", "Stockholm", "Sydney", "Tokyo", "Vienna", "Warsaw" },
@@ -1498,6 +1496,9 @@ void CMenu::MenuMisc()
 					   &Vars::Misc::RegionsAllowed.Value,
 					   "Regions"
 			);
+			WToggle("Instant accept match", &Vars::Misc::InstantAccept.Value); HelpMarker("Will skip the 10 second delay before joining a match");
+			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
+			WToggle("Auto VAC Join", &Vars::Misc::AntiVAC.Value); HelpMarker("Tries to join a server while having a VAC ban");
 
 			SectionTitle("Sound");
 			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");

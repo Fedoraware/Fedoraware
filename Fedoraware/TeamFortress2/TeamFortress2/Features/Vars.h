@@ -622,6 +622,7 @@ namespace Vars
 		inline CVar<bool> AutoCasualQueue{ false};
 		inline CVar<bool> JoinSpam{ false };
 		inline CVar<bool> AntiVAC{ false };
+		inline CVar<bool> InstantAccept{ false };
 
 		namespace Followbot
 		{

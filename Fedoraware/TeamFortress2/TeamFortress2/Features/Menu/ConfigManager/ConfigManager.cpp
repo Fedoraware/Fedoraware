@@ -736,10 +736,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::ChatFlags);
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
-			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
+			SAVE_VAR(Vars::Misc::RegionChanger);
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
 			SAVE_VAR(Vars::Misc::AutoCasualQueue);
 			SAVE_VAR(Vars::Misc::AntiVAC);
+			SAVE_VAR(Vars::Misc::InstantAccept);
 
 			// Followbot
 			{
@@ -1483,10 +1484,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
 			LOAD_VAR(Vars::Menu::ShowDVD);
-			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this ???? why
+			LOAD_VAR(Vars::Misc::RegionChanger);
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
 			LOAD_VAR(Vars::Misc::AutoCasualQueue);
 			LOAD_VAR(Vars::Misc::AntiVAC);
+			LOAD_VAR(Vars::Misc::InstantAccept);
 
 			// Followbot
 			{
