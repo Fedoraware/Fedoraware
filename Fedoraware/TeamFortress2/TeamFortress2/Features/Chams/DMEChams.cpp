@@ -292,6 +292,8 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFPlayer: {
 		return 2;
 	}
+	case ETFClassID::CRagdollPropAttached:
+	case ETFClassID::CRagdollProp:
 	case ETFClassID::CTFRagdoll: {
 		return 3;
 	}
