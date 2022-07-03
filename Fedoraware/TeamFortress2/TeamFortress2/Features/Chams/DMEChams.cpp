@@ -94,30 +94,44 @@ bool CDMEChams::ShouldRun()
 IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
-	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
-	if (auto var = returnMaterial->FindVar("$flags", nullptr))
-		$flags = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
-		$flags_defined = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags2", nullptr))
-		$flags2 = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
-		$flags_defined2 = std::stoi(var->GetStringValue());
-	backupInformation[returnMaterial] = {
-		$flags, $flags_defined, $flags2, $flags_defined2,	
-	};
+	
+	if (IMaterialVar** aParam = returnMaterial->GetShaderParams())
+	{
+		for (int idxParam = 0; idxParam < returnMaterial->ShaderParamCount(); ++idxParam)
+		{
+			if (!aParam[idxParam]) {
+				continue;
+			}
+			else {
+				backupInformation[returnMaterial][idxParam] = aParam[idxParam]->GetStringValue();
+			}
+		}
+	}
+
+	v_MatListGlobal.push_back(returnMaterial);
+
 	return returnMaterial;
 }
 
-void CDMEChams::ValidateMaterial(IMaterial* mTarget, ChamInfo backupInfo) {
-	if (auto $flags = mTarget->FindVar("$flags", nullptr))
-		$flags->SetIntValue(backupInfo.$flags);
-	if (auto $flags_defined = mTarget->FindVar("$flags_defined", nullptr))
-		$flags_defined->SetIntValue(backupInfo.$flags_defined);
-	if (auto $flags2 = mTarget->FindVar("$flags2", nullptr))
-		$flags2->SetIntValue(backupInfo.$flags2);
-	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
-		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
+void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
+	if (IMaterialVar* $frame = mTarget->FindVar("$frame", nullptr, false)) {
+		if ($frame->GetStringValue() == backupInformation[mTarget][7])
+		{
+			return;
+		}
+	}
+	if (IMaterialVar** aParam = mTarget->GetShaderParams())
+	{
+		for (int idxParam = 0; idxParam < mTarget->ShaderParamCount(); ++idxParam)
+		{
+			if (!aParam[idxParam]) {
+				continue;
+			}
+			else if (const char* stringVal = backupInformation[mTarget][idxParam]) {
+				aParam[idxParam]->SetStringValue(stringVal);
+			}
+		}
+	}
 }
 
 void CDMEChams::Init()
@@ -141,6 +155,7 @@ void CDMEChams::Init()
 		m_pMatShadedkv->SetString("$selfillum", "1");
 		m_pMatShadedkv->SetString("$selfillumfresnel", "1");
 		m_pMatShadedkv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShadedkv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatShinykv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatShinykv->SetString("$bumpmap", "vgui/white_additive");
@@ -149,8 +164,10 @@ void CDMEChams::Init()
 		m_pMatShinykv->SetString("$selfillum", "1");
 		m_pMatShinykv->SetString("$selfillumfresnel", "1");
 		m_pMatShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatShinykv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatFlatkv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatFlatkv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatFresnelkv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatFresnelkv->SetString("$bumpmap", "models/player/shared/shared_normal");
@@ -163,6 +180,7 @@ void CDMEChams::Init()
 		m_pMatFresnelkv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		m_pMatFresnelkv->SetString("$selfillumtint", "[0 0 0]");
 		m_pMatFresnelkv->SetString("$envmaptint", "[1 1 1]");
+		m_pMatFresnelkv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatBrickkv->SetString("$basetexture", "brick/brickwall031b");
 		m_pMatBrickkv->SetString("$bumpmap", "vgui/white_additive");
@@ -174,6 +192,7 @@ void CDMEChams::Init()
 		m_pMatBrickkv->SetString("$selfillum", "1");
 		m_pMatBrickkv->SetString("$rimlight", "1");
 		m_pMatBrickkv->SetString("$rimlightboost", "10");
+		m_pMatBrickkv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatOverlaykv->SetString("$basetexture", "models/player/shared/ice_player");
 		m_pMatOverlaykv->SetString("$bumpmap", "models/player/shared/shared_normal");
@@ -190,6 +209,7 @@ void CDMEChams::Init()
 		m_pMatOverlaykv->SetString("$rimlight", "1");
 		m_pMatOverlaykv->SetString("$rimlightboost", "-5");
 		m_pMatOverlaykv->SetString("$wireframe", "0");
+		m_pMatOverlaykv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatWFShadedkv->SetString("$wireframe", "1");
 		m_pMatWFShadedkv->SetString("$basetexture", "vgui/white_additive");
@@ -197,6 +217,7 @@ void CDMEChams::Init()
 		m_pMatWFShadedkv->SetString("$selfillum", "1");
 		m_pMatWFShadedkv->SetString("$selfillumfresnel", "1");
 		m_pMatWFShadedkv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatWFShadedkv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatWFShinykv->SetString("$wireframe", "1");
 		m_pMatWFShinykv->SetString("$basetexture", "vgui/white_additive");
@@ -206,9 +227,11 @@ void CDMEChams::Init()
 		m_pMatWFShinykv->SetString("$selfillum", "1");
 		m_pMatWFShinykv->SetString("$selfillumfresnel", "1");
 		m_pMatWFShinykv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
+		m_pMatWFShinykv->SetString("$cloakPassEnabled", "1");
 
 		m_pMatWFFlatkv->SetString("$wireframe", "1");
 		m_pMatWFFlatkv->SetString("$basetexture", "vgui/white_additive");
+		m_pMatWFFlatkv->SetString("$cloakPassEnabled", "1");
 
 		setup = true;
 	}
@@ -278,6 +301,8 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFPlayer: {
 		return 2;
 	}
+	case ETFClassID::CRagdollPropAttached:
+	case ETFClassID::CRagdollProp:
 	case ETFClassID::CTFRagdoll: {
 		return 3;
 	}
@@ -320,6 +345,9 @@ int GetType(int EntIndex) {
 	case ETFClassID::CTFProjectile_HealingBolt:
 	case ETFClassID::CTFProjectile_ThrowableBreadMonster: {
 		return 9;
+	}
+	case ETFClassID::CBaseDoor: {
+		return 10;
 	}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
@@ -456,6 +484,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		m_bRendering = true;
 
 		const int drawType = GetType(pInfo.m_nEntIndex);
+		if (drawType == 10 && Vars::Debug::DebugBool.Value) {
+			I::RenderView->SetBlend(0.3f);
+			if (dmeHook) {
+				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+			}
+			I::RenderView->SetBlend(1.f);
+			return true;
+		}
 
 		// filter weapon draws
 		if (!drawType)
@@ -496,7 +532,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
 			if (chamsMaterial) {
-				ValidateMaterial(chamsMaterial, backupInformation[chamsMaterial]);
 				chamsMaterial->IncrementReferenceCount();
 			}
 
@@ -530,8 +565,12 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (pEntity && pLocal) {
 				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value) {
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
+					if (alpha < 0.05f) {	//dont draw if we are too close
+						return true;
+					}
 				}
 			}
+			
 			I::RenderView->SetBlend(alpha);
 
 
@@ -544,7 +583,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
-					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
 
 					pMaterial->IncrementReferenceCount();
 
@@ -564,7 +602,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
-					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
 
 					pMaterial->IncrementReferenceCount();
 

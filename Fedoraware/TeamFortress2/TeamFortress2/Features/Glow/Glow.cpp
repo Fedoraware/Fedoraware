@@ -136,12 +136,6 @@ void CGlowEffect::Render()
 			{
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
-				//
-				//F::DMEChams.ValidateMaterial(m_pMatBlurX, F::DMEChams.backupInformation[m_pMatBlurX]);
-				//F::DMEChams.ValidateMaterial(m_pMatBlurXwf, F::DMEChams.backupInformation[m_pMatBlurXwf]);
-				//F::DMEChams.ValidateMaterial(m_pMatBlurY, F::DMEChams.backupInformation[m_pMatBlurY]);
-				//F::DMEChams.ValidateMaterial(m_pMatBlurYwf, F::DMEChams.backupInformation[m_pMatBlurYwf]);
-				//F::DMEChams.ValidateMaterial(m_pMatHaloAddToScreen, F::DMEChams.backupInformation[m_pMatHaloAddToScreen]);
 
 				bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
 
@@ -202,7 +196,7 @@ void CGlowEffect::Render()
 				if (!F::Chams.HasDrawn(Player))
 					DrawModel(Player, STUDIO_RENDER, true);
 
-				if (Vars::Glow::Players::Wearables.Value)
+				if (Vars::Glow::Players::Wearables.Value && !Player->IsUbered())
 				{
 					CBaseEntity* pAttachment = Player->FirstMoveChild();
 
@@ -223,7 +217,7 @@ void CGlowEffect::Render()
 					}
 				}
 
-				if (Vars::Glow::Players::Weapons.Value)
+				if (Vars::Glow::Players::Weapons.Value && !Player->IsUbered())
 				{
 					if (const auto& pWeapon = Player->GetActiveWeapon())
 					{
@@ -251,10 +245,16 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Buildings::Color.Value == 0)
+				switch (Vars::Glow::Buildings::Color.Value) {
+				case 0: {
 					DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
-
-				else DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
+					break;
+				}
+				case 1: {
+					DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
+					break;
+				}
+				}
 
 				m_vecGlowEntities.push_back({Building, DrawColor, Vars::Glow::Buildings::Alpha.Value});
 

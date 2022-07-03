@@ -18,6 +18,9 @@
 #include "../../Features/Vars.h"
 #include "../../Features/Discord/Discord.h"
 
+#include "../../Features/Chams/DMEChams.h"
+#include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
+
 #include "../../SDK/Discord/include/discord_rpc.h"
 
 static void UpdateAntiAFK(CUserCmd* pCmd)
@@ -336,6 +339,15 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 		if (const ConVar* debugMode = I::CVars->FindVar("debugMode")) {
 			Vars::Debug::DebugInfo.Value = Vars::Debug::DebugBool.Value = debugMode->GetInt();
+		}
+	}
+
+	static Timer ValidateTimer{};
+	if (ValidateTimer.Run(3000))//
+	{
+		for (IMaterial* curMat : F::DMEChams.v_MatListGlobal) {
+			if (!curMat) { continue; }
+			F::DMEChams.ValidateMaterial(curMat);
 		}
 	}
 

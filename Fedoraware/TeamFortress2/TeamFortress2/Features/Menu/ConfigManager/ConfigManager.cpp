@@ -705,6 +705,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::DisableInterpolation);
 			SAVE_VAR(Vars::Misc::MedalFlip);
 			SAVE_VAR(Vars::Misc::AutoRocketJump);
+			SAVE_VAR(Vars::Misc::NonLethalRocketJump);
 			SAVE_VAR(Vars::Misc::AutoScoutJump);
 			SAVE_VAR(Vars::Misc::ChatSpam);
 			SAVE_VAR(Vars::Misc::NoPush);
@@ -735,10 +736,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::ChatFlags);
 			SAVE_VAR(Vars::Misc::MedievalChat);
 			SAVE_VAR(Vars::Misc::AutoAcceptItemDrops);
-			//SAVE_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this
+			SAVE_VAR(Vars::Misc::RegionChanger);
 			SAVE_VAR(Vars::Misc::RegionsAllowed);
 			SAVE_VAR(Vars::Misc::AutoCasualQueue);
 			SAVE_VAR(Vars::Misc::AntiVAC);
+			SAVE_VAR(Vars::Misc::InstantAccept);
 
 			// Followbot
 			{
@@ -1450,6 +1452,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::DisableInterpolation);
 			LOAD_VAR(Vars::Misc::MedalFlip);
 			LOAD_VAR(Vars::Misc::AutoRocketJump);
+			LOAD_VAR(Vars::Misc::NonLethalRocketJump);
 			LOAD_VAR(Vars::Misc::AutoScoutJump);
 			LOAD_VAR(Vars::Misc::ChatSpam);
 			LOAD_VAR(Vars::Misc::NoPush);
@@ -1481,10 +1484,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
 			LOAD_VAR(Vars::Menu::ShowDVD);
-			//LOAD_VAR(Vars::Misc::RegionChanger); // We probably don't want to save this ???? why
+			LOAD_VAR(Vars::Misc::RegionChanger);
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
 			LOAD_VAR(Vars::Misc::AutoCasualQueue);
 			LOAD_VAR(Vars::Misc::AntiVAC);
+			LOAD_VAR(Vars::Misc::InstantAccept);
 
 			// Followbot
 			{
