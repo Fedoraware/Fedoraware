@@ -85,29 +85,30 @@ void CAttributeChanger::Run()
 						break;
 					}
 
-					if (AttributeMap[nIndex].StyleOverride)
+					const auto& attrInfo = AttributeMap[nIndex];
+					if (attrInfo.StyleOverride)
 					{
 						pList->Add(ItemStyleOverride, true);
 					}
 
-					if (AttributeMap[nIndex].Effect)
+					if (attrInfo.Effect)
 					{
-						pList->Add(UnusualEffect, AttributeMap[nIndex].Effect);
+						pList->Add(UnusualEffect, attrInfo.Effect);
 					}
 
-					if (AttributeMap[nIndex].Particle)
+					if (attrInfo.Particle)
 					{
-						pList->Add(ParticleEffect, AttributeMap[nIndex].Particle);
+						pList->Add(ParticleEffect, attrInfo.Particle);
 					}
 
-					if (AttributeMap[nIndex].Ancient)
+					if (attrInfo.Ancient)
 					{
 						pList->Add(AncientPowers, true);
 					}
 
-					if (AttributeMap[nIndex].Sheen)
+					if (attrInfo.Sheen)
 					{
-						pList->Add(Sheen, AttributeMap[nIndex].Sheen);
+						pList->Add(Sheen, attrInfo.Sheen);
 					}
 				}
 			}
