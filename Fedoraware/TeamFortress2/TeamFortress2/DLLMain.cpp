@@ -9,6 +9,7 @@
 
 #include "Features/Menu/ConfigManager/ConfigManager.h"
 #include "Features/Menu/../AttributeChanger/AttributeChanger.h"
+#include "Features/Commands/Commands.h"
 
 #include "SDK/Includes/Enums.h"
 #include "Utils/Events/Events.h"
@@ -72,6 +73,7 @@ void Initialize()
 	}
 
 	g_ConVars.Init();
+	F::Commands.Init();
 
 	InitRichPresence();
 }

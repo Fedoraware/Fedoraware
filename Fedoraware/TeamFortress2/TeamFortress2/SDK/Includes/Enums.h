@@ -696,6 +696,32 @@ enum ETFConds
 	TFCondEx_IgnoreStates          = (TFCondEx_PyroHeal)
 };
 
+enum ETFMatchGroup {
+	k_eTFMatchGroup_Invalid = -1,
+	k_eTFMatchGroup_MvM_Practice = 0,
+	k_eTFMatchGroup_MvM_MannUp = 1,
+	k_eTFMatchGroup_First = 0,
+	k_eTFMatchGroup_MvM_Default = 0,
+	k_eTFMatchGroup_MvM_First = 0,
+	k_eTFMatchGroup_MvM_Last = 1,
+	k_eTFMatchGroup_Ladder_6v6 = 2,
+	k_eTFMatchGroup_Ladder_9v9 = 3,
+	k_eTFMatchGroup_Ladder_12v12 = 4,
+	k_eTFMatchGroup_Ladder_Default = 2,
+	k_eTFMatchGroup_Ladder_First = 2,
+	k_eTFMatchGroup_Ladder_Last = 4,
+	k_eTFMatchGroup_Casual_6v6 = 5,
+	k_eTFMatchGroup_Casual_9v9 = 6,
+	k_eTFMatchGroup_Casual_12v12 = 7,
+	k_eTFMatchGroup_Casual_Default = 7,
+	k_eTFMatchGroup_Casual_First = 5,
+	k_eTFMatchGroup_Casual_Last = 7,
+	k_eTFMatchGroup_Event_Placeholder = 8,
+	k_eTFMatchGroup_Event_Default = 8,
+	k_eTFMatchGroup_Event_First = 8,
+	k_eTFMatchGroup_Event_Last = 8,
+};
+
 enum class EConVarFlags
 {
 	FCVAR_NONE                     = 0, // The default, no flags at all

@@ -89,7 +89,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_OverideView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_ShouldDrawViewModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_CreateMove.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_StartMessageMode.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeShared_DoPostScreenSpaceEffects.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_DrawStaticProps.cpp" />
@@ -151,12 +150,11 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_PlayerResource_GetTeamColor.cpp" />
     <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\OpenVoiceMenu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Commands\Commands.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -699,6 +697,8 @@
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
+    <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

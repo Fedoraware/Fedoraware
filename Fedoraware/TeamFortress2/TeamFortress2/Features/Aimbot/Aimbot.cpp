@@ -7,14 +7,14 @@
 
 bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	if (G::FreecamActive)
-		return false;
+	// Don't run while freecam is active
+	if (G::FreecamActive) { return false; }
 
-	if (!Vars::Aimbot::Global::Active.Value)
-		return false;
+	// Don't run if aimbot is disabled
+	if (!Vars::Aimbot::Global::Active.Value) { return false; }
 
-	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
-		return false;
+	// Don't run in menus
+	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible()) { return false; }
 
 	if (!pLocal->IsAlive()
 		|| pLocal->IsTaunting()
@@ -23,7 +23,9 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		|| pLocal->IsCloaked()
 		|| pLocal->IsInBumperKart()
 		|| pLocal->IsAGhost())
+	{
 		return false;
+	}
 
 	switch (G::CurItemDefIndex)
 	{
@@ -62,46 +64,37 @@ void CAimbot::Run(CUserCmd* pCmd)
 	G::ProjectileSilentActive = false;
 	G::AimPos = Vec3();
 
-	auto pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
+	const auto pLocal = g_EntityCache.GetLocal();
+	const auto pWeapon = g_EntityCache.GetWeapon();
+	if (!pLocal || !pWeapon) { return; }
 
-	if (pLocal)
+	if (!ShouldRun(pLocal, pWeapon)) { return; }
+
+	if (SandvichAimbot::bIsSandvich = SandvichAimbot::IsSandvich())
 	{
-		auto pWeapon = pLocal->GetActiveWeapon();
+		G::CurWeaponType = EWeaponType::HITSCAN;
+	}
 
-		if (!pWeapon)
+	switch (G::CurWeaponType)
+	{
+	case EWeaponType::HITSCAN:
 		{
-			return;
+			F::AimbotHitscan.Run(pLocal, pWeapon, pCmd);
+			break;
 		}
 
-		if (!ShouldRun(pLocal, pWeapon))
-			return;
-
-		SandvichAimbot::IsSandvich();
-		if (SandvichAimbot::bIsSandvich) {
-			G::CurWeaponType = EWeaponType::HITSCAN;
-		}
-
-		switch (G::CurWeaponType)
+	case EWeaponType::PROJECTILE:
 		{
-		case EWeaponType::HITSCAN:
-			{
-				F::AimbotHitscan.Run(pLocal, pWeapon, pCmd);
-				break;
-			}
-
-		case EWeaponType::PROJECTILE:
-			{
-				F::AimbotProjectile.Run(pLocal, pWeapon, pCmd);
-				break;
-			}
-
-		case EWeaponType::MELEE:
-			{
-				F::AimbotMelee.Run(pLocal, pWeapon, pCmd);
-				break;
-			}
-
-		default: break;
+			F::AimbotProjectile.Run(pLocal, pWeapon, pCmd);
+			break;
 		}
+
+	case EWeaponType::MELEE:
+		{
+			F::AimbotMelee.Run(pLocal, pWeapon, pCmd);
+			break;
+		}
+
+	default: break;
 	}
 }
