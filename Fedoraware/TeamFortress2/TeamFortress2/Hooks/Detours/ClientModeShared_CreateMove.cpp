@@ -343,6 +343,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	{
 		for (IMaterial* curMat : F::DMEChams.v_MatList) {
+			if (!curMat) { continue; }
 			F::DMEChams.ValidateMaterial(curMat);
 		}
 	}
