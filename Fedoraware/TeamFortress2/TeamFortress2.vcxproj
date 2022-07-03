@@ -798,6 +798,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Steam\Win32Library.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Surface\Surface.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Texture\Texture.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\UniformRandomStream\UniformRandomStream.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRender\ViewRender.h" />

@@ -85,11 +85,14 @@ void CInterfaces::Init()
 	MatSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, _(VMATERIALSYSTEM_INTERFACE));
 	_valid(MatSystem);
 
-	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);;
+	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);;
 	_valid(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient*(__cdecl*)()>(g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? FF 70 24"))();
+	TFPartyClient = reinterpret_cast<CTFPartyClient*(__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
 	_valid(TFPartyClient);
+
+	TFInventoryManager = *reinterpret_cast<CTFInventoryManager**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
+	_valid(TFInventoryManager);
 
 	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, _(L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34")) + 0x2);
 	_valid(RandomSeed);

@@ -237,7 +237,7 @@ namespace ImGui
 		}
 
 		SameLine();
-		Text(label);
+		Text("%s", label);
 		PopID();
 
 		return true;
@@ -362,7 +362,7 @@ namespace ImGui
 		const auto textWidth = CalcTextSize(fmt).x;
 
 		SetCursorPosX((windowWidth - textWidth) * 0.5f);
-		Text(fmt);
+		Text("%s", fmt);
 	}
 
     // Source: https://github.com/ocornut/imgui/issues/1537#issuecomment-355569554
@@ -395,7 +395,6 @@ namespace ImGui
 
         drawList->AddRectFilled(p, ImVec2(p.x + width, p.y + height), colBg, height * 0.5f);
         drawList->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, colCircle);
-        //drawList->AddText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, ImColor(255, 255, 255), label);
 		RenderText({ p.x + width + style.ItemInnerSpacing.x, p.y + (height / 2 - labelSize.y / 2) }, label);
 
 		return *v;

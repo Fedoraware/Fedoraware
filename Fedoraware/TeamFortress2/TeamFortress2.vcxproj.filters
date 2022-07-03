@@ -699,6 +699,7 @@
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

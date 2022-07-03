@@ -37,6 +37,7 @@
 #include "Steam/ISteamNetworkingUtils.h"
 #include "CTFGCClientSystem/CTFGCClientSystem.h"
 #include "CTFPartyClient/CTFPartyClient.h"
+#include "CTFInventoryManager/CTFInventoryManager.h"
 
 class CClockDriftMgr
 {
@@ -146,6 +147,7 @@ namespace I
 	inline void* BackpackPanel = nullptr;
 	inline CTFGCClientSystem* TFGCClientSystem = nullptr;
 	inline CTFPartyClient* TFPartyClient = nullptr;
+	inline CTFInventoryManager* TFInventoryManager = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
