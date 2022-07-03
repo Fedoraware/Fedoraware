@@ -200,44 +200,12 @@ namespace Colors
 
 namespace Utils
 {
-	__inline IMaterial* CreateMaterial(const char* szVars)
-	{
-		static int nCreatedMats = 0;
-		char szOut[512];
-		sprintf_s(szOut, sizeof(szOut), _("SEO_material%i.vmt"), nCreatedMats++);
-
-		char szMaterial[512];
-		sprintf_s(szMaterial, sizeof(szMaterial), szVars);
-
-		KeyValues* pVals = new KeyValues(_("matvalsxd"));
-		g_KeyValUtils.Initialize(pVals, (char*)szOut);
-		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szMaterial);
-
-		IMaterial* pCreated = I::MatSystem->Create(szOut, pVals);
-		pCreated->IncrementReferenceCount();
-
-		return pCreated;
-	}
-
 	static std::random_device RandomDevice;
 	static std::mt19937 Engine{ RandomDevice() };
 	__inline float RandFloatRange(float min, float max)
 	{
 		std::uniform_real_distribution<float> Random(min, max);
 		return Random(Engine);
-	}
-
-	__inline void* CreateKeyVals(const char* szVars)
-	{
-		static int nCreatedKeyVals = 0;
-		char szOut[512];
-		sprintf_s(szOut, sizeof(szOut), _("SEO_keyvals%i.vmt"), nCreatedKeyVals++);
-
-		KeyValues* pVals = new KeyValues(_("keyvalssmh"));
-		g_KeyValUtils.Initialize(pVals, (char*)szOut);
-		g_KeyValUtils.LoadFromBuffer(pVals, szOut, szVars);
-
-		return pVals;
 	}
 
 	__inline bool W2S(const Vec3 &vOrigin, Vec3 &m_vScreen)

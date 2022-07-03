@@ -585,6 +585,7 @@ namespace Vars
 		inline CVar<bool> DisableInterpolation{false};
 		inline CVar<bool> MedalFlip{false};
 		inline CVar<bool> AutoRocketJump{false};
+		inline CVar<bool> NonLethalRocketJump{true};
 		inline CVar<bool> AutoScoutJump{ false };
 		inline CVar<int> ChatSpam{0};
 		inline CVar<bool> NoPush{false};
