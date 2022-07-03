@@ -196,7 +196,7 @@ void CGlowEffect::Render()
 				if (!F::Chams.HasDrawn(Player))
 					DrawModel(Player, STUDIO_RENDER, true);
 
-				if (Vars::Glow::Players::Wearables.Value)
+				if (Vars::Glow::Players::Wearables.Value && !Player->IsUbered())
 				{
 					CBaseEntity* pAttachment = Player->FirstMoveChild();
 
@@ -217,7 +217,7 @@ void CGlowEffect::Render()
 					}
 				}
 
-				if (Vars::Glow::Players::Weapons.Value)
+				if (Vars::Glow::Players::Weapons.Value && !Player->IsUbered())
 				{
 					if (const auto& pWeapon = Player->GetActiveWeapon())
 					{
