@@ -6,9 +6,9 @@ namespace SandvichAimbot
 {
 	bool bIsSandvich;
 
-	void IsSandvich()
+	bool IsSandvich()
 	{
-		bIsSandvich = (G::CurItemDefIndex == Heavy_s_RoboSandvich ||
+		return (G::CurItemDefIndex == Heavy_s_RoboSandvich ||
 			G::CurItemDefIndex == Heavy_s_Sandvich ||
 			G::CurItemDefIndex == Heavy_s_FestiveSandvich ||
 			G::CurItemDefIndex == Heavy_s_Fishcake ||

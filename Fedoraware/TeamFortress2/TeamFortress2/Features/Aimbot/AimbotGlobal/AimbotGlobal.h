@@ -4,7 +4,7 @@
 namespace SandvichAimbot
 {
 	extern bool bIsSandvich;
-	extern void IsSandvich();
+	extern bool IsSandvich();
 	extern void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget);
 }
 
