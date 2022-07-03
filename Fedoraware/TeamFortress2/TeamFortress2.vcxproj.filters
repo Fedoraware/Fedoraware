@@ -157,6 +157,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_RenderView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\OpenVoiceMenu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Commands\Commands.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -700,6 +701,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
+    <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
