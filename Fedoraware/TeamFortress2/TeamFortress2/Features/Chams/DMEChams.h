@@ -3,13 +3,6 @@
 
 using DMEFN = void(__stdcall*)(CModelRender*, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 
-struct ChamInfo {
-	int $flags = 0;
-	int $flags_defined = 0;
-	int $flags2 = 0;
-	int $flags_defined2 = 0;
-};
-
 class CDMEChams
 {
 private:
@@ -19,11 +12,11 @@ private:
 public:
 	void Init();
 	IMaterial* CreateNRef(char const* szName, void* pKV);
-	void ValidateMaterial(IMaterial* mTarget, ChamInfo backupInfo);
+	void ValidateMaterial(IMaterial* mTarget);
 	bool Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 	bool m_bRendering;
 	std::vector<IMaterial*> v_MatList;
-	std::unordered_map<IMaterial*, ChamInfo> backupInformation;
+	std::unordered_map<IMaterial*, std::unordered_map<int, const char*>> backupInformation;
 };
 
 ADD_FEATURE(CDMEChams, DMEChams)

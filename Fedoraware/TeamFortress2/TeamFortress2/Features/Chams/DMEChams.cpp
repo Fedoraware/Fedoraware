@@ -94,30 +94,36 @@ bool CDMEChams::ShouldRun()
 IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
-	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
-	if (auto var = returnMaterial->FindVar("$flags", nullptr))
-		$flags = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
-		$flags_defined = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags2", nullptr))
-		$flags2 = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
-		$flags_defined2 = std::stoi(var->GetStringValue());
-	backupInformation[returnMaterial] = {
-		$flags, $flags_defined, $flags2, $flags_defined2,	
-	};
+	
+	if (IMaterialVar** aParam = returnMaterial->GetShaderParams())
+	{
+		for (int idxParam = 0; idxParam < returnMaterial->ShaderParamCount(); ++idxParam)
+		{
+			if (!aParam[idxParam]) {
+				continue;
+			}
+			else {
+				backupInformation[returnMaterial][idxParam] = aParam[idxParam]->GetStringValue();
+			}
+		}
+	}
+
 	return returnMaterial;
 }
 
-void CDMEChams::ValidateMaterial(IMaterial* mTarget, ChamInfo backupInfo) {
-	if (auto $flags = mTarget->FindVar("$flags", nullptr))
-		$flags->SetIntValue(backupInfo.$flags);
-	if (auto $flags_defined = mTarget->FindVar("$flags_defined", nullptr))
-		$flags_defined->SetIntValue(backupInfo.$flags_defined);
-	if (auto $flags2 = mTarget->FindVar("$flags2", nullptr))
-		$flags2->SetIntValue(backupInfo.$flags2);
-	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
-		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
+void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
+	if (IMaterialVar** aParam = mTarget->GetShaderParams())
+	{
+		for (int idxParam = 0; idxParam < mTarget->ShaderParamCount(); ++idxParam)
+		{
+			if (!aParam[idxParam]) {
+				continue;
+			}
+			else if (const char* stringVal = backupInformation[mTarget][idxParam]) {
+				aParam[idxParam]->SetStringValue(stringVal);
+			}
+		}
+	}
 }
 
 void CDMEChams::Init()
@@ -496,7 +502,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
 			if (chamsMaterial) {
-				ValidateMaterial(chamsMaterial, backupInformation[chamsMaterial]);
+				ValidateMaterial(chamsMaterial);
 				chamsMaterial->IncrementReferenceCount();
 			}
 
@@ -544,7 +550,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
-					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
+					ValidateMaterial(pMaterial);
 
 					pMaterial->IncrementReferenceCount();
 
@@ -564,7 +570,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
-					ValidateMaterial(pMaterial, backupInformation[pMaterial]);
+					ValidateMaterial(pMaterial);
 
 					pMaterial->IncrementReferenceCount();
 
