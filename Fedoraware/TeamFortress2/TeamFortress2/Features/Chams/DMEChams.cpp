@@ -112,6 +112,12 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 }
 
 void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
+	if (IMaterialVar* $frame = mTarget->FindVar("$frame", nullptr, false)) {
+		if ($frame->GetStringValue() == backupInformation[mTarget][7])
+		{
+			return;
+		}
+	}
 	if (IMaterialVar** aParam = mTarget->GetShaderParams())
 	{
 		for (int idxParam = 0; idxParam < mTarget->ShaderParamCount(); ++idxParam)
@@ -502,7 +508,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
 			if (chamsMaterial) {
-				ValidateMaterial(chamsMaterial);
 				chamsMaterial->IncrementReferenceCount();
 			}
 
@@ -550,7 +555,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
-					ValidateMaterial(pMaterial);
 
 					pMaterial->IncrementReferenceCount();
 
@@ -570,7 +574,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
-					ValidateMaterial(pMaterial);
 
 					pMaterial->IncrementReferenceCount();
 

@@ -127,12 +127,6 @@ void CGlowEffect::Render()
 			StencilState.SetStencilState(pRenderContext);
 		}
 
-		F::DMEChams.ValidateMaterial(m_pMatBlurX);
-		F::DMEChams.ValidateMaterial(m_pMatBlurXwf);
-		F::DMEChams.ValidateMaterial(m_pMatBlurY);
-		F::DMEChams.ValidateMaterial(m_pMatBlurYwf);
-		F::DMEChams.ValidateMaterial(m_pMatHaloAddToScreen);
-		//
 		I::RenderView->SetBlend(1.0f);
 		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
