@@ -82,7 +82,7 @@ namespace G
 
 	inline CUserCmd* CurrentUserCmd{nullptr}; // Unreliable! Only use this if you really have to.
 	inline CUserCmd* LastUserCmd{nullptr};
-
+	
 	inline EWeaponType CurWeaponType = {};
 	inline std::unordered_map<CBaseEntity*, VelFixRecord> VelFixRecords;
 	inline std::unordered_map<CBaseEntity*, std::unordered_map<int, PlayerCache>> Cache; // caches movement, angles, add more if you want. format is <Entity, <tickcount, pData>>
@@ -100,8 +100,6 @@ namespace G
 	inline std::vector<int> MedicCallers;
 
 	inline bool ShouldUpdateMaterialCache = false;
-
-	inline std::string DisconnectReason = "Greetings from Fedoraware!";
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{

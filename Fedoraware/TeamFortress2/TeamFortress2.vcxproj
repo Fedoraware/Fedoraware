@@ -199,7 +199,6 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CGameClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPartyClient_OnInQueueChanged.cpp" />
