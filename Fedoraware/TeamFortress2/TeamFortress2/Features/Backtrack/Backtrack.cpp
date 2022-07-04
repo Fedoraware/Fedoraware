@@ -231,7 +231,7 @@ void CBacktrack::AdjustPing(INetChannel* netChannel)
 	{
 		if (I::GlobalVars->realtime - sequence.CurTime >= GetLatency())
 		{
-			netChannel->m_nInReliableState = sequence.IsReliableState;
+			netChannel->m_nInReliableState = sequence.InReliableState;
 			netChannel->m_nInSequenceNr = sequence.SequenceNr;
 			break;
 		}
