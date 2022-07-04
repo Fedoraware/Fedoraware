@@ -23,7 +23,7 @@ struct DormantData {
 };
 
 struct Priority {
-	int Mode = 0; // -2 - Friend, -1 - Ignore, 0 - Default, 1 - Rage, 2 - Cheater
+	int Mode = 2; // 0 - Friend, 1 - Ignore, 2 - Default, 3 - Rage, 4 - Cheater
 };
 
 namespace G
@@ -103,11 +103,11 @@ namespace G
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{
-		return PlayerPriority[friendsID].Mode < 0;
+		return PlayerPriority[friendsID].Mode < 2;
 	}
 
 	inline bool IsRage(uint32_t friendsID)
 	{
-		return PlayerPriority[friendsID].Mode > 0;
+		return PlayerPriority[friendsID].Mode > 2;
 	}
 };

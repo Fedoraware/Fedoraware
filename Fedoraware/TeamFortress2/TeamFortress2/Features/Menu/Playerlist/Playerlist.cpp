@@ -175,7 +175,7 @@ void CPlayerList::Render()
 						case 3:
 							{
 								/* Priority */
-								if (ImGui::Selectable(priorityModes[G::PlayerPriority[Player.FriendsID].Mode + 2]))
+								if (ImGui::Selectable(priorityModes[G::PlayerPriority[Player.FriendsID].Mode]))
 								{
 									ImGui::OpenPopup("priority_popup");
 								}
@@ -186,7 +186,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(priorityModes[i]))
 										{
-											G::PlayerPriority[Player.FriendsID].Mode = i - 2;
+											G::PlayerPriority[Player.FriendsID].Mode = i;
 											ShouldSave = true;
 										}
 									}
@@ -316,7 +316,7 @@ void CPlayerList::Load()
 
 			if (auto getValue = it.second.get_optional<int>("Mode"))
 			{
-				prio.Mode = *getValue;
+				prio.Mode = std::max(*getValue, 0);
 			}
 
 			G::PlayerPriority[userID] = prio;
