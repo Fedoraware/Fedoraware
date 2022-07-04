@@ -1,8 +1,5 @@
 #include "AutoQueue.h"
 
-#include <chrono>
-#include <thread>
-
 void CAutoQueue::Run()
 {
 	if (!I::EngineVGui->IsGameUIVisible() || I::Engine->IsInGame()) { return; }

@@ -2,9 +2,13 @@
 #include "../../Vars.h"
 #include "../../Resolver/Resolver.h"
 #include "../../Menu/Menu.h"
+#include "../ConfigManager/ConfigManager.h"
 #include "../ImGui/imgui_color_gradient.h"
-#include <mutex>
 #include "../ImGui/imgui_internal.h"
+
+#include <mutex>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 const char* resolveListPitch[]{"None", "Up", "Down", "Zero", "Auto"};
 const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert", "Auto"};
@@ -61,10 +65,31 @@ void CPlayerList::UpdatePlayers()
 	}
 }
 
+void CPlayerList::Run()
+{
+	// Save every 10 seconds, if needed
+	static Timer saveTimer{ };
+	if (saveTimer.Run(10000))
+	{
+		if (ShouldSave)
+		{
+			Save();
+			ShouldSave = false;
+		}
+
+		if (ShouldLoad)
+		{
+			Load();
+			ShouldLoad = false;
+		}
+	}
+}
+
 void CPlayerList::Render()
 {
 	if (!Vars::Menu::ShowPlayerlist) { return; }
 
+	// Draw the playerlist
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
 	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
 	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
@@ -162,6 +187,7 @@ void CPlayerList::Render()
 										if (ImGui::MenuItem(priorityModes[i]))
 										{
 											G::PlayerPriority[Player.FriendsID].Mode = i;
+											ShouldSave = true;
 										}
 									}
 
@@ -252,6 +278,48 @@ void CPlayerList::Render()
 		ImGui::PopFont();
 		ImGui::End();
 	}
-
 	ImGui::PopStyleVar();
+}
+
+void CPlayerList::Save()
+{
+	try
+	{
+		boost::property_tree::ptree writeTree;
+
+		// Put map entries into ptree
+		for (const auto& [user, prio] : G::PlayerPriority)
+		{
+			boost::property_tree::ptree userTree;
+			userTree.put("Mode", prio.Mode);
+
+			writeTree.put_child(std::to_string(user), userTree);
+		}
+
+		// Save the file
+		write_json(g_CFG.GetConfigPath() + "\\Core\\Playerlist.json", writeTree);
+	} catch (...) { }
+}
+
+void CPlayerList::Load()
+{
+	try
+	{
+		boost::property_tree::ptree readTree;
+		read_json(g_CFG.GetConfigPath() + "\\Core\\Playerlist.json", readTree);
+		G::PlayerPriority.clear();
+
+		for (auto& it : readTree)
+		{
+			Priority prio;
+			uint32_t userID = std::stoi(it.first);
+
+			if (auto getValue = it.second.get_optional<int>("Mode"))
+			{
+				prio.Mode = std::max(*getValue, 0);
+			}
+
+			G::PlayerPriority[userID] = prio;
+		}
+	} catch (...) { }
 }
