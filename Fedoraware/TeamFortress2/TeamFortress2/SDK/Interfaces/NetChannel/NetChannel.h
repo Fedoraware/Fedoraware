@@ -508,6 +508,27 @@ public:
 	float		m_flHostFrameTimeStdDeviation;
 };
 
+class CLC_VoiceData : public CNetMessage
+{
+	DECLARE_CLC_MESSAGE(VoiceData);
+
+	int GetGroup() const
+	{
+		return INetChannelInfo::VOICE;
+	}
+
+	CLC_VoiceData()
+	{
+		m_bReliable = false;
+	};
+
+public:
+	int m_nLength;
+	bf_read m_DataIn;
+	bf_write m_DataOut;
+	uint64_t m_xuid;
+};
+
 class SVC_FixAngle : public CNetMessage
 {
 	SVC_FixAngle() { m_bReliable = false; };
@@ -521,4 +542,17 @@ public:
 	QAngle			m_Angle;
 };
 
+class CLC_BaselineAck : public CNetMessage
+{
+	DECLARE_CLC_MESSAGE(BaselineAck);
+
+	CLC_BaselineAck() {};
+	CLC_BaselineAck(int tick, int baseline) { m_nBaselineTick = tick; m_nBaselineNr = baseline; }
+
+	int	GetGroup() const { return INetChannelInfo::ENTITIES; }
+
+public:
+	int		m_nBaselineTick;	// sequence number of baseline
+	int		m_nBaselineNr;		// 0 or 1 		
+};
 #endif

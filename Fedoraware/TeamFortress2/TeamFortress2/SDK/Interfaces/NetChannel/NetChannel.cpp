@@ -99,3 +99,47 @@ const char* NET_Tick::ToString(void) const
 {
     return tfm::format("%s: tick %i", GetName(), m_nTick).c_str();
 }
+
+const char* CLC_VoiceData::ToString(void) const
+{
+    return tfm::format("%s: %i bytes", GetName(), static_cast<int>(m_nLength * 0.125f)).c_str();
+}
+
+
+bool CLC_VoiceData::WriteToBuffer(bf_write& buffer)
+{
+    buffer.WriteUBitLong(GetType(), NETMSG_TYPE_BITS);
+    m_nLength = m_DataOut.GetNumBitsWritten();
+    buffer.WriteWord(m_nLength); // length in bits
+
+    return buffer.WriteBits(m_DataOut.GetBasePointer(), m_nLength);
+}
+
+bool CLC_VoiceData::ReadFromBuffer(bf_read& buffer)
+{
+    m_nLength = buffer.ReadWord(); // length in bits
+    m_DataIn = buffer;
+
+    return buffer.SeekRelative(m_nLength);
+}
+
+bool CLC_BaselineAck::WriteToBuffer(bf_write& buffer)
+{
+    buffer.WriteUBitLong(GetType(), NETMSG_TYPE_BITS);
+    buffer.WriteLong(m_nBaselineTick);
+    buffer.WriteUBitLong(m_nBaselineNr, 1);
+    return !buffer.IsOverflowed();
+}
+
+bool CLC_BaselineAck::ReadFromBuffer(bf_read& buffer)
+{
+
+    m_nBaselineTick = buffer.ReadLong();
+    m_nBaselineNr = buffer.ReadUBitLong(1);
+    return !buffer.IsOverflowed();
+}
+
+const char* CLC_BaselineAck::ToString(void) const
+{
+    return tfm::format("%s: tick %i", GetName(), m_nBaselineTick).c_str();
+}
