@@ -2,6 +2,7 @@
 
 #include <string>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
@@ -15,6 +16,9 @@
 
 #define SAVE_OTHER(x) SaveJson(_(#x), x)
 #define LOAD_OTHER(x) LoadJson(_(#x), x)
+
+boost::property_tree::ptree WriteTree;
+boost::property_tree::ptree ReadTree;
 
 boost::property_tree::ptree ColorToTree(Color_t color)
 {

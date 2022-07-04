@@ -3,13 +3,9 @@
 #include "../../../Utils/Color/Color.h"
 
 #include <filesystem>
-#include <boost/property_tree/ptree.hpp>
 
 class CConfigManager
 {
-	boost::property_tree::ptree WriteTree;
-	boost::property_tree::ptree ReadTree;
-
 	void SaveJson(const char* name, bool val);
 	void SaveJson(const char* name, const std::string& val);
 	void SaveJson(const char* name, int val);

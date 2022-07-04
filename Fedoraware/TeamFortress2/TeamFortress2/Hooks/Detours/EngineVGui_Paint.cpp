@@ -15,6 +15,7 @@
 #include "../../Features/AutoQueue/AutoQueue.h"
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
+#include "../../Features/Menu/Playerlist/Playerlist.h"
 
 #include "../../Resources/DVD-Icon.h"
 
@@ -69,8 +70,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			
 			auto OtherDraws = [&]() -> void
 			{
-				F::AutoQueue.Run();
-
 				if (I::EngineVGui->IsGameUIVisible())
 				{
 					if (!I::Engine->IsInGame())
@@ -367,10 +366,12 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::Visuals.PickupTimers();
 			F::SpyWarning.Run();
 			F::PlayerArrows.Run();
+			F::AutoQueue.Run();
 			F::Followbot.Draw();
 			F::SpectatorList.Run();
 			F::CritHack.Draw();
 			F::Radar.Run();
+			F::PlayerList.Run();
 
 			if (Vars::AntiHack::AntiAim::Active.Value)
 			{
