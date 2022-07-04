@@ -6,19 +6,19 @@
 class CIncomingSequence
 {
 public:
-	int IsReliableState;
+	int InReliableState;
 	int SequenceNr;
 	float CurTime;
 
-	CIncomingSequence(int instate, int seqnr, float time)
+	CIncomingSequence(int inState, int seqNr, float time)
 	{
-		IsReliableState = instate;
-		SequenceNr = seqnr;
+		InReliableState = inState;
+		SequenceNr = seqNr;
 		CurTime = time;
 	}
 };
 
-typedef struct BoneMatrixes {
+using BoneMatrixes = struct {
 	float BoneMatrix[128][3][4];
 };
 
