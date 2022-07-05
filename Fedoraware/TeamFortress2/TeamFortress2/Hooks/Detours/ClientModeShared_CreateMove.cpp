@@ -29,20 +29,23 @@ void UpdateRichPresence()
 	F::Misc.SteamRPC();
 }
 
-void AppendCache() {
+void AppendCache()
+{
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	const int tickcount = I::GlobalVars->tickcount;
 
 	for (CBaseEntity* pCaching : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		std::unordered_map<int, PlayerCache> &openCache = G::Cache[pCaching];
-		if (pCaching == pLocal || pCaching->GetDormant()) {
+		std::unordered_map<int, PlayerCache>& openCache = G::Cache[pCaching];
+		if (pCaching == pLocal || pCaching->GetDormant())
+		{
 			openCache.clear();
 			continue;
 		}
 
-		if (openCache.size() > round(1.f / I::GlobalVars->interval_per_tick)) {
-			openCache.erase(openCache.begin());	// delete the first value if our cache lasts longer than a second.
+		if (openCache.size() > round(1.f / I::GlobalVars->interval_per_tick))
+		{
+			openCache.erase(openCache.begin()); // delete the first value if our cache lasts longer than a second.
 		}
 
 		openCache[tickcount].m_vecOrigin = pCaching->m_vecOrigin();
@@ -53,12 +56,12 @@ void AppendCache() {
 }
 
 MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bool, __fastcall,
-		  void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
+          void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
 	G::SilentTime = false;
 	G::IsAttacking = false;
 	G::FakeShotPitch = false;
-	G::SafeTick = !G::IsAttacking;//
+	G::SafeTick = !G::IsAttacking;
 
 	if (!pCmd || !pCmd->command_number)
 	{
@@ -70,6 +73,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
 	}
 
+	// Get the pointer to pSendPacket
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
 	auto pSendPacket = reinterpret_cast<bool*>(***reinterpret_cast<uintptr_t***>(_bp) - 0x1);
@@ -87,7 +91,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 		// Update Discord/Steam rich presence every second
 		static Timer richPresenceTimer{};
-		if (richPresenceTimer.Run(1000)) {
+		if (richPresenceTimer.Run(1000))
+		{
 			UpdateRichPresence();
 		}
 
@@ -144,14 +149,16 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (const INetChannel* netChannel = I::Engine->GetNetChannelInfo()) {
+		if (const INetChannel* netChannel = I::Engine->GetNetChannelInfo())
+		{
 			static const char* oServerAddress = netChannel->GetAddress();
 			const char* cServerAddress = netChannel->GetAddress();
 
 			static const char* oMap = I::Engine->GetLevelName();
 			const char* cMap = I::Engine->GetLevelName();
 
-			if (oServerAddress != cServerAddress || oMap != cMap) {
+			if (oServerAddress != cServerAddress || oMap != cMap)
+			{
 				oServerAddress = cServerAddress;
 				oMap = cMap;
 				G::LoadInCount++;
@@ -216,7 +223,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
 
-	AppendCache();	// hopefully won't cause issues.
+	AppendCache(); // hopefully won't cause issues.
 	G::ViewAngles = pCmd->viewangles;
 
 	// Recharge doubletap by shifting packets
@@ -259,16 +266,18 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			return false;
 		}
 
-		if (const ConVar* debugMode = I::CVars->FindVar("debugMode")) {
+		if (const ConVar* debugMode = I::CVars->FindVar("debugMode"))
+		{
 			Vars::Debug::DebugInfo.Value = Vars::Debug::DebugBool.Value = debugMode->GetInt();
 		}
 	}
 
 	// Validates the cham materials every 3 seconds
 	static Timer validateTimer{};
-	if (validateTimer.Run(3000))//
+	if (validateTimer.Run(3000)) //
 	{
-		for (IMaterial* curMat : F::DMEChams.v_MatListGlobal) {
+		for (IMaterial* curMat : F::DMEChams.v_MatListGlobal)
+		{
 			if (!curMat) { continue; }
 			F::DMEChams.ValidateMaterial(curMat);
 		}
@@ -307,7 +316,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	} // check after force send to prevent timing out possibly
 
 	// Stop movement if required
-	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value)) {
+	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value))
+	{
 		G::ShouldStop = false;
 		Utils::StopMovement(pCmd, !G::ShouldShift);
 		return false;

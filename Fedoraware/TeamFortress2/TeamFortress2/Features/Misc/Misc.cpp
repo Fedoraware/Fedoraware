@@ -18,7 +18,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
 		Freecam(pCmd, pLocal);
-		RageRetry(pCmd, pLocal);
+		RageRetry(pLocal);
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
 		ViewmodelFlip(pCmd, pLocal);
@@ -316,7 +316,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 }
 
-void CMisc::RageRetry(CUserCmd* pCmd, CBaseEntity* pLocal)
+void CMisc::RageRetry(CBaseEntity* pLocal)
 {
 	if (Vars::Misc::RageRetry.Value)
 	{
