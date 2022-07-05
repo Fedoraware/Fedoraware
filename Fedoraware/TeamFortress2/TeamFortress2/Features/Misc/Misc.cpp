@@ -18,12 +18,14 @@ void CMisc::Run(CUserCmd* pCmd)
 		NoiseMakerSpam(pLocal);
 		ExtendFreeze(pLocal);
 		Freecam(pCmd, pLocal);
+		RageRetry(pLocal);
 		AntiBackstab(pLocal, pCmd);
 		LegJitter(pCmd, pLocal);
 		ViewmodelFlip(pCmd, pLocal);
 		AutoPeek(pCmd, pLocal);
 	}
 
+	AntiAFK(pCmd);
 	ChatSpam();
 	CheatsBypass();
 	Teleport(pCmd);
@@ -37,8 +39,20 @@ void CMisc::RunLate(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
+		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
+	}
+}
+
+void CMisc::AntiAFK(CUserCmd* pCmd)
+{
+	if (Vars::Misc::AntiAFK.Value && g_ConVars.afkTimer->GetInt() != 0)
+	{
+		if (pCmd->command_number % 2)
+		{
+			pCmd->buttons |= 1 << 27;
+		}
 	}
 }
 
@@ -299,6 +313,17 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	else
 	{
 		G::FreecamActive = false;
+	}
+}
+
+void CMisc::RageRetry(CBaseEntity* pLocal)
+{
+	if (Vars::Misc::RageRetry.Value)
+	{
+		if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.Value * 0.01f)))
+		{
+			I::Engine->ClientCmd_Unrestricted("retry");
+		}
 	}
 }
 
@@ -693,6 +718,66 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	} else if (angleDelta > 5.f)
 	{
 		cl_flipviewmodels->SetValue(false);
+	}
+}
+
+//	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
+//	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
+//	wishspeed = side/forwardmove from pCmd
+//	accel = sv_accelerate value
+//	10 * .015 * 450 * surfaceFriction	=	acceleration
+//	67.5(surfaceFriction)				=	acceleration
+//	acceleration = 60
+//	surfaceFriction = 1.125	// this doesn't account for ice, etc. (it is also possible that the reason our accel is lower is because we are locked below 450 with our actual acceleration)
+//	if our forward velocity is 400, to get it to 0, we would need to spend ~7 ticks of time decelerating.
+void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
+		const int stopType = (
+			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
+			pLocal->GetMoveType() == MOVETYPE_WALK ? 1 : 2 : 0
+			); // 0.none, 1.ground, 2.midair
+		static Vec3 predEndPoint = {};
+		static Vec3 currentPos{};
+		static int nShiftTick = 0;
+
+		switch (stopType) {
+		case 0: {
+			nShiftTick = 0;
+			return;
+		}
+		case 1: {
+			switch (nShiftTick) {
+			case 0: {
+				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
+				nShiftTick++;
+				return;
+			}
+			case 1: {
+				G::ShouldStop = true;
+				nShiftTick++;
+				break;
+			}
+			default: {
+				nShiftTick++;
+				break;
+			}
+			}//
+
+			currentPos = pLocal->GetVecOrigin();//
+			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / currentPos.Dist2D(predEndPoint)));
+			//	the "slight stop" that u can see when we do this is due to (i believe) the player reaching the desired point, and then constantly accelerating backwards, meaning their velocity-
+			//	when they finish shifting ticks, is lower than when they started.
+			//	alot of things worked better than (1/dist) as the scale, but caused issues on different classes, for now this is the best I can get it to.
+			return;
+		}
+			  //case 2: {
+			  //	return;
+			  //}
+		default: {
+			return;
+		}
+		}
 	}
 }
 

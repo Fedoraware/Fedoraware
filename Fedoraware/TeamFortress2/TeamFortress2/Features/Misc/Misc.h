@@ -6,31 +6,38 @@ class CMisc {
 	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoiseMakerSpam(CBaseEntity* pLocal);
-	void PingReducer();
 	void ExtendFreeze(CBaseEntity* pLocal);
-	void Teleport(const CUserCmd* pCmd);
 	void Freecam(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void RageRetry(CBaseEntity* pLocal);
+	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
+	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
+
+	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
+	void CheatsBypass();
+	void Teleport(const CUserCmd* pCmd);
+	void PingReducer();
+	void ServerHitbox();
+	void WeaponSway();
+	void DetectChoke();
+
+	// Late
+	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 
 	bool SteamCleared = false;
 
 public:
 	void Run(CUserCmd* pCmd);
-	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void RunLate(CUserCmd* pCmd);
-	void CheatsBypass();
-	void ServerHitbox();
-	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
-	void WeaponSway();
-	void DetectChoke();
-	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void EdgeJump(CUserCmd* pCmd, int nOldFlags);
-	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
+
 	void SteamRPC();
 	void UnlockAchievements();
 	void LockAchievements();
+	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 
 	Vec3 PeekReturnPos;
 };

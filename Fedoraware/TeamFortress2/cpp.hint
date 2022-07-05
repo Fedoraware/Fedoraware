@@ -9,3 +9,4 @@
 #define NETVAR(_name, type, table, name) inline type &_name() { static int offset = GetNetVar(table, name); return *reinterpret_cast<type *>(reinterpret_cast<DWORD>(this) + offset); }
 #define _(s) XorStr(s).c_str()
 #define TOGGLE(label, v) ImGui::Checkbox(label, v);
+#define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
