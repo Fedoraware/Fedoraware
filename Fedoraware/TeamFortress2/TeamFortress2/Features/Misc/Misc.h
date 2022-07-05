@@ -15,8 +15,11 @@ class CMisc {
 	bool SteamCleared = false;
 
 public:
+	void AntiAFK(CUserCmd* pCmd);
+	void RageRetry(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void Run(CUserCmd* pCmd);
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void RunLate(CUserCmd* pCmd);
 	void CheatsBypass();
 	void ServerHitbox();

@@ -23,88 +23,13 @@
 
 #include "../../SDK/Discord/include/discord_rpc.h"
 
-static void UpdateAntiAFK(CUserCmd* pCmd)
-{
-	if (Vars::Misc::AntiAFK.Value && g_ConVars.afkTimer->GetInt() != 0)
-	{
-		static float last_time = 0.0f;
-		static int buttones = 0;
-
-		if (pCmd->command_number % 2)
-		{
-			pCmd->buttons |= 1 << 27;
-		}
-	}
-}
-
 void UpdateRichPresence()
 {
 	F::DiscordRPC.Update();
 	F::Misc.SteamRPC();
 }
 
-//	TODO: make this p
-//	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
-//	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
-//	wishspeed = side/forwardmove from pCmd
-//	accel = sv_accelerate value
-//	10 * .015 * 450 * surfaceFriction	=	acceleration
-//	67.5(surfaceFriction)				=	acceleration
-//	acceleration = 60
-//	surfaceFriction = 1.125	// this doesn't account for ice, etc. (it is also possible that the reason our accel is lower is because we are locked below 450 with our actual acceleration)
-//	if our forward velocity is 400, to get it to 0, we would need to spend ~7 ticks of time decelerating.
-void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
-{
-	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
-		const int stopType = (
-			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
-			pLocal->GetMoveType() == MOVETYPE_WALK ? 1 : 2 : 0
-			); // 0.none, 1.ground, 2.midair
-		static Vec3 predEndPoint = {};
-		static Vec3 currentPos{};
-		static int nShiftTick = 0;
-
-		switch (stopType) {
-		case 0: {
-			nShiftTick = 0;
-			return;
-		}
-		case 1: {
-			switch (nShiftTick) {
-			case 0: {
-				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
-				nShiftTick++;
-				return;
-			}
-			case 1: {
-				G::ShouldStop = true;
-				nShiftTick++;
-				break;
-			}
-			default: {
-				nShiftTick++;
-				break;
-			}
-			}//
-
-			currentPos = pLocal->GetVecOrigin();//
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / currentPos.Dist2D(predEndPoint)));
-			//	the "slight stop" that u can see when we do this is due to (i believe) the player reaching the desired point, and then constantly accelerating backwards, meaning their velocity-
-			//	when they finish shifting ticks, is lower than when they started.
-			//	alot of things worked better than (1/dist) as the scale, but caused issues on different classes, for now this is the best I can get it to.
-			return;
-		}
-		//case 2: {
-		//	return;
-		//}
-		default: {
-			return;
-		}
-		}
-	}
-}
-
-void appendCache() {
+void AppendCache() {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	const int tickcount = I::GlobalVars->tickcount;
 
@@ -145,15 +70,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
 	}
 
-	//static ConVar* engine_no_focus_sleep = I::CVars->FindVar("engine_no_focus_sleep");
-	//if (engine_no_focus_sleep && engine_no_focus_sleep->GetInt() >= 1)
-	//{
-	//	engine_no_focus_sleep->SetValue(0);
-	//} // stop lagging my audio when I alt-tab lmao
-
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
-	auto pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
+	auto pSendPacket = reinterpret_cast<bool*>(***reinterpret_cast<uintptr_t***>(_bp) - 0x1);
 
 	int nOldFlags = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
@@ -166,17 +85,21 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	{
 		nOldFlags = pLocal->GetFlags();
 
-		static Timer RichPresenceTimer{};
-		if (RichPresenceTimer.Run(1000)) {
+		// Update Discord/Steam rich presence every second
+		static Timer richPresenceTimer{};
+		if (richPresenceTimer.Run(1000)) {
 			UpdateRichPresence();
 		}
 
+		// Update Global Info
 		if (const auto& pWeapon = g_EntityCache.GetWeapon())
 		{
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
 			if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1() || (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart()))
+			{
 				G::WaitForShift = DT_WAIT_CALLS;
+			}
 
 			G::CurItemDefIndex = nItemDefIndex;
 			G::WeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
@@ -188,21 +111,16 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			if (pWeapon->GetSlot() != SLOT_MELEE)
 			{
 				if (pWeapon->IsInReload())
+				{
 					G::WeaponCanAttack = true;
+				}
 
 				if (G::CurItemDefIndex != Soldier_m_TheBeggarsBazooka)
 				{
 					if (pWeapon->GetClip1() == 0)
+					{
 						G::WeaponCanAttack = false;
-				}
-			}
-
-			if (Vars::Misc::RageRetry.Value)
-			{
-				if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.
-					Value / 100.f)))
-				{
-					I::Engine->ClientCmd_Unrestricted("retry");
+					}
 				}
 			}
 		}
@@ -226,23 +144,22 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (const INetChannel* NetChannel = I::Engine->GetNetChannelInfo()) {
-			static const char* OServerAddress = NetChannel->GetAddress();
-			const char* CServerAddress = NetChannel->GetAddress();
+		if (const INetChannel* netChannel = I::Engine->GetNetChannelInfo()) {
+			static const char* oServerAddress = netChannel->GetAddress();
+			const char* cServerAddress = netChannel->GetAddress();
 
-			static const char* OMap = I::Engine->GetLevelName();
-			const char* CMap = I::Engine->GetLevelName();
+			static const char* oMap = I::Engine->GetLevelName();
+			const char* cMap = I::Engine->GetLevelName();
 
-			if (OServerAddress != CServerAddress || OMap != CMap) {
-				OServerAddress = CServerAddress;
-				OMap = CMap;
+			if (oServerAddress != cServerAddress || oMap != cMap) {
+				oServerAddress = cServerAddress;
+				oMap = cMap;
 				G::LoadInCount++;
 			}
 		}
 	}
 
-	UpdateAntiAFK(pCmd);
-
+	// Handle Roll Exploit
 	if (Vars::Misc::Roll.Value && pCmd->buttons & IN_DUCK)
 	{
 		Vec3 ang = vOldAngles;
@@ -275,31 +192,34 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		pCmd->viewangles = ang;
 	}
 
-	F::Misc.Run(pCmd);
-	F::Fedworking.Run();
-	F::CameraWindow.Update();
-	F::BadActors.OnTick();
-
-	F::EnginePrediction.Start(pCmd);
+	// Run Features
 	{
-		F::Aimbot.Run(pCmd);
-		F::Backtrack.Run(pCmd);
-		F::Auto.Run(pCmd);
-		F::AntiAim.Run(pCmd, pSendPacket);
-		F::Misc.EdgeJump(pCmd, nOldFlags);
+		F::Misc.Run(pCmd);
+		F::Fedworking.Run();
+		F::CameraWindow.Update();
+		F::BadActors.OnTick();
+
+		F::EnginePrediction.Start(pCmd);
+		{
+			F::Aimbot.Run(pCmd);
+			F::Backtrack.Run(pCmd);
+			F::Auto.Run(pCmd);
+			F::AntiAim.Run(pCmd, pSendPacket);
+			F::Misc.EdgeJump(pCmd, nOldFlags);
+		}
+		F::EnginePrediction.End(pCmd);
+
+		F::CritHack.Run(pCmd);
+		F::Misc.RunLate(pCmd);
+		F::Resolver.Update(pCmd);
+		F::Followbot.Run(pCmd);
+		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
-	F::EnginePrediction.End(pCmd);
-	F::CritHack.Run(pCmd);
 
-	FastStop(pCmd, g_EntityCache.GetLocal());
-	F::Misc.RunLate(pCmd);
-	F::Resolver.Update(pCmd);
-	F::Followbot.Run(pCmd);
-	F::FakeLag.OnTick(pCmd, pSendPacket);
-
-	appendCache();	// hopefully won't cause issues.
+	AppendCache();	// hopefully won't cause issues.
 	G::ViewAngles = pCmd->viewangles;
 
+	// Recharge doubletap by shifting packets
 	static int nChoked = 0;
 	if (G::ShouldShift)
 	{
@@ -310,31 +230,33 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		if (nChoked > 21) { *pSendPacket = true; }
 	}
 
+	// Check if Fakelag Chams should be drawn
 	if (G::ShiftedTicks > 0)
 	{
 		F::FakeAng.DrawChams = false;
 	}
 
+	// Party Crasher: Crashes the party by spamming messages
 	if (Vars::Misc::PartyCrasher.Value)
 	{
 		I::Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
+	// Handle Taunt Slide
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (Vars::Misc::TauntSlide.Value)
+		if (Vars::Misc::TauntSlide.Value && pLocal->IsTaunting())
 		{
-			if (pLocal->IsTaunting())
+			if (Vars::Misc::TauntControl.Value)
 			{
-				if (Vars::Misc::TauntControl.Value)
-					pCmd->viewangles.x = (pCmd->buttons & IN_BACK)
-					? 91.0f
-					: (pCmd->buttons & IN_FORWARD)
-					? 0.0f
-					: 90.0f;
-
-				return false;
+				pCmd->viewangles.x = (pCmd->buttons & IN_BACK)
+					                     ? 91.0f
+					                     : (pCmd->buttons & IN_FORWARD)
+					                     ? 0.0f
+					                     : 90.0f;
 			}
+
+			return false;
 		}
 
 		if (const ConVar* debugMode = I::CVars->FindVar("debugMode")) {
@@ -342,8 +264,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		}
 	}
 
-	static Timer ValidateTimer{};
-	if (ValidateTimer.Run(3000))//
+	// Validates the cham materials every 3 seconds
+	static Timer validateTimer{};
+	if (validateTimer.Run(3000))//
 	{
 		for (IMaterial* curMat : F::DMEChams.v_MatListGlobal) {
 			if (!curMat) { continue; }
@@ -351,14 +274,13 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		}
 	}
 
+	// Handle Silent Time
 	static bool bWasSet = false;
-
 	if (G::SilentTime)
 	{
 		*pSendPacket = false;
 		bWasSet = true;
 	}
-
 	else
 	{
 		if (bWasSet)
@@ -384,6 +306,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		G::ForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
+	// Stop movement if required
 	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value)) {
 		G::ShouldStop = false;
 		Utils::StopMovement(pCmd, !G::ShouldShift);
