@@ -17,18 +17,26 @@ public:
 	void OverrideWorldTextures();
 	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
-	void ScopeLines();
+	void ScopeLines(CBaseEntity* pLocal);
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
-	
+	void DrawAimbotFOV(CBaseEntity* pLocal);
+	void DrawDebugInfo(CBaseEntity* pLocal);
+	void DrawAntiAim(CBaseEntity* pLocal);
+	void DrawTickbaseInfo(CBaseEntity* pLocal);
+	void DrawMenuSnow();
+	void DrawDVD();
+	void DrawPredictionLine();
+	void SetVisionFlags();
+
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;
-	
-	class CPrecipitation {
+
+	class CPrecipitation
+	{
 	private:
 		CBaseEntity* RainEntity = nullptr;
 		IClientNetworkable* RainNetworkable = nullptr;
-	private:
 		CClientClass* GetPrecipitationClass();
 	public:
 		void Run();
@@ -36,7 +44,8 @@ public:
 	};
 	CPrecipitation rain;
 
-	struct PickupData {
+	struct PickupData
+	{
 		int Type = 0;
 		float Time = 0.f;
 		Vec3 Location;

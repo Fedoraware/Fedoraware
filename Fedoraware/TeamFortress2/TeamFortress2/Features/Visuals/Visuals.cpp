@@ -16,7 +16,7 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 		{
 			continue;
 		}
-		
+
 		/*if (bbox->m_radius <= 0.f) {*/
 		matrix3x4 rotMatrix;
 		Math::AngleMatrix(bbox->angle, rotMatrix);
@@ -36,17 +36,21 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 	}
 }
 
-void CVisuals::ScopeLines()
+void CVisuals::ScopeLines(CBaseEntity* pLocal)
 {
-	const int centerX = g_ScreenSize.w / 2;
-	const int centerY = g_ScreenSize.h / 2;
-	const Color_t line1 = {Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255};
-	const Color_t line2 = {Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255};
+	if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.Value && Vars::Visuals::ScopeLines.Value)
+	{
+		const int centerX = g_ScreenSize.w / 2;
+		const int centerY = g_ScreenSize.h / 2;
+		const Color_t line1 = { Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255 };
+		const Color_t line2 = { Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255 };
 
-	g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
-	g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
-	g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
-	g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
+		g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
+		g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
+		g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
+		g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
+
+	}
 }
 
 void CVisuals::SkyboxChanger()
@@ -146,7 +150,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		{
 			if (!I::EngineVGui->IsGameUIVisible() && !I::Surface->IsCursorVisible())
 			{
-				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.Value};
+				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.Value };
 				if (tpKey.Pressed())
 				{
 					Vars::Visuals::ThirdPerson.Value = !Vars::Visuals::ThirdPerson.Value;
@@ -256,6 +260,328 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 
 	//I::Surface->DrawLine(src.x, src.y, dst.x, dst.y);
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
+}
+
+void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
+{
+	// Debug info
+	if (Vars::Debug::DebugInfo.Value)
+	{
+		int yoffset = 10, xoffset = 10;
+
+			// header
+		{
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player");
+		}
+		// alive
+		{
+			const bool alive = pLocal->IsAlive();
+			Color_t clr = alive ? Color_t{ 153, 232, 0, 255 } : Color_t{ 167, 0, 0, 255 };
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
+		}
+		if (const int tickcount = I::GlobalVars->tickcount)
+		{
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "Tickcount			: %i", tickcount);
+		}
+
+		{	//	movement data to help me make epic strafe prediction!
+			const Vec3 m_vecVelocity = pLocal->m_vecVelocity();
+			const Vec3 m_vecViewOffset = pLocal->m_vecViewOffset();
+			const Vec3 m_vecOrigin = pLocal->m_vecOrigin();
+			if (!m_vecVelocity.IsZero())
+			{
+				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecVelocity		: [%.1f, %.1f, %.1f]", m_vecVelocity.x, m_vecVelocity.y, m_vecVelocity.z);
+				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "playerVelocity		: [%.1f]", m_vecVelocity.Length2D());
+			}
+			if (!m_vecViewOffset.IsZero())
+				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecViewOffset	: [%.1f, %.1f, %.1f]", m_vecViewOffset.x, m_vecViewOffset.y, m_vecViewOffset.z);
+			if (!m_vecOrigin.IsZero())
+				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecOrigin		: [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z);
+		}
+	}
+}
+
+void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
+{
+	if (Vars::AntiHack::AntiAim::Active.Value)
+	{
+		static constexpr Color_t realColour = { 0, 255,0, 255 };
+		static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
+
+		const auto& vOrigin = pLocal->GetAbsOrigin();
+
+		Vec3 vScreen1, vScreen2;
+		if (Utils::W2S(vOrigin, vScreen1))
+		{
+			constexpr auto distance = 50.f;
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
+				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
+
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
+				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
+		}
+	}
+}
+
+#include "../../Features/Menu/DTBar/DTBar.h"
+#include "../../Resources/DVD-Icon.h"
+
+void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
+{
+	//Tickbase info
+	if (Vars::Misc::CL_Move::Enabled.Value)
+	{
+
+		const auto& pWeapon = g_EntityCache.GetWeapon();
+
+		if (pWeapon)
+		{
+			if (pLocal->GetLifeState() == LIFE_ALIVE)
+			{
+				const int nY = (g_ScreenSize.h / 2) + 20;
+
+				static Color_t color1, color2;
+
+				if (G::WaitForShift)
+				{
+					color1 = Colors::DTBarIndicatorsCharging.startColour;
+					color2 = Colors::DTBarIndicatorsCharging.endColour;
+				}
+				else
+				{
+					color1 = Colors::DTBarIndicatorsCharged.startColour;
+					color2 = Colors::DTBarIndicatorsCharged.endColour;
+				}
+
+				// Default DT Bar
+				if (Vars::Misc::CL_Move::DTBarStyle.Value == 1)
+				{
+					const auto maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
+					const float dtOffset = g_ScreenSize.c - (maxWidth / 2);
+					static float tickWidth = 0.f;
+					static float barWidth = 0.f;
+					tickWidth = (G::ShiftedTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
+					barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
+
+					g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2) + 49, maxWidth + 2,
+										Vars::Misc::CL_Move::DtbarOutlineHeight.Value + 2,
+										{ 50, 50, 50, 210 });
+					g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth,
+										(g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.
+										Value, color1, color2, true);
+				}
+
+				// Rijin DT Bar
+				else if (Vars::Misc::CL_Move::DTBarStyle.Value == 3)
+				{
+					F::DTBar.Run();
+					// put this here so we don't move menu if we r using something else, no biggie
+					const float rratio = (static_cast<float>(G::ShiftedTicks) / static_cast<float>(
+						Vars::Misc::CL_Move::DTTicks.Value));
+					static float ratio = 0.f;
+					ratio = g_Draw.EaseIn(ratio, rratio, 0.9f);
+
+					if (ratio > 1.f) { ratio = 1.f; }
+					else if (ratio < 0.f) { ratio = 0.f; }
+					//if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
+
+					// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
+					//		so i added them
+					const int xoff = Vars::Misc::CL_Move::DTBarX.Value;
+					// width offset (is it called width offset who knows)
+					const int yoff = Vars::Misc::CL_Move::DTBarY.Value; // height offset
+					const int yscale = Vars::Misc::CL_Move::DTBarScaleY.Value; // height of bar
+					const int xscale = Vars::Misc::CL_Move::DTBarScaleX.Value; // width of bar
+
+					g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff,
+										nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2),
+										Colors::DtOutline);
+					g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale,
+								yscale, { 17, 24, 26, 255 });
+					g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff,
+										((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)),
+										(nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);
+					g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff,
+								  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT,
+								  _(L"CHARGE"));
+					if (G::ShiftedTicks == 0) // no charge no money
+					{
+						g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
+									  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE,
+									  _(L"NO CHARGE"));
+					}
+					else if (G::Recharging && (G::WaitForShift || ratio < 1)) // charging 
+					{
+						g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
+									  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE,
+									  _(L"CHARGING"));
+					}
+					else if (!G::WaitForShift && ratio == 1) // activates when ready
+					{
+						g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
+									  nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE,
+									  _(L"READY"));
+					}
+					else // activates when waiting blah blah blahg
+					{
+						g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
+									  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 46, 46, 255 }, ALIGN_REVERSE,
+									  _(L"DT IMPOSSIBLE"));
+					}
+				}
+			}
+		}
+	}
+}
+
+void CVisuals::DrawMenuSnow()
+{
+	{	//	menu snow
+		struct snowFlake
+		{
+			std::pair<int, int> position;
+		};
+
+		static std::vector<snowFlake> vSnowFlakes;
+		constexpr int snowCount = 1000;
+
+		static bool bInit = false;
+		if (!bInit)
+		{
+			for (int i = 0; i < snowCount; i++)
+			{
+				vSnowFlakes.push_back({ {Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f)} });
+			}
+			bInit = true;
+		}
+
+		for (snowFlake& flake : vSnowFlakes)
+		{
+//	do gravity
+			constexpr int drift = 1;
+			flake.position.first += Utils::RandFloatRange(-drift, drift);
+			flake.position.second += drift;
+
+			//	calculate alpha
+			float Alpha = Math::MapFloat(flake.position.second, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
+			//
+			//	recreate snow flakes that are gone
+			if (Alpha <= 0.f || flake.position.first >= g_ScreenSize.w || flake.position.first <= 0)
+			{
+				flake = { {
+						Utils::RandIntSimple(0, g_ScreenSize.w),
+						Utils::RandIntSimple(0, 100),
+				},
+				};
+			}//
+
+			Color_t flakeColour = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
+			g_Draw.String(FONT_MENU, flake.position.first, flake.position.second, flakeColour, ALIGN_DEFAULT, "*");
+		}
+	}
+}
+
+void CVisuals::DrawDVD()
+{
+	{
+		static int iDVD = g_Draw.CreateTextureFromArray(DVDIcon::rawData, 237, 139);
+
+				// DVD Logo
+		if (iDVD && Vars::Menu::ShowDVD.Value)
+		{
+			static Vec2 logoPos = { 1, 1 };
+			static Vec2 logoVelocity = { 1, -1 };
+
+			if (logoPos.y <= 0 || logoPos.y >= (g_ScreenSize.h - DVDIcon::Height))
+			{
+				logoVelocity.y = -logoVelocity.y;
+			}
+			if (logoPos.x <= 0 || logoPos.x >= (g_ScreenSize.w - DVDIcon::Width))
+			{
+				logoVelocity.x = -logoVelocity.x;
+			}
+			logoPos += logoVelocity;
+
+			I::Surface->DrawSetTexture(iDVD);
+			const Color_t rainbow = Utils::Rainbow();
+			I::Surface->SetDrawColor(rainbow.r, rainbow.g, rainbow.b, 255);
+			I::Surface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
+		}
+	}
+}
+
+void CVisuals::DrawPredictionLine()
+{
+	if (!G::PredictedPos.IsZero())
+	{
+		if (Vars::Visuals::MoveSimLine.Value)
+		{
+			for (size_t i = 0; i < G::PredFutureLines.size(); i++)
+			{
+				Vec3 vScreenpast, vScreenfuture;
+				if (Utils::W2S(G::PredBeforeLines.at(i), vScreenpast))
+				{
+					if (Utils::W2S(G::PredFutureLines.at(i), vScreenfuture))
+					{
+						g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
+									{ Vars::Aimbot::Projectile::PredictionColor });
+					}
+				}
+			}
+		}
+		if (Vars::Visuals::AimPosSquare.Value)
+		{
+			Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+			if (Utils::W2S(G::LinearPredLine, vProjAimStart) && Utils::W2S(
+				G::PredictedPos, vProjAimEnd))
+			{
+				g_Draw.Line(
+					vProjAimStart.x,
+					vProjAimStart.y,
+					vProjAimEnd.x,
+					vProjAimEnd.y,
+					{ 255, 255, 255, 255 }
+				);
+			}
+		}
+	}
+}
+
+void CVisuals::SetVisionFlags()
+{
+	static ConVar* localplayer_visionflags = I::CVars->FindVar("localplayer_visionflags");
+	if (localplayer_visionflags)
+	{
+		switch (Vars::Visuals::VisionModifier.Value)
+		{
+			case 1:
+				localplayer_visionflags->SetValue(1);
+				break;
+			case 2:
+				localplayer_visionflags->SetValue(2);
+				break;
+			case 3:
+				localplayer_visionflags->SetValue(4);
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
+{
+	//Current Active Aimbot FOV
+	if (Vars::Visuals::AimFOVAlpha.Value && Vars::Aimbot::Global::AimFOV.Value)
+	{
+		const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.Value);
+		const float flR = tanf(DEG2RAD(Vars::Aimbot::Global::AimFOV.Value) / 2.0f)
+			/ tanf(
+			DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
+			2.0f) * g_ScreenSize.w;
+		const Color_t clr = Colors::FOVCircle;
+		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
+	}
 }
 
 
@@ -442,8 +768,8 @@ void CVisuals::ModulateWorld()
 
 	if (ModColChanged() || ModSetChanged() || !isUnchanged)
 	{
-		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({255, 255, 255, 255});
-		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({255, 255, 255, 255});
+		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({ 255, 255, 255, 255 });
+		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({ 255, 255, 255, 255 });
 		oConnectionState = connectionState;
 		shouldModulate = false;
 	}
@@ -451,7 +777,7 @@ void CVisuals::ModulateWorld()
 	{
 		if (!shouldModulate)
 		{
-			ApplyModulation({255, 255, 255, 255});
+			ApplyModulation({ 255, 255, 255, 255 });
 			shouldModulate = true;
 		}
 	} // i don't know why i need to do this
@@ -459,8 +785,8 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::RestoreWorldModulation() // keep this because its mentioned in @DLLMain.cpp if you find a better way to do this, remove it ig.
 {
-	ApplyModulation({255, 255, 255, 255});
-	ApplySkyboxModulation({255, 255, 255, 255});
+	ApplyModulation({ 255, 255, 255, 255 });
+	ApplySkyboxModulation({ 255, 255, 255, 255 });
 }
 
 // all world mod stuff above
