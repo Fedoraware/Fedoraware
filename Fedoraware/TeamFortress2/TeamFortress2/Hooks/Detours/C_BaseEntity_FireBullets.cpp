@@ -76,7 +76,7 @@ void DrawBeam(const Vector& source, const Vector& end)
 	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
 	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
 	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
-	beamInfo.m_nSegments = Vars::Visuals::Beans::segments.Value;
+	beamInfo.m_nSegments = Vars::Visuals::Beans::Segments.Value;
 	beamInfo.m_bRenderable = true;
 	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.Value;
 	beamInfo.m_vecStart = source;

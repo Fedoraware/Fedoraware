@@ -488,7 +488,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	case 2: //Silent
 		{
-			if (Vars::AntiHack::AntiAim::invalidshootpitch.Value && Vars::AntiHack::AntiAim::Active.Value && ((Vars::AntiHack::AntiAim::YawReal.Value && Vars::AntiHack::AntiAim::YawFake.Value) ||
+			if (Vars::AntiHack::AntiAim::InvalidShootPitch.Value && Vars::AntiHack::AntiAim::Active.Value && ((Vars::AntiHack::AntiAim::YawReal.Value && Vars::AntiHack::AntiAim::YawFake.Value) ||
 				Vars::AntiHack::AntiAim::Pitch.Value))
 			{
 				G::FakeShotPitch = true;

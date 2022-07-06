@@ -247,8 +247,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
-				SAVE_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
-				SAVE_VAR(Vars::Aimbot::Global::hitboxTime);
+				SAVE_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
+				SAVE_VAR(Vars::Aimbot::Global::HitboxLifetime);
 			}
 
 			// Backtrack
@@ -268,8 +268,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 			{
 				SAVE_VAR(Vars::CritHack::Active);
-				SAVE_VAR(Vars::CritHack::indicators);
-				SAVE_VAR(Vars::CritHack::avoidrandom);
+				SAVE_VAR(Vars::CritHack::Indicators);
+				SAVE_VAR(Vars::CritHack::AvoidRandom);
 				SAVE_VAR(Vars::CritHack::AlwaysMelee);
 				SAVE_VAR(Vars::CritHack::CritKey);
 			}
@@ -308,7 +308,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				SAVE_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
-				SAVE_VAR(Vars::Aimbot::Projectile::predTime);
+				SAVE_VAR(Vars::Aimbot::Projectile::PredictionTime);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanScale);
 				SAVE_VAR(Vars::Aimbot::Projectile::NoSpread);
@@ -663,16 +663,16 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Visuals::Beans::Brightness);
 				SAVE_VAR(Vars::Visuals::Beans::Speed);
 				SAVE_VAR(Vars::Visuals::Beans::Flags);
-				SAVE_VAR(Vars::Visuals::Beans::segments);
+				SAVE_VAR(Vars::Visuals::Beans::Segments);
 			}
 
-			SAVE_VAR(Vars::Visuals::despawnTime);
-			SAVE_VAR(Vars::Visuals::damageLoggerText);
-			SAVE_VAR(Vars::Visuals::damageLoggerChat);
-			SAVE_VAR(Vars::Visuals::damageLoggerConsole);
+			SAVE_VAR(Vars::Visuals::NotificationLifetime);
+			SAVE_VAR(Vars::Visuals::DamageLoggerText);
+			SAVE_VAR(Vars::Visuals::DamageLoggerChat);
+			SAVE_VAR(Vars::Visuals::DamageLoggerConsole);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
 			SAVE_VAR(Vars::Glow::Main::Stencil);
-			SAVE_VAR(Vars::Visuals::Vision);
+			SAVE_VAR(Vars::Visuals::VisionModifier);
 
 			{
 				SAVE_VAR(Vars::Visuals::RagdollEffects::EnemyOnly);
@@ -824,8 +824,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
-				SAVE_VAR(Vars::AntiHack::AntiAim::legjitter);
-				SAVE_VAR(Vars::AntiHack::AntiAim::invalidshootpitch);
+				SAVE_VAR(Vars::AntiHack::AntiAim::LegJitter);
+				SAVE_VAR(Vars::AntiHack::AntiAim::InvalidShootPitch);
 			}
 			//Resolver
 			{
@@ -996,8 +996,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
-				LOAD_VAR(Vars::Aimbot::Global::clearPreviousHitbox);
-				LOAD_VAR(Vars::Aimbot::Global::hitboxTime);
+				LOAD_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
+				LOAD_VAR(Vars::Aimbot::Global::HitboxLifetime);
 			}
 
 
@@ -1018,8 +1018,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 			{
 				LOAD_VAR(Vars::CritHack::Active);
-				LOAD_VAR(Vars::CritHack::indicators);
-				LOAD_VAR(Vars::CritHack::avoidrandom);
+				LOAD_VAR(Vars::CritHack::Indicators);
+				LOAD_VAR(Vars::CritHack::AvoidRandom);
 				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
 			}
@@ -1056,7 +1056,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
 				LOAD_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
-				LOAD_VAR(Vars::Aimbot::Projectile::predTime);
+				LOAD_VAR(Vars::Aimbot::Projectile::PredictionTime);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanScale);
 				LOAD_VAR(Vars::Aimbot::Projectile::NoSpread);
@@ -1392,12 +1392,12 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::MinDist);
 			LOAD_VAR(Vars::Visuals::FovArrowsDist);
 			LOAD_VAR(Vars::Visuals::AimPosSquare);
-			LOAD_VAR(Vars::Visuals::despawnTime);
-			LOAD_VAR(Vars::Visuals::damageLoggerText);
-			LOAD_VAR(Vars::Visuals::damageLoggerChat);
-			LOAD_VAR(Vars::Visuals::damageLoggerConsole);
+			LOAD_VAR(Vars::Visuals::NotificationLifetime);
+			LOAD_VAR(Vars::Visuals::DamageLoggerText);
+			LOAD_VAR(Vars::Visuals::DamageLoggerChat);
+			LOAD_VAR(Vars::Visuals::DamageLoggerConsole);
 			LOAD_VAR(Vars::Glow::Main::Stencil);
-			LOAD_VAR(Vars::Visuals::Vision);
+			LOAD_VAR(Vars::Visuals::VisionModifier);
 			LOAD_VAR(Vars::Visuals::Rain);
 			LOAD_VAR(Vars::Debug::DebugInfo);
 			LOAD_VAR(Vars::Visuals::DoPostProcessing);
@@ -1418,7 +1418,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Visuals::Beans::Brightness);
 				LOAD_VAR(Vars::Visuals::Beans::Speed);
 				LOAD_VAR(Vars::Visuals::Beans::Flags);
-				LOAD_VAR(Vars::Visuals::Beans::segments);
+				LOAD_VAR(Vars::Visuals::Beans::Segments);
 			}
 
 			{
@@ -1572,8 +1572,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
-				LOAD_VAR(Vars::AntiHack::AntiAim::legjitter);
-				LOAD_VAR(Vars::AntiHack::AntiAim::invalidshootpitch);
+				LOAD_VAR(Vars::AntiHack::AntiAim::LegJitter);
+				LOAD_VAR(Vars::AntiHack::AntiAim::InvalidShootPitch);
 			}
 			//Resolver
 			{

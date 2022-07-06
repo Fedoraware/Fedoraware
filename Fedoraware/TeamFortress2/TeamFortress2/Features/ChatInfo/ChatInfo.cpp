@@ -92,7 +92,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		}
 
 		// Damage logger
-		if ((Vars::Visuals::damageLoggerConsole.Value || Vars::Visuals::damageLoggerChat.Value) && uNameHash == FNV1A::HashConst("player_hurt"))
+		if ((Vars::Visuals::DamageLoggerConsole.Value || Vars::Visuals::DamageLoggerChat.Value) && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
 			if (const auto pEntity = I::EntityList->GetClientEntity(
 				I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
@@ -126,18 +126,18 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 					blue + "[FeD]" + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" +
 					std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
-				if (Vars::Visuals::damageLoggerChat.Value)
+				if (Vars::Visuals::DamageLoggerChat.Value)
 				{
 					I::ClientMode->m_pChatElement->ChatPrintf(0,
 					                                          chatAttackString.c_str());
 				}
 
-				if (Vars::Visuals::damageLoggerConsole.Value)
+				if (Vars::Visuals::DamageLoggerConsole.Value)
 				{
 					I::CVars->ConsoleColorPrintf({219, 145, 59, 255}, _("%s\n"), attackString.c_str());
 				}
 
-				if (Vars::Visuals::damageLoggerText.Value)
+				if (Vars::Visuals::DamageLoggerText.Value)
 				{
 					F::Notifications.Add(attackString);
 				}
@@ -147,8 +147,8 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		// Show Hitboxes on hit
 		if (Vars::Aimbot::Global::showHitboxes.Value && uNameHash == FNV1A::HashConst("player_hurt"))
 		{
-			if (Vars::Aimbot::Global::clearPreviousHitbox.Value) { I::DebugOverlay->ClearAllOverlays(); }
-			auto time = Vars::Aimbot::Global::hitboxTime.Value;
+			if (Vars::Aimbot::Global::ClearPreviousHitbox.Value) { I::DebugOverlay->ClearAllOverlays(); }
+			auto time = Vars::Aimbot::Global::HitboxLifetime.Value;
 			// alpha is how "filled" the hitbox render is, looks bad at anything non-zero (rijin moment)
 			auto pEntity = I::EntityList->GetClientEntity(
 				I::Engine->GetPlayerForUserID(pEvent->GetInt("userid")));

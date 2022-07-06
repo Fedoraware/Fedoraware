@@ -136,7 +136,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 			pCmd->command_number = nextCrit;
 			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
 		} 
-		else if (Vars::CritHack::avoidrandom.Value)
+		else if (Vars::CritHack::AvoidRandom.Value)
 		{
 			// Prevent crit
 			int tries = 0;
@@ -155,7 +155,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 
 void CCritHack::Draw()
 {
-	if (!Vars::CritHack::indicators.Value) { return; }
+	if (!Vars::CritHack::Indicators.Value) { return; }
 	if (!IsEnabled() || !G::CurrentUserCmd) { return; }
 
 	const auto& pLocal = g_EntityCache.GetLocal();

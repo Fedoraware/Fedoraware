@@ -54,8 +54,8 @@ namespace Vars
 	namespace CritHack
 	{
 		inline CVar<bool> Active{ false };
-		inline CVar<bool> indicators{ false };
-		inline CVar<bool> avoidrandom{ false };
+		inline CVar<bool> Indicators{ false };
+		inline CVar<bool> AvoidRandom{ false };
 		inline CVar<bool> AlwaysMelee{ false };
 		inline CVar<int> CritKey{ VK_SHIFT };
 	}
@@ -92,8 +92,8 @@ namespace Vars
 			inline CVar<bool> IgnoreInvlunerable{ false };
 			inline CVar<bool> BAimLethal{ false }; // This is in global cause i remmebered hunterman exists
 			inline CVar<bool> showHitboxes{ false }; // original codenz
-			inline CVar<bool> clearPreviousHitbox{ false };
-			inline CVar<int> hitboxTime{ 2 };
+			inline CVar<bool> ClearPreviousHitbox{ false };
+			inline CVar<int> HitboxLifetime{ 2 };
 		}
 
 
@@ -132,7 +132,7 @@ namespace Vars
 			inline CVar<bool> FeetAimIfOnGround{ false };
 			inline CVar<bool> SplashPrediction{ false };
 			inline Color_t PredictionColor{ 255, 255, 255, 255 };
-			inline CVar<float> predTime{ 2.0f };
+			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> NoSpread{ false };
 		}
 
@@ -507,7 +507,7 @@ namespace Vars
 			inline CVar<float> Brightness{ 255.f };
 			inline CVar<float> Speed{ 0.2f };
 			inline CVar<int> Flags{ 65792 };
-			inline CVar<int> segments{ 2 };
+			inline CVar<int> Segments{ 2 };
 		}
 
 		inline CVar<bool> BulletTracerRainbow{ false };
@@ -523,13 +523,12 @@ namespace Vars
 		inline Vec3 VMOffsets{};
 		inline CVar<int> VMRoll{ 0 };
 
-		inline CVar<float> despawnTime{ 5.f };
-		//inline CVar<int> damageLogger{ 2 };
-		inline CVar<bool> damageLoggerText{ false };
-		inline CVar<bool> damageLoggerChat{ false };
-		inline CVar<bool> damageLoggerConsole{ false };
+		inline CVar<float> NotificationLifetime{ 5.f };
+		inline CVar<bool> DamageLoggerText{ false };
+		inline CVar<bool> DamageLoggerChat{ false };
+		inline CVar<bool> DamageLoggerConsole{ false };
 
-		inline CVar<int> Vision{ false };
+		inline CVar<int> VisionModifier{ false };
 
 		inline CVar<int> Rain{ false };
 		inline CVar<bool> EquipRegionUnlock{ false };
@@ -572,31 +571,30 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<int> AccurateMovement{false};
-		inline CVar<bool> AutoJump{false};
-		inline CVar<bool> AutoVote{false};
-		inline CVar<bool> DuckJump{false};
-		inline CVar<int> AutoStrafe{2};
-		inline CVar<bool> Directional{false};
-		inline CVar<bool> TauntSlide{false};
-		inline CVar<bool> TauntControl{false};
-		inline CVar<bool> BypassPure{false};
-		inline CVar<bool> NoisemakerSpam{false};
-		inline CVar<bool> DisableInterpolation{false};
-		inline CVar<bool> MedalFlip{false};
-		inline CVar<bool> AutoRocketJump{false};
-		inline CVar<bool> NonLethalRocketJump{true};
+		inline CVar<int> AccurateMovement{ false };
+		inline CVar<bool> AutoJump{ false };
+		inline CVar<bool> AutoVote{ false };
+		inline CVar<bool> DuckJump{ false };
+		inline CVar<int> AutoStrafe{ 2 };
+		inline CVar<bool> Directional{ false };
+		inline CVar<bool> TauntSlide{ false };
+		inline CVar<bool> TauntControl{ false };
+		inline CVar<bool> BypassPure{ false };
+		inline CVar<bool> NoisemakerSpam{ false };
+		inline CVar<bool> DisableInterpolation{ false };
+		inline CVar<bool> MedalFlip{ false };
+		inline CVar<bool> AutoRocketJump{ false };
+		inline CVar<bool> NonLethalRocketJump{ true };
 		inline CVar<bool> AutoScoutJump{ false };
-		inline CVar<int> ChatSpam{0};
-		inline CVar<bool> NoPush{false};
-		inline CVar<bool> EdgeJump{false};
-		inline CVar<int> EdgeJumpKey{VK_MENU};
-		inline CVar<bool> AntiAFK{false};
-		inline CVar<int> VotingOptions{0b000011}; // 000011 {verbose, autovote, party, chat, console, text}
-		inline CVar<bool> CheatsBypass{false};
-		inline CVar<int> Roll{false};
-		inline CVar<bool> ChatCensor{false};
-		//inline CVar<bool> ChatNL{false};
+		inline CVar<int> ChatSpam{ 0 };
+		inline CVar<bool> NoPush{ false };
+		inline CVar<bool> EdgeJump{ false };
+		inline CVar<int> EdgeJumpKey{ VK_MENU };
+		inline CVar<bool> AntiAFK{ false };
+		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
+		inline CVar<bool> CheatsBypass{ false };
+		inline CVar<int> Roll{ false };
+		inline CVar<bool> ChatCensor{ false };
 		inline CVar<bool> AntiAutobal{ false };
 		inline CVar<bool> RageRetry{ false };
 		inline CVar<int> RageRetryHealth{ 20 };
@@ -614,12 +612,11 @@ namespace Vars
 		inline CVar<bool> PartyESP{ false };
 		inline CVar<int> SoundBlock{ 0 };
 		inline CVar<bool> ChatFlags{ false };
-		//inline CVar<bool> ForceMedievalChat{false};
 		inline CVar<int> MedievalChat{ 0 };
 		inline CVar<bool> AutoAcceptItemDrops{ false };
 		inline CVar<bool> RegionChanger{ false };
 		inline CVar<int> RegionsAllowed{ 0 };
-		inline CVar<bool> AutoCasualQueue{ false};
+		inline CVar<bool> AutoCasualQueue{ false };
 		inline CVar<bool> JoinSpam{ false };
 		inline CVar<bool> AntiVAC{ false };
 		inline CVar<bool> InstantAccept{ false };
@@ -709,9 +706,9 @@ namespace Vars
 			inline CVar<float> SpinSpeed{ 15.f };
 			inline CVar<int> RandInterval{ 25 };
 			inline CVar<bool> AntiBackstab{ false };
-			inline CVar<bool> legjitter{ false }; // frick u fourteen
+			inline CVar<bool> LegJitter{ false }; // frick u fourteen
 			inline CVar<bool> AntiOverlap{ false };
-			inline CVar<bool> invalidshootpitch{ false }; // i dont know what to name this its TRASH
+			inline CVar<bool> InvalidShootPitch{ false }; // i dont know what to name this its TRASH
 			// no reason to do this for projectile and melee cause u have psilent lel
 		}
 

@@ -410,7 +410,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 		static ConVar* localplayer_visionflags = I::CVars->FindVar("localplayer_visionflags");
 		if (localplayer_visionflags)
 		{
-			switch (Vars::Visuals::Vision.Value)
+			switch (Vars::Visuals::VisionModifier.Value)
 			{
 				case 1:
 					localplayer_visionflags->SetValue(1);

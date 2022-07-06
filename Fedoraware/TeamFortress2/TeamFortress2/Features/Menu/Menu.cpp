@@ -276,7 +276,7 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.Value);  HelpMarker("Enables the crit hack (BETA)");
-			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, {&Vars::CritHack::indicators.Value, &Vars::CritHack::avoidrandom.Value, &Vars::CritHack::AlwaysMelee.Value }, "Misc###CrithackMiscOptions");
+			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, {&Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value }, "Misc###CrithackMiscOptions");
 			HelpMarker("Misc options for crithack");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
@@ -323,7 +323,7 @@ void CMenu::MenuAimbot()
 		if (TableColumnChild("AimbotCol3"))
 		{
 			SectionTitle("Projectile");
-			WSlider("Prediction Time", &Vars::Aimbot::Projectile::predTime.Value, 0.1f, 10.f, "%.1f");
+			WSlider("Prediction Time", &Vars::Aimbot::Projectile::PredictionTime.Value, 0.1f, 10.f, "%.1f");
 			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
@@ -997,7 +997,7 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("World & UI");
 				WSlider("Field of view", &Vars::Visuals::FieldOfView.Value, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
-				WCombo("Vision modifiers", &Vars::Visuals::Vision.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
+				WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 				MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
 				HelpMarker("Select which types of modulation you want to enable");
 				if (ColorPickerL("World modulation colour", Colors::WorldModulation))
@@ -1022,12 +1022,12 @@ void CMenu::MenuVisuals()
 					static std::vector flagValues{ 1, 2, 4, 8, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}
-				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::damageLoggerConsole.Value, &Vars::Visuals::damageLoggerText.Value, &Vars::Visuals::damageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
+				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
 				HelpMarker("What & How should events be logged");
 				ColorPickerL("GUI Notif Background", Colors::NotifBG);
 				ColorPickerL("GUI Notif Outline", Colors::NotifOutline, 1);
 				ColorPickerL("GUI Notif Colour", Colors::NotifText, 2);
-				WSlider("GUI Notif Time", &Vars::Visuals::despawnTime.Value, 0.5f, 3.f, "%.1f");
+				WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
 				WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
 				if (Vars::Visuals::ParticleTracer.Value == 9)
 				{
@@ -1047,8 +1047,8 @@ void CMenu::MenuVisuals()
 				WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 				ColorPickerL("Hitbox matrix face colour", Colors::HitboxFace);
 				ColorPickerL("Hitbox matrix edge colour", Colors::HitboxEdge, 1);
-				WToggle("Clear Hitboxes", &Vars::Aimbot::Global::clearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-				WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::hitboxTime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+				WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+				WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 				WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
 				WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.Value); HelpMarker("Enables the killstreak counter on any weapon");
 				WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
@@ -1071,7 +1071,7 @@ void CMenu::MenuVisuals()
 					WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
 					WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
 					WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
-					WSlider("Segments", &Beans::segments.Value, 1, 10); //what are good values for this
+					WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
 
 					// TODO: Reward this ugly code
 					{
@@ -1435,7 +1435,7 @@ void CMenu::MenuHvH()
 				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.Value, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
 			}
 			WToggle("Resolver", &Vars::AntiHack::Resolver::Resolver.Value); HelpMarker("Enables Anti-aim resolver in the playerlist");
-			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.Value, &Vars::AntiHack::AntiAim::legjitter.Value, &Vars::AntiHack::AntiAim::invalidshootpitch.Value, &Vars::AntiHack::AntiAim::AntiBackstab.Value }, "Misc.");
+			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.Value, &Vars::AntiHack::AntiAim::LegJitter.Value, &Vars::AntiHack::AntiAim::InvalidShootPitch.Value, &Vars::AntiHack::AntiAim::AntiBackstab.Value }, "Misc.");
 
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
