@@ -39,6 +39,35 @@
 #include "CTFPartyClient/CTFPartyClient.h"
 #include "CTFInventoryManager/CTFInventoryManager.h"
 
+class CThirdPersonManager
+{
+public:
+	Vector		m_vecCameraOffset;
+	// Distances from the center
+	Vector		m_vecDesiredCameraOffset;
+
+	Vector m_vecCameraOrigin;
+
+	bool	m_bUseCameraOffsets;
+
+	QAngle	m_ViewAngles;
+
+	float	m_flFraction;
+	float	m_flUpFraction;
+
+	float	m_flTargetFraction;
+	float	m_flTargetUpFraction;
+
+	bool	m_bOverrideThirdPerson;
+
+	bool	m_bForced;
+
+	float	m_flUpOffset;
+
+	float	m_flLerpTime;
+	float	m_flUpLerpTime;
+};
+
 class CClockDriftMgr
 {
 private:
@@ -148,6 +177,7 @@ namespace I
 	inline CTFGCClientSystem* TFGCClientSystem = nullptr;
 	inline CTFPartyClient* TFPartyClient = nullptr;
 	inline CTFInventoryManager* TFInventoryManager = nullptr;
+	inline CThirdPersonManager* ThirdPersonManager = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
