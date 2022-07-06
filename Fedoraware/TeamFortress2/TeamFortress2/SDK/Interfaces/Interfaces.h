@@ -42,6 +42,48 @@
 class CThirdPersonManager
 {
 public:
+	void	SetCameraOffsetAngles(const Vector& vecOffset) { m_vecCameraOffset = vecOffset; }
+	const Vector& GetCameraOffsetAngles(void) const { return m_vecCameraOffset; }
+
+	void	SetDesiredCameraOffset(const Vector& vecOffset) { m_vecDesiredCameraOffset = vecOffset; }
+	const Vector& GetDesiredCameraOffset(void) const { return m_vecDesiredCameraOffset; }
+
+	// Vector GetFinalCameraOffset(void)
+	// {
+	// 	Vector vDesired = GetDesiredCameraOffset();
+
+	// 	if (m_flUpFraction != 1.0f)
+	// 	{
+	// 		vDesired.z += m_flUpOffset;
+	// 	}
+
+	// 	return vDesired;
+	// }
+
+	void	SetCameraOrigin(const Vector& vecOffset) { m_vecCameraOrigin = vecOffset; }
+	const Vector& GetCameraOrigin(void) const { return m_vecCameraOrigin; }
+
+	/*void	Update(void);*/
+
+	//void	PositionCamera(CBaseEntity* pPlayer, const QAngle& angles);
+
+	void	UseCameraOffsets(bool bUse) { m_bUseCameraOffsets = bUse; }
+	bool	UsingCameraOffsets(void) { return m_bUseCameraOffsets; }
+
+	const QAngle& GetCameraViewAngles(void) const { return m_ViewAngles; }
+
+	/*Vector	GetDistanceFraction(void);
+
+	bool	WantToUseGameThirdPerson(void);*/
+
+	void	SetOverridingThirdPerson(bool bOverride) { m_bOverrideThirdPerson = bOverride; }
+	bool	IsOverridingThirdPerson(void) { return m_bOverrideThirdPerson; }
+
+	/*void	Init(void);*/
+
+	void	SetForcedThirdPerson(bool bForced) { m_bForced = bForced; }
+	bool	GetForcedThirdPerson() const { return m_bForced; }
+public:
 	Vector		m_vecCameraOffset;
 	// Distances from the center
 	Vector		m_vecDesiredCameraOffset;
