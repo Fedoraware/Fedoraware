@@ -975,7 +975,6 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 			return true;
 		}
 	}
-
 	else
 	{
 		if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER)
@@ -990,6 +989,19 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 			if (!(pCmd->buttons & IN_ATTACK) && bCharging)
 			{
 				bCharging = false;
+				return true;
+			}
+		}
+		else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON)//Probably right
+		{
+			static bool Charging = false;
+
+			if (pWeapon->GetDetonateTime() > 0.0f)
+				Charging = true;
+
+			if (!(pCmd->buttons & IN_ATTACK) && Charging)
+			{
+				Charging = false;
 				return true;
 			}
 		}
@@ -1162,6 +1174,15 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 					&& pWeapon->GetChargeBeginTime() > 0.0f)
 				{
 					pCmd->buttons &= ~IN_ATTACK;
+				}
+				else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON && pWeapon->GetDetonateTime() > 0.0f)
+				{
+					const Vec3 vEyePos = pLocal->GetEyePosition();
+
+					float BestCharge = vEyePos.DistTo(G::PredictedPos) / 1453.9f;//Probably right
+
+					if (pWeapon->GetDetonateTime() - I::GlobalVars->curtime <= BestCharge)
+						pCmd->buttons &= ~IN_ATTACK;
 				}
 			}
 		}
