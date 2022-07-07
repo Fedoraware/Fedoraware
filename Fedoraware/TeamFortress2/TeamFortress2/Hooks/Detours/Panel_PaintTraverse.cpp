@@ -7,7 +7,7 @@ MAKE_HOOK(Panel_PaintTraverse, Utils::GetVFuncPtr(I::Panel, 41), void, __fastcal
 		  void* ecx, void* edx, unsigned int vgui_panel, bool force_repaint, bool allow_force)
 {
 	F::CameraWindow.Draw();
-	if (F::Visuals.RemoveScope(vgui_panel)) { return; }
+	//if (F::Visuals.RemoveScope(vgui_panel)) { return; }
 
 	Hook.Original<FN>()(ecx, edx, vgui_panel, force_repaint, allow_force);
 }
