@@ -98,6 +98,66 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				F::Visuals.DrawAimbotFOV(pLocal);
 				F::Visuals.ScopeLines(pLocal);
 				F::Visuals.DrawDebugInfo(pLocal);
+
+				if (I::ThirdPersonManager)
+				{
+					/*g_Draw.String(FONT_MENU, 10, 400, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Camera Offset: %f %f %f", 
+								  I::ThirdPersonManager->m_vecCameraOffset.x,
+								  I::ThirdPersonManager->m_vecCameraOffset.y, 
+								  I::ThirdPersonManager->m_vecCameraOffset.z);
+
+					g_Draw.String(FONT_MENU, 10, 420, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Desired camera offset: %f %f %f",
+								  I::ThirdPersonManager->m_vecDesiredCameraOffset.x,
+								  I::ThirdPersonManager->m_vecDesiredCameraOffset.y,
+								  I::ThirdPersonManager->m_vecDesiredCameraOffset.z);
+
+					g_Draw.String(FONT_MENU, 10, 440, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Camera origin: %f %f %f",
+								  I::ThirdPersonManager->m_vecCameraOrigin.x,
+								  I::ThirdPersonManager->m_vecCameraOrigin.y,
+								  I::ThirdPersonManager->m_vecCameraOrigin.z);
+					
+					g_Draw.String(FONT_MENU, 10, 460, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Use camera offsets: %d",
+								  I::ThirdPersonManager->m_bUseCameraOffsets);
+
+					g_Draw.String(FONT_MENU, 10, 480, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Camera viewangles: %f %f %f",
+								  I::ThirdPersonManager->m_ViewAngles.x,
+								  I::ThirdPersonManager->m_ViewAngles.y,
+								  I::ThirdPersonManager->m_ViewAngles.z);
+
+					g_Draw.String(FONT_MENU, 10, 500, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Fraction: %f", I::ThirdPersonManager->m_flFraction);
+
+					g_Draw.String(FONT_MENU, 10, 520, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Up fraction: %f", I::ThirdPersonManager->m_flUpFraction);
+
+					g_Draw.String(FONT_MENU, 10, 540, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Target fraction: %f", I::ThirdPersonManager->m_flTargetFraction);
+
+					g_Draw.String(FONT_MENU, 10, 560, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Target up fraction: %f", I::ThirdPersonManager->m_flTargetUpFraction);
+
+					g_Draw.String(FONT_MENU, 10, 580, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Override in thirdperson: %d", I::ThirdPersonManager->m_bOverrideThirdPerson);
+
+					g_Draw.String(FONT_MENU, 10, 600, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Forced: %d", I::ThirdPersonManager->m_bForced);
+
+					g_Draw.String(FONT_MENU, 10, 620, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Up offset: %f", I::ThirdPersonManager->m_flUpOffset);
+
+					g_Draw.String(FONT_MENU, 10, 640, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Lerp time: %f", I::ThirdPersonManager->m_flLerpTime);
+
+					g_Draw.String(FONT_MENU, 10, 660, { 255,255,255,255 }, ALIGN_DEFAULT,
+								  "Up lerp time: %f", I::ThirdPersonManager->m_flUpLerpTime);
+
+					if (GetAsyncKeyState('O') & 0x1) I::ThirdPersonManager->m_bForced = !I::ThirdPersonManager->m_bForced;
+				*/}
 			}
 
 			F::Visuals.DrawPredictionLine();

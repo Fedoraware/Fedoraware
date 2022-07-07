@@ -144,6 +144,9 @@ void CInterfaces::Init()
 
 	TFGameRules = *reinterpret_cast<CTFGameRules**>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB ? ? ? ? ?") + 0x1);
 	_valid(TFGameRules);
+
+	ThirdPersonManager = *reinterpret_cast<CThirdPersonManager**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 42 8B 86") + 0x1);
+	_valid(ThirdPersonManager);
 }
 
 void CSteamInterfaces::Init()
