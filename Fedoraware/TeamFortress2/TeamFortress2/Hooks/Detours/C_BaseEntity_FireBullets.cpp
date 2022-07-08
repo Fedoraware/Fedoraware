@@ -90,7 +90,7 @@ void DrawBeam(const Vector& source, const Vector& end)
 }
 
 
-MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 57 8B F9 8B 4B"), void, __fastcall,
+MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D"), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
 	if (!pWeapon || (!Vars::Visuals::ParticleTracer.Value && !Vars::Visuals::BulletTracer.Value && !Vars::Visuals::Beans::Active.Value))
