@@ -95,18 +95,18 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
 	
-	if (IMaterialVar** aParam = returnMaterial->GetShaderParams())
-	{
-		for (int idxParam = 0; idxParam < returnMaterial->ShaderParamCount(); ++idxParam)
-		{
-			if (!aParam[idxParam]) {
-				continue;
-			}
-			else {
-				backupInformation[returnMaterial][idxParam] = aParam[idxParam]->GetStringValue();
-			}
-		}
-	}
+	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
+	if (auto var = returnMaterial->FindVar("$flags", nullptr))
+		$flags = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
+		$flags_defined = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags2", nullptr))
+		$flags2 = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
+		$flags_defined2 = std::stoi(var->GetStringValue());
+	backupInformation[returnMaterial] = {
+		$flags, $flags_defined, $flags2, $flags_defined2,
+	};
 
 	v_MatListGlobal.push_back(returnMaterial);
 
@@ -114,25 +114,15 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 }
 
 void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
-	if (const IMaterialVar* $frame = mTarget->FindVar("$frame", nullptr, false)) {
-		if ($frame->GetStringValue() == backupInformation[mTarget][7])
-		{
-			return;
-		}
-	}
-
-	if (IMaterialVar** aParam = mTarget->GetShaderParams())
-	{
-		for (int idxParam = 0; idxParam < mTarget->ShaderParamCount(); ++idxParam)
-		{
-			if (!aParam[idxParam]) {
-				continue;
-			}
-			else if (const char* stringVal = backupInformation[mTarget][idxParam]) {
-				aParam[idxParam]->SetStringValue(stringVal);
-			}
-		}
-	}
+	ChamInfo backupInfo = backupInformation[mTarget];
+	if (auto $flags = mTarget->FindVar("$flags", nullptr))
+		$flags->SetIntValue(backupInfo.$flags);
+	if (auto $flags_defined = mTarget->FindVar("$flags_defined", nullptr))
+		$flags_defined->SetIntValue(backupInfo.$flags_defined);
+	if (auto $flags2 = mTarget->FindVar("$flags2", nullptr))
+		$flags2->SetIntValue(backupInfo.$flags2);
+	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
+		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
 }
 
 void CDMEChams::Init()
