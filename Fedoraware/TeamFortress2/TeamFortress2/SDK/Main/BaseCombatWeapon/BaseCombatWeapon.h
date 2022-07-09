@@ -152,13 +152,13 @@ public: //Everything else, lol
 		bool bResult = false;
 		if (const auto& pOwner = I::EntityList->GetClientEntityFromHandle(GethOwner())) {
 			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
-			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 423)(this, bHeadShot, nullptr);
+			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 424)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
 		} return bResult;
 	}
 
 	__inline bool CanFireRandomCriticalShot(const float flCritChance) {
-		return GetVFunc<bool(__thiscall*)(decltype(this), float)>(this, 422)(this, flCritChance);
+		return GetVFunc<bool(__thiscall*)(decltype(this), float)>(this, 423)(this, flCritChance);
 	}
 
 	__inline bool CanWeaponHeadShot() {
