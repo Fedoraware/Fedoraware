@@ -63,6 +63,53 @@ ESortMethod CAimbotMelee::GetSortMethod()
 	}
 }
 
+bool ShouldAimFriendlySentry(CBaseObject* Building)
+{
+	int MaxAmmo = 0;
+	int MaxRocket = 0;
+
+	if (Building->GetLevel() != 3)
+		return true;
+
+	if (Building->GetHealth() < Building->GetMaxHealth())
+		return true;
+
+	//IDK if this is needed
+	if (Building->GetSapped())
+		return true;
+
+	if (Building->IsSentrygun())
+	{
+		switch (Building->GetLevel())
+		{
+		case 1:
+		{
+			MaxAmmo = 150;
+			break;
+		}
+		case 2:
+		{
+			MaxAmmo = 200;
+			break;
+		}
+		case 3:
+		{
+			MaxAmmo = 200;
+			MaxRocket = 20;//Yeah?
+			break;
+		}
+		}
+	}
+
+	if (Building->GetAmmo() < MaxAmmo)
+		return true;
+
+	if (Building->GetRockets() < MaxRocket)
+		return true;
+
+	return false;
+}
+
 bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	const ESortMethod sortMethod = GetSortMethod();
@@ -113,8 +160,18 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	// Buildings
 	if (Vars::Aimbot::Global::AimBuildings.Value)
 	{
-		for (const auto& pBuilding : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ENEMIES))
+		const bool HasWrench = (pWeapon->GetWeaponID() == TF_WEAPON_WRENCH);
+
+		for (const auto& pBuilding : g_EntityCache.GetGroup(HasWrench ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
+			const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
+
+			if (HasWrench && (Building->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (!ShouldAimFriendlySentry(Building))
+					continue;
+			}
+
 			if (!pBuilding->IsAlive())
 			{
 				continue;
