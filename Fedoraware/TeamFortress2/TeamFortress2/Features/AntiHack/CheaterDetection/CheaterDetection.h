@@ -24,7 +24,7 @@ class CCheaterDetection {
 	bool ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect);
 	//bool IsSteamNameDifferent(PlayerInfo_t pInfo);
 	bool IsPitchInvalid(CBaseEntity* pSuspect);
-	bool IsTickCountManipulated(int currentTickCount);
+	bool IsTickCountManipulated(CBaseEntity* pSuspect, int currentTickCount);
 	bool IsBhopping(CBaseEntity* pSuspect, PlayerData& pData);
 	bool IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData);
 

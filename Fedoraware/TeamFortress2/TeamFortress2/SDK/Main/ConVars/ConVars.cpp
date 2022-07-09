@@ -17,6 +17,7 @@ void CConVars::Init()
 	r_drawspecificstaticprop = I::CVars->FindVar(_("r_drawspecificstaticprop"));
 	sv_namechange_cooldown_seconds = I::CVars->FindVar(_("sv_namechange_cooldown_seconds"));
 	afkTimer = I::CVars->FindVar(_("mp_idlemaxtime"));
+	sv_maxusrcmdprocessticks = I::CVars->FindVar(_("sv_maxusrcmdprocessticks"));
 
 	ConCommandBase* cmdBase = I::CVars->GetCommands();
 	while (cmdBase != nullptr) {

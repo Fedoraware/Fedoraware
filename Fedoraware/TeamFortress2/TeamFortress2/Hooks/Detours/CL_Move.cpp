@@ -81,7 +81,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	{
 		G::ForceSendPacket = true; // force uninterrupted connection with server
 		G::ShiftedTicks++; // add ticks to tick counter
-		G::WaitForShift = 33 - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
+		G::WaitForShift = round(1.f / I::GlobalVars->interval_per_tick) - Vars::Misc::CL_Move::DTTicks.Value; // set wait condition (genius)
 		return; // this recharges
 	}
 
@@ -101,7 +101,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
 
-	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value)
+	if (G::WaitForShift)
 	{
 		G::WaitForShift--;
 		return;
@@ -157,7 +157,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 			{
 				oClMove(0, (G::ShiftedTicks == 1));
 				G::ShiftedTicks--;
-				//G::m_bForceSendPacket = true;
 			}
 
 			I::Engine->FireEvents();

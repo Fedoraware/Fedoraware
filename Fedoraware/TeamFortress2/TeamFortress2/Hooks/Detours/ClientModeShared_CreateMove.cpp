@@ -134,18 +134,16 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		{
 			if (!pLocal->IsAlive() && G::ShiftedTicks)
 			{
-				G::Recharging = true;
+				G::RechargeQueued = true;
 			}
 		}
 
-		if (Vars::Misc::CL_Move::AutoRecharge.Value)
+		
+		if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
 		{
-			if (G::ShiftedTicks && !G::ShouldShift)
+			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons & IN_ATTACK))
 			{
-				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons == 0))
-				{
-					G::Recharging = true;
-				}
+				G::RechargeQueued = true;
 			}
 		}
 
@@ -320,6 +318,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	{
 		G::ShouldStop = false;
 		Utils::StopMovement(pCmd, !G::ShouldShift);
+		if (!G::IsAttacking && !G::Recharging) {
+			*pSendPacket = false;	//	stop angle shit
+		}
 		return false;
 	}
 

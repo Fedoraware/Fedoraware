@@ -1,10 +1,12 @@
 #include "CheaterDetection.h"
 
 void conLogDetection(const char* text) {
-	static std::string clr({ '\x7', 'C', 'C', '0', '0', 'F', 'F' });
-	I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
-	I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
-	I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[CheaterDetection] \x1 %s", clr, text).c_str());
+	if (Vars::Debug::DebugBool.Value) {
+		static std::string clr({ '\x7', 'C', 'C', '0', '0', 'F', 'F' });
+		I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
+		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
+		I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[CheaterDetection] \x1 %s", clr, text).c_str());
+	}
 }
 
 bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect)
@@ -58,11 +60,12 @@ bool CCheaterDetection::IsPitchInvalid(CBaseEntity* pSuspect)
 	return false;
 }
 
-bool CCheaterDetection::IsTickCountManipulated(int currentTickCount)
+bool CCheaterDetection::IsTickCountManipulated(CBaseEntity* pSuspect, int currentTickCount)
 {
-	const int delta = I::GlobalVars->tickcount - currentTickCount;
-	// delta should be 1 however it can be different me thinks (from looking it only gets to about 3 at its worst, maybe this is different with packet loss?)
-	if (abs(delta) > 20) { return true; } // who knew players lagged that much
+	if (const int oldPredTick = G::Cache[pSuspect][I::GlobalVars->tickcount - 1].playersPredictedTick) {
+		const int delta = oldPredTick - currentTickCount;
+		return abs(delta) > 14;
+	}	
 	return false;
 }
 
@@ -216,7 +219,7 @@ void CCheaterDetection::OnTick()
 
 			if (I::GlobalVars->tickcount)
 			{
-				if (IsTickCountManipulated(currenttickcount))
+				if (IsTickCountManipulated(pSuspect, currenttickcount))
 				{
 					if (userData.AreTicksSafe)
 					{
