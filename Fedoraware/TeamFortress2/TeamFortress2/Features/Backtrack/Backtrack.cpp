@@ -2,6 +2,7 @@
 
 static float LerpTime()
 {
+	if (Vars::Misc::DisableInterpolation.Value) { return 0.f; }
 	static ConVar* updaterate = g_ConVars.FindVar("cl_updaterate");
 	static ConVar* minupdate = g_ConVars.FindVar("sv_minupdaterate");
 	static ConVar* maxupdate = g_ConVars.FindVar("sv_maxupdaterate");

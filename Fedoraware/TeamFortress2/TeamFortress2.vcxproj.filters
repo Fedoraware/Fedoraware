@@ -155,6 +155,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
     <ClCompile Include="TeamFortress2\Features\Commands\Commands.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMatchInviteNotification_OnTick.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_GetClientInterpAmount.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
