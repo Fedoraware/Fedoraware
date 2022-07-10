@@ -84,9 +84,27 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	{
 		int nHitbox = GetHitbox(pLocal, pWeapon);
 		const bool bIsMedigun = pWeapon->GetWeaponID() == TF_WEAPON_MEDIGUN;
+		const bool HasPissRifle = G::CurItemDefIndex == Sniper_m_TheSydneySleeper;
 
-		for (const auto& pTarget : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
+		auto ShouldExtinguishTeam = [](CBaseEntity* TeamPlayer) -> bool
 		{
+			if (!Vars::Aimbot::Hitscan::ExtinguishTeam.Value)
+				return false;
+
+			if (TeamPlayer->IsOnFire())
+				return true;
+
+			return false;
+		};
+
+		for (const auto& pTarget : g_EntityCache.GetGroup(bIsMedigun ? EGroupType::PLAYERS_TEAMMATES : SandvichAimbot::bIsSandvich || HasPissRifle ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
+		{
+			if (HasPissRifle && (pTarget->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (!ShouldExtinguishTeam(pTarget))
+					continue;
+			}
+
 			if (!pTarget->IsAlive() || pTarget->IsAGhost())
 			{
 				continue;
