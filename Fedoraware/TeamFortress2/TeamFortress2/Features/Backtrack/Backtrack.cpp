@@ -1,43 +1,5 @@
 #include "Backtrack.h"
 
-static float LerpTime()
-{
-	if (Vars::Misc::DisableInterpolation.Value) { return 0.f; }
-	static ConVar* updaterate = g_ConVars.FindVar("cl_updaterate");
-	static ConVar* minupdate = g_ConVars.FindVar("sv_minupdaterate");
-	static ConVar* maxupdate = g_ConVars.FindVar("sv_maxupdaterate");
-	static ConVar* lerp = g_ConVars.FindVar("cl_interp");
-	static ConVar* cmin = g_ConVars.FindVar("sv_client_min_interp_ratio");
-	static ConVar* cmax = g_ConVars.FindVar("sv_client_max_interp_ratio");
-	static ConVar* ratio = g_ConVars.FindVar("cl_interp_ratio");
-
-	const float interpValue = lerp->GetFloat();
-	const float maxUpdateValue = maxupdate->GetFloat();
-	int updateRateValue = updaterate->GetInt();
-	float interpRatioValue = ratio->GetFloat();
-	const int svMaxUpdateRate = maxupdate->GetInt();
-	const int svMinUpdateRate = minupdate->GetInt();
-	const float minRatioValue = cmin->GetFloat();
-	const float maxRatioValue = cmax->GetFloat();
-
-	if (svMaxUpdateRate && svMinUpdateRate)
-	{
-		updateRateValue = static_cast<int>(maxUpdateValue);
-	}
-
-	if (interpRatioValue == 0)
-	{
-		interpRatioValue = 1.0f;
-	}
-
-	if (cmin && cmax && cmin->GetFloat() != 1)
-	{
-		interpRatioValue = std::clamp(interpRatioValue, minRatioValue, maxRatioValue);
-	}
-
-	return std::max(interpValue, interpRatioValue / static_cast<float>(updateRateValue));
-}
-
 bool CBacktrack::IsGoodTick(const int tick)
 {
 	const auto netChannel = I::Engine->GetNetChannelInfo();

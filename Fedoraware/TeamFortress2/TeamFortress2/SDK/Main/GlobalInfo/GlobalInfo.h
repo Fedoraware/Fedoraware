@@ -33,6 +33,7 @@ namespace G
 	inline int NotifyCounter = 0;
 	inline int EyeAngDelay = 25;
 	inline int LoadInCount = 0; //	increments each time we change server / map.
+	inline float LerpTime = 0.f;	//	current lerp time
 	inline bool WeaponCanHeadShot = false; // Can the current weapon headshot?
 	inline bool WeaponCanAttack = false; // Can the current weapon attack?
 	inline bool WeaponCanSecondaryAttack = false;

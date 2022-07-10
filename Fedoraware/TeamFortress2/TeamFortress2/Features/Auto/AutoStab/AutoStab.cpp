@@ -89,9 +89,7 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 	if (Vars::Misc::DisableInterpolation.Value)
 	{
-		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
-			+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate
-				->GetFloat()));
+		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
 	}
 }
 
@@ -126,9 +124,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (Vars::Misc::DisableInterpolation.Value)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
-				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.
-					cl_updaterate->GetFloat()));
+			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
 		}
 
 		break;

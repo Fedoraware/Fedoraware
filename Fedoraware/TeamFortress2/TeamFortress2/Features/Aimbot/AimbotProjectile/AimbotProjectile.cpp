@@ -721,7 +721,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		case TF_WEAPON_STICKY_BALL_LAUNCHER:
 		{
 
-			hullSize = { 0.f, 2.f, 2.f };
+			hullSize = { 8.f, 8.f, 8.f };
 
 			auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 			Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);

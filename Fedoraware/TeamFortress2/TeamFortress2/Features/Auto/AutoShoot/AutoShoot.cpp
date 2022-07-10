@@ -156,9 +156,7 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 
 		if (fSimTime && Vars::Misc::DisableInterpolation.Value && G::WeaponCanAttack)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(fSimTime
-				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.
-					cl_updaterate->GetFloat()));
+			pCmd->tick_count = TIME_TO_TICKS(fSimTime + G::LerpTime);
 		}
 	}
 }
