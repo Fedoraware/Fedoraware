@@ -188,7 +188,9 @@ namespace Vars
 			inline CVar<bool> Stickies{ false };
 			inline CVar<bool> Flares{ false };
 			inline CVar<float> RadiusScale{ 1.0f };
-			inline CVar<bool> DestroySticky{ false };
+			inline CVar<bool> DetonateOnPlayer{ false };
+			inline CVar<bool> DetonateOnBuilding{ false };
+			inline CVar<bool> DetonateOnSticky{ false };
 		}
 
 		namespace Blast
