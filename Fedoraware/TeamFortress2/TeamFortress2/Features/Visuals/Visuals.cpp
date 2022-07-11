@@ -288,22 +288,22 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			const Vec3 m_vecVelocity = pLocal->m_vecVelocity();
 			const Vec3 m_vecViewOffset = pLocal->m_vecViewOffset();
 			const Vec3 m_vecOrigin = pLocal->m_vecOrigin();
+			const Vec3 eyePosition = pLocal->GetEyePosition();;
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecVelocity		: [%.1f, %.1f, %.1f]", m_vecVelocity.x, m_vecVelocity.y, m_vecVelocity.z);
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "playerVelocity		: [%.1f]", m_vecVelocity.Length2D());
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecViewOffset	: [%.1f, %.1f, %.1f]", m_vecViewOffset.x, m_vecViewOffset.y, m_vecViewOffset.z);
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecOrigin		: [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z);
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "eyePosition		: [%.1f, %.1f, %.1f]", eyePosition.x, eyePosition.y, eyePosition.z);
 		}
 
 		for (CBaseEntity* eProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)) {
 			Vec3 mins = eProjectile->GetCollideableMins();
 			Vec3 maxs = eProjectile->GetCollideableMaxs();
-			if (maxs.IsZero() && mins.IsZero()) {
-				eProjectile->GetRenderBounds(mins, maxs);
-			}
-			if (!maxs.IsZero() && !mins.IsZero()) {
-				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "mins : [%.1f, %.1f, %.1f]", mins.x, mins.y, mins.z);
-				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "maxs : [%.1f, %.1f, %.1f]", maxs.x, maxs.y, maxs.z);
-			}
+			Vec3 eyepos = eProjectile->GetEyePosition();
+
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "mins : [%.1f, %.1f, %.1f]", mins.x, mins.y, mins.z);
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "maxs : [%.1f, %.1f, %.1f]", maxs.x, maxs.y, maxs.z);
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "eyepos : [%.1f, %.1f, %.1f]", eyepos.x, eyepos.y, eyepos.z);
 		}
 	}
 }

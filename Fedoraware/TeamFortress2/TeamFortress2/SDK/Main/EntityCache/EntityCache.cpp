@@ -102,8 +102,10 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFProjectile_Arrow:
 			case ETFClassID::CTFProjectile_SentryRocket:
 			case ETFClassID::CTFProjectile_Flare:
+			case ETFClassID::CTFProjectile_GrapplingHook:
 			case ETFClassID::CTFProjectile_Cleaver:
 			case ETFClassID::CTFProjectile_EnergyBall:
+			case ETFClassID::CTFProjectile_EnergyRing:
 			case ETFClassID::CTFProjectile_HealingBolt:
 			case ETFClassID::CTFProjectile_ThrowableBreadMonster:
 			{
