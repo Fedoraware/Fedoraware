@@ -746,6 +746,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::AutoCasualQueue);
 			SAVE_VAR(Vars::Misc::AntiVAC);
 			SAVE_VAR(Vars::Misc::InstantAccept);
+			SAVE_VAR(Vars::Misc::AntiAutobal);
 
 			// Followbot
 			{
@@ -1032,6 +1033,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);
+				LOAD_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
@@ -1053,6 +1055,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimPosition);
+				LOAD_VAR(Vars::Aimbot::Projectile::RespectFOV);
 				LOAD_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
@@ -1071,6 +1074,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Melee::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Melee::AimMethod);
 				//LOAD_VAR(Vars::Aimbot::Melee::AimFOV);
+				LOAD_VAR(Vars::Aimbot::Melee::RespectFOV);
 				LOAD_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Melee::RangeCheck);
 				LOAD_VAR(Vars::Aimbot::Melee::PredictSwing);
@@ -1495,6 +1499,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::AutoCasualQueue);
 			LOAD_VAR(Vars::Misc::AntiVAC);
 			LOAD_VAR(Vars::Misc::InstantAccept);
+			LOAD_VAR(Vars::Misc::AntiAutobal);
 
 			// Followbot
 			{
