@@ -51,7 +51,6 @@
 #include "Main/ConVars/ConVars.h"
 #include "Main/KeyValues/KeyValues.h"
 #include "Main/TraceFilters/TraceFilters.h"
-#include "DirectX/DirectX.h"
 #include "../Features/Vars.h"
 
 #define TICK_INTERVAL		( I::GlobalVars->interval_per_tick )

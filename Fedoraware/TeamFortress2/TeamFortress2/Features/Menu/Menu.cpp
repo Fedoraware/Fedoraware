@@ -998,22 +998,21 @@ void CMenu::MenuVisuals()
 				WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 				MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
 				HelpMarker("Select which types of modulation you want to enable");
-				if (ColorPickerL("World modulation colour", Colors::WorldModulation))
-				{
-					G::ShouldUpdateMaterialCache = true;
-				}
-				if (ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1))
-				{
-					G::ShouldUpdateMaterialCache = true;
-				}
-				if (ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2))
+				if (ColorPickerL("World modulation colour", Colors::WorldModulation) ||
+					ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1) ||
+					ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2))
 				{
 					G::ShouldUpdateMaterialCache = true;
 				}
 				MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "View Punch", "MOTD", "Screen Effects", "Angle Forcing"}, {&Vars::Visuals::RemoveScope.Value, &Vars::Visuals::RemoveZoom.Value, &Vars::Visuals::RemoveDisguises.Value, &Vars::Visuals::RemoveTaunts.Value, &Vars::Misc::DisableInterpolation.Value, &Vars::Visuals::RemovePunch.Value, &Vars::Visuals::RemoveMOTD.Value, &Vars::Visuals::RemoveScreenEffects.Value, &Vars::Visuals::PreventForcedAngles.Value }, "Removals");
 				HelpMarker("Select what you want to remove");
-				MultiCombo({ "Aimbot Crosshair", "Render Proj Line", "Bullet Tracers", "Viewmodel Aimbot", "Weapon Sway", "Move sim line" }, { &Vars::Visuals::CrosshairAimPos.Value, &Vars::Visuals::AimPosSquare.Value, &Vars::Visuals::BulletTracer.Value, &Vars::Visuals::AimbotViewmodel.Value, &Vars::Visuals::ViewmodelSway.Value, &Vars::Visuals::MoveSimLine.Value }, "Misc");
-				HelpMarker("What misc visual features should be run");
+				WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
+				WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
+				WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
+				WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+				WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
+				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
+				WToggle("Movement simulation lines", &Vars::Visuals::MoveSimLine.Value);
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
@@ -1031,16 +1030,9 @@ void CMenu::MenuVisuals()
 				{
 					WInputText("Custom Tracer", &Vars::Visuals::ParticleName); HelpMarker("If you want to use a custom particle tracer");
 				}
-				if (Vars::Visuals::BulletTracer.Value)
-				{
-					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
-				}
-				if (Vars::Visuals::RemoveScope.Value)
-				{
-					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
-					ColorPickerL("Inner line color", Colors::NoscopeLines1);
-					ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
-				}
+				WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
+				ColorPickerL("Inner line color", Colors::NoscopeLines1);
+				ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
 				WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.Value); HelpMarker("Displays the respawn time of health and ammopacks");
 				WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 				ColorPickerL("Hitbox matrix face colour", Colors::HitboxFace);

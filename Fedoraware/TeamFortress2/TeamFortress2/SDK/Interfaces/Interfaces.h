@@ -38,6 +38,7 @@
 #include "CTFGCClientSystem/CTFGCClientSystem.h"
 #include "CTFPartyClient/CTFPartyClient.h"
 #include "CTFInventoryManager/CTFInventoryManager.h"
+#include "../DirectX/DirectX.h"
 
 class CThirdPersonManager
 {
@@ -220,6 +221,7 @@ namespace I
 	inline CTFPartyClient* TFPartyClient = nullptr;
 	inline CTFInventoryManager* TFInventoryManager = nullptr;
 	inline CThirdPersonManager* ThirdPersonManager = nullptr;
+	inline IDirect3DDevice9* DirectXDevice = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;

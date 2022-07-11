@@ -74,9 +74,9 @@ void CHookManager::Release()
 
 void CHookManager::Init()
 {
-	while (!g_dwDirectXDevice)
+	while (!I::DirectXDevice)
 	{
-		g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
+		I::DirectXDevice = *reinterpret_cast<IDirect3DDevice9**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
 	}
 
 	MH_Initialize();
