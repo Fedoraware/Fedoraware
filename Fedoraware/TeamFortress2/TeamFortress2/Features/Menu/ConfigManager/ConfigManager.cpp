@@ -294,6 +294,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AutoRev);
+				SAVE_VAR(Vars::Aimbot::Hitscan::ExtinguishTeam);
 			}
 
 			//Projectile
@@ -1043,6 +1044,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScopedOnly);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoScope);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AutoRev);
+				LOAD_VAR(Vars::Aimbot::Hitscan::ExtinguishTeam);
 			}
 
 			//Projectile

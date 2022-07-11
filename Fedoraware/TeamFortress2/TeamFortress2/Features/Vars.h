@@ -116,6 +116,7 @@ namespace Vars
 			inline CVar<bool> ScopedOnly{ false };
 			inline CVar<bool> AutoScope{ false };
 			inline CVar<bool> AutoRev{ false };
+			inline CVar<bool>ExtinguishTeam{ false };
 		}
 
 		namespace Projectile
