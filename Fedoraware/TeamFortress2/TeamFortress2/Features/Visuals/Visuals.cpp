@@ -298,6 +298,8 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			if (!m_vecOrigin.IsZero())
 				g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 255, 255 }, ALIGN_DEFAULT, "m_vecOrigin		: [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z);
 		}
+
+
 	}
 }
 
