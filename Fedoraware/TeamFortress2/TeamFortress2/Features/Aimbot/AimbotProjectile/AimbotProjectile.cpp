@@ -673,6 +673,12 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	{
 		switch (pWeapon->GetWeaponID())
 		{
+		case TF_WEAPON_CROSSBOW: {
+			hullSize = { 3.f, 3.f, 3.f };
+			const Vec3 vecOffset(23.5f, 12.0f, -3.0f);
+			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
+			break;
+		}
 		case TF_WEAPON_RAYGUN_REVENGE:
 		case TF_WEAPON_ROCKETLAUNCHER:
 		case TF_WEAPON_DIRECTHIT:
@@ -721,7 +727,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		case TF_WEAPON_STICKY_BALL_LAUNCHER:
 		{
 
-			hullSize = { 8.f, 8.f, 8.f };
+			hullSize = { 2.f, 2.f, 2.f };
 
 			auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 			Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);
