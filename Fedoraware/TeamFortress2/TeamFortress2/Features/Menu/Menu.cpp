@@ -34,19 +34,16 @@ void CMenu::DrawMenu()
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
 
-		//// pride gradient setup
-		//{
-		//	TitleGradient.ClearMarks();
-		//	TitleGradient.AddMark(0.f, ImGui::ColorToVec(Utils::Rainbow(0.f)));
-		//	TitleGradient.AddMark(0.2f, ImGui::ColorToVec(Utils::Rainbow(1.f)));
-		//	TitleGradient.AddMark(0.4f, ImGui::ColorToVec(Utils::Rainbow(2.f)));
-		//	TitleGradient.AddMark(0.6f, ImGui::ColorToVec(Utils::Rainbow(3.f)));
-		//	TitleGradient.AddMark(0.8f, ImGui::ColorToVec(Utils::Rainbow(4.f)));
-		//	TitleGradient.AddMark(1.0f, ImGui::ColorToVec(Utils::Rainbow(5.f)));
-		//}
-
-		// pride gradient line
-		//ImGui::GradientRect(&TitleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
+		// Title gradient setup
+		{
+			TitleGradient.ClearMarks();
+			TitleGradient.AddMark(0.f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
+			TitleGradient.AddMark(0.25f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
+			TitleGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent));
+			TitleGradient.AddMark(0.75f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
+			TitleGradient.AddMark(1.0f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
+		}
+		ImGui::GradientRect(&TitleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
 		ImGui::Dummy({ 0, 2 });
 
 		// Title Text
