@@ -365,10 +365,12 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//Detonate
 			{
 				SAVE_VAR(Vars::Triggerbot::Detonate::Active);
+				SAVE_VAR(Vars::Triggerbot::Detonate::DetonateOnPlayer);
+				SAVE_VAR(Vars::Triggerbot::Detonate::DetonateOnBuilding);
+				SAVE_VAR(Vars::Triggerbot::Detonate::DetonateOnSticky);
 				SAVE_VAR(Vars::Triggerbot::Detonate::Stickies);
 				SAVE_VAR(Vars::Triggerbot::Detonate::Flares);
 				SAVE_VAR(Vars::Triggerbot::Detonate::RadiusScale);
-				SAVE_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
@@ -1117,10 +1119,12 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//Detonate
 			{
 				LOAD_VAR(Vars::Triggerbot::Detonate::Active);
+				LOAD_VAR(Vars::Triggerbot::Detonate::DetonateOnPlayer);
+				LOAD_VAR(Vars::Triggerbot::Detonate::DetonateOnBuilding);
+				LOAD_VAR(Vars::Triggerbot::Detonate::DetonateOnSticky);
 				LOAD_VAR(Vars::Triggerbot::Detonate::Stickies);
 				LOAD_VAR(Vars::Triggerbot::Detonate::Flares);
 				LOAD_VAR(Vars::Triggerbot::Detonate::RadiusScale);
-				LOAD_VAR(Vars::Triggerbot::Detonate::DestroySticky);
 			}
 
 			//Blast
