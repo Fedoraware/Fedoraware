@@ -38,6 +38,7 @@ namespace G
 	inline int NotifyCounter = 0;
 	inline int EyeAngDelay = 25;
 	inline int LoadInCount = 0; //	increments each time we change server / map.
+	inline int NextSafeTick = 0;	//	I::GlobalVars->tickcount + sv_maxusrcmdprocessticks_holdaim + 1 (when attacking)
 	inline float LerpTime = 0.f;	//	current lerp time
 	inline bool WeaponCanHeadShot = false; // Can the current weapon headshot?
 	inline bool WeaponCanAttack = false; // Can the current weapon attack?
@@ -51,7 +52,6 @@ namespace G
 	inline bool LocalSpectated = false; // Is the local player being spectated?
 	inline bool RollExploiting = false; // Are we performing the roll exploit?
 	inline bool ShouldStop = false; // Stops our players movement, takes 1 tick.
-	inline bool SafeTick = false; // Are we being effected by sv_maxusrcmdprocessticks_holdaim.
 	inline bool UnloadWndProcHook = false;
 
 	/* Double tap / Tick shift */

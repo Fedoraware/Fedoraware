@@ -760,6 +760,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				SAVE_VAR(Vars::Misc::CL_Move::SafeTick);
 				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::StopMovement);
@@ -1515,6 +1516,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				LOAD_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
+				LOAD_VAR(Vars::Misc::CL_Move::SafeTick);
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::StopMovement);

@@ -716,13 +716,6 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	static int nLastTracerTick = pCmd->tick_count;
 	static int nextSafeTick = pCmd->tick_count;
 
-	if (abs(nextSafeTick - pCmd->tick_count) > 100) {
-		nextSafeTick = pCmd->tick_count;
-	}
-	else if (pCmd->tick_count < nextSafeTick) {
-		return;
-	}
-
 	if (!Vars::Aimbot::Global::Active.Value)
 	{
 		return;

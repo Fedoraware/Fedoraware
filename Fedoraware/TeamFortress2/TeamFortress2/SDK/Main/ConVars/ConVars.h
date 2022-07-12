@@ -20,6 +20,7 @@ public:
 	ConVar* sv_namechange_cooldown_seconds = nullptr;
 	ConVar* afkTimer = nullptr;
 	ConVar* sv_maxusrcmdprocessticks = nullptr;
+	ConVar* sv_maxusrcmdprocessticks_holdaim = nullptr;
 
 	void Init();
 	ConVar* FindVar(const char* cvarname);

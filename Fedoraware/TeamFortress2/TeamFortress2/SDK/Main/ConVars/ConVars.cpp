@@ -18,6 +18,7 @@ void CConVars::Init()
 	sv_namechange_cooldown_seconds = I::CVars->FindVar(_("sv_namechange_cooldown_seconds"));
 	afkTimer = I::CVars->FindVar(_("mp_idlemaxtime"));
 	sv_maxusrcmdprocessticks = I::CVars->FindVar(_("sv_maxusrcmdprocessticks"));
+	sv_maxusrcmdprocessticks_holdaim = I::CVars->FindVar(_("sv_maxusrcmdprocessticks_holdaim"));
 
 	ConCommandBase* cmdBase = I::CVars->GetCommands();
 	while (cmdBase != nullptr) {

@@ -61,7 +61,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	G::SilentTime = false;
 	G::IsAttacking = false;
 	G::FakeShotPitch = false;
-	G::SafeTick = !G::IsAttacking;
 
 	if (!pCmd || !pCmd->command_number)
 	{
@@ -160,6 +159,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 				oServerAddress = cServerAddress;
 				oMap = cMap;
 				G::LoadInCount++;
+				G::NextSafeTick = 0;
 			}
 		}
 	}
@@ -322,6 +322,18 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			*pSendPacket = false;	//	stop angle shit
 		}
 		return false;
+	}
+
+	// do this at the end just in case aimbot / triggerbot fired.
+	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
+		if (Utils::IsAttacking(pCmd, pWeapon) && Vars::Misc::CL_Move::SafeTick.Value) {
+			if (G::NextSafeTick >= I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {
+				pCmd->buttons &= ~IN_ATTACK;
+			}
+			else {
+				G::NextSafeTick = I::GlobalVars->tickcount + g_ConVars.sv_maxusrcmdprocessticks_holdaim->GetInt();
+			}
+		}
 	}
 
 	if (G::SilentTime ||

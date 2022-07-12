@@ -635,6 +635,7 @@ namespace Vars
 		{
 			inline CVar<bool> Enabled{ false };
 			inline CVar<bool> Doubletap{ false };
+			inline CVar<bool> SafeTick{ false };
 			inline CVar<bool> SEnabled{ false };
 			inline CVar<int> SFactor{ 1 };
 			inline CVar<bool> NotInAir{ false };
