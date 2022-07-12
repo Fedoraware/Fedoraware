@@ -751,12 +751,12 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			case 0: {
 				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
 				nShiftTick++;
-				return;
+				break;
 			}
 			case 1: {
 				G::ShouldStop = true;
 				nShiftTick++;
-				break;
+				return;
 			}
 			default: {
 				nShiftTick++;
