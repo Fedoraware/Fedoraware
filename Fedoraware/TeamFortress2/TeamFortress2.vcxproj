@@ -233,6 +233,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerInventory_OnHasNewItems.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_UpdateClientSideAnimations.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />

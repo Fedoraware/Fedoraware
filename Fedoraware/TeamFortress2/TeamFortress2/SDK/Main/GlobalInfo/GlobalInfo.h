@@ -3,6 +3,11 @@
 
 constexpr auto DT_WAIT_CALLS = 26;
 
+struct BoneCache {
+	matrix3x4* bones;
+	float time = 0.f;
+};
+
 struct VelFixRecord {
 	Vec3 m_vecOrigin;
 	int m_nFlags;
@@ -93,6 +98,7 @@ namespace G
 	inline std::unordered_map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
+	inline std::unordered_map<void*, BoneCache> entBones; // bones cached from C_BaseAnimating_SetupBones (please use these instead of calling setupbones every 2 seconds :D)
 
 	inline bool ShouldAutoQueue = false;
 

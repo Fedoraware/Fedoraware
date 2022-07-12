@@ -27,7 +27,7 @@ void CGlowEffect::SetScale(int nScale)
 	static bool bFound = false;
 
 
-	if (!bFound)
+	if (!bFound && m_pMatBlurY)
 	{
 		pVar = m_pMatBlurY->FindVar(_("$bloomamount"), &bFound);
 	}
