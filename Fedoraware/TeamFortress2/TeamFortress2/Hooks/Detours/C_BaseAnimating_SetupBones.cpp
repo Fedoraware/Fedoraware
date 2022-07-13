@@ -9,7 +9,7 @@ MAKE_HOOK(C_BaseAnimating_SetupBones, g_Pattern.Find(L"client.dll", L"55 8B EC 8
 
 	if (Vars::Debug::DebugInfo.Value && !bResult) {
 		I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[C_BaseAnimating_SetupBones] ");
-		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "bone setup failed @%.1f", currentTime);
+		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "bone setup failed @%.1f\n", currentTime);
 	}
 
 	return bResult;

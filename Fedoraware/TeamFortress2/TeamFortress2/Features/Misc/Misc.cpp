@@ -756,7 +756,7 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			case 1: {
 				G::ShouldStop = true;
 				nShiftTick++;
-				return;
+				break;
 			}
 			default: {
 				nShiftTick++;
