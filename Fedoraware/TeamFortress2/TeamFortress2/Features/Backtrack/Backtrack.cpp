@@ -145,8 +145,18 @@ void CBacktrack::Run(CUserCmd* pCmd)
 	if (g_EntityCache.GetLocal() && pCmd)
 	{
 		UpdateDatagram();
-
-		Start(pCmd);
+		if (G::CurWeaponType != EWeaponType::PROJECTILE)
+		{
+			Start(pCmd);
+		}
+		else
+		{
+			for (auto& a : Record)
+			{
+				a.clear();
+			}
+		}
+		
 		/*Calculate(pCmd);*/
 	}
 	else

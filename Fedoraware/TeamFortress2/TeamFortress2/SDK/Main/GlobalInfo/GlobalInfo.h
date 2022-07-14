@@ -83,8 +83,8 @@ namespace G
 	/* Projectile prediction */
 	inline Vec3 PredictedPos = {};
 	inline Vec3 LinearPredLine = {};
-	inline std::vector<Vec3> PredBeforeLines;
-	inline std::vector<Vec3> PredFutureLines;
+	inline std::vector<Vec3> PredictionLines;
+	inline std::vector<Vec3> PredLinesBackup;
 
 	inline CUserCmd* CurrentUserCmd{nullptr}; // Unreliable! Only use this if you really have to.
 	inline CUserCmd* LastUserCmd{nullptr};

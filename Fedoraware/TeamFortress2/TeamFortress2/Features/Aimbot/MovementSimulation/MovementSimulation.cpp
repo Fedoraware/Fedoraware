@@ -190,12 +190,12 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	I::Prediction->m_bFirstTimePredicted = false;
 	I::GlobalVars->frametime = I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
 
-
 	//call CTFGameMovement::ProcessMovement
-	G::PredBeforeLines.push_back(m_MoveData.m_vecAbsOrigin);
-	reinterpret_cast<void(__thiscall*)(void*, CBaseEntity*, CMoveData*)>(
-		Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
-	G::PredFutureLines.push_back(m_MoveData.m_vecAbsOrigin);
+	using ProcessMovement_FN = void(__thiscall*)(void*, CBaseEntity*, CMoveData*);
+	reinterpret_cast<ProcessMovement_FN>(Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
+
+	G::PredictionLines.push_back(m_MoveData.m_vecAbsOrigin);
+
 	moveDataOut = m_MoveData;
 	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;
 }

@@ -323,7 +323,7 @@ void CMenu::MenuAimbot()
 		{
 			SectionTitle("Projectile");
 			WSlider("Prediction Time", &Vars::Aimbot::Projectile::PredictionTime.Value, 0.1f, 10.f, "%.1f");
-			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+		
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
 				if (Vars::Aimbot::Projectile::SortMethod.Value == 1) {
@@ -1011,10 +1011,11 @@ void CMenu::MenuVisuals()
 				WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
 				WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
 				WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 				WToggle("Movement simulation lines", &Vars::Visuals::MoveSimLine.Value);
-				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
+				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
 					static std::vector flagValues{ 1, 2, 4, 8, 32 };

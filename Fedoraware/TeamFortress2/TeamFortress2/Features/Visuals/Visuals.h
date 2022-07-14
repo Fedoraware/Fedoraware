@@ -27,6 +27,7 @@ public:
 	void DrawMenuSnow();
 	void DrawDVD();
 	void DrawPredictionLine();
+	void DrawMovesimLine();
 	void SetVisionFlags();
 
 	float arrowUp = 0.f;
