@@ -224,6 +224,10 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 			return false;
 		}
 	}
+	else
+	{
+		ShouldBacktrack = false;
+	}
 	
 	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value))
 	{
@@ -325,23 +329,15 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 
 		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange * 1.9) // It just works?
 		{
-			I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 255, 0, 0, false, 1.f);
+			//I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 255, 0, 0, false, 1.f);
 			return false;
 		}
 		else
 		{
-			I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 0, 255, 0, false, 1.f);
+			/*I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 0, 255, 0, false, 1.f);*/
 			return true;
 		}
 	}
-
-
-	
-
-	/*if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))
-	{
-		return false;
-	}*/
 
 	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
 	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.Value == 2 ? Target.m_vAngleTo : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))

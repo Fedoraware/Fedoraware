@@ -411,6 +411,10 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 					return false;
 				}
 			}
+			else
+			{
+				ShouldBacktrack = false;
+			}
 			if (!ScanHitboxes(pLocal, target))
 			{
 				

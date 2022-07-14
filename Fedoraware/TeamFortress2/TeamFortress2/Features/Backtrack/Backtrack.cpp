@@ -184,7 +184,14 @@ float CBacktrack::GetLatency()
 		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
 	}
 
-	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.Value * 0.001f, 0.f, 0.9f - realLatency);
+	float flLatency = Vars::Backtrack::Latency.Value;
+
+	if (flLatency <= 200)
+	{
+		flLatency = 200;
+	}
+
+	return LatencyRampup * std::clamp(flLatency * 0.001f, 0.f, 0.9f - realLatency);
 }
 
 // Adjusts the fake latency ping
