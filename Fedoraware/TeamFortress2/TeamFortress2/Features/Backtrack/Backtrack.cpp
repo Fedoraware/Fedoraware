@@ -43,6 +43,12 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 					model_t* model = pEntity->GetModel();
 					studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
 
+					Vec3 mins = pEntity->m_vecMins();
+					Vec3 maxs = pEntity->m_vecMaxs();
+					Vec3 worldspacecenter = pEntity->GetWorldSpaceCenter();
+					Vec3 eyeangles = pEntity->GetEyeAngles();
+
+
 					if (model && hdr)
 					{
 						Record[i].insert(Record[i].begin(), TickRecord(
@@ -52,7 +58,11 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 							*reinterpret_cast<BoneMatrixes*>(&bones),
 							model,
 							hdr,
-							pEntity->GetHitboxSet())
+							pEntity->GetHitboxSet(),
+							mins,
+							maxs,
+							worldspacecenter,
+							eyeangles)
 						);
 					}
 

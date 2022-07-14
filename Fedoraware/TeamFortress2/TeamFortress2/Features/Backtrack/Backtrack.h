@@ -18,14 +18,18 @@ public:
 	}
 };
 
-using BoneMatrixes = struct {
+using BoneMatrixes = struct
+{
 	float BoneMatrix[128][3][4];
 };
 
-struct TickRecord {
+struct TickRecord
+{
 	TickRecord(const float flSimulationTime, const Vec3& headPos, const Vec3& absOrigin,
-		BoneMatrixes boneMatrix, model_t* model, studiohdr_t* hdr,
-		int hitboxSet) {
+			   BoneMatrixes boneMatrix, model_t* model, studiohdr_t* hdr,
+			   int hitboxSet, const Vec3& mins, const Vec3& maxs, const Vec3& worldSpaceCenter,
+			   const Vec3& eyeangles)
+	{
 		SimulationTime = flSimulationTime;
 		HeadPosition = headPos;
 		AbsOrigin = absOrigin;
@@ -33,19 +37,26 @@ struct TickRecord {
 		Model = model;
 		HDR = hdr;
 		HitboxSet = hitboxSet;
+		WorldSpaceCenter = worldSpaceCenter;
+		EyeAngles = eyeangles;
 	}
 
 	float SimulationTime = -1;
-	Vec3 HeadPosition;
-	Vec3 AbsOrigin;
-	BoneMatrixes BoneMatrix;
-	model_t* Model;
-	studiohdr_t* HDR;
-	int  HitboxSet;
+	Vec3 HeadPosition = Vec3();
+	Vec3 AbsOrigin = Vec3();
+	BoneMatrixes BoneMatrix{};
+	model_t* Model = nullptr;
+	studiohdr_t* HDR = nullptr;
+	int  HitboxSet = 0;
 	bool AimedAt = false;
+	Vec3 mins = Vec3();
+	Vec3 maxs = Vec3();
+	Vec3 WorldSpaceCenter = Vec3();
+	Vec3 EyeAngles = Vec3();
 };
 
-class CBacktrack {
+class CBacktrack
+{
 public:
 	bool IsGoodTick(int tick);
 	void Start(const CUserCmd* pCmd);
