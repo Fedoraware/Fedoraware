@@ -272,6 +272,7 @@
     <ClCompile Include="TeamFortress2\Hooks\HookManager.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
+    <ClCompile Include="TeamFortress2\Resources\64x64_Circle_Mask.h" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />

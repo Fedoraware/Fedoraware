@@ -18,6 +18,7 @@
 #undef min
 
 
+
 class Vec2
 {
 public:
@@ -357,6 +358,18 @@ public:
 					 0.0f };
 	}
 
+	float const* Base() const
+	{
+		return (float const*)this;
+	}
+
+	//-----------------------------------------------------------------------------
+	inline float* Base()
+	{
+		return (float*)this;
+	}
+
+
 	Vec3 fromAngle() const noexcept
 	{
 		return Vec3{ cos(DEG2RAD(x)) * cos(DEG2RAD(y)),
@@ -457,6 +470,15 @@ public:
 };
 
 typedef float matrix3x4[3][4];
+
+struct cplane_t
+{
+	Vec3 normal;
+	float dist;
+	unsigned char	 type;
+	unsigned char	 sign_bits;
+	unsigned char pad[2];
+};
 
 namespace Math
 {
@@ -975,6 +997,448 @@ namespace Math
 	inline float NormalizeRad(float a) noexcept
 	{
 		return std::isfinite(a) ? std::remainder(a, PI * 2) : 0.0f;
+	}
+
+	inline void VectorSubtract(const Vec3& a, const Vec3& b, Vec3& c)
+	{
+		c.x = a.x - b.x;
+		c.y = a.y - b.y;
+		c.z = a.z - b.z;
+	}
+
+	inline void VectorAdd(const Vec3& a, const Vec3& b, Vec3& c)
+	{
+		c.x = a.x + b.x;
+		c.y = a.y + b.y;
+		c.z = a.z + b.z;
+	}
+
+	inline void AngleIMatrix(const Vec3& angles, matrix3x4 & matrix)
+	{
+		float		sr, sp, sy, cr, cp, cy;
+
+		SinCos(DEG2RAD(angles[1]), &sy, &cy);
+		SinCos(DEG2RAD(angles[0]), &sp, &cp);
+		SinCos(DEG2RAD(angles[2]), &sr, &cr);
+
+		// matrix = (YAW * PITCH) * ROLL
+		matrix[0][0] = cp * cy;
+		matrix[0][1] = cp * sy;
+		matrix[0][2] = -sp;
+		matrix[1][0] = sr * sp * cy + cr * -sy;
+		matrix[1][1] = sr * sp * sy + cr * cy;
+		matrix[1][2] = sr * cp;
+		matrix[2][0] = (cr * sp * cy + -sr * -sy);
+		matrix[2][1] = (cr * sp * sy + -sr * cy);
+		matrix[2][2] = cr * cp;
+		matrix[0][3] = 0.f;
+		matrix[1][3] = 0.f;
+		matrix[2][3] = 0.f;
+	}
+
+	inline void ComputeCenterIMatrix(const Vec3& origin, const Vec3& angles,
+									 const Vec3& mins, const Vec3& maxs, matrix3x4& matrix)
+	{
+		Vec3 centroid;
+		VectorAdd(mins, maxs, centroid);
+		centroid *= -0.5f;
+		AngleIMatrix(angles, matrix);
+
+		// For the translational component here, note that the origin in world space
+		// is T = R * C + O, (R = rotation matrix, C = centroid in local space, O = origin in world space)
+		// The IMatrix translation = - transpose(R) * T = -C - transpose(R) * 0
+		Vec3 localOrigin;
+		VectorRotate(origin, matrix, localOrigin);
+		centroid -= localOrigin;
+		MatrixSetColumn(centroid, 3, matrix);
+	}
+
+	inline void ComputeCenterMatrix(const Vec3& origin, const Vec3 & angles,
+									const Vec3& mins, const Vec3& maxs, matrix3x4& matrix)
+	{
+		Vec3 centroid;
+		VectorAdd(mins, maxs, centroid);
+		centroid *= 0.5f;
+		AngleMatrix(angles, matrix);
+
+		Vec3 worldCentroid;
+		VectorRotate(centroid, matrix, worldCentroid);
+		worldCentroid += origin;
+		MatrixSetColumn(worldCentroid, 3, matrix);
+	}
+
+	inline unsigned long& FloatBits(float& f)
+	{
+		return *reinterpret_cast<unsigned long*>(&f);
+	}
+
+	inline unsigned long FloatAbsBits(float f)
+	{
+		return FloatBits(f) & 0x7FFFFFFF;
+	}
+
+	//-----------------------------------------------------------------------------
+	static inline void ComputeAbsMatrix(const matrix3x4& in, matrix3x4& out)
+	{
+		FloatBits(out[0][0]) = FloatAbsBits(in[0][0]);
+		FloatBits(out[0][1]) = FloatAbsBits(in[0][1]);
+		FloatBits(out[0][2]) = FloatAbsBits(in[0][2]);
+		FloatBits(out[1][0]) = FloatAbsBits(in[1][0]);
+		FloatBits(out[1][1]) = FloatAbsBits(in[1][1]);
+		FloatBits(out[1][2]) = FloatAbsBits(in[1][2]);
+		FloatBits(out[2][0]) = FloatAbsBits(in[2][0]);
+		FloatBits(out[2][1]) = FloatAbsBits(in[2][1]);
+		FloatBits(out[2][2]) = FloatAbsBits(in[2][2]);
+	}
+
+	inline void MatrixGetColumn(const matrix3x4& in, int column, Vec3& out)
+	{
+		out.x = in[0][column];
+		out.y = in[1][column];
+		out.z = in[2][column];
+	}
+
+	inline float MatrixRowDotProduct(const matrix3x4& in1, int row, const Vec3& in2)
+	{
+		return DotProduct(in1[row], in2.Base());
+	}
+
+	inline float FloatMakePositive(float f)
+	{
+		return fabsf(f);
+	}
+
+	inline void VectorCopy(const float* a, float* b)
+	{
+		b[0] = a[0];
+		b[1] = a[1];
+		b[2] = a[2];
+	}
+
+	inline float MatrixColumnDotProduct(const matrix3x4& in1, int col, const Vec3& in2)
+	{
+		return in1[0][col] * in2[0] + in1[1][col] * in2[1] + in1[2][col] * in2[2];
+	}
+
+	inline void CrossProduct(const float* v1, const float* v2, float* cross)
+	{
+		cross[0] = v1[1] * v2[2] - v1[2] * v2[1];
+		cross[1] = v1[2] * v2[0] - v1[0] * v2[2];
+		cross[2] = v1[0] * v2[1] - v1[1] * v2[0];
+	}
+
+
+	inline bool ComputeSeparatingPlane(const matrix3x4& worldToBox1, const matrix3x4& box2ToWorld,
+									   const Vec3& box1Size, const Vec3& box2Size, float tolerance, cplane_t* pPlane)
+	{
+		// The various separating planes can be either
+		// 1) A plane parallel to one of the box face planes
+		// 2) A plane parallel to the cross-product of an edge from each box
+
+		// First, compute the basis of second box in the space of the first box
+		// NOTE: These basis place the origin at the centroid of each box!
+		matrix3x4	box2ToBox1;
+		ConcatTransforms(worldToBox1, box2ToWorld, box2ToBox1);
+
+		// We're going to be using the origin of box2 in the space of box1 alot,
+		// lets extract it from the matrix....
+		Vec3 box2Origin;
+		MatrixGetColumn(box2ToBox1, 3, box2Origin);
+
+		// Next get the absolute values of these entries and store in absbox2ToBox1.
+		matrix3x4 absBox2ToBox1;
+		ComputeAbsMatrix(box2ToBox1, absBox2ToBox1);
+
+		// There are 15 tests to make.  The first 3 involve trying planes parallel
+		// to the faces of the first box.
+
+		// NOTE: The algorithm here involves finding the projections of the two boxes
+		// onto a particular line. If the projections on the line do not overlap,
+		// that means that there's a plane perpendicular to the line which separates 
+		// the two boxes; and we've therefore found a separating plane.
+
+		// The way we check for overlay is we find the projections of the two boxes
+		// onto the line, and add them up. We compare the sum with the projection
+		// of the relative center of box2 onto the same line.
+
+		Vec3 tmp;
+		float boxProjectionSum;
+		float originProjection;
+
+		// NOTE: For these guys, we're taking advantage of the fact that the ith
+		// row of the box2ToBox1 is the direction of the box1 (x,y,z)-axis
+		// transformed into the space of box2.
+
+		// First side of box 1
+		boxProjectionSum = box1Size.x + MatrixRowDotProduct(absBox2ToBox1, 0, box2Size);
+		originProjection = FloatMakePositive(box2Origin.x) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			VectorCopy(worldToBox1[0], pPlane->normal.Base());
+			return true;
+		}
+
+		// Second side of box 1
+		boxProjectionSum = box1Size.y + MatrixRowDotProduct(absBox2ToBox1, 1, box2Size);
+		originProjection = FloatMakePositive(box2Origin.y) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			VectorCopy(worldToBox1[1], pPlane->normal.Base());
+			return true;
+		}
+
+		// Third side of box 1
+		boxProjectionSum = box1Size.z + MatrixRowDotProduct(absBox2ToBox1, 2, box2Size);
+		originProjection = FloatMakePositive(box2Origin.z) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			VectorCopy(worldToBox1[2], pPlane->normal.Base());
+			return true;
+		}
+
+		// The next three involve checking splitting planes parallel to the
+		// faces of the second box.
+
+		// NOTE: For these guys, we're taking advantage of the fact that the 0th
+		// column of the box2ToBox1 is the direction of the box2 x-axis
+		// transformed into the space of box1.
+		// Here, we're determining the distance of box2's center from box1's center
+		// by projecting it onto a line parallel to box2's axis
+
+		// First side of box 2
+		boxProjectionSum = box2Size.x + MatrixColumnDotProduct(absBox2ToBox1, 0, box1Size);
+		originProjection = FloatMakePositive(MatrixColumnDotProduct(box2ToBox1, 0, box2Origin)) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			MatrixGetColumn(box2ToWorld, 0, pPlane->normal);
+			return true;
+		}
+
+		// Second side of box 2
+		boxProjectionSum = box2Size.y + MatrixColumnDotProduct(absBox2ToBox1, 1, box1Size);
+		originProjection = FloatMakePositive(MatrixColumnDotProduct(box2ToBox1, 1, box2Origin)) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			MatrixGetColumn(box2ToWorld, 1, pPlane->normal);
+			return true;
+		}
+
+		// Third side of box 2
+		boxProjectionSum = box2Size.z + MatrixColumnDotProduct(absBox2ToBox1, 2, box1Size);
+		originProjection = FloatMakePositive(MatrixColumnDotProduct(box2ToBox1, 2, box2Origin)) + tolerance;
+		if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+		{
+			MatrixGetColumn(box2ToWorld, 2, pPlane->normal);
+			return true;
+		}
+
+		// Next check the splitting planes which are orthogonal to the pairs
+		// of edges, one from box1 and one from box2.  As only direction matters,
+		// there are 9 pairs since each box has 3 distinct edge directions.
+
+		// Here, we take advantage of the fact that the edges from box 1 are all
+		// axis aligned; therefore the crossproducts are simplified. Let's walk through
+		// the example of b1e1 x b2e1:
+
+		// In this example, the line to check is perpendicular to b1e1 + b2e2
+		// we can compute this line by taking the cross-product:
+		//
+		// [  i  j  k ]
+		// [  1  0  0 ] = - ez j + ey k = l1
+		// [ ex ey ez ]
+
+		// Where ex, ey, ez is the components of box2's x axis in the space of box 1,
+		// which is == to the 0th column of of box2toBox1
+
+		// The projection of box1 onto this line = the absolute dot product of the box size
+		// against the line, which =
+		// AbsDot( box1Size, l1 ) = abs( -ez * box1.y ) + abs( ey * box1.z )
+
+		// To compute the projection of box2 onto this line, we'll do it in the space of box 2
+		//
+		// [  i  j  k ]
+		// [ fx fy fz ] = fz j - fy k = l2
+		// [  1  0  0 ]
+
+		// Where fx, fy, fz is the components of box1's x axis in the space of box 2,
+		// which is == to the 0th row of of box2toBox1
+
+		// The projection of box2 onto this line = the absolute dot product of the box size
+		// against the line, which =
+		// AbsDot( box2Size, l2 ) = abs( fz * box2.y ) + abs ( fy * box2.z )
+
+		// The projection of the relative origin position on this line is done in the 
+		// space of box 1:
+		//
+		// originProjection = DotProduct( <-ez j + ey k>, box2Origin ) =
+		//		-ez * box2Origin.y + ey * box2Origin.z
+
+		// NOTE: These checks can be bogus if both edges are parallel. The if
+		// checks at the beginning of each block are designed to catch that case
+
+		// b1e1 x b2e1
+		if (absBox2ToBox1[0][0] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.y * absBox2ToBox1[2][0] + box1Size.z * absBox2ToBox1[1][0] +
+				box2Size.y * absBox2ToBox1[0][2] + box2Size.z * absBox2ToBox1[0][1];
+			originProjection = FloatMakePositive(-box2Origin.y * box2ToBox1[2][0] + box2Origin.z * box2ToBox1[1][0]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 0, tmp);
+				CrossProduct(worldToBox1[0], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e1 x b2e2
+		if (absBox2ToBox1[0][1] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.y * absBox2ToBox1[2][1] + box1Size.z * absBox2ToBox1[1][1] +
+				box2Size.x * absBox2ToBox1[0][2] + box2Size.z * absBox2ToBox1[0][0];
+			originProjection = FloatMakePositive(-box2Origin.y * box2ToBox1[2][1] + box2Origin.z * box2ToBox1[1][1]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 1, tmp);
+				CrossProduct(worldToBox1[0], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e1 x b2e3
+		if (absBox2ToBox1[0][2] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.y * absBox2ToBox1[2][2] + box1Size.z * absBox2ToBox1[1][2] +
+				box2Size.x * absBox2ToBox1[0][1] + box2Size.y * absBox2ToBox1[0][0];
+			originProjection = FloatMakePositive(-box2Origin.y * box2ToBox1[2][2] + box2Origin.z * box2ToBox1[1][2]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 2, tmp);
+				CrossProduct(worldToBox1[0], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e2 x b2e1
+		if (absBox2ToBox1[1][0] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[2][0] + box1Size.z * absBox2ToBox1[0][0] +
+				box2Size.y * absBox2ToBox1[1][2] + box2Size.z * absBox2ToBox1[1][1];
+			originProjection = FloatMakePositive(box2Origin.x * box2ToBox1[2][0] - box2Origin.z * box2ToBox1[0][0]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 0, tmp);
+				CrossProduct(worldToBox1[1], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e2 x b2e2
+		if (absBox2ToBox1[1][1] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[2][1] + box1Size.z * absBox2ToBox1[0][1] +
+				box2Size.x * absBox2ToBox1[1][2] + box2Size.z * absBox2ToBox1[1][0];
+			originProjection = FloatMakePositive(box2Origin.x * box2ToBox1[2][1] - box2Origin.z * box2ToBox1[0][1]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 1, tmp);
+				CrossProduct(worldToBox1[1], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e2 x b2e3
+		if (absBox2ToBox1[1][2] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[2][2] + box1Size.z * absBox2ToBox1[0][2] +
+				box2Size.x * absBox2ToBox1[1][1] + box2Size.y * absBox2ToBox1[1][0];
+			originProjection = FloatMakePositive(box2Origin.x * box2ToBox1[2][2] - box2Origin.z * box2ToBox1[0][2]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 2, tmp);
+				CrossProduct(worldToBox1[1], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e3 x b2e1
+		if (absBox2ToBox1[2][0] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[1][0] + box1Size.y * absBox2ToBox1[0][0] +
+				box2Size.y * absBox2ToBox1[2][2] + box2Size.z * absBox2ToBox1[2][1];
+			originProjection = FloatMakePositive(-box2Origin.x * box2ToBox1[1][0] + box2Origin.y * box2ToBox1[0][0]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 0, tmp);
+				CrossProduct(worldToBox1[2], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e3 x b2e2
+		if (absBox2ToBox1[2][1] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[1][1] + box1Size.y * absBox2ToBox1[0][1] +
+				box2Size.x * absBox2ToBox1[2][2] + box2Size.z * absBox2ToBox1[2][0];
+			originProjection = FloatMakePositive(-box2Origin.x * box2ToBox1[1][1] + box2Origin.y * box2ToBox1[0][1]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 1, tmp);
+				CrossProduct(worldToBox1[2], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+
+		// b1e3 x b2e3
+		if (absBox2ToBox1[2][2] < 1.0f - 1e-3f)
+		{
+			boxProjectionSum =
+				box1Size.x * absBox2ToBox1[1][2] + box1Size.y * absBox2ToBox1[0][2] +
+				box2Size.x * absBox2ToBox1[2][1] + box2Size.y * absBox2ToBox1[2][0];
+			originProjection = FloatMakePositive(-box2Origin.x * box2ToBox1[1][2] + box2Origin.y * box2ToBox1[0][2]) + tolerance;
+			if (FloatBits(originProjection) > FloatBits(boxProjectionSum))
+			{
+				MatrixGetColumn(box2ToWorld, 2, tmp);
+				CrossProduct(worldToBox1[2], tmp.Base(), pPlane->normal.Base());
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	inline bool ComputeSeparatingPlane(const Vec3& org1, const Vec3 & angles1, const Vec3& min1, const Vec3& max1,
+								const Vec3& org2, const Vec3 & angles2, const Vec3& min2, const Vec3& max2,
+								float tolerance, cplane_t* pPlane)
+	{
+		matrix3x4	worldToBox1, box2ToWorld;
+		ComputeCenterIMatrix(org1, angles1, min1, max1, worldToBox1);
+		ComputeCenterMatrix(org2, angles2, min2, max2, box2ToWorld);
+
+		// Then compute the size of the two boxes
+		Vec3 box1Size, box2Size;
+		VectorSubtract(max1, min1, box1Size);
+		VectorSubtract(max2, min2, box2Size);
+		box1Size *= 0.5f;
+		box2Size *= 0.5f;
+
+		return ComputeSeparatingPlane(worldToBox1, box2ToWorld, box1Size, box2Size, tolerance, pPlane);
+	}
+
+	inline bool IsOBBIntersectingOBB(const Vec3& vecOrigin1, const Vec3 & vecAngles1, const Vec3& boxMin1, const Vec3& boxMax1,
+									 const Vec3& vecOrigin2, const Vec3 & vecAngles2, const Vec3& boxMin2, const Vec3& boxMax2, float flTolerance)
+	{
+		cplane_t plane;
+		bool bFoundPlane = ComputeSeparatingPlane(vecOrigin1, vecAngles1, boxMin1, boxMax1,
+												  vecOrigin2, vecAngles2, boxMin2, boxMax2, flTolerance, &plane);
+		return (bFoundPlane == false);
 	}
 
 	inline float AngleDiffRad(float a1, float a2) noexcept

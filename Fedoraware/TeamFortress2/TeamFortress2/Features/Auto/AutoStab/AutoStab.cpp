@@ -17,14 +17,12 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 	vecEyeVictim.z = 0;
 	vecEyeVictim.NormalizeInPlace();
 
-	if (vWSCDelta.Dot(vecEyeVictim) <= 0.01f)
+	if (vWSCDelta.Dot(vecEyeVictim) <= 0.01f ||
+		vWSCDelta.Dot(vecEyeSpy) <= 0.5f ||
+		vecEyeSpy.Dot(vecEyeVictim) <= -0.3f)
+	{
 		return false;
-
-	if (vWSCDelta.Dot(vecEyeSpy) <= 0.5f)
-		return false;
-
-	if (vecEyeSpy.Dot(vecEyeVictim) <= -0.3f)
-		return false;
+	}
 
 	return true;
 }
@@ -35,7 +33,9 @@ bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, cons
 	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
 
 	if (flRange <= 0.0f)
+	{
 		return false;
+	}
 
 	auto vForward = Vec3();
 	Math::AngleVectors(vViewAngles, &vForward);
@@ -45,13 +45,13 @@ bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, cons
 	CGameTrace Trace = {};
 	CTraceFilterHitscan Filter = {};
 	Filter.pSkip = pLocal;
-	Utils::TraceHull(vTraceStart, vTraceEnd, {-18.0f, -18.0f, -18.0f}, {18.0f, 18.0f, 18.0f}, MASK_SOLID, &Filter,
-	                 &Trace);
-
+	Utils::TraceHull(vTraceStart, vTraceEnd, {-18.0f, -18.0f, -18.0f}, {18.0f, 18.0f, 18.0f}, MASK_SOLID, &Filter, &Trace);
 	if (IsEntityValid(pLocal, Trace.entity))
 	{
 		if (pEntityOut && !*pEntityOut)
+		{
 			*pEntityOut = Trace.entity;
+		}
 
 		return true;
 	}
@@ -108,8 +108,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (!TraceMelee(pLocal, pWeapon, vAngleTo, &pTraceEnemy) || pTraceEnemy != pEnemy)
 			continue;
 
-		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(),
-		                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 			continue;
 
 		if (Vars::Triggerbot::Stab::Silent.Value)
@@ -133,17 +132,24 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.Value || !G::WeaponCanAttack || pWeapon->GetWeaponID() !=
-		TF_WEAPON_KNIFE)
+	if (!Vars::Triggerbot::Stab::Active.Value || !G::WeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE)
+	{
 		return;
+	}
 
 	if (Vars::Triggerbot::Stab::RageMode.Value)
+	{
 		RunRage(pLocal, pWeapon, pCmd);
-
-	else RunLegit(pLocal, pWeapon, pCmd);
+	}
+	else
+	{
+		RunLegit(pLocal, pWeapon, pCmd);
+	}
 
 	if (pCmd->buttons & IN_ATTACK)
+	{
 		G::IsAttacking = true;
+	}
 
 	G::AutoBackstabRunning = true;
 }
