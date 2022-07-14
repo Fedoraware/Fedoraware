@@ -63,6 +63,7 @@ struct Draw_t
 	void OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& overlay_clr, bool horizontal);
 	void GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
+	void FilledCircle(const int x, const int y, const int radius, const int segments, const Color_t clr);
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex);
 	CHudTexture* GetIcon(const char* szIcon, int eIconFormat = 0);

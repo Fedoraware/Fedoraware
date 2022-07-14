@@ -225,6 +225,22 @@ void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Colo
 	}
 }
 
+void Draw_t::FilledCircle(const int x, const int y, const int radius, const int segments, const Color_t clr)
+{
+	CUtlVector<Vertex_t> vecVertixes;
+
+	const float flStep = (6.28318530718f / static_cast<float>(segments));
+
+	for (float n = 0.0f; n < 6.28318530718f; n += flStep)
+		vecVertixes.AddToTail(Vertex_t({ (static_cast<float>(radius) * cos(n) + x), (static_cast<float>(radius) * sinf(n) + y) }, { 0.0f, 0.0f }));
+
+	if (vecVertixes.Count() > 0)
+	{
+		I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+		I::Surface->DrawTexturedPoly(segments, vecVertixes.Base());
+	}
+}
+
 void Draw_t::CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color)
 {
 	Line(x, y, x + (w / _x), y, color);

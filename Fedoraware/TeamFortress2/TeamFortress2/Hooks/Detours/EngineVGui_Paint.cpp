@@ -17,6 +17,7 @@
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 
 #include "../../Resources/DVD-Icon.h"
+#include "../../Resources/64x64_Circle_Mask.h"
 
 MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
@@ -65,6 +66,45 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 		StartDrawing(I::Surface);
 		{
+			//static int nAvatar = 0;
+			//static int nAvatarID = 0;
+			//static uint32 w, h;
+			//static byte removebytes[16384];
+			//if (!nAvatar)
+			//{
+			//	nAvatar = g_SteamInterfaces.Friends015->GetMediumFriendAvatar(CSteamID(g_SteamInterfaces.User->GetSteamID()));
+
+			//	if (g_SteamInterfaces.Utils007->GetImageSize(nAvatar, &w, &h))
+			//	{
+			//		const int nSize = static_cast<int>(4 * w * h * sizeof(uint8));
+
+			//		if (g_SteamInterfaces.Utils007->GetImageRGBA(nAvatar, removebytes, nSize))
+			//		{
+			//			for (int i = 0; i <= 16384; i += 4)
+			//			{
+			//				// Do not convert these to hex >:)
+			//				if (rawData[i] == 105 &&
+			//					rawData[i + 1] == 20 &&
+			//					rawData[i + 2] == 136 &&
+			//					rawData[i + 3] == 0x01)
+			//				{
+			//					removebytes[i] = 0x00;
+			//					removebytes[i + 1] = 0x00;
+			//					removebytes[i + 2] = 0x00;
+			//					removebytes[i + 3] = 0x00;
+			//				}
+			//			}
+			//			nAvatarID = g_Draw.CreateTextureFromArray(removebytes, w, h);
+			//		}
+			//	}
+			//}
+			//if (nAvatarID)
+			//{
+			//	I::Surface->DrawSetTexture(nAvatarID);
+			//	I::Surface->DrawTexturedRect(100, 300, w, h);
+			//	g_Draw.OutlinedCircle(100 + (w / 2), 300 + (h / 2), w / 2, 300, Utils::Rainbow());
+			//}
+
 			if (I::EngineVGui->IsGameUIVisible())
 			{
 				if (!I::Engine->IsInGame())
@@ -102,9 +142,9 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				if (I::ThirdPersonManager)
 				{
 					/*g_Draw.String(FONT_MENU, 10, 400, { 255,255,255,255 }, ALIGN_DEFAULT,
-								  "Camera Offset: %f %f %f", 
+								  "Camera Offset: %f %f %f",
 								  I::ThirdPersonManager->m_vecCameraOffset.x,
-								  I::ThirdPersonManager->m_vecCameraOffset.y, 
+								  I::ThirdPersonManager->m_vecCameraOffset.y,
 								  I::ThirdPersonManager->m_vecCameraOffset.z);
 
 					g_Draw.String(FONT_MENU, 10, 420, { 255,255,255,255 }, ALIGN_DEFAULT,
@@ -118,7 +158,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 								  I::ThirdPersonManager->m_vecCameraOrigin.x,
 								  I::ThirdPersonManager->m_vecCameraOrigin.y,
 								  I::ThirdPersonManager->m_vecCameraOrigin.z);
-					
+
 					g_Draw.String(FONT_MENU, 10, 460, { 255,255,255,255 }, ALIGN_DEFAULT,
 								  "Use camera offsets: %d",
 								  I::ThirdPersonManager->m_bUseCameraOffsets);
@@ -157,7 +197,8 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 								  "Up lerp time: %f", I::ThirdPersonManager->m_flUpLerpTime);
 
 					if (GetAsyncKeyState('O') & 0x1) I::ThirdPersonManager->m_bForced = !I::ThirdPersonManager->m_bForced;
-				*/}
+				*/
+				}
 			}
 
 			F::Visuals.DrawPredictionLine();
