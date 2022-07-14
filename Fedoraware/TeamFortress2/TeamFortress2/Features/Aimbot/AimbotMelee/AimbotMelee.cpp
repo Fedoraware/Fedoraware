@@ -1,6 +1,8 @@
 #include "AimbotMelee.h"
 #include "../../Vars.h"
 
+#include "../../Backtrack/Backtrack.h"
+
 bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
                                int nTargetIndex)
 {
@@ -184,13 +186,62 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 
-bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Target_t& target)
+bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target)
 {
-	if (Vars::Aimbot::Melee::RangeCheck.Value
-		    ? !CanMeleeHit(pLocal, pWeapon, target.m_vAngleTo, target.m_pEntity->GetIndex())
-		    : !Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))
+	Vec3 hitboxpos;
+	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 	{
-		return false;
+		if (const auto& pRecord = F::Backtrack.GetPlayerRecord(target.m_pEntity))
+		{
+			const auto& pLastTick = pRecord->back();
+			if (const auto& pHDR = pLastTick.HDR)
+			{
+				if (const auto& pSet = pHDR->GetHitboxSet(pLastTick.HitboxSet))
+				{
+					if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS))
+					{
+						const Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f;
+						Vec3 vOut;
+						const matrix3x4& bone = pLastTick.BoneMatrix.BoneMatrix[pBox->bone];
+						Math::VectorTransform(vPos, bone, vOut);
+						hitboxpos = vOut;
+						PlayerSimTime = pLastTick.SimulationTime;
+					}
+				}
+			}
+		}
+
+		if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
+		{
+			target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
+			target.m_vPos = hitboxpos;
+			ShouldBacktrack = true;
+			return true;
+		}
+		ShouldBacktrack = false;
+		if (Vars::Backtrack::Latency.Value > 200)
+		{
+			return false;
+		}
+	}
+	
+	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value))
+	{
+		if (!CanMeleeHit(pLocal, pWeapon, target.m_vAngleTo, target.m_pEntity->GetIndex()))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		const float flRange = (pWeapon->GetSwingRange(pLocal));
+		if (hitboxpos.DistTo(target.m_vPos) < flRange)
+		{
+			if (!Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))
+			{
+				return false;
+			}
+		}
 	}
 
 	return true;
@@ -268,11 +319,32 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 	}
 
+	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
+	{
+		float flRange = pWeapon->GetSwingRange(pLocal);
+
+		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange * 1.9) // It just works?
+		{
+			I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 255, 0, 0, false, 1.f);
+			return false;
+		}
+		else
+		{
+			I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 0, 255, 0, false, 1.f);
+			return true;
+		}
+	}
+
+
+	
+
+	/*if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))
+	{
+		return false;
+	}*/
+
 	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
-	if (!CanMeleeHit(pLocal, pWeapon,
-	                 Vars::Aimbot::Melee::AimMethod.Value == 2
-		                 ? Target.m_vAngleTo
-		                 : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
+	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.Value == 2 ? Target.m_vAngleTo : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
 	{
 		return false;
 	}
@@ -286,23 +358,19 @@ bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 	{
 		return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 	}
-	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick
-		* 2.0f;
+	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
 }
 
 void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Aimbot::Global::Active.Value || G::AutoBackstabRunning || pWeapon->GetWeaponID() ==
-		TF_WEAPON_KNIFE)
+	if (!Vars::Aimbot::Global::Active.Value || G::AutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 	{
 		return;
 	}
 
 	Target_t target = {};
 
-	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
-		                         ? (pCmd->buttons & IN_ATTACK)
-		                         : F::AimbotGlobal.IsKeyDown());
+	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : F::AimbotGlobal.IsKeyDown());
 
 	if (GetTarget(pLocal, pWeapon, target) && bShouldAim)
 	{
@@ -340,6 +408,16 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		if (bIsAttacking)
 		{
 			G::IsAttacking = true;
+		}
+
+		if (!ShouldBacktrack)
+		{
+			PlayerSimTime = target.m_pEntity->GetSimulationTime();
+		}
+
+		if (bIsAttacking)
+		{
+			pCmd->tick_count = TIME_TO_TICKS(PlayerSimTime + G::LerpTime);
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.Value == 2)
