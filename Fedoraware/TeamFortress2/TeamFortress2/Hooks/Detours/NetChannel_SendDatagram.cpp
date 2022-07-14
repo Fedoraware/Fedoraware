@@ -7,8 +7,11 @@ MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ?
 		|| !netChannel || netChannel->IsLoopback()
 		|| !I::Engine->IsConnected() || !I::Engine->IsInGame() || I::Engine->IsDrawingLoadingImage())
 	{
+		F::Backtrack.AllowLatency = false;
 		return Hook.Original<FN>()(netChannel, edx, datagram);
 	}
+
+	F::Backtrack.AllowLatency = true;
 	
 	const int inSequence = netChannel->m_nInSequenceNr;
 	const int inState = netChannel->m_nInReliableState;

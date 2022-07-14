@@ -60,6 +60,7 @@ public:
 	std::vector<TickRecord>* GetPlayerRecord(int iEntityIndex);
 	std::vector<TickRecord>* GetPlayerRecord(CBaseEntity* pEntity);
 	int LastInSequence = 0;
+	bool AllowLatency = false;
 	std::vector<TickRecord> Record[64];
 	float LatencyRampup = 0.f;
 	std::deque<CIncomingSequence> Sequences;

@@ -65,7 +65,7 @@ namespace Vars
 		inline CVar<bool> Enabled{ false };
 		inline CVar<bool> Aim{ false };
 		inline CVar<bool> FakeLatency{ false };
-		inline CVar<float> Latency{ 0.f };
+		inline CVar<float> Latency{ 200.f };
 
 		namespace BtChams
 		{

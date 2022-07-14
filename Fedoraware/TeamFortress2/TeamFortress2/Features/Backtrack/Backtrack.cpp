@@ -186,7 +186,7 @@ float CBacktrack::GetLatency()
 
 	float flLatency = Vars::Backtrack::Latency.Value;
 
-	if (flLatency <= 200)
+	if (flLatency <= 200 || !AllowLatency)
 	{
 		flLatency = 200;
 	}
