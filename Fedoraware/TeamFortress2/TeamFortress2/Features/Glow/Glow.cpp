@@ -90,8 +90,11 @@ void CGlowEffect::Render()
 		m_DrawnEntities.clear();
 
 	if (!Vars::Glow::Main::Active.Value)
+	{
+		F::Visuals.DrawMovesimLine();
 		return;
-
+	}
+	
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		int w = g_ScreenSize.w;
