@@ -536,8 +536,6 @@ void CVisuals::DrawPredictionLine()
 
 void CVisuals::DrawMovesimLine()
 {
-	static auto RenderLine = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));
-	
 	if (Vars::Visuals::MoveSimLine.Value)
 	{
 		if (!G::PredLinesBackup.empty())
@@ -548,6 +546,12 @@ void CVisuals::DrawMovesimLine()
 			}
 		}
 	}
+}
+
+void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer)
+{
+	static auto RenderLineFn = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));
+	RenderLineFn(v1, v2, c, bZBuffer);
 }
 
 void CVisuals::SetVisionFlags()

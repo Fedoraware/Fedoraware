@@ -28,6 +28,8 @@ public:
 	void DrawDVD();
 	void DrawPredictionLine();
 	void DrawMovesimLine();
+	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
+
 	void SetVisionFlags();
 
 	float arrowUp = 0.f;
