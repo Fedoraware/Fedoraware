@@ -363,6 +363,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
+	if (G::Recharging || G::RechargeQueued)
+
 	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsOnGround() || G::IsAttacking)
 	{
 		return;
