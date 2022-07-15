@@ -12,8 +12,6 @@ class CAimbotMelee
 	void Aim(CUserCmd* pCmd, Vec3& vAngle);
 	bool ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& Target);
 	bool IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
-	bool ShouldBacktrack = false;
-	float PlayerSimTime = 0;
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };

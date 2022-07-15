@@ -207,7 +207,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 						const matrix3x4& bone = pLastTick.BoneMatrix.BoneMatrix[pBox->bone];
 						Math::VectorTransform(vPos, bone, vOut);
 						hitboxpos = vOut;
-						PlayerSimTime = pLastTick.SimulationTime;
+						target.SimTime = pLastTick.SimulationTime;
 					}
 				}
 			}
@@ -217,10 +217,11 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 		{
 			target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
 			target.m_vPos = hitboxpos;
-			ShouldBacktrack = true;
+			target.ShouldBacktrack = true;
 			return true;
 		}
-		ShouldBacktrack = false;
+
+		target.ShouldBacktrack = false;
 		if (Vars::Backtrack::Latency.Value > 200)
 		{
 			return false;
@@ -228,7 +229,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	}
 	else
 	{
-		ShouldBacktrack = false;
+		target.ShouldBacktrack = false;
 	}
 	
 	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value))
@@ -327,9 +328,9 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 
 	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 	{
-		float flRange = pWeapon->GetSwingRange(pLocal);
+		const float flRange = pWeapon->GetSwingRange(pLocal);
 
-		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange * 1.9) // It just works?
+		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange * 1.9f) // It just works?
 		{
 			//I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 255, 0, 0, false, 1.f);
 			return false;
@@ -379,6 +380,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			G::AimPos = target.m_vPos;
 		}
 
+		// Early swing prediction
 		if (ShouldSwing(pLocal, pWeapon, pCmd, target))
 		{
 			pCmd->buttons |= IN_ATTACK;
@@ -408,14 +410,11 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			G::IsAttacking = true;
 		}
 
-		if (!ShouldBacktrack)
-		{
-			PlayerSimTime = target.m_pEntity->GetSimulationTime();
-		}
-
+		// Set the target tickcount (Backtrack)
 		if (bIsAttacking)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(PlayerSimTime + G::LerpTime);
+			const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
+			pCmd->tick_count = TIME_TO_TICKS(simTime + G::LerpTime);
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.Value == 2)
