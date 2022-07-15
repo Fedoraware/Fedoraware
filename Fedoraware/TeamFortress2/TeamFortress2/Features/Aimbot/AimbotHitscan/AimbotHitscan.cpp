@@ -393,7 +393,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 								const matrix3x4& bone = pLastTick.BoneMatrix.BoneMatrix[pBox->bone];
 								Math::VectorTransform(vPos, bone, vOut);
 								hitboxpos = vOut;
-								PlayerSimTime = pLastTick.SimulationTime;
+								target.SimTime = pLastTick.SimulationTime;
 							}
 						}
 					}
@@ -402,10 +402,11 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 				if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
 				{
 					target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-					ShouldBacktrack = true;
+					target.ShouldBacktrack = true;
 					return true;
 				}
-				ShouldBacktrack = false;
+
+				target.ShouldBacktrack = false;
 				if (Vars::Backtrack::Latency.Value > 200)
 				{
 					return false;
@@ -413,11 +414,10 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 			}
 			else
 			{
-				ShouldBacktrack = false;
+				target.ShouldBacktrack = false;
 			}
 			if (!ScanHitboxes(pLocal, target))
 			{
-				
 				return false;
 			}
 
@@ -886,14 +886,11 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			}
 		}
 
-		if (!ShouldBacktrack)
-		{
-			PlayerSimTime = target.m_pEntity->GetSimulationTime();
-		}
-
+		// Set the players tickcount (Backtrack / Interpolation removal)
 		if (Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(PlayerSimTime + G::LerpTime);
+			const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
+			pCmd->tick_count = TIME_TO_TICKS(simTime + G::LerpTime);
 		}
 
 		Aim(pCmd, target.m_vAngleTo);

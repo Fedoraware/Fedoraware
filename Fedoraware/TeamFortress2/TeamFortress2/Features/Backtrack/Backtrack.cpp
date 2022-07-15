@@ -1,19 +1,11 @@
 #include "Backtrack.h"
 
-bool CBacktrack::IsGoodTick(const int tick)
+bool CBacktrack::IsGoodTick(const float simTime)
 {
-	const auto netChannel = I::Engine->GetNetChannelInfo();
+	const float latency = std::clamp(GetLatency(), 0.f, 0.9f);
+	const float deltaTime = latency - (I::GlobalVars->curtime - simTime);
 
-	if (!netChannel)
-	{
-		return false;
-	}
-
-	const float correct = std::clamp(GetLatency(), 0.f, 0.9f);
-
-	const float deltaTime = correct - (I::GlobalVars->curtime - TICKS_TO_TIME(tick));
-
-	return fabsf(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
+	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
 }
 
 void CBacktrack::Start(const CUserCmd* pCmd)
@@ -30,7 +22,7 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 				{
 					if (pEntity->GetDormant() || !pEntity->IsAlive())
 					{
-						Record[i].clear();
+						Records[i].clear();
 						continue;
 					}
 
@@ -51,7 +43,7 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 
 					if (model && hdr)
 					{
-						Record[i].insert(Record[i].begin(), TickRecord(
+						Records[i].insert(Records[i].begin(), TickRecord(
 							pEntity->GetSimulationTime(),
 							pEntity->GetHitboxPos(hitbox),
 							pEntity->GetAbsOrigin(),
@@ -66,9 +58,9 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 						);
 					}
 
-					while (Record[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
+					while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
 					{
-						Record[i].pop_back();
+						Records[i].pop_back();
 					}
 				}
 			}
@@ -101,7 +93,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 					continue;
 				}
 
-				if (Record[i].empty())
+				if (Records[i].empty())
 				{
 					continue;
 				}
@@ -116,7 +108,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 			float finalTargetIndex = -1;
 			if (bestTargetIndex != -1)
 			{
-				for (auto& i : Record[bestTargetIndex])
+				for (auto& i : Records[bestTargetIndex])
 				{
 					if (const float fieldOfViewDistance = Math::DistPointToLine(i.HeadPosition, pLocal->GetEyePosition(), newViewDirection); fieldOfViewDistance < bestFieldOfView)
 					{
@@ -141,7 +133,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 	}
 }
 
-void CBacktrack::Run(CUserCmd* pCmd)
+void CBacktrack::Run(const CUserCmd* pCmd)
 {
 	if (!Vars::Backtrack::Enabled.Value)
 	{
@@ -161,7 +153,7 @@ void CBacktrack::Run(CUserCmd* pCmd)
 		}
 		else
 		{
-			for (auto& a : Record)
+			for (auto& a : Records)
 			{
 				a.clear();
 			}
@@ -230,11 +222,11 @@ void CBacktrack::AdjustPing(INetChannel* netChannel)
 
 std::vector<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
 {
-	if (Record[iEntityIndex].empty())
+	if (Records[iEntityIndex].empty())
 	{
 		return nullptr;
 	}
-	return &Record[iEntityIndex];
+	return &Records[iEntityIndex];
 }
 
 std::vector<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
@@ -244,9 +236,9 @@ std::vector<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
 		return nullptr;
 	}
 	auto entindex = pEntity->GetIndex();
-	if (Record[entindex].empty())
+	if (Records[entindex].empty())
 	{
 		return nullptr;
 	}
-	return &Record[entindex];
+	return &Records[entindex];
 }

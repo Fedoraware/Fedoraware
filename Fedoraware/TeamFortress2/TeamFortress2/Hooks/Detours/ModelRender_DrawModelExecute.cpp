@@ -7,7 +7,7 @@
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 
 void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
-void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo);
+void DrawFakeAngles(void* ecx, void* edx, const CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo);
 
 MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), void, __fastcall,
 		  void* ecx, void* edx, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
@@ -67,24 +67,19 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
-
-
+				const auto& records = F::Backtrack.Records.at(pEntity->GetIndex());
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					if (!F::Backtrack.Record[pEntity->GetIndex()].empty())
+					if (!records.empty())
 					{
-						OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Record[pEntity->GetIndex()].back().BoneMatrix));
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&records.back().BoneMatrix));
 					}
 				}
 				else
 				{
-					if (!F::Backtrack.Record[pEntity->GetIndex()].empty())
+					for (auto& record : records)
 					{
-						for (size_t t = 0; t < F::Backtrack.Record[pEntity->GetIndex()].size(); t++)
-						{
-							if (F::Backtrack.IsGoodTick(t)) { continue; }
-							OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Record[pEntity->GetIndex()].at(t).BoneMatrix));
-						}
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix));
 					}
 				}
 
@@ -102,7 +97,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 	}
 }
 
-void DrawFakeAngles(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo)
+void DrawFakeAngles(void* ecx, void* edx, const CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo)
 {
 	auto OriginalFn = Hooks::ModelRender_DrawModelExecute::Hook.Original<Hooks::ModelRender_DrawModelExecute::FN>();
 
