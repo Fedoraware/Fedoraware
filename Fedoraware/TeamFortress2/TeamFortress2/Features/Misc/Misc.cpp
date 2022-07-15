@@ -372,8 +372,12 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f) - 1; //	get our max speed, then if we are going backwards, reduce it. (the -1 fixes freezetime at the start of the game)
+	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f) - 1; //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
+
+	if (maxSpeed < 60) {
+		return;
+	}
 
 	if (curSpeed > maxSpeed) {
 		return;	//	no need to accelerate if we are moving at our max speed
@@ -383,7 +387,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (pCmd->buttons & (IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
+	if (pCmd->buttons & (IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
 	{
 		Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
 		float flLength = vecMove.Length();
