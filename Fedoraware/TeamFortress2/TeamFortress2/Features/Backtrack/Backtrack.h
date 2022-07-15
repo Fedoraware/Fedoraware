@@ -58,10 +58,10 @@ struct TickRecord
 class CBacktrack
 {
 public:
-	bool IsGoodTick(int tick);
+	bool IsGoodTick(float simTime);
 	void Start(const CUserCmd* pCmd);
 	void Calculate(CUserCmd* pCmd);
-	void Run(CUserCmd* pCmd);
+	void Run(const CUserCmd* pCmd);
 
 	// Latency
 	void UpdateDatagram();

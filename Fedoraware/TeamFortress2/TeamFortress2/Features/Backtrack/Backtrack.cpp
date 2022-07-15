@@ -1,19 +1,11 @@
 #include "Backtrack.h"
 
-bool CBacktrack::IsGoodTick(const int tick)
+bool CBacktrack::IsGoodTick(const float simTime)
 {
-	const auto netChannel = I::Engine->GetNetChannelInfo();
+	const float latency = std::clamp(GetLatency(), 0.f, 0.9f);
+	const float deltaTime = latency - (I::GlobalVars->curtime - simTime);
 
-	if (!netChannel)
-	{
-		return false;
-	}
-
-	const float correct = std::clamp(GetLatency(), 0.f, 0.9f);
-
-	const float deltaTime = correct - (I::GlobalVars->curtime - TICKS_TO_TIME(tick));
-
-	return fabsf(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
+	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
 }
 
 void CBacktrack::Start(const CUserCmd* pCmd)
@@ -141,7 +133,7 @@ void CBacktrack::Calculate(CUserCmd* pCmd)
 	}
 }
 
-void CBacktrack::Run(CUserCmd* pCmd)
+void CBacktrack::Run(const CUserCmd* pCmd)
 {
 	if (!Vars::Backtrack::Enabled.Value)
 	{

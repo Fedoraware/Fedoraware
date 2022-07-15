@@ -67,24 +67,19 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
-
-
+				const auto& records = F::Backtrack.Records.at(pEntity->GetIndex());
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					if (!F::Backtrack.Records[pEntity->GetIndex()].empty())
+					if (!records.empty())
 					{
-						OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Records[pEntity->GetIndex()].back().BoneMatrix));
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&records.back().BoneMatrix));
 					}
 				}
 				else
 				{
-					if (!F::Backtrack.Records[pEntity->GetIndex()].empty())
+					for (auto& record : records)
 					{
-						for (size_t t = 0; t < F::Backtrack.Records[pEntity->GetIndex()].size(); t++)
-						{
-							if (F::Backtrack.IsGoodTick(t)) { continue; }
-							OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Records[pEntity->GetIndex()].at(t).BoneMatrix));
-						}
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix));
 					}
 				}
 
