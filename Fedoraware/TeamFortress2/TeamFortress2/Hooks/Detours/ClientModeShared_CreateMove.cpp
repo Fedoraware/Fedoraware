@@ -164,39 +164,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		}
 	}
 
-	// Handle Roll Exploit
-	if (Vars::Misc::Roll.Value && pCmd->buttons & IN_DUCK)
-	{
-		Vec3 ang = vOldAngles;
-		float v = fOldForward;
-		static bool fake = false;
-
-		if (std::abs(v) > 0.0f)
-		{
-			ang.z = 90.0f;
-			pCmd->sidemove = 0.0f;
-
-			if ((pCmd->buttons & IN_FORWARD) && !(pCmd->buttons & IN_ATTACK))
-			{
-				if ((Vars::Misc::Roll.Value == 2 && !fake) || !(Vars::Misc::Roll.Value != 2))
-				{
-					ang.y = ang.y + 180.0f;
-				}
-				v = -1.0f * v;
-			}
-
-			G::RollExploiting = true;
-		}
-
-		if (Vars::Misc::Roll.Value == 2)
-		{
-			*pSendPacket = fake;
-			fake = !fake;
-		}
-		pCmd->forwardmove = v;
-		pCmd->viewangles = ang;
-	}
-
 	// Run Features
 	{
 		F::Misc.Run(pCmd);

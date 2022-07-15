@@ -358,7 +358,8 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (false) {	//	Vars::Misc::FastAccel.Value
+	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::Roll.Value : Vars::Misc::FastAccel.Value;
+	if (!ShouldAccel) {
 		return;
 	}
 
@@ -374,18 +375,25 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;	//	no need to accelerate if we are moving at our max speed
 	}
 
-	Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
-	float flLength = vecMove.Length();
-	if (flLength > 0.0f)
+	if (pLocal->GetClassNum() == ETFClass::CLASS_HEAVY && pCmd->buttons & IN_ATTACK2 && pLocal->IsDucking()) {
+		return;
+	}
+
+	if (pCmd->buttons & (IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
 	{
-		Vec3 angMoveReverse;
-		Math::VectorAngles(vecMove * -1.f, angMoveReverse);
-		pCmd->forwardmove = -flLength;
-		pCmd->sidemove = 0.0f;
-		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
-		pCmd->viewangles.z = FLT_MAX;
-		G::RollExploiting = true;
-		G::ForceChokePacket = true;
+		Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
+		float flLength = vecMove.Length();
+		if (flLength > 0.0f)
+		{
+			Vec3 angMoveReverse;
+			Math::VectorAngles(vecMove * -1.f, angMoveReverse);
+			pCmd->forwardmove = -flLength;
+			pCmd->sidemove = 0.0f;
+			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
+			pCmd->viewangles.z = 270.f;
+			G::RollExploiting = true;
+			G::ForceChokePacket = true;
+		}
 	}
 }
 

@@ -741,6 +741,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::PartyMarker);
 			SAVE_VAR(Vars::Misc::PartyESP);
 			SAVE_VAR(Vars::Misc::Roll);
+			SAVE_VAR(Vars::Misc::FastAccel);
 			SAVE_VAR(Vars::Misc::SoundBlock);
 			SAVE_VAR(Vars::Misc::ChatFlags);
 			SAVE_VAR(Vars::Misc::MedievalChat);
@@ -1498,6 +1499,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::PartyMarker);
 			LOAD_VAR(Vars::Misc::PartyESP);
 			LOAD_VAR(Vars::Misc::Roll);
+			LOAD_VAR(Vars::Misc::FastAccel);
 			LOAD_VAR(Vars::Misc::SoundBlock);
 			LOAD_VAR(Vars::Misc::ChatFlags);
 			LOAD_VAR(Vars::Misc::MedievalChat);
