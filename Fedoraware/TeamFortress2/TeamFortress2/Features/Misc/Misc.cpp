@@ -382,10 +382,6 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .85f : .95f) - 1; //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
-	if (maxSpeed < 60) {
-		return;
-	}
-
 	if (curSpeed > maxSpeed) {	
 		return;	//	no need to accelerate if we are moving at our max speed
 	}
