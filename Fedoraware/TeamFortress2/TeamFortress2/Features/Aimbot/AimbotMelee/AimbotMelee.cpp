@@ -189,6 +189,8 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target)
 {
 	Vec3 hitboxpos;
+
+	// Backtrack the target if required
 	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 	{
 		if (const auto& pRecord = F::Backtrack.GetPlayerRecord(target.m_pEntity))

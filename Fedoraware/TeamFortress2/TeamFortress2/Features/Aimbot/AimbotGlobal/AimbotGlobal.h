@@ -40,6 +40,10 @@ struct Target_t {
 	int m_nAimedHitbox = -1;
 	bool m_bHasMultiPointed = false;
 	Priority n_Priority = {};
+
+	// Backtrack
+	bool ShouldBacktrack = false;
+	float SimTime = 0.f;
 };
 
 class CAimbotGlobal {
