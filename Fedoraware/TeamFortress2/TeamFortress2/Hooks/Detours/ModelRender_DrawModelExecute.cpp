@@ -71,19 +71,19 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					if (!F::Backtrack.Record[pEntity->GetIndex()].empty())
+					if (!F::Backtrack.Records[pEntity->GetIndex()].empty())
 					{
-						OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Record[pEntity->GetIndex()].back().BoneMatrix));
+						OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Records[pEntity->GetIndex()].back().BoneMatrix));
 					}
 				}
 				else
 				{
-					if (!F::Backtrack.Record[pEntity->GetIndex()].empty())
+					if (!F::Backtrack.Records[pEntity->GetIndex()].empty())
 					{
-						for (size_t t = 0; t < F::Backtrack.Record[pEntity->GetIndex()].size(); t++)
+						for (size_t t = 0; t < F::Backtrack.Records[pEntity->GetIndex()].size(); t++)
 						{
 							if (F::Backtrack.IsGoodTick(t)) { continue; }
-							OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Record[pEntity->GetIndex()].at(t).BoneMatrix));
+							OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::Backtrack.Records[pEntity->GetIndex()].at(t).BoneMatrix));
 						}
 					}
 				}
