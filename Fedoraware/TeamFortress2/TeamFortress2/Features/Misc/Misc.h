@@ -3,6 +3,7 @@
 
 class CMisc {
 	void AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void NoiseMakerSpam(CBaseEntity* pLocal);

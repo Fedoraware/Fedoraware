@@ -717,6 +717,7 @@ namespace Utils
 			pCmd->viewangles.y = direction;
 			pCmd->viewangles.z = 0;
 			pCmd->sidemove = 0; pCmd->forwardmove = 0;
+			G::ShouldStop = false;
 		}
 	}
 

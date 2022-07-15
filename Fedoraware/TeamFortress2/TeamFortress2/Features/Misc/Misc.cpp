@@ -13,6 +13,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		AccurateMovement(pCmd, pLocal);
+		FastAccel(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -352,6 +353,39 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 				pCmd->buttons |= IN_DUCK;
 			}
 		}
+	}
+}
+
+void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
+{
+	if (false) {	//	Vars::Misc::FastAccel.Value
+		return;
+	}
+
+	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsOnGround() || G::IsAttacking)
+	{
+		return;
+	}
+
+	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f); //	get our max speed, then if we are going backwards, reduce it.
+	const float curSpeed = pLocal->GetVecVelocity().Length2D();
+
+	if (curSpeed > maxSpeed) {
+		return;	//	no need to accelerate if we are moving at our max speed
+	}
+
+	Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
+	float flLength = vecMove.Length();
+	if (flLength > 0.0f)
+	{
+		Vec3 angMoveReverse;
+		Math::VectorAngles(vecMove * -1.f, angMoveReverse);
+		pCmd->forwardmove = -flLength;
+		pCmd->sidemove = 0.0f;
+		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
+		pCmd->viewangles.z = FLT_MAX;
+		G::RollExploiting = true;
+		G::ForceChokePacket = true;
 	}
 }
 

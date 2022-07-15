@@ -316,9 +316,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	// Stop movement if required
 	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value))
 	{
-		G::ShouldStop = false;
+		//G::ShouldStop = false;	//	we still need to stop if we didn't stop...
 		Utils::StopMovement(pCmd, !G::ShouldShift);
-		if (!G::IsAttacking && !G::Recharging) {
+		if (!G::IsAttacking && !G::Recharging && !G::ShouldStop) {	//	only do this code if we DID actually stop.
 			*pSendPacket = false;	//	stop angle shit
 		}
 		return false;
