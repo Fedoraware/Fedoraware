@@ -300,6 +300,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			DebugLine("m_vecOrigin", tfm::format(": [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 			DebugLine("eyePosition", tfm::format(": [%.1f, %.1f, %.1f]", eyePosition.x, eyePosition.y, eyePosition.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
+
+		{
+			const int MaxSpeed = pLocal->GetMaxSpeed();
+			DebugLine("MaxSpeed", tfm::format(": %d", MaxSpeed).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
 	}
 }
 

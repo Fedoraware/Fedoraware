@@ -358,19 +358,21 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : Vars::Misc::FastAccel.Value;
+	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value || (G::ShouldShift && Vars::Misc::CL_Move::AntiWarp.Value));	//	G::ShouldShift means we can use it in antiwarp independantly of what our user wants.
 	if (!ShouldAccel) {
 		return;
 	}
 
-	if (G::Recharging || G::RechargeQueued)
+	if (G::Recharging || G::RechargeQueued) {
+		return;
+	}
 
 	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsOnGround() || G::IsAttacking)
 	{
 		return;
 	}
 
-	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f); //	get our max speed, then if we are going backwards, reduce it.
+	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f) - 1; //	get our max speed, then if we are going backwards, reduce it. (the -1 fixes freezetime at the start of the game)
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
 	if (curSpeed > maxSpeed) {
