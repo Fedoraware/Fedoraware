@@ -269,6 +269,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 	G::EyeAngDelay++; // Used for the return delay in the viewmodel aimbot
 	G::LastUserCmd = pCmd;
+
 	if (G::ForceSendPacket)
 	{
 		*pSendPacket = true;

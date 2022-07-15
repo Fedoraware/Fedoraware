@@ -13,7 +13,6 @@ void CMisc::Run(CUserCmd* pCmd)
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		AccurateMovement(pCmd, pLocal);
-		FastAccel(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -43,6 +42,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
+		FastAccel(pCmd, pLocal);
 	}
 }
 
@@ -372,14 +372,14 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .89f : .99f) - 1; //	get our max speed, then if we are going backwards, reduce it.
+	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .85f : .95f) - 1; //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
 	if (maxSpeed < 60) {
 		return;
 	}
 
-	if (curSpeed > maxSpeed) {
+	if (curSpeed > maxSpeed) {	
 		return;	//	no need to accelerate if we are moving at our max speed
 	}
 
@@ -400,7 +400,9 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 			pCmd->viewangles.z = 270.f;
 			G::RollExploiting = true;
-			G::ForceChokePacket = true;
+			if (Vars::Misc::FakeAccelAngle.Value) {
+				G::ForceChokePacket = true;
+			}
 		}
 	}
 }
