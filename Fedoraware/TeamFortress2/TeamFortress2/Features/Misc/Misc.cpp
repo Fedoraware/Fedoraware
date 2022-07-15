@@ -358,7 +358,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::Roll.Value : Vars::Misc::FastAccel.Value;
+	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : Vars::Misc::FastAccel.Value;
 	if (!ShouldAccel) {
 		return;
 	}
