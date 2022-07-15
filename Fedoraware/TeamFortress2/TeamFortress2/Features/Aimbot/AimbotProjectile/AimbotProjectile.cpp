@@ -265,7 +265,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const INetChannel* pNetChannel = I::Engine->GetNetChannelInfo();
 	static ConVar* cl_flipviewmodels = g_ConVars.cl_flipviewmodels;
 
-	G::PredBeforeLines.clear(); G::PredFutureLines.clear();
+	G::PredictionLines.clear();
 	
 	if (!G::WeaponCanAttack) {
 		return true;	// we can't attack, so it shouldn't matter if we say we've solved it, also shouldn't f wit da chammies iykyk
@@ -1208,6 +1208,8 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				ProjectileTracer(pLocal, target);
 				nLastTracerTick = pCmd->tick_count;
 			}
+			G::PredLinesBackup.clear();
+			G::PredLinesBackup = G::PredictionLines;
 
 			//I::DebugOverlay->AddLineOverlayAlpha(Target.m_vPos, G::m_vPredictedPos, 0, 255, 0, 255, true, 2); // Predicted aim pos
 		}

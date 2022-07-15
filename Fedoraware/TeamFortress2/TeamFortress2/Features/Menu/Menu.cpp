@@ -280,7 +280,8 @@ void CMenu::MenuAimbot()
 			SectionTitle("Backtrack");
 			WToggle("Active", &Vars::Backtrack::Enabled.Value); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::Aim.Value); HelpMarker("Aimbot aims at the last tick if visible");
-			WSlider("Latency###BTLatency", &Vars::Backtrack::Latency.Value, 0.f, 1000.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
+			WToggle("Fake latency", &Vars::Backtrack::FakeLatency.Value); HelpMarker("Fakes your latency to hit records further in the past");
+			WSlider("Amount of latency###BTLatency", &Vars::Backtrack::Latency.Value, 200.f, 1000.f, "%.fms", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput); HelpMarker("This won't work on local servers");
 		} EndChild();
 
 		/* Column 2 */
@@ -322,7 +323,7 @@ void CMenu::MenuAimbot()
 		{
 			SectionTitle("Projectile");
 			WSlider("Prediction Time", &Vars::Aimbot::Projectile::PredictionTime.Value, 0.1f, 10.f, "%.1f");
-			ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+		
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
 				if (Vars::Aimbot::Projectile::SortMethod.Value == 1) {
@@ -1010,10 +1011,11 @@ void CMenu::MenuVisuals()
 				WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
 				WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
 				WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 				WToggle("Movement simulation lines", &Vars::Visuals::MoveSimLine.Value);
-				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
+				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
 					static std::vector flagValues{ 1, 2, 4, 8, 32 };

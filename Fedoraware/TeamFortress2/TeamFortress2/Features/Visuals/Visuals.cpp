@@ -516,21 +516,6 @@ void CVisuals::DrawPredictionLine()
 {
 	if (!G::PredictedPos.IsZero())
 	{
-		if (Vars::Visuals::MoveSimLine.Value)
-		{
-			for (size_t i = 0; i < G::PredFutureLines.size(); i++)
-			{
-				Vec3 vScreenpast, vScreenfuture;
-				if (Utils::W2S(G::PredBeforeLines.at(i), vScreenpast))
-				{
-					if (Utils::W2S(G::PredFutureLines.at(i), vScreenfuture))
-					{
-						g_Draw.Line(vScreenpast.x, vScreenpast.y, vScreenfuture.x, vScreenfuture.y,
-									{ Vars::Aimbot::Projectile::PredictionColor });
-					}
-				}
-			}
-		}
 		if (Vars::Visuals::AimPosSquare.Value)
 		{
 			Vec3 vProjAimStart, vProjAimEnd = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
@@ -547,6 +532,26 @@ void CVisuals::DrawPredictionLine()
 			}
 		}
 	}
+}
+
+void CVisuals::DrawMovesimLine()
+{
+	if (Vars::Visuals::MoveSimLine.Value)
+	{
+		if (!G::PredLinesBackup.empty())
+		{
+			for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
+			{
+				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+			}
+		}
+	}
+}
+
+void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer)
+{
+	static auto RenderLineFn = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));
+	RenderLineFn(v1, v2, c, bZBuffer);
 }
 
 void CVisuals::SetVisionFlags()

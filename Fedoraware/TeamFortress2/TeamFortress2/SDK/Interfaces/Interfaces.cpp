@@ -97,7 +97,7 @@ void CInterfaces::Init()
 	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34") + 0x2);
 	_valid(RandomSeed);
 
-	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, L"C6 05 ? ? ? ? ? 8A C3")) + 0x2;
+	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, L"C6 05 ? ? ? ? ? 8A C3") + 0x2);
 	_valid(AllowSecureServers);
 
 	auto pdwClient = reinterpret_cast<PDWORD>(Client);     _valid(pdwClient);

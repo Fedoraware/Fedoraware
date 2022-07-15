@@ -211,14 +211,7 @@ struct Ray_t
 	}
 };
 
-struct cplane_t
-{
-	Vec3 normal;
-	float dist;
-	BYTE type;
-	BYTE sign_bits;
-	BYTE pad[2];
-};
+
 
 struct csurface_t
 {

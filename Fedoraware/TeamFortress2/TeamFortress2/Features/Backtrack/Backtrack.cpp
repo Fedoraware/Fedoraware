@@ -43,16 +43,27 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 					model_t* model = pEntity->GetModel();
 					studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
 
+					Vec3 mins = pEntity->m_vecMins();
+					Vec3 maxs = pEntity->m_vecMaxs();
+					Vec3 worldspacecenter = pEntity->GetWorldSpaceCenter();
+					Vec3 eyeangles = pEntity->GetEyeAngles();
+
+
 					if (model && hdr)
 					{
 						Record[i].insert(Record[i].begin(), TickRecord(
-							                 pEntity->GetSimulationTime(),
-							                 pEntity->GetHitboxPos(hitbox),
-							                 pEntity->GetAbsOrigin(),
-							                 *reinterpret_cast<BoneMatrixes*>(&bones),
-							                 model,
-							                 hdr,
-							                 pEntity->GetHitboxSet()));
+							pEntity->GetSimulationTime(),
+							pEntity->GetHitboxPos(hitbox),
+							pEntity->GetAbsOrigin(),
+							*reinterpret_cast<BoneMatrixes*>(&bones),
+							model,
+							hdr,
+							pEntity->GetHitboxSet(),
+							mins,
+							maxs,
+							worldspacecenter,
+							eyeangles)
+						);
 					}
 
 					while (Record[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
@@ -144,9 +155,19 @@ void CBacktrack::Run(CUserCmd* pCmd)
 	if (g_EntityCache.GetLocal() && pCmd)
 	{
 		UpdateDatagram();
-
-		Start(pCmd);
-		Calculate(pCmd);
+		if (G::CurWeaponType != EWeaponType::PROJECTILE)
+		{
+			Start(pCmd);
+		}
+		else
+		{
+			for (auto& a : Record)
+			{
+				a.clear();
+			}
+		}
+		
+		/*Calculate(pCmd);*/
 	}
 	else
 	{
@@ -160,10 +181,9 @@ void CBacktrack::UpdateDatagram()
 	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
 	if (netChannel)
 	{
-		static int lastInSequence = 0;
-		if (netChannel->m_nInSequenceNr > lastInSequence)
+		if (netChannel->m_nInSequenceNr > LastInSequence)
 		{
-			lastInSequence = netChannel->m_nInSequenceNr;
+			LastInSequence = netChannel->m_nInSequenceNr;
 			Sequences.push_front(CIncomingSequence(netChannel->m_nInReliableState, netChannel->m_nInSequenceNr, I::GlobalVars->realtime));
 		}
 
@@ -183,8 +203,15 @@ float CBacktrack::GetLatency()
 	{
 		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
 	}
-	
-	return LatencyRampup * std::clamp(Vars::Backtrack::Latency.Value * 0.001f, 0.f, 0.9f - realLatency);
+
+	float flLatency = Vars::Backtrack::Latency.Value;
+
+	if (flLatency <= 200 || !AllowLatency)
+	{
+		flLatency = 200;
+	}
+
+	return LatencyRampup * std::clamp(flLatency * 0.001f, 0.f, 0.9f - realLatency);
 }
 
 // Adjusts the fake latency ping
@@ -199,4 +226,27 @@ void CBacktrack::AdjustPing(INetChannel* netChannel)
 			break;
 		}
 	}
+}
+
+std::vector<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
+{
+	if (Record[iEntityIndex].empty())
+	{
+		return nullptr;
+	}
+	return &Record[iEntityIndex];
+}
+
+std::vector<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
+{
+	if (!pEntity)
+	{
+		return nullptr;
+	}
+	auto entindex = pEntity->GetIndex();
+	if (Record[entindex].empty())
+	{
+		return nullptr;
+	}
+	return &Record[entindex];
 }

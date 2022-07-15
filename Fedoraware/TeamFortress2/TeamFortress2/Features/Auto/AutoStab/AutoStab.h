@@ -9,7 +9,8 @@ private:
 	bool IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity);
 	void RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 	void RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
-
+	bool ShouldBacktrack = false;
+	float PlayerSimTime = 0;
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 

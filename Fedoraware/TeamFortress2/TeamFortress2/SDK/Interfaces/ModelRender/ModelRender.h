@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Includes/Includes.h"
 
+
 class CModelRender
 {
 public:
@@ -15,6 +16,13 @@ public:
 		typedef void(__thiscall* FN)(PVOID, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*);
 		return GetVFunc<FN>(this, 19)(this, pState, pInfo, pBoneToWorld);
 	}
+
+	void GetMaterialOverride(IMaterial** ppOutForcedMaterial, EOverrideType* pOutOverrideType)
+	{
+		typedef void(__thiscall* FN)(PVOID, IMaterial**, EOverrideType*);
+		return GetVFunc<FN>(this, 25)(this, ppOutForcedMaterial, pOutOverrideType);
+	}
+
 };
 
 #define VENGINE_MODELRENDER_INTERFACE "VEngineModel016"
