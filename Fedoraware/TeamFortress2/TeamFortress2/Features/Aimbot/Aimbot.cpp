@@ -16,6 +16,9 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	// Don't run in menus
 	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible()) { return false; }
 
+	// Don't run if we are frozen in place.
+	if (G::Frozen) { return false; }
+
 	if (!pLocal->IsAlive()
 		|| pLocal->IsTaunting()
 		|| pLocal->IsBonked()

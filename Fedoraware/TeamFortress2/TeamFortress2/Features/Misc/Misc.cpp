@@ -358,12 +358,19 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
+	static bool FlipVar = false;
+	FlipVar = !FlipVar;
+	
+	if (!FlipVar) {
+		return;
+	}
+
 	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value || (G::ShouldShift && Vars::Misc::CL_Move::AntiWarp.Value));	//	G::ShouldShift means we can use it in antiwarp independantly of what our user wants.
 	if (!ShouldAccel) {
 		return;
 	}
 
-	if (G::Recharging || G::RechargeQueued) {
+	if (G::Recharging || G::RechargeQueued || G::Frozen) {
 		return;
 	}
 
@@ -400,7 +407,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 			pCmd->viewangles.z = 270.f;
 			G::RollExploiting = true;
-			if (Vars::Misc::FakeAccelAngle.Value) {
+			if (Vars::Misc::FakeAccelAngle.Value && !G::AAActive) {
 				G::ForceChokePacket = true;
 			}
 		}

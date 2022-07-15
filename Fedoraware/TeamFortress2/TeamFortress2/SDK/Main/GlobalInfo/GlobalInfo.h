@@ -53,6 +53,7 @@ namespace G
 	inline bool RollExploiting = false; // Are we performing the roll exploit?
 	inline bool ShouldStop = false; // Stops our players movement, takes 1 tick.
 	inline bool UnloadWndProcHook = false;
+	inline bool Frozen = false;	//	angles & movement are frozen.
 
 	/* Double tap / Tick shift */
 	inline int WaitForShift = 0;
