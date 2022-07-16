@@ -296,10 +296,10 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 		return false;
 	}
 
-	// do this at the end just in case aimbot / triggerbot fired.
+	// do this at the end just in case aimbot / triggerbot fired.//
 	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
-		if (Utils::IsAttacking(pCmd, pWeapon) && Vars::Misc::CL_Move::SafeTick.Value) {
-			if (G::NextSafeTick >= I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {
+		if (pCmd->buttons & IN_ATTACK && Vars::Misc::CL_Move::SafeTick.Value) {
+			if (G::NextSafeTick > I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {
 				pCmd->buttons &= ~IN_ATTACK;
 			}
 			else {
