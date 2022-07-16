@@ -621,6 +621,7 @@ void CMenu::MenuVisuals()
 				WToggle("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.Value); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
 
 				static std::vector backtrackMaterial{
+					"Original",
 					"Shaded",
 					"Shiny",
 					"Flat",
