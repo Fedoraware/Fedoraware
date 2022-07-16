@@ -193,7 +193,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	// Backtrack the target if required
 	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 	{
-		if (const auto& pRecord = F::Backtrack.GetPlayerRecord(target.m_pEntity))
+		if (const auto& pRecord = F::Backtrack.GetPlayerRecords(target.m_pEntity))
 		{
 			const auto& pLastTick = pRecord->back();
 			if (const auto& pHDR = pLastTick.HDR)

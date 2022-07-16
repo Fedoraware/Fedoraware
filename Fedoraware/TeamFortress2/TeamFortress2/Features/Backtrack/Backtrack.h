@@ -40,23 +40,26 @@ struct TickRecord
 
 class CBacktrack
 {
-public:
 	bool IsGoodTick(float simTime);
-	void Start(const CUserCmd* pCmd);
-	void Run(const CUserCmd* pCmd);
+	void UpdateRecords(const CUserCmd* pCmd);
 
-	// Latency
 	void UpdateDatagram();
 	float GetLatency();
-	void AdjustPing(INetChannel* netChannel);
 
-	std::deque<TickRecord>* GetPlayerRecord(int iEntityIndex);
-	std::deque<TickRecord>* GetPlayerRecord(CBaseEntity* pEntity);
+	float LatencyRampup = 0.f;
 	int LastInSequence = 0;
+	std::deque<CIncomingSequence> Sequences;
+
+public:
+	void Run(const CUserCmd* pCmd);
+	void AdjustPing(INetChannel* netChannel);
+	void ResetLatency();
+
+	std::deque<TickRecord>* GetPlayerRecords(int iEntityIndex);
+	std::deque<TickRecord>* GetPlayerRecords(CBaseEntity* pEntity);
+
 	bool AllowLatency = false;
 	std::array<std::deque<TickRecord>, 64> Records;
-	float LatencyRampup = 0.f;
-	std::deque<CIncomingSequence> Sequences;
 };
 
 ADD_FEATURE(CBacktrack, Backtrack)

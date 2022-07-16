@@ -8,7 +8,7 @@ bool CBacktrack::IsGoodTick(const float simTime)
 	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
 }
 
-void CBacktrack::Start(const CUserCmd* pCmd)
+void CBacktrack::UpdateRecords(const CUserCmd* pCmd)
 {
 	if (!pCmd) { return; }
 
@@ -17,42 +17,39 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 
 	for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 	{
-		if (CBaseEntity* pEntity = I::EntityList->GetClientEntity(i))
+		// Check if the entity is valid
+		const auto& pEntity = I::EntityList->GetClientEntity(i);
+		if (!pEntity || pEntity->GetDormant() || !pEntity->IsAlive()) { continue;  }
+
+		// Get bone matrix
+		matrix3x4 bones[128];
+		pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
+
+		// Get model info
+		model_t* model = pEntity->GetModel();
+		studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+
+		if (model && hdr)
 		{
-			if (pEntity->GetDormant() || !pEntity->IsAlive())
-			{
-				Records[i].clear();
-				continue;
-			}
-			
-			matrix3x4 bones[128];
-			pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
-			
-			model_t* model = pEntity->GetModel();
-			studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+			Records[i].push_front({
+				pEntity->GetSimulationTime(),
+				pEntity->GetHitboxPos(HITBOX_HEAD),
+				pEntity->GetAbsOrigin(),
+				*reinterpret_cast<BoneMatrixes*>(&bones),
+				model,
+				hdr,
+				pEntity->GetHitboxSet(),
+				pEntity->m_vecMins(),
+				pEntity->m_vecMaxs(),
+				pEntity->GetWorldSpaceCenter(),
+				pEntity->GetEyeAngles()
+			});
+		}
 
-			if (model && hdr)
-			{
-				Records[i].push_front({
-					pEntity->GetSimulationTime(),
-					pEntity->GetHitboxPos(HITBOX_HEAD),
-					pEntity->GetAbsOrigin(),
-					*reinterpret_cast<BoneMatrixes*>(&bones),
-					model,
-					hdr,
-					pEntity->GetHitboxSet(),
-					pEntity->m_vecMins(),
-					pEntity->m_vecMaxs(),
-					pEntity->GetWorldSpaceCenter(),
-					pEntity->GetEyeAngles()
-				});
-			}
-
-			// Remove old out-of-range records
-			while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
-			{
-				Records[i].pop_back();
-			}
+		// Remove old out-of-range records
+		while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
+		{
+			Records[i].pop_back();
 		}
 	}
 }
@@ -64,26 +61,23 @@ void CBacktrack::Run(const CUserCmd* pCmd)
 		LatencyRampup = 0.f;
 		return;
 	}
-
-	LatencyRampup += I::GlobalVars->interval_per_tick;
-	LatencyRampup = std::min(1.f, LatencyRampup);
+	
+	LatencyRampup = std::min(1.f, LatencyRampup += I::GlobalVars->interval_per_tick);
 
 	if (g_EntityCache.GetLocal() && pCmd)
 	{
 		UpdateDatagram();
 		if (G::CurWeaponType != EWeaponType::PROJECTILE)
 		{
-			Start(pCmd);
+			UpdateRecords(pCmd);
 		}
 		else
 		{
-			for (auto& a : Records)
+			for (auto& record : Records)
 			{
-				a.clear();
+				record.clear();
 			}
 		}
-		
-		/*Calculate(pCmd);*/
 	}
 	else
 	{
@@ -144,16 +138,23 @@ void CBacktrack::AdjustPing(INetChannel* netChannel)
 	}
 }
 
-std::deque<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
+void CBacktrack::ResetLatency()
+{
+	LastInSequence = 0;
+	LatencyRampup = 0.f;
+}
+
+std::deque<TickRecord>* CBacktrack::GetPlayerRecords(int iEntityIndex)
 {
 	if (Records[iEntityIndex].empty())
 	{
 		return nullptr;
 	}
+
 	return &Records[iEntityIndex];
 }
 
-std::deque<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
+std::deque<TickRecord>* CBacktrack::GetPlayerRecords(CBaseEntity* pEntity)
 {
 	if (!pEntity)
 	{
@@ -165,5 +166,6 @@ std::deque<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
 	{
 		return nullptr;
 	}
+
 	return &Records[entindex];
 }
