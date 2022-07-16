@@ -24,22 +24,16 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 				Records[i].clear();
 				continue;
 			}
-
+			
 			matrix3x4 bones[128];
 			pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
-
+			
 			model_t* model = pEntity->GetModel();
 			studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
 
-			Vec3 mins = pEntity->m_vecMins();
-			Vec3 maxs = pEntity->m_vecMaxs();
-			Vec3 worldspacecenter = pEntity->GetWorldSpaceCenter();
-			Vec3 eyeangles = pEntity->GetEyeAngles();
-
-
 			if (model && hdr)
 			{
-				Records[i].insert(Records[i].begin(), TickRecord(
+				Records[i].push_front({
 					pEntity->GetSimulationTime(),
 					pEntity->GetHitboxPos(HITBOX_HEAD),
 					pEntity->GetAbsOrigin(),
@@ -47,13 +41,14 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 					model,
 					hdr,
 					pEntity->GetHitboxSet(),
-					mins,
-					maxs,
-					worldspacecenter,
-					eyeangles)
-				);
+					pEntity->m_vecMins(),
+					pEntity->m_vecMaxs(),
+					pEntity->GetWorldSpaceCenter(),
+					pEntity->GetEyeAngles()
+				});
 			}
 
+			// Remove old out-of-range records
 			while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
 			{
 				Records[i].pop_back();
@@ -149,7 +144,7 @@ void CBacktrack::AdjustPing(INetChannel* netChannel)
 	}
 }
 
-std::vector<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
+std::deque<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
 {
 	if (Records[iEntityIndex].empty())
 	{
@@ -158,13 +153,14 @@ std::vector<TickRecord>* CBacktrack::GetPlayerRecord(int iEntityIndex)
 	return &Records[iEntityIndex];
 }
 
-std::vector<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
+std::deque<TickRecord>* CBacktrack::GetPlayerRecord(CBaseEntity* pEntity)
 {
 	if (!pEntity)
 	{
 		return nullptr;
 	}
-	auto entindex = pEntity->GetIndex();
+
+	const auto entindex = pEntity->GetIndex();
 	if (Records[entindex].empty())
 	{
 		return nullptr;
