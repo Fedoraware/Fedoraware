@@ -12,122 +12,51 @@ void CBacktrack::Start(const CUserCmd* pCmd)
 {
 	if (!pCmd) { return; }
 
-	if (const auto& pLocal = g_EntityCache.GetLocal())
+	const auto& pLocal = g_EntityCache.GetLocal();
+	if (!pLocal || !pLocal->IsAlive()) { return; }
+
+	for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 	{
-		if (const auto& pWeapon = g_EntityCache.GetWeapon())
+		if (CBaseEntity* pEntity = I::EntityList->GetClientEntity(i))
 		{
-			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
+			if (pEntity->GetDormant() || !pEntity->IsAlive())
 			{
-				if (CBaseEntity* pEntity = I::EntityList->GetClientEntity(i))
-				{
-					if (pEntity->GetDormant() || !pEntity->IsAlive())
-					{
-						Records[i].clear();
-						continue;
-					}
-
-					int hitbox = HITBOX_HEAD;
-
-					matrix3x4 bones[128];
-
-					pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
-
-					model_t* model = pEntity->GetModel();
-					studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
-
-					Vec3 mins = pEntity->m_vecMins();
-					Vec3 maxs = pEntity->m_vecMaxs();
-					Vec3 worldspacecenter = pEntity->GetWorldSpaceCenter();
-					Vec3 eyeangles = pEntity->GetEyeAngles();
-
-
-					if (model && hdr)
-					{
-						Records[i].insert(Records[i].begin(), TickRecord(
-							pEntity->GetSimulationTime(),
-							pEntity->GetHitboxPos(hitbox),
-							pEntity->GetAbsOrigin(),
-							*reinterpret_cast<BoneMatrixes*>(&bones),
-							model,
-							hdr,
-							pEntity->GetHitboxSet(),
-							mins,
-							maxs,
-							worldspacecenter,
-							eyeangles)
-						);
-					}
-
-					while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
-					{
-						Records[i].pop_back();
-					}
-				}
-			}
-		}
-	}
-}
-
-void CBacktrack::Calculate(CUserCmd* pCmd)
-{
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		Vec3 newViewDirection;
-		const Vec3 viewDirection = pCmd->viewangles;
-		/*I::Engine->GetViewAngles(viewDirection);*/
-		Math::AngleVectors(viewDirection, &newViewDirection);
-		if (CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon())
-		{
-			int bestTargetIndex = -1;
-			float bestFieldOfView = FLT_MAX;
-			for (int i = 0; i < I::Engine->GetMaxClients(); i++)
-			{
-				CBaseEntity* pEntity = I::EntityList->GetClientEntity(i);
-				if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE)
-				{
-					continue;
-				}
-
-				if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
-				{
-					continue;
-				}
-
-				if (Records[i].empty())
-				{
-					continue;
-				}
-
-				if (const float fovDistance = Math::DistPointToLine(pEntity->GetEyePosition(), pLocal->GetEyePosition(), newViewDirection); fovDistance < bestFieldOfView)
-				{
-					bestFieldOfView = fovDistance;
-					bestTargetIndex = i;
-				}
+				Records[i].clear();
+				continue;
 			}
 
-			float finalTargetIndex = -1;
-			if (bestTargetIndex != -1)
-			{
-				for (auto& i : Records[bestTargetIndex])
-				{
-					if (const float fieldOfViewDistance = Math::DistPointToLine(i.HeadPosition, pLocal->GetEyePosition(), newViewDirection); fieldOfViewDistance < bestFieldOfView)
-					{
-						bestFieldOfView = fieldOfViewDistance;
-						finalTargetIndex = i.SimulationTime;
-					}
-					i.AimedAt = true;
-				}
+			matrix3x4 bones[128];
+			pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
 
-				if (finalTargetIndex != -1)
-				{
-					if (!G::ShouldShift && G::ShiftedTicks == 0)
-					{
-						if (pCmd->buttons & IN_ATTACK || G::IsAttacking)
-						{
-							pCmd->tick_count = TIME_TO_TICKS(finalTargetIndex);
-						}
-					}
-				}
+			model_t* model = pEntity->GetModel();
+			studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+
+			Vec3 mins = pEntity->m_vecMins();
+			Vec3 maxs = pEntity->m_vecMaxs();
+			Vec3 worldspacecenter = pEntity->GetWorldSpaceCenter();
+			Vec3 eyeangles = pEntity->GetEyeAngles();
+
+
+			if (model && hdr)
+			{
+				Records[i].insert(Records[i].begin(), TickRecord(
+					pEntity->GetSimulationTime(),
+					pEntity->GetHitboxPos(HITBOX_HEAD),
+					pEntity->GetAbsOrigin(),
+					*reinterpret_cast<BoneMatrixes*>(&bones),
+					model,
+					hdr,
+					pEntity->GetHitboxSet(),
+					mins,
+					maxs,
+					worldspacecenter,
+					eyeangles)
+				);
+			}
+
+			while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
+			{
+				Records[i].pop_back();
 			}
 		}
 	}

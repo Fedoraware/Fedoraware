@@ -42,17 +42,16 @@ struct TickRecord
 	}
 
 	float SimulationTime = -1;
-	Vec3 HeadPosition = Vec3();
-	Vec3 AbsOrigin = Vec3();
-	BoneMatrixes BoneMatrix{};
+	Vec3 HeadPosition = { };
+	Vec3 AbsOrigin = { };
+	BoneMatrixes BoneMatrix{ };
 	model_t* Model = nullptr;
 	studiohdr_t* HDR = nullptr;
 	int  HitboxSet = 0;
-	bool AimedAt = false;
 	Vec3 mins = Vec3();
 	Vec3 maxs = Vec3();
-	Vec3 WorldSpaceCenter = Vec3();
-	Vec3 EyeAngles = Vec3();
+	Vec3 WorldSpaceCenter = { };
+	Vec3 EyeAngles = { };
 };
 
 class CBacktrack
@@ -60,7 +59,6 @@ class CBacktrack
 public:
 	bool IsGoodTick(float simTime);
 	void Start(const CUserCmd* pCmd);
-	void Calculate(CUserCmd* pCmd);
 	void Run(const CUserCmd* pCmd);
 
 	// Latency
