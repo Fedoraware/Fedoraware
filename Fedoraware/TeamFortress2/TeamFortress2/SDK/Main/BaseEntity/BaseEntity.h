@@ -107,6 +107,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(Thrower, void*, this, _("DT_BaseGrenade"), _("m_hThrower"))
 		M_DYNVARGET(DamageRadius, float, this, _("DT_BaseGrenade"), _("m_DmgRadius"))
 		M_DYNVARGET(Streaks, int*, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nStreaks"))
+		NETVAR(m_nStreaks, void*, "CTFPlayer", "m_nStreaks");
 
 	M_OFFSETGET(PipebombType, int, 0x8FC)
 		M_OFFSETGET(Touched, bool, 0x8F8)
