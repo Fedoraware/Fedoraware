@@ -592,6 +592,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::FieldOfView);
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
 			SAVE_VAR(Vars::Visuals::RemoveScope);
+			SAVE_VAR(Vars::Visuals::RemoveRagdolls);
 			SAVE_VAR(Vars::Visuals::RemoveScreenEffects);
 			SAVE_VAR(Vars::Visuals::PreventForcedAngles);
 			SAVE_VAR(Vars::Visuals::ScopeLines);
@@ -1351,6 +1352,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::FieldOfView);
 			LOAD_VAR(Vars::Visuals::AimFOVAlpha);
 			LOAD_VAR(Vars::Visuals::RemoveScope);
+			LOAD_VAR(Vars::Visuals::RemoveRagdolls);
 			LOAD_VAR(Vars::Visuals::PickupTimers);
 			LOAD_VAR(Vars::Visuals::ScopeLines);
 			LOAD_VAR(Vars::Visuals::RemoveZoom);

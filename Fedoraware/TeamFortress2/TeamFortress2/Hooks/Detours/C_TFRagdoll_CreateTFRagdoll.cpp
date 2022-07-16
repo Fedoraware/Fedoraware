@@ -15,6 +15,8 @@ void ClearEffects(CBaseEntity* pEntity)
 MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 8D 4F F8 E8 ? ? ? ? 84 C0 74 78"), void, __fastcall,
 		  void* ecx, void* edx)
 {
+	if (Vars::Visuals::RemoveRagdolls.Value) { return; }
+
 	if (const auto& pEntity = static_cast<CBaseEntity*>(ecx))
 	{
 		if (Vars::Visuals::RagdollEffects::EnemyOnly.Value)

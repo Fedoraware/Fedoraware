@@ -440,6 +440,7 @@ namespace Vars
 		inline CVar<int> FieldOfView{ 130 };
 		inline CVar<int> AimFOVAlpha{ 10 };
 		inline CVar<bool> RemoveScope{ false };
+		inline CVar<bool> RemoveRagdolls{ false };
 		inline CVar<bool> RemoveMOTD{ false };
 		inline CVar<bool> RemoveScreenEffects{ false };
 		inline CVar<bool> PreventForcedAngles{ false };

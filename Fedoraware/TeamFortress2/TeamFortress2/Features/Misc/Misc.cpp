@@ -348,7 +348,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 		// Duck Jump
 		if ((nOldFlags & ~FL_ONGROUND) && (Vars::Misc::DuckJump.Value || Vars::Misc::Followbot::Enabled.Value))
 		{
-			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming() && !pLocal->IsStunned())
 			{
 				pCmd->buttons |= IN_DUCK;
 			}
