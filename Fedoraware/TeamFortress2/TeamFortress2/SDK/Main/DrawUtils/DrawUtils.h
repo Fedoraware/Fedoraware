@@ -71,6 +71,7 @@ struct Draw_t
 	void DrawHudTexture(float x0, float y0, float s0, CHudTexture* texture, Color_t col0);
 	void DrawHudTextureByName(float x0, float y0, float s0, const char* textureName, Color_t col0);
 	void Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID);
+	void RoundedBoxStatic(const int x, const int y, const int w, const int h, const int radius, const Color_t& col);
 	float EaseOut(float start, float end, float speed);
 	float EaseIn(float start, float end, float speed);
 	float Linear(float start, float end, float speed);

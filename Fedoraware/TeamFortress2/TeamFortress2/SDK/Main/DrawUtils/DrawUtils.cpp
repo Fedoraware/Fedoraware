@@ -372,6 +372,29 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 	}
 }
 
+void Draw_t::RoundedBoxStatic(const int x, const int y, const int w, const int h, const int radius, const Color_t& col)
+{
+	Vertex_t roundsquare[64];
+
+	for (int i = 0; i < 4; i++)
+	{
+		int _x = x + ((i < 2) ? (w - radius) : radius);
+		int _y = y + ((i % 3) ? (h - radius) : radius);
+
+		float a = 90.f * i;
+
+		for (int j = 0; j < 16; j++)
+		{
+			float _a = DEG2RAD(a + j * 6.f);
+
+			roundsquare[(i * 16) + j] = Vertex_t(Vector2D(_x + radius * sin(_a), _y - radius * cos(_a)));
+		}
+	}
+
+	I::Surface->SetDrawColor(col.r, col.g, col.b, col.a);
+	I::Surface->DrawTexturedPoly(64, roundsquare);
+}
+
 
 
 void Draw_t::ClearAvatarCache()
