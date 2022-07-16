@@ -1624,6 +1624,12 @@ void CMenu::SettingsWindow()
 		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);
 
 		Dummy({ 0, 5 });
+
+		if (Button("Open configs folder", ImVec2(200, 0)))
+		{
+			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
+		}
+
 		static std::string selected;
 		int nConfig = 0;
 
