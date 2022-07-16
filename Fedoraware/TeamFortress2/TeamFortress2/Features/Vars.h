@@ -443,6 +443,8 @@ namespace Vars
 		inline CVar<bool> RemoveRagdolls{ false };
 		inline CVar<bool> RemoveMOTD{ false };
 		inline CVar<bool> RemoveScreenEffects{ false };
+		inline CVar<bool> RemoveWaterOverlay{ false };
+		inline CVar<int> VisualOverlay{ 0 };
 		inline CVar<bool> PreventForcedAngles{ false };
 		inline CVar<bool> ScopeLines{ false };
 		inline CVar<bool> PickupTimers{ false };

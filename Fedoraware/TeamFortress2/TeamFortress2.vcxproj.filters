@@ -158,6 +158,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_UpdateClientSideAnimations.cpp" />
     <ClCompile Include="TeamFortress2\Resources\64x64_Circle_Mask.h" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CViewRender_DrawUnderwaterOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
