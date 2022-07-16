@@ -243,6 +243,7 @@ void CGlowEffect::Render()
 		{
 			for (const auto& Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
 			{
+				const auto& pBuilding = reinterpret_cast<CBaseObject*>(Building);
 				if (!Building->IsAlive())
 					continue;
 
@@ -260,7 +261,7 @@ void CGlowEffect::Render()
 					break;
 				}
 				case 1: {
-					DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
+					DrawColor = Utils::GetHealthColor(pBuilding->GetHealth(), pBuilding->GetMaxHealth());
 					break;
 				}
 				}
