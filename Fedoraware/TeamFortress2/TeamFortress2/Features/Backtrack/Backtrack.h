@@ -25,56 +25,41 @@ using BoneMatrixes = struct
 
 struct TickRecord
 {
-	TickRecord(const float flSimulationTime, const Vec3& headPos, const Vec3& absOrigin,
-			   BoneMatrixes boneMatrix, model_t* model, studiohdr_t* hdr,
-			   int hitboxSet, const Vec3& mins, const Vec3& maxs, const Vec3& worldSpaceCenter,
-			   const Vec3& eyeangles)
-	{
-		SimulationTime = flSimulationTime;
-		HeadPosition = headPos;
-		AbsOrigin = absOrigin;
-		BoneMatrix = boneMatrix;
-		Model = model;
-		HDR = hdr;
-		HitboxSet = hitboxSet;
-		WorldSpaceCenter = worldSpaceCenter;
-		EyeAngles = eyeangles;
-	}
-
 	float SimulationTime = -1;
-	Vec3 HeadPosition = Vec3();
-	Vec3 AbsOrigin = Vec3();
-	BoneMatrixes BoneMatrix{};
+	Vec3 HeadPosition = { };
+	Vec3 AbsOrigin = { };
+	BoneMatrixes BoneMatrix{ };
 	model_t* Model = nullptr;
 	studiohdr_t* HDR = nullptr;
 	int  HitboxSet = 0;
-	bool AimedAt = false;
-	Vec3 mins = Vec3();
-	Vec3 maxs = Vec3();
-	Vec3 WorldSpaceCenter = Vec3();
-	Vec3 EyeAngles = Vec3();
+	Vec3 Mins = Vec3();
+	Vec3 Maxs = Vec3();
+	Vec3 WorldSpaceCenter = { };
+	Vec3 EyeAngles = { };
 };
 
 class CBacktrack
 {
-public:
 	bool IsGoodTick(float simTime);
-	void Start(const CUserCmd* pCmd);
-	void Calculate(CUserCmd* pCmd);
-	void Run(const CUserCmd* pCmd);
+	void UpdateRecords(const CUserCmd* pCmd);
 
-	// Latency
 	void UpdateDatagram();
 	float GetLatency();
-	void AdjustPing(INetChannel* netChannel);
 
-	std::vector<TickRecord>* GetPlayerRecord(int iEntityIndex);
-	std::vector<TickRecord>* GetPlayerRecord(CBaseEntity* pEntity);
-	int LastInSequence = 0;
-	bool AllowLatency = false;
-	std::array<std::vector<TickRecord>, 64> Records;
 	float LatencyRampup = 0.f;
+	int LastInSequence = 0;
 	std::deque<CIncomingSequence> Sequences;
+
+public:
+	void Run(const CUserCmd* pCmd);
+	void AdjustPing(INetChannel* netChannel);
+	void ResetLatency();
+
+	std::deque<TickRecord>* GetPlayerRecords(int iEntityIndex);
+	std::deque<TickRecord>* GetPlayerRecords(CBaseEntity* pEntity);
+
+	bool AllowLatency = false;
+	std::array<std::deque<TickRecord>, 64> Records;
 };
 
 ADD_FEATURE(CBacktrack, Backtrack)

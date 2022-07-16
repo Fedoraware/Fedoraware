@@ -8,7 +8,9 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 {
 	F::Visuals.StoreMaterialHandles();
 	F::Visuals.OverrideWorldTextures();
+
 	Hook.Original<FN>()(ecx, edx);
+
 	F::Visuals.ModulateWorld();
-	F::Backtrack.LastInSequence = 0;
+	F::Backtrack.ResetLatency();
 }
