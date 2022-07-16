@@ -595,7 +595,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::RemoveRagdolls);
 			SAVE_VAR(Vars::Visuals::RemoveScreenEffects);
 			SAVE_VAR(Vars::Visuals::VisualOverlay);
-			SAVE_VAR(Vars::Visuals::RemoveWaterOverlay);
+			SAVE_VAR(Vars::Visuals::RemoveScreenOverlays);
 			SAVE_VAR(Vars::Visuals::PreventForcedAngles);
 			SAVE_VAR(Vars::Visuals::ScopeLines);
 			SAVE_VAR(Vars::Visuals::PickupTimers);
@@ -1350,7 +1350,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
 			LOAD_VAR(Vars::Visuals::RemoveScreenEffects);
-			LOAD_VAR(Vars::Visuals::RemoveWaterOverlay);
+			LOAD_VAR(Vars::Visuals::RemoveScreenOverlays);
 			LOAD_VAR(Vars::Visuals::VisualOverlay);
 			LOAD_VAR(Vars::Visuals::PreventForcedAngles);
 			LOAD_VAR(Vars::Visuals::FieldOfView);
