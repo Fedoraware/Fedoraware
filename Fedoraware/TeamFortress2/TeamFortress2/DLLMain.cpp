@@ -123,7 +123,7 @@ LONG WINAPI UnhandledExFilter(PEXCEPTION_POINTERS ExPtr);
 
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
-	AddVectoredExceptionHandler(0, UnhandledExFilter);
+	//AddVectoredExceptionHandler(0, UnhandledExFilter);
 
 	//"mss32.dll" being one of the last modules to be loaded
 	//So wait for that before proceeding, after it's up everything else should be too
