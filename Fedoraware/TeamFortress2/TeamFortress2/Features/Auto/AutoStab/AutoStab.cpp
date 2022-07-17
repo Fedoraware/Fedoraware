@@ -125,7 +125,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 				flSimTime = pTick.SimulationTime;
 
-				if (!F::Backtrack.IsGoodTick(flSimTime))
+				if (!F::Backtrack.IsTickInRange(pTick.TickCount))
 				{
 					continue;
 				}

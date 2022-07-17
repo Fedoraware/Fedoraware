@@ -379,21 +379,20 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 			Vec3 hitboxpos;
 			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 			{
-				if (const auto& pRecord = F::Backtrack.GetPlayerRecords(target.m_pEntity))
+				if (const auto& pLastTick = F::Backtrack.GetTick(target.m_pEntity->GetIndex(), BacktrackMode::Last))
 				{
-					const auto& pLastTick = pRecord->back();
-					if (const auto& pHDR = pLastTick.HDR)
+					if (const auto& pHDR = pLastTick->HDR)
 					{
-						if (const auto& pSet = pHDR->GetHitboxSet(pLastTick.HitboxSet))
+						if (const auto& pSet = pHDR->GetHitboxSet(pLastTick->HitboxSet))
 						{
 							if (const auto& pBox = pSet->hitbox(target.m_nAimedHitbox))
 							{
 								const Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f;
 								Vec3 vOut;
-								const matrix3x4& bone = pLastTick.BoneMatrix.BoneMatrix[pBox->bone];
+								const matrix3x4& bone = pLastTick->BoneMatrix.BoneMatrix[pBox->bone];
 								Math::VectorTransform(vPos, bone, vOut);
 								hitboxpos = vOut;
-								target.SimTime = pLastTick.SimulationTime;
+								target.SimTime = pLastTick->SimulationTime;
 							}
 						}
 					}

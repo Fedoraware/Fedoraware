@@ -1,11 +1,19 @@
 #include "Backtrack.h"
 
-bool CBacktrack::IsGoodTick(const float simTime)
+/*bool CBacktrack::IsGoodTick(const float simTime)
 {
 	const float latency = std::clamp(GetLatency(), 0.f, 0.9f);
 	const float deltaTime = latency - (I::GlobalVars->curtime - simTime);
 
 	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
+}*/
+
+bool CBacktrack::IsTickInRange(int tickCount)
+{
+	if (!G::CurrentUserCmd) { return false; }
+
+	const int deltaTicks = std::abs(tickCount - G::CurrentUserCmd->tick_count + TIME_TO_TICKS(GetLatency()));
+	return TICKS_TO_TIME(deltaTicks) <= 0.2f - TICKS_TO_TIME(2);
 }
 
 void CBacktrack::UpdateRecords()
@@ -38,6 +46,7 @@ void CBacktrack::UpdateRecords()
 		{
 			Records[i].push_front({
 				pEntity->GetSimulationTime(),
+				I::GlobalVars->tickcount,
 				pEntity->GetHitboxPos(HITBOX_HEAD),
 				pEntity->GetAbsOrigin(),
 				*reinterpret_cast<BoneMatrixes*>(&bones),
@@ -48,7 +57,7 @@ void CBacktrack::UpdateRecords()
 				pEntity->m_vecMaxs(),
 				pEntity->GetWorldSpaceCenter(),
 				pEntity->GetEyeAngles()
-								  });
+			});
 		}
 
 		// Remove old out-of-range records
@@ -173,4 +182,38 @@ std::deque<TickRecord>* CBacktrack::GetPlayerRecords(CBaseEntity* pEntity)
 	}
 
 	return &Records[entindex];
+}
+
+// Returns the last valid backtrack tick (further away from the player)
+std::optional<TickRecord> CBacktrack::GetLastRecord(int entIdx)
+{
+	const auto& entRecods = Records[entIdx];
+	if (entRecods.empty()) { return std::nullopt; }
+
+	return entRecods.back();
+}
+
+// Returns the first valid backtrack tick (close to the player)
+std::optional<TickRecord> CBacktrack::GetFirstRecord(int entIdx)
+{
+	const auto& entRecods = Records[entIdx];
+	for (const auto& record : entRecods)
+	{
+		if (IsTickInRange(record.TickCount))
+		{
+			return record;
+		}
+	}
+
+	return std::nullopt;
+}
+
+// Returns the best tick for the chosen mode
+std::optional<TickRecord> CBacktrack::GetTick(int entIdx, BacktrackMode mode)
+{
+	switch (mode)
+	{
+	case BacktrackMode::First: { return GetFirstRecord(entIdx); }
+	default: { return GetLastRecord(entIdx); }
+	}
 }
