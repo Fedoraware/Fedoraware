@@ -475,14 +475,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		m_bRendering = true;
 
 		const int drawType = GetType(pInfo.m_nEntIndex);
-		if (drawType == 10 && Vars::Debug::DebugBool.Value) {
-			I::RenderView->SetBlend(0.3f);
-			if (dmeHook) {
-				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
-			}
-			I::RenderView->SetBlend(1.f);
-			return true;
-		}
 
 		// filter weapon draws
 		if (!drawType)
@@ -506,6 +498,19 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
+
+		if (drawType == 3) {	//	don't interfere with ragdolls
+			if (Vars::Visuals::RagdollEffects::RagdollType.Value) {
+				if (Vars::Visuals::RagdollEffects::EnemyOnly.Value) {
+					if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+			}
+		}
 
 		Chams_t chams = pEntity ? getChamsType(drawType, pEntity) : getChamsType(drawType);
 
