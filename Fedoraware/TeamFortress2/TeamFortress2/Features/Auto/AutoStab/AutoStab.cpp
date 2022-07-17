@@ -169,6 +169,10 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				{
 					pCmd->tick_count = TIME_TO_TICKS(flSimTime + G::LerpTime);
 				}
+				else
+				{
+					pCmd->tick_count = TIME_TO_TICKS(flSimTime);
+				}
 
 				pEnemy->SetAbsOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
