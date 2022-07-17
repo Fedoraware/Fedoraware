@@ -465,13 +465,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 	m_bRendering = false;
 	if (ShouldRun() && pRenderContext)
 	{
-		{
-			pRenderContext->DepthRange(0.0f, 1.f);
-			I::ModelRender->ForcedMaterialOverride(nullptr);
-			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-			I::RenderView->SetBlend(1.0f);
-		}
-
 		m_bRendering = true;
 
 		const int drawType = GetType(pInfo.m_nEntIndex);
@@ -515,6 +508,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		Chams_t chams = pEntity ? getChamsType(drawType, pEntity) : getChamsType(drawType);
 
 		if (!chams.chamsActive) { return false; }
+
+		{
+			pRenderContext->DepthRange(0.0f, 1.f);
+			I::ModelRender->ForcedMaterialOverride(nullptr);
+			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+			I::RenderView->SetBlend(1.0f);
+		}
 		
 		// I wanted these to be 1 line each leave me alone.
 		const int proxyIndex = (drawType <= 1) ? (drawType ? Vars::Chams::DME::HandsProxySkin.Value : Vars::Chams::DME::WeaponsProxySkin.Value) : 0;
