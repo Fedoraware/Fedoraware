@@ -153,50 +153,51 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
 		case 1:
 		{
-			pCmd->viewangles.x = 1036.0f;
-			G::RealViewAngles.x = 0.0f;
+			pCmd->viewangles.x = 0.0f;
 			break;
 		}
 		case 2:
 		{
 			pCmd->viewangles.x = -89.0f;
-			G::RealViewAngles.x = -89.0f;
 			break;
 		}
 		case 3:
 		{
 			pCmd->viewangles.x = 89.0f;
-			G::RealViewAngles.x = 89.0f;
 			break;
 		}
 		case 4:
 		{
 			pCmd->viewangles.x = -271.0f;
-			G::RealViewAngles.x = 89.0f;
 			break;
 		}
 		case 5:
 		{
 			pCmd->viewangles.x = 271.0f;
-			G::RealViewAngles.x = -89.0f;
 			break;
 		}
 		case 6:
 		{
-			static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-			static Timer updateTimer{ };
-			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-			{
-				currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-			}
-			pCmd->viewangles.x = currentAngle;
-			G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
-			break;
+				static bool counter = false;
+				static int counters = 0;
+				if (counters == 1)
+				{
+					counters = 0;
+					counter = !counter;
+				}
+				counters++;
+				if (counter)
+				{
+					pCmd->viewangles.y += 1030;
+					break;
+				}
+				else
+					pCmd->viewangles.y -= 1030.f;
+				break;
 		}
 		case 7://Half Up
 		{
 			pCmd->viewangles.x = -45.0f;
-			G::RealViewAngles.x = -45.0f;
 			break;
 		}
 		default:
