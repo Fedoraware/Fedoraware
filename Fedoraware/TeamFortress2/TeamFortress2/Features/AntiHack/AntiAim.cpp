@@ -178,27 +178,25 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		}
 		case 6:
 		{
-				static bool counter = false;
-				static int counters = 0;
-				if (counters == 1)
-				{
-					counters = 0;
-					counter = !counter;
-				}
-				counters++;
-				if (counter)
-				{
-					pCmd->viewangles.x += 1030;
-					break;
-				}
-				else
-					pCmd->viewangles.x -= 1030.f;
-				break;
+			static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+			static Timer updateTimer{ };
+			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
+			{
+				currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+			}
+			pCmd->viewangles.x = currentAngle;
+			G::RealViewAngles.x = currentAngle;
+			break;
 		}
 		case 7://Half Up
 		{
 			pCmd->viewangles.x = -45.0f;
 			break;
+		}
+		case 8: {	//	jitter
+			static bool flip = false;
+			pCmd->viewangles.x = flip ? 89.f : -89.f;
+			G::RealViewAngles.x = pCmd->viewangles.x;
 		}
 		default:
 		{
