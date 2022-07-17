@@ -8,7 +8,9 @@ private:
 	float EdgeDistance(float edgeRayYaw);
 	bool FindEdge(float edgeOrigYaw);
 	bool IsOverlapping(float a, float b, float epsilon);
-	void setAngle(CUserCmd* pCmd, const bool* pSendPacket, bool& bPitchSet, bool& bYawSet);
+	std::pair<float, float> GetAnglePair(int nIndex);
+	std::pair<float, float> GetAnglePairPitch(int nIndex);	//	send angles, real angles
+	float CalculateCustomFakePitch(float WishPitch);
 public:
 	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);

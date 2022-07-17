@@ -110,6 +110,55 @@ bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 	return std::abs(a - b) < epsilon;
 }
 
+std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
+	std::pair<float, float> retnAngles = { 0.f, 0.f };
+	switch (Vars::AntiHack::AntiAim::Pitch.Value) {
+	case 2:
+	{
+		retnAngles.first = -89.0f;
+		retnAngles.second = -89.0f;
+		break;
+	}
+	case 3:
+	{
+		retnAngles.first = 89.0f;
+		retnAngles.second = 89.0f;
+		break;
+	}
+	case 4:
+	{
+		retnAngles.first = -271.0f;
+		retnAngles.second = 89.0f;
+		break;
+	}
+	case 5:
+	{
+		retnAngles.first = 271.0f;
+		retnAngles.second = -89.0f;
+		break;
+	}
+	case 6:
+	{
+		static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+		static Timer updateTimer{ };
+		if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
+		{
+			currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
+		}
+		retnAngles.first = currentAngle;
+		retnAngles.second = currentAngle;
+		break;
+	}
+	case 7://Half Up
+	{
+		retnAngles.first = -45.0f;
+		retnAngles.second = -45.0f;
+		break;
+	}
+	}
+	return retnAngles;
+}
+
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	G::AAActive = false;
 	G::RealViewAngles = G::ViewAngles;
@@ -142,7 +191,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		if (G::IsAttacking) { return; }
 
 		static bool bSendReal = true;
-		bool bPitchSet = true;
+		bool bPitchSet = false;
 		bool bYawSet = true;
 
 		const Vec3 vOldAngles = pCmd->viewangles;
@@ -150,60 +199,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		const float fOldForwardMove = pCmd->forwardmove;
 
 		// Pitch
-		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
-		case 1:
-		{
-			pCmd->viewangles.x = 1036.0f;
-			G::RealViewAngles.x = 0.0f;
-			break;
-		}
-		case 2:
-		{
-			pCmd->viewangles.x = -89.0f;
-			G::RealViewAngles.x = -89.0f;
-			break;
-		}
-		case 3:
-		{
-			pCmd->viewangles.x = 89.0f;
-			G::RealViewAngles.x = 89.0f;
-			break;
-		}
-		case 4:
-		{
-			pCmd->viewangles.x = -271.0f;
-			G::RealViewAngles.x = 89.0f;
-			break;
-		}
-		case 5:
-		{
-			pCmd->viewangles.x = 271.0f;
-			G::RealViewAngles.x = -89.0f;
-			break;
-		}
-		case 6:
-		{
-			static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-			static Timer updateTimer{ };
-			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-			{
-				currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-			}
-			pCmd->viewangles.x = currentAngle;
-			G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
-			break;
-		}
-		case 7://Half Up
-		{
-			pCmd->viewangles.x = -45.0f;
-			G::RealViewAngles.x = -45.0f;
-			break;
-		}
-		default:
-		{
-			bPitchSet = false;
-			break;
-		}
+		if (Vars::AntiHack::AntiAim::Pitch.Value) {
+			const std::pair<float, float> angPair = GetAnglePairPitch(Vars::AntiHack::AntiAim::Pitch.Value);
+			pCmd->viewangles.x = angPair.first;
+			G::RealViewAngles.x = angPair.second;
+			bPitchSet = true;
 		}
 
 		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) {
