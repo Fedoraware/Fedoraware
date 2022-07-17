@@ -153,32 +153,27 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
 		case 1:
 		{
-			pCmd->viewangles.x = 1036.0f;
-			G::RealViewAngles.x = 0.0f;
+			pCmd->viewangles.x = 0.0f;
 			break;
 		}
 		case 2:
 		{
 			pCmd->viewangles.x = -89.0f;
-			G::RealViewAngles.x = -89.0f;
 			break;
 		}
 		case 3:
 		{
 			pCmd->viewangles.x = 89.0f;
-			G::RealViewAngles.x = 89.0f;
 			break;
 		}
 		case 4:
 		{
 			pCmd->viewangles.x = -271.0f;
-			G::RealViewAngles.x = 89.0f;
 			break;
 		}
 		case 5:
 		{
 			pCmd->viewangles.x = 271.0f;
-			G::RealViewAngles.x = -89.0f;
 			break;
 		}
 		case 6:
@@ -190,13 +185,19 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
 			}
 			pCmd->viewangles.x = currentAngle;
-			G::RealViewAngles.x = pCmd->viewangles.x; //Utils::RandFloatRange(-89.0f, 89.0f); this is bad
+			G::RealViewAngles.x = currentAngle;
 			break;
 		}
 		case 7://Half Up
 		{
 			pCmd->viewangles.x = -45.0f;
-			G::RealViewAngles.x = -45.0f;
+			break;
+		}
+		case 8: {	//	jitter
+			static bool flip = false;
+			pCmd->viewangles.x = flip ? 89.f : -89.f;
+			G::RealViewAngles.x = pCmd->viewangles.x;
+			flip = !flip;
 			break;
 		}
 		default:
