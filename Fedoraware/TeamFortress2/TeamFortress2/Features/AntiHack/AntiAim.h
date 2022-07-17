@@ -8,7 +8,7 @@ private:
 	float EdgeDistance(float edgeRayYaw);
 	bool FindEdge(float edgeOrigYaw);
 	bool IsOverlapping(float a, float b, float epsilon);
-	//std::pair<float, float> GetAnglePair(int nIndex);
+	float GetAngle(int nIndex);
 	std::pair<float, float> GetAnglePairPitch(int nIndex);	//	send angles, real angles
 	//float CalculateCustomFakePitch(float WishPitch);
 	bool bPacketFlip = true;
