@@ -159,7 +159,9 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		static bool flip = false;
 		retnAngles.first = flip ? 89.f : -89.f;
 		retnAngles.second = retnAngles.first;
-		flip = !flip;
+		if (bPacketFlip) {	//	dumb hack
+			flip = !flip;
+		}
 		break;
 	}
 	}
@@ -197,7 +199,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 		if (G::IsAttacking) { return; }
 
-		static bool bSendReal = true;
 		bool bPitchSet = false;
 		bool bYawSet = true;
 
@@ -218,7 +219,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		}
 
 		// Yaw (Real)
-		if (bSendReal) {
+		if (bPacketFlip) {
 			switch (Vars::AntiHack::AntiAim::YawReal.Value) {
 			case 1:
 			{
@@ -366,10 +367,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			G::FakeViewAngles = pCmd->viewangles;
 		}
 
-		if (bYawSet) { *pSendPacket = bSendReal = !bSendReal; }
+		if (bYawSet) { *pSendPacket = bPacketFlip = !bPacketFlip; }
 		if (Vars::AntiHack::AntiAim::YawFake.Value == 0)
 		{
-			*pSendPacket = bSendReal = true;
+			*pSendPacket = bPacketFlip = true;
 		}
 		G::AAActive = bPitchSet || bYawSet;
 
