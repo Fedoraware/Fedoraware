@@ -10,7 +10,7 @@ private:
 	bool IsOverlapping(float a, float b, float epsilon);
 	float GetAngle(int nIndex);
 	std::pair<float, float> GetAnglePairPitch(int nIndex);	//	send angles, real angles
-	//float CalculateCustomFakePitch(float WishPitch);
+	float CalculateCustomRealPitch(float WishPitch, bool FakeDown);
 	bool bPacketFlip = true;
 public:
 	void Run(CUserCmd* pCmd, bool* pSendPacket);

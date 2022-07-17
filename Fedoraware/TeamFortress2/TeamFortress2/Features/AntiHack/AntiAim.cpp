@@ -110,6 +110,10 @@ bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 	return std::abs(a - b) < epsilon;
 }
 
+float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown) {
+	return FakeDown ? 720 + WishPitch : -720 + WishPitch;
+}
+
 float CAntiAim::GetAngle(int nIndex) {
 	float retnAngle = 0.f;
 	switch (nIndex) {
@@ -223,6 +227,14 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		if (bPacketFlip) {	//	dumb hack
 			flip = !flip;
 		}
+		break;
+	}
+	case 9:
+	case 10:
+	{	//	fake up/down, real custom
+		const bool FakeDown = nIndex == 10;
+		retnAngles.first = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, FakeDown);
+		retnAngles.second = retnAngles.first;
 		break;
 	}
 	}
