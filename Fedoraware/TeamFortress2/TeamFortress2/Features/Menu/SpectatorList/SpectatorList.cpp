@@ -62,7 +62,7 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 	if (!F::Menu.IsOpen) { return; }
 
 	int mousex, mousey;
-	I::VGuiSurface->GetCursorPos(mousex, mousey);
+	I::VGuiSurface->SurfaceGetCursorPos(mousex, mousey);
 
 	static POINT delta{};
 	static bool drag = false;
