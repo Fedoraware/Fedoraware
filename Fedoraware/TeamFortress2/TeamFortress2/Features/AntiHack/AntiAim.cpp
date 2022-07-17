@@ -132,6 +132,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			return;
 		}
 
+		if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+			|| pLocal->GetMoveType() == MOVETYPE_LADDER
+			|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		{
+			return;
+		}
+
 		if (G::IsAttacking) { return; }
 
 		static bool bSendReal = true;
