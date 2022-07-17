@@ -384,10 +384,10 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					case 2:
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 800 - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/22", G::ShiftedTicks);
+						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 800 - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
 						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, 800, 100, 12, 4, { 0,0,0,170 });
-						const int chargeWidth = Math::RemapValClamped(G::ShiftedTicks, 0, 22, 0, 96);
-						if (G::ShiftedTicks)
+						const int chargeWidth = Math::RemapValClamped(G::ShiftedTicks, 0, Vars::Misc::CL_Move::DTTicks.Value, 0, 96);
+						if (G::ShiftedTicks && chargeWidth > 5)
 						{
 							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, 802, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
 						}

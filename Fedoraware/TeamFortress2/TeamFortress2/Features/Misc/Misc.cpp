@@ -609,10 +609,10 @@ void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 }
 
 const std::string SPAM_FED[] = {
-	_("Fedoraware - github.com/tf2cheater2013/Fedoraware"),
+	_("Fedoraware - github.com/Fedoraware"),
 	_("Fedoraware - Best free and open-source cheat!"),
 	_("Fedoraware - One tip ahead of the game!"),
-	_("Fedoraware - Now available @ https://github.com/tf2cheater2013!"),
+	_("Fedoraware - Now available @ https://github.com/Fedoraware!"),
 	_("Fedoraware - Based on SEOwned public source!")
 };
 

@@ -16,18 +16,8 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
-#include "../../Features/Discord/Discord.h"
-
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
-
-#include "../../SDK/Discord/include/discord_rpc.h"
-
-void UpdateRichPresence()
-{
-	F::DiscordRPC.Update();
-	F::Misc.SteamRPC();
-}
 
 void AppendCache()
 {
@@ -87,13 +77,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		nOldFlags = pLocal->GetFlags();
-
-		// Update Discord/Steam rich presence every second
-		static Timer richPresenceTimer{};
-		if (richPresenceTimer.Run(1000))
-		{
-			UpdateRichPresence();
-		}
 
 		if (const int MaxSpeed = pLocal->GetMaxSpeed()) {
 			G::Frozen = MaxSpeed == 1;

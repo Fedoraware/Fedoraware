@@ -199,6 +199,7 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeTFNormal_UpdateSteamRichPresence.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMatchInviteNotification_OnTick.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetChan_Shutdown.cpp" />
@@ -535,6 +536,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineSound\EngineSound.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineTrace\EngineTrace.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineVGui\EngineVGui.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\CGameEventListener.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
