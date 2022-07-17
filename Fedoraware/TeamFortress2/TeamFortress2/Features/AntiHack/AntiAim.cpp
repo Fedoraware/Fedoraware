@@ -197,6 +197,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			static bool flip = false;
 			pCmd->viewangles.x = flip ? 89.f : -89.f;
 			G::RealViewAngles.x = pCmd->viewangles.x;
+			flip = !flip;
+			break;
 		}
 		default:
 		{
