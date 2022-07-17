@@ -40,29 +40,44 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	static bool streaming = false;
-	// Teleport
+// Teleport
 	if ((tpKey.Down() || streaming) && G::ShiftedTicks > 0 && !G::Recharging && !G::RechargeQueued)
 	{
-		switch (Vars::Misc::CL_Move::TeleportMode.Value) {
-		case 0: {	// plain
-			while (G::ShiftedTicks > 0) {
-				oClMove(0, G::ShiftedTicks == 1);
-				G::ShiftedTicks--;
+		oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
+		switch (Vars::Misc::CL_Move::TeleportMode.Value)
+		{
+			case 0:
+			{	// plain
+				while (G::ShiftedTicks > 0)
+				{
+					oClMove(0, G::ShiftedTicks == 1);
+					G::ShiftedTicks--;
+				}
+				break;
 			}
-			break;
-		}
-		case 1: {	// smooth
-			streaming = true;
-			static int wishSpeed = 2;
-			int speed = 0;
-			while (speed < wishSpeed && G::ShiftedTicks) {
-				oClMove(0, G::ShiftedTicks == 1);
-				G::ShiftedTicks--;
-				speed++;
+			case 1:
+			{	// smooth
+				if (G::ShiftedTicks)
+				{
+					oClMove(0, G::ShiftedTicks == 1);
+					G::ShiftedTicks--;
+				}
+
+				break;
 			}
-			streaming = G::ShiftedTicks;
-			break;
-		}
+			case 2:
+			{ // weird
+				streaming = true;
+				static int wishSpeed = 2;
+				int speed = 0;
+				while (speed < wishSpeed && G::ShiftedTicks)
+				{
+					oClMove(0, G::ShiftedTicks == 1);
+					G::ShiftedTicks--;
+					speed++;
+				}
+				streaming = G::ShiftedTicks;
+			}
 		}
 		return;
 	}
@@ -100,6 +115,8 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
+
+
 
 	if (G::WaitForShift)
 	{
