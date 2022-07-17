@@ -188,11 +188,11 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 				counters++;
 				if (counter)
 				{
-					pCmd->viewangles.y += 1030;
+					pCmd->viewangles.x += 1030;
 					break;
 				}
 				else
-					pCmd->viewangles.y -= 1030.f;
+					pCmd->viewangles.x -= 1030.f;
 				break;
 		}
 		case 7://Half Up
