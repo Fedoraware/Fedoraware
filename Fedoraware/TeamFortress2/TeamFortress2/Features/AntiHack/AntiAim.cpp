@@ -155,6 +155,13 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		retnAngles.second = -45.0f;
 		break;
 	}
+	case 8: {	//	jitter
+		static bool flip = false;
+		retnAngles.first = flip ? 89.f : -89.f;
+		retnAngles.second = retnAngles.first;
+		flip = !flip;
+		break;
+	}
 	}
 	return retnAngles;
 }
