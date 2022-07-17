@@ -193,26 +193,26 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	// Backtrack the target if required
 	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
 	{
-		if (const auto& pRecord = F::Backtrack.GetPlayerRecords(target.m_pEntity))
+		if (const auto& pLastTick = F::Backtrack.GetTick(target.m_pEntity->GetIndex(), BacktrackMode::Last))
 		{
-			const auto& pLastTick = pRecord->back();
-			if (const auto& pHDR = pLastTick.HDR)
+			if (const auto& pHDR = pLastTick->HDR)
 			{
-				if (const auto& pSet = pHDR->GetHitboxSet(pLastTick.HitboxSet))
+				if (const auto& pSet = pHDR->GetHitboxSet(pLastTick->HitboxSet))
 				{
 					if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS))
 					{
 						const Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f;
 						Vec3 vOut;
-						const matrix3x4& bone = pLastTick.BoneMatrix.BoneMatrix[pBox->bone];
+						const matrix3x4& bone = pLastTick->BoneMatrix.BoneMatrix[pBox->bone];
 						Math::VectorTransform(vPos, bone, vOut);
 						hitboxpos = vOut;
-						target.SimTime = pLastTick.SimulationTime;
+						target.SimTime = pLastTick->SimulationTime;
 					}
 				}
 			}
 		}
 
+		// Check if the backtrack pos is visible
 		if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
 		{
 			target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
@@ -221,15 +221,11 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 			return true;
 		}
 
-		target.ShouldBacktrack = false;
+		// Check if the player is in range for a non-backtrack hit
 		if (Vars::Backtrack::Latency.Value > 200)
 		{
 			return false;
 		}
-	}
-	else
-	{
-		target.ShouldBacktrack = false;
 	}
 	
 	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value))

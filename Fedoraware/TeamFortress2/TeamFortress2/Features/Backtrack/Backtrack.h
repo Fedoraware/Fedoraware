@@ -26,6 +26,7 @@ using BoneMatrixes = struct
 struct TickRecord
 {
 	float SimulationTime = -1;
+	int TickCount = -1;
 	Vec3 HeadPosition = { };
 	Vec3 AbsOrigin = { };
 	BoneMatrixes BoneMatrix{ };
@@ -38,9 +39,16 @@ struct TickRecord
 	Vec3 EyeAngles = { };
 };
 
+enum class BacktrackMode
+{
+	First, Last, Distance, FOV
+};
+
 class CBacktrack
 {
 	void UpdateRecords();
+	std::optional<TickRecord> GetLastRecord(int entIdx);
+	std::optional<TickRecord> GetFirstRecord(int entIdx);
 
 	void UpdateDatagram();
 	float GetLatency();
@@ -53,10 +61,12 @@ public:
 	void Run();
 	void AdjustPing(INetChannel* netChannel);
 	void ResetLatency();
-	bool IsGoodTick(float simTime);
+	//bool IsGoodTick(float simTime);
+	bool IsTickInRange(int tickCount);
 
 	std::deque<TickRecord>* GetPlayerRecords(int iEntityIndex);
 	std::deque<TickRecord>* GetPlayerRecords(CBaseEntity* pEntity);
+	std::optional<TickRecord> GetTick(int entIdx, BacktrackMode mode);
 
 	bool AllowLatency = false;
 	std::array<std::deque<TickRecord>, 64> Records;
