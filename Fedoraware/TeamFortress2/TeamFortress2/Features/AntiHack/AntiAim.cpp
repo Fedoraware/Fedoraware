@@ -8,27 +8,40 @@ float lastFakeAngle = 90.f;
 bool wasHit = false;
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove) {
-	Vec3 curAngs = pCmd->viewangles;
+	//better movement fix roll and pitch above 90 and -90 l0l
+		static auto cl_forwardspeed = g_ConVars.FindVar("cl_forwardspeed");
+		static auto cl_sidespeed = g_ConVars.FindVar("cl_sidespeed");
+		static auto cl_upspeed = g_ConVars.FindVar("cl_upspeed");
+		if (!cl_upspeed || !cl_sidespeed || !cl_forwardspeed) {
+			return;
+		}
 
-	float fDelta = pCmd->viewangles.y - vOldAngles.y;
-	float f1, f2;
-
-	if (vOldAngles.y < 0.0f) { f1 = 360.0f + vOldAngles.y; }
-
-	else { f1 = vOldAngles.y; }
-
-	if (pCmd->viewangles.y < 0.0f) { f2 = 360.0f + pCmd->viewangles.y; }
-
-	else { f2 = pCmd->viewangles.y; }
-
-	if (f2 < f1) { fDelta = abs(f2 - f1); }
-
-	else { fDelta = 360.0f - abs(f1 - f2); }
-
-	fDelta = 360.0f - fDelta;
-
-	pCmd->forwardmove = cos(DEG2RAD(fDelta)) * fOldForwardMove + cos(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
-	pCmd->sidemove = sin(DEG2RAD(fDelta)) * fOldForwardMove + sin(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
+		const float flMaxForwardSpeed = cl_forwardspeed->GetFloat();
+		const float flMaxSideSpeed = cl_sidespeed->GetFloat();
+		const float flMaxUpSpeed = cl_upspeed->GetFloat();
+		Vector vecForward = { }, vecRight = { }, vecUp = { };
+		Math::AngleVectors(vOldAngles, &vecForward, &vecRight, &vecUp);
+		vecForward.z = vecRight.z = vecUp.x = vecUp.y = 0.f;
+		vecForward.NormalizeInPlace();
+		vecRight.NormalizeInPlace();
+		vecUp.NormalizeInPlace();
+		Vector vecOldForward = { }, vecOldRight = { }, vecOldUp = { };
+		Math::AngleVectors(pCmd->viewangles, &vecOldForward, &vecOldRight, &vecOldUp);
+		vecOldForward.z = vecOldRight.z = vecOldUp.x = vecOldUp.y = 0.f;	// these can all have 3 vectors can they not?
+		vecOldForward.NormalizeInPlace();
+		vecOldRight.NormalizeInPlace();
+		vecOldUp.NormalizeInPlace();
+		const float flPitchForward = vecForward.x * pCmd->forwardmove;	//	chunky
+		const float flYawForward = vecForward.y * pCmd->forwardmove;	//	chunky
+		const float flPitchSide = vecRight.x * pCmd->sidemove;			//	chunky
+		const float flYawSide = vecRight.y * pCmd->sidemove;			//	chunky
+		const float flRollUp = vecUp.z * pCmd->sidemove;				//	chunky
+		const float x = vecOldForward.x * flPitchSide + vecOldForward.y * flYawSide + vecOldForward.x * flPitchForward + vecOldForward.y * flYawForward + vecOldForward.z * flRollUp;
+		const float y = vecOldRight.x * flPitchSide + vecOldRight.y * flYawSide + vecOldRight.x * flPitchForward + vecOldRight.y * flYawForward + vecOldRight.z * flRollUp;
+		const float z = vecOldUp.x * flYawSide + vecOldUp.y * flPitchSide + vecOldUp.x * flYawForward + vecOldUp.y * flPitchForward + vecOldUp.z * flRollUp;
+		pCmd->forwardmove = std::clamp(x, -flMaxForwardSpeed, flMaxForwardSpeed);
+		pCmd->sidemove = std::clamp(y, -flMaxSideSpeed, flMaxSideSpeed);
+		pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed);	//	not a good idea
 }
 
 float CAntiAim::EdgeDistance(float edgeRayYaw) {
@@ -116,6 +129,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			|| pLocal->IsTaunting()
 			|| pLocal->IsInBumperKart()
 			|| pLocal->IsAGhost()) {
+			return;
+		}
+
+		if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+			|| pLocal->GetMoveType() == MOVETYPE_LADDER
+			|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+		{
 			return;
 		}
 
