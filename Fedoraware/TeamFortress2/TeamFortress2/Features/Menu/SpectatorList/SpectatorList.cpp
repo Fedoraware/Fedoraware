@@ -9,7 +9,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 
 	for (const auto& pTeammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
 	{
-		CBaseEntity* pObservedPlayer = I::EntityList->GetClientEntityFromHandle(
+		CBaseEntity* pObservedPlayer = I::ClientEntityList->GetClientEntityFromHandle(
 			pTeammate->GetObserverTarget());
 
 		if (pTeammate && !pTeammate->IsAlive() && pObservedPlayer == pLocal)
@@ -31,7 +31,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 			}
 
 			PlayerInfo_t playerInfo{ };
-			if (I::Engine->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
+			if (I::EngineClient->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
 			{
 				Spectators.push_back({
 					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.IsFriend(pTeammate->GetIndex()),
@@ -62,7 +62,7 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 	if (!F::Menu.IsOpen) { return; }
 
 	int mousex, mousey;
-	I::Surface->GetCursorPos(mousex, mousey);
+	I::VGuiSurface->GetCursorPos(mousex, mousey);
 
 	static POINT delta{};
 	static bool drag = false;
@@ -166,14 +166,14 @@ void CSpectatorList::DrawClassic()
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
+			I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
 			                                  (Spectator.Mode + Spectator.Name).c_str(), w, h);
 
 			const int nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
 			if (Vars::Visuals::SpectatorList.Value == 3)
 			{
 				PlayerInfo_t pi{};
-				if (!I::Engine->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
+				if (!I::EngineClient->GetPlayerInfo(Spectator.Index, &pi)) { continue; }
 
 				g_Draw.Avatar(nDrawX - (w / 2) - 25, nDrawY, 24, 24, pi.friendsID);
 				// center - half the width of the string

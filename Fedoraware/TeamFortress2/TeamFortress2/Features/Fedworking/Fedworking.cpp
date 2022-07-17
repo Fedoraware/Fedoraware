@@ -39,10 +39,10 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const int playerIndex = std::stoi(dataVector[4]);
 
 					PlayerInfo_t playerInfo{};
-					I::Engine->GetPlayerInfo(playerIndex, &playerInfo);
+					I::EngineClient->GetPlayerInfo(playerIndex, &playerInfo);
 
 					if (playerInfo.userID != 0) {
-						CGameEvent* markerEvent = I::GameEvent->CreateNewEvent("show_annotation");
+						CGameEvent* markerEvent = I::GameEventManager->CreateNewEvent("show_annotation");
 						if (markerEvent) {
 							markerEvent->SetInt("id", playerIndex);
 							markerEvent->SetFloat("worldPosX", xPos);
@@ -54,7 +54,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 							markerEvent->SetString("text", playerInfo.name);
 							markerEvent->SetString("play_sound", "coach/coach_go_here.wav");
 
-							I::GameEvent->FireEventClientSide(markerEvent);
+							I::GameEventManager->FireEventClientSide(markerEvent);
 						}
 					}
 				}
@@ -73,7 +73,7 @@ void CFedworking::HandleMessage(const char* pMessage)
 					const int playerIndex = std::stoi(dataVector[4]);
 
 					G::PartyPlayerESP[playerIndex].Location = { xPos, yPos, zPos };
-					G::PartyPlayerESP[playerIndex].LastUpdate = I::Engine->Time();
+					G::PartyPlayerESP[playerIndex].LastUpdate = I::EngineClient->Time();
 				} catch (...) { ConsoleLog("Failed to read ESP data!"); }
 			}
 			break;
@@ -105,7 +105,7 @@ void CFedworking::SendESP(CBaseEntity* pPlayer)
 {
 	if (!pPlayer->GetDormant() && pPlayer->IsInValidTeam() && pPlayer->IsAlive()) {
 		const float lastUpdate = G::PartyPlayerESP[pPlayer->GetIndex()].LastUpdate;
-		if (lastUpdate == 0.f || I::Engine->Time() - lastUpdate >= 0.4f) {
+		if (lastUpdate == 0.f || I::EngineClient->Time() - lastUpdate >= 0.4f) {
 			const Vec3 playerPos = pPlayer->GetVecOrigin();
 			std::stringstream msg;
 			msg << ESP << "&" << playerPos.x << "&" << playerPos.y << "&" << playerPos.z << "&" << pPlayer->GetIndex();
@@ -128,7 +128,7 @@ void CFedworking::SendMessage(const std::string& pData)
 		std::string cmd = "tf_party_chat \"FED@";
 		cmd.append(encMsg);
 		cmd.append("\"");
-		I::Engine->ClientCmd_Unrestricted(cmd.c_str());
+		I::EngineClient->ClientCmd_Unrestricted(cmd.c_str());
 	} else {
 		ConsoleLog("Failed to send message! The message was too long.");
 	}
@@ -142,7 +142,7 @@ void CFedworking::Run()
 		// Party marker
 		static KeyHelper markerKey{ &Vars::Misc::PartyMarker.Value };
 		if (Vars::Misc::PartyMarker.Value && markerKey.Pressed()) {
-			const Vec3 viewAngles = I::Engine->GetViewAngles();
+			const Vec3 viewAngles = I::EngineClient->GetViewAngles();
 			Vec3 vForward;
 			Math::AngleVectors(viewAngles, &vForward);
 
@@ -177,5 +177,5 @@ void CFedworking::ConsoleLog(const std::string& pMessage)
 	std::string consoleMsg = "[Fedworking] ";
 	consoleMsg.append(pMessage);
 	consoleMsg.append("\n");
-	I::CVars->ConsoleColorPrintf({ 225, 177, 44, 255 }, consoleMsg.c_str());
+	I::Cvar->ConsoleColorPrintf({ 225, 177, 44, 255 }, consoleMsg.c_str());
 }

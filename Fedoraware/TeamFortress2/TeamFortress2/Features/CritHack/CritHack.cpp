@@ -17,7 +17,7 @@ bool CCritHack::IsEnabled()
 {
 	if (!Vars::CritHack::Active.Value) { return false; }
 	if (!AreRandomCritsEnabled()) { return false; }
-	if (!I::Engine->IsInGame()) { return false; }
+	if (!I::EngineClient->IsInGame()) { return false; }
 
 	return true;
 }

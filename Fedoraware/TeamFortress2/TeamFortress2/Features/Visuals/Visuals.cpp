@@ -6,7 +6,7 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 	//I::DebugOverlay->ClearAllOverlays();
 
 	const model_t* model = pEntity->GetModel();
-	const studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+	const studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
 	const mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
 
 	for (int i{}; i < set->numhitboxes; ++i)
@@ -94,7 +94,7 @@ void CVisuals::SkyboxChanger()
 			}
 			else
 			{
-				LoadSkys(I::CVars->FindVar("sv_skyname")->GetString());
+				LoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
 			}
 		}
 		else
@@ -104,7 +104,7 @@ void CVisuals::SkyboxChanger()
 	}
 	else
 	{
-		LoadSkys(I::CVars->FindVar("sv_skyname")->GetString());
+		LoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
 	}
 }
 
@@ -112,7 +112,7 @@ bool CVisuals::RemoveScope(int nPanel)
 {
 	if (!Vars::Visuals::RemoveScope.Value) { return false; }
 
-	if (!m_nHudZoom && Hash::IsHudScope(I::Panel->GetName(nPanel)))
+	if (!m_nHudZoom && Hash::IsHudScope(I::VGuiPanel->GetName(nPanel)))
 	{
 		m_nHudZoom = nPanel;
 	}
@@ -148,7 +148,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Toggle key
 		if (Vars::Visuals::ThirdPersonKey.Value)
 		{
-			if (!I::EngineVGui->IsGameUIVisible() && !I::Surface->IsCursorVisible())
+			if (!I::EngineVGui->IsGameUIVisible() && !I::VGuiSurface->IsCursorVisible())
 			{
 				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.Value };
 				if (tpKey.Pressed())
@@ -192,7 +192,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Thirdperson offset
 		if (bIsInThirdPerson && Vars::Visuals::ThirdpersonOffset.Value)
 		{
-			const Vec3 viewangles = I::Engine->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
+			const Vec3 viewangles = I::EngineClient->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
 			Vec3 vForward, vRight, vUp;
 			Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
 			static KeyHelper offsetKey{ &Vars::Visuals::ThirdpersonArrowOffsetKey.Value };
@@ -525,10 +525,10 @@ void CVisuals::DrawDVD()
 			}
 			logoPos += logoVelocity;
 
-			I::Surface->DrawSetTexture(iDVD);
+			I::VGuiSurface->DrawSetTexture(iDVD);
 			const Color_t rainbow = Utils::Rainbow();
-			I::Surface->SetDrawColor(rainbow.r, rainbow.g, rainbow.b, 255);
-			I::Surface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
+			I::VGuiSurface->SetDrawColor(rainbow.r, rainbow.g, rainbow.b, 255);
+			I::VGuiSurface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
 		}
 	}
 }
@@ -577,7 +577,7 @@ void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZ
 
 void CVisuals::SetVisionFlags()
 {
-	static ConVar* localplayer_visionflags = I::CVars->FindVar("localplayer_visionflags");
+	static ConVar* localplayer_visionflags = I::Cvar->FindVar("localplayer_visionflags");
 	if (localplayer_visionflags)
 	{
 		switch (Vars::Visuals::VisionModifier.Value)
@@ -615,9 +615,9 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 
 void CVisuals::StoreMaterialHandles()
 {
-	for (MaterialHandle_t h = I::MatSystem->First(); h != I::MatSystem->Invalid(); h = I::MatSystem->Next(h))
+	for (MaterialHandle_t h = I::MaterialSystem->First(); h != I::MaterialSystem->Invalid(); h = I::MaterialSystem->Next(h))
 	{
-		if (const auto& pMaterial = I::MatSystem->Get(h))
+		if (const auto& pMaterial = I::MaterialSystem->Get(h))
 		{
 			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
 			{
@@ -789,8 +789,8 @@ void ApplySkyboxModulation(const Color_t& clr)
 
 void CVisuals::ModulateWorld()
 {
-	static bool oConnectionState = (I::Engine->IsConnected() && I::Engine->IsInGame());
-	const bool connectionState = (I::Engine->IsConnected() && I::Engine->IsInGame());
+	static bool oConnectionState = (I::EngineClient->IsConnected() && I::EngineClient->IsInGame());
+	const bool connectionState = (I::EngineClient->IsConnected() && I::EngineClient->IsInGame());
 	const bool isUnchanged = connectionState == oConnectionState;
 	static bool shouldModulate = false;
 
@@ -860,7 +860,7 @@ void CVisuals::PickupTimers()
 
 	for (auto pickupData = PickupDatas.begin(); pickupData != PickupDatas.end();)
 	{
-		const float timeDiff = I::Engine->Time() - pickupData->Time;
+		const float timeDiff = I::EngineClient->Time() - pickupData->Time;
 		if (timeDiff > 10.f)
 		{
 			pickupData = PickupDatas.erase(pickupData);
@@ -886,7 +886,7 @@ CClientClass* CVisuals::CPrecipitation::GetPrecipitationClass()
 
 	if (!pReturn)
 	{
-		for (auto pClass = I::Client->GetAllClasses(); pClass; pClass = pClass->m_pNext)
+		for (auto pClass = I::BaseClientDLL->GetAllClasses(); pClass; pClass = pClass->m_pNext)
 		{
 			if (pClass->m_ClassID == static_cast<int>(ETFClassID::CPrecipitation))
 			{
@@ -903,7 +903,7 @@ void CVisuals::CPrecipitation::Run()
 {
 	constexpr auto PRECIPITATION_INDEX = (MAX_EDICTS - 1);
 
-	const auto* pRainEntity = I::EntityList->GetClientEntity(PRECIPITATION_INDEX);
+	const auto* pRainEntity = I::ClientEntityList->GetClientEntity(PRECIPITATION_INDEX);
 
 	if (!pRainEntity)
 	{
@@ -921,7 +921,7 @@ void CVisuals::CPrecipitation::Run()
 			return;
 		}
 
-		RainEntity = I::EntityList->GetClientEntity(PRECIPITATION_INDEX);
+		RainEntity = I::ClientEntityList->GetClientEntity(PRECIPITATION_INDEX);
 
 		if (!RainEntity)
 		{

@@ -18,12 +18,12 @@ void CDiscordRPC::Update()
 		static int64_t startTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		DiscordRichPresence discordPresence = {};
 
-		if (I::Engine->IsInGame())
+		if (I::EngineClient->IsInGame())
 		{
 			if (Vars::Misc::Discord::IncludeMap.Value)
 			{
 				char mapName[256];
-				const char* cLevelName = I::Engine->GetLevelName();
+				const char* cLevelName = I::EngineClient->GetLevelName();
 
 				if (cLevelName != nullptr)
 				{

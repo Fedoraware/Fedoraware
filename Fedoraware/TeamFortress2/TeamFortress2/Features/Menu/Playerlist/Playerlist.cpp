@@ -41,7 +41,7 @@ void CPlayerList::UpdatePlayers()
 			if (pr->GetValid(i) && pr->GetConnected(i))
 			{
 				PlayerInfo_t info{};
-				if (I::Engine->GetPlayerInfo(i, &info))
+				if (I::EngineClient->GetPlayerInfo(i, &info))
 				{
 					ListPlayer player{
 						pr->GetPlayerName(i),
@@ -101,7 +101,7 @@ void CPlayerList::Render()
 		ImGui::Dummy(ImVec2());
 
 		// Check if we are in-game
-		if (!I::Engine->IsInGame())
+		if (!I::EngineClient->IsInGame())
 		{
 			ImGui::Dummy(ImVec2(0, 20));
 			static ImVec2 fontSize = ImGui::CalcTextSize("You're not in game, noob!");
@@ -260,7 +260,7 @@ void CPlayerList::Render()
 
 						if (ImGui::Selectable("Votekick"))
 						{
-							I::Engine->ClientCmd_Unrestricted(tfm::format("callvote kick %i", Player.UserID).c_str());
+							I::EngineClient->ClientCmd_Unrestricted(tfm::format("callvote kick %i", Player.UserID).c_str());
 						}
 
 						ImGui::EndPopup();

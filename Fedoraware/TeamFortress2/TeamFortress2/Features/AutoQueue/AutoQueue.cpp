@@ -2,7 +2,7 @@
 
 void CAutoQueue::Run()
 {
-	if (!I::EngineVGui->IsGameUIVisible() || I::Engine->IsInGame()) { return; }
+	if (!I::EngineVGui->IsGameUIVisible() || I::EngineClient->IsInGame()) { return; }
 
 	// Auto queue
 	if (Vars::Misc::AutoCasualQueue.Value)
@@ -24,21 +24,21 @@ void CAutoQueue::Run()
 		static auto sv_cheats = g_ConVars.FindVar("sv_cheats");
 		static bool lastConnect = false;
 
-		if (I::TFGCClientSystem->GetNumMatchInvites() > 0 && !I::Engine->IsConnected())
+		if (I::TFGCClientSystem->GetNumMatchInvites() > 0 && !I::EngineClient->IsConnected())
 		{
 			sv_cheats->SetValue(1);
 			fps_max->SetValue(1);
 			host_timescale->SetValue(25);
-		} else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::Engine->IsConnected() && lastConnect)
+		} else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::EngineClient->IsConnected() && lastConnect)
 		{
 			I::TFGCClientSystem->JoinMMMatch();
-		} else if (I::Engine->IsConnected() && !lastConnect)
+		} else if (I::EngineClient->IsConnected() && !lastConnect)
 		{
 			fps_max->SetValue(0);
 			host_timescale->SetValue(1);
 		}
 
-		lastConnect = I::Engine->IsConnected();
+		lastConnect = I::EngineClient->IsConnected();
 	}
 
 	// Join message spam

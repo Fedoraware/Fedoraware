@@ -5,7 +5,7 @@ MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ?
 {
 	if (!Vars::Backtrack::Enabled.Value || !Vars::Backtrack::FakeLatency.Value || Vars::Backtrack::Latency.Value <= 4.f
 		|| !netChannel || netChannel->IsLoopback()
-		|| !I::Engine->IsConnected() || !I::Engine->IsInGame() || I::Engine->IsDrawingLoadingImage())
+		|| !I::EngineClient->IsConnected() || !I::EngineClient->IsInGame() || I::EngineClient->IsDrawingLoadingImage())
 	{
 		F::Backtrack.AllowLatency = false;
 		return Hook.Original<FN>()(netChannel, edx, datagram);

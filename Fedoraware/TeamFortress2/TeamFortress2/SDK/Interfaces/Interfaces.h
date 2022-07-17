@@ -180,31 +180,31 @@ public:
 
 namespace I
 {
-	inline CBaseClientDLL* Client = nullptr;
-	inline CClientDLLSharedAppSystems* ClientShared = nullptr;
+	inline CBaseClientDLL* BaseClientDLL = nullptr;
+	inline CClientDLLSharedAppSystems* ClientDLLSharedAppSystems = nullptr;
 	inline CClientState* ClientState = nullptr;
-	inline CClientModeShared* ClientMode = nullptr;
-	inline CEngineClient* Engine = nullptr;
+	inline CClientModeShared* ClientModeShared = nullptr;
+	inline CEngineClient* EngineClient = nullptr;
 	inline IVEngineEffects* EngineEffects = nullptr;
-	inline CPanel* Panel = nullptr;
-	inline CSurface* Surface = nullptr;
-	inline CClientEntityList* EntityList = nullptr;
+	inline CPanel* VGuiPanel = nullptr;
+	inline CSurface* VGuiSurface = nullptr;
+	inline CClientEntityList* ClientEntityList = nullptr;
 	inline IEffects* EffectsClient = nullptr;
-	inline CModelInfoClient* ModelInfo = nullptr;
+	inline CModelInfoClient* ModelInfoClient = nullptr;
 	inline CEngineTrace* EngineTrace = nullptr;
 	inline CPrediction* Prediction = nullptr;
 	inline CGameMovement* GameMovement = nullptr;
 	inline CMoveHelper* MoveHelper = nullptr;
-	inline ICvar* CVars = nullptr;
+	inline ICvar* Cvar = nullptr;
 	inline CGlobalVarsBase* GlobalVars = nullptr;
 	inline CEngineVGui* EngineVGui = nullptr;
 	inline void* DemoPlayer = nullptr;
 	inline IVRenderView* RenderView = nullptr;
 	inline IViewRender* ViewRender = nullptr;
 	inline CDebugOverlay* DebugOverlay = nullptr;
-	inline CGameEventManager* GameEvent = nullptr;
+	inline CGameEventManager* GameEventManager = nullptr;
 	inline CModelRender* ModelRender = nullptr;
-	inline CMaterialSystem* MatSystem = nullptr;
+	inline CMaterialSystem* MaterialSystem = nullptr;
 	inline IInput* Input = nullptr;
 	inline IKeyValuesSystem* KeyValuesSystem = nullptr;
 	inline IUniformRandomStream* UniformRandomStream = nullptr;

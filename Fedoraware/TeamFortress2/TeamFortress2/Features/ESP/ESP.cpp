@@ -138,7 +138,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		}
 
 		int nIndex = Player->GetIndex();
-		bool bIsLocal = nIndex == I::Engine->GetLocalPlayer();
+		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();
 
 		if (!bIsLocal)
 		{
@@ -208,7 +208,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.Value);
+			I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.Value);
 
 			// Bone ESP
 			if (Vars::ESP::Players::Bones.Value)
@@ -327,7 +327,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			PlayerInfo_t pi{};
-			if (I::Engine->GetPlayerInfo(nIndex, &pi))
+			if (I::EngineClient->GetPlayerInfo(nIndex, &pi))
 			{
 				// Name ESP
 				int middle = x + w / 2;
@@ -337,7 +337,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					if (Vars::ESP::Players::NameBox.Value)
 					{
 						int wideth, heighth;
-						I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
+						I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont,
 						                        Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = drawColor;
 						LineColor.a = 180;
@@ -491,7 +491,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				x += 1;
 			}
 
-			I::Surface->DrawSetAlphaMultiplier(1.0f);
+			I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
 }
@@ -542,7 +542,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 			const bool bIsMini = building->GetMiniBuilding();
 
-			I::Surface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.Value);
+			I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.Value);
 
 			// Box ESP (Rect, Corners, 3D)
 			switch (Vars::ESP::Buildings::Box.Value)
@@ -644,7 +644,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				{
 					int wideth, heighth;
 					const int middle = x + w / 2;
-					I::Surface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
+					I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_NAME].dwFont, szName, wideth, heighth);
 					Color_t LineColor = drawColor;
 					LineColor.a = 180;
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
@@ -671,7 +671,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				if (const auto& pOwner = building->GetOwner())
 				{
 					PlayerInfo_t pi;
-					if (I::Engine->GetPlayerInfo(pOwner->GetIndex(), &pi))
+					if (I::EngineClient->GetPlayerInfo(pOwner->GetIndex(), &pi))
 					{
 						nTextTopOffset += g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall /
 							4;
@@ -796,7 +796,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 			}
 
-			I::Surface->DrawSetAlphaMultiplier(1.0f);
+			I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
 }
@@ -811,7 +811,7 @@ void CESP::DrawWorld() const
 	Vec3 vScreen = {};
 	constexpr size_t FONT = FONT_ESP_PICKUPS;
 
-	I::Surface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
+	I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
 
 	// Health Text
 	if (Vars::ESP::World::HealthText.Value)
@@ -847,7 +847,7 @@ void CESP::DrawWorld() const
 		}
 	}
 
-	I::Surface->DrawSetAlphaMultiplier(1.0f);
+	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 }
 
 using ETFCond = int;
@@ -1108,7 +1108,7 @@ const wchar_t* CESP::GetPlayerClass(int nClassNum)
 void CESP::CreateDLight(int nIndex, Color_t DrawColor, const Vec3& vOrigin, float flRadius)
 {
 	const auto pLight = I::EngineEffects->CL_AllocDlight(nIndex);
-	pLight->m_flDie = I::Engine->Time() + 0.5f;
+	pLight->m_flDie = I::EngineClient->Time() + 0.5f;
 	pLight->m_flRadius = flRadius;
 	pLight->m_Color.r = DrawColor.r;
 	pLight->m_Color.g = DrawColor.g;

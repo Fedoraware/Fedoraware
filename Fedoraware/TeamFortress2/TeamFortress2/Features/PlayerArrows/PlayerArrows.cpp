@@ -40,7 +40,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	};
 
 	const Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
-	const Vec3 vecViewAngle = I::Engine->GetViewAngles();
+	const Vec3 vecViewAngle = I::EngineClient->GetViewAngles();
 
 	const float deg = GetClockwiseAngle(vecViewAngle, vecAngleTo);
 	const float xrot = cos(deg - PI / 2);

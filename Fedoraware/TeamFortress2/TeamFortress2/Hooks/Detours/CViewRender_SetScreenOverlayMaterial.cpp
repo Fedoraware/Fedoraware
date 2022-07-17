@@ -13,23 +13,23 @@ MAKE_HOOK(CViewRender_SetScreenOverlayMaterial, Utils::GetVFuncPtr(I::ViewRender
 
 	switch (matIndex) {
 	case 1: {
-		mat = I::MatSystem->Find("effects/imcookin", TEXTURE_GROUP_CLIENT_EFFECTS, false);
+		mat = I::MaterialSystem->Find("effects/imcookin", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
 	case 2: {
-		mat = I::MatSystem->Find("effects/jarate_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
+		mat = I::MaterialSystem->Find("effects/jarate_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
 	case 3: {
-		mat = I::MatSystem->Find("effects/bleed_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
+		mat = I::MaterialSystem->Find("effects/bleed_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
 	case 4: {
-		mat = I::MatSystem->Find("effects/stealth_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
+		mat = I::MaterialSystem->Find("effects/stealth_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
 	case 5: {
-		mat = I::MatSystem->Find("effects/dodge_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
+		mat = I::MaterialSystem->Find("effects/dodge_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
 	}

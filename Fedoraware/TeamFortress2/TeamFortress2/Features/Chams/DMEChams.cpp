@@ -37,7 +37,7 @@ namespace ProxySkins
 		kv->SetString("$scrollanglevar", "0");
 		kv->SetString("$wireframe", "0");
 		kv->AddSubkey(Proxies);
-		return I::MatSystem->Create(tfm::format("DMEProxy_%s", materialName).c_str(), kv);
+		return I::MaterialSystem->Create(tfm::format("DMEProxy_%s", materialName).c_str(), kv);
 	}
 
 	void Init()
@@ -92,7 +92,7 @@ bool CDMEChams::ShouldRun()
 }
 
 IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
-	IMaterial* returnMaterial = I::MatSystem->Create(szName, pKV);
+	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
 	
 	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
@@ -282,7 +282,7 @@ IMaterial* CDMEChams::GetProxyMaterial(int nIndex) {
 }
 
 int GetType(int EntIndex) {
-	CBaseEntity* pEntity = I::EntityList->GetClientEntity(EntIndex);
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(EntIndex);
 	if (!pEntity) { return 0; }
 	switch (pEntity->GetClassID()) {
 	case ETFClassID::CTFViewModel: {
@@ -411,7 +411,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	case 4: {
 		if (!Vars::Chams::Players::Wearables.Value) { return Chams_t(); }
 		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
+		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
 			return GetPlayerChams(pOwner);
 		}
 		return Chams_t();
@@ -419,7 +419,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	case 5: {
 		if (!Vars::Chams::Players::Weapons.Value) { return Chams_t(); }
 		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
+		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
 			return GetPlayerChams(pOwner);
 		}
 		return Chams_t();
@@ -447,7 +447,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	}
 	case 9: {
 		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower()))) {
+		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower()))) {
 			return GetPlayerChams(pOwner);
 		}
 		return Chams_t();
@@ -460,7 +460,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
-	const auto& pRenderContext = I::MatSystem->GetRenderContext();
+	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
 	m_bRendering = false;
 	if (ShouldRun() && pRenderContext)
@@ -472,7 +472,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		// filter weapon draws
 		if (!drawType)
 		{
-			std::string_view szModelName(I::ModelInfo->GetModelName(pInfo.m_pModel));
+			std::string_view szModelName(I::ModelInfoClient->GetModelName(pInfo.m_pModel));
 			if (!(szModelName.find(_("weapon")) != std::string_view::npos
 				&& szModelName.find(_("arrow")) == std::string_view::npos
 				&& szModelName.find(_("w_syringe")) == std::string_view::npos
@@ -489,7 +489,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		}
 		if (drawType == -1) { return false; }
 
-		CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(pInfo.m_nEntIndex);
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
 		if (drawType == 3) {	//	don't interfere with ragdolls

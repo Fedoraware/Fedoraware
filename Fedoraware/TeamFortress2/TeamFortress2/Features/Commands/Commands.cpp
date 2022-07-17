@@ -32,13 +32,13 @@ void CCommands::Init()
 				 if (I::TFGCClientSystem)
 				 {
 					 *(reinterpret_cast<bool*>(I::TFGCClientSystem) + 1440) = !*(reinterpret_cast<bool*>(I::TFGCClientSystem) + 1440);
-					 I::CVars->ConsolePrintf("%d", *(reinterpret_cast<bool*>(I::TFGCClientSystem) + 1440));
+					 I::Cvar->ConsolePrintf("%d", *(reinterpret_cast<bool*>(I::TFGCClientSystem) + 1440));
 				 }
 			 });
 
 	Register("crash", [](const std::deque<std::string>& args)
 			 {
-				 reinterpret_cast<void(__thiscall*)(void*, void*, void*, void*)>(I::Client + 10000)(NULL, NULL, NULL, NULL);
+				 reinterpret_cast<void(__thiscall*)(void*, void*, void*, void*)>(I::BaseClientDLL + 10000)(NULL, NULL, NULL, NULL);
 			 });
 
 	Register("setcvar", [](std::deque<std::string> args)
@@ -46,16 +46,16 @@ void CCommands::Init()
 // Check if the user provided at least 2 args
 				 if (args.size() < 2)
 				 {
-					 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
+					 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: setcvar <cvar> <value>\n");
 					 return;
 				 }
 
 				 // Find the given CVar
-				 const auto foundCVar = I::CVars->FindVar(args[0].c_str());
+				 const auto foundCVar = I::Cvar->FindVar(args[0].c_str());
 				 const std::string cvarName = args[0];
 				 if (!foundCVar)
 				 {
-					 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+					 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
 					 return;
 				 }
 
@@ -64,7 +64,7 @@ void CCommands::Init()
 				 std::string newValue = boost::algorithm::join(args, " ");
 				 boost::replace_all(newValue, "\"", "");
 				 foundCVar->SetValue(newValue.c_str());
-				 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to: %s\n", cvarName.c_str(), newValue.c_str());
+				 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Set %s to: %s\n", cvarName.c_str(), newValue.c_str());
 			 });
 
 	Register("getcvar", [](std::deque<std::string> args)
@@ -72,19 +72,19 @@ void CCommands::Init()
 // Check if the user provided 1 arg
 				 if (args.size() != 1)
 				 {
-					 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: getcvar <cvar>\n");
+					 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Usage: getcvar <cvar>\n");
 					 return;
 				 }
 
-				 const auto foundCVar = I::CVars->FindVar(args[0].c_str());
+				 const auto foundCVar = I::Cvar->FindVar(args[0].c_str());
 				 const std::string cvarName = args[0];
 				 if (!foundCVar)
 				 {
-					 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
+					 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Could not find %s\n", cvarName.c_str());
 					 return;
 				 }
 
-				 I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Value of %s is: %s\n", cvarName.c_str(), foundCVar->GetString());
+				 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Value of %s is: %s\n", cvarName.c_str(), foundCVar->GetString());
 			 });
 
 	Register("f_dumpmaterials", [](const std::deque<std::string>& args)
@@ -128,20 +128,20 @@ void CCommands::Init()
 						 fFlags.push_back({ "GetAlphaModulation", scanMat->GetAlphaModulation() });
 					 }
 
-					 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", matName);
-					 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", matGroupName);
-					 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", GetShaderName);
+					 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", matName);
+					 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", matGroupName);
+					 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s\n", GetShaderName);
 					 for (std::pair<const char*, bool> flag : bFlags)
 					 {
-						 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %s\n", flag.first, flag.second ? "TRUE" : "FALSE");
+						 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %s\n", flag.first, flag.second ? "TRUE" : "FALSE");
 					 }
 					 for (std::pair<const char*, bool> flag : iFlags)
 					 {
-						 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %d\n", flag.first, flag.second);
+						 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %d\n", flag.first, flag.second);
 					 }
 					 for (std::pair<const char*, bool> flag : fFlags)
 					 {
-						 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %.1f\n", flag.first, flag.second);
+						 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %.1f\n", flag.first, flag.second);
 					 }
 					 for (int idxParam = 0; idxParam < scanMat->ShaderParamCount(); ++idxParam)
 					 {
@@ -150,12 +150,12 @@ void CCommands::Init()
 							 continue;
 						 }
 
-						 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %s\n", aParam[idxParam]->GetName(), aParam[idxParam]->GetStringValue());
+						 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%s : %s\n", aParam[idxParam]->GetName(), aParam[idxParam]->GetStringValue());
 					 }
 					 for (int flagIndex = -1; flagIndex < 31; flagIndex++)
 					 {
 						 const bool bOn = scanMat->GetMaterialVarFlag(static_cast<EMaterialVarFlags>(flagIndex));
-						 I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%d : %s\n", flagIndex, bOn ? "TRUE" : "FALSE");
+						 I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "%d : %s\n", flagIndex, bOn ? "TRUE" : "FALSE");
 					 }
 					 scanMat->Refresh();
 				 }

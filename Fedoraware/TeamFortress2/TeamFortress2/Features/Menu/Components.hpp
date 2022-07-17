@@ -166,11 +166,11 @@ namespace ImGui
 		if (GetActiveID() == id) {
 			Button("...", ImVec2(100, 20));
 
-			static float time = I::Engine->Time();
-			const float elapsed = I::Engine->Time() - time;
+			static float time = I::EngineClient->Time();
+			const float elapsed = I::EngineClient->Time() - time;
 			static CVar<int>* curr = nullptr, * prevv = curr;
 			if (curr != prevv) {
-				time = I::Engine->Time();
+				time = I::EngineClient->Time();
 				prevv = curr;
 			}
 
@@ -222,7 +222,7 @@ namespace ImGui
 			}
 
 			if (curr != prevv) {
-				time = I::Engine->Time();
+				time = I::EngineClient->Time();
 				prevv = curr;
 			}
 

@@ -21,7 +21,7 @@ MAKE_HOOK(CL_SendMove, g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? A1
 	for (int to = nextcommandnr - numcmds + 1; to <= nextcommandnr; to++)
 	{
 		const bool isnewcmd = to >= nextcommandnr - moveMsg.m_nNewCommands + 1;
-		bOK = bOK && I::Client->WriteUsercmdDeltaToBuffer(&moveMsg.m_DataOut, from, to, isnewcmd);
+		bOK = bOK && I::BaseClientDLL->WriteUsercmdDeltaToBuffer(&moveMsg.m_DataOut, from, to, isnewcmd);
 		from = to;
 	}
 

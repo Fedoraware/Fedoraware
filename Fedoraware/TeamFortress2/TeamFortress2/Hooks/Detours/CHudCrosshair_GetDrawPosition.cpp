@@ -24,7 +24,7 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 		Vars::Visuals::ThirdpersonUp.Value < -1.f)
 		)
 	{
-		const Vec3 viewangles = I::Engine->GetViewAngles();
+		const Vec3 viewangles = I::EngineClient->GetViewAngles();
 		Vec3 vForward{}, vRight{}, vUp{};
 		Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
 

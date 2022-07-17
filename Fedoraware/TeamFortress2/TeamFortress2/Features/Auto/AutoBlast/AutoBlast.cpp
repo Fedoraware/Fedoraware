@@ -25,7 +25,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 	if (Vars::Triggerbot::Blast::DisableOnAttack.Value && pCmd->buttons & IN_ATTACK)
 		return;
 
-	if (const auto& pNet = I::Engine->GetNetChannelInfo())
+	if (const auto& pNet = I::EngineClient->GetNetChannelInfo())
 	{
 		const Vec3 vEyePos = pLocal->GetEyePosition();
 		const float flLatency = (pNet->GetLatency(FLOW_INCOMING) + pNet->GetLatency(FLOW_OUTGOING));
@@ -81,7 +81,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 					bShouldBlast = true;
 					break;
 				}
-				if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, vPredicted) <=
+				if (Math::GetFov(I::EngineClient->GetViewAngles(), vEyePos, vPredicted) <=
 					Vars::Triggerbot::Blast::Fov.Value)
 				{
 					bShouldBlast = true;
@@ -106,7 +106,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 						bShouldBlast = true;
 						break;
 					}
-					if (Math::GetFov(I::Engine->GetViewAngles(), vEyePos, pBurningPlayer->m_vecOrigin()) <= Vars::Triggerbot::Blast::Fov.Value)
+					if (Math::GetFov(I::EngineClient->GetViewAngles(), vEyePos, pBurningPlayer->m_vecOrigin()) <= Vars::Triggerbot::Blast::Fov.Value)
 					{
 						bShouldBlast = true;
 						break;

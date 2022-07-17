@@ -12,7 +12,7 @@ void DrawFakeAngles(void* ecx, void* edx, const CBaseEntity* pEntity, const Draw
 MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), void, __fastcall,
 		  void* ecx, void* edx, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	CBaseEntity* pEntity = I::EntityList->GetClientEntity(pInfo.m_nEntIndex);
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);
 	DrawFakeAngles(ecx, edx, pEntity, pState, pInfo);
@@ -59,7 +59,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 				}
 
 
-				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
+				if (const auto& pRenderContext = I::MaterialSystem->GetRenderContext())
 				{
 					if (Vars::Backtrack::BtChams::IgnoreZ.Value)
 						pRenderContext->DepthRange(0.0f, 0.2f);
@@ -87,7 +87,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				I::RenderView->SetBlend(1.0f);
 
-				if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
+				if (const auto& pRenderContext = I::MaterialSystem->GetRenderContext())
 				{
 					if (Vars::Backtrack::BtChams::IgnoreZ.Value)
 						pRenderContext->DepthRange(0.0f, 1.0f);

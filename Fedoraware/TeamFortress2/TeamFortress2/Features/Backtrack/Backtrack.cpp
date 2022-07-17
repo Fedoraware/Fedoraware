@@ -20,10 +20,10 @@ void CBacktrack::UpdateRecords()
 		return;
 	}
 
-	for (int i = 0; i < I::Engine->GetMaxClients(); i++)
+	for (int i = 0; i < I::EngineClient->GetMaxClients(); i++)
 	{
 		// Check if the entity is valid
-		const auto& pEntity = I::EntityList->GetClientEntity(i);
+		const auto& pEntity = I::ClientEntityList->GetClientEntity(i);
 		if (!pEntity || pEntity->GetDormant() || !pEntity->IsAlive()) { Records[i].clear(); continue; }
 
 		// Get bone matrix
@@ -32,7 +32,7 @@ void CBacktrack::UpdateRecords()
 
 		// Get model info
 		model_t* model = pEntity->GetModel();
-		studiohdr_t* hdr = I::ModelInfo->GetStudioModel(model);
+		studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
 
 		if (model && hdr)
 		{
@@ -93,7 +93,7 @@ void CBacktrack::Run()
 // Store the last 2048 sequences
 void CBacktrack::UpdateDatagram()
 {
-	const INetChannel* netChannel = I::Engine->GetNetChannelInfo();
+	const INetChannel* netChannel = I::EngineClient->GetNetChannelInfo();
 	if (netChannel)
 	{
 		if (netChannel->m_nInSequenceNr > LastInSequence)
@@ -114,7 +114,7 @@ float CBacktrack::GetLatency()
 {
 	float realLatency = 0.f;
 
-	if (const auto netChannel = I::Engine->GetNetChannelInfo())
+	if (const auto netChannel = I::EngineClient->GetNetChannelInfo())
 	{
 		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
 	}

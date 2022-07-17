@@ -24,7 +24,7 @@ private:
 
 };
 
-MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::Engine, 106), void, __fastcall,
+MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::EngineClient, 106), void, __fastcall,
 		  void* ecx, void* edx, const char* szCmdString)
 {
 	std::string cmdString(szCmdString);

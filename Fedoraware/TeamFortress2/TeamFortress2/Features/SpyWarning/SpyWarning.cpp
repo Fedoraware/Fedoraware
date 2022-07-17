@@ -44,7 +44,7 @@ void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 	};
 
 	const Vec3 vecAngleTo = Math::CalcAngle(vecFromPos, vecToPos);
-	const Vec3 vecViewAngle = I::Engine->GetViewAngles();
+	const Vec3 vecViewAngle = I::EngineClient->GetViewAngles();
 
 	const float deg = GetClockwiseAngle(vecViewAngle, vecAngleTo);
 	const float xrot = cos(deg - PI / 2);
@@ -150,7 +150,7 @@ void CSpyWarning::Run()
 			{
 				if (!m_vecSpies.empty())
 				{
-					I::Engine->ClientCmd_Unrestricted(_("voicemenu 1 1"));
+					I::EngineClient->ClientCmd_Unrestricted(_("voicemenu 1 1"));
 				}
 
 				bOldEmpty = m_vecSpies.empty();

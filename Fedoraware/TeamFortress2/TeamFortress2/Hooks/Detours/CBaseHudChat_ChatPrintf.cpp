@@ -9,7 +9,7 @@ struct ChatFlags_t {
 	const char* Name;
 };
 
-MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElement, 19), void, __cdecl,
+MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pChatElement, 19), void, __cdecl,
 	void* ecx, int iPlayerIndex, int iFilter, const char* fmt, ...)
 {
 	va_list marker;
@@ -35,7 +35,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElem
 		bool set = false;
 		PlayerInfo_t pi{ };
 
-		if (iPlayerIndex == I::Engine->GetLocalPlayer()) {
+		if (iPlayerIndex == I::EngineClient->GetLocalPlayer()) {
 			//#A043E7
 			flag = { { '\x7', 'A', '0', '4', '3', 'E', '7' }, ("[You]") };
 			set = true;
@@ -45,7 +45,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientMode->m_pChatElem
 			flag = { { '\x7', '6', '9', '9', 'A', '0', '0' }, ("[Friend]") };
 			set = true;
 		}
-		else if (I::Engine->GetPlayerInfo(iPlayerIndex, &pi) && F::BadActors.MarkedCheaters[pi.friendsID]) {
+		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &pi) && F::BadActors.MarkedCheaters[pi.friendsID]) {
 			//#9B0000
 			flag = { { '\x7', '9', 'B', '0', '0', '0', '0' }, ("[Cheater]") };
 			set = true;
