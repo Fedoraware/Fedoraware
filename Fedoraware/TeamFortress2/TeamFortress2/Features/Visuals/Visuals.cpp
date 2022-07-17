@@ -400,7 +400,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						const float rratio = (static_cast<float>(G::ShiftedTicks) / static_cast<float>(
 							Vars::Misc::CL_Move::DTTicks.Value));
 						static float ratio = 0.f;
-						ratio = g_Draw.EaseIn(ratio, rratio, .995f);
+						ratio = g_Draw.EaseIn(ratio, rratio, 0.95f);
 
 						if (ratio > 1.f) { ratio = 1.f; }
 						else if (ratio < 0.f) { ratio = 0.f; }
