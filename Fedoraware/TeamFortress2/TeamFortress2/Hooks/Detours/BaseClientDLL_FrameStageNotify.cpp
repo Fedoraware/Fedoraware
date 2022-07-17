@@ -4,6 +4,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), void, __fastcall,
 		  void* ecx, void* edx, EClientFrameStage curStage)
@@ -64,6 +65,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::Client, 35), voi
 		case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
+			F::Backtrack.Run();
 			G::LocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.GetLocal())

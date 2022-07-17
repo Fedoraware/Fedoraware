@@ -40,7 +40,7 @@ struct TickRecord
 
 class CBacktrack
 {
-	void UpdateRecords(const CUserCmd* pCmd);
+	void UpdateRecords();
 
 	void UpdateDatagram();
 	float GetLatency();
@@ -50,7 +50,7 @@ class CBacktrack
 	std::deque<CIncomingSequence> Sequences;
 
 public:
-	void Run(const CUserCmd* pCmd);
+	void Run();
 	void AdjustPing(INetChannel* netChannel);
 	void ResetLatency();
 	bool IsGoodTick(float simTime);

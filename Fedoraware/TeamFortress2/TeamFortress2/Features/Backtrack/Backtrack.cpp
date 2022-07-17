@@ -8,12 +8,17 @@ bool CBacktrack::IsGoodTick(const float simTime)
 	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
 }
 
-void CBacktrack::UpdateRecords(const CUserCmd* pCmd)
+void CBacktrack::UpdateRecords()
 {
-	if (!pCmd) { return; }
-
 	const auto& pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !pLocal->IsAlive()) { return; }
+	if (!pLocal || !pLocal->IsAlive())
+	{
+		for (auto& record : Records)
+		{
+			record.clear();
+		}
+		return;
+	}
 
 	for (int i = 0; i < I::Engine->GetMaxClients(); i++)
 	{
@@ -43,7 +48,7 @@ void CBacktrack::UpdateRecords(const CUserCmd* pCmd)
 				pEntity->m_vecMaxs(),
 				pEntity->GetWorldSpaceCenter(),
 				pEntity->GetEyeAngles()
-			});
+								  });
 		}
 
 		// Remove old out-of-range records
@@ -54,22 +59,22 @@ void CBacktrack::UpdateRecords(const CUserCmd* pCmd)
 	}
 }
 
-void CBacktrack::Run(const CUserCmd* pCmd)
+void CBacktrack::Run()
 {
 	if (!Vars::Backtrack::Enabled.Value)
 	{
 		LatencyRampup = 0.f;
 		return;
 	}
-	
+
 	LatencyRampup = std::min(1.f, LatencyRampup += I::GlobalVars->interval_per_tick);
 
-	if (g_EntityCache.GetLocal() && pCmd)
+	if (g_EntityCache.GetLocal())
 	{
 		UpdateDatagram();
 		if (G::CurWeaponType != EWeaponType::PROJECTILE)
 		{
-			UpdateRecords(pCmd);
+			UpdateRecords();
 		}
 		else
 		{

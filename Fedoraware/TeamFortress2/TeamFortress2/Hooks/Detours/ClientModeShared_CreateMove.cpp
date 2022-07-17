@@ -177,7 +177,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 
 		F::EnginePrediction.Start(pCmd);
 		{
-			F::Backtrack.Run(pCmd);
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
