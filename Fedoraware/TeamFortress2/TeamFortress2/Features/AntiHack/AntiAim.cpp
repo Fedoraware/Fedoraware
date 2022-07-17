@@ -10,14 +10,12 @@ bool wasHit = false;
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove) {
 	//better movement fix roll and pitch above 90 and -90 l0l
 		static auto cl_forwardspeed = g_ConVars.FindVar("cl_forwardspeed");
-		if (cl_forwardspeed == nullptr)
-			return;
 		static auto cl_sidespeed = g_ConVars.FindVar("cl_sidespeed");
-		if (cl_sidespeed == nullptr)
-			return;
 		static auto cl_upspeed = g_ConVars.FindVar("cl_upspeed");
-		if (cl_upspeed == nullptr)
+		if (!cl_upspeed || !cl_sidespeed || !cl_forwardspeed) {
 			return;
+		}
+
 		const float flMaxForwardSpeed = cl_forwardspeed->GetFloat();
 		const float flMaxSideSpeed = cl_sidespeed->GetFloat();
 		const float flMaxUpSpeed = cl_upspeed->GetFloat();
@@ -29,21 +27,21 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 		vecUp.NormalizeInPlace();
 		Vector vecOldForward = { }, vecOldRight = { }, vecOldUp = { };
 		Math::AngleVectors(pCmd->viewangles, &vecOldForward, &vecOldRight, &vecOldUp);
-		vecOldForward.z = vecOldRight.z = vecOldUp.x = vecOldUp.y = 0.f;
+		vecOldForward.z = vecOldRight.z = vecOldUp.x = vecOldUp.y = 0.f;	// these can all have 3 vectors can they not?
 		vecOldForward.NormalizeInPlace();
 		vecOldRight.NormalizeInPlace();
 		vecOldUp.NormalizeInPlace();
-		const float flPitchForward = vecForward.x * pCmd->forwardmove;
-		const float flYawForward = vecForward.y * pCmd->forwardmove;
-		const float flPitchSide = vecRight.x * pCmd->sidemove;
-		const float flYawSide = vecRight.y * pCmd->sidemove;
-		const float flRollUp = vecUp.z * pCmd->sidemove;
+		const float flPitchForward = vecForward.x * pCmd->forwardmove;	//	chunky
+		const float flYawForward = vecForward.y * pCmd->forwardmove;	//	chunky
+		const float flPitchSide = vecRight.x * pCmd->sidemove;			//	chunky
+		const float flYawSide = vecRight.y * pCmd->sidemove;			//	chunky
+		const float flRollUp = vecUp.z * pCmd->sidemove;				//	chunky
 		const float x = vecOldForward.x * flPitchSide + vecOldForward.y * flYawSide + vecOldForward.x * flPitchForward + vecOldForward.y * flYawForward + vecOldForward.z * flRollUp;
 		const float y = vecOldRight.x * flPitchSide + vecOldRight.y * flYawSide + vecOldRight.x * flPitchForward + vecOldRight.y * flYawForward + vecOldRight.z * flRollUp;
 		const float z = vecOldUp.x * flYawSide + vecOldUp.y * flPitchSide + vecOldUp.x * flYawForward + vecOldUp.y * flPitchForward + vecOldUp.z * flRollUp;
 		pCmd->forwardmove = std::clamp(x, -flMaxForwardSpeed, flMaxForwardSpeed);
 		pCmd->sidemove = std::clamp(y, -flMaxSideSpeed, flMaxSideSpeed);
-		pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed);
+		pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed);	//	not a good idea
 }
 
 float CAntiAim::EdgeDistance(float edgeRayYaw) {
