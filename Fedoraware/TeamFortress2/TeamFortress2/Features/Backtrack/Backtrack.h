@@ -40,7 +40,6 @@ struct TickRecord
 
 class CBacktrack
 {
-	bool IsGoodTick(float simTime);
 	void UpdateRecords(const CUserCmd* pCmd);
 
 	void UpdateDatagram();
@@ -54,6 +53,7 @@ public:
 	void Run(const CUserCmd* pCmd);
 	void AdjustPing(INetChannel* netChannel);
 	void ResetLatency();
+	bool IsGoodTick(float simTime);
 
 	std::deque<TickRecord>* GetPlayerRecords(int iEntityIndex);
 	std::deque<TickRecord>* GetPlayerRecords(CBaseEntity* pEntity);

@@ -1,6 +1,7 @@
 #include "AutoStab.h"
 
 #include "../../Vars.h"
+#include "../../Backtrack/Backtrack.h"
 
 bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 {
@@ -105,28 +106,102 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pEnemy->GetHitboxPos(HITBOX_PELVIS));
 
-		if (!TraceMelee(pLocal, pWeapon, vAngleTo, &pTraceEnemy) || pTraceEnemy != pEnemy)
-			continue;
+		const auto& pRecord = F::Backtrack.GetPlayerRecords(pEnemy);
+		bool bBacktrackable = pRecord != nullptr && Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value;
+		float flSimTime = 0;
 
-		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
-			continue;
+		Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
+		Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
 
-		if (Vars::Triggerbot::Stab::Silent.Value)
+		if (bBacktrackable)
 		{
-			Utils::FixMovement(pCmd, vAngleTo);
-			G::SilentTime = true;
+			for (size_t t = 0; t < pRecord->size(); t++)
+			{
+				auto& pTick = pRecord->back();
+
+				pEnemy->SetAbsOrigin(vOriginalPos);
+				pEnemy->SetEyeAngles(vOriginalEyeAngles);
+
+				flSimTime = pTick.SimulationTime;
+
+				if (!F::Backtrack.IsGoodTick(flSimTime))
+				{
+					continue;
+				}
+
+				auto pBoneMatrix = reinterpret_cast<matrix3x4*>(&pTick.BoneMatrix);
+				Vec3 vPelvisPos = Vec3(pBoneMatrix[HITBOX_PELVIS][0][3],
+									   pBoneMatrix[HITBOX_PELVIS][1][3],
+									   pBoneMatrix[HITBOX_PELVIS][2][3]);
+
+				vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), vPelvisPos);
+
+				pEnemy->SetAbsOrigin(pTick.AbsOrigin);
+				pEnemy->SetEyeAngles(pTick.EyeAngles);
+
+				float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
+
+				if (flRange <= 0.0f)
+				{
+					continue;
+				}
+
+				if (pTick.WorldSpaceCenter.DistTo(pLocal->GetWorldSpaceCenter()) > flRange * 2)
+				{
+					continue;
+				}
+
+				if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pTick.WorldSpaceCenter - pLocal->GetWorldSpaceCenter())))
+					continue;
+
+				if (Vars::Triggerbot::Stab::Silent.Value)
+				{
+					Utils::FixMovement(pCmd, vAngleTo);
+					G::SilentTime = true;
+				}
+
+				pCmd->viewangles = vAngleTo;
+				pCmd->buttons |= IN_ATTACK;
+				m_bShouldDisguise = true;
+
+				if (Vars::Misc::DisableInterpolation.Value)
+				{
+					pCmd->tick_count = TIME_TO_TICKS(flSimTime + G::LerpTime);
+				}
+
+				pEnemy->SetAbsOrigin(vOriginalPos);
+				pEnemy->SetEyeAngles(vOriginalEyeAngles);
+
+				return;
+			}
+			continue;
 		}
-
-		pCmd->viewangles = vAngleTo;
-		pCmd->buttons |= IN_ATTACK;
-		m_bShouldDisguise = true;
-
-		if (Vars::Misc::DisableInterpolation.Value)
+		else
 		{
-			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
-		}
+			if (!TraceMelee(pLocal, pWeapon, vAngleTo, &pTraceEnemy) || pTraceEnemy != pEnemy)
+				continue;
 
-		break;
+			if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(),
+				(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+				continue;
+
+			if (Vars::Triggerbot::Stab::Silent.Value)
+			{
+				Utils::FixMovement(pCmd, vAngleTo);
+				G::SilentTime = true;
+			}
+
+			pCmd->viewangles = vAngleTo;
+			pCmd->buttons |= IN_ATTACK;
+			m_bShouldDisguise = true;
+
+			if (Vars::Misc::DisableInterpolation.Value)
+			{
+				pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
+			}
+
+			return;
+		}
 	}
 }
 
