@@ -715,6 +715,7 @@ namespace Vars
 			inline CVar<int> YawReal{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<int> YawFake{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<float> SpinSpeed{ 15.f };
+			inline CVar<float> CustomRealPitch{ 0.f };
 			inline CVar<int> RandInterval{ 25 };
 			inline CVar<bool> AntiBackstab{ false };
 			inline CVar<bool> LegJitter{ false }; // frick u fourteen
