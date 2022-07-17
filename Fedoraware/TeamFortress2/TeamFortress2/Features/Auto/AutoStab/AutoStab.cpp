@@ -98,8 +98,9 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 {
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
+		const auto& pWeapon = pEnemy->GetWeaponFromSlot(SLOT_SECONDARY);
 		if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
-			pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
+			pWeapon && pWeapon->GetItemDefIndex() == Sniper_s_TheRazorback)
 			continue;
 
 		CBaseEntity* pTraceEnemy = nullptr;
