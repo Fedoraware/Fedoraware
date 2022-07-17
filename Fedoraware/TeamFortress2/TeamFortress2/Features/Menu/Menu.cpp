@@ -271,6 +271,9 @@ void CMenu::MenuAimbot()
 			}
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
+			WToggle("Aim while not shooting###AimbotWaitForValidShot", &Vars::Aimbot::Global::DontWaitForShot.Value); HelpMarker("Prevents fps drops by only running aimbot while we are able to shoot");
+
+
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.Value);  HelpMarker("Enables the crit hack (BETA)");
 			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, {&Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value }, "Misc###CrithackMiscOptions");

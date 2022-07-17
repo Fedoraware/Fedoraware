@@ -86,6 +86,7 @@ namespace Vars
 			inline CVar<int> AimKey{ VK_XBUTTON1 };
 			inline CVar<float> AimFOV{ 15.0f };
 			inline CVar<bool> AutoShoot{ false };
+			inline CVar<bool> DontWaitForShot{ false };
 			inline CVar<bool> AimPlayers{ false };
 			inline CVar<bool> AimBuildings{ false };
 			inline CVar<bool> AimStickies{ false };

@@ -153,7 +153,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		switch (Vars::AntiHack::AntiAim::Pitch.Value) {
 		case 1:
 		{
-			pCmd->viewangles.x = 0.0f;
+			pCmd->viewangles.x = 1036.0f;
 			G::RealViewAngles.x = 0.0f;
 			break;
 		}
