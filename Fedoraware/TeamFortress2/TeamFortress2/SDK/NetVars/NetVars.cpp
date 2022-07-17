@@ -4,7 +4,7 @@
 
 void CNetVars::Init()
 {
-	const auto* client_class = I::Client->GetAllClasses();
+	const auto* client_class = I::BaseClientDLL->GetAllClasses();
 
 	while (client_class != nullptr)
 	{

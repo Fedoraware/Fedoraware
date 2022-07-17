@@ -1571,31 +1571,31 @@ void CMenu::MenuMisc()
 			SectionTitle("Utilities");
 			const auto btnWidth = GetWindowSize().x - 2 * GetStyle().WindowPadding.x;
 			if (Button("Full update", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("cl_fullupdate");
+				I::EngineClient->ClientCmd_Unrestricted("cl_fullupdate");
 			if (Button("Reload HUD", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("hud_reloadscheme");
+				I::EngineClient->ClientCmd_Unrestricted("hud_reloadscheme");
 			if (Button("Restart sound", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("snd_restart");
+				I::EngineClient->ClientCmd_Unrestricted("snd_restart");
 			if (Button("Stop sound", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("stopsound");
+				I::EngineClient->ClientCmd_Unrestricted("stopsound");
 			if (Button("Status", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("status");
+				I::EngineClient->ClientCmd_Unrestricted("status");
 			if (Button("Ping", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("ping");
+				I::EngineClient->ClientCmd_Unrestricted("ping");
 			if (Button("Pong", ImVec2(btnWidth, 20)))
 				F::Pong.IsOpen = !F::Pong.IsOpen;
 			if (Button("Retry", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("retry");
+				I::EngineClient->ClientCmd_Unrestricted("retry");
 			if (Button("Exit", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("exit");
+				I::EngineClient->ClientCmd_Unrestricted("exit");
 			if (Button("Console", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("showconsole");
+				I::EngineClient->ClientCmd_Unrestricted("showconsole");
 			if (Button("Demo playback", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("demoui");
+				I::EngineClient->ClientCmd_Unrestricted("demoui");
 			if (Button("Demo trackbar", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("demoui2");
+				I::EngineClient->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
-				I::Engine->ClientCmd_Unrestricted("itemtest");
+				I::EngineClient->ClientCmd_Unrestricted("itemtest");
 
 			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
 			{
@@ -1839,7 +1839,7 @@ void CMenu::DebugMenu()
 /* Window for the camera feature */
 void CMenu::DrawCameraWindow()
 {
-	if (I::Engine->IsInGame() && Vars::Visuals::CameraMode.Value != 0)
+	if (I::EngineClient->IsInGame() && Vars::Visuals::CameraMode.Value != 0)
 	{
 		// Draw the camera window
 		ImGui::SetNextWindowSize({ static_cast<float>(F::CameraWindow.ViewRect.w), static_cast<float>(F::CameraWindow.ViewRect.h) }, ImGuiCond_FirstUseEver);
@@ -1918,7 +1918,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	if (menuKey.Pressed() || GetAsyncKeyState(VK_INSERT) & 0x1)
 	{
 		F::Menu.IsOpen = !F::Menu.IsOpen;
-		I::Surface->SetCursorAlwaysVisible(F::Menu.IsOpen);
+		I::VGuiSurface->SetCursorAlwaysVisible(F::Menu.IsOpen);
 	}
 
 	// Begin current frame

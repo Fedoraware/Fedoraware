@@ -131,7 +131,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 {
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
 	LocalOrigin = pLocal->GetAbsOrigin();
-	LocalYaw = I::Engine->GetViewAngles().y * (PI / 180.f);
+	LocalYaw = I::EngineClient->GetViewAngles().y * (PI / 180.f);
 	Range = static_cast<float>(Vars::Radar::Main::Range.Value);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);
 
@@ -325,7 +325,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				//Prepare the correct texture index for player icon, and draw it
 				{
 					PlayerInfo_t playerInfo{};
-					if (Vars::Radar::Players::IconType.Value == 2 && I::Engine->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
+					if (Vars::Radar::Players::IconType.Value == 2 && I::EngineClient->GetPlayerInfo(player->GetIndex(), &playerInfo) && !playerInfo.fakeplayer)
 					{
 						// Avatar
 						g_Draw.Avatar(nX, nY, nSize, nSize, playerInfo.friendsID);

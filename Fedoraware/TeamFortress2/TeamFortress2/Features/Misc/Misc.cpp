@@ -124,7 +124,7 @@ void CMisc::ServerHitbox()
 		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);	// C_BaseAnimating, Duration, MonoColour
 		static auto DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(L"server.dll", L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97"));
 
-		const auto pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
+		const auto pLocal = I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer());
 		if (pLocal && pLocal->IsAlive())
 		{
 			void* server_animating = GetServerAnimating(pLocal->GetIndex());
@@ -227,7 +227,7 @@ void CMisc::Teleport(const CUserCmd* pCmd)
 void CMisc::PingReducer()
 {
 	const ConVar* cl_cmdrate = g_ConVars.FindVar("cl_cmdrate");
-	CNetChannel* netChannel = I::Engine->GetNetChannelInfo();
+	CNetChannel* netChannel = I::EngineClient->GetNetChannelInfo();
 	if (cl_cmdrate == nullptr || netChannel == nullptr) { return; }
 
 	static Timer updateRateTimer{};
@@ -235,7 +235,7 @@ void CMisc::PingReducer()
 	{
 		if (Vars::Misc::PingReducer.Value)
 		{
-			const int currentPing = g_EntityCache.GetPR()->GetPing(I::Engine->GetLocalPlayer());
+			const int currentPing = g_EntityCache.GetPR()->GetPing(I::EngineClient->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.Value <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
 			netChannel->SendNetMsg(cmd);
 		}
@@ -249,12 +249,12 @@ void CMisc::PingReducer()
 
 void CMisc::ExtendFreeze(CBaseEntity* pLocal)
 {
-	if (Vars::Misc::ExtendFreeze.Value && I::Engine->IsInGame() && !pLocal->IsAlive())
+	if (Vars::Misc::ExtendFreeze.Value && I::EngineClient->IsInGame() && !pLocal->IsAlive())
 	{
 		static Timer cmdTimer{};
 		if (cmdTimer.Run(2000))
 		{
-			I::Engine->ClientCmd_Unrestricted("extendfreeze");
+			I::EngineClient->ClientCmd_Unrestricted("extendfreeze");
 		}
 	}
 }
@@ -270,7 +270,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 			G::FreecamActive = true;
 		}
 
-		const Vec3 viewAngles = I::Engine->GetViewAngles();
+		const Vec3 viewAngles = I::EngineClient->GetViewAngles();
 		const float zMove = sinf(DEG2RAD(viewAngles.x));
 		Vec3 vForward, vRight, vUp;
 		Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
@@ -319,7 +319,7 @@ void CMisc::RageRetry(CBaseEntity* pLocal)
 	{
 		if (pLocal->IsAlive() && pLocal->GetHealth() <= (pLocal->GetMaxHealth() * (Vars::Misc::RageRetryHealth.Value * 0.01f)))
 		{
-			I::Engine->ClientCmd_Unrestricted("retry");
+			I::EngineClient->ClientCmd_Unrestricted("retry");
 		}
 	}
 }
@@ -604,7 +604,7 @@ void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 
 	if (pLocal->GetNextNoiseMakerTime() < I::GlobalVars->curtime)
 	{
-		I::Engine->ServerCmdKeyValues(new KeyValues("use_action_slot_item_server"));
+		I::EngineClient->ServerCmdKeyValues(new KeyValues("use_action_slot_item_server"));
 	}
 }
 
@@ -651,12 +651,12 @@ void CMisc::ChatSpam()
 		return "say " + spamMsg;
 	};
 
-	const float flCurTime = I::Engine->Time();
+	const float flCurTime = I::EngineClient->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend)
 	{
-		I::Engine->ClientCmd_Unrestricted(getSpam().c_str());
+		I::EngineClient->ClientCmd_Unrestricted(getSpam().c_str());
 		flNextSend = (flCurTime + 4.0f);
 	}
 }
@@ -668,7 +668,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
+	if (I::EngineVGui->IsGameUIVisible() || I::VGuiSurface->IsCursorVisible())
 	{
 		return;
 	}
@@ -732,7 +732,7 @@ void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (I::EngineVGui->IsGameUIVisible() || I::Surface->IsCursorVisible())
+	if (I::EngineVGui->IsGameUIVisible() || I::VGuiSurface->IsCursorVisible())
 	{
 		return;
 	}
@@ -755,14 +755,14 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static auto cl_flipviewmodels = g_ConVars.FindVar("cl_flipviewmodels");
 	static bool defaultValue = cl_flipviewmodels->GetBool();
 
-	const auto aimTarget = I::EntityList->GetClientEntity(G::CurrentTargetIdx);
+	const auto aimTarget = I::ClientEntityList->GetClientEntity(G::CurrentTargetIdx);
 	if (G::CurrentTargetIdx <= 0 || !aimTarget || Utils::VisPosFraction(pLocal, pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter()))
 	{
 		cl_flipviewmodels->SetValue(defaultValue);
 		return;
 	}
 
-	const auto localAngles = I::Engine->GetViewAngles();
+	const auto localAngles = I::EngineClient->GetViewAngles();
 	const auto aimAngles = Math::CalcAngle(pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter());
 
 	auto mod = [](float a, float n) {
@@ -909,7 +909,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 		// We need a peek direction (A / D)
 		if (!Vars::Misc::CL_Move::AutoPeekFree.Value && !hasDirection && pLocal->IsOnGround())
 		{
-			const Vec3 viewAngles = I::Engine->GetViewAngles();
+			const Vec3 viewAngles = I::EngineClient->GetViewAngles();
 			Vec3 vForward, vRight, vUp, vDirection;
 			Math::AngleVectors(viewAngles, &vForward, &vRight, &vUp);
 
@@ -1018,7 +1018,7 @@ void CMisc::SteamRPC()
 	"TF_RichPresence_State_PlayingCommunity"      "Community - %currentmap%"
 	"TF_RichPresence_State_LoadingCommunity"      "Joining Community Server"
 	*/
-	if (!I::Engine->IsInGame() && Vars::Misc::Steam::OverrideMenu.Value)
+	if (!I::EngineClient->IsInGame() && Vars::Misc::Steam::OverrideMenu.Value)
 	{
 		g_SteamInterfaces.Friends015->SetRichPresence("state", "MainMenu");
 	}
@@ -1095,7 +1095,7 @@ void CMisc::SteamRPC()
 void CMisc::UnlockAchievements()
 {
 	using FN = IAchievementMgr * (*)(void);
-	const auto achievementmgr = GetVFunc<FN>(I::Engine, 114)();
+	const auto achievementmgr = GetVFunc<FN>(I::EngineClient, 114)();
 	if (achievementmgr)
 	{
 		g_SteamInterfaces.UserStats->RequestCurrentStats();
@@ -1111,7 +1111,7 @@ void CMisc::UnlockAchievements()
 void CMisc::LockAchievements()
 {
 	using FN = IAchievementMgr * (*)(void);
-	const auto achievementmgr = GetVFunc<FN>(I::Engine, 114)();
+	const auto achievementmgr = GetVFunc<FN>(I::EngineClient, 114)();
 	if (achievementmgr)
 	{
 		g_SteamInterfaces.UserStats->RequestCurrentStats();
@@ -1186,7 +1186,7 @@ void CNotifications::Think()
 
 		int w, h;
 
-		I::Surface->GetTextSize(FONT_INDICATORS, wc, w, h);
+		I::VGuiSurface->GetTextSize(FONT_INDICATORS, wc, w, h);
 
 		delete[] wc; // Memory leak
 

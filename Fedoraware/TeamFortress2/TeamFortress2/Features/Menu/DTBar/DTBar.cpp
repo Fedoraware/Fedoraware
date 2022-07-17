@@ -14,7 +14,7 @@ bool CDTBar::ShouldRun()
 void CDTBar::Dragbar()
 {
 	int mousex, mousey;
-	I::Surface->GetCursorPos(mousex, mousey);
+	I::VGuiSurface->GetCursorPos(mousex, mousey);
 
 	static POINT pCorrect{};
 	static bool isDragging = false;

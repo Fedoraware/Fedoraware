@@ -57,7 +57,7 @@ void CPong::Render()
 			if (LeftScore >= 10 || RightScore >= 10)
 			{
 				Init();
-				I::Engine->ClientCmd_Unrestricted("play ui/duel_challenge");
+				I::EngineClient->ClientCmd_Unrestricted("play ui/duel_challenge");
 			}
 		}
 
@@ -112,7 +112,7 @@ void CPong::DrawMenu()
 
 			for (const auto& match : FoundMatches)
 			{
-				if (I::Engine->Time() - match.second > 15.f) { continue; }
+				if (I::EngineClient->Time() - match.second > 15.f) { continue; }
 				
 				if (ImGui::Button(tfm::format("Match #%i", match.first).c_str()))
 				{
@@ -201,7 +201,7 @@ void CPong::CheckCollisions()
 	{
 		if (BallVelocity.x > 0)
 		{
-			I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			I::EngineClient->ClientCmd_Unrestricted("play ui/cyoa_switch");
 		}
 		BallVelocity.x = -1.f;
 
@@ -217,7 +217,7 @@ void CPong::CheckCollisions()
 	{
 		if (BallVelocity.x < 0)
 		{
-			I::Engine->ClientCmd_Unrestricted("play ui/cyoa_switch");
+			I::EngineClient->ClientCmd_Unrestricted("play ui/cyoa_switch");
 		}
 		BallVelocity.x = 1.f;
 	}
@@ -296,7 +296,7 @@ void CPong::Reset()
 {
 	BallPos = { 300.f, 200.f };
 	BallVelocity = { 1.f, -1.f };
-	I::Engine->ClientCmd_Unrestricted("play ui/chat_display_text");
+	I::EngineClient->ClientCmd_Unrestricted("play ui/chat_display_text");
 }
 
 #pragma region Networking
@@ -319,7 +319,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 		{
 			if (dataVector.size() == 3)
 			{
-				FoundMatches[senderID] = I::Engine->Time();
+				FoundMatches[senderID] = I::EngineClient->Time();
 			}
 			break;
 		}

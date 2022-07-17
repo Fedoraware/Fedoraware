@@ -81,7 +81,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
-	if (!I::Engine->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
+	if (!I::EngineClient->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (INVUL) && !pTarget->IsVulnerable()) { return true; }
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (CLOAKED) && pTarget->IsCloaked())
 	{

@@ -4,7 +4,7 @@
 
 void CEntityCache::Fill()
 {
-	CBaseEntity* _pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer());
+	CBaseEntity* _pLocal = I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer());
 
 	if (_pLocal && _pLocal->IsInValidTeam())
 	{
@@ -16,16 +16,16 @@ void CEntityCache::Fill()
 		case OBS_MODE_FIRSTPERSON:
 		case OBS_MODE_THIRDPERSON:
 		{
-			m_pObservedTarget = I::EntityList->GetClientEntityFromHandle(m_pLocal->GetObserverTarget());
+			m_pObservedTarget = I::ClientEntityList->GetClientEntityFromHandle(m_pLocal->GetObserverTarget());
 			break;
 		}
 		default: break;
 		}
 
 		CBaseEntity* pEntity;
-		for (int n = 1; n < I::EntityList->GetHighestEntityIndex(); n++)
+		for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 		{
-			pEntity = I::EntityList->GetClientEntity(n);
+			pEntity = I::ClientEntityList->GetClientEntity(n);
 
 			if (!pEntity)
 				continue;
@@ -36,7 +36,7 @@ void CEntityCache::Fill()
 
 			if (pEntity->GetDormant()) {
 				const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
-				if (I::Engine->Time() - lastUpdate <= 5.0f) {
+				if (I::EngineClient->Time() - lastUpdate <= 5.0f) {
 					pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
 					pEntity->SetVecOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
 				} else {
@@ -113,7 +113,7 @@ void CEntityCache::Fill()
 
 				if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && pEntity->GetPipebombType() == TYPE_STICKY)
 				{
-					if (I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
+					if (I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
 						m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
 
 					break;
@@ -125,7 +125,7 @@ void CEntityCache::Fill()
 					{
 						if (pSecondary->GetItemDefIndex() == ETFWeapons::Pyro_s_TheDetonator)
 						{
-							if (I::EntityList->GetClientEntityFromHandle(pEntity->GethOwner()) == m_pLocal)
+							if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) == m_pLocal)
 								m_vecGroups[EGroupType::LOCAL_FLARES].push_back(pEntity);
 						}
 					}
@@ -154,7 +154,7 @@ bool IsPlayerOnSteamFriendList(CBaseEntity* pPlayer)
 {
 	PlayerInfo_t pi = { };
 
-	if (I::Engine->GetPlayerInfo(pPlayer->GetIndex(), &pi) && pi.friendsID)
+	if (I::EngineClient->GetPlayerInfo(pPlayer->GetIndex(), &pi) && pi.friendsID)
 	{
 		CSteamID steamID{ pi.friendsID, 1, k_EUniversePublic, k_EAccountTypeIndividual };
 		return g_SteamInterfaces.Friends002->HasFriend(steamID, k_EFriendFlagImmediate);

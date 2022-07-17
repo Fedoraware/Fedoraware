@@ -3,9 +3,9 @@
 void conLogDetection(const char* text) {
 	if (Vars::Debug::DebugBool.Value) {
 		static std::string clr({ '\x7', 'C', 'C', '0', '0', 'F', 'F' });
-		I::CVars->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
-		I::CVars->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
-		I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[CheaterDetection] \x1 %s", clr, text).c_str());
+		I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
+		I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);
+		I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s[CheaterDetection] \x1 %s", clr, text).c_str());
 	}
 }
 
@@ -142,7 +142,7 @@ bool CCheaterDetection::IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData) {
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !I::Engine->IsConnected())
+	if (!pLocal || !I::EngineClient->IsConnected())
 	{
 		return;
 	}
@@ -162,7 +162,7 @@ void CCheaterDetection::OnTick()
 			}
 		}
 
-		if (const INetChannel* NetChannel = I::Engine->GetNetChannelInfo()) {
+		if (const INetChannel* NetChannel = I::EngineClient->GetNetChannelInfo()) {
 			const float lastReceivedUpdate = NetChannel->GetTimeSinceLastReceived();
 			const float maxReceiveTime = I::GlobalVars->interval_per_tick * 2;
 			const bool isTimingOut = NetChannel->IsTimingOut();
@@ -180,7 +180,7 @@ void CCheaterDetection::OnTick()
 		int index = pSuspect->GetIndex();
 
 		PlayerInfo_t pi{ };
-		if (I::Engine->GetPlayerInfo(index, &pi) && !pi.fakeplayer)
+		if (I::EngineClient->GetPlayerInfo(index, &pi) && !pi.fakeplayer)
 		{
 			int friendsID = pi.friendsID;
 
@@ -273,13 +273,13 @@ void CCheaterDetection::Event(CGameEvent* pEvent) {
 	int entID{};
 
 	if (uNameHash == FNV1A::HashConst("player_hurt")) {
-		entID = I::Engine->GetPlayerForUserID(pEvent->GetInt("attacker"));
+		entID = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("attacker"));
 	}
 	else if (uNameHash == FNV1A::HashConst("player_death")) {
 		entID = pEvent->GetInt("inflictor_entindex");
 	}
 
-	if (CBaseEntity* pInflictor = I::EntityList->GetClientEntity(entID)) {
+	if (CBaseEntity* pInflictor = I::ClientEntityList->GetClientEntity(entID)) {
 		if (pInflictor == pLocal) { return; }
 		PlayerCache suspectCache = G::Cache[pInflictor][I::GlobalVars->tickcount];	// get the cache info for our current tick
 		suspectCache.didDamage = true;

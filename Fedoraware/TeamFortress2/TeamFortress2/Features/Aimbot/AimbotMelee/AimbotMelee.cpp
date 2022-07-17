@@ -72,7 +72,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
 
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
@@ -287,7 +287,7 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	case 0:
 		{
 			pCmd->viewangles = vAngle;
-			I::Engine->SetViewAngles(pCmd->viewangles);
+			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -297,14 +297,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
-				I::Engine->SetViewAngles(pCmd->viewangles);
+				I::EngineClient->SetViewAngles(pCmd->viewangles);
 				break;
 			}
 
 			Vec3 vecDelta = vAngle - pCmd->viewangles;
 			Math::ClampAngles(vecDelta);
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.Value;
-			I::Engine->SetViewAngles(pCmd->viewangles);
+			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -343,7 +343,7 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	}
 
 	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
-	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.Value == 2 ? Target.m_vAngleTo : I::Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
+	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.Value == 2 ? Target.m_vAngleTo : I::EngineClient->GetViewAngles(), Target.m_pEntity->GetIndex()))
 	{
 		return false;
 	}

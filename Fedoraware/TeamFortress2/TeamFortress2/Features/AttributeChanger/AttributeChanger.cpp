@@ -18,13 +18,13 @@ std::array<std::pair<int, int>, 12> redirects{
 
 void CAttributeChanger::Run()
 {
-	if (!I::Engine->IsInGame() || AttributeMap.empty())
+	if (!I::EngineClient->IsInGame() || AttributeMap.empty())
 	{
 		return;
 	}
 
 	//Needed here, runs 2 stages before cache is filled
-	if (const auto& pLocal = I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer()))
+	if (const auto& pLocal = I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer()))
 	{
 		if (!pLocal->IsAlive())
 		{
@@ -34,7 +34,7 @@ void CAttributeChanger::Run()
 		const auto myWeapons = reinterpret_cast<size_t*>(pLocal + 0xCF8);
 		for (int n = 0; myWeapons[n]; n++)
 		{
-			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(myWeapons[n])))
+			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(myWeapons[n])))
 			{
 				const auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
 				if (!pList || pList->m_Attributes.Count() > 0)

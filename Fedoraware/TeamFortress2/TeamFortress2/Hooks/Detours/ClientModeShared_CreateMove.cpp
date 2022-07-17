@@ -45,7 +45,7 @@ void AppendCache()
 	}
 }
 
-MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bool, __fastcall,
+MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 21), bool, __fastcall,
           void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
 	G::SilentTime = false;
@@ -133,13 +133,13 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			}
 		}
 
-		if (const INetChannel* netChannel = I::Engine->GetNetChannelInfo())
+		if (const INetChannel* netChannel = I::EngineClient->GetNetChannelInfo())
 		{
 			static const char* oServerAddress = netChannel->GetAddress();
 			const char* cServerAddress = netChannel->GetAddress();
 
-			static const char* oMap = I::Engine->GetLevelName();
-			const char* cMap = I::Engine->GetLevelName();
+			static const char* oMap = I::EngineClient->GetLevelName();
+			const char* cMap = I::EngineClient->GetLevelName();
 
 			if (oServerAddress != cServerAddress || oMap != cMap)
 			{
@@ -197,7 +197,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 	// Party Crasher: Crashes the party by spamming messages
 	if (Vars::Misc::PartyCrasher.Value)
 	{
-		I::Engine->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
+		I::EngineClient->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
 	// Handle Taunt Slide
@@ -217,7 +217,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientMode, 21), bo
 			return false;
 		}
 
-		if (const ConVar* debugMode = I::CVars->FindVar("debugMode"))
+		if (const ConVar* debugMode = I::Cvar->FindVar("debugMode"))
 		{
 			Vars::Debug::DebugInfo.Value = Vars::Debug::DebugBool.Value = debugMode->GetInt();
 		}

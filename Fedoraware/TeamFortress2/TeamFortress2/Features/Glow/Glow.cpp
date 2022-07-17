@@ -40,16 +40,16 @@ void CGlowEffect::SetScale(int nScale)
 
 void CGlowEffect::Init()
 {
-	m_pMatGlowColor = I::MatSystem->Find(_("dev/glow_color"), TEXTURE_GROUP_OTHER);
-	m_pRtFullFrame = I::MatSystem->FindTexture(_("_rt_FullFrameFB"), TEXTURE_GROUP_RENDER_TARGET);
+	m_pMatGlowColor = I::MaterialSystem->Find(_("dev/glow_color"), TEXTURE_GROUP_OTHER);
+	m_pRtFullFrame = I::MaterialSystem->FindTexture(_("_rt_FullFrameFB"), TEXTURE_GROUP_RENDER_TARGET);
 
-	m_pRenderBuffer1 = I::MatSystem->CreateNamedRenderTargetTextureEx(
+	m_pRenderBuffer1 = I::MaterialSystem->CreateNamedRenderTargetTextureEx(
 		_("glow_buffer_1"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer1->IncrementReferenceCount();
 	// This can cause a crash on inject for some reason
-	m_pRenderBuffer2 = I::MatSystem->CreateNamedRenderTargetTextureEx(
+	m_pRenderBuffer2 = I::MaterialSystem->CreateNamedRenderTargetTextureEx(
 		_("glow_buffer_2"), m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
@@ -106,7 +106,7 @@ void CGlowEffect::Render()
 		if (I::EngineVGui->IsGameUIVisible())
 			return;
 
-		IMatRenderContext* pRenderContext = I::MatSystem->GetRenderContext();
+		IMatRenderContext* pRenderContext = I::MaterialSystem->GetRenderContext();
 
 		if (!pRenderContext)
 			return;
@@ -144,7 +144,7 @@ void CGlowEffect::Render()
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
 
-				bool bIsLocal = Player->GetIndex() == I::Engine->GetLocalPlayer();
+				bool bIsLocal = Player->GetIndex() == I::EngineClient->GetLocalPlayer();
 
 				if (!bIsLocal)
 				{

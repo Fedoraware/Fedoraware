@@ -295,7 +295,7 @@ namespace Utils
 	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)
 	{
 		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
-		PlayerInfo_t info{}; I::Engine->GetPlayerInfo(pEntity->GetIndex(), &info);
+		PlayerInfo_t info{}; I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &info);
 
 		if (pEntity->IsPlayer())
 		{
@@ -754,7 +754,7 @@ namespace Utils
 				continue;
 			}
 			// Get the weapon
-			auto* weapon = reinterpret_cast<CBaseCombatWeapon*>(I::EntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
+			auto* weapon = reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(HandleToIDX(hWeapons[i])));
 			// if weapon is what we are looking for, return true
 			if (weapon && weapon->GetWeaponID() == pWeaponID)
 			{
@@ -789,10 +789,10 @@ namespace Utils
 
 	__inline int GetPlayerForUserID(int userID)
 	{
-		for (int i = 1; i <= I::Engine->GetMaxClients(); i++)
+		for (int i = 1; i <= I::EngineClient->GetMaxClients(); i++)
 		{
 			PlayerInfo_t playerInfo{};
-			if (!I::Engine->GetPlayerInfo(i, &playerInfo))
+			if (!I::EngineClient->GetPlayerInfo(i, &playerInfo))
 			{
 				continue;
 			}

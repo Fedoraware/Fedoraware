@@ -11,7 +11,7 @@ MAKE_HOOK(CSkyboxView_Enable3dSkyboxFog, g_Pattern.Find(L"client.dll", L"55 8B E
 	{
 		return Hook.Original<FN>()(ecx, edx);
 	}
-	auto pRenderContext = I::MatSystem->GetRenderContext();
+	auto pRenderContext = I::MaterialSystem->GetRenderContext();
 	if (pRenderContext)
 	{
 		if (const auto& pLocal = g_EntityCache.GetLocal())

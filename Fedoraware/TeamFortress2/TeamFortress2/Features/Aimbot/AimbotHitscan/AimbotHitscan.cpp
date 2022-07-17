@@ -77,7 +77,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
 
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
@@ -206,7 +206,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			const auto owner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pProjectile->GetThrower()));
+			const auto owner = I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pProjectile->GetThrower()));
 
 			if (!owner)
 			{
@@ -249,7 +249,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 		matrix3x4 boneMatrix[128];
 		if (const model_t* pModel = target.m_pEntity->GetModel())
 		{
-			if (const studiohdr_t* pHDR = I::ModelInfo->GetStudioModel(pModel))
+			if (const studiohdr_t* pHDR = I::ModelInfoClient->GetStudioModel(pModel))
 			{
 				if (target.m_pEntity->SetupBones(boneMatrix, 128, 0x100, I::GlobalVars->curtime))
 				{
@@ -489,7 +489,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 		case 0: //Plain
 		{
 			pCmd->viewangles = vAngle;
-			I::Engine->SetViewAngles(pCmd->viewangles);
+			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -499,11 +499,11 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			{
 				// plain aim at 0 smoothing factor
 				pCmd->viewangles = vAngle;
-				I::Engine->SetViewAngles(pCmd->viewangles);
+				I::EngineClient->SetViewAngles(pCmd->viewangles);
 				break;
 			}
 			//Calculate delta of current viewangles and wanted angles
-			Vec3 vecDelta = vAngle - I::Engine->GetViewAngles();
+			Vec3 vecDelta = vAngle - I::EngineClient->GetViewAngles();
 
 			//Clamp, keep the angle in possible bounds
 			Math::ClampAngles(vecDelta);
@@ -512,7 +512,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			pCmd->viewangles += vecDelta / Vars::Aimbot::Hitscan::SmoothingAmount.Value;
 
 			//Set the viewangles from engine
-			I::Engine->SetViewAngles(pCmd->viewangles);
+			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 

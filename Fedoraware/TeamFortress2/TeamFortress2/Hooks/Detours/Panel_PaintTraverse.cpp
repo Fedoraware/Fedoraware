@@ -3,7 +3,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Camera/CameraWindow.h"
 
-MAKE_HOOK(Panel_PaintTraverse, Utils::GetVFuncPtr(I::Panel, 41), void, __fastcall,
+MAKE_HOOK(Panel_PaintTraverse, Utils::GetVFuncPtr(I::VGuiPanel, 41), void, __fastcall,
 		  void* ecx, void* edx, unsigned int vgui_panel, bool force_repaint, bool allow_force)
 {
 	F::CameraWindow.Draw();

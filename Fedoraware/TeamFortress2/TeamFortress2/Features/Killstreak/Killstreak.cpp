@@ -64,7 +64,7 @@ void CKillstreaker::ApplyKillstreak()
 	{
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
-			const auto streaksResource = g_EntityCache.GetPR()->GetStreaks(I::Engine->GetLocalPlayer());
+			const auto streaksResource = g_EntityCache.GetPR()->GetStreaks(I::EngineClient->GetLocalPlayer());
 			if (streaksResource && *streaksResource != GetCurrentStreak())
 			{
 				streaksResource[0] = GetCurrentStreak();
@@ -97,13 +97,13 @@ void CKillstreaker::PlayerDeath(CGameEvent* pEvent)
 	const int attacker = Utils::GetPlayerForUserID(pEvent->GetInt("attacker"));
 	const int userid = Utils::GetPlayerForUserID(pEvent->GetInt("userid"));
 
-	if (userid == I::Engine->GetLocalPlayer())
+	if (userid == I::EngineClient->GetLocalPlayer())
 	{
 		ResetKillstreak();
 		return;
 	}
 
-	if (attacker != I::Engine->GetLocalPlayer() ||
+	if (attacker != I::EngineClient->GetLocalPlayer() ||
 		attacker == userid ||
 		!g_EntityCache.GetLocal() || !g_EntityCache.GetWeapon() || !g_EntityCache.GetLocal()->IsAlive())
 	{
@@ -123,7 +123,7 @@ void CKillstreaker::PlayerSpawn(CGameEvent* pEvent)
 {
 	const int userid = Utils::GetPlayerForUserID(pEvent->GetInt("userid"));
 
-	if (userid == I::Engine->GetLocalPlayer())
+	if (userid == I::EngineClient->GetLocalPlayer())
 	{
 		ResetKillstreak();
 	}

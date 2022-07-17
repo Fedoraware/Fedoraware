@@ -374,8 +374,8 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 {
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
-		if (const auto pEntity = I::EntityList->GetClientEntity(
-			I::Engine->GetPlayerForUserID(pEvent->GetInt("userid"))))
+		if (const auto pEntity = I::ClientEntityList->GetClientEntity(
+			I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"))))
 		{
 			const auto nAttacker = pEvent->GetInt("attacker");
 			const auto& pLocal = g_EntityCache.GetLocal();
@@ -383,7 +383,7 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			if (pEntity != pLocal) { return; }
 
 			PlayerInfo_t pi{};
-			I::Engine->GetPlayerInfo(I::Engine->GetLocalPlayer(), &pi);
+			I::EngineClient->GetPlayerInfo(I::EngineClient->GetLocalPlayer(), &pi);
 			if (nAttacker == pi.userID) { return; }
 
 			wasHit = true;

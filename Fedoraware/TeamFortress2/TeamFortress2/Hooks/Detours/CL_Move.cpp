@@ -176,7 +176,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				G::ShiftedTicks--;
 			}
 
-			I::Engine->FireEvents();
+			I::EngineClient->FireEvents();
 			G::WaitForShift = DT_WAIT_CALLS;
 		}
 		G::ShouldShift = false;

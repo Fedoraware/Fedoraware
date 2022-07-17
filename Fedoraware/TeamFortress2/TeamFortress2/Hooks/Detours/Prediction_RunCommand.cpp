@@ -4,7 +4,7 @@ int CalculateTick(int simTicks, CBaseEntity* player)
 {
 	const int clockcorrect = TIME_TO_TICKS(0.06f); //sv_clockcorrectmsecs
 	const int nIdealFinalTick = I::GlobalVars->tickcount + TIME_TO_TICKS(
-		I::Engine->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
+		I::EngineClient->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
 	const int estimatedFinal = player->GetTickBase() + simTicks;
 	const int fast = nIdealFinalTick + clockcorrect;
 	const int slow = nIdealFinalTick - clockcorrect;

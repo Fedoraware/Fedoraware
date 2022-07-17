@@ -262,7 +262,7 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
-	const INetChannel* pNetChannel = I::Engine->GetNetChannelInfo();
+	const INetChannel* pNetChannel = I::EngineClient->GetNetChannelInfo();
 	static ConVar* cl_flipviewmodels = g_ConVars.cl_flipviewmodels;
 
 	G::PredictionLines.clear();
@@ -795,7 +795,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	F::AimbotGlobal.m_vecTargets.clear();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
-	const Vec3 vLocalAngles = I::Engine->GetViewAngles();
+	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
 
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
@@ -948,7 +948,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 		{
 			// Plain
 			pCmd->viewangles = vAngle;
-			I::Engine->SetViewAngles(pCmd->viewangles);
+			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
@@ -1055,7 +1055,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || !splashRadius) { return false; }
 
 	const auto sortMethod = GetSortMethod();
-	const auto& vLocalAngles = I::Engine->GetViewAngles();
+	const auto& vLocalAngles = I::EngineClient->GetViewAngles();
 	const auto& vLocalShootPos = pLocal->GetShootPos();
 	const auto& vLocalOrigin = pLocal->GetAbsOrigin();
 

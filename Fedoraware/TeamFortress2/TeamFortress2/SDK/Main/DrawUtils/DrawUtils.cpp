@@ -4,7 +4,7 @@
 
 void ScreenSize_t::Update()
 {
-	I::Engine->GetScreenSize(this->w, this->h);
+	I::EngineClient->GetScreenSize(this->w, this->h);
 	this->c = (this->w / 2);
 }
 
@@ -32,8 +32,8 @@ void Draw_t::ReloadFonts()
 {
 	for (auto& v : m_vecFonts)
 	{
-		v.dwFont = I::Surface->CreateFont();
-		I::Surface->SetFontGlyphSet(v.dwFont, v.szName, v.nTall, v.nWeight, 0, 0, v.nFlags);
+		v.dwFont = I::VGuiSurface->CreateFont();
+		I::VGuiSurface->SetFontGlyphSet(v.dwFont, v.szName, v.nTall, v.nWeight, 0, 0, v.nFlags);
 	}
 }
 
@@ -57,35 +57,35 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 	case ALIGN_DEFAULT: break;
 	case ALIGN_CENTER: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w / 2);
 		y -= (h / 2);
 		break;
 	}
 	case ALIGN_CENTERVERTICAL: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		y -= (h / 2);
 		break;
 	}
 	case ALIGN_CENTERHORIZONTAL: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w / 2);
 		break;
 	}
 	case ALIGN_REVERSE: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w);
 		break;
 	}
 	}
 
-	I::Surface->SetTextPos(x, y);
-	I::Surface->SetTextFont(m_vecFonts.at(font_idx).dwFont);
-	I::Surface->SetTextColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->PrintText(wstr, wcslen(wstr));
+	I::VGuiSurface->SetTextPos(x, y);
+	I::VGuiSurface->SetTextFont(m_vecFonts.at(font_idx).dwFont);
+	I::VGuiSurface->SetTextColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->PrintText(wstr, wcslen(wstr));
 }
 
 void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...)
@@ -107,51 +107,51 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 	case ALIGN_DEFAULT: break;
 	case ALIGN_CENTER: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w / 2);
 		y -= (h / 2);
 		break;
 	}
 	case ALIGN_CENTERVERTICAL: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		y -= (h / 2);
 		break;
 	}
 	case ALIGN_CENTERHORIZONTAL: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w / 2);
 		break;
 	}
 	case ALIGN_REVERSE: {
 		int w = 0, h = 0;
-		I::Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
 		x -= (w);
 		break;
 	}
 	}
 
-	I::Surface->SetTextPos(x, y);
-	I::Surface->SetTextFont(m_vecFonts.at(font_idx).dwFont);
-	I::Surface->SetTextColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->PrintText(wstr, wcslen(wstr));
+	I::VGuiSurface->SetTextPos(x, y);
+	I::VGuiSurface->SetTextFont(m_vecFonts.at(font_idx).dwFont);
+	I::VGuiSurface->SetTextColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->PrintText(wstr, wcslen(wstr));
 }
 
 void Draw_t::Line(int x, int y, int x1, int y1, const Color_t& clr)
 {
-	I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->DrawLine(x, y, x1, y1);
+	I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawLine(x, y, x1, y1);
 }
 
 void Draw_t::DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr)
 {
-	static int iTexture = I::Surface->CreateNewTextureID(true);
+	static int iTexture = I::VGuiSurface->CreateNewTextureID(true);
 
-	I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->DrawSetTexture(iTexture);
+	I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawSetTexture(iTexture);
 
-	I::Surface->DrawTexturedPoly(count, vertices);
+	I::VGuiSurface->DrawTexturedPoly(count, vertices);
 }
 
 void Draw_t::DrawFilledTriangle(std::array<Vec2, 3>points, const Color_t& clr)
@@ -169,39 +169,39 @@ void Draw_t::DrawOutlinedTriangle(std::array<Vec2, 3>points, const Color_t& clr)
 
 void Draw_t::Rect(int x, int y, int w, int h, const Color_t& clr)
 {
-	I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->DrawFilledRect(x, y, x + w, y + h);
+	I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawFilledRect(x, y, x + w, y + h);
 }
 
 void Draw_t::OutlinedRect(int x, int y, int w, int h, const Color_t& clr)
 {
-	I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->DrawOutlinedRect(x, y, x + w, y + h);
+	I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawOutlinedRect(x, y, x + w, y + h);
 }
 
 void Draw_t::GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
 {
-	I::Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x1, y1, 255, 255, horizontal);
-	I::Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x1, y1, 0, 255, horizontal);
+	I::VGuiSurface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x1, y1, 255, 255, horizontal);
+	I::VGuiSurface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x1, y1, 0, 255, horizontal);
 }
 
 // above but does alpha better (imo)
 void Draw_t::GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
 {
-	I::Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
-	I::Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+	I::VGuiSurface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
+	I::VGuiSurface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x1, y1, top_clr.a, bottom_clr.a, horizontal);
 }
 
 void Draw_t::GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal)
 {
-	I::Surface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x + w, y + h, 255, 255, horizontal);
-	I::Surface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
-	I::Surface->DrawFilledRectFade(x, y, x + w, y + h, 0, 255, horizontal);
+	I::VGuiSurface->SetDrawColor(top_clr.r, top_clr.g, top_clr.b, top_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x + w, y + h, 255, 255, horizontal);
+	I::VGuiSurface->SetDrawColor(bottom_clr.r, bottom_clr.g, bottom_clr.b, bottom_clr.a);
+	I::VGuiSurface->DrawFilledRectFade(x, y, x + w, y + h, 0, 255, horizontal);
 }
 
 void Draw_t::OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, bool horizontal)
@@ -236,8 +236,8 @@ void Draw_t::FilledCircle(const int x, const int y, const int radius, const int 
 
 	if (vecVertixes.Count() > 0)
 	{
-		I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-		I::Surface->DrawTexturedPoly(segments, vecVertixes.Base());
+		I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+		I::VGuiSurface->DrawTexturedPoly(segments, vecVertixes.Base());
 	}
 }
 
@@ -266,14 +266,14 @@ void Draw_t::Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex)
 	}
 	else
 	{
-		nTexture = I::Surface->CreateNewTextureID();
-		I::Surface->DrawSetTextureFile(nTexture, ICONS::TEXTURE[nIndex].c_str(), false, true);
+		nTexture = I::VGuiSurface->CreateNewTextureID();
+		I::VGuiSurface->DrawSetTextureFile(nTexture, ICONS::TEXTURE[nIndex].c_str(), false, true);
 		ICONS::ID[nIndex] = nTexture;
 	}
 
-	I::Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
-	I::Surface->DrawSetTexture(nTexture);
-	I::Surface->DrawTexturedRect(x, y, w, h);
+	I::VGuiSurface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawSetTexture(nTexture);
+	I::VGuiSurface->DrawTexturedRect(x, y, w, h);
 }
 
 //E8 ? ? ? ? 80 7F 3C 00
@@ -287,8 +287,8 @@ CHudTexture* Draw_t::GetIcon(const char* szIcon, int eIconFormat /* = 0*/)
 
 int Draw_t::CreateTextureFromArray(const unsigned char* rgba, int w, int h)
 {
-	int nTextureIdOut = I::Surface->CreateNewTextureID(true);
-	I::Surface->DrawSetTextureRGBAEx(nTextureIdOut, rgba, w, h, IMAGE_FORMAT_RGBA8888);
+	int nTextureIdOut = I::VGuiSurface->CreateNewTextureID(true);
+	I::VGuiSurface->DrawSetTextureRGBAEx(nTextureIdOut, rgba, w, h, IMAGE_FORMAT_RGBA8888);
 	return nTextureIdOut;
 }
 
@@ -300,16 +300,16 @@ void Draw_t::DrawHudTexture(float x0, float y0, float s0, CHudTexture* texture, 
 	if (texture->bRenderUsingFont)
 	{
 
-		I::Surface->DrawSetTextFont(texture->hFont);
-		I::Surface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
-		I::Surface->SetTextPos(x0, y0);
-		I::Surface->DrawUnicodeChar(texture->cCharacterInFont);
+		I::VGuiSurface->DrawSetTextFont(texture->hFont);
+		I::VGuiSurface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
+		I::VGuiSurface->SetTextPos(x0, y0);
+		I::VGuiSurface->DrawUnicodeChar(texture->cCharacterInFont);
 	}
 	else if (texture->textureId != -1)
 	{
-		I::Surface->DrawSetTexture(texture->textureId);
-		I::Surface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
-		I::Surface->DrawTexturedSubRect(x0, y0, x0 + (texture->rc.right - texture->rc.left) * s0, y0 + (texture->rc.bottom - texture->rc.top) * s0, texture->texCoords[0], texture->texCoords[1], texture->texCoords[2], texture->texCoords[3]);
+		I::VGuiSurface->DrawSetTexture(texture->textureId);
+		I::VGuiSurface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
+		I::VGuiSurface->DrawTexturedSubRect(x0, y0, x0 + (texture->rc.right - texture->rc.left) * s0, y0 + (texture->rc.bottom - texture->rc.top) * s0, texture->texCoords[0], texture->texCoords[1], texture->texCoords[2], texture->texCoords[3]);
 	}
 }
 
@@ -323,16 +323,16 @@ void Draw_t::DrawHudTextureByName(float x0, float y0, float s0, const char* text
 	if (pIcon->bRenderUsingFont)
 	{
 
-		I::Surface->DrawSetTextFont(pIcon->hFont);
-		I::Surface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
-		I::Surface->SetTextPos(x0, y0);
-		I::Surface->DrawUnicodeChar(pIcon->cCharacterInFont);
+		I::VGuiSurface->DrawSetTextFont(pIcon->hFont);
+		I::VGuiSurface->SetTextColor(col0.r, col0.g, col0.b, col0.a);
+		I::VGuiSurface->SetTextPos(x0, y0);
+		I::VGuiSurface->DrawUnicodeChar(pIcon->cCharacterInFont);
 	}
 	else if (pIcon->textureId != -1)
 	{
-		I::Surface->DrawSetTexture(pIcon->textureId);
-		I::Surface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
-		I::Surface->DrawTexturedSubRect(x0, y0, x0 + (pIcon->rc.right - pIcon->rc.left) * s0, y0 + (pIcon->rc.bottom - pIcon->rc.top) * s0, pIcon->texCoords[0], pIcon->texCoords[1], pIcon->texCoords[2], pIcon->texCoords[3]);
+		I::VGuiSurface->DrawSetTexture(pIcon->textureId);
+		I::VGuiSurface->SetDrawColor(col0.r, col0.g, col0.b, col0.a);
+		I::VGuiSurface->DrawTexturedSubRect(x0, y0, x0 + (pIcon->rc.right - pIcon->rc.left) * s0, y0 + (pIcon->rc.bottom - pIcon->rc.top) * s0, pIcon->texCoords[0], pIcon->texCoords[1], pIcon->texCoords[2], pIcon->texCoords[3]);
 	}
 }
 
@@ -342,9 +342,9 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 	{
 		if (m_mapAvatars.find(nID) != m_mapAvatars.end())
 		{
-			I::Surface->SetDrawColor(255, 255, 255, 255);
-			I::Surface->DrawSetTexture(m_mapAvatars[nID]);
-			I::Surface->DrawTexturedRect(x, y, w, h);
+			I::VGuiSurface->SetDrawColor(255, 255, 255, 255);
+			I::VGuiSurface->DrawSetTexture(m_mapAvatars[nID]);
+			I::VGuiSurface->DrawTexturedRect(x, y, w, h);
 		}
 		else
 		{
@@ -358,10 +358,10 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 
 				if (g_SteamInterfaces.Utils007->GetImageRGBA(nAvatar, pData, nSize))
 				{
-					const int nTextureID = I::Surface->CreateNewTextureID(true);
-					if (I::Surface->IsTextureIDValid(nTextureID))
+					const int nTextureID = I::VGuiSurface->CreateNewTextureID(true);
+					if (I::VGuiSurface->IsTextureIDValid(nTextureID))
 					{
-						I::Surface->DrawSetTextureRGBA(nTextureID, pData, w, h, 0, false);
+						I::VGuiSurface->DrawSetTextureRGBA(nTextureID, pData, w, h, 0, false);
 						m_mapAvatars[nID] = nTextureID;
 					}
 				}
@@ -391,8 +391,8 @@ void Draw_t::RoundedBoxStatic(const int x, const int y, const int w, const int h
 		}
 	}
 
-	I::Surface->SetDrawColor(col.r, col.g, col.b, col.a);
-	I::Surface->DrawTexturedPoly(64, roundsquare);
+	I::VGuiSurface->SetDrawColor(col.r, col.g, col.b, col.a);
+	I::VGuiSurface->DrawTexturedPoly(64, roundsquare);
 }
 
 
@@ -401,8 +401,8 @@ void Draw_t::ClearAvatarCache()
 {
 	for (auto Avatar : m_mapAvatars)
 	{
-		I::Surface->DeleteTextureByID(Avatar.second);
-		I::Surface->DestroyTextureID(Avatar.second);
+		I::VGuiSurface->DeleteTextureByID(Avatar.second);
+		I::VGuiSurface->DestroyTextureID(Avatar.second);
 	}
 
 	m_mapAvatars.clear();

@@ -100,7 +100,7 @@ public: //Everything else, lol
 	}
 
 	__inline CBaseEntity* GetHealingTarget() {
-		return I::EntityList->GetClientEntityFromHandle(GetHealingTargetHandle());
+		return I::ClientEntityList->GetClientEntityFromHandle(GetHealingTargetHandle());
 	}
 
 	__inline int GetHealingTargetHandle() {
@@ -150,7 +150,7 @@ public: //Everything else, lol
 
 	__inline bool CanFireCriticalShot(const bool bHeadShot) {
 		bool bResult = false;
-		if (const auto& pOwner = I::EntityList->GetClientEntityFromHandle(GethOwner())) {
+		if (const auto& pOwner = I::ClientEntityList->GetClientEntityFromHandle(GethOwner())) {
 			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
 			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 424)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
@@ -304,12 +304,12 @@ public: //Everything else, lol
 
 		if (GetClip1() == 0)
 			return false;
-		return (nextAttack <= (TICKS_TO_TIME(I::EntityList->GetClientEntity(I::Engine->GetLocalPlayer())->GetTickBase())));
+		return (nextAttack <= (TICKS_TO_TIME(I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer())->GetTickBase())));
 	}
 
 	__inline bool IsFlipped()
 	{
-		static auto cl_flipviewmodels = I::CVars->FindVar("cl_flipviewmodels");
+		static auto cl_flipviewmodels = I::Cvar->FindVar("cl_flipviewmodels");
 		return cl_flipviewmodels->GetBool();
 	}
 

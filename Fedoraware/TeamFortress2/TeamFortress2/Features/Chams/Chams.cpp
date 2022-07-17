@@ -30,7 +30,7 @@ void CChams::Init()
 		kv->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
 		kv->SetString("$selfillumtint", "[0 0 0]");
 		kv->SetString("$envmaptint", "[0 1 0]");
-		m_pMatFresnel = I::MatSystem->Create("m_pMatFresnel", kv);
+		m_pMatFresnel = I::MaterialSystem->Create("m_pMatFresnel", kv);
 	}
 
 	{
@@ -40,7 +40,7 @@ void CChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShaded = I::MatSystem->Create("m_pMatShaded", kv);
+		m_pMatShaded = I::MaterialSystem->Create("m_pMatShaded", kv);
 	}
 
 	{
@@ -55,7 +55,7 @@ void CChams::Init()
 		kv->SetString("$rimlight", "1");
 		kv->SetString("$rimlightboost", "100");
 		kv->SetString("$envmapfresnelminmaxexp", "[0 1 2]");
-		m_pMatBrick = I::MatSystem->Create("m_pMatBrick", kv);
+		m_pMatBrick = I::MaterialSystem->Create("m_pMatBrick", kv);
 	}
 
 	{
@@ -66,14 +66,14 @@ void CChams::Init()
 		kv->SetString("$selfillum", "1");
 		kv->SetString("$selfillumfresnel", "1");
 		kv->SetString("$selfillumfresnelminmaxexp", "[-0.25 1 1]");
-		m_pMatShiny = I::MatSystem->Create("m_pMatShiny", kv);
+		m_pMatShiny = I::MaterialSystem->Create("m_pMatShiny", kv);
 	}
 
 
 	{
 		auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
-		m_pMatFlat = I::MatSystem->Create("m_pMatFlat", kv);
+		m_pMatFlat = I::MaterialSystem->Create("m_pMatFlat", kv);
 	}
 
 	{
@@ -87,11 +87,11 @@ void CChams::Init()
 			kv->SetString("$phongfresnelranges", "[0 0 0]");
 			kv->SetString("$basemapalphaphongmask", "1");
 			kv->SetString("$phongwarptexture", "models/player/shared/ice_player_warp");
-			m_pMatPlastic = I::MatSystem->Create("m_pMatPlastic", kv);
+			m_pMatPlastic = I::MaterialSystem->Create("m_pMatPlastic", kv);
 		}
 	}
 
-	m_pMatBlur = I::MatSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
+	m_pMatBlur = I::MaterialSystem->Find("models/effects/muzzleflash/blurmuzzle", "Model textures");
 }
 
 void CChams::Render()
@@ -106,7 +106,7 @@ void CChams::Render()
 		if (!ShouldRun())
 			return;
 
-		if (const auto& pRenderContext = I::MatSystem->GetRenderContext())
+		if (const auto& pRenderContext = I::MaterialSystem->GetRenderContext())
 		{
 			//Let's do this in advance if Glow is enabled.
 			/*if (Vars::Glow::Main::Active.m_Var)

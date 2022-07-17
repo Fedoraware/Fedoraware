@@ -2,25 +2,25 @@
 
 void CConVars::Init()
 {
-	cl_interp = I::CVars->FindVar(_("cl_interp"));
-	cl_sidespeed = I::CVars->FindVar(_("cl_sidespeed"));
-	cl_interp_ratio = I::CVars->FindVar(_("cl_interp_ratio"));
-	cl_updaterate = I::CVars->FindVar(_("cl_updaterate"));
-	tf_crit_cap = I::CVars->FindVar(_("tf_weapon_criticals_bucket_cap"));
-	tf_crit_bottom = I::CVars->FindVar(_("tf_weapon_criticals_bucket_bottom"));
-	tf_crit_default = I::CVars->FindVar(_("tf_weapon_criticals_bucket_default"));
-	sv_gravity = I::CVars->FindVar(_("sv_gravity"));
-	cl_flipviewmodels = I::CVars->FindVar(_("cl_flipviewmodels"));
-	sv_maxunlag = I::CVars->FindVar(_("sv_maxunlag"));
-	tf_enable_glows_after_respawn = I::CVars->FindVar(_("tf_enable_glows_after_respawn"));
-	glow_outline_effect_enable = I::CVars->FindVar(_("glow_outline_effect_enable"));
-	r_drawspecificstaticprop = I::CVars->FindVar(_("r_drawspecificstaticprop"));
-	sv_namechange_cooldown_seconds = I::CVars->FindVar(_("sv_namechange_cooldown_seconds"));
-	afkTimer = I::CVars->FindVar(_("mp_idlemaxtime"));
-	sv_maxusrcmdprocessticks = I::CVars->FindVar(_("sv_maxusrcmdprocessticks"));
-	sv_maxusrcmdprocessticks_holdaim = I::CVars->FindVar(_("sv_maxusrcmdprocessticks_holdaim"));
+	cl_interp = I::Cvar->FindVar(_("cl_interp"));
+	cl_sidespeed = I::Cvar->FindVar(_("cl_sidespeed"));
+	cl_interp_ratio = I::Cvar->FindVar(_("cl_interp_ratio"));
+	cl_updaterate = I::Cvar->FindVar(_("cl_updaterate"));
+	tf_crit_cap = I::Cvar->FindVar(_("tf_weapon_criticals_bucket_cap"));
+	tf_crit_bottom = I::Cvar->FindVar(_("tf_weapon_criticals_bucket_bottom"));
+	tf_crit_default = I::Cvar->FindVar(_("tf_weapon_criticals_bucket_default"));
+	sv_gravity = I::Cvar->FindVar(_("sv_gravity"));
+	cl_flipviewmodels = I::Cvar->FindVar(_("cl_flipviewmodels"));
+	sv_maxunlag = I::Cvar->FindVar(_("sv_maxunlag"));
+	tf_enable_glows_after_respawn = I::Cvar->FindVar(_("tf_enable_glows_after_respawn"));
+	glow_outline_effect_enable = I::Cvar->FindVar(_("glow_outline_effect_enable"));
+	r_drawspecificstaticprop = I::Cvar->FindVar(_("r_drawspecificstaticprop"));
+	sv_namechange_cooldown_seconds = I::Cvar->FindVar(_("sv_namechange_cooldown_seconds"));
+	afkTimer = I::Cvar->FindVar(_("mp_idlemaxtime"));
+	sv_maxusrcmdprocessticks = I::Cvar->FindVar(_("sv_maxusrcmdprocessticks"));
+	sv_maxusrcmdprocessticks_holdaim = I::Cvar->FindVar(_("sv_maxusrcmdprocessticks_holdaim"));
 
-	ConCommandBase* cmdBase = I::CVars->GetCommands();
+	ConCommandBase* cmdBase = I::Cvar->GetCommands();
 	while (cmdBase != nullptr) {
 		constexpr int FCVAR_HIDDEN = (int)EConVarFlags::FCVAR_HIDDEN;
 		constexpr int FCVAR_DEVELOPMENT_ONLY = (int)EConVarFlags::FCVAR_DEVELOPMENT_ONLY;
@@ -45,7 +45,7 @@ void CConVars::Init()
 
 ConVar* CConVars::FindVar(const char* cvarname) {
 	if (!cvarMap[FNV1A::HashConst(cvarname)]) {
-		cvarMap[FNV1A::HashConst(cvarname)] = I::CVars->FindVar(cvarname);
+		cvarMap[FNV1A::HashConst(cvarname)] = I::Cvar->FindVar(cvarname);
 	}
 	return cvarMap[FNV1A::HashConst(cvarname)];
 }

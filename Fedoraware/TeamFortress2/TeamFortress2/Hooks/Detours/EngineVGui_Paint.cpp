@@ -56,7 +56,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 		{
 			CViewSetup viewSetup = {};
 
-			if (I::Client->GetPlayerView(viewSetup))
+			if (I::BaseClientDLL->GetPlayerView(viewSetup))
 			{
 				VMatrix worldToView = {}, viewToProjection = {}, worldToPixels = {};
 				I::RenderView->GetMatricesForView(viewSetup, &worldToView, &viewToProjection,
@@ -64,7 +64,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			}
 		}
 
-		StartDrawing(I::Surface);
+		StartDrawing(I::VGuiSurface);
 		{
 			//static int nAvatar = 0;
 			//static int nAvatarID = 0;
@@ -107,7 +107,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 			if (I::EngineVGui->IsGameUIVisible())
 			{
-				if (!I::Engine->IsInGame())
+				if (!I::EngineClient->IsInGame())
 				{
 					static bool bOpenedMenuOnce = false;
 					if (F::Menu.IsOpen)
@@ -215,6 +215,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::Notifications.Think();
 			F::Visuals.SetVisionFlags();
 		}
-		FinishDrawing(I::Surface);
+		FinishDrawing(I::VGuiSurface);
 	}
 }

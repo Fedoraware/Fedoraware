@@ -16,14 +16,14 @@ void CInterfaces::Init()
 {
 	using namespace I;
 
-	Client = g_Interface.Get<CBaseClientDLL*>(CLIENT, CLIENT_DLL_INTERFACE_VERSION);
-	_valid(Client);
+	BaseClientDLL = g_Interface.Get<CBaseClientDLL*>(CLIENT, CLIENT_DLL_INTERFACE_VERSION);
+	_valid(BaseClientDLL);
 
-	ClientShared = g_Interface.Get<CClientDLLSharedAppSystems*>(CLIENT, CLIENT_DLL_SHARED_APPSYSTEMS);
-	_valid(ClientShared);
+	ClientDLLSharedAppSystems = g_Interface.Get<CClientDLLSharedAppSystems*>(CLIENT, CLIENT_DLL_SHARED_APPSYSTEMS);
+	_valid(ClientDLLSharedAppSystems);
 
-	EntityList = g_Interface.Get<CClientEntityList*>(CLIENT, VCLIENTENTITYLIST_INTERFACE_VERSION);
-	_valid(EntityList);
+	ClientEntityList = g_Interface.Get<CClientEntityList*>(CLIENT, VCLIENTENTITYLIST_INTERFACE_VERSION);
+	_valid(ClientEntityList);
 
 	Prediction = g_Interface.Get<CPrediction*>(CLIENT, VCLIENT_PREDICTION_INTERFACE_VERSION);
 	_valid(Prediction);
@@ -31,11 +31,11 @@ void CInterfaces::Init()
 	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
 	_valid(GameMovement);
 
-	ModelInfo = g_Interface.Get<CModelInfoClient*>(ENGINE, VMODELINFO_CLIENT_INTERFACE_VERSION);
-	_valid(ModelInfo);
+	ModelInfoClient = g_Interface.Get<CModelInfoClient*>(ENGINE, VMODELINFO_CLIENT_INTERFACE_VERSION);
+	_valid(ModelInfoClient);
 
-	Engine = g_Interface.Get<CEngineClient*>(ENGINE, VENGINE_CLIENT_INTERFACE_VERSION_13);
-	_valid(Engine);
+	EngineClient = g_Interface.Get<CEngineClient*>(ENGINE, VENGINE_CLIENT_INTERFACE_VERSION_13);
+	_valid(EngineClient);
 
 	EngineEffects = g_Interface.Get<IVEngineEffects*>(ENGINE, VENGINE_EFFECTS_INTERFACE_VERSION);
 	_valid(EngineEffects);
@@ -43,14 +43,14 @@ void CInterfaces::Init()
 	EngineTrace = g_Interface.Get<CEngineTrace*>(ENGINE, VENGINE_TRACE_CLIENT_INTERFACE_VERSION);
 	_valid(EngineTrace);
 
-	Panel = g_Interface.Get<CPanel*>(VGUI2, VGUI_PANEL_INTERFACE_VERSION);
-	_valid(Panel);
+	VGuiPanel = g_Interface.Get<CPanel*>(VGUI2, VGUI_PANEL_INTERFACE_VERSION);
+	_valid(VGuiPanel);
 
-	Surface = g_Interface.Get<CSurface*>(MATSURFACE, VGUI_SURFACE_INTERFACE_VERSION);
-	_valid(Surface);
+	VGuiSurface = g_Interface.Get<CSurface*>(MATSURFACE, VGUI_SURFACE_INTERFACE_VERSION);
+	_valid(VGuiSurface);
 
-	CVars = g_Interface.Get<ICvar*>(VSTDLIB, VENGINE_CVAR_INTERFACE_VERSION);
-	_valid(CVars);
+	Cvar = g_Interface.Get<ICvar*>(VSTDLIB, VENGINE_CVAR_INTERFACE_VERSION);
+	_valid(Cvar);
 
 	GlobalVars = *reinterpret_cast<CGlobalVarsBase**>(g_Pattern.Find(ENGINE, L"A1 ? ? ? ? 8B 11 68") + 0x8);
 	_valid(GlobalVars);
@@ -61,8 +61,8 @@ void CInterfaces::Init()
 	void* ClientTable = reinterpret_cast<void*>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 8B 02 D9 05"));
 	_valid(ClientTable);
 
-	ClientMode = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);
-	_valid(ClientMode);
+	ClientModeShared = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);
+	_valid(ClientModeShared);
 
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE, VENGINE_VGUI_VERSION);
 	_valid(EngineVGui);
@@ -76,14 +76,14 @@ void CInterfaces::Init()
 	DebugOverlay = g_Interface.Get<CDebugOverlay*>(ENGINE, VENGINE_DEBUGOVERLAY_INTERFACE_VERSION);
 	_valid(RenderView);
 
-	GameEvent = g_Interface.Get<CGameEventManager*>(ENGINE, GAMEEVENTSMANAGER_ENGINE_INTERFACE);
-	_valid(GameEvent);
+	GameEventManager = g_Interface.Get<CGameEventManager*>(ENGINE, GAMEEVENTSMANAGER_ENGINE_INTERFACE);
+	_valid(GameEventManager);
 
 	ModelRender = g_Interface.Get<CModelRender*>(ENGINE, VENGINE_MODELRENDER_INTERFACE);
 	_valid(ModelRender);
 
-	MatSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, VMATERIALSYSTEM_INTERFACE);
-	_valid(MatSystem);
+	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, VMATERIALSYSTEM_INTERFACE);
+	_valid(MaterialSystem);
 
 	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);
 	_valid(TFGCClientSystem);
@@ -100,7 +100,7 @@ void CInterfaces::Init()
 	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, L"C6 05 ? ? ? ? ? 8A C3") + 0x2);
 	_valid(AllowSecureServers);
 
-	auto pdwClient = reinterpret_cast<PDWORD>(Client);     _valid(pdwClient);
+	auto pdwClient = reinterpret_cast<PDWORD>(BaseClientDLL);     _valid(pdwClient);
 	auto pdwTable = *reinterpret_cast<PDWORD*>(pdwClient); _valid(pdwTable);
 
 	if (pdwTable)
@@ -132,7 +132,7 @@ void CInterfaces::Init()
 
 	typedef IAchievementMgr* (*getachievementmgr)();
 
-	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(I::Engine, 115));
+	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(I::EngineClient, 115));
 	_valid(AchievementMgr);
 
 	ViewRenderBeams = **reinterpret_cast<IViewRenderBeams***>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?") + 0x2);

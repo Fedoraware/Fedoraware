@@ -109,7 +109,7 @@ inline int GetOffset(RecvTable* pTable, const char* szNetVar)
 
 inline int GetNetVar(const char* szClass, const char* szNetVar)
 {
-	CClientClass* pClasses = I::Client->GetAllClasses();
+	CClientClass* pClasses = I::BaseClientDLL->GetAllClasses();
 
 	for (auto pCurrNode = pClasses; pCurrNode; pCurrNode = pCurrNode->m_pNext)
 	{

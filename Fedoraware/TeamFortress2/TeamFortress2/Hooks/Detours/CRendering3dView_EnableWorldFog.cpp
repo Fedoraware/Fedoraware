@@ -11,7 +11,7 @@ MAKE_HOOK(CRendering3dView_EnableWorldFog, g_Pattern.Find(L"client.dll", L"55 8B
 		return Hook.Original<FN>()();
 	}
 
-	const auto pRenderContext = I::MatSystem->GetRenderContext();
+	const auto pRenderContext = I::MaterialSystem->GetRenderContext();
 	if (pRenderContext)
 	{
 		using namespace Vars::Visuals;
