@@ -31,7 +31,10 @@ public:
 	}
 };
 
-
+class ClientModeTFNormal
+{
+public:
+};
 
 struct CSoundParameters
 {

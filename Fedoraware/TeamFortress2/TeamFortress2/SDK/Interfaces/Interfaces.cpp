@@ -150,6 +150,9 @@ void CInterfaces::Init()
 	// Forgive the double cast but this was annoying meeeeee
 	DirectXDevice = reinterpret_cast<IDirect3DDevice9*>(**reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1));
 	_valid(DirectXDevice);
+
+	ClientModeTF = *reinterpret_cast<ClientModeTFNormal**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 35 ? ? ? ?") + 0x1);
+	_valid(ClientModeTF);
 }
 
 void CSteamInterfaces::Init()

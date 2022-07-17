@@ -222,6 +222,7 @@ namespace I
 	inline CTFInventoryManager* TFInventoryManager = nullptr;
 	inline CThirdPersonManager* ThirdPersonManager = nullptr;
 	inline IDirect3DDevice9* DirectXDevice = nullptr;
+	inline ClientModeTFNormal* ClientModeTF = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
