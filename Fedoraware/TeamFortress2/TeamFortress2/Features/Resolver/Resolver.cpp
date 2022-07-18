@@ -25,6 +25,8 @@ void CResolver::Run()
 		localHead = pLocal->GetEyePosition();
 	}
 
+	UpdateSniperDots();
+
 	for (auto i = 1; i <= I::EngineClient->GetMaxClients(); i++)
 	{
 		CBaseEntity* entity;
@@ -83,6 +85,12 @@ void CResolver::Run()
 		}
 		case 4:
 		{
+			// if we can resolve using the sniper dot, do that
+			if (const float SniperDotYaw = ResolveSniperDot(entity)) {
+				*m_angEyeAnglesX = SniperDotYaw;
+				break;
+			}
+
 			// Auto (Will resolve fake up/down)
 			if (vX.x >= 90)
 			{
@@ -203,6 +211,35 @@ void CResolver::Update(CUserCmd* pCmd)
 			data.second.RequiresUpdate = false;
 		}
 	}
+}
+
+void CResolver::UpdateSniperDots() {
+	SniperDotMap.clear();
+
+	// Find sniper dots
+	for (int i = I::EngineClient->GetMaxClients() + 1; i <= I::ClientEntityList->GetHighestEntityIndex(); i++)
+	{
+		if (CBaseEntity* eTarget = I::ClientEntityList->GetClientEntity(i)) {
+			if (eTarget->GetClassID() != ETFClassID::CSniperDot)
+				continue;
+
+			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(eTarget->m_hOwnerEntity())) {
+				SniperDotMap[pOwner] = eTarget;
+			}
+		}
+	}
+}
+
+float CResolver::ResolveSniperDot(CBaseEntity* pOwner) {
+	if (CBaseEntity* SniperDot = SniperDotMap[pOwner]) {
+		const Vec3 DotOrigin = SniperDot->m_vecOrigin();
+		const Vec3 EyePosition = pOwner->GetEyePosition();
+		const Vec3 delta = DotOrigin - EyePosition;
+		Vec3 angles;
+		Math::VectorAngles(delta, angles);
+		return angles.x;
+	}
+	return false;
 }
 
 /* Called when the someone was damaged. Did we hit? */

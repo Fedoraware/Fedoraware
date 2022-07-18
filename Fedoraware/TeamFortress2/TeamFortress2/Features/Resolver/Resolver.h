@@ -20,6 +20,10 @@ struct BruteData {
 
 class CResolver
 {
+private:
+	void UpdateSniperDots();
+	float ResolveSniperDot(CBaseEntity* pOwner);
+	std::unordered_map<CBaseEntity*, CBaseEntity*> SniperDotMap;
 public:
 	bool ShouldAutoResolve();
 	void Run();

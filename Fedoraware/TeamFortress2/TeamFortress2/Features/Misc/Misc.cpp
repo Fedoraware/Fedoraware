@@ -382,7 +382,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	const int maxSpeed = pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .85f : .95f) - 1; //	get our max speed, then if we are going backwards, reduce it.
+	const int maxSpeed = std::min(pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .85f : .95f) - 1, 510.f); //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
 	if (curSpeed > maxSpeed) {	
