@@ -176,6 +176,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
 
+	if (*pSendPacket) {
+		F::FakeAng.Run(pCmd); 
+		F::FakeAng.DrawChams = Vars::AntiHack::AntiAim::Active.Value || Vars::Misc::CL_Move::Fakelag.Value;
+	}
+
 	AppendCache(); // hopefully won't cause issues.
 	G::ViewAngles = pCmd->viewangles;
 

@@ -10,6 +10,7 @@ void CFakeAng::Run(CUserCmd* pCmd) {
 		if (pLocal->IsAlive()) {
 
 			if (const auto& pAnimState = pLocal->GetAnimState()) {
+				Math::Clamp(G::FakeViewAngles.x, -89.f, 89.f);
 
 				float flOldFrameTime = I::GlobalVars->frametime;
 				int nOldSequence = pLocal->m_nSequence();

@@ -55,8 +55,6 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 		*pSendPacket = true;
 		ChokeCounter = 0;
 
-		F::FakeAng.DrawChams = false;
-
 		G::IsChoking = false;
 		return;
 	}
@@ -66,7 +64,6 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 		*pSendPacket = true;
 		// Set a new random amount (if desired)
 		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random) { ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value); }
-		F::FakeAng.Run(pCmd); F::FakeAng.DrawChams = true;
 		ChokeCounter = 0;
 		return;
 	}

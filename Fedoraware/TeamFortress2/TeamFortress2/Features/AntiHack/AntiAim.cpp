@@ -190,16 +190,18 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		retnAngles.second = 89.0f;
 		break;
 	}
-	case 4:
+	case 4:	//	fakeup
 	{
 		retnAngles.first = -271.0f;
 		retnAngles.second = 89.0f;
+		G::FakeViewAngles.x = -89.f;
 		break;
 	}
-	case 5:
+	case 5:	//	fakedown
 	{
 		retnAngles.first = 271.0f;
 		retnAngles.second = -89.0f;
+		G::FakeViewAngles.x = 89.f;
 		break;
 	}
 	case 6:
@@ -212,18 +214,21 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		}
 		retnAngles.first = currentAngle;
 		retnAngles.second = currentAngle;
+		G::FakeViewAngles.x = currentAngle;
 		break;
 	}
 	case 7://Half Up
 	{
 		retnAngles.first = -45.0f;
 		retnAngles.second = -45.0f;
+		G::FakeViewAngles.x = -45.0f;
 		break;
 	}
 	case 8: {	//	jitter
 		static bool flip = false;
 		retnAngles.first = flip ? 89.f : -89.f;
 		retnAngles.second = retnAngles.first;
+		G::FakeViewAngles.x = retnAngles.first;
 		if (bPacketFlip) {	//	dumb hack
 			flip = !flip;
 		}
@@ -235,6 +240,7 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		const bool FakeDown = nIndex == 10;
 		retnAngles.first = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, FakeDown);
 		retnAngles.second = retnAngles.first;
+		G::FakeViewAngles.x = FakeDown ? 89.f : -89.f;
 		break;
 	}
 	}
