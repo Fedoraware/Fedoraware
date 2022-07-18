@@ -110,9 +110,74 @@ bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
 	return std::abs(a - b) < epsilon;
 }
 
+float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown) {
+	return FakeDown ? 720 + WishPitch : -720 + WishPitch;
+}
+
+float CAntiAim::GetAngle(int nIndex) {
+	float retnAngle = 0.f;
+	switch (nIndex) {
+	case 1:
+	{
+		retnAngle = 0.0f;
+		break;
+	}
+	case 2:
+	{
+		retnAngle = 90.0f;
+		break;
+	}
+	case 3:
+	{
+		retnAngle = -90.0f;
+		break;
+	}
+	case 4:
+	{
+		retnAngle = 180.0f;
+		break;
+	}
+	case 5:
+	{
+		static Timer updateTimer{ };
+		if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
+		{
+			lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+		}
+		retnAngle = lastRealAngle;
+		break;
+	}
+	case 6:
+	{
+		lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
+		if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
+		if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
+		retnAngle = lastRealAngle;
+		break;
+	}
+	case 7:
+	{
+		if (edgeToEdgeOn == 1) { retnAngle = bPacketFlip ? 90.f : -90.f; }
+		else if (edgeToEdgeOn == 2) { retnAngle = bPacketFlip ? -90.0f : 90.f; }
+		break;
+	}
+	case 8:
+	{
+		if (wasHit)
+		{
+			lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+			wasHit = false;
+		}
+		retnAngle = lastRealAngle;
+		break;
+	}
+	}
+	return retnAngle;
+}
+
 std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 	std::pair<float, float> retnAngles = { 0.f, 0.f };
-	switch (Vars::AntiHack::AntiAim::Pitch.Value) {
+	switch (nIndex) {
 	case 2:
 	{
 		retnAngles.first = -89.0f;
@@ -164,6 +229,14 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		}
 		break;
 	}
+	case 9:
+	case 10:
+	{	//	fake up/down, real custom
+		const bool FakeDown = nIndex == 10;
+		retnAngles.first = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, FakeDown);
+		retnAngles.second = retnAngles.first;
+		break;
+	}
 	}
 	return retnAngles;
 }
@@ -199,8 +272,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 		if (G::IsAttacking) { return; }
 
-		bool bPitchSet = false;
-		bool bYawSet = true;
+		bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
+		bool bYawSet = bPacketFlip ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
 
 		const Vec3 vOldAngles = pCmd->viewangles;
 		const float fOldSideMove = pCmd->sidemove;
@@ -211,76 +284,15 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			const std::pair<float, float> angPair = GetAnglePairPitch(Vars::AntiHack::AntiAim::Pitch.Value);
 			pCmd->viewangles.x = angPair.first;
 			G::RealViewAngles.x = angPair.second;
-			bPitchSet = true;
 		}
 
 		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) {
 			FindEdge(pCmd->viewangles.y);
 		}
 
-		// Yaw (Real)
-		if (bPacketFlip) {
-			switch (Vars::AntiHack::AntiAim::YawReal.Value) {
-			case 1:
-			{
-				pCmd->viewangles.y += 0.0f;
-				break;
-			}
-			case 2:
-			{
-				pCmd->viewangles.y += 90.0f;
-				break;
-			}
-			case 3:
-			{
-				pCmd->viewangles.y -= 90.0f;
-				break;
-			}
-			case 4:
-			{
-				pCmd->viewangles.y += 180.0f;
-				break;
-			}
-			case 5:
-			{
-				static Timer updateTimer{ };
-				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-				{
-					lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-				}
-				pCmd->viewangles.y = lastRealAngle;
-				break;
-			}
-			case 6:
-			{
-				lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
-				if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
-				if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
-				pCmd->viewangles.y = lastRealAngle;
-				break;
-			}
-			case 7:
-			{
-				if (edgeToEdgeOn == 1) { pCmd->viewangles.y += 90; }
-				else if (edgeToEdgeOn == 2) { pCmd->viewangles.y -= 90.0f; }
-				break;
-			}
-			case 8:
-			{
-				if (wasHit)
-				{
-					lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-					wasHit = false;
-				}
-				pCmd->viewangles.y = lastRealAngle;
-				break;
-			}
-			default:
-			{
-				bYawSet = false;
-				break;
-			}
-			}
+		if (bPacketFlip) {	//	real
+			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawReal.Value);
+			pCmd->viewangles.y += angOffset;
 
 			// Check if our real angle is overlapping with the fake angle
 			if (Vars::AntiHack::AntiAim::YawFake.Value != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
@@ -299,71 +311,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 			G::RealViewAngles.y = pCmd->viewangles.y;
 		}
-
-		// Yaw ( Fake)
-		else {
-			switch (Vars::AntiHack::AntiAim::YawFake.Value) {
-			case 1: //fake forward for legit aa
-			{
-				pCmd->viewangles.y += 0.0f;
-				break;
-			}
-			case 2:
-			{
-				pCmd->viewangles.y += 90.0f;
-				break;
-			}
-			case 3:
-			{
-				pCmd->viewangles.y -= 90.0f;
-				break;
-			}
-			case 4:
-			{
-				pCmd->viewangles.y += 180.0f;
-				break;
-			}
-			case 5:
-			{
-				static Timer updateTimer{ };
-				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-				{
-					lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-				}
-				pCmd->viewangles.y = lastFakeAngle;
-				break;
-			}
-			case 6:
-			{
-				lastFakeAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
-				if (lastFakeAngle > 180.f) { lastFakeAngle -= 360.f; }
-				if (lastFakeAngle < -180.f) { lastFakeAngle += 360.f; }
-				pCmd->viewangles.y = lastFakeAngle;
-				break;
-			}
-			case 7:
-			{
-				if (edgeToEdgeOn == 1) { pCmd->viewangles.y -= 90; }
-				else if (edgeToEdgeOn == 2) { pCmd->viewangles.y += 90.0f; }
-				break;
-			}
-			case 8:
-			{
-				if (wasHit)
-				{
-					lastFakeAngle = Utils::RandFloatRange(-180.0f, 180.0f);
-					wasHit = false;
-				}
-				pCmd->viewangles.y = lastFakeAngle;
-				break;
-			}
-			default:
-			{
-				bYawSet = false;
-				break;
-			}
-			}
-
+		else {	//	fake
+			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawFake.Value);
+			pCmd->viewangles.y += angOffset;
 			G::FakeViewAngles = pCmd->viewangles;
 		}
 

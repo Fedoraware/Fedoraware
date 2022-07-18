@@ -526,8 +526,7 @@ void CVisuals::DrawDVD()
 			logoPos += logoVelocity;
 
 			I::VGuiSurface->DrawSetTexture(iDVD);
-			const Color_t rainbow = Utils::Rainbow();
-			I::VGuiSurface->SetDrawColor(rainbow.r, rainbow.g, rainbow.b, 255);
+			I::VGuiSurface->DrawSetColor(Utils::Rainbow());
 			I::VGuiSurface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
 		}
 	}
