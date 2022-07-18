@@ -172,17 +172,19 @@ std::deque<TickRecord>* CBacktrack::GetPlayerRecords(int entIdx)
 // Returns the last valid backtrack tick (further away from the player)
 std::optional<TickRecord> CBacktrack::GetLastRecord(int entIdx)
 {
-	const auto& entRecods = Records[entIdx];
-	if (entRecods.empty()) { return std::nullopt; }
+	const auto& entRecord = Records[entIdx];
+	if (!entRecord.empty()) {
+		return { entRecord.back() };
+	}
 
-	return entRecods.back();
+	return std::nullopt;
 }
 
 /* Returns the first valid backtrack tick(close to the player) */
 std::optional<TickRecord> CBacktrack::GetFirstRecord(int entIdx)
 {
-	const auto& entRecods = Records[entIdx];
-	for (const auto& record : entRecods)
+	const auto& entRecord = Records[entIdx];
+	for (const auto& record : entRecord)
 	{
 		if (IsTickInRange(record.TickCount))
 		{

@@ -191,7 +191,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	Vec3 hitboxpos;
 
 	// Backtrack the target if required
-	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value && target.m_TargetType == ETargetType::PLAYER)
 	{
 		if (const auto& pLastTick = F::Backtrack.GetRecord(target.m_pEntity->GetIndex(), BacktrackMode::Last))
 		{
