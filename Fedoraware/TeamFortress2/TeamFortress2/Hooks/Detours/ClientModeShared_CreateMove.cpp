@@ -68,6 +68,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	auto pSendPacket = reinterpret_cast<bool*>(***reinterpret_cast<uintptr_t***>(_bp) - 0x1);
 
 	int nOldFlags = 0;
+	int nOldGroundEnt = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
@@ -77,6 +78,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		nOldFlags = pLocal->GetFlags();
+		nOldGroundEnt = pLocal->m_hGroundEntity();
 
 		if (const int MaxSpeed = pLocal->GetMaxSpeed()) {
 			G::Frozen = MaxSpeed == 1;

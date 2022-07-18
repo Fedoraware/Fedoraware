@@ -324,17 +324,17 @@ void CMisc::RageRetry(CBaseEntity* pLocal)
 	}
 }
 
-void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
+void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		// Edge Jump
-		if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.Value)
+		if ((nOldGroundEnt >= 0) && Vars::Misc::EdgeJump.Value)
 		{
 			static KeyHelper edgeKey{ &Vars::Misc::EdgeJumpKey.Value };
 			if (!Vars::Misc::EdgeJumpKey.Value || edgeKey.Down())
 			{
-				if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming())
+				if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming())
 				{
 					pCmd->buttons |= IN_JUMP;
 				}
@@ -342,9 +342,9 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 		}
 
 		// Duck Jump
-		if ((nOldFlags & ~FL_ONGROUND) && (Vars::Misc::DuckJump.Value || Vars::Misc::Followbot::Enabled.Value))
+		if ((nOldGroundEnt < 0) && (Vars::Misc::DuckJump.Value || Vars::Misc::Followbot::Enabled.Value))
 		{
-			if (pLocal->IsAlive() && !pLocal->IsOnGround() && !pLocal->IsSwimming() && !pLocal->IsStunned())
+			if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming() && !pLocal->IsStunned())
 			{
 				pCmd->buttons |= IN_DUCK;
 			}
@@ -370,7 +370,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsOnGround() || G::IsAttacking)
+	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->OnSolid() || G::IsAttacking)
 	{
 		return;
 	}
@@ -424,7 +424,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsSwimming()
 		|| pLocal->IsInBumperKart()
 		|| pLocal->IsAGhost()
-		|| !pLocal->IsOnGround())
+		|| !pLocal->OnSolid())
 	{
 		return;
 	}
@@ -491,7 +491,7 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!s_bState && !pLocal->IsOnGround())
+		if (!s_bState && !pLocal->OnSolid())
 		{
 			pCmd->buttons &= ~IN_JUMP;
 		}
@@ -517,7 +517,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsSwimming()
 		|| pLocal->IsInBumperKart()
 		|| pLocal->IsAGhost()
-		|| pLocal->IsOnGround())
+		|| pLocal->OnSolid())
 	{
 		return;
 	}
@@ -793,8 +793,8 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
-			pLocal->GetMoveType() == MOVETYPE_WALK ? 1 : 2 : 0
-			); // 0.none, 1.ground, 2.midair
+			pLocal->OnSolid() ? 1 : 2 : 0
+			); // 0.none, 1.ground, 2.not ground
 		static Vec3 predEndPoint = {};
 		static Vec3 currentPos{};
 		static int nShiftTick = 0;

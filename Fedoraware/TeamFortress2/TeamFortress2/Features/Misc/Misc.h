@@ -38,7 +38,7 @@ public:
 	void SteamRPC();
 	void UnlockAchievements();
 	void LockAchievements();
-	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
+	void EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt);
 
 	Vec3 PeekReturnPos;
 };

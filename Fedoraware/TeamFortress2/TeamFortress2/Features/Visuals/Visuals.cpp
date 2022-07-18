@@ -305,6 +305,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			const int MaxSpeed = pLocal->GetMaxSpeed();
 			DebugLine("MaxSpeed", tfm::format(": %d", MaxSpeed).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
+
+		{
+			const int m_hGroundEntity = pLocal->m_hGroundEntity();
+			DebugLine("m_hGroundEntity", tfm::format(": %d", m_hGroundEntity).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
 	}
 }
 
