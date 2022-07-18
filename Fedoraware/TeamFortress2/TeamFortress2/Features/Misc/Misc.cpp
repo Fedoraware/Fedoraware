@@ -375,6 +375,10 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
+	if (pCmd->buttons & IN_BULLRUSH) {	//	demoman charge
+		return;
+	}
+
 	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
 		|| pLocal->GetMoveType() == MOVETYPE_LADDER
 		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
