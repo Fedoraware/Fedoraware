@@ -255,7 +255,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			// Backtrack
 			{
 				SAVE_VAR(Vars::Backtrack::Enabled);
-				SAVE_VAR(Vars::Backtrack::Aim);
+				SAVE_VAR(Vars::Backtrack::LastTick);
 				SAVE_VAR(Vars::Backtrack::Latency);
 				SAVE_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams
@@ -1017,7 +1017,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			// Backtrack
 			{
 				LOAD_VAR(Vars::Backtrack::Enabled);
-				LOAD_VAR(Vars::Backtrack::Aim);
+				LOAD_VAR(Vars::Backtrack::LastTick);
 				LOAD_VAR(Vars::Backtrack::Latency);
 				LOAD_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams

@@ -377,9 +377,9 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		case ETargetType::PLAYER:
 		{
 			Vec3 hitboxpos;
-			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Aim.Value)
+			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
 			{
-				if (const auto& pLastTick = F::Backtrack.GetTick(target.m_pEntity->GetIndex(), BacktrackMode::Last))
+				if (const auto& pLastTick = F::Backtrack.GetRecord(target.m_pEntity->GetIndex(), BacktrackMode::Last))
 				{
 					if (const auto& pHDR = pLastTick->HDR)
 					{

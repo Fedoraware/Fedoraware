@@ -64,9 +64,8 @@ public:
 	//bool IsGoodTick(float simTime);
 	bool IsTickInRange(int tickCount);
 
-	std::deque<TickRecord>* GetPlayerRecords(int iEntityIndex);
-	std::deque<TickRecord>* GetPlayerRecords(CBaseEntity* pEntity);
-	std::optional<TickRecord> GetTick(int entIdx, BacktrackMode mode);
+	std::deque<TickRecord>* GetPlayerRecords(int entIdx);
+	std::optional<TickRecord> GetRecord(int entIdx, BacktrackMode mode);
 
 	bool AllowLatency = false;
 	std::array<std::deque<TickRecord>, 64> Records;
