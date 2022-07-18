@@ -158,30 +158,15 @@ void CBacktrack::ResetLatency()
 	LatencyRampup = 0.f;
 }
 
-std::deque<TickRecord>* CBacktrack::GetPlayerRecords(int iEntityIndex)
+/* Returns all records of a given player */
+std::deque<TickRecord>* CBacktrack::GetPlayerRecords(int entIdx)
 {
-	if (Records[iEntityIndex].empty())
+	if (Records[entIdx].empty())
 	{
 		return nullptr;
 	}
 
-	return &Records[iEntityIndex];
-}
-
-std::deque<TickRecord>* CBacktrack::GetPlayerRecords(CBaseEntity* pEntity)
-{
-	if (!pEntity)
-	{
-		return nullptr;
-	}
-
-	const auto entindex = pEntity->GetIndex();
-	if (Records[entindex].empty())
-	{
-		return nullptr;
-	}
-
-	return &Records[entindex];
+	return &Records[entIdx];
 }
 
 // Returns the last valid backtrack tick (further away from the player)
@@ -193,7 +178,7 @@ std::optional<TickRecord> CBacktrack::GetLastRecord(int entIdx)
 	return entRecods.back();
 }
 
-// Returns the first valid backtrack tick (close to the player)
+/* Returns the first valid backtrack tick(close to the player) */
 std::optional<TickRecord> CBacktrack::GetFirstRecord(int entIdx)
 {
 	const auto& entRecods = Records[entIdx];
@@ -208,8 +193,8 @@ std::optional<TickRecord> CBacktrack::GetFirstRecord(int entIdx)
 	return std::nullopt;
 }
 
-// Returns the best tick for the chosen mode
-std::optional<TickRecord> CBacktrack::GetTick(int entIdx, BacktrackMode mode)
+/* Returns the best tick for the chosen mode */
+std::optional<TickRecord> CBacktrack::GetRecord(int entIdx, BacktrackMode mode)
 {
 	switch (mode)
 	{
