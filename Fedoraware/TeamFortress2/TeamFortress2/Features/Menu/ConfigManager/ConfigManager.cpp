@@ -788,7 +788,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarX);
 				SAVE_VAR(Vars::Misc::CL_Move::DTBarY);
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
@@ -901,6 +900,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_STRING(Vars::Skybox::SkyboxName);
 
 			SAVE_OTHER(Vars::Chams::Players::Local);
+			SAVE_OTHER(Vars::Chams::Players::FakeAng);
 			SAVE_OTHER(Vars::Chams::Players::Enemy);
 			SAVE_OTHER(Vars::Chams::Players::Team);
 			SAVE_OTHER(Vars::Chams::Players::Friend);
@@ -1552,7 +1552,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarX);
 				LOAD_VAR(Vars::Misc::CL_Move::DTBarY);
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag); // { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::FakelagIndicator);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
@@ -1662,6 +1661,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_OTHER(Colors::HitboxEdge);
 
 			LOAD_OTHER(Vars::Chams::Players::Local);
+			LOAD_OTHER(Vars::Chams::Players::FakeAng);
 			LOAD_OTHER(Vars::Chams::Players::Enemy);
 			LOAD_OTHER(Vars::Chams::Players::Team);
 			LOAD_OTHER(Vars::Chams::Players::Friend);

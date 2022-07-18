@@ -15,16 +15,11 @@ MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), 
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);
-	DrawFakeAngles(ecx, edx, pEntity, pState, pInfo);
 
-	//if ((F::Chams.HasDrawn(pEntity) || F::Glow.HasDrawn(pEntity)) && !F::Glow.m_bDrawingGlow) { return; }
-	//if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
 
 	if (!F::Glow.m_bRendering) {
 		if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
 	}
-
-	//if (F::Glow.HasDrawn(pEntity) && !F::Glow.m_bDrawingGlow) { return; }
 
 	Hook.Original<FN>()(ecx, edx, pState, pInfo, pBoneToWorld);
 }
@@ -113,35 +108,3 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 	}
 }
 
-void DrawFakeAngles(void* ecx, void* edx, const CBaseEntity* pEntity, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo)
-{
-	auto OriginalFn = Hooks::ModelRender_DrawModelExecute::Hook.Original<Hooks::ModelRender_DrawModelExecute::FN>();
-	
-	if (Vars::Misc::CL_Move::FakelagIndicator.Value && F::FakeAng.DrawChams)
-	{
-		if (pEntity && pEntity == g_EntityCache.GetLocal())
-		{
-			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
-			{
-				IMaterial* chosenMat = F::DMEChams.v_MatList.at(Vars::Misc::CL_Move::FLGChams::Material.Value) ? F::DMEChams.v_MatList.at(Vars::Misc::CL_Move::FLGChams::Material.Value) : nullptr;
-
-				I::ModelRender->ForcedMaterialOverride(chosenMat);
-				if (chosenMat)
-				{
-					I::RenderView->SetColorModulation(
-						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.r),
-						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.g),
-						Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.b));
-				}
-
-				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Misc::CL_Move::FLGChams::FakelagColor.a)); // this is so much better than having a seperate alpha slider lmao
-				OriginalFn(ecx, edx, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
-
-				I::ModelRender->ForcedMaterialOverride(nullptr);
-				I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
-
-				I::RenderView->SetBlend(1.0f);
-			}
-		}
-	}
-}

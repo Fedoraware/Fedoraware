@@ -300,6 +300,7 @@ namespace Vars
 
 			// {ignorez, material, overlay type (0 = off), active}
 			inline Chams_t Local{};
+			inline Chams_t FakeAng{};
 			inline Chams_t Friend{};
 			inline Chams_t Enemy{};
 			inline Chams_t Team{};
@@ -669,7 +670,6 @@ namespace Vars
 			inline CVar<int> FakelagMode{ 0 }; // 0 - plain, 1 - random, 2 - vel based
 			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22 };
-			inline CVar<bool> FakelagIndicator{ false };
 			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3
 			inline CVar<int> FakelagKey{ 0x54 }; //T
 			inline CVar<int> FakelagValue{ 1 }; // dont show when fakelagmode=2

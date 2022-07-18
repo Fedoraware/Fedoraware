@@ -195,12 +195,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		if (nChoked > 21) { *pSendPacket = true; }
 	}
 
-	// Check if Fakelag Chams should be drawn
-	if (G::ShiftedTicks > 0)
-	{
-		F::FakeAng.DrawChams = false;
-	}
-
 	// Party Crasher: Crashes the party by spamming messages
 	if (Vars::Misc::PartyCrasher.Value)
 	{

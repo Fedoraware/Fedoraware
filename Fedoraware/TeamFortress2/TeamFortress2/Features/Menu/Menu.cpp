@@ -519,6 +519,7 @@ void CMenu::MenuVisuals()
 
 				static std::vector chamOptions{
 					"Local",
+					"FakeAngles",
 					"Friends",
 					"Enemies",
 					"Teammates",
@@ -556,24 +557,27 @@ void CMenu::MenuVisuals()
 								return Vars::Chams::Players::Local;
 							}
 							case 1: {
-								return Vars::Chams::Players::Friend;
+								return Vars::Chams::Players::FakeAng;
 							}
 							case 2: {
-								return Vars::Chams::Players::Enemy;
+								return Vars::Chams::Players::Friend;
 							}
 							case 3: {
-								return Vars::Chams::Players::Team;
+								return Vars::Chams::Players::Enemy;
 							}
 							case 4: {
-								return Vars::Chams::Players::Target;
+								return Vars::Chams::Players::Team;
 							}
 							case 5: {
-								return Vars::Chams::Players::Ragdoll;
+								return Vars::Chams::Players::Target;
 							}
 							case 6: {
-								return Vars::Chams::DME::Hands;
+								return Vars::Chams::Players::Ragdoll;
 							}
 							case 7: {
+								return Vars::Chams::DME::Hands;
+							}
+							case 8: {
 								return Vars::Chams::DME::Weapon;
 							}
 						}
@@ -606,8 +610,8 @@ void CMenu::MenuVisuals()
 					WToggle("Pulse Glow", &currentStruct.overlayPulse);
 					WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-					if (currentSelected == 7 || currentSelected == 6) {
-						int& proxySkinIndex = currentSelected == 7 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;
+					if (currentSelected == 7 || currentSelected == 8) {
+						int& proxySkinIndex = currentSelected == 8 ? Vars::Chams::DME::WeaponsProxySkin.Value : Vars::Chams::DME::HandsProxySkin.Value;
 						WCombo("Proxy Material", &proxySkinIndex, DMEProxyMaterials);
 
 					}
@@ -636,11 +640,6 @@ void CMenu::MenuVisuals()
 				};
 				WCombo("Backtrack material", &Vars::Backtrack::BtChams::Material.Value, backtrackMaterial);
 				WToggle("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.Value); HelpMarker("Draws them through walls");
-
-				SectionTitle("Fakelag chams");
-				WToggle("Fakelag chams", &Vars::Misc::CL_Move::FakelagIndicator.Value); HelpMarker("Draws chams to show your fakelag position");
-				ColorPickerL("Fakelag colour", Vars::Misc::CL_Move::FLGChams::FakelagColor);
-				WCombo("Fakelag material", &Vars::Misc::CL_Move::FLGChams::Material.Value, backtrackMaterial);
 			} EndChild();
 
 			/* Column 3 */

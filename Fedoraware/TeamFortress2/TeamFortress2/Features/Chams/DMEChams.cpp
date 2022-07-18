@@ -7,7 +7,7 @@
 #include "../Backtrack/Backtrack.h"
 #include "../../Hooks/HookManager.h"
 #include "../../Hooks/Hooks.h"
-
+#include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 
 // I can't believe i'm doing this
 
@@ -457,6 +457,115 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
 	}
 }
 
+void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld) {
+	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
+
+	Chams_t chams = Vars::Chams::Players::FakeAng;
+	if (!chams.chamsActive || !F::FakeAng.DrawChams) {
+		return;
+	}
+
+	if (!pRenderContext) {
+		return;
+	}
+
+	{
+		pRenderContext->DepthRange(0.0f, 1.f);
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+		I::RenderView->SetBlend(1.0f);
+	}
+
+	{
+		const bool rainbow = chams.rainbow;
+		const bool rainbowOverlay = chams.overlayRainbow;
+
+		IMaterial* chamsMaterial = GetChamMaterial(chams);
+
+		if (chamsMaterial) {
+			chamsMaterial->IncrementReferenceCount();
+		}
+
+		pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
+
+		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
+
+		if (chamsMaterial == v_MatList.at(7))
+		{
+			if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
+				$envmaptint->SetVecValue(
+					Color::TOFLOAT(chams.colour.r) * 4,
+					Color::TOFLOAT(chams.colour.g) * 4,
+					Color::TOFLOAT(chams.colour.b) * 4);
+			}
+			if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
+				$selfillumtint->SetVecValue(
+					Color::TOFLOAT(chams.fresnelBase.r) * 4,
+					Color::TOFLOAT(chams.fresnelBase.g) * 4,
+					Color::TOFLOAT(chams.fresnelBase.b) * 4);
+			}
+		}
+		else {
+			I::RenderView->SetColorModulation(
+				Color::TOFLOAT(rainbow ? Utils::Rainbow().r : chams.colour.r),
+				Color::TOFLOAT(rainbow ? Utils::Rainbow().g : chams.colour.g),
+				Color::TOFLOAT(rainbow ? Utils::Rainbow().b : chams.colour.b));
+		}
+
+		I::RenderView->SetBlend(chams.colour.a);
+
+		if (dmeHook) {
+			dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
+		}
+
+		if (chams.overlayType)
+		{
+			// Overlay
+			IMaterial* pMaterial = v_MatList.at(9);
+
+			if (pMaterial) {
+
+				pMaterial->IncrementReferenceCount();
+
+				if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))
+				{
+					$phongtint->SetVecValue(
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
+				}
+				if (IMaterialVar* $envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false))
+				{
+					$envmaptint->SetVecValue(
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
+						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
+				}
+				if (IMaterialVar* $phongfresnelranges = pMaterial->FindVar("$phongfresnelranges", nullptr, false))
+				{
+					$phongfresnelranges->SetVecValue(0, 0.5 / chams.overlayIntensity, 10 / chams.overlayIntensity);
+				}
+				pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chams.overlayType == 2);
+
+				I::RenderView->SetBlend(chams.overlayPulse ? sin(I::GlobalVars->curtime * 5) * 0.5f + 0.51f : Color::TOFLOAT(chams.overlayColour.a));
+				I::ModelRender->ForcedMaterialOverride(pMaterial);
+			}
+
+			if (dmeHook) {
+				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
+			}
+		}
+
+		pRenderContext->DepthRange(0.0f, 1.f);
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+		I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
+
+		I::RenderView->SetBlend(1.0f);
+		return;
+	}
+}
+
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
@@ -503,6 +612,11 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					return false;
 				}
 			}
+		}
+
+		//do fakeang chams before this check right here
+		if (pEntity == pLocal) {
+			RenderFakeAng(pState, pInfo, pBoneToWorld);
 		}
 
 		Chams_t chams = pEntity ? getChamsType(drawType, pEntity) : getChamsType(drawType);

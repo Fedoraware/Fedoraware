@@ -16,6 +16,7 @@ private:
 	bool ShouldRun();
 	IMaterial* GetChamMaterial(const Chams_t& chams);
 	IMaterial* GetProxyMaterial(int nIndex);
+	void RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 public:
 	void Init();
 	IMaterial* CreateNRef(char const* szName, void* pKV);
