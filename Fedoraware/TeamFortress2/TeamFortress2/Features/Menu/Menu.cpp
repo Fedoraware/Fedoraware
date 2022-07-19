@@ -502,8 +502,8 @@ void CMenu::MenuVisuals()
 				WCombo("Health bar style", &Vars::ESP::Players::HealthBarStyle.Value, { "Gradient", "Old" }); HelpMarker("How to draw the health bar");
 				if (Vars::ESP::Players::HealthBarStyle.Value == 0)
 				{
-					ColorPickerL("Overheal Bar Top", Colors::GradientOverhealBar.startColour, 2);
-					ColorPickerL("Overheal Bar Bottom", Colors::GradientOverhealBar.endColour, 3);
+					ColorPickerL("Overheal Bar Top", Colors::GradientOverhealBar.startColour);
+					ColorPickerL("Overheal Bar Bottom", Colors::GradientOverhealBar.endColour, 1);
 				}
 				if (Vars::ESP::Players::HealthBarStyle.Value == 1)
 				{
