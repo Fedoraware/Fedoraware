@@ -242,6 +242,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Global::AutoShoot);
 				SAVE_VAR(Vars::Aimbot::Global::DontWaitForShot);
+				SAVE_VAR(Vars::Aimbot::Global::FlickatEnemies);
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
 				SAVE_VAR(Vars::Aimbot::Global::AimStickies);
@@ -421,6 +422,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Players::HealthText);
 				SAVE_VAR(Vars::ESP::Players::Cond);
 				SAVE_VAR(Vars::ESP::Players::HealthBar);
+				SAVE_VAR(Vars::ESP::Players::HealthBarStyle);
 				SAVE_VAR(Vars::ESP::Players::Box);
 				SAVE_VAR(Vars::ESP::Players::GUID);
 				SAVE_VAR(Vars::ESP::Players::Choked);
@@ -854,7 +856,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Colors::DTBarIndicatorsCharging);
 			SAVE_OTHER(Colors::ChokedBar);
 			SAVE_OTHER(Colors::GradientHealthBar);
-			SAVE_OTHER(Colors::OverhealHealthBar);
+			SAVE_OTHER(Colors::GradientOverhealBar);
 			SAVE_OTHER(Colors::Cond);
 			SAVE_OTHER(Colors::Target);
 			SAVE_OTHER(Colors::Invuln);
@@ -1004,6 +1006,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimFOV);
 				LOAD_VAR(Vars::Aimbot::Global::AutoShoot);
 				LOAD_VAR(Vars::Aimbot::Global::DontWaitForShot);
+				LOAD_VAR(Vars::Aimbot::Global::FlickatEnemies);
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
 				LOAD_VAR(Vars::Aimbot::Global::AimStickies);
@@ -1184,6 +1187,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Players::HealthText);
 				LOAD_VAR(Vars::ESP::Players::Cond);
 				LOAD_VAR(Vars::ESP::Players::HealthBar);
+				LOAD_VAR(Vars::ESP::Players::HealthBarStyle);
 				LOAD_VAR(Vars::ESP::Players::Box);
 				LOAD_VAR(Vars::ESP::Players::Choked);
 				LOAD_VAR(Vars::ESP::Players::GUID);
@@ -1618,7 +1622,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_OTHER(Colors::DTBarIndicatorsCharging);
 			LOAD_OTHER(Colors::ChokedBar);
 			LOAD_OTHER(Colors::GradientHealthBar);
-			LOAD_OTHER(Colors::OverhealHealthBar);
+			LOAD_OTHER(Colors::GradientOverhealBar);
 			LOAD_OTHER(Colors::Cond);
 			LOAD_OTHER(Colors::Target);
 			LOAD_OTHER(Colors::Invuln);

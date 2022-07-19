@@ -272,6 +272,7 @@ void CMenu::MenuAimbot()
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
 			WToggle("Dont wait for shot###AimbotWaitForValidShot", &Vars::Aimbot::Global::DontWaitForShot.Value); HelpMarker("Prevents fps drops by only running aimbot while we are able to shoot");
+			WToggle("Flick at Enemies", &Vars::Aimbot::Global::FlickatEnemies.Value); HelpMarker("Keep this disabled if you have low fps");
 
 
 			SectionTitle("Crits");
@@ -492,8 +493,22 @@ void CMenu::MenuVisuals()
 				WToggle("Weapon icons", &Vars::ESP::Players::WeaponIcon.Value); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
 				ColorPickerL("Invulnerable colour", Colors::WeaponIcon);
 				WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the player has");
-				ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
-				ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
+				if (Vars::ESP::Players::HealthBarStyle.Value == 0)
+				{
+					ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
+					ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
+				}
+
+				WCombo("Health bar style", &Vars::ESP::Players::HealthBarStyle.Value, { "Gradient", "Old" }); HelpMarker("How to draw the health bar");
+				if (Vars::ESP::Players::HealthBarStyle.Value == 0)
+				{
+					ColorPickerL("Overheal Bar Top", Colors::GradientOverhealBar.startColour);
+					ColorPickerL("Overheal Bar Bottom", Colors::GradientOverhealBar.endColour, 1);
+				}
+				if (Vars::ESP::Players::HealthBarStyle.Value == 1)
+				{
+					ColorPickerL("Overheal Colour", Colors::Overheal);
+				}
 				WCombo("Health Text###ESPPlayerHealthText", &Vars::ESP::Players::HealthText.Value, { "Off", "Default", "Bar" }); HelpMarker("Draws the player health as a text");
 				WToggle("Condition", &Vars::ESP::Players::Cond.Value); HelpMarker("Will draw what conditions the player is under");
 				ColorPickerL("Condition colour", Colors::Cond);
