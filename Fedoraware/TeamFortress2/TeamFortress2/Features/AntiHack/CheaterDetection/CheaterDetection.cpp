@@ -64,7 +64,7 @@ bool CCheaterDetection::IsTickCountManipulated(CBaseEntity* pSuspect, int curren
 {
 	if (const int oldPredTick = G::Cache[pSuspect][I::GlobalVars->tickcount - 1].playersPredictedTick) {
 		const int delta = oldPredTick - currentTickCount;
-		return abs(delta) > 14;
+		return abs(delta) > 17;	
 	}	
 	return false;
 }

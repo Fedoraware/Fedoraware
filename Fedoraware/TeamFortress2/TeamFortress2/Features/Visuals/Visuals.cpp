@@ -829,9 +829,7 @@ void CVisuals::OverrideWorldTextures()
 	if (!kv)
 	{
 		kv = new KeyValues("LightmappedGeneric");
-		//kv->SetString("$basetexture", "dev/dev_measuregeneric01b"); //Nitro (dev texture)
-		kv->SetString("$basetexture", "vgui/white_additive"); //flat 
-		kv->SetString("$color2", "[0.12 0.12 0.15]"); //grey
+		kv->SetString("$basetexture", "dev/dev_measuregeneric01b");
 	}
 
 	if (Vars::Visuals::OverrideWorldTextures.Value)
