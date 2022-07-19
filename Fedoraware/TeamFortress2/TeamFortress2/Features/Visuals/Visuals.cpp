@@ -423,7 +423,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 											nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2),
 											Colors::DtOutline);
 						g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale,
-									yscale, { 17, 24, 26, 255 });
+									yscale, { 35, 36, 50, 255 });
 						g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff,
 											((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)),
 											(nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);

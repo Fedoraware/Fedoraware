@@ -173,6 +173,13 @@ void Draw_t::Rect(int x, int y, int w, int h, const Color_t& clr)
 	I::VGuiSurface->DrawFilledRect(x, y, x + w, y + h);
 }
 
+void Draw_t::RectOverlay(int x, int y, int w, int h, float bwidthp, const Color_t& clr, const Color_t& outline_clr, bool horizontal)
+{
+	OutlinedRect(x - 1, y + 1 - (h + 2), w + 2, h + 2, outline_clr);
+	GradientRectWH(x, y - h, w, h, clr, clr, horizontal);
+	Rect(x, y - h, w, h * (1.0f - bwidthp), { 17, 24, 26, 255 });
+}
+
 void Draw_t::OutlinedRect(int x, int y, int w, int h, const Color_t& clr)
 {
 	I::VGuiSurface->DrawSetColor(clr.r, clr.g, clr.b, clr.a);

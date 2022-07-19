@@ -533,7 +533,16 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 				vAngle.y -= 180.f;
 			}
-			if (G::IsAttacking)
+			
+			if (Vars::Aimbot::Global::FlickatEnemies.Value)
+			{
+				if (G::IsAttacking)
+				{
+					Utils::FixMovement(pCmd, vAngle);
+					pCmd->viewangles = vAngle;
+				}
+			}
+			else
 			{
 				Utils::FixMovement(pCmd, vAngle);
 				pCmd->viewangles = vAngle;
