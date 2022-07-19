@@ -495,9 +495,13 @@ void CMenu::MenuVisuals()
 				WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the player has");
 				if (Vars::ESP::Players::HealthBarStyle.Value == 0)
 				{
-					// having 4 color pickers in one place is kinda ugly
 					ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
 					ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
+				}
+
+				WCombo("Health bar style", &Vars::ESP::Players::HealthBarStyle.Value, { "Gradient", "Old" }); HelpMarker("How to draw the health bar");
+				if (Vars::ESP::Players::HealthBarStyle.Value == 0)
+				{
 					ColorPickerL("Overheal Bar Top", Colors::GradientOverhealBar.startColour, 2);
 					ColorPickerL("Overheal Bar Bottom", Colors::GradientOverhealBar.endColour, 3);
 				}
@@ -505,9 +509,6 @@ void CMenu::MenuVisuals()
 				{
 					ColorPickerL("Overheal Colour", Colors::Overheal);
 				}
-				WCombo("Health bar style", &Vars::ESP::Players::HealthBarStyle.Value, { "Gradient", "Old" }); HelpMarker("How to draw the health bar");
-				ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
-				ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
 				WCombo("Health Text###ESPPlayerHealthText", &Vars::ESP::Players::HealthText.Value, { "Off", "Default", "Bar" }); HelpMarker("Draws the player health as a text");
 				WToggle("Condition", &Vars::ESP::Players::Cond.Value); HelpMarker("Will draw what conditions the player is under");
 				ColorPickerL("Condition colour", Colors::Cond);
