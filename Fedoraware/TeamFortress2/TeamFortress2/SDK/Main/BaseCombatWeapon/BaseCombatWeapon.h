@@ -22,12 +22,15 @@ public: //Netvars
 		M_DYNVARGET(ChargeResistType, int, this, _("DT_WeaponMedigun"), _("m_nChargeResistType"))
 		M_DYNVARGET(ReloadMode, int, this, _("DT_TFWeaponBase"), _("m_iReloadMode"))
 		M_DYNVARGET(DetonateTime, float, this, _("DT_WeaponGrenadeLauncher"), _("m_flDetonateTime"))
+		//M_DYNVARGET(ObservedCritChance, float, this, _("DT_LocalTFWeaponData"), _("m_flObservedCritChance"))
 		//M_DYNVARGET(LastCritCheckTime, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flLastCritCheckTime"))
-		//M_DYNVARGET(ObservedCritChance, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flObservedCritChance"))
+		M_DYNVARGET(ObservedCritChance, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flObservedCritChance"))
 
 		M_OFFSETGET(UberCharge, float, 0xC6C) //DT_WeaponMedigun -> NonLocalTFWeaponMedigundata -> m_flChargeLevel
 		//M_OFFSETGET(HealingTarget, int, 0xC48) //DT_WeaponMedigun -> m_hHealingTarget
 		M_OFFSETGET(Healing, int, 0xC51) //DT_WeaponMedigun -> m_bHealing
+		M_OFFSETGET(CritTokenBucket, float, 0xA54)
+
 
 			// pretty srue these are all wrong but i have no idea how to do the thing to find out what they are
 		// you add 1c idiot
@@ -43,7 +46,6 @@ public: //Netvars
 		*(float*)((uintptr_t)pWeapon + 0xC18) = observed_crit_chance;
 		*(bool*)((uintptr_t)pWeapon + 0xB34) = unknown7;
 		*//*
-		M_OFFSETGET(CritBucket, float, 0xA54)
 		M_OFFSETGET(WeaponSeed, int, 0xB58)
 		M_OFFSETGET(Unknown1, int, 0xB4C)
 		M_OFFSETGET(Unknown2, int, 0xB50)
@@ -111,6 +113,18 @@ public: //Everything else, lol
 		static int offset = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 66 8B ? ? 66 3B 05 ? ? ? ? 73"));
 		static auto get_tf_weapon_data_fn = reinterpret_cast<CTFWeaponInfo * (__cdecl*)(int)>(offset);
 		return get_tf_weapon_data_fn(GetWeaponID())->m_WeaponData[0];
+	}
+	
+	__inline bool CanFireCriticalShot() {
+		static int CanFireCriticalShotOffset = g_Pattern.Find(_(L"client.dll"), _(L"6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 14 C3"));
+		static auto CanFireCriticalShotFN = reinterpret_cast<bool * (__cdecl*)(CBaseCombatWeapon*)>(CanFireCriticalShotOffset);
+		return CanFireCriticalShotFN(this);
+	}
+
+	__inline CTFWeaponInfo* GetTFWeaponInfo() {
+		static int GetTFWeaponInfoFNOffset = g_Pattern.Find(L"client.dll", L"55 8B EC FF 75 08 E8 ? ? ? ? 83 C4 04 85 C0 75 02 5D C3 56 50 E8 ? ? ? ? 83 C4 04 0F B7 F0 E8 ? ? ? ? 66 3B F0 75 05 33 C0 5E 5D C3");
+		static auto GetTFWeaponInfoFN = reinterpret_cast<CTFWeaponInfo * (__cdecl*)(int)>(GetTFWeaponInfoFNOffset);
+		return GetTFWeaponInfoFN(GetWeaponID());
 	}
 
 	__inline float GetSwingRange(CBaseEntity* pLocal) {
