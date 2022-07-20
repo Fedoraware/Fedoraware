@@ -30,6 +30,8 @@
 ## Credits to:
   - [spook953](https://github.com/spook953)
   - [Lak3](https://github.com/Lak3)
+  - [Baan](https://github.com/xxmyn)
+  - [lnx00](https://github.com/lnx00)
   - [Johnathon Walnut](https://github.com/johnathon-walnut)
   - [JAGNEmk](https://github.com/JAGNEmk)
   - [r00t](https://github.com/l-r00t-l)
@@ -38,5 +40,6 @@
   - [HutchyBean](https://github.com/HutchyBean)
   - [SinnerK0N](https://github.com/SinnerK0N)
   - [John Page The Fourth](https://github.com/relaxtakenotes)
-  - [Baan](https://github.com/tf2cheater2013)
-  - [lnx00](https://github.com/lnx00)
+  - [canedoly](https://github.com/canedoly)
+  - [lolnoenemy](https://github.com/lolnoenemy)
+
