@@ -116,7 +116,7 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 67)
 		}
 	}
 
-	*reinterpret_cast<int*>(pWeapon + 0xA5C) = 0;
+	/**reinterpret_cast<int*>(pWeapon + 0xA5C) = 0;*/
 
 	*I::RandomSeed = seedBackup;
 	return foundTick;

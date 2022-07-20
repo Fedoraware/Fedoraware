@@ -53,12 +53,12 @@ MAKE_HOOK(C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket, g_Pattern.Find(L
         return 0;
     v8 = m_flCritTokenBucket - flCost;
     *(float*)(ecx + 2644) = v8;
-    //I::Cvar->ConsolePrintf("[C_BaseCombatWeapon::IsAllowedToWithdrawFromCritBucket] RemoveFromCritBucket(%f)\n", v8);
+    I::Cvar->ConsolePrintf("[C_BaseCombatWeapon::IsAllowedToWithdrawFromCritBucket] RemoveFromCritBucket(%f)\n", flCost);
     flBottom = I::Cvar->FindVar("tf_weapon_criticals_bucket_bottom")->GetFloat();
     if (flBottom > v8)
     {
         *(float*)(ecx + 2644) = flBottom;
-        //I::Cvar->ConsolePrintf("[C_BaseCombatWeapon::IsAllowedToWithdrawFromCritBucket] Bucket less than minimum: set to %f\n", v8);
+        I::Cvar->ConsolePrintf("[C_BaseCombatWeapon::IsAllowedToWithdrawFromCritBucket] Bucket less than minimum: set to %f\n", v8);
     }
 
 
