@@ -5,6 +5,8 @@
 
 #define rettexture(string) static CHudTexture* pTexture = g_Draw.GetIcon(string); return pTexture;
 
+
+
 CHudTexture* CBaseCombatWeapon::GetWeaponIcon()
 {
 	switch (GetItemDefIndex()) {

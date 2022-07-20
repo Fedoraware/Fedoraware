@@ -95,6 +95,8 @@ namespace G
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
 
+	inline DWORD CalcIsAttackCriticalHelperOffset = 0;
+
 	inline bool ShouldAutoQueue = false;
 
 	inline int BackpackQuality = 1;

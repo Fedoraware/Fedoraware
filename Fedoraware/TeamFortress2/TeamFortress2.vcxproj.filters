@@ -161,8 +161,9 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CViewRender_DrawUnderwaterOverlay.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CViewRender_SetScreenOverlayMaterial.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeTFNormal_UpdateSteamRichPresence.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\AddToCritBucket.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\IsAllowedToWithdrawFromCritBucket.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFWeaponBase_CalcIsAttackCriticalHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

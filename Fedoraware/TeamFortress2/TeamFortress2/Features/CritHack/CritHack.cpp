@@ -165,11 +165,12 @@ void CCritHack::Draw()
 
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
-
-	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
-	const int seedRequests = *reinterpret_cast<int*>(pWeapon + 0xA5C);
 	int currentY = (g_ScreenSize.h / 2) + 150;
-
+	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
+	
+	const int seedRequests = *reinterpret_cast<int*>(pWeapon + 0xA5C);
+	
+	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 255,255,255,255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
 	// Are we currently forcing crits?
 	if (ShouldCrit())
 	{

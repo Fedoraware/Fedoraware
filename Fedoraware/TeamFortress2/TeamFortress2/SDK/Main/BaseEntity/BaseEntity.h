@@ -290,6 +290,12 @@ public: //Everything else, lol.
 		return reinterpret_cast<float*>(this + dwOff);
 	}
 
+	int GetAmmoCount(int iAmmoIndex)
+	{
+		static auto FN = reinterpret_cast<int(__thiscall*)(CBaseEntity*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00"));
+		return FN(this, iAmmoIndex);
+	}
+
 
 	__inline CBaseEntity* GetGroundEntity() {
 		DYNVAR(pHandle, int, _("DT_BasePlayer"), _("m_hGroundEntity"));

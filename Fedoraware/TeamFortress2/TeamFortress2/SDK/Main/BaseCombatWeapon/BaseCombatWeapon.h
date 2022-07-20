@@ -6,6 +6,8 @@
 #define TICKS_TO_TIME( t )	( I::GlobalVars->interval_per_tick * ( t ) )
 #endif
 
+inline DWORD calcisattackcriticaloffset = 0;
+
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars
@@ -30,6 +32,8 @@ public: //Netvars
 		//M_OFFSETGET(HealingTarget, int, 0xC48) //DT_WeaponMedigun -> m_hHealingTarget
 		M_OFFSETGET(Healing, int, 0xC51) //DT_WeaponMedigun -> m_bHealing
 		M_OFFSETGET(CritTokenBucket, float, 0xA54)
+
+		NETVAR(m_iPrimaryAmmoType, int, "CBaseCombatWeapon", "m_iPrimaryAmmoType");
 
 
 			// pretty srue these are all wrong but i have no idea how to do the thing to find out what they are
@@ -76,6 +80,11 @@ public: //Everything else, lol
 	__inline float ObservedCritChance()
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
+	}
+
+	inline int& m_iWeaponMode() {
+		static int offset = 716; 
+		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + offset); 
 	}
 
 	//str8 outta cathook
@@ -261,6 +270,8 @@ public: //Everything else, lol
 		return ret || this->GetClientClass()->m_ClassID == static_cast<int>(ETFClassID::CTFMinigun);
 	}
 
+	
+
 	__inline bool WillCrit()
 	{
 		return this->GetSlot() == SLOT_MELEE ? this->CalcIsAttackCriticalHelperMelee() : this->CalcIsAttackCriticalHelper();
@@ -277,8 +288,14 @@ public: //Everything else, lol
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
 		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC")));
+		if (!pCalcIsAttackCriticalHelper)
+		{
+			pCalcIsAttackCriticalHelper = (FN)calcisattackcriticaloffset;
+			return false;
+		}
 		return pCalcIsAttackCriticalHelper(this);
 	}
+	
 	__inline bool CalcIsAttackCriticalHelperMelee()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
