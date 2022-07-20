@@ -13,13 +13,12 @@
 ## Notes:
 - It is recommended to use dxlevel 90+ due to issues with imgui.
 - You might have issues with injecting if you are on Windows 10 upgraded from Windows 7.
-- The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
+- The source code is most likely __DETECTED__, use [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). In the event you get VAC Banned, we are not responsible. Don't cheat on accounts you care about.
 
 ## Guide:
 - We suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
 - Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
 - __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__ (Dear god please link a config and follow the issue template)
-- Should you choose to compile this cheat yourself, you may enable enhanced instruction sets to possibly increase performance. __Properties -> C/C++ -> Code Generation -> Enable Enhanced Instruction Set__. Be sure to check what's the best instruction set you can use by checking in [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html), otherwise the cheat won't work on your PC. 
 
 ## Media:  
 - [Fedoraware is the best free cheat in tf2 (by bean)](https://www.youtube.com/watch?v=FyeaMghYZL0)
