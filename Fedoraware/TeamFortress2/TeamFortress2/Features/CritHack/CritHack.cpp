@@ -116,6 +116,8 @@ int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 67)
 		}
 	}
 
+	*reinterpret_cast<int*>(pWeapon + 0xA5C) = 0;
+
 	*I::RandomSeed = seedBackup;
 	return foundTick;
 }
@@ -165,6 +167,7 @@ void CCritHack::Draw()
 	if (!pWeapon) { return; }
 
 	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
+	const int seedRequests = *reinterpret_cast<int*>(pWeapon + 0xA5C);
 	int currentY = (g_ScreenSize.h / 2) + 150;
 
 	// Are we currently forcing crits?
@@ -176,5 +179,7 @@ void CCritHack::Draw()
 	static auto tf_weapon_criticals_bucket_cap = g_ConVars.FindVar("tf_weapon_criticals_bucket_cap");
 	const float bucketCap = tf_weapon_criticals_bucket_cap->GetFloat();
 	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
+	const auto seedText = tfm::format("m_nCritSeedRequests: %d", seedRequests);
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
+	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
 }
