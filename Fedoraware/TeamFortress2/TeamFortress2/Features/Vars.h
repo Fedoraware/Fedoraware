@@ -138,6 +138,7 @@ namespace Vars
 			inline Color_t PredictionColor{ 255, 255, 255, 255 };
 			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> NoSpread{ false };
+			inline CVar<bool> ChargeLooseCannon{ false };
 		}
 
 		namespace Melee
