@@ -344,14 +344,7 @@ void CMenu::MenuAimbot()
 				WSlider("Point Scan Limit", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, Vars::Aimbot::Projectile::VisTestPoints.Value, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how many visible points the cheat needs to find before it picks one to aim at.");
 				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.7f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls the size of the hitbox as it's given to the cheat.");
 			}
-			WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at feet if target is on the ground");
-
-			SectionTitle("Splash Prediction");
-			{
-				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Tries to deal splash damage if an enemy isn't visible");
-				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Automatically flips your viewmodel if it's beneficial");
-				//WToggle("No spread###ProjectileNospread", &Vars::Aimbot::Projectile::NoSpread.Value); HelpMarker("Tries to compensate the random projectile spread");
-			}
+			MultiCombo({ "Feet Aim on Ground", "Splash Prediction", "Viewmodel Flipper", "Charge Loose Cannon" }, { &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value, &Vars::Aimbot::Projectile::SplashPrediction.Value, &Vars::Misc::ViewmodelFlip.Value, &Vars::Aimbot::Projectile::ChargeLooseCannon.Value }, "Preferences###ProjectileAimbotPreferences");
 
 			SectionTitle("Melee");
 			{

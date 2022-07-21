@@ -200,6 +200,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			break;
 		}
 	case Demoman_s_StickybombLauncher:
+	case Demoman_s_StickybombLauncherR:
+	case Demoman_s_FestiveStickybombLauncher:
 	case Demoman_s_TheScottishResistance:
 	{
 		//Probably wrong
@@ -1003,7 +1005,7 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 				return true;
 			}
 		}
-		else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON)//Probably right
+		else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON)
 		{
 			static bool Charging = false;
 
@@ -1047,8 +1049,13 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	case ETFClassID::CTFRocketLauncher:
 	case ETFClassID::CTFRocketLauncher_AirStrike:
 	case ETFClassID::CTFRocketLauncher_Mortar:
-	case ETFClassID::CTFStickBomb:
-		splashRadius = 130.f; break;
+	{
+		//I haven't tested if this is unaccurate in actual gameplay but it still hits
+		splashRadius = 160.f;
+		break;
+	}
+	//Flares
+	//Stickybombs
 	}
 
 	// Don't do it with the direct hit or if the splash radius is unknown
@@ -1062,6 +1069,9 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!pTarget || !pTarget->IsAlive() || !pTarget->IsOnGround()) { continue; }
+
+		if (F::AimbotGlobal.ShouldIgnore(pTarget))
+			continue;
 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
@@ -1174,11 +1184,8 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{
 				if (pWeapon->GetClip1() > 0)
-				{
 					pCmd->buttons &= ~IN_ATTACK;
-				}
 			}
-
 			else
 			{
 				if ((pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW || pWeapon->GetWeaponID() == TF_WEAPON_PIPEBOMBLAUNCHER)
@@ -1188,11 +1195,15 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 				}
 				else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON && pWeapon->GetDetonateTime() > 0.0f)
 				{
-					const Vec3 vEyePos = pLocal->GetEyePosition();
+					const Vec3 vEyePos = pLocal->GetShootPos();
+					float BestCharge = vEyePos.DistTo(G::PredictedPos) / 1453.9f;
 
-					float BestCharge = vEyePos.DistTo(G::PredictedPos) / 1453.9f;//Probably right
-
-					if (pWeapon->GetDetonateTime() - I::GlobalVars->curtime <= BestCharge)
+					if (Vars::Aimbot::Projectile::ChargeLooseCannon.Value)
+					{
+						if (pWeapon->GetDetonateTime() - I::GlobalVars->curtime <= BestCharge)
+							pCmd->buttons &= ~IN_ATTACK;
+					}
+					else
 						pCmd->buttons &= ~IN_ATTACK;
 				}
 			}
