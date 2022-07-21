@@ -85,41 +85,75 @@ bool CCritHack::ShouldCrit()
 	return false;
 }
 
-/* Returns the next crit command number */
-int CCritHack::NextCritTick(const CUserCmd* pCmd, int loops = 67)
-{
-	static int previousWeapon = 0;
-	static int previousCrit = 0;
-
-	const auto& pLocal = g_EntityCache.GetLocal();
-	if (!pLocal) { return -1; }
-
-	const auto& pWeapon = pLocal->GetActiveWeapon();
-	if (!pWeapon) { return -1; }
-
-	// Return previous crit tick if it's still good
-	if (previousWeapon == pWeapon->GetIndex() && previousCrit >= pCmd->command_number) { return previousCrit; }
-
-	// Find the next crit tick
-	int foundTick = -1;
-	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
-	for (int i = 0; i < loops; i++)
-	{
-		const int cmdNum = pCmd->command_number + i;
-		*I::RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
-		if (pWeapon->WillCrit())
-		{
-			previousCrit = cmdNum;
-			previousWeapon = pWeapon->GetIndex();
-			foundTick = cmdNum;
-			break;
+int CCritHack::LastGoodCritTick(const CUserCmd* pCmd) {
+	int retVal = -1;
+	bool pop = false;
+	for (int i = 0; i < critTicks.size(); i++) {
+		if (critTicks.at(i) >= pCmd->command_number) {
+			retVal = critTicks.at(i);
+		}
+		else {
+			pop = true;
 		}
 	}
 
-	/**reinterpret_cast<int*>(pWeapon + 0xA5C) = 0;*/
+	if (pop) {
+		critTicks.pop_back();
+	}
+
+	return retVal;
+}
+
+void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
+{
+	static int previousWeapon = 0;
+	static int previousCrit = 0;
+	static int startingNum = pCmd->command_number;
+
+	const auto& pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return; }
+
+	const auto& pWeapon = pLocal->GetActiveWeapon();
+	if (!pWeapon) { return; }
+
+	if (G::IsAttacking || IsAttacking(pCmd, pWeapon)) {
+		return;
+	}
+
+	const bool bRescanRequired = previousWeapon != pWeapon->GetIndex();
+	if (bRescanRequired) {
+		startingNum = pCmd->command_number;
+		previousWeapon = pWeapon->GetIndex();
+		critTicks.clear();
+	}
+
+	if (critTicks.size() > 128) {
+		return;
+	}
+
+
+	//CritBucketBP = *reinterpret_cast<float*>(pWeapon + 0xA54);
+	bProtectData = true;	//	stop shit that interferes with our crit bucket because it will BREAK it
+	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
+	for (int i = 0; i < loops; i++)
+	{
+		const int cmdNum = startingNum + i;
+		*I::RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
+		if (pWeapon->WillCrit())
+		{
+			critTicks.push_back(cmdNum);	//	store our wish command number for later reference
+		}
+	}
+	startingNum += loops;
+	bProtectData = false;	//	we no longer need to be protecting important crit data
+	
+	//*reinterpret_cast<float*>(pWeapon + 0xA54) = CritBucketBP;
+	*reinterpret_cast<int*>(pWeapon + 0xA5C) = 0;	//	dont comment this out, makes sure our crit mult stays as low as possible
+													//	crit mult can reach a maximum value of 3!! which means we expend 3 crits WORTH from our bucket
+													//	by forcing crit mult to be its minimum value of 1, we can crit more without directly fucking our bucket
+													//	yes bProtectData stops this value from changing artificially, but it still changes when you fire and this is worth it imo.
 
 	*I::RandomSeed = seedBackup;
-	return foundTick;
 }
 
 void CCritHack::Run(CUserCmd* pCmd)
@@ -129,30 +163,30 @@ void CCritHack::Run(CUserCmd* pCmd)
 	const auto& pWeapon = g_EntityCache.GetWeapon();
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
-	int nextCrit = NextCritTick(pCmd);
-	if (nextCrit >= 0 && IsAttacking(pCmd, pWeapon))
+	ScanForCrits(pCmd, 66);	//	fill our vector slowly.
+
+	int closestGoodTick = LastGoodCritTick(pCmd);	//	retrieve our wish
+	if (IsAttacking(pCmd, pWeapon))	//	is it valid & should we even use it
 	{
 		if (ShouldCrit())
 		{
-			// Force next crit
-			pCmd->command_number = nextCrit;
-			pCmd->random_seed = MD5_PseudoRandom(nextCrit) & MASK_SIGNED;
+			if (closestGoodTick < 0) { return; }
+			pCmd->command_number = closestGoodTick;		//	set our cmdnumber to our wish
+			pCmd->random_seed = MD5_PseudoRandom(closestGoodTick) & MASK_SIGNED;	//	trash poopy whatever who cares
 		} 
-		else if (Vars::CritHack::AvoidRandom.Value)
+		else if (Vars::CritHack::AvoidRandom.Value)	//	we don't want to crit
 		{
-			// Prevent crit
-			int tries = 0;
-			while (pCmd->command_number == nextCrit && tries < 5)
+			for (int tries = 0; tries < 5; tries++)
 			{
-				pCmd->command_number++;
+				if (std::find(critTicks.begin(), critTicks.end(), pCmd->command_number + tries) != critTicks.end()) {
+					continue;	//	what a useless attempt
+				}
+				pCmd->command_number += tries;
 				pCmd->random_seed = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
-				nextCrit = NextCritTick(pCmd, 5);
-				tries++;
+				break;	//	we found a seed that we can use to avoid a crit and have skipped to it, woohoo
 			}
 		}
 	}
-
-	// TODO: Fix the crit bucket
 }
 
 void CCritHack::Draw()
@@ -181,6 +215,10 @@ void CCritHack::Draw()
 	const float bucketCap = tf_weapon_criticals_bucket_cap->GetFloat();
 	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
 	const auto seedText = tfm::format("m_nCritSeedRequests: %d", seedRequests);
+	const auto FoundCrits = tfm::format("Found Crit Ticks: %d", critTicks.size());
+	const auto commandNumber = tfm::format("cmdNumber: %d", G::CurrentUserCmd->command_number);
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
 	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
+	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
+	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
 }

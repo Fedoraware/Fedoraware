@@ -58,10 +58,10 @@ MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, g_Pattern.Find(L"client.dll", L"5
         return Hook.Original<FN>()(ecx, edx);
     }
 
-    if (!CritHandler())
+   /* if (!CritHandler())
     {
         return;
-    }
+    }*/
 
     const auto nPreviousWeaponMode = pWeapon->m_iWeaponMode();
     pWeapon->m_iWeaponMode() = 0;

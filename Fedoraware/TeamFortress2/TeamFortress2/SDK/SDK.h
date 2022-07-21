@@ -658,7 +658,7 @@ namespace Utils
 					static float flThrowTime = 0.0f;
 
 					if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack && !flThrowTime)
-						flThrowTime = I::GlobalVars->curtime + 0.16f;
+						flThrowTime = I::GlobalVars->curtime + I::GlobalVars->interval_per_tick;
 
 					if (flThrowTime && I::GlobalVars->curtime >= flThrowTime) {
 						flThrowTime = 0.0f;

@@ -2,11 +2,16 @@
 #include "../../SDK/SDK.h"
 
 class CCritHack {
+private:
 	bool AreRandomCritsEnabled();
 	bool IsEnabled();
 	bool ShouldCrit();
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
-	int NextCritTick(const CUserCmd* pCmd, int loops);
+	void ScanForCrits(const CUserCmd* pCmd, int loops = 10);
+	int LastGoodCritTick(const CUserCmd* pCmd);
+
+	std::vector<int> critTicks{};
+	float CritBucketBP = 0;
 
 	struct stats_t
 	{
@@ -18,8 +23,8 @@ class CCritHack {
 public:
 	void Run(CUserCmd* pCmd);
 	void Draw();
-	void FireEvent(CGameEvent* pEvent, const FNV1A_t uNameHash);
-	void Init();
+	
+	bool bProtectData = false;
 };
 
 ADD_FEATURE(CCritHack, CritHack)
