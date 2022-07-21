@@ -120,8 +120,8 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 		return;
 	}
 
-	if (startingNum - pCmd->command_number > 60) {
-		return;	//	apparently we can't go further into the future than 60 (according to cathook :D)
+	if (startingNum - pCmd->command_number > 660) {
+		return;
 	}
 
 	const bool bRescanRequired = previousWeapon != pWeapon->GetIndex();
@@ -130,11 +130,6 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 		previousWeapon = pWeapon->GetIndex();
 		critTicks.clear();
 	}
-
-	if (startingNum > 132) {	//	2 seconds into the future we stop scanning
-		return;
-	}
-
 
 	//CritBucketBP = *reinterpret_cast<float*>(pWeapon + 0xA54);
 	bProtectData = true;	//	stop shit that interferes with our crit bucket because it will BREAK it
