@@ -6,13 +6,18 @@ private:
 	bool AreRandomCritsEnabled();
 	bool IsEnabled();
 	bool ShouldCrit();
+	//bool ShouldForceMelee(CBaseCombatWeapon* pWeapon);	//	compare distances between local & enemies, force crits if we are within swing range of enemy.
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 	void ScanForCrits(const CUserCmd* pCmd, int loops = 10);
 	int LastGoodCritTick(const CUserCmd* pCmd);
+	//int DamageToNextCrit(CBaseCombatWeapon* pWeapon);	//	returns a positive value if we are crit banned
 
 	std::vector<int> critTicks{};
 	float CritBucketBP = 0;
 
+
+	//	TODO: Create & Restore to & from this struct when scanning for crits.
+	//	Stop messing around with AddToBucket etc, just change values when scanning if needed.
 	struct stats_t
 	{
 		float flCritBucket;	// 0xA54

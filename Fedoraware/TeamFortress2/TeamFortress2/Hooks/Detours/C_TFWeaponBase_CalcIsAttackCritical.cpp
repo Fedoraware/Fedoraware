@@ -19,7 +19,7 @@ bool CritHandler()
     }
 
     {
-        static int s_nPreviousTickcount;
+        static int s_nPreviousTickcount = 0;
 
         if (s_nPreviousTickcount == I::GlobalVars->tickcount)
         {
@@ -58,10 +58,10 @@ MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, g_Pattern.Find(L"client.dll", L"5
         return Hook.Original<FN>()(ecx, edx);
     }
 
-   /* if (!CritHandler())
+    if (!CritHandler()) //  this completely fucks the crit bucket for me
     {
         return;
-    }*/
+    }
 
     const auto nPreviousWeaponMode = pWeapon->m_iWeaponMode();
     pWeapon->m_iWeaponMode() = 0;

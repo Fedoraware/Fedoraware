@@ -116,8 +116,12 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
 
-	if (G::IsAttacking || IsAttacking(pCmd, pWeapon)) {
+	if (G::IsAttacking || IsAttacking(pCmd, pWeapon) || pCmd->buttons & IN_ATTACK) {
 		return;
+	}
+
+	if (startingNum - pCmd->command_number > 60) {
+		return;	//	apparently we can't go further into the future than 60 (according to cathook :D)
 	}
 
 	const bool bRescanRequired = previousWeapon != pWeapon->GetIndex();
@@ -127,7 +131,7 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 		critTicks.clear();
 	}
 
-	if (critTicks.size() > 128) {
+	if (startingNum > 132) {	//	2 seconds into the future we stop scanning
 		return;
 	}
 
@@ -163,7 +167,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 	const auto& pWeapon = g_EntityCache.GetWeapon();
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
-	ScanForCrits(pCmd, 66);	//	fill our vector slowly.
+	ScanForCrits(pCmd, 33);	//	fill our vector slowly.
 
 	int closestGoodTick = LastGoodCritTick(pCmd);	//	retrieve our wish
 	if (IsAttacking(pCmd, pWeapon))	//	is it valid & should we even use it
