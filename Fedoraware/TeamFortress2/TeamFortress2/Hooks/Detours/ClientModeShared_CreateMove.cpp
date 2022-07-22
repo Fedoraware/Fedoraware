@@ -129,7 +129,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		
 		if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
 		{
-			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons & IN_ATTACK))
+			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))//
 			{
 				G::RechargeQueued = true;
 			}
