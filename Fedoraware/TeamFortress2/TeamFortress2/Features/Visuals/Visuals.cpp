@@ -389,12 +389,13 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					case 2:
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 800 - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
-						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, 800, 100, 12, 4, { 0,0,0,170 });
+						const int drawY = g_ScreenSize.h / 2 + (g_ScreenSize.h * 0.24) // 1080 / 2 = 540, 800 - 540 = 260, 260 / 1080 = 0.2407407..., this should be ~ the equivalent of 800 pixels on a 1080p monitor...
+						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, drawY - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, drawY, 100, 12, 4, { 0,0,0,170 });
 						const int chargeWidth = Math::RemapValClamped(G::ShiftedTicks, 0, Vars::Misc::CL_Move::DTTicks.Value, 0, 96);
 						if (G::ShiftedTicks && chargeWidth > 5)
 						{
-							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, 802, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
+							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, drawY + 2, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
 						}
 						break;
 					}
