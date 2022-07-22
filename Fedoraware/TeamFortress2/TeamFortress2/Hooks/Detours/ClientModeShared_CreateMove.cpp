@@ -134,23 +134,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 				G::RechargeQueued = true;
 			}
 		}
-
-		if (const INetChannel* netChannel = I::EngineClient->GetNetChannelInfo())
-		{
-			static const char* oServerAddress = netChannel->GetAddress();
-			const char* cServerAddress = netChannel->GetAddress();
-
-			static const char* oMap = I::EngineClient->GetLevelName();
-			const char* cMap = I::EngineClient->GetLevelName();
-
-			if (oServerAddress != cServerAddress || oMap != cMap)
-			{
-				oServerAddress = cServerAddress;
-				oMap = cMap;
-				G::LoadInCount++;
-				G::NextSafeTick = 0;
-			}
-		}
 	}
 
 	// Run Features

@@ -32,7 +32,6 @@ namespace G
 	inline int CurItemDefIndex = 0; // DefIndex of the current weapon
 	inline int NotifyCounter = 0;
 	inline int EyeAngDelay = 25;
-	inline int LoadInCount = 0; //	increments each time we change server / map.
 	inline int NextSafeTick = 0;	//	I::GlobalVars->tickcount + sv_maxusrcmdprocessticks_holdaim + 1 (when attacking)
 	inline float LerpTime = 0.f;	//	current lerp time
 	inline bool WeaponCanHeadShot = false; // Can the current weapon headshot?
