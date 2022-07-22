@@ -1,5 +1,6 @@
 #include "Visuals.h"
 #include "../Vars.h"
+#include "../ESP/ESP.h"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
@@ -50,6 +51,23 @@ void CVisuals::ScopeLines(CBaseEntity* pLocal)
 		g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
 		g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
 
+	}
+}
+
+void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
+{
+	const int height = g_ScreenSize.h / 2 + 25;
+	const int width = g_ScreenSize.c;
+
+	// check
+	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
+
+	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
+		
+	int nTextOffset = 0;
+	for (std::wstring cond : conditionsVec) {
+		g_Draw.String(FONT_MENU, width, height + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
+		nTextOffset += g_Draw.m_vecFonts[FONT_MENU].nTall;
 	}
 }
 
