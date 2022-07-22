@@ -120,15 +120,15 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 		return;
 	}
 
-	if (startingNum - pCmd->command_number > 660) {
-		return;
-	}
-
 	const bool bRescanRequired = previousWeapon != pWeapon->GetIndex();
 	if (bRescanRequired) {
 		startingNum = pCmd->command_number;
 		previousWeapon = pWeapon->GetIndex();
 		critTicks.clear();
+	}
+
+	if (critTicks.size() > 32) {
+		return;
 	}
 
 	//CritBucketBP = *reinterpret_cast<float*>(pWeapon + 0xA54);
@@ -162,7 +162,7 @@ void CCritHack::Run(CUserCmd* pCmd)
 	const auto& pWeapon = g_EntityCache.GetWeapon();
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
-	ScanForCrits(pCmd, 33);	//	fill our vector slowly.
+	ScanForCrits(pCmd, 50);	//	fill our vector slowly.
 
 	int closestGoodTick = LastGoodCritTick(pCmd);	//	retrieve our wish
 	if (IsAttacking(pCmd, pWeapon))	//	is it valid & should we even use it
