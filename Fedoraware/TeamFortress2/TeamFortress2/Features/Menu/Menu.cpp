@@ -1046,6 +1046,7 @@ void CMenu::MenuVisuals()
 				{
 					WInputText("Custom Tracer", &Vars::Visuals::ParticleName); HelpMarker("If you want to use a custom particle tracer");
 				}
+				WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
 				WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
 				ColorPickerL("Inner line color", Colors::NoscopeLines1);
 				ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);

@@ -1,5 +1,6 @@
 #include "Visuals.h"
 #include "../Vars.h"
+#include "../ESP/ESP.h"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
@@ -50,6 +51,24 @@ void CVisuals::ScopeLines(CBaseEntity* pLocal)
 		g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
 		g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
 
+	}
+}
+
+void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
+{
+	const int height = g_ScreenSize.h / 2 + 25;
+	const int width = g_ScreenSize.c;
+
+	// check
+	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
+	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
+
+	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
+		
+	int nTextOffset = 0;
+	for (std::wstring cond : conditionsVec) {
+		g_Draw.String(FONT_MENU, width, height + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
+		nTextOffset += g_Draw.m_vecFonts[FONT_MENU].nTall;
 	}
 }
 
@@ -389,12 +408,13 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					case 2:
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, 800 - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
-						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, 800, 100, 12, 4, { 0,0,0,170 });
+						const int drawY = g_ScreenSize.h / 2 + (g_ScreenSize.h * 0.24);
+						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, drawY - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, drawY, 100, 12, 4, { 0,0,0,170 });
 						const int chargeWidth = Math::RemapValClamped(G::ShiftedTicks, 0, Vars::Misc::CL_Move::DTTicks.Value, 0, 96);
 						if (G::ShiftedTicks && chargeWidth > 5)
 						{
-							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, 802, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
+							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, drawY + 2, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
 						}
 						break;
 					}

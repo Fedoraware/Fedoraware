@@ -138,6 +138,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				F::Visuals.DrawAimbotFOV(pLocal);
 				F::Visuals.ScopeLines(pLocal);
 				F::Visuals.DrawDebugInfo(pLocal);
+				F::Visuals.DrawOnScreenConditions(pLocal);
 
 				if (I::ThirdPersonManager)
 				{

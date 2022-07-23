@@ -83,17 +83,8 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	if (!pTarget) { return true; }
 	if (!I::EngineClient->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (INVUL) && !pTarget->IsVulnerable()) { return true; }
-	if (Vars::Aimbot::Global::IgnoreOptions.Value & (CLOAKED) && pTarget->IsCloaked())
-	{
-		const int nCond = pTarget->GetCond();
-		if (nCond & ~(TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
-		{
-			return true;
-		}
-	}
-
-	if (Vars::Aimbot::Global::IgnoreOptions.Value & (DEADRINGER) && Utils::isFeigningDeath(pTarget)) { return true; }
-
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (CLOAKED) && pTarget->IsVisible()) { return true; }
+	if (Vars::Aimbot::Global::IgnoreOptions.Value & (DEADRINGER) && pTarget->GetFeignDeathReady()) { return true; }
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (TAUNTING) && pTarget->IsTaunting()) { return true; }
 
 	// Special conditions for mediguns //

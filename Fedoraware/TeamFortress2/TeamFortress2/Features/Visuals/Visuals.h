@@ -17,6 +17,7 @@ public:
 	void OverrideWorldTextures();
 	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
+	void DrawOnScreenConditions(CBaseEntity* pLocal);
 	void ScopeLines(CBaseEntity* pLocal);
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);

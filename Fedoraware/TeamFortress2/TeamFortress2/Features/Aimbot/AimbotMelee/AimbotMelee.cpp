@@ -380,24 +380,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		if (ShouldSwing(pLocal, pWeapon, pCmd, target))
 		{
 			pCmd->buttons |= IN_ATTACK;
-		}
-			
-		if (Vars::Misc::CL_Move::Enabled.Value && Vars::Misc::CL_Move::Doubletap.Value && (pCmd->buttons & IN_ATTACK) && G::ShiftedTicks && !G::WaitForShift)
-		{
-			if ((Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
-				(Vars::Misc::CL_Move::DTMode.Value == 1) ||
-				(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
-			{
-				if ((Vars::Misc::CL_Move::NotInAir.Value && !pLocal->IsOnGround() && G::ShiftedTicks))
-				{
-					G::ShouldShift = false;
-				}
-				else
-				{
-					G::ShouldShift = true;
-				}
-			}
-		}		
+		}	
 
 		const bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 

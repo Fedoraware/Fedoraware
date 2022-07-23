@@ -1037,7 +1037,12 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Overhealed");
 	}
 
-	if (nCond & TFCond_Ubercharged || nCond & TFCondEx_PhlogUber)
+	if (nCond & TFCond_OnFire)
+	{
+		szCond.emplace_back(L"Burning");
+	}
+
+	if (nCond & TFCond_Ubercharged || nCondEx & TFCondEx_PhlogUber || nCondEx & TFCondEx_UberchargedCanteen || nCondEx & TFCondEx_UberchargedHidden)
 	{
 		szCond.emplace_back(L"Ubered");
 	}
@@ -1095,7 +1100,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Bleeding");
 	}
 
-	if (Utils::isFeigningDeath(pEntity)) {
+	if (pEntity->GetFeignDeathReady()) {
 		szCond.emplace_back(L"Dead Ringer");
 	}
 

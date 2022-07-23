@@ -129,26 +129,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		
 		if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
 		{
-			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons & IN_ATTACK))
+			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))
 			{
 				G::RechargeQueued = true;
-			}
-		}
-
-		if (const INetChannel* netChannel = I::EngineClient->GetNetChannelInfo())
-		{
-			static const char* oServerAddress = netChannel->GetAddress();
-			const char* cServerAddress = netChannel->GetAddress();
-
-			static const char* oMap = I::EngineClient->GetLevelName();
-			const char* cMap = I::EngineClient->GetLevelName();
-
-			if (oServerAddress != cServerAddress || oMap != cMap)
-			{
-				oServerAddress = cServerAddress;
-				oMap = cMap;
-				G::LoadInCount++;
-				G::NextSafeTick = 0;
 			}
 		}
 	}
