@@ -357,7 +357,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static bool FlipVar = false;
 	FlipVar = !FlipVar;
 	
-	if (!FlipVar) {
+	if (!FlipVar && !G::ShouldShift) {
 		return;
 	}
 
