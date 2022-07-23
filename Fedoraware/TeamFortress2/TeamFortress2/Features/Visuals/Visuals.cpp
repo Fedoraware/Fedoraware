@@ -381,8 +381,8 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 			{
 				const int nY = (g_ScreenSize.h / 2) + 20;
 				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator;
-				const float ratioCurrent = (float)((float)G::ShiftedTicks / (float)Vars::Misc::CL_Move::DTTicks.Value); std::clamp(ratioCurrent, 0.00f, 1.00f);
-				static float ratioInterp = 0.00f; ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f); std::clamp(ratioInterp, 0.00f, 1.00f);
+				const float ratioCurrent = std::clamp(((float)G::ShiftedTicks / (float)Vars::Misc::CL_Move::DTTicks.Value), 0.0f, 1.0f);
+				static float ratioInterp = 0.00f; ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f); Math::Clamp(ratioInterp, 0.00f, 1.00f);
 
 				static Color_t color1, color2;
 
