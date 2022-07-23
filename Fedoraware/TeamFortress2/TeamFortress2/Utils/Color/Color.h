@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 
 #include "../Math/Math.h"
 
@@ -8,7 +9,25 @@
 
 using byte = unsigned char;
 
-struct Color_t { byte r = 0, g = 0, b = 0, a = 0; };
+struct Color_t { 
+	byte r = 0, g = 0, b = 0, a = 0; 
+	[[nodiscard]] std::string to_hex() const
+	{
+		std::stringstream ss;
+		ss << "\x7";
+		ss << std::hex << (static_cast<int>(r) << 16 | static_cast<int>(g) << 8 | static_cast<int>(b));
+		return ss.str();
+	}
+
+	[[nodiscard]] std::string to_hex_alpha() const
+	{
+		std::stringstream ss;
+		ss << "\x8";
+		ss << std::hex << (static_cast<int>(r) << 16 | static_cast<int>(g) << 8 | static_cast<int>(b));
+		ss << std::hex << static_cast<int>(a);
+		return ss.str();
+	}
+};
 
 struct Gradient_t {
 	Color_t startColour = { 0,0,0,255 };

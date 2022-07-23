@@ -10,7 +10,7 @@ void MenuHook::Unload()
 	F::Menu.Unload = true;
 }
 
-MAKE_HOOK(WINAPI_EndScene, Utils::GetVFuncPtr(I::DirectXDevice, 42), HRESULT, __stdcall,
+MAKE_HOOK(Direct3DDevice9_EndScene, Utils::GetVFuncPtr(I::DirectXDevice, 42), HRESULT, __stdcall,
 		  LPDIRECT3DDEVICE9 pDevice)
 {
 	static void* fAddr = _ReturnAddress();
@@ -23,7 +23,7 @@ MAKE_HOOK(WINAPI_EndScene, Utils::GetVFuncPtr(I::DirectXDevice, 42), HRESULT, __
 	return Hook.Original<FN>()(pDevice);
 }
 
-MAKE_HOOK(WINAPI_Reset, Utils::GetVFuncPtr(I::DirectXDevice, 16), HRESULT, __stdcall,
+MAKE_HOOK(Direct3DDevice9_Reset, Utils::GetVFuncPtr(I::DirectXDevice, 16), HRESULT, __stdcall,
 		  LPDIRECT3DDEVICE9 pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)
 {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
