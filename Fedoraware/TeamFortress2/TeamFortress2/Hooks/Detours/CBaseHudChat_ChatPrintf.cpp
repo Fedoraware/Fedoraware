@@ -1,5 +1,6 @@
 #include "../Hooks.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
+#include "../../Features/Visuals/Visuals.h"
 
 // @https://www.unknowncheats.me/forum/team-fortress-2-a/488217-chat-flags-titles.html
 //	i swear its not pasted i just used this as inspiration, credits myzarfin.
@@ -32,6 +33,8 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 		return;
 
 	std::string final_msg = msg, name = {};
+
+	
 	PlayerInfo_t info{};
 	ChatFlags_t flag;
 	bool set = false;
@@ -47,6 +50,20 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 			return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
 		}
 	}
+	if (iPlayerIndex && Vars::Misc::RunescapeChat.Value)
+	{
+		if (const auto& pEntity = I::ClientEntityList->GetClientEntity(iPlayerIndex))
+		{
+			auto backup_msg = final_msg;
+			if (auto offset = backup_msg.find(name))
+			{
+				backup_msg = backup_msg.erase(offset, offset + name.length() + 2);
+				backup_msg.erase(std::remove_if(backup_msg.begin(), backup_msg.end(), [](char c) -> bool { return c == '\x3'; }), backup_msg.end());
+				F::RSChat.PushChat(pEntity, backup_msg);
+			}
+		}
+	}
+
 	if (iPlayerIndex && Vars::Misc::ChatFlags.Value)
 	{
 		if (iPlayerIndex == I::EngineClient->GetLocalPlayer())

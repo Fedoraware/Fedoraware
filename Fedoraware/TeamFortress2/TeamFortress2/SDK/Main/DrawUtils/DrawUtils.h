@@ -31,6 +31,7 @@ enum EFonts
 	FONT_MENU,
 	FONT_INDICATORS,
 	FONT_IMGUI,
+	FONT_OSRS
 };
 
 enum EStringAlign
@@ -79,7 +80,5 @@ struct Draw_t
 	bool Timer();
 	void ClearAvatarCache();
 };
-
-
 
 inline Draw_t g_Draw;

@@ -640,7 +640,7 @@ namespace Vars
 		inline CVar<bool> JoinSpam{ false };
 		inline CVar<bool> AntiVAC{ false };
 		inline CVar<bool> InstantAccept{ false };
-
+		inline CVar<bool> RunescapeChat{ false };
 		namespace Followbot
 		{
 			inline CVar<bool> Enabled{ false };

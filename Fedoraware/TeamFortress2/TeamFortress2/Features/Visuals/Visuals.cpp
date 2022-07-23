@@ -937,3 +937,60 @@ void CVisuals::CPrecipitation::Cleanup()
 	RainEntity = nullptr;
 	RainNetworkable = nullptr;
 }
+
+void CRunescapeChat::Draw()
+{
+	if (!Vars::Misc::RunescapeChat.Value)
+	{
+		return;
+	}
+	std::vector<size_t> vecRemovals;
+	const float curTime = I::GlobalVars->curtime;
+	Vec3 vHeadpos;
+	Vec3 vScreen;
+	for (size_t i = 0; i < m_vecChats.size(); i++)
+	{
+		auto &chat = m_vecChats.at(i);
+		if (chat.m_flTimeCreated + 4 < curTime)
+		{
+			vecRemovals.push_back(i);
+		}
+		else
+		{
+			if (chat.m_pEntity && chat.m_pEntity->IsAlive())
+			{
+				vHeadpos = chat.m_pEntity->GetHitboxPos(HITBOX_HEAD);
+				if (!vHeadpos.IsZero())
+				{
+					vHeadpos.z += 20;
+					if (Utils::W2S(vHeadpos, vScreen))
+					{
+						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), { 255, 255, 0, 255 }, ALIGN_CENTERHORIZONTAL, "%s", chat.m_szChatText.c_str());
+					}
+				}
+			}
+		}
+	}
+
+	for (auto& pos : vecRemovals)
+	{
+		m_vecChats.erase(m_vecChats.begin() + pos);
+	}
+}
+
+void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
+{
+	int highestOffset = 0;
+	for (auto& chat : m_vecChats)
+	{
+		if (chat.m_pEntity == pEntity)
+		{
+			if (chat.m_nOffset >= highestOffset)
+			{
+				highestOffset = chat.m_nOffset + 1;
+			}
+		}
+	}
+	Chat_t push = { pEntity, I::GlobalVars->curtime, highestOffset, szChatText };
+	m_vecChats.push_back(push);
+}

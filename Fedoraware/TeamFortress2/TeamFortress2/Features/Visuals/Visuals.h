@@ -81,4 +81,24 @@ public:
 
 };
 
+class CRunescapeChat
+{
+	struct Chat_t
+	{
+		CBaseEntity* m_pEntity = nullptr;
+		float m_flTimeCreated;
+		int m_nOffset;
+		std::string m_szChatText;
+	};
+
+	std::deque<Chat_t> m_vecChats;
+public:
+	void Draw();
+	void PushChat(CBaseEntity* pEntity, std::string szChatText);
+
+	
+};
+
 ADD_FEATURE(CVisuals, Visuals)
+
+ADD_FEATURE(CRunescapeChat, RSChat);

@@ -131,6 +131,11 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				}
 			}
 
+			if (I::EngineClient->IsInGame())
+			{
+				F::RSChat.Draw();
+			}
+
 			if (CBaseEntity* pLocal = g_EntityCache.GetLocal())
 			{
 				F::Visuals.DrawAntiAim(pLocal);

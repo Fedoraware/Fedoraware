@@ -990,6 +990,7 @@ void CMenu::MenuVisuals()
 						fontMenu,
 						fontIndicator,
 						{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
+						{ 0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW},
 					};
 
 					g_Draw.RemakeFonts(fonts);
@@ -1525,6 +1526,7 @@ void CMenu::MenuMisc()
 			WToggle("Chat Flags", &Vars::Misc::ChatFlags.Value);
 			//WToggle("Chat Censor", &Vars::Misc::ChatCensor.Value); HelpMarker("Clears the chat when someone accuses your");
 			//WToggle("Allow Newlines", &Vars::Misc::ChatNL.Value); HelpMarker("Allows you to use \\n in the chat");
+			WToggle("Runescape chat", &Vars::Misc::RunescapeChat.Value); HelpMarker("Draws text on top of peoples heads when they type like in runescape (wholesome)");
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
 			WCombo("Mediaval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
 
