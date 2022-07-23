@@ -197,6 +197,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeTFNormal_UpdateSteamRichPresence.cpp" />
@@ -252,6 +253,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_IsPlayingTimeDemo.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineVGui_Paint.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Input_GetUserCmd.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\IsLocalPlayerUsingVisionFilterFlags.cpp" />
