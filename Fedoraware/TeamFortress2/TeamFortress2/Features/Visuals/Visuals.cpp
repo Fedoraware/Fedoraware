@@ -402,7 +402,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					case 1:
 					{
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);
-						g_Draw.GradientRect(DTBox.x + 1, DTBox.y + 1, (DTBox.x + 1) + ratioInterp * (DTBox.w - 2), (DTBox.y + 1) + DTBox.h - 2, color1, color2, true);
+						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
 						break;
 					}
 					case 2:
