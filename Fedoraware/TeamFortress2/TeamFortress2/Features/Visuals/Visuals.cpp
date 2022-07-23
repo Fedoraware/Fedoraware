@@ -370,7 +370,7 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 {
 	//Tickbase info
-	if (Vars::Misc::CL_Move::Enabled.Value)
+	if (Vars::Misc::CL_Move::Enabled.Value && Vars::Misc::CL_Move::DTBarStyle.Value)
 	{
 
 		const auto& pWeapon = g_EntityCache.GetWeapon();
@@ -399,8 +399,6 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 
 				switch (Vars::Misc::CL_Move::DTBarStyle.Value)
 				{
-					case 0:
-						return;
 					case 1:
 					{
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);
