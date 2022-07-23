@@ -421,23 +421,24 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);	//	draw the outline
 						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, { 28, 29, 38, 255 });	//	draw the background
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
+						g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 255, 255, 255 }, ALIGN_DEFAULT, L"CHARGE");
 
 						if (G::ShiftedTicks == 0) // chargless
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_DEFAULT, L"NO CHARGE");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_REVERSE, L"NO CHARGE");
 						}
 						else if (G::Recharging) // charging 
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 126, 0, 255 }, ALIGN_DEFAULT, L"CHARGING");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 126, 0, 255 }, ALIGN_REVERSE, L"CHARGING");
 						}
 						else if (!G::WaitForShift && ratioCurrent == 1) // ready (only show if we are fully charged)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 66, 255, 0, 255 }, ALIGN_DEFAULT, L"READY");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 66, 255, 0, 255 }, ALIGN_REVERSE, L"READY");
 
 						}
 						else	//waiting 
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 46, 46, 255 }, ALIGN_DEFAULT, L"DT IMPOSSIBLE");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 46, 46, 255 }, ALIGN_REVERSE, L"DT IMPOSSIBLE");
 						}
 						break;
 
