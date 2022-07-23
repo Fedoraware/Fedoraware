@@ -122,14 +122,14 @@ void CConfigManager::SaveJson(const char* name, const Chams_t& val)
 
 void CConfigManager::SaveJson(const char* name, const DragBox_t& val)
 {
-	boost::property_tree::ptree chamTree;
-	chamTree.put("x", val.x);
-	chamTree.put("y", val.y);
-	chamTree.put("w", val.w);
-	chamTree.put("h", val.h);
-	chamTree.put("c", val.c);
+	boost::property_tree::ptree dragBoxTree;
+	dragBoxTree.put("x", val.x);
+	dragBoxTree.put("y", val.y - 20);
+	dragBoxTree.put("w", val.w);
+	dragBoxTree.put("h", val.h + 20);
+	dragBoxTree.put("c", val.c);
 
-	WriteTree.put_child(name, chamTree);
+	WriteTree.put_child(name, dragBoxTree);
 }
 
 void CConfigManager::LoadJson(const char* name, std::string& val)
@@ -677,7 +677,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::MoveSimLine);
 			SAVE_OTHER(Vars::Visuals::VMOffsets);
-			SAVE_OTHER(Vars::Visuals::OnScreenConditions	);
+			SAVE_OTHER(Vars::Visuals::OnScreenConditions);
 			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
