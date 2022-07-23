@@ -60,8 +60,8 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
-	const int x = F::Visuals.OnScreenConditions.c;
-	int y = F::Visuals.OnScreenConditions.y + 15;
+	const int x = Vars::Visuals::OnScreenConditions.c;
+	int y = Vars::Visuals::OnScreenConditions.y + 15;
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 		

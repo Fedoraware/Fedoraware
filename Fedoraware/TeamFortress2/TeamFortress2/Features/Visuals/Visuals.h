@@ -37,8 +37,6 @@ public:
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;
 
-	DragBox_t OnScreenConditions;
-
 	class CPrecipitation
 	{
 	private:

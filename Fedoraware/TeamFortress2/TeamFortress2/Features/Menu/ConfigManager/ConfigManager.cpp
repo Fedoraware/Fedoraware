@@ -120,6 +120,18 @@ void CConfigManager::SaveJson(const char* name, const Chams_t& val)
 	WriteTree.put_child(name, chamTree);
 }
 
+void CConfigManager::SaveJson(const char* name, const DragBox_t& val)
+{
+	boost::property_tree::ptree chamTree;
+	chamTree.put("x", val.x);
+	chamTree.put("y", val.y);
+	chamTree.put("w", val.w);
+	chamTree.put("h", val.h);
+	chamTree.put("c", val.c);
+
+	WriteTree.put_child(name, chamTree);
+}
+
 void CConfigManager::LoadJson(const char* name, std::string& val)
 {
 	if (auto getValue = ReadTree.get_optional<std::string>(name))
@@ -199,6 +211,18 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 		if (const auto getChildColor = (*getChild).get_child_optional("colour")) { val.colour = TreeToColor(*getChildColor); }
 		if (const auto getChildColor = (*getChild).get_child_optional("overlayColour")) { val.overlayColour = TreeToColor(*getChildColor); }
 		if (auto getValue = (*getChild).get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, DragBox_t& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		if (auto getValue = (*getChild).get_optional<int>("x")) { val.x = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("y")) { val.y = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("w")) { val.w = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("h")) { val.h = *getValue; }
+		if (auto getValue = (*getChild).get_optional<int>("c")) { val.c = *getValue; }
 	}
 }
 
@@ -651,6 +675,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::MoveSimLine);
 			SAVE_OTHER(Vars::Visuals::VMOffsets);
+			SAVE_OTHER(Vars::Visuals::OnScreenConditions	);
 			SAVE_VAR(Vars::Visuals::VMRoll);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrows);
 			SAVE_VAR(Vars::Visuals::ArrowLength);
@@ -1421,6 +1446,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::MoveSimLine);
 			LOAD_OTHER(Vars::Visuals::VMOffsets);
+			LOAD_OTHER(Vars::Visuals::OnScreenConditions);
 			LOAD_VAR(Vars::Visuals::VMRoll);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrows);
 			LOAD_VAR(Vars::Visuals::ArrowLength);

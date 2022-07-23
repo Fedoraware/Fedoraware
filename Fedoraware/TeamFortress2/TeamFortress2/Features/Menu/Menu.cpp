@@ -1924,29 +1924,6 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool& bShouldDraw
 	}
 }
 
-void CMenu::DrawConditionDrag()
-{
-	if (Vars::Visuals::DrawOnScreenConditions.Value)
-	{
-		ImGui::SetNextWindowSize({ (float)F::Visuals.OnScreenConditions.w, (float)F::Visuals.OnScreenConditions.h }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos({ (float)F::Visuals.OnScreenConditions.x, (float)F::Visuals.OnScreenConditions.y }, ImGuiCond_FirstUseEver);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
-		if (ImGui::Begin("Conditions", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
-		{
-			const ImVec2 winPos = ImGui::GetWindowPos();
-			const ImVec2 winSize = ImGui::GetWindowSize();
-
-			Vars::Visuals::ConditionX.Value = static_cast<int>(winPos.x);
-			Vars::Visuals::ConditionY.Value = static_cast<int>(winPos.y);
-
-			ImGui::End();
-		}
-		ImGui::PopStyleVar();
-		ImGui::PopStyleColor();
-	}
-}
-
 void CMenu::DrawKeybinds()
 {
 	if (!Vars::Menu::ShowKeybinds) { return; }
@@ -2019,7 +1996,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		DrawMenu();
 		DrawCameraWindow();
-		AddDraggable("Conditions", F::Visuals.OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
+		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
 		//AddDraggable("Crits", Vars::CritHack::IndicatorX.Value, Vars::CritHack::IndicatorY.Value, F::CritHack.IndicatorW, F::CritHack.IndicatorH, Vars::CritHack::Indicators.Value, false, true);
 
 		SettingsWindow();
