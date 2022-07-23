@@ -17,7 +17,7 @@ class CMenu {
 	void DrawCritDrag();
 
 
-	void AddDraggable(const char* szTitle, int& x, int& y, int& w, int& h, bool &bShouldDraw, bool setSize = false);
+	void AddDraggable(const char* szTitle, DragBox_t& info, bool &bShouldDraw, bool setSize = false);
 
 	void DrawConditionDrag();
 	void DrawKeybinds();

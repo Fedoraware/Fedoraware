@@ -60,26 +60,27 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
-	const int x = Vars::Visuals::ConditionX.Value;
-	int y = Vars::Visuals::ConditionY.Value;
+	const int x = F::Visuals.OnScreenConditions.c;
+	int y = F::Visuals.OnScreenConditions.y + 15;
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 		
 	int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
-	int longestText = 40;
+	//int longestText = 40;
 	int width, height;
 	for (const std::wstring &cond : conditionsVec) {
-		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, cond.data());
+		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
 		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, cond.data(), width, height);
-		if (width > longestText)
-		{
-			longestText = width;
-		}
-		nTextOffset += g_Draw.m_vecFonts[FONT_MENU].nTall;
+		//if (width > longestText)
+		//{
+		//	longestText = width;
+		//}
+		nTextOffset += height;
 	}
 
-	ConditionW = longestText;
-	ConditionH = y + nTextOffset;
+	//	do these matter?
+	//ConditionW = longestText;
+	//ConditionH = y + nTextOffset;
 }
 
 void CVisuals::SkyboxChanger()

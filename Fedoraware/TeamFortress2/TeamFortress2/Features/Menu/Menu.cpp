@@ -1884,21 +1884,21 @@ void CMenu::DrawCritDrag()
 	}
 }
 
-void CMenu::AddDraggable(const char* szTitle, int& x, int& y, int& w, int& h, bool& bShouldDraw, bool setSize)
+void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool& bShouldDraw, bool setSize)
 {
 	if (bShouldDraw)
 	{
 		if (setSize)
 		{
-			ImGui::SetNextWindowSize({ static_cast<float>(w), static_cast<float>(h) }, ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowPos({ static_cast<float>(x), static_cast<float>(y) }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize({ (float)info.w,(float)info.h }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos({ (float)info.x, (float)info.y}, ImGuiCond_FirstUseEver);
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
 		}
 		else
 		{
 			ImGui::SetNextWindowSize({ 80.f, 60.f }, ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowPos({ static_cast<float>(x), static_cast<float>(y) }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos({ (float)info.x, (float)info.y}, ImGuiCond_FirstUseEver);
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
 		}
@@ -1908,13 +1908,14 @@ void CMenu::AddDraggable(const char* szTitle, int& x, int& y, int& w, int& h, bo
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();
 
-			x = static_cast<int>(winPos.x);
-			y = static_cast<int>(winPos.y);
+			info.x = static_cast<int>(winPos.x);
+			info.y = static_cast<int>(winPos.y);
 			if (setSize)
 			{
-				w = static_cast<int>(winSize.x);
-				h = static_cast<int>(winSize.y);
+				info.w = static_cast<int>(winSize.x);
+				info.h = static_cast<int>(winSize.y);
 			}
+			info.c = static_cast<int>(info.x + ((setSize ? info.w : 80.f) / 2));
 
 			ImGui::End();
 		}
@@ -1927,8 +1928,8 @@ void CMenu::DrawConditionDrag()
 {
 	if (Vars::Visuals::DrawOnScreenConditions.Value)
 	{
-		ImGui::SetNextWindowSize({ static_cast<float>(F::Visuals.ConditionW), static_cast<float>(F::Visuals.ConditionH) }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos({ static_cast<float>(Vars::Visuals::ConditionX.Value), static_cast<float>(Vars::Visuals::ConditionY.Value) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize({ (float)F::Visuals.OnScreenConditions.w, (float)F::Visuals.OnScreenConditions.h }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ (float)F::Visuals.OnScreenConditions.x, (float)F::Visuals.OnScreenConditions.y }, ImGuiCond_FirstUseEver);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
 		if (ImGui::Begin("Conditions", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
@@ -2018,7 +2019,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		DrawMenu();
 		DrawCameraWindow();
-		AddDraggable("Conditions", Vars::Visuals::ConditionX.Value, Vars::Visuals::ConditionY.Value, F::Visuals.ConditionW, F::Visuals.ConditionH, Vars::Visuals::DrawOnScreenConditions.Value, false);
+		AddDraggable("Conditions", F::Visuals.OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
 		//AddDraggable("Crits", Vars::CritHack::IndicatorX.Value, Vars::CritHack::IndicatorY.Value, F::CritHack.IndicatorW, F::CritHack.IndicatorH, Vars::CritHack::Indicators.Value, false, true);
 
 		SettingsWindow();
