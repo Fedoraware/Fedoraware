@@ -79,7 +79,6 @@
     <ClCompile Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\TextEditor.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\DTBar\DTBar.cpp" />
     <ClCompile Include="TeamFortress2\Features\Followbot\Followbot.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_PreEntity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\BaseClientDLL_PostEntity.cpp" />
@@ -690,7 +689,6 @@
     <ClInclude Include="TeamFortress2\Features\Menu\MaterialEditor\MaterialEditor.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ImGui\TextEditor.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\DTBar\DTBar.h" />
     <ClInclude Include="TeamFortress2\Utils\KeyHelper\KeyHelper.hpp" />
     <ClInclude Include="TeamFortress2\Features\Followbot\Followbot.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />

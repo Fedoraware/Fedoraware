@@ -1099,23 +1099,13 @@ void CMenu::MenuVisuals()
 				WSlider("VM Roll", &Vars::Visuals::VMRoll.Value, -180, 180);
 
 				SectionTitle("DT Indicator");
-				WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin" }); HelpMarker("Which style to do the bar style");
+				WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin" }); HelpMarker("What style the bar should draw in.");
+				Text("Charging Gradient");
 				ColorPickerL("DT charging right", Colors::DTBarIndicatorsCharging.endColour);
 				ColorPickerL("DT charging left", Colors::DTBarIndicatorsCharging.startColour, 1);
-				if (Vars::Misc::CL_Move::DTBarStyle.Value == 3)
-				{
-					WSlider("DT Bar height###dtBHeightNitro", &Vars::Misc::CL_Move::DTBarScaleY.Value, 1, 25);
-					ColorPickerL("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
-					ColorPickerL("DT charged left", Colors::DTBarIndicatorsCharged.startColour, 1);
-					WSlider("DT Bar width###dtBWidthNitro", &Vars::Misc::CL_Move::DTBarScaleX.Value, 100, 1000);
-				}
-				else
-				{
-					WSlider("DT Bar height###dtBHeight", &Vars::Misc::CL_Move::DtbarOutlineHeight.Value, 1, 30);
-					ColorPickerL("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
-					ColorPickerL("DT charged left", Colors::DTBarIndicatorsCharged.startColour, 1);
-					WSlider("DT Bar width###dtBWidth", &Vars::Misc::CL_Move::DtbarOutlineWidth.Value, 1, 30);
-				}
+				Text("Charged Gradient");
+				ColorPickerL("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
+				ColorPickerL("DT charged left", Colors::DTBarIndicatorsCharged.startColour, 1);
 
 				SectionTitle("Attribute Changer");
 
@@ -1886,7 +1876,7 @@ void CMenu::DrawCritDrag()
 	}
 }
 
-void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool& bShouldDraw, bool setSize)
+void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw, bool setSize)
 {
 	if (bShouldDraw)
 	{
@@ -1903,20 +1893,21 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool& bShouldDraw
 			info.update = false;
 		}
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 50.f, 21.f });
 
 		auto bResize = setSize ? 0 : ImGuiWindowFlags_NoResize;
 		if (ImGui::Begin(szTitle, nullptr, bResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();
+			constexpr int titlebarheight = 20;
 
 			info.x = static_cast<int>(winPos.x);
-			info.y = static_cast<int>(winPos.y);
+			info.y = static_cast<int>(winPos.y + titlebarheight);	//	fix title bars
 			if (setSize)
 			{
 				info.w = static_cast<int>(winSize.x);
-				info.h = static_cast<int>(winSize.y);
+				info.h = static_cast<int>(winSize.y - titlebarheight);	//	account for title bar fix
 			}
 			info.c = static_cast<int>(info.x + ((setSize ? info.w : 80.f) / 2));
 
@@ -2000,6 +1991,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DrawMenu();
 		DrawCameraWindow();
 		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
+		AddDraggable("DT Bar", Vars::Misc::CL_Move::DTIndicator, Vars::Misc::CL_Move::DTBarStyle.Value, true);
 		//AddDraggable("Crits", Vars::CritHack::IndicatorX.Value, Vars::CritHack::IndicatorY.Value, F::CritHack.IndicatorW, F::CritHack.IndicatorH, Vars::CritHack::Indicators.Value, false, true);
 
 		SettingsWindow();

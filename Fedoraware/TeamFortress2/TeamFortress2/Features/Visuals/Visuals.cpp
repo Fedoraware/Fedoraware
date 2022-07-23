@@ -61,7 +61,7 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
 	const int x = Vars::Visuals::OnScreenConditions.c;
-	int y = Vars::Visuals::OnScreenConditions.y + 15;
+	int y = Vars::Visuals::OnScreenConditions.y;
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 		
@@ -365,7 +365,6 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 	}
 }
 
-#include "../../Features/Menu/DTBar/DTBar.h"
 #include "../../Resources/DVD-Icon.h"
 
 void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
@@ -381,6 +380,9 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 			if (pLocal->GetLifeState() == LIFE_ALIVE)
 			{
 				const int nY = (g_ScreenSize.h / 2) + 20;
+				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator;
+				const float ratioCurrent = (float)((float)G::ShiftedTicks / (float)Vars::Misc::CL_Move::DTTicks.Value); std::clamp(ratioCurrent, 0.00f, 1.00f);
+				static float ratioInterp = 0.00f; ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f); std::clamp(ratioInterp, 0.00f, 1.00f);
 
 				static Color_t color1, color2;
 
@@ -401,91 +403,46 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						return;
 					case 1:
 					{
-						const auto maxWidth = static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
-						const float dtOffset = g_ScreenSize.c - (maxWidth / 2);
-						static float tickWidth = 0.f;
-						static float barWidth = 0.f;
-						tickWidth = (G::ShiftedTicks * Vars::Misc::CL_Move::DtbarOutlineWidth.Value);
-						barWidth = g_Draw.EaseIn(barWidth, tickWidth, 0.9f);
-
-						g_Draw.OutlinedRect(dtOffset - 1, (g_ScreenSize.h / 2) + 49, maxWidth + 2,
-											Vars::Misc::CL_Move::DtbarOutlineHeight.Value + 2,
-											{ 50, 50, 50, 210 });
-						g_Draw.GradientRect(dtOffset, (g_ScreenSize.h / 2) + 50, dtOffset + barWidth,
-											(g_ScreenSize.h / 2) + 50 + Vars::Misc::CL_Move::DtbarOutlineHeight.
-											Value, color1, color2, true);
+						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);
+						g_Draw.GradientRect(DTBox.x + 1, DTBox.y + 1, (DTBox.x + 1) + ratioInterp * (DTBox.w - 2), (DTBox.y + 1) + DTBox.h - 2, color1, color2, true);
 						break;
 					}
 					case 2:
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
-						const int drawY = g_ScreenSize.h / 2 + (g_ScreenSize.h * 0.24);
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c, drawY - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
-						g_Draw.RoundedBoxStatic(g_ScreenSize.c - 50, drawY, 100, 12, 4, { 0,0,0,170 });
-						const int chargeWidth = Math::RemapValClamped(G::ShiftedTicks, 0, Vars::Misc::CL_Move::DTTicks.Value, 0, 96);
-						if (G::ShiftedTicks && chargeWidth > 5)
+						const int drawX = DTBox.x;
+						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Colors::DtOutline);
+						if (G::ShiftedTicks && ratioCurrent)
 						{
-							g_Draw.RoundedBoxStatic(g_ScreenSize.c - 48, drawY + 2, chargeWidth, 8, 4, Vars::Menu::Colors::MenuAccent);
+							g_Draw.RoundedBoxStatic(DTBox.x + 2, DTBox.y + 2, ratioCurrent * (DTBox.w - 4), DTBox.h - 4, 4, Vars::Menu::Colors::MenuAccent);
 						}
 						break;
 					}
-					case 3:
-					{
-						F::DTBar.Run();
-					// put this here so we don't move menu if we r using something else, no biggie
-						const float rratio = (static_cast<float>(G::ShiftedTicks) / static_cast<float>(
-							Vars::Misc::CL_Move::DTTicks.Value));
-						static float ratio = 0.f;
-						ratio = g_Draw.EaseIn(ratio, rratio, 0.95f);
+					case 3: {
+						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);	//	draw the outline
+						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, { 28, 29, 38, 255 });	//	draw the background
+						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
 
-						if (ratio > 1.f) { ratio = 1.f; }
-						else if (ratio < 0.f) { ratio = 0.f; }
-						//if the user changes ticks after charging we don't want it to be like sliding out of bounds, this stops that.
+						if (G::ShiftedTicks == 0) // chargless
+						{
+							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_DEFAULT, L"NO CHARGE");
+						}
+						else if (G::Recharging) // charging 
+						{
+							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_DEFAULT, L"CHARGING");
+						}
+						else if (!G::WaitForShift && ratioCurrent == 1) // ready (only show if we are fully charged)
+						{
+							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 66, 255, 0, 255 }, ALIGN_DEFAULT, L"READY");
 
-						// these are all vars in dp but fedware doesnt have the vars and i am not adding them 
-						//		so i added them
-						const int xoff = Vars::Misc::CL_Move::DTBarX.Value;
-						// width offset (is it called width offset who knows)
-						const int yoff = Vars::Misc::CL_Move::DTBarY.Value; // height offset
-						const int yscale = Vars::Misc::CL_Move::DTBarScaleY.Value; // height of bar
-						const int xscale = Vars::Misc::CL_Move::DTBarScaleX.Value; // width of bar
-
-						g_Draw.OutlinedRect(g_ScreenSize.c - (xscale / 2 + 1) + xoff,
-											nY - (yscale / 2 + 1) + yoff, (xscale + 2), (yscale + 2),
-											Colors::DtOutline);
-						g_Draw.Rect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff, xscale,
-									yscale, { 28, 29, 38, 255 });
-						g_Draw.GradientRect(g_ScreenSize.c - (xscale / 2) + xoff, nY - (yscale / 2) + yoff,
-											((g_ScreenSize.c - (xscale / 2) + xoff) + (xscale * ratio)),
-											(nY - (yscale / 2) + yoff + yscale), { color1 }, { color2 }, TRUE);
-						g_Draw.String(FONT_INDICATORS, g_ScreenSize.c - (xscale / 2 + 1) + xoff,
-									  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 255, 255, 255 }, ALIGN_DEFAULT,
-									  _(L"CHARGE"));
-						if (G::ShiftedTicks == 0) // no charge no money
-						{
-							g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
-										  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 55, 40, 255 }, ALIGN_REVERSE,
-										  _(L"NO CHARGE"));
 						}
-						else if (G::Recharging && (G::WaitForShift || ratio < 1)) // charging 
+						else	//waiting 
 						{
-							g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
-										  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 126, 0, 255 }, ALIGN_REVERSE,
-										  _(L"CHARGING"));
-						}
-						else if (!G::WaitForShift && ratio == 1) // activates when ready
-						{
-							g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
-										  nY - (yscale / 2 + 1) - 10 + yoff, { 66, 255, 0, 255 }, ALIGN_REVERSE,
-										  _(L"READY"));
-						}
-						else // activates when waiting blah blah blahg
-						{
-							g_Draw.String(FONT_INDICATORS, (g_ScreenSize.c - (xscale / 2) + xoff + xscale),
-										  nY - (yscale / 2 + 1) - 10 + yoff, { 255, 46, 46, 255 }, ALIGN_REVERSE,
-										  _(L"DT IMPOSSIBLE"));
+							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 46, 46, 255 }, ALIGN_DEFAULT, L"DT IMPOSSIBLE");
 						}
 						break;
+
 					}
 				}
 			}

@@ -445,7 +445,7 @@ namespace Vars
 		inline CVar<bool> RemoveDisguises{ false };
 		inline CVar<bool> RemoveTaunts{ false };
 		inline CVar<bool> DrawOnScreenConditions{ false };
-		inline DragBox_t OnScreenConditions{};
+		inline DragBox_t OnScreenConditions{ g_ScreenSize.c, g_ScreenSize.c };
 		inline CVar<int> FieldOfView{ 130 };
 		inline CVar<int> AimFOVAlpha{ 10 };
 		inline CVar<bool> RemoveScope{ false };
@@ -662,19 +662,14 @@ namespace Vars
 			inline CVar<int> TeleportMode{ 0 };
 			inline CVar<int> RechargeKey{ 0x48 }; //H
 			inline CVar<int> DoubletapKey{ 0x56 }; //V
-			inline CVar<int> DTBarStyle{ 3 };
 			inline CVar<bool> RetainFakelag{ false };
 			inline CVar<bool> RechargeWhileDead{ false };
 			inline CVar<bool> AutoRecharge{ false }; //H
 			inline CVar<bool> AntiWarp{ false }; //H
 			inline CVar<int> DTMode{ 0 }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
-			inline CVar<int> DtbarOutlineHeight{ 5 };
-			inline CVar<int> DtbarOutlineWidth{ 4 };
+			inline CVar<int> DTBarStyle{ 3 };
+			inline DragBox_t DTIndicator{g_ScreenSize.c, g_ScreenSize.c};
 			inline CVar<int> DTTicks{ 21 };
-			inline CVar<int> DTBarScaleY{ 12 };
-			inline CVar<int> DTBarScaleX{ 100 };
-			inline CVar<int> DTBarY{ 60 };
-			inline CVar<int> DTBarX{ 0 };
 			inline CVar<bool> WaitForDT{ false };
 			inline CVar<bool> Fakelag{ false };
 			inline CVar<int> FakelagMode{ 0 }; // 0 - plain, 1 - random, 2 - vel based
