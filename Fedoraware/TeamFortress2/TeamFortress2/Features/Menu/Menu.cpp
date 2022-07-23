@@ -20,6 +20,8 @@
 #include "../Visuals/Visuals.h"
 #include "../CritHack/CritHack.h"
 
+#pragma warning (disable : 4309)
+
 int unuPrimary = 0;
 int unuSecondary = 0;
 

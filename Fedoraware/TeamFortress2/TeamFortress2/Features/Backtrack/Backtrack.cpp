@@ -61,7 +61,7 @@ void CBacktrack::UpdateRecords()
 		}
 
 		// Remove old out-of-range records
-		while (Records[i].size() > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
+		while (static_cast<int>(Records[i].size()) > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
 		{
 			Records[i].pop_back();
 		}

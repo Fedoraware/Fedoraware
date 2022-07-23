@@ -8,6 +8,8 @@
 #include "imgui_color_gradient.h"
 #include "imgui_internal.h"
 
+#pragma warning (disable : 4244)
+
 static constexpr float GRADIENT_BAR_WIDGET_HEIGHT = 25;
 static constexpr float GRADIENT_BAR_EDITOR_HEIGHT = 40;
 static constexpr float GRADIENT_MARK_DELETE_DIFFY = 40;
@@ -62,13 +64,32 @@ void ImGradient::ComputeColorAt(float position, ImVec4* color) const
 
 	for (ImGradientMark* mark : Marks)
 	{
-		if (mark->Position < position) { if (!lower || lower->Position < mark->Position) { lower = mark; } }
+		if (mark)
+		{
+			if (mark->Position < position)
+			{
+				if (!lower || lower->Position < mark->Position)
+				{
+					lower = mark;
+				}
+			}
 
-		if (mark->Position >= position) { if (!upper || upper->Position > mark->Position) { upper = mark; } }
+			if (mark->Position >= position)
+			{
+				if (!upper || upper->Position > mark->Position)
+				{
+					upper = mark;
+				}
+			}
+		}
 	}
 
-	if (upper && !lower) { lower = upper; }
-	else if (!upper && lower) { upper = lower; }
+	if (upper && !lower) { 
+		lower = upper; 
+	}
+	else if (!upper && lower) { 
+		upper = lower; 
+	}
 	else if (!lower && !upper)
 	{
 		color->x = color->y = color->z = color->w = 0;
@@ -88,10 +109,10 @@ void ImGradient::ComputeColorAt(float position, ImVec4* color) const
 		const float delta = (position - lower->Position) / distance;
 
 		// Lerp
-		color->x = ((1.0f - delta) * lower->Color.x) + ((delta) * upper->Color.x);
-		color->y = ((1.0f - delta) * lower->Color.y) + ((delta) * upper->Color.y);
-		color->z = ((1.0f - delta) * lower->Color.z) + ((delta) * upper->Color.z);
-		color->w = ((1.0f - delta) * lower->Color.w) + ((delta) * upper->Color.w);
+		color->x = ((1.0f - delta) * lower->Color.x) + ((delta)*upper->Color.x);
+		color->y = ((1.0f - delta) * lower->Color.y) + ((delta)*upper->Color.y);
+		color->z = ((1.0f - delta) * lower->Color.z) + ((delta)*upper->Color.z);
+		color->w = ((1.0f - delta) * lower->Color.w) + ((delta)*upper->Color.w);
 	}
 }
 
@@ -106,16 +127,16 @@ void ImGradient::RefreshCache()
 namespace ImGui
 {
 	void GradientRect(ImGradient* gradient,
-	                  const ImVec2& bar_pos,
-	                  float maxWidth,
-	                  float height)
+					  const ImVec2& bar_pos,
+					  float maxWidth,
+					  float height)
 	{
 		const auto drawList = GetWindowDrawList();
 		const ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems) { return; }
 
-		ImVec4 colorA = {1, 1, 1, 1};
-		ImVec4 colorB = {1, 1, 1, 1};
+		ImVec4 colorA = { 1, 1, 1, 1 };
+		ImVec4 colorB = { 1, 1, 1, 1 };
 		float prevX = bar_pos.x;
 		const float barBottom = bar_pos.y + height;
 		ImGradientMark* prevMark = nullptr;
@@ -123,8 +144,8 @@ namespace ImGui
 		if (gradient->GetMarks().empty())
 		{
 			drawList->AddRectFilled(ImVec2(bar_pos.x, bar_pos.y),
-			                        ImVec2(bar_pos.x + maxWidth, barBottom),
-			                        ImColor(255, 255, 255, 255));
+									ImVec2(bar_pos.x + maxWidth, barBottom),
+									ImColor(255, 255, 255, 255));
 		}
 
 		ImU32 colorAU32 = 0;
@@ -132,6 +153,7 @@ namespace ImGui
 
 		for (const auto mark : gradient->GetMarks())
 		{
+			if (!mark) continue;
 			const float from = prevX;
 			const float to = prevX = bar_pos.x + mark->Position * maxWidth;
 
@@ -161,8 +183,8 @@ namespace ImGui
 			if (mark->Position > 0.f)
 			{
 				drawList->AddRectFilledMultiColor(ImVec2(from, bar_pos.y),
-				                                  ImVec2(to, barBottom),
-				                                  colorAU32, colorBU32, colorBU32, colorAU32);
+												  ImVec2(to, barBottom),
+												  colorAU32, colorBU32, colorBU32, colorAU32);
 			}
 
 			prevMark = mark;
@@ -171,34 +193,34 @@ namespace ImGui
 		if (prevMark && prevMark->Position < 1.f)
 		{
 			drawList->AddRectFilledMultiColor(ImVec2(prevX, bar_pos.y),
-			                                  ImVec2(bar_pos.x + maxWidth, barBottom),
-			                                  colorBU32, colorBU32, colorBU32, colorBU32);
+											  ImVec2(bar_pos.x + maxWidth, barBottom),
+											  colorBU32, colorBU32, colorBU32, colorBU32);
 		}
 
 		SetCursorScreenPos(ImVec2(bar_pos.x, bar_pos.y + height + 10.0f));
 	}
 
 	static void DrawGradientBar(ImGradient* gradient,
-	                            const struct ImVec2& bar_pos,
-	                            float maxWidth,
-	                            float height)
+								const struct ImVec2& bar_pos,
+								float maxWidth,
+								float height)
 	{
-		ImVec4 colorA = {1, 1, 1, 1};
-		ImVec4 colorB = {1, 1, 1, 1};
+		ImVec4 colorA = { 1, 1, 1, 1 };
+		ImVec4 colorB = { 1, 1, 1, 1 };
 		float prevX = bar_pos.x;
 		const float barBottom = bar_pos.y + height;
 		ImGradientMark* prevMark = nullptr;
 		ImDrawList* drawList = GetWindowDrawList();
 
 		drawList->AddRectFilled(ImVec2(bar_pos.x - 2, bar_pos.y - 2),
-		                         ImVec2(bar_pos.x + maxWidth + 2, barBottom + 2),
-		                         IM_COL32(100, 100, 100, 255));
+								ImVec2(bar_pos.x + maxWidth + 2, barBottom + 2),
+								IM_COL32(100, 100, 100, 255));
 
 		if (gradient->GetMarks().empty())
 		{
 			drawList->AddRectFilled(ImVec2(bar_pos.x, bar_pos.y),
-			                         ImVec2(bar_pos.x + maxWidth, barBottom),
-			                         IM_COL32(255, 255, 255, 255));
+									ImVec2(bar_pos.x + maxWidth, barBottom),
+									IM_COL32(255, 255, 255, 255));
 		}
 
 		ImU32 colorAU32 = 0;
@@ -206,6 +228,7 @@ namespace ImGui
 
 		for (const auto mark : gradient->GetMarks())
 		{
+			if (!mark) continue;
 			const float from = prevX;
 			const float to = prevX = bar_pos.x + mark->Position * maxWidth;
 
@@ -235,8 +258,8 @@ namespace ImGui
 			if (mark->Position > 0.f)
 			{
 				drawList->AddRectFilledMultiColor(ImVec2(from, bar_pos.y),
-				                                   ImVec2(to, barBottom),
-				                                   colorAU32, colorBU32, colorBU32, colorAU32);
+												  ImVec2(to, barBottom),
+												  colorAU32, colorBU32, colorBU32, colorAU32);
 			}
 
 			prevMark = mark;
@@ -245,22 +268,22 @@ namespace ImGui
 		if (prevMark && prevMark->Position < 1.f)
 		{
 			drawList->AddRectFilledMultiColor(ImVec2(prevX, bar_pos.y),
-			                                   ImVec2(bar_pos.x + maxWidth, barBottom),
-			                                   colorBU32, colorBU32, colorBU32, colorBU32);
+											  ImVec2(bar_pos.x + maxWidth, barBottom),
+											  colorBU32, colorBU32, colorBU32, colorBU32);
 		}
 
 		SetCursorScreenPos(ImVec2(bar_pos.x, bar_pos.y + height + 10.0f));
 	}
 
 	static void DrawGradientMarks(ImGradient* gradient,
-	                              ImGradientMark*& draggingMark,
-	                              ImGradientMark*& selectedMark,
-	                              const struct ImVec2& bar_pos,
-	                              float maxWidth,
-	                              float height)
+								  ImGradientMark*& draggingMark,
+								  ImGradientMark*& selectedMark,
+								  const struct ImVec2& bar_pos,
+								  float maxWidth,
+								  float height)
 	{
-		ImVec4 colorA = {1, 1, 1, 1};
-		ImVec4 colorB = {1, 1, 1, 1};
+		ImVec4 colorA = { 1, 1, 1, 1 };
+		ImVec4 colorB = { 1, 1, 1, 1 };
 		const float barBottom = bar_pos.y + height;
 		ImGradientMark* prevMark = nullptr;
 		ImDrawList* drawList = GetWindowDrawList();
@@ -269,6 +292,7 @@ namespace ImGui
 
 		for (const auto mark : gradient->GetMarks())
 		{
+			if (!mark) continue;
 			if (!selectedMark) { selectedMark = mark; }
 
 			const float to = bar_pos.x + mark->Position * maxWidth;
@@ -297,31 +321,31 @@ namespace ImGui
 			colorBU32 = ColorConvertFloat4ToU32(colorB);
 
 			drawList->AddTriangleFilled(ImVec2(to, bar_pos.y + (height - 6)),
-			                             ImVec2(to - 6, barBottom),
-			                             ImVec2(to + 6, barBottom), IM_COL32(100, 100, 100, 255));
+										ImVec2(to - 6, barBottom),
+										ImVec2(to + 6, barBottom), IM_COL32(100, 100, 100, 255));
 
 			drawList->AddRectFilled(ImVec2(to - 6, barBottom),
-			                         ImVec2(to + 6, bar_pos.y + (height + 12)),
-			                         IM_COL32(100, 100, 100, 255), 1.0f, 1.0f);
+									ImVec2(to + 6, bar_pos.y + (height + 12)),
+									IM_COL32(100, 100, 100, 255), 1.0f, 1.0f);
 
 			drawList->AddRectFilled(ImVec2(to - 5, bar_pos.y + (height + 1)),
-			                         ImVec2(to + 5, bar_pos.y + (height + 11)),
-			                         IM_COL32(0, 0, 0, 255), 1.0f, 1.0f);
+									ImVec2(to + 5, bar_pos.y + (height + 11)),
+									IM_COL32(0, 0, 0, 255), 1.0f, 1.0f);
 
 			if (selectedMark == mark)
 			{
 				drawList->AddTriangleFilled(ImVec2(to, bar_pos.y + (height - 3)),
-				                             ImVec2(to - 4, barBottom + 1),
-				                             ImVec2(to + 4, barBottom + 1), IM_COL32(0, 255, 0, 255));
+											ImVec2(to - 4, barBottom + 1),
+											ImVec2(to + 4, barBottom + 1), IM_COL32(0, 255, 0, 255));
 
 				drawList->AddRect(ImVec2(to - 5, bar_pos.y + (height + 1)),
-				                   ImVec2(to + 5, bar_pos.y + (height + 11)),
-				                   IM_COL32(0, 255, 0, 255), 1.0f, 1.0f);
+								  ImVec2(to + 5, bar_pos.y + (height + 11)),
+								  IM_COL32(0, 255, 0, 255), 1.0f, 1.0f);
 			}
 
 			drawList->AddRectFilledMultiColor(ImVec2(to - 3, bar_pos.y + (height + 3)),
-			                                   ImVec2(to + 3, bar_pos.y + (height + 9)),
-			                                   colorBU32, colorBU32, colorBU32, colorBU32);
+											  ImVec2(to + 3, bar_pos.y + (height + 9)),
+											  colorBU32, colorBU32, colorBU32, colorBU32);
 
 			SetCursorScreenPos(ImVec2(to - 6, barBottom));
 			InvisibleButton("mark", ImVec2(12, 12));
@@ -358,8 +382,8 @@ namespace ImGui
 	}
 
 	bool GradientEditor(const char* label, ImGradient* gradient,
-	                    ImGradientMark*& draggingMark,
-	                    ImGradientMark*& selectedMark)
+						ImGradientMark*& draggingMark,
+						ImGradientMark*& selectedMark)
 	{
 		if (!gradient) { return false; }
 
@@ -379,7 +403,7 @@ namespace ImGui
 			// float newMarkCol[4];
 			ImVec4 newMarkCol;
 			gradient->GetColorAt(pos, &newMarkCol);
-			
+
 			gradient->AddMark(pos, ImColor(newMarkCol.x, newMarkCol.y, newMarkCol.z, newMarkCol.w));
 		}
 

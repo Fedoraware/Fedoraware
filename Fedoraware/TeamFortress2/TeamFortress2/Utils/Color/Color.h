@@ -53,10 +53,4 @@ namespace Color
 	inline unsigned long TODWORD(const Color_t &x) {
 		return (static_cast<unsigned long>(((x.r & 0xFF) << 24) | ((x.g & 0xFF) << 16) | ((x.b & 0xFF) << 8) | (x.a & 0xFF)));
 	}
-
-	inline float* TOBLEND(const Color_t& x)
-	{
-		float blend[3] = { TOFLOAT(x.r), TOFLOAT(x.g), TOFLOAT(x.b) };
-		return blend;
-	}
 }

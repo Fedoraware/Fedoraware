@@ -537,7 +537,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	for (const auto& point : vecPoints)
 	{
 		if (testPoints > Vars::Aimbot::Projectile::VisTestPoints.Value) { break; }
-		if (visiblePoints.size() >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
+		if (static_cast<int>(visiblePoints.size()) >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
 		if (!IsPointAllowed(curPoint)) { curPoint++; continue; }
 
 		Vec3 vTransformed = {};

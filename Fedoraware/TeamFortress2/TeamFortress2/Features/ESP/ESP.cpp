@@ -996,7 +996,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	const int nCondEx = pEntity->GetCondEx();
 	const int nFlag = pEntity->GetFlags();
 
-	if (const const wchar_t* rune = pEntity->GetRune()) {	// I want to see if they are the king before anything else.
+	if (const wchar_t* rune = pEntity->GetRune()) {	// I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
 	}
 
