@@ -18,6 +18,7 @@
 
 #include <mutex>
 #include "../Visuals/Visuals.h"
+#include "../CritHack/CritHack.h"
 
 int unuPrimary = 0;
 int unuSecondary = 0;
@@ -1883,6 +1884,45 @@ void CMenu::DrawCritDrag()
 	}
 }
 
+void CMenu::AddDraggable(const char* szTitle, int& x, int& y, int& w, int& h, bool& bShouldDraw, bool setSize)
+{
+	if (bShouldDraw)
+	{
+		if (setSize)
+		{
+			ImGui::SetNextWindowSize({ static_cast<float>(w), static_cast<float>(h) }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos({ static_cast<float>(x), static_cast<float>(y) }, ImGuiCond_FirstUseEver);
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+		}
+		else
+		{
+			ImGui::SetNextWindowSize({ 80.f, 60.f }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos({ static_cast<float>(x), static_cast<float>(y) }, ImGuiCond_FirstUseEver);
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+		}
+		auto bResize = setSize ? 0 : ImGuiWindowFlags_NoResize;
+		if (ImGui::Begin(szTitle, nullptr, bResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
+		{
+			const ImVec2 winPos = ImGui::GetWindowPos();
+			const ImVec2 winSize = ImGui::GetWindowSize();
+
+			x = static_cast<int>(winPos.x);
+			y = static_cast<int>(winPos.y);
+			if (setSize)
+			{
+				w = static_cast<int>(winSize.x);
+				h = static_cast<int>(winSize.y);
+			}
+
+			ImGui::End();
+		}
+		ImGui::PopStyleVar();
+		ImGui::PopStyleColor();
+	}
+}
+
 void CMenu::DrawConditionDrag()
 {
 	if (Vars::Visuals::DrawOnScreenConditions.Value)
@@ -1978,7 +2018,8 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		DrawMenu();
 		DrawCameraWindow();
-		DrawConditionDrag();
+		AddDraggable("Conditions", Vars::Visuals::ConditionX.Value, Vars::Visuals::ConditionY.Value, F::Visuals.ConditionW, F::Visuals.ConditionH, Vars::Visuals::DrawOnScreenConditions.Value, false);
+		//AddDraggable("Crits", Vars::CritHack::IndicatorX.Value, Vars::CritHack::IndicatorY.Value, F::CritHack.IndicatorW, F::CritHack.IndicatorH, Vars::CritHack::Indicators.Value, false, true);
 
 		SettingsWindow();
 		DebugMenu();
