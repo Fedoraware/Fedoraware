@@ -2000,7 +2000,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DrawMenu();
 		DrawCameraWindow();
 		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
-		//AddDraggable("Crits", Vars::CritHack::IndicatorX.Value, Vars::CritHack::IndicatorY.Value, F::CritHack.IndicatorW, F::CritHack.IndicatorH, Vars::CritHack::Indicators.Value, false, true);
+		AddDraggable("Crits", Vars::CritHack::IndicatorPos, Vars::CritHack::Indicators.Value, true);
 
 		SettingsWindow();
 		DebugMenu();

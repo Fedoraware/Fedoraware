@@ -514,11 +514,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 		return;
 	}
 
-	const auto buildings = g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.Value
-		                                              ? EGroupType::BUILDINGS_ENEMIES
-		                                              : EGroupType::BUILDINGS_ALL);
-
-	for (const auto& pBuilding : buildings)
+	for (const auto& pBuilding : g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.Value ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL))
 	{
 		if (!pBuilding->IsAlive())
 		{

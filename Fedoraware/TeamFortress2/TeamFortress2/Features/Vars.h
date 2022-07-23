@@ -55,8 +55,7 @@ namespace Vars
 	{
 		inline CVar<bool> Active{ false };
 		inline CVar<bool> Indicators{ false };
-		inline CVar<int> IndicatorX{ 200 };
-		inline CVar<int> IndicatorY{ 200 };
+		inline DragBox_t IndicatorPos{};
 		inline CVar<bool> AvoidRandom{ false };
 		inline CVar<bool> AlwaysMelee{ false };
 		inline CVar<int> CritKey{ VK_SHIFT };

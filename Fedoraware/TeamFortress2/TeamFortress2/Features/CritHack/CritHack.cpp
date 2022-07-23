@@ -199,8 +199,8 @@ void CCritHack::Draw()
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
 	
-	const int x = Vars::CritHack::IndicatorX.Value;
-	int currentY = Vars::CritHack::IndicatorY.Value;
+	const int x = Vars::CritHack::IndicatorPos.c;
+	int currentY = Vars::CritHack::IndicatorPos.y;
 	
 	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
 	const int seedRequests = *reinterpret_cast<int*>(pWeapon + 0xA5C);
