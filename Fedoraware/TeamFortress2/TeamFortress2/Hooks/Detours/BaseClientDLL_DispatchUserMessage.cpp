@@ -6,6 +6,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include "../../Features/Visuals/Visuals.h"
 
 static int anti_balance_attempts = 0;
 static std::string previous_name;
@@ -58,6 +59,7 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 			std::string playerName(nameBuffer);
 			std::string chatMessage(msgBuffer);
 
+			F::RSChat.PushChat(I::ClientEntityList->GetClientEntity(entIdx), chatMessage);
 			/*if (Vars::Misc::ChatCensor.Value)
 			{
 				PlayerInfo_t senderInfo{};

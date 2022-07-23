@@ -50,19 +50,19 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 			return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
 		}
 	}
-	if (iPlayerIndex && Vars::Misc::RunescapeChat.Value)
-	{
-		if (const auto& pEntity = I::ClientEntityList->GetClientEntity(iPlayerIndex))
-		{
-			auto backup_msg = final_msg;
-			if (auto offset = backup_msg.find(name))
-			{
-				backup_msg = backup_msg.erase(offset, offset + name.length() + 2);
-				backup_msg.erase(std::remove_if(backup_msg.begin(), backup_msg.end(), [](char c) -> bool { return c == '\x3'; }), backup_msg.end());
-				F::RSChat.PushChat(pEntity, backup_msg);
-			}
-		}
-	}
+	//if (iPlayerIndex && Vars::Misc::RunescapeChat.Value)
+	//{
+	//	if (const auto& pEntity = I::ClientEntityList->GetClientEntity(iPlayerIndex))
+	//	{
+	//		auto backup_msg = final_msg;
+	//		if (auto offset = backup_msg.find(name))
+	//		{
+	//			backup_msg = backup_msg.erase(offset, offset + name.length() + 2);
+	//			backup_msg.erase(std::remove_if(backup_msg.begin(), backup_msg.end(), [](char c) -> bool { return c == '\x3'; }), backup_msg.end());
+	//			F::RSChat.PushChat(pEntity, backup_msg);
+	//		}
+	//	}
+	//}
 
 	if (iPlayerIndex && Vars::Misc::ChatFlags.Value)
 	{

@@ -980,6 +980,12 @@ void CRunescapeChat::Draw()
 
 void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
 {
+	if (!Vars::Misc::RunescapeChat.Value)
+	{
+		return;
+	}
+	if (!pEntity) return;
+
 	int highestOffset = 0;
 	for (auto& chat : m_vecChats)
 	{
