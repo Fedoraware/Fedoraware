@@ -60,6 +60,7 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	const int width = g_ScreenSize.c;
 
 	// check
+	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);

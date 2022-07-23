@@ -592,6 +592,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		{
 			SAVE_VAR(Vars::Visuals::RemoveMOTD);
 			SAVE_VAR(Vars::Visuals::RemoveDisguises);
+			SAVE_VAR(Vars::Visuals::DrawOnScreenConditions);
 			SAVE_VAR(Vars::Visuals::RemoveTaunts);
 			SAVE_VAR(Vars::Visuals::FieldOfView);
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
@@ -1357,6 +1358,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		{
 			LOAD_VAR(Vars::Visuals::RemoveMOTD);
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
+			LOAD_VAR(Vars::Visuals::DrawOnScreenConditions);
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
 			LOAD_VAR(Vars::Visuals::RemoveScreenEffects);
 			LOAD_VAR(Vars::Visuals::RemoveScreenOverlays);
