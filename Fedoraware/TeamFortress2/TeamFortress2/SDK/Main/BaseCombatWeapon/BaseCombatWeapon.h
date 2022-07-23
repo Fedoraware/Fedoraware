@@ -87,6 +87,12 @@ public: //Everything else, lol
 		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + offset); 
 	}
 
+	inline int& m_iCurrentSeed()
+	{
+		static int offset = 727;
+		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + offset);
+	}
+
 	//str8 outta cathook
 	__inline bool AmbassadorCanHeadshot()
 	{
