@@ -16,7 +16,8 @@ MAKE_HOOK(CRendering3dView_EnableWorldFog, g_Pattern.Find(L"client.dll", L"55 8B
 	{
 		using namespace Vars::Visuals;
 		pRenderContext->FogMode(MATERIAL_FOG_LINEAR);
-		pRenderContext->FogColor3fv(Color::TOBLEND(Fog::FogColor));
+		float blend[3] = { Color::TOFLOAT(Fog::FogColor.r), Color::TOFLOAT(Fog::FogColor.g), Color::TOFLOAT(Fog::FogColor.b) };
+		pRenderContext->FogColor3fv(blend);
 		pRenderContext->FogStart(Fog::FogStart.Value);
 		pRenderContext->FogEnd(Fog::FogEnd.Value);
 		pRenderContext->FogMaxDensity(Fog::FogDensity.Value);

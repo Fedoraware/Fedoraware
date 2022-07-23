@@ -88,7 +88,7 @@ bool CCritHack::ShouldCrit()
 int CCritHack::LastGoodCritTick(const CUserCmd* pCmd) {
 	int retVal = -1;
 	bool pop = false;
-	for (int i = 0; i < critTicks.size(); i++) {
+	for (size_t i = 0; i < critTicks.size(); i++) {
 		if (critTicks.at(i) >= pCmd->command_number) {
 			retVal = critTicks.at(i);
 		}

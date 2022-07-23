@@ -203,7 +203,7 @@ void CResolver::Update(CUserCmd* pCmd)
 		{
 			// Miss
 			data.second.Mode += 1;
-			while (data.second.Mode >= YawResolves.size())
+			while (data.second.Mode >= static_cast<int>(YawResolves.size()))
 			{
 				data.second.Mode -= YawResolves.size();
 			}

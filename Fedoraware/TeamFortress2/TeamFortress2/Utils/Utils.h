@@ -57,6 +57,8 @@ namespace Utils
 		return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 	}
 
+
+#pragma warning (disable : 6031)
 	inline void ReplaceSpecials(std::string& str) // thx cathook
 	{
 		int val;

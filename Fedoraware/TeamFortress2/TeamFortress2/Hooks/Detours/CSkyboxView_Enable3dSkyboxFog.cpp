@@ -24,7 +24,9 @@ MAKE_HOOK(CSkyboxView_Enable3dSkyboxFog, g_Pattern.Find(L"client.dll", L"55 8B E
 			}
 			using namespace Vars::Visuals;
 			pRenderContext->FogMode(MATERIAL_FOG_LINEAR);
-			pRenderContext->FogColor3fv(Color::TOBLEND(Fog::FogColorSkybox));
+
+			float blend[3] = { Color::TOFLOAT(Fog::FogColorSkybox.r), Color::TOFLOAT(Fog::FogColorSkybox.g), Color::TOFLOAT(Fog::FogColorSkybox.b) };
+			pRenderContext->FogColor3fv(blend);
 			pRenderContext->FogStart(Fog::FogStartSkybox.Value * scale);
 			pRenderContext->FogEnd(Fog::FogEndSkybox.Value * scale);
 			pRenderContext->FogMaxDensity(Fog::FogDensitySkybox.Value);
