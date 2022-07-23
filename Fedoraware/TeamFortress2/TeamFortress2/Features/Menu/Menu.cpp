@@ -17,6 +17,7 @@
 #include "ConfigManager/ConfigManager.h"
 
 #include <mutex>
+#include "../Visuals/Visuals.h"
 
 int unuPrimary = 0;
 int unuSecondary = 0;
@@ -1874,6 +1875,37 @@ void CMenu::DrawCameraWindow()
 	}
 }
 
+void CMenu::DrawCritDrag()
+{
+	if (Vars::CritHack::Indicators.Value)
+	{
+
+	}
+}
+
+void CMenu::DrawConditionDrag()
+{
+	if (Vars::Visuals::DrawOnScreenConditions.Value)
+	{
+		ImGui::SetNextWindowSize({ static_cast<float>(F::Visuals.ConditionW), static_cast<float>(F::Visuals.ConditionH) }, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos({ static_cast<float>(Vars::Visuals::ConditionX.Value), static_cast<float>(Vars::Visuals::ConditionY.Value) }, ImGuiCond_FirstUseEver);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+		if (ImGui::Begin("Conditions", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
+		{
+			const ImVec2 winPos = ImGui::GetWindowPos();
+			const ImVec2 winSize = ImGui::GetWindowSize();
+
+			Vars::Visuals::ConditionX.Value = static_cast<int>(winPos.x);
+			Vars::Visuals::ConditionY.Value = static_cast<int>(winPos.y);
+
+			ImGui::End();
+		}
+		ImGui::PopStyleVar();
+		ImGui::PopStyleColor();
+	}
+}
+
 void CMenu::DrawKeybinds()
 {
 	if (!Vars::Menu::ShowKeybinds) { return; }
@@ -1946,6 +1978,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		DrawMenu();
 		DrawCameraWindow();
+		DrawConditionDrag();
 
 		SettingsWindow();
 		DebugMenu();

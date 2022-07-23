@@ -14,6 +14,8 @@ class CMenu {
 	void SettingsWindow();
 	void DebugMenu();
 	void DrawCameraWindow();
+	void DrawCritDrag();
+	void DrawConditionDrag();
 	void DrawKeybinds();
 	void LoadStyle();
 

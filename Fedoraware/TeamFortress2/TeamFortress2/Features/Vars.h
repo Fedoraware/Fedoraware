@@ -463,6 +463,9 @@ namespace Vars
 		inline CVar<float> FovArrowsDist{ 0.15f };
 		inline CVar<int> SpectatorList{ 2 }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
 
+		inline CVar<int> ConditionX{ 100 };
+		inline CVar<int> ConditionY{ 200 };
+
 		inline CVar<int> FreecamKey{ 0 };
 		inline CVar<float> FreecamSpeed{ 10.f };
 

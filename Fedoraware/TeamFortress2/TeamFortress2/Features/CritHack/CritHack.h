@@ -15,7 +15,8 @@ private:
 	std::vector<int> critTicks{};
 	float CritBucketBP = 0;
 
-
+	int IndicatorW;
+	int IndicatorH;
 	//	TODO: Create & Restore to & from this struct when scanning for crits.
 	//	Stop messing around with AddToBucket etc, just change values when scanning if needed.
 	struct stats_t

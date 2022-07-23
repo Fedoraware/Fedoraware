@@ -56,20 +56,30 @@ void CVisuals::ScopeLines(CBaseEntity* pLocal)
 
 void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 {
-	const int height = g_ScreenSize.h / 2 + 25;
-	const int width = g_ScreenSize.c;
-
 	// check
 	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
+	const int x = Vars::Visuals::ConditionX.Value;
+	int y = Vars::Visuals::ConditionY.Value;
+
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 		
-	int nTextOffset = 0;
-	for (std::wstring cond : conditionsVec) {
-		g_Draw.String(FONT_MENU, width, height + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
+	int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
+	int longestText = 40;
+	int width, height;
+	for (const std::wstring &cond : conditionsVec) {
+		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, cond.data());
+		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, cond.data(), width, height);
+		if (width > longestText)
+		{
+			longestText = width;
+		}
 		nTextOffset += g_Draw.m_vecFonts[FONT_MENU].nTall;
 	}
+
+	ConditionW = longestText;
+	ConditionH = y + nTextOffset;
 }
 
 void CVisuals::SkyboxChanger()
