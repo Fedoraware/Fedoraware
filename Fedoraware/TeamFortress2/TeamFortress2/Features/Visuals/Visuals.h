@@ -83,11 +83,22 @@ public:
 
 class CRunescapeChat
 {
+	enum EChatColour
+	{
+		eRS_YELLOW,
+		eRS_RED,
+		eRS_GREEN,
+		eRS_CYAN,
+		eRS_PURPLE,
+		eRS_WHITE
+	};
+
 	struct Chat_t
 	{
 		CBaseEntity* m_pEntity = nullptr;
 		float m_flTimeCreated;
 		int m_nOffset;
+		EChatColour m_Colour;
 		std::string m_szChatText;
 	};
 

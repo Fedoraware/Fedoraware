@@ -64,12 +64,13 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	int y = Vars::Visuals::OnScreenConditions.y;
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
-		
+
 	int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
 	//int longestText = 40;
 	int width, height;
-	for (const std::wstring &cond : conditionsVec) {
-		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
+	for (const std::wstring& cond : conditionsVec)
+	{
+		g_Draw.String(FONT_MENU, x, y + nTextOffset, { 255, 255, 255, 255 }, ALIGN_CENTER, cond.data());
 		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, cond.data(), width, height);
 		//if (width > longestText)
 		//{
@@ -292,7 +293,8 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
-void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = {255, 255, 255, 255}) {
+void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = { 255, 255, 255, 255 })
+{
 	g_Draw.String(FONT_MENU, offsets.first, offsets.second += 15, clr, ALIGN_DEFAULT, title);
 	g_Draw.String(FONT_MENU, offsets.first + 125, offsets.second, clr, ALIGN_DEFAULT, value);
 }
@@ -417,7 +419,8 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						}
 						break;
 					}
-					case 3: {
+					case 3:
+					{
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);	//	draw the outline
 						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, { 28, 29, 38, 255 });	//	draw the background
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
@@ -950,7 +953,7 @@ void CRunescapeChat::Draw()
 	Vec3 vScreen;
 	for (size_t i = 0; i < m_vecChats.size(); i++)
 	{
-		auto &chat = m_vecChats.at(i);
+		auto& chat = m_vecChats.at(i);
 		if (chat.m_flTimeCreated + 4 < curTime)
 		{
 			vecRemovals.push_back(i);
@@ -965,7 +968,37 @@ void CRunescapeChat::Draw()
 					vHeadpos.z += 20;
 					if (Utils::W2S(vHeadpos, vScreen))
 					{
-						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), { 255, 255, 0, 255 }, ALIGN_CENTERHORIZONTAL, "%s", chat.m_szChatText.c_str());
+						Color_t col = { 255, 255, 0, 255 };
+						switch (chat.m_Colour)
+						{
+							case eRS_RED:
+							{
+								col = { 255, 0, 0, 255 };
+								break;
+							}
+							case eRS_GREEN:
+							{
+								col = { 0, 255, 0, 255 };
+								break;
+							}
+							case eRS_CYAN:
+							{
+								col = { 0, 255, 255, 255 };
+								break;
+							}
+							case eRS_PURPLE:
+							{
+								col = { 255, 0, 255, 255 };
+								break;
+							}
+							case eRS_WHITE:
+							{
+								col = { 255,255,255,255 };
+								break;
+							}
+							default:break;
+						}
+						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, "%s", chat.m_szChatText.c_str());
 					}
 				}
 			}
@@ -986,6 +1019,37 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
 	}
 	if (!pEntity) return;
 
+	EChatColour col = eRS_YELLOW;
+
+	if (!szChatText.rfind("red:", 0))
+	{
+		col = eRS_RED;
+		szChatText.erase(0, 4);
+	}
+	else if (!szChatText.rfind("green:", 0))
+	{
+		col = eRS_GREEN;
+		szChatText.erase(0, 6);
+	}
+	else if (!szChatText.rfind("cyan:", 0))
+	{
+		col = eRS_CYAN;
+		szChatText.erase(0, 5);
+	}
+	else if (!szChatText.rfind("purple:", 0))
+	{
+		col = eRS_PURPLE;
+		szChatText.erase(0, 7);
+	}
+	else if (!szChatText.rfind("white:", 0))
+	{
+		col = eRS_WHITE;
+		szChatText.erase(0, 6);
+	}
+
+
+
+
 	int highestOffset = 0;
 	for (auto& chat : m_vecChats)
 	{
@@ -997,6 +1061,6 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
 			}
 		}
 	}
-	Chat_t push = { pEntity, I::GlobalVars->curtime, highestOffset, szChatText };
+	Chat_t push = { pEntity, I::GlobalVars->curtime, highestOffset, col, szChatText };
 	m_vecChats.push_back(push);
 }
