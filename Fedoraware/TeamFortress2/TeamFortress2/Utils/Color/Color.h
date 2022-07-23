@@ -37,6 +37,7 @@ struct DragBox_t {
 	int w = 0;
 	int h = 0;
 	int c = 0;
+	bool update = true;
 };
 
 namespace Color

@@ -1888,20 +1888,21 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool& bShouldDraw
 {
 	if (bShouldDraw)
 	{
-		if (setSize)
-		{
-			ImGui::SetNextWindowSize({ (float)info.w,(float)info.h }, ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowPos({ (float)info.x, (float)info.y}, ImGuiCond_FirstUseEver);
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+		if (info.update) {
+			if (setSize)
+			{
+				ImGui::SetNextWindowSize({ (float)info.w,(float)info.h }, ImGuiCond_Always);
+			}
+			else
+			{
+				ImGui::SetNextWindowSize({ 80.f, 60.f }, ImGuiCond_Always);
+			}
+			ImGui::SetNextWindowPos({ (float)info.x, (float)info.y }, ImGuiCond_Always);
+			info.update = false;
 		}
-		else
-		{
-			ImGui::SetNextWindowSize({ 80.f, 60.f }, ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowPos({ (float)info.x, (float)info.y}, ImGuiCond_FirstUseEver);
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
-		}
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 80.f, 60.f });
+
 		auto bResize = setSize ? 0 : ImGuiWindowFlags_NoResize;
 		if (ImGui::Begin(szTitle, nullptr, bResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
 		{

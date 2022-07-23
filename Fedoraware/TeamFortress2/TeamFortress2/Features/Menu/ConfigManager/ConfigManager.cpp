@@ -223,6 +223,7 @@ void CConfigManager::LoadJson(const char* name, DragBox_t& val)
 		if (auto getValue = (*getChild).get_optional<int>("w")) { val.w = *getValue; }
 		if (auto getValue = (*getChild).get_optional<int>("h")) { val.h = *getValue; }
 		if (auto getValue = (*getChild).get_optional<int>("c")) { val.c = *getValue; }
+		val.update = true;
 	}
 }
 
