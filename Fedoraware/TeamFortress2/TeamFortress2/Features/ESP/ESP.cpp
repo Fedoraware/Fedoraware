@@ -1100,7 +1100,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Bleeding");
 	}
 
-	if (Utils::isFeigningDeath(pEntity)) {
+	if (pEntity->GetFeignDeathReady()) {
 		szCond.emplace_back(L"Dead Ringer");
 	}
 

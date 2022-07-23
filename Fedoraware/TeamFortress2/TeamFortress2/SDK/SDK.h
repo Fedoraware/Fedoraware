@@ -532,18 +532,6 @@ namespace Utils
 		return (trace.flFraction > 0.99f);
 	}
 
-	__inline bool isFeigningDeath(CBaseEntity* pQuery) {
-		CTFWeaponInvis* slot4 = reinterpret_cast<CTFWeaponInvis*>(pQuery->GetWeaponFromSlot(4));
-		if (slot4) {
-			if (slot4->GetWeaponID() == TF_WEAPON_INVIS && slot4->HasFeignDeath()) {
-				if (pQuery->GetFeignDeathReady()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	__inline EWeaponType GetWeaponType(CBaseCombatWeapon *pWeapon)
 	{
 		if (!pWeapon)

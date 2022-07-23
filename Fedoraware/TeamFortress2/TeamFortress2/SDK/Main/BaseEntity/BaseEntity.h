@@ -434,7 +434,19 @@ public: //Everything else, lol.
 
 	__inline bool IsVulnerable() {
 		int nCond = GetCond();
-		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked);
+		int nCondEx = GetCondEx();
+		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked || nCondEx & TFCondEx_PhlogUber || nCondEx & TFCondEx_UberchargedHidden || nCondEx & TFCondEx_UberchargedCanteen);
+	}
+
+	__inline bool IsVisible() {
+		int nCond = GetCond();
+		int nCondEx = GetCondEx();
+
+		if (nCond & (TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding)) {
+			return false;
+		}
+
+		return (nCond & TFCond_Cloaked);
 	}
 
 	__inline bool IsCritBoosted() {
