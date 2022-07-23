@@ -20,7 +20,6 @@ void CMisc::Run(CUserCmd* pCmd)
 		Freecam(pCmd, pLocal);
 		RageRetry(pLocal);
 		AntiBackstab(pLocal, pCmd);
-		LegJitter(pCmd, pLocal);
 		ViewmodelFlip(pCmd, pLocal);
 		AutoPeek(pCmd, pLocal);
 	}
@@ -39,6 +38,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
+		LegJitter(pCmd, pLocal);
 		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
@@ -103,8 +103,8 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 2.f;
-	if (G::IsAttacking || G::ShouldShift) { return; }
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value && I::GlobalVars->tickcount % 2)
+	if (G::IsAttacking || G::ShouldShift || G::AntiAim.second) { return; }
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
 		pos ? pCmd->sidemove = scale : pCmd->sidemove = -scale;
@@ -357,7 +357,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static bool FlipVar = false;
 	FlipVar = !FlipVar;
 	
-	if (!FlipVar && !G::ShouldShift) {
+	if (!FlipVar || G::ShouldShift || G::AntiAim.second) {
 		return;
 	}
 
@@ -375,7 +375,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (pCmd->buttons & IN_BULLRUSH) {	//	demoman charge
+	if (pLocal->IsCharging()) {	//	demoman charge
 		return;
 	}
 

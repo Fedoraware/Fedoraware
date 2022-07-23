@@ -251,6 +251,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	G::AAActive = false;
 	G::RealViewAngles = G::ViewAngles;
 	G::FakeViewAngles = G::ViewAngles;
+	G::AntiAim = { false, false };
 
 	// AA toggle key
 	static KeyHelper aaKey{ &Vars::AntiHack::AntiAim::ToggleKey.Value };
@@ -273,6 +274,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			|| pLocal->GetMoveType() == MOVETYPE_LADDER
 			|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
 		{
+			return;
+		}
+
+		if (pLocal->IsCharging()) {
 			return;
 		}
 
@@ -316,11 +321,13 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 			}
 
 			G::RealViewAngles.y = pCmd->viewangles.y;
+			G::AntiAim.first = true;
 		}
 		else {	//	fake
 			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawFake.Value);
 			pCmd->viewangles.y += angOffset;
 			G::FakeViewAngles = pCmd->viewangles;
+			G::AntiAim.second = true;
 		}
 
 		if (bYawSet) { *pSendPacket = bPacketFlip = !bPacketFlip; }
