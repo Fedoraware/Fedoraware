@@ -428,7 +428,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						}
 						else if (G::Recharging) // charging 
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_DEFAULT, L"CHARGING");
+							g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 126, 0, 255 }, ALIGN_DEFAULT, L"CHARGING");
 						}
 						else if (!G::WaitForShift && ratioCurrent == 1) // ready (only show if we are fully charged)
 						{
