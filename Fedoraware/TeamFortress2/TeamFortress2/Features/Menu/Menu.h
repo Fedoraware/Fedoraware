@@ -14,6 +14,12 @@ class CMenu {
 	void SettingsWindow();
 	void DebugMenu();
 	void DrawCameraWindow();
+	void DrawCritDrag();
+
+
+	void AddDraggable(const char* szTitle, int& x, int& y, int& w, int& h, bool &bShouldDraw, bool setSize = false);
+
+	void DrawConditionDrag();
 	void DrawKeybinds();
 	void LoadStyle();
 

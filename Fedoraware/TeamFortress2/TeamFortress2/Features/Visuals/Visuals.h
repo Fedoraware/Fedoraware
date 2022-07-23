@@ -17,6 +17,10 @@ public:
 	void OverrideWorldTextures();
 	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
+
+	int ConditionW;
+	int ConditionH;
+
 	void DrawOnScreenConditions(CBaseEntity* pLocal);
 	void ScopeLines(CBaseEntity* pLocal);
 	void SkyboxChanger();

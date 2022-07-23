@@ -198,26 +198,61 @@ void CCritHack::Draw()
 
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
-	int currentY = (g_ScreenSize.h / 2) + 150;
+	
+	const int x = Vars::CritHack::IndicatorX.Value;
+	int currentY = Vars::CritHack::IndicatorY.Value;
+	
 	const float bucket = *reinterpret_cast<float*>(pWeapon + 0xA54);
-	
 	const int seedRequests = *reinterpret_cast<int*>(pWeapon + 0xA5C);
+
+	int longestW = 40;
 	
-	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 255,255,255,255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
+	if (Vars::Debug::DebugInfo.Value)
+	{
+		g_Draw.String(FONT_MENU, x, currentY += 15, { 255,255,255,255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
+	}
 	// Are we currently forcing crits?
 	if (ShouldCrit())
 	{
-		g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
+		g_Draw.String(FONT_MENU, x, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}
 
 	static auto tf_weapon_criticals_bucket_cap = g_ConVars.FindVar("tf_weapon_criticals_bucket_cap");
 	const float bucketCap = tf_weapon_criticals_bucket_cap->GetFloat();
-	const auto bucketText = tfm::format("Bucket: %s / %s", static_cast<int>(bucket), bucketCap);
-	const auto seedText = tfm::format("m_nCritSeedRequests: %d", seedRequests);
-	const auto FoundCrits = tfm::format("Found Crit Ticks: %d", critTicks.size());
-	const auto commandNumber = tfm::format("cmdNumber: %d", G::CurrentUserCmd->command_number);
-	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketText.c_str());
-	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
-	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
-	g_Draw.String(FONT_MENU, g_ScreenSize.c, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
+	const std::wstring bucketstr = L"Bucket: " + std::to_wstring(static_cast<int>(bucket)) + L"/" + std::to_wstring(static_cast<int>(bucketCap));
+	g_Draw.String(FONT_MENU, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketstr.c_str());
+	int w, h;
+	I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_MENU).dwFont, bucketstr.c_str(), w, h);
+	if (w > longestW)
+	{
+		longestW = w;
+	}
+	if (Vars::Debug::DebugInfo.Value)
+	{
+		const std::wstring seedText = L"m_nCritSeedRequests: " + std::to_wstring(seedRequests);
+		const std::wstring FoundCrits = L"Found Crit Ticks: " + std::to_wstring(critTicks.size());
+		const std::wstring commandNumber = L"cmdNumber: " + std::to_wstring(G::CurrentUserCmd->command_number);
+		g_Draw.String(FONT_MENU, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
+		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_MENU).dwFont, seedText.c_str(), w, h);
+		if (w > longestW)
+		{
+			longestW = w;
+		}
+		g_Draw.String(FONT_MENU, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
+		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_MENU).dwFont, FoundCrits.c_str(), w, h);
+		if (w > longestW)
+		{
+			longestW = w;
+		}
+		g_Draw.String(FONT_MENU, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
+		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_MENU).dwFont, commandNumber.c_str(), w, h);
+		if (w > longestW)
+		{
+			longestW = w;
+		}
+	}
+	IndicatorW = longestW * 2;
+	IndicatorH = currentY;
+
+
 }

@@ -28,7 +28,8 @@ private:
 public:
 	void Run(CUserCmd* pCmd);
 	void Draw();
-	
+	int IndicatorW;
+	int IndicatorH;
 	bool bProtectData = false;
 };
 
