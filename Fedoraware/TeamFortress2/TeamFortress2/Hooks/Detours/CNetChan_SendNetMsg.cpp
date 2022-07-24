@@ -35,6 +35,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 			//I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString());
 			return false;	//	if we failed to manipulate the data, don't send it.
 		}
+		break;
 	}
 	case net_SetConVar: {
 		if (Vars::Visuals::RemoveForcedConvars.Value) {
