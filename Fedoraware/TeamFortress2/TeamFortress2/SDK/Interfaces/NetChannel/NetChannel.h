@@ -64,9 +64,9 @@ public:                                     \
     DECLARE_BASE_MESSAGE(net_##name); \
     void *m_pMessageHandler;
 
-//#define DECLARE_SVC_MESSAGE( name )		\
-//	DECLARE_BASE_MESSAGE( svc_##name );	\
-//	void *m_pMessageHandler;
+#define DECLARE_SVC_MESSAGE( name )		\
+	DECLARE_BASE_MESSAGE( svc_##name );	\
+	void *m_pMessageHandler;
 
 class INetMessage;
 class CNetMessage;
@@ -527,6 +527,23 @@ public:
 	bf_read m_DataIn;
 	bf_write m_DataOut;
 	uint64_t m_xuid;
+};
+
+class CLC_RespondCvarValue : public CNetMessage
+{
+public:
+	DECLARE_CLC_MESSAGE(RespondCvarValue);
+
+	int		m_iCookie;
+
+	const char* m_szCvarName;
+	const char* m_szCvarValue;	// The sender sets this, and it automatically points it at m_szCvarNameBuffer when receiving.
+
+	int	m_eStatusCode;
+
+private:
+	char		m_szCvarNameBuffer[256];
+	char		m_szCvarValueBuffer[256];
 };
 
 class SVC_FixAngle : public CNetMessage

@@ -143,3 +143,4 @@ const char* CLC_BaselineAck::ToString(void) const
 {
     return tfm::format("%s: tick %i", GetName(), m_nBaselineTick).c_str();
 }
+
