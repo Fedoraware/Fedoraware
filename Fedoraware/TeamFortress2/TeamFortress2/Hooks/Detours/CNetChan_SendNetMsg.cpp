@@ -23,6 +23,9 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 		if (Vars::Visuals::RemoveConvarQueries.Value) {
 			if (DWORD* respondMsg = (DWORD*)&msg) {
 				if (const char* cvarName = (const char*)respondMsg[6]) {
+					if (std::find(G::FalseReturns.begin(), G::FalseReturns.end(), FNV1A::HashConst(cvarName)) != G::FalseReturns.end()) {
+						break;	//	we want a normal return for this
+					}
 					if (ConVar* convarC = g_ConVars.FindVar(cvarName)) {
 						if (const char* defaultValue = convarC->GetDefault()) {
 							respondMsg[7] = (DWORD)defaultValue;
@@ -30,16 +33,9 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 							break;
 						}
 					}
+					return false;	//	if we failed to manipulate the data, don't send it.
 				}
 			}
-			//I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString());
-			return false;	//	if we failed to manipulate the data, don't send it.
-		}
-		break;
-	}
-	case net_SetConVar: {
-		if (Vars::Visuals::RemoveForcedConvars.Value) {
-			return false;
 		}
 		break;
 	}

@@ -194,18 +194,20 @@ void CMisc::InstantRespawnMVM() {
 void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
-	ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats");
-	if (Vars::Misc::CheatsBypass.Value && sv_cheats)
-	{
-		sv_cheats->SetValue(1);
-		cheatset = true;
-	}
-	else
-	{
-		if (cheatset)
+	if (ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats")) {
+		G::FalseReturns.push_back(FNV1A::HashConst("sv_cheats"));
+		if (Vars::Misc::CheatsBypass.Value && sv_cheats)
 		{
-			sv_cheats->SetValue(0);
-			cheatset = false;
+			sv_cheats->SetValue(1);
+			cheatset = true;
+		}
+		else
+		{
+			if (cheatset)
+			{
+				sv_cheats->SetValue(0);
+				cheatset = false;
+			}
 		}
 	}
 }

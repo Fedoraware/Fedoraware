@@ -94,6 +94,7 @@ namespace G
 	inline std::unordered_map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
+	inline std::vector<FNV1A_t> FalseReturns;	//	returns the default value for convars in this vector
 
 	inline DWORD CalcIsAttackCriticalHelperOffset = 0;
 
