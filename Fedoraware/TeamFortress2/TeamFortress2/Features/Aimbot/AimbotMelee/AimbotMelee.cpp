@@ -390,7 +390,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		}
 
 		// Set the target tickcount (Backtrack)
-		if (bIsAttacking)
+		if (bIsAttacking && target.m_TargetType == ETargetType::PLAYER)
 		{
 			const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
 			pCmd->tick_count = TIME_TO_TICKS(simTime + G::LerpTime);
