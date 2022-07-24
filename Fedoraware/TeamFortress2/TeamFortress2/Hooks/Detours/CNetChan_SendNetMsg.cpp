@@ -20,19 +20,21 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 		break;
 	}
 	case clc_RespondCvarValue: {
-		if (DWORD* respondMsg = (DWORD*)&msg) {
-			if (const char* cvarName = (const char*)respondMsg[6]) {
-				if (ConVar* convarC = g_ConVars.FindVar(cvarName)) {
-					if (const char* defaultValue = convarC->GetDefault()) {	
-						respondMsg[7] = (DWORD)defaultValue;
-						I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString()); //	mt everest
-						break;
+		if (Vars::Visuals::RemoveConvarQueries.Value) {
+			if (DWORD* respondMsg = (DWORD*)&msg) {
+				if (const char* cvarName = (const char*)respondMsg[6]) {
+					if (ConVar* convarC = g_ConVars.FindVar(cvarName)) {
+						if (const char* defaultValue = convarC->GetDefault()) {
+							respondMsg[7] = (DWORD)defaultValue;
+							I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString()); //	mt everest
+							break;
+						}
 					}
 				}
 			}
+			//I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString());
+			return false;	//	if we failed to manipulate the data, don't send it.
 		}
-		//I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString());
-		return false;	//	if we failed to manipulate the data, don't send it.
 	}
 	case net_SetConVar: {
 		if (Vars::Visuals::RemoveForcedConvars.Value) {
