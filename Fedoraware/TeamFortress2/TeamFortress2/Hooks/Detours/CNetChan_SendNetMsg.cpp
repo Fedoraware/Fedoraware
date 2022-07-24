@@ -26,7 +26,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 					if (ConVar* convarC = g_ConVars.FindVar(cvarName)) {
 						if (const char* defaultValue = convarC->GetDefault()) {
 							respondMsg[7] = (DWORD)defaultValue;
-							I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString()); //	mt everest
+							//I::Cvar->ConsoleColorPrintf({ 255, 0, 0, 255 }, "%s\n", msg.ToString()); //	mt everest
 							break;
 						}
 					}
