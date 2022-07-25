@@ -701,7 +701,7 @@ namespace Utils
 		if (Safe && G::IsAttacking) { return; }
 		if (CBaseEntity* pLocal = g_EntityCache.GetLocal()) {
 			const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
-			pCmd->viewangles.x = 90;
+			pCmd->viewangles.x = -90;	//	on projectiles we would be annoyed if we shot the ground.
 			pCmd->viewangles.y = direction;
 			pCmd->viewangles.z = 0;
 			pCmd->sidemove = 0; pCmd->forwardmove = 0;

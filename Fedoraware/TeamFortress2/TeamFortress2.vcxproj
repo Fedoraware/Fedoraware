@@ -199,6 +199,7 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClientState_ProcessSetConVar.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_ProcessSetConVar.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CHudCloseCaption_OnTick.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ProcessPacketEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
@@ -243,6 +244,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_UpdateClientSideAnimations.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_GetInterpolationAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
