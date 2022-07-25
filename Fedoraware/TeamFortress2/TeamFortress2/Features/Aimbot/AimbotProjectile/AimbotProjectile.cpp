@@ -802,16 +802,17 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
 	{
-		const int nWeaponID = pWeapon->GetWeaponID();
-		const bool bIsCrossbow = nWeaponID == TF_WEAPON_CROSSBOW;
+		const bool bIsCrossbow = pWeapon->GetWeaponID() == TF_WEAPON_CROSSBOW;
 
-		for (const auto& pTarget : g_EntityCache.GetGroup(
-			     bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
+		for (const auto& pTarget : g_EntityCache.GetGroup(bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
-			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal || (bIsCrossbow && (pTarget->GetHealth() >=
-				pTarget->GetMaxHealth()) && (pTarget->GetTeamNum() == pLocal->GetTeamNum())))
-			{
+			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal)
 				continue;
+
+			if (bIsCrossbow && (pTarget->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (pTarget->GetHealth() >= pTarget->GetMaxHealth())
+					continue;
 			}
 
 			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
@@ -841,25 +842,37 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	{
 		const bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
 
-		for (const auto& pBuilding : g_EntityCache.GetGroup(
-			     bIsRescueRanger ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
+		auto AimFriendly = [](CBaseObject* Building) -> bool
 		{
+			if (Building->GetHealth() < Building->GetMaxHealth())
+				return true;
+
+			return false;
+		};
+
+		for (const auto& pBuilding : g_EntityCache.GetGroup(bIsRescueRanger ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
+		{
+			const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
+
 			if (!pBuilding->IsAlive())
-			{
 				continue;
+
+			if (bIsRescueRanger && (pBuilding->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (!AimFriendly(Building))
+					continue;
 			}
 
 			Vec3 vPos = pBuilding->GetWorldSpaceCenter();
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 			
-
 			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({ pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 

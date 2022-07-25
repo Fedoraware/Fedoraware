@@ -116,6 +116,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (Vars::Aimbot::Global::AimBuildings.Value)
 	{
 		const bool HasWrench = (pWeapon->GetWeaponID() == TF_WEAPON_WRENCH);
+		const bool CanDestroySapper = (G::CurItemDefIndex == Pyro_t_Homewrecker || G::CurItemDefIndex == Pyro_t_TheMaul || G::CurItemDefIndex == Pyro_t_NeonAnnihilator || G::CurItemDefIndex == Pyro_t_NeonAnnihilatorG);
 
 		auto AimFriendly = [](CBaseObject* Building) -> bool
 		{
@@ -154,13 +155,19 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			return false;
 		};
 
-		for (const auto& pBuilding : g_EntityCache.GetGroup(HasWrench ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
+		for (const auto& pBuilding : g_EntityCache.GetGroup(HasWrench || CanDestroySapper ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
 			const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
 
 			if (HasWrench && (Building->GetTeamNum() == pLocal->GetTeamNum()))
 			{
 				if (!AimFriendly(Building))
+					continue;
+			}
+
+			if (CanDestroySapper && (Building->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (!Building->GetSapped())
 					continue;
 			}
 
@@ -179,7 +186,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			}
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({ pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -390,7 +397,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		}
 
 		// Set the target tickcount (Backtrack)
-		if (bIsAttacking)
+		if (bIsAttacking && target.m_TargetType == ETargetType::PLAYER)
 		{
 			const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
 			pCmd->tick_count = TIME_TO_TICKS(simTime + G::LerpTime);
