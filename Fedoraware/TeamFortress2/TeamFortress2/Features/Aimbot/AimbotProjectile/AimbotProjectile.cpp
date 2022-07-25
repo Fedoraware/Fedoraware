@@ -842,14 +842,24 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	{
 		const bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
 
+		auto AimFriendly = [](CBaseObject* Building) -> bool
+		{
+			if (Building->GetHealth() < Building->GetMaxHealth())
+				return true;
+
+			return false;
+		};
+
 		for (const auto& pBuilding : g_EntityCache.GetGroup(bIsRescueRanger ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
+			const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
+
 			if (!pBuilding->IsAlive())
 				continue;
 
 			if (bIsRescueRanger && (pBuilding->GetTeamNum() == pLocal->GetTeamNum()))
 			{
-				if (pBuilding->GetHealth() >= pBuilding->GetMaxHealth())
+				if (!AimFriendly(Building))
 					continue;
 			}
 
