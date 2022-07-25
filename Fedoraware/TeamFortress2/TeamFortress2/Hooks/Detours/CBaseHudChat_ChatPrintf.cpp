@@ -60,7 +60,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 				backup_msg = backup_msg.erase(offset, offset + name.length() + 2);
 				backup_msg.erase(std::remove_if(backup_msg.begin(), backup_msg.end(), [](char c) -> bool { return c == '\x3'; }), backup_msg.end());
 				if (backup_msg.rfind("(Voice)", 0) == 0) {
-					szChatText.erase(0, 7);
+					backup_msg.erase(0, 7);
 				}
 				F::RSChat.PushChat(pEntity, backup_msg);
 			}
