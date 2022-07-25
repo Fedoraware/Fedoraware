@@ -167,6 +167,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_ProcessSetConVar.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CHudCloseCaption_OnTick.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClientState_ProcessSetConVar.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ProcessPacketEntities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
