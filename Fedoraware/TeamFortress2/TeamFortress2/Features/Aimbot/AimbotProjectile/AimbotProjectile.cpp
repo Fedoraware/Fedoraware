@@ -802,16 +802,17 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
 	{
-		const int nWeaponID = pWeapon->GetWeaponID();
-		const bool bIsCrossbow = nWeaponID == TF_WEAPON_CROSSBOW;
+		const bool bIsCrossbow = pWeapon->GetWeaponID() == TF_WEAPON_CROSSBOW;
 
-		for (const auto& pTarget : g_EntityCache.GetGroup(
-			     bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
+		for (const auto& pTarget : g_EntityCache.GetGroup(bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
-			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal || (bIsCrossbow && (pTarget->GetHealth() >=
-				pTarget->GetMaxHealth()) && (pTarget->GetTeamNum() == pLocal->GetTeamNum())))
-			{
+			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal)
 				continue;
+
+			if (bIsCrossbow && (pTarget->GetTeamNum() == pLocal->GetTeamNum()))
+			{
+				if (pTarget->GetHealth() >= pTarget->GetMaxHealth())
+					continue;
 			}
 
 			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
@@ -861,7 +862,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			F::AimbotGlobal.m_vecTargets.push_back({ pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			F::AimbotGlobal.m_vecTargets.push_back({ pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
