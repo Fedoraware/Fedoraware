@@ -127,9 +127,11 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		return;
 	}
 
-	if (G::IsAttacking)
-	{
-		G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
+	if (G::LastUserCmd) {
+		if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && G::LastUserCmd->buttons & IN_ATTACK))
+		{
+			G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
+		}
 	}
 
 	// Should we shift?
