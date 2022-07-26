@@ -24,6 +24,7 @@ void CMisc::Run(CUserCmd* pCmd)
 		AutoPeek(pCmd, pLocal);
 	}
 
+	GetInterpolationAmount();
 	AntiAFK(pCmd);
 	ChatSpam();
 	CheatsBypass();
@@ -416,6 +417,12 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 				G::ForceChokePacket = true;
 			}
 		}
+	}
+}
+
+void CMisc::GetInterpolationAmount() {
+	if (CNetChannel* NetChan = I::EngineClient->GetNetChannelInfo()) {
+		G::LerpTime = NetChan->m_flInterpolationAmount;
 	}
 }
 
