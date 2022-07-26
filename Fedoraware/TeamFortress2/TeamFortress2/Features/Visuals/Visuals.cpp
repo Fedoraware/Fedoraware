@@ -347,27 +347,88 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 
 void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 {
-	if (!pLocal->IsAlive() || I::Input->CAM_IsThirdPerson()) {
-		return;
-	}
-
 	if (Vars::AntiHack::AntiAim::Active.Value)
 	{
-		static constexpr Color_t realColour = { 0, 255,0, 255 };
-		static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
-
-		const auto& vOrigin = pLocal->GetAbsOrigin();
-
-		Vec3 vScreen1, vScreen2;
-		if (Utils::W2S(vOrigin, vScreen1))
+	
+		const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
+		const int xy = g_ScreenSize.h / 2 + (g_ScreenSize.h * 0.24);
+		if (Vars::AntiHack::AntiAim::Active.Value)
 		{
-			constexpr auto distance = 50.f;
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
-				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
-
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
-				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
+			g_Draw.String(FONT_INDICATORS, 5 , xy - fontHeight - 85, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"AA");
 		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value)
+		{
+			g_Draw.String(FONT_INDICATORS, 5 , xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"FAKE:");
+		}
+	    if (Vars::AntiHack::AntiAim::YawFake.Value == 1) 
+		{
+			g_Draw.String(FONT_INDICATORS, 90 , xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"FORWARD");
+		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 2)
+		{
+			g_Draw.String(FONT_INDICATORS,90 , xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"LEFT");
+		}
+	    if (Vars::AntiHack::AntiAim::YawFake.Value == 3)
+		{
+			g_Draw.String(FONT_INDICATORS,  90 , xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"RIGHT");
+		}
+	    if (Vars::AntiHack::AntiAim::YawFake.Value == 4)
+		{
+			g_Draw.String(FONT_INDICATORS, 90 , xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"BACK");
+		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 5)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"RANDOM");
+		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 6)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"SPIN");
+		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 7)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 25, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"EDGE");
+		}
+		if (Vars::AntiHack::AntiAim::YawFake.Value == 8)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 35, { 255, 0, 0, 255 }, ALIGN_DEFAULT, L"ON HURT");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value)
+		{
+		   g_Draw.String(FONT_INDICATORS, 5 , xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"REAL:");
+		}
+	    if (Vars::AntiHack::AntiAim::YawReal.Value == 1) 
+		{
+			g_Draw.String(FONT_INDICATORS, 90 , xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"FORWARD");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 2)
+		{
+			g_Draw.String(FONT_INDICATORS,90 , xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"LEFT");
+		}
+	    if (Vars::AntiHack::AntiAim::YawReal.Value == 3)
+		{
+			g_Draw.String(FONT_INDICATORS,  90 , xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"RIGHT");
+		}
+	    if (Vars::AntiHack::AntiAim::YawReal.Value == 4)
+		{
+			g_Draw.String(FONT_INDICATORS, 90 , xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"BACK");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 5)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"RANDOM");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 6)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"SPIN");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 7)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"EDGE");
+		}
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 8)
+		{
+			g_Draw.String(FONT_INDICATORS, 90, xy - fontHeight - 55, { 0, 255, 0, 255 }, ALIGN_DEFAULT, L"ON HURT");
+		}
+
 	}
 }
 
