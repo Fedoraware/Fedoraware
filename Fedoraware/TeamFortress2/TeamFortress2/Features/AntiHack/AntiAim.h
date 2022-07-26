@@ -12,6 +12,10 @@ private:
 	std::pair<float, float> GetAnglePairPitch(int nIndex);	//	send angles, real angles
 	float CalculateCustomRealPitch(float WishPitch, bool FakeDown);
 	bool bPacketFlip = true;
+	float lastRealAngle = -90.f;
+	float lastFakeAngle = 90.f;
+	int edgeToEdgeOn = 0;
+	bool wasHit = false;
 public:
 	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);

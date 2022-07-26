@@ -2,10 +2,7 @@
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
 
-int edgeToEdgeOn = 0;
-float lastRealAngle = -90.f;
-float lastFakeAngle = 90.f;
-bool wasHit = false;
+
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove) {
 	//better movement fix roll and pitch above 90 and -90 l0l
