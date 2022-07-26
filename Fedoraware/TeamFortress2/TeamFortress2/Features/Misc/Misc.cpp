@@ -4,6 +4,7 @@
 #include "../ChatInfo/ChatInfo.h"
 #include "../../Utils/Timer/Timer.hpp"
 #include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
+#include "../Backtrack/Backtrack.h"
 
 extern int attackStringW;
 extern int attackStringH;
@@ -878,7 +879,16 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 			if (!target->IsAlive()) { continue; }
 			if (F::AimbotGlobal.ShouldIgnore(target)) { continue; }
 
-			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD)))
+			// Get the hitbox position (Backtrack if possible)
+			Vec3 targetPos = target->GetHitboxPos(HITBOX_HEAD);
+			if (Vars::Backtrack::Enabled.Value)
+			{
+				const auto& btRecord = F::Backtrack.GetRecord(target->GetIndex(), BacktrackMode::Last);
+				if (btRecord) { targetPos = btRecord->HeadPosition; }
+			}
+
+			// Is the player visible?
+			if (Utils::VisPos(pLocal, target, pPos, targetPos))
 			{
 				return true;
 			}
@@ -1138,6 +1148,7 @@ void CMisc::LockAchievements()
 }
 
 // Myzarfin added this
+// TODO: Move this out of Misc.cpp
 void CNotifications::Think()
 {
 	constexpr int x{1};
