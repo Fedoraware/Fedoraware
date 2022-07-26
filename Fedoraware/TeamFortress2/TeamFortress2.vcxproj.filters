@@ -171,6 +171,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ProcessPacketEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_GetInterpolationAmount.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LatchInterpolationAmount.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />

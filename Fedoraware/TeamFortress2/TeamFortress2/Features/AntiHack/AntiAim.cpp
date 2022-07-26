@@ -115,6 +115,7 @@ float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown) {
 }
 
 float CAntiAim::GetAngle(int nIndex) {
+	float &lastAngleRef = bPacketFlip ? lastRealAngle : lastFakeAngle;
 	float retnAngle = 0.f;
 	switch (nIndex) {
 	case 1:
@@ -142,17 +143,17 @@ float CAntiAim::GetAngle(int nIndex) {
 		static Timer updateTimer{ };
 		if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
 		{
-			lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+			lastAngleRef = Utils::RandFloatRange(-180.0f, 180.0f);
 		}
-		retnAngle = lastRealAngle;
+		retnAngle = lastAngleRef;
 		break;
 	}
-	case 6:
+	case 6:	//	spin
 	{
-		lastRealAngle += Vars::AntiHack::AntiAim::SpinSpeed.Value;
-		if (lastRealAngle > 180.f) { lastRealAngle -= 360.f; }
-		if (lastRealAngle < -180.f) { lastRealAngle += 360.f; }
-		retnAngle = lastRealAngle;
+		lastAngleRef += (bPacketFlip ? +1 : -1) * Vars::AntiHack::AntiAim::SpinSpeed.Value;
+		if (lastAngleRef > 180.f) { lastAngleRef -= 360.f; }
+		if (lastAngleRef < -180.f) { lastAngleRef += 360.f; }
+		retnAngle = lastAngleRef;
 		break;
 	}
 	case 7:
@@ -165,10 +166,10 @@ float CAntiAim::GetAngle(int nIndex) {
 	{
 		if (wasHit)
 		{
-			lastRealAngle = Utils::RandFloatRange(-180.0f, 180.0f);
+			lastAngleRef = Utils::RandFloatRange(-180.0f, 180.0f);
 			wasHit = false;
 		}
-		retnAngle = lastRealAngle;
+		retnAngle = lastAngleRef;
 		break;
 	}
 	}
