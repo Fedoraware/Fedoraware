@@ -4,6 +4,7 @@
 #include "../ChatInfo/ChatInfo.h"
 #include "../../Utils/Timer/Timer.hpp"
 #include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
+#include "../Backtrack/Backtrack.h"
 
 extern int attackStringW;
 extern int attackStringH;
@@ -357,15 +358,15 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	static bool FlipVar = false;
-	FlipVar = !FlipVar;
+	static bool flipVar = false;
+	flipVar = !flipVar;
 	
-	if (!FlipVar || G::ShouldShift || G::AntiAim.second) {
+	if (!flipVar || G::ShouldShift || G::AntiAim.second) {
 		return;
 	}
 
-	const bool ShouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value || (G::ShouldShift && Vars::Misc::CL_Move::AntiWarp.Value));	//	G::ShouldShift means we can use it in antiwarp independantly of what our user wants.
-	if (!ShouldAccel) {
+	const bool shouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value || (G::ShouldShift && Vars::Misc::CL_Move::AntiWarp.Value));	//	G::ShouldShift means we can use it in antiwarp independantly of what our user wants.
+	if (!shouldAccel) {
 		return;
 	}
 
@@ -402,8 +403,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (pCmd->buttons & (IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK))
 	{
-		Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
-		float flLength = vecMove.Length();
+		const Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
+		const float flLength = vecMove.Length();
 		if (flLength > 0.0f)
 		{
 			Vec3 angMoveReverse;
@@ -421,8 +422,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 }
 
 void CMisc::GetInterpolationAmount() {
-	if (CNetChannel* NetChan = I::EngineClient->GetNetChannelInfo()) {
-		G::LerpTime = NetChan->m_flInterpolationAmount;
+	if (const CNetChannel* netChan = I::EngineClient->GetNetChannelInfo()) {
+		G::LerpTime = netChan->m_flInterpolationAmount;
 	}
 }
 
@@ -454,17 +455,16 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	const float Speed = pLocal->GetVecVelocity().Length2D();
-	const float SpeedLimit = Vars::Debug::DebugBool.Value ? 2.f : 10.f;	//	does some fucky stuff
+	const float speed = pLocal->GetVecVelocity().Length2D();
+	const float speedLimit = Vars::Debug::DebugBool.Value ? 2.f : 10.f;	//	does some fucky stuff
 
-
-	if (Speed > SpeedLimit)
+	if (speed > speedLimit)
 	{
 		switch (Vars::Misc::AccurateMovement.Value) {
 		case 1: {
 			Vec3 direction = pLocal->GetVecVelocity().toAngle();
 			direction.y = pCmd->viewangles.y - direction.y;
-			const Vec3 negatedDirection = direction.fromAngle() * -Speed;
+			const Vec3 negatedDirection = direction.fromAngle() * -speed;
 			pCmd->forwardmove = negatedDirection.x;
 			pCmd->sidemove = negatedDirection.y;
 			break;
@@ -542,7 +542,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	ConVar* cl_sidespeed = g_ConVars.FindVar(_("cl_sidespeed"));
+	static auto cl_sidespeed = g_ConVars.FindVar(_("cl_sidespeed"));
 	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
 	{
 		return;
@@ -878,7 +878,16 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 			if (!target->IsAlive()) { continue; }
 			if (F::AimbotGlobal.ShouldIgnore(target)) { continue; }
 
-			if (Utils::VisPos(pLocal, target, pPos, target->GetHitboxPos(HITBOX_HEAD)))
+			// Get the hitbox position (Backtrack if possible)
+			Vec3 targetPos = target->GetHitboxPos(HITBOX_HEAD);
+			if (Vars::Backtrack::Enabled.Value)
+			{
+				const auto& btRecord = F::Backtrack.GetRecord(target->GetIndex(), BacktrackMode::Last);
+				if (btRecord) { targetPos = btRecord->HeadPosition; }
+			}
+
+			// Is the player visible?
+			if (Utils::VisPos(pLocal, target, pPos, targetPos))
 			{
 				return true;
 			}
@@ -1138,6 +1147,7 @@ void CMisc::LockAchievements()
 }
 
 // Myzarfin added this
+// TODO: Move this out of Misc.cpp
 void CNotifications::Think()
 {
 	constexpr int x{1};

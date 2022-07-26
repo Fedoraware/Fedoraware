@@ -613,8 +613,8 @@ namespace Vars
 		inline CVar<bool> AntiAFK{ false };
 		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
 		inline CVar<bool> CheatsBypass{ false };
-		inline CVar<bool> CrouchSpeed{ true };
-		inline CVar<bool> FastAccel{ true };
+		inline CVar<bool> CrouchSpeed{ false };
+		inline CVar<bool> FastAccel{ false };
 		inline CVar<bool> FakeAccelAngle{ false };
 		inline CVar<bool> ChatCensor{ false };
 		inline CVar<bool> AntiAutobal{ false };

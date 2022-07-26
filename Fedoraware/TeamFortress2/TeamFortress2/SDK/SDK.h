@@ -248,10 +248,10 @@ namespace Utils
 
 	__inline bool IsGameWindowInFocus()
 	{
-		static HWND hwGame = 0;
+		static HWND hwGame = nullptr;
 
 		while (!hwGame) {
-			hwGame = WinAPI::FindWindowW(0, _(L"Team Fortress 2"));
+			hwGame = WinAPI::FindWindowW(nullptr, _(L"Team Fortress 2"));
 			return false;
 		}
 
@@ -260,7 +260,7 @@ namespace Utils
 
 	__inline void* InitKeyValue()
 	{
-		typedef PDWORD(__cdecl* Init_t)(int);
+		using Init_t = PDWORD(__cdecl* )(int);
 		static DWORD dwInitLocation = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 83 C4 14 85 C0 74 10 68")) + 0x1;
 		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
 		static Init_t InitKeyValues = (Init_t)dwInit;
@@ -273,12 +273,26 @@ namespace Utils
 		if (otherColors) {
 			if (const auto& pLocal = g_EntityCache.GetLocal()) {
 				// Enemy/Team based colors
-				auto lPlayerTeam = pLocal->GetTeamNum();
-				if (lPlayerTeam == 2 && nTeamNum == 2) return Colors::rTeam;
-				else if (lPlayerTeam == 3 && nTeamNum == 3) return Colors::rTeam;
-				else if (lPlayerTeam == 2 && nTeamNum == 3) return Colors::Enemy;
-				else if (lPlayerTeam == 3 && nTeamNum == 2) return Colors::Enemy;
-				else return Colors::White;
+				const auto lPlayerTeam = pLocal->GetTeamNum();
+
+				if (lPlayerTeam == 2 && nTeamNum == 2)
+				{
+					return Colors::rTeam;
+				}
+				if (lPlayerTeam == 3 && nTeamNum == 3)
+				{
+					return Colors::rTeam;
+				}
+				if (lPlayerTeam == 2 && nTeamNum == 3)
+				{
+					return Colors::Enemy;
+				}
+				if (lPlayerTeam == 3 && nTeamNum == 2)
+				{
+					return Colors::Enemy;
+				}
+
+				return Colors::White;
 			}
 		}
 		else {
@@ -300,23 +314,35 @@ namespace Utils
 		if (pEntity->IsPlayer())
 		{
 			if (g_EntityCache.GetLocal()->GetIndex() == pEntity->GetIndex())
+			{
 				out = Colors::Local;
+			}
 
 			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.GetLocal())
+			{
 				out = Colors::Friend;
+			}
 
 			else if (G::IsIgnored(info.friendsID))
+			{
 				out = Colors::Ignored;
+			}
 
 			else if (pEntity->IsCloaked())
+			{
 				out = Colors::Cloak;
+			}
 
 			else if (!pEntity->IsVulnerable())
+			{
 				out = Colors::Invuln;
+			}
 		}
 
 		if (pEntity->GetIndex() == G::CurrentTargetIdx)
+		{
 			out = Colors::Target;
+		}
 
 		return out;
 	}
@@ -339,22 +365,26 @@ namespace Utils
 
 	__inline bool IsOnScreen(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	{
-		Vec3 WSC = pEntity->GetWorldSpaceCenter();
+		const Vec3 wsc = pEntity->GetWorldSpaceCenter();
 
-		if (WSC.DistTo(pLocal->GetWorldSpaceCenter()) > 300.0f)
+		if (wsc.DistTo(pLocal->GetWorldSpaceCenter()) > 300.0f)
 		{
 			Vec3 vScreen = {};
 
-			if (Utils::W2S(pEntity->GetWorldSpaceCenter(), vScreen))
+			if (W2S(pEntity->GetWorldSpaceCenter(), vScreen))
 			{
 				if (vScreen.x < -400
 					|| vScreen.x > g_ScreenSize.w + 400
 					|| vScreen.y < -400
 					|| vScreen.y > g_ScreenSize.h + 400)
+				{
 					return false;
+				}
 			}
-
-			else return false;
+			else
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -382,7 +412,7 @@ namespace Utils
 		static const unsigned nSeed = std::chrono::system_clock::now().time_since_epoch().count();
 
 		std::default_random_engine gen(nSeed);
-		std::uniform_int_distribution<int> distr(min, max);
+		const std::uniform_int_distribution distr(min, max);
 		return distr(gen);
 	}
 
@@ -408,32 +438,32 @@ namespace Utils
 
 	__inline int UnicodeToUTF8(const wchar_t* unicode, char* ansi, int ansiBufferSize)
 	{
-		int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, NULL, NULL);
+		const int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, NULL, NULL);
 		ansi[ansiBufferSize - 1] = 0;
 		return result;
 	}
 
 	__inline int UTF8ToUnicode(const char* ansi, wchar_t* unicode, int unicodeBufferSizeInBytes)
 	{
-		int chars = MultiByteToWideChar(CP_UTF8, 0, ansi, -1, unicode, unicodeBufferSizeInBytes / sizeof(wchar_t));
+		const int chars = MultiByteToWideChar(CP_UTF8, 0, ansi, -1, unicode, unicodeBufferSizeInBytes / sizeof(wchar_t));
 		unicode[(unicodeBufferSizeInBytes / sizeof(wchar_t)) - 1] = 0;
 		return chars;
 	}
 
 	__inline std::wstring ConvertUtf8ToWide(const std::string_view& str)
 	{
-		int count = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), NULL, 0);
+		const int count = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), NULL, 0);
 		std::wstring wstr(count, 0);
 		MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), &wstr[0], count);
 		return wstr;
 	}
 
-	__inline float ATTRIB_HOOK_FLOAT(float base_value, const char *search_string, CBaseEntity *ent, void *buffer, bool is_global_const_string)
+	__inline float ATTRIB_HOOK_FLOAT(float baseValue, const char *searchString, CBaseEntity *ent, void *buffer, bool isGlobalConstString)
 	{
 		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(_(L"client.dll"),
 			_(L"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38")));
 
-		return fn(base_value, search_string, ent, buffer, is_global_const_string);
+		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
 	}
 
 	__inline void RemovePEH(HINSTANCE hinstDLL)
@@ -468,12 +498,12 @@ namespace Utils
 
 		CRC32_Final(&retval);
 
-		return (int)(retval);
+		return static_cast<int>(retval);
 	}
 
 	__inline int SharedRandomInt(unsigned iseed, const char *sharedname, int iMinVal, int iMaxVal, int additionalSeed)
 	{
-		int seed = SeedFileLineHash(iseed, sharedname, additionalSeed);
+		const int seed = SeedFileLineHash(iseed, sharedname, additionalSeed);
 		I::UniformRandomStream->SetSeed(seed);
 		return I::UniformRandomStream->RandomInt(iMinVal, iMaxVal);
 	}
@@ -490,7 +520,7 @@ namespace Utils
 		return RandomFloatFn(flMinVal, flMaxVal);
 	}
 
-	__inline bool VisPos(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)
+	__inline bool VisPos(CBaseEntity *pSkip, const CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)
 	{
 		CGameTrace trace = {};
 		CTraceFilterHitscan filter = {};
@@ -499,7 +529,7 @@ namespace Utils
 		return ((trace.entity && trace.entity == pEntity) || trace.flFraction > 0.99f);
 	}
 
-	__inline bool VisPosMask(CBaseEntity* pSkip, CBaseEntity* pEntity, const Vec3& from, const Vec3& to, unsigned int nMask)
+	__inline bool VisPosMask(CBaseEntity* pSkip, const CBaseEntity* pEntity, const Vec3& from, const Vec3& to, unsigned int nMask)
 	{
 		CGameTrace trace = {};
 		CTraceFilterHitscan filter = {};
@@ -508,7 +538,7 @@ namespace Utils
 		return ((trace.entity && trace.entity == pEntity) || trace.flFraction > 0.99f);
 	}
 
-	__inline bool VisPosHitboxId(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int nHitbox)
+	__inline bool VisPosHitboxId(CBaseEntity *pSkip, const CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int nHitbox)
 	{
 		CGameTrace trace = {};
 		CTraceFilterHitscan filter = {};
@@ -517,7 +547,7 @@ namespace Utils
 		return (trace.entity && trace.entity == pEntity && trace.hitbox == nHitbox);
 	}
 
-	__inline bool VisPosHitboxIdOut(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int &nHitboxOut)
+	__inline bool VisPosHitboxIdOut(CBaseEntity *pSkip, const CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int &nHitboxOut)
 	{
 		CGameTrace trace = {};
 		CTraceFilterHitscan filter = {};
@@ -544,10 +574,14 @@ namespace Utils
 	__inline EWeaponType GetWeaponType(CBaseCombatWeapon *pWeapon)
 	{
 		if (!pWeapon)
+		{
 			return EWeaponType::UNKNOWN;
+		}
 
 		if (pWeapon->GetSlot() == EWeaponSlots::SLOT_MELEE)
+		{
 			return EWeaponType::MELEE;
+		}
 
 		switch (pWeapon->GetWeaponID())
 		{
@@ -574,10 +608,12 @@ namespace Utils
 
 			default:
 			{
-				int nDamageType = pWeapon->GetDamageType();
+				const int nDamageType = pWeapon->GetDamageType();
 
 				if (nDamageType & DMG_BULLET || nDamageType && DMG_BUCKSHOT)
+				{
 					return EWeaponType::HITSCAN;
+				}
 
 				break;
 			}
@@ -600,40 +636,42 @@ namespace Utils
 		return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 	}
 
-	__inline bool IsAttacking(CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
+	__inline bool IsAttacking(const CUserCmd *pCmd, CBaseCombatWeapon *pWeapon)
 	{
 		if (pWeapon->GetSlot() == SLOT_MELEE)
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
-				return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
-
-			else return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
-		}
-
-		else
-		{
-			if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{
-				static bool bLoading = false;
-
-				if (pWeapon->GetClip1() > 0)
-					bLoading = true;
-
-				if (!(pCmd->buttons & IN_ATTACK) && bLoading) {
-					bLoading = false;
-					return true;
-				}
+				return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 			}
 
-			else
+			return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
+		}
+
+
+		if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
+		{
+			static bool bLoading = false;
+
+			if (pWeapon->GetClip1() > 0)
 			{
-				int ID = pWeapon->GetWeaponID();
-				switch (ID) {
-				case TF_WEAPON_COMPOUND_BOW:
-				case TF_WEAPON_PIPEBOMBLAUNCHER:
-				case TF_WEAPON_STICKY_BALL_LAUNCHER:
-				case TF_WEAPON_GRENADE_STICKY_BALL:
-				case TF_WEAPON_CANNON:
+				bLoading = true;
+			}
+
+			if (!(pCmd->buttons & IN_ATTACK) && bLoading) {
+				bLoading = false;
+				return true;
+			}
+		}
+		else
+		{
+			const int id = pWeapon->GetWeaponID();
+			switch (id) {
+			case TF_WEAPON_COMPOUND_BOW:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			case TF_WEAPON_GRENADE_STICKY_BALL:
+			case TF_WEAPON_CANNON:
 				{
 					static bool bCharging = false;
 
@@ -646,16 +684,18 @@ namespace Utils
 					}
 					break;
 				}
-				case TF_WEAPON_JAR:
-				case TF_WEAPON_JAR_MILK:
-				case TF_WEAPON_JAR_GAS:
-				case TF_WEAPON_GRENADE_JAR_GAS:
-				case TF_WEAPON_CLEAVER:
+			case TF_WEAPON_JAR:
+			case TF_WEAPON_JAR_MILK:
+			case TF_WEAPON_JAR_GAS:
+			case TF_WEAPON_GRENADE_JAR_GAS:
+			case TF_WEAPON_CLEAVER:
 				{
 					static float flThrowTime = 0.0f;
 
 					if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack && !flThrowTime)
+					{
 						flThrowTime = I::GlobalVars->curtime + I::GlobalVars->interval_per_tick;
+					}
 
 					if (flThrowTime && I::GlobalVars->curtime >= flThrowTime) {
 						flThrowTime = 0.0f;
@@ -663,12 +703,11 @@ namespace Utils
 					}
 					break;
 				}
-				default:
+			default:
 				{
 					if ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack)
 					{ return true; }
 					break;
-				}
 				}
 			}
 		}
@@ -678,36 +717,42 @@ namespace Utils
 
 	__inline Vector ComputeMove(const CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
 	{
-		Vec3 diff = (b - a);
+		const Vec3 diff = (b - a);
 		if (diff.Length() == 0.0f)
-			return Vec3(0.0f, 0.0f, 0.0f);
+		{
+			return {0.0f, 0.0f, 0.0f};
+		}
 		const float x = diff.x;
 		const float y = diff.y;
-		Vec3 vsilent(x, y, 0);
+		const Vec3 vSilent(x, y, 0);
 		Vec3 ang;
-		Math::VectorAngles(vsilent, ang);
-		float yaw = DEG2RAD(ang.y - pCmd->viewangles.y);
-		float pitch = DEG2RAD(ang.x - pCmd->viewangles.x);
+		Math::VectorAngles(vSilent, ang);
+		const float yaw = DEG2RAD(ang.y - pCmd->viewangles.y);
+		const float pitch = DEG2RAD(ang.x - pCmd->viewangles.x);
 		Vec3 move = { cos(yaw) * 450.0f, -sin(yaw) * 450.0f, -cos(pitch) * 450.0f };
 
 		// Only apply upmove in water
 		if (!(I::EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
+		{
 			move.z = pCmd->upmove;
+		}
 		return move;
 	}
 
 	__inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b, float scale)
 	{
 		// Calculate how to get to a vector
-		auto result = ComputeMove(pCmd, pLocal, a, b);
+		const auto result = ComputeMove(pCmd, pLocal, a, b);
+
 		// Push our move to usercmd
 		pCmd->forwardmove = result.x * scale;
 		pCmd->sidemove = result.y * scale;
 		pCmd->upmove = result.z * scale;
 	}
 
-	__inline void StopMovement(CUserCmd* pCmd, bool Safe = true) {
-		if (Safe && G::IsAttacking) { return; }
+	__inline void StopMovement(CUserCmd* pCmd, bool safe = true) {
+		if (safe && G::IsAttacking) { return; }
+
 		if (CBaseEntity* pLocal = g_EntityCache.GetLocal()) {
 			const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
 			pCmd->viewangles.x = -90;	//	on projectiles we would be annoyed if we shot the ground.

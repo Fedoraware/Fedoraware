@@ -552,7 +552,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		testPoints++;	// Only increment this if we actually tested.
 	}
 	if (visiblePoints.empty()) { 
-		return Vec3(0, 0, 0); 
+		return {0, 0, 0}; 
 	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
@@ -624,9 +624,6 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 }
 
 Vec3 CAimbotProjectile::GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEntity) {
-	Vec3 retVec = pLocal->GetAbsOrigin();
-	Vec3 localPos = pLocal->GetAbsOrigin();
-
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
 	const float bboxScale = std::max(Vars::Aimbot::Projectile::ScanScale.Value - 0.05f, 0.5f);	// set the maximum scale for buildings at .95f
@@ -658,7 +655,8 @@ Vec3 CAimbotProjectile::GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEnt
 			return vTransformed; // just return the first point we see
 		}
 	}
-	return Vec3(0, 0, 0);
+
+	return {0, 0, 0};
 }
 
 bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo,
@@ -807,12 +805,17 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 		for (const auto& pTarget : g_EntityCache.GetGroup(bIsCrossbow ? EGroupType::PLAYERS_ALL : EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!pTarget->IsAlive() || pTarget->IsAGhost() || pTarget == pLocal)
+			{
 				continue;
+			}
 
+			// Check if the crossbow should shoot at friendly players
 			if (bIsCrossbow && (pTarget->GetTeamNum() == pLocal->GetTeamNum()))
 			{
 				if (pTarget->GetHealth() >= pTarget->GetMaxHealth())
+				{
 					continue;
+				}
 			}
 
 			if (pTarget->GetTeamNum() != pLocal->GetTeamNum())
@@ -823,7 +826,6 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			Vec3 vPos = pTarget->GetWorldSpaceCenter();
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo =Math::CalcFov(vLocalAngles, vAngleTo);
-			
 
 			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
@@ -842,25 +844,16 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	{
 		const bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
 
-		auto AimFriendly = [](CBaseObject* Building) -> bool
-		{
-			if (Building->GetHealth() < Building->GetMaxHealth())
-				return true;
-
-			return false;
-		};
-
 		for (const auto& pBuilding : g_EntityCache.GetGroup(bIsRescueRanger ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
 			const auto& Building = reinterpret_cast<CBaseObject*>(pBuilding);
 
-			if (!pBuilding->IsAlive())
-				continue;
+			if (!pBuilding->IsAlive()) { continue; }
 
+			// Check if the Rescue Ranger should shoot at friendly buildings
 			if (bIsRescueRanger && (pBuilding->GetTeamNum() == pLocal->GetTeamNum()))
 			{
-				if (!AimFriendly(Building))
-					continue;
+				if (Building->GetHealth() >= Building->GetMaxHealth()) { continue; }
 			}
 
 			Vec3 vPos = pBuilding->GetWorldSpaceCenter();
