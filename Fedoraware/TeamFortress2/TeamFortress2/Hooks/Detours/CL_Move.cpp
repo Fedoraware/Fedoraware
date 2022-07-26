@@ -12,7 +12,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
 	static KeyHelper rechargeKey{ &Vars::Misc::CL_Move::RechargeKey.Value };
 
-
 	if (!Vars::Misc::CL_Move::Enabled.Value)	// return the normal CL_Move if we don't want to manipulate it.
 	{
 		G::ShiftedTicks = 0;					// cough
@@ -116,7 +115,11 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
 
-
+	if (!pLocal)
+	{
+		G::ShiftedTicks = 0; // we do not have charge if we do not exist
+		return;
+	}
 
 	if (G::WaitForShift)
 	{
@@ -124,38 +127,9 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		return;
 	}
 
-	if (G::LastUserCmd != nullptr)
+	if (G::IsAttacking)
 	{
-		// Shift if attacking normally
-		if (Vars::Misc::CL_Move::NotInAir.Value)
-		{
-			if (pLocal)
-			{
-				if (pLocal->IsOnGround())
-				{
-					G::ShouldShift = G::ShouldShift
-						? true
-						: G::LastUserCmd->buttons & IN_ATTACK;
-				}
-				else
-				{
-					G::ShouldShift = false;
-				}
-			}
-		}
-		else
-		{
-			G::ShouldShift = G::ShouldShift
-				? true
-				: G::LastUserCmd->buttons & IN_ATTACK;
-		}
-	}
-
-
-	if (!pLocal)
-	{
-		G::ShiftedTicks = 0; // we do not have charge if we do not exist
-		return;
+		G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
 	}
 
 	// Should we shift?
