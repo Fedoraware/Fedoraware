@@ -499,6 +499,15 @@ namespace Utils
 		return ((trace.entity && trace.entity == pEntity) || trace.flFraction > 0.99f);
 	}
 
+	__inline bool VisPosWeak(CBaseEntity* pSkip, const Vec3& from, const Vec3& to)
+	{
+		CGameTrace trace = {};
+		CTraceFilterHitscan filter = {};
+		filter.pSkip = pSkip;
+		Trace(from, to, MASK_SHOT_HULL, &filter, &trace);
+		return (trace.flFraction > 0.99f);
+	}
+
 	__inline bool VisPosHitboxId(CBaseEntity *pSkip, CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int nHitbox)
 	{
 		CGameTrace trace = {};

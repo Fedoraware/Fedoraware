@@ -67,7 +67,7 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 	pMoveData->m_bFirstRunOfFunctions = false;
 	pMoveData->m_bGameCodeMovedPlayer = false;
 	pMoveData->m_nPlayerHandle = reinterpret_cast<IHandleEntity*>(pPlayer)->GetRefEHandle();
-	pMoveData->m_vecVelocity = pPlayer->m_vecVelocity();
+	pMoveData->m_vecVelocity = pPlayer->m_vecVelocity();	//	m_vecBaseVelocity hits -1950?
 	pMoveData->m_vecAbsOrigin = pPlayer->m_vecOrigin();
 	pMoveData->m_flMaxSpeed = pPlayer->TeamFortress_CalculateMaxSpeed();
 

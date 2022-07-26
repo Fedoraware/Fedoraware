@@ -195,7 +195,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
 				Math::RemapValClamped(charge, 0.0f, 1.f, 1800, 2600),
-				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 1.f, 0.5, 0.1)
 			};
 			break;
 		}
@@ -543,7 +543,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		Vec3 vTransformed = {};
 		Math::VectorTransform(point, transform, vTransformed);
 
-		if (Utils::VisPos(pLocal, pEntity, vLocalPos, vTransformed))
+		if (Utils::VisPosWeak(pLocal, vLocalPos, vTransformed))
 		{
 			if (curPoint == aimMethod && aimMethod < 3) { return vTransformed; }	// return this value now if it is going to get returned anyway, avoid useless scanning.
 			visiblePoints.push_back(vTransformed);
