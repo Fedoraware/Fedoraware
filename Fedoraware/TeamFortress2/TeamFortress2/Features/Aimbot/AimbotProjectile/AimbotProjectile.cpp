@@ -543,7 +543,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		Vec3 vTransformed = {};
 		Math::VectorTransform(point, transform, vTransformed);
 
-		if (Utils::VisPosWeak(pLocal, vLocalPos, vTransformed))
+		if (Utils::VisPosMask(pLocal, pEntity, vLocalPos, vTransformed, MASK_SHOT_HULL))
 		{
 			if (curPoint == aimMethod && aimMethod < 3) { return vTransformed; }	// return this value now if it is going to get returned anyway, avoid useless scanning.
 			visiblePoints.push_back(vTransformed);
