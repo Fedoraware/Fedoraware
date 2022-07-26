@@ -347,6 +347,10 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 
 void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 {
+	if (!pLocal->IsAlive() || I::Input->CAM_IsThirdPerson()) {
+		return;
+	}
+
 	if (Vars::AntiHack::AntiAim::Active.Value)
 	{
 		static constexpr Color_t realColour = { 0, 255,0, 255 };
