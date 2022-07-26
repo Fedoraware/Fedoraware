@@ -52,7 +52,7 @@ bool CCheaterDetection::IsPitchInvalid(CBaseEntity* pSuspect)
 		{
 			return true;
 		}
-		if (suspectAngles.z >= 51.f || suspectAngles.z <= -51.f)
+		if (suspectAngles.z >= 51.f || suspectAngles.z <= -51.f)	//	used by roll exploit
 		{
 			return true;
 		}

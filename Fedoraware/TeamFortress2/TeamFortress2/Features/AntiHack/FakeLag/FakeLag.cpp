@@ -68,6 +68,7 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 		return;
 	}
 
+	G::IsChoking = true;
 	*pSendPacket = false;
 	ChokeCounter++;
 }
