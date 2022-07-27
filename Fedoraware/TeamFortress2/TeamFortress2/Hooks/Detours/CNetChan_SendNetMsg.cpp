@@ -30,7 +30,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 							break;
 						}
 					}
-					return false;	//	if we failed to manipulate the data, don't send it.
+					return true;	//	if we failed to manipulate the data, don't send it.
 				}
 			}
 		}
