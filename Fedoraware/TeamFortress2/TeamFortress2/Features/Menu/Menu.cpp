@@ -1880,18 +1880,20 @@ void CMenu::DrawCritDrag()
 
 void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw, bool setSize)
 {
+	constexpr int titlebarheight = 20;
+
 	if (bShouldDraw)
 	{
 		if (info.update) {
 			if (setSize)
 			{
-				ImGui::SetNextWindowSize({ static_cast<float>(info.w),static_cast<float>(info.h) }, ImGuiCond_Always);
+				ImGui::SetNextWindowSize({ static_cast<float>(info.w), static_cast<float>(info.h) + titlebarheight }, ImGuiCond_Always);
 			}
 			else
 			{
 				ImGui::SetNextWindowSize({ 80.f, 60.f }, ImGuiCond_Always);
 			}
-			ImGui::SetNextWindowPos({ static_cast<float>(info.x), static_cast<float>(info.y) }, ImGuiCond_Always);
+			ImGui::SetNextWindowPos({ static_cast<float>(info.x), static_cast<float>(info.y) - titlebarheight }, ImGuiCond_Always);
 			info.update = false;
 		}
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.1f));
@@ -1902,7 +1904,6 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw,
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();
-			constexpr int titlebarheight = 20;
 
 			info.x = static_cast<int>(winPos.x);
 			info.y = static_cast<int>(winPos.y + titlebarheight);	//	fix title bars

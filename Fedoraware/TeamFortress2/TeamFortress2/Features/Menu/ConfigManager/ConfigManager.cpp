@@ -124,9 +124,9 @@ void CConfigManager::SaveJson(const char* name, const DragBox_t& val)
 {
 	boost::property_tree::ptree dragBoxTree;
 	dragBoxTree.put("x", val.x);
-	dragBoxTree.put("y", val.y - 20);
+	dragBoxTree.put("y", val.y);
 	dragBoxTree.put("w", val.w);
-	dragBoxTree.put("h", val.h + 20);
+	dragBoxTree.put("h", val.h);
 	dragBoxTree.put("c", val.c);
 
 	WriteTree.put_child(name, dragBoxTree);
