@@ -200,11 +200,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 			return false;
 		}
-
-		if (const ConVar* debugMode = I::Cvar->FindVar("debugMode"))
-		{
-			Vars::Debug::DebugInfo.Value = Vars::Debug::DebugBool.Value = debugMode->GetInt();
-		}
 	}
 
 	// Validates the cham materials every 3 seconds

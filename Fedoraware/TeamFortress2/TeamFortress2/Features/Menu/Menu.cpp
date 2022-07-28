@@ -1633,6 +1633,7 @@ void CMenu::SettingsWindow()
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
+		Checkbox("Debug", &Vars::Debug::DebugInfo.Value);
 
 		SetNextItemWidth(100);
 		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);
@@ -1828,12 +1829,6 @@ void CMenu::DebugMenu()
 			{
 				Particles::DispatchParticleEffect(particleName.c_str(), pLocal->GetAbsOrigin(), { });
 			}
-		}
-
-		// Debug options
-		if (CollapsingHeader("Debug options"))
-		{
-			Checkbox("Debug Bool", &Vars::Debug::DebugBool.Value);
 		}
 
 		End();

@@ -1,7 +1,7 @@
 #include "CheaterDetection.h"
 
 void conLogDetection(const char* text) {
-	if (Vars::Debug::DebugBool.Value) {
+	if (Vars::Debug::DebugInfo.Value) {
 		static std::string clr({ '\x7', 'C', 'C', '0', '0', 'F', 'F' });
 		I::Cvar->ConsoleColorPrintf({ 204, 0, 255, 255 }, "[CheaterDetection] ");
 		I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, text);

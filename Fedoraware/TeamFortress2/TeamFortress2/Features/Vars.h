@@ -793,10 +793,9 @@ namespace Vars
 		}
 	}
 
-	// Debug options - Don't save these!
+	// Debug options
 	namespace Debug
 	{
 		inline CVar<bool> DebugInfo{ false };
-		inline CVar<bool> DebugBool{ false };
 	}
 }

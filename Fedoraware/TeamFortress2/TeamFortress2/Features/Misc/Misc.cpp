@@ -449,7 +449,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 
 	const float speed = pLocal->GetVecVelocity().Length2D();
-	const float speedLimit = Vars::Debug::DebugBool.Value ? 2.f : 10.f;	//	does some fucky stuff
+	const float speedLimit = Vars::Debug::DebugInfo.Value ? 2.f : 10.f;	//	does some fucky stuff
 
 	if (speed > speedLimit)
 	{
