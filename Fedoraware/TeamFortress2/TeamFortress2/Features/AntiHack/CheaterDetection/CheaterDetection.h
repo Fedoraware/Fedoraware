@@ -29,7 +29,6 @@ class CCheaterDetection {
 	bool IsAimbotting(CBaseEntity* pSuspect, PlayerData& pData);
 
 public:
-	std::unordered_map<int, bool> MarkedCheaters, IllegalChar;
 	void OnTick();
 	void Event(CGameEvent* pEvent);
 };

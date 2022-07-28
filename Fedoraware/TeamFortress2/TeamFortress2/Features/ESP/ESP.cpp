@@ -360,7 +360,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 
 				// Cheater detection ESP
-				if (F::BadActors.MarkedCheaters[pi.friendsID] && Vars::ESP::Players::CheaterDetection.Value)
+				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, {255, 0, 0, 255}, ALIGN_DEFAULT, "CHEATER");
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;

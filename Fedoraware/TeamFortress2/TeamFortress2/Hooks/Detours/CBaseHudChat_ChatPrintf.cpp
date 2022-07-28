@@ -79,7 +79,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 			flag = { Colors::Friend.to_hex_alpha(), "[Friend]" };
 			set = true;
 		}
-		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && F::BadActors.MarkedCheaters[info.friendsID])
+		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 4)
 		{
 			static const auto red = Color_t{255, 0, 0, 255};
 			flag = { red.to_hex_alpha(), "[Cheater]"};

@@ -92,10 +92,6 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 				}
 			}*/
 
-			if (boost::contains(chatMessage, "\n")) {
-				F::BadActors.IllegalChar[entIdx] = true;
-			}
-
 			break;
 		}
 

@@ -11,7 +11,7 @@ void conLogDetection(const char* text) {
 
 bool CCheaterDetection::ShouldScan(int nIndex, int friendsID, CBaseEntity* pSuspect)
 {
-	if (g_EntityCache.IsFriend(nIndex) || G::IsIgnored(friendsID) || MarkedCheaters[friendsID]) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
+	if (g_EntityCache.IsFriend(nIndex) || G::IsIgnored(friendsID) || G::PlayerPriority[friendsID].Mode == 4) { return false; } // dont rescan this player if we know they are cheating, a friend, or ignored
 	if (pSuspect->GetDormant()) { return false; } // dont run this player if they are dormant
 	if (!pSuspect->IsAlive() || pSuspect->IsAGhost() || pSuspect->IsTaunting()) { return false; } // dont run this player if they are dead / ghost or taunting
 	return true;
@@ -247,10 +247,9 @@ void CCheaterDetection::OnTick()
 			if (Strikes[friendsID] > 4)
 			{
 				conLogDetection(tfm::format("%s was marked as a cheater.\n", pi.name).c_str());
-				MarkedCheaters[friendsID] = true;
 				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
 			}
-			else if (userData.NonDormantTimer >= (67 * 120) && userData.OldStrikes == Strikes[friendsID] && Strikes[friendsID]) {
+			else if (userData.NonDormantTimer >= (67 * 30) && userData.OldStrikes == Strikes[friendsID] && Strikes[friendsID]) {
 				Strikes[friendsID]--;
 				userData.NonDormantTimer = 0;
 				conLogDetection(tfm::format("%s has had their suspicion reduced due to good behaviour.\n", pi.name).c_str());
