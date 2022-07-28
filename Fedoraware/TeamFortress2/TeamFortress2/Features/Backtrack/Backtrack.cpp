@@ -56,7 +56,8 @@ void CBacktrack::UpdateRecords()
 				pEntity->m_vecMins(),
 				pEntity->m_vecMaxs(),
 				pEntity->GetWorldSpaceCenter(),
-				pEntity->GetEyeAngles()
+				pEntity->GetEyeAngles(),
+				pEntity->GetVelocity()
 			});
 		}
 
@@ -73,6 +74,13 @@ void CBacktrack::Run()
 	if (!Vars::Backtrack::Enabled.Value)
 	{
 		LatencyRampup = 0.f;
+		if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+		{
+			if (g_EntityCache.GetLocal())
+			{
+				UpdateRecords();
+			}
+		}
 		return;
 	}
 
@@ -81,17 +89,14 @@ void CBacktrack::Run()
 	if (g_EntityCache.GetLocal())
 	{
 		UpdateDatagram();
-		if (G::CurWeaponType != EWeaponType::PROJECTILE)
-		{
-			UpdateRecords();
-		}
-		else
-		{
-			for (auto& record : Records)
-			{
-				record.clear();
-			}
-		}
+		UpdateRecords();
+		//else
+		//{
+		//	for (auto& record : Records)
+		//	{
+		//		record.clear();
+		//	}
+		//}
 	}
 	else
 	{

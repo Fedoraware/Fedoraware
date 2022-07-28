@@ -67,6 +67,7 @@ namespace Vars
 		inline CVar<bool> LastTick{ false };
 		inline CVar<bool> FakeLatency{ false };
 		inline CVar<float> Latency{ 200.f };
+		
 
 		namespace BtChams
 		{
@@ -140,6 +141,7 @@ namespace Vars
 			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> NoSpread{ false };
 			inline CVar<bool> ChargeLooseCannon{ false };
+			inline CVar<bool> StrafePrediction{ false };
 		}
 
 		namespace Melee

@@ -561,6 +561,12 @@ void CVisuals::DrawMovesimLine()
 		{
 			for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 			{
+				//I::DebugOverlay->AddLineOverlay(G::PredictionLines.at(i - 1), G::PredictionLines.at(i),
+				//								Vars::Aimbot::Projectile::PredictionColor.r,
+				//								Vars::Aimbot::Projectile::PredictionColor.g,
+				//								Vars::Aimbot::Projectile::PredictionColor.b,
+				//								false,
+				//								1.f);
 				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
 			}
 		}

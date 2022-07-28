@@ -290,6 +290,7 @@ void CMenu::MenuAimbot()
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::LastTick.Value); HelpMarker("Aimbot aims at the last tick if visible");
 			WToggle("Fake latency", &Vars::Backtrack::FakeLatency.Value); HelpMarker("Fakes your latency to hit records further in the past");
 			WSlider("Amount of latency###BTLatency", &Vars::Backtrack::Latency.Value, 200.f, 1000.f, "%.fms", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput); HelpMarker("This won't work on local servers");
+			WToggle("Strafe prediction", &Vars::Aimbot::Projectile::StrafePrediction.Value); HelpMarker("This is bad and needs backtrack on, don't use fake latency or suffer the consequences");
 		} EndChild();
 
 		/* Column 2 */
@@ -348,7 +349,7 @@ void CMenu::MenuAimbot()
 				WSlider("Point Scan Limit", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, Vars::Aimbot::Projectile::VisTestPoints.Value, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how many visible points the cheat needs to find before it picks one to aim at.");
 				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.7f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls the size of the hitbox as it's given to the cheat.");
 			}
-			MultiCombo({ "Feet Aim on Ground", "Splash Prediction", "Viewmodel Flipper", "Charge Loose Cannon" }, { &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value, &Vars::Aimbot::Projectile::SplashPrediction.Value, &Vars::Misc::ViewmodelFlip.Value, &Vars::Aimbot::Projectile::ChargeLooseCannon.Value }, "Preferences###ProjectileAimbotPreferences");
+			MultiCombo({ "Feet Aim on Ground", "Splash Prediction", "Viewmodel Flipper", "Charge Loose Cannon" }, {&Vars::Aimbot::Projectile::FeetAimIfOnGround.Value, &Vars::Aimbot::Projectile::SplashPrediction.Value, &Vars::Misc::ViewmodelFlip.Value, &Vars::Aimbot::Projectile::ChargeLooseCannon.Value}, "Preferences###ProjectileAimbotPreferences");
 
 			SectionTitle("Melee");
 			{
