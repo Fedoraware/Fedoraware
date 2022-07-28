@@ -347,7 +347,7 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 
 void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 {
-	if (!pLocal->IsAlive() || I::Input->CAM_IsThirdPerson()) {
+	if (!pLocal->IsAlive() || !I::Input->CAM_IsThirdPerson()) {
 		return;
 	}
 
