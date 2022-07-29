@@ -561,6 +561,14 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (classNum) {
 	case CLASS_SOLDIER:
+	{
+		if (pLocal->GetActiveWeapon()->GetWeaponID() == TF_WEAPON_ROCKETLAUNCHER)
+		{
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround())
+				aimMethod = 2;
+		}
+		break;
+	}
 	case CLASS_DEMOMAN:
 	{
 		if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround()) {
