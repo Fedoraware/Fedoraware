@@ -723,7 +723,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		{
 			hullSize = { 0.f, 1.f, 1.f };
 
-			const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
+			const Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
