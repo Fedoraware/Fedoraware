@@ -1,6 +1,7 @@
 #include "EntityCache.h"
 
 #include "../GlobalInfo/GlobalInfo.h"
+#include "../../../Features/ESP/ESP.h"
 
 void CEntityCache::Fill()
 {
@@ -30,11 +31,11 @@ void CEntityCache::Fill()
 			if (!pEntity)
 				continue;
 
-			if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex())) {
+			if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex()) && !F::ESP.Argh()) {
 				continue;
 			}
 
-			if (pEntity->GetDormant()) {
+			if (pEntity->GetDormant() && !F::ESP.Argh()) {
 				const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
 				if (I::EngineClient->Time() - lastUpdate <= 5.0f) {
 					pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);

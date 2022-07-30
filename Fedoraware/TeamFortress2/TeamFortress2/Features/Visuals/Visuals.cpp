@@ -573,6 +573,27 @@ void CVisuals::DrawMovesimLine()
 	}
 }
 
+void CVisuals::ManualNetwork(StartSoundParams_t& params)
+{
+	// Credits go to reestart entirely
+	Vector vOrigin;
+	if (params.soundsource > 0) //Make sure we even have a valid entity to begin with
+	{
+		VectorCopy(params.origin, vOrigin);
+		int iEntIndex = params.soundsource;
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iEntIndex);
+		if (pEntity && iEntIndex != I::EngineClient->GetLocalPlayer() && pEntity->GetDormant())
+		{
+			pEntity->SetAbsOrigin(vOrigin);
+			if (pEntity->m_lifeState() != LIFE_ALIVE)
+			{
+				pEntity->m_lifeState() = LIFE_ALIVE;
+				pEntity->m_iHealth() = pEntity->GetMaxHealth();
+			}
+		}
+	}
+}
+
 void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer)
 {
 	static auto RenderLineFn = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));

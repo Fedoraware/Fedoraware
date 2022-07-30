@@ -141,6 +141,9 @@ void CGlowEffect::Render()
 		{
 			for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
+				if (Player->GetDormant())
+					continue;
+
 				if (!Player->IsAlive() || Player->IsAGhost())
 					continue;
 

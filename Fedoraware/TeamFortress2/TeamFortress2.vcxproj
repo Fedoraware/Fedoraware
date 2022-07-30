@@ -277,6 +277,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetAlphaModulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\StudioRender_SetColorModulation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Surface_OnScreenSizeChanged.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\S_StartDynamicSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\UniformRandomStream_RandInt.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\UTIL_TraceLine.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ViewRender_LevelInit.cpp" />

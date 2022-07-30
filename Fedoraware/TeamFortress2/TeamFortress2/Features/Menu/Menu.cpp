@@ -469,6 +469,8 @@ void CMenu::MenuVisuals()
 					ColorPickerL("RED Team color", Colors::TeamRed);
 					ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
 				}
+				WToggle("Dormant sound ESP", &Vars::ESP::Main::DormantSoundESP.Value); HelpMarker("Credits: reestart");
+
 
 				SectionTitle("Player ESP");
 				WToggle("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.Value); HelpMarker("Will draw useful information/indicators on players");

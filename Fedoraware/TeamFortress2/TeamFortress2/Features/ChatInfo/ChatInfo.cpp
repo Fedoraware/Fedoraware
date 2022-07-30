@@ -202,6 +202,16 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		}
 	}
 
+	if (uNameHash == FNV1A::HashConst("player_death"))
+	{
+		int victim_entindex = pEvent->GetInt("victim_entindex");
+		if (CBaseEntity* pVictim = I::ClientEntityList->GetClientEntity(victim_entindex))
+		{
+			pVictim->m_iHealth() = 0;
+			pVictim->m_lifeState() = LIFE_DEAD;
+		}
+	}
+
 	/*if (uNameHash == FNV1A::HashConst("player_death")) {
 		short userid = pEvent->GetInt("userid");									//user ID who died
 		long 	victim_entindex = pEvent->GetInt("victim_entindex");

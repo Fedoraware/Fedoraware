@@ -773,6 +773,28 @@ public:
 	}
 };
 
+struct StartSoundParams_t
+{
+	bool			staticsound;
+	int				userdata;
+	int				soundsource;
+	int				entchannel;
+	void* pSfx; //CSfxTable
+	Vec3			origin;
+	Vec3			direction;
+	bool			bUpdatePositions;
+	float			fvol;
+	soundlevel_t	soundlevel;
+	int				flags;
+	int				pitch;
+	int				specialdsp;
+	bool			fromserver;
+	float			delay;
+	int				speakerentity;
+	bool			suppressrecording;
+	int				initialStreamPosition;
+};
+
 class IRecipientFilter
 {
 public:

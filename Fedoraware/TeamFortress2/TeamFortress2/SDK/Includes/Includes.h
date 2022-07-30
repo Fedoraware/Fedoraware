@@ -16,3 +16,10 @@ public:
 	virtual int AddRef() = 0;
 	virtual int Release() = 0;
 };
+
+FORCEINLINE void VectorCopy(const Vector& src, Vector& dst)
+{
+	dst.x = src.x;
+	dst.y = src.y;
+	dst.z = src.z;
+}

@@ -16,6 +16,7 @@ bool CAutoGlobal::ShouldIgnore(CBaseEntity* pTarget)
 {
 	PlayerInfo_t pInfo{};
 	if (!pTarget) { return true; }
+	if (pTarget->GetDormant()) { return true; }
 	if (!I::EngineClient->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (G::IsIgnored(pInfo.friendsID)) { return true; }
 	if (Vars::Triggerbot::Global::IgnoreFriends.Value && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
