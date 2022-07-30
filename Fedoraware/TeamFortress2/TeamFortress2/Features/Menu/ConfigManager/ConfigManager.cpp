@@ -433,6 +433,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Main::Active);
 				SAVE_VAR(Vars::ESP::Main::Outlinedbar);
 				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				SAVE_VAR(Vars::ESP::Main::DormantSoundESP);
 			}
 
 			//Players
@@ -1203,6 +1204,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Main::Active);
 				LOAD_VAR(Vars::ESP::Main::Outlinedbar);
 				LOAD_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				LOAD_VAR(Vars::ESP::Main::DormantSoundESP);
 			}
 
 			//Players
