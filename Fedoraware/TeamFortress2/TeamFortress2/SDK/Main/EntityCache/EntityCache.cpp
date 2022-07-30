@@ -184,6 +184,7 @@ void CEntityCache::Clear()
 	m_pLocal = nullptr;
 	m_pLocalWeapon = nullptr;
 	m_pObservedTarget = nullptr;
+	m_pPlayerResource = nullptr;
 
 	for (auto& Group : m_vecGroups)
 		Group.second.clear();

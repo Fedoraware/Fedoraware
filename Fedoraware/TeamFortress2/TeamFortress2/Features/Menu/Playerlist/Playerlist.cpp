@@ -37,8 +37,8 @@ void CPlayerList::UpdatePlayers()
 		std::multimap<int, ListPlayer> listBuffer{};
 		for (int i = 1; i <= I::GlobalVars->maxclients; i++)
 		{
-			const auto pr = g_EntityCache.GetPR();
-			if (pr->GetValid(i) && pr->GetConnected(i))
+			const auto& pr = g_EntityCache.GetPR();
+			if (pr && pr->GetValid(i) && pr->GetConnected(i))
 			{
 				PlayerInfo_t info{};
 				if (I::EngineClient->GetPlayerInfo(i, &info))

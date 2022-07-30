@@ -238,6 +238,7 @@ void CMisc::PingReducer()
 	{
 		if (Vars::Misc::PingReducer.Value)
 		{
+			if (!g_EntityCache.GetPR()) return;
 			const int currentPing = g_EntityCache.GetPR()->GetPing(I::EngineClient->GetLocalPlayer());
 			NET_SetConVar cmd("cl_cmdrate", (Vars::Misc::PingTarget.Value <= currentPing) ? "-1" : std::to_string(cl_cmdrate->GetInt()).c_str());
 			netChannel->SendNetMsg(cmd);
