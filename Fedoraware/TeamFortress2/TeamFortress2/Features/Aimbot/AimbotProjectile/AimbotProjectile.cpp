@@ -85,7 +85,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Demoman_m_Warhawk:
 	case Demoman_m_ButcherBird:
 		{
-			out = {1116.f, 0.545f};
+			out = {1216.f, 0.4f};
 			m_bIsBoosted = true;
 			break;
 		}
