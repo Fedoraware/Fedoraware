@@ -562,7 +562,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	switch (classNum) {
 	case CLASS_SOLDIER:
 	{
-		if (pLocal->GetActiveWeapon()->GetWeaponID() == TF_WEAPON_ROCKETLAUNCHER)
+		if (pLocal->GetActiveWeapon()->GetSlot() == SLOT_PRIMARY)
 		{
 			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround())
 				aimMethod = 2;
