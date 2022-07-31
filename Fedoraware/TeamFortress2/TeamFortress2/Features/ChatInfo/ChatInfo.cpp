@@ -201,7 +201,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			}
 		}
 	}
-	
 
 	//if (uNameHash == FNV1A::HashConst("player_death"))
 	//{

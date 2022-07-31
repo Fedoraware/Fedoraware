@@ -257,20 +257,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		return false;
 	}
 
-	/*
-			Utils::StopMovement(pCmd, !G::ShouldShift);
-		static bool lol = 0;
-		if (!G::IsAttacking && !G::Recharging && !G::ShouldStop && !lol) {	//	only do this code if we DID actually stop.
-			*pSendPacket = false;	//	stop angle shit
-			lol = true;
-		}
-		else
-		{
-			*pSendPacket = true;
-			lol = false;
-		}
-		*/
-
 	// do this at the end just in case aimbot / triggerbot fired.//
 	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
 		if (pCmd->buttons & IN_ATTACK && Vars::Misc::CL_Move::SafeTick.Value) {
