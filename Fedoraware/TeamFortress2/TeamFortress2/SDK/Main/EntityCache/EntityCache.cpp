@@ -14,13 +14,13 @@ void CEntityCache::Fill()
 
 		switch (m_pLocal->GetObserverMode())
 		{
-		case OBS_MODE_FIRSTPERSON:
-		case OBS_MODE_THIRDPERSON:
-		{
-			m_pObservedTarget = I::ClientEntityList->GetClientEntityFromHandle(m_pLocal->GetObserverTarget());
-			break;
-		}
-		default: break;
+			case OBS_MODE_FIRSTPERSON:
+			case OBS_MODE_THIRDPERSON:
+			{
+				m_pObservedTarget = I::ClientEntityList->GetClientEntityFromHandle(m_pLocal->GetObserverTarget());
+				break;
+			}
+			default: break;
 		}
 
 		CBaseEntity* pEntity;
@@ -29,18 +29,38 @@ void CEntityCache::Fill()
 			pEntity = I::ClientEntityList->GetClientEntity(n);
 
 			if (!pEntity)
-				continue;
-
-			if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex()) && !F::ESP.Argh()) {
+			{
 				continue;
 			}
 
-			if (pEntity->GetDormant() && !F::ESP.Argh()) {
-				const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
-				if (I::EngineClient->Time() - lastUpdate <= 5.0f) {
-					pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
-					pEntity->SetVecOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
-				} else {
+			auto nClassID = pEntity->GetClassID();
+
+			if (nClassID == ETFClassID::CTFPlayer)
+			{
+
+				if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex()) && !F::ESP.Argh())
+				{
+					continue;
+				}
+
+				if (pEntity->GetDormant() && !F::ESP.Argh())
+				{
+					const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
+					if (I::EngineClient->Time() - lastUpdate <= 5.0f)
+					{
+						pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
+						pEntity->SetVecOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
+					}
+					else
+					{
+						continue;
+					}
+				}
+			}
+			else
+			{
+				if (pEntity->GetDormant())
+				{
 					continue;
 				}
 			}
@@ -48,102 +68,107 @@ void CEntityCache::Fill()
 			if (pEntity == m_pLocal)
 			{
 				if (!I::Input->CAM_IsThirdPerson())
+				{
 					continue;
+				}
 			}
-
-			auto nClassID = pEntity->GetClassID();
+			
 			switch (nClassID)
 			{
-			case ETFClassID::CTFPlayer:
-			{
-				m_vecGroups[EGroupType::PLAYERS_ALL].push_back(pEntity);
-				m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::PLAYERS_ENEMIES : EGroupType::PLAYERS_TEAMMATES].push_back(pEntity);
-				break;
-			}
-
-			case ETFClassID::CObjectSentrygun:
-			case ETFClassID::CObjectDispenser:
-			case ETFClassID::CObjectTeleporter:
-			{
-				m_vecGroups[EGroupType::BUILDINGS_ALL].push_back(pEntity);
-				m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_TEAMMATES].push_back(pEntity);
-				break;
-			}
-
-			case ETFClassID::CBaseAnimating:
-			{
-				const auto szName = pEntity->GetModelName();
-
-				if (Hash::IsAmmo(szName))
+				case ETFClassID::CTFPlayer:
 				{
-					m_vecGroups[EGroupType::WORLD_AMMO].push_back(pEntity);
+					m_vecGroups[EGroupType::PLAYERS_ALL].push_back(pEntity);
+					m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::PLAYERS_ENEMIES : EGroupType::PLAYERS_TEAMMATES].push_back(pEntity);
 					break;
 				}
 
-				if (Hash::IsHealth(szName))
+				case ETFClassID::CObjectSentrygun:
+				case ETFClassID::CObjectDispenser:
+				case ETFClassID::CObjectTeleporter:
 				{
-					m_vecGroups[EGroupType::WORLD_HEALTH].push_back(pEntity);
+					m_vecGroups[EGroupType::BUILDINGS_ALL].push_back(pEntity);
+					m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_TEAMMATES].push_back(pEntity);
 					break;
 				}
 
-				break;
-			}
-
-			case ETFClassID::CTFAmmoPack:
-			{
-				m_vecGroups[EGroupType::WORLD_AMMO].push_back(pEntity);
-				break;
-			}
-
-			case ETFClassID::CTFProjectile_Rocket:
-			case ETFClassID::CTFGrenadePipebombProjectile:
-			case ETFClassID::CTFProjectile_Jar:
-			case ETFClassID::CTFProjectile_JarGas:
-			case ETFClassID::CTFProjectile_JarMilk:
-			case ETFClassID::CTFProjectile_Arrow:
-			case ETFClassID::CTFProjectile_SentryRocket:
-			case ETFClassID::CTFProjectile_Flare:
-			case ETFClassID::CTFProjectile_GrapplingHook:
-			case ETFClassID::CTFProjectile_Cleaver:
-			case ETFClassID::CTFProjectile_EnergyBall:
-			case ETFClassID::CTFProjectile_EnergyRing:
-			case ETFClassID::CTFProjectile_HealingBolt:
-			case ETFClassID::CTFProjectile_ThrowableBreadMonster:
-			{
-				m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
-
-				if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && pEntity->GetPipebombType() == TYPE_STICKY)
+				case ETFClassID::CBaseAnimating:
 				{
-					if (I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
-						m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
+					const auto szName = pEntity->GetModelName();
 
-					break;
-				}
-
-				if (nClassID == ETFClassID::CTFProjectile_Flare)
-				{
-					if (const auto& pSecondary = m_pLocal->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
+					if (Hash::IsAmmo(szName))
 					{
-						if (pSecondary->GetItemDefIndex() == ETFWeapons::Pyro_s_TheDetonator)
-						{
-							if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) == m_pLocal)
-								m_vecGroups[EGroupType::LOCAL_FLARES].push_back(pEntity);
-						}
+						m_vecGroups[EGroupType::WORLD_AMMO].push_back(pEntity);
+						break;
+					}
+
+					if (Hash::IsHealth(szName))
+					{
+						m_vecGroups[EGroupType::WORLD_HEALTH].push_back(pEntity);
+						break;
 					}
 
 					break;
 				}
 
-				break;
-			}
+				case ETFClassID::CTFAmmoPack:
+				{
+					m_vecGroups[EGroupType::WORLD_AMMO].push_back(pEntity);
+					break;
+				}
 
-			case ETFClassID::CTFPlayerResource:
-			{
-				m_pPlayerResource = reinterpret_cast<CTFPlayerResource*>(pEntity);
-				break;
-			}
+				case ETFClassID::CTFProjectile_Rocket:
+				case ETFClassID::CTFGrenadePipebombProjectile:
+				case ETFClassID::CTFProjectile_Jar:
+				case ETFClassID::CTFProjectile_JarGas:
+				case ETFClassID::CTFProjectile_JarMilk:
+				case ETFClassID::CTFProjectile_Arrow:
+				case ETFClassID::CTFProjectile_SentryRocket:
+				case ETFClassID::CTFProjectile_Flare:
+				case ETFClassID::CTFProjectile_GrapplingHook:
+				case ETFClassID::CTFProjectile_Cleaver:
+				case ETFClassID::CTFProjectile_EnergyBall:
+				case ETFClassID::CTFProjectile_EnergyRing:
+				case ETFClassID::CTFProjectile_HealingBolt:
+				case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+				{
+					m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
 
-			default: break;
+					if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && pEntity->GetPipebombType() == TYPE_STICKY)
+					{
+						if (I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
+						{
+							m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
+						}
+
+						break;
+					}
+
+					if (nClassID == ETFClassID::CTFProjectile_Flare)
+					{
+						if (const auto& pSecondary = m_pLocal->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
+						{
+							if (pSecondary->GetItemDefIndex() == ETFWeapons::Pyro_s_TheDetonator)
+							{
+								if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) == m_pLocal)
+								{
+									m_vecGroups[EGroupType::LOCAL_FLARES].push_back(pEntity);
+								}
+							}
+						}
+
+						break;
+					}
+
+					break;
+				}
+
+				case ETFClassID::CTFPlayerResource:
+				{
+					m_pPlayerResource = reinterpret_cast<CTFPlayerResource*>(pEntity);
+					break;
+				}
+
+				default: break;
 			}
 		}
 
@@ -173,7 +198,9 @@ void CEntityCache::UpdateFriends()
 	if (CurSize != OldSize)
 	{
 		for (const auto& Player : Players)
+		{
 			Friends[Player->GetIndex()] = IsPlayerOnSteamFriendList(Player);
+		}
 	}
 
 	OldSize = CurSize;
@@ -187,12 +214,17 @@ void CEntityCache::Clear()
 	m_pPlayerResource = nullptr;
 
 	for (auto& Group : m_vecGroups)
+	{
 		Group.second.clear();
+	}
 }
 
 bool CEntityCache::IsFriend(int entIdx)
 {
-	if (entIdx < 0 || entIdx >= 129) { return false; }
+	if (entIdx < 0 || entIdx >= 129)
+	{
+		return false;
+	}
 	return Friends[entIdx];
 }
 
