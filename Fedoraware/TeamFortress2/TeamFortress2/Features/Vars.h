@@ -145,7 +145,7 @@ namespace Vars
 			inline CVar<bool> ChargeLooseCannon{ false };
 			inline CVar<bool> StrafePrediction{ false };
 			inline CVar<int> StrafePredictionSamples{ 10 };
-			inline CVar<int> StrafePredictionDivisions{ 0 };
+			inline CVar<int> StrafePredictionMaxDistance{ 1000 };
 			inline CVar<int> StrafePredictionMinDifference{ 10 };
 		}
 

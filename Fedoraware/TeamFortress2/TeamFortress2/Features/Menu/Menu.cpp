@@ -360,6 +360,7 @@ void CMenu::MenuAimbot()
 				WToggle("Strafe prediction", &Vars::Aimbot::Projectile::StrafePrediction.Value); HelpMarker("This is bad, currently only applies to players on ground");
 				WSlider("Velocity samples", &Vars::Aimbot::Projectile::StrafePredictionSamples.Value, 1, 20); HelpMarker("How many ticks to keep velocity records of");
 				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
+				WSlider("Maximum distance", &Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value, 100.f, 10000.f); HelpMarker("Max distance to apply strafe prediction (lower is better)");
 			}
 			SectionTitle("Melee");
 			{

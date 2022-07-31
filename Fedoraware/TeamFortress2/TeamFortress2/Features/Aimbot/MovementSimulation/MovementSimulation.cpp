@@ -233,6 +233,13 @@ bool CMovementSimulation::StrafePrediction()
 {
 	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
 	{
+		if (const auto& pLocal = g_EntityCache.GetLocal())
+		{
+			if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
+			{
+				return false;
+			}
+		}
 		if (!m_pPlayer->IsOnGround())
 		{
 			return false;
