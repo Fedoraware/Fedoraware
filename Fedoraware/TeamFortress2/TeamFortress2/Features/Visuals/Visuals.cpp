@@ -564,18 +564,18 @@ void CVisuals::DrawMovesimLine()
 				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
 			}
 		}
-		if (!G::PredictionLines.empty())
-		{
-			for (size_t i = 1; i < G::PredictionLines.size(); i++)
-			{
-				I::DebugOverlay->AddLineOverlay(G::PredictionLines.at(i - 1), G::PredictionLines.at(i),
-												Vars::Aimbot::Projectile::PredictionColor.r,
-												Vars::Aimbot::Projectile::PredictionColor.g,
-												Vars::Aimbot::Projectile::PredictionColor.b,
-												false,
-												1.f);
-			}
-		}
+		//if (!G::PredictionLines.empty())
+		//{
+		//	for (size_t i = 1; i < G::PredictionLines.size(); i++)
+		//	{
+		//		I::DebugOverlay->AddLineOverlay(G::PredictionLines.at(i - 1), G::PredictionLines.at(i),
+		//										Vars::Aimbot::Projectile::PredictionColor.r,
+		//										Vars::Aimbot::Projectile::PredictionColor.g,
+		//										Vars::Aimbot::Projectile::PredictionColor.b,
+		//										false,
+		//										1.f);
+		//	}
+		//}
 	}
 }
 
