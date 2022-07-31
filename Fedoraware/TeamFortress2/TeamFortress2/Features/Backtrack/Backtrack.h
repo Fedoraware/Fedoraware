@@ -37,6 +37,7 @@ struct TickRecord
 	Vec3 Maxs = Vec3();
 	Vec3 WorldSpaceCenter = { };
 	Vec3 EyeAngles = { };
+	Vec3 Velocity = { };
 };
 
 enum class BacktrackMode

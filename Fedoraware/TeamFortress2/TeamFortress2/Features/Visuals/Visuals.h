@@ -30,6 +30,7 @@ public:
 	void DrawDVD();
 	void DrawPredictionLine();
 	void DrawMovesimLine();
+	void ManualNetwork(StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
 
 	void SetVisionFlags();

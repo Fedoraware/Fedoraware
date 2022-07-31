@@ -344,6 +344,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanScale);
 				SAVE_VAR(Vars::Aimbot::Projectile::NoSpread);
 				SAVE_VAR(Vars::Aimbot::Projectile::ChargeLooseCannon);
+				SAVE_VAR(Vars::Aimbot::Projectile::StrafePrediction);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -432,6 +433,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Main::Active);
 				SAVE_VAR(Vars::ESP::Main::Outlinedbar);
 				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				SAVE_VAR(Vars::ESP::Main::DormantSoundESP);
 			}
 
 			//Players
@@ -1113,6 +1115,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanScale);
 				LOAD_VAR(Vars::Aimbot::Projectile::NoSpread);
 				LOAD_VAR(Vars::Aimbot::Projectile::ChargeLooseCannon);
+				LOAD_VAR(Vars::Aimbot::Projectile::StrafePrediction);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -1201,6 +1204,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Main::Active);
 				LOAD_VAR(Vars::ESP::Main::Outlinedbar);
 				LOAD_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				LOAD_VAR(Vars::ESP::Main::DormantSoundESP);
 			}
 
 			//Players

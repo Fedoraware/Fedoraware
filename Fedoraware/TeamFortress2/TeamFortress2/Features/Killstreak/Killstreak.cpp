@@ -64,6 +64,7 @@ void CKillstreaker::ApplyKillstreak()
 	{
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
+			if (!g_EntityCache.GetPR()) return;
 			const auto streaksResource = g_EntityCache.GetPR()->GetStreaks(I::EngineClient->GetLocalPlayer());
 			if (streaksResource && *streaksResource != GetCurrentStreak())
 			{

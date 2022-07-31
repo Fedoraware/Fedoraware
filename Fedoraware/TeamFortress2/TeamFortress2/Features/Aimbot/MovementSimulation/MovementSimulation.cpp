@@ -1,10 +1,12 @@
 #include "MovementSimulation.h"
+#include "../../Backtrack/Backtrack.h"
 
 //we'll use this to set current player's command, without it CGameMovement::CheckInterval will try to access a nullptr
 static CUserCmd DummyCmd = {};
 
 //since we're going to call game functions some entity data will be modified (we'll modify it too), we'll have to restore it after running
-class CPlayerDataBackup {
+class CPlayerDataBackup
+{
 public:
 	Vec3 m_vecOrigin = {};
 	Vec3 m_vecVelocity = {};
@@ -79,7 +81,7 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 	pMoveData->m_flClientMaxSpeed = pMoveData->m_flMaxSpeed;
 
 	//need a better way to determine angles probably
-	pMoveData->m_vecViewAngles = {0.0f, Math::VelocityToAngles(pMoveData->m_vecVelocity).y, 0.0f};
+	pMoveData->m_vecViewAngles = { 0.0f, Math::VelocityToAngles(pMoveData->m_vecVelocity).y, 0.0f };
 
 	Vec3 vForward = {}, vRight = {};
 	Math::AngleVectors(pMoveData->m_vecViewAngles, &vForward, &vRight, nullptr);
@@ -189,6 +191,41 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	I::Prediction->m_bInPrediction = true;
 	I::Prediction->m_bFirstTimePredicted = false;
 	I::GlobalVars->frametime = I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
+
+	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	{
+		const auto& pRecords = F::Backtrack.GetPlayerRecords(m_pPlayer->GetIndex());
+		if (pRecords)
+		{
+			Vec3 vAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity); // Initial angle
+			float flDifference = 0;
+			size_t i = 0;
+			// Add all the angles from the velocity's of the backtrack records and divide them by the amount of records to get an "average angle"
+			for (; i < pRecords->size(); i++)
+			{
+				Vec3 vAngle2 = Math::VelocityToAngles(pRecords->at(i).Velocity);
+				flDifference += (vAngle.y - vAngle2.y);
+			}
+
+			flDifference = flDifference / i;
+
+			if (flDifference < 10 && flDifference > -10)
+			{
+				flDifference = 0;
+			}
+
+			m_MoveData.m_vecViewAngles = { 0.0f, vAngle.y + flDifference, 0.0f };
+		}
+		else
+		{
+			// Why tf are there no records?
+			m_MoveData.m_vecViewAngles = { 0.0f, Math::VelocityToAngles(m_MoveData.m_vecVelocity).y, 0.0f };
+		}
+	}
+	else
+	{
+		m_MoveData.m_vecViewAngles = { 0.0f, Math::VelocityToAngles(m_MoveData.m_vecVelocity).y, 0.0f };
+	}
 
 	//call CTFGameMovement::ProcessMovement
 	using ProcessMovement_FN = void(__thiscall*)(void*, CBaseEntity*, CMoveData*);

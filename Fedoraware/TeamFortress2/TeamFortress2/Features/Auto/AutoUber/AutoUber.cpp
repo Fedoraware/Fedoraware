@@ -22,6 +22,9 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		if (!player->IsAlive())
 			continue;
 
+		if (player->GetDormant())
+			continue;
+
 		if (player->GetClassNum() != CLASS_SNIPER &&
 			player->GetClassNum() != CLASS_HEAVY)
 			continue;

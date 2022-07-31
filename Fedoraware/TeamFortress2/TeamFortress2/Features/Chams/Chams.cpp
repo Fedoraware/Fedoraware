@@ -152,6 +152,9 @@ void CChams::RenderEnts(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 	for (const auto& Entity : Entities)
 	{
+		if (Entity->GetDormant()) 
+			continue;
+
 		const bool isPlayer = Entity->IsPlayer();
 		if (isPlayer && (!Entity->IsAlive() || Entity->IsAGhost()))
 			continue;

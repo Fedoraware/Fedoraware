@@ -561,7 +561,37 @@ void CVisuals::DrawMovesimLine()
 		{
 			for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 			{
+				//I::DebugOverlay->AddLineOverlay(G::PredictionLines.at(i - 1), G::PredictionLines.at(i),
+				//								Vars::Aimbot::Projectile::PredictionColor.r,
+				//								Vars::Aimbot::Projectile::PredictionColor.g,
+				//								Vars::Aimbot::Projectile::PredictionColor.b,
+				//								false,
+				//								1.f);
 				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+			}
+		}
+	}
+}
+
+void CVisuals::ManualNetwork(StartSoundParams_t& params)
+{
+	if (Vars::ESP::Main::DormantSoundESP.Value) {
+		// Credits go to reestart entirely
+		Vector vOrigin;
+		if (params.soundsource > 0) //Make sure we even have a valid entity to begin with
+		{
+			VectorCopy(params.origin, vOrigin);
+			int iEntIndex = params.soundsource;
+			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iEntIndex);
+			if (pEntity && iEntIndex != I::EngineClient->GetLocalPlayer() && 
+				pEntity->GetDormant() && pEntity->GetClassID() == ETFClassID::CTFPlayer)
+			{
+				pEntity->SetAbsOrigin(vOrigin);
+				if (pEntity->m_lifeState() != LIFE_ALIVE)
+				{
+					pEntity->m_lifeState() = LIFE_ALIVE;
+					pEntity->m_iHealth() = pEntity->GetMaxHealth();
+				}
 			}
 		}
 	}

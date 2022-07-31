@@ -25,6 +25,11 @@ void CESP::Run()
 	}
 }
 
+bool CESP::Argh()
+{
+	return Vars::ESP::Main::DormantSoundESP.Value;
+}
+
 bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h)
 {
 	bool bIsPlayer = false;
@@ -994,6 +999,11 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 
 	if (const wchar_t* rune = pEntity->GetRune()) {	// I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
+	}
+
+	if (pEntity->GetDormant())
+	{
+		szCond.emplace_back(L"Dormant");
 	}
 
 	if (InCond(pEntity, 61))

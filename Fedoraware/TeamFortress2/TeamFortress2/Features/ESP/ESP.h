@@ -16,6 +16,7 @@ private:
 
 public:
 	void Run();
+	bool Argh();
 	std::vector<std::wstring> GetPlayerConds(CBaseEntity* pEntity) const;	//	used in Visuals.cpp as of today
 	static bool GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h);
 };

@@ -85,7 +85,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	case Demoman_m_Warhawk:
 	case Demoman_m_ButcherBird:
 		{
-			out = {1116.f, 0.545f};
+			out = {1216.f, 0.4f};
 			m_bIsBoosted = true;
 			break;
 		}
@@ -561,6 +561,14 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (classNum) {
 	case CLASS_SOLDIER:
+	{
+		if (pLocal->GetActiveWeapon()->GetSlot() == SLOT_PRIMARY)
+		{
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround())
+				aimMethod = 2;
+		}
+		break;
+	}
 	case CLASS_DEMOMAN:
 	{
 		if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround()) {
@@ -715,7 +723,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		{
 			hullSize = { 0.f, 1.f, 1.f };
 
-			const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
+			const Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
@@ -832,6 +840,9 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				continue;
 			}
 			const float flDistTo = (sortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
+
+			if (!g_EntityCache.GetPR()) return false;
+
 			const uint32_t priorityID = g_EntityCache.GetPR()->GetValid(pTarget->GetIndex()) ? g_EntityCache.GetPR()->GetAccountID(pTarget->GetIndex()) : 0;
 			const auto& priority = G::PlayerPriority[priorityID];
 

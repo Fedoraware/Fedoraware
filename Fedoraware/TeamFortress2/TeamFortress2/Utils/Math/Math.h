@@ -147,6 +147,17 @@ public:
 		x = X; y = Y;
 	}
 
+	float Normalize()
+	{
+		float fl_length = Length();
+		float fl_length_normal = 1.f / (FLT_EPSILON + fl_length);
+
+		x = x * fl_length_normal;
+		y = y * fl_length_normal;
+
+		return fl_length;
+	}
+
 	float Length(void) const
 	{
 		return sqrtf(x * x + y * y);

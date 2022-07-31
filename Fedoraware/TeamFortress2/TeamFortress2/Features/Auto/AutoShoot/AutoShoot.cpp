@@ -21,6 +21,9 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 				if (!pEntity->IsAlive())
 					return false;
 
+				if (pEntity->GetDormant())
+					return false;
+
 				if (!Vars::Triggerbot::Shoot::TriggerPlayers.Value)
 					return false;
 
