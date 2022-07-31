@@ -290,7 +290,6 @@ void CMenu::MenuAimbot()
 			WToggle("Aimbot aims last tick", &Vars::Backtrack::LastTick.Value); HelpMarker("Aimbot aims at the last tick if visible");
 			WToggle("Fake latency", &Vars::Backtrack::FakeLatency.Value); HelpMarker("Fakes your latency to hit records further in the past");
 			WSlider("Amount of latency###BTLatency", &Vars::Backtrack::Latency.Value, 200.f, 1000.f, "%.fms", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput); HelpMarker("This won't work on local servers");
-			WToggle("Strafe prediction", &Vars::Aimbot::Projectile::StrafePrediction.Value); HelpMarker("This is bad and needs backtrack on, don't use fake latency or suffer the consequences");
 		} EndChild();
 
 		/* Column 2 */
@@ -348,9 +347,20 @@ void CMenu::MenuAimbot()
 				WSlider("Point VisTest Limit", &Vars::Aimbot::Projectile::VisTestPoints.Value, 3, 15, "%d", ImGuiSliderFlags_AlwaysClamp);	HelpMarker("Controls how many points the cheat is allowed to consider.");
 				WSlider("Point Scan Limit", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, Vars::Aimbot::Projectile::VisTestPoints.Value, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how many visible points the cheat needs to find before it picks one to aim at.");
 				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.7f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls the size of the hitbox as it's given to the cheat.");
-			}
-			MultiCombo({ "Feet Aim on Ground", "Splash Prediction", "Viewmodel Flipper", "Charge Loose Cannon" }, {&Vars::Aimbot::Projectile::FeetAimIfOnGround.Value, &Vars::Aimbot::Projectile::SplashPrediction.Value, &Vars::Misc::ViewmodelFlip.Value, &Vars::Aimbot::Projectile::ChargeLooseCannon.Value}, "Preferences###ProjectileAimbotPreferences");
+				
+				SectionTitle("Preferences");
+				WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at targets feet if they're on the ground in order to launch them into the air");
+				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Will flip your viewmodel if it can hit from that side");
+				WToggle("Charge loose cannon", &Vars::Aimbot::Projectile::ChargeLooseCannon.Value); HelpMarker("Will charge your loose cannon in order to double donk");
+				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Will shoot the area near the target to hit them with splash damage");
+				WSlider("Minimum splash distance", &Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 0.f, 10000.f); HelpMarker("The minimum distance to try going for splash damage");
+				WSlider("Maximum splash distance", &Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value, 50.f, 10000.f); HelpMarker("The maximum distance to try going for splash damage");
 
+				SectionTitle("Strafe prediction");
+				WToggle("Strafe prediction", &Vars::Aimbot::Projectile::StrafePrediction.Value); HelpMarker("This is bad, currently only applies to players on ground");
+				WSlider("Velocity samples", &Vars::Aimbot::Projectile::StrafePredictionSamples.Value, 1, 20); HelpMarker("How many ticks to keep velocity records of");
+				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
+			}
 			SectionTitle("Melee");
 			{
 				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.Value, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");

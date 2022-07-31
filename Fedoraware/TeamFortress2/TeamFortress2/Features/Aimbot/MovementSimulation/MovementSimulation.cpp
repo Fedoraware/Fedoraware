@@ -175,6 +175,108 @@ void CMovementSimulation::Restore()
 	memset(&PlayerDataBackup, 0, sizeof(CPlayerDataBackup));
 }
 
+void CMovementSimulation::FillVelocities()
+{
+	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	{
+		for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+		{
+			const int iEntIndex = pEntity->GetIndex();
+			if (!pEntity->IsAlive() || pEntity->GetDormant())
+			{
+				m_Velocities[iEntIndex].clear();
+				continue;
+			}
+
+			const Vec3 vVelocity = pEntity->GetVelocity();
+			m_Velocities[iEntIndex].push_front(vVelocity);
+
+			while (static_cast<int>(m_Velocities[iEntIndex].size()) > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+			{
+				m_Velocities[iEntIndex].pop_back();
+			}
+		}
+	}
+	else
+	{
+		m_Velocities.clear();
+	}
+}
+
+
+// This hook lets you freeze where your camera is in place, so you can do +right and +forward with a bot to make it walk in a circle
+// Credits: spook953
+//#include "../../../Hooks/Hooks.h"
+//
+//MAKE_HOOK(C_BasePlayer_CalcPlayerView, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01 8B 40 38 FF D0 84 C0 75 0B 8B 0D ? ? ? ? 8B 01 FF 50 4C 8B 06 8D 4D E8 51 8B CE FF 90"), void, __fastcall,
+//		  void* ecx, void* edx, Vector& eyeOrigin, Vector& eyeAngles, float& fov)
+//{
+//	static Vector vFrozenOrigin{};
+//	static Vector vFrozenAngle{};
+//	static bool bFreezePlayerView = false;
+//	if (GetAsyncKeyState(VK_R) & 0x1)
+//	{
+//		vFrozenOrigin = eyeOrigin;
+//		vFrozenAngle = eyeAngles;
+//		bFreezePlayerView = !bFreezePlayerView;
+//	}
+//
+//	if (bFreezePlayerView)
+//	{
+//		return Hook.Original<FN>()(ecx, edx, vFrozenOrigin, vFrozenAngle, fov);
+//	}
+//
+//	Hook.Original<FN>()(ecx, edx, eyeOrigin, eyeAngles, fov);
+//}
+
+bool CMovementSimulation::StrafePrediction()
+{
+	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	{
+		if (!m_pPlayer->IsOnGround())
+		{
+			return false;
+		}
+		const int iEntIndex = m_pPlayer->GetIndex();
+
+		const auto& mVelocityRecord = m_Velocities[iEntIndex];
+
+		if (mVelocityRecord.empty() || mVelocityRecord.size() < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+		{
+			return false;
+		}
+
+		float flAverageYaw = 0;
+
+		size_t i = 0;
+
+		const Vec3 vInitialAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity);
+
+		for (; i < mVelocityRecord.size(); i++)
+		{
+			const Vec3 vRecordAngle = Math::VelocityToAngles(mVelocityRecord.at(i));
+
+			flAverageYaw += (vInitialAngle.y - vRecordAngle.y);
+		}
+
+		flAverageYaw /= i;
+
+		if (flAverageYaw < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value &&
+			flAverageYaw > -Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
+		{
+			flAverageYaw = 0;
+		}
+
+		m_MoveData.m_vecViewAngles = { 0.0f, vInitialAngle.y + flAverageYaw, 0.0f };
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 {
 	if (!I::CTFGameMovement || !m_pPlayer)
@@ -192,37 +294,7 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	I::Prediction->m_bFirstTimePredicted = false;
 	I::GlobalVars->frametime = I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
 
-	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
-	{
-		const auto& pRecords = F::Backtrack.GetPlayerRecords(m_pPlayer->GetIndex());
-		if (pRecords)
-		{
-			Vec3 vAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity); // Initial angle
-			float flDifference = 0;
-			size_t i = 0;
-			// Add all the angles from the velocity's of the backtrack records and divide them by the amount of records to get an "average angle"
-			for (; i < pRecords->size(); i++)
-			{
-				Vec3 vAngle2 = Math::VelocityToAngles(pRecords->at(i).Velocity);
-				flDifference += (vAngle.y - vAngle2.y);
-			}
-
-			flDifference = flDifference / i;
-
-			if (flDifference < 10 && flDifference > -10)
-			{
-				flDifference = 0;
-			}
-
-			m_MoveData.m_vecViewAngles = { 0.0f, vAngle.y + flDifference, 0.0f };
-		}
-		else
-		{
-			// Why tf are there no records?
-			m_MoveData.m_vecViewAngles = { 0.0f, Math::VelocityToAngles(m_MoveData.m_vecVelocity).y, 0.0f };
-		}
-	}
-	else
+	if (!StrafePrediction())
 	{
 		m_MoveData.m_vecViewAngles = { 0.0f, Math::VelocityToAngles(m_MoveData.m_vecVelocity).y, 0.0f };
 	}

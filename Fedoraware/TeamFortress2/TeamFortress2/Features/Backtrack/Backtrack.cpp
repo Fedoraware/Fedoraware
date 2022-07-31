@@ -57,7 +57,6 @@ void CBacktrack::UpdateRecords()
 				pEntity->m_vecMaxs(),
 				pEntity->GetWorldSpaceCenter(),
 				pEntity->GetEyeAngles(),
-				pEntity->GetVelocity()
 			});
 		}
 

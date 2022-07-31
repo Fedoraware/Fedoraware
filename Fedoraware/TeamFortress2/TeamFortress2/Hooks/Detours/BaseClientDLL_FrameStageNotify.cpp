@@ -5,6 +5,7 @@
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
 
 MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 35), void, __fastcall,
 		  void* ecx, void* edx, EClientFrameStage curStage)
@@ -66,6 +67,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 		{
 			g_EntityCache.Fill();
 			F::Backtrack.Run();
+			F::MoveSim.FillVelocities();
 			G::LocalSpectated = false;
 
 			if (const auto& pLocal = g_EntityCache.GetLocal())

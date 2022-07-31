@@ -17,9 +17,13 @@ private:
 	bool m_bOldFirstTimePredicted = false;
 	float m_flOldFrametime = 0.0f;
 
+	std::map<int, std::deque<Vec3>> m_Velocities;
+
 public:
 	bool Initialize(CBaseEntity* pPlayer);
 	void Restore();
+	void FillVelocities();
+	bool StrafePrediction();
 	void RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin);
 	const Vec3& GetOrigin() { return m_MoveData.m_vecAbsOrigin; }
 };

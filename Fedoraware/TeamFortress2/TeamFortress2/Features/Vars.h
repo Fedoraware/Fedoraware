@@ -137,11 +137,16 @@ namespace Vars
 			inline CVar<int> AllowedHitboxes{ 0b000 }; // 111, Feet, Body, Head.
 			inline CVar<bool> FeetAimIfOnGround{ false };
 			inline CVar<bool> SplashPrediction{ false };
+			inline CVar<int> MinSplashPredictionDistance{ 0 };
+			inline CVar<int> MaxSplashPredictionDistance{ 10000 };
 			inline Color_t PredictionColor{ 255, 255, 255, 255 };
 			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> NoSpread{ false };
 			inline CVar<bool> ChargeLooseCannon{ false };
 			inline CVar<bool> StrafePrediction{ false };
+			inline CVar<int> StrafePredictionSamples{ 10 };
+			inline CVar<int> StrafePredictionDivisions{ 0 };
+			inline CVar<int> StrafePredictionMinDifference{ 10 };
 		}
 
 		namespace Melee

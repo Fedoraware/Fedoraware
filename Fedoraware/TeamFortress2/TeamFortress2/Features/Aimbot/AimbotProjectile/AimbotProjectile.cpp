@@ -723,7 +723,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		{
 			hullSize = { 0.f, 1.f, 1.f };
 
-			const Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
+			const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 			Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 			break;
 		}
@@ -1059,6 +1059,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 {
 	if (!Vars::Aimbot::Projectile::SplashPrediction.Value) { return false; }
 
+
+
 	// TODO: I have no clue if these values are accurate
 	std::optional<float> splashRadius;
 	switch (pWeapon->GetClassID())
@@ -1093,7 +1095,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
 		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
 
-		if (vLocalOrigin.DistTo(vTargetOrigin) > 800.f) { continue; } // Don't shoot too far
+		if (vLocalOrigin.DistTo(vTargetOrigin) < Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value) { continue; } // Don't shoot too close
+		if (vLocalOrigin.DistTo(vTargetOrigin) > Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value) { continue; } // Don't shoot too far
 		if (vLocalOrigin.z < vTargetOrigin.z - 45.f) { continue; } // Don't shoot from below
 
 		// Don't predict enemies that are visible
