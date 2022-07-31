@@ -41,6 +41,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 }
 
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
+	G::IsChoking = false;	//	do this first
 	if (!Vars::Misc::CL_Move::Fakelag.Value) { return; }
 
 	// Set the selected choke amount (if not random)
@@ -55,7 +56,6 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 		*pSendPacket = true;
 		ChokeCounter = 0;
 
-		G::IsChoking = false;
 		return;
 	}
 
