@@ -153,6 +153,9 @@ void CInterfaces::Init()
 
 	ClientModeTF = *reinterpret_cast<ClientModeTFNormal**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 35 ? ? ? ?") + 0x1);
 	_valid(ClientModeTF);
+
+	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
+	_valid(Localize);
 }
 
 void CSteamInterfaces::Init()
