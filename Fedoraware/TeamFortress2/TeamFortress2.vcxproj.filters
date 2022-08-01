@@ -175,6 +175,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\S_StartDynamicSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Localize\Localize.h" />
+    <ClCompile Include="TeamFortress2\Features\LuaEngine\LuaEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -719,6 +720,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\CGameEventListener.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
