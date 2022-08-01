@@ -499,6 +499,7 @@ void CMenu::MenuVisuals()
 				WCombo("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.Value, { "Off", "Text", "Bar" }); HelpMarker("Will draw how much ubercharge a medic has");
 				ColorPickerL("Ubercharge colour", Colors::UberColor);
 				WCombo("Class###PlayerIconClass", &Vars::ESP::Players::Class.Value, { "Off", "Icon", "Text", "Both" }); HelpMarker("Will draw the class the player is");
+				//WToggle("Weapon text", &Vars::ESP::Players::WeaponText.Value);
 				WToggle("Weapon icons", &Vars::ESP::Players::WeaponIcon.Value); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
 				ColorPickerL("Invulnerable colour", Colors::WeaponIcon);
 				WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the player has");

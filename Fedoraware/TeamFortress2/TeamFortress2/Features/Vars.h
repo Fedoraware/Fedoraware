@@ -250,6 +250,7 @@ namespace Vars
 			inline CVar<int> Uber{ 0 }; //0 - Off, 1 - Text, 2 - Bar
 			inline CVar<int> Class{ 0 }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
 			inline CVar<bool> WeaponIcon{ false };
+			inline CVar<bool> WeaponText{ false };
 			inline CVar<int> HealthText{ 0 }; // 0 - Off, 1 - Default, 2 - Bar
 			inline CVar<bool> Cond{ false };
 			inline CVar<bool> HealthBar{ false };

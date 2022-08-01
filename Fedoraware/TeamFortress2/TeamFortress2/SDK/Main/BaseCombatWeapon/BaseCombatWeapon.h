@@ -93,6 +93,13 @@ public: //Everything else, lol
 		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + offset);
 	}
 
+	inline const char* GetName()
+	{
+		static auto C_BaseCombatWeapon_GetName = reinterpret_cast<const char* (__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"0F B7 81 ? ? ? ? 50 E8 ? ? ? ? 83 C4 04 83 C0 06"));
+		return GetVFunc<const char* (__thiscall*)(void*)>(this, 333)(this);
+		//return C_BaseCombatWeapon_GetName(this);
+	}
+
 	//str8 outta cathook
 	__inline bool AmbassadorCanHeadshot()
 	{
