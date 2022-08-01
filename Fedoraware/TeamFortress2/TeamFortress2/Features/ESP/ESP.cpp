@@ -25,11 +25,6 @@ void CESP::Run()
 	}
 }
 
-bool CESP::Argh()
-{
-	return Vars::ESP::Main::DormantSoundESP.Value;
-}
-
 bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h)
 {
 	bool bIsPlayer = false;

@@ -584,27 +584,23 @@ void CVisuals::DrawMovesimLine()
 	}
 }
 
-void CVisuals::ManualNetwork(StartSoundParams_t& params)
+// Credits go to reestart entirely
+void CVisuals::ManualNetwork(const StartSoundParams_t& params)
 {
-	if (Vars::ESP::Main::DormantSoundESP.Value) {
-		// Credits go to reestart entirely
-		Vector vOrigin;
-		if (params.soundsource > 0) //Make sure we even have a valid entity to begin with
-		{
-			VectorCopy(params.origin, vOrigin);
-			int iEntIndex = params.soundsource;
-			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iEntIndex);
-			if (pEntity && iEntIndex != I::EngineClient->GetLocalPlayer() && 
-				pEntity->GetDormant() && pEntity->GetClassID() == ETFClassID::CTFPlayer)
-			{
-				pEntity->SetAbsOrigin(vOrigin);
-				if (pEntity->m_lifeState() != LIFE_ALIVE)
-				{
-					pEntity->m_lifeState() = LIFE_ALIVE;
-					pEntity->m_iHealth() = pEntity->GetMaxHealth();
-				}
-			}
-		}
+	if (!Vars::ESP::Main::DormantSoundESP.Value) { return; }
+	if (params.soundsource <= 0) { return; }
+
+	Vector vOrigin;
+	VectorCopy(params.origin, vOrigin);
+	const int iEntIndex = params.soundsource;
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iEntIndex);
+
+	if (pEntity
+		&& iEntIndex != I::EngineClient->GetLocalPlayer()
+		&& pEntity->GetDormant()
+		&& pEntity->GetClassID() == ETFClassID::CTFPlayer)
+	{
+		G::DormantPlayerESP[iEntIndex] = { vOrigin, I::EngineClient->Time() };
 	}
 }
 
