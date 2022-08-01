@@ -92,6 +92,7 @@ void CGlowEffect::Render()
 	if (!Vars::Glow::Main::Active.Value)
 	{
 		F::Visuals.DrawMovesimLine();
+		F::Visuals.DrawSightlines();
 		return;
 	}
 	
@@ -241,6 +242,7 @@ void CGlowEffect::Render()
 		}
 
 		F::Visuals.DrawMovesimLine();
+		F::Visuals.DrawSightlines();
 
 		if (Vars::Glow::Buildings::Active.Value)
 		{
@@ -356,6 +358,7 @@ void CGlowEffect::Render()
 			}
 
 			F::Visuals.DrawMovesimLine();
+			F::Visuals.DrawSightlines();
 
 			StencilStateDisable.SetStencilState(pRenderContext);
 		}

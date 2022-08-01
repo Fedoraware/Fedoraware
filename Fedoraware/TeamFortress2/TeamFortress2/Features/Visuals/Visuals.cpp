@@ -610,6 +610,50 @@ void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZ
 	RenderLineFn(v1, v2, c, bZBuffer);
 }
 
+void CVisuals::DrawSightlines()
+{
+	if (Vars::ESP::Players::SniperSightlines.Value)
+	{
+		if (!F::Visuals.m_SightLines.empty())
+		{
+			for (const auto& sightline : F::Visuals.m_SightLines)
+			{
+				F::Visuals.RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+			}
+		}
+	}
+}
+
+void CVisuals::FillSightlines()
+{
+	if (Vars::ESP::Players::SniperSightlines.Value)
+	{
+		Vec3 vShootPos, vAngle, vForward, vShootEnd;
+		CTraceFilterHitscan filter{};
+		CGameTrace trace{};
+		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		{
+			const int iEntityIndex = pEnemy->GetIndex();
+			if (!(pEnemy->IsAlive()) ||
+				!(pEnemy->GetClassNum() == CLASS_SNIPER) ||
+				!(pEnemy->GetCond() & TFCond_Zoomed) ||
+				(pEnemy->GetDormant()))
+			{
+				m_SightLines[iEntityIndex] = { Vec3{0,0,0}, Vec3{0,0,0}, Color_t{0,0,0,0}, false };
+				continue;
+			}
+			vShootPos = pEnemy->GetShootPos();
+			vAngle = pEnemy->GetEyeAngles();
+			Math::AngleVectors(vAngle, &vForward);
+			vShootEnd = vShootPos + (vForward * 8192.f);
+
+			Utils::Trace(vShootPos, vShootEnd, MASK_SHOT, &filter, &trace);
+
+			m_SightLines[pEnemy->GetIndex()] = { vShootPos, vShootEnd, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true };
+		}
+	}
+}
+
 void CVisuals::SetVisionFlags()
 {
 	static ConVar* localplayer_visionflags = I::Cvar->FindVar("localplayer_visionflags");

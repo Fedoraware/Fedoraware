@@ -468,6 +468,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Players::CheaterDetection);
 				SAVE_VAR(Vars::ESP::Players::WeaponIcon);
 				SAVE_VAR(Vars::ESP::Players::WeaponText);
+				SAVE_VAR(Vars::ESP::Players::SniperSightlines);
 			}
 
 			//Buildings
@@ -1242,6 +1243,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Players::CheaterDetection);
 				LOAD_VAR(Vars::ESP::Players::WeaponIcon);
 				LOAD_VAR(Vars::ESP::Players::WeaponText);
+				LOAD_VAR(Vars::ESP::Players::SniperSightlines);
 			}
 
 			//Buildings

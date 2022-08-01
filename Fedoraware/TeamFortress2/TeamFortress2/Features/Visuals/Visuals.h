@@ -1,6 +1,16 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
+#include <map>
+
+struct Sightline_t
+{
+	Vec3 m_vStart = { 0,0,0 };
+	Vec3 m_vEnd = { 0,0,0 };
+	Color_t m_Color = { 0,0,0,0 };
+	bool m_bDraw = false;
+};
+
 class CVisuals
 {
 private:
@@ -32,11 +42,14 @@ public:
 	void DrawMovesimLine();
 	void ManualNetwork(const StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
-
+	void DrawSightlines();
+	void FillSightlines();
 	void SetVisionFlags();
 
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;
+
+	std::array<Sightline_t, 64> m_SightLines;
 
 	class CPrecipitation
 	{
