@@ -649,7 +649,7 @@ void CVisuals::FillSightlines()
 
 			Utils::Trace(vShootPos, vShootEnd, MASK_SHOT, &filter, &trace);
 
-			m_SightLines[pEnemy->GetIndex()] = { vShootPos, vShootEnd, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true };
+			m_SightLines[pEnemy->GetIndex()] = { vShootPos, trace.vEndPos, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true };
 		}
 	}
 }
