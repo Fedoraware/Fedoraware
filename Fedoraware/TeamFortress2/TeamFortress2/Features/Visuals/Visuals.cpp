@@ -342,6 +342,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			const int m_hGroundEntity = pLocal->m_hGroundEntity();
 			DebugLine("m_hGroundEntity", tfm::format(": %d", m_hGroundEntity).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
+
+		{
+			const Vec3 lastViewAngles = G::LastUserCmd->viewangles;
+			DebugLine("lastViewAngles", tfm::format(": [%.1f, %.1f, %.1f]", lastViewAngles.x, lastViewAngles.y, lastViewAngles.z).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
 	}
 }
 

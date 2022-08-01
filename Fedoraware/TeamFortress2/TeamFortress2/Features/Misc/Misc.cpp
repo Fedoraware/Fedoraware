@@ -361,11 +361,15 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static bool flipVar = false;
 	flipVar = !flipVar;
 	
-	if (!flipVar || G::ShouldShift || G::AntiAim.second) {
+	if (Vars::Misc::FakeAccelAngle.Value && !flipVar){
 		return;
 	}
 
-	const bool shouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value || (G::ShouldShift && Vars::Misc::CL_Move::AntiWarp.Value));	//	G::ShouldShift means we can use it in antiwarp independantly of what our user wants.
+	if (G::ShouldShift || G::AAActive) {
+		return;
+	}
+
+	const bool shouldAccel = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : (Vars::Misc::FastAccel.Value);
 	if (!shouldAccel) {
 		return;
 	}
@@ -390,7 +394,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	const int maxSpeed = std::min(pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .85f : .95f) - 1, 510.f); //	get our max speed, then if we are going backwards, reduce it.
+	const int maxSpeed = std::min(pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .9f : 1.f) - 1, 510.f); //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
 	if (curSpeed > maxSpeed) {	
@@ -405,8 +409,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	{
 		const Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
 		const float flLength = vecMove.Length();
-		if (flLength > 0.0f)
-		{
+		//if (flLength > 0.0f)
+		//{
 			Vec3 angMoveReverse;
 			Math::VectorAngles(vecMove * -1.f, angMoveReverse);
 			pCmd->forwardmove = -flLength;
@@ -414,10 +418,10 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 			pCmd->viewangles.z = 270.f;
 			G::RollExploiting = true;
-			if (Vars::Misc::FakeAccelAngle.Value && !G::AAActive) {
+			if (Vars::Misc::FakeAccelAngle.Value) {
 				G::ForceChokePacket = true;
 			}
-		}
+		//}
 	}
 }
 
@@ -450,7 +454,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 
 	const float speed = pLocal->GetVecVelocity().Length2D();
-	const float speedLimit = Vars::Debug::DebugInfo.Value ? 2.f : 10.f;	//	does some fucky stuff
+	const float speedLimit = 10.f;
 
 	if (speed > speedLimit)
 	{
