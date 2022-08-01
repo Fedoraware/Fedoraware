@@ -23,43 +23,46 @@ void CEntityCache::Fill()
 			default: break;
 		}
 
-		CBaseEntity* pEntity;
 		for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 		{
-			pEntity = I::ClientEntityList->GetClientEntity(n);
+			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 
 			if (!pEntity)
 			{
 				continue;
 			}
 
-			auto nClassID = pEntity->GetClassID();
+			const auto nClassID = pEntity->GetClassID();
 
-			if (nClassID == ETFClassID::CTFPlayer)
+			if (pEntity->GetDormant())
 			{
-
-				if (pEntity->GetDormant() && !G::PartyPlayerESP.count(pEntity->GetIndex()) && !F::ESP.Argh())
+				if (nClassID == ETFClassID::CTFPlayer)
 				{
-					continue;
-				}
-
-				if (pEntity->GetDormant() && !F::ESP.Argh())
-				{
-					const float lastUpdate = G::PartyPlayerESP[pEntity->GetIndex()].LastUpdate;
-					if (I::EngineClient->Time() - lastUpdate <= 5.0f)
+					// Is any dormant data available?
+					if (!G::DormantPlayerESP.count(pEntity->GetIndex()))
 					{
-						pEntity->SetAbsOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
-						pEntity->SetVecOrigin(G::PartyPlayerESP[pEntity->GetIndex()].Location);
+						continue;
+					}
+
+					auto& dormantData = G::DormantPlayerESP[pEntity->GetIndex()];
+					const float lastUpdate = dormantData.LastUpdate;
+					if (I::EngineClient->Time() - lastUpdate <= 6.0f)
+					{
+						pEntity->SetAbsOrigin(dormantData.Location);
+						pEntity->SetVecOrigin(dormantData.Location);
+
+						pEntity->m_lifeState() = LIFE_ALIVE;
+						if (pEntity->m_iHealth() <= 0)
+						{
+							pEntity->m_iHealth() = pEntity->GetMaxHealth();
+						}
 					}
 					else
 					{
 						continue;
 					}
 				}
-			}
-			else
-			{
-				if (pEntity->GetDormant())
+				else
 				{
 					continue;
 				}
