@@ -618,7 +618,10 @@ void CVisuals::DrawSightlines()
 		{
 			for (const auto& sightline : F::Visuals.m_SightLines)
 			{
-				F::Visuals.RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+				if (sightline.m_bDraw)
+				{
+					F::Visuals.RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+				}
 			}
 		}
 	}
