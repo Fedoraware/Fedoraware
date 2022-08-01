@@ -248,7 +248,7 @@ bool CMovementSimulation::StrafePrediction()
 
 		const auto& mVelocityRecord = m_Velocities[iEntIndex];
 
-		if (mVelocityRecord.empty() || mVelocityRecord.size() < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+		if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
 		{
 			return false;
 		}
