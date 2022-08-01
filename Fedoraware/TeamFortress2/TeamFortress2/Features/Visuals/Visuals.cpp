@@ -1043,7 +1043,7 @@ void CRunescapeChat::Draw()
 							}
 							default:break;
 						}
-						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, "%s", chat.m_szChatText.c_str());
+						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, L"%ls", chat.m_szChatText.c_str());
 					}
 				}
 			}
@@ -1056,7 +1056,7 @@ void CRunescapeChat::Draw()
 	}
 }
 
-void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
+void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::wstring szChatText)
 {
 	if (!Vars::Misc::RunescapeChat.Value)
 	{
@@ -1066,27 +1066,27 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::string szChatText)
 
 	EChatColour col = eRS_YELLOW;
 
-	if (!szChatText.rfind("red:", 0))
+	if (!szChatText.rfind(L"red:", 0))
 	{
 		col = eRS_RED;
 		szChatText.erase(0, 4);
 	}
-	else if (!szChatText.rfind("green:", 0))
+	else if (!szChatText.rfind(L"green:", 0))
 	{
 		col = eRS_GREEN;
 		szChatText.erase(0, 6);
 	}
-	else if (!szChatText.rfind("cyan:", 0))
+	else if (!szChatText.rfind(L"cyan:", 0))
 	{
 		col = eRS_CYAN;
 		szChatText.erase(0, 5);
 	}
-	else if (!szChatText.rfind("purple:", 0))
+	else if (!szChatText.rfind(L"purple:", 0))
 	{
 		col = eRS_PURPLE;
 		szChatText.erase(0, 7);
 	}
-	else if (!szChatText.rfind("white:", 0))
+	else if (!szChatText.rfind(L"white:", 0))
 	{
 		col = eRS_WHITE;
 		szChatText.erase(0, 6);
