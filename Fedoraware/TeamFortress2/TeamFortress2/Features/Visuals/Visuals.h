@@ -100,13 +100,13 @@ class CRunescapeChat
 		float m_flTimeCreated;
 		int m_nOffset;
 		EChatColour m_Colour;
-		std::string m_szChatText;
+		std::wstring m_szChatText;
 	};
 
 	std::deque<Chat_t> m_vecChats;
 public:
 	void Draw();
-	void PushChat(CBaseEntity* pEntity, std::string szChatText);
+	void PushChat(CBaseEntity* pEntity, std::wstring szChatText);
 
 	
 };

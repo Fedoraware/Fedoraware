@@ -40,23 +40,6 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 		return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", finalMsg.c_str());
 	}
 
-	/* Runescape Chat */
-	if (iPlayerIndex && Vars::Misc::RunescapeChat.Value)
-	{
-		if (const auto& pEntity = I::ClientEntityList->GetClientEntity(iPlayerIndex))
-		{
-			auto backupMsg = finalMsg;
-			if (const auto offset = backupMsg.find(name))
-			{
-				backupMsg = backupMsg.erase(offset, offset + name.length() + 2);
-				backupMsg.erase(std::remove_if(backupMsg.begin(), backupMsg.end(), [](char c) -> bool { return c == '\x3'; }), backupMsg.end());
-				if (backupMsg.find("(Voice)") == std::string::npos) {
-					F::RSChat.PushChat(pEntity, backupMsg);
-				}
-			}
-		}
-	}
-
 	/*
 	 *	Chat Flags
 	 *	@https://www.unknowncheats.me/forum/team-fortress-2-a/488217-chat-flags-titles.html
