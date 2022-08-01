@@ -629,7 +629,6 @@ namespace Vars
 		inline CVar<bool> RageRetry{ false };
 		inline CVar<int> RageRetryHealth{ 20 };
 		inline CVar<bool> MVMRes{ false };
-		inline CVar<bool> BeCat{ false };
 		inline CVar<bool> PingReducer{ false };
 		inline CVar<int> PingTarget{ 0 };
 		inline CVar<bool> ExtendFreeze{ false };

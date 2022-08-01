@@ -775,7 +775,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::RageRetry);
 			SAVE_VAR(Vars::Misc::RageRetryHealth);
 			SAVE_VAR(Vars::Misc::MVMRes);
-			SAVE_VAR(Vars::Misc::BeCat);
 			SAVE_VAR(Vars::Misc::VotingOptions);
 			SAVE_VAR(Vars::Misc::PingReducer);
 			SAVE_VAR(Vars::Misc::PingTarget);
@@ -1551,7 +1550,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::RageRetry);
 			LOAD_VAR(Vars::Misc::RageRetryHealth);
 			LOAD_VAR(Vars::Misc::MVMRes);
-			LOAD_VAR(Vars::Misc::BeCat);
 			LOAD_VAR(Vars::Misc::VotingOptions);
 			LOAD_VAR(Vars::Misc::PingReducer);
 			LOAD_VAR(Vars::Misc::PingTarget);

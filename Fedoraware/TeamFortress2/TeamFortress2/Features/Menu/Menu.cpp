@@ -17,8 +17,6 @@
 #include "ConfigManager/ConfigManager.h"
 
 #include <mutex>
-#include "../Visuals/Visuals.h"
-#include "../CritHack/CritHack.h"
 
 #pragma warning (disable : 4309)
 
@@ -1549,7 +1547,6 @@ void CMenu::MenuMisc()
 			WToggle("sv_cheats Bypass", &Vars::Misc::CheatsBypass.Value); HelpMarker("Allows you to use some sv_cheats commands (clientside)");
 			WToggle("Join spam", &Vars::Misc::JoinSpam.Value); HelpMarker("Spams join/disconnect messages in the chat");
 			WToggle("Noisemaker Spam", &Vars::Misc::NoisemakerSpam.Value); HelpMarker("Spams the noisemaker without reducing it's charges");
-			//WToggle("Cat identify", &Vars::Misc::BeCat.m_Var); HelpMarker("Will mark you as a cathook instance to other cathook instances (basically catbots)");
 			WToggle("Ping reducer", &Vars::Misc::PingReducer.Value); HelpMarker("Reduces your ping on the scoreboard");
 			if (Vars::Misc::PingReducer.Value)
 			{
