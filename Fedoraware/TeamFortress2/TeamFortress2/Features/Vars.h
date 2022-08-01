@@ -615,6 +615,7 @@ namespace Vars
 		inline CVar<bool> NonLethalRocketJump{ true };
 		inline CVar<bool> AutoScoutJump{ false };
 		inline CVar<int> ChatSpam{ 0 };
+		inline CVar<int> VoicechatSpam{ 0 };
 		inline CVar<bool> NoPush{ false };
 		inline CVar<bool> EdgeJump{ false };
 		inline CVar<int> EdgeJumpKey{ VK_MENU };
@@ -624,7 +625,6 @@ namespace Vars
 		inline CVar<bool> CrouchSpeed{ false };
 		inline CVar<bool> FastAccel{ false };
 		inline CVar<bool> FakeAccelAngle{ false };
-		inline CVar<bool> ChatCensor{ false };
 		inline CVar<bool> AntiAutobal{ false };
 		inline CVar<bool> RageRetry{ false };
 		inline CVar<int> RageRetryHealth{ 20 };

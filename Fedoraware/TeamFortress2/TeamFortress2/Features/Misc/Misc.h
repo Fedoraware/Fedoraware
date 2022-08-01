@@ -23,7 +23,6 @@ class CMisc {
 	void ServerHitbox();
 	void WeaponSway();
 	void DetectChoke();
-	void GetInterpolationAmount();
 
 	// Late
 	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
