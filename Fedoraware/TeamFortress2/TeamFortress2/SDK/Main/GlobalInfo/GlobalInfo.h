@@ -90,7 +90,7 @@ namespace G
 	inline std::unordered_map<CBaseEntity*, std::unordered_map<int, PlayerCache>> Cache; // caches movement, angles, add more if you want. format is <Entity, <tickcount, pData>>
 	inline bool FreecamActive = false;
 	inline Vec3 FreecamPos = {};
-	inline std::unordered_map<int, DormantData> PartyPlayerESP; // <Index, DormantData>
+	inline std::unordered_map<int, DormantData> DormantPlayerESP; // <Index, DormantData>
 	inline std::unordered_map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
