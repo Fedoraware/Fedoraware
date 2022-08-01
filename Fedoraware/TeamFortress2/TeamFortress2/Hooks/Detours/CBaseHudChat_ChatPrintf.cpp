@@ -2,11 +2,6 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Visuals/Visuals.h"
 
-// @https://www.unknowncheats.me/forum/team-fortress-2-a/488217-chat-flags-titles.html
-//	i swear its not pasted i just used this as inspiration, credits myzarfin.
-
-
-
 struct ChatFlags_t
 {
 	std::string Colour;
@@ -29,72 +24,75 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 	while (*msg && (*msg == '\n' || *msg == '\r' || *msg == '\x1A')) {
 		msg++;
 	}
-	if (!*msg)
-		return;
+	if (!*msg) { return; }
 
-	std::string final_msg = msg, name = {};
+	std::string finalMsg = msg, name = {};
 
-	
 	PlayerInfo_t info{};
-	ChatFlags_t flag;
-	bool set = false;
 	if (!I::EngineClient->GetPlayerInfo(iPlayerIndex, &info))
 	{
-		return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
+		return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", finalMsg.c_str());
 	}
-	else
+
+	name = info.name;
+	if (finalMsg.find(name) == std::string::npos)
 	{
-		name = info.name;
-		if (final_msg.find(name) == std::string::npos)
-		{
-			return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
-		}
+		return Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", finalMsg.c_str());
 	}
+
+	/* Runescape Chat */
 	if (iPlayerIndex && Vars::Misc::RunescapeChat.Value)
 	{
 		if (const auto& pEntity = I::ClientEntityList->GetClientEntity(iPlayerIndex))
 		{
-			auto backup_msg = final_msg;
-			if (auto offset = backup_msg.find(name))
+			auto backupMsg = finalMsg;
+			if (const auto offset = backupMsg.find(name))
 			{
-				backup_msg = backup_msg.erase(offset, offset + name.length() + 2);
-				backup_msg.erase(std::remove_if(backup_msg.begin(), backup_msg.end(), [](char c) -> bool { return c == '\x3'; }), backup_msg.end());
-				if (backup_msg.rfind("(Voice)", 0) != 0) {
-					F::RSChat.PushChat(pEntity, backup_msg);
+				backupMsg = backupMsg.erase(offset, offset + name.length() + 2);
+				backupMsg.erase(std::remove_if(backupMsg.begin(), backupMsg.end(), [](char c) -> bool { return c == '\x3'; }), backupMsg.end());
+				if (backupMsg.find("(Voice)") == std::string::npos) {
+					F::RSChat.PushChat(pEntity, backupMsg);
 				}
-				F::RSChat.PushChat(pEntity, backup_msg);
 			}
 		}
 	}
 
+	/*
+	 *	Chat Flags
+	 *	@https://www.unknowncheats.me/forum/team-fortress-2-a/488217-chat-flags-titles.html
+		i swear its not pasted i just used this as inspiration, credits myzarfin.
+	*/
 	if (iPlayerIndex && Vars::Misc::ChatFlags.Value)
 	{
+		ChatFlags_t chatFlag;
+		bool flagSet = false;
+
 		if (iPlayerIndex == I::EngineClient->GetLocalPlayer())
 		{
-			flag = { Colors::Local.to_hex_alpha(), "[You]"};
-			set = true;
+			chatFlag = { Colors::Local.to_hex_alpha(), "[You]"};
+			flagSet = true;
 		}
 		else if (g_EntityCache.IsFriend(iPlayerIndex))
 		{
-			flag = { Colors::Friend.to_hex_alpha(), "[Friend]" };
-			set = true;
+			chatFlag = { Colors::Friend.to_hex_alpha(), "[Friend]" };
+			flagSet = true;
 		}
 		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 4)
 		{
-			static const auto red = Color_t{255, 0, 0, 255};
-			flag = { red.to_hex_alpha(), "[Cheater]"};
-			set = true;
+			static constexpr auto RED = Color_t{255, 0, 0, 255};
+			chatFlag = { RED.to_hex_alpha(), "[Cheater]"};
+			flagSet = true;
 		}
-
-		if (set)
+		
+		if (flagSet)
 		{
-			final_msg = flag.Colour + flag.Name + " \x3" + final_msg;
-			if (auto offset = final_msg.find(name))
+			finalMsg = chatFlag.Colour + chatFlag.Name + " \x3" + finalMsg;
+			if (auto offset = finalMsg.find(name))
 			{
-				final_msg.substr(offset + name.length());
-				final_msg = final_msg.replace(offset + name.length(), 0, "\x1");
+				finalMsg = finalMsg.replace(offset + name.length(), 0, "\x1");
 			}
 		}
 	}
-	Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", final_msg.c_str());
+
+	Hook.Original<FN>()(ecx, iPlayerIndex, iFilter, "%s", finalMsg.c_str());
 }
