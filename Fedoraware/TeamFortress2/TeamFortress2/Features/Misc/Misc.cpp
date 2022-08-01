@@ -645,34 +645,52 @@ const std::string SPAM_CH[] = {
 	_("Cathook - ca(n)t stop me meow!")
 };
 
+/* Chat & Voicechat Spam */
 void CMisc::ChatSpam()
 {
-	if (Vars::Misc::ChatSpam.Value == 0) { return; }
-
-	auto getSpam = []() {
-		std::string spamMsg;
-
-		switch (Vars::Misc::ChatSpam.Value)
-		{
-		case 2: spamMsg = SPAM_LBOX[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_LBOX) - 1)];
-			break;
-		case 3: spamMsg = SPAM_CH[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_CH) - 1)];
-			break;
-		default: spamMsg = SPAM_FED[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_FED) - 1)];
-			break;
-		}
-
-		Utils::ReplaceSpecials(spamMsg);
-		return "say " + spamMsg;
-	};
-
 	const float flCurTime = I::EngineClient->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend)
 	{
-		I::EngineClient->ClientCmd_Unrestricted(getSpam().c_str());
-		flNextSend = (flCurTime + 4.0f);
+		// Chat Spam
+		if (Vars::Misc::ChatSpam.Value != 0)
+		{
+			std::string spamMsg;
+
+			switch (Vars::Misc::ChatSpam.Value)
+			{
+			case 2: spamMsg = SPAM_LBOX[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_LBOX) - 1)];
+				break;
+			case 3: spamMsg = SPAM_CH[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_CH) - 1)];
+				break;
+			default: spamMsg = SPAM_FED[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_FED) - 1)];
+				break;
+			}
+
+			Utils::ReplaceSpecials(spamMsg);
+
+			spamMsg.insert(0, "say ");
+			I::EngineClient->ClientCmd_Unrestricted(spamMsg.c_str());
+		}
+
+		// Voicechat Spam
+		if (Vars::Misc::VoicechatSpam.Value != 0)
+		{
+			std::string voiceCommand;
+			switch (Vars::Misc::VoicechatSpam.Value)
+			{
+			case 1: voiceCommand = "0 0"; break;
+			case 2: voiceCommand = "2 0"; break;
+			case 3: voiceCommand = "2 6"; break;
+			default: voiceCommand = tfm::format("%i %i", Utils::RandIntSimple(0, 2), Utils::RandIntSimple(0, 8)); break;
+			}
+
+			voiceCommand.insert(0, "voicemenu ");
+			I::EngineClient->ClientCmd_Unrestricted(voiceCommand.c_str());
+		}
+
+		flNextSend = (flCurTime + Vars::Misc::SpamInterval.Value);
 	}
 }
 
