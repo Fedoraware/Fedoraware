@@ -417,18 +417,63 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						);
 
 					int iWeaponSlot = pWeapon->GetSlot();
+					int iPlayerClass = Player->GetClassNum();
+
+					const char* szItemName = "";
+
+					switch (iPlayerClass)
+					{
+						case CLASS_SPY:
+						{
+							switch (iWeaponSlot)
+							{
+								case 0: // Primary (gun)
+								{
+									iWeaponSlot = 1;
+									break;
+								}
+								case 1: // Sapper ????
+								{
+									iWeaponSlot = -1; // Can't seem to get the sapper to show :/
+									break;
+								}
+								// case 2: // Knife
+								case 3: // Disguise kit
+								{
+									iWeaponSlot = 5;
+									break;
+								}
+								default: break;
+							}
+						}
+						case CLASS_ENGINEER:
+						{
+							switch (iWeaponSlot)
+							{
+								case 3:
+								{
+									iWeaponSlot = 5;
+									break;
+								}
+								case 4:
+								{
+									iWeaponSlot = 6;
+									break;
+								}
+								default: break;
+							}
+						}
+						default: break;
+					}
 
 					void* pCurItemData = CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot(Player, iWeaponSlot, 0);
-
 					if (pCurItemData)
 					{
-						if (auto szItemName = C_EconItemView_GetItemName(pCurItemData))
-						{
-							g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
-							weaponoffset += Vars::Fonts::FONT_ESP::nTall.Value;
-						}
+						szItemName = C_EconItemView_GetItemName(pCurItemData);
+						g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
+						weaponoffset += Vars::Fonts::FONT_ESP::nTall.Value;
 					}
-					
+				
 
 					//static auto C_EconItemView_GetStaticData = reinterpret_cast<void* (__thiscall*)(void*)>(
 					//	g_Pattern.Find(L"client.dll", L"0F B7 41 24 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 50 E8 ? ? ? ? 83 C4 14 C3")
