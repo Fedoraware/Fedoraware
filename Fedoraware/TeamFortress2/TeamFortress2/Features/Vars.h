@@ -616,6 +616,7 @@ namespace Vars
 		inline CVar<bool> AutoScoutJump{ false };
 		inline CVar<int> ChatSpam{ 0 };
 		inline CVar<int> VoicechatSpam{ 0 };
+		inline CVar<float> SpamInterval{ 4.f };
 		inline CVar<bool> NoPush{ false };
 		inline CVar<bool> EdgeJump{ false };
 		inline CVar<int> EdgeJumpKey{ VK_MENU };

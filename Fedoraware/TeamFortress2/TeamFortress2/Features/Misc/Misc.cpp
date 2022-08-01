@@ -690,7 +690,7 @@ void CMisc::ChatSpam()
 			I::EngineClient->ClientCmd_Unrestricted(voiceCommand.c_str());
 		}
 
-		flNextSend = (flCurTime + 4.0f);
+		flNextSend = (flCurTime + Vars::Misc::SpamInterval.Value);
 	}
 }
 
