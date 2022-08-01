@@ -365,7 +365,11 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (G::ShouldShift || G::AAActive) {
+	if (G::AAActive) {
+		return;
+	}
+
+	if (G::ShouldShift && !pLocal->IsDucking()){	//	i dont think this makes it much better
 		return;
 	}
 
@@ -808,27 +812,29 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			); // 0.none, 1.ground, 2.not ground
 		static Vec3 predEndPoint = {};
 		static Vec3 currentPos{};
-		static int nShiftTick = 0;
+		static int nShiftTickG = 0;
+		static int nShiftTickA = 0;
 
 		switch (stopType) {
 		case 0: {
-			nShiftTick = 0;
+			nShiftTickG = 0;
+			nShiftTickA = 0;
 			return;
 		}
 		case 1: {
-			switch (nShiftTick) {
+			switch (nShiftTickG) {
 			case 0: {
 				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
-				nShiftTick++;
+				nShiftTickG++;
 				break;
 			}
 			case 1: {
 				G::ShouldStop = true;
-				nShiftTick++;
+				nShiftTickG++;
 				break;
 			}
 			default: {
-				nShiftTick++;
+				nShiftTickG++;
 				break;
 			}
 			}//
@@ -841,14 +847,14 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 			return;
 		}
 		case 2: {
-			switch (nShiftTick) {
+			switch (nShiftTickA) {
 			case 0: {
 				predEndPoint = pLocal->GetVecOrigin();
-				nShiftTick++;
+				nShiftTickA++;
 				break;
 			}
 			default: {
-				nShiftTick++;
+				nShiftTickA++;
 				break;
 			}
 			}
