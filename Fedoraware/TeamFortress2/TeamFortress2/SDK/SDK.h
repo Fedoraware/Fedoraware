@@ -275,24 +275,21 @@ namespace Utils
 				// Enemy/Team based colors
 				const auto lPlayerTeam = pLocal->GetTeamNum();
 
-				if (lPlayerTeam == 2 && nTeamNum == 2)
+				if (pLocal->IsInValidTeam() && (nTeamNum == 2 || nTeamNum == 3))
 				{
-					return Colors::rTeam;
+					if (lPlayerTeam == nTeamNum)
+					{
+						return Colors::rTeam;
+					}
+					else
+					{
+						return Colors::Enemy;
+					}
 				}
-				if (lPlayerTeam == 3 && nTeamNum == 3)
+				else
 				{
-					return Colors::rTeam;
+					return Colors::White;
 				}
-				if (lPlayerTeam == 2 && nTeamNum == 3)
-				{
-					return Colors::Enemy;
-				}
-				if (lPlayerTeam == 3 && nTeamNum == 2)
-				{
-					return Colors::Enemy;
-				}
-
-				return Colors::White;
 			}
 		}
 		else {
