@@ -727,6 +727,10 @@
     <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.hpp" />
     <ClInclude Include="TeamFortress2\SDK\Lua\include\luaconf.h" />
     <ClInclude Include="TeamFortress2\SDK\Lua\include\lualib.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\Wrapper.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

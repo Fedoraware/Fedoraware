@@ -325,7 +325,11 @@
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\Wrapper.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
