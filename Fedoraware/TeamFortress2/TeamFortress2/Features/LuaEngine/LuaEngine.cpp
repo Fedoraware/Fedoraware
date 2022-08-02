@@ -88,7 +88,7 @@ void CLuaEngine::Init()
 			.addProperty("z", &Vec3::z)
 			.endClass()
 
-			.endNamespace()
+			.endNamespace() // Utils Namespace
 
 			// CUserCmd
 			.beginClass<WUserCmd>("UserCmd")
@@ -141,6 +141,8 @@ void CLuaEngine::Init()
 			.addFunction("Text", &ExportedDraw::Text)
 			.addFunction("Line", &ExportedDraw::Line)
 			.addFunction("Rect", &ExportedDraw::Rect)
+			.addFunction("OutlinedRect", &ExportedDraw::OutlinedRect)
+			.addFunction("FilledCircle", &ExportedDraw::FilledCircle)
 			.addFunction("SetColor", &ExportedDraw::SetColor)
 			.endClass()
 
@@ -153,6 +155,22 @@ void CLuaEngine::Init()
 			// Global Vars, Props and Functions
 			.addProperty("Interfaces", &exInterfaces, false)
 			.addProperty("Draw", &exDraw, false)
+			.endNamespace() // Game Namespace
+
+			.beginNamespace("GlobalInfo")
+			.addFunction("RealTime", +[] { return I::GlobalVars->realtime; })
+			.addFunction("FrameCount", +[] { return I::GlobalVars->framecount; })
+			.addFunction("AbsFrameTime", +[] { return I::GlobalVars->absoluteframetime; })
+			.addFunction("CurTime", +[] { return I::GlobalVars->curtime; })
+			.addFunction("FrameTime", +[] { return I::GlobalVars->frametime; })
+			.addFunction("MaxClients", +[] { return I::GlobalVars->maxclients; })
+			.addFunction("TickCount", +[] { return I::GlobalVars->tickcount; })
+			.addFunction("IntervalPerTick", +[] { return I::GlobalVars->interval_per_tick; })
+			.endNamespace()
+
+			.beginNamespace("Fedoraware")
+			.addProperty("ShiftedTicks", &G::ShiftedTicks, false)
+			.addProperty("ShouldShift", &G::ShouldShift, false)
 			.endNamespace()
 
 			// Callbacks

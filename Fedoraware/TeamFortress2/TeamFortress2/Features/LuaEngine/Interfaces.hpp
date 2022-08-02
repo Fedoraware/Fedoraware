@@ -37,6 +37,16 @@ public:
 		g_Draw.Rect(x, y, w, h, CurrentColor);
 	}
 
+	void OutlinedRect(int x, int y, int w, int h)
+	{
+		g_Draw.OutlinedRect(x, y, w, h, CurrentColor);
+	}
+
+	void FilledCircle(int x, int y, int radius, int segments)
+	{
+		g_Draw.FilledCircle(x, y, radius, segments, CurrentColor);
+	}
+
 	void SetColor(int r, int g, int b, int a)
 	{
 		CurrentColor.r = r;
