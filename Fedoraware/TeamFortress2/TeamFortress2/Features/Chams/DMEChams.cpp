@@ -493,13 +493,13 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 		if (chamsMaterial == v_MatList.at(7))
 		{
-			if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
+			if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false)) {
 				$envmaptint->SetVecValue(
 					Color::TOFLOAT(chams.colour.r) * 4,
 					Color::TOFLOAT(chams.colour.g) * 4,
 					Color::TOFLOAT(chams.colour.b) * 4);
 			}
-			if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
+			if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false)) {
 				$selfillumtint->SetVecValue(
 					Color::TOFLOAT(chams.fresnelBase.r) * 4,
 					Color::TOFLOAT(chams.fresnelBase.g) * 4,
@@ -528,14 +528,14 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 				pMaterial->IncrementReferenceCount();
 
-				if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))
+				if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 				{
 					$phongtint->SetVecValue(
 						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 				}
-				if (IMaterialVar* $envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false))
+				if (IMaterialVar* $envmaptint = pMaterial->FindVar("$envmaptint", nullptr, false))
 				{
 					$envmaptint->SetVecValue(
 						Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
@@ -582,17 +582,17 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		if (!drawType)
 		{
 			std::string_view szModelName(I::ModelInfoClient->GetModelName(pInfo.m_pModel));
-			if (!(szModelName.find(_("weapon")) != std::string_view::npos
-				&& szModelName.find(_("arrow")) == std::string_view::npos
-				&& szModelName.find(_("w_syringe")) == std::string_view::npos
-				&& szModelName.find(_("nail")) == std::string_view::npos
-				&& szModelName.find(_("shell")) == std::string_view::npos
-				&& szModelName.find(_("parachute")) == std::string_view::npos
-				&& szModelName.find(_("buffbanner")) == std::string_view::npos
-				&& szModelName.find(_("shogun_warbanner")) == std::string_view::npos
-				&& szModelName.find(_("targe")) == std::string_view::npos //same as world model, can't filter
-				&& szModelName.find(_("shield")) == std::string_view::npos //same as world model, can't filter
-				&& szModelName.find(_("repair_claw")) == std::string_view::npos)) {
+			if (!(szModelName.find("weapon") != std::string_view::npos
+				&& szModelName.find("arrow") == std::string_view::npos
+				&& szModelName.find("w_syringe") == std::string_view::npos
+				&& szModelName.find("nail") == std::string_view::npos
+				&& szModelName.find("shell") == std::string_view::npos
+				&& szModelName.find("parachute") == std::string_view::npos
+				&& szModelName.find("buffbanner") == std::string_view::npos
+				&& szModelName.find("shogun_warbanner") == std::string_view::npos
+				&& szModelName.find("targe") == std::string_view::npos //same as world model, can't filter
+				&& szModelName.find("shield") == std::string_view::npos //same as world model, can't filter
+				&& szModelName.find("repair_claw") == std::string_view::npos)) {
 				return false;
 			}
 		}
@@ -651,13 +651,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			if (chamsMaterial == v_MatList.at(7))
 			{
-				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar(_("$envmaptint"), nullptr, false)) {
+				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false)) {
 					$envmaptint->SetVecValue(
 						Color::TOFLOAT(chams.colour.r) * 4,
 						Color::TOFLOAT(chams.colour.g) * 4,
 						Color::TOFLOAT(chams.colour.b) * 4);
 				}
-				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar(_("$selfillumtint"), nullptr, false)) {
+				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false)) {
 					$selfillumtint->SetVecValue(
 						Color::TOFLOAT(chams.fresnelBase.r) * 4,
 						Color::TOFLOAT(chams.fresnelBase.g) * 4,
@@ -715,14 +715,14 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 					pMaterial->IncrementReferenceCount();
 
-					if (IMaterialVar* $phongtint = pMaterial->FindVar(_("$phongtint"), nullptr, false))
+					if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 					{
 						$phongtint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().g : chams.overlayColour.g),
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().b : chams.overlayColour.b));
 					}
-					if (IMaterialVar* $envmaptint = pMaterial->FindVar(_("$envmaptint"), nullptr, false))
+					if (IMaterialVar* $envmaptint = pMaterial->FindVar("$envmaptint", nullptr, false))
 					{
 						$envmaptint->SetVecValue(
 							Color::TOFLOAT(rainbowOverlay ? Utils::Rainbow().r : chams.overlayColour.r),
