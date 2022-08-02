@@ -19,5 +19,13 @@ public:
 
 namespace LuaUtils
 {
-	
+	inline void Print(const char* msg)
+	{
+		I::Cvar->ConsolePrintf("%s\n", msg);
+	}
+
+	inline void Text(int x, int y, const char* text)
+	{
+		g_Draw.String(FONT_MENU, x, y, { 255, 255, 255, 255 }, EStringAlign::ALIGN_CENTER, "%s", text);
+	}
 }

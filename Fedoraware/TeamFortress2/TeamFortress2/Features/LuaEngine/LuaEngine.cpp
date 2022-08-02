@@ -1,8 +1,9 @@
 #include "LuaEngine.h"
-#include <LuaBridge.h>
 #include <boost/algorithm/string/join.hpp>
 #include "Interfaces.hpp"
 #include "../Commands/Commands.h"
+
+std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef*>> Callbacks;
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
@@ -41,9 +42,22 @@ void CLuaEngine::ExecuteString(const char* expression)
 	}
 }
 
-void Print(const char* msg)
+std::unordered_map<std::string, luabridge::LuaRef*>& CLuaEngine::GetCallbacks(const std::string& type)
 {
-	I::Cvar->ConsolePrintf("%s\n", msg);
+	return Callbacks[type];
+}
+
+void RegisterCallback(const char* type, const char* name, luabridge::LuaRef callback)
+{
+	if (callback.isFunction())
+	{
+		Callbacks[type][name] = &callback;
+	}
+}
+
+void UnregisterCallback(const char* type, const char* name)
+{
+	Callbacks[type].erase(name);
 }
 
 void CLuaEngine::Init()
@@ -96,9 +110,20 @@ void CLuaEngine::Init()
 			.addProperty("Interfaces", &exInterfaces, false)
 			.endNamespace()
 
-			.addFunction("print", Print);
-	}
+			.beginNamespace("Draw")
+			.addFunction("Text", LuaUtils::Text)
+			.endNamespace()
 
+			// Callbacks
+			.beginNamespace("Callbacks")
+			.addFunction("Register", RegisterCallback)
+			.addFunction("Unregister", UnregisterCallback)
+			.endNamespace()
+
+			/* Global functions */
+			.addFunction("print", LuaUtils::Print);
+	}
+	
 	/* Register commands */
 	{
 		F::Commands.Register("lua_load", [&](const std::deque<std::string>& args) {

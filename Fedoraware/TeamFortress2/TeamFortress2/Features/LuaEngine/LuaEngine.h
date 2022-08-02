@@ -1,6 +1,7 @@
 #pragma once
-#include <lua.hpp>
 #include <mutex>
+#include <lua.hpp>
+#include <LuaBridge.h>
 #include "../../SDK/SDK.h"
 
 #define LOCKLUA() std::lock_guard<std::mutex> lock(F::LuaEngine.LuaMutex)
@@ -15,6 +16,8 @@ public:
 	
 	void ExecuteFile(const char* file);
 	void ExecuteString(const char* expression);
+	std::unordered_map<std::string, luabridge::LuaRef*>& GetCallbacks(const std::string& type);
+
 	void Reset() {
 		if (LuaState) { lua_close(LuaState); }
 		LuaState = luaL_newstate();
