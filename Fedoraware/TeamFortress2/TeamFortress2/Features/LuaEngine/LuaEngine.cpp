@@ -3,7 +3,7 @@
 #include "Interfaces.hpp"
 #include "../Commands/Commands.h"
 
-std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef*>> Callbacks;
+std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef>> Callbacks;
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
@@ -42,7 +42,7 @@ void CLuaEngine::ExecuteString(const char* expression)
 	}
 }
 
-std::unordered_map<std::string, luabridge::LuaRef*>& CLuaEngine::GetCallbacks(const std::string& type)
+std::unordered_map<std::string, luabridge::LuaRef>& CLuaEngine::GetCallbacks(const std::string& type)
 {
 	return Callbacks[type];
 }
@@ -51,7 +51,7 @@ void RegisterCallback(const char* type, const char* name, luabridge::LuaRef call
 {
 	if (callback.isFunction())
 	{
-		Callbacks[type][name] = &callback;
+		Callbacks[type].emplace(name, callback);
 	}
 }
 
