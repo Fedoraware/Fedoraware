@@ -721,29 +721,7 @@
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\CGameEventListener.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\CFunctions.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\ClassInfo.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Config.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Constructor.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\dump.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\FuncTraits.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Iterator.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\LuaException.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\LuaHelpers.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\LuaRef.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Namespace.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Security.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Stack.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\TypeList.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\TypeTraits.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\detail\Userdata.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\List.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\LuaBridge.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\Map.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\RefCountedObject.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\RefCountedPtr.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\UnorderedMap.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge-2.6\LuaBridge\Vector.h" />
+    <ClInclude Include="TeamFortress2\SDK\LuaBridge\LuaBridge.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

@@ -1,5 +1,5 @@
 #include "LuaEngine.h"
-#include <LuaBridge/LuaBridge.h>
+#include <LuaBridge.h>
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
