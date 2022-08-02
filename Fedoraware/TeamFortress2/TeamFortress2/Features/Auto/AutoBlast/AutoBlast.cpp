@@ -75,14 +75,14 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			*/
 			if (vEyePos.DistTo(vPredicted) <= 245.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
 			{
-				if (Vars::Triggerbot::Blast::Rage.Value)
+				//We could probably do fov like Nullcore
+				if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0)
 				{
 					pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
 					bShouldBlast = true;
 					break;
 				}
-				if (Math::GetFov(I::EngineClient->GetViewAngles(), vEyePos, vPredicted) <=
-					Vars::Triggerbot::Blast::Fov.Value)
+				if (Math::GetFov(I::EngineClient->GetViewAngles(), vEyePos, vPredicted) <= Vars::Triggerbot::Blast::Fov.Value)
 				{
 					bShouldBlast = true;
 					break;
@@ -97,10 +97,9 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				if (!pBurningPlayer->IsOnFire() || !pBurningPlayer->IsAlive())
 					continue;
 
-				//I'm pretty positive the range could be increased but for accuracy reasons I'll leave it alone
-				if (vEyePos.DistTo(pBurningPlayer->m_vecOrigin()) <= 260.0f && Utils::VisPos(pLocal, pBurningPlayer, vEyePos, pBurningPlayer->m_vecOrigin()))
+				if (vEyePos.DistTo(pBurningPlayer->m_vecOrigin()) <= 245.0f && Utils::VisPos(pLocal, pBurningPlayer, vEyePos, pBurningPlayer->m_vecOrigin()))
 				{
-					if (Vars::Triggerbot::Blast::Rage.Value)
+					if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0)
 					{
 						pCmd->viewangles = Math::CalcAngle(vEyePos, pBurningPlayer->m_vecOrigin());
 						bShouldBlast = true;
@@ -117,7 +116,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (bShouldBlast)
 		{
-			if (Vars::Triggerbot::Blast::Rage.Value && Vars::Triggerbot::Blast::Silent.Value)
+			if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0 && Vars::Triggerbot::Blast::Silent.Value)
 			{
 				G::SilentTime = true;
 			}
