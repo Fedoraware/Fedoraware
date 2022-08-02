@@ -1,28 +1,28 @@
 #pragma once
 #include <lua.hpp>
 #include <mutex>
+#include "../../SDK/SDK.h"
 
-#define LOCKLUA() std::lock_guard<std::mutex> lock(g_pLuaEngine->m)
+#define LOCKLUA() std::lock_guard<std::mutex> lock(F::LuaEngine.LuaMutex)
 
-class LuaEngine {
-	lua_State* m_L;
+class CLuaEngine {
+	lua_State* LuaState;
 	void PrintError();
 
 public:
-	LuaEngine() : m_L(luaL_newstate()) { luaL_openlibs(m_L); }
-	~LuaEngine() { lua_close(m_L); }
-
-	lua_State* L();
+	CLuaEngine() : LuaState(luaL_newstate()) { luaL_openlibs(LuaState); }
+	~CLuaEngine() { lua_close(LuaState); }
+	
 	void ExecuteFile(const char* file);
 	void ExecuteString(const char* expression);
 	void Reset() {
-		if (m_L) { lua_close(m_L); }
-		m_L = luaL_newstate();
-		luaL_openlibs(m_L);
+		if (LuaState) { lua_close(LuaState); }
+		LuaState = luaL_newstate();
+		luaL_openlibs(LuaState);
 	}
-	void Initialize();
+	void Init();
 
-	std::mutex m;
+	std::mutex LuaMutex;
 };
 
-extern LuaEngine* g_pLuaEngine;
+ADD_FEATURE(CLuaEngine, LuaEngine)

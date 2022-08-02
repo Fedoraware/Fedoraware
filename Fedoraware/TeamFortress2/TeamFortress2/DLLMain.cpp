@@ -14,6 +14,7 @@
 #include "SDK/Includes/Enums.h"
 #include "Utils/Events/Events.h"
 
+#include "Features/LuaEngine/LuaEngine.h"
 #include "SDK/Discord/include/discord_rpc.h"
 #include "Features/Discord/Discord.h"
 
@@ -73,6 +74,7 @@ void Initialize()
 	}
 
 	g_ConVars.Init();
+	F::LuaEngine.Init();
 	F::Commands.Init();
 
 	InitRichPresence();
