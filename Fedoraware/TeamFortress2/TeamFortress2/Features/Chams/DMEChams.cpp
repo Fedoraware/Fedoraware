@@ -95,7 +95,7 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
 	
-	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{};
+	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{}, $frame{};
 	if (auto var = returnMaterial->FindVar("$flags", nullptr))
 		$flags = std::stoi(var->GetStringValue());
 	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
@@ -104,8 +104,10 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 		$flags2 = std::stoi(var->GetStringValue());
 	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
 		$flags_defined2 = std::stoi(var->GetStringValue());
+	if (auto var = returnMaterial->FindVar("$frame", nullptr))
+		$frame = std::stoi(var->GetStringValue());
 	backupInformation[returnMaterial] = {
-		$flags, $flags_defined, $flags2, $flags_defined2,
+		$flags, $flags_defined, $flags2, $flags_defined2, $frame,
 	};
 
 	v_MatListGlobal.push_back(returnMaterial);
@@ -123,6 +125,8 @@ void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
 		$flags2->SetIntValue(backupInfo.$flags2);
 	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
 		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
+	if (auto $frame = mTarget->FindVar("$frame", nullptr))
+		$frame->SetIntValue(backupInfo.$frame);
 }
 
 void CDMEChams::Init()

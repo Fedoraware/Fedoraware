@@ -8,6 +8,7 @@ struct ChamInfo {
 	int $flags_defined = 0;
 	int $flags2 = 0;
 	int $flags_defined2 = 0;
+	int $frame = 0;
 };
 
 class CDMEChams
