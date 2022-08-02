@@ -1,8 +1,6 @@
 #include "LuaEngine.h"
 #include <LuaBridge/LuaBridge.h>
 
-CLuaEngine* g_pLuaEngine = new CLuaEngine();
-
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
 {
