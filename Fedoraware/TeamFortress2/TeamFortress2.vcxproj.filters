@@ -722,6 +722,11 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\CGameEventListener.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
     <ClInclude Include="TeamFortress2\SDK\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lauxlib.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\luaconf.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lualib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />
@@ -737,5 +742,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
+    <Library Include="TeamFortress2\SDK\Lua\lua54.lib" />
   </ItemGroup>
 </Project>

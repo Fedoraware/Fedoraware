@@ -134,7 +134,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -825,6 +825,11 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRender\ViewRender.h" />
     <ClInclude Include="TeamFortress2\SDK\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lauxlib.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\luaconf.h" />
+    <ClInclude Include="TeamFortress2\SDK\Lua\include\lualib.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseEntity\AnimState\Activity.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseEntity\AnimState\BaseAnimatingOverlay.h" />
@@ -882,17 +887,16 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
+    <Library Include="TeamFortress2\SDK\Lua\lua54.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\boost.1.79.0\build\boost.targets" Condition="Exists('..\packages\boost.1.79.0\build\boost.targets')" />
-    <Import Project="..\packages\luajit.native.2.0.5\build\native\luajit.native.targets" Condition="Exists('..\packages\luajit.native.2.0.5\build\native\luajit.native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\boost.1.79.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.79.0\build\boost.targets'))" />
-    <Error Condition="!Exists('..\packages\luajit.native.2.0.5\build\native\luajit.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\luajit.native.2.0.5\build\native\luajit.native.targets'))" />
   </Target>
 </Project>
