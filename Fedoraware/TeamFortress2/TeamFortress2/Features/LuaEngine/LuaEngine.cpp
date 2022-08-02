@@ -1,5 +1,6 @@
 #include "LuaEngine.h"
 #include <LuaBridge.h>
+#include <boost/algorithm/string/join.hpp>
 #include "../Commands/Commands.h"
 
 /* Prints the last lua error */
@@ -9,7 +10,7 @@ void CLuaEngine::PrintError()
 	errorMessage.append(lua_tostring(LuaState, -1));
 	errorMessage.append("\n");
 
-	I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, errorMessage.c_str());
+	I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, "%s\n", errorMessage.c_str());
 	lua_pop(LuaState, -1);
 }
 
@@ -36,12 +37,18 @@ void CLuaEngine::ExecuteString(const char* expression) {
 	}
 }
 
+void Print(const char* msg)
+{
+	I::Cvar->ConsolePrintf("%s\n", msg);
+}
+
 void CLuaEngine::Init()
 {
 	LOCKLUA();
 
 	using namespace luabridge;
 	getGlobalNamespace(LuaState)
+		.addFunction("print", Print)
 
 		// Client
 		.beginNamespace("Client")
@@ -64,10 +71,11 @@ void CLuaEngine::Init()
 	{
 		if (args.empty())
 		{
-			F::Commands.Error("Usage: lua_do \"<expression>\"");
+			F::Commands.Error("Usage: lua_do <expression>");
 			return;
 		}
 
-		ExecuteString(args.front().c_str());
+		const std::string expr = boost::algorithm::join(args, " ");
+		ExecuteString(expr.c_str());
 	});
 }
