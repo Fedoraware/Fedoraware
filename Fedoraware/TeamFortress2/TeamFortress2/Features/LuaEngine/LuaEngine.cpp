@@ -1,6 +1,5 @@
 #include "LuaEngine.h"
 #include <boost/algorithm/string/join.hpp>
-#include "Interfaces.hpp"
 #include "../Commands/Commands.h"
 
 std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef>> Callbacks;
@@ -47,7 +46,7 @@ std::unordered_map<std::string, luabridge::LuaRef>& CLuaEngine::GetCallbacks(con
 	return Callbacks[type];
 }
 
-void RegisterCallback(const char* type, const char* name, luabridge::LuaRef callback)
+void RegisterCallback(const char* type, const char* name, const luabridge::LuaRef& callback)
 {
 	if (callback.isFunction())
 	{
@@ -60,13 +59,19 @@ void UnregisterCallback(const char* type, const char* name)
 	Callbacks[type].erase(name);
 }
 
+void Print(const char* msg)
+{
+	I::Cvar->ConsolePrintf("%s\n", msg);
+}
+
 void CLuaEngine::Init()
 {
 	LOCKLUA();
 
 	/* Initialize LuaBridge */
 	{
-		ExportedInterfaces exInterfaces;
+		static ExportedInterfaces exInterfaces;
+		static ExportedDraw exDraw;
 
 		using namespace luabridge;
 		getGlobalNamespace(LuaState)
@@ -85,22 +90,61 @@ void CLuaEngine::Init()
 
 			.endNamespace()
 
+			// CUserCmd
+			.beginClass<WUserCmd>("UserCmd")
+			.addFunction("GetButtons", &WUserCmd::GetButtons)
+			.addFunction("GetViewAngles", &WUserCmd::GetViewAngles)
+			.addFunction("GetForwardMove", &WUserCmd::GetForwardMove)
+			.addFunction("GetSideMove", &WUserCmd::GetSideMove)
+			.addFunction("GetUpMove", &WUserCmd::GetUpMove)
+
+			.addFunction("SetButtons", &WUserCmd::SetButtons)
+			.addFunction("SetViewAngles", &WUserCmd::SetViewAngles)
+			.addFunction("SetForwardMove", &WUserCmd::SetForwardMove)
+			.addFunction("SetSideMove", &WUserCmd::SetSideMove)
+			.addFunction("SetUpMove", &WUserCmd::SetUpMove)
+			.endClass()
+
 			// CEngineClient
 			.beginClass<WEngineClient>("EngineClient")
-			.addFunction("GetLocalPlayer", &WEngineClient::GetLocalPlayer)
-			.addFunction("ExecuteCommand", &WEngineClient::ExecuteCommand)
-			.addFunction("IsConnected", &WEngineClient::IsConnected)
 			.addFunction("IsInGame", &WEngineClient::IsInGame)
+			.addFunction("IsConnected", &WEngineClient::IsConnected)
+			.addFunction("IsTakingScreenshot", &WEngineClient::IsTakingScreenshot)
+			.addFunction("ExecuteCommand", &WEngineClient::ExecuteCommand)
+			.addFunction("GetLocalPlayer", &WEngineClient::GetLocalPlayer)
+			.addFunction("GetMaxClients", &WEngineClient::GetMaxClients)
+			.addFunction("GetLevelName", &WEngineClient::GetLevelName)
+			.addFunction("GetScreenSize", &WEngineClient::GetScreenSize)
+			.addFunction("GetViewAngles", &WEngineClient::GetViewAngles)
+			.addFunction("SetViewAngles", &WEngineClient::SetViewAngles)
 			.endClass()
 
 			// CBaseEntity
 			.beginClass<WBaseEntity>("BaseEntity")
-			.addFunction("AddCond", &WBaseEntity::AddCond)
+			.addFunction("IsValid", &WBaseEntity::IsValid)
+			.addFunction("GetIndex", &WBaseEntity::GetIndex)
+			.addFunction("GetOrigin", &WBaseEntity::GetOrigin)
+			.addFunction("GetClassID", &WBaseEntity::GetClassID)
+			.addFunction("GetClassName", &WBaseEntity::GetClass)
+			.addFunction("GetHealth", &WBaseEntity::GetHealth)
 			.addFunction("GetAmmo", &WBaseEntity::GetAmmo)
-			.addFunction("GetAbsOrigin", &WBaseEntity::GetAbsOrigin)
+			.addFunction("GetFlags", &WBaseEntity::GetFlags)
+			.addFunction("GetEyePos", &WBaseEntity::GetEyePos)
+			.addFunction("IsDormant", &WBaseEntity::IsDormant)
+			.addFunction("IsAlive", &WBaseEntity::IsAlive)
+			.addFunction("GetTeam", &WBaseEntity::GetTeam)
+			.addFunction("SetOrigin", &WBaseEntity::SetOrigin)
 			.endClass()
 
-			// Add Interfaces
+			// Draw
+			.beginClass<ExportedDraw>("DrawClass")
+			.addFunction("Text", &ExportedDraw::Text)
+			.addFunction("Line", &ExportedDraw::Line)
+			.addFunction("Rect", &ExportedDraw::Rect)
+			.addFunction("SetColor", &ExportedDraw::SetColor)
+			.endClass()
+
+			// Interfaces
 			.beginClass<ExportedInterfaces>("InterfaceClass")
 			.addFunction("GetEngine", &ExportedInterfaces::GetEngine)
 			.addFunction("GetLocalPlayer", &ExportedInterfaces::GetLocalPlayer)
@@ -108,10 +152,7 @@ void CLuaEngine::Init()
 
 			// Global Vars, Props and Functions
 			.addProperty("Interfaces", &exInterfaces, false)
-			.endNamespace()
-
-			.beginNamespace("Draw")
-			.addFunction("Text", LuaUtils::Text)
+			.addProperty("Draw", &exDraw, false)
 			.endNamespace()
 
 			// Callbacks
@@ -121,7 +162,7 @@ void CLuaEngine::Init()
 			.endNamespace()
 
 			/* Global functions */
-			.addFunction("print", LuaUtils::Print);
+			.addFunction("print", Print);
 	}
 	
 	/* Register commands */

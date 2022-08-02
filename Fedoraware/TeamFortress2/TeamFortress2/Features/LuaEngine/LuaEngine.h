@@ -2,6 +2,7 @@
 #include <mutex>
 #include <lua.hpp>
 #include <LuaBridge.h>
+#include "Interfaces.hpp"
 #include "../../SDK/SDK.h"
 
 #define LOCKLUA() std::lock_guard<std::mutex> lock(F::LuaEngine.LuaMutex)

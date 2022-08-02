@@ -222,10 +222,10 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::Notifications.Think();
 			F::Visuals.SetVisionFlags();
 
-			// Run Lua callback
-			for (auto& callback : F::LuaEngine.GetCallbacks("Draw"))
+			// Run Lua callbacks
+			for (const auto& callback : F::LuaEngine.GetCallbacks("Draw"))
 			{
-				callback.second();
+				if (callback.second.isValid()) { callback.second(); }
 			}
 		}
 		FinishDrawing(I::VGuiSurface);

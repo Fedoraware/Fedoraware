@@ -6,9 +6,70 @@ class WBaseEntity {
 public:
 	explicit WBaseEntity(CBaseEntity* baseEntity) : BaseEntity(baseEntity) { }
 
-	void AddCond(int cond) { BaseEntity->AddCond(cond); }
-	int GetAmmo() { return BaseEntity->GetAmmo(); }
-	Vec3 GetAbsOrigin() { return BaseEntity->GetAbsOrigin(); }
-	int GetHealth() { return BaseEntity->GetHealth(); }
-	bool IsAlive() { return BaseEntity->IsAlive(); }
+	bool IsValid()
+	{
+		return BaseEntity != nullptr;
+	}
+
+	int GetIndex()
+	{
+		return BaseEntity->GetIndex();
+	}
+
+	Vec3 GetOrigin()
+	{
+		return BaseEntity->GetAbsOrigin();
+	}
+
+	int GetClassID()
+	{
+		return BaseEntity->GetClientClass()->m_ClassID;
+	}
+
+	const char* GetClass()
+	{
+		return BaseEntity->GetClientClass()->GetName();
+	}
+
+	int GetHealth()
+	{
+		return BaseEntity->GetHealth();
+	}
+
+	int GetAmmo()
+	{
+		return BaseEntity->GetAmmo();
+	}
+
+	int GetFlags()
+	{
+		return BaseEntity->GetFlags();
+	}
+
+	Vec3 GetEyePos()
+	{
+		return BaseEntity->GetEyePosition();
+	}
+
+	bool IsDormant()
+	{
+		return BaseEntity->GetDormant();
+	}
+
+	bool IsAlive()
+	{
+		return BaseEntity->IsAlive();
+	}
+
+	int GetTeam()
+	{
+		return BaseEntity->GetTeamNum();
+	}
+
+	void SetOrigin(const Vec3& v)
+	{
+		BaseEntity->SetAbsOrigin(v);
+		BaseEntity->SetVecOrigin(v);
+	}
+
 };
