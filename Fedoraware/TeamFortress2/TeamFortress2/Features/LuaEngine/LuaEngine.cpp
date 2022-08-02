@@ -1,5 +1,6 @@
 #include "LuaEngine.h"
 #include <LuaBridge.h>
+#include "../Commands/Commands.h"
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
@@ -15,7 +16,9 @@ void CLuaEngine::PrintError()
 /* Executes the given file */
 void CLuaEngine::ExecuteFile(const char* file) {
 	if (!file || !LuaState) { return; }
-	if (luaL_dofile(LuaState, file)) {
+
+	if (luaL_dofile(LuaState, file))
+	{
 		PrintError();
 	}
 }
@@ -27,7 +30,8 @@ void CLuaEngine::ExecuteString(const char* expression) {
 		return;
 	}
 
-	if (luaL_dostring(LuaState, expression)) {
+	if (luaL_dostring(LuaState, expression))
+	{
 		PrintError();
 	}
 }
@@ -38,6 +42,32 @@ void CLuaEngine::Init()
 
 	using namespace luabridge;
 	getGlobalNamespace(LuaState)
-		.beginNamespace("Game")
+
+		// Client
+		.beginNamespace("Client")
 		.endNamespace();
+
+	/* Register commands */
+
+	F::Commands.Register("lua_load", [&](const std::deque<std::string>& args)
+	{
+		if (args.empty())
+		{
+			F::Commands.Error("Usage: lua_load <path>");
+			return;
+		}
+
+		ExecuteFile(args.front().c_str());
+	});
+
+	F::Commands.Register("lua_do", [&](const std::deque<std::string>& args)
+	{
+		if (args.empty())
+		{
+			F::Commands.Error("Usage: lua_do \"<expression>\"");
+			return;
+		}
+
+		ExecuteString(args.front().c_str());
+	});
 }

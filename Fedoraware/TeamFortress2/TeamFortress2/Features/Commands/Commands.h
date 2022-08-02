@@ -12,6 +12,7 @@ public:
 	void Init();
 	bool Run(const std::string& cmd, const std::deque<std::string>& args);
 	void Register(const std::string& name, CommandCallback callback);
+	void Error(const std::string& msg);
 };
 
 ADD_FEATURE(CCommands, Commands)

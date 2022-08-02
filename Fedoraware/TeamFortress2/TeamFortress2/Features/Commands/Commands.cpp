@@ -19,6 +19,11 @@ void CCommands::Register(const std::string& name, CommandCallback callback)
 	CommandMap[name] = std::move(callback);
 }
 
+void CCommands::Error(const std::string& msg)
+{
+	I::Cvar->ConsoleColorPrintf({ 230, 75, 60, 255 }, (msg + "\n").c_str());
+}
+
 void CCommands::Init()
 {
 	Register("queue", [](const std::deque<std::string>& args)
