@@ -5,7 +5,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Killstreak/Killstreak.h"
-#include "../../Features/LuaEngine/LuaEngine.h"
+#include "../../Features/LuaEngine/LuaCallbacks.hpp"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -39,10 +39,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	}
 
 	// Run Lua callbacks
-	for (const auto& callback : F::LuaEngine.GetCallbacks("FireGameEvent"))
-	{
-		if (callback.second.isValid()) { callback.second(WGameEvent(pEvent)); }
-	}
+	F::LuaCallbacks.OnFireGameEvent(pEvent);
 
 	// Pickup Timers
 	if (Vars::Visuals::PickupTimers.Value && uNameHash == FNV1A::HashConst("item_pickup"))

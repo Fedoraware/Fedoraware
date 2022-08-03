@@ -1,8 +1,7 @@
 #include "LuaEngine.h"
+#include "LuaCallbacks.hpp"
 #include <boost/algorithm/string/join.hpp>
 #include "../Commands/Commands.h"
-
-std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef>> Callbacks;
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()
@@ -31,7 +30,7 @@ void CLuaEngine::ExecuteString(const char* expression)
 {
 	if (!expression || !LuaState)
 	{
-		I::Cvar->ConsoleColorPrintf({235, 59, 90, 255}, _("Lua Error: null expression passed to script engine\n"));
+		I::Cvar->ConsoleColorPrintf({235, 59, 90, 255}, "Lua Error: null expression passed to script engine\n");
 		return;
 	}
 
@@ -41,22 +40,14 @@ void CLuaEngine::ExecuteString(const char* expression)
 	}
 }
 
-std::unordered_map<std::string, luabridge::LuaRef>& CLuaEngine::GetCallbacks(const std::string& type)
-{
-	return Callbacks[type];
-}
-
 void RegisterCallback(const char* type, const char* name, const luabridge::LuaRef& callback)
 {
-	if (callback.isFunction())
-	{
-		Callbacks[type].emplace(name, callback);
-	}
+	F::LuaCallbacks.Register(type, name, callback);
 }
 
 void UnregisterCallback(const char* type, const char* name)
 {
-	Callbacks[type].erase(name);
+	F::LuaCallbacks.Unregister(type, name);
 }
 
 void CLuaEngine::Init()

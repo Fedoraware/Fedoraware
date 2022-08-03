@@ -18,7 +18,7 @@
 #include "../../Features/Vars.h"
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
-#include "../../Features/LuaEngine/LuaEngine.h"
+#include "../../Features/LuaEngine/LuaCallbacks.hpp"
 
 void AppendCache()
 {
@@ -161,10 +161,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	}
 
 	// Run Lua callbacks
-	for (const auto& callback : F::LuaEngine.GetCallbacks("CreateMove"))
-	{
-		if (callback.second.isValid()) { callback.second(WUserCmd(pCmd, pSendPacket)); }
-	}
+	F::LuaCallbacks.OnCreateMove(pCmd, pSendPacket);
 
 	if (*pSendPacket) {
 		F::FakeAng.Run(pCmd); 

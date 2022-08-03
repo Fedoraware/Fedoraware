@@ -15,7 +15,7 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
-#include "../../Features/LuaEngine/LuaEngine.h"
+#include "../../Features/LuaEngine/LuaCallbacks.hpp"
 
 #include "../../Resources/DVD-Icon.h"
 #include "../../Resources/64x64_Circle_Mask.h"
@@ -223,10 +223,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 			F::Visuals.SetVisionFlags();
 
 			// Run Lua callbacks
-			for (const auto& callback : F::LuaEngine.GetCallbacks("Draw"))
-			{
-				if (callback.second.isValid()) { callback.second(); }
-			}
+			F::LuaCallbacks.ByType("Draw");
 		}
 		FinishDrawing(I::VGuiSurface);
 	}
