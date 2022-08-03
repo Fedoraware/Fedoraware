@@ -88,7 +88,7 @@ void CVisuals::SkyboxChanger()
 {
 	using LoadNamedSkysFn = bool(_cdecl*)(const char*);
 	static auto LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(
-		_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
+		L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45");
 
 	const char* skybNames[] = {
 		"Custom",

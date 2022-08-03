@@ -68,45 +68,45 @@ public:
 class CBaseEntity
 {
 public: //Netvars & conditions
-	M_DYNVARGET(NextNoiseMakerTime, float, this, _("DT_TFPlayer"), _("m_Shared"), _("m_flNextNoiseMakerTime"))
-		M_DYNVARGET(FeignDeathReady, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bFeignDeathReady"))
-		M_DYNVARGET(StepSize, float, this, _("DT_BasePlayer"), _("localdata"), _("m_flStepSize"))
-		M_DYNVARGET(ConveyorSpeed, float, this, _("DT_FuncConveyor"), _("m_flConveyorSpeed"))
-		M_DYNVARGET(MaxSpeed, float, this, _("DT_BasePlayer"), _("m_flMaxspeed"))
-		M_DYNVARGET(State, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerState"))
-		M_DYNVARGET(ViewOffset, Vec3, this, _("DT_BasePlayer"), _("localdata"), _("m_vecViewOffset[0]"))
-		M_DYNVARGET(CurrentCommand, CUserCmd*, (this - 0x4), _("DT_BasePlayer"), _("localdata"), _("m_hConstraintEntity"))
-		M_DYNVARGET(VecOrigin, Vec3, this, _("DT_BaseEntity"), _("m_vecOrigin"))
-		M_DYNVARGET(Ammo, int, (this + 0x4), _("DT_BasePlayer"), _("localdata"), _("m_iAmmo"))
-		M_DYNVARGET(HitboxSet, int, this, _("DT_BaseAnimating"), _("m_nHitboxSet"))
-		M_DYNVARGET(TickBase, int, this, _("DT_BasePlayer"), _("localdata"), _("m_nTickBase"))
-		M_DYNVARGET(SimulationTime, float, this, _("DT_BaseEntity"), _("m_flSimulationTime"))
-		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), _("DT_BaseEntity"), _("m_flSimulationTime"));
-		M_DYNVARGET(hOwner, int, this, _("DT_BaseEntity"), _("m_hOwnerEntity"))
-		M_DYNVARGET(Health, int, this, _("DT_BasePlayer"), _("m_iHealth"))
-		M_DYNVARGET(TeamNum, int, this, _("DT_BaseEntity"), _("m_iTeamNum"))
-		M_DYNVARGET(Flags, int, this, _("DT_BasePlayer"), _("m_fFlags"))
-		M_DYNVARGET(LifeState, BYTE, this, _("DT_BasePlayer"), _("m_lifeState"))
-		M_DYNVARGET(ClassNum, int, this, _("DT_TFPlayer"), _("m_PlayerClass"), _("m_iClass"))
-		M_DYNVARGET(Cond, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"))
-		M_DYNVARGET(ViewingCYOAPDA, bool, this, _("DT_TFPlayer"), _("m_bViewingCYOAPDA"))
-		M_DYNVARGET(UsingActionSlot, bool, this, _("DT_TFPlayer"), _("m_bUsingActionSlot"))
-		M_DYNVARGET(LoadoutUnavailable, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bLoadoutUnavailable"))
-		M_DYNVARGET(CondEx, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx"))
-		M_DYNVARGET(CondEx2, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx2"))
-		M_DYNVARGET(CondEx3, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx3"))
-		M_DYNVARGET(CollideableMins, Vec3, this, _("DT_BaseEntity"), _("m_Collision"), _("m_vecMins"))
-		M_DYNVARGET(CollideableMaxs, Vec3, this, _("DT_BaseEntity"), _("m_Collision"), _("m_vecMaxs"))
-		M_DYNVARGET(EyeAngles, Vec3, this, _("DT_TFPlayer"), _("tfnonlocaldata"), _("m_angEyeAngles[0]"))
-		M_DYNVARGET(WaterLevel, BYTE, this, _("DT_TFPlayer"), _("m_nWaterLevel"))
-		M_DYNVARGET(NextAttack, float, this, _("DT_BaseCombatCharacter"), _("bcc_localdata"), _("m_flNextAttack"))
-		M_DYNVARGET(Fov, int, this, _("DT_BasePlayer"), _("m_iFOV"))
-		M_DYNVARGET(ObserverTarget, int, this, _("DT_BasePlayer"), _("m_hObserverTarget"))
-		M_DYNVARGET(ObserverMode, int, this, _("DT_BasePlayer"), _("m_iObserverMode"))
-		M_DYNVARGET(GlowEnabled, bool, this, _("DT_TFPlayer"), _("m_bGlowEnabled"))
-		M_DYNVARGET(Thrower, void*, this, _("DT_BaseGrenade"), _("m_hThrower"))
-		M_DYNVARGET(DamageRadius, float, this, _("DT_BaseGrenade"), _("m_DmgRadius"))
-		M_DYNVARGET(Streaks, int*, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nStreaks"))
+	M_DYNVARGET(NextNoiseMakerTime, float, this, "DT_TFPlayer", "m_Shared", "m_flNextNoiseMakerTime")
+		M_DYNVARGET(FeignDeathReady, bool, this, "DT_TFPlayer", "m_Shared", "m_bFeignDeathReady")
+		M_DYNVARGET(StepSize, float, this, "DT_BasePlayer", "localdata", "m_flStepSize")
+		M_DYNVARGET(ConveyorSpeed, float, this, "DT_FuncConveyor", "m_flConveyorSpeed")
+		M_DYNVARGET(MaxSpeed, float, this, "DT_BasePlayer", "m_flMaxspeed")
+		M_DYNVARGET(State, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerState")
+		M_DYNVARGET(ViewOffset, Vec3, this, "DT_BasePlayer", "localdata", "m_vecViewOffset[0]")
+		M_DYNVARGET(CurrentCommand, CUserCmd*, (this - 0x4), "DT_BasePlayer", "localdata", "m_hConstraintEntity")
+		M_DYNVARGET(VecOrigin, Vec3, this, "DT_BaseEntity", "m_vecOrigin")
+		M_DYNVARGET(Ammo, int, (this + 0x4), "DT_BasePlayer", "localdata", "m_iAmmo")
+		M_DYNVARGET(HitboxSet, int, this, "DT_BaseAnimating", "m_nHitboxSet")
+		M_DYNVARGET(TickBase, int, this, "DT_BasePlayer", "localdata", "m_nTickBase")
+		M_DYNVARGET(SimulationTime, float, this, "DT_BaseEntity", "m_flSimulationTime")
+		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), "DT_BaseEntity", "m_flSimulationTime");
+		M_DYNVARGET(hOwner, int, this, "DT_BaseEntity", "m_hOwnerEntity")
+		M_DYNVARGET(Health, int, this, "DT_BasePlayer", "m_iHealth")
+		M_DYNVARGET(TeamNum, int, this, "DT_BaseEntity", "m_iTeamNum")
+		M_DYNVARGET(Flags, int, this, "DT_BasePlayer", "m_fFlags")
+		M_DYNVARGET(LifeState, BYTE, this, "DT_BasePlayer", "m_lifeState")
+		M_DYNVARGET(ClassNum, int, this, "DT_TFPlayer", "m_PlayerClass", "m_iClass")
+		M_DYNVARGET(Cond, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCond")
+		M_DYNVARGET(ViewingCYOAPDA, bool, this, "DT_TFPlayer", "m_bViewingCYOAPDA")
+		M_DYNVARGET(UsingActionSlot, bool, this, "DT_TFPlayer", "m_bUsingActionSlot")
+		M_DYNVARGET(LoadoutUnavailable, bool, this, "DT_TFPlayer", "m_Shared", "m_bLoadoutUnavailable")
+		M_DYNVARGET(CondEx, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx")
+		M_DYNVARGET(CondEx2, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx2")
+		M_DYNVARGET(CondEx3, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx3")
+		M_DYNVARGET(CollideableMins, Vec3, this, "DT_BaseEntity", "m_Collision", "m_vecMins")
+		M_DYNVARGET(CollideableMaxs, Vec3, this, "DT_BaseEntity", "m_Collision", "m_vecMaxs")
+		M_DYNVARGET(EyeAngles, Vec3, this, "DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]")
+		M_DYNVARGET(WaterLevel, BYTE, this, "DT_TFPlayer", "m_nWaterLevel")
+		M_DYNVARGET(NextAttack, float, this, "DT_BaseCombatCharacter", "bcc_localdata", "m_flNextAttack")
+		M_DYNVARGET(Fov, int, this, "DT_BasePlayer", "m_iFOV")
+		M_DYNVARGET(ObserverTarget, int, this, "DT_BasePlayer", "m_hObserverTarget")
+		M_DYNVARGET(ObserverMode, int, this, "DT_BasePlayer", "m_iObserverMode")
+		M_DYNVARGET(GlowEnabled, bool, this, "DT_TFPlayer", "m_bGlowEnabled")
+		M_DYNVARGET(Thrower, void*, this, "DT_BaseGrenade", "m_hThrower")
+		M_DYNVARGET(DamageRadius, float, this, "DT_BaseGrenade", "m_DmgRadius")
+		M_DYNVARGET(Streaks, int*, this, "DT_TFPlayer", "m_Shared", "m_nStreaks")
 		NETVAR(m_nStreaks, void*, "CTFPlayer", "m_nStreaks");
 
 	M_OFFSETGET(PipebombType, int, 0x8FC)
@@ -162,76 +162,76 @@ public: //Netvars & conditions
 		M_CONDGET(FireResist, GetCondEx(), TFCondEx_FireCharge)
 
 		// thanks litebase this is just better ngl
-		NETVAR(m_vecOrigin, Vec3, _("CBaseEntity"), _("m_vecOrigin"))
-		NETVAR(m_Local, void*, _("CBasePlayer"), _("m_Local"))
-		NETVAR(m_chAreaBits, void*, _("CBasePlayer"), _("m_chAreaBits"))
-		NETVAR(m_chAreaPortalBits, void*, _("CBasePlayer"), _("m_chAreaPortalBits"))
-		NETVAR(m_iHideHUD, int, _("CBasePlayer"), _("m_iHideHUD"))
-		NETVAR(m_flFOVRate, float, _("CBasePlayer"), _("m_flFOVRate"))
-		NETVAR(m_bDucked, bool, _("CBasePlayer"), _("m_bDucked"))
-		NETVAR(m_bDucking, bool, _("CBasePlayer"), _("m_bDucking"))
-		NETVAR(m_bInDuckJump, bool, _("CBasePlayer"), _("m_bInDuckJump"))
-		NETVAR(m_flDucktime, float, _("CBasePlayer"), _("m_flDucktime"))
-		NETVAR(m_flDuckJumpTime, float, _("CBasePlayer"), _("m_flDuckJumpTime"))
-		NETVAR(m_flJumpTime, float, _("CBasePlayer"), _("m_flJumpTime"))
-		NETVAR(m_flFallVelocity, float, _("CBasePlayer"), _("m_flFallVelocity"))
-		NETVAR(m_vecPunchAngle, Vec3, _("CBasePlayer"), _("m_vecPunchAngle"))
-		NETVAR(m_vecPunchAngleVel, Vec3, _("CBasePlayer"), _("m_vecPunchAngleVel"))
-		NETVAR(m_bDrawViewmodel, bool, _("CBasePlayer"), _("m_bDrawViewmodel"))
-		NETVAR(m_bWearingSuit, bool, _("CBasePlayer"), _("m_bWearingSuit"))
-		NETVAR(m_bPoisoned, bool, _("CBasePlayer"), _("m_bPoisoned"))
-		NETVAR(m_flStepSize, float, _("CBasePlayer"), _("m_flStepSize"))
-		NETVAR(m_bAllowAutoMovement, bool, _("CBasePlayer"), _("m_bAllowAutoMovement"))
-		NETVAR(m_vecViewOffset, Vec3, _("CBasePlayer"), "m_vecViewOffset[0]")
-		NETVAR(m_flFriction, float, _("CBasePlayer"), _("m_flFriction"))
-		NETVAR(m_iAmmo, void*, _("CBasePlayer"), _("m_iAmmo"))
-		NETVAR(m_fOnTarget, int, _("CBasePlayer"), _("m_fOnTarget"))
-		NETVAR(m_nTickBase, int, _("CBasePlayer"), _("m_nTickBase"))
-		NETVAR(m_nNextThinkTick, int, _("CBasePlayer"), _("m_nNextThinkTick"))
-		NETVAR(m_hLastWeapon, int, _("CBasePlayer"), _("m_hLastWeapon"))
-		NETVAR(m_hGroundEntity, int, _("CBasePlayer"), _("m_hGroundEntity"))
-		NETVAR(m_vecVelocity, Vec3, _("CBasePlayer"), _("m_vecVelocity[0]"))
-		NETVAR(m_vecBaseVelocity, Vec3, _("CBasePlayer"), _("m_vecBaseVelocity"))
-		NETVAR(m_hConstraintEntity, int, _("CBasePlayer"), _("m_hConstraintEntity"))
-		NETVAR(m_vecConstraintCenter, Vec3, _("CBasePlayer"), _("m_vecConstraintCenter"))
-		NETVAR(m_flConstraintRadius, float, _("CBasePlayer"), _("m_flConstraintRadius"))
-		NETVAR(m_flConstraintWidth, float, _("CBasePlayer"), _("m_flConstraintWidth"))
-		NETVAR(m_flConstraintSpeedFactor, float, _("CBasePlayer"), _("m_flConstraintSpeedFactor"))
-		NETVAR(m_flDeathTime, float, _("CBasePlayer"), _("m_flDeathTime"))
-		NETVAR(m_nWaterLevel, int, _("CBasePlayer"), _("m_nWaterLevel"))
-		NETVAR(m_flLaggedMovementValue, float, _("CBasePlayer"), _("m_flLaggedMovementValue"))
-		NETVAR(m_AttributeList, void*, _("CBasePlayer"), _("m_AttributeList"))
-		NETVAR(pl, void*, _("CBasePlayer"), _("pl"))
-		NETVAR(deadflag, int, _("CBasePlayer"), _("deadflag"))
-		NETVAR(m_iFOV, int, _("CBasePlayer"), _("m_iFOV"))
-		NETVAR(m_iFOVStart, int, _("CBasePlayer"), _("m_iFOVStart"))
-		NETVAR(m_flFOVTime, float, _("CBasePlayer"), _("m_flFOVTime"))
-		NETVAR(m_iDefaultFOV, int, _("CBasePlayer"), _("m_iDefaultFOV"))
-		NETVAR(m_hZoomOwner, int, _("CBasePlayer"), _("m_hZoomOwner"))
-		NETVAR(m_hVehicle, int, _("CBasePlayer"), _("m_hVehicle"))
-		NETVAR(m_hUseEntity, int, _("CBasePlayer"), _("m_hUseEntity"))
-		NETVAR(m_iHealth, int, _("CBasePlayer"), _("m_iHealth"))
-		NETVAR(m_ubInterpolationFrame, int, _("CBasePlayer"), _("m_ubInterpolationFrame"))
-		NETVAR(m_fEffects, int, _("CBasePlayer"), _("m_fEffects"))
-		NETVAR(m_lifeState, byte, _("CBasePlayer"), _("m_lifeState"))
-		NETVAR(m_iBonusProgress, int, _("CBasePlayer"), _("m_iBonusProgress"))
-		NETVAR(m_iBonusChallenge, int, _("CBasePlayer"), _("m_iBonusChallenge"))
-		NETVAR(m_flMaxspeed, float, _("CBasePlayer"), _("m_flMaxspeed"))
-		NETVAR(m_fFlags, int, _("CBasePlayer"), _("m_fFlags"))
-		NETVAR(m_iObserverMode, int, _("CBasePlayer"), _("m_iObserverMode"))
-		NETVAR(m_hObserverTarget, int, _("CBasePlayer"), _("m_hObserverTarget"))
-		NETVAR(m_hViewModel, int, _("CBasePlayer"), _("m_hViewModel[0]"))
-		NETVAR(m_szLastPlaceName, const char*, _("CBasePlayer"), _("m_szLastPlaceName"))
-		NETVAR(m_flModelScale, float, _("CBaseAnimating"), _("m_flModelScale"))
-		NETVAR(m_bClientSideAnimation, bool, _("CBaseAnimating"), _("m_bClientSideAnimation"))
-		NETVAR(m_flPlaybackRate, float, _("CBaseAnimating"), _("m_flPlaybackRate"))
-		NETVAR(m_vecMins, Vec3, _("CBaseEntity"), _("m_vecMins"))
-		NETVAR(m_vecMaxs, Vec3, _("CBaseEntity"), _("m_vecMaxs"))
-		NETVAR(m_nSequence, int, _("CBaseAnimating"), _("m_nSequence"))
-		NETVAR(m_flCycle, float, _("CBaseAnimating"), _("m_flCycle"))
-		NETVAR(m_flAnimTime, int, _("CBaseAnimating"), _("m_flAnimTime"))
-		NETVAR(m_hOwnerEntity, int, _("CBaseAnimating"), _("m_hOwnerEntity"))
-		NETVAR(m_ConditionList, void*, _("CTFPlayer"), _("m_ConditionList"))
+		NETVAR(m_vecOrigin, Vec3, "CBaseEntity", "m_vecOrigin")
+		NETVAR(m_Local, void*, "CBasePlayer", "m_Local")
+		NETVAR(m_chAreaBits, void*, "CBasePlayer", "m_chAreaBits")
+		NETVAR(m_chAreaPortalBits, void*, "CBasePlayer", "m_chAreaPortalBits")
+		NETVAR(m_iHideHUD, int, "CBasePlayer", "m_iHideHUD")
+		NETVAR(m_flFOVRate, float, "CBasePlayer", "m_flFOVRate")
+		NETVAR(m_bDucked, bool, "CBasePlayer", "m_bDucked")
+		NETVAR(m_bDucking, bool, "CBasePlayer", "m_bDucking")
+		NETVAR(m_bInDuckJump, bool, "CBasePlayer", "m_bInDuckJump")
+		NETVAR(m_flDucktime, float, "CBasePlayer", "m_flDucktime")
+		NETVAR(m_flDuckJumpTime, float, "CBasePlayer", "m_flDuckJumpTime")
+		NETVAR(m_flJumpTime, float, "CBasePlayer", "m_flJumpTime")
+		NETVAR(m_flFallVelocity, float, "CBasePlayer", "m_flFallVelocity")
+		NETVAR(m_vecPunchAngle, Vec3, "CBasePlayer", "m_vecPunchAngle")
+		NETVAR(m_vecPunchAngleVel, Vec3, "CBasePlayer", "m_vecPunchAngleVel")
+		NETVAR(m_bDrawViewmodel, bool, "CBasePlayer", "m_bDrawViewmodel")
+		NETVAR(m_bWearingSuit, bool, "CBasePlayer", "m_bWearingSuit")
+		NETVAR(m_bPoisoned, bool, "CBasePlayer", "m_bPoisoned")
+		NETVAR(m_flStepSize, float, "CBasePlayer", "m_flStepSize")
+		NETVAR(m_bAllowAutoMovement, bool, "CBasePlayer", "m_bAllowAutoMovement")
+		NETVAR(m_vecViewOffset, Vec3, "CBasePlayer", "m_vecViewOffset[0]")
+		NETVAR(m_flFriction, float, "CBasePlayer", "m_flFriction")
+		NETVAR(m_iAmmo, void*, "CBasePlayer", "m_iAmmo")
+		NETVAR(m_fOnTarget, int, "CBasePlayer", "m_fOnTarget")
+		NETVAR(m_nTickBase, int, "CBasePlayer", "m_nTickBase")
+		NETVAR(m_nNextThinkTick, int, "CBasePlayer", "m_nNextThinkTick")
+		NETVAR(m_hLastWeapon, int, "CBasePlayer", "m_hLastWeapon")
+		NETVAR(m_hGroundEntity, int, "CBasePlayer", "m_hGroundEntity")
+		NETVAR(m_vecVelocity, Vec3, "CBasePlayer", "m_vecVelocity[0]")
+		NETVAR(m_vecBaseVelocity, Vec3, "CBasePlayer", "m_vecBaseVelocity")
+		NETVAR(m_hConstraintEntity, int, "CBasePlayer", "m_hConstraintEntity")
+		NETVAR(m_vecConstraintCenter, Vec3, "CBasePlayer", "m_vecConstraintCenter")
+		NETVAR(m_flConstraintRadius, float, "CBasePlayer", "m_flConstraintRadius")
+		NETVAR(m_flConstraintWidth, float, "CBasePlayer", "m_flConstraintWidth")
+		NETVAR(m_flConstraintSpeedFactor, float, "CBasePlayer", "m_flConstraintSpeedFactor")
+		NETVAR(m_flDeathTime, float, "CBasePlayer", "m_flDeathTime")
+		NETVAR(m_nWaterLevel, int, "CBasePlayer", "m_nWaterLevel")
+		NETVAR(m_flLaggedMovementValue, float, "CBasePlayer", "m_flLaggedMovementValue")
+		NETVAR(m_AttributeList, void*, "CBasePlayer", "m_AttributeList")
+		NETVAR(pl, void*, "CBasePlayer", "pl")
+		NETVAR(deadflag, int, "CBasePlayer", "deadflag")
+		NETVAR(m_iFOV, int, "CBasePlayer", "m_iFOV")
+		NETVAR(m_iFOVStart, int, "CBasePlayer", "m_iFOVStart")
+		NETVAR(m_flFOVTime, float, "CBasePlayer", "m_flFOVTime")
+		NETVAR(m_iDefaultFOV, int, "CBasePlayer", "m_iDefaultFOV")
+		NETVAR(m_hZoomOwner, int, "CBasePlayer", "m_hZoomOwner")
+		NETVAR(m_hVehicle, int, "CBasePlayer", "m_hVehicle")
+		NETVAR(m_hUseEntity, int, "CBasePlayer", "m_hUseEntity")
+		NETVAR(m_iHealth, int, "CBasePlayer", "m_iHealth")
+		NETVAR(m_ubInterpolationFrame, int, "CBasePlayer", "m_ubInterpolationFrame")
+		NETVAR(m_fEffects, int, "CBasePlayer", "m_fEffects")
+		NETVAR(m_lifeState, byte, "CBasePlayer", "m_lifeState")
+		NETVAR(m_iBonusProgress, int, "CBasePlayer", "m_iBonusProgress")
+		NETVAR(m_iBonusChallenge, int, "CBasePlayer", "m_iBonusChallenge")
+		NETVAR(m_flMaxspeed, float, "CBasePlayer", "m_flMaxspeed")
+		NETVAR(m_fFlags, int, "CBasePlayer", "m_fFlags")
+		NETVAR(m_iObserverMode, int, "CBasePlayer", "m_iObserverMode")
+		NETVAR(m_hObserverTarget, int, "CBasePlayer", "m_hObserverTarget")
+		NETVAR(m_hViewModel, int, "CBasePlayer", "m_hViewModel[0]")
+		NETVAR(m_szLastPlaceName, const char*, "CBasePlayer", "m_szLastPlaceName")
+		NETVAR(m_flModelScale, float, "CBaseAnimating", "m_flModelScale")
+		NETVAR(m_bClientSideAnimation, bool, "CBaseAnimating", "m_bClientSideAnimation")
+		NETVAR(m_flPlaybackRate, float, "CBaseAnimating", "m_flPlaybackRate")
+		NETVAR(m_vecMins, Vec3, "CBaseEntity", "m_vecMins")
+		NETVAR(m_vecMaxs, Vec3, "CBaseEntity", "m_vecMaxs")
+		NETVAR(m_nSequence, int, "CBaseAnimating", "m_nSequence")
+		NETVAR(m_flCycle, float, "CBaseAnimating", "m_flCycle")
+		NETVAR(m_flAnimTime, int, "CBaseAnimating", "m_flAnimTime")
+		NETVAR(m_hOwnerEntity, int, "CBaseAnimating", "m_hOwnerEntity")
+		NETVAR(m_ConditionList, void*, "CTFPlayer", "m_ConditionList")
 
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)
@@ -271,26 +271,26 @@ public: //Virtuals from networkable
 
 public: //Everything else, lol.
 	__inline size_t* GetMyWeapons() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_BaseCombatCharacter"), _("m_hMyWeapons"));
+		static auto dwOff = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
 		return reinterpret_cast<size_t*>(this + dwOff);
 	}
 
 	__inline bool* PDAman() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_bViewingCYOAPDA"));
+		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_bViewingCYOAPDA");
 		return reinterpret_cast<bool*>(this + dwOff);
-		//M_DYNVARGET(ViewingCYOAPDA, bool, this, _("DT_TFPlayer"), _("m_bViewingCYOAPDA"))
+		//M_DYNVARGET(ViewingCYOAPDA, bool, this, "DT_TFPlayer", "m_bViewingCYOAPDA")
 	}
 
 	__inline float* GetHeadScale() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flHeadScale"));
+		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flHeadScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
 	__inline float* GetTorsoScale() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flTorsoScale"));
+		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flTorsoScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
 	__inline float* GetHandScale() {
-		static auto dwOff = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_flHandScale"));
+		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flHandScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
 
@@ -302,7 +302,7 @@ public: //Everything else, lol.
 
 
 	__inline CBaseEntity* GetGroundEntity() {
-		DYNVAR(pHandle, int, _("DT_BasePlayer"), _("m_hGroundEntity"));
+		DYNVAR(pHandle, int, "DT_BasePlayer", "m_hGroundEntity");
 		return reinterpret_cast<CBaseEntity*>(I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
 
@@ -315,21 +315,21 @@ public: //Everything else, lol.
 	}
 
 	__inline CBaseCombatWeapon* GetActiveWeapon() {
-		DYNVAR(pHandle, int, _("DT_BaseCombatCharacter"), _("m_hActiveWeapon"));
+		DYNVAR(pHandle, int, "DT_BaseCombatCharacter", "m_hActiveWeapon");
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
 
 	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
 	{
 		typedef float(__thiscall* CalculateMaxSpeedFn)(CBaseEntity*, bool);
-		static DWORD dwFn = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1")) + 0x1;
+		static DWORD dwFn = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1") + 0x1;
 		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
 		CalculateMaxSpeedFn maxSpeed = (CalculateMaxSpeedFn)dwEstimate;
 		return maxSpeed(this, bIgnoreSpecialAbility);
 	}
 
 	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot) {
-		static DWORD dwMyWeapons = g_NetVars.get_offset(_("DT_BaseCombatCharacter"), _("m_hMyWeapons"));
+		static DWORD dwMyWeapons = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
 		int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(hWeapon));
 	}
@@ -351,12 +351,12 @@ public: //Everything else, lol.
 	}
 
 	__inline void SetPoseParam(std::array<float, MAXSTUDIOPOSEPARAM> param) {
-		static DWORD dwOffset = g_NetVars.get_offset(_("DT_BaseAnimating"), _("m_flPoseParameter"));
+		static DWORD dwOffset = g_NetVars.get_offset("DT_BaseAnimating", "m_flPoseParameter");
 		*reinterpret_cast<std::array<float, MAXSTUDIOPOSEPARAM>*>(this + dwOffset) = param;
 	}
 
 	__inline std::array<float, MAXSTUDIOPOSEPARAM> GetPoseParam() {
-		static DWORD dwOffset = g_NetVars.get_offset(_("DT_BaseAnimating"), _("m_flPoseParameter"));
+		static DWORD dwOffset = g_NetVars.get_offset("DT_BaseAnimating", "m_flPoseParameter");
 		return *reinterpret_cast<std::array<float, MAXSTUDIOPOSEPARAM>*>(this + dwOffset);
 	}
 
@@ -565,7 +565,7 @@ public: //Everything else, lol.
 	}
 
 	__inline Vec3 GetVelocity() {
-		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0")));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0"));
 		Vec3 v;
 		FN(this, v);
 		return v;
@@ -588,7 +588,7 @@ public: //Everything else, lol.
 	}
 
 	__inline int GetCritMult() {
-		DYNVAR(m_iCritMult, int, _("DT_TFPlayer"), _("m_Shared"), _("m_iCritMult"));
+		DYNVAR(m_iCritMult, int, "DT_TFPlayer", "m_Shared", "m_iCritMult");
 		return Math::RemapValClamped(m_iCritMult.GetValue(this), 0.0f, 255.0f, 1.0f, 4.0f);
 	}
 
@@ -616,15 +616,15 @@ public: //Everything else, lol.
 	}
 
 	__inline void SetTickBase(const int nTickBase) {
-		DYNVAR_SET(int, this, nTickBase, _("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
+		DYNVAR_SET(int, this, nTickBase, "DT_BasePlayer", "localdata", "m_nTickBase");
 	}
 
 	__inline void UpTickBase() {
-		static CDynamicNetvar<int> n(_("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
+		static CDynamicNetvar<int> n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) + 1);
 	}
 	__inline void DownTickBase() {
-		static CDynamicNetvar<int> n(_("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
+		static CDynamicNetvar<int> n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) - 1);
 	}
 
@@ -639,7 +639,7 @@ public: //Everything else, lol.
 
 	__inline void SetAbsOrigin(const Vec3& vOrigin) {
 		typedef void(__thiscall* FN)(CBaseEntity*, const Vec3&);
-		static DWORD dwFN = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07"));
+		static DWORD dwFN = g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
 		FN func = (FN)dwFN;
 		func(this, vOrigin);
 	}
@@ -657,18 +657,18 @@ public: //Everything else, lol.
 	}
 
 	__inline void SetCurrentCmd(CUserCmd* pCmd) {
-		DYNVAR_SET(CUserCmd*, (this - 0x4), pCmd, _("DT_BasePlayer"), _("localdata"), _("m_hConstraintEntity"));
+		DYNVAR_SET(CUserCmd*, (this - 0x4), pCmd, "DT_BasePlayer", "localdata", "m_hConstraintEntity");
 	}
 
 	__inline void SetVecOrigin(const Vec3& vOrigin) {
-		DYNVAR_SET(Vec3, this, vOrigin, _("DT_BaseEntity"), _("m_vecOrigin"));
+		DYNVAR_SET(Vec3, this, vOrigin, "DT_BaseEntity", "m_vecOrigin");
 	}
 
 	__inline void RemoveEffect(const BYTE Effect) {
 		*reinterpret_cast<byte*>(this + 0x7C) &= ~Effect;
 
 		if (Effect == EF_NODRAW) {
-			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 56 FF 75 08 8B F1 B8")));
+			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 FF 75 08 8B F1 B8"));
 
 			if (AddToLeafSystemFn)
 				AddToLeafSystemFn(this, RENDER_GROUP_OPAQUE_ENTITY);
@@ -676,56 +676,56 @@ public: //Everything else, lol.
 	}
 
 	__inline void SetGlowEnabled(const bool bState) {
-		DYNVAR_SET(bool, this, bState, _("DT_TFPlayer"), _("m_bGlowEnabled"));
+		DYNVAR_SET(bool, this, bState, "DT_TFPlayer", "m_bGlowEnabled");
 	}
 
 	__inline void SetCond(const int nCond) {
-		DYNVAR_SET(int, this, nCond, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
+		DYNVAR_SET(int, this, nCond, "DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 	}
 
 	__inline void SetFov(const int nFov) {
-		DYNVAR_SET(int, this, nFov, _("DT_BasePlayer"), _("m_iFOV"));
+		DYNVAR_SET(int, this, nFov, "DT_BasePlayer", "m_iFOV");
 	}
 
 	__inline void ForceTauntCam(const int nTo) {
-		DYNVAR_SET(int, this, nTo, _("DT_TFPlayer"), _("m_nForceTauntCam"));
+		DYNVAR_SET(int, this, nTo, "DT_TFPlayer", "m_nForceTauntCam");
 	}
 
 	__inline void SetFlags(const int nFlags) {
-		DYNVAR_SET(int, this, nFlags, _("DT_BasePlayer"), _("m_fFlags"));
+		DYNVAR_SET(int, this, nFlags, "DT_BasePlayer", "m_fFlags");
 	}
 
 	__inline void AddCond(const int nCond) {
-		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
+		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
 	__inline void AddCondEx(const int nCond) {
-		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx"));
+		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCondEx");
 		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
 	__inline void RemoveCond(const int nCond) {
-		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
+		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
 	__inline void RemoveCondEx(const int nCond) {
-		static DWORD offset = g_NetVars.get_offset(_("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCondEx"));
+		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCondEx");
 		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
 	__inline void SetEyeAngles(const Vec3& vAngles) {
-		DYNVAR_SET(Vec3, this, vAngles, _("DT_TFPlayer"), _("tfnonlocaldata"), _("m_angEyeAngles[0]"));
+		DYNVAR_SET(Vec3, this, vAngles, "DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]");
 	}
 
 	__inline void IncreaseTickBase() {
-		static CDynamicNetvar<int>n(_("DT_BasePlayer"), _("localdata"), _("m_nTickBase"));
+		static CDynamicNetvar<int>n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) + 1);
 	}
 
 	__inline void SetAnimTime(const float flAnimTime) {
-		DYNVAR_SET(float, this, flAnimTime, _("DT_BaseEntity"), _("m_flAnimTime"));
+		DYNVAR_SET(float, this, flAnimTime, "DT_BaseEntity", "m_flAnimTime");
 	}
 
 	/*

@@ -863,7 +863,6 @@
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
-    <ClInclude Include="TeamFortress2\Utils\WinAPI\WinAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

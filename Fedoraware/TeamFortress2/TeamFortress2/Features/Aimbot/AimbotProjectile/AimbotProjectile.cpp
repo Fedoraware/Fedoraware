@@ -791,7 +791,7 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
 	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 	Vec3 shootPos;
-	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment(_("muzzle"));
+	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment("muzzle");
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
 	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }

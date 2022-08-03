@@ -150,7 +150,7 @@ void CSpyWarning::Run()
 			{
 				if (!m_vecSpies.empty())
 				{
-					I::EngineClient->ClientCmd_Unrestricted(_("voicemenu 1 1"));
+					I::EngineClient->ClientCmd_Unrestricted("voicemenu 1 1");
 				}
 
 				bOldEmpty = m_vecSpies.empty();

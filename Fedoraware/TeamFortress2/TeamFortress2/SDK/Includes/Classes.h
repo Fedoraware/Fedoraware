@@ -767,8 +767,7 @@ class CCollisionProperty : public ICollideable
 {
 public:
 	__inline void SetCollisionBounds(const Vec3 &mins, const Vec3 &maxs) {
-		using fn = void(__thiscall *)(CCollisionProperty *, const Vec3 &, const Vec3 &);
-		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03")));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03"));
 		FN(this, mins, maxs);
 	}
 };

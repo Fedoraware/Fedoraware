@@ -2,8 +2,6 @@
 
 #include <Windows.h>
 
-#include "../WinAPI/WinAPI.h"
-
 class CInterface
 {
 private:
@@ -20,12 +18,12 @@ public:
 	template<typename T>
 	__inline T Get(LPCWSTR szModule, PCCH szObject)
 	{
-		typedef void* (*CreateFn)(const char* pName, int* pReturnCode);
-
-		if (const auto dwModule = reinterpret_cast<DWORD>(WinAPI::GetModuleHandleW(szModule)))
+		if (const auto hModule = GetModuleHandleW(szModule))
 		{
-			if (const auto Factory = reinterpret_cast<CreateFn>(WinAPI::GetProcessAddr(dwModule, _("CreateInterface"))))
+			if (const auto Factory = reinterpret_cast<void*(__cdecl*)(const char* pName, int* pReturnCode)>(GetProcAddress(hModule, "CreateInterface")))
+			{
 				return reinterpret_cast<T>(Factory(szObject, nullptr));
+			}
 		}
 
 		return nullptr;

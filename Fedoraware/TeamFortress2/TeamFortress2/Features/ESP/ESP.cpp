@@ -707,34 +707,34 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					{
 						if (bIsMini)
 						{
-							szName = _(L"Mini Sentry");
+							szName = L"Mini Sentry";
 						}
 						else
 						{
-							szName = _(L"Sentry");
+							szName = L"Sentry";
 						}
 						break;
 					}
 				case EBuildingType::DISPENSER:
 					{
-						szName = _(L"Dispenser");
+						szName = L"Dispenser";
 						break;
 					}
 				case EBuildingType::TELEPORTER:
 					{
 						if (building->GetObjectMode())
 						{
-							szName = _(L"Teleporter Out");
+							szName = L"Teleporter Out";
 						}
 						else
 						{
-							szName = _(L"Teleporter In");
+							szName = L"Teleporter In";
 						}
 						break;
 					}
 				default:
 					{
-						szName = _(L"Unknown");
+						szName = L"Unknown";
 						break;
 					}
 				}
@@ -776,7 +776,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 						nTextTopOffset += g_Draw.m_vecFonts[FONT_NAME].nTall + g_Draw.m_vecFonts[FONT_NAME].nTall /
 							4;
 						g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, drawColor, ALIGN_CENTERHORIZONTAL,
-						              _(L"Built by: %ls"), Utils::ConvertUtf8ToWide(pi.name).data());
+						              L"Built by: %ls", Utils::ConvertUtf8ToWide(pi.name).data());
 					}
 				}
 			}
@@ -792,7 +792,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
-				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, _(L"Building: %0.f%%"),
+				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"Building: %0.f%%",
 				              flConstructed);
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
@@ -924,7 +924,7 @@ void CESP::DrawWorld() const
 			{
 				if (Utils::W2S(health->GetVecOrigin(), vScreen))
 				{
-					g_Draw.String(FONT, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, _(L"Health"));
+					g_Draw.String(FONT, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, L"Health");
 				}
 			} // obviously a health pack isn't going to be upside down, this just looks nicer.
 		}
@@ -941,7 +941,7 @@ void CESP::DrawWorld() const
 			{
 				if (Utils::W2S(ammo->GetVecOrigin(), vScreen))
 				{
-					g_Draw.String(FONT, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, _(L"Ammo"));
+					g_Draw.String(FONT, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, L"Ammo");
 				}
 			}
 		}
