@@ -1,7 +1,6 @@
 #include "Pattern.h"
 
 #include <thread>
-#include "../WinAPI/WinAPI.h"
 
 #define INRANGE(x,a,b)	(x >= a && x <= b)
 #define GET_BITS(x)		(INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
@@ -54,7 +53,7 @@ HMODULE CPattern::GetModuleHandleSafe(LPCWSTR szModuleName)
 
 	while (!hModule)
 	{
-		hModule = WinAPI::GetModuleHandleW(szModuleName);
+		hModule = GetModuleHandleW(szModuleName);
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
