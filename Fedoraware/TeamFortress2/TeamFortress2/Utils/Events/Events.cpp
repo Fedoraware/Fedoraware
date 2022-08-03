@@ -5,6 +5,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Killstreak/Killstreak.h"
+#include "../../Features/LuaEngine/LuaEngine.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -37,9 +38,11 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 		F::Resolver.OnPlayerHurt(pEvent);
 	}
 
-	//if (uNameHash == FNV1A::HashConst("player_hurt") || uNameHash == FNV1A::HashConst("player_death")) {
-	//	F::BadActors.Event(pEvent);
-	//}
+	// Run Lua callbacks
+	for (const auto& callback : F::LuaEngine.GetCallbacks("FireGameEvent"))
+	{
+		if (callback.second.isValid()) { callback.second(WGameEvent(pEvent)); }
+	}
 
 	// Pickup Timers
 	if (Vars::Visuals::PickupTimers.Value && uNameHash == FNV1A::HashConst("item_pickup"))
