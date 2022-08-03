@@ -169,6 +169,11 @@ float CAntiAim::GetAngle(int nIndex) {
 		retnAngle = lastAngleRef;
 		break;
 	}
+	case 9:
+	{
+		retnAngle = bPacketFlip ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value;
+		break;
+	}
 	}
 	return retnAngle;
 }
