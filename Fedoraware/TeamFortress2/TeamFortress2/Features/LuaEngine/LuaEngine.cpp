@@ -59,23 +59,18 @@ void UnregisterCallback(const char* type, const char* name)
 	Callbacks[type].erase(name);
 }
 
-void Print(const char* msg)
-{
-	I::Cvar->ConsolePrintf("%s\n", msg);
-}
-
 void CLuaEngine::Init()
 {
 	LOCKLUA();
 
 	/* Initialize LuaBridge */
 	{
-		static ExportedInterfaces exInterfaces;
 		static ExportedDraw exDraw;
+		static WEngineClient engineClient(I::EngineClient);
 
 		using namespace luabridge;
 		getGlobalNamespace(LuaState)
-			.beginNamespace("Game")
+			.beginNamespace("Interfaces")
 
 			/* Utils */
 			.beginNamespace("Utils")
@@ -136,6 +131,17 @@ void CLuaEngine::Init()
 			.addFunction("SetOrigin", &WBaseEntity::SetOrigin)
 			.endClass()
 
+			// CTFPlayerResource
+			.beginClass<WPlayerResource>("PlayerResource")
+			.addFunction("GetPing", &WPlayerResource::GetPing)
+			.addFunction("GetKills", &WPlayerResource::GetKills)
+			.addFunction("GetDeaths", &WPlayerResource::GetDeaths)
+			.addFunction("GetConnected", &WPlayerResource::GetConnected)
+			.addFunction("GetValid", &WPlayerResource::GetValid)
+			.addFunction("GetPlayerName", &WPlayerResource::GetPlayerName)
+			.addFunction("GetDamage", &WPlayerResource::GetDamage)
+			.endClass()
+
 			// Draw
 			.beginClass<ExportedDraw>("DrawClass")
 			.addFunction("Text", &ExportedDraw::Text)
@@ -146,17 +152,20 @@ void CLuaEngine::Init()
 			.addFunction("SetColor", &ExportedDraw::SetColor)
 			.endClass()
 
-			// Interfaces
-			.beginClass<ExportedInterfaces>("InterfaceClass")
-			.addFunction("GetEngine", &ExportedInterfaces::GetEngine)
-			.addFunction("GetLocalPlayer", &ExportedInterfaces::GetLocalPlayer)
-			.endClass()
-
 			// Global Vars, Props and Functions
-			.addProperty("Interfaces", &exInterfaces, false)
+			.addProperty("Engine", &engineClient)
 			.addProperty("Draw", &exDraw, false)
 			.endNamespace() // Game Namespace
 
+			// Entities
+			.beginNamespace("Entities")
+			.addFunction("GetLocalPlayer", +[] { return WBaseEntity(g_EntityCache.GetLocal()); })
+			.addFunction("GetLocalWeapon", +[] { return WBaseEntity(g_EntityCache.GetWeapon()); })
+			.addFunction("GetPlayerResource", +[] { return WPlayerResource(g_EntityCache.GetPR()); })
+			.addFunction("GetByIndex", +[](int idx) { return WBaseEntity(I::ClientEntityList->GetClientEntity(idx)); })
+			.endNamespace()
+
+			// GlobalInfo
 			.beginNamespace("GlobalInfo")
 			.addFunction("RealTime", +[] { return I::GlobalVars->realtime; })
 			.addFunction("FrameCount", +[] { return I::GlobalVars->framecount; })
@@ -168,9 +177,12 @@ void CLuaEngine::Init()
 			.addFunction("IntervalPerTick", +[] { return I::GlobalVars->interval_per_tick; })
 			.endNamespace()
 
+			// Fedoraware Globals
 			.beginNamespace("Fedoraware")
 			.addProperty("ShiftedTicks", &G::ShiftedTicks, false)
 			.addProperty("ShouldShift", &G::ShouldShift, false)
+			.addProperty("CurrentTargetIdx", &G::CurrentTargetIdx, false)
+			.addFunction("GetPriority", +[](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; })
 			.endNamespace()
 
 			// Callbacks
@@ -180,9 +192,9 @@ void CLuaEngine::Init()
 			.endNamespace()
 
 			/* Global functions */
-			.addFunction("print", Print);
+			.addFunction("print", +[](const char* msg) { I::Cvar->ConsolePrintf("%s\n", msg); });
 	}
-	
+
 	/* Register commands */
 	{
 		F::Commands.Register("lua_load", [&](const std::deque<std::string>& args) {

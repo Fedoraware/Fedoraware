@@ -330,6 +330,7 @@
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WGameEvent.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WPlayerResource.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\Wrapper.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserCmd.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
