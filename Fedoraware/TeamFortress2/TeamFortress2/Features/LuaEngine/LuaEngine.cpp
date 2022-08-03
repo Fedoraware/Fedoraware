@@ -70,8 +70,6 @@ void CLuaEngine::Init()
 
 		using namespace luabridge;
 		getGlobalNamespace(LuaState)
-			.beginNamespace("Interfaces")
-
 			/* Utils */
 			.beginNamespace("Utils")
 
@@ -83,7 +81,10 @@ void CLuaEngine::Init()
 			.addProperty("z", &Vec3::z)
 			.endClass()
 
-			.endNamespace() // Utils Namespace
+			.endNamespace() // Utils
+
+			/* Interfaces */
+			.beginNamespace("Interfaces")
 
 			// CUserCmd
 			.beginClass<WUserCmd>("UserCmd")
@@ -155,7 +156,7 @@ void CLuaEngine::Init()
 			// Global Vars, Props and Functions
 			.addProperty("Engine", &engineClient)
 			.addProperty("Draw", &exDraw, false)
-			.endNamespace() // Game Namespace
+			.endNamespace() // Interfaces
 
 			// Entities
 			.beginNamespace("Entities")
@@ -163,7 +164,13 @@ void CLuaEngine::Init()
 			.addFunction("GetLocalWeapon", +[] { return WBaseEntity(g_EntityCache.GetWeapon()); })
 			.addFunction("GetPlayerResource", +[] { return WPlayerResource(g_EntityCache.GetPR()); })
 			.addFunction("GetByIndex", +[](int idx) { return WBaseEntity(I::ClientEntityList->GetClientEntity(idx)); })
-			.endNamespace()
+			.endNamespace() // Entities
+
+			// Input
+			.beginNamespace("Input")
+			.addFunction("IsKeyDown", +[](int key) { return (GetAsyncKeyState(key) & 0x8000) != 0; })
+			.addFunction("GetMousePos", +[] { int p[2]{ }; I::VGuiSurface->SurfaceGetCursorPos(p[0], p[1]); return p; })
+			.endNamespace() // Input
 
 			// GlobalInfo
 			.beginNamespace("GlobalInfo")
@@ -175,7 +182,7 @@ void CLuaEngine::Init()
 			.addFunction("MaxClients", +[] { return I::GlobalVars->maxclients; })
 			.addFunction("TickCount", +[] { return I::GlobalVars->tickcount; })
 			.addFunction("IntervalPerTick", +[] { return I::GlobalVars->interval_per_tick; })
-			.endNamespace()
+			.endNamespace() // GlobalInfo
 
 			// Fedoraware Globals
 			.beginNamespace("Fedoraware")
@@ -183,13 +190,13 @@ void CLuaEngine::Init()
 			.addProperty("ShouldShift", &G::ShouldShift, false)
 			.addProperty("CurrentTargetIdx", &G::CurrentTargetIdx, false)
 			.addFunction("GetPriority", +[](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; })
-			.endNamespace()
+			.endNamespace() // Fedoraware
 
 			// Callbacks
 			.beginNamespace("Callbacks")
 			.addFunction("Register", RegisterCallback)
 			.addFunction("Unregister", UnregisterCallback)
-			.endNamespace()
+			.endNamespace() // Callbacks
 
 			/* Global functions */
 			.addFunction("print", +[](const char* msg) { I::Cvar->ConsolePrintf("%s\n", msg); });
