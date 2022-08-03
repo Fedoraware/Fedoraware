@@ -744,3 +744,11 @@ enum soundlevel_t
 #define	PITCH_NORM		100			// non-pitch shifted
 #define PITCH_LOW		95			// other values are possible - 0-255, where 255 is very high
 #define PITCH_HIGH		120
+
+enum modtype_t
+{
+	mod_bad = 0,
+	mod_brush,
+	mod_sprite,
+	mod_studio
+};

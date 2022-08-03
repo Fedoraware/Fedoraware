@@ -156,6 +156,9 @@ void CInterfaces::Init()
 
 	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
 	_valid(Localize);
+
+	HostState = *reinterpret_cast<CCommonHostState**>(g_Pattern.Find(L"engine.dll", L"8B 15 ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85") + 0x1);
+	_valid(HostState);
 }
 
 void CSteamInterfaces::Init()

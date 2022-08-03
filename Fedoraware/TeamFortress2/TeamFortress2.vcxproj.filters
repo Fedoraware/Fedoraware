@@ -719,6 +719,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\CTFInventoryManager\CTFInventoryManager.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\CGameEventListener.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CCommonHostState\CCommonHostState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

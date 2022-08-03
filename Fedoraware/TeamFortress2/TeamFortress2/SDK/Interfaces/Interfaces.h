@@ -39,6 +39,7 @@
 #include "CTFPartyClient/CTFPartyClient.h"
 #include "CTFInventoryManager/CTFInventoryManager.h"
 #include "Localize/Localize.h"
+#include "CCommonHostState/CCommonHostState.h"
 #include "../DirectX/DirectX.h"
 
 class CThirdPersonManager
@@ -225,6 +226,7 @@ namespace I
 	inline IDirect3DDevice9* DirectXDevice = nullptr;
 	inline ClientModeTFNormal* ClientModeTF = nullptr;
 	inline ILocalize* Localize = nullptr;
+	inline CCommonHostState* HostState = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
@@ -233,7 +235,7 @@ namespace I
 
 class CInterfaces
 {
-public: 
+public:
 	void Init();
 };
 

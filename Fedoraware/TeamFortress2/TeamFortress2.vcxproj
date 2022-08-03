@@ -535,6 +535,7 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\worldsize.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\AchievementMgr\AchievementMgr.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\BaseClientDLL\BaseClientDLL.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\CCommonHostState\CCommonHostState.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientDLLSharedAppSystems\ClientDLLSharedAppSystems.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientEntityList\ClientEntityList.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ClientModeShared\ClientModeShared.h" />
