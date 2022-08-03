@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Includes/Includes.h"
 
-struct Vector4D;
+struct Vector4D { float x, y, z, w; };
 struct MorphWeight_t;
 struct MaterialPrimitiveType_t;
 struct MaterialNonInteractiveMode_t;

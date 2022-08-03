@@ -134,7 +134,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::DamageLoggerConsole.Value)
 				{
-					I::Cvar->ConsoleColorPrintf({219, 145, 59, 255}, _("%s\n"), attackString.c_str());
+					I::Cvar->ConsoleColorPrintf({219, 145, 59, 255}, "%s\n", attackString.c_str());
 				}
 
 				if (Vars::Visuals::DamageLoggerText.Value)

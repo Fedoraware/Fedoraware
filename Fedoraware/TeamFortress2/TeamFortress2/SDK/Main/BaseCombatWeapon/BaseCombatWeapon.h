@@ -11,22 +11,22 @@ inline DWORD calcisattackcriticaloffset = 0;
 class CBaseCombatWeapon : public CBaseEntity
 {
 public: //Netvars
-	M_DYNVARGET(Clip1, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip1"))
-		M_DYNVARGET(Clip2, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_iClip2"))
-		M_DYNVARGET(nViewModelIndex, int, this, _("DT_BaseCombatWeapon"), _("LocalWeaponData"), _("m_nViewModelIndex"))
-		M_DYNVARGET(iViewModelIndex, int, this, _("DT_BaseCombatWeapon"), _("m_iViewModelIndex"))
-		M_DYNVARGET(ItemDefIndex, int, this, _("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"))
-		M_DYNVARGET(ChargeBeginTime, float, this, _("DT_WeaponPipebombLauncher"), _("PipebombLauncherLocalData"), _("m_flChargeBeginTime"))
-		M_DYNVARGET(ChargeDamage, float, this, _("DT_TFSniperRifle"), _("SniperRifleLocalData"), _("m_flChargedDamage"))
-		M_DYNVARGET(LastFireTime, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flLastFireTime"))
-		M_DYNVARGET(NextSecondaryAttack, float, this, _("DT_BaseCombatWeapon"), _("LocalActiveWeaponData"), _("m_flNextSecondaryAttack"))
-		M_DYNVARGET(NextPrimaryAttack, float, this, _("DT_BaseCombatWeapon"), _("LocalActiveWeaponData"), _("m_flNextPrimaryAttack"))
-		M_DYNVARGET(ChargeResistType, int, this, _("DT_WeaponMedigun"), _("m_nChargeResistType"))
-		M_DYNVARGET(ReloadMode, int, this, _("DT_TFWeaponBase"), _("m_iReloadMode"))
-		M_DYNVARGET(DetonateTime, float, this, _("DT_WeaponGrenadeLauncher"), _("m_flDetonateTime"))
-		//M_DYNVARGET(ObservedCritChance, float, this, _("DT_LocalTFWeaponData"), _("m_flObservedCritChance"))
-		//M_DYNVARGET(LastCritCheckTime, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flLastCritCheckTime"))
-		M_DYNVARGET(ObservedCritChance, float, this, _("DT_TFWeaponBase"), _("LocalActiveTFWeaponData"), _("m_flObservedCritChance"))
+	M_DYNVARGET(Clip1, int, this, "DT_BaseCombatWeapon", "LocalWeaponData", "m_iClip1")
+		M_DYNVARGET(Clip2, int, this, "DT_BaseCombatWeapon", "LocalWeaponData", "m_iClip2")
+		M_DYNVARGET(nViewModelIndex, int, this, "DT_BaseCombatWeapon", "LocalWeaponData", "m_nViewModelIndex")
+		M_DYNVARGET(iViewModelIndex, int, this, "DT_BaseCombatWeapon", "m_iViewModelIndex")
+		M_DYNVARGET(ItemDefIndex, int, this, "DT_EconEntity", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex")
+		M_DYNVARGET(ChargeBeginTime, float, this, "DT_WeaponPipebombLauncher", "PipebombLauncherLocalData", "m_flChargeBeginTime")
+		M_DYNVARGET(ChargeDamage, float, this, "DT_TFSniperRifle", "SniperRifleLocalData", "m_flChargedDamage")
+		M_DYNVARGET(LastFireTime, float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flLastFireTime")
+		M_DYNVARGET(NextSecondaryAttack, float, this, "DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextSecondaryAttack")
+		M_DYNVARGET(NextPrimaryAttack, float, this, "DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack")
+		M_DYNVARGET(ChargeResistType, int, this, "DT_WeaponMedigun", "m_nChargeResistType")
+		M_DYNVARGET(ReloadMode, int, this, "DT_TFWeaponBase", "m_iReloadMode")
+		M_DYNVARGET(DetonateTime, float, this, "DT_WeaponGrenadeLauncher", "m_flDetonateTime")
+		//M_DYNVARGET(ObservedCritChance, float, this, "DT_LocalTFWeaponData", "m_flObservedCritChance")
+		//M_DYNVARGET(LastCritCheckTime, float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flLastCritCheckTime")
+		M_DYNVARGET(ObservedCritChance, float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance")
 
 		M_OFFSETGET(UberCharge, float, 0xC6C) //DT_WeaponMedigun -> NonLocalTFWeaponMedigundata -> m_flChargeLevel
 		//M_OFFSETGET(HealingTarget, int, 0xC48) //DT_WeaponMedigun -> m_hHealingTarget
@@ -150,13 +150,13 @@ public: //Everything else, lol
 
 	__inline CAttributeList* GetAttributeList()
 	{
-		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_AttributeList"));
+		static auto dwOff = g_NetVars.get_offset("DT_EconEntity", "m_AttributeManager", "m_AttributeList");
 		return reinterpret_cast<CAttributeList*>(this + dwOff);
 	}
 
 	__inline void SetItemDefIndex(const int nIndex)
 	{
-		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
+		static auto dwOff = g_NetVars.get_offset("DT_EconEntity", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
 		*reinterpret_cast<int*>(this + dwOff) = nIndex;
 	}
 
@@ -172,14 +172,14 @@ public: //Everything else, lol
 
 	__inline WeaponData_t GetWeaponData()
 	{
-		static int offset = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 66 8B ? ? 66 3B 05 ? ? ? ? 73"));
+		static int offset = g_Pattern.Find(L"client.dll", L"55 8B EC 66 8B ? ? 66 3B 05 ? ? ? ? 73");
 		static auto get_tf_weapon_data_fn = reinterpret_cast<CTFWeaponInfo * (__cdecl*)(int)>(offset);
 		return get_tf_weapon_data_fn(GetWeaponID())->m_WeaponData[0];
 	}
 
 	__inline bool CanFireCriticalShot()
 	{
-		static int CanFireCriticalShotOffset = g_Pattern.Find(_(L"client.dll"), _(L"6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 14 C3"));
+		static int CanFireCriticalShotOffset = g_Pattern.Find(L"client.dll", L"6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 14 C3");
 		static auto CanFireCriticalShotFN = reinterpret_cast<bool* (__cdecl*)(CBaseCombatWeapon*)>(CanFireCriticalShotOffset);
 		return CanFireCriticalShotFN(this);
 	}
@@ -198,18 +198,18 @@ public: //Everything else, lol
 
 	__inline float GetWeaponSpread()
 	{
-		static auto GetWeaponSpreadFn = reinterpret_cast<float(__thiscall*)(decltype(this))>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 08 56 8B F1 57 6A 01 6A 00 8B 96 ? ? ? ? 8B 86 ? ? ? ? C1 E2 06 56 68 ? ? ? ? 51")));
+		static auto GetWeaponSpreadFn = reinterpret_cast<float(__thiscall*)(decltype(this))>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 56 8B F1 57 6A 01 6A 00 8B 96 ? ? ? ? 8B 86 ? ? ? ? C1 E2 06 56 68 ? ? ? ? 51"));
 		return GetWeaponSpreadFn(this);
 	}
 
 	/*__inline bool WillCrit() {
-		static auto dwCalcIsAttackCritical = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
+		static auto dwCalcIsAttackCritical = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC");
 		return reinterpret_cast<bool(__thiscall*)(decltype(this))>(dwCalcIsAttackCritical);
 	}*/
 
 	/*__inline bool CalcIsAttackCritical() {
 		typedef bool(__thiscall* OriginalFn)(CBaseCombatWeapon*);
-		static DWORD dwFunc = g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
+		static DWORD dwFunc = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC");
 		return ((OriginalFn)dwFunc)(this);
 	}*/
 
@@ -318,7 +318,7 @@ public: //Everything else, lol
 
 	__inline bool IsInReload()
 	{
-		static DWORD dwNextPrimaryAttack = g_NetVars.get_offset(_("DT_BaseCombatWeapon"), _("LocalActiveWeaponData"), _("m_flNextPrimaryAttack"));
+		static DWORD dwNextPrimaryAttack = g_NetVars.get_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
 		bool m_bInReload = *reinterpret_cast<bool*>(this + (dwNextPrimaryAttack + 0xC));
 		int m_iReloadMode = *reinterpret_cast<int*>(this + 0xB28);
 		return (m_bInReload || m_iReloadMode != 0);
@@ -326,13 +326,13 @@ public: //Everything else, lol
 
 	__inline void GetSpreadAngles(Vec3& vOut)
 	{
-		static auto GetSpreadAnglesFn = reinterpret_cast<void(__thiscall*)(decltype(this), Vec3&)>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 85 F6 74 10 8B 06 8B CE 8B 80 ? ? ? ? FF D0 84 C0 75 02")));
+		static auto GetSpreadAnglesFn = reinterpret_cast<void(__thiscall*)(decltype(this), Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 85 F6 74 10 8B 06 8B CE 8B 80 ? ? ? ? FF D0 84 C0 75 02"));
 		GetSpreadAnglesFn(this, vOut);
 	}
 
 	__inline void GetProjectileFireSetup(CBaseEntity* pPlayer, Vec3 vOffset, Vec3* vSrc, Vec3* vForward, bool bHitTeam, float flEndDist)
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float)>(g_Pattern.Find(_(L"client.dll"), _(L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0")));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float)>(g_Pattern.Find(L"client.dll", L"53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0"));
 		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
@@ -351,7 +351,7 @@ public: //Everything else, lol
 
 	__inline bool CalcIsAttackCritical()
 	{
-		static auto func = g_Pattern.Find(_(L"client.dll"), _(L"53 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 14 85 DB 0F 84 ? ? ? ?"));
+		static auto func = g_Pattern.Find(L"client.dll", L"53 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 14 85 DB 0F 84 ? ? ? ?");
 		typedef bool(__thiscall* fn)(void*);
 		return reinterpret_cast<fn>(func)(this);
 	}
@@ -359,7 +359,7 @@ public: //Everything else, lol
 	__inline bool CalcIsAttackCriticalHelper()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
-		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC")));
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
 		if (!pCalcIsAttackCriticalHelper)
 		{
 			pCalcIsAttackCriticalHelper = (FN)calcisattackcriticaloffset;
@@ -371,7 +371,7 @@ public: //Everything else, lol
 	__inline bool CalcIsAttackCriticalHelperMelee()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
-		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57")));
+		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(L"client.dll", L"55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57"));
 		return pCalcIsAttackCriticalHelper(this);
 	}
 

@@ -19,12 +19,12 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 			{
 			case OBS_MODE_FIRSTPERSON:
 				{
-					szMode = _(L"1st");
+					szMode = L"1st";
 					break;
 				}
 			case OBS_MODE_THIRDPERSON:
 				{
-					szMode = _(L"3rd");
+					szMode = L"3rd";
 					break;
 				}
 			default: continue;
@@ -111,7 +111,7 @@ void CSpectatorList::DrawDefault()
 	              SpecListY + (SpecListTitleBarH / 2),
 	              Vars::Menu::Colors::MenuAccent,
 	              ALIGN_CENTER,
-	              "%hs", _("Spectators"));
+	              "%hs", "Spectators");
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -133,7 +133,7 @@ void CSpectatorList::DrawDefault()
 		{
 			if (Spectators[n].Name.length() > 20)
 			{
-				Spectators[n].Name.replace(20, Spectators[n].Name.length(), _(L"..."));
+				Spectators[n].Name.replace(20, Spectators[n].Name.length(), L"...");
 			}
 
 			y = SpecListY + SpecListTitleBarH + (nFontTall * n);

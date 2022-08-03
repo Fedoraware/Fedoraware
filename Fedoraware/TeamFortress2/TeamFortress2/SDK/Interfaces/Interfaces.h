@@ -39,6 +39,7 @@
 #include "CTFPartyClient/CTFPartyClient.h"
 #include "CTFInventoryManager/CTFInventoryManager.h"
 #include "Localize/Localize.h"
+#include "CCommonHostState/CCommonHostState.h"
 #include "../DirectX/DirectX.h"
 
 class CThirdPersonManager
@@ -158,8 +159,7 @@ public:
 
 	void ForceFullUpdate()
 	{
-		using FN = void(__thiscall*)(CClientState*);
-		return reinterpret_cast<FN>(g_Pattern.Find(_(L"engine.dll"), _(L"56 8B F1 83 BE ? ? ? ? ? 74 1D")))(this);
+		return reinterpret_cast<void(__thiscall*)(CClientState*)>(g_Pattern.Find(L"engine.dll", L"56 8B F1 83 BE ? ? ? ? ? 74 1D"))(this);
 	}
 };
 
@@ -225,6 +225,7 @@ namespace I
 	inline IDirect3DDevice9* DirectXDevice = nullptr;
 	inline ClientModeTFNormal* ClientModeTF = nullptr;
 	inline ILocalize* Localize = nullptr;
+	inline CCommonHostState* HostState = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;
@@ -233,7 +234,7 @@ namespace I
 
 class CInterfaces
 {
-public: 
+public:
 	void Init();
 };
 

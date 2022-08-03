@@ -1,7 +1,7 @@
 #include "Interfaces.h"
 
-#define _valid(x) if (!x) WinAPI::MessageBoxW(0, L#x, L"CInterfaces::Init() -> nullptr", MB_ICONERROR)
-#define _validS(x) if (!x) WinAPI::MessageBoxW(0, L#x, L"CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
+#define _valid(x) if (!x) MessageBoxW(0, L#x, L"CInterfaces::Init() -> nullptr", MB_ICONERROR)
+#define _validS(x) if (!x) MessageBoxW(0, L#x, L"CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
 
 #define CLIENT L"client.dll"
 #define STEAMCLIENT L"steamclient.dll"
@@ -111,7 +111,7 @@ void CInterfaces::Init()
 	_valid(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
-		static auto fn = reinterpret_cast<IKeyValuesSystem*(__cdecl *)()>(reinterpret_cast<DWORD>(WinAPI::GetProcessAddr(reinterpret_cast<DWORD>(WinAPI::GetModuleHandleW(VSTDLIB)), "KeyValuesSystem")));
+		static auto fn = reinterpret_cast<IKeyValuesSystem*(__cdecl *)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleW(VSTDLIB), "KeyValuesSystem")));
 		return fn();
 	};
 
@@ -156,6 +156,9 @@ void CInterfaces::Init()
 
 	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
 	_valid(Localize);
+
+	HostState = *reinterpret_cast<CCommonHostState**>(g_Pattern.Find(L"engine.dll", L"8B 15 ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85") + 0x1);
+	_valid(HostState);
 }
 
 void CSteamInterfaces::Init()

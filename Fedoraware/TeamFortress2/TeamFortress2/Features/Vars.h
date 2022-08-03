@@ -14,7 +14,7 @@ namespace Vars
 	namespace Menu
 	{
 		inline Rect_t Position = { 100, 100, 800, 500 };
-		inline const auto Title = _(L"Team Fortress 2");
+		inline const auto Title = L"Team Fortress 2";
 		inline int TitleBarH = 25;
 
 		inline int SpacingX = 8;

@@ -125,7 +125,7 @@ void CAttributeChanger::SaveConfig()
 {
 	if (AttributePath.empty())
 	{
-		AttributePath = (g_CFG.GetConfigPath() + _("\\Core\\ATTRIBUTES.ini"));
+		AttributePath = (g_CFG.GetConfigPath() + "\\Core\\ATTRIBUTES.ini");
 	}
 
 	WriteStream = std::ofstream(AttributePath, std::ios::out);
@@ -153,7 +153,7 @@ void CAttributeChanger::LoadConfig()
 {
 	if (AttributePath.empty())
 	{
-		AttributePath = (g_CFG.GetConfigPath() + _("\\Core\\ATTRIBUTES.ini"));
+		AttributePath = (g_CFG.GetConfigPath() + "\\Core\\ATTRIBUTES.ini");
 	}
 
 	ReadStream = std::ifstream(AttributePath);

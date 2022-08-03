@@ -109,7 +109,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 		/* if ur shooting thru stuff, change MASK_SHOT to MASK_SOLID - myzarfin */
 		Utils::Trace(vStart, vEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
 		
-		const int iAttachment = pWeapon->LookupAttachment(_("muzzle"));
+		const int iAttachment = pWeapon->LookupAttachment("muzzle");
 		pWeapon->GetAttachment(iAttachment, trace.vStartPos);
 
 		if (Vars::Visuals::BulletTracer.Value)

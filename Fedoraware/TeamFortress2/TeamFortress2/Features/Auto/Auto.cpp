@@ -31,7 +31,7 @@ void CAuto::Run(CUserCmd* pCmd)
 {
 	if (Vars::Triggerbot::Stab::Disguise.Value && F::AutoStab.m_bShouldDisguise)
 	{
-		I::EngineClient->ClientCmd_Unrestricted(_("lastdisguise"));
+		I::EngineClient->ClientCmd_Unrestricted("lastdisguise");
 	}
 
 	G::AutoBackstabRunning = false;

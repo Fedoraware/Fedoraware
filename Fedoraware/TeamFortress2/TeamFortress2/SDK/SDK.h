@@ -251,17 +251,17 @@ namespace Utils
 		static HWND hwGame = nullptr;
 
 		while (!hwGame) {
-			hwGame = WinAPI::FindWindowW(nullptr, _(L"Team Fortress 2"));
+			hwGame = FindWindowW(nullptr, L"Team Fortress 2");
 			return false;
 		}
 
-		return (WinAPI::GetForegroundWindow() == hwGame);
+		return (GetForegroundWindow() == hwGame);
 	}
 
 	__inline void* InitKeyValue()
 	{
 		using Init_t = PDWORD(__cdecl* )(int);
-		static DWORD dwInitLocation = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 83 C4 14 85 C0 74 10 68")) + 0x1;
+		static DWORD dwInitLocation = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 83 C4 14 85 C0 74 10 68") + 0x1;
 		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
 		static Init_t InitKeyValues = (Init_t)dwInit;
 
@@ -457,8 +457,8 @@ namespace Utils
 
 	__inline float ATTRIB_HOOK_FLOAT(float baseValue, const char *searchString, CBaseEntity *ent, void *buffer, bool isGlobalConstString)
 	{
-		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(_(L"client.dll"),
-			_(L"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38")));
+		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(L"client.dll",
+			L"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
 
 		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
 	}
@@ -967,7 +967,7 @@ namespace Particles {
 
 	inline void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz) {
 		using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
-		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(L"client.dll", _(L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83")));
+		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(L"client.dll", L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83"));
 		UTIL_ParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
 
 	}
