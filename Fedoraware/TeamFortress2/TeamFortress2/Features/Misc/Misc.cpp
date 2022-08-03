@@ -544,7 +544,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	static auto cl_sidespeed = g_ConVars.FindVar(_("cl_sidespeed"));
+	static auto cl_sidespeed = g_ConVars.FindVar("cl_sidespeed");
 	if (!cl_sidespeed || !cl_sidespeed->GetFloat())
 	{
 		return;
@@ -581,7 +581,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 				if (const auto& pLocal = g_EntityCache.GetLocal())
 				{
 					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-					static auto airVar = g_ConVars.FindVar(_("sv_airaccelerate"));
+					static auto airVar = g_ConVars.FindVar("sv_airaccelerate");
 					static auto wishSpeed = 30.0f;
 
 					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
@@ -624,25 +624,25 @@ void CMisc::NoiseMakerSpam(CBaseEntity* pLocal)
 }
 
 const std::string SPAM_FED[] = {
-	_("Fedoraware - github.com/Fedoraware"),
-	_("Fedoraware - Best free and open-source cheat!"),
-	_("Fedoraware - One tip ahead of the game!"),
-	_("Fedoraware - Now available @ https://github.com/Fedoraware!"),
-	_("Fedoraware - Based on SEOwned public source!")
+	"Fedoraware - github.com/Fedoraware",
+	"Fedoraware - Best free and open-source cheat!",
+	"Fedoraware - One tip ahead of the game!",
+	"Fedoraware - Now available @ https://github.com/Fedoraware!",
+	"Fedoraware - Based on SEOwned public source!"
 };
 
 const std::string SPAM_LBOX[] = {
-	_("GET GOOD, GET LMAOBOX!"),
-	_("LMAOBOX - WAY TO THE TOP"),
-	_("WWW.LMAOBOX.NET - BEST FREE TF2 HACK!")
+	"GET GOOD, GET LMAOBOX!",
+	"LMAOBOX - WAY TO THE TOP",
+	"WWW.LMAOBOX.NET - BEST FREE TF2 HACK!"
 };
 
 const std::string SPAM_CH[] = {
-	_("Cathook - more fun than a ball of yarn!"),
-	_("GNU/Linux is the best OS!"),
-	_("Visit https://cathook.club for more information!"),
-	_("Cathook - Free and Open-Source tf2 cheat!"),
-	_("Cathook - ca(n)t stop me meow!")
+	"Cathook - more fun than a ball of yarn!",
+	"GNU/Linux is the best OS!",
+	"Visit https://cathook.club for more information!",
+	"Cathook - Free and Open-Source tf2 cheat!",
+	"Cathook - ca(n)t stop me meow!"
 };
 
 /* Chat & Voicechat Spam */

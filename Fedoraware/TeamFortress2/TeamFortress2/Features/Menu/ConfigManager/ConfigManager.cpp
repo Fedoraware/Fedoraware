@@ -8,14 +8,14 @@
 #include "../../../SDK/SDK.h"
 #include "../../Misc/Misc.h"
 
-#define SAVE_VAR(x) SaveJson(_(#x), x.Value)
-#define LOAD_VAR(x) LoadJson(_(#x), x.Value)
+#define SAVE_VAR(x) SaveJson(#x, x.Value)
+#define LOAD_VAR(x) LoadJson(#x, x.Value)
 
-#define SAVE_STRING(x) SaveJson(_(#x), x)
-#define LOAD_STRING(x) LoadJson(_(#x), x)
+#define SAVE_STRING(x) SaveJson(#x, x)
+#define LOAD_STRING(x) LoadJson(#x, x)
 
-#define SAVE_OTHER(x) SaveJson(_(#x), x)
-#define LOAD_OTHER(x) LoadJson(_(#x), x)
+#define SAVE_OTHER(x) SaveJson(#x, x)
+#define LOAD_OTHER(x) LoadJson(#x, x)
 
 boost::property_tree::ptree WriteTree;
 boost::property_tree::ptree ReadTree;
@@ -229,21 +229,21 @@ void CConfigManager::LoadJson(const char* name, DragBox_t& val)
 
 CConfigManager::CConfigManager()
 {
-	ConfigPath = std::filesystem::current_path().string() + _("\\FedFigs");
+	ConfigPath = std::filesystem::current_path().string() + "\\FedFigs";
 
 	if (!std::filesystem::exists(ConfigPath))
 	{
 		std::filesystem::create_directory(ConfigPath);
 	}
 
-	if (!std::filesystem::exists(ConfigPath + _("\\Core")))
+	if (!std::filesystem::exists(ConfigPath + "\\Core"))
 	{
-		std::filesystem::create_directory(ConfigPath + _("\\Core"));
+		std::filesystem::create_directory(ConfigPath + "\\Core");
 	}
 
-	if (!std::filesystem::exists(ConfigPath + _("\\Materials")))
+	if (!std::filesystem::exists(ConfigPath + "\\Materials"))
 	{
-		std::filesystem::create_directory(ConfigPath + _("\\Materials"));
+		std::filesystem::create_directory(ConfigPath + "\\Materials");
 	}
 }
 

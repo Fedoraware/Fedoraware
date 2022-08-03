@@ -19,7 +19,7 @@ const static std::string CLEAR_MSG("?\nServer:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 								   "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 								   "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-const static std::vector<std::string> BAD_WORDS{ _("cheat"), _("hack"), _("bot"), _("aim"), _("esp"), _("kick"), _("hax"), _("script") };
+const static std::vector<std::string> BAD_WORDS{ "cheat", "hack", "bot", "aim", "esp", "kick", "hax", "script" };
 
 static std::string clr({ '\x7', '0', 'D', '9', '2', 'F', 'F' });
 static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900

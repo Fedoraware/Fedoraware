@@ -55,7 +55,7 @@ bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn
 						full_path += s + "";
 					std::string poop("Required member not found: " + full_path);
 					char* poop2 = (char*)poop.c_str();
-					WinAPI::MessageBoxA(0, poop2, _("Hooking netvar failed"), MB_ICONERROR);
+					MessageBoxA(0, poop2, "Hooking netvar failed", MB_ICONERROR);
 					//logging::Info("Hooking netvar with path \"%s\" failed. Required member not found.");
 					return false;
 				}
@@ -76,7 +76,7 @@ void CHookManager::Init()
 {
 	while (!I::DirectXDevice)
 	{
-		I::DirectXDevice = *reinterpret_cast<IDirect3DDevice9**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
+		I::DirectXDevice = *reinterpret_cast<IDirect3DDevice9**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	}
 
 	MH_Initialize();
@@ -90,6 +90,6 @@ void CHookManager::Init()
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
 	{
-		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);
+		MessageBoxW(0, L"MH failed to enable all hooks!", L"ERROR!", MB_ICONERROR);
 	}
 }
