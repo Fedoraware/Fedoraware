@@ -170,6 +170,16 @@ void CEntityCache::Fill()
 					m_pPlayerResource = reinterpret_cast<CTFPlayerResource*>(pEntity);
 					break;
 				}
+				case ETFClassID::CHeadlessHatman:
+				case ETFClassID::CTFTankBoss:
+				case ETFClassID::CMerasmus:
+				case ETFClassID::CZombie:
+				case ETFClassID::CEyeballBoss:
+				{
+					m_vecGroups[EGroupType::WORLD_NPC].push_back(pEntity);
+
+					break;
+				}
 
 				default: break;
 			}

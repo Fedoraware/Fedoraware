@@ -93,6 +93,7 @@ namespace Vars
 			inline CVar<bool> AimPlayers{ false };
 			inline CVar<bool> AimBuildings{ false };
 			inline CVar<bool> AimStickies{ false };
+			inline CVar<bool> AimNPC{ false };
 			inline CVar<int> IgnoreOptions{ 0b00000 }; //taunting, friends, deadringer,cloaked, invul
 			inline CVar<bool> IgnoreInvlunerable{ false };
 			inline CVar<bool> BAimLethal{ false }; // This is in global cause i remmebered hunterman exists
@@ -403,6 +404,7 @@ namespace Vars
 			inline CVar<bool> Active{ false };
 			inline CVar<bool> Health{ false };
 			inline CVar<bool> Ammo{ false };
+			inline CVar<bool> NPCs{ false };
 			inline CVar<int> Projectiles{ 1 }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{ 1.0f };
 		}
