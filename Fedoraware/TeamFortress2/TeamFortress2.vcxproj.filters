@@ -175,6 +175,10 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\S_StartDynamicSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Localize\Localize.h" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MoveToLastReceivedPosition.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
