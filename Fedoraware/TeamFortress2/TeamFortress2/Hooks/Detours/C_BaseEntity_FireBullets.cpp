@@ -151,9 +151,47 @@ MAKE_HOOK(FX_FireBullets, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 83 C4 28 C2 0
 	return Hook.Original<FN>()(pWpn, iPlayer, vecOrigin, vecAngles, iWeapon, iMode, iSeed, flSpread, flDamage, bCritical);
 }
 
+bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
+{
+	static int nLastTickCount = 0;
+	static int nLastBulletAmount = 0;
+	static int nShotCount = 0;
+	if (!pWeapon || pWeapon != g_EntityCache.GetWeapon() || !I::Prediction->m_bFirstTimePredicted)
+	{
+		nShotCount = 0;
+		return false;
+	}
+
+	const int nBulletAmount = pWeapon->GetBulletAmount();
+
+	if (nBulletAmount != nLastBulletAmount)
+	{
+		nShotCount = 0;
+		nLastBulletAmount = nBulletAmount;
+		return true;
+	}
+
+	if (nLastTickCount == I::GlobalVars->tickcount)
+	{
+		nShotCount++;
+		if (nShotCount > nBulletAmount)
+		{
+			return false;
+		}
+	}
+	nShotCount = 0;
+	nLastTickCount = I::GlobalVars->tickcount;
+
+	return true;
+}
+
 MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D"), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
+	if (!FireBulletsHandler(pWeapon))
+	{
+		return;
+	}
 	/*static int nCount = 0;
 	static int nPreviousBulletsPerShot = pWeapon->GetBulletAmount();
 
@@ -193,7 +231,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 	I::Cvar->ConsolePrintf("nCount: %d/%d\n", nCount, iCurrentBulletsPerShot);
 	I::Cvar->ConsolePrintf("tick count from %d to %d\n", iPreviousGlobalTickCount, iCurrentGlobalTickCount);*/
 
-	RETURN_ADDRESS_CMD("firebullets");
+	/*RETURN_ADDRESS_CMD("firebullets");*/
 	if (!pWeapon || (!Vars::Visuals::ParticleTracer.Value && !Vars::Visuals::BulletTracer.Value && !Vars::Visuals::Beans::Active.Value))
 	{
 		return Hook.Original<FN>()(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
