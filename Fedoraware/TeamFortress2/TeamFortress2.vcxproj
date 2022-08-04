@@ -95,7 +95,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\Lua\include;$(ProjectDir)TeamFortress2\SDK\sol2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\Lua\include;$(ProjectDir)TeamFortress2\SDK\sol2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;$(ProjectDir)TeamFortress2\SDK\sol2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\Lua\include;$(ProjectDir)TeamFortress2\SDK\sol2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -842,7 +842,6 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\UniformRandomStream\UniformRandomStream.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRender\ViewRender.h" />
-    <ClInclude Include="TeamFortress2\SDK\LuaBridge\LuaBridge.h" />
     <ClInclude Include="TeamFortress2\SDK\Lua\include\lauxlib.h" />
     <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.h" />
     <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.hpp" />

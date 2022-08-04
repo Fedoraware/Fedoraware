@@ -1,20 +1,23 @@
 #include "LuaEngine.h"
-#include "Callbacks/LuaCallbacks.h"
-#include "Interfaces.hpp"
-#include "../Commands/Commands.h"
 
+#include <lua.hpp>
+#include <sol/sol.hpp>
 #include <boost/algorithm/string/join.hpp>
 
-sol::state LuaState;
+#include "Interfaces.hpp"
+#include "Callbacks/LuaCallbacks.h"
+#include "../Commands/Commands.h"
 
-/* Executes the given file | TODO: Use stl string */
-void CLuaEngine::ExecuteFile(std::string file)
+static sol::state LuaState;
+
+/* Executes the given file */
+void CLuaEngine::ExecuteFile(const std::string& file)
 {
 	LuaState.script_file(file);
 }
 
-/* Executes the given expression | TODO: Use stl string */
-void CLuaEngine::ExecuteString(std::string expression)
+/* Executes the given expression */
+void CLuaEngine::ExecuteString(const std::string& expression)
 {
 	LuaState.script(expression);
 }
@@ -31,14 +34,12 @@ void UnregisterCallback(const char* type, const char* name)
 
 void CLuaEngine::Init()
 {
-	LuaState.open_libraries(sol::lib::base); // TODO: ?
+	LuaState.open_libraries(sol::lib::base, sol::lib::string, sol::lib::ffi, sol::lib::io, sol::lib::math);
 
 	/* Initialize LuaBridge */
 	{
 		static ExportedDraw exDraw;
 		static WEngineClient engineClient(I::EngineClient);
-
-		// TODO: This
 
 		// Vector3
 		auto vecClass = LuaState.new_usertype<Vec3>("Vec3", sol::constructors<Vec3(), Vec3(float, float, float)>());
@@ -164,7 +165,7 @@ void CLuaEngine::Init()
 				return;
 			}
 
-			ExecuteFile(args.front().c_str());
+			ExecuteFile(args.front());
 		});
 
 		F::Commands.Register("lua_do", [&](const std::deque<std::string>& args) {
@@ -175,7 +176,7 @@ void CLuaEngine::Init()
 			}
 
 			const std::string expr = boost::algorithm::join(args, " ");
-			ExecuteString(expr.c_str());
+			ExecuteString(expr);
 		});
 	}
 }
