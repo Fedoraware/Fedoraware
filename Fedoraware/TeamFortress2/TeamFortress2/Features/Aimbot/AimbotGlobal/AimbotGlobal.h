@@ -13,7 +13,8 @@ enum struct ETargetType {
 	PLAYER,
 	BUILDING,
 	STICKY,
-	NPC
+	NPC,
+	BOMBS
 };
 
 enum struct ESortMethod {

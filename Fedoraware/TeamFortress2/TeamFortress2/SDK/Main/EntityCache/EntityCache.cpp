@@ -180,6 +180,13 @@ void CEntityCache::Fill()
 
 					break;
 				}
+				case ETFClassID::CTFPumpkinBomb:
+				case ETFClassID::CTFGenericBomb:
+				{
+					m_vecGroups[EGroupType::WORLD_BOMBS].push_back(pEntity);
+
+					break;
+				}
 
 				default: break;
 			}

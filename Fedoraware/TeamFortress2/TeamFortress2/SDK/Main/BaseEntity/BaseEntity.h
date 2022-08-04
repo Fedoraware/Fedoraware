@@ -540,6 +540,17 @@ public: //Everything else, lol.
 		}
 	}
 
+	__inline bool IsBomb()
+	{
+		switch (GetClassID())
+		{
+		case ETFClassID::CTFPumpkinBomb:
+		case ETFClassID::CTFGenericBomb:
+			return true;
+		default: return false;
+		}
+	}
+
 	__inline Vec3 GetHitboxPos(const int nHitbox) {
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {

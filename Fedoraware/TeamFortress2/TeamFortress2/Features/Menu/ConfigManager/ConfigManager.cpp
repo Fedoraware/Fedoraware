@@ -271,6 +271,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::AimPlayers);
 				SAVE_VAR(Vars::Aimbot::Global::AimBuildings);
 				SAVE_VAR(Vars::Aimbot::Global::AimStickies);
+				SAVE_VAR(Vars::Aimbot::Global::AimNPC);
+				SAVE_VAR(Vars::Aimbot::Global::AimBombs);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
@@ -495,8 +497,23 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//World
 			{
 				SAVE_VAR(Vars::ESP::World::Active);
-				SAVE_VAR(Vars::ESP::World::HealthText);
-				SAVE_VAR(Vars::ESP::World::AmmoText);
+
+				SAVE_VAR(Vars::ESP::World::HealthName);
+				SAVE_VAR(Vars::ESP::World::HealthLine);
+				SAVE_VAR(Vars::ESP::World::HealthBox);
+
+				SAVE_VAR(Vars::ESP::World::AmmoName);
+				SAVE_VAR(Vars::ESP::World::AmmoLine);
+				SAVE_VAR(Vars::ESP::World::AmmoBox);
+
+				SAVE_VAR(Vars::ESP::World::NPCName);
+				SAVE_VAR(Vars::ESP::World::NPCLine);
+				SAVE_VAR(Vars::ESP::World::NPCBox);
+
+				SAVE_VAR(Vars::ESP::World::BombName);
+				SAVE_VAR(Vars::ESP::World::BombLine);
+				SAVE_VAR(Vars::ESP::World::BombBox);
+
 				SAVE_VAR(Vars::ESP::World::Alpha);
 			}
 		}
@@ -1048,6 +1065,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimPlayers);
 				LOAD_VAR(Vars::Aimbot::Global::AimBuildings);
 				LOAD_VAR(Vars::Aimbot::Global::AimStickies);
+				LOAD_VAR(Vars::Aimbot::Global::AimNPC);
+				LOAD_VAR(Vars::Aimbot::Global::AimBombs);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
@@ -1273,8 +1292,23 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//World
 			{
 				LOAD_VAR(Vars::ESP::World::Active);
-				LOAD_VAR(Vars::ESP::World::HealthText);
-				LOAD_VAR(Vars::ESP::World::AmmoText);
+
+				LOAD_VAR(Vars::ESP::World::HealthName);
+				LOAD_VAR(Vars::ESP::World::HealthLine);
+				LOAD_VAR(Vars::ESP::World::HealthBox);
+
+				LOAD_VAR(Vars::ESP::World::AmmoName);
+				LOAD_VAR(Vars::ESP::World::AmmoLine);
+				LOAD_VAR(Vars::ESP::World::AmmoBox);
+
+				LOAD_VAR(Vars::ESP::World::NPCName);
+				LOAD_VAR(Vars::ESP::World::NPCLine);
+				LOAD_VAR(Vars::ESP::World::NPCBox);
+
+				LOAD_VAR(Vars::ESP::World::BombName);
+				LOAD_VAR(Vars::ESP::World::BombLine);
+				LOAD_VAR(Vars::ESP::World::BombBox);
+
 				LOAD_VAR(Vars::ESP::World::Alpha);
 			}
 		}

@@ -263,7 +263,7 @@ void CMenu::MenuAimbot()
 			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.Value, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.Value); HelpMarker("Automatically shoot when a target is found");
-			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs"}, {&Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value}, "Aim targets");
+			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs", "Bombs"}, {&Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value, &Vars::Aimbot::Global::AimBombs.Value}, "Aim targets");
 			HelpMarker("Choose which targets the Aimbot should aim at");
 			{
 				static std::vector flagNames{ "Invulnerable", "Cloaked", "Dead Ringer", "Friends", "Taunting", "Vaccinator"};
@@ -814,12 +814,34 @@ void CMenu::MenuVisuals()
 			if (TableColumnChild("VisualsWorldCol1"))
 			{
 				SectionTitle("World ESP");
+
 				WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.Value); HelpMarker("World ESP master switch");
-				WToggle("Healthpacks###WorldESPHealthPacks", &Vars::ESP::World::HealthText.Value); HelpMarker("Will draw ESP on healthpacks");
-				ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
-				WToggle("Ammopacks###WorldESPAmmoPacks", &Vars::ESP::World::AmmoText.Value); HelpMarker("Will draw ESP on ammopacks");
-				ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
 				WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
+
+				SectionTitle("Healthpack");
+				WToggle("Name###WorldESPHealthpackName", &Vars::ESP::World::HealthName.Value); HelpMarker("Will draw ESP on healthpacks");
+				WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
+				WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
+				ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
+
+				SectionTitle("Ammopack");
+				WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
+				WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
+				WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
+				ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
+
+				SectionTitle("NPC");
+				WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
+				WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
+				WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
+				ColorPickerL("NPC colour", Colors::NPC); HelpMarker("Color for NPC ESP");
+
+				SectionTitle("Bombs");
+				WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on NPCs");
+				WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to NPCs");
+				WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
+				ColorPickerL("Bomb Colour", Colors::Bomb); HelpMarker("Color for bomb ESP");
+
 			} EndChild();
 
 			/* Column 2 */

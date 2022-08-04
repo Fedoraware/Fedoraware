@@ -195,7 +195,8 @@ namespace Colors
 	inline Color_t NoscopeLines1 =				{ 0,0,0,255 };
 	inline Color_t NoscopeLines2 =				{ 0,0,0,100 };
 	inline Color_t bonecolor =					{ 231, 95, 255, 10 };
-	inline Color_t NPC =						{ 231, 95, 255, 10 };
+	inline Color_t NPC =						{ 255, 255, 255, 255 };
+	inline Color_t Bomb =						{ 255, 255, 255, 255 };
 }
 
 namespace Utils
@@ -309,6 +310,12 @@ namespace Utils
 		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
 		PlayerInfo_t info{}; I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &info);
 
+		if (pEntity->IsNPC())
+			out = Colors::NPC;
+
+		if (pEntity->IsBomb())
+			out = Colors::Bomb;
+
 		if (pEntity->IsPlayer())
 		{
 			if (g_EntityCache.GetLocal()->GetIndex() == pEntity->GetIndex())
@@ -336,9 +343,6 @@ namespace Utils
 				out = Colors::Invuln;
 			}
 		}
-
-		if (pEntity->IsNPC())
-			out = Colors::NPC;
 
 		if (pEntity->GetIndex() == G::CurrentTargetIdx)
 		{
