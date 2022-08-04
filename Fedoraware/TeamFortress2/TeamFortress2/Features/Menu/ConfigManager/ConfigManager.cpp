@@ -580,6 +580,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Glow::World::Active);
 				SAVE_VAR(Vars::Glow::World::Health);
 				SAVE_VAR(Vars::Glow::World::Ammo);
+				SAVE_VAR(Vars::Glow::World::NPCs);
 				SAVE_VAR(Vars::Glow::World::Projectiles);
 				SAVE_VAR(Vars::Glow::World::Alpha);
 			}
@@ -1356,6 +1357,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Glow::World::Active);
 				LOAD_VAR(Vars::Glow::World::Health);
 				LOAD_VAR(Vars::Glow::World::Ammo);
+				LOAD_VAR(Vars::Glow::World::NPCs);
 				LOAD_VAR(Vars::Glow::World::Projectiles);
 				LOAD_VAR(Vars::Glow::World::Alpha);
 			}
