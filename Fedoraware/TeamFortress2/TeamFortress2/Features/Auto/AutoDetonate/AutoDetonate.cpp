@@ -36,8 +36,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 		// Iterate through entities in sphere radius
 		for (CEntitySphereQuery sphere(pExplosive->GetWorldSpaceCenter(), radius);
-		     (pTarget = sphere.GetCurrentEntity()) != nullptr;
-		     sphere.NextEntity())
+			(pTarget = sphere.GetCurrentEntity()) != nullptr;
+			sphere.NextEntity())
 		{
 			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
 				GetTeamNum())
@@ -45,17 +45,20 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 				continue;
 			}
 
-			const bool bIsPlayer = pTarget->IsPlayer() && Vars::Triggerbot::Detonate::DetonateOnPlayer.Value;
-			const bool bIsBuilding = pTarget->IsBuilding() && Vars::Triggerbot::Detonate::DetonateOnBuilding.Value;
-			bool CanDestroySticky = (G::CurItemDefIndex == Demoman_s_TheQuickiebombLauncher || G::CurItemDefIndex == Demoman_s_TheScottishResistance && Vars::Triggerbot::Detonate::DetonateOnSticky.Value);
-			if (bIsPlayer || bIsBuilding || pTarget->GetPipebombType() == TYPE_STICKY && CanDestroySticky)
+			const bool IsPlayer = Vars::Triggerbot::Detonate::DetonateTargets.Value & (PLAYER) && pTarget->IsPlayer();
+			const bool IsBuilding = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BUILDING) && pTarget->IsBuilding();
+			const bool IsNPC = Vars::Triggerbot::Detonate::DetonateTargets.Value & (NPC) && pTarget->IsNPC();
+			const bool IsBomb = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BOMB) && pTarget->IsBomb();
+			const bool IsSticky = Vars::Triggerbot::Detonate::DetonateTargets.Value & (STICKY) && (G::CurItemDefIndex == (Demoman_s_TheQuickiebombLauncher || Demoman_s_TheScottishResistance));
+
+			if (IsPlayer || IsBuilding || IsNPC || IsBomb || pTarget->GetPipebombType() == TYPE_STICKY && IsSticky)
 			{
-				if (bIsPlayer && F::AutoGlobal.ShouldIgnore(pTarget)) { continue; }
+				if (IsPlayer && F::AutoGlobal.ShouldIgnore(pTarget))
+					continue;
 
 				CGameTrace trace = {};
 				CTraceFilterWorldAndPropsOnly traceFilter = {};
-				Utils::Trace(pExplosive->GetWorldSpaceCenter(), pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter,
-				             &trace);
+				Utils::Trace(pExplosive->GetWorldSpaceCenter(), pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
 
 				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
 				{
@@ -90,6 +93,6 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 	if (shouldDetonate)
 	{
-		pCmd->buttons |= IN_ATTACK2;
+		pCmd->buttons |= IN_ATTACK;
 	}
 }

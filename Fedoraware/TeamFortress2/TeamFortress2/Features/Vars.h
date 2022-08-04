@@ -199,9 +199,7 @@ namespace Vars
 		namespace Detonate
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<bool> DetonateOnPlayer{ false };
-			inline CVar<bool> DetonateOnBuilding{ false };
-			inline CVar<bool> DetonateOnSticky{ false };
+			inline CVar<int> DetonateTargets{ 0b00000 };
 			inline CVar<bool> Stickies{ false };
 			inline CVar<bool> Flares{ false };
 			inline CVar<float> RadiusScale{ 1.0f };

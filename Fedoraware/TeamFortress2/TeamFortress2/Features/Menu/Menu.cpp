@@ -419,7 +419,12 @@ void CMenu::MenuTrigger()
 
 			SectionTitle("Auto Detonate");
 			WToggle("Autodetonate###TriggerDet", &Vars::Triggerbot::Detonate::Active.Value);
-			MultiCombo({ "Players", "Buildings", "Stickies" }, { &Vars::Triggerbot::Detonate::DetonateOnPlayer.Value, &Vars::Triggerbot::Detonate::DetonateOnBuilding.Value, &Vars::Triggerbot::Detonate::DetonateOnSticky.Value }, "Targets###AutoDetonateTargets");
+			{
+				static std::vector Names{ "Players", "Buildings", "NPCs", "Bombs", "Stickies" };
+				static std::vector Values{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4 };
+
+				MultiFlags(Names, Values, &Vars::Triggerbot::Detonate::DetonateTargets.Value, "Targets###TriggerbotDetonateTargets");
+			}
 			WToggle("Explode stickies###TriggerSticky", &Vars::Triggerbot::Detonate::Stickies.Value); HelpMarker("Detonate sticky bombs when a player is in range");
 			WToggle("Detonate flares###TriggerFlares", &Vars::Triggerbot::Detonate::Flares.Value); HelpMarker("Detonate detonator flares when a player is in range");
 			WSlider("Detonation radius###TriggerDetRadius", &Vars::Triggerbot::Detonate::RadiusScale.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The radius around the projectile that it will detonate if a player is in");
