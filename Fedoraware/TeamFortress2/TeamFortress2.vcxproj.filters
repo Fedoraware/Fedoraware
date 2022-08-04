@@ -160,6 +160,10 @@
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Localize\Localize.h" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MoveToLastReceivedPosition.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\ConVars\ConVars.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\DrawUtils\DrawUtils.cpp" />
