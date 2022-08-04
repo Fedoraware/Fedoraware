@@ -1,7 +1,9 @@
 #include "LuaEngine.h"
 #include "LuaCallbacks.hpp"
-#include <boost/algorithm/string/join.hpp>
+#include "Interfaces.hpp"
 #include "../Commands/Commands.h"
+
+#include <boost/algorithm/string/join.hpp>
 
 /* Prints the last lua error */
 void CLuaEngine::PrintError()

@@ -11,6 +11,7 @@
 #include "Fonts/IconsMaterialDesign.h"
 #include "Playerlist/Playerlist.h"
 #include "MaterialEditor/MaterialEditor.h"
+#include "LuaMenu/LuaMenu.h"
 #include "Pong/Pong.h"
 
 #include "Components.hpp"
@@ -92,10 +93,18 @@ void CMenu::DrawMenu()
 			}
 			ImGui::HelpMarker("Material Editor");
 
+			// Lua Menu Icon
+			ImGui::SetCursorPos({ currentX -= 25, 0 });
+			if (ImGui::IconButton(ICON_MD_CODE))
+			{
+				F::LuaMenu.IsOpen = !F::LuaMenu.IsOpen;
+			}
+			ImGui::HelpMarker("Lua Scripts");
+
 			#ifdef _DEBUG
 			// Debug Menu
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
-			if (ImGui::IconButton(ICON_MD_CODE))
+			if (ImGui::IconButton(ICON_MD_BUG_REPORT))
 			{
 				ShowDebugMenu = !ShowDebugMenu;
 			}
@@ -2017,6 +2026,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		SettingsWindow();
 		DebugMenu();
 		F::MaterialEditor.Render();
+		F::LuaMenu.Render();
 		F::PlayerList.Render();
 		F::Pong.Render();
 	}
@@ -2154,4 +2164,5 @@ void CMenu::Init(IDirect3DDevice9* pDevice)
 
 	LoadStyle();
 	F::MaterialEditor.Init();
+	F::LuaMenu.Init();
 }

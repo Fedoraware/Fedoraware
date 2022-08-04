@@ -1,6 +1,6 @@
 #pragma once
 #include "../../SDK/SDK.h"
-#include "Wrapper/Wrapper.hpp"
+#include "Wrapper.hpp"
 
 class ExportedDraw {
 	Color_t CurrentColor = { 255, 255, 255, 255 };

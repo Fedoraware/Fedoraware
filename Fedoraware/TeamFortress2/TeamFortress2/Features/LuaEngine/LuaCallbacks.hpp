@@ -3,7 +3,7 @@
 #include <LuaBridge.h>
 
 #include "../../SDK/SDK.h"
-#include "Wrapper/Wrapper.hpp"
+#include "Wrapper.hpp"
 
 class CLuaCallbacks {
 	std::unordered_map<std::string, std::unordered_map<std::string, luabridge::LuaRef>> Callbacks;

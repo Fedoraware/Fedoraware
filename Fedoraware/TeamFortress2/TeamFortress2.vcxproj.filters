@@ -65,6 +65,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ProcessPacketEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeTFNormal_UpdateSteamRichPresence.cpp" />
@@ -105,8 +106,11 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_UpdateClientSideAnimations.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_GetInterpolationAmount.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MoveToLastReceivedPosition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
@@ -160,10 +164,6 @@
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Localize\Localize.h" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MoveToLastReceivedPosition.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\ConVars\ConVars.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\DrawUtils\DrawUtils.cpp" />
@@ -180,17 +180,19 @@
     <ClCompile Include="TeamFortress2\Utils\MinHook\hook.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\trampoline.c" />
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaCallbacks.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WGameEvent.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WPlayerResource.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\Wrapper.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserCmd.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
@@ -738,7 +740,7 @@
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaCallbacks.hpp" />
+    <ClInclude Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
