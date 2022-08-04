@@ -210,24 +210,6 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
-	//Bombs
-	if (Vars::Aimbot::Global::AimBombs.Value)
-	{
-		for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
-		{
-			Vec3 vPos = Bombs->GetWorldSpaceCenter();
-			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
-
-			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
-			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-
-			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Hitscan::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
-				continue;
-
-			F::AimbotGlobal.m_vecTargets.push_back({ Bombs, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo });
-		}
-	}
-
 	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 
