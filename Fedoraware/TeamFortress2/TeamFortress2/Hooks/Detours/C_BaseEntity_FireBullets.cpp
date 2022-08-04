@@ -90,59 +90,16 @@ void DrawBeam(const Vector& source, const Vector& end)
 	}
 }
 
-//MAKE_HOOK(C_BaseCombatWeapon_ItemPostFrame, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 80 BE ? ? ? ? ? 74 07 8B CE E8 ? ? ? ? 8B 06"), void, __fastcall,
-//		  void* ecx, void* edx)
-//{
-//	RETURN_ADDRESS_CMD("itempostframe");
-//	I::Cvar->ConsolePrintf("ItemPostFrame\n");
-//	return Hook.Original<FN>()(ecx, edx);
-//}
-//
-//MAKE_HOOK(C_TFWeaponBaseGun_PrimaryAttack, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? A1 ? ? ? ? 8D 4D F0"), void, __fastcall,
-//		  void* ecx, void* edx)
-//{
-//	RETURN_ADDRESS_CMD("primaryattack");
-//	return Hook.Original<FN>()(ecx, edx);
-//}
-//
-//MAKE_HOOK(C_TFWeaponBaseGun_FireProjectile, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"), CBaseEntity*, __fastcall,
-//		  void* ecx, void* edx, CBaseEntity* pPlayer)
-//{
-//	RETURN_ADDRESS_CMD("fireprojectile");
-//	return Hook.Original<FN>()(ecx, edx, pPlayer);
-//}
-//
-//MAKE_HOOK(C_TFWeaponBaseGun_FireBullet, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"), void, __fastcall,
-//		  void* ecx, void* edx, CBaseEntity* pPlayer)
-//{
-//	RETURN_ADDRESS_CMD("weaponbasegun");
-//	return Hook.Original<FN>()(ecx, edx, pPlayer);
-//}
-//
-//
+//C_BaseCombatWeapon_ItemPostFrame L"client.dll", L"E8 ? ? ? ? 80 BE ? ? ? ? ? 74 07 8B CE E8 ? ? ? ? 8B 06"
+//C_TFWeaponBaseGun_PrimaryAttack L"client.dll", L"E8 ? ? ? ? A1 ? ? ? ? 8D 4D F0"
+//C_TFWeaponBaseGun_FireProjectile L"client.dll", L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"
+//C_TFWeaponBaseGun_FireBullet L"client.dll", L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"
+
 MAKE_HOOK(FX_FireBullets, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 83 C4 28 C2 04 00"), void, __cdecl,
 		  void* pWpn, int iPlayer, const Vector* vecOrigin, const Vector* vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
 {
 	//static auto C_TEFireBullets__PostDataUpdate_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? C2 ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC");
 	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
-//	static DWORD dwChosenFilter = 0;
-//	INIT_INLINE_CMD(swap_ret_filter)
-//	{
-//		if (dwChosenFilter == C_TEFireBullets__PostDataUpdate_Call)
-//		{
-//			dwChosenFilter = C_TFWeaponBaseGun__FireBullet_Call;
-//		}
-//		else
-//		{
-//			dwChosenFilter = C_TEFireBullets__PostDataUpdate_Call;
-//		}
-//	});
-//}
-//if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwChosenFilter)
-//{
-///*RETURN_ADDRESS_CMD("fx_firebullets");*/
-//	return Hook.Original<FN>()(pWpn, iPlayer, vecOrigin, vecAngles, iWeapon, iMode, iSeed, flSpread, flDamage, bCritical);
-//}
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) != C_TFWeaponBaseGun__FireBullet_Call)
 	{
 		return;
@@ -192,46 +149,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 	{
 		return;
 	}
-	/*static int nCount = 0;
-	static int nPreviousBulletsPerShot = pWeapon->GetBulletAmount();
 
-	int nCurrentBulletsPerShot = pWeapon->GetBulletAmount();
-
-	if (nPreviousBulletsPerShot != nCurrentBulletsPerShot)
-	{
-		nPreviousBulletsPerShot = nCurrentBulletsPerShot;
-	}
-
-	nCount++;
-
-	if (nCount > nCurrentBulletsPerShot && G::BulletTracerFix)
-	{
-		nCount = 0;
-		G::BulletTracerFix = false;
-		return;
-	}*/
-
-	/*static int iPreviousGlobalTickCount = -+;
-	static int iPreviousBulletsPerShot = pWeapon->GetBulletAmount();
-	static int nCount = 0;
-	int iCurrentGlobalTickCount = I::ClientState->m_ClockDriftMgr.m_nServerTick;
-	int iCurrentBulletsPerShot = pWeapon->GetBulletAmount();
-	nCount++;*/
-
-	//if amount of times called > amount of bullets and the amount of time since the previous time is less than a tick then dont do anything
-
-	/*if (nCount > iCurrentBulletsPerShot)
-	{
-		iPreviousBulletsPerShot = iCurrentBulletsPerShot;
-		iPreviousGlobalTickCount = iCurrentGlobalTickCount;
-		
-		return;
-	}
-
-	I::Cvar->ConsolePrintf("nCount: %d/%d\n", nCount, iCurrentBulletsPerShot);
-	I::Cvar->ConsolePrintf("tick count from %d to %d\n", iPreviousGlobalTickCount, iCurrentGlobalTickCount);*/
-
-	/*RETURN_ADDRESS_CMD("firebullets");*/
 	if (!pWeapon || (!Vars::Visuals::ParticleTracer.Value && !Vars::Visuals::BulletTracer.Value && !Vars::Visuals::Beans::Active.Value))
 	{
 		return Hook.Original<FN>()(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
