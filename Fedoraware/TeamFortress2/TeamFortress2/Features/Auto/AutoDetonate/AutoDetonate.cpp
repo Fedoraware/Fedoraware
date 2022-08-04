@@ -93,6 +93,6 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 	if (shouldDetonate)
 	{
-		pCmd->buttons |= IN_ATTACK;
+		pCmd->buttons |= IN_ATTACK2;
 	}
 }
