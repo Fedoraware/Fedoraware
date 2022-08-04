@@ -93,7 +93,7 @@ bool CDMEChams::ShouldRun()
 
 IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
-	returnMaterial->IncrementReferenceCount();
+	/*returnMaterial->IncrementReferenceCount();*/
 	
 	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{}, $frame{};
 	if (auto var = returnMaterial->FindVar("$flags", nullptr))
