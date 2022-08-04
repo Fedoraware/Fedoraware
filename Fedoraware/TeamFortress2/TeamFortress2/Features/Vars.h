@@ -421,6 +421,7 @@ namespace Vars
 			inline CVar<bool> Health{ false };
 			inline CVar<bool> Ammo{ false };
 			inline CVar<bool> NPCs{ false };
+			inline CVar<bool> Bombs{ false };
 			inline CVar<int> Projectiles{ 1 }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{ 1.0f };
 		}

@@ -910,6 +910,7 @@ void CMenu::MenuVisuals()
 				WToggle("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.Value);
 				WToggle("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.Value);
 				WToggle("NPCs###worldnpcs", &Vars::Glow::World::NPCs.Value);
+				WToggle("Bombs###worldbombglow", &Vars::Glow::World::Bombs.Value);
 				WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.Value, { "Off", "All", "Only enemies" });
 				WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 			} EndChild();
