@@ -195,6 +195,7 @@ namespace Colors
 	inline Color_t NoscopeLines1 =				{ 0,0,0,255 };
 	inline Color_t NoscopeLines2 =				{ 0,0,0,100 };
 	inline Color_t bonecolor =					{ 231, 95, 255, 10 };
+	inline Color_t NPC =						{ 231, 95, 255, 10 };
 }
 
 namespace Utils
@@ -335,6 +336,9 @@ namespace Utils
 				out = Colors::Invuln;
 			}
 		}
+
+		if (pEntity->IsNPC())
+			out = Colors::NPC;
 
 		if (pEntity->GetIndex() == G::CurrentTargetIdx)
 		{
