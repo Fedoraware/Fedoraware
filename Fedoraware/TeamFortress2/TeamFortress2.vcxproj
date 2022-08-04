@@ -136,7 +136,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)TeamFortress2\SDK\LuaBridge;$(ProjectDir)TeamFortress2\SDK\Lua\include;$(ProjectDir)TeamFortress2\SDK\sol2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +171,7 @@
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
+    <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
     <ClCompile Include="TeamFortress2\Features\LuaEngine\LuaEngine.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
@@ -330,8 +331,8 @@
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaCallbacks.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
@@ -864,6 +865,9 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\config.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\forward.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\sol.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Base64\Base64.hpp" />
     <ClInclude Include="TeamFortress2\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />

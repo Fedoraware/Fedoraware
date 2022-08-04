@@ -1,48 +1,25 @@
 #include "LuaEngine.h"
-#include "LuaCallbacks.hpp"
+#include "Callbacks/LuaCallbacks.h"
 #include "Interfaces.hpp"
 #include "../Commands/Commands.h"
 
 #include <boost/algorithm/string/join.hpp>
 
-/* Prints the last lua error */
-void CLuaEngine::PrintError()
-{
-	std::string errorMessage = "LUA Error: ";
-	errorMessage.append(lua_tostring(LuaState, -1));
-	errorMessage.append("\n");
+sol::state LuaState;
 
-	I::Cvar->ConsoleColorPrintf({235, 59, 90, 255}, "%s", errorMessage.c_str());
-	lua_pop(LuaState, -1);
+/* Executes the given file | TODO: Use stl string */
+void CLuaEngine::ExecuteFile(std::string file)
+{
+	LuaState.script_file(file);
 }
 
-/* Executes the given file */
-void CLuaEngine::ExecuteFile(const char* file)
+/* Executes the given expression | TODO: Use stl string */
+void CLuaEngine::ExecuteString(std::string expression)
 {
-	if (!file || !LuaState) { return; }
-
-	if (luaL_dofile(LuaState, file))
-	{
-		PrintError();
-	}
+	LuaState.script(expression);
 }
 
-/* Executes the given expression */
-void CLuaEngine::ExecuteString(const char* expression)
-{
-	if (!expression || !LuaState)
-	{
-		I::Cvar->ConsoleColorPrintf({235, 59, 90, 255}, "Lua Error: null expression passed to script engine\n");
-		return;
-	}
-
-	if (luaL_dostring(LuaState, expression))
-	{
-		PrintError();
-	}
-}
-
-void RegisterCallback(const char* type, const char* name, const luabridge::LuaRef& callback)
+void RegisterCallback(const char* type, const char* name, const sol::function& callback)
 {
 	F::LuaCallbacks.Register(type, name, callback);
 }
@@ -54,145 +31,128 @@ void UnregisterCallback(const char* type, const char* name)
 
 void CLuaEngine::Init()
 {
-	LOCKLUA();
+	LuaState.open_libraries(sol::lib::base); // TODO: ?
 
 	/* Initialize LuaBridge */
 	{
 		static ExportedDraw exDraw;
 		static WEngineClient engineClient(I::EngineClient);
 
-		using namespace luabridge;
-		getGlobalNamespace(LuaState)
-			/* Utils */
-			.beginNamespace("Utils")
+		// TODO: This
 
-			// Vec3
-			.beginClass<Vec3>("Vec3")
-			.addConstructor<void(*)(float, float, float)>()
-			.addProperty("x", &Vec3::x)
-			.addProperty("y", &Vec3::y)
-			.addProperty("z", &Vec3::z)
-			.endClass()
+		// Vector3
+		auto vecClass = LuaState.new_usertype<Vec3>("Vec3", sol::constructors<Vec3(), Vec3(float, float, float)>());
+		vecClass["x"] = &Vec3::x;
+		vecClass["y"] = &Vec3::y;
+		vecClass["z"] = &Vec3::z;
 
-			.endNamespace() // Utils
+		// CUserCmd
+		auto userCmdClass = LuaState.new_usertype<WUserCmd>("UserCmd");
+		userCmdClass["GetButtons"] = &WUserCmd::GetButtons;
+		userCmdClass["GetViewAngles"] = &WUserCmd::GetViewAngles;
+		userCmdClass["GetForwardMove"] = &WUserCmd::GetForwardMove;
+		userCmdClass["GetSideMove"] = &WUserCmd::GetSideMove;
+		userCmdClass["GetUpMove"] = &WUserCmd::GetUpMove;
+		userCmdClass["SetButtons"] = &WUserCmd::SetButtons;
+		userCmdClass["SetViewAngles"] = &WUserCmd::SetViewAngles;
+		userCmdClass["SetForwardMove"] = &WUserCmd::SetForwardMove;
+		userCmdClass["SetSideMove"] = &WUserCmd::SetSideMove;
+		userCmdClass["SetUpMove"] = &WUserCmd::SetUpMove;
 
-			/* Interfaces */
-			.beginNamespace("Interfaces")
+		// CEngineClient
+		auto engineClass = LuaState.new_usertype<WEngineClient>("EngineClient");
+		engineClass["IsInGame"] = &WEngineClient::IsInGame;
+		engineClass["IsConnected"] = &WEngineClient::IsConnected;
+		engineClass["IsTakingScreenshot"] = &WEngineClient::IsTakingScreenshot;
+		engineClass["ExecuteCommand"] = &WEngineClient::ExecuteCommand;
+		engineClass["GetLocalPlayer"] = &WEngineClient::GetLocalPlayer;
+		engineClass["GetMaxClients"] = &WEngineClient::GetMaxClients;
+		engineClass["GetLevelName"] = &WEngineClient::GetLevelName;
+		engineClass["GetScreenSize"] = &WEngineClient::IsInGame;
+		engineClass["GetViewAngles"] = &WEngineClient::GetViewAngles;
+		engineClass["SetViewAngles"] = &WEngineClient::SetViewAngles;
 
-			// CUserCmd
-			.beginClass<WUserCmd>("UserCmd")
-			.addFunction("GetButtons", &WUserCmd::GetButtons)
-			.addFunction("GetViewAngles", &WUserCmd::GetViewAngles)
-			.addFunction("GetForwardMove", &WUserCmd::GetForwardMove)
-			.addFunction("GetSideMove", &WUserCmd::GetSideMove)
-			.addFunction("GetUpMove", &WUserCmd::GetUpMove)
+		// CBaseEntity
+		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity");
+		entityClass["IsValid"] = &WBaseEntity::IsValid;
+		entityClass["GetIndex"] = &WBaseEntity::GetIndex;
+		entityClass["GetOrigin"] = &WBaseEntity::GetOrigin;
+		entityClass["GetClassID"] = &WBaseEntity::GetClassID;
+		entityClass["GetClass"] = &WBaseEntity::GetClass;
+		entityClass["GetHealth"] = &WBaseEntity::GetHealth;
+		entityClass["GetAmmo"] = &WBaseEntity::GetAmmo;
+		entityClass["GetFlags"] = &WBaseEntity::GetFlags;
+		entityClass["GetEyePos"] = &WBaseEntity::GetEyePos;
+		entityClass["IsDormant"] = &WBaseEntity::IsDormant;
+		entityClass["IsAlive"] = &WBaseEntity::IsAlive;
+		entityClass["GetTeam"] = &WBaseEntity::GetTeam;
+		entityClass["SetOrigin"] = &WBaseEntity::SetOrigin;
 
-			.addFunction("SetButtons", &WUserCmd::SetButtons)
-			.addFunction("SetViewAngles", &WUserCmd::SetViewAngles)
-			.addFunction("SetForwardMove", &WUserCmd::SetForwardMove)
-			.addFunction("SetSideMove", &WUserCmd::SetSideMove)
-			.addFunction("SetUpMove", &WUserCmd::SetUpMove)
-			.endClass()
+		// CTFPlayerResource
+		auto prClass = LuaState.new_usertype<WPlayerResource>("PlayerResource");
+		prClass["GetPing"] = &WPlayerResource::GetPing;
+		prClass["GetKills"] = &WPlayerResource::GetKills;
+		prClass["GetDeaths"] = &WPlayerResource::GetDeaths;
+		prClass["GetConnected"] = &WPlayerResource::GetConnected;
+		prClass["GetValid"] = &WPlayerResource::GetValid;
+		prClass["GetPlayerName"] = &WPlayerResource::GetPlayerName;
+		prClass["GetDamage"] = &WPlayerResource::GetDamage;
 
-			// CEngineClient
-			.beginClass<WEngineClient>("EngineClient")
-			.addFunction("IsInGame", &WEngineClient::IsInGame)
-			.addFunction("IsConnected", &WEngineClient::IsConnected)
-			.addFunction("IsTakingScreenshot", &WEngineClient::IsTakingScreenshot)
-			.addFunction("ExecuteCommand", &WEngineClient::ExecuteCommand)
-			.addFunction("GetLocalPlayer", &WEngineClient::GetLocalPlayer)
-			.addFunction("GetMaxClients", &WEngineClient::GetMaxClients)
-			.addFunction("GetLevelName", &WEngineClient::GetLevelName)
-			.addFunction("GetScreenSize", &WEngineClient::GetScreenSize)
-			.addFunction("GetViewAngles", &WEngineClient::GetViewAngles)
-			.addFunction("SetViewAngles", &WEngineClient::SetViewAngles)
-			.endClass()
+		// Draw
+		auto drawClass = LuaState.new_usertype<ExportedDraw>("DrawClass");
+		drawClass["Text"] = &ExportedDraw::Text;
+		drawClass["Line"] = &ExportedDraw::Line;
+		drawClass["Rect"] = &ExportedDraw::Rect;
+		drawClass["OutlinedRect"] = &ExportedDraw::OutlinedRect;
+		drawClass["FilledCircle"] = &ExportedDraw::FilledCircle;
+		drawClass["SetColor"] = &ExportedDraw::SetColor;
 
-			// CBaseEntity
-			.beginClass<WBaseEntity>("BaseEntity")
-			.addFunction("IsValid", &WBaseEntity::IsValid)
-			.addFunction("GetIndex", &WBaseEntity::GetIndex)
-			.addFunction("GetOrigin", &WBaseEntity::GetOrigin)
-			.addFunction("GetClassID", &WBaseEntity::GetClassID)
-			.addFunction("GetClassName", &WBaseEntity::GetClass)
-			.addFunction("GetHealth", &WBaseEntity::GetHealth)
-			.addFunction("GetAmmo", &WBaseEntity::GetAmmo)
-			.addFunction("GetFlags", &WBaseEntity::GetFlags)
-			.addFunction("GetEyePos", &WBaseEntity::GetEyePos)
-			.addFunction("IsDormant", &WBaseEntity::IsDormant)
-			.addFunction("IsAlive", &WBaseEntity::IsAlive)
-			.addFunction("GetTeam", &WBaseEntity::GetTeam)
-			.addFunction("SetOrigin", &WBaseEntity::SetOrigin)
-			.endClass()
+		// Entities
+		auto entityTable = LuaState.create_named_table("Entities");
+		entityTable["GetLocalPlayer"] = [] { return WBaseEntity(g_EntityCache.GetLocal()); };
+		entityTable["GetLocalWeapon"] = [] { return WBaseEntity(g_EntityCache.GetWeapon()); };
+		entityTable["GetPlayerResource"] = [] { return WPlayerResource(g_EntityCache.GetPR()); };
+		entityTable["GetByIndex"] = [](int idx) { return WBaseEntity(I::ClientEntityList->GetClientEntity(idx)); };
 
-			// CTFPlayerResource
-			.beginClass<WPlayerResource>("PlayerResource")
-			.addFunction("GetPing", &WPlayerResource::GetPing)
-			.addFunction("GetKills", &WPlayerResource::GetKills)
-			.addFunction("GetDeaths", &WPlayerResource::GetDeaths)
-			.addFunction("GetConnected", &WPlayerResource::GetConnected)
-			.addFunction("GetValid", &WPlayerResource::GetValid)
-			.addFunction("GetPlayerName", &WPlayerResource::GetPlayerName)
-			.addFunction("GetDamage", &WPlayerResource::GetDamage)
-			.endClass()
+		// Input
+		auto inputTable = LuaState.create_named_table("Input");
+		inputTable["IsKeyDown"] = [](int key) { return (GetAsyncKeyState(key) & 0x8000) != 0; };
+		inputTable["GetMousePos"] = [] {
+			int x, y;
+			I::VGuiSurface->SurfaceGetCursorPos(x, y);
+			return std::vector{ x, y };
+		};
 
-			// Draw
-			.beginClass<ExportedDraw>("DrawClass")
-			.addFunction("Text", &ExportedDraw::Text)
-			.addFunction("Line", &ExportedDraw::Line)
-			.addFunction("Rect", &ExportedDraw::Rect)
-			.addFunction("OutlinedRect", &ExportedDraw::OutlinedRect)
-			.addFunction("FilledCircle", &ExportedDraw::FilledCircle)
-			.addFunction("SetColor", &ExportedDraw::SetColor)
-			.endClass()
+		// GlobalInfo
+		auto globalInfo = LuaState.create_named_table("GlobalInfo");
+		globalInfo["RealTime"] = [] { return I::GlobalVars->realtime; };
+		globalInfo["FrameCount"] = [] { return I::GlobalVars->framecount; };
+		globalInfo["AbsFrameTime"] = [] { return I::GlobalVars->absoluteframetime; };
+		globalInfo["CurTime"] = [] { return I::GlobalVars->curtime; };
+		globalInfo["FrameTime"] = [] { return I::GlobalVars->frametime; };
+		globalInfo["MaxClients"] = [] { return I::GlobalVars->maxclients; };
+		globalInfo["TickCount"] = [] { return I::GlobalVars->tickcount; };
+		globalInfo["IntervalPerTick"] = [] { return I::GlobalVars->interval_per_tick; };
 
-			// Global Vars, Props and Functions
-			.addProperty("Engine", &engineClient)
-			.addProperty("Draw", &exDraw, false)
-			.endNamespace() // Interfaces
+		// Fedoraware Globals
+		auto fwareGlobals = LuaState.create_named_table("Fedoraware");
+		fwareGlobals["ShiftedTicks"] = [] { return G::ShiftedTicks; };
+		fwareGlobals["ShouldShift"] = [] { return G::ShouldShift; };
+		fwareGlobals["CurrentTargetIdx"] = [] { return G::CurrentTargetIdx; };
+		fwareGlobals["GetPriority"] = [](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; };
 
-			// Entities
-			.beginNamespace("Entities")
-			.addFunction("GetLocalPlayer", +[] { return WBaseEntity(g_EntityCache.GetLocal()); })
-			.addFunction("GetLocalWeapon", +[] { return WBaseEntity(g_EntityCache.GetWeapon()); })
-			.addFunction("GetPlayerResource", +[] { return WPlayerResource(g_EntityCache.GetPR()); })
-			.addFunction("GetByIndex", +[](int idx) { return WBaseEntity(I::ClientEntityList->GetClientEntity(idx)); })
-			.endNamespace() // Entities
+		// Interfaces
+		auto interfaceTable = LuaState.create_named_table("Interfaces");
+		interfaceTable["Engine"] = &engineClient; // TODO: Make this readonly
+		interfaceTable["Draw"] = &exDraw; // TODO: Make this readonly
 
-			// Input
-			.beginNamespace("Input")
-			.addFunction("IsKeyDown", +[](int key) { return (GetAsyncKeyState(key) & 0x8000) != 0; })
-			.addFunction("GetMousePos", +[] { int p[2]{ }; I::VGuiSurface->SurfaceGetCursorPos(p[0], p[1]); return p; })
-			.endNamespace() // Input
+		// Callbacks
+		auto callbackTable = LuaState.create_named_table("Callbacks");
+		callbackTable["Register"] = RegisterCallback;
+		callbackTable["Unregister"] = UnregisterCallback;
 
-			// GlobalInfo
-			.beginNamespace("GlobalInfo")
-			.addFunction("RealTime", +[] { return I::GlobalVars->realtime; })
-			.addFunction("FrameCount", +[] { return I::GlobalVars->framecount; })
-			.addFunction("AbsFrameTime", +[] { return I::GlobalVars->absoluteframetime; })
-			.addFunction("CurTime", +[] { return I::GlobalVars->curtime; })
-			.addFunction("FrameTime", +[] { return I::GlobalVars->frametime; })
-			.addFunction("MaxClients", +[] { return I::GlobalVars->maxclients; })
-			.addFunction("TickCount", +[] { return I::GlobalVars->tickcount; })
-			.addFunction("IntervalPerTick", +[] { return I::GlobalVars->interval_per_tick; })
-			.endNamespace() // GlobalInfo
-
-			// Fedoraware Globals
-			.beginNamespace("Fedoraware")
-			.addProperty("ShiftedTicks", &G::ShiftedTicks, false)
-			.addProperty("ShouldShift", &G::ShouldShift, false)
-			.addProperty("CurrentTargetIdx", &G::CurrentTargetIdx, false)
-			.addFunction("GetPriority", +[](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; })
-			.endNamespace() // Fedoraware
-
-			// Callbacks
-			.beginNamespace("Callbacks")
-			.addFunction("Register", RegisterCallback)
-			.addFunction("Unregister", UnregisterCallback)
-			.endNamespace() // Callbacks
-
-			/* Global functions */
-			.addFunction("print", +[](const char* msg) { I::Cvar->ConsolePrintf("%s\n", msg); });
+		// Global functions
+		LuaState.set_function("print", [](const char* msg) { I::Cvar->ConsolePrintf("%s\n", msg); });
 	}
 
 	/* Register commands */
@@ -218,4 +178,10 @@ void CLuaEngine::Init()
 			ExecuteString(expr.c_str());
 		});
 	}
+}
+
+void CLuaEngine::Reset()
+{
+	F::LuaCallbacks.Reset();
+	LuaState = { };
 }

@@ -92,6 +92,7 @@ void Uninitialize()
 	g_Events.Destroy();
 	g_HookManager.Release();
 	g_PatchManager.Restore();
+	F::LuaEngine.Reset();
 
 	ShutdownRichPresence();
 

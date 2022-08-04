@@ -5,7 +5,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Killstreak/Killstreak.h"
-#include "../../Features/LuaEngine/LuaCallbacks.hpp"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {

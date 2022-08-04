@@ -181,12 +181,12 @@
     <ClCompile Include="TeamFortress2\Utils\MinHook\trampoline.c" />
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.cpp" />
+    <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaCallbacks.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
@@ -741,6 +741,10 @@
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.h" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\config.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\forward.hpp" />
+    <ClInclude Include="TeamFortress2\SDK\sol2\sol\sol.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />

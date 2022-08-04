@@ -49,7 +49,7 @@ void CLuaMenu::MainWindow()
 			SameLine();
 			if (Button("Execute") && !currentPath.empty())
 			{
-				F::LuaEngine.ExecuteFile(currentPath.c_str());
+				F::LuaEngine.ExecuteFile(currentPath);
 			}
 
 			SameLine();

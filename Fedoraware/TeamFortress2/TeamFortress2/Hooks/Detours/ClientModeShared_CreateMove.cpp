@@ -18,7 +18,7 @@
 #include "../../Features/Vars.h"
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
-#include "../../Features/LuaEngine/LuaCallbacks.hpp"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 void AppendCache()
 {

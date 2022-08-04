@@ -15,7 +15,7 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
-#include "../../Features/LuaEngine/LuaCallbacks.hpp"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 #include "../../Resources/DVD-Icon.h"
 #include "../../Resources/64x64_Circle_Mask.h"
