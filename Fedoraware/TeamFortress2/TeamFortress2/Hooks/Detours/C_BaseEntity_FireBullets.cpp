@@ -154,7 +154,7 @@ MAKE_HOOK(FX_FireBullets, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 83 C4 28 C2 0
 MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D"), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
-	static int nCount = 0;
+	/*static int nCount = 0;
 	static int nPreviousBulletsPerShot = pWeapon->GetBulletAmount();
 
 	int nCurrentBulletsPerShot = pWeapon->GetBulletAmount();
@@ -171,7 +171,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 		nCount = 0;
 		G::BulletTracerFix = false;
 		return;
-	}
+	}*/
 
 	/*static int iPreviousGlobalTickCount = -+;
 	static int iPreviousBulletsPerShot = pWeapon->GetBulletAmount();
