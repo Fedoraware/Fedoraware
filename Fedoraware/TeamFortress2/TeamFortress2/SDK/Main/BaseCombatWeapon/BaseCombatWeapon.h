@@ -78,6 +78,8 @@ public: //Everything else, lol
 		return *reinterpret_cast<float*>(this + dwOffset);
 	}
 
+	int GetBulletAmount();
+
 	__inline float ObservedCritChance()
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");
