@@ -1,11 +1,28 @@
 #include "BaseCombatWeapon.h"
 #include "../DrawUtils/DrawUtils.h"
+#include "../../SDK.h"
 
 #define singlecase(id, string) case id: { static CHudTexture* pTexture = g_Draw.GetIcon(string); return pTexture; }
 
 #define rettexture(string) static CHudTexture* pTexture = g_Draw.GetIcon(string); return pTexture;
 
 
+
+int CBaseCombatWeapon::GetBulletAmount()
+{
+	auto v7 = *(DWORD*)(this + 2864);
+	auto v8 = *(DWORD*)(this + 2852) << 6;
+	int bulletspershot = *(DWORD*)(v8 + v7 + 1788);
+	if (bulletspershot >= 1)
+	{
+		Utils::ATTRIB_HOOK_FLOAT(bulletspershot, "mult_bullets_per_shot", this, 0, true);
+	}
+	else
+	{
+		bulletspershot = 1;
+	}
+	return bulletspershot;
+}
 
 CHudTexture* CBaseCombatWeapon::GetWeaponIcon()
 {

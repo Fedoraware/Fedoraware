@@ -1,4 +1,5 @@
 #include "../Hooks.h"
+#include "../../Features/Commands/Commands.h"
 
 struct FireBulletsInfo_t
 {
@@ -89,10 +90,66 @@ void DrawBeam(const Vector& source, const Vector& end)
 	}
 }
 
+//C_BaseCombatWeapon_ItemPostFrame L"client.dll", L"E8 ? ? ? ? 80 BE ? ? ? ? ? 74 07 8B CE E8 ? ? ? ? 8B 06"
+//C_TFWeaponBaseGun_PrimaryAttack L"client.dll", L"E8 ? ? ? ? A1 ? ? ? ? 8D 4D F0"
+//C_TFWeaponBaseGun_FireProjectile L"client.dll", L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"
+//C_TFWeaponBaseGun_FireBullet L"client.dll", L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"
+
+MAKE_HOOK(FX_FireBullets, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 83 C4 28 C2 04 00"), void, __cdecl,
+		  void* pWpn, int iPlayer, const Vector* vecOrigin, const Vector* vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
+{
+	//static auto C_TEFireBullets__PostDataUpdate_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? C2 ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC");
+	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
+	if (reinterpret_cast<DWORD>(_ReturnAddress()) != C_TFWeaponBaseGun__FireBullet_Call)
+	{
+		return;
+	}
+
+	return Hook.Original<FN>()(pWpn, iPlayer, vecOrigin, vecAngles, iWeapon, iMode, iSeed, flSpread, flDamage, bCritical);
+}
+
+bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
+{
+	static int nLastTickCount = 0;
+	static int nLastBulletAmount = 0;
+	static int nShotCount = 0;
+	if (!pWeapon || pWeapon != g_EntityCache.GetWeapon() || !I::Prediction->m_bFirstTimePredicted)
+	{
+		nShotCount = 0;
+		return false;
+	}
+
+	const int nBulletAmount = pWeapon->GetBulletAmount();
+
+	if (nBulletAmount != nLastBulletAmount)
+	{
+		nShotCount = 0;
+		nLastBulletAmount = nBulletAmount;
+		return true;
+	}
+
+	if (nLastTickCount == I::GlobalVars->tickcount)
+	{
+		nShotCount++;
+		if (nShotCount > nBulletAmount)
+		{
+			return false;
+		}
+	}
+	nShotCount = 0;
+	nLastTickCount = I::GlobalVars->tickcount;
+
+	return true;
+}
 
 MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D"), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
+	if (!FireBulletsHandler(pWeapon))
+	{
+		return;
+	}
+
 	if (!pWeapon || (!Vars::Visuals::ParticleTracer.Value && !Vars::Visuals::BulletTracer.Value && !Vars::Visuals::Beans::Active.Value))
 	{
 		return Hook.Original<FN>()(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
@@ -108,7 +165,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 
 		/* if ur shooting thru stuff, change MASK_SHOT to MASK_SOLID - myzarfin */
 		Utils::Trace(vStart, vEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
-		
+
 		const int iAttachment = pWeapon->LookupAttachment("muzzle");
 		pWeapon->GetAttachment(iAttachment, trace.vStartPos);
 
@@ -117,7 +174,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 
 			I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
-														   Colors::BulletTracer.a, true, 5);
+												 Colors::BulletTracer.a, true, 5);
 		}
 		if (!pLocal->IsInValidTeam())
 		{

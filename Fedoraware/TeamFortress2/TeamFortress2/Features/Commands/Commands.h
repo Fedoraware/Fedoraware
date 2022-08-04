@@ -37,5 +37,7 @@ public:
         returnAddresses[retaddr] = true;\
     }\
 
+#define INIT_INLINE_CMD(name) static bool name = false;\
+    if (!name) { name = true; F::Commands.Register(#name, [](const std::deque<std::string>& args)\
 
 ADD_FEATURE(CCommands, Commands)
