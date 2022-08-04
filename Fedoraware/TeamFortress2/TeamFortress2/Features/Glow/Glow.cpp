@@ -332,6 +332,20 @@ void CGlowEffect::Render()
 						DrawModel(Projectile, STUDIO_RENDER, true);
 				}
 			}
+
+			if (Vars::Glow::World::NPCs.Value)
+			{
+				for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
+				{
+					if (!Utils::IsOnScreen(pLocal, NPC))
+						continue;
+
+					m_vecGlowEntities.push_back({ NPC, Utils::GetEntityDrawColor(NPC, false), Vars::Glow::World::Alpha.Value});
+
+					if (!F::Chams.HasDrawn(NPC))
+						DrawModel(NPC, STUDIO_RENDER, true);
+				}
+			}
 		}
 
 		StencilStateDisable.SetStencilState(pRenderContext);

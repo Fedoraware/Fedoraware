@@ -526,6 +526,20 @@ public: //Everything else, lol.
 		}
 	}
 
+	__inline bool IsNPC()
+	{
+		switch (GetClassID())
+		{
+		case ETFClassID::CHeadlessHatman:
+		case ETFClassID::CTFTankBoss:
+		case ETFClassID::CMerasmus:
+		case ETFClassID::CZombie:
+		case ETFClassID::CEyeballBoss:
+			return true;
+		default: return false;
+		}
+	}
+
 	__inline Vec3 GetHitboxPos(const int nHitbox) {
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {

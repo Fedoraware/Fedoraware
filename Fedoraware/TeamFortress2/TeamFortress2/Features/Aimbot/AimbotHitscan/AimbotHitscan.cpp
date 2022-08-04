@@ -234,6 +234,24 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
+	// NPCs
+	if (Vars::Aimbot::Global::AimNPC.Value)
+	{
+		for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
+		{
+			Vec3 vPos = NPC->GetWorldSpaceCenter();
+			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
+
+			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
+			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
+
+			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Hitscan::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+				continue;
+
+			F::AimbotGlobal.m_vecTargets.push_back({ NPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo });
+		}
+	}
+
 	return !F::AimbotGlobal.m_vecTargets.empty();
 }
 

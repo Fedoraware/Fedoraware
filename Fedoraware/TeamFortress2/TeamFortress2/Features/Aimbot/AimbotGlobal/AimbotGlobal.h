@@ -12,7 +12,8 @@ enum struct ETargetType {
 	UNKNOWN,
 	PLAYER,
 	BUILDING,
-	STICKY
+	STICKY,
+	NPC
 };
 
 enum struct ESortMethod {

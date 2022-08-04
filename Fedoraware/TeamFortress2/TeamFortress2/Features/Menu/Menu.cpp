@@ -263,7 +263,7 @@ void CMenu::MenuAimbot()
 			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.Value, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.Value); HelpMarker("Automatically shoot when a target is found");
-			MultiCombo({ "Players", "Buildings", "Stickies"}, {&Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value}, "Aim targets");
+			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs"}, {&Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value}, "Aim targets");
 			HelpMarker("Choose which targets the Aimbot should aim at");
 			{
 				static std::vector flagNames{ "Invulnerable", "Cloaked", "Dead Ringer", "Friends", "Taunting", "Vaccinator"};
@@ -887,6 +887,7 @@ void CMenu::MenuVisuals()
 				WToggle("World glow###Worldglowbutton", &Vars::Glow::World::Active.Value);
 				WToggle("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.Value);
 				WToggle("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.Value);
+				WToggle("NPCs###worldnpcs", &Vars::Glow::World::NPCs.Value);
 				WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.Value, { "Off", "All", "Only enemies" });
 				WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 			} EndChild();
