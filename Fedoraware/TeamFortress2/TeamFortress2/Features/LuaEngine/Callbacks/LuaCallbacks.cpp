@@ -10,7 +10,7 @@ void CLuaCallbacks::Register(const char* type, const char* name, const sol::func
 	}
 }
 
-/* Unregisters an existing callback by name */
+/* Unregisters an existing callback by type and name */
 void CLuaCallbacks::Unregister(const char* type, const char* name)
 {
 	Callbacks[type].erase(name);
@@ -21,13 +21,22 @@ void CLuaCallbacks::Reset()
 	Callbacks.clear();
 }
 
+void CLuaCallbacks::HandleError(const sol::protected_function_result& result)
+{
+	if (!result.valid())
+	{
+		const sol::error err = result;
+		I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, "Callback Error:\n%s\n", err.what());
+	}
+}
+
 /* Simple callback without any args */
 void CLuaCallbacks::ByType(const char* type) {
 	for (const auto& [name, callback] : Callbacks[type])
 	{
 		if (callback.valid())
 		{
-			callback();
+			HandleError(callback());
 		}
 	}
 }
@@ -37,7 +46,7 @@ void CLuaCallbacks::OnCreateMove(CUserCmd* pCmd, bool* pSendPacket) {
 	{
 		if (callback.valid())
 		{
-			callback(WUserCmd(pCmd, pSendPacket));
+			HandleError(callback(WUserCmd(pCmd, pSendPacket)));
 		}
 	}
 }
@@ -47,7 +56,7 @@ void CLuaCallbacks::OnFireGameEvent(CGameEvent* pEvent) {
 	{
 		if (callback.valid())
 		{
-			callback(WGameEvent(pEvent));
+			HandleError(callback(WGameEvent(pEvent)));
 		}
 	}
 }

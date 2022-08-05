@@ -41,15 +41,14 @@ void CLuaMenu::MainWindow()
 
 		// Toolbar
 		{
-			if (Button("Reload"))
-			{
-				LoadScripts();
-			}
-
-			SameLine();
 			if (Button("Execute") && !currentPath.empty())
 			{
 				F::LuaEngine.ExecuteFile(currentPath);
+			}
+
+			if (Button("Refresh"))
+			{
+				LoadScripts();
 			}
 
 			SameLine();

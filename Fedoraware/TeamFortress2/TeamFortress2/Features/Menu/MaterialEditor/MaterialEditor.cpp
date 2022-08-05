@@ -72,7 +72,7 @@ void CMaterialEditor::MainWindow()
 	{
 		// Toolbar
 		{
-			if (Button("Reload"))
+			if (Button("Refresh"))
 			{
 				LoadMaterials();
 			}

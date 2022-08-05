@@ -13,13 +13,23 @@ static sol::state LuaState;
 /* Executes the given file */
 void CLuaEngine::ExecuteFile(const std::string& file)
 {
-	LuaState.script_file(file);
+	const auto result = LuaState.safe_script_file(file, &sol::script_pass_on_error);
+	HandleError(result);
 }
 
 /* Executes the given expression */
 void CLuaEngine::ExecuteString(const std::string& expression)
 {
-	LuaState.script(expression);
+	LuaState.safe_script(expression);
+}
+
+void CLuaEngine::HandleError(const sol::protected_function_result& result)
+{
+	if (!result.valid())
+	{
+		const sol::error err = result;
+		I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, "%s\n", err.what());
+	}
 }
 
 void RegisterCallback(const char* type, const char* name, const sol::function& callback)
@@ -32,9 +42,18 @@ void UnregisterCallback(const char* type, const char* name)
 	F::LuaCallbacks.Unregister(type, name);
 }
 
+void OnPanic(sol::optional<std::string> errorMsg)
+{
+	if (errorMsg) {
+		const auto& msg = errorMsg.value();
+		I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, "Panic:\n%s", msg.c_str());
+	}
+}
+
 void CLuaEngine::Init()
 {
 	LuaState.open_libraries(sol::lib::base, sol::lib::string, sol::lib::ffi, sol::lib::io, sol::lib::math);
+	LuaState.set_panic(sol::c_call<decltype(&OnPanic), &OnPanic>);
 
 	/* Initialize LuaBridge */
 	{
