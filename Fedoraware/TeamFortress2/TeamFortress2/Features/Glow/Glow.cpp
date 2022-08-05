@@ -42,6 +42,7 @@ void CGlowEffect::Init()
 {
 	m_pMatGlowColor = I::MaterialSystem->Find("dev/glow_color", TEXTURE_GROUP_OTHER);
 	m_pRtFullFrame = I::MaterialSystem->FindTexture("_rt_FullFrameFB", TEXTURE_GROUP_RENDER_TARGET);
+	m_pRtQuarterSize1 = I::MaterialSystem->FindTexture("_rt_SmallFB1", TEXTURE_GROUP_RENDER_TARGET);
 
 	m_pRenderBuffer1 = I::MaterialSystem->CreateNamedRenderTargetTextureEx(
 		"glow_buffer_1", m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
@@ -378,7 +379,7 @@ void CGlowEffect::Render()
 		}
 		pRenderContext->PopRenderTargetAndViewport();
 
-		if (!Vars::Glow::Main::Stencil.Value) {
+		if (Vars::Glow::Main::Type.Value == 0) {
 			pRenderContext->PushRenderTargetAndViewport();
 			{
 				pRenderContext->Viewport(0, 0, w, h);
@@ -407,8 +408,15 @@ void CGlowEffect::Render()
 		StencilState.m_ZFailOp = STENCILOPERATION_KEEP;
 		StencilState.SetStencilState(pRenderContext);
 
-		if (Vars::Glow::Main::Stencil.Value)
-		{
+		int nViewportX, nViewportY, nViewportWidth, nViewportHeight;
+		pRenderContext->GetViewport( nViewportX, nViewportY, nViewportWidth, nViewportHeight );
+
+		switch (Vars::Glow::Main::Type.Value){
+		case 0:{
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			break;
+		}
+		case 1:{
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
@@ -417,9 +425,14 @@ void CGlowEffect::Render()
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			break;
 		}
-		else {
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+		case 2:{
+			const float flScale = (Vars::Glow::Main::Scale.Value * 0.05f);
+			pRenderContext->DrawScreenSpaceRectangle( m_pMatHaloAddToScreen, 0, 0, w, h, +flScale, +flScale, (float)nViewportWidth / 4 - 1, (float)nViewportHeight/ 4 - 1, m_pRtQuarterSize1->GetActualWidth(), m_pRtQuarterSize1->GetActualHeight() );
+			pRenderContext->DrawScreenSpaceRectangle( m_pMatHaloAddToScreen, 0, 0, w, h, -flScale, -flScale, (float)nViewportWidth / 4 - 1, (float)nViewportHeight/ 4 - 1, m_pRtQuarterSize1->GetActualWidth(), m_pRtQuarterSize1->GetActualHeight() );
+			break;
+		}
 		}
 		StencilStateDisable.SetStencilState(pRenderContext);
 
