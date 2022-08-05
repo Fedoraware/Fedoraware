@@ -7,6 +7,7 @@ class CGlowEffect
 private:
 	IMaterial* m_pMatGlowColor;
 	ITexture* m_pRtFullFrame;
+	ITexture* m_pRtQuarterSize1;
 	ITexture* m_pRenderBuffer1;
 	ITexture* m_pRenderBuffer2;
 	IMaterial* m_pMatBlurXwf;

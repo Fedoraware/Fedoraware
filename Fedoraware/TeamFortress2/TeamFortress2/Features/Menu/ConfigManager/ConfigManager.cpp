@@ -553,6 +553,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::Glow::Main::Active);
 				SAVE_VAR(Vars::Glow::Main::Scale);
+				SAVE_VAR(Vars::Glow::Main::Type);
 			}
 
 			//Players
@@ -725,7 +726,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::DamageLoggerChat);
 			SAVE_VAR(Vars::Visuals::DamageLoggerConsole);
 			SAVE_VAR(Vars::Visuals::ParticleTracer);
-			SAVE_VAR(Vars::Glow::Main::Stencil);
 			SAVE_VAR(Vars::Visuals::VisionModifier);
 
 			{
@@ -1330,6 +1330,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::Glow::Main::Active);
 				LOAD_VAR(Vars::Glow::Main::Scale);
+				LOAD_VAR(Vars::Glow::Main::Type);
 			}
 
 			//Players
@@ -1481,7 +1482,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::DamageLoggerText);
 			LOAD_VAR(Vars::Visuals::DamageLoggerChat);
 			LOAD_VAR(Vars::Visuals::DamageLoggerConsole);
-			LOAD_VAR(Vars::Glow::Main::Stencil);
 			LOAD_VAR(Vars::Visuals::VisionModifier);
 			LOAD_VAR(Vars::Visuals::Rain);
 			LOAD_VAR(Vars::Debug::DebugInfo);
