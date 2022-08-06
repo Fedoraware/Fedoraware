@@ -93,7 +93,7 @@ void CLuaEngine::Init()
 		engineClass["SetViewAngles"] = &WEngineClient::SetViewAngles;
 
 		// CBaseEntity
-		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity");
+		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity", sol::constructors<WBaseEntity(CBaseEntity*)>());
 		entityClass["IsValid"] = &WBaseEntity::IsValid;
 		entityClass["GetIndex"] = &WBaseEntity::GetIndex;
 		entityClass["GetOrigin"] = &WBaseEntity::GetOrigin;
@@ -108,8 +108,21 @@ void CLuaEngine::Init()
 		entityClass["GetTeam"] = &WBaseEntity::GetTeam;
 		entityClass["SetOrigin"] = &WBaseEntity::SetOrigin;
 
+		// CBaseCombatWeapon
+		auto weaponClass = LuaState.new_usertype<WBaseCombatWeapon>("BaseCombatWeapon");
+		weaponClass["IsValid"] = &WBaseCombatWeapon::IsValid;
+		weaponClass["GetEntity"] = &WBaseCombatWeapon::GetEntity;
+		weaponClass["GetName"] = &WBaseCombatWeapon::GetName;
+		weaponClass["CanShoot"] = &WBaseCombatWeapon::CanShoot;
+		weaponClass["GetClip1"] = &WBaseCombatWeapon::GetClip1;
+		weaponClass["GetClip2"] = &WBaseCombatWeapon::GetClip2;
+		weaponClass["GetSlot"] = &WBaseCombatWeapon::GetSlot;
+		weaponClass["GetWeaponID"] = &WBaseCombatWeapon::GetWeaponID;
+		weaponClass["IsInReload"] = &WBaseCombatWeapon::IsInReload;
+
 		// CGameEvent
 		auto eventClass = LuaState.new_usertype<WGameEvent>("GameEvent");
+		eventClass["IsValid"] = &WGameEvent::IsValid;
 		eventClass["GetName"] = &WGameEvent::GetName;
 		eventClass["GetBool"] = &WGameEvent::GetBool;
 		eventClass["GetInt"] = &WGameEvent::GetInt;
@@ -142,7 +155,7 @@ void CLuaEngine::Init()
 		// Entities
 		auto entityTable = LuaState.create_named_table("Entities");
 		entityTable["GetLocalPlayer"] = [] { return WBaseEntity(g_EntityCache.GetLocal()); };
-		entityTable["GetLocalWeapon"] = [] { return WBaseEntity(g_EntityCache.GetWeapon()); };
+		entityTable["GetLocalWeapon"] = [] { return WBaseCombatWeapon(g_EntityCache.GetWeapon()); };
 		entityTable["GetPlayerResource"] = [] { return WPlayerResource(g_EntityCache.GetPR()); };
 		entityTable["GetByIndex"] = [](int idx) { return WBaseEntity(I::ClientEntityList->GetClientEntity(idx)); };
 
