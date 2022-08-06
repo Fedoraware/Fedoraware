@@ -231,19 +231,28 @@ CConfigManager::CConfigManager()
 {
 	ConfigPath = std::filesystem::current_path().string() + "\\FedFigs";
 
+	// Create 'FedFigs' folder
 	if (!std::filesystem::exists(ConfigPath))
 	{
 		std::filesystem::create_directory(ConfigPath);
 	}
 
+	// Create 'Core' folder for Attribute-Changer & Playerlist
 	if (!std::filesystem::exists(ConfigPath + "\\Core"))
 	{
 		std::filesystem::create_directory(ConfigPath + "\\Core");
 	}
 
+	// Create 'Materials' folder for custom materials
 	if (!std::filesystem::exists(ConfigPath + "\\Materials"))
 	{
 		std::filesystem::create_directory(ConfigPath + "\\Materials");
+	}
+
+	// Create 'Lua' folder for Lua scripts
+	if (!std::filesystem::exists(ConfigPath + "\\Lua"))
+	{
+		std::filesystem::create_directory(ConfigPath + "\\Lua");
 	}
 }
 

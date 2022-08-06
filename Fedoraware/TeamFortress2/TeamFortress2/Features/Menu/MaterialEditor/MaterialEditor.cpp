@@ -29,7 +29,8 @@ void CMaterialEditor::LoadMaterials()
 	// Load material files
 	for (const auto& entry : std::filesystem::directory_iterator(MaterialFolder))
 	{
-		if (std::string(std::filesystem::path(entry).filename().string()).find(".vmt") == std::string_view::npos)
+		// Ignore all non-Material files
+		if (std::filesystem::path(entry).filename().string().find(".vmt") == std::string_view::npos)
 		{
 			continue;
 		}
@@ -71,7 +72,7 @@ void CMaterialEditor::MainWindow()
 	{
 		// Toolbar
 		{
-			if (Button("Reload"))
+			if (Button("Refresh"))
 			{
 				LoadMaterials();
 			}
@@ -99,7 +100,7 @@ void CMaterialEditor::MainWindow()
 			}
 
 			SameLine();
-			if (Button("Open Folder") && !GetMaterialPath(CurrentMaterial.FileName).empty())
+			if (Button("Open Folder"))
 			{
 				ShellExecuteA(nullptr, "open", MaterialFolder.c_str(), nullptr, nullptr, SW_SHOWDEFAULT);
 			}
@@ -129,12 +130,14 @@ void CMaterialEditor::MainWindow()
 		}
 
 		// Material list
-		if (BeginChild("ListChild"))
+		if (BeginChild("ListChild###Materials"))
 		{
 			if (ListBoxHeader("###MaterialList", { GetWindowWidth(), GetWindowHeight() }))
 			{
 				for (auto const& [name, mat] : MaterialMap)
 				{
+					if (name.empty()) { continue; }
+
 					if (Selectable(name.c_str(), CurrentMaterial.FileName == mat.FileName))
 					{
 						CurrentMaterial = mat;

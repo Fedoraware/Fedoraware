@@ -18,10 +18,11 @@
 #include "../../Features/Vars.h"
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 void AppendCache()
 {
-	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	const CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	const int tickcount = I::GlobalVars->tickcount;
 
 	for (CBaseEntity* pCaching : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
@@ -158,6 +159,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Followbot.Run(pCmd);
 		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
+
+	// Run Lua callbacks
+	F::LuaCallbacks.OnCreateMove(pCmd, pSendPacket);
 
 	if (*pSendPacket) {
 		F::FakeAng.Run(pCmd); 
