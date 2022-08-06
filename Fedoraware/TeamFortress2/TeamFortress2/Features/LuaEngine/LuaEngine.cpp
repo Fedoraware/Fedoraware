@@ -88,7 +88,7 @@ void CLuaEngine::Init()
 		engineClass["GetLocalPlayer"] = &WEngineClient::GetLocalPlayer;
 		engineClass["GetMaxClients"] = &WEngineClient::GetMaxClients;
 		engineClass["GetLevelName"] = &WEngineClient::GetLevelName;
-		engineClass["GetScreenSize"] = &WEngineClient::IsInGame;
+		engineClass["GetScreenSize"] = &WEngineClient::GetScreenSize;
 		engineClass["GetViewAngles"] = &WEngineClient::GetViewAngles;
 		engineClass["SetViewAngles"] = &WEngineClient::SetViewAngles;
 
@@ -107,6 +107,18 @@ void CLuaEngine::Init()
 		entityClass["IsAlive"] = &WBaseEntity::IsAlive;
 		entityClass["GetTeam"] = &WBaseEntity::GetTeam;
 		entityClass["SetOrigin"] = &WBaseEntity::SetOrigin;
+
+		// CGameEvent
+		auto eventClass = LuaState.new_usertype<WGameEvent>("GameEvent");
+		eventClass["GetName"] = &WGameEvent::GetName;
+		eventClass["GetBool"] = &WGameEvent::GetBool;
+		eventClass["GetInt"] = &WGameEvent::GetInt;
+		eventClass["GetFloat"] = &WGameEvent::GetFloat;
+		eventClass["GetString"] = &WGameEvent::GetString;
+		eventClass["SetBool"] = &WGameEvent::SetBool;
+		eventClass["SetInt"] = &WGameEvent::SetInt;
+		eventClass["SetFloat"] = &WGameEvent::SetFloat;
+		eventClass["SetString"] = &WGameEvent::SetString;
 
 		// CTFPlayerResource
 		auto prClass = LuaState.new_usertype<WPlayerResource>("PlayerResource");
