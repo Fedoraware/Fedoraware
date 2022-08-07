@@ -18,6 +18,7 @@ public:
 	void OnCreateMove(CUserCmd* pCmd, bool* pSendPacket);
 	void OnFireGameEvent(CGameEvent* pEvent);
 	void OnUserMessage(int msgType, bf_read& msgData);
+	void OnFrameStage(int curStage);
 };
 
 ADD_FEATURE(CLuaCallbacks, LuaCallbacks)
