@@ -341,6 +341,7 @@
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WPlayerResource.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserCmd.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserMessage.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
