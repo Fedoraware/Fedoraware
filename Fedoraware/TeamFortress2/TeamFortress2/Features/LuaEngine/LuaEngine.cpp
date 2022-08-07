@@ -230,8 +230,8 @@ void CLuaEngine::Init()
 
 		// Interfaces
 		auto interfaceTable = LuaState.create_named_table("Interfaces");
-		interfaceTable["Engine"] = &engineClient; // TODO: Make this readonly
-		interfaceTable["Draw"] = &exDraw; // TODO: Make this readonly
+		interfaceTable["GetEngine"] = [] { return &engineClient; };
+		interfaceTable["GetDraw"] = [] { return exDraw; };
 
 		// Callbacks
 		auto callbackTable = LuaState.create_named_table("Callbacks");
