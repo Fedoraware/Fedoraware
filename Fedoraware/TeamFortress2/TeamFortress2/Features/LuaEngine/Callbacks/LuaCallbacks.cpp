@@ -71,3 +71,14 @@ void CLuaCallbacks::OnUserMessage(int msgType, bf_read& msgData)
 		}
 	}
 }
+
+void CLuaCallbacks::OnFrameStage(int curStage)
+{
+	for (const auto& [name, callback] : Callbacks["FrameStageNotify"])
+	{
+		if (callback.valid())
+		{
+			HandleError(callback(curStage));
+		}
+	}
+}
