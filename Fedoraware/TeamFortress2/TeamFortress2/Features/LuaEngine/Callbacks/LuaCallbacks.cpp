@@ -60,3 +60,14 @@ void CLuaCallbacks::OnFireGameEvent(CGameEvent* pEvent) {
 		}
 	}
 }
+
+void CLuaCallbacks::OnUserMessage(int msgType, bf_read& msgData)
+{
+	for (const auto& [name, callback] : Callbacks["UserMessage"])
+	{
+		if (callback.valid())
+		{
+			HandleError(callback(WUserMessage(msgType, msgData)));
+		}
+	}
+}

@@ -17,6 +17,7 @@ public:
 	void ByType(const char* type);
 	void OnCreateMove(CUserCmd* pCmd, bool* pSendPacket);
 	void OnFireGameEvent(CGameEvent* pEvent);
+	void OnUserMessage(int msgType, bf_read& msgData);
 };
 
 ADD_FEATURE(CLuaCallbacks, LuaCallbacks)

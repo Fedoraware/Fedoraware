@@ -6,3 +6,4 @@
 #include "Wrapper/WUserCmd.hpp"
 #include "Wrapper/WGameEvent.hpp"
 #include "Wrapper/WPlayerResource.h"
+#include "Wrapper/WUserMessage.hpp"

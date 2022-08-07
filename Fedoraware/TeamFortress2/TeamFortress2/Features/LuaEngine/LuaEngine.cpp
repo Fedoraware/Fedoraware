@@ -143,6 +143,17 @@ void CLuaEngine::Init()
 		prClass["GetPlayerName"] = &WPlayerResource::GetPlayerName;
 		prClass["GetDamage"] = &WPlayerResource::GetDamage;
 
+		// UserMessage
+		auto userMsgClass = LuaState.new_usertype<WUserMessage>("UserMessage");
+		userMsgClass["GetType"] = &WUserMessage::GetType;
+		userMsgClass["Reset"] = &WUserMessage::Reset;
+		userMsgClass["Seek"] = &WUserMessage::Seek;
+		userMsgClass["GetDataBits"] = &WUserMessage::GetDataBits;
+		userMsgClass["GetNumBitsLeft"] = &WUserMessage::GetNumBitsLeft;
+		userMsgClass["ReadByte"] = &WUserMessage::ReadByte;
+		userMsgClass["ReadFloat"] = &WUserMessage::ReadFloat;
+		userMsgClass["ReadString"] = &WUserMessage::ReadString;
+
 		// Draw
 		auto drawClass = LuaState.new_usertype<ExportedDraw>("DrawClass");
 		drawClass["Text"] = &ExportedDraw::Text;
@@ -212,6 +223,7 @@ void CLuaEngine::Init()
 			"IN_WEAPON1", 1 << 20,
 			"IN_WEAPON2", 1 << 21,
 			"IN_BULLRUSH", 1 << 22,
+			"IN_GRENADE1", 1 << 23,
 			"IN_GRENADE2", 1 << 24,
 			"IN_ATTACK3", 1 << 25
 		);

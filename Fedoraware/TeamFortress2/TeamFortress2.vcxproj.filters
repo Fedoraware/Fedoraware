@@ -745,6 +745,7 @@
     <ClInclude Include="TeamFortress2\SDK\sol2\sol\sol.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseCombatWeapon.h" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserMessage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
