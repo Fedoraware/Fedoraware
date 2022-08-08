@@ -1519,7 +1519,7 @@ void CMenu::MenuMisc()
 			WToggle("Taunt follows camera", &Vars::Misc::TauntFollowsCamera.Value);
 			WToggle("Taunt spin", &Vars::Misc::TauntSpin.Value);
 			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, false);
-			WSlider("Taunts pin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+			WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 			
 			WToggle("Fast Accel", &Vars::Misc::FastAccel.Value); HelpMarker("Makes you accelerate to full speed faster.");
 			WToggle("Crouch Speed", &Vars::Misc::CrouchSpeed.Value); HelpMarker("Allows you to move at full speed while crouched.");
