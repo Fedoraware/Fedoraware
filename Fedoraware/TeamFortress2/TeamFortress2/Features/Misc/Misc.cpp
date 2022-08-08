@@ -885,6 +885,7 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	// 17 = TF_COND_SHIELD_CHARGE
+	
 	if (pLocal && pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?

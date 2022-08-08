@@ -151,12 +151,16 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 				if (pTick.WorldSpaceCenter.DistTo(pLocal->GetWorldSpaceCenter()) > flRange * 2)
 				{
+					pEnemy->SetAbsOrigin(vOriginalPos);
+					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
 
 				// Can we backstab the target?
 				if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pTick.WorldSpaceCenter - pLocal->GetWorldSpaceCenter())))
 				{
+					pEnemy->SetAbsOrigin(vOriginalPos);
+					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
 
