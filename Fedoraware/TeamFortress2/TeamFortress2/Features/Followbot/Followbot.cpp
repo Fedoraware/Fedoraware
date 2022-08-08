@@ -21,6 +21,8 @@ bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 // Optimizes the path and removes useless Nodes
 void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 {
+	std::lock_guard guard(PathMutex);
+
 	for (size_t i = 0; i < PathNodes.size(); i++)
 	{
 		auto& currentNode = PathNodes[i];
@@ -32,6 +34,7 @@ void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 				PathNodes.pop_front();
 				garbageNodes--;
 			}
+			
 			return;
 		}
 	}
@@ -57,19 +60,17 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 
 void CFollowbot::Run(CUserCmd* pCmd)
 {
-	if (!Vars::Misc::Followbot::Enabled.Value)
+	const auto& pLocal = g_EntityCache.GetLocal();
+	if (!Vars::Misc::Followbot::Enabled.Value || !pLocal || !pLocal->IsAlive())
 	{
-		CurrentTarget = nullptr;
+		Reset();
 		return;
 	}
-
-	const auto& pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !pLocal->IsAlive()) { return; }
 
 	// Find a new target if we don't have one
 	if (!ValidTarget(CurrentTarget, pLocal) || PathNodes.size() >= 300)
 	{
-		PathNodes.clear();
+		Reset();
 		CurrentTarget = FindTarget(pLocal);
 	}
 	if (!CurrentTarget) { return; }
@@ -122,6 +123,12 @@ void CFollowbot::Run(CUserCmd* pCmd)
 
 		OptimizePath(pLocal);
 	}
+}
+
+void CFollowbot::Reset()
+{
+	CurrentTarget = nullptr;
+	PathNodes.clear();
 }
 
 void CFollowbot::Draw()

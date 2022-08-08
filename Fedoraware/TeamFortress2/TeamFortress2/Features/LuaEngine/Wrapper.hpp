@@ -7,3 +7,4 @@
 #include "Wrapper/WGameEvent.hpp"
 #include "Wrapper/WPlayerResource.h"
 #include "Wrapper/WUserMessage.hpp"
+#include "Wrapper/WDraw.hpp"

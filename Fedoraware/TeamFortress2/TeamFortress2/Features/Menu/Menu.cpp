@@ -1639,13 +1639,16 @@ void CMenu::MenuMisc()
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::EngineClient->ClientCmd_Unrestricted("itemtest");
 
-			if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
+			if (!I::EngineClient->IsConnected())
 			{
-				F::Misc.UnlockAchievements();
-			}
-			if (Button("Lock all achievements", ImVec2(btnWidth, 20)))
-			{
-				F::Misc.LockAchievements();
+				if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
+				{
+					F::Misc.UnlockAchievements();
+				}
+				if (Button("Lock all achievements", ImVec2(btnWidth, 20)))
+				{
+					F::Misc.LockAchievements();
+				}
 			}
 		} EndChild();
 
