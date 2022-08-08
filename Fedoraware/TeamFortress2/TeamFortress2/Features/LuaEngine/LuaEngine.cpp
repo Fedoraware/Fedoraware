@@ -4,7 +4,7 @@
 #include <sol/sol.hpp>
 #include <boost/algorithm/string/join.hpp>
 
-#include "Interfaces.hpp"
+#include "Wrapper.hpp"
 #include "Callbacks/LuaCallbacks.h"
 #include "../Commands/Commands.h"
 
@@ -20,7 +20,8 @@ void CLuaEngine::ExecuteFile(const std::string& file)
 /* Executes the given expression */
 void CLuaEngine::ExecuteString(const std::string& expression)
 {
-	LuaState.safe_script(expression);
+	const auto result = LuaState.safe_script(expression, &sol::script_pass_on_error);
+	HandleError(result);
 }
 
 void CLuaEngine::HandleError(const sol::protected_function_result& result)
@@ -57,7 +58,7 @@ void CLuaEngine::Init()
 
 	/* Initialize LuaBridge */
 	{
-		static ExportedDraw exDraw;
+		static WDraw draw;
 		static WEngineClient engineClient(I::EngineClient);
 
 		// Vector3
@@ -65,6 +66,10 @@ void CLuaEngine::Init()
 		vecClass["x"] = &Vec3::x;
 		vecClass["y"] = &Vec3::y;
 		vecClass["z"] = &Vec3::z;
+		vecClass["Cross"] = &Vec3::Cross;
+		vecClass["DistTo"] = &Vec3::DistTo;
+		vecClass["IsZero"] = &Vec3::IsZero;
+		vecClass["Length"] = &Vec3::Length;
 
 		// CUserCmd
 		auto userCmdClass = LuaState.new_usertype<WUserCmd>("UserCmd");
@@ -155,13 +160,13 @@ void CLuaEngine::Init()
 		userMsgClass["ReadString"] = &WUserMessage::ReadString;
 
 		// Draw
-		auto drawClass = LuaState.new_usertype<ExportedDraw>("DrawClass");
-		drawClass["Text"] = &ExportedDraw::Text;
-		drawClass["Line"] = &ExportedDraw::Line;
-		drawClass["Rect"] = &ExportedDraw::Rect;
-		drawClass["OutlinedRect"] = &ExportedDraw::OutlinedRect;
-		drawClass["FilledCircle"] = &ExportedDraw::FilledCircle;
-		drawClass["SetColor"] = &ExportedDraw::SetColor;
+		auto drawClass = LuaState.new_usertype<WDraw>("DrawClass");
+		drawClass["Text"] = &WDraw::Text;
+		drawClass["Line"] = &WDraw::Line;
+		drawClass["Rect"] = &WDraw::Rect;
+		drawClass["OutlinedRect"] = &WDraw::OutlinedRect;
+		drawClass["FilledCircle"] = &WDraw::FilledCircle;
+		drawClass["SetColor"] = &WDraw::SetColor;
 
 		// Entities
 		auto entityTable = LuaState.create_named_table("Entities");
@@ -237,11 +242,21 @@ void CLuaEngine::Init()
 			"FRAME_RENDER_START", EClientFrameStage::FRAME_RENDER_START,
 			"FRAME_RENDER_END", EClientFrameStage::FRAME_RENDER_END
 		);
+		enums["Fonts"] = LuaState.create_table_with(
+			"FONT_ESP", FONT_ESP,
+			"FONT_ESP_NAME", FONT_ESP_NAME,
+			"FONT_ESP_COND", FONT_ESP_COND,
+			"FONT_ESP_PICKUPS", FONT_ESP_PICKUPS,
+			"FONT_MENU", FONT_MENU,
+			"FONT_INDICATORS", FONT_INDICATORS,
+			"FONT_IMGUI", FONT_IMGUI,
+			"FONT_OSRS", FONT_OSRS
+		);
 
 		// Interfaces
 		auto interfaceTable = LuaState.create_named_table("Interfaces");
 		interfaceTable["GetEngine"] = [] { return &engineClient; };
-		interfaceTable["GetDraw"] = [] { return exDraw; };
+		interfaceTable["GetDraw"] = [] { return &draw; };
 
 		// Callbacks
 		auto callbackTable = LuaState.create_named_table("Callbacks");

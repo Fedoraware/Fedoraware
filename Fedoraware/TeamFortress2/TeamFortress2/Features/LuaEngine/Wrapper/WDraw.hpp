@@ -1,15 +1,14 @@
 #pragma once
-#include "../../SDK/SDK.h"
-#include "Wrapper.hpp"
 
-class ExportedDraw {
+class WDraw {
 	Color_t CurrentColor = { 255, 255, 255, 255 };
+	int CurrentFont = FONT_MENU;
 
 public:
 	// TODO: try default args using 'int align = 2'
 	void Text(int x, int y, const char* text)
 	{
-		g_Draw.String(FONT_MENU, x, y, CurrentColor, ALIGN_DEFAULT, "%s", text);
+		g_Draw.String(CurrentFont, x, y, CurrentColor, ALIGN_DEFAULT, "%s", text);
 	}
 
 	void Line(int x, int y, int x1, int y1)
@@ -32,11 +31,16 @@ public:
 		g_Draw.FilledCircle(x, y, radius, segments, CurrentColor);
 	}
 
-	void SetColor(int r, int g, int b, int a)
+	void SetColor(byte r, byte g, byte b, byte a)
 	{
 		CurrentColor.r = r;
 		CurrentColor.g = g;
 		CurrentColor.b = b;
 		CurrentColor.a = a;
+	}
+
+	void SetFont(int font)
+	{
+		CurrentFont = font;
 	}
 };

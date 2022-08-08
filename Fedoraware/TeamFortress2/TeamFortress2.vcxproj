@@ -332,10 +332,10 @@
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Interfaces.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseCombatWeapon.h" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
+    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WDraw.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WGameEvent.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WPlayerResource.h" />
