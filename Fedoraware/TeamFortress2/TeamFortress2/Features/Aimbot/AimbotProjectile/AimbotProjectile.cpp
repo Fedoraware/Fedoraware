@@ -1,6 +1,7 @@
 #include "AimbotProjectile.h"
 #include "../../Vars.h"
 #include "../MovementSimulation/MovementSimulation.h"
+#include "../../Visuals/Visuals.h"
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
@@ -793,7 +794,8 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 	Vec3 shootPos;
 	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment("muzzle");
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
-	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
+	F::Visuals.AddBulletTracer(shootPos, vecPos, tracerColor);
+	//I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }
 
 bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
