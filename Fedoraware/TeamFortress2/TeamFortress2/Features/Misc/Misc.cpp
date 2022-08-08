@@ -783,6 +783,7 @@ void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 bool CMisc::TauntControl(CUserCmd* pCmd)
 {
+	bool bReturn = true;
 	// Handle Taunt Slide
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -802,7 +803,7 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 					pCmd->viewangles.y += m_flSpinYaw;
 					pCmd->viewangles.x = 90.f;
 
-					return false;
+					bReturn = false;
 				}
 			}
 
@@ -820,17 +821,25 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 					}
 					else
 					{
-						pCmd->viewangles.x =90.0f;;
+						pCmd->viewangles.x = 90.0f;
 					}
-					/*pCmd->viewangles.x = (pCmd->buttons & IN_BACK) ? 91.0f : (pCmd->buttons & IN_FORWARD) ? 0.0f : 90.0f;*/
+					bReturn = false;
 				}
 
-				return false;
+				if (Vars::Misc::TauntFollowsCamera.Value)
+				{
+					Vec3 vAngle = I::EngineClient->GetViewAngles();
+					pCmd->viewangles.y = vAngle.y;
+
+					bReturn = false;
+				}
+
+				bReturn = false;
 			}
 		}
 	}
 
-	return true;
+	return bReturn;
 }
 
 void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
