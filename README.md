@@ -10,6 +10,10 @@
 <a href="https://github.com/tf2cheater2013/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tf2cheater2013/Fedoraware"></a>
 </p>  
 
+<hr/>
+
+<p align="center"><a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">Download latest build</a></p>
+
 ## Notes:
 - It is recommended to use dxlevel 90+ due to issues with imgui.
 - You might have issues with injecting if you are on Windows 10 upgraded from Windows 7.
