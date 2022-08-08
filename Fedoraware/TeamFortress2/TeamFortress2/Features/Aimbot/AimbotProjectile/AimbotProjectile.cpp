@@ -789,6 +789,16 @@ void ProjectileTracer(CBaseEntity* pLocal, const Target_t& target)
 	{
 		return;
 	}
+	if (!I::Prediction->m_bFirstTimePredicted)
+	{
+		return;
+	}
+	static int tickcount = 0;
+	if (tickcount == I::GlobalVars->tickcount)
+	{
+		return;
+	}
+	tickcount = I::GlobalVars->tickcount;
 	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
 	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 	Vec3 shootPos;
