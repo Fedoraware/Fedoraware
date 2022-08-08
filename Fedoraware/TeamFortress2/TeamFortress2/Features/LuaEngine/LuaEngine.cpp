@@ -67,6 +67,7 @@ void CLuaEngine::Init()
 		vecClass["y"] = &Vec3::y;
 		vecClass["z"] = &Vec3::z;
 		vecClass["Cross"] = &Vec3::Cross;
+		vecClass["Dot"] = &Vec3::Dot;
 		vecClass["DistTo"] = &Vec3::DistTo;
 		vecClass["IsZero"] = &Vec3::IsZero;
 		vecClass["Length"] = &Vec3::Length;
@@ -167,6 +168,7 @@ void CLuaEngine::Init()
 		drawClass["OutlinedRect"] = &WDraw::OutlinedRect;
 		drawClass["FilledCircle"] = &WDraw::FilledCircle;
 		drawClass["SetColor"] = &WDraw::SetColor;
+		drawClass["SetFont"] = &WDraw::SetFont;
 
 		// Entities
 		auto entityTable = LuaState.create_named_table("Entities");
