@@ -716,7 +716,7 @@ void CVisuals::DrawBulletTracers()
 			}
 			else
 			{
-				I::Cvar->ConsolePrintf("%f\n", flDistance);
+				//I::Cvar->ConsolePrintf("%f\n", flDistance);
 				tracerColor.a = Math::RemapValClamped(flDistance, 0, 1, 255, 0);
 			}
 			/*I::Cvar->ConsolePrintf("a: %d\n", tracerColor.a);*/
