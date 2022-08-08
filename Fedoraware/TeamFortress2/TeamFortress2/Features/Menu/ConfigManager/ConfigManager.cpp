@@ -594,6 +594,13 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Glow::World::Projectiles);
 				SAVE_VAR(Vars::Glow::World::Alpha);
 			}
+
+			//Misc
+			{
+				SAVE_VAR(Vars::Glow::Misc::MovementSimLine);
+				SAVE_VAR(Vars::Glow::Misc::BulletTracers);
+				SAVE_VAR(Vars::Glow::Misc::Sightlines);
+			}
 		}
 
 		//Radar
@@ -1289,6 +1296,13 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::World::HealthText);
 				LOAD_VAR(Vars::ESP::World::AmmoText);
 				LOAD_VAR(Vars::ESP::World::Alpha);
+			}
+
+			//Misc
+			{
+				LOAD_VAR(Vars::Glow::Misc::MovementSimLine);
+				LOAD_VAR(Vars::Glow::Misc::BulletTracers);
+				LOAD_VAR(Vars::Glow::Misc::Sightlines);
 			}
 		}
 
