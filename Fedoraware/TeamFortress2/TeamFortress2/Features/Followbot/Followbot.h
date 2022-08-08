@@ -1,4 +1,6 @@
 #pragma once
+#include <mutex>
+
 #include "../../SDK/SDK.h"
 
 class CFollowbot {
@@ -12,12 +14,13 @@ class CFollowbot {
 	};
 
 	CBaseEntity* CurrentTarget = nullptr;
+	std::deque<PathNode> PathNodes;
+	std::mutex PathMutex;
 
 public:
 	void Run(CUserCmd* pCmd);
+	void Reset();
 	void Draw();
-
-	std::deque<PathNode> PathNodes; // We have to expose this for drawing
 };
 
 ADD_FEATURE(CFollowbot, Followbot)
