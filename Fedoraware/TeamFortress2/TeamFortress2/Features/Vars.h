@@ -408,6 +408,13 @@ namespace Vars
 			inline CVar<int> Projectiles{ 1 }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{ 1.0f };
 		}
+
+		namespace Misc
+		{
+			inline CVar<bool> MovementSimLine{ false };
+			inline CVar<bool> Sightlines{ false };
+			inline CVar<bool> BulletTracers{ false };
+		}
 	}
 
 	namespace Radar

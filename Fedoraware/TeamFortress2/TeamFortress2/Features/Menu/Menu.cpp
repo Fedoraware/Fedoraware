@@ -694,6 +694,11 @@ void CMenu::MenuVisuals()
 				WToggle("Weapon glow###PlayerWeaponGlow", &Vars::Glow::Players::Weapons.Value); HelpMarker("Will draw glow on player weapons");
 				WSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 				WCombo("Glow colour###GlowColour", &Vars::Glow::Players::Color.Value, { "Team", "Health" }); HelpMarker("Which colour the glow will draw");
+
+				SectionTitle("Misc Glow");
+				WToggle("Prediction glow", &Vars::Glow::Misc::MovementSimLine.Value);
+				WToggle("Sightline glow", &Vars::Glow::Misc::Sightlines.Value);
+				WToggle("Bullet tracer glow", &Vars::Glow::Misc::BulletTracers.Value);
 			} EndChild();
 
 			EndTable();

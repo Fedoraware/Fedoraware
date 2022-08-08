@@ -10,5 +10,18 @@ MAKE_HOOK(ClientModeShared_DoPostScreenSpaceEffects, Utils::GetVFuncPtr(I::Clien
 	F::Chams.Render();
 	F::Glow.Render();
 
+	if (!Vars::Glow::Misc::MovementSimLine.Value)
+	{
+		F::Visuals.DrawMovesimLine();
+	}
+	if (!Vars::Glow::Misc::Sightlines.Value)
+	{
+		F::Visuals.DrawSightlines();
+	}
+	if (!Vars::Glow::Misc::BulletTracers.Value)
+	{
+		F::Visuals.DrawBulletTracers();
+	}
+
 	return Hook.Original<FN>()(ecx, edx, pSetup);
 }

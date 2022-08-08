@@ -72,7 +72,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 			F::Visuals.FillSightlines();
 			G::BulletTracerFix = true;
 			G::LocalSpectated = false;
-
+			F::Visuals.PruneBulletTracers();
 			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
 				for (const auto& teammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))

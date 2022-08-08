@@ -83,19 +83,11 @@ void CGlowEffect::Init()
 
 void CGlowEffect::Render()
 {
-
 	if (!m_vecGlowEntities.empty())
 		m_vecGlowEntities.clear();
 
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
-
-	if (!Vars::Glow::Main::Active.Value)
-	{
-		F::Visuals.DrawMovesimLine();
-		F::Visuals.DrawSightlines();
-		return;
-	}
 	
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -242,9 +234,18 @@ void CGlowEffect::Render()
 			}
 		}
 
-		F::Visuals.DrawMovesimLine();
-		F::Visuals.DrawSightlines();
-
+		if (Vars::Glow::Misc::MovementSimLine.Value)
+		{
+			F::Visuals.DrawMovesimLine();
+		}
+		if (Vars::Glow::Misc::Sightlines.Value)
+		{
+			F::Visuals.DrawSightlines();
+		}
+		if (Vars::Glow::Misc::BulletTracers.Value)
+		{
+			F::Visuals.DrawBulletTracers();
+		}
 		if (Vars::Glow::Buildings::Active.Value)
 		{
 			for (const auto& Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
@@ -351,7 +352,7 @@ void CGlowEffect::Render()
 
 		StencilStateDisable.SetStencilState(pRenderContext);
 
-		if (m_vecGlowEntities.empty() && G::PredLinesBackup.empty())
+		if (m_vecGlowEntities.empty() && F::Visuals.m_SightLines.empty() && F::Visuals.m_vecBulletTracers.empty() && G::PredictionLines.empty())
 			return;
 
 		I::ModelRender->ForcedMaterialOverride(m_pMatGlowColor);
@@ -372,8 +373,18 @@ void CGlowEffect::Render()
 				DrawModel(GlowEntity.m_pEntity, STUDIO_RENDER | STUDIO_NOSHADOWS, false);
 			}
 
-			F::Visuals.DrawMovesimLine();
-			F::Visuals.DrawSightlines();
+			if (Vars::Glow::Misc::MovementSimLine.Value)
+			{
+				F::Visuals.DrawMovesimLine();
+			}
+			if (Vars::Glow::Misc::Sightlines.Value)
+			{
+				F::Visuals.DrawSightlines();
+			}
+			if (Vars::Glow::Misc::BulletTracers.Value)
+			{
+				F::Visuals.DrawBulletTracers();
+			}
 
 			StencilStateDisable.SetStencilState(pRenderContext);
 		}

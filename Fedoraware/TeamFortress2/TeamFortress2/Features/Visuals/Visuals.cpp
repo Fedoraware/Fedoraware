@@ -679,6 +679,39 @@ void CVisuals::SetVisionFlags()
 	}
 }
 
+void CVisuals::AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr)
+{
+	m_vecBulletTracers.push_back({ vFrom, vTo, clr, I::GlobalVars->curtime });
+}
+
+void CVisuals::PruneBulletTracers()
+{
+	const float curtime = I::GlobalVars->curtime;
+
+	if (m_vecBulletTracers.size())
+	{
+		for (size_t i = 0; i < m_vecBulletTracers.size(); i++)
+		{
+			const auto& bulletTracer = m_vecBulletTracers.at(i);
+			if (curtime > bulletTracer.m_flTimeCreated + 5)
+			{
+				m_vecBulletTracers.erase(m_vecBulletTracers.begin(), m_vecBulletTracers.begin() + 1);
+			}
+		}
+	}
+}
+
+void CVisuals::DrawBulletTracers()
+{
+	if (m_vecBulletTracers.size())
+	{
+		for (const auto& bulletTracer : m_vecBulletTracers)
+		{
+			RenderLine(bulletTracer.m_vStartPos, bulletTracer.m_vEndPos, bulletTracer.m_Color, false);
+		}
+	}
+}
+
 void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 {
 	//Current Active Aimbot FOV

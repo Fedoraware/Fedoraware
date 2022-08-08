@@ -31,7 +31,6 @@ class CMisc {
 	float m_flSpinYaw = 0.f;
 	
 	bool SteamCleared = false;
-
 public:
 	bool TauntControl(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);

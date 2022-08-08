@@ -1,5 +1,6 @@
 #include "../Hooks.h"
 #include "../../Features/Commands/Commands.h"
+#include "../../Features/Visuals/Visuals.h"
 
 struct FireBulletsInfo_t
 {
@@ -173,8 +174,10 @@ MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 
 		{
 			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 
-			I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
-												 Colors::BulletTracer.a, true, 5);
+			F::Visuals.AddBulletTracer(trace.vStartPos, trace.vEndPos, tracerColor);
+
+			/*I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
+												 Colors::BulletTracer.a, true, 5);*/
 		}
 		if (!pLocal->IsInValidTeam())
 		{

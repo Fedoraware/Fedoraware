@@ -11,6 +11,15 @@ struct Sightline_t
 	bool m_bDraw = false;
 };
 
+struct BulletTracer_t
+{
+	Vec3 m_vStartPos;
+	Vec3 m_vEndPos;
+	Color_t m_Color;
+	float m_flTimeCreated;
+};
+
+
 class CVisuals
 {
 private:
@@ -45,6 +54,11 @@ public:
 	void DrawSightlines();
 	void FillSightlines();
 	void SetVisionFlags();
+	void AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr);
+	void PruneBulletTracers();
+	void DrawBulletTracers();
+
+	std::vector<BulletTracer_t> m_vecBulletTracers;
 
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;
