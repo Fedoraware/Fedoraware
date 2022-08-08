@@ -1516,6 +1516,9 @@ void CMenu::MenuMisc()
 			WToggle("Auto Vote", &Vars::Misc::AutoVote.Value); HelpMarker("Automatically votes yes/no depending on the target");
 			WToggle("Taunt slide", &Vars::Misc::TauntSlide.Value); HelpMarker("Allows you to input in taunts");
 			WToggle("Taunt control", &Vars::Misc::TauntControl.Value); HelpMarker("Gives full control if enabled with taunt slide");
+			WToggle("Taunt spin", &Vars::Misc::TauntSpin.Value);
+			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, false);
+			WSlider("Taunts pin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 30.f, "%.2f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 			
 			WToggle("Fast Accel", &Vars::Misc::FastAccel.Value); HelpMarker("Makes you accelerate to full speed faster.");
 			WToggle("Crouch Speed", &Vars::Misc::CrouchSpeed.Value); HelpMarker("Allows you to move at full speed while crouched.");

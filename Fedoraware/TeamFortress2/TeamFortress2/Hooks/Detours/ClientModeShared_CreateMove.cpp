@@ -188,24 +188,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		I::EngineClient->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	// Handle Taunt Slide
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		if (Vars::Misc::TauntSlide.Value && pLocal->IsTaunting())
-		{
-			if (Vars::Misc::TauntControl.Value)
-			{
-				pCmd->viewangles.x = (pCmd->buttons & IN_BACK)
-					                     ? 91.0f
-					                     : (pCmd->buttons & IN_FORWARD)
-					                     ? 0.0f
-					                     : 90.0f;
-			}
-
-			return false;
-		}
-	}
-
 	// Validates the cham materials every 3 seconds
 	static Timer validateTimer{};
 	if (validateTimer.Run(3000)) //
@@ -273,13 +255,16 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 	}
 
+	bool bSilentTaunt = !F::Misc.TauntControl(pCmd);
+
 	if (G::SilentTime ||
 		G::AAActive ||
 		G::FakeShotPitch ||
 		G::HitscanSilentActive ||
 		G::AvoidingBackstab ||
 		G::ProjectileSilentActive ||
-		G::RollExploiting)
+		G::RollExploiting ||
+		bSilentTaunt)
 	{
 		return false;
 	}

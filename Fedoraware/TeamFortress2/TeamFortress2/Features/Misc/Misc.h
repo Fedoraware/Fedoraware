@@ -28,10 +28,12 @@ class CMisc {
 	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
-
+	float m_flSpinYaw = 0.f;
+	
 	bool SteamCleared = false;
 
 public:
+	bool TauntControl(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
 	void RunLate(CUserCmd* pCmd);
 

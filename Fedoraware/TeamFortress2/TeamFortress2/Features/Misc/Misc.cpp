@@ -781,6 +781,58 @@ void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	G::SilentTime = true;
 }
 
+bool CMisc::TauntControl(CUserCmd* pCmd)
+{
+	// Handle Taunt Slide
+	if (const auto& pLocal = g_EntityCache.GetLocal())
+	{
+		if (pLocal->IsTaunting())
+		{
+			if (Vars::Misc::TauntSpin.Value)
+			{
+				static KeyHelper spinKey{ &Vars::Misc::TauntSpinKey.Value };
+				if (spinKey.Down())
+				{
+					if (m_flSpinYaw > 180)
+					{
+						m_flSpinYaw = -180;
+					}
+					m_flSpinYaw += Vars::Misc::TauntSpinSpeed.Value;
+
+					pCmd->viewangles.y += m_flSpinYaw;
+					pCmd->viewangles.x = 90.f;
+
+					return false;
+				}
+			}
+
+			if (Vars::Misc::TauntSlide.Value)
+			{
+				if (Vars::Misc::TauntControl.Value)
+				{
+					if (pCmd->buttons & IN_BACK)
+					{
+						pCmd->viewangles.x = 91.0f;
+					}
+					else if (pCmd->buttons & IN_FORWARD)
+					{
+						pCmd->viewangles.x = 0.0f;
+					}
+					else
+					{
+						pCmd->viewangles.x =90.0f;;
+					}
+					/*pCmd->viewangles.x = (pCmd->buttons & IN_BACK) ? 91.0f : (pCmd->buttons & IN_FORWARD) ? 0.0f : 90.0f;*/
+				}
+
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	if (!Vars::Misc::ViewmodelFlip.Value || G::CurWeaponType != EWeaponType::PROJECTILE) { return; }

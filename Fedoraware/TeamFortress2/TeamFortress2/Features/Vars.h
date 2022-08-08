@@ -611,6 +611,9 @@ namespace Vars
 		inline CVar<bool> Directional{ false };
 		inline CVar<bool> TauntSlide{ false };
 		inline CVar<bool> TauntControl{ false };
+		inline CVar<bool> TauntSpin{ false };
+		inline CVar<int> TauntSpinKey{ false };
+		inline CVar<float> TauntSpinSpeed{ 5.f };
 		inline CVar<bool> BypassPure{ false };
 		inline CVar<bool> NoisemakerSpam{ false };
 		inline CVar<bool> DisableInterpolation{ false };
