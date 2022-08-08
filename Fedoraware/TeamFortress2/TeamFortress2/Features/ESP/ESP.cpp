@@ -903,6 +903,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 void CESP::DrawWorld() const
 {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+
 	if (!Vars::ESP::World::Active.Value || !Vars::ESP::Main::Active.Value)
 	{
 		return;
@@ -913,36 +915,287 @@ void CESP::DrawWorld() const
 
 	I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
 
-	// Health Text
-	if (Vars::ESP::World::HealthText.Value)
+	for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 	{
-		for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(health, vTrans, x, y, w, h))
 		{
-			int x = 0, y = 0, w = 0, h = 0;
-			Vec3 vTrans[8];
-			if (GetDrawBounds(health, vTrans, x, y, w, h))
+			if (Vars::ESP::World::HealthName.Value)
 			{
 				if (Utils::W2S(health->GetVecOrigin(), vScreen))
-				{
 					g_Draw.String(FONT, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, L"Health");
-				}
-			} // obviously a health pack isn't going to be upside down, this just looks nicer.
+			}
+
+			if (Vars::ESP::World::HealthLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(health->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Colors::Health);
+			}
+
+			switch (Vars::ESP::World::HealthBox.Value)
+			{
+			case 1:
+			{
+				h += 1;
+
+				g_Draw.OutlinedRect(x, y, w, h, Colors::Health);
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+
+				h -= 1;
+				break;
+			}
+			case 2:
+			{
+				g_Draw.CornerRect(x, y, w, h, 3, 5, Colors::Health);
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
+
+				break;
+			}
+			case 3:
+			{
+				Draw3DBox(vTrans, Colors::Health);
+				break;
+			}
+			default: break;
+			}
 		}
 	}
 
-	// Ammo Text
-	if (Vars::ESP::World::AmmoText.Value)
+	for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 	{
-		for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(ammo, vTrans, x, y, w, h))
 		{
-			int x = 0, y = 0, w = 0, h = 0;
-			Vec3 vTrans[8];
-			if (GetDrawBounds(ammo, vTrans, x, y, w, h))
+			if (Vars::ESP::World::AmmoName.Value)
 			{
 				if (Utils::W2S(ammo->GetVecOrigin(), vScreen))
-				{
 					g_Draw.String(FONT, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, L"Ammo");
+			}
+
+			if (Vars::ESP::World::AmmoLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(ammo->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Colors::Ammo);
+			}
+
+			switch (Vars::ESP::World::AmmoBox.Value)
+			{
+			case 1:
+			{
+				h += 1;
+
+				g_Draw.OutlinedRect(x, y, w, h, Colors::Ammo);
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+
+				h -= 1;
+				break;
+			}
+			case 2:
+			{
+				g_Draw.CornerRect(x, y, w, h, 3, 5, Colors::Ammo);
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
+
+				break;
+			}
+			case 3:
+			{
+				Draw3DBox(vTrans, Colors::Ammo);
+				break;
+			}
+			default: break;
+			}
+		}
+	}
+
+	for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
+	{
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(NPC, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::NPCName.Value)
+			{
+				const wchar_t* szName;
+
+				switch (NPC->GetClassID())
+				{
+				case ETFClassID::CHeadlessHatman:
+				{
+					szName = L"Horseless Headless Horsemann";
+					break;
 				}
+				case ETFClassID::CTFTankBoss:
+				{
+					szName = L"Tank";
+					break;
+				}
+				case ETFClassID::CMerasmus:
+				{
+					szName = L"Merasmus";
+					break;
+				}
+				case ETFClassID::CZombie:
+				{
+					szName = L"Skeleton";
+					break;
+				}
+				case ETFClassID::CEyeballBoss:
+				{
+					szName = L"Monoculus";
+					break;
+				}
+				default:
+				{
+					szName = L"Unknown";
+					break;
+				}
+				}
+
+				nTextTopOffset += g_Draw.m_vecFonts[FONT].nTall + g_Draw.m_vecFonts[FONT].nTall / 4;
+				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(NPC, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::NPCLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(NPC->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Utils::GetEntityDrawColor(NPC, true));
+			}
+
+			switch (Vars::ESP::World::NPCBox.Value)
+			{
+			case 1:
+			{
+				h += 1;
+
+				g_Draw.OutlinedRect(x, y, w, h, Utils::GetEntityDrawColor(NPC, true));
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+
+				h -= 1;
+				break;
+			}
+			case 2:
+			{
+				g_Draw.CornerRect(x, y, w, h, 3, 5, Utils::GetEntityDrawColor(NPC, true));
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
+
+				break;
+			}
+			case 3:
+			{
+				Draw3DBox(vTrans, Utils::GetEntityDrawColor(NPC, true));
+				break;
+			}
+			default: break;
+			}
+		}
+	}
+
+	for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
+	{
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Bombs, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::BombName.Value)
+			{
+				const wchar_t* szName;
+
+				switch (Bombs->GetClassID())
+				{
+				case ETFClassID::CTFPumpkinBomb:
+				{
+					szName = L"Pumpkin Bomb";
+					break;
+				}
+				case ETFClassID::CTFGenericBomb:
+				{
+					szName = L"Bomb";
+					break;
+				}
+				default:
+				{
+					szName = L"Unknown";
+					break;
+				}
+				}
+
+				nTextTopOffset += g_Draw.m_vecFonts[FONT].nTall + g_Draw.m_vecFonts[FONT].nTall / 4;
+				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(Bombs, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::BombLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Bombs->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Utils::GetEntityDrawColor(Bombs, true));
+			}
+
+			switch (Vars::ESP::World::BombBox.Value)
+			{
+			case 1:
+			{
+				h += 1;
+
+				g_Draw.OutlinedRect(x, y, w, h, Utils::GetEntityDrawColor(Bombs, true));
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+
+				h -= 1;
+				break;
+			}
+			case 2:
+			{
+				g_Draw.CornerRect(x, y, w, h, 3, 5, Utils::GetEntityDrawColor(Bombs, true));
+
+				if (Vars::ESP::Main::Outlinedbar.Value)
+					g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
+
+				break;
+			}
+			case 3:
+			{
+				Draw3DBox(vTrans, Utils::GetEntityDrawColor(Bombs, true));
+				break;
+			}
+			default: break;
 			}
 		}
 	}

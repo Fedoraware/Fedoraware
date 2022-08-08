@@ -94,6 +94,7 @@ namespace Vars
 			inline CVar<bool> AimBuildings{ false };
 			inline CVar<bool> AimStickies{ false };
 			inline CVar<bool> AimNPC{ false };
+			inline CVar<bool> AimBombs{ false };
 			inline CVar<int> IgnoreOptions{ 0b00000 }; //taunting, friends, deadringer,cloaked, invul
 			inline CVar<bool> IgnoreInvlunerable{ false };
 			inline CVar<bool> BAimLethal{ false }; // This is in global cause i remmebered hunterman exists
@@ -198,9 +199,7 @@ namespace Vars
 		namespace Detonate
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<bool> DetonateOnPlayer{ false };
-			inline CVar<bool> DetonateOnBuilding{ false };
-			inline CVar<bool> DetonateOnSticky{ false };
+			inline CVar<int> DetonateTargets{ 0b00000 };
 			inline CVar<bool> Stickies{ false };
 			inline CVar<bool> Flares{ false };
 			inline CVar<float> RadiusScale{ 1.0f };
@@ -293,8 +292,23 @@ namespace Vars
 		namespace World
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<bool> HealthText{ false };
-			inline CVar<bool> AmmoText{ false };
+
+			inline CVar<bool> HealthName{ false };
+			inline CVar<int> HealthBox{ false };
+			inline CVar<bool> HealthLine{ false };
+
+			inline CVar<bool> AmmoName{ false };
+			inline CVar<int> AmmoBox{ false };
+			inline CVar<bool> AmmoLine{ false };
+
+			inline CVar<bool> NPCName{ false };
+			inline CVar<int> NPCBox{ false };
+			inline CVar<bool> NPCLine{ false };
+
+			inline CVar<bool> BombName{ false };
+			inline CVar<int> BombBox{ false };
+			inline CVar<bool> BombLine{ false };
+
 			inline CVar<float> Alpha{ 1.0f };
 		}
 	}
@@ -405,6 +419,7 @@ namespace Vars
 			inline CVar<bool> Health{ false };
 			inline CVar<bool> Ammo{ false };
 			inline CVar<bool> NPCs{ false };
+			inline CVar<bool> Bombs{ false };
 			inline CVar<int> Projectiles{ 1 }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{ 1.0f };
 		}

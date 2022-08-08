@@ -348,6 +348,20 @@ void CGlowEffect::Render()
 						DrawModel(NPC, STUDIO_RENDER, true);
 				}
 			}
+
+			if (Vars::Glow::World::Bombs.Value)
+			{
+				for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
+				{
+					if (!Utils::IsOnScreen(pLocal, Bombs))
+						continue;
+
+					m_vecGlowEntities.push_back({ Bombs, Utils::GetEntityDrawColor(Bombs, false), Vars::Glow::World::Alpha.Value });
+
+					if (!F::Chams.HasDrawn(Bombs))
+						DrawModel(Bombs, STUDIO_RENDER, true);
+				}
+			}
 		}
 
 		StencilStateDisable.SetStencilState(pRenderContext);
