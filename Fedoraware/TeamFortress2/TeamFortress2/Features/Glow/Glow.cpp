@@ -88,6 +88,11 @@ void CGlowEffect::Render()
 
 	if (!m_DrawnEntities.empty())
 		m_DrawnEntities.clear();
+
+	if (!Vars::Glow::Main::Active.Value)
+	{
+		return;
+	}
 	
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
