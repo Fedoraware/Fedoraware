@@ -12,7 +12,11 @@
 
 <hr/>
 
-<p align="center"><a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">Download latest build</a></p>
+<p align="center">
+<a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">
+<img src=".github/assets/download.png" align="center" height="250px">
+</a>
+</p>
 
 ## Notes:
 - It is recommended to use dxlevel 90+ due to issues with imgui.
