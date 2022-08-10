@@ -17,7 +17,7 @@ enum class GameState {
 	Match
 };
 
-static int PlayerID = Utils::RandInt(100, 999);
+static int PlayerID = Utils::RandIntSimple(100, 999);
 static int EnemyID = 0;
 
 static GameState CurrentState = GameState::None;

@@ -38,7 +38,7 @@ namespace SandvichAimbot
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.Value };
+	static KeyHelper aimKey{&Vars::Aimbot::Global::AimKey.Value};
 	return !Vars::Aimbot::Global::AimKey.Value ? true : aimKey.Down();
 }
 
@@ -100,35 +100,55 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 		switch (G::CurWeaponType)
 		{
 		case EWeaponType::HITSCAN:
-		{
-			if (G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist())
-				return true;
+			{
+				if (G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist())
+				{
+					return true;
+				}
 
-			break;
-		}
+				break;
+			}
 		case EWeaponType::PROJECTILE:
-		{
-			if (pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER || pWeapon->GetWeaponID() == TF_WEAPON_FLAREGUN)
 			{
-				if (pTarget->IsFireResist())
-					return true;
-			}
-			else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW)//Right?
-			{
-				if (pTarget->IsBulletResist())
-					return true;
-			}
-			else
-			{
-				if (pTarget->IsBlastResist())
-					return true;
-			}
+				if (pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER || pWeapon->GetWeaponID() == TF_WEAPON_FLAREGUN)
+				{
+					if (pTarget->IsFireResist())
+					{
+						return true;
+					}
+				}
+				else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW) //Right?
+				{
+					if (pTarget->IsBulletResist())
+					{
+						return true;
+					}
+				}
+				else
+				{
+					if (pTarget->IsBlastResist())
+					{
+						return true;
+					}
+				}
 
-			break;
-		}
+				break;
+			}
 		default: break;
 		}
 	}
 
 	return false;
+}
+
+Priority CAimbotGlobal::GetPriority(int targetIdx)
+{
+	const auto& playerResource = g_EntityCache.GetPR();
+	if (playerResource && playerResource->GetValid(targetIdx))
+	{
+		const uint32_t priorityID = g_EntityCache.GetPR()->GetAccountID(targetIdx);
+		return G::PlayerPriority[priorityID];
+	}
+
+	return { };
 }

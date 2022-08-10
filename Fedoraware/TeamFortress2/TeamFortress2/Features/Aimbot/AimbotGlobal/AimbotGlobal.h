@@ -54,6 +54,7 @@ public:
 	void SortTargets(const ESortMethod& Method);
 	const Target_t& GetBestTarget(const ESortMethod& Method);
 	bool ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun = false);
+	Priority GetPriority(int targetIdx);
 
 	std::vector<Target_t> m_vecTargets = {};
 };

@@ -817,6 +817,8 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
 
+	const bool respectFOV = (sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value);
+
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
 	{
@@ -847,17 +849,13 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo =Math::CalcFov(vLocalAngles, vAngleTo);
 
-			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+			if (respectFOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
+
 			const float flDistTo = (sortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
-
-			if (!g_EntityCache.GetPR()) return false;
-
-			const uint32_t priorityID = g_EntityCache.GetPR()->GetValid(pTarget->GetIndex()) ? g_EntityCache.GetPR()->GetAccountID(pTarget->GetIndex()) : 0;
-			const auto& priority = G::PlayerPriority[priorityID];
-
+			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
 			F::AimbotGlobal.m_vecTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}

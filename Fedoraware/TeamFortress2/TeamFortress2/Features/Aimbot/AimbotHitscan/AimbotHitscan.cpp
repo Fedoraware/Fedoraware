@@ -175,12 +175,8 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			const auto& playerResource = g_EntityCache.GetPR();
-			if (!playerResource) { return false; }
-
 			// Get the target priority
-			const uint32_t priorityID = playerResource->GetValid(pTarget->GetIndex()) ? playerResource->GetAccountID(pTarget->GetIndex()) : 0;
-			const auto& priority = G::PlayerPriority[priorityID];
+			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
