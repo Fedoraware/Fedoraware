@@ -251,132 +251,36 @@ if (const auto& pLocal = g_EntityCache.GetLocal()){
 	}
 	case 11:
 	{
-			if (pLocal->GetClassNum() == CLASS_SCOUT) {
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_SECONDARY)
+		const int nClassNum = pLocal->GetClassNum();
+		const int nWeaponSlot = pWeapon->GetSlot()
+		retnAngles.first = 89.f;
+		retnAngles.second = 89.f;
+		switch nClassNum
+		{
+			case CLASS_HEAVY:
+			case CLASS_DEMOMAN:
+			case CLASS_SOLDIER:
+			case CLASS_ENGINEER:
+			case CLASS_MEDIC:
+			case CLASS_SNIPER:
 			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
+				if (nWeaponSlot == SLOT_PRIMARY)
+				{	
+					retnAngles.first = -89.f;
+					retnAngles.second = -89.f;
+				}
 				break;
 			}
-			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_PYRO) {
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_SECONDARY)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_SECONDARY)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-		    if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-		    if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_SECONDARY)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY && (speed < 3.0f)) // changed it from 2 to 3 due to leg jitter.
-			{
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY) {
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-		    if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_SECONDARY)
-			{
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_MELEE)
-			{
-				retnAngles.first = -89.f;
-				retnAngles.second = -89.f;
-				break;
-			}
-			if (pLocal->GetClassNum() == CLASS_SPY) {
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				break;
-			}
-			break;
+			default: break;
 		}
 
+		if (nClassNum == CLASS_MEDIC)
+		{
+			retnAngles.first = -89.f;
+			retnAngles.second = -89.f;
+		}
+		break;
+		}
 	}
 	return retnAngles;
 	}
