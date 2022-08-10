@@ -443,8 +443,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 									iWeaponSlot = 5;
 									break;
 								}
-								default: break;
 							}
+							break;
 						}
 						case CLASS_ENGINEER:
 						{
@@ -460,8 +460,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 									iWeaponSlot = 6;
 									break;
 								}
-								default: break;
 							}
+							break;
 						}
 						default: break;
 					}
