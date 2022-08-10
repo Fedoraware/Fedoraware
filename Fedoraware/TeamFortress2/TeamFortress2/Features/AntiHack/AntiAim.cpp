@@ -246,6 +246,38 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		G::FakeViewAngles.x = FakeDown ? 89.f : -89.f;
 		break;
 	}
+	case 11:
+	{
+		if (pLocal->GetClassNum() == CLASS_SCOUT && CLASS_SPY && CLASS_PYRO) // no neeed to change their pitch
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY && (speed < 2.0f)) // if you move it changes pitch
+			{
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+	}
 	}
 	return retnAngles;
 }
