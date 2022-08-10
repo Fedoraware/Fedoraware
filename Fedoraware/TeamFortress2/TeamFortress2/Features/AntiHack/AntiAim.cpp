@@ -179,6 +179,9 @@ float CAntiAim::GetAngle(int nIndex) {
 }
 
 std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
+if (const auto& pLocal = g_EntityCache.GetLocal()){
+	const float speed = pLocal->GetVelocity().Length2D();
+	const auto& pWeapon = g_EntityCache.GetWeapon();
 	std::pair<float, float> retnAngles = { 0.f, 0.f };
 	switch (nIndex) {
 	case 2:
@@ -248,38 +251,135 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 	}
 	case 11:
 	{
-		if (pLocal->GetClassNum() == CLASS_SCOUT && CLASS_SPY && CLASS_PYRO) // no neeed to change their pitch
-			{
+			if (pLocal->GetClassNum() == CLASS_SCOUT) {
 				retnAngles.first = 89.f;
 				retnAngles.second = 89.f;
 				break;
 			}
-			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY) {
+			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_PRIMARY) {
 				retnAngles.first = -89.f;
 				retnAngles.second = -89.f;
 				break;
 			}
-			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_SECONDARY)
+			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_SECONDARY)
 			{
 				retnAngles.first = 89.f;
 				retnAngles.second = 89.f;
 				break;
 			}
-			if (pLocal->GetClassNum() == CLASS_HEAVY && CLASS_DEMOMAN && CLASS_SOLDIER && CLASS_ENGINEER && CLASS_MEDIC && CLASS_SNIPER && pWeapon->GetSlot() == SLOT_MELEE)
+			if (pLocal->GetClassNum() == CLASS_SOLDIER && pWeapon->GetSlot() == SLOT_MELEE)
 			{
 				retnAngles.first = 89.f;
 				retnAngles.second = 89.f;
 				break;
 			}
-			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY && (speed < 2.0f)) // if you move it changes pitch
+			if (pLocal->GetClassNum() == CLASS_PYRO) {
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_DEMOMAN && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+		    if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+		    if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_ENGINEER && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY && (speed < 3.0f)) // changed it from 2 to 3 due to leg jitter.
 			{
 				retnAngles.first = -89.f;
 				retnAngles.second = -89.f;
 				break;
 			}
-	}
+			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_MEDIC && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY) {
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+		    if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_SECONDARY)
+			{
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_MELEE)
+			{
+				retnAngles.first = -89.f;
+				retnAngles.second = -89.f;
+				break;
+			}
+			if (pLocal->GetClassNum() == CLASS_SPY) {
+				retnAngles.first = 89.f;
+				retnAngles.second = 89.f;
+				break;
+			}
+			break;
+		}
+
 	}
 	return retnAngles;
+	}
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
