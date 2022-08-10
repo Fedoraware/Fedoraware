@@ -26,11 +26,16 @@ namespace Hash
 	constexpr size_owned MedKitMediumBday = 2229940197;
 	constexpr size_owned MedKitLargeBday = 2131865389;
 	constexpr size_owned MedKitSandwich = 430753038;
+	constexpr size_owned MedKitSandwichXmas = 3376545636;
+	constexpr size_owned MedKitSandwichRobo = 1299884225;
 	constexpr size_owned MedKitSteak = 2817177407;
+	constexpr size_owned MedKitDalokahs = 4000983528;
+	constexpr size_owned MedKitFishCake = 3413381804;
 	constexpr size_owned MedKitSmallHalloween = 2634597576;
 	constexpr size_owned MedKitMediumHalloween = 4166466968;
 	constexpr size_owned MedKitLargeHalloween = 3893084692;
 	constexpr size_owned MedKitLargeMushroom = 980493366;
+	constexpr size_owned MedievalMeat = 969509793;
 
 	//Ammo packs
 	constexpr size_owned AmmoSmall = 2534489767;
@@ -38,6 +43,7 @@ namespace Hash
 	constexpr size_owned AmmoLarge = 1018735539;
 	constexpr size_owned AmmoLargeBday = 1501082414;
 	constexpr size_owned AmmoMediumBday = 1283759932;
+	constexpr size_owned AmmoSmallBday = 2832603626;
 
 	//Models
 	constexpr size_owned SentryBuster = 2509256133;

@@ -44,13 +44,19 @@ const char* ToHash[] =
 		"models/props_td/atom_bomb.mdl",
 		"FocusOverlayPanel",
 		"models/props_gameplay/resupply_locker.mdl",
+		"models/items/plate_sandwich_xmas.mdl",
+		"models/items/ammopack_small_bday.mdl",
+		"models/props_medieval/medieval_meat.mdl",
+		"models/items/plate_sandwich_xmas.mdl",
+		"models/items/plate_robo_sandwich.mdl",
+		"models/workshop/weapons/c_models/c_chocolate/plate_chocolate.mdl",
+		"models/workshop/weapons/c_models/c_fishcake/plate_fishcake.mdl",
 		"HudScope",
 		"info"
 };
 
 void Hash::PrintHash()
 {
-#ifdef _DEBUG
 	int ArraySize = (sizeof(ToHash) / sizeof(ToHash[0]));
 
 	for (int n = 0; n < ArraySize; n++)
@@ -65,8 +71,6 @@ void Hash::PrintHash()
 
 		I::Cvar->ConsolePrintf("constexpr size_owned %s = %lu;\n", szPrintName.data(), m_Hash(ToHash[n]));
 	}
-
-#endif
 }
 
 bool Hash::IsHudScope(const char* szName)
@@ -98,9 +102,14 @@ bool Hash::IsHealth(const char* szName)
 		case MedKitMediumHalloween:
 		case MedKitLargeHalloween:
 		case MedKitSandwich:
+		case MedKitSandwichXmas:
+		case MedKitSandwichRobo:
 		case MedKitSteak:
 		case MedKitLargeMushroom:
 		case MedKitBanana:
+		case MedievalMeat:
+		case MedKitDalokahs:
+		case MedKitFishCake:
 			return true;
 		default: 
 			return false;
@@ -114,6 +123,7 @@ bool Hash::IsAmmo(const char* szName)
 		case AmmoSmall:
 		case AmmoMedium:
 		case AmmoLarge:
+		case AmmoSmallBday:
 		case AmmoMediumBday:
 		case AmmoLargeBday:
 			return true;
