@@ -440,6 +440,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 		|| pLocal->IsSwimming()
 		|| pLocal->IsInBumperKart()
 		|| pLocal->IsAGhost()
+		|| pLocal->IsCharging()
 		|| !pLocal->OnSolid())
 	{
 		return;
@@ -886,7 +887,7 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	// 1<<17 = TFCond_Charging
 	
-	if (pLocal && pLocal->IsAlive() && pLocal->GetCond() & ~TFCond_Charging && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsCharging() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
 			pLocal->OnSolid() ? 1 : 2 : 0
