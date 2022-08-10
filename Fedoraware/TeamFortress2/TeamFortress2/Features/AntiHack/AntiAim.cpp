@@ -255,7 +255,7 @@ if (const auto& pLocal = g_EntityCache.GetLocal()){
 		const int nWeaponSlot = pWeapon->GetSlot()
 		retnAngles.first = 89.f;
 		retnAngles.second = 89.f;
-		switch nClassNum
+		switch (nClassNum)
 		{
 			case CLASS_HEAVY:
 			case CLASS_DEMOMAN:
