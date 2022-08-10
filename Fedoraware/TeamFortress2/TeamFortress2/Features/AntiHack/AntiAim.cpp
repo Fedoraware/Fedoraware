@@ -274,7 +274,7 @@ if (const auto& pLocal = g_EntityCache.GetLocal()){
 			default: break;
 		}
 
-		if (nClassNum == CLASS_MEDIC)
+		if (nClassNum == CLASS_MEDIC && speed < 2.0f)
 		{
 			retnAngles.first = -89.f;
 			retnAngles.second = -89.f;
