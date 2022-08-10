@@ -36,8 +36,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 		// Iterate through entities in sphere radius
 		for (CEntitySphereQuery sphere(pExplosive->GetWorldSpaceCenter(), radius);
-			(pTarget = sphere.GetCurrentEntity()) != nullptr;
-			sphere.NextEntity())
+		     (pTarget = sphere.GetCurrentEntity()) != nullptr;
+		     sphere.NextEntity())
 		{
 			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
 				GetTeamNum())
@@ -45,16 +45,18 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 				continue;
 			}
 
-			const bool IsPlayer = Vars::Triggerbot::Detonate::DetonateTargets.Value & (PLAYER) && pTarget->IsPlayer();
-			const bool IsBuilding = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BUILDING) && pTarget->IsBuilding();
-			const bool IsNPC = Vars::Triggerbot::Detonate::DetonateTargets.Value & (NPC) && pTarget->IsNPC();
-			const bool IsBomb = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BOMB) && pTarget->IsBomb();
-			const bool IsSticky = Vars::Triggerbot::Detonate::DetonateTargets.Value & (STICKY) && (G::CurItemDefIndex == (Demoman_s_TheQuickiebombLauncher || Demoman_s_TheScottishResistance));
+			const bool isPlayer = Vars::Triggerbot::Detonate::DetonateTargets.Value & (PLAYER) && pTarget->IsPlayer();
+			const bool isBuilding = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BUILDING) && pTarget->IsBuilding();
+			const bool isNPC = Vars::Triggerbot::Detonate::DetonateTargets.Value & (NPC) && pTarget->IsNPC();
+			const bool isBomb = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BOMB) && pTarget->IsBomb();
+			const bool isSticky = Vars::Triggerbot::Detonate::DetonateTargets.Value & (STICKY) && (G::CurItemDefIndex == Demoman_s_TheQuickiebombLauncher || G::CurItemDefIndex == Demoman_s_TheScottishResistance);
 
-			if (IsPlayer || IsBuilding || IsNPC || IsBomb || pTarget->GetPipebombType() == TYPE_STICKY && IsSticky)
+			if (isPlayer || isBuilding || isNPC || isBomb || pTarget->GetPipebombType() == TYPE_STICKY && isSticky)
 			{
-				if (IsPlayer && F::AutoGlobal.ShouldIgnore(pTarget))
+				if (isPlayer && F::AutoGlobal.ShouldIgnore(pTarget))
+				{
 					continue;
+				}
 
 				CGameTrace trace = {};
 				CTraceFilterWorldAndPropsOnly traceFilter = {};

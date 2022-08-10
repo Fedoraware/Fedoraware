@@ -417,7 +417,7 @@ namespace Utils
 		static const unsigned nSeed = std::chrono::system_clock::now().time_since_epoch().count();
 
 		std::default_random_engine gen(nSeed);
-		const std::uniform_int_distribution distr(min, max);
+		std::uniform_int_distribution distr(min, max);
 		return distr(gen);
 	}
 

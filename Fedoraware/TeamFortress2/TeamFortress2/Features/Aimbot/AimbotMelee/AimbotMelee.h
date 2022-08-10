@@ -5,6 +5,8 @@
 class CAimbotMelee
 {
 	ESortMethod GetSortMethod();
+	EGroupType GetGroupType(CBaseCombatWeapon* pWeapon);
+	bool AimFriendlyBuilding(CBaseObject* pBuilding);
 	bool CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles, int nTargetIndex);
 	bool GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target);
