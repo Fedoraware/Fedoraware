@@ -26,7 +26,6 @@ void CEntityCache::Fill()
 		for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 		{
 			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
-			const int entIdx = pEntity->GetIndex();
 
 			if (!pEntity)
 			{
@@ -34,6 +33,7 @@ void CEntityCache::Fill()
 			}
 
 			const auto nClassID = pEntity->GetClassID();
+			const int entIdx = pEntity->GetIndex();
 
 			if (pEntity->GetDormant())
 			{
