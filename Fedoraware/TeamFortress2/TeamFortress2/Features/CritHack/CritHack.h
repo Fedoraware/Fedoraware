@@ -12,9 +12,7 @@ private:
 	int LastGoodCritTick(const CUserCmd* pCmd);
 	//int DamageToNextCrit(CBaseCombatWeapon* pWeapon);	//	returns a positive value if we are crit banned
 
-	std::vector<int> critTicks{};
-	float CritBucketBP = 0;
-
+	std::vector<int> CritTicks{};
 
 	//	TODO: Create & Restore to & from this struct when scanning for crits.
 	//	Stop messing around with AddToBucket etc, just change values when scanning if needed.
@@ -28,9 +26,10 @@ private:
 public:
 	void Run(CUserCmd* pCmd);
 	void Draw();
+
 	int IndicatorW;
 	int IndicatorH;
-	bool bProtectData = false;
+	bool ProtectData = false;
 };
 
 ADD_FEATURE(CCritHack, CritHack)

@@ -38,8 +38,10 @@ MAKE_HOOK(C_BaseCombatWeapon_AddToCritBucket, g_Pattern.Find(L"client.dll", L"55
     //   /* I::Cvar->ConsolePrintf("[C_BaseCombatWeapon::AddToCritBucket] Min( m_flCritTokenBucket, flCap ) %f\n", v4);*/
     //}
 
-    if (F::CritHack.bProtectData) {
+    if (F::CritHack.ProtectData)
+    {
         return;
     }
+
 	return Hook.Original<FN>()(ecx, edx, flAmount);
 }
