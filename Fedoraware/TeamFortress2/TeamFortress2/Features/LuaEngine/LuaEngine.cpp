@@ -74,6 +74,7 @@ void CLuaEngine::Init()
 
 		// CUserCmd
 		auto userCmdClass = LuaState.new_usertype<WUserCmd>("UserCmd");
+		userCmdClass["IsValid"] = &WUserCmd::IsValid;
 		userCmdClass["GetButtons"] = &WUserCmd::GetButtons;
 		userCmdClass["GetViewAngles"] = &WUserCmd::GetViewAngles;
 		userCmdClass["GetForwardMove"] = &WUserCmd::GetForwardMove;
@@ -103,6 +104,8 @@ void CLuaEngine::Init()
 		entityClass["IsValid"] = &WBaseEntity::IsValid;
 		entityClass["GetIndex"] = &WBaseEntity::GetIndex;
 		entityClass["GetOrigin"] = &WBaseEntity::GetOrigin;
+		entityClass["GetAngles"] = &WBaseEntity::GetAngles;
+		entityClass["GetEyeAngles"] = &WBaseEntity::GetEyeAngles;
 		entityClass["GetClassID"] = &WBaseEntity::GetClassID;
 		entityClass["GetClass"] = &WBaseEntity::GetClass;
 		entityClass["GetHealth"] = &WBaseEntity::GetHealth;
@@ -113,6 +116,8 @@ void CLuaEngine::Init()
 		entityClass["IsAlive"] = &WBaseEntity::IsAlive;
 		entityClass["GetTeam"] = &WBaseEntity::GetTeam;
 		entityClass["SetOrigin"] = &WBaseEntity::SetOrigin;
+		entityClass["SetAngles"] = &WBaseEntity::SetAngles;
+		entityClass["SetEyeAngles"] = &WBaseEntity::SetEyeAngles;
 
 		// CBaseCombatWeapon
 		auto weaponClass = LuaState.new_usertype<WBaseCombatWeapon>("BaseCombatWeapon");
