@@ -766,21 +766,8 @@ bool CAimbotHitscan::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapo
 	return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 }
 
-void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
-{
-	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
-	//Color_t Color = (Utils::Rainbow());
-
-	Vec3 shootPos = pLocal->GetShootPos();
-	shootPos.z -= 5.0f;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
-	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
-}
-
-
 void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	static int nLastTracerTick = pCmd->tick_count;
 	static int nextSafeTick = pCmd->tick_count;
 
 	if (!Vars::Aimbot::Global::Active.Value)
@@ -917,15 +904,10 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		{
 			G::IsAttacking = true;
 			nextSafeTick = pCmd->tick_count; // just in case.weew
-			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
-			{
-				//bulletTracer(pLocal, Target);
-				nLastTracerTick = pCmd->tick_count;
-			}
 		}
 
 		// Set the players tickcount (Backtrack / Interpolation removal)
-		float tickCount = G::LerpTime;
+		const float tickCount = G::LerpTime;
 		const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
 		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)
