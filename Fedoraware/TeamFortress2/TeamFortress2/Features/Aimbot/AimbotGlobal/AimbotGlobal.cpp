@@ -18,7 +18,6 @@ namespace SandvichAimbot
 
 	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
 	{
-		const int nWeaponID = pWeapon->GetWeaponID();
 		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
 			                         ? (pCmd->buttons & IN_ATTACK)
 			                         : F::AimbotGlobal.IsKeyDown());

@@ -33,7 +33,6 @@ class CAimbotProjectile {
 	Vec3 GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos);
 	Vec3 GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEntity);
 	bool WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo, const Predictor_t& predictor);
-	ESortMethod GetSortMethod();
 	std::vector<Target_t> GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& target);
 	bool GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
@@ -41,8 +40,9 @@ class CAimbotProjectile {
 	bool ShouldFire(CUserCmd* pCmd);
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 	bool GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
-	bool m_bIsFlameThrower;
-	bool m_bIsBoosted;
+
+	bool IsFlameThrower = false;
+	bool IsBoosted = false;
 
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);

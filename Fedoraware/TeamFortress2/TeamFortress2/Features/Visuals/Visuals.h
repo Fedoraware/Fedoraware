@@ -57,6 +57,7 @@ public:
 	void AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr);
 	void PruneBulletTracers();
 	void DrawBulletTracers();
+	void DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position);
 
 	std::vector<BulletTracer_t> m_vecBulletTracers;
 
