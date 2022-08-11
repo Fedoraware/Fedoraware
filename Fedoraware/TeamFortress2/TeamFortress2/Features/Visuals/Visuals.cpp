@@ -725,6 +725,33 @@ void CVisuals::DrawBulletTracers()
 	}
 }
 
+void CVisuals::DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position)
+{
+	if (pLocal->IsTaunting())
+	{
+		return;
+	}
+
+	if (!I::Prediction->m_bFirstTimePredicted)
+	{
+		return;
+	}
+
+	static int lastTickcount = 0;
+	if (lastTickcount == I::GlobalVars->tickcount)
+	{
+		return;
+	}
+
+	lastTickcount = I::GlobalVars->tickcount;
+	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : position;
+	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
+	Vec3 shootPos;
+	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment("muzzle");
+	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
+	AddBulletTracer(shootPos, vecPos, tracerColor);
+}
+
 void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 {
 	//Current Active Aimbot FOV

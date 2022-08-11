@@ -65,8 +65,10 @@ MAKE_HOOK(C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket, g_Pattern.Find(L
 
 
    
-    if (F::CritHack.bProtectData) {
+    if (F::CritHack.ProtectData)
+    {
         return true;
     }
+
     return Hook.Original<FN>()(ecx, edx, flDamage);
 }

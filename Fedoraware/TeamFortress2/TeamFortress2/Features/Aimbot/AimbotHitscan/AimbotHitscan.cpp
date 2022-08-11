@@ -60,17 +60,6 @@ int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	return HITBOX_HEAD;
 }
 
-/* Returns the selected sort method */
-ESortMethod CAimbotHitscan::GetSortMethod()
-{
-	switch (Vars::Aimbot::Hitscan::SortMethod.Value)
-	{
-	case 0: return ESortMethod::FOV;
-	case 1: return ESortMethod::DISTANCE;
-	default: return ESortMethod::UNKNOWN;
-	}
-}
-
 /* Returns the target group of the current weapon */
 EGroupType CAimbotHitscan::GetGroupType(CBaseCombatWeapon* pWeapon)
 {
@@ -88,11 +77,11 @@ EGroupType CAimbotHitscan::GetGroupType(CBaseCombatWeapon* pWeapon)
 	return EGroupType::PLAYERS_ENEMIES;
 }
 
-bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
+/* Returns all valid targets */
+std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	const ESortMethod sortMethod = GetSortMethod();
-
-	F::AimbotGlobal.m_vecTargets.clear();
+	std::vector<Target_t> validTargets;
+	const auto sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Hitscan::SortMethod.Value);
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
@@ -180,7 +169,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({
+			validTargets.push_back({
 				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 			});
 		}
@@ -206,7 +195,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -241,7 +230,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -262,7 +251,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({ pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -285,12 +274,12 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			}
 
 			// The target is valid! Add it to the target vector.
-			F::AimbotGlobal.m_vecTargets.push_back({ pBomb, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pBomb, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
 	// Did we find at least one target?
-	return !F::AimbotGlobal.m_vecTargets.empty();
+	return validTargets;
 }
 
 bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
@@ -509,24 +498,24 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	return true;
 }
 
+/* Returns all valid and verified targets */
 bool CAimbotHitscan::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& outTarget)
 {
-	if (!GetTargets(pLocal, pWeapon))
-	{
-		return false;
-	}
+	auto validTargets = GetTargets(pLocal, pWeapon);
+	if (validTargets.empty()) { return false; }
 
-	F::AimbotGlobal.SortTargets(GetSortMethod());
+	// Sort the targets
+	const auto& sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Hitscan::SortMethod.Value);
+	F::AimbotGlobal.SortTargets(&validTargets, sortMethod);
 
-	for (auto& target : F::AimbotGlobal.m_vecTargets)
+	// Verify all targets
+	for (auto& target : validTargets)
 	{
-		if (!VerifyTarget(pLocal, target))
+		if (VerifyTarget(pLocal, target))
 		{
-			continue;
+			outTarget = target;
+			return true;
 		}
-
-		outTarget = target;
-		return true;
 	}
 
 	return false;
@@ -612,7 +601,8 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	}
 }
 
-bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& target)
+/* Returns whether AutoShoot should fire */
+bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const CUserCmd* pCmd, const Target_t& target)
 {
 	if (!Vars::Aimbot::Global::AutoShoot.Value)
 	{
@@ -777,21 +767,8 @@ bool CAimbotHitscan::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapo
 	return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 }
 
-void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
-{
-	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : target.m_vPos;
-	//Color_t Color = (Utils::Rainbow());
-
-	Vec3 shootPos = pLocal->GetShootPos();
-	shootPos.z -= 5.0f;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
-	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
-}
-
-
 void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	static int nLastTracerTick = pCmd->tick_count;
 	static int nextSafeTick = pCmd->tick_count;
 
 	if (!Vars::Aimbot::Global::Active.Value)
@@ -852,6 +829,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		G::HitscanRunning = true;
 		G::HitscanSilentActive = Vars::Aimbot::Hitscan::AimMethod.Value == 2;
 
+		// Smooth if spectated
 		if (Vars::Aimbot::Hitscan::SpectatedSmooth.Value && G::LocalSpectated)
 		{
 			G::HitscanSilentActive = false;
@@ -903,7 +881,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 					                 ? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
 					                 : true;
 
-				if (bDo && pWeapon->GetWeaponSpread())
+				if (bDo && pWeapon->GetWeaponSpread() != 0.f)
 				{
 					const float flTimeSinceLastShot = (pLocal->GetTickBase() * TICK_INTERVAL) - pWeapon->GetLastFireTime();
 
@@ -928,15 +906,10 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		{
 			G::IsAttacking = true;
 			nextSafeTick = pCmd->tick_count; // just in case.weew
-			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
-			{
-				//bulletTracer(pLocal, Target);
-				nLastTracerTick = pCmd->tick_count;
-			}
 		}
 
 		// Set the players tickcount (Backtrack / Interpolation removal)
-		float tickCount = G::LerpTime;
+		const float tickCount = G::LerpTime;
 		const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
 		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)

@@ -23,6 +23,18 @@ public:
 		return BaseEntity->GetAbsOrigin();
 	}
 
+	Vec3 GetAngles()
+	{
+		if (!IsValid()) { return { }; }
+		return BaseEntity->GetAbsAngles();
+	}
+
+	Vec3 GetEyeAngles()
+	{
+		if (!IsValid()) { return { }; }
+		return BaseEntity->GetEyeAngles();
+	}
+
 	int GetClassID()
 	{
 		if (!IsValid()) { return 0; }
@@ -82,6 +94,18 @@ public:
 		if (!IsValid()) { return; }
 		BaseEntity->SetAbsOrigin(v);
 		BaseEntity->SetVecOrigin(v);
+	}
+
+	void SetAngles(const Vec3 angles)
+	{
+		if (!IsValid()) { return; }
+		BaseEntity->SetAbsAngles(angles);
+	}
+
+	void SetEyeAngles(const Vec3 angles)
+	{
+		if (!IsValid()) { return; }
+		BaseEntity->SetEyeAngles(angles);
 	}
 
 };

@@ -55,16 +55,6 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	return true;
 }
 
-ESortMethod CAimbotMelee::GetSortMethod()
-{
-	switch (Vars::Aimbot::Melee::SortMethod.Value)
-	{
-	case 0: return ESortMethod::FOV;
-	case 1: return ESortMethod::DISTANCE;
-	default: return ESortMethod::UNKNOWN;
-	}
-}
-
 EGroupType CAimbotMelee::GetGroupType(CBaseCombatWeapon* pWeapon)
 {
 	if (Vars::Aimbot::Melee::WhipTeam.Value && pWeapon->GetItemDefIndex() == Soldier_t_TheDisciplinaryAction)
@@ -117,16 +107,15 @@ bool CAimbotMelee::AimFriendlyBuilding(CBaseObject* pBuilding)
 	return false;
 }
 
-bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
+std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	const ESortMethod sortMethod = GetSortMethod();
-
-	F::AimbotGlobal.m_vecTargets.clear();
+	std::vector<Target_t> validTargets;
+	const auto sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Melee::SortMethod.Value);
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
 
-	const bool respectFOV = (sortMethod == ESortMethod::FOV || Vars::Aimbot::Hitscan::RespectFOV.Value);
+	const bool respectFOV = (sortMethod == ESortMethod::FOV || Vars::Aimbot::Melee::RespectFOV.Value);
 
 	// Players
 	if (Vars::Aimbot::Global::AimPlayers.Value)
@@ -154,7 +143,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			
 			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority});
+			validTargets.push_back({pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority});
 		}
 	}
 
@@ -201,7 +190,7 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			}
 
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			F::AimbotGlobal.m_vecTargets.push_back({pObject, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pObject, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -221,11 +210,11 @@ bool CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				continue;
 			}
 
-			F::AimbotGlobal.m_vecTargets.push_back({pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
-	return !F::AimbotGlobal.m_vecTargets.empty();
+	return validTargets;
 }
 
 bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target)
@@ -292,24 +281,21 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	return true;
 }
 
-bool CAimbotMelee::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& Out)
+bool CAimbotMelee::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& outTarget)
 {
-	if (!GetTargets(pLocal, pWeapon))
-	{
-		return false;
-	}
+	auto validTargets = GetTargets(pLocal, pWeapon);
+	if (validTargets.empty()) { return false; }
 
-	F::AimbotGlobal.SortTargets(GetSortMethod());
+	const auto& sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Melee::SortMethod.Value);
+	F::AimbotGlobal.SortTargets(&validTargets, sortMethod);
 
-	for (auto& target : F::AimbotGlobal.m_vecTargets)
+	for (auto& target : validTargets)
 	{
-		if (!VerifyTarget(pLocal, pWeapon, target))
+		if (VerifyTarget(pLocal, pWeapon, target))
 		{
-			continue;
+			outTarget = target;
+			return true;
 		}
-
-		Out = target;
-		return true;
 	}
 
 	return false;
@@ -386,12 +372,13 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	return true;
 }
 
-bool CAimbotMelee::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
+bool CAimbotMelee::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 {
 	if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 	{
 		return ((pCmd->buttons & IN_ATTACK) && G::WeaponCanAttack);
 	}
+
 	return fabs(pWeapon->GetSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
 }
 
@@ -443,7 +430,6 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 				G::SilentTime = true;
 			}
 		}
-
 		else
 		{
 			Aim(pCmd, target.m_vAngleTo);

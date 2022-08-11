@@ -90,7 +90,7 @@ namespace Vars
 			inline CVar<bool> AutoShoot{ false };
 			inline CVar<bool> DontWaitForShot{ false };
 			inline CVar<bool> FlickatEnemies{ false };
-			inline CVar<bool> AimPlayers{ false };
+			inline CVar<bool> AimPlayers{ true };
 			inline CVar<bool> AimBuildings{ false };
 			inline CVar<bool> AimStickies{ false };
 			inline CVar<bool> AimNPC{ false };
@@ -199,7 +199,7 @@ namespace Vars
 		namespace Detonate
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<int> DetonateTargets{ 0b00000 };
+			inline CVar<int> DetonateTargets{ 0b00001 };
 			inline CVar<bool> Stickies{ false };
 			inline CVar<bool> Flares{ false };
 			inline CVar<float> RadiusScale{ 1.0f };
