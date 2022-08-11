@@ -601,6 +601,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	}
 }
 
+/* Returns whether AutoShoot should fire */
 bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const CUserCmd* pCmd, const Target_t& target)
 {
 	if (!Vars::Aimbot::Global::AutoShoot.Value)
@@ -828,6 +829,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		G::HitscanRunning = true;
 		G::HitscanSilentActive = Vars::Aimbot::Hitscan::AimMethod.Value == 2;
 
+		// Smooth if spectated
 		if (Vars::Aimbot::Hitscan::SpectatedSmooth.Value && G::LocalSpectated)
 		{
 			G::HitscanSilentActive = false;
@@ -879,7 +881,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 					                 ? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
 					                 : true;
 
-				if (bDo && pWeapon->GetWeaponSpread())
+				if (bDo && pWeapon->GetWeaponSpread() != 0.f)
 				{
 					const float flTimeSinceLastShot = (pLocal->GetTickBase() * TICK_INTERVAL) - pWeapon->GetLastFireTime();
 
