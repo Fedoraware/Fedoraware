@@ -60,6 +60,24 @@ void CAimbotGlobal::SortTargets(const ESortMethod& Method)
 	});
 }
 
+void CAimbotGlobal::SortTargets(std::vector<Target_t>* targets, const ESortMethod& method)
+{
+	// Sort by preference
+	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool {
+		switch (method)
+		{
+		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
+		case ESortMethod::DISTANCE: return (a.m_flDistTo < b.m_flDistTo);
+		default: return false;
+		}
+	});
+
+	// Sort by priority
+	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool {
+		return (a.n_Priority.Mode > b.n_Priority.Mode);
+	});
+}
+
 const Target_t& CAimbotGlobal::GetBestTarget(const ESortMethod& Method)
 {
 	return *std::min_element(m_vecTargets.begin(), m_vecTargets.end(), [&](const Target_t& a, const Target_t& b) -> bool {

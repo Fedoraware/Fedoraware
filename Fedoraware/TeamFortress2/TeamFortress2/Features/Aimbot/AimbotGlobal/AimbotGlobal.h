@@ -18,7 +18,6 @@ enum struct ETargetType {
 };
 
 enum struct ESortMethod {
-	UNKNOWN,
 	FOV,
 	DISTANCE
 };
@@ -52,6 +51,7 @@ class CAimbotGlobal {
 public:
 	bool IsKeyDown();
 	void SortTargets(const ESortMethod& Method);
+	void SortTargets(std::vector<Target_t>*, const ESortMethod& method);
 	const Target_t& GetBestTarget(const ESortMethod& Method);
 	bool ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun = false);
 	Priority GetPriority(int targetIdx);

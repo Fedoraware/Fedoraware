@@ -61,7 +61,7 @@ ESortMethod CAimbotMelee::GetSortMethod()
 	{
 	case 0: return ESortMethod::FOV;
 	case 1: return ESortMethod::DISTANCE;
-	default: return ESortMethod::UNKNOWN;
+	default: return ESortMethod::FOV;
 	}
 }
 

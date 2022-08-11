@@ -60,17 +60,6 @@ int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	return HITBOX_HEAD;
 }
 
-/* Returns the selected sort method */
-ESortMethod CAimbotHitscan::GetSortMethod()
-{
-	switch (Vars::Aimbot::Hitscan::SortMethod.Value)
-	{
-	case 0: return ESortMethod::FOV;
-	case 1: return ESortMethod::DISTANCE;
-	default: return ESortMethod::UNKNOWN;
-	}
-}
-
 /* Returns the target group of the current weapon */
 EGroupType CAimbotHitscan::GetGroupType(CBaseCombatWeapon* pWeapon)
 {
@@ -88,11 +77,11 @@ EGroupType CAimbotHitscan::GetGroupType(CBaseCombatWeapon* pWeapon)
 	return EGroupType::PLAYERS_ENEMIES;
 }
 
-bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
+/* Returns all valid targets */
+std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	const ESortMethod sortMethod = GetSortMethod();
-
-	F::AimbotGlobal.m_vecTargets.clear();
+	std::vector<Target_t> validTargets;
+	const auto sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Hitscan::SortMethod.Value);
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 	const Vec3 vLocalAngles = I::EngineClient->GetViewAngles();
@@ -180,7 +169,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({
+			validTargets.push_back({
 				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 			});
 		}
@@ -206,7 +195,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -241,7 +230,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({pProjectile, ETargetType::STICKY, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -262,7 +251,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 
 			// The target is valid! Add it to the target vector.
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			F::AimbotGlobal.m_vecTargets.push_back({ pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
@@ -285,12 +274,12 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			}
 
 			// The target is valid! Add it to the target vector.
-			F::AimbotGlobal.m_vecTargets.push_back({ pBomb, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pBomb, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo});
 		}
 	}
 
 	// Did we find at least one target?
-	return !F::AimbotGlobal.m_vecTargets.empty();
+	return validTargets;
 }
 
 bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
@@ -509,24 +498,24 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	return true;
 }
 
+/* Returns all valid and verified targets */
 bool CAimbotHitscan::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& outTarget)
 {
-	if (!GetTargets(pLocal, pWeapon))
-	{
-		return false;
-	}
+	auto validTargets = GetTargets(pLocal, pWeapon);
+	if (validTargets.empty()) { return false; }
 
-	F::AimbotGlobal.SortTargets(GetSortMethod());
+	// Sort the targets
+	const auto& sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Hitscan::SortMethod.Value);
+	F::AimbotGlobal.SortTargets(&validTargets, sortMethod);
 
-	for (auto& target : F::AimbotGlobal.m_vecTargets)
+	// Verify all targets
+	for (auto& target : validTargets)
 	{
-		if (!VerifyTarget(pLocal, target))
+		if (VerifyTarget(pLocal, target))
 		{
-			continue;
+			outTarget = target;
+			return true;
 		}
-
-		outTarget = target;
-		return true;
 	}
 
 	return false;
@@ -612,7 +601,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 	}
 }
 
-bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& target)
+bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const CUserCmd* pCmd, const Target_t& target)
 {
 	if (!Vars::Aimbot::Global::AutoShoot.Value)
 	{
