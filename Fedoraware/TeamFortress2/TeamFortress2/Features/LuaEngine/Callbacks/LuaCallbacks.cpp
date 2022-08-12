@@ -52,7 +52,7 @@ void CLuaCallbacks::OnCreateMove(CUserCmd* pCmd, bool* pSendPacket) {
 }
 
 void CLuaCallbacks::OnFireGameEvent(CGameEvent* pEvent) {
-	for (const auto& [name, callback] : Callbacks["CreateMove"])
+	for (const auto& [name, callback] : Callbacks["FireGameEvent"])
 	{
 		if (callback.valid())
 		{
