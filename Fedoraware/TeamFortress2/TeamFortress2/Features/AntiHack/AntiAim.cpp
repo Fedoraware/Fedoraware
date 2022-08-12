@@ -179,6 +179,9 @@ float CAntiAim::GetAngle(int nIndex) {
 }
 
 std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
+if (const auto& pLocal = g_EntityCache.GetLocal()){
+	const float speed = pLocal->GetVelocity().Length2D();
+	const auto& pWeapon = g_EntityCache.GetWeapon();
 	std::pair<float, float> retnAngles = { 0.f, 0.f };
 	switch (nIndex) {
 	case 2:
@@ -246,8 +249,41 @@ std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex) {
 		G::FakeViewAngles.x = FakeDown ? 89.f : -89.f;
 		break;
 	}
+	case 11:
+	{
+		const int nClassNum = pLocal->GetClassNum();
+		const int nWeaponSlot = pWeapon->GetSlot()
+		retnAngles.first = 89.f;
+		retnAngles.second = 89.f;
+		switch (nClassNum)
+		{
+			case CLASS_HEAVY:
+			case CLASS_DEMOMAN:
+			case CLASS_SOLDIER:
+			case CLASS_ENGINEER:
+			case CLASS_MEDIC:
+			case CLASS_SNIPER:
+			{
+				if (nWeaponSlot == SLOT_PRIMARY)
+				{	
+					retnAngles.first = -89.f;
+					retnAngles.second = -89.f;
+				}
+				break;
+			}
+			default: break;
+		}
+
+		if (nClassNum == CLASS_MEDIC && speed < 2.0f)
+		{
+			retnAngles.first = -89.f;
+			retnAngles.second = -89.f;
+		}
+		break;
+		}
 	}
 	return retnAngles;
+	}
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
