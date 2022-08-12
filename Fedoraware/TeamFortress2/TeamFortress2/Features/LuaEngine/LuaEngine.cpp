@@ -69,9 +69,9 @@ void CLuaEngine::Init()
 		vecClass["Length"] = &Vec3::Length;
 		vecClass["LengthSqr"] = &Vec3::LengthSqr;
 		vecClass["Normalize"] = &Vec3::Normalize;
-		vecClass["Length2D"] = &Vec3::Length2D
+		vecClass["Length2D"] = &Vec3::Length2D;
 		vecClass["DistTo"] = &Vec3::DistTo;
-		vecClass["DistToSqr"] = &Vec3::DistToSqr
+		vecClass["DistToSqr"] = &Vec3::DistToSqr;
 		vecClass["Dot"] = &Vec3::Dot;
 		vecClass["Cross"] = &Vec3::Cross;
 		vecClass["IsZero"] = &Vec3::IsZero;
