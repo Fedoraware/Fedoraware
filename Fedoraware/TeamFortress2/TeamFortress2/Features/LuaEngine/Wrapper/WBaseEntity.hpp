@@ -96,16 +96,21 @@ public:
 		BaseEntity->SetVecOrigin(v);
 	}
 
-	void SetAngles(const Vec3 angles)
+	void SetAngles(const Vec3& angles)
 	{
 		if (!IsValid()) { return; }
 		BaseEntity->SetAbsAngles(angles);
 	}
 
-	void SetEyeAngles(const Vec3 angles)
+	void SetEyeAngles(const Vec3& angles)
 	{
 		if (!IsValid()) { return; }
 		BaseEntity->SetEyeAngles(angles);
+	}
+
+	int GetCriticals()
+	{
+		return *reinterpret_cast<int*>(BaseEntity + 0x17F0 + 0x0074 + 0x0040);
 	}
 
 };
