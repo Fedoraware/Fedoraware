@@ -107,7 +107,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(Thrower, void*, this, "DT_BaseGrenade", "m_hThrower")
 		M_DYNVARGET(DamageRadius, float, this, "DT_BaseGrenade", "m_DmgRadius")
 		M_DYNVARGET(Streaks, int*, this, "DT_TFPlayer", "m_Shared", "m_nStreaks")
-		NETVAR(m_nStreaks, void*, "CTFPlayer", "m_nStreaks");
+		M_DYNVARGET(Crits, int, this, "DT_TFPlayer", "m_Shared", "tfsharedlocaldata", "m_ScoreData", "m_iCrits")
 
 	M_OFFSETGET(PipebombType, int, 0x8FC)
 		M_OFFSETGET(Touched, bool, 0x8F8)
@@ -232,6 +232,7 @@ public: //Netvars & conditions
 		NETVAR(m_flAnimTime, int, "CBaseAnimating", "m_flAnimTime")
 		NETVAR(m_hOwnerEntity, int, "CBaseAnimating", "m_hOwnerEntity")
 		NETVAR(m_ConditionList, void*, "CTFPlayer", "m_ConditionList")
+		NETVAR(m_nStreaks, void*, "CTFPlayer", "m_nStreaks");
 
 public: //Virtuals
 	M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)

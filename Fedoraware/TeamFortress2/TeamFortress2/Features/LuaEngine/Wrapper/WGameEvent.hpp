@@ -13,7 +13,7 @@ public:
 
 	const char* GetName()
 	{
-		if (!IsValid()) { return "Invalid"; }
+		if (!IsValid()) { return ""; }
 		return GameEvent->GetName();
 	}
 
@@ -37,7 +37,7 @@ public:
 
 	const char* GetString(const char* szKey)
 	{
-		if (!IsValid()) { return "Invalid"; }
+		if (!IsValid()) { return ""; }
 		return GameEvent->GetString(szKey);
 	}
 
