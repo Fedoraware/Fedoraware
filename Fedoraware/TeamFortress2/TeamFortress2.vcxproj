@@ -208,7 +208,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CHudCloseCaption_OnTick.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LatchInterpolationAmount.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ProcessPacketEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />

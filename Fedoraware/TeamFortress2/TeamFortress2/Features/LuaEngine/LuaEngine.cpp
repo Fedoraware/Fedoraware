@@ -118,6 +118,7 @@ void CLuaEngine::Init()
 		entityClass["SetOrigin"] = &WBaseEntity::SetOrigin;
 		entityClass["SetAngles"] = &WBaseEntity::SetAngles;
 		entityClass["SetEyeAngles"] = &WBaseEntity::SetEyeAngles;
+		entityClass["GetCriticals"] = &WBaseEntity::GetCriticals;
 
 		// CBaseCombatWeapon
 		auto weaponClass = LuaState.new_usertype<WBaseCombatWeapon>("BaseCombatWeapon");
@@ -130,6 +131,8 @@ void CLuaEngine::Init()
 		weaponClass["GetSlot"] = &WBaseCombatWeapon::GetSlot;
 		weaponClass["GetWeaponID"] = &WBaseCombatWeapon::GetWeaponID;
 		weaponClass["IsInReload"] = &WBaseCombatWeapon::IsInReload;
+		weaponClass["GetDamage"] = &WBaseCombatWeapon::GetDamage;
+		weaponClass["GetBulletsPerShot"] = &WBaseCombatWeapon::GetBulletsPerShot;
 
 		// CGameEvent
 		auto eventClass = LuaState.new_usertype<WGameEvent>("GameEvent");

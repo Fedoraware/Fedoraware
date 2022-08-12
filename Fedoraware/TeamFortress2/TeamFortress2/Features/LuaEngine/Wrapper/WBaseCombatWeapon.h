@@ -64,4 +64,16 @@ public:
 		return Weapon->IsInReload();
 	}
 
+	float GetDamage()
+	{
+		if (!IsValid()) { return 0.f; }
+		return static_cast<float>(*reinterpret_cast<int*>((*reinterpret_cast<DWORD*>(Weapon + 0xB24) << 6) + *reinterpret_cast<DWORD*>(Weapon + 0xB30) + 0x6F8));
+	}
+
+	float GetBulletsPerShot()
+	{
+		if (!IsValid()) { return 0.f; }
+		return static_cast<float>(*reinterpret_cast<int*>((*reinterpret_cast<DWORD*>(Weapon + 0xB24) << 6) + *reinterpret_cast<DWORD*>(Weapon + 0xB30) + 0x6FC));
+	}
+
 };
