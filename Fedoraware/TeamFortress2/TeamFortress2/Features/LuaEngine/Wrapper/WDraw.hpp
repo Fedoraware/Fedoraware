@@ -11,6 +11,15 @@ public:
 		g_Draw.String(CurrentFont, x, y, CurrentColor, ALIGN_DEFAULT, "%s", text);
 	}
 
+	Vec2 W2S(Vec3 v)
+	{
+		Vec3 vScreen;
+		if (Utils::W2S(v, vScreen)) {
+			return Vec2(vScreen.x, vScreen.y);
+		}
+		return Vec2(0, 0);
+	}
+
 	void Line(int x, int y, int x1, int y1)
 	{
 		g_Draw.Line(x, y, x1, y1, CurrentColor);

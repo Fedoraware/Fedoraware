@@ -66,11 +66,26 @@ void CLuaEngine::Init()
 		vecClass["x"] = &Vec3::x;
 		vecClass["y"] = &Vec3::y;
 		vecClass["z"] = &Vec3::z;
-		vecClass["Cross"] = &Vec3::Cross;
-		vecClass["Dot"] = &Vec3::Dot;
-		vecClass["DistTo"] = &Vec3::DistTo;
-		vecClass["IsZero"] = &Vec3::IsZero;
 		vecClass["Length"] = &Vec3::Length;
+		vecClass["LengthSqr"] = &Vec3::LengthSqr;
+		vecClass["Normalize"] = &Vec3::Normalize;
+		vecClass["Length2D"] = &Vec3::Length2D
+		vecClass["DistTo"] = &Vec3::DistTo;
+		vecClass["DistToSqr"] = &Vec3::DistToSqr
+		vecClass["Dot"] = &Vec3::Dot;
+		vecClass["Cross"] = &Vec3::Cross;
+		vecClass["IsZero"] = &Vec3::IsZero;
+		
+		// Vec2
+		auto vec2Class = LuaState.new_usertype<Vec2>("Vec2", sol::constructors<Vec2(), Vec2(float, float)>());
+		vec2Class["x"] = &Vec2::x;
+		vec2Class["y"] = &Vec2::y;
+		vec2Class["Normalize"] = &Vec2::Normalize;
+		vec2Class["Length"] = &Vec2::Length;
+		vec2Class["LengthSqr"] = &Vec2::LengthSqr;
+		vec2Class["DistTo"] = &Vec2::DistTo;
+		vec2Class["DistToSqr"] = &Vec2::DistToSqr;
+		vec2Class["Dot"] = &Vec2::Dot;
 
 		// CUserCmd
 		auto userCmdClass = LuaState.new_usertype<WUserCmd>("UserCmd");
@@ -211,6 +226,7 @@ void CLuaEngine::Init()
 		fwareGlobals["ShouldShift"] = [] { return G::ShouldShift; };
 		fwareGlobals["CurrentTargetIdx"] = [] { return G::CurrentTargetIdx; };
 		fwareGlobals["GetPriority"] = [](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; };
+		fwareGlobals["SilentTime"] = [] { return G::SilentTime; };
 
 		// Enums
 		auto enums = LuaState.create_named_table("Enums");
