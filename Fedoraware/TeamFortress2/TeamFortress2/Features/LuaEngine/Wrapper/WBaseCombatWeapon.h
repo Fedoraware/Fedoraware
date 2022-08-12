@@ -66,14 +66,16 @@ public:
 
 	float GetDamage()
 	{
-		if (!IsValid()) { return 0.f; }
-		return static_cast<float>(*reinterpret_cast<int*>((*reinterpret_cast<DWORD*>(Weapon + 0xB24) << 6) + *reinterpret_cast<DWORD*>(Weapon + 0xB30) + 0x6F8));
+		if (!IsValid()) { return 0; }
+		return (float)*(int*)((*(DWORD*)(Weapon + 0xB24) << 6) + *(DWORD*)(Weapon + 0xB30) + 0x6F8);
+		//return Weapon->GetWeaponData().m_nDamage;
 	}
 
 	float GetBulletsPerShot()
 	{
-		if (!IsValid()) { return 0.f; }
-		return static_cast<float>(*reinterpret_cast<int*>((*reinterpret_cast<DWORD*>(Weapon + 0xB24) << 6) + *reinterpret_cast<DWORD*>(Weapon + 0xB30) + 0x6FC));
+		if (!IsValid()) { return 0; }
+		return (float)*(int*)((*(DWORD*)(Weapon + 0xB24) << 6) + *(DWORD*)(Weapon + 0xB30) + 0x6FC);
+		//return Weapon->GetWeaponData().m_nBulletsPerShot;
 	}
 
 };

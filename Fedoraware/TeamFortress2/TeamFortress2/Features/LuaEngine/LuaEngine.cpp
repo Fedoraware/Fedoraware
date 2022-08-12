@@ -103,6 +103,7 @@ void CLuaEngine::Init()
 
 		// CEngineClient
 		auto engineClass = LuaState.new_usertype<WEngineClient>("EngineClient");
+		engineClass["IsValid"] = &WEngineClient::IsValid;
 		engineClass["IsInGame"] = &WEngineClient::IsInGame;
 		engineClass["IsConnected"] = &WEngineClient::IsConnected;
 		engineClass["IsTakingScreenshot"] = &WEngineClient::IsTakingScreenshot;
@@ -206,7 +207,7 @@ void CLuaEngine::Init()
 		inputTable["GetMousePos"] = [] {
 			int x, y;
 			I::VGuiSurface->SurfaceGetCursorPos(x, y);
-			return std::vector{ x, y };
+			return Vec2(x, y);
 		};
 
 		// GlobalInfo
@@ -227,6 +228,7 @@ void CLuaEngine::Init()
 		fwareGlobals["CurrentTargetIdx"] = [] { return G::CurrentTargetIdx; };
 		fwareGlobals["GetPriority"] = [](uint32_t friendsId) { return G::PlayerPriority[friendsId].Mode; };
 		fwareGlobals["SilentTime"] = [] { return G::SilentTime; };
+		fwareGlobals["SetSilentTime"] = [](bool state) { G::SilentTime = state; };
 
 		// Enums
 		auto enums = LuaState.create_named_table("Enums");
