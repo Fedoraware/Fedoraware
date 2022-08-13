@@ -60,6 +60,7 @@ void CLuaEngine::Init()
 	{
 		static WDraw draw;
 		static WEngineClient engineClient(I::EngineClient);
+		static WClientMode clientMode(I::ClientModeShared);
 
 		// Vector3
 		auto vecClass = LuaState.new_usertype<Vec3>("Vec3", sol::constructors<Vec3(), Vec3(float, float, float)>());
@@ -116,6 +117,10 @@ void CLuaEngine::Init()
 		engineClass["GetViewAngles"] = &WEngineClient::GetViewAngles;
 		engineClass["SetViewAngles"] = &WEngineClient::SetViewAngles;
 		engineClass["GetPlayerForUserID"] = &WEngineClient::GetPlayerForUserID;
+
+		// CClientModeShared
+		auto clientClass = LuaState.new_usertype<WClientMode>("ClientMode");
+		engineClass["ChatPrintf"] = &WClientMode::ChatPrintf;
 
 		// CBaseEntity
 		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity", sol::constructors<WBaseEntity(CBaseEntity*)>());
@@ -293,6 +298,7 @@ void CLuaEngine::Init()
 		// Interfaces
 		auto interfaceTable = LuaState.create_named_table("Interfaces");
 		interfaceTable["GetEngine"] = [] { return &engineClient; };
+		interfaceTable["GetClient"] = [] { return &clientMode; };
 		interfaceTable["GetDraw"] = [] { return &draw; };
 
 		// Callbacks
