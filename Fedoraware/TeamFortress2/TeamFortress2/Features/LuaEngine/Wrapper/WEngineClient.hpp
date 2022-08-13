@@ -46,6 +46,12 @@ public:
 		return EngineClient->GetLevelName();
 	}
 
+	int GetPlayerForUserID(int userID)
+	{
+		if (!IsValid()) { return 0; }
+		return EngineClient->GetPlayerForUserID(userID);
+	}
+
 	Vec3 GetScreenSize() {
 		if (!IsValid()) { return { }; }
 
