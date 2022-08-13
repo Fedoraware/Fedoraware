@@ -114,6 +114,7 @@ void CLuaEngine::Init()
 		engineClass["GetScreenSize"] = &WEngineClient::GetScreenSize;
 		engineClass["GetViewAngles"] = &WEngineClient::GetViewAngles;
 		engineClass["SetViewAngles"] = &WEngineClient::SetViewAngles;
+		engineClass["GetPlayerForUserID"] = &WEngineClient::GetPlayerForUserID;
 
 		// CBaseEntity
 		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity", sol::constructors<WBaseEntity(CBaseEntity*)>());
