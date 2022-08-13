@@ -111,7 +111,6 @@ public:
 	int GetCriticals()
 	{
 		if (!IsValid()) { return 0; }
-		//return *reinterpret_cast<int*>(BaseEntity + 0x17F0 + 0x0074 + 0x0040);
 		return BaseEntity->GetCrits();
 	}
 
