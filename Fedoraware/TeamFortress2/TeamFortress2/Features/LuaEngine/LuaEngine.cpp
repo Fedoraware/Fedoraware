@@ -169,9 +169,15 @@ void CLuaEngine::Init()
 		prClass["GetKills"] = &WPlayerResource::GetKills;
 		prClass["GetDeaths"] = &WPlayerResource::GetDeaths;
 		prClass["GetConnected"] = &WPlayerResource::GetConnected;
+		prClass["GetTeam"] = &WPlayerResource::GetTeam;
+		prClass["IsAlive"] = &WPlayerResource::IsAlive;
+		prClass["GetHealth"] = &WPlayerResource::GetHealth;
+		prClass["GetAccountID"] = &WPlayerResource::GetAccountID;
 		prClass["GetValid"] = &WPlayerResource::GetValid;
 		prClass["GetPlayerName"] = &WPlayerResource::GetPlayerName;
+		prClass["GetScore"] = &WPlayerResource::GetScore;
 		prClass["GetDamage"] = &WPlayerResource::GetDamage;
+		prClass["GetMaxHealth"] = &WPlayerResource::GetMaxHealth;
 
 		// UserMessage
 		auto userMsgClass = LuaState.new_usertype<WUserMessage>("UserMessage");
@@ -182,6 +188,7 @@ void CLuaEngine::Init()
 		userMsgClass["GetNumBitsLeft"] = &WUserMessage::GetNumBitsLeft;
 		userMsgClass["ReadByte"] = &WUserMessage::ReadByte;
 		userMsgClass["ReadFloat"] = &WUserMessage::ReadFloat;
+		userMsgClass["ReadLong"] = &WUserMessage::ReadLong;
 		userMsgClass["ReadString"] = &WUserMessage::ReadString;
 
 		// Draw
