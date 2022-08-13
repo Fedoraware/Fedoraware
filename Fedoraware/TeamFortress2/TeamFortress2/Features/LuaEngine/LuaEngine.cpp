@@ -100,6 +100,7 @@ void CLuaEngine::Init()
 		userCmdClass["SetForwardMove"] = &WUserCmd::SetForwardMove;
 		userCmdClass["SetSideMove"] = &WUserCmd::SetSideMove;
 		userCmdClass["SetUpMove"] = &WUserCmd::SetUpMove;
+		userCmdClass["SetSendPacket"] = &WUserCmd::SetSendPacket;
 
 		// CEngineClient
 		auto engineClass = LuaState.new_usertype<WEngineClient>("EngineClient");
