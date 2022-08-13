@@ -19,6 +19,7 @@ public:
 	void OnFireGameEvent(CGameEvent* pEvent);
 	void OnUserMessage(int msgType, bf_read& msgData);
 	void OnFrameStage(int curStage);
+	void OnAntiAim(CUserCmd* pCmd, bool* pSendPacket, bool isReal);
 };
 
 ADD_FEATURE(CLuaCallbacks, LuaCallbacks)
