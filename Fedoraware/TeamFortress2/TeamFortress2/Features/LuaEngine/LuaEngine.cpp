@@ -120,7 +120,7 @@ void CLuaEngine::Init()
 
 		// CClientModeShared
 		auto clientClass = LuaState.new_usertype<WClientMode>("ClientMode");
-		engineClass["ChatPrintf"] = &WClientMode::ChatPrintf;
+		clientClass["ChatPrintf"] = &WClientMode::ChatPrintf;
 
 		// CBaseEntity
 		auto entityClass = LuaState.new_usertype<WBaseEntity>("BaseEntity", sol::constructors<WBaseEntity(CBaseEntity*)>());

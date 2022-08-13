@@ -82,3 +82,14 @@ void CLuaCallbacks::OnFrameStage(int curStage)
 		}
 	}
 }
+
+void CLuaCallbacks::OnAntiAim(CUserCmd* pCmd, bool* pSendPacket, bool isReal)
+{
+	for (const auto& [name, callback] : Callbacks["AntiAim"])
+	{
+		if (callback.valid())
+		{
+			HandleError(callback(WUserCmd(pCmd, pSendPacket), isReal));
+		}
+	}
+}

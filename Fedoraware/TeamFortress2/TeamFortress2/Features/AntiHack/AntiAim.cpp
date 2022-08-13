@@ -1,8 +1,7 @@
 #include "AntiAim.h"
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
-
-
+#include "../LuaEngine/Callbacks/LuaCallbacks.h"
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove) {
 	//better movement fix roll and pitch above 90 and -90 l0l
@@ -322,8 +321,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 		if (G::IsAttacking) { return; }
 
-		bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
-		bool bYawSet = bPacketFlip ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
+		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
+		const bool bYawSet = bPacketFlip ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
 
 		const Vec3 vOldAngles = pCmd->viewangles;
 		const float fOldSideMove = pCmd->sidemove;
@@ -343,6 +342,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		if (bPacketFlip) {	//	real
 			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawReal.Value);
 			pCmd->viewangles.y += angOffset;
+
+			// Lua callback
+			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, bPacketFlip);
 
 			// Check if our real angle is overlapping with the fake angle
 			if (Vars::AntiHack::AntiAim::YawFake.Value != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
@@ -365,6 +367,10 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		else {	//	fake
 			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawFake.Value);
 			pCmd->viewangles.y += angOffset;
+
+			// Lua callback
+			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, bPacketFlip);
+
 			G::FakeViewAngles = pCmd->viewangles;
 			G::AntiAim.second = true;
 		}
