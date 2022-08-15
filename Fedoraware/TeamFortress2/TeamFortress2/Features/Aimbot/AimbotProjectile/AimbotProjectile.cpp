@@ -232,34 +232,26 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 
 bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
-	const Vec3 v = vTargetPos - vLocalPos;
-	const float dx = sqrt(v.x * v.x + v.y * v.y);
-	const float dy = v.z;
-	const float v0 = projInfo.m_flVelocity;
-
-	//Ballistics
-	if (const float g = g_ConVars.sv_gravity->GetFloat() * projInfo.m_flGravity)
-	{
-		const float root = v0 * v0 * v0 * v0 - g * (g * dx * dx + 2.0f * dy * v0 * v0);
-
-		if (root < 0.0f)
-		{
+	const float fGravity = g_ConVars.sv_gravity->GetFloat() * projInfo.m_flGravity;
+	const Vec3 vDelta = vTargetPos - vLocalPos;
+	const float fHyp = sqrt(vDelta.x * vDelta.x + vDelta.y * vDelta.y);
+	const float fDist = vDelta.z;
+	const float fVel = projInfo.m_flVelocity;
+	
+	if (!fGravity){
+		const Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vTargetPos);
+		out.m_flPitch = -DEG2RAD(vAngleTo.x);
+		out.m_flYaw = DEG2RAD(vAngleTo.y);
+	}
+	else{	//	arch
+		const float fRoot = pow(fVel, 4) - fGravity * (fGravity * pow(fHyp, 2) + 2.f * fDist * pow(fVel, 2));
+		if (fRoot < 0.f){
 			return false;
 		}
-
-		out.m_flPitch = atan((v0 * v0 - sqrt(root)) / (g * dx));
-		out.m_flYaw = atan2(v.y, v.x);
+		out.m_flPitch = atan((pow(fVel, 2) - sqrt(fRoot)) / (fGravity * fHyp));
+		out.m_flYaw = atan2(vDelta.y, vDelta.x);
 	}
-
-	//Straight trajectory (the time stuff later doesn't make sense with this but hey it works!)
-	else
-	{
-		const Vec3 vecAngle = Math::CalcAngle(vLocalPos, vTargetPos);
-		out.m_flPitch = -DEG2RAD(vecAngle.x);
-		out.m_flYaw = DEG2RAD(vecAngle.y);
-	}
-
-	out.m_flTime = dx / (cos(out.m_flPitch) * v0);
+	out.m_flTime = fHyp / (cos(out.m_flPitch) * fVel);
 
 	return true;
 }
