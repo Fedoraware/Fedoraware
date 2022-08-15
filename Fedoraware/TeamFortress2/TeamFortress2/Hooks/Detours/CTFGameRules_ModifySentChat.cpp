@@ -17,8 +17,6 @@ MAKE_HOOK(CTFGameRules_ModifySentChat, g_Pattern.Find(L"client.dll", L"55 8B EC 
 			ConVar* english = I::Cvar->FindVar("english");
 			if (tf_medieval_autorp && english)
 			{
-				G::FalseReturns.push_back(FNV1A::HashConst("english"));
-				G::FalseReturns.push_back(FNV1A::HashConst("tf_medieval_autorp"));
 				const bool bOriginalAutoRP = tf_medieval_autorp->GetBool();
 				const bool bOriginalEnglish = english->GetBool();
 				const bool bOriginalPlayingMedieval = pGameRules->m_bPlayingMedieval;

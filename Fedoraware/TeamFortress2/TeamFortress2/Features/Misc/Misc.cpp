@@ -196,7 +196,6 @@ void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
 	if (ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats")) {
-		G::FalseReturns.push_back(FNV1A::HashConst("sv_cheats"));
 		if (Vars::Misc::CheatsBypass.Value && sv_cheats)
 		{
 			sv_cheats->SetValue(1);
