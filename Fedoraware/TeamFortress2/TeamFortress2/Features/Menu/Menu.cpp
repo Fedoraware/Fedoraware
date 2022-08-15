@@ -1704,7 +1704,9 @@ void CMenu::SettingsWindow()
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
-		Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value);
+		if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value)){
+			I::ViewRender->SetScreenOverlayMaterial(nullptr);
+		}
 
 		SetNextItemWidth(100);
 		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);
