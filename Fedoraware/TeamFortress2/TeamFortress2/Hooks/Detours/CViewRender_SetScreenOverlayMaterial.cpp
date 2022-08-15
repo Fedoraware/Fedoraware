@@ -1,13 +1,14 @@
 #include "../Hooks.h"
+#include "../../Features/Menu/Menu.h"
 
 MAKE_HOOK(CViewRender_SetScreenOverlayMaterial, Utils::GetVFuncPtr(I::ViewRender, 20), void, __fastcall,
 	void* ecx, void* edx, IMaterial* pMaterial)
 {
 	const int matIndex = Vars::Visuals::VisualOverlay.Value;
 
-	if (!matIndex && Vars::Visuals::RemoveScreenOverlays.Value) {
-		return Hook.Original<FN>()(ecx, edx, nullptr);
-	}
+	//if (!matIndex && Vars::Visuals::RemoveScreenOverlays.Value) {
+	//	return Hook.Original<FN>()(ecx, edx, nullptr);
+	//}
 
 	IMaterial* mat = pMaterial;
 
@@ -32,6 +33,10 @@ MAKE_HOOK(CViewRender_SetScreenOverlayMaterial, Utils::GetVFuncPtr(I::ViewRender
 		mat = I::MaterialSystem->Find("effects/dodge_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 		break;
 	}
+	}
+
+	if (F::Menu.IsOpen && Vars::Menu::Vignette.Value){
+		mat = I::MaterialSystem->Find("effects/stealth_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 	}
 
 	return Hook.Original<FN>()(ecx, edx, mat);

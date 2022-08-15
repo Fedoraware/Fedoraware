@@ -263,6 +263,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		WriteTree.clear();
 		// Menu
 		{
+			SAVE_VAR(Vars::Menu::Vignette);
 			SAVE_VAR(Vars::Menu::ShowDVD);
 			SAVE_VAR(Vars::Menu::MenuKey);
 		}
@@ -1067,6 +1068,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		// Menu
 		{
+			LOAD_VAR(Vars::Menu::Vignette);
 			LOAD_VAR(Vars::Menu::ShowDVD);
 			LOAD_VAR(Vars::Menu::MenuKey);
 		}
@@ -1633,7 +1635,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::ChatFlags);
 			LOAD_VAR(Vars::Misc::MedievalChat);
 			LOAD_VAR(Vars::Misc::AutoAcceptItemDrops);
-			LOAD_VAR(Vars::Menu::ShowDVD);
 			LOAD_VAR(Vars::Misc::RegionChanger);
 			LOAD_VAR(Vars::Misc::RegionsAllowed);
 			LOAD_VAR(Vars::Misc::AutoCasualQueue);

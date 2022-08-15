@@ -41,6 +41,7 @@ namespace Vars
 		inline bool ModernDesign = false;
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
+		inline CVar<bool> Vignette{true};
 
 		inline CVar<bool> ShowDVD{ false };
 		inline CVar<int> MenuKey{ 0 };
