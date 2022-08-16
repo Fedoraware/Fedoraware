@@ -81,27 +81,34 @@ void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange
 }
 
 bool CCheaterDetection::TrustAngles(CBaseEntity* pSuspect, PlayerData& pData){
-	if (pData.NonDormantTimer < 1 || G::ChokeMap[pSuspect->GetIndex()]) { return true; }	//	our old angle data will not be reliable
-	const Vec3 oldAngles = pData.OldAngles;
-	const Vec3 curAngles = pSuspect->GetEyeAngles();
+	if (!pData.NonDormantTimer || G::ChokeMap[pSuspect->GetIndex()]) { return true; }	//	our old angle data will not be reliable
+	Vec3 oldAngles = pData.OldAngles; oldAngles.y = abs(oldAngles.y);
+	Vec3 curAngles = pSuspect->GetEyeAngles(); curAngles.y = abs(curAngles.y);
 
 	const Vec3 vDelta = oldAngles - curAngles;
-	const float flDelta = sqrt(pow(vDelta.x, 2) + pow(abs(vDelta.y), 2));
+	const float flDelta = sqrt(pow(vDelta.x, 2) + pow(vDelta.y, 2));
 
-	if (flDelta > 25){	//	this was suspicious but we don't know if they are cheating yet
+	if (flDelta > 35.f){	//	this was suspicious but we don't know if they are cheating yet
 		pData.StoredEndFlick = {true, curAngles};
 		return true;
 	}
 
-	if (pData.StoredEndFlick.first){	//	we know they flicked and want to check for inaccuracy
-		const Vec3 vEndDelta = pData.StoredEndFlick.second - curAngles;
-		const float flEndDelta = sqrt(pow(vEndDelta.x, 2) + pow(abs(vEndDelta.y), 2));;
-		pData.StoredEndFlick = {false, {0, 0, 0}};
-
-		if (flEndDelta < 2.f){
-			return false;
-		}
+	if (!pData.StoredEndFlick.first){
+		return true;
 	}
+
+	//	we know they flicked and want to check for inaccuracy
+	const Vec3 vEndDelta = pData.StoredEndFlick.second - curAngles;
+	const float flEndDelta = sqrt(pow(vEndDelta.x, 2) + pow(vEndDelta.y, 2));;
+
+	if (flEndDelta < 0.1f){
+		pData.StoredEndFlick = {false, {0, 0, 0}};
+		return false;
+	}
+
+	pData.StoredEndFlick = {false, {0, 0, 0}};
+
+
 	return true;
 }
 
@@ -191,10 +198,10 @@ void CCheaterDetection::OnTick()
 				userData.PlayerSuspicion += 1.f * FL_BHOP_MULTIPLIER;
 			}
 
-			if (!TrustAngles(pSuspect, userData)){
+			/*if (!TrustAngles(pSuspect, userData)){
 				conLogDetection(tfm::format("%s was detected as aim-snapping.\n", pi.name).c_str());
 				userData.PlayerSuspicion += 1.f * FL_SNAP_MULTIPLIER;
-			}
+			}*/
 
 			if (userData.PlayerSuspicion >= FL_SUSPICION_GATE)
 			{
