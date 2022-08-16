@@ -181,6 +181,8 @@
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.cpp" />
     <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_InterpolateServerEntities.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />

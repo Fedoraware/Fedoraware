@@ -203,6 +203,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClientState_ProcessSetConVar.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_ProcessSetConVar.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_GetInterpolationAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_InterpolateServerEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MoveToLastReceivedPosition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcFreezeCamView.cpp" />
