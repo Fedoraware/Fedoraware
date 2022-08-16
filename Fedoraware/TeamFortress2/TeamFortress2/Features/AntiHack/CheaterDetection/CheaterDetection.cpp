@@ -81,7 +81,7 @@ void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange
 }
 
 bool CCheaterDetection::TrustAngles(CBaseEntity* pSuspect, PlayerData& pData){
-	if (pData.NonDormantTimer < 1) { return true; }	//	our old angle data will not be reliable
+	if (pData.NonDormantTimer < 1 || G::ChokeMap[pSuspect->GetIndex()] > 1) { return true; }	//	our old angle data will not be reliable
 	const Vec3 oldAngles = pData.OldAngles;
 	const Vec3 curAngles = pSuspect->GetEyeAngles();
 
