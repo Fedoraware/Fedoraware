@@ -1,9 +1,11 @@
 #include "CheaterDetection.h"
 
+// TODO: make these vars
 constexpr float FL_TICKCOUNT_MULTIPLIER = 0.1f;
 constexpr float FL_BHOP_MULTIPLIER = 0.5f;
 constexpr float FL_SNAP_MULTIPLIER = 0.1f;
 constexpr float FL_SUSPICION_REMOVAL = 0.2f;
+constexpr float FL_SUSPICION_GATE = 1.f;
 
 void conLogDetection(const char* text) {
 	if (Vars::Debug::DebugInfo.Value) {
@@ -195,7 +197,7 @@ void CCheaterDetection::OnTick()
 				userData.PlayerSuspicion += 1.f * FL_SNAP_MULTIPLIER;
 			}
 
-			if (userData.PlayerSuspicion >= 1.f)
+			if (userData.PlayerSuspicion >= FL_SUSPICION_GATE)
 			{
 				conLogDetection(tfm::format("%s was marked as a cheater.\n", pi.name).c_str());
 				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
