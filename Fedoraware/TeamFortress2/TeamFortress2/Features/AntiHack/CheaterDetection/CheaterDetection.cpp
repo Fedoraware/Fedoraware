@@ -68,15 +68,15 @@ bool CCheaterDetection::IsPitchInvalid(CBaseEntity* pSuspect)
 }
 
 void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange){
-	if (iChange < 7){return;}
+	if (iChange < 15){return;}
 	PlayerInfo_t pi{ };
 	if (I::EngineClient->GetPlayerInfo(pSuspect->GetIndex(), &pi))
 	{
 		int friendsID = pi.friendsID;
 		PlayerData& userData = UserData[friendsID];
-
-		userData.PlayerSuspicion += Math::RemapValClamped((float)iChange, 0, 22, 0, 100) * FL_TICKCOUNT_MULTIPLIER;
-		//conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
+		if (userData.NonDormantTimer < 67) {return;}
+		userData.PlayerSuspicion += Math::RemapValClamped((float)iChange, 0, 22, 0.f, 1.f) * FL_TICKCOUNT_MULTIPLIER;
+		conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
 	}
 }
 
