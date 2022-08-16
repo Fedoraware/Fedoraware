@@ -42,7 +42,8 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 // Teleport
 	if ((tpKey.Down() || streaming) && G::ShiftedTicks > 0 && !G::Recharging && !G::RechargeQueued)
 	{
-		oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
+		G::ShouldShift = true;
+		oClMove(accumulated_extra_samples, false);
 		switch (Vars::Misc::CL_Move::TeleportMode.Value)
 		{
 			case 0:
@@ -78,6 +79,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				streaming = G::ShiftedTicks;
 			}
 		}
+		G::ShouldShift = false;
 		return;
 	}
 

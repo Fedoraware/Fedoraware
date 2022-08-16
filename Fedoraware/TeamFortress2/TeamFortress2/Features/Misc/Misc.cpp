@@ -81,6 +81,7 @@ void CMisc::WeaponSway()
 
 void CMisc::DetectChoke()
 {
+	if (G::ShouldShift) {return;}	//	do not do this code if we are shifting ticks.
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!player->IsAlive() || player->GetDormant())
