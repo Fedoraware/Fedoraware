@@ -14,7 +14,7 @@
 
 <p align="center">
 <a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">
-<img src=".github/assets/download.png" align="center" width="300px" height="auto">
+<img src=".github/assets/download.png" align="center" width="900px" height="auto">
 </a>
 </p>
 
