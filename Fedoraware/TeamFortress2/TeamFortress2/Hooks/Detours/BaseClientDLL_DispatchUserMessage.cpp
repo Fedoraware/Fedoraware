@@ -2,7 +2,6 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
-#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 #include <boost/algorithm/string/replace.hpp>

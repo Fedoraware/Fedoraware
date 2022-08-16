@@ -68,7 +68,7 @@ bool CCheaterDetection::IsPitchInvalid(CBaseEntity* pSuspect)
 }
 
 void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange){
-	if (!iChange){return;}
+	if (iChange < 7){return;}
 	PlayerInfo_t pi{ };
 	if (I::EngineClient->GetPlayerInfo(pSuspect->GetIndex(), &pi))
 	{

@@ -3,7 +3,6 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 

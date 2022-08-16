@@ -95,7 +95,7 @@ void CMisc::DetectChoke()
 		}
 		else
 		{
-			F::BadActors.ReportTickCount(player, G::ChokeMap[player->GetIndex()]);
+			F::BadActors.ReportTickCount(player, G::ChokeMap[player->GetIndex() - 3]);
 			G::ChokeMap[player->GetIndex()] = 0;
 		}
 	}
