@@ -93,7 +93,10 @@ void CCommands::Init()
 			 });
 	Register("f_hash", [](const std::deque<std::string>& args)
 			{
-				Hash::PrintHash();
+				std::hash<std::string_view> m_Hash;
+				const char* hashString = args[0].c_str();
+				I::Cvar->ConsolePrintf("%lu\n", m_Hash(hashString));
+				
 				return;
 			});
 	Register("f_dumpmaterials", [](const std::deque<std::string>& args)
