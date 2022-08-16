@@ -74,7 +74,7 @@ void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange
 		PlayerData& userData = UserData[friendsID];
 
 		userData.PlayerSuspicion += Math::RemapValClamped((float)iChange, 0, 22, 0, 100) * FL_TICKCOUNT_MULTIPLIER;
-		conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
+		//conLogDetection(tfm::format("%s was detected as shifting their tickbase.\n", pi.name).c_str());
 	}
 }
 
@@ -95,7 +95,8 @@ bool CCheaterDetection::TrustAngles(CBaseEntity* pSuspect, PlayerData& pData){
 		const Vec3 vEndDelta = pData.StoredEndFlick.second - curAngles;
 		const float flEndDelta = sqrt(pow(vEndDelta.x, 2) + pow(vEndDelta.y, 2));;
 
-		if (flEndDelta > 5.f){
+		if (flEndDelta < 5.f){
+			pData.StoredEndFlick = {false, {0, 0, 0}};
 			return false;	//	their mouse movement slowed to 1/4th of the speed in one tick after moving that fast? surely not.
 		}
 		pData.StoredEndFlick = {false, {0, 0, 0}};
@@ -189,7 +190,7 @@ void CCheaterDetection::OnTick()
 				userData.PlayerSuspicion += 1.f * FL_BHOP_MULTIPLIER;
 			}
 
-			if (TrustAngles(pSuspect, userData)){
+			if (!TrustAngles(pSuspect, userData)){
 				conLogDetection(tfm::format("%s was detected as aim-snapping.\n", pi.name).c_str());
 				userData.PlayerSuspicion += 1.f * FL_SNAP_MULTIPLIER;
 			}
@@ -210,6 +211,7 @@ void CCheaterDetection::OnTick()
 				userData.NonDormantTimer = 0;
 			}
 
+			userData.OldAngles = pSuspect->GetEyeAngles();
 			userData.NonDormantTimer++;
 			userData.OldPlayerSuspicion = userData.PlayerSuspicion;
 		}

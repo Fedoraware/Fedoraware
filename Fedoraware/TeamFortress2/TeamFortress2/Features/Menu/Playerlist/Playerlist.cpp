@@ -141,11 +141,11 @@ void CPlayerList::Render()
 					{
 						ImGui::TableSetColumnIndex(column);
 
-						// don't show priority or resolver for bots
-						if (Player.FakePlayer && column > 2)
-						{
-							continue;
-						}
+						//// don't show priority or resolver for bots
+						//if (Player.FakePlayer && column > 2)
+						//{
+						//	continue;
+						//}
 
 						switch (column)
 						{
