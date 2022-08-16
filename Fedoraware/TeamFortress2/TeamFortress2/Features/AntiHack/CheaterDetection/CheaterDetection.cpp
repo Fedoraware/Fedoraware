@@ -2,7 +2,7 @@
 
 constexpr float FL_TICKCOUNT_MULTIPLIER = 0.1f;
 constexpr float FL_BHOP_MULTIPLIER = 0.5f;
-constexpr float FL_PITCH_MULTIPLIER = 0.1f;
+constexpr float FL_SNAP_MULTIPLIER = 0.1f;
 constexpr float FL_SUSPICION_REMOVAL = 0.2f;
 
 void conLogDetection(const char* text) {
@@ -79,7 +79,28 @@ void CCheaterDetection::ReportTickCount(CBaseEntity* pSuspect, const int iChange
 }
 
 bool CCheaterDetection::TrustAngles(CBaseEntity* pSuspect, PlayerData& pData){
+	if (pData.NonDormantTimer < 1) { return true; }	//	our old angle data will not be reliable
 	const Vec3 oldAngles = pData.OldAngles;
+	const Vec3 curAngles = pSuspect->GetEyeAngles();
+
+	const Vec3 vDelta = oldAngles - curAngles;
+	const float flDelta = sqrt(pow(vDelta.x, 2) + pow(vDelta.y, 2));
+
+	if (flDelta > 20){	//	this was suspicious but we don't know if they are cheating yet
+		pData.StoredEndFlick = {true, curAngles};
+		return true;
+	}
+
+	if (pData.StoredEndFlick.first){	//	we know they flicked and want to check for inaccuracy
+		const Vec3 vEndDelta = pData.StoredEndFlick.second - curAngles;
+		const float flEndDelta = sqrt(pow(vEndDelta.x, 2) + pow(vEndDelta.y, 2));;
+
+		if (flEndDelta > 5.f){
+			return false;	//	their mouse movement slowed to 1/4th of the speed in one tick after moving that fast? surely not.
+		}
+		pData.StoredEndFlick = {false, {0, 0, 0}};
+	}
+	return true;
 }
 
 bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData& pData)
@@ -166,6 +187,11 @@ void CCheaterDetection::OnTick()
 			if (IsBhopping(pSuspect, userData)) {
 				conLogDetection(tfm::format("%s was detected as bhopping.\n", pi.name).c_str());
 				userData.PlayerSuspicion += 1.f * FL_BHOP_MULTIPLIER;
+			}
+
+			if (TrustAngles(pSuspect, userData)){
+				conLogDetection(tfm::format("%s was detected as aim-snapping.\n", pi.name).c_str());
+				userData.PlayerSuspicion += 1.f * FL_SNAP_MULTIPLIER;
 			}
 
 			if (userData.PlayerSuspicion >= 1.f)

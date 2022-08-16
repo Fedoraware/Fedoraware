@@ -8,6 +8,7 @@ struct PlayerData {
 	int BHopSuspicion = 0;				//	maxes out at 5, resets, adds a strike
 	int NonDormantTimer = 0;			//	stores how many ticks we have properly scanned this player for without striking them
 	Vec3 OldAngles{0, 0, 0};			//	stores the eye angles from the last tick on this player
+	std::pair<bool, Vec3> StoredEndFlick{false, {0, 0, 0}};
 };
 
 class CCheaterDetection {
