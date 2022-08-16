@@ -29,7 +29,6 @@ void CMisc::Run(CUserCmd* pCmd)
 	AntiAFK(pCmd);
 	ChatSpam();
 	CheatsBypass();
-	Teleport(pCmd);
 	PingReducer();
 	ServerHitbox(); // super secret deathpole feature!!!!
 	WeaponSway();
@@ -81,7 +80,7 @@ void CMisc::WeaponSway()
 
 void CMisc::DetectChoke()
 {
-	if (G::ShouldShift) {return;}	//	do not do this code if we are shifting ticks.
+	if (G::Teleporting || G::ShouldShift) {return;}	//	do not do this code if we are shifting ticks.
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!player->IsAlive() || player->GetDormant())
@@ -212,20 +211,6 @@ void CMisc::CheatsBypass()
 				cheatset = false;
 			}
 		}
-	}
-}
-
-void CMisc::Teleport(const CUserCmd* pCmd)
-{
-	// Stupid
-	static KeyHelper tpKey{ &Vars::Misc::CL_Move::TeleportKey.Value };
-	if (tpKey.Down())
-	{
-		if (Vars::Misc::CL_Move::TeleportMode.Value == 0 && G::TickShiftQueue == 0 && G::ShiftedTicks > 0)
-		{
-			// Plain teleport
-			G::TickShiftQueue = G::ShiftedTicks;
-		} // Why do it like this wtf?
 	}
 }
 

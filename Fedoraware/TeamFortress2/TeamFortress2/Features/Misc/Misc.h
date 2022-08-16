@@ -18,7 +18,6 @@ class CMisc {
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
 	void CheatsBypass();
-	void Teleport(const CUserCmd* pCmd);
 	void PingReducer();
 	void ServerHitbox();
 	void WeaponSway();

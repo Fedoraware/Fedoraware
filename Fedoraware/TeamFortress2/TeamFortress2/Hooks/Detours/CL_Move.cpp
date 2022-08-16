@@ -42,7 +42,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 // Teleport
 	if ((tpKey.Down() || streaming) && G::ShiftedTicks > 0 && !G::Recharging && !G::RechargeQueued)
 	{
-		G::ShouldShift = true;
+		G::Teleporting = true;
 		oClMove(accumulated_extra_samples, false);
 		switch (Vars::Misc::CL_Move::TeleportMode.Value)
 		{
@@ -79,7 +79,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 				streaming = G::ShiftedTicks;
 			}
 		}
-		G::ShouldShift = false;
+		G::Teleporting = false;
 		return;
 	}
 
@@ -89,7 +89,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 		// probably perfect method of waiting to ensure we don't mess with fakelag
 		G::RechargeQueued = false; // see relevant code @clientmodehook
 		G::Recharging = true;
-		G::TickShiftQueue = 0;
 	}
 
 	// Recharge ticks

@@ -53,9 +53,9 @@ namespace G
 	inline int WaitForShift = 0;
 	inline int ShiftedTicks = 0; // Amount of ticks that are shifted
 	inline bool ShouldShift = false; // Should we shift now?
+	inline bool Teleporting = false;
 	inline bool Recharging = false; // Are we currently recharging?
 	inline bool RechargeQueued = false; // Queues a recharge
-	inline int TickShiftQueue = 0; // Ticks that shouls be shifted
 
 	/* Choking / Packets */
 	inline bool ForceSendPacket = false; // might not actually be useful 
