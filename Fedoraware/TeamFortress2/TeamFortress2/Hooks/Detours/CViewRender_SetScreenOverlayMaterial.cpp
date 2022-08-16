@@ -5,10 +5,11 @@ MAKE_HOOK(CViewRender_SetScreenOverlayMaterial, Utils::GetVFuncPtr(I::ViewRender
 	void* ecx, void* edx, IMaterial* pMaterial)
 {
 	const int matIndex = Vars::Visuals::VisualOverlay.Value;
+	const bool menuOverlay = Vars::Menu::Vignette.Value && F::Menu.IsOpen;
 
-	//if (!matIndex && Vars::Visuals::RemoveScreenOverlays.Value) {
-	//	return Hook.Original<FN>()(ecx, edx, nullptr);
-	//}
+	if (!matIndex && !menuOverlay && Vars::Visuals::RemoveScreenOverlays.Value) {
+		return Hook.Original<FN>()(ecx, edx, nullptr);
+	}
 
 	IMaterial* mat = pMaterial;
 
@@ -35,7 +36,7 @@ MAKE_HOOK(CViewRender_SetScreenOverlayMaterial, Utils::GetVFuncPtr(I::ViewRender
 	}
 	}
 
-	if (F::Menu.IsOpen && Vars::Menu::Vignette.Value){
+	if (menuOverlay){
 		mat = I::MaterialSystem->Find("effects/stealth_overlay", TEXTURE_GROUP_CLIENT_EFFECTS, false);
 	}
 
