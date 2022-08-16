@@ -59,7 +59,7 @@ EGroupType CAimbotMelee::GetGroupType(CBaseCombatWeapon* pWeapon)
 {
 	if (Vars::Aimbot::Melee::WhipTeam.Value && pWeapon->GetItemDefIndex() == Soldier_t_TheDisciplinaryAction)
 	{
-		return EGroupType::PLAYERS_ENEMIES;
+		return EGroupType::PLAYERS_ALL;
 	}
 
 	return EGroupType::PLAYERS_ENEMIES;
