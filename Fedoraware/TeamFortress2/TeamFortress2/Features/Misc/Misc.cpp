@@ -5,6 +5,7 @@
 #include "../../Utils/Timer/Timer.hpp"
 #include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../Backtrack/Backtrack.h"
+#include "../AntiHack/CheaterDetection/CheaterDetection.h"
 
 extern int attackStringW;
 extern int attackStringH;
@@ -94,6 +95,7 @@ void CMisc::DetectChoke()
 		}
 		else
 		{
+			F::BadActors.ReportTickCount(player, G::ChokeMap[player->GetIndex()]);
 			G::ChokeMap[player->GetIndex()] = 0;
 		}
 	}
