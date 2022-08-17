@@ -183,6 +183,9 @@
     <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_InterpolateServerEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Extrapolate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
