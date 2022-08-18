@@ -572,11 +572,19 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+	const auto ModelRender_DrawModelExecute = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
+	if (!ModelRender_DrawModelExecute || !pRenderContext){
+		return false;
+	}
+		
+	I::RenderView->SetBlend(0.0f);
+	ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);		
+	I::RenderView->SetBlend(1.0f);
+
 	m_bRendering = false;
-	if (ShouldRun() && pRenderContext)
+	if (ShouldRun())
 	{
 		m_bRendering = true;
 
@@ -688,8 +696,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			I::RenderView->SetBlend(alpha);
 
 
-			if (dmeHook) {
-				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+			if (ModelRender_DrawModelExecute) {
+				ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
 
@@ -705,8 +713,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 				}
 
-				if (dmeHook) {
-					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+				if (ModelRender_DrawModelExecute) {
+					ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
 
@@ -743,8 +751,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 				}
 
-				if (dmeHook) {
-					dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
+				if (ModelRender_DrawModelExecute) {
+					ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
 
