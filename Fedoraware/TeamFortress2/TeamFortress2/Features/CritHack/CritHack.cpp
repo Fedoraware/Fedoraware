@@ -123,7 +123,7 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
 
-	if (G::IsAttacking || IsAttacking(pCmd, pWeapon) || pCmd->buttons & IN_ATTACK)
+	if (G::IsAttacking || IsAttacking(pCmd, pWeapon)/* || pCmd->buttons & IN_ATTACK*/)
 	{
 		return;
 	}
@@ -136,7 +136,7 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 		CritTicks.clear();
 	}
 
-	if (CritTicks.size() > 32)
+	if (CritTicks.size() >= 128)
 	{
 		return;
 	}
