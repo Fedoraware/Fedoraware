@@ -58,7 +58,7 @@ MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, g_Pattern.Find(L"client.dll", L"5
         return Hook.Original<FN>()(ecx, edx);
     }
 
-    if (!CritHandler()) //  this completely fucks the crit bucket for me
+    if (CritHandler()) //  this completely fucks the crit bucket for me
     {
         return;
     }
