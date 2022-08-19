@@ -188,11 +188,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		I::EngineClient->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	// Validates the cham materials every 3 seconds
+	// Validates the cham materials every 5 seconds
 	static Timer validateTimer{};
-	if (validateTimer.Run(3000)) //
+	if (validateTimer.Run(5000)) //
 	{
-		for (IMaterial* curMat : F::DMEChams.v_MatListGlobal)
+		for (IMaterial* curMat : F::DMEChams.v_MatListFix)
 		{
 			if (!curMat) { continue; }
 			F::DMEChams.ValidateMaterial(curMat);

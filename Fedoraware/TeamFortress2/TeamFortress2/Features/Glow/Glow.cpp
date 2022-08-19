@@ -44,6 +44,8 @@ void CGlowEffect::Init()
 	m_pRtFullFrame = I::MaterialSystem->FindTexture("_rt_FullFrameFB", TEXTURE_GROUP_RENDER_TARGET);
 	m_pRtQuarterSize1 = I::MaterialSystem->FindTexture("_rt_SmallFB1", TEXTURE_GROUP_RENDER_TARGET);
 
+	F::DMEChams.v_MatListGlobal.push_back(m_pMatGlowColor);
+
 	m_pMatGlowColor->IncrementReferenceCount();
 	m_pRtFullFrame->IncrementReferenceCount();
 	m_pRtQuarterSize1->IncrementReferenceCount();
@@ -53,7 +55,6 @@ void CGlowEffect::Init()
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer1->IncrementReferenceCount();
-	// This can cause a crash on inject for some reason
 	m_pRenderBuffer2 = I::MaterialSystem->CreateNamedRenderTargetTextureEx(
 		"glow_buffer_2", m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
 		RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED,

@@ -111,6 +111,7 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
 	};
 
 	v_MatListGlobal.push_back(returnMaterial);
+	v_MatListFix.push_back(returnMaterial);
 
 	return returnMaterial;
 }
