@@ -191,6 +191,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\SpectatorList\SpectatorList.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
+    <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
     <ClCompile Include="TeamFortress2\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
@@ -349,6 +350,7 @@
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserMessage.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
+    <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHk.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.h" />

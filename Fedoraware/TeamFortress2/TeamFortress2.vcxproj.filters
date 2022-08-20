@@ -186,6 +186,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Extrapolate.cpp" />
+    <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
@@ -751,6 +752,7 @@
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserMessage.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WDraw.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WClientMode.hpp" />
+    <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHk.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />

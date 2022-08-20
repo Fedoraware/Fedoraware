@@ -1,6 +1,7 @@
 #include "Hooks/HookManager.h"
 #include "Hooks/PatchManager/PatchManager.h"
 
+#include "Features/NetVarHooks/NetVarHk.h"
 #include "Features/Visuals/Visuals.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
@@ -71,6 +72,7 @@ void Initialize()
 	{
 		g_HookManager.Init();
 		g_PatchManager.Init();
+		F::NetHooks.Init();
 	}
 
 	g_ConVars.Init();
