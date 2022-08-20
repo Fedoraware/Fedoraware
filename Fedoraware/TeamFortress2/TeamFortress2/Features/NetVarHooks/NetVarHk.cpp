@@ -41,9 +41,9 @@ bool NetVarHooks::HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, R
 					std::string full_path;
 					for (auto& s : path)
 						full_path += s + "";
-					std::string poop("Required member not found: " + full_path);
-					char* poop2 = (char*)poop.c_str();
-					MessageBoxA(0, poop2, "Hooking netvar failed", MB_ICONERROR);
+					std::string stringMessage("Required member not found: " + full_path);
+					const char* errorMessage = stringMessage.c_str();
+					MessageBoxA(0, errorMessage, "Hooking netvar failed", MB_ICONERROR);
 					//logging::Info("Hooking netvar with path \"%s\" failed. Required member not found.");
 					return false;
 				}
