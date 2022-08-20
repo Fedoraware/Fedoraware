@@ -91,27 +91,29 @@ bool CDMEChams::ShouldRun()
 	return true;
 }
 
-IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV) {
+IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV, bool bSave) {
 	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
-	
-	int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{}, $frame{};
-	if (auto var = returnMaterial->FindVar("$flags", nullptr))
-		$flags = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
-		$flags_defined = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags2", nullptr))
-		$flags2 = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
-		$flags_defined2 = std::stoi(var->GetStringValue());
-	if (auto var = returnMaterial->FindVar("$frame", nullptr))
-		$frame = std::stoi(var->GetStringValue());
-	backupInformation[returnMaterial] = {
-		$flags, $flags_defined, $flags2, $flags_defined2, $frame,
-	};
-
 	v_MatListGlobal.push_back(returnMaterial);
-	v_MatListFix.push_back(returnMaterial);
+	
+	if (bSave){
+		int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{}, $frame{};
+		if (auto var = returnMaterial->FindVar("$flags", nullptr))
+			$flags = std::stoi(var->GetStringValue());
+		if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
+			$flags_defined = std::stoi(var->GetStringValue());
+		if (auto var = returnMaterial->FindVar("$flags2", nullptr))
+			$flags2 = std::stoi(var->GetStringValue());
+		if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
+			$flags_defined2 = std::stoi(var->GetStringValue());
+		if (auto var = returnMaterial->FindVar("$frame", nullptr))
+			$frame = std::stoi(var->GetStringValue());
+		backupInformation[returnMaterial] = {
+			$flags, $flags_defined, $flags2, $flags_defined2, $frame,
+		};
+
+		v_MatListFix.push_back(returnMaterial);
+	}
 
 	return returnMaterial;
 }

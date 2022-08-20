@@ -79,11 +79,11 @@ void CGlowEffect::Init()
 	m_pMatHaloAddToScreenkv->SetString("$basetexture", "glow_buffer_1");
 	m_pMatHaloAddToScreenkv->SetString("$additive", "1");
 
-	m_pMatBlurX = F::DMEChams.CreateNRef("m_pMatBlurX", m_pMatBlurXkv);
-	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv);
-	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv);
-	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv);
-	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv);
+	m_pMatBlurX = F::DMEChams.CreateNRef("m_pMatBlurX", m_pMatBlurXkv, false);
+	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv, false);
+	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv, false);
+	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv, false);
+	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);
 }
 
 void CGlowEffect::Render()
