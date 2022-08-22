@@ -734,7 +734,10 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			{
 				hullSize = {0.f, 3.7f, 3.7f};
 
-				Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
+				Vec3 vecOffset = Vec3(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
+				if (G::CurItemDefIndex == Soldier_m_TheOriginal){
+					vecOffset.y = 0.f;
+				}
 				if (pLocal->IsDucking())
 				{
 					vecOffset.z = 8.0f;
