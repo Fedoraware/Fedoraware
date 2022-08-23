@@ -187,6 +187,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Extrapolate.cpp" />
     <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
