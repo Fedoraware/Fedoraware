@@ -190,6 +190,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_SimulateRain.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Simulate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
