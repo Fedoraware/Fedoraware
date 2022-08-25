@@ -191,6 +191,14 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_SimulateRain.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Simulate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Render.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCaches.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsQueriesValid.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_EnableAbsRecomputations.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_PushAllowBoneAccess.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_MarkAimEntsDirty.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_CalcAimEntPositions.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_ToolRecordEntities.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_AddVisibleEntities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
