@@ -20,32 +20,6 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
-void AppendCache()
-{
-	const CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	const int tickcount = I::GlobalVars->tickcount;
-
-	for (CBaseEntity* pCaching : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
-	{
-		std::unordered_map<int, PlayerCache>& openCache = G::Cache[pCaching];
-		if (pCaching == pLocal || pCaching->GetDormant())
-		{
-			openCache.clear();
-			continue;
-		}
-
-		if (openCache.size() > round(1.f / I::GlobalVars->interval_per_tick))
-		{
-			openCache.erase(openCache.begin()); // delete the first value if our cache lasts longer than a second.
-		}
-
-		openCache[tickcount].m_vecOrigin = pCaching->m_vecOrigin();
-		openCache[tickcount].m_vecVelocity = pCaching->m_vecVelocity();
-		openCache[tickcount].eyePosition = pCaching->GetEyeAngles();
-		openCache[tickcount].playersPredictedTick = TIME_TO_TICKS(pCaching->GetSimulationTime());
-	}
-}
-
 MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 21), bool, __fastcall,
           void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -168,7 +142,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::FakeAng.DrawChams = Vars::AntiHack::AntiAim::Active.Value || Vars::Misc::CL_Move::Fakelag.Value;
 	}
 
-	AppendCache(); // hopefully won't cause issues.
 	G::ViewAngles = pCmd->viewangles;
 
 	// Recharge doubletap by shifting packets
