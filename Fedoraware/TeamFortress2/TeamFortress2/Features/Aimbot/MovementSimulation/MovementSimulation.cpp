@@ -240,7 +240,7 @@ bool CMovementSimulation::StrafePrediction()
 				return false;
 			}
 		}
-		if (!m_pPlayer->IsOnGround())
+		if (!m_pPlayer->IsOnGround() && Vars::Aimbot::Projectile::AllowAirstrafePrediction.Value == false)
 		{
 			return false;
 		}
