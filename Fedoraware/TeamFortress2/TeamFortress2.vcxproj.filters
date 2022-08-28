@@ -199,6 +199,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_CalcAimEntPositions.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_ToolRecordEntities.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_AddVisibleEntities.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
