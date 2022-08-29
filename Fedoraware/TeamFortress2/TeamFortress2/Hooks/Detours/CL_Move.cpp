@@ -115,25 +115,7 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	}
 
 	oClMove(accumulated_extra_samples, (G::ShouldShift && !G::WaitForShift) ? true : bFinalTick);
-
-	if (!pLocal)
-	{
-		G::ShiftedTicks = 0; // we do not have charge if we do not exist
-		return;
-	}
-
-	if (G::WaitForShift)
-	{
-		G::WaitForShift--;
-		return;
-	}
-
-	if (G::LastUserCmd) {
-		if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && G::LastUserCmd->buttons & IN_ATTACK))
-		{
-			G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
-		}
-	}
+	if (G::WaitForShift) { G::WaitForShift--; }
 
 	// Should we shift?
 	if (G::ShouldShift && !G::WaitForShift)

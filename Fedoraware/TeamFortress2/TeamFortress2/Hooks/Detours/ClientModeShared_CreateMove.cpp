@@ -20,6 +20,18 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
+void AttackingUpdate(){
+	if (!G::IsAttacking) { return; }
+
+	if (const auto& pLocal = g_EntityCache.GetLocal()){
+	if (const auto& pWeapon = g_EntityCache.GetWeapon())
+	{
+		const float flFireDelay = pWeapon->GetFireRate();	//	I have no idea why this works (none) when this returns no good value, frankly, i dnc, it works LOL
+		pWeapon->m_flNextPrimaryAttack() = static_cast<float>(pLocal->GetTickBase()) * I::GlobalVars->interval_per_tick + flFireDelay;
+	}
+	}
+}
+
 MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 21), bool, __fastcall,
           void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -205,11 +217,13 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		G::ForceChokePacket = false;
 	} // check after force send to prevent timing out possibly
 
+	AttackingUpdate();	//	fix
+
 	// Stop movement if required
 	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value))
 	{
 		//G::ShouldStop = false;	//	we still need to stop if we didn't stop...
-		Utils::StopMovement(pCmd, !G::ShouldShift);
+		Utils::StopMovement(pCmd/*, !G::ShouldShift*/);
 		if (!G::IsAttacking && !G::Recharging && !G::ShouldStop) {	//	only do this code if we DID actually stop.
 			*pSendPacket = false;	//	stop angle shit
 		}

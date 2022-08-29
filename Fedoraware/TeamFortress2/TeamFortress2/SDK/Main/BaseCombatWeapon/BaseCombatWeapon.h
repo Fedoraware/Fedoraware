@@ -34,7 +34,8 @@ public: //Netvars
 		M_OFFSETGET(CritTokenBucket, float, 0xA54)
 
 		NETVAR(m_iPrimaryAmmoType, int, "CBaseCombatWeapon", "m_iPrimaryAmmoType");
-
+		NETVAR(m_flNextPrimaryAttack, float, "CBaseCombatWeapon", "m_flNextPrimaryAttack")
+		
 
 			// pretty srue these are all wrong but i have no idea how to do the thing to find out what they are
 		// you add 1c idiot
@@ -418,6 +419,12 @@ public: //Everything else, lol
 	{
 		static auto cl_flipviewmodels = I::Cvar->FindVar("cl_flipviewmodels");
 		return cl_flipviewmodels->GetBool();
+	}
+
+	__inline float GetFireRate()
+	{
+		typedef float(__thiscall* FN)(PVOID);
+		return GetVFunc<FN>(this, 359)(this);
 	}
 
 	CHudTexture* GetWeaponIcon();
