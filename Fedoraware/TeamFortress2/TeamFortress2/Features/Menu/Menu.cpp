@@ -364,8 +364,7 @@ void CMenu::MenuAimbot()
 				WSlider("Maximum splash distance", &Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value, Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 10000.f); HelpMarker("The maximum distance to try going for splash damage");
 
 				SectionTitle("Strafe prediction");
-				WToggle("Strafe prediction", &Vars::Aimbot::Projectile::StrafePrediction.Value); HelpMarker("Allows for strafing prediction");
-				WToggle("Allow airstrafe prediction", &Vars::Aimbot::Projectile::AllowAirstrafePrediction.Value); HelpMarker("Recommended value is off");
+				MultiCombo({"Air", "Ground"}, {&Vars::Aimbot::Projectile::StrafePredictionAir.Value, &Vars::Aimbot::Projectile::StrafePredictionGround.Value}, "Strafe Prediction");
 				WSlider("Velocity samples", &Vars::Aimbot::Projectile::StrafePredictionSamples.Value, 1, 20); HelpMarker("How many ticks to keep velocity records of");
 				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
 				WSlider("Maximum distance", &Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value, 100.f, 10000.f); HelpMarker("Max distance to apply strafe prediction (lower is better)");

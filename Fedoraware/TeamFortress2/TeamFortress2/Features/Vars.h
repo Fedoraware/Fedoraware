@@ -146,8 +146,8 @@ namespace Vars
 			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> NoSpread{ false };
 			inline CVar<bool> ChargeLooseCannon{ false };
-			inline CVar<bool> StrafePrediction{ false };
-			inline CVar<bool> AllowAirstrafePrediction{ false };
+			inline CVar<bool> StrafePredictionGround{ false };
+			inline CVar<bool> StrafePredictionAir{ false };
 			inline CVar<int> StrafePredictionSamples{ 10 };
 			inline CVar<int> StrafePredictionMaxDistance{ 1000 };
 			inline CVar<int> StrafePredictionMinDifference{ 10 };
