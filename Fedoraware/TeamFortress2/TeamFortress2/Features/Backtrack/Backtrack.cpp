@@ -73,7 +73,7 @@ void CBacktrack::Run()
 	if (!Vars::Backtrack::Enabled.Value)
 	{
 		LatencyRampup = 0.f;
-		if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+		if (Vars::Aimbot::Projectile::StrafePredictionAir.Value || Vars::Aimbot::Projectile::StrafePredictionGround.Value)
 		{
 			if (g_EntityCache.GetLocal())
 			{
