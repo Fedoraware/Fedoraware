@@ -177,7 +177,7 @@ void CMovementSimulation::Restore()
 
 void CMovementSimulation::FillVelocities()
 {
-	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	if (Vars::Aimbot::Projectile::StrafePredictionGround.Value || Vars::Aimbot::Projectile::StrafePredictionAir.Value)
 	{
 		for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
@@ -231,57 +231,50 @@ void CMovementSimulation::FillVelocities()
 
 bool CMovementSimulation::StrafePrediction()
 {
-	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
+	if (!shouldPredict) { return false; }
+		
+	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (const auto& pLocal = g_EntityCache.GetLocal())
-		{
-			if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
-			{
-				return false;
-			}
-		}
-		if (!m_pPlayer->IsOnGround())
+		if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
 		{
 			return false;
 		}
-		const int iEntIndex = m_pPlayer->GetIndex();
-
-		const auto& mVelocityRecord = m_Velocities[iEntIndex];
-
-		if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
-		{
-			return false;
-		}
-
-		float flAverageYaw = 0;
-
-		size_t i = 0;
-
-		const Vec3 vInitialAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity);
-
-		for (; i < mVelocityRecord.size(); i++)
-		{
-			const Vec3 vRecordAngle = Math::VelocityToAngles(mVelocityRecord.at(i));
-
-			flAverageYaw += (vInitialAngle.y - vRecordAngle.y);
-		}
-
-		flAverageYaw /= i;
-
-		if (flAverageYaw < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value &&
-			flAverageYaw > -Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
-		{
-			flAverageYaw = 0;
-		}
-
-		m_MoveData.m_vecViewAngles = { 0.0f, vInitialAngle.y + flAverageYaw, 0.0f };
-
-		return true;
 	}
-	else
+
+	const int iEntIndex = m_pPlayer->GetIndex();
+
+	const auto& mVelocityRecord = m_Velocities[iEntIndex];
+
+	if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
 	{
 		return false;
 	}
+
+	float flAverageYaw = 0;
+
+	size_t i = 0;
+
+	const Vec3 vInitialAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity);
+
+	for (; i < mVelocityRecord.size(); i++)
+	{
+		const Vec3 vRecordAngle = Math::VelocityToAngles(mVelocityRecord.at(i));
+
+		flAverageYaw += (vInitialAngle.y - vRecordAngle.y);
+	}
+
+	flAverageYaw /= i;
+
+	if (flAverageYaw < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value &&
+		flAverageYaw > -Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
+	{
+		flAverageYaw = 0;
+	}
+
+	m_MoveData.m_vecViewAngles = { 0.0f, vInitialAngle.y + flAverageYaw, 0.0f };
+
+	return true;
 }
 
 void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
