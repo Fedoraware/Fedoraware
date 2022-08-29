@@ -6,9 +6,11 @@ MAKE_HOOK(C_BaseAnimating_FrameAdvance, g_Pattern.Find(L"client.dll", L"55 8B EC
 	void* ecx, void* edx, float flInterval)
 {
 	if (CBaseEntity* pEntity = reinterpret_cast<CBaseEntity*>(ecx)){
-		if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()){
-			flDebt[ecx] += flInterval;
-			return 0.0f;
+		if (pEntity->IsPlayer()){
+			if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()){
+				flDebt[ecx] += flInterval;
+				return 0.0f;
+			}
 		}
 	}
 
