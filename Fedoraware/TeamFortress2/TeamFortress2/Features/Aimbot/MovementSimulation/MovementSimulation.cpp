@@ -177,7 +177,7 @@ void CMovementSimulation::Restore()
 
 void CMovementSimulation::FillVelocities()
 {
-	if (Vars::Aimbot::Projectile::StrafePrediction.Value)
+	if (Vars::Aimbot::Projectile::StrafePredictionGround.Value || Vars::Aimbot::Projectile::StrafePredictionAir.Value)
 	{
 		for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
