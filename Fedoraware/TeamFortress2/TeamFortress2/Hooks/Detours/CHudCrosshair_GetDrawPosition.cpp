@@ -15,13 +15,13 @@ MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B E
 	}
 	else if (
 		const auto& pLocal = g_EntityCache.GetLocal();
-		Vars::Visuals::ThirdpersonOffset.Value &&
+		//Vars::Visuals::ThirdpersonOffset.Value &&
 		Vars::Visuals::ThirdpersonCrosshair.Value &&
-		I::Input->CAM_IsThirdPerson() &&
+		I::Input->CAM_IsThirdPerson()/* &&
 		(Vars::Visuals::ThirdpersonRight.Value > 1.f ||
 		Vars::Visuals::ThirdpersonRight.Value < -1.f) &&
 		(Vars::Visuals::ThirdpersonUp.Value > 1.f ||
-		Vars::Visuals::ThirdpersonUp.Value < -1.f)
+		Vars::Visuals::ThirdpersonUp.Value < -1.f)*/
 		)
 	{
 		const Vec3 viewangles = I::EngineClient->GetViewAngles();
