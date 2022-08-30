@@ -209,10 +209,9 @@ void CCheaterDetection::OnTick()
 				G::PlayerPriority[friendsID].Mode = 4; // Set priority to "Cheater"
 				userData.PlayerSuspicion = 0.f;	//	reset suspicion
 			}
-			else if (userData.NonDormantTimer >= (67 * 30) && userData.OldPlayerSuspicion == userData.PlayerSuspicion && userData.PlayerSuspicion > 0.f) {
-				userData.PlayerSuspicion -= FL_SUSPICION_REMOVAL;
-				userData.NonDormantTimer = 0;
-				conLogDetection(tfm::format("%s has had their suspicion reduced due to good behaviour.\n", pi.name).c_str());
+			else if (userData.OldPlayerSuspicion == userData.PlayerSuspicion && userData.PlayerSuspicion > 0.f) {
+				userData.PlayerSuspicion *= 0.95f;	//	lol
+				//conLogDetection(tfm::format("%s has had their suspicion reduced due to good behaviour.\n", pi.name).c_str());
 			}
 
 			if (userData.OldPlayerSuspicion != userData.PlayerSuspicion) {
