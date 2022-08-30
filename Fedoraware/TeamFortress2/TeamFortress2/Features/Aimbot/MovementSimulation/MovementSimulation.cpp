@@ -66,6 +66,8 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 		return;
 	}
 
+	bFirstRunTick = true;
+
 	pMoveData->m_bFirstRunOfFunctions = false;
 	pMoveData->m_bGameCodeMovedPlayer = false;
 	pMoveData->m_nPlayerHandle = reinterpret_cast<IHandleEntity*>(pPlayer)->GetRefEHandle();
@@ -231,48 +233,65 @@ void CMovementSimulation::FillVelocities()
 
 bool CMovementSimulation::StrafePrediction()
 {
-	const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
-	if (!shouldPredict) { return false; }
+	static float flAverageYaw = 0.f;
+	static float flInitialYaw = 0.f;
+
+	if (bFirstRunTick){
+		const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
+		if (!shouldPredict) { return false; }
+		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
+		if (!iSamples) { return false; }
 		
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
+		if (const auto& pLocal = g_EntityCache.GetLocal())
+		{
+			if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
+			{
+				return false;
+			}
+		}
+
+		const int iEntIndex = m_pPlayer->GetIndex();
+
+		const auto& mVelocityRecord = m_Velocities[iEntIndex];
+
+		if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < iSamples)
+		{
+			return false;
+		}
+
+		flInitialYaw = Math::VelocityToAngles(m_MoveData.m_vecVelocity).y;
+		float flCompareYaw = flInitialYaw;
+
+		int i = 0;
+		for (; i < iSamples; i++)
+		{
+			const float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
+			/*
+				To avoid explaining this later,
+				a yaw change from -179 to 179 is 2 degrees, but with the old maths, would calculate to 358 degrees;
+				getting flRecordYaw as fabsf(Math::VelocityToAngles(mVelocityRecord.at(i)).y) reduces the innacuracy, but will register 50 => -50 as a change of 0;
+				remapping negative values as (-180 => 181, -1 => 359) would fix any change that wasn't passing through point 0;
+			*/
+
+			if (flRecordYaw > 90 && flCompareYaw < -90){	//	this is bad, if it's likely we have crossed the 180 mark (our current pooPoint), we need to change our pooPoint to 0.
+				flCompareYaw += 361;
+			}
+
+			flAverageYaw += (flCompareYaw - flRecordYaw);
+			flCompareYaw = flRecordYaw;
+		}
+
+		flAverageYaw /= i;
+
+		if (fabsf(flAverageYaw) < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
 		{
 			return false;
 		}
 	}
 
-	const int iEntIndex = m_pPlayer->GetIndex();
-
-	const auto& mVelocityRecord = m_Velocities[iEntIndex];
-
-	if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
-	{
-		return false;
-	}
-
-	float flAverageYaw = 0;
-
-	size_t i = 0;
-
-	const Vec3 vInitialAngle = Math::VelocityToAngles(m_MoveData.m_vecVelocity);
-
-	for (; i < mVelocityRecord.size(); i++)
-	{
-		const Vec3 vRecordAngle = Math::VelocityToAngles(mVelocityRecord.at(i));
-
-		flAverageYaw += (vInitialAngle.y - vRecordAngle.y);
-	}
-
-	flAverageYaw /= i;
-
-	if (flAverageYaw < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value &&
-		flAverageYaw > -Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
-	{
-		flAverageYaw = 0;
-	}
-
-	m_MoveData.m_vecViewAngles = { 0.0f, vInitialAngle.y + flAverageYaw, 0.0f };
+	flInitialYaw += flAverageYaw;
+	m_MoveData.m_vecViewAngles = { 0.0f, flInitialYaw, 0.0f };
+	bFirstRunTick = false;	//	if we did the math for this tick already, why do it again.
 
 	return true;
 }

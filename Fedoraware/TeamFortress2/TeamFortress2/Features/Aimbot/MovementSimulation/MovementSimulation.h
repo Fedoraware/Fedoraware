@@ -13,6 +13,7 @@ private:
 	void SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveData);
 
 private:
+	bool bFirstRunTick = true;
 	bool m_bOldInPrediction = false;
 	bool m_bOldFirstTimePredicted = false;
 	float m_flOldFrametime = 0.0f;
