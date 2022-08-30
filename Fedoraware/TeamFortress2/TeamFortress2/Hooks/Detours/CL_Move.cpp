@@ -120,24 +120,13 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 	// Should we shift?
 	if (G::ShouldShift && !G::WaitForShift)
 	{
-		if (// 0 - On key
-			(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
-
-			// 1 - Always
-			(Vars::Misc::CL_Move::DTMode.Value == 1) ||
-
-			// 2 - Disable on key 
-			(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
+		while (G::ShiftedTicks > 0)
 		{
-			while (G::ShiftedTicks > 0)
-			{
-				oClMove(0, (G::ShiftedTicks == 1));
-				G::ShiftedTicks--;
-			}
-
-			I::EngineClient->FireEvents();
-			G::WaitForShift = DT_WAIT_CALLS;
+			oClMove(0, (G::ShiftedTicks == 1));
+			G::ShiftedTicks--;
 		}
+		G::WaitForShift = DT_WAIT_CALLS;
 		G::ShouldShift = false;
 	}
+	I::EngineClient->FireEvents();
 }

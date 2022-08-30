@@ -220,7 +220,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	AttackingUpdate();	//	fix
 
 	// Stop movement if required
-	if (G::ShouldStop || (G::RechargeQueued || G::Recharging && Vars::Misc::CL_Move::StopMovement.Value))
+	if (G::ShouldStop || ((G::RechargeQueued || G::Recharging) && Vars::Misc::CL_Move::StopMovement.Value))
 	{
 		//G::ShouldStop = false;	//	we still need to stop if we didn't stop...
 		Utils::StopMovement(pCmd/*, !G::ShouldShift*/);

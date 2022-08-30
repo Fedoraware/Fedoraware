@@ -408,10 +408,16 @@ void CMisc::DoubleTapLogic(CUserCmd* pCmd, CBaseEntity* pLocal){
 	if (G::ShouldShift) { return; }
 	if (!pLocal->IsAlive()) { return; }
 
-	if (pCmd) {
-		if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
+	if (
+			(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
+			(Vars::Misc::CL_Move::DTMode.Value == 1) ||
+			(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
 		{
-			G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
+		if (pCmd) {
+			if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
+			{
+				G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
+			}
 		}
 	}
 }
