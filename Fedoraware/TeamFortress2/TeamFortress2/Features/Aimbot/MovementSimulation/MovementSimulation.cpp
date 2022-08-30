@@ -284,6 +284,10 @@ bool CMovementSimulation::StrafePrediction()
 			}
 
 			flAverageYaw += (flCompareYaw - flRecordYaw);
+
+			if (flRecordYaw < 0){ flRecordYaw += 360; }		//	fix
+			if (flCompareYaw < 0){ flCompareYaw += 360; }
+
 			flCompareYaw = flRecordYaw;
 		}
 
@@ -294,6 +298,8 @@ bool CMovementSimulation::StrafePrediction()
 			return false;
 		}
 	}
+
+	if (flAverageYaw < 0.1f) { return false; }	//	fix
 
 	flInitialYaw += flAverageYaw;
 	m_MoveData.m_vecViewAngles.y = flInitialYaw;
