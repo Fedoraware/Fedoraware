@@ -193,7 +193,7 @@ void CMovementSimulation::FillVelocities()
 			const Vec3 vVelocity = pEntity->GetVelocity();
 			m_Velocities[iEntIndex].push_front(vVelocity);
 
-			while (static_cast<int>(m_Velocities[iEntIndex].size()) > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+			while (m_Velocities[iEntIndex].size() > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
 			{
 				m_Velocities[iEntIndex].pop_back();
 			}
@@ -236,7 +236,11 @@ bool CMovementSimulation::StrafePrediction()
 	static float flAverageYaw = 0.f;
 	static float flInitialYaw = 0.f;
 
-	if (bFirstRunTick){
+	if (bFirstRunTick){			//	we've already done the math, don't do it again
+		flAverageYaw = 0.f;
+		flInitialYaw = 0.f;
+		bFirstRunTick = false;	//	if we fail the math here, don't try it again, it won't work.
+
 		const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
 		if (!shouldPredict) { return false; }
 		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
@@ -290,8 +294,7 @@ bool CMovementSimulation::StrafePrediction()
 	}
 
 	flInitialYaw += flAverageYaw;
-	m_MoveData.m_vecViewAngles = { 0.0f, flInitialYaw, 0.0f };
-	bFirstRunTick = false;	//	if we did the math for this tick already, why do it again.
+	m_MoveData.m_vecViewAngles.y = flInitialYaw;
 
 	return true;
 }
