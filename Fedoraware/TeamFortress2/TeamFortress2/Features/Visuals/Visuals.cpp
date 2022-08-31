@@ -562,11 +562,11 @@ void CVisuals::DrawMovesimLine()
 {
 	if (Vars::Visuals::MoveSimLine.Value)
 	{
-		if (!G::PredictionLines.empty())
+		if (!G::PredLinesBackup.empty())
 		{
-			for (size_t i = 1; i < G::PredictionLines.size(); i++)
+			for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 			{
-				RenderLine(G::PredictionLines.at(i - 1), G::PredictionLines.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
 			}
 		}
 		//if (!G::PredictionLines.empty())
