@@ -32,6 +32,10 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 {
 	for (const auto& pExplosive : entityGroup)
 	{
+		if (pExplosive->GetPipebombType() == TYPE_STICKY){
+			if (!pExplosive->GetPipebombPulsed()) { continue; }
+		}
+
 		CBaseEntity* pTarget;
 
 		// Iterate through entities in sphere radius

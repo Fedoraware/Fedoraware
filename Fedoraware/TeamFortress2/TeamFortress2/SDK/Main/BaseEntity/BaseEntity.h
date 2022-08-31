@@ -110,6 +110,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(Crits, int, this, "DT_TFPlayer", "m_Shared", "tfsharedlocaldata", "m_ScoreData", "m_iCrits")
 
 	M_OFFSETGET(PipebombType, int, 0x8FC)
+		M_OFFSETGET(PipebombPulsed, bool, 0x908)	//	this is incredibly fucking lazy.
 		M_OFFSETGET(Touched, bool, 0x8F8)
 		M_OFFSETGET(PunchAngles, Vec3, 0xE8C)
 		M_OFFSETGET(VecVelocity, Vec3, 0x120)
