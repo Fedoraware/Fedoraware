@@ -269,7 +269,7 @@ bool CMovementSimulation::StrafePrediction()
 		int i = 0;
 		for (; i < iSamples; i++)
 		{
-			float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
+			const float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
 			/*
 				To avoid explaining this later,
 				a yaw change of -1 to 1 will show as flRecordYaw = 1, flCompareYaw = 359, with a difference of 358 degrees when the difference is actually 2 degrees.
@@ -277,16 +277,9 @@ bool CMovementSimulation::StrafePrediction()
 				remapping values above 180 to -180 will cause another issue that should be fixed below anyway.
 			*/
 
-			if (flRecordYaw > 180){ flRecordYaw -= 360; }	//	clamps to bounds of [-180, 180] like all other angles.
-			if (flCompareYaw > 180){ flCompareYaw -= 360; }
-			if (flRecordYaw > 90 && flCompareYaw < -90){	//	probably a correct check for poo vector detection
-				flCompareYaw += 360;
-			}
-
-			flAverageYaw += (flCompareYaw - flRecordYaw);
-
-			if (flRecordYaw < 0){ flRecordYaw += 360; }		//	fix
-			if (flCompareYaw < 0){ flCompareYaw += 360; }
+			float flFinal = (flCompareYaw - flRecordYaw);
+			flFinal = ((flFinal + 180) - floor(flFinal/360) * 360) - 180;
+			flAverageYaw += flFinal;
 
 			flCompareYaw = flRecordYaw;
 		}
