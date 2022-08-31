@@ -28,7 +28,7 @@ private:
 	CBaseEntity* m_pList[MAX_SPHERE_QUERY];
 };
 
-bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBaseEntity*>& entityGroup, float radius)
+bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBaseEntity*>& entityGroup, float radius, CUserCmd* pCmd)
 {
 	for (const auto& pExplosive : entityGroup)
 	{
@@ -68,6 +68,14 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
 				{
+					{
+						if (G::CurItemDefIndex == Demoman_s_TheScottishResistance){	//	super fucking ghetto holy shit
+							Vec3 vAngleTo = Math::CalcAngle(pLocal->GetWorldSpaceCenter(), pExplosive->GetWorldSpaceCenter());
+							Utils::FixMovement(pCmd, vAngleTo);
+							pCmd->viewangles = vAngleTo;
+							G::SilentTime = true;
+						}
+					}
 					return true;
 				}
 			}
@@ -85,20 +93,18 @@ void CAutoDetonate::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 	// Check sticky detonation
 	if (Vars::Triggerbot::Detonate::Stickies.Value
-		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.Value))
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES), 115.0f * Vars::Triggerbot::Detonate::RadiusScale.Value, pCmd))
 	{
 		shouldDetonate = true;
 	}
 
 	// Check flare detonation
 	if (Vars::Triggerbot::Detonate::Flares.Value
-		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.Value))
+		&& CheckDetonation(pLocal, g_EntityCache.GetGroup(EGroupType::LOCAL_FLARES), 85.0f * Vars::Triggerbot::Detonate::RadiusScale.Value, pCmd))
 	{
 		shouldDetonate = true;
 	}
 
-	if (shouldDetonate)
-	{
-		pCmd->buttons |= IN_ATTACK2;
-	}
+	if (!shouldDetonate) { return; }
+	pCmd->buttons |= IN_ATTACK2;
 }

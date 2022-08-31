@@ -186,7 +186,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	// Handle Silent Time
 	static bool bWasSet = false;
-	if (G::SilentTime)
+	if (G::SilentTime && !bWasSet)
 	{
 		*pSendPacket = false;
 		bWasSet = true;
