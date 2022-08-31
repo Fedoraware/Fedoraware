@@ -768,6 +768,11 @@ namespace Utils
 		}
 	}
 
+	__inline void ConLog(const char* cFunction, const char* cLog, Color_t cColour){
+		I::Cvar->ConsoleColorPrintf(cColour, "[%s] ", cFunction);
+		I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "%s\n", cLog);
+	}
+
 	__inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& pDestination)
 	{
 		Vec3 localPos = pLocal->GetVecOrigin();

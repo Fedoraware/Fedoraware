@@ -286,9 +286,16 @@ bool CMovementSimulation::StrafePrediction()
 
 		flAverageYaw /= i;
 
+		while (flAverageYaw > 360.f){ flAverageYaw -= 360.f; }
+		while (flAverageYaw < -360.f){ flAverageYaw += 360.f; }
+
 		if (fabsf(flAverageYaw) < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
 		{
 			return false;
+		}
+
+		if (Vars::Debug::DebugInfo.Value){
+			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), {83, 255, 83, 255});
 		}
 	}
 
