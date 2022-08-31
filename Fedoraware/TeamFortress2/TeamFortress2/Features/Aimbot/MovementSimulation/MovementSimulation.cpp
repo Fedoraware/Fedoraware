@@ -193,7 +193,7 @@ void CMovementSimulation::FillVelocities()
 			const Vec3 vVelocity = pEntity->GetVelocity();
 			m_Velocities[iEntIndex].push_front(vVelocity);
 
-			while (static_cast<int>(m_Velocities[iEntIndex].size()) > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+			while (m_Velocities[iEntIndex].size() > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
 			{
 				m_Velocities[iEntIndex].pop_back();
 			}
@@ -236,7 +236,11 @@ bool CMovementSimulation::StrafePrediction()
 	static float flAverageYaw = 0.f;
 	static float flInitialYaw = 0.f;
 
-	if (bFirstRunTick){
+	if (bFirstRunTick){			//	we've already done the math, don't do it again
+		flAverageYaw = 0.f;
+		flInitialYaw = 0.f;
+		bFirstRunTick = false;	//	if we fail the math here, don't try it again, it won't work.
+
 		const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
 		if (!shouldPredict) { return false; }
 		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
@@ -268,30 +272,37 @@ bool CMovementSimulation::StrafePrediction()
 			const float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
 			/*
 				To avoid explaining this later,
-				a yaw change from -179 to 179 is 2 degrees, but with the old maths, would calculate to 358 degrees;
-				getting flRecordYaw as fabsf(Math::VelocityToAngles(mVelocityRecord.at(i)).y) reduces the innacuracy, but will register 50 => -50 as a change of 0;
-				remapping negative values as (-180 => 181, -1 => 359) would fix any change that wasn't passing through point 0;
+				a yaw change of -1 to 1 will show as flRecordYaw = 1, flCompareYaw = 359, with a difference of 358 degrees when the difference is actually 2 degrees.
+				remapping values above 180 to 0 (and reversing them) will cause the issue of -1 to 1 showing a difference of 0 degrees.
+				remapping values above 180 to -180 will cause another issue that should be fixed below anyway.
 			*/
 
-			if (flRecordYaw > 90 && flCompareYaw < -90){	//	this is bad, if it's likely we have crossed the 180 mark (our current pooPoint), we need to change our pooPoint to 0.
-				flCompareYaw += 361;
-			}
+			float flFinal = (flCompareYaw - flRecordYaw);
+			flFinal = ((flFinal + 180) - floor(flFinal/360) * 360) - 180;
+			flAverageYaw += flFinal;
 
-			flAverageYaw += (flCompareYaw - flRecordYaw);
 			flCompareYaw = flRecordYaw;
 		}
 
 		flAverageYaw /= i;
 
+		while (flAverageYaw > 360.f){ flAverageYaw -= 360.f; }
+		while (flAverageYaw < -360.f){ flAverageYaw += 360.f; }
+
 		if (fabsf(flAverageYaw) < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
 		{
 			return false;
 		}
+
+		if (Vars::Debug::DebugInfo.Value){
+			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), {83, 255, 83, 255});
+		}
 	}
 
+	if (flAverageYaw < 0.1f) { return false; }	//	fix
+
 	flInitialYaw += flAverageYaw;
-	m_MoveData.m_vecViewAngles = { 0.0f, flInitialYaw, 0.0f };
-	bFirstRunTick = false;	//	if we did the math for this tick already, why do it again.
+	m_MoveData.m_vecViewAngles.y = flInitialYaw;
 
 	return true;
 }
