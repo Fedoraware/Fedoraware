@@ -216,7 +216,8 @@ void CDMEChams::CreateMaterials(){
 	bSetup = true;
 }
 
-void CDMEChams::DeleteMaterials(){	
+void CDMEChams::DeleteMaterials(){
+	if (v_MatList.size() == 0U){ return; }
 	for (IMaterial* material : v_MatList){
 		if (!material){ continue; }
 		material->DecrementReferenceCount();
