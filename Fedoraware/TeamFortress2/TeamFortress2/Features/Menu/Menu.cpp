@@ -5,6 +5,7 @@
 #include "../AttributeChanger/AttributeChanger.h"
 #include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
+#include "../Chams/DMEChams.h"
 
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
@@ -1674,6 +1675,9 @@ void CMenu::MenuMisc()
 				I::EngineClient->ClientCmd_Unrestricted("demoui2");
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::EngineClient->ClientCmd_Unrestricted("itemtest");
+			if (Button("Fix Chams", ImVec2(btnWidth, 20)))
+				F::DMEChams.CreateMaterials();
+
 
 			if (!I::EngineClient->IsConnected())
 			{
