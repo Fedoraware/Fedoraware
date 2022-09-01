@@ -548,10 +548,9 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 	const auto ModelRender_DrawModelExecute = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
-	if (!ModelRender_DrawModelExecute || !pRenderContext){
-		return false;
-	}
-		
+	if (!ModelRender_DrawModelExecute || !pRenderContext){ return false; }
+	if (v_MatList.size() < 9) { CreateMaterials(); return false;}	//	super schizoid
+
 	I::RenderView->SetBlend(0.0f);
 	ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);		
 	I::RenderView->SetBlend(1.0f);
