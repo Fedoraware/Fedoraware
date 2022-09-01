@@ -20,12 +20,12 @@ private:
 	void RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 public:
 	void Init();
+	void CreateMaterials();
+	void DeleteMaterials();
 	IMaterial* CreateNRef(char const* szName, void* pKV, bool bSave = true);
-	void ValidateMaterial(IMaterial* mTarget);
 	bool Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 	bool m_bRendering;
 	std::vector<IMaterial*> v_MatList;			//	cough
-	std::vector<IMaterial*> v_MatListFix;		//	cough
 	std::vector<IMaterial*> v_MatListGlobal;	//	this is for all materials. (I should order material creation and put it elsewhere)
 	std::unordered_map<IMaterial*, ChamInfo> backupInformation;
 };

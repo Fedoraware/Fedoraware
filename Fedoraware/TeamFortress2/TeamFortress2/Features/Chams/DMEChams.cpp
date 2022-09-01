@@ -95,58 +95,26 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV, bool bSave) {
 	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
 	v_MatListGlobal.push_back(returnMaterial);
-	
-	if (bSave){
-		int $flags{}, $flags_defined{}, $flags2{}, $flags_defined2{}, $frame{};
-		if (auto var = returnMaterial->FindVar("$flags", nullptr))
-			$flags = std::stoi(var->GetStringValue());
-		if (auto var = returnMaterial->FindVar("$flags_defined", nullptr))
-			$flags_defined = std::stoi(var->GetStringValue());
-		if (auto var = returnMaterial->FindVar("$flags2", nullptr))
-			$flags2 = std::stoi(var->GetStringValue());
-		if (auto var = returnMaterial->FindVar("$flags_defined2", nullptr))
-			$flags_defined2 = std::stoi(var->GetStringValue());
-		if (auto var = returnMaterial->FindVar("$frame", nullptr))
-			$frame = std::stoi(var->GetStringValue());
-		backupInformation[returnMaterial] = {
-			$flags, $flags_defined, $flags2, $flags_defined2, $frame,
-		};
-
-		v_MatListFix.push_back(returnMaterial);
-	}
-
 	return returnMaterial;
-}
-
-void CDMEChams::ValidateMaterial(IMaterial* mTarget) {
-	ChamInfo backupInfo = backupInformation[mTarget];
-	if (auto $flags = mTarget->FindVar("$flags", nullptr))
-		$flags->SetIntValue(backupInfo.$flags);
-	if (auto $flags_defined = mTarget->FindVar("$flags_defined", nullptr))
-		$flags_defined->SetIntValue(backupInfo.$flags_defined);
-	if (auto $flags2 = mTarget->FindVar("$flags2", nullptr))
-		$flags2->SetIntValue(backupInfo.$flags2);
-	if (auto $flags_defined2 = mTarget->FindVar("$flags_defined2", nullptr))
-		$flags_defined2->SetIntValue(backupInfo.$flags_defined2);
-	if (auto $frame = mTarget->FindVar("$frame", nullptr))
-		$frame->SetIntValue(backupInfo.$frame);
 }
 
 void CDMEChams::Init()
 {
-	static KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
-	static KeyValues* m_pMatFresnelkv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatBrickkv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatOverlaykv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatWFShadedkv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatWFShinykv = new KeyValues("VertexLitGeneric");
-	static KeyValues* m_pMatWFFlatkv = new KeyValues("UnlitGeneric");
+	ProxySkins::Init();
+}
 
-	static bool setup = false;
+//TODO: add glow to this shit.
+void CDMEChams::CreateMaterials(){
+	KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
+	KeyValues* m_pMatFresnelkv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatBrickkv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatOverlaykv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatWFShadedkv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatWFShinykv = new KeyValues("VertexLitGeneric");
+	KeyValues* m_pMatWFFlatkv = new KeyValues("UnlitGeneric");
 
-	if (!setup)
 	{
 		m_pMatShadedkv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatShadedkv->SetString("$bumpmap", "vgui/white_additive");
@@ -230,8 +198,6 @@ void CDMEChams::Init()
 		m_pMatWFFlatkv->SetString("$wireframe", "1");
 		m_pMatWFFlatkv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatWFFlatkv->SetString("$cloakPassEnabled", "1");
-
-		setup = true;
 	}
 
 	v_MatList.push_back(nullptr);
@@ -244,9 +210,19 @@ void CDMEChams::Init()
 	v_MatList.push_back(CreateNRef("m_pMatFresnel", m_pMatFresnelkv));
 	v_MatList.push_back(CreateNRef("m_pMatBrick", m_pMatBrickkv));
 	v_MatList.push_back(CreateNRef("m_pMatScuffed", m_pMatOverlaykv));
+}
 
+void CDMEChams::DeleteMaterials(){
+	const auto CMaterial_DeleteIfUnreferenced = g_HookManager.GetMapHooks()["CMaterial_DeleteIfUnreferenced"];
+	if (!CMaterial_DeleteIfUnreferenced){ return; }
+	
+	for (IMaterial* material : v_MatList){
+		if (!material){ continue; }
+		material->DecrementReferenceCount();
+		material->DeleteIfUnreferenced();
+	}
 
-	ProxySkins::Init();
+	v_MatList.clear();
 }
 
 IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
@@ -490,10 +466,6 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 		IMaterial* chamsMaterial = GetChamMaterial(chams);
 
-		if (chamsMaterial) {
-			chamsMaterial->IncrementReferenceCount();
-		}
-
 		pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
 
 		I::ModelRender->ForcedMaterialOverride(chamsMaterial);
@@ -532,9 +504,6 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 			IMaterial* pMaterial = v_MatList.at(9);
 
 			if (pMaterial) {
-
-				pMaterial->IncrementReferenceCount();
-
 				if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 				{
 					$phongtint->SetVecValue(
@@ -656,10 +625,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			IMaterial* chamsMaterial = GetChamMaterial(chams);
 
-			if (chamsMaterial) {
-				chamsMaterial->IncrementReferenceCount();
-			}
-
 			pRenderContext->DepthRange(0.0f, chams.showObstructed ? 0.2f : 1.f);
 
 			I::ModelRender->ForcedMaterialOverride(chamsMaterial);
@@ -708,9 +673,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
 				if (pMaterial) {
-
-					pMaterial->IncrementReferenceCount();
-
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
 					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
@@ -727,9 +689,6 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				IMaterial* pMaterial = v_MatList.at(9);
 
 				if (pMaterial) {
-
-					pMaterial->IncrementReferenceCount();
-
 					if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 					{
 						$phongtint->SetVecValue(

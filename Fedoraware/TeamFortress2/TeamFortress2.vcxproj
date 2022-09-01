@@ -206,6 +206,8 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClientState_ProcessSetConVar.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Connect.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_ProcessSetConVar.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Render.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Simulate.cpp" />
