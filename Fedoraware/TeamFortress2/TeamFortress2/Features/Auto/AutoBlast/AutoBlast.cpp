@@ -75,7 +75,10 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			*/
 			if (vEyePos.DistTo(vPredicted) <= 245.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
 			{
-				//We could probably do fov like Nullcore
+				CGameTrace trace = {};
+				static CTraceFilterWorldAndPropsOnly traceFilter = {};
+				Utils::TraceHull(pProjectile->GetAbsOrigin(), vPredicted, pProjectile->GetCollideableMaxs(), pProjectile->GetCollideableMaxs() * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
+				if (trace.flFraction < 0.98f && !trace.entity){ continue; }
 				if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0)
 				{
 					pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
