@@ -7,7 +7,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	const bool retainFakelagTest = Vars::Misc::CL_Move::RetainFakelag.Value ? G::ShiftedTicks != 1 : !G::ShiftedTicks;
 
 	// Failsafe, in case we're trying to choke too many ticks
-	if (ChokeCounter > 22) {
+	if (ChokeCounter > 21) {
 		return false;
 	}
 
