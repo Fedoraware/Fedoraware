@@ -68,13 +68,11 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
 				{
-					{
-						if (G::CurItemDefIndex == Demoman_s_TheScottishResistance){	//	super fucking ghetto holy shit
-							Vec3 vAngleTo = Math::CalcAngle(pLocal->GetWorldSpaceCenter(), pExplosive->GetWorldSpaceCenter());
-							Utils::FixMovement(pCmd, vAngleTo);
-							pCmd->viewangles = vAngleTo;
-							G::SilentTime = true;
-						}
+					if (G::CurItemDefIndex == Demoman_s_TheScottishResistance){	//	super fucking ghetto holy shit
+						Vec3 vAngleTo = Math::CalcAngle(pLocal->GetWorldSpaceCenter(), pExplosive->GetWorldSpaceCenter());
+						Utils::FixMovement(pCmd, vAngleTo);
+						pCmd->viewangles = vAngleTo;
+						G::SilentTime = true;
 					}
 					return true;
 				}
