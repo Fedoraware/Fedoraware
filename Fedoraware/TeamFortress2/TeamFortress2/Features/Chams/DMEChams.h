@@ -18,6 +18,7 @@ private:
 	IMaterial* GetChamMaterial(const Chams_t& chams);
 	IMaterial* GetProxyMaterial(int nIndex);
 	void RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
+	bool bSetup = false;
 public:
 	void Init();
 	void CreateMaterials();

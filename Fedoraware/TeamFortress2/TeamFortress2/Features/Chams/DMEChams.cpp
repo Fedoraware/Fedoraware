@@ -100,11 +100,13 @@ IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV, bool bSave) {
 
 void CDMEChams::Init()
 {
+	CreateMaterials();
 	ProxySkins::Init();
 }
 
 //TODO: add glow to this shit.
 void CDMEChams::CreateMaterials(){
+	if (bSetup){ return; }
 	KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
@@ -210,6 +212,7 @@ void CDMEChams::CreateMaterials(){
 	v_MatList.push_back(CreateNRef("m_pMatFresnel", m_pMatFresnelkv));
 	v_MatList.push_back(CreateNRef("m_pMatBrick", m_pMatBrickkv));
 	v_MatList.push_back(CreateNRef("m_pMatScuffed", m_pMatOverlaykv));
+	bSetup = true;
 }
 
 void CDMEChams::DeleteMaterials(){
@@ -222,7 +225,7 @@ void CDMEChams::DeleteMaterials(){
 		material->DeleteIfUnreferenced();
 	}
 
-	v_MatList.clear();
+	v_MatList.clear(); bSetup = false;
 }
 
 IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
