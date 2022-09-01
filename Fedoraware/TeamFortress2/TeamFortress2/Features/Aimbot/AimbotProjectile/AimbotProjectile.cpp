@@ -724,13 +724,14 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 		case TF_WEAPON_CROSSBOW:
 			{
 				hullSize = {3.f, 3.f, 3.f};
-				const Vec3 vecOffset(23.5f, 12.0f, -3.0f);
+				const Vec3 vecOffset(23.5f, -8.0f, -3.0f);
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
 		case TF_WEAPON_RAYGUN_REVENGE:
 		case TF_WEAPON_ROCKETLAUNCHER:
 		case TF_WEAPON_DIRECTHIT:
+		case TF_WEAPON_FLAREGUN:
 			{
 				hullSize = {0.f, 3.7f, 3.7f};
 
@@ -755,7 +756,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			}
 		case TF_WEAPON_COMPOUND_BOW:
 			{
-				hullSize = {0.f, 1.f, 1.f};
+				hullSize = {1.f, 1.f, 1.f};	//	tf_projectile_arrow.cpp @L271
 
 				const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
