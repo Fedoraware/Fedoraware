@@ -106,8 +106,8 @@ void CDMEChams::Init()
 
 //TODO: add glow to this shit.
 void CDMEChams::CreateMaterials(){
-	if (bSetup){ return; }
 	if (!v_MatList.empty()) { DeleteMaterials(); }
+	if (bSetup){ return; }
 	KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
@@ -216,10 +216,7 @@ void CDMEChams::CreateMaterials(){
 	bSetup = true;
 }
 
-void CDMEChams::DeleteMaterials(){
-	const auto CMaterial_DeleteIfUnreferenced = g_HookManager.GetMapHooks()["CMaterial_DeleteIfUnreferenced"];
-	if (!CMaterial_DeleteIfUnreferenced){ return; }
-	
+void CDMEChams::DeleteMaterials(){	
 	for (IMaterial* material : v_MatList){
 		if (!material){ continue; }
 		material->DecrementReferenceCount();
