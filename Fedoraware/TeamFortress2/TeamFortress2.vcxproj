@@ -209,6 +209,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Connect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_ProcessSetConVar.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_SendSignonData.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Render.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_Simulate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CClient_Precipitation_SimulateRain.cpp" />

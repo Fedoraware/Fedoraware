@@ -107,6 +107,7 @@ void CDMEChams::Init()
 //TODO: add glow to this shit.
 void CDMEChams::CreateMaterials(){
 	if (bSetup){ return; }
+	if (!v_MatList.empty()) { DeleteMaterials(); }
 	KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
