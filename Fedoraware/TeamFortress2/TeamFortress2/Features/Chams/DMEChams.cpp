@@ -222,6 +222,7 @@ void CDMEChams::DeleteMaterials(){
 		if (!material){ continue; }
 		material->DecrementReferenceCount();
 		material->DeleteIfUnreferenced();
+		material = nullptr;
 	}
 
 	v_MatList.clear(); bSetup = false;

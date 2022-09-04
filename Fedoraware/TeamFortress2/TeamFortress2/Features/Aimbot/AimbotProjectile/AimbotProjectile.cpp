@@ -371,6 +371,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		Vec3 vPredictedPos = {};
 		CMoveData moveData = {};
 		Vec3 absOrigin = {};
+		bool bNeedsTimeCheck = false;	//fuick me
 
 		if (F::MoveSim.Initialize(predictor.m_pEntity))
 		{
@@ -386,8 +387,14 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				const Vec3 aimPosition = GetAimPos(pLocal, predictor.m_pEntity, vPredictedPos);
 				if (aimPosition.IsZero())
 				{
-					break;
+					bNeedsTimeCheck = true;
+					continue;
 				} // don't remove.
+
+				// we have found a point.
+				if (bNeedsTimeCheck){
+					if (TICKS_TO_TIME(n) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos)/projInfo.m_flVelocity)) { break; }	//	lol
+				}
 
 				//const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
 				//vPredictedPos.x += abs(vAimDelta.x);
@@ -798,7 +805,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	//	UTIL_TraceHull( vecEye, vecSrc, -Vector(8,8,8), Vector(8,8,8), MASK_SOLID_BRUSHONLY, &traceFilter, &trace ); @tf_weaponbase_gun.cpp L696 pills
 	Utils::TraceHull(vVisCheck, vPredictedPos, hullSize * 1.01f, hullSize * -1.01f, MASK_SHOT_HULL, &traceFilter, &trace);
 
-	return !trace.DidHit() && !trace.bStartSolid;
+	return trace.flFraction == 1.f || trace.entity;
 }
 
 std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)

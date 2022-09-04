@@ -133,6 +133,7 @@ void CGlowEffect::DeleteMaterials(){
 		if (!material){ continue; }
 		material->DecrementReferenceCount();
 		material->DeleteIfUnreferenced();
+		material = nullptr;
 	}
 }
 
