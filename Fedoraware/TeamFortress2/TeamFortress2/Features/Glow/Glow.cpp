@@ -40,13 +40,14 @@ void CGlowEffect::SetScale(int nScale)
 
 void CGlowEffect::Init()
 {
-	m_pMatGlowColor = I::MaterialSystem->Find("dev/glow_color", TEXTURE_GROUP_OTHER);
+	CreateMaterials();
+	//m_pMatGlowColor = I::MaterialSystem->Find("dev/glow_color", TEXTURE_GROUP_OTHER);
 	m_pRtFullFrame = I::MaterialSystem->FindTexture("_rt_FullFrameFB", TEXTURE_GROUP_RENDER_TARGET);
 	m_pRtQuarterSize1 = I::MaterialSystem->FindTexture("_rt_SmallFB1", TEXTURE_GROUP_RENDER_TARGET);
 
 	F::DMEChams.v_MatListGlobal.push_back(m_pMatGlowColor);
 
-	m_pMatGlowColor->IncrementReferenceCount();
+	//m_pMatGlowColor->IncrementReferenceCount();
 	m_pRtFullFrame->IncrementReferenceCount();
 	m_pRtQuarterSize1->IncrementReferenceCount();
 
@@ -61,7 +62,7 @@ void CGlowEffect::Init()
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
-	static KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
+	/*static KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
 	static KeyValues* m_pMatBlurXwfkv = new KeyValues("BlurFilterX");
 	static KeyValues* m_pMatBlurYkv = new KeyValues("BlurFilterY");
 	static KeyValues* m_pMatBlurYwfkv = new KeyValues("BlurFilterY");
@@ -83,7 +84,53 @@ void CGlowEffect::Init()
 	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv, false);
 	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv, false);
 	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv, false);
+	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);*/
+}
+
+void CGlowEffect::CreateMaterials(){
+	m_pMatGlowColor = I::MaterialSystem->Find("dev/glow_color", TEXTURE_GROUP_OTHER);
+	m_pMatGlowColor->IncrementReferenceCount();
+	KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
+	KeyValues* m_pMatBlurXwfkv = new KeyValues("BlurFilterX");
+	KeyValues* m_pMatBlurYkv = new KeyValues("BlurFilterY");
+	KeyValues* m_pMatBlurYwfkv = new KeyValues("BlurFilterY");
+	KeyValues* m_pMatHaloAddToScreenkv = new KeyValues("UnlitGeneric");
+
+	m_pMatBlurXkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatBlurXwfkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatBlurXwfkv->SetString("$wireframe", "1");
+	
+	m_pMatBlurYkv->SetString("$basetexture", "glow_buffer_2");
+	m_pMatBlurYwfkv->SetString("$basetexture", "glow_buffer_2");
+	m_pMatBlurYwfkv->SetString("$wireframe", "1");
+
+
+	m_pMatHaloAddToScreenkv->SetString("$basetexture", "glow_buffer_1");
+	m_pMatHaloAddToScreenkv->SetString("$additive", "1");
+
+	m_pMatBlurX = F::DMEChams.CreateNRef("m_pMatBlurX", m_pMatBlurXkv, false);
+	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv, false);
+	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv, false);
+	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv, false);
 	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);
+
+}
+
+void CGlowEffect::DeleteMaterials(){
+	std::vector<IMaterial*> scanMats = {
+		m_pMatGlowColor,
+		m_pMatBlurXwf,
+		m_pMatBlurX,
+		m_pMatBlurYwf,
+		m_pMatBlurY,
+		m_pMatHaloAddToScreen,
+	};
+
+	for (IMaterial* material : scanMats){
+		if (!material){ continue; }
+		material->DecrementReferenceCount();
+		material->DeleteIfUnreferenced();
+	}
 }
 
 void CGlowEffect::Render()

@@ -29,6 +29,8 @@ private:
 private:
 	void DrawModel(CBaseEntity* pEntity, int nFlags, bool bIsDrawingModels);
 	void SetScale(int nScale);
+	void DeleteMaterials();
+	void CreateMaterials();
 
 public:
 	void Init();
