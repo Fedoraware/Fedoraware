@@ -16,6 +16,7 @@ class CMisc {
 
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
+	void CheatsBypass();
 	void PingReducer();
 	void ServerHitbox();
 	void WeaponSway();
@@ -34,8 +35,6 @@ public:
 	bool TauntControl(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
 	void RunLate(CUserCmd* pCmd);
-
-	void CheatsBypass();
 
 	void SteamRPC();
 	void UnlockAchievements();
