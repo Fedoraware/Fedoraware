@@ -22,6 +22,8 @@ class CMisc {
 	void WeaponSway();
 	void DetectChoke();
 
+	void PrintProjAngles(CBaseEntity* pLocal);
+
 	// Late
 	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);

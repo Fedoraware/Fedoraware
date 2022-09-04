@@ -14,6 +14,7 @@ void CMisc::Run(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
+		PrintProjAngles(pLocal);
 		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
@@ -76,6 +77,24 @@ void CMisc::WeaponSway()
 				cl_wpn_sway_interp->SetValue(0.0f);
 			}
 		}
+	}
+}
+
+void CMisc::PrintProjAngles(CBaseEntity* pLocal){
+	if (!Vars::Debug::DebugInfo.Value){ return; }
+	if (!pLocal->IsAlive() || pLocal->IsAGhost()){ return; }
+	static float flNextPrint = 0.f; if (flNextPrint > I::GlobalVars->curtime) { return; }
+	const Vec3 vLocalEyeAngles = pLocal->GetEyeAngles();
+	const Vec3 vLocalEyePosition = pLocal->GetEyePosition();
+	for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)){
+		if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) != pLocal){ continue; }
+		const Vec3 vProjAngles = pEntity->GetAbsAngles();
+		const Vec3 vProjPosition = pEntity->GetAbsOrigin();
+
+		const Vec3 vDeltaAng = vLocalEyeAngles - vProjAngles;
+		const Vec3 vDeltaPos = vLocalEyePosition - vProjPosition;
+		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), {255, 180, 0, 255});
+		flNextPrint = I::GlobalVars->curtime + 1.f;
 	}
 }
 
