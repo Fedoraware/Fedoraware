@@ -17,6 +17,7 @@
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
 #include "../../Features/Chams/DMEChams.h"
+#include "../../Features/Glow/Glow.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
@@ -132,6 +133,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 		if (curMap != oldMap || curAddress != oldAddress){
 			F::DMEChams.CreateMaterials();
+			F::Glow.CreateMaterials();
 		}
 	}
 

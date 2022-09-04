@@ -88,6 +88,7 @@ void CGlowEffect::Init()
 }
 
 void CGlowEffect::CreateMaterials(){
+	DeleteMaterials();
 	m_pMatGlowColor = I::MaterialSystem->Find("dev/glow_color", TEXTURE_GROUP_OTHER);
 	m_pMatGlowColor->IncrementReferenceCount();
 	KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
