@@ -22,11 +22,12 @@ void CGlowEffect::DrawModel(CBaseEntity* pEntity, int nFlags, bool bIsDrawingMod
 	m_bRendering = false;
 }
 
-void CGlowEffect::SetScale(int nScale)
+void CGlowEffect::SetScale(int nScale, bool bReset = false)
 {
 	static IMaterialVar* pVar = nullptr;
 	static bool bFound = false;
 
+	if (bReset) { pVar = nullptr; bFound = false; return; }
 
 	if (!bFound && m_pMatBlurY)
 	{
@@ -115,6 +116,7 @@ void CGlowEffect::CreateMaterials(){
 	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv, false);
 	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);
 
+	SetScale(1.f, true);
 }
 
 void CGlowEffect::DeleteMaterials(){
