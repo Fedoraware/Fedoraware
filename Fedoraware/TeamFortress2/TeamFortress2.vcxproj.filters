@@ -203,6 +203,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Connect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_SendSignonData.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CServerGameClients_ProcessUsercmds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
