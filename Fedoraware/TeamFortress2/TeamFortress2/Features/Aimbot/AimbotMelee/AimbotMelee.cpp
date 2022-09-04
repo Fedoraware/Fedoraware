@@ -36,7 +36,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 
 		static constexpr float FL_DELAY = 0.2f; //it just works
 
-		if (pLocal->IsOnGround())
+		if (pLocal->OnSolid())
 		{
 			vecTraceStart += (pLocal->GetVelocity() * FL_DELAY);
 		}

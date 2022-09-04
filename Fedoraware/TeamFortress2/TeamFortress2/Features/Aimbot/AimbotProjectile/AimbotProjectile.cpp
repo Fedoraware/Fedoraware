@@ -567,20 +567,15 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (classNum)
 	{
-	case CLASS_SOLDIER:
-		{
-			if (pLocal->GetActiveWeapon()->GetSlot() == SLOT_PRIMARY)
+	case CLASS_SOLDIER: {
+			if (pLocal->GetActiveWeapon()->GetSlot() != SLOT_PRIMARY)
 			{
-				if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround())
-				{
-					aimMethod = 2;
-				}
+				break;
 			}
-			break;
+			[[fallthrough]];
 		}
-	case CLASS_DEMOMAN:
-		{
-			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->IsOnGround())
+	case CLASS_DEMOMAN: {
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->OnSolid())
 			{
 				aimMethod = 2;
 			}

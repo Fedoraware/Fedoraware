@@ -81,14 +81,14 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	{
 		if (PathNodes.empty())
 		{
-			PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
+			PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->OnSolid() });
 		}
 		else
 		{
 			const auto& lastNode = PathNodes.back();
 			if (CurrentTarget->GetAbsOrigin().DistTo(lastNode.Location) >= 5.f)
 			{
-				PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->IsOnGround() });
+				PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->OnSolid() });
 			}
 		}
 	}
@@ -108,7 +108,7 @@ void CFollowbot::Run(CUserCmd* pCmd)
 
 			if (!currentNode.OnGround)
 			{
-				if (!pLocal->IsOnGround())
+				if (!pLocal->OnSolid())
 				{
 					currentNode.OnGround = true;
 				} else

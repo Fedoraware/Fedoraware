@@ -416,7 +416,7 @@ void CMisc::DoubleTapLogic(CUserCmd* pCmd, CBaseEntity* pLocal){
 		if (pCmd) {
 			if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
 			{
-				G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->IsOnGround() : true;
+				G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
 			}
 		}
 	}
@@ -700,7 +700,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->IsOnGround() || pLocal->IsDucking() || (pLocal->GetHealth() < 60 && Vars::Misc::NonLethalRocketJump.Value)) // health check is meh, you could check the damage of the launcher, and find the damage at distance from explosion, but that's a lot of work, and it will just be ~40 anyway.
+	if (pLocal->GetClassNum() != CLASS_SOLDIER || !pLocal->OnSolid() || pLocal->IsDucking() || (pLocal->GetHealth() < 60 && Vars::Misc::NonLethalRocketJump.Value)) // health check is meh, you could check the damage of the launcher, and find the damage at distance from explosion, but that's a lot of work, and it will just be ~40 anyway.
 	{
 		return;
 	}
@@ -989,7 +989,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 		// We just started peeking. Save the return position!
 		if (!posPlaced)
 		{
-			if (pLocal->IsOnGround())
+			if (pLocal->OnSolid())
 			{
 				PeekReturnPos = localPos;
 				posPlaced = true;
@@ -1005,7 +1005,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 		}
 
 		// We need a peek direction (A / D)
-		if (!Vars::Misc::CL_Move::AutoPeekFree.Value && !hasDirection && pLocal->IsOnGround())
+		if (!Vars::Misc::CL_Move::AutoPeekFree.Value && !hasDirection && pLocal->OnSolid())
 		{
 			const Vec3 viewAngles = I::EngineClient->GetViewAngles();
 			Vec3 vForward, vRight, vUp, vDirection;

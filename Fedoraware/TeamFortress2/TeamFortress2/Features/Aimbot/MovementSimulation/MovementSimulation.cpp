@@ -241,7 +241,7 @@ bool CMovementSimulation::StrafePrediction()
 		flInitialYaw = 0.f;
 		bFirstRunTick = false;	//	if we fail the math here, don't try it again, it won't work.
 
-		const bool shouldPredict = m_pPlayer->IsOnGround() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
+		const bool shouldPredict = m_pPlayer->OnSolid() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
 		if (!shouldPredict) { return false; }
 		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
 		if (!iSamples) { return false; }
