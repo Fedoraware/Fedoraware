@@ -388,7 +388,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				if (aimPosition.IsZero())
 				{
 					bNeedsTimeCheck = true;
-					continue;
+					if (Vars::Aimbot::Projectile::PredictObscured.Value) { continue; }
+					else { break; }
 				} // don't remove.
 
 				// we have found a point.
