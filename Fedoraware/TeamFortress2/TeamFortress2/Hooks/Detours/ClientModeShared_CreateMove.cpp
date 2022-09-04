@@ -134,6 +134,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		if (curMap != oldMap || curAddress != oldAddress){
 			F::DMEChams.CreateMaterials();
 			F::Glow.CreateMaterials();
+			oldMap = curMap; oldAddress = curAddress;
 		}
 	}
 
