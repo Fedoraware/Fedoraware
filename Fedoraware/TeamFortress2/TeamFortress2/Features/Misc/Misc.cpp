@@ -588,7 +588,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 		{
 			if (pCmd->mousedx && (!isJumping || wasJumping))
 			{
-				pCmd->sidemove = pCmd->mousedx > 1 ? cl_sidespeed->GetFloat() : -cl_sidespeed->GetFloat();
+				pCmd->sidemove = pCmd->mousedx > 0 ? cl_sidespeed->GetFloat() : -cl_sidespeed->GetFloat();
 			}
 			wasJumping = isJumping;
 			break;
