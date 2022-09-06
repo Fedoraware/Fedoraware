@@ -26,12 +26,13 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 					pLocal->SetAbsOrigin(G::FreecamPos);
 				}
 
+
+
+				
 				// Remove punch effect
-				if (Vars::Visuals::RemovePunch.Value)
 				{
-					G::PunchAngles = pLocal->GetPunchAngles();
-					//Store punch angles to be compesnsated for in aim
-					pLocal->ClearPunchAngle(); //Clear punch angles for visual no-recoil
+					G::PunchAngles = pLocal->GetPunchAngles();	//	use in aimbot 
+					if (Vars::Visuals::RemovePunch.Value) { pLocal->ClearPunchAngle(); }	//	visual no-recoil
 				}
 			}
 
