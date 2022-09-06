@@ -406,7 +406,7 @@ void Draw_t::RoundedBoxStatic(const int x, const int y, const int w, const int h
 
 void Draw_t::ClearAvatarCache()
 {
-	for (auto Avatar : m_mapAvatars)
+	for (auto &Avatar : m_mapAvatars)
 	{
 		I::VGuiSurface->DeleteTextureByID(Avatar.second);
 		I::VGuiSurface->DestroyTextureID(Avatar.second);
