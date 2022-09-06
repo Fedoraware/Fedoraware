@@ -40,6 +40,7 @@
 #include "CTFInventoryManager/CTFInventoryManager.h"
 #include "Localize/Localize.h"
 #include "CCommonHostState/CCommonHostState.h"
+#include "ICenterPrint/ICenterPrint.h"
 #include "../DirectX/DirectX.h"
 
 class CThirdPersonManager
@@ -226,6 +227,7 @@ namespace I
 	inline ClientModeTFNormal* ClientModeTF = nullptr;
 	inline ILocalize* Localize = nullptr;
 	inline CCommonHostState* HostState = nullptr;
+	inline ICenterPrint* CenterPrint = nullptr;
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;

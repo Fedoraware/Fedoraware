@@ -770,6 +770,7 @@
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WDraw.hpp" />
     <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WClientMode.hpp" />
     <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHk.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\ICenterPrint\ICenterPrint.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />

@@ -600,6 +600,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\ICenterPrint\ICenterPrint.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Input\Input.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Interfaces.h" />

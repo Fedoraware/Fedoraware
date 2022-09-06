@@ -31,6 +31,9 @@ void CInterfaces::Init()
 	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
 	_valid(GameMovement);
 
+	CenterPrint = g_Interface.Get<ICenterPrint*>(CLIENT, VCENTERPRINT_INTERFACE_VERSION);
+	_valid(CenterPrint);
+
 	ModelInfoClient = g_Interface.Get<CModelInfoClient*>(ENGINE, VMODELINFO_CLIENT_INTERFACE_VERSION);
 	_valid(ModelInfoClient);
 

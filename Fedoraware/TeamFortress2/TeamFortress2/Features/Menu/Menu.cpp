@@ -1675,6 +1675,9 @@ void CMenu::MenuMisc()
 				I::EngineClient->ClientCmd_Unrestricted("itemtest");
 			if (Button("Fix Chams", ImVec2(btnWidth, 20)))
 				F::DMEChams.CreateMaterials();
+			//if (Button("CPrint", ImVec2(btnWidth, 20))){
+			//	I::CenterPrint->Print((char*)"niggaz");
+			//}
 
 
 			if (!I::EngineClient->IsConnected())
