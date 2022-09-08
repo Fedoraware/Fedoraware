@@ -53,8 +53,8 @@ void CMenu::DrawMenu()
 		// Title Text
 		{
 			ImGui::PushFont(TitleFont);
-			const auto titleWidth = ImGui::CalcTextSize("Fedoraware").x;
-			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, "Fedoraware");
+			const auto titleWidth = ImGui::CalcTextSize("Fedoraware (RIP Queen Elizabeth II)").x;
+			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, "Fedoraware (RIP Queen Elizabeth II)");
 			ImGui::PopFont();
 		}
 
