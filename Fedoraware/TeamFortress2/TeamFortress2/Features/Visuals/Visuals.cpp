@@ -377,7 +377,7 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 }
 
 #include "../../Resources/DVD-Icon.h"
-
+#include "../../Resources/Queen.h"
 void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 {
 	//Tickbase info
@@ -511,7 +511,8 @@ void CVisuals::DrawMenuSnow()
 void CVisuals::DrawDVD()
 {
 	{
-		static int iDVD = g_Draw.CreateTextureFromArray(DVDIcon::rawData, 237, 139);
+		//static int iDVD = g_Draw.CreateTextureFromArray(DVDIcon::rawData, 237, 139);
+		static int iDVD = g_Draw.CreateTextureFromArray(QueenEli::rawData, 237, 139);
 
 				// DVD Logo
 		if (iDVD && Vars::Menu::ShowDVD.Value)

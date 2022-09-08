@@ -414,6 +414,7 @@
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
+    <ClInclude Include="TeamFortress2\Resources\Queen.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9core.h" />
