@@ -205,6 +205,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_SendSignonData.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CServerGameClients_ProcessUsercmds.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DSP_Process.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\DataTable_Warning.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />

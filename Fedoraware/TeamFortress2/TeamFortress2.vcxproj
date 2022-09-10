@@ -288,6 +288,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFRagdoll_CreateTFRagdoll.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFWeaponBase_CalcIsAttackCritical.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\DataTable_Warning.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DoEnginePostProcessing.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DSP_Process.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_ClientCmd_Unrestricted.cpp" />
