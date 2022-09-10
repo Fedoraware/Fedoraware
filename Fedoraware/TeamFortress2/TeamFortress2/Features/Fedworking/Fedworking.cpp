@@ -136,7 +136,7 @@ void CFedworking::SendMessage(const std::string& pData)
 
 void CFedworking::Run()
 {
-	if (!Vars::Misc::PartyNetworking.Value) { return; }
+	if (!Vars::Misc::PartyNetworking.Value || G::ShouldShift) { return; }
 
 	if (const auto& pLocal = g_EntityCache.GetLocal()) {
 		// Party marker

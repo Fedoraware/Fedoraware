@@ -141,7 +141,7 @@ bool CCheaterDetection::IsBhopping(CBaseEntity* pSuspect, PlayerData& pData)
 void CCheaterDetection::OnTick()
 {
 	const auto pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !I::EngineClient->IsConnected())
+	if (!pLocal || !I::EngineClient->IsConnected() || G::ShouldShift)
 	{
 		return;
 	}

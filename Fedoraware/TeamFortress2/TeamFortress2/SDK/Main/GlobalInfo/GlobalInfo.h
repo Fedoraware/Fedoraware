@@ -38,13 +38,10 @@ namespace G
 	inline bool WeaponCanAttack = false; // Can the current weapon attack?
 	inline bool WeaponCanSecondaryAttack = false;
 	inline bool AAActive = false; // Is the Anti-Aim active?
-	inline bool FakeShotPitch = false;
 	inline bool HitscanSilentActive = false;
 	inline bool AvoidingBackstab = false; // Are we currently avoiding a backstab? (Overwrites AA)
-	inline bool ProjectileSilentActive = false; //flamethrower
 	inline bool AutoBackstabRunning = false;
 	inline bool LocalSpectated = false; // Is the local player being spectated?
-	inline bool RollExploiting = false; // Are we performing the roll exploit?
 	inline bool ShouldStop = false; // Stops our players movement, takes 1 tick.
 	inline bool UnloadWndProcHook = false;
 	inline bool Frozen = false;	//	angles & movement are frozen.
@@ -94,6 +91,8 @@ namespace G
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
 	inline bool BulletTracerFix = false;
+
+	inline bool UpdateView = false;
 
 	inline DWORD CalcIsAttackCriticalHelperOffset = 0;
 

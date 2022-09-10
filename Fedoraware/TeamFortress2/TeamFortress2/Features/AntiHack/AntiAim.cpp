@@ -317,7 +317,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		Vars::AntiHack::AntiAim::Active.Value = !Vars::AntiHack::AntiAim::Active.Value;
 	}
 
-	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab) { return; }
+	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab || G::ShouldShift) { return; }
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{

@@ -76,7 +76,6 @@ void CAimbot::Run(CUserCmd* pCmd)
 	G::PredictedPos = Vec3();
 	G::HitscanRunning = false;
 	G::HitscanSilentActive = false;
-	G::ProjectileSilentActive = false;
 	G::AimPos = Vec3();
 
 	const auto pLocal = g_EntityCache.GetLocal();

@@ -24,6 +24,8 @@ bool CAuto::ShouldRun(CBaseEntity* pLocal)
 		return false;
 	}
 
+	if (G::ShouldShift) { return false; }
+
 	return true;
 }
 

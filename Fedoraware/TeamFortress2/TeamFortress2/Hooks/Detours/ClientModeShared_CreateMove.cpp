@@ -36,96 +36,89 @@ void AttackingUpdate(){
 MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 21), bool, __fastcall,
           void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
-	G::SilentTime = false;
-	G::IsAttacking = false;
-	G::FakeShotPitch = false;
+	G::UpdateView = true;
 
-	if (!pCmd || !pCmd->command_number)
-	{
-		return Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd);
-	}
-
-	if (Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd))
-	{
-		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
-	}
+	if (!pCmd || !pCmd->command_number) { return Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd); }
+	if (Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd)) { I::Prediction->SetLocalViewAngles(pCmd->viewangles); }
 
 	// Get the pointer to pSendPacket
 	uintptr_t _bp;
 	__asm mov _bp, ebp;
 	auto pSendPacket = reinterpret_cast<bool*>(***reinterpret_cast<uintptr_t***>(_bp) - 0x1);
 
-	int nOldFlags = 0;
-	int nOldGroundEnt = 0;
-	Vec3 vOldAngles = pCmd->viewangles;
-	float fOldSide = pCmd->sidemove;
-	float fOldForward = pCmd->forwardmove;
+	//	save old info
+	static int nOldFlags = 0;
+	static int nOldGroundEnt = 0;
+	static Vec3 vOldAngles = pCmd->viewangles;
+	static float fOldSide = pCmd->sidemove;
+	static float fOldForward = pCmd->forwardmove;
 
 	G::CurrentUserCmd = pCmd;
 
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		nOldFlags = pLocal->GetFlags();
-		nOldGroundEnt = pLocal->m_hGroundEntity();
-
-		if (const int MaxSpeed = pLocal->GetMaxSpeed()) {
-			G::Frozen = MaxSpeed == 1;
-		}
-
-		// Update Global Info
-		if (const auto& pWeapon = g_EntityCache.GetWeapon())
+	if (!G::ShouldShift){
+		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
-			const int nItemDefIndex = pWeapon->GetItemDefIndex();
+			nOldFlags = pLocal->GetFlags();
+			nOldGroundEnt = pLocal->m_hGroundEntity();
 
-			if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1() || (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart()))
-			{
-				G::WaitForShift = DT_WAIT_CALLS;
+			if (const int MaxSpeed = pLocal->GetMaxSpeed()) {
+				G::Frozen = MaxSpeed == 1;
 			}
 
-			G::CurItemDefIndex = nItemDefIndex;
-			G::WeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
-			G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
-			G::WeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
-			G::CurWeaponType = Utils::GetWeaponType(pWeapon);
-			G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon);
-
-			if (pWeapon->GetSlot() != SLOT_MELEE)
+			// Update Global Info
+			if (const auto& pWeapon = g_EntityCache.GetWeapon())
 			{
-				if (pWeapon->IsInReload())
+				const int nItemDefIndex = pWeapon->GetItemDefIndex();
+
+				if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1() || (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart()))
 				{
-					G::WeaponCanAttack = true;
+					G::WaitForShift = DT_WAIT_CALLS;
 				}
 
-				if (G::CurItemDefIndex != Soldier_m_TheBeggarsBazooka)
+				G::CurItemDefIndex = nItemDefIndex;
+				G::WeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
+				G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
+				G::WeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
+				G::CurWeaponType = Utils::GetWeaponType(pWeapon);
+				G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon);
+
+				if (pWeapon->GetSlot() != SLOT_MELEE)
 				{
-					if (pWeapon->GetClip1() == 0)
+					if (pWeapon->IsInReload())
 					{
-						G::WeaponCanAttack = false;
+						G::WeaponCanAttack = true;
+					}
+
+					if (G::CurItemDefIndex != Soldier_m_TheBeggarsBazooka)
+					{
+						if (pWeapon->GetClip1() == 0)
+						{
+							G::WeaponCanAttack = false;
+						}
 					}
 				}
 			}
-		}
 
-		if (Vars::Misc::CL_Move::RechargeWhileDead.Value)
-		{
-			if (!pLocal->IsAlive() && G::ShiftedTicks)
+			if (Vars::Misc::CL_Move::RechargeWhileDead.Value)
 			{
-				G::RechargeQueued = true;
+				if (!pLocal->IsAlive() && G::ShiftedTicks)
+				{
+					G::RechargeQueued = true;
+				}
 			}
-		}
 
 		
-		if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
-		{
-			if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))
+			if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
 			{
-				G::RechargeQueued = true;
+				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))
+				{
+					G::RechargeQueued = true;
+				}
 			}
 		}
-	}
 
-	//	is there somewhere better for this?
-	if (const auto& netChan = I::EngineClient->GetNetChannelInfo()){
+		//	is there somewhere better for this?
+		if (const auto& netChan = I::EngineClient->GetNetChannelInfo()){
 		static uint32_t oldMap = FNV1A::HashConst(I::EngineClient->GetLevelName());
 		static uint32_t oldAddress = FNV1A::HashConst(netChan->GetAddress());
 		const uint32_t curMap = FNV1A::HashConst(I::EngineClient->GetLevelName());
@@ -137,6 +130,13 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			oldMap = curMap; oldAddress = curAddress;
 		}
 	}
+	}
+	else if (const auto& pWeapon = g_EntityCache.GetWeapon()){ 
+		if (const auto& pLocal = g_EntityCache.GetLocal()){
+			G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
+			G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon); 
+		}
+	}	//	we always need this :c
 
 	// Run Features
 	{
@@ -171,54 +171,50 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	G::ViewAngles = pCmd->viewangles;
 
-	// Recharge doubletap by shifting packets
 	static int nChoked = 0;
-	if (G::ShouldShift)
-	{
-		*pSendPacket = G::ShiftedTicks == 1;
-
+	if (G::ShouldShift) { *pSendPacket = G::ShiftedTicks == 1; }
+	else {
 		if (!*pSendPacket) { nChoked++; }
 		else { nChoked = 0; }
 		if (nChoked > 21) { *pSendPacket = true; }
 	}
 
 	// Party Crasher: Crashes the party by spamming messages
-	if (Vars::Misc::PartyCrasher.Value)
+	if (Vars::Misc::PartyCrasher.Value && !G::ShouldShift)
 	{
 		I::EngineClient->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	// Handle Silent Time
-	static bool bWasSet = false;
-	if (G::SilentTime && !bWasSet)
-	{
-		*pSendPacket = false;
-		bWasSet = true;
-	}
-	else
-	{
-		if (bWasSet)
+	if (!G::ShouldShift){
+		static bool bWasSet = false;
+		if (G::SilentTime && !bWasSet)
+		{
+			*pSendPacket = false;
+			bWasSet = true;
+		}
+		else
+		{
+			if (bWasSet)
+			{
+				*pSendPacket = true;
+				bWasSet = false;
+			}
+		}
+
+		G::EyeAngDelay++; // Used for the return delay in the viewmodel aimbot
+
+		if (G::ForceSendPacket)
 		{
 			*pSendPacket = true;
-			bWasSet = false;
-		}
+			G::ForceSendPacket = false;
+		} // if we are trying to force update do this lol
+		else if (G::ForceChokePacket)
+		{
+			*pSendPacket = false;
+			G::ForceChokePacket = false;
+		} // check after force send to prevent timing out possibly
 	}
-
-	G::EyeAngDelay++; // Used for the return delay in the viewmodel aimbot
-	G::LastUserCmd = pCmd;
-
-	if (G::ForceSendPacket)
-	{
-		*pSendPacket = true;
-		G::ForceSendPacket = false;
-	} // if we are trying to force update do this lol
-	else if (G::ForceChokePacket)
-	{
-		*pSendPacket = false;
-		G::ForceChokePacket = false;
-	} // check after force send to prevent timing out possibly
-
-	AttackingUpdate();	//	fix
+	else{ AttackingUpdate(); }
 
 	// Stop movement if required
 	if (G::ShouldStop || ((G::RechargeQueued || G::Recharging) && Vars::Misc::CL_Move::StopMovement.Value))
@@ -243,19 +239,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 	}
 
-	bool bSilentTaunt = !F::Misc.TauntControl(pCmd);
+	G::LastUserCmd = pCmd;
 
-	if (G::SilentTime ||
-		G::AAActive ||
-		G::FakeShotPitch ||
-		G::HitscanSilentActive ||
-		G::AvoidingBackstab ||
-		G::ProjectileSilentActive ||
-		G::RollExploiting ||
-		bSilentTaunt)
-	{
-		return false;
-	}
-
-	return Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd);
+	const bool bShouldSkip = (G::SilentTime || G::AAActive || G::HitscanSilentActive || G::AvoidingBackstab || !G::UpdateView || !F::Misc.TauntControl(pCmd));
+	return bShouldSkip ? false : Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd);
 }

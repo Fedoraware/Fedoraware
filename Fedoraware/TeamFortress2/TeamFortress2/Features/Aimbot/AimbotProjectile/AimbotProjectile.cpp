@@ -1289,7 +1289,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		{
 			if (IsFlameThrower)
 			{
-				G::ProjectileSilentActive = true;
+				G::UpdateView = false;
 				Aim(pCmd, pWeapon, target.m_vAngleTo);
 			}
 

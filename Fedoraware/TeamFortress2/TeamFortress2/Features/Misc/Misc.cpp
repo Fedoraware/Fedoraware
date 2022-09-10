@@ -428,7 +428,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->sidemove = 0.0f;
 			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 			pCmd->viewangles.z = 270.f;
-			G::RollExploiting = true;
+			G::UpdateView = false;
 			if (Vars::Misc::FakeAccelAngle.Value) {
 				G::ForceChokePacket = true;
 			}
