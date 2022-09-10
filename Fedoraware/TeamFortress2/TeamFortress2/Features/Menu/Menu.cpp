@@ -33,7 +33,7 @@ void CMenu::DrawMenu()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 700, 500 });
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 
-	if (ImGui::Begin("Fedoraware", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
+	if (ImGui::Begin(Vars::Menu::CheatName.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
@@ -54,8 +54,8 @@ void CMenu::DrawMenu()
 		// Title Text
 		{
 			ImGui::PushFont(TitleFont);
-			const auto titleWidth = ImGui::CalcTextSize("Fedoraware").x;
-			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, "Fedoraware");
+			const auto titleWidth = ImGui::CalcTextSize(Vars::Menu::CheatName.c_str()).x;
+			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, Vars::Menu::CheatName.c_str());
 			ImGui::PopFont();
 		}
 
