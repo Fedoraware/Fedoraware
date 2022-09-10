@@ -157,7 +157,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::EnginePrediction.End(pCmd);
 
 		F::CritHack.Run(pCmd);
-		F::Misc.RunLate(pCmd);
+		F::Misc.RunLate(pCmd, pSendPacket);
 		F::Resolver.Update(pCmd);
 		F::Followbot.Run(pCmd);
 		F::FakeLag.OnTick(pCmd, pSendPacket);

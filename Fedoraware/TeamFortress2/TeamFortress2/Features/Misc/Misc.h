@@ -28,7 +28,7 @@ class CMisc {
 	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket);
 	void DoubleTapLogic(CUserCmd* pCmd, CBaseEntity* pLocal);
 	float m_flSpinYaw = 0.f;
 	
@@ -36,7 +36,7 @@ class CMisc {
 public:
 	bool TauntControl(CUserCmd* pCmd);
 	void Run(CUserCmd* pCmd);
-	void RunLate(CUserCmd* pCmd);
+	void RunLate(CUserCmd* pCmd, bool* pSendPacket);
 
 	void SteamRPC();
 	void UnlockAchievements();

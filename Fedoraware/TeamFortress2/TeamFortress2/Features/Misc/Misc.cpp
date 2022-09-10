@@ -36,7 +36,7 @@ void CMisc::Run(CUserCmd* pCmd)
 	DetectChoke();
 }
 
-void CMisc::RunLate(CUserCmd* pCmd)
+void CMisc::RunLate(CUserCmd* pCmd, bool* pSendPacket)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -45,7 +45,7 @@ void CMisc::RunLate(CUserCmd* pCmd)
 		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
-		FastAccel(pCmd, pLocal);
+		FastAccel(pCmd, pLocal, pSendPacket);
 	}
 }
 
@@ -363,7 +363,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt)
 	}
 }
 
-void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
+void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 {
 	static bool flipVar = false;
 	flipVar = !flipVar;
@@ -413,19 +413,16 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 	{
 		const Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, 0.0f);
 		const float flLength = vecMove.Length();
-		//if (flLength > 0.0f)
-		//{
-			Vec3 angMoveReverse;
-			Math::VectorAngles(vecMove * -1.f, angMoveReverse);
-			pCmd->forwardmove = -flLength;
-			pCmd->sidemove = 0.0f;
-			pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
-			pCmd->viewangles.z = 270.f;
-			G::UpdateView = false;
-			if (Vars::Misc::FakeAccelAngle.Value) {
-				G::ForceChokePacket = true;
-			}
-		//}
+		Vec3 angMoveReverse;
+		Math::VectorAngles(vecMove * -1.f, angMoveReverse);
+		pCmd->forwardmove = -flLength;
+		pCmd->sidemove = 0.0f;
+		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
+		pCmd->viewangles.z = 270.f;
+		G::UpdateView = false;
+		if (Vars::Misc::FakeAccelAngle.Value) {
+			*pSendPacket = false;
+		}
 	}
 }
 
