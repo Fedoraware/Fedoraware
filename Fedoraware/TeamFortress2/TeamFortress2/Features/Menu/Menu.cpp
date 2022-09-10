@@ -6,6 +6,7 @@
 #include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
 #include "../Chams/DMEChams.h"
+#include "../Glow/Glow.h"
 
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
@@ -1674,7 +1675,10 @@ void CMenu::MenuMisc()
 			if (Button("Itemtest", ImVec2(btnWidth, 20)))
 				I::EngineClient->ClientCmd_Unrestricted("itemtest");
 			if (Button("Fix Chams", ImVec2(btnWidth, 20)))
+			{
 				F::DMEChams.CreateMaterials();
+				F::Glow.CreateMaterials();
+			}
 			//if (Button("CPrint", ImVec2(btnWidth, 20))){
 			//	I::CenterPrint->Print((char*)"niggaz");
 			//}
