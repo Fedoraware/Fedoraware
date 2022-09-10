@@ -482,7 +482,7 @@ namespace Vars
 		inline CVar<bool> RemoveTaunts{ false };
 		inline CVar<bool> DrawOnScreenConditions{ false };
 		inline DragBox_t OnScreenConditions{ };
-		inline CVar<int> FieldOfView{ 130 };
+		inline CVar<int> FieldOfView{ 90 };
 		inline CVar<int> AimFOVAlpha{ 10 };
 		inline CVar<bool> RemoveScope{ false };
 		inline CVar<bool> RemoveRagdolls{ false };
