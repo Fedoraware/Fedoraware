@@ -37,6 +37,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
           void* ecx, void* edx, float input_sample_frametime, CUserCmd* pCmd)
 {
 	G::UpdateView = true;
+	G::SilentTime = false;
+	G::IsAttacking = false;
 
 	if (!pCmd || !pCmd->command_number) { return Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd); }
 	if (Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd)) { I::Prediction->SetLocalViewAngles(pCmd->viewangles); }
