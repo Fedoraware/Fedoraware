@@ -7,11 +7,15 @@
 int attackStringW;
 int attackStringH;
 
-static std::string yellow({'\x7', 'C', '8', 'A', '9', '0', '0'}); //C8A900
+static std::string yellow({'\x7', 'C', '8', 'A', '9', '0', '0'}); //C8A900 //CACACA
 static std::string blue({'\x7', '0', 'D', '9', '2', 'F', 'F'}); //0D92FF
-static std::string white({'\x7', 'F', 'F', 'F', 'F', 'F', 'F'}); //FFFFFF
 static std::string red({'\x7', 'F', 'F', '3', 'A', '3', 'A'}); //FF3A3A
 static std::string green({'\x7', '3', 'A', 'F', 'F', '4', 'D'}); //3AFF4D
+static std::string white({'\x7', 'F', 'F', 'F', 'F', 'F', 'F'}); //FFFFFF
+static std::string gsyellow({ '\x7', 'C', 'A', 'C', 'A', 'C', 'A'}); //CACACA
+static std::string gsblue({'\x7', '7', '6', '7', '6', '7', '6'}); //767676
+static std::string gsred({'\x7', '7', '5', '7', '5', '7', '5'}); //757575
+static std::string gsgreen({'\x7', 'B', '0', 'B', '0', 'B', '0'}); //b0b0b0
 
 enum VoteLogger {
 	VoteText = 1 << 0,
@@ -81,7 +85,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & VoteChat) // chat
 				{
-					I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s %s \x3%s %svoted %s%s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
+					I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s %s \x3%s %svoted %s%s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow), bVotedYes ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) : (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red), bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & VoteParty) // party
 				{
@@ -122,7 +126,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
 				                        attackStringW, attackStringH);
 				const std::string chatAttackString(
-					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" +
+					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) +" You hit \x3" + pi.name + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " for " + (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red) + std::to_string(nDamage) + " damage " + (bCrit ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) + "(crit) " : "") + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + "(" +
 					std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
 				if (Vars::Visuals::DamageLoggerChat.Value)

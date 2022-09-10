@@ -687,6 +687,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::CrosshairAimPos);
 			SAVE_VAR(Vars::Visuals::ChatInfoText);
 			SAVE_VAR(Vars::Visuals::ChatInfoChat);
+			SAVE_VAR(Vars::Visuals::ChatInfoGrayScale);
 			SAVE_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			SAVE_VAR(Vars::Visuals::SpectatorList);
 
@@ -1497,6 +1498,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::CrosshairAimPos);
 			LOAD_VAR(Vars::Visuals::ChatInfoText);
 			LOAD_VAR(Vars::Visuals::ChatInfoChat);
+			LOAD_VAR(Vars::Visuals::ChatInfoGrayScale);
 			LOAD_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 			LOAD_VAR(Vars::Visuals::SpectatorList);
 

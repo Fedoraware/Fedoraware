@@ -479,6 +479,7 @@ namespace Vars
 		inline CVar<bool> CrosshairAimPos{ false };
 		inline CVar<bool> ChatInfoText{ false };
 		inline CVar<bool> ChatInfoChat{ false };
+		inline CVar<bool> ChatInfoGrayScale{ false };
 		inline CVar<bool> OutOfFOVArrowsOutline{ false };
 		inline CVar<float> FovArrowsDist{ 0.15f };
 		inline CVar<int> SpectatorList{ 2 }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars

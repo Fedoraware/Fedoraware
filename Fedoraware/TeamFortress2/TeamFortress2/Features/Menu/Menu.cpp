@@ -1094,6 +1094,7 @@ void CMenu::MenuVisuals()
 				WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 				WToggle("Movement simulation lines", &Vars::Visuals::MoveSimLine.Value);
+				WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
 				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
