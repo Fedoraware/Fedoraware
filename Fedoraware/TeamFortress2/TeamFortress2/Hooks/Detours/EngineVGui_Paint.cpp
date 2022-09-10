@@ -111,7 +111,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				if (!I::EngineClient->IsInGame())
 				{
 					static bool bOpenedMenuOnce = false;
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, 100, {255,100,100,255}, EStringAlign::ALIGN_CENTERHORIZONTAL, "R.I.P Queen Elizabeth II :(");
 					if (F::Menu.IsOpen)
 					{
 						g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 5 - Vars::Fonts::FONT_MENU::nTall.Value, { 116, 255, 48, 255 }, ALIGN_DEFAULT, __DATE__);
