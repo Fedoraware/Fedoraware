@@ -11,7 +11,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 		return false;
 	}
 
-	if (ChokeCounter >= ChosenAmount) {
+	if (ChokeCounter >= ChosenAmount && Vars::Misc::CL_Move::FakelagMode.Value != FL_Adaptive) {
 		return false;
 	}
 
