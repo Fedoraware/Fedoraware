@@ -674,7 +674,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::RemoveScope);
 			SAVE_VAR(Vars::Visuals::RemoveRagdolls);
 			SAVE_VAR(Vars::Visuals::RemoveScreenEffects);
-			SAVE_VAR(Vars::Visuals::RemoveForcedConvars);
+			SAVE_VAR(Vars::Visuals::RemoveDSP);
 			SAVE_VAR(Vars::Visuals::RemoveConvarQueries);
 			SAVE_VAR(Vars::Visuals::VisualOverlay);
 			SAVE_VAR(Vars::Visuals::RemoveScreenOverlays);
@@ -1480,7 +1480,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
 			LOAD_VAR(Vars::Visuals::RemoveScreenEffects);
 			LOAD_VAR(Vars::Visuals::RemoveScreenOverlays);
-			LOAD_VAR(Vars::Visuals::RemoveForcedConvars);
+			LOAD_VAR(Vars::Visuals::RemoveDSP);
 			LOAD_VAR(Vars::Visuals::RemoveConvarQueries);
 			LOAD_VAR(Vars::Visuals::VisualOverlay);
 			LOAD_VAR(Vars::Visuals::PreventForcedAngles);

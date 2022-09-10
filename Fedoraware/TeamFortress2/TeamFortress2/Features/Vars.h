@@ -466,8 +466,9 @@ namespace Vars
 		inline CVar<bool> RemoveMOTD{ false };
 		inline CVar<bool> RemoveScreenEffects{ false };
 		inline CVar<bool> RemoveScreenOverlays{ false };
-		inline CVar<bool> RemoveForcedConvars{ false };
+		//inline CVar<bool> RemoveForcedConvars{ false };
 		inline CVar<bool> RemoveConvarQueries{ false };
+		inline CVar<bool> RemoveDSP{ false };
 		inline CVar<int> VisualOverlay{ false };
 		inline CVar<bool> PreventForcedAngles{ false };
 		inline CVar<bool> ScopeLines{ false };
