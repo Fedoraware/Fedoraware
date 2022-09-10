@@ -69,7 +69,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const int votingOptions = Vars::Misc::VotingOptions.Value;
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				auto voteLine = tfm::format("%s %s %s voted %s", Vars::Menu::CheatName.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+				auto voteLine = tfm::format("%s %s %s voted %s", Vars::Menu::CheatPrefix.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
 				if (votingOptions & VoteText) // text
 				{
@@ -81,7 +81,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & VoteChat) // chat
 				{
-					I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s %s \x3%s %svoted %s%s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatName.c_str(), pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
+					I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s %s \x3%s %svoted %s%s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, yellow, bVotedYes ? green : red, bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & VoteParty) // party
 				{
@@ -122,7 +122,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
 				                        attackStringW, attackStringH);
 				const std::string chatAttackString(
-					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatName + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" +
+					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + yellow + " You hit \x3" + pi.name + yellow + " for " + red + std::to_string(nDamage) + " damage " + (bCrit ? green + "(crit) " : "") + yellow + "(" +
 					std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
 				if (Vars::Visuals::DamageLoggerChat.Value)
