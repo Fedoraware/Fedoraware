@@ -32,6 +32,13 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 		return false;
 	}
 
+	if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Adaptive){
+		const Vec3 vDelta = vLastPosition - pLocal->GetAbsOrigin();
+		if (vDelta.Length2DSqr() > pow(64, 2)){
+			return false;
+		}
+	}
+
 	// Are we recharging or shifting ticks?
 	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || G::ShouldShift || !retainFakelagTest) {
 		return false;
@@ -62,6 +69,7 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
 
 	// Are we even allowed to choke?
 	if (!IsAllowed(pLocal)) {
+		vLastPosition = pLocal->GetAbsOrigin();
 		*pSendPacket = true;
 		// Set a new random amount (if desired)
 		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random) { ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value); }
