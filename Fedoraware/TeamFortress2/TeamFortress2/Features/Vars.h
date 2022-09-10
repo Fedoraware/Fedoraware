@@ -14,6 +14,7 @@ namespace Vars
 	namespace Menu
 	{
 		inline std::string CheatName = "Fedoraware";
+		inline std::string CheatPrefix = "FeD";
 
 		inline bool ModernDesign = false;
 		inline bool ShowPlayerlist = false;

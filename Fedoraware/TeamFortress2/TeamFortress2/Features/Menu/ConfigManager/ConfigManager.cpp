@@ -264,6 +264,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		// Menu
 		{
 			SAVE_OTHER(Vars::Menu::CheatName);
+			SAVE_OTHER(Vars::Menu::CheatPrefix);
 			SAVE_VAR(Vars::Menu::Vignette);
 			SAVE_VAR(Vars::Menu::ShowDVD);
 			SAVE_VAR(Vars::Menu::MenuKey);
@@ -1073,6 +1074,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		// Menu
 		{
 			LOAD_OTHER(Vars::Menu::CheatName);
+			LOAD_OTHER(Vars::Menu::CheatPrefix);
 			LOAD_VAR(Vars::Menu::Vignette);
 			LOAD_VAR(Vars::Menu::ShowDVD);
 			LOAD_VAR(Vars::Menu::MenuKey);

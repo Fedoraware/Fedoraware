@@ -52,7 +52,7 @@ void ShutdownRichPresence()
 
 void Loaded()
 {
-	I::Cvar->ConsoleColorPrintf({ 255, 193, 75, 255 }, "Fedoraware Loaded!\n");
+	I::Cvar->ConsoleColorPrintf({ 255, 193, 75, 255 }, "%s Loaded!\n", Vars::Menu::CheatName.c_str());
 	I::EngineClient->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	const int dxLevel = g_ConVars.FindVar("mat_dxlevel")->GetInt();
@@ -101,7 +101,7 @@ void Uninitialize()
 	Sleep(100);
 
 	F::Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
-	I::Cvar->ConsoleColorPrintf({ 255, 255, 0, 255 }, "Fedoraware Unloaded!\n");
+	I::Cvar->ConsoleColorPrintf({ 255, 255, 0, 255 }, "%s Unloaded!\n", Vars::Menu::CheatName.c_str());
 }
 
 void LoadDefaultConfig()
