@@ -42,6 +42,7 @@
 #include "CCommonHostState/CCommonHostState.h"
 #include "ICenterPrint/ICenterPrint.h"
 #include "../DirectX/DirectX.h"
+#include "IOcclusionSystem/IOcclusionSystem.h"
 
 class CThirdPersonManager
 {
@@ -228,6 +229,7 @@ namespace I
 	inline ILocalize* Localize = nullptr;
 	inline CCommonHostState* HostState = nullptr;
 	inline ICenterPrint* CenterPrint = nullptr;
+	inline IOcclusionSystem* OcclusionSystem = nullptr;	//	this is actually COcclusionSystem.
 
 	// TODO: These do not belong here
 	inline int32_t* RandomSeed = nullptr;

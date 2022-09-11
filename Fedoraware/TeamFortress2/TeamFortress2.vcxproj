@@ -220,6 +220,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LatchInterpolationAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CServerGameClients_ProcessUsercmds.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
@@ -606,6 +607,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Input\Input.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Interfaces.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\IOcclusionSystem\IOcclusionSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\KeyValuesSystem\KeyValuesSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Material\Material.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\MatRenderContext\MatRenderContext.h" />
