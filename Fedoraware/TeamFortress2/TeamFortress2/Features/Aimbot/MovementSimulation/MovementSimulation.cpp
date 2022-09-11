@@ -128,7 +128,7 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 
 		if (pPlayer != g_EntityCache.GetLocal())
 		{
-			pPlayer->m_hGroundEntity() = 0; //without this nonlocal players get snapped to the floor
+			pPlayer->m_hGroundEntity() = -1; //without this nonlocal players get snapped to the floor
 		}
 
 		pPlayer->m_flModelScale() -= 0.03125f; //fixes issues with corners
@@ -235,14 +235,14 @@ bool CMovementSimulation::StrafePrediction()
 {
 	static float flAverageYaw = 0.f;
 	static float flInitialYaw = 0.f;
+	const bool shouldPredict = m_pPlayer->OnSolid() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
+	if (!shouldPredict) { return false; }
 
 	if (bFirstRunTick){			//	we've already done the math, don't do it again
 		flAverageYaw = 0.f;
 		flInitialYaw = 0.f;
 		bFirstRunTick = false;	//	if we fail the math here, don't try it again, it won't work.
 
-		const bool shouldPredict = m_pPlayer->OnSolid() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
-		if (!shouldPredict) { return false; }
 		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
 		if (!iSamples) { return false; }
 		
@@ -258,7 +258,7 @@ bool CMovementSimulation::StrafePrediction()
 
 		const auto& mVelocityRecord = m_Velocities[iEntIndex];
 
-		if (mVelocityRecord.empty() || static_cast<int>(mVelocityRecord.size()) < iSamples)
+		if (static_cast<int>(mVelocityRecord.size()) != iSamples)
 		{
 			return false;
 		}
@@ -298,8 +298,7 @@ bool CMovementSimulation::StrafePrediction()
 			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), {83, 255, 83, 255});
 		}
 	}
-
-	if (flAverageYaw < 0.1f) { return false; }	//	fix
+	if (flAverageYaw == 0.f) { return false; }	//	fix
 
 	flInitialYaw += flAverageYaw;
 	m_MoveData.m_vecViewAngles.y = flInitialYaw;
