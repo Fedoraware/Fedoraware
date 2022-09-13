@@ -215,7 +215,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) { FindEdge(flBaseYaw); }
 
 		// Yaw
-		if (bSendState)
+		if (bSendState && Vars::AntiHack::AntiAim::YawReal.Value)
 		{
 			const float flRealYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
 			pCmd->viewangles.y = flRealYaw;
@@ -234,7 +234,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			G::RealViewAngles.y = pCmd->viewangles.y;
 			G::AntiAim.first = true;
 		}
-		else
+		else if (Vars::AntiHack::AntiAim::YawReal.Value)
 		{
 			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
 			pCmd->viewangles.y = flFakeYaw;
