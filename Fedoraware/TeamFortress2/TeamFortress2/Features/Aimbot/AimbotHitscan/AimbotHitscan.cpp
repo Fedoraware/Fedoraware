@@ -586,7 +586,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 				vAngle.y -= 180.f;
 			}
 
-			if (Vars::Aimbot::Global::FlickatEnemies.Value)
+			if (Vars::Aimbot::Global::FlickatEnemies.Value && !G::ShouldShift)
 			{
 				if (G::IsAttacking)
 				{
