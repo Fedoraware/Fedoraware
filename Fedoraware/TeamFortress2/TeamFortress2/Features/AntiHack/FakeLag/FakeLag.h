@@ -5,7 +5,7 @@ class CFakeLag {
 
 	// Update this enum if you're adding/removing modes!
 	enum FakelagModes {
-		FL_Plain, FL_Random, FL_Velocity, FL_Adaptive
+		FL_Plain, FL_Random, FL_Velocity, FL_Adaptive, FL_SmartAdaptive
 	};
 
 	int ChokeCounter = 0; // How many ticks have been choked

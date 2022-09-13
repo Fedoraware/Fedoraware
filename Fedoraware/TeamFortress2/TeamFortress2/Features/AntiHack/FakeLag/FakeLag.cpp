@@ -11,7 +11,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 		return false;
 	}
 
-	if (ChokeCounter >= ChosenAmount && Vars::Misc::CL_Move::FakelagMode.Value != FL_Adaptive) {
+	if (ChokeCounter >= ChosenAmount && Vars::Misc::CL_Move::FakelagMode.Value < 3) {
 		return false;
 	}
 
@@ -23,6 +23,11 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	// Is a fakelag key set and pressed?
 	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.Value };
 	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.Value && Vars::Misc::CL_Move::FakelagMode.Value == 0) {
+		return false;
+	}
+
+	// Are we recharging
+	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) {
 		return false;
 	}
 
@@ -39,12 +44,23 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 		}
 	}
 
-	// Are we recharging or shifting ticks?
-	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || G::ShouldShift || !retainFakelagTest) {
-		return false;
+	switch (Vars::Misc::CL_Move::FakelagMode.Value){
+	case FL_Velocity:{
+		return pLocal->GetVecVelocity().Length2D() > 20.f;
 	}
-
-	return true;
+	case FL_Adaptive:{
+		const Vec3 vDelta = vLastPosition - pLocal->GetAbsOrigin();
+		return vDelta.Length2DSqr() < pow(64, 2);
+	}
+	case FL_SmartAdaptive:{
+		const Vec3 vDelta = vLastPosition - pLocal->GetAbsOrigin();
+		const float flVelocity = pLocal->GetVecVelocity().Length2D();
+		return vDelta.Length2DSqr() < pow(64, 2) && flVelocity > 10.f;
+	}
+	default: {
+		return true;
+	}
+	}
 }
 
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket) {
