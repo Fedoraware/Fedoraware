@@ -834,8 +834,10 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			}
 		}
 
-		if (!target.ShouldBacktrack && target.m_pEntity->GetSimulationTime() == target.m_pEntity->GetOldSimulationTime() && !G::ShouldShift){
-			return;
+		if (Vars::Aimbot::Global::IgnoreOptions.Value & (1<<6)){
+			if (!target.ShouldBacktrack && target.m_pEntity->GetSimulationTime() == target.m_pEntity->GetOldSimulationTime() && !G::ShouldShift){
+				return;
+			}
 		}
 
 		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
