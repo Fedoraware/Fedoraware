@@ -206,6 +206,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		const float fOldForwardMove = pCmd->forwardmove;
 
 		// Get Base Yaw
+		flBaseYaw = GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd);
 
 		// Pitch
 		SetupPitch(Vars::AntiHack::AntiAim::Pitch.Value, pCmd);
