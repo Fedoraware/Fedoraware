@@ -33,6 +33,7 @@ void CBacktrack::UpdateRecords()
 		// Check if the entity is valid
 		const auto& pEntity = I::ClientEntityList->GetClientEntity(i);
 		if (!pEntity || pEntity->GetDormant() || !pEntity->IsAlive()) { Records[i].clear(); continue; }
+		if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { continue; }
 
 		// Get bone matrix
 		matrix3x4 bones[128];
