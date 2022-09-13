@@ -82,24 +82,10 @@ bool CAntiAim::FindEdge(float edgeOrigYaw)
 	if (Utils::CompareFloat(edgeLeftDist, edgeRightDist)) { return false; }
 
 	// Depending on the edge, choose a direction to face
-	if (edgeRightDist < edgeLeftDist)
+	bEdge = edgeRightDist < edgeLeftDist;
+	if (G::RealViewAngles.x == 89.f) // Check for real up
 	{
-		edgeToEdgeOn = 1;
-		if (Vars::AntiHack::AntiAim::Pitch.Value == 2 ||
-			Vars::AntiHack::AntiAim::Pitch.Value == 4 ||
-			G::RealViewAngles.x < 10.f) // Check for real up
-		{
-			edgeToEdgeOn = 2;
-		}
-		return true;
-	}
-
-	edgeToEdgeOn = 2;
-	if (Vars::AntiHack::AntiAim::Pitch.Value == 2 ||
-		Vars::AntiHack::AntiAim::Pitch.Value == 4 ||
-		G::RealViewAngles.x < 10.f) // Check for real up
-	{
-		edgeToEdgeOn = 1;
+		bEdge = !bEdge;
 	}
 
 	return true;
@@ -116,191 +102,35 @@ float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown)
 	return FakeDown ? 720 + WishPitch : -720 + WishPitch;
 }
 
-float CAntiAim::GetAngle(int nIndex)
-{
-	float& lastAngleRef = bPacketFlip ? lastRealAngle : lastFakeAngle;
-	float retnAngle = 0.f;
-	switch (nIndex)
-	{
-	case 1:
-		{
-			retnAngle = 0.0f;
-			break;
-		}
-	case 2:
-		{
-			retnAngle = 90.0f;
-			break;
-		}
-	case 3:
-		{
-			retnAngle = -90.0f;
-			break;
-		}
-	case 4:
-		{
-			retnAngle = 180.0f;
-			break;
-		}
-	case 5:
-		{
-			static Timer updateTimer{};
-			if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-			{
-				lastAngleRef = Utils::RandFloatRange(-180.0f, 180.0f);
-			}
-			retnAngle = lastAngleRef;
-			break;
-		}
-	case 6: //	spin
-		{
-			lastAngleRef += (bPacketFlip ? +1 : -1) * Vars::AntiHack::AntiAim::SpinSpeed.Value;
-			if (lastAngleRef > 180.f) { lastAngleRef -= 360.f; }
-			if (lastAngleRef < -180.f) { lastAngleRef += 360.f; }
-			retnAngle = lastAngleRef;
-			break;
-		}
-	case 7:
-		{
-			if (edgeToEdgeOn == 1) { retnAngle = bPacketFlip ? 90.f : -90.f; }
-			else if (edgeToEdgeOn == 2) { retnAngle = bPacketFlip ? -90.0f : 90.f; }
-			break;
-		}
-	case 8:
-		{
-			if (wasHit)
-			{
-				lastAngleRef = Utils::RandFloatRange(-180.0f, 180.0f);
-				wasHit = false;
-			}
-			retnAngle = lastAngleRef;
-			break;
-		}
-	case 9:
-		{
-			retnAngle = bPacketFlip ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value;
-			break;
-		}
+float CAntiAim::YawIndex(int iIndex){
+	float &flLastYaw = bSendState ? flLastRealOffset : flLastFakeOffset;
+	switch (iIndex){
+	case 1: { return 0.f; }
+	case 2: { return 90.f; }
+	case 3: { return -90.f; }
+	case 4: { return 180.f; }
+	case 5: { flLastYaw = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; return flLastYaw; }
+	case 6: { return flLastYaw += (bSendState ? 1.f : -1.f) * Vars::AntiHack::AntiAim::SpinSpeed.Value; }
+	case 7: { return (bEdge ? 1.f : -1.f) * (bSendState ? 90.f : -90.f); }
+	case 8: { return flLastYaw = bWasHit ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; }
+	case 9: { return bSendState ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value; }
+	default: { return 0.f; }
 	}
-	return retnAngle;
 }
 
-std::pair<float, float> CAntiAim::GetAnglePairPitch(int nIndex)
-{
-	std::pair retnAngles = { 0.f, 0.f };
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		const float speed = pLocal->GetVelocity().Length2D();
-		const auto& pWeapon = g_EntityCache.GetWeapon();
-		
-		switch (nIndex)
-		{
-		case 2:
-			{
-				retnAngles.first = -89.0f;
-				retnAngles.second = -89.0f;
-				break;
-			}
-		case 3:
-			{
-				retnAngles.first = 89.0f;
-				retnAngles.second = 89.0f;
-				break;
-			}
-		case 4: //	fakeup
-			{
-				retnAngles.first = -271.0f;
-				retnAngles.second = 89.0f;
-				G::FakeViewAngles.x = -89.f;
-				break;
-			}
-		case 5: //	fakedown
-			{
-				retnAngles.first = 271.0f;
-				retnAngles.second = -89.0f;
-				G::FakeViewAngles.x = 89.f;
-				break;
-			}
-		case 6:
-			{
-				static float currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-				static Timer updateTimer{};
-				if (updateTimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10))
-				{
-					currentAngle = Utils::RandFloatRange(-89.0f, 89.0f);
-				}
-				retnAngles.first = currentAngle;
-				retnAngles.second = currentAngle;
-				G::FakeViewAngles.x = currentAngle;
-				break;
-			}
-		case 7: //Half Up
-			{
-				retnAngles.first = -45.0f;
-				retnAngles.second = -45.0f;
-				G::FakeViewAngles.x = -45.0f;
-				break;
-			}
-		case 8:
-			{
-				//	jitter
-				static bool flip = false;
-				retnAngles.first = flip ? 89.f : -89.f;
-				retnAngles.second = retnAngles.first;
-				G::FakeViewAngles.x = retnAngles.first;
-				if (bPacketFlip)
-				{
-					//	dumb hack
-					flip = !flip;
-				}
-				break;
-			}
-		case 9:
-		case 10:
-			{
-				//	fake up/down, real custom
-				const bool FakeDown = nIndex == 10;
-				retnAngles.first = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, FakeDown);
-				retnAngles.second = retnAngles.first;
-				G::FakeViewAngles.x = FakeDown ? 89.f : -89.f;
-				break;
-			}
-		case 11:
-			{
-				const int nClassNum = pLocal->GetClassNum();
-				const int nWeaponSlot = pWeapon->GetSlot();
-				retnAngles.first = 89.f;
-				retnAngles.second = 89.f;
-				switch (nClassNum)
-				{
-				case CLASS_HEAVY:
-				case CLASS_DEMOMAN:
-				case CLASS_SOLDIER:
-				case CLASS_ENGINEER:
-				case CLASS_MEDIC:
-				case CLASS_SNIPER:
-					{
-						if (nWeaponSlot == SLOT_PRIMARY)
-						{
-							retnAngles.first = -89.f;
-							retnAngles.second = -89.f;
-						}
-						break;
-					}
-				default: break;
-				}
-
-				if (nClassNum == CLASS_MEDIC && speed < 2.0f)
-				{
-					retnAngles.first = -89.f;
-					retnAngles.second = -89.f;
-				}
-				break;
-			}
-		}
+void CAntiAim::SetupPitch(int iMode, CUserCmd* pCmd){
+	switch (iMode){
+	case 1: { pCmd->viewangles.x = 0.f; G::FakeViewAngles.x = 0.f; return; }
+	case 2: { pCmd->viewangles.x = -89.f; G::FakeViewAngles.x = -89.f; return; }
+	case 3: { pCmd->viewangles.x = 89.f; G::FakeViewAngles.x = 89.f; return; }
+	case 4: { pCmd->viewangles.x = -271.f; G::FakeViewAngles.x = -89.f; return; }
+	case 5: { pCmd->viewangles.x = 271.f; G::FakeViewAngles.x = 89.f; return; }
+	case 6: { flLastPitch = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-89.0f, 89.0f) : flLastPitch; pCmd->viewangles.x = flLastPitch; G::FakeViewAngles.x = flLastPitch; return; }	//	problem?
+	case 7: { pCmd->viewangles.x = -45.f; G::FakeViewAngles.x = -45.f; return; }
+	case 8: { pCmd->viewangles.x = bPitchFlip ? 89.f : -89.f; G::FakeViewAngles.x = bPitchFlip ? 89.f : -89.f; bPitchFlip = !bPitchFlip; return; }
+	case 9:
+	case 10: { pCmd->viewangles.x = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, iMode == 10); G::FakeViewAngles.x = iMode == 10 ? 89.f : -89.f; return; }
 	}
-
-	return retnAngles;
 }
 
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
@@ -344,7 +174,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		if (G::IsAttacking) { return; }
 
 		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
-		const bool bYawSet = bPacketFlip ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
+		const bool bYawSet = bSendState ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
 
 		const Vec3 vOldAngles = pCmd->viewangles;
 		const float fOldSideMove = pCmd->sidemove;
@@ -360,7 +190,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7)
 		{
-			FindEdge(pCmd->viewangles.y);
+			FindEdge(flBaseYaw);
 		}
 
 		if (bPacketFlip)
