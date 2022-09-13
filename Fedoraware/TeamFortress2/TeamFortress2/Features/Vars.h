@@ -741,6 +741,8 @@ namespace Vars
 			inline CVar<int> Pitch{ 0 }; //0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
 			inline CVar<int> YawReal{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<int> YawFake{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
+			inline CVar<int> BaseYawMode{ 0 };
+			inline CVar<float> BaseYawOffset{ 0.f };
 			inline CVar<float> SpinSpeed{ 15.f };
 			inline CVar<float> CustomRealPitch{ 0.f };
 			inline CVar<float> CustomRealYaw{ 0 };

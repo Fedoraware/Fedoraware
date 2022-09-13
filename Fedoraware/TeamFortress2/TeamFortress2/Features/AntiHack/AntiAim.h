@@ -4,16 +4,20 @@
 class CAntiAim
 {
 private:
+	// utils
 	void FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove);
+
+	// logic
 	float EdgeDistance(float edgeRayYaw);
 	bool FindEdge(float edgeOrigYaw);
-	bool IsOverlapping(float a, float b, float epsilon);
-	float CalculateCustomRealPitch(float WishPitch, bool FakeDown);
+	bool IsOverlapping(float epsilon);
+	bool ShouldAntiAim(CBaseEntity* pLocal);
 	
+	// angles
+	float CalculateCustomRealPitch(float WishPitch, bool FakeDown);
 	void SetupPitch(int iMode, CUserCmd* pCmd);
 	float YawIndex(int iIndex);
-
-	float GetBaseYaw(int iMode);
+	float GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd);
 
 	float flBaseYaw = 0.f;
 	float flLastFakeOffset = 0.f;

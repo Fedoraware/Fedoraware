@@ -42,6 +42,19 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 	pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed); //	not a good idea
 }
 
+bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal){
+	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost()) 
+	{ return; }
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP || pLocal->GetMoveType() == MOVETYPE_LADDER || pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+	{ return; }
+
+	if (pLocal->IsCharging())
+	{ return; }
+
+	if (G::IsAttacking) { return; }
+}
+
 float CAntiAim::EdgeDistance(float edgeRayYaw)
 {
 	// Main ray tracing area
@@ -91,10 +104,10 @@ bool CAntiAim::FindEdge(float edgeOrigYaw)
 	return true;
 }
 
-bool CAntiAim::IsOverlapping(float a, float b, float epsilon = 45.f)
+bool CAntiAim::IsOverlapping(float epsilon = 45.f)
 {
 	if (!Vars::AntiHack::AntiAim::AntiOverlap.Value) { return false; }
-	return std::abs(a - b) < epsilon;
+	return std::abs(YawIndex(Vars::AntiHack::AntiAim::YawReal.Value) - YawIndex(Vars::AntiHack::AntiAim::YawFake.Value)) < epsilon;
 }
 
 float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown)
@@ -133,6 +146,36 @@ void CAntiAim::SetupPitch(int iMode, CUserCmd* pCmd){
 	}
 }
 
+float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
+	//	0 offset, 1 at player, 2 at player + offset
+	const float flBaseOffset = Vars::AntiHack::AntiAim::BaseYawOffset.Value;
+	switch (iMode){
+	case 0: { return pCmd->viewangles.y + flBaseOffset; }
+	case 1: { 
+		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
+		for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)){
+			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }
+			const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
+			const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
+			
+			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
+		}
+		return flSmallestAngleTo;
+	}
+	case 2: {
+		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
+		for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)){
+			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }
+			const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
+			const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
+			
+			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
+		}
+		return flSmallestAngleTo + flBaseOffset;
+	}
+	}
+}
+
 void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 {
 	G::AAActive = false;
@@ -151,27 +194,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		if (!pLocal->IsAlive()
-			|| pLocal->IsTaunting()
-			|| pLocal->IsInBumperKart()
-			|| pLocal->IsAGhost())
-		{
-			return;
-		}
-
-		if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
-			|| pLocal->GetMoveType() == MOVETYPE_LADDER
-			|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
-		{
-			return;
-		}
-
-		if (pLocal->IsCharging())
-		{
-			return;
-		}
-
-		if (G::IsAttacking) { return; }
+		if (!ShouldAntiAim(pLocal)) { return; }
 
 		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
 		const bool bYawSet = bSendState ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
@@ -180,41 +203,29 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		const float fOldSideMove = pCmd->sidemove;
 		const float fOldForwardMove = pCmd->forwardmove;
 
+		// Get Base Yaw
+
 		// Pitch
-		if (Vars::AntiHack::AntiAim::Pitch.Value)
-		{
-			const std::pair<float, float> angPair = GetAnglePairPitch(Vars::AntiHack::AntiAim::Pitch.Value);
-			pCmd->viewangles.x = angPair.first;
-			G::RealViewAngles.x = angPair.second;
-		}
+		SetupPitch(Vars::AntiHack::AntiAim::Pitch.Value, pCmd);
 
-		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7)
-		{
-			FindEdge(flBaseYaw);
-		}
+		//	get edges if needed
+		if (Vars::AntiHack::AntiAim::YawReal.Value == 7 || Vars::AntiHack::AntiAim::YawFake.Value == 7) { FindEdge(flBaseYaw); }
 
-		if (bPacketFlip)
+		// Yaw
+		if (bSendState)
 		{
-			//	real
-			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawReal.Value);
-			pCmd->viewangles.y += angOffset;
+			const float flRealYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
+			pCmd->viewangles.y = flRealYaw;
 
 			// Lua callback
-			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, bPacketFlip);
+			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, true);
 
 			// Check if our real angle is overlapping with the fake angle
-			if (Vars::AntiHack::AntiAim::YawFake.Value != 0 && IsOverlapping(pCmd->viewangles.y, G::FakeViewAngles.y))
+			if (Vars::AntiHack::AntiAim::YawFake.Value && IsOverlapping())
 			{
-				if (Vars::AntiHack::AntiAim::SpinSpeed.Value > 0)
-				{
-					pCmd->viewangles.y += 50.f;
-					lastRealAngle += 50.f;
-				}
-				else
-				{
-					pCmd->viewangles.y -= 50.f;
-					lastRealAngle -= 50.f;
-				}
+				const float flFixOffset = Vars::AntiHack::AntiAim::SpinSpeed.Value ? 45.f : -45.f;
+				pCmd->viewangles.y += flFixOffset;
+				flLastRealOffset += flFixOffset;
 			}
 
 			G::RealViewAngles.y = pCmd->viewangles.y;
@@ -222,21 +233,20 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		}
 		else
 		{
-			//	fake
-			const float angOffset = GetAngle(Vars::AntiHack::AntiAim::YawFake.Value);
-			pCmd->viewangles.y += angOffset;
+			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
+			pCmd->viewangles.y = flFakeYaw;
 
 			// Lua callback
-			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, bPacketFlip);
+			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, false);
 
 			G::FakeViewAngles = pCmd->viewangles;
 			G::AntiAim.second = true;
 		}
 
-		if (bYawSet) { *pSendPacket = bPacketFlip = !bPacketFlip; }
+		if (bYawSet) { *pSendPacket = bSendState = !bSendState; }
 		if (Vars::AntiHack::AntiAim::YawFake.Value == 0)
 		{
-			*pSendPacket = bPacketFlip = true;
+			*pSendPacket = bSendState = true;
 		}
 		G::AAActive = bPitchSet || bYawSet;
 
@@ -260,7 +270,7 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			I::EngineClient->GetPlayerInfo(I::EngineClient->GetLocalPlayer(), &pi);
 			if (nAttacker == pi.userID) { return; }
 
-			wasHit = true;
+			bWasHit = true;
 		}
 	}
 }
