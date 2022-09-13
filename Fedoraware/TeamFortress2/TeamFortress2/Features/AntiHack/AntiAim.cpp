@@ -234,9 +234,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			G::RealViewAngles.y = pCmd->viewangles.y;
 			G::AntiAim.first = true;
 		}
-		else if (Vars::AntiHack::AntiAim::YawReal.Value)
+		else if (Vars::AntiHack::AntiAim::YawFake.Value)
 		{
-			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
+			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawFake.Value);
 			pCmd->viewangles.y = flFakeYaw;
 
 			// Lua callback
@@ -255,6 +255,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 
 		FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
 	}
+	bWasHit = false;
 }
 
 void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
