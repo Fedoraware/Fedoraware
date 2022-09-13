@@ -834,13 +834,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			}
 		}
 
-		//if (Vars::Misc::CL_Move::WaitForDT.m_Var)
-		//{
-		//	if (G::m_nWaitForShift && G::m_nShifted &&
-		//		GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var))
-		//		//if dt not ready and "ticks" = 0 and key is held, dont aimbot
-		//		return;
-		//}
+		if (!target.ShouldBacktrack && target.m_pEntity->GetSimulationTime() == target.m_pEntity->GetOldSimulationTime() && !G::ShouldShift){
+			return;
+		}
 
 		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
 		G::HitscanRunning = true;
