@@ -44,15 +44,17 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 
 bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal){
 	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost()) 
-	{ return; }
+	{ return false; }
 
 	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP || pLocal->GetMoveType() == MOVETYPE_LADDER || pLocal->GetMoveType() == MOVETYPE_OBSERVER)
-	{ return; }
+	{ return false; }
 
 	if (pLocal->IsCharging())
-	{ return; }
+	{ return false; }
 
-	if (G::IsAttacking) { return; }
+	if (G::IsAttacking) { return false; }
+
+	return true;
 }
 
 float CAntiAim::EdgeDistance(float edgeRayYaw)
