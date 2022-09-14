@@ -51,7 +51,7 @@ void CEntityCache::Fill()
 				const auto& dormantData = G::DormantPlayerESP[entIdx];
 				const float lastUpdate = dormantData.LastUpdate;
 
-				if (I::EngineClient->Time() - lastUpdate > 6.0f)
+				if (I::EngineClient->Time() - lastUpdate > Vars::ESP::Main::DormantTime.Value)
 				{
 					continue;
 				}
