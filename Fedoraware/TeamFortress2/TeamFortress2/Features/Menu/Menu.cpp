@@ -495,6 +495,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("RED Team color", Colors::TeamRed);
 					ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
 				}
+				WToggle("Distance2Alpha", &Vars::ESP::Main::DistanceToAlpha.Value); HelpMarker("Will fade out ESP elements as the distance between you and the player increases");
 				WToggle("Dormant sound ESP", &Vars::ESP::Main::DormantSoundESP.Value); HelpMarker("Credits: reestart");
 				if (Vars::ESP::Main::DormantSoundESP.Value){
 					WSlider("Dormant Decay Time###GlobalDormantDecayTime", &Vars::ESP::Main::DormantTime.Value, 0.015f, 5.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
