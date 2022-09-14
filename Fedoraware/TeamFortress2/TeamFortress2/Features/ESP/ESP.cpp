@@ -137,8 +137,10 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			continue;
 		}
 
-		// dist check
-		if (Player->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = Player->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();
@@ -210,8 +212,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					nTextX += 5;
 				}
 			}
-
-			I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Players::Alpha.Value);
 
 			// Bone ESP
 			if (Vars::ESP::Players::Bones.Value)
@@ -617,8 +617,11 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			continue;
 		}
 
-		// dist check
-		if (pBuilding->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = pBuilding->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+
 
 		const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
 
@@ -923,8 +926,10 @@ void CESP::DrawWorld() const
 
 	for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 	{
-		// dist check
-		if (health->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = health->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -982,8 +987,10 @@ void CESP::DrawWorld() const
 
 	for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 	{
-		// dist check
-		if (ammo->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = ammo->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -1041,8 +1048,10 @@ void CESP::DrawWorld() const
 
 	for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
 	{
-		// dist check
-		if (NPC->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = NPC->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -1138,8 +1147,10 @@ void CESP::DrawWorld() const
 
 	for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
 	{
-		// dist check
-		if (Bombs->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		// distance things
+		const float flDistance = Bombs->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin());
+		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
