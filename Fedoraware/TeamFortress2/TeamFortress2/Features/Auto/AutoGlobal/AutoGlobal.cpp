@@ -19,9 +19,11 @@ bool CAutoGlobal::ShouldIgnore(CBaseEntity* pTarget)
 	if (pTarget->GetDormant()) { return true; }
 	if (!I::EngineClient->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (G::IsIgnored(pInfo.friendsID)) { return true; }
-	if (Vars::Triggerbot::Global::IgnoreFriends.Value && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
-	if (Vars::Triggerbot::Global::IgnoreCloaked.Value && pTarget->IsVisible()) { return true; }
-	if (Vars::Triggerbot::Global::IgnoreInvlunerable.Value && !pTarget->IsVulnerable()) { return true; }
+	if ((Vars::Triggerbot::Global::IgnoreOptions.Value & 1 << 4) && (pTarget->GetSimulationTime() == pTarget->GetOldSimulationTime())) { return true; }
+	if ((Vars::Triggerbot::Global::IgnoreOptions.Value & 1 << 3) && pTarget->IsTaunting()) { return true; }
+	if ((Vars::Triggerbot::Global::IgnoreOptions.Value & 1 << 2) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+	if ((Vars::Triggerbot::Global::IgnoreOptions.Value & 1 << 1) && pTarget->IsVisible()) { return true; }
+	if ((Vars::Triggerbot::Global::IgnoreOptions.Value & 1 << 0) && !pTarget->IsVulnerable()) { return true; }
 
 	return false;
 }

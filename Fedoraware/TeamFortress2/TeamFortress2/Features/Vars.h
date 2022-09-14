@@ -151,9 +151,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ false };
 			inline CVar<int> TriggerKey{ VK_XBUTTON2 };
-			inline CVar<bool> IgnoreInvlunerable{ false };
-			inline CVar<bool> IgnoreCloaked{ false };
-			inline CVar<bool> IgnoreFriends{ false };
+			inline CVar<int> IgnoreOptions{ 0b00000 }; //fakelagging players, taunting, friends, cloaked, invul
 		}
 
 		namespace Shoot

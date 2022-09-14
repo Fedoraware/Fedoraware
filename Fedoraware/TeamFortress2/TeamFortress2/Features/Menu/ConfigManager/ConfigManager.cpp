@@ -389,9 +389,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::Triggerbot::Global::Active);
 				SAVE_VAR(Vars::Triggerbot::Global::TriggerKey);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
-				SAVE_VAR(Vars::Triggerbot::Global::IgnoreFriends);
+				SAVE_VAR(Vars::Triggerbot::Global::IgnoreOptions);
 			}
 
 			//Shoot
@@ -1207,9 +1205,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::Triggerbot::Global::Active);
 				LOAD_VAR(Vars::Triggerbot::Global::TriggerKey);
-				LOAD_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
-				LOAD_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
-				LOAD_VAR(Vars::Triggerbot::Global::IgnoreFriends);
+				LOAD_VAR(Vars::Triggerbot::Global::IgnoreOptions);
 			}
 
 			//Shoot

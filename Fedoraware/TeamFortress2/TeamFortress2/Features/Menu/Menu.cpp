@@ -405,8 +405,13 @@ void CMenu::MenuTrigger()
 			SectionTitle("Global");
 			WToggle("Triggerbot", &Vars::Triggerbot::Global::Active.Value); HelpMarker("Global triggerbot master switch");
 			InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
-			MultiCombo({ "Invulnerable", "Cloaked", "Friends" }, { &Vars::Triggerbot::Global::IgnoreInvlunerable.Value, &Vars::Triggerbot::Global::IgnoreCloaked.Value, &Vars::Triggerbot::Global::IgnoreFriends.Value }, "Ignored targets###TriggerIgnoredTargets");
-			HelpMarker("Choose which targets should be ignored");
+			HelpMarker("Choose which targets the Aimbot should aim at");
+			{
+				static std::vector flagNames{ "Invulnerable", "Cloaked", "Friends", "Taunting", "Unsimulated Players"};
+				static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4 };
+				MultiFlags(flagNames, flagValues, &Vars::Triggerbot::Global::IgnoreOptions.Value, "Ignored targets###TriggerbotIgnoredTargets");
+				HelpMarker("Choose which targets should be ignored");
+			}
 
 			SectionTitle("Autoshoot");
 			WToggle("Autoshoot###AutoshootTrigger", &Vars::Triggerbot::Shoot::Active.Value); HelpMarker("Shoots if mouse is over a target");

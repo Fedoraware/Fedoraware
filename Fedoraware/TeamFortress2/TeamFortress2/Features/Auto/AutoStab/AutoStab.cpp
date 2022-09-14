@@ -111,6 +111,8 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			continue;
 		}
 
+		if (!IsEntityValid(pLocal, pEnemy)){ continue; }
+
 		CBaseEntity* pTraceEnemy = nullptr;
 
 		Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pEnemy->GetHitboxPos(HITBOX_PELVIS));
