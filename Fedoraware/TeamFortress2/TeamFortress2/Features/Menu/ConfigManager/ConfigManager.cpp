@@ -911,6 +911,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::AntiHack::AntiAim::Active);
 				SAVE_VAR(Vars::AntiHack::AntiAim::ToggleKey);
+				SAVE_VAR(Vars::AntiHack::AntiAim::InvertKey);
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::BaseYawMode);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
@@ -920,6 +921,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::AntiHack::AntiAim::BaseYawOffset);
 				SAVE_VAR(Vars::AntiHack::AntiAim::CustomRealYaw);
 				SAVE_VAR(Vars::AntiHack::AntiAim::CustomFakeYaw);
+				SAVE_VAR(Vars::AntiHack::AntiAim::RealJitter);
+				SAVE_VAR(Vars::AntiHack::AntiAim::FakeJitter);
 				SAVE_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
@@ -1727,6 +1730,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::AntiHack::AntiAim::Active);
 				LOAD_VAR(Vars::AntiHack::AntiAim::ToggleKey);
+				LOAD_VAR(Vars::AntiHack::AntiAim::InvertKey);
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::BaseYawMode);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
@@ -1736,6 +1740,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::AntiHack::AntiAim::BaseYawOffset);
 				LOAD_VAR(Vars::AntiHack::AntiAim::CustomRealYaw);
 				LOAD_VAR(Vars::AntiHack::AntiAim::CustomFakeYaw);
+				LOAD_VAR(Vars::AntiHack::AntiAim::RealJitter);
+				LOAD_VAR(Vars::AntiHack::AntiAim::FakeJitter);
 				LOAD_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiBackstab);

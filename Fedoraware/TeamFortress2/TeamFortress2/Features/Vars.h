@@ -740,6 +740,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ false };
 			inline CVar<int> ToggleKey{ 0 };
+			inline CVar<int> InvertKey{ 0 };
 			inline CVar<int> Pitch{ 0 }; //0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
 			inline CVar<int> YawReal{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
 			inline CVar<int> YawFake{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
@@ -749,6 +750,8 @@ namespace Vars
 			inline CVar<float> CustomRealPitch{ 0.f };
 			inline CVar<float> CustomRealYaw{ 0 };
 			inline CVar<float> CustomFakeYaw{ 0 };
+			inline CVar<float> FakeJitter{ 0 };
+			inline CVar<float> RealJitter{ 0 };
 			inline CVar<int> RandInterval{ 25 };
 			inline CVar<bool> AntiBackstab{ false };
 			inline CVar<bool> LegJitter{ false }; // frick u fourteen

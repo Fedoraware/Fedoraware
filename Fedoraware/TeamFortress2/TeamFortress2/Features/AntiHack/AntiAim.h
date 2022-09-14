@@ -27,6 +27,8 @@ private:
 	bool bWasHit = false;
 	bool bEdge = false;	//	false - right, true - left
 	bool bPitchFlip = false;
+	bool bInvert = false;
+	std::pair<bool, bool> p_bJitter = {false, false};
 
 	Timer tAATimer{};
 public:

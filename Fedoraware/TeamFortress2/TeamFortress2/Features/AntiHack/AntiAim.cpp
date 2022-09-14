@@ -129,6 +129,10 @@ float CAntiAim::YawIndex(int iIndex){
 	case 7: { return (bEdge ? 1.f : -1.f) * (bSendState ? 90.f : -90.f); }
 	case 8: { return flLastYaw = bWasHit ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; }
 	case 9: { return bSendState ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value; }
+	case 10: { return bSendState ? (bInvert ? 90.f : -90.f) : (bInvert ? -90.f : 90.f); }
+	case 11: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : 0.f) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : 0.f); }
+	case 12: { return bSendState ? (p_bJitter.first ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f)) : 0.f) : (p_bJitter.second ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f)) : 0.f); }
+	case 13: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : -Vars::AntiHack::AntiAim::RealJitter.Value) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : -Vars::AntiHack::AntiAim::FakeJitter.Value); }
 	default: { return 0.f; }
 	}
 }
@@ -185,12 +189,14 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = {false, false};
 
+
 	// AA toggle key
-	static KeyHelper aaKey{&Vars::AntiHack::AntiAim::ToggleKey.Value};
-	if (aaKey.Pressed())
-	{
-		Vars::AntiHack::AntiAim::Active.Value = !Vars::AntiHack::AntiAim::Active.Value;
-	}
+	static KeyHelper kAA{&Vars::AntiHack::AntiAim::ToggleKey.Value};
+	Vars::AntiHack::AntiAim::Active.Value = (kAA.Pressed() ? !Vars::AntiHack::AntiAim::Active.Value : Vars::AntiHack::AntiAim::Active.Value);
+
+	// AA invert key
+	static KeyHelper kInvert{&Vars::AntiHack::AntiAim::InvertKey.Value};
+	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 
 	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab || G::ShouldShift) { return; }
 
@@ -217,6 +223,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		// Yaw
 		if (bSendState && Vars::AntiHack::AntiAim::YawReal.Value)
 		{
+			p_bJitter.first = !p_bJitter.first;
 			const float flRealYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
 			pCmd->viewangles.y = flRealYaw;
 
@@ -236,6 +243,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 		}
 		else if (Vars::AntiHack::AntiAim::YawFake.Value)
 		{
+			p_bJitter.second = !p_bJitter.second;
 			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawFake.Value);
 			pCmd->viewangles.y = flFakeYaw;
 
