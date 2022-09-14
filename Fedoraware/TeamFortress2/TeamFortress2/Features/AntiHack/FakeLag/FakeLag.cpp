@@ -46,7 +46,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 
 	switch (Vars::Misc::CL_Move::FakelagMode.Value){
 	case FL_Velocity:{
-		return pLocal->GetVecVelocity().Length2D() > 20.f;
+		return pLocal->GetVecVelocity().Length2D() > 10.f;
 	}
 	case FL_Adaptive:{
 		const Vec3 vDelta = vLastPosition - pLocal->GetAbsOrigin();
