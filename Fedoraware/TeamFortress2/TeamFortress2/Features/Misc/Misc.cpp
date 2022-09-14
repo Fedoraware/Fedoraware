@@ -176,9 +176,13 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost())
+		if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost() || pEnemy->GetFeignDeathReady())
 		{
 			continue;
+		}
+
+		if (CBaseCombatWeapon* pWeapon = pEnemy->GetActiveWeapon()){
+			if (pWeapon->GetWeaponID() != TF_WEAPON_KNIFE) { continue; }
 		}
 
 		Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
