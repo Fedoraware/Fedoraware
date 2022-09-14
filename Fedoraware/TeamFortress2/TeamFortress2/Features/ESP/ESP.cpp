@@ -598,10 +598,9 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				x += 1;
 			}
-
-			I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
+	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 }
 
 void CESP::DrawBuildings(CBaseEntity* pLocal) const
@@ -905,9 +904,9 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 			}
 
-			I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
+	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 }
 
 void CESP::DrawWorld() const
