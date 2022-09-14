@@ -452,7 +452,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::ESP::Main::Active);
 				SAVE_VAR(Vars::ESP::Main::Outlinedbar);
 				SAVE_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				SAVE_VAR(Vars::ESP::Main::DistanceToAlpha);
 				SAVE_VAR(Vars::ESP::Main::DormantSoundESP);
+				SAVE_VAR(Vars::ESP::Main::DormantTime);
+				SAVE_VAR(Vars::ESP::Main::DormantDist);
+				SAVE_VAR(Vars::ESP::Main::NetworkedDist);
 			}
 
 			//Players
@@ -1266,7 +1270,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::ESP::Main::Active);
 				LOAD_VAR(Vars::ESP::Main::Outlinedbar);
 				LOAD_VAR(Vars::ESP::Main::EnableTeamEnemyColors);
+				LOAD_VAR(Vars::ESP::Main::DistanceToAlpha);
 				LOAD_VAR(Vars::ESP::Main::DormantSoundESP);
+				LOAD_VAR(Vars::ESP::Main::DormantTime);
+				LOAD_VAR(Vars::ESP::Main::DormantDist);
+				LOAD_VAR(Vars::ESP::Main::NetworkedDist);
 			}
 
 			//Players
