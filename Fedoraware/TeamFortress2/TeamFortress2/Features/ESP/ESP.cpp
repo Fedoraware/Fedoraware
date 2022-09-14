@@ -140,8 +140,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		// distance things
 		const Vec3 vDelta = Player->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value)) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) - 256.f, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value), Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();
@@ -621,8 +621,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 		// distance things
 		const Vec3 vDelta = pBuilding->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Buildings::Alpha.Value, 0.f) : Vars::ESP::Buildings::Alpha.Value);
 
 
 		const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
@@ -652,8 +652,6 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
 
 			const bool bIsMini = building->GetMiniBuilding();
-
-			I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Buildings::Alpha.Value);
 
 			// Box ESP (Rect, Corners, 3D)
 			switch (Vars::ESP::Buildings::Box.Value)
@@ -931,8 +929,8 @@ void CESP::DrawWorld() const
 		// distance things
 		const Vec3 vDelta = health->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -993,8 +991,8 @@ void CESP::DrawWorld() const
 		// distance things
 		const Vec3 vDelta = ammo->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -1055,8 +1053,8 @@ void CESP::DrawWorld() const
 		// distance things
 		const Vec3 vDelta = NPC->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
@@ -1155,8 +1153,8 @@ void CESP::DrawWorld() const
 		// distance things
 		const Vec3 vDelta = Bombs->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance > Vars::ESP::Main::NetworkedDist.Value) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, 1024.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
