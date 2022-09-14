@@ -214,7 +214,11 @@ namespace Vars
 			inline CVar<bool> Active{ false };
 			inline CVar<bool> Outlinedbar{ false };
 			inline CVar<bool> EnableTeamEnemyColors{ false };
+			inline CVar<bool> DistanceToAlpha{false};
 			inline CVar<bool> DormantSoundESP{ false };
+			inline CVar<float> DormantTime{1.f};
+			inline CVar<int> DormantDist{1000};
+			inline CVar<int> NetworkedDist{2000};
 		}
 
 

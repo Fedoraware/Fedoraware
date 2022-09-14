@@ -137,6 +137,9 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			continue;
 		}
 
+		// dist check
+		if (Player->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();
 
@@ -614,6 +617,9 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			continue;
 		}
 
+		// dist check
+		if (pBuilding->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
 
 		Color_t drawColor = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
@@ -917,6 +923,9 @@ void CESP::DrawWorld() const
 
 	for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 	{
+		// dist check
+		if (health->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
 		if (GetDrawBounds(health, vTrans, x, y, w, h))
@@ -973,6 +982,9 @@ void CESP::DrawWorld() const
 
 	for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 	{
+		// dist check
+		if (ammo->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
 		if (GetDrawBounds(ammo, vTrans, x, y, w, h))
@@ -1029,6 +1041,9 @@ void CESP::DrawWorld() const
 
 	for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
 	{
+		// dist check
+		if (NPC->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
 		if (GetDrawBounds(NPC, vTrans, x, y, w, h))
@@ -1123,6 +1138,9 @@ void CESP::DrawWorld() const
 
 	for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
 	{
+		// dist check
+		if (Bombs->GetAbsOrigin().Dist2D(pLocal->GetAbsOrigin()) > Vars::ESP::Main::NetworkedDist.Value) { continue; }
+
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
 		if (GetDrawBounds(Bombs, vTrans, x, y, w, h))
