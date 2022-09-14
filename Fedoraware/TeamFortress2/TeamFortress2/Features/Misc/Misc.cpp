@@ -125,7 +125,7 @@ void CMisc::DetectChoke()
 void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static bool pos = true;
-	const float scale = pLocal->IsDucking() ? 14.f : 2.f;
+	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
 	if (G::IsAttacking || G::ShouldShift || G::AntiAim.second) { return; }
 	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
 	{

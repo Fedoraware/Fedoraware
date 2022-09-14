@@ -166,7 +166,7 @@ float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
 			
 			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 		}
-		return flSmallestAngleTo;
+		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y : flSmallestAngleTo);
 	}
 	case 2: {
 		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
@@ -177,7 +177,7 @@ float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
 			
 			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 		}
-		return flSmallestAngleTo + flBaseOffset;
+		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + flBaseOffset : flSmallestAngleTo + flBaseOffset);
 	}
 	}
 }
