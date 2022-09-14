@@ -472,7 +472,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 				return false;
 			}
 
-			if (Vars::Aimbot::Global::IgnoreOptions.Value & (1<<6)){
+			if (Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)){
 				if (target.m_pEntity->GetSimulationTime() == target.m_pEntity->GetOldSimulationTime() && !G::ShouldShift){
 					return false;
 				}
