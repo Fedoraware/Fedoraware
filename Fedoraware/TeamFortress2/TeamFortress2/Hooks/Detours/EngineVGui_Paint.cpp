@@ -16,6 +16,7 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../../Features/AntiHack/AntiAim.h"
 
 #include "../../Resources/DVD-Icon.h"
 #include "../../Resources/64x64_Circle_Mask.h"
@@ -145,6 +146,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				F::Visuals.ScopeLines(pLocal);
 				F::Visuals.DrawDebugInfo(pLocal);
 				F::Visuals.DrawOnScreenConditions(pLocal);
+				F::AntiAim.Draw(pLocal);
 
 				if (I::ThirdPersonManager)
 				{

@@ -1518,6 +1518,9 @@ void CMenu::MenuHvH()
 			if (Vars::AntiHack::AntiAim::YawFake.Value == 10 || Vars::AntiHack::AntiAim::YawReal.Value == 10){
 				InputKeybind("Invert Key", Vars::AntiHack::AntiAim::InvertKey);
 			}
+			if (Vars::AntiHack::AntiAim::YawFake.Value == 14 || Vars::AntiHack::AntiAim::YawReal.Value == 14){
+				InputKeybind("Manual Key", Vars::AntiHack::AntiAim::ManualKey);
+			}
 			switch (Vars::AntiHack::AntiAim::YawFake.Value){
 			case 9: { WSlider("Custom fake yaw", &Vars::AntiHack::AntiAim::CustomFakeYaw.Value, -180, 180); break; }
 			case 11:

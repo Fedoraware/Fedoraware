@@ -42,6 +42,16 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 	pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed); //	not a good idea
 }
 
+void CAntiAim::ManualMouseEvent(CUserCmd* pCmd){
+	const short dMouseX = pCmd->mousedx;
+	const short dMouseY = pCmd->mousedy;
+	if (dMouseX > 15) {p_p_bManualYaw = {false, {true, false}}; }	//right
+	if (dMouseX < -15) {p_p_bManualYaw = {false, {false, false}}; }	//left
+	if (dMouseY > 15) {p_p_bManualYaw = {true, {false, true}}; }	//down
+	if (dMouseY < -15) {p_p_bManualYaw = {true, {false, false}}; }	//up
+	return;
+}
+
 bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal){
 	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost()) 
 	{ return false; }
@@ -133,7 +143,7 @@ float CAntiAim::YawIndex(int iIndex){
 	case 11: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : 0.f) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : 0.f); }
 	case 12: { return bSendState ? (p_bJitter.first ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f)) : 0.f) : (p_bJitter.second ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f)) : 0.f); }
 	case 13: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : -Vars::AntiHack::AntiAim::RealJitter.Value) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : -Vars::AntiHack::AntiAim::FakeJitter.Value); }
-	case 14: { return p_p_bManualYaw.first ? (p_p_bManualYaw.second.first ? 90.f : -90.f) : (p_p_bManualYaw.second.second ? 0.f : 180.f); }
+	case 14: { return p_p_bManualYaw.first ? (p_p_bManualYaw.second.first ? 90.f : -90.f) : (p_p_bManualYaw.second.second ? 180.f : 0.f); }
 	default: { return 0.f; }
 	}
 }
@@ -199,11 +209,16 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	static KeyHelper kInvert{&Vars::AntiHack::AntiAim::InvertKey.Value};
 	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 
+	// Manual yaw key
+	static KeyHelper kManual(&Vars::AntiHack::AntiAim::InvertKey.Value);
+	bManualing = kManual.Down();
+
 	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab || G::ShouldShift) { return; }
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		if (!ShouldAntiAim(pLocal)) { return; }
+		if (bManualing) { ManualMouseEvent(pCmd); }
 
 		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
 		const bool bYawSet = bSendState ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value;
@@ -286,4 +301,11 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 			bWasHit = true;
 		}
 	}
+}
+
+void CAntiAim::Draw(CBaseEntity* pLocal){
+	if (!pLocal->IsAlive() || !bManualing) { return; }
+
+	const char* cText = p_p_bManualYaw.first ? (p_p_bManualYaw.second.first ? "LEFT" : "RIGHT") : (p_p_bManualYaw.second.second ? "BACKWARDS" : "FORWARDS");
+	g_Draw.String(FONT_MENU, g_ScreenSize.h, g_ScreenSize.c + 25, { 255, 0, 0, 255 }, ALIGN_CENTER, cText);
 }
