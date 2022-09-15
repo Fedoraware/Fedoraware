@@ -133,6 +133,7 @@ float CAntiAim::YawIndex(int iIndex){
 	case 11: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : 0.f) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : 0.f); }
 	case 12: { return bSendState ? (p_bJitter.first ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f)) : 0.f) : (p_bJitter.second ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f)) : 0.f); }
 	case 13: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : -Vars::AntiHack::AntiAim::RealJitter.Value) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : -Vars::AntiHack::AntiAim::FakeJitter.Value); }
+	case 14: { return p_p_bManualYaw.first ? (p_p_bManualYaw.second.first ? 90.f : -90.f) : (p_p_bManualYaw.second.second ? 0.f : 180.f); }
 	default: { return 0.f; }
 	}
 }

@@ -29,6 +29,7 @@ private:
 	bool bPitchFlip = false;
 	bool bInvert = false;
 	std::pair<bool, bool> p_bJitter = {false, false};
+	std::pair<bool, std::pair<bool, bool>> p_p_bManualYaw = {false, {false, false}};	//	{hori/vert, {left/right, up/down}}
 
 	Timer tAATimer{};
 public:
