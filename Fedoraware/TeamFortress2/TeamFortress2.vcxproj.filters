@@ -207,6 +207,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\DSP_Process.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DataTable_Warning.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CVoiceBanMgr_GetPlayerBan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
