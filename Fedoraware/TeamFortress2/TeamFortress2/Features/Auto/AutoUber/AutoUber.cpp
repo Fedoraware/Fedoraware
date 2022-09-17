@@ -121,6 +121,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) > pPatient->GetVecOrigin().
 			DistToSqr(vPredicted) &&
 			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f)
+			hasRockets = true;
 		{
 			if (pProjectile->IsCritBoosted()) { return 2; }
 			hasRockets = true;
