@@ -6,6 +6,7 @@ bool IsHitboxValid(int nHitbox, int index)
 {
 	switch (nHitbox)
 	{
+	case -1: return true;
 	case HITBOX_HEAD: return (index & (1 << 0));
 	case HITBOX_PELVIS: return (index & (1 << 1));
 	case HITBOX_SPINE_0:
@@ -304,10 +305,10 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 					{
 						for (int nHitbox = -1; nHitbox < target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
 						{
+							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value)) { continue; }
 							if (nHitbox == -1) { nHitbox = PriorityHitbox; }
 							else if (nHitbox == PriorityHitbox) { continue; }
 
-							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value)) { continue; }
 
 							Vec3 vHitbox = target.m_pEntity->GetHitboxPos(nHitbox);
 
