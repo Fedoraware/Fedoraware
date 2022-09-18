@@ -372,11 +372,11 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 	static bool flipVar = false;
 	flipVar = !flipVar;
 	
-	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value) && !flipVar && !G::ShouldShift){
+	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value) && !flipVar){
 		return;
 	}
 
-	const bool bShouldAccel = G::ShouldShift ? Vars::Misc::CL_Move::AntiWarp.Value : Vars::Misc::FastAccel.Value;
+	const bool bShouldAccel = !G::ShouldShift && Vars::Misc::FastAccel.Value;
 	const bool bShouldAccelFinal = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : bShouldAccel;
 	if (!bShouldAccelFinal) {
 		return;
