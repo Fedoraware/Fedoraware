@@ -474,7 +474,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			}
 
 			if (Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)){
-				if (target.m_pEntity->GetSimulationTime() == target.m_pEntity->GetOldSimulationTime() && !G::ShouldShift){
+				if (G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value){
 					return false;
 				}
 			}
