@@ -174,27 +174,21 @@ float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
 	const float flBaseOffset = Vars::AntiHack::AntiAim::BaseYawOffset.Value;
 	switch (iMode){
 	case 0: { return pCmd->viewangles.y + flBaseOffset; }
-	case 1: { 
-		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
-		for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)){
-			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }
-			const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
-			const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
-			
-			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
-		}
-		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y : flSmallestAngleTo);
-	}
+	case 1:
 	case 2: {
 		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
 		for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)){
-			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }
+			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }	//	is enemy valid
+			PlayerInfo_t pInfo{ };
+			if (I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
+				if (G::IsIgnored(pInfo.friendsID)) { continue; }
+			}
 			const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
 			const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
 			
 			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 		}
-		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + flBaseOffset : flSmallestAngleTo + flBaseOffset);
+		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + + (iMode == 2 ? flBaseOffset : 0));
 	}
 	}
 	return pCmd->viewangles.y;
