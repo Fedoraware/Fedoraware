@@ -100,23 +100,24 @@ void CMisc::PrintProjAngles(CBaseEntity* pLocal){
 
 void CMisc::DetectChoke()
 {
-	if (G::Teleporting || G::ShouldShift) {return;}	//	do not do this code if we are shifting ticks.
-	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+	static int iOldTick = I::GlobalVars->tickcount;
+	if (I::GlobalVars->tickcount == iOldTick) {return;}
+	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		if (!player->IsAlive() || player->GetDormant())
+		if (!pEntity->IsAlive() || pEntity->GetDormant())
 		{
-			G::ChokeMap[player->GetIndex()] = 0;
+			G::ChokeMap[pEntity->GetIndex()] = 0;
 			continue;
 		}
 
-		if (player->GetSimulationTime() == player->GetOldSimulationTime())
+		if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime())
 		{
-			G::ChokeMap[player->GetIndex()]++;
+			G::ChokeMap[pEntity->GetIndex()]++;
 		}
 		else
 		{
-			F::BadActors.ReportTickCount(player, G::ChokeMap[player->GetIndex() - 3]);
-			G::ChokeMap[player->GetIndex()] = 0;
+			F::BadActors.ReportTickCount(pEntity, G::ChokeMap[pEntity->GetIndex()]);
+			G::ChokeMap[pEntity->GetIndex()] = 0;
 		}
 	}
 }
