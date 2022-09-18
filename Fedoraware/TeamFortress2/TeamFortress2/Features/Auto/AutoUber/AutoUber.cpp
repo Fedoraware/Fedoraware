@@ -103,6 +103,9 @@ int BlastDangerValue(CBaseEntity* pPatient)
 
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 	{
+		if (hasRockets && !pProjectile->IsCritBoosted())
+			continue;
+
 		if (pProjectile->GetVelocity().IsZero())
 			continue;
 
@@ -117,10 +120,10 @@ int BlastDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		// Projectile is getting closer
-		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		if (pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()) > pPatient->GetVecOrigin().
-			DistToSqr(vPredicted) &&
-			pPatient->GetVecOrigin().DistTo(vPredicted) < 200.f)
+		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
+		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
+		const float flHyp = sqrtf(pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()));
+		if ( flHypPred < flHyp && pPatient->GetVecOrigin().DistTo(vPredicted) < pProjectile->GetVelocity().Length())	//	this is way too sensitive
 		{
 			if (pProjectile->IsCritBoosted()) { return 2; }
 			hasRockets = true;
