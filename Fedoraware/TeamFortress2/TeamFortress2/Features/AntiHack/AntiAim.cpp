@@ -43,6 +43,7 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 }
 
 void CAntiAim::ManualMouseEvent(CUserCmd* pCmd){
+	if (!bSaved) { vSavedAngles = I::EngineClient->GetViewAngles(); bSaved = true; }
 	const short dMouseX = pCmd->mousedx;
 	const short dMouseY = pCmd->mousedy;
 	if (abs(dMouseX) > abs(dMouseY)){
@@ -53,6 +54,7 @@ void CAntiAim::ManualMouseEvent(CUserCmd* pCmd){
 		if (dMouseY > 25) { p_p_bManualYaw = {true, {false, true}}; }	//down
 		else if (dMouseY < -25) { p_p_bManualYaw = {true, {false, false}}; }	//up
 	}
+	I::EngineClient->SetViewAngles(vSavedAngles);
 	return;
 }
 
@@ -224,6 +226,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	{
 		if (!ShouldAntiAim(pLocal)) { return; }
 		if (bManualing) { ManualMouseEvent(pCmd); }
+		else if (bSaved) { I::EngineClient->SetViewAngles(vSavedAngles); bSaved = false; vSavedAngles = {0, 0, 0}; }
 
 		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
 		const bool bYawSet = Vars::AntiHack::AntiAim::YawReal.Value || Vars::AntiHack::AntiAim::YawFake.Value;

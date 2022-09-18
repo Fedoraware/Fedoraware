@@ -29,6 +29,9 @@ private:
 	bool bEdge = false;	//	false - right, true - left
 	bool bPitchFlip = false;
 	bool bInvert = false;
+	bool bManualing = false;
+	bool bSaved = false;
+	Vec3 vSavedAngles = {};
 	std::pair<bool, bool> p_bJitter = {false, false};
 	std::pair<bool, std::pair<bool, bool>> p_p_bManualYaw = {false, {false, false}};	//	{vert/hori, {left/right, down/up}}
 
@@ -37,7 +40,6 @@ public:
 	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
 	void Draw(CBaseEntity* pLocal);
-	bool bManualing = false;
 };
 
 ADD_FEATURE(CAntiAim, AntiAim)
