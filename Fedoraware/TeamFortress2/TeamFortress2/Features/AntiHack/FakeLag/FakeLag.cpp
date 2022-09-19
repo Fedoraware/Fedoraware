@@ -2,12 +2,17 @@
 #include "../../Visuals/FakeAngleManager/FakeAng.h"
 
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
-
+	static int iOldTick = I::GlobalVars->tickcount;
 	const int doubleTapAllowed = 22 - G::ShiftedTicks;
 	const bool retainFakelagTest = Vars::Misc::CL_Move::RetainFakelag.Value ? G::ShiftedTicks != 1 : !G::ShiftedTicks;
 
 	// Failsafe, in case we're trying to choke too many ticks
 	if (ChokeCounter > 21) {
+		return false;
+	}
+
+	if (iOldTick == I::GlobalVars->tickcount){
+		iOldTick = I::GlobalVars->tickcount;
 		return false;
 	}
 
