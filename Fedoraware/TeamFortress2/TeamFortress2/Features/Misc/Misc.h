@@ -29,7 +29,6 @@ class CMisc {
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket);
-	void DoubleTapLogic(CUserCmd* pCmd, CBaseEntity* pLocal);
 	float m_flSpinYaw = 0.f;
 	
 	bool SteamCleared = false;

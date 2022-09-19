@@ -20,6 +20,7 @@
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../../Features/TickHandler/TickHandler.h"
 
 void AttackingUpdate(){
 	if (!G::IsAttacking) { return; }
@@ -156,6 +157,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 		F::EnginePrediction.End(pCmd);
 
+		F::Ticks.CreateMove(pCmd);
 		F::CritHack.Run(pCmd);
 		F::Misc.RunLate(pCmd, pSendPacket);
 		F::Resolver.Update(pCmd);

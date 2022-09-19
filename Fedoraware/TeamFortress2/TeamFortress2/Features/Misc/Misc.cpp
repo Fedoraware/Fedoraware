@@ -40,7 +40,6 @@ void CMisc::RunLate(CUserCmd* pCmd, bool* pSendPacket)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		DoubleTapLogic(pCmd, pLocal);
 		LegJitter(pCmd, pLocal);
 		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
@@ -427,25 +426,6 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		G::UpdateView = false;
 		if (Vars::Misc::FakeAccelAngle.Value) {
 			*pSendPacket = false;
-		}
-	}
-}
-
-void CMisc::DoubleTapLogic(CUserCmd* pCmd, CBaseEntity* pLocal){
-	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return; }
-	if (G::ShouldShift) { return; }
-	if (!pLocal->IsAlive()) { return; }
-
-	if (
-			(Vars::Misc::CL_Move::DTMode.Value == 0 && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)) ||
-			(Vars::Misc::CL_Move::DTMode.Value == 1) ||
-			(Vars::Misc::CL_Move::DTMode.Value == 2 && !GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.Value)))
-		{
-		if (pCmd) {
-			if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
-			{
-				G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
-			}
 		}
 	}
 }
