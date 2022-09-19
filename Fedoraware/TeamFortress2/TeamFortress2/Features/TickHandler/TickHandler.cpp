@@ -53,7 +53,7 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 	if (G::WaitForShift) { G::WaitForShift--; }
 
 	if (bTeleport){
-		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? 2 : iAvailableTicks);
+		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? Vars::Misc::CL_Move::TeleportFactor.Value : iAvailableTicks);
 		for (int i = 0; i < iWishTicks; i++) { CLMoveFunc(accumulated_extra_samples, i == iWishTicks); } return;
 	}
 	if (bRecharge){
