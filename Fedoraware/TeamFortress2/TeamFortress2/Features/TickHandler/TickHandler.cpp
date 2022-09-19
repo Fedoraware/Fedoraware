@@ -37,6 +37,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	if (!fCL_Move){ return; }
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
+	G::ShiftedTicks = iAvailableTicks;
 	return fCL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
 
