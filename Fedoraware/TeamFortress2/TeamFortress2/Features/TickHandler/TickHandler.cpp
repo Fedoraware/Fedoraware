@@ -9,7 +9,7 @@ void CTickshiftHandler::Speedhack(CUserCmd* pCmd){	//	called from CreateMove
 void CTickshiftHandler::Recharge(CUserCmd* pCmd){	//	called from CreateMove
 	static KeyHelper kRecharge{ &Vars::Misc::CL_Move::RechargeKey.Value };
 	bRecharge = (((!bTeleport && !bDoubletap && !bSpeedhack) && (kRecharge.Down()) || G::RechargeQueued) || bRecharge) && iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value;
-	G::ShouldStop = bRecharge && Vars::Misc::CL_Move::StopMovement.Value;
+	G::ShouldStop = (bRecharge && Vars::Misc::CL_Move::StopMovement.Value) || G::ShouldStop;
 }
 
 void CTickshiftHandler::Teleport(CUserCmd* pCmd){	//	called from CreateMove
