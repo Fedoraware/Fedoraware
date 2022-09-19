@@ -755,6 +755,11 @@ public: //Everything else, lol.
 		DYNVAR_SET(float, this, flAnimTime, "DT_BaseEntity", "m_flAnimTime");
 	}
 
+	__inline void EstimateAbsVelocity(Vec3& vVel){
+		static auto fnEstimateABSVelocity = reinterpret_cast<void(__thiscall*)(void*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2"));
+		fnEstimateABSVelocity(this, vVel);
+	}
+
 	/*
 	__inline CCollisionProperty* GetCollision() {
 		return *reinterpret_cast<CCollisionProperty*>(this + 0x1C8);

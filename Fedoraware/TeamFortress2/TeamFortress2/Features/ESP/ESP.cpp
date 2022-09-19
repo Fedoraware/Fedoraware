@@ -284,6 +284,13 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
 
+			if (Vars::Debug::DebugInfo.Value)
+			{
+				Vec3 vPlayerVelocity{};
+				Player->EstimateAbsVelocity(vPlayerVelocity);
+				g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, L"SPEED (%.0f)", vPlayerVelocity.Length());
+			}
+
 			// Ubercharge status/bar
 			if (Vars::ESP::Players::Uber.Value && nClassNum == CLASS_MEDIC)
 			{
