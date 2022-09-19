@@ -34,12 +34,12 @@ void CTickshiftHandler::Doubletap(CUserCmd* pCmd, CBaseEntity* pLocal){	//	calle
 }
 
 void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalTick){
-	const auto fCL_Move = g_HookManager.GetMapHooks()["CL_Move"];
-	if (!fCL_Move){ return; }
+	const auto CL_Move = g_HookManager.GetMapHooks()["CL_Move"];
+	if (!CL_Move){ return; }
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
-	return fCL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
+	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
 
 void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick){
