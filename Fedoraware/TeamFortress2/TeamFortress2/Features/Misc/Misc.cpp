@@ -469,6 +469,8 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const float speed = pLocal->GetVecVelocity().Length2D();
 	const float speedLimit = 10.f;
 
+	const int iStopMode = Vars::Misc::AccurateMovement.Value == 3 ? G::ShiftedTicks ? 1 : 2 : Vars::Misc::AccurateMovement.Value;
+
 	if (speed > speedLimit)
 	{
 		switch (Vars::Misc::AccurateMovement.Value) {
