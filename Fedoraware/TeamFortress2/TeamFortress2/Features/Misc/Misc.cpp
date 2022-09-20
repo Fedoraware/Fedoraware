@@ -10,11 +10,13 @@
 extern int attackStringW;
 extern int attackStringH;
 
-void CMisc::RunPre(CUserCmd* pCmd)
+void CMisc::RunPre(CUserCmd* pCmd, bool *pSendPacket)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		PrintProjAngles(pLocal);
+		FastStop(pCmd, pLocal);
+		StopMovement(pCmd, pSendPacket);
+		//PrintProjAngles(pLocal);
 		AccurateMovement(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
@@ -39,7 +41,6 @@ void CMisc::RunMid(CUserCmd* pCmd, const int nOldGroundEnt){
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		EdgeJump(pCmd, nOldGroundEnt);
-		FastStop(pCmd, pLocal);
 	}
 }
 
@@ -54,6 +55,15 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 		FastAccel(pCmd, pLocal, pSendPacket);
 		ChokeCheck(pSendPacket);
 	}
+}
+
+void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket){
+	if (!G::ShouldStop) { return; }
+	Utils::StopMovement(pCmd);
+	if (G::ShouldStop) { return; }
+	G::UpdateView = false;
+	if (G::Recharging) { return; }
+	*pSendPacket = false;
 }
 
 void CMisc::ChokeCheck(bool* pSendPacket){

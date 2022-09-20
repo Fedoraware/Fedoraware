@@ -143,19 +143,19 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	// Run Features
 	{
-		F::Misc.RunPre(pCmd);
+		F::Misc.RunPre(pCmd, pSendPacket);
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
 
-		if (!G::ShouldShift) { F::EnginePrediction.Start(pCmd); }
+		F::EnginePrediction.Start(pCmd);
 		{
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
 			F::Misc.RunMid(pCmd, nOldFlags);
 		}
-		if (!G::ShouldShift) { F::EnginePrediction.End(pCmd); }
+		F::EnginePrediction.End(pCmd);
 
 		F::Ticks.CreateMove(pCmd);
 		F::CritHack.Run(pCmd);
@@ -211,17 +211,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		} // check after force send to prevent timing out possibly
 	}
 	else{ AttackingUpdate(); }
-
-	// Stop movement if required
-	if (G::ShouldStop)
-	{
-		//G::ShouldStop = false;	//	we still need to stop if we didn't stop...
-		Utils::StopMovement(pCmd/*, !G::ShouldShift*/);
-		if (!G::IsAttacking && !G::Recharging && !G::ShouldStop) {	//	only do this code if we DID actually stop.
-			*pSendPacket = false;	//	stop angle shit
-		}
-		return false;
-	}
 
 	// do this at the end just in case aimbot / triggerbot fired.
 	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {

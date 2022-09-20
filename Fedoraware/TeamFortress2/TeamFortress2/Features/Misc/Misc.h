@@ -13,6 +13,7 @@ class CMisc {
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
+	void StopMovement(CUserCmd* pCmd, bool *pSendPacket);
 
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
@@ -36,13 +37,17 @@ class CMisc {
 	bool SteamCleared = false;
 public:
 	bool TauntControl(CUserCmd* pCmd);
-	void RunPre(CUserCmd* pCmd);
+	void RunPre(CUserCmd* pCmd, bool* pSendPacket);
 	void RunMid(CUserCmd* pCmd, const int nOldGroundEnt);
 	void RunPost(CUserCmd* pCmd, bool* pSendPacket);
 
 	void SteamRPC();
 	void UnlockAchievements();
 	void LockAchievements();
+
+	bool bAntiWarp = false;
+	bool bFastAccel = false;
+	bool bMovementStopped = false;
 
 	Vec3 PeekReturnPos;
 };
