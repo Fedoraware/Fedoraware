@@ -18,7 +18,6 @@ class CMisc {
 	void ChatSpam();
 	void CheatsBypass();
 	void PingReducer();
-	void ServerHitbox();
 	void WeaponSway();
 	void DetectChoke();
 	void ChokeCheck(bool* pSendPacket);

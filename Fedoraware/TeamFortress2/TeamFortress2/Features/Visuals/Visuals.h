@@ -58,6 +58,7 @@ public:
 	void PruneBulletTracers();
 	void DrawBulletTracers();
 	void DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position);
+	void DrawServerHitboxes();
 
 	std::vector<BulletTracer_t> m_vecBulletTracers;
 

@@ -472,6 +472,32 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 	}
 }
 
+void CVisuals::DrawServerHitboxes()
+{
+	static int iOldTick = I::GlobalVars->tickcount;
+	if (iOldTick == I::GlobalVars->tickcount) { return; } iOldTick = I::GlobalVars->tickcount;
+	// draw our serverside hitbox on local servers, used to test fakelag & antiaim
+	if (I::Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.Value)
+	{
+		//	i have no idea what this is
+		using GetServerAnimating_t = void* (*)(int);
+		static auto GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(L"server.dll", L"55 8B EC 8B 55 ? 85 D2 7E ? A1"));
+
+		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);	// C_BaseAnimating, Duration, MonoColour
+		static auto DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(L"server.dll", L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97"));
+
+		const auto pLocal = I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer());
+		if (pLocal && pLocal->IsAlive())
+		{
+			void* server_animating = GetServerAnimating(pLocal->GetIndex());
+			if (server_animating)
+			{
+				DrawServerHitboxes(server_animating, I::GlobalVars->interval_per_tick, true);
+			}
+		}
+	}
+}
+
 void CVisuals::DrawMenuSnow()
 {
 	{	//	menu snow

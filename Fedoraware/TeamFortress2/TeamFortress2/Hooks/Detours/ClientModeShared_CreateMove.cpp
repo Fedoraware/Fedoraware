@@ -175,14 +175,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	G::ViewAngles = pCmd->viewangles;
 
-	static int nChoked = 0;
-	if (G::ShouldShift) { *pSendPacket = G::ShiftedTicks == 1; }
-	else {
-		if (!*pSendPacket) { nChoked++; }
-		else { nChoked = 0; }
-		if (nChoked > 21) { *pSendPacket = true; }
-	}
-
 	// Party Crasher: Crashes the party by spamming messages
 	if (Vars::Misc::PartyCrasher.Value && !G::ShouldShift)
 	{
@@ -231,7 +223,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		return false;
 	}
 
-	// do this at the end just in case aimbot / triggerbot fired.//
+	// do this at the end just in case aimbot / triggerbot fired.
 	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
 		if (pCmd->buttons & IN_ATTACK && Vars::Misc::CL_Move::SafeTick.Value) {
 			if (G::NextSafeTick > I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {

@@ -146,6 +146,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 				F::Visuals.ScopeLines(pLocal);
 				F::Visuals.DrawDebugInfo(pLocal);
 				F::Visuals.DrawOnScreenConditions(pLocal);
+				F::Visuals.DrawServerHitboxes();
 				F::AntiAim.Draw(pLocal);
 
 				if (I::ThirdPersonManager)
