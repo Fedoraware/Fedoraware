@@ -1377,6 +1377,11 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	const int nCondEx = pEntity->GetCondEx();
 	const int nFlag = pEntity->GetFlags();
 
+	{
+		const float flTickVelSqr = pow(pEntity->TickVelocity2D(), 2);
+		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"Can't Hit"); }
+	}
+
 	if (const wchar_t* rune = pEntity->GetRune()) {	// I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
 	}

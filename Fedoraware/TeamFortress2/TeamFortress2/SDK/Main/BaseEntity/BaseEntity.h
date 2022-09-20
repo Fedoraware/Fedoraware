@@ -760,6 +760,12 @@ public: //Everything else, lol.
 		fnEstimateABSVelocity(this, vVel);
 	}
 
+	__inline float TickVelocity2D(){	//	bad
+		const int iDivide = floor(1000.f / I::GlobalVars->interval_per_tick);
+		const float flVel = this->m_vecVelocity().Length2D();
+		return flVel / iDivide;
+	}
+
 	/*
 	__inline CCollisionProperty* GetCollision() {
 		return *reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
