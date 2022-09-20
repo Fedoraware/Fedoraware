@@ -469,11 +469,11 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const float speed = pLocal->GetVecVelocity().Length2D();
 	const float speedLimit = 10.f;
 
-	const int iStopMode = Vars::Misc::AccurateMovement.Value == 3 ? G::ShiftedTicks ? 1 : 2 : Vars::Misc::AccurateMovement.Value;
+	const int iStopMode = (Vars::Misc::AccurateMovement.Value == 3) ? (G::ShiftedTicks ? 1 : 2) : Vars::Misc::AccurateMovement.Value;
 
 	if (speed > speedLimit)
 	{
-		switch (Vars::Misc::AccurateMovement.Value) {
+		switch (iStopMode) {
 		case 1: {
 			Vec3 direction = pLocal->GetVecVelocity().toAngle();
 			direction.y = pCmd->viewangles.y - direction.y;
