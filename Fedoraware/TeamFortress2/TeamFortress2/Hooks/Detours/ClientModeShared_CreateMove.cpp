@@ -148,14 +148,14 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
 
-		F::EnginePrediction.Start(pCmd);
+		if (!G::ShouldShift) { F::EnginePrediction.Start(pCmd); }
 		{
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
 			F::Misc.RunMid(pCmd, nOldFlags);
 		}
-		F::EnginePrediction.End(pCmd);
+		if (!G::ShouldShift) { F::EnginePrediction.End(pCmd); }
 
 		F::Ticks.CreateMove(pCmd);
 		F::CritHack.Run(pCmd);
