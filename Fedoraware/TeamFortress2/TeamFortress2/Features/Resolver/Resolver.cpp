@@ -91,7 +91,7 @@ void CResolver::Run()
 				break;
 			}
 
-			// Auto (Will resolve fake up/down)
+			// Auto (Will resolve fake up/down) (poorly)
 			if (vX.x >= 90)
 			{
 				*m_angEyeAnglesX = -89;

@@ -2,6 +2,7 @@
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
 #include "../LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../Misc/Misc.h"
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove)
 {
@@ -201,6 +202,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = {false, false};
 
+	if (F::Misc.bMovementStopped || F::Misc.bFastAccel) { return; }
 
 	// AA toggle key
 	static KeyHelper kAA{&Vars::AntiHack::AntiAim::ToggleKey.Value};
