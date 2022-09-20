@@ -4,6 +4,7 @@
 #include "AimbotHitscan/AimbotHitscan.h"
 #include "AimbotProjectile/AimbotProjectile.h"
 #include "AimbotMelee/AimbotMelee.h"
+#include "../Misc/Misc.h"
 
 bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
@@ -77,6 +78,8 @@ void CAimbot::Run(CUserCmd* pCmd)
 	G::HitscanRunning = false;
 	G::HitscanSilentActive = false;
 	G::AimPos = Vec3();
+
+	if (F::Misc.bMovementStopped || F::Misc.bFastAccel) { return; }
 
 	const auto pLocal = g_EntityCache.GetLocal();
 	const auto pWeapon = g_EntityCache.GetWeapon();

@@ -58,10 +58,11 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 }
 
 void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket){
+	bMovementStopped = false;
 	if (!G::ShouldStop) { return; }
 	Utils::StopMovement(pCmd);
 	if (G::ShouldStop) { return; }
-	G::UpdateView = false;
+	G::UpdateView = false; bMovementStopped = true;
 	if (G::Recharging) { return; }
 	*pSendPacket = false;
 }
@@ -374,6 +375,7 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt)
 
 void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 {
+	bFastAccel = false;
 	static bool flipVar = false;
 	flipVar = !flipVar;
 	
@@ -428,7 +430,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		pCmd->sidemove = 0.0f;
 		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 		pCmd->viewangles.z = 270.f;
-		G::UpdateView = false;
+		G::UpdateView = false; bFastAccel = true;
 		if (Vars::Misc::FakeAccelAngle.Value) {
 			*pSendPacket = false;
 		}
