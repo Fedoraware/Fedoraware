@@ -21,6 +21,9 @@ class CMisc {
 	void ServerHitbox();
 	void WeaponSway();
 	void DetectChoke();
+	void ChokeCheck(bool* pSendPacket);
+	void DoubletapPacket(bool* pSendPacket);
+	void EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt);
 
 	void PrintProjAngles(CBaseEntity* pLocal);
 
@@ -34,13 +37,13 @@ class CMisc {
 	bool SteamCleared = false;
 public:
 	bool TauntControl(CUserCmd* pCmd);
-	void Run(CUserCmd* pCmd);
-	void RunLate(CUserCmd* pCmd, bool* pSendPacket);
+	void RunPre(CUserCmd* pCmd);
+	void RunMid(CUserCmd* pCmd, const int nOldGroundEnt);
+	void RunPost(CUserCmd* pCmd, bool* pSendPacket);
 
 	void SteamRPC();
 	void UnlockAchievements();
 	void LockAchievements();
-	void EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt);
 
 	Vec3 PeekReturnPos;
 };

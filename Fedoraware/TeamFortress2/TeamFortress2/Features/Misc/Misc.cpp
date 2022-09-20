@@ -10,7 +10,7 @@
 extern int attackStringW;
 extern int attackStringH;
 
-void CMisc::Run(CUserCmd* pCmd)
+void CMisc::RunPre(CUserCmd* pCmd)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -36,16 +36,36 @@ void CMisc::Run(CUserCmd* pCmd)
 	DetectChoke();
 }
 
-void CMisc::RunLate(CUserCmd* pCmd, bool* pSendPacket)
+void CMisc::RunMid(CUserCmd* pCmd, const int nOldGroundEnt){
+	if (const auto& pLocal = g_EntityCache.GetLocal())
+	{
+		EdgeJump(pCmd, nOldGroundEnt);
+		FastStop(pCmd, pLocal);
+	}
+}
+
+void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
+		DoubletapPacket(pSendPacket);
 		LegJitter(pCmd, pLocal);
-		FastStop(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
 		FastAccel(pCmd, pLocal, pSendPacket);
+		ChokeCheck(pSendPacket);
 	}
+}
+
+void CMisc::ChokeCheck(bool* pSendPacket){
+	static int iChokedPackets = 0;
+	if (!*pSendPacket) { iChokedPackets++; }
+	else { iChokedPackets = 0; }
+	if (iChokedPackets > 22) { *pSendPacket = true; iChokedPackets = 0; }
+}
+
+void CMisc::DoubletapPacket(bool* pSendPacket){
+	*pSendPacket = (G::ShouldShift || G::Teleporting) ? G::ShiftedTicks == 1 : *pSendPacket;
 }
 
 void CMisc::AntiAFK(CUserCmd* pCmd)

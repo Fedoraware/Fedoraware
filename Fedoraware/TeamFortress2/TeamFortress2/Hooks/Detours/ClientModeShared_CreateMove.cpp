@@ -143,7 +143,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	// Run Features
 	{
-		F::Misc.Run(pCmd);
+		F::Misc.RunPre(pCmd);
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
@@ -153,13 +153,13 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
-			F::Misc.EdgeJump(pCmd, nOldFlags);
+			F::Misc.RunMid(pCmd, nOldFlags);
 		}
 		F::EnginePrediction.End(pCmd);
 
 		F::Ticks.CreateMove(pCmd);
 		F::CritHack.Run(pCmd);
-		F::Misc.RunLate(pCmd, pSendPacket);
+		F::Misc.RunPost(pCmd, pSendPacket);
 		F::Resolver.Update(pCmd);
 		F::Followbot.Run(pCmd);
 		F::FakeLag.OnTick(pCmd, pSendPacket);
