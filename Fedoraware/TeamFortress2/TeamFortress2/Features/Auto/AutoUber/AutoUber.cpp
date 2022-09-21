@@ -43,7 +43,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		if (HAS_CONDITION(player, TFCond_Zoomed))
 		{
 			anyZoomedSnipers = true;
-			if (Utils::VisPos(pPatient, player, pPatient->GetEyePosition(), player->GetEyePosition()))
+			if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_HEAD), player->GetEyePosition()))
 			{
 				return 2;
 			}
@@ -54,7 +54,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		{
 			if (const auto& pWeapon = player->GetActiveWeapon())
 			{
-				if (Utils::VisPos(pPatient, player, pPatient->GetEyePosition(), player->GetHitboxPos(HITBOX_HEAD)))
+				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_PELVIS), player->GetEyePosition()))
 				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
 						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && (
