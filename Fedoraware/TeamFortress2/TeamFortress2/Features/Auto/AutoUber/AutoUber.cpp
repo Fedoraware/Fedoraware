@@ -32,11 +32,11 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		// Ignore ignored players
 		if (F::AutoGlobal.ShouldIgnore(player)) { continue; }
 
-		const Vec3 vAngleTo = Math::CalcAngle(pPatient->GetWorldSpaceCenter(), player->GetEyePosition());
-		const float flFOVTo = Math::CalcFov(pPatient->GetHitboxPos(HITBOX_HEAD), vAngleTo);
+		const Vec3 vAngleTo = Math::CalcAngle(player->GetEyePosition(), pPatient->GetWorldSpaceCenter());
+		const float flFOVTo = Math::CalcFov(player->GetEyeAngles(), vAngleTo);
 
 		if (G::PlayerPriority[player->GetIndex()].Mode != 4 && Vars::Triggerbot::Uber::ReactFoV.Value){ 
-			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > Vars::Triggerbot::Uber::ReactFoV.Value) { continue; }	//	account for choking :D
+			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > (float)Vars::Triggerbot::Uber::ReactFoV.Value) { continue; }	//	account for choking :D
 		}	//	respect FoV if player is not a cheater :D
 
 		// Check for any zoomed snipers
