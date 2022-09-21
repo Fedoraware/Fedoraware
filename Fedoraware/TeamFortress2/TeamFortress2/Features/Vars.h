@@ -202,6 +202,7 @@ namespace Vars
 			inline CVar<bool> AutoVacc{ false };
 			inline CVar<float> HealthLeft{ 35.0f };
 			inline CVar<bool> VoiceCommand{ false };
+			inline CVar<int> ReactFoV{25};
 		}
 	}
 
