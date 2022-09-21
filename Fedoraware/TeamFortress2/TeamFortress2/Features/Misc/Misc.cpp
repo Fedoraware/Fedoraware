@@ -191,6 +191,11 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 			if (pWeapon->GetWeaponID() != TF_WEAPON_KNIFE) { continue; }
 		}
 
+		PlayerInfo_t pInfo{};
+		if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
+			if (G::IsIgnored(pInfo.friendsID)) { continue; }
+		}
+
 		Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
 		if (!Utils::VisPos(pLocal, pEnemy, vLocalPos, vEnemyPos)) { continue; }
 		if (!target && vLocalPos.DistTo(vEnemyPos) < 150.f)
