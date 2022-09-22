@@ -117,8 +117,6 @@ public: //Netvars & conditions
 		M_OFFSETGET(WaterJumpTime, float, 0x10FC)
 		M_OFFSETGET(SurfaceFriction, float, 0x12D4)
 		M_OFFSETGET(MoveType, MoveType_t, 0x1A4)
-		M_OFFSETGET(m_ubInterpolationFrame, byte, 0x78)
-		M_OFFSETGET(m_ubOldInterpolationFrame, byte, 0x79)
 
 		M_CONDGET(OnGround, GetFlags(), FL_ONGROUND)
 		M_CONDGET(InWater, GetFlags(), FL_INWATER)
@@ -212,7 +210,8 @@ public: //Netvars & conditions
 		NETVAR(m_hVehicle, int, "CBasePlayer", "m_hVehicle")
 		NETVAR(m_hUseEntity, int, "CBasePlayer", "m_hUseEntity")
 		NETVAR(m_iHealth, int, "CBasePlayer", "m_iHealth")
-		NETVAR(m_ubInterpolationFrame, int, "CBasePlayer", "m_ubInterpolationFrame")
+		NETVAR(m_ubInterpolationFrame, byte, "CBasePlayer", "m_ubInterpolationFrame")
+		NETVAR(m_ubOldInterpolationFrame, byte, "CBasePlayer", "m_ubInterpolationFrame" + 0x1)
 		NETVAR(m_fEffects, int, "CBasePlayer", "m_fEffects")
 		NETVAR(m_lifeState, byte, "CBasePlayer", "m_lifeState")
 		NETVAR(m_iBonusProgress, int, "CBasePlayer", "m_iBonusProgress")
