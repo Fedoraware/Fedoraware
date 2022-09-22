@@ -28,7 +28,7 @@ void AttackingUpdate(){
 	if (const auto& pLocal = g_EntityCache.GetLocal()){
 	if (const auto& pWeapon = g_EntityCache.GetWeapon())
 	{
-		const float flFireDelay = pWeapon->GetFireRate();	//	I have no idea why this works (none) when this returns no good value, frankly, i dnc, it works LOL
+		const float flFireDelay = pWeapon->GetWeaponData().m_flTimeFireDelay;
 		pWeapon->m_flNextPrimaryAttack() = static_cast<float>(pLocal->GetTickBase()) * I::GlobalVars->interval_per_tick + flFireDelay;
 	}
 	}
