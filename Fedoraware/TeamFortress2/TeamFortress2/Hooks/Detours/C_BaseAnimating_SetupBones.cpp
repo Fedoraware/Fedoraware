@@ -11,9 +11,9 @@ MAKE_HOOK(C_BaseAnimating_SetupBones, g_Pattern.Find(L"client.dll", L"55 8B EC 8
 	//	*(unsigned int*)((DWORD)pAnimating + 361) = 0xFF7FFFFF;
 	//	*(unsigned int*)((DWORD)pAnimating + 358) = (g_iModelBoneCounter - 1);
 	//}
-	const auto C_BaseAnimating_InvalidateBoneCaches = g_HookManager.GetMapHooks()["C_BaseAnimating_InvalidateBoneCaches"];
-	if (C_BaseAnimating_InvalidateBoneCaches){
-		C_BaseAnimating_InvalidateBoneCaches->Original<void(__cdecl*)()>()();
-	}
+	//const auto C_BaseAnimating_InvalidateBoneCaches = g_HookManager.GetMapHooks()["C_BaseAnimating_InvalidateBoneCaches"];
+	//if (C_BaseAnimating_InvalidateBoneCaches){
+	//	C_BaseAnimating_InvalidateBoneCaches->Original<void(__cdecl*)()>()();
+	//}
 	return Hook.Original<FN>()(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, currentTime);
 }
