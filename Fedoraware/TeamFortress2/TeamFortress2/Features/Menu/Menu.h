@@ -39,8 +39,14 @@ class CMenu {
 		Radar
 	};
 
+	enum class ConfigTab {
+		General,
+		Visuals
+	};
+
 	MenuTab CurrentTab = MenuTab::Aimbot;
 	VisualsTab CurrentVisualsTab = VisualsTab::Players;
+	ConfigTab CurrentConfigTab = ConfigTab::General;
 
 	bool ShowSettings = false;
 	bool ShowDebugMenu = false;

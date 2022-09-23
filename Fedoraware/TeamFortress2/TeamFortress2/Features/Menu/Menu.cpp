@@ -103,7 +103,7 @@ void CMenu::DrawMenu()
 			}
 			ImGui::HelpMarker("Lua Scripts");
 
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			// Debug Menu
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_BUG_REPORT))
@@ -111,7 +111,7 @@ void CMenu::DrawMenu()
 				ShowDebugMenu = !ShowDebugMenu;
 			}
 			ImGui::HelpMarker("Debug Menu");
-			#endif
+#endif
 		}
 
 		// Tabbar
@@ -247,11 +247,12 @@ void CMenu::DrawTabbar()
 			ImGui::PopStyleColor(2);
 			ImGui::EndTable();
 		}
-	} else
+	}
+	else
 	{
 		SubTabHeight = 0.f;
 	}
-	
+
 	ImGui::PopStyleVar(3);
 	ImGui::PopFont();
 }
@@ -274,17 +275,17 @@ void CMenu::MenuAimbot()
 			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.Value, 0.f, 180.f, "%.f", ImGuiSliderFlags_AlwaysClamp);
 			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.Value); HelpMarker("Automatically shoot when a target is found");
-			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs", "Bombs"}, {&Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value, &Vars::Aimbot::Global::AimBombs.Value}, "Aim targets");
+			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs", "Bombs" }, { &Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value, &Vars::Aimbot::Global::AimBombs.Value }, "Aim targets");
 			HelpMarker("Choose which targets the Aimbot should aim at");
 			{
-				static std::vector flagNames{ "Invulnerable", "Cloaked", "Dead Ringer", "Friends", "Taunting", "Vaccinator", "Unsimulated Players", "Disguised"};
+				static std::vector flagNames{ "Invulnerable", "Cloaked", "Dead Ringer", "Friends", "Taunting", "Vaccinator", "Unsimulated Players", "Disguised" };
 				static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7 };
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Global::IgnoreOptions.Value, "Ignored targets###AimbotIgnoredTargets");
 				HelpMarker("Choose which targets should be ignored");
 			}
 			ColorPickerL("Invulnerable colour", Colors::Invuln);
 
-			if (Vars::Aimbot::Global::IgnoreOptions.Value & (1 << 6)){
+			if (Vars::Aimbot::Global::IgnoreOptions.Value & (1 << 6)) {
 				WSlider("Tick Tolerance###AimbotUnsimulatedTolerance", &Vars::Aimbot::Global::TickTolerance.Value, 0, 21, "%d", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 			}
 
@@ -294,7 +295,7 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.Value);  HelpMarker("Enables the crit hack (BETA)");
-			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, {&Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value }, "Misc###CrithackMiscOptions");
+			MultiCombo({ "Indicators", "Avoid Random", "Always Melee" }, { &Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value }, "Misc###CrithackMiscOptions");
 			HelpMarker("Misc options for crithack");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
@@ -314,12 +315,12 @@ void CMenu::MenuAimbot()
 				WToggle("Respect FOV", &Vars::Aimbot::Hitscan::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
 			}
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
-			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto"}); // this could probably be removed entirely since it actually does nothing.
+			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto" }); // this could probably be removed entirely since it actually does nothing.
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
 			{
-				static std::vector flagNames{ "Head", "Body", "Pelvis", "Arms", "Legs"};
-				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010}; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
+				static std::vector flagNames{ "Head", "Body", "Pelvis", "Arms", "Legs" };
+				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::ScanHitboxes.Value, "Scan Hitboxes###AimbotHitboxScanning");
 			}
 			{
@@ -344,23 +345,23 @@ void CMenu::MenuAimbot()
 		{
 			SectionTitle("Projectile");
 			WSlider("Prediction Time", &Vars::Aimbot::Projectile::PredictionTime.Value, 0.1f, 10.f, "%.1f");
-		
+
 			{
 				WCombo("Sort method###ProjectileSortMethod", &Vars::Aimbot::Projectile::SortMethod.Value, { "FOV", "Distance" });
 				if (Vars::Aimbot::Projectile::SortMethod.Value == 1) {
 					WToggle("Respect FOV", &Vars::Aimbot::Projectile::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
 				}
 				WCombo("Aim method###ProjectileAimMethod", &Vars::Aimbot::Projectile::AimMethod.Value, { "Plain", "Silent" });
-				WCombo("Priority Hitbox###ProjectileHitboxPriority", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto"});
+				WCombo("Priority Hitbox###ProjectileHitboxPriority", &Vars::Aimbot::Projectile::AimPosition.Value, { "Head", "Body", "Feet", "Auto" });
 				{
 					static std::vector flagNames{ "Head", "Body", "Feet" };
-					static std::vector flagValues{ (1<<0), (1<<1), (1<<2)}; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
+					static std::vector flagValues{ (1 << 0), (1 << 1), (1 << 2) }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 					MultiFlags(flagNames, flagValues, &Vars::Aimbot::Projectile::AllowedHitboxes.Value, "Allowed Hitboxes###ProjectileHitboxScanning"); HelpMarker("Controls what hitboxes the cheat is allowed to consider shooting at.");
 				}
 				WSlider("Point VisTest Limit", &Vars::Aimbot::Projectile::VisTestPoints.Value, 3, 15, "%d", ImGuiSliderFlags_AlwaysClamp);	HelpMarker("Controls how many points the cheat is allowed to consider.");
 				WSlider("Point Scan Limit", &Vars::Aimbot::Projectile::ScanPoints.Value, 3, Vars::Aimbot::Projectile::VisTestPoints.Value, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls how many visible points the cheat needs to find before it picks one to aim at.");
 				WSlider("Point Scale", &Vars::Aimbot::Projectile::ScanScale.Value, 0.7f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Controls the size of the hitbox as it's given to the cheat.");
-				
+
 				SectionTitle("Preferences");
 				WToggle("Predict Obscured Enemies", &Vars::Aimbot::Projectile::PredictObscured.Value); HelpMarker("Will predict enemies that cannot yet be targetted because of a wall etc and shoot if they are predicted to peek (FPS)");
 				WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at targets feet if they're on the ground in order to launch them into the air");
@@ -371,7 +372,7 @@ void CMenu::MenuAimbot()
 				WSlider("Maximum splash distance", &Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value, Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 10000.f); HelpMarker("The maximum distance to try going for splash damage");
 
 				SectionTitle("Strafe prediction");
-				MultiCombo({"Air", "Ground"}, {&Vars::Aimbot::Projectile::StrafePredictionAir.Value, &Vars::Aimbot::Projectile::StrafePredictionGround.Value}, "Strafe Prediction");
+				MultiCombo({ "Air", "Ground" }, { &Vars::Aimbot::Projectile::StrafePredictionAir.Value, &Vars::Aimbot::Projectile::StrafePredictionGround.Value }, "Strafe Prediction");
 				WSlider("Velocity samples", &Vars::Aimbot::Projectile::StrafePredictionSamples.Value, 1, 20); HelpMarker("How many ticks to keep velocity records of");
 				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
 				WSlider("Maximum distance", &Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value, 100.f, 10000.f); HelpMarker("Max distance to apply strafe prediction (lower is better)");
@@ -411,7 +412,7 @@ void CMenu::MenuTrigger()
 			InputKeybind("Trigger key", Vars::Triggerbot::Global::TriggerKey); HelpMarker("The key which activates the triggerbot");
 			HelpMarker("Choose which targets the Aimbot should aim at");
 			{
-				static std::vector flagNames{ "Invulnerable", "Cloaked", "Friends", "Taunting", "Unsimulated Players", "Disguised"};
+				static std::vector flagNames{ "Invulnerable", "Cloaked", "Friends", "Taunting", "Unsimulated Players", "Disguised" };
 				static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5 };
 				MultiFlags(flagNames, flagValues, &Vars::Triggerbot::Global::IgnoreOptions.Value, "Ignored targets###TriggerbotIgnoredTargets");
 				HelpMarker("Choose which targets should be ignored");
@@ -482,7 +483,7 @@ void CMenu::MenuVisuals()
 
 	switch (CurrentVisualsTab)
 	{
-	// Visuals: Players
+		// Visuals: Players
 	case VisualsTab::Players:
 	{
 		if (BeginTable("VisualsPlayersTable", 3))
@@ -506,7 +507,7 @@ void CMenu::MenuVisuals()
 				}
 				WToggle("Distance2Alpha", &Vars::ESP::Main::DistanceToAlpha.Value); HelpMarker("Will fade out ESP elements as the distance between you and the player increases");
 				WToggle("Dormant sound ESP", &Vars::ESP::Main::DormantSoundESP.Value); HelpMarker("Credits: reestart");
-				if (Vars::ESP::Main::DormantSoundESP.Value){
+				if (Vars::ESP::Main::DormantSoundESP.Value) {
 					WSlider("Dormant Decay Time###GlobalDormantDecayTime", &Vars::ESP::Main::DormantTime.Value, 0.015f, 5.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
 					WSlider("Dormant Max Dist###GlobalDormantMaxDist", &Vars::ESP::Main::DormantDist.Value, 512, 4096, "%d", ImGuiSliderFlags_Logarithmic);
 				}
@@ -610,42 +611,42 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-							case 0: {
-								return Vars::Chams::Players::Local;
-							}
-							case 1: {
-								return Vars::Chams::Players::FakeAng;
-							}
-							case 2: {
-								return Vars::Chams::Players::Friend;
-							}
-							case 3: {
-								return Vars::Chams::Players::Enemy;
-							}
-							case 4: {
-								return Vars::Chams::Players::Team;
-							}
-							case 5: {
-								return Vars::Chams::Players::Target;
-							}
-							case 6: {
-								return Vars::Chams::Players::Ragdoll;
-							}
-							case 7: {
-								return Vars::Chams::DME::Hands;
-							}
-							case 8: {
-								return Vars::Chams::DME::Weapon;
-							}
+						case 0: {
+							return Vars::Chams::Players::Local;
+						}
+						case 1: {
+							return Vars::Chams::Players::FakeAng;
+						}
+						case 2: {
+							return Vars::Chams::Players::Friend;
+						}
+						case 3: {
+							return Vars::Chams::Players::Enemy;
+						}
+						case 4: {
+							return Vars::Chams::Players::Team;
+						}
+						case 5: {
+							return Vars::Chams::Players::Target;
+						}
+						case 6: {
+							return Vars::Chams::Players::Ragdoll;
+						}
+						case 7: {
+							return Vars::Chams::DME::Hands;
+						}
+						case 8: {
+							return Vars::Chams::DME::Weapon;
+						}
 						}
 
 						return Vars::Chams::Players::Local;
 					}());
 				static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
-				
+
 				//WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.Value); HelpMarker("Player chams master switch");
 
-				MultiCombo({ "Render Wearable", "Render Weapon", "Fadeout Own Team"}, {&Vars::Chams::Players::Wearables.Value, &Vars::Chams::Players::Weapons.Value, &Vars::Chams::Players::FadeoutTeammates.Value}, "Flags");
+				MultiCombo({ "Render Wearable", "Render Weapon", "Fadeout Own Team" }, { &Vars::Chams::Players::Wearables.Value, &Vars::Chams::Players::Weapons.Value, &Vars::Chams::Players::FadeoutTeammates.Value }, "Flags");
 				HelpMarker("Customize Chams");
 				WCombo("Config", &currentSelected, chamOptions);
 				{
@@ -673,7 +674,7 @@ void CMenu::MenuVisuals()
 
 					}
 				}
-			
+
 				SectionTitle("Chams Misc");
 
 				WToggle("DME chams###dmeactive", &Vars::Chams::DME::Active.Value); HelpMarker("DME chams master switch");
@@ -783,21 +784,21 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-							case 0: {
-								return Vars::Chams::Buildings::Local;
-							}
-							case 1: {
-								return Vars::Chams::Buildings::Friend;
-							}
-							case 2: {
-								return Vars::Chams::Buildings::Enemy;
-							}
-							case 3: {
-								return Vars::Chams::Buildings::Team;
-							}
-							case 4: {
-								return Vars::Chams::Buildings::Target;
-							}
+						case 0: {
+							return Vars::Chams::Buildings::Local;
+						}
+						case 1: {
+							return Vars::Chams::Buildings::Friend;
+						}
+						case 2: {
+							return Vars::Chams::Buildings::Enemy;
+						}
+						case 3: {
+							return Vars::Chams::Buildings::Team;
+						}
+						case 4: {
+							return Vars::Chams::Buildings::Target;
+						}
 						}
 
 						return Vars::Chams::Buildings::Local;
@@ -901,15 +902,15 @@ void CMenu::MenuVisuals()
 				Chams_t& currentStruct = ([&]() -> Chams_t&
 					{
 						switch (currentSelected) {
-							case 0: {
-								return Vars::Chams::World::Health;
-							}
-							case 1: {
-								return Vars::Chams::World::Ammo;
-							}
-							case 2: {
-								return Vars::Chams::World::Projectiles;
-							}
+						case 0: {
+							return Vars::Chams::World::Health;
+						}
+						case 1: {
+							return Vars::Chams::World::Ammo;
+						}
+						case 2: {
+							return Vars::Chams::World::Projectiles;
+						}
 						}
 
 						return Vars::Chams::World::Health;
@@ -961,8 +962,8 @@ void CMenu::MenuVisuals()
 	{
 		if (BeginTable("VisualsFontTable", 3))
 		{
-			static std::vector fontFlagNames { "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
-			static std::vector fontFlagValues {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
+			static std::vector fontFlagNames{ "Italic", "Underline", "Strikeout", "Symbol", "Antialias", "Gaussian", "Rotary", "Dropshadow", "Additive", "Outline", "Custom" };
+			static std::vector fontFlagValues{ 0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400 };
 
 			/* Column 1 */
 			if (TableColumnChild("VisualsFontCol1"))
@@ -1076,7 +1077,7 @@ void CMenu::MenuVisuals()
 		break;
 	}
 
-		// Visuals: Misc
+	// Visuals: Misc
 	case VisualsTab::Misc:
 	{
 		if (BeginTable("VisualsMiscTable", 2))
@@ -1111,7 +1112,7 @@ void CMenu::MenuVisuals()
 				WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
 				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 				{
-					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
+					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
 					static std::vector flagValues{ 1, 2, 4, 8, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}
@@ -1162,8 +1163,8 @@ void CMenu::MenuVisuals()
 
 					// TODO: Reward this ugly code
 					{
-						static std::vector flagNames { "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
-						static std::vector flagValues { 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
+						static std::vector flagNames{ "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
+						static std::vector flagValues{ 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
 						MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
 					}
 				}
@@ -1292,7 +1293,7 @@ void CMenu::MenuVisuals()
 				WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
 				SectionTitle("Camera");
-				WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)"}); HelpMarker("What the camera should display");
+				WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
 				WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 			} EndChild();
 
@@ -1501,10 +1502,10 @@ void CMenu::MenuHvH()
 			SectionTitle("Anti Aim");
 			WToggle("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.Value);
 			InputKeybind("Anti-aim Key", Vars::AntiHack::AntiAim::ToggleKey); HelpMarker("The key to toggle anti aim");
-			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.Value, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random", "Half Up", "Jitter", "Fake Up Custom", "Fake Down Custom"}); HelpMarker("Which way to look up/down");
-			WCombo("Base Yaw", &Vars::AntiHack::AntiAim::BaseYawMode.Value, { "Offset", "FOV Player", "FOV Player + Offset"});
-			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt", "Custom", "Invert", "Jitter", "Jitter Random", "Jitter Flip", "Manual"}); HelpMarker("Which way to look horizontally");
-			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt", "Custom", "Invert", "Jitter", "Jitter Random", "Jitter Flip", "Manual"}); HelpMarker("Which way to appear to look horizontally");
+			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.Value, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random", "Half Up", "Jitter", "Fake Up Custom", "Fake Down Custom" }); HelpMarker("Which way to look up/down");
+			WCombo("Base Yaw", &Vars::AntiHack::AntiAim::BaseYawMode.Value, { "Offset", "FOV Player", "FOV Player + Offset" });
+			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt", "Custom", "Invert", "Jitter", "Jitter Random", "Jitter Flip", "Manual" }); HelpMarker("Which way to look horizontally");
+			WCombo("Fake yaw", &Vars::AntiHack::AntiAim::YawFake.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt", "Custom", "Invert", "Jitter", "Jitter Random", "Jitter Flip", "Manual" }); HelpMarker("Which way to appear to look horizontally");
 			if (Vars::AntiHack::AntiAim::Pitch.Value == 9 || Vars::AntiHack::AntiAim::Pitch.Value == 10) {
 				WSlider("Custom Real Pitch", &Vars::AntiHack::AntiAim::CustomRealPitch.Value, -89.f, 89.f, "%.1f", 0);
 			}
@@ -1516,29 +1517,29 @@ void CMenu::MenuHvH()
 			{
 				WSlider("Random Interval", &Vars::AntiHack::AntiAim::RandInterval.Value, 0, 100, "%d"); HelpMarker("How often the random Anti-Aim should update");
 			}
-			if (Vars::AntiHack::AntiAim::BaseYawMode.Value != 1){
+			if (Vars::AntiHack::AntiAim::BaseYawMode.Value != 1) {
 				WSlider("Base Yaw Offset", &Vars::AntiHack::AntiAim::BaseYawOffset.Value, -180, 180);
 			}
-			if (Vars::AntiHack::AntiAim::YawFake.Value == 10 || Vars::AntiHack::AntiAim::YawReal.Value == 10){
+			if (Vars::AntiHack::AntiAim::YawFake.Value == 10 || Vars::AntiHack::AntiAim::YawReal.Value == 10) {
 				InputKeybind("Invert Key", Vars::AntiHack::AntiAim::InvertKey);
 			}
-			if (Vars::AntiHack::AntiAim::YawFake.Value == 14 || Vars::AntiHack::AntiAim::YawReal.Value == 14){
+			if (Vars::AntiHack::AntiAim::YawFake.Value == 14 || Vars::AntiHack::AntiAim::YawReal.Value == 14) {
 				InputKeybind("Manual Key", Vars::AntiHack::AntiAim::ManualKey);
 			}
-			switch (Vars::AntiHack::AntiAim::YawFake.Value){
+			switch (Vars::AntiHack::AntiAim::YawFake.Value) {
 			case 9: { WSlider("Custom fake yaw", &Vars::AntiHack::AntiAim::CustomFakeYaw.Value, -180, 180); break; }
 			case 11:
 			case 12:
 			case 13: { WSlider("Fake Jitter Amt", &Vars::AntiHack::AntiAim::FakeJitter.Value, -180, 180); break; }
 			}
-			switch (Vars::AntiHack::AntiAim::YawReal.Value){
+			switch (Vars::AntiHack::AntiAim::YawReal.Value) {
 			case 9: { WSlider("Custom Real yaw", &Vars::AntiHack::AntiAim::CustomRealYaw.Value, -180, 180); break; }
 			case 11:
 			case 12:
 			case 13: { WSlider("Real Jitter Amt", &Vars::AntiHack::AntiAim::RealJitter.Value, -180, 180); break; }
 			}
 			WToggle("Resolver", &Vars::AntiHack::Resolver::Resolver.Value); HelpMarker("Enables Anti-aim resolver in the playerlist");
-			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab"}, { &Vars::AntiHack::AntiAim::AntiOverlap.Value, &Vars::AntiHack::AntiAim::LegJitter.Value, &Vars::AntiHack::AntiAim::InvalidShootPitch.Value, &Vars::AntiHack::AntiAim::AntiBackstab.Value }, "Misc.");
+			MultiCombo({ "AntiOverlap", "Jitter Legs", "HidePitchOnShot", "Anti-Backstab" }, { &Vars::AntiHack::AntiAim::AntiOverlap.Value, &Vars::AntiHack::AntiAim::LegJitter.Value, &Vars::AntiHack::AntiAim::InvalidShootPitch.Value, &Vars::AntiHack::AntiAim::AntiBackstab.Value }, "Misc.");
 
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
@@ -1585,7 +1586,7 @@ void CMenu::MenuMisc()
 			WToggle("Taunt spin", &Vars::Misc::TauntSpin.Value);
 			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, false);
 			WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
-			
+
 			WToggle("Fast Accel", &Vars::Misc::FastAccel.Value); HelpMarker("Makes you accelerate to full speed faster.");
 			WToggle("Crouch Speed", &Vars::Misc::CrouchSpeed.Value); HelpMarker("Allows you to move at full speed while crouched.");
 			if (Vars::Misc::CrouchSpeed.Value || Vars::Misc::FastAccel.Value) {
@@ -1604,9 +1605,9 @@ void CMenu::MenuMisc()
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
 
 			MultiFlags({ "Amsterdam", "Atlanta", "Mumbai", "Dubai", "Moses Lake", "Washington", "Frankfurt", "Tokyo (GNRT)", "Sao Paulo", "Hong Kong", "Virginia", "Johannesburg", "Los Angeles", "London", "Lima", "Luxembourg", "Chennai", "Madrid", "Manilla", "Oklahoma City", "Chicago", "Paris", "Santiago", "Seattle", "Singapore", "Stockholm", "Sydney", "Tokyo", "Vienna", "Warsaw" },
-					   { DC_AMS,      DC_ATL,    DC_BOM,   DC_DXB,  DC_EAT,		 DC_MWH,	   DC_FRA,		DC_GNRT,		DC_GRU,		 DC_HKG,	  DC_IAD,	  DC_JNB,		  DC_LAX,		 DC_LHR,   DC_LIM, DC_LUX,		 DC_MAA,	DC_MAD,	  DC_MAN,    DC_OKC,		  DC_ORD,	 DC_PAR,  DC_SCL,     DC_SEA,	 DC_SGP,	  DC_STO,	   DC_SYD,   DC_TYO,  DC_VIE,	DC_WAW },
-					   &Vars::Misc::RegionsAllowed.Value,
-					   "Regions"
+				{ DC_AMS,      DC_ATL,    DC_BOM,   DC_DXB,  DC_EAT,		 DC_MWH,	   DC_FRA,		DC_GNRT,		DC_GRU,		 DC_HKG,	  DC_IAD,	  DC_JNB,		  DC_LAX,		 DC_LHR,   DC_LIM, DC_LUX,		 DC_MAA,	DC_MAD,	  DC_MAN,    DC_OKC,		  DC_ORD,	 DC_PAR,  DC_SCL,     DC_SEA,	 DC_SGP,	  DC_STO,	   DC_SYD,   DC_TYO,  DC_VIE,	DC_WAW },
+				&Vars::Misc::RegionsAllowed.Value,
+				"Regions"
 			);
 			WToggle("Instant accept match", &Vars::Misc::InstantAccept.Value); HelpMarker("Will skip the 10 second delay before joining a match");
 			WToggle("Auto queue for casual", &Vars::Misc::AutoCasualQueue.Value); HelpMarker("Automatically starts queueuing for casual on the main menu");
@@ -1615,7 +1616,7 @@ void CMenu::MenuMisc()
 			SectionTitle("Sound");
 			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
 
-			
+
 
 		} EndChild();
 
@@ -1745,7 +1746,7 @@ void CMenu::SettingsWindow()
 		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
 		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
-		if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value)){
+		if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value)) {
 			I::ViewRender->SetScreenOverlayMaterial(nullptr);
 		}
 
@@ -1758,12 +1759,182 @@ void CMenu::SettingsWindow()
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
+		ImGui::PushFont(SectionFont);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		if (ImGui::BeginTable("ConfigTable", 2))
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
+			if (ImGui::TabButton("General", CurrentConfigTab == ConfigTab::General))
+			{
+				CurrentConfigTab = ConfigTab::General;
+			}
 
+			if (ImGui::TabButton("Visuals", CurrentConfigTab == ConfigTab::Visuals))
+			{
+				CurrentConfigTab = ConfigTab::Visuals;
+			}
+
+			ImGui::PopStyleColor(1);
+			ImGui::EndTable();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopFont();
 		static std::string selected;
+		static std::string selectedvis;
 		int nConfig = 0;
 
 		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+		if (CurrentConfigTab == ConfigTab::General) {
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+			{
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
+				{
+					continue;
+				}
+				nConfig++;
+			}
+
+			// Current config
+			const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
+			Text(cfgText.c_str());
+
+			// Config name field
+			if (nConfig < 100)
+			{
+				std::string newConfigName = {};
+
+				PushItemWidth(200);
+				if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
+					{
+						g_CFG.SaveConfig(newConfigName);
+					}
+				}
+				PopItemWidth();
+			}
+
+			// Config list
+
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+			{
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
+				{
+					continue;
+				}
+
+				std::string configName = entry.path().filename().string();
+				configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
+
+				if (configName == selected)
+				{
+					const ImGuiStyle* style2 = &GetStyle();
+					const ImVec4* colors2 = style2->Colors;
+					ImVec4 buttonColor = colors2[ImGuiCol_Button];
+					buttonColor.w *= .5f;
+					PushStyleColor(ImGuiCol_Button, buttonColor);
+
+					// Config name button
+					if (Button(configName.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+					PopStyleColor();
+
+					// Save config button
+					if (Button("Save", ImVec2(61, 20)))
+					{
+						if (configName != g_CFG.GetCurrentConfig())
+						{
+							OpenPopup("Save config?");
+						}
+						else
+						{
+							g_CFG.SaveConfig(selected);
+							selected.clear();
+						}
+					}
+
+					// Load config button
+					SameLine();
+					if (Button("Load", ImVec2(61, 20)))
+					{
+						g_CFG.LoadConfig(selected);
+						selected.clear();
+						LoadStyle();
+					}
+
+					// Remove config button
+					SameLine();
+					if (Button("Remove", ImVec2(62, 20)))
+					{
+						OpenPopup("Remove config?");
+					}
+
+					// Save config dialog
+					if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to override this config?");
+
+						Separator();
+						if (Button("Yes, override!", ImVec2(150, 0)))
+						{
+							g_CFG.SaveConfig(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+
+						SameLine();
+						if (Button("No", ImVec2(120, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+
+					// Delete config dialog
+					if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to delete this config?");
+
+						Separator();
+						if (Button("Yes, remove!", ImVec2(150, 0)))
+						{
+							g_CFG.RemoveConfig(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+						SameLine();
+						if (Button("No", ImVec2(150, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+				}
+				else if (configName == g_CFG.GetCurrentConfig())
+				{
+					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
+					std::string buttonText = "> " + configName + " <";
+					if (Button(buttonText.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+					PopStyleColor();
+				}
+				else
+				{
+					if (Button(configName.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+				}
+			}
+
+		}
+		else {
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1773,7 +1944,7 @@ void CMenu::SettingsWindow()
 		}
 
 		// Current config
-		const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
+		const std::string cfgText = "Loaded: " + g_CFG.GetCurrentVisualConfig();
 		Text(cfgText.c_str());
 
 		// Config name field
@@ -1784,7 +1955,7 @@ void CMenu::SettingsWindow()
 			PushItemWidth(200);
 			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
+				if (!std::filesystem::exists(g_CFG.GetVisualConfigPath() + "\\" + newConfigName))
 				{
 					g_CFG.SaveConfig(newConfigName);
 				}
@@ -1793,7 +1964,8 @@ void CMenu::SettingsWindow()
 		}
 
 		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+
+		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualConfigPath()))
 		{
 			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 			{
@@ -1821,12 +1993,13 @@ void CMenu::SettingsWindow()
 				// Save config button
 				if (Button("Save", ImVec2(61, 20)))
 				{
-					if (configName != g_CFG.GetCurrentConfig())
+					if (configName != g_CFG.GetCurrentVisualConfig())
 					{
 						OpenPopup("Save config?");
-					} else
+					}
+					else
 					{
-						g_CFG.SaveConfig(selected);
+						g_CFG.SaveVisuals(selected);
 						selected.clear();
 					}
 				}
@@ -1835,7 +2008,7 @@ void CMenu::SettingsWindow()
 				SameLine();
 				if (Button("Load", ImVec2(61, 20)))
 				{
-					g_CFG.LoadConfig(selected);
+					g_CFG.LoadVisuals(selected);
 					selected.clear();
 					LoadStyle();
 				}
@@ -1855,7 +2028,7 @@ void CMenu::SettingsWindow()
 					Separator();
 					if (Button("Yes, override!", ImVec2(150, 0)))
 					{
-						g_CFG.SaveConfig(selected);
+						g_CFG.SaveVisuals(selected);
 						selected.clear();
 						CloseCurrentPopup();
 					}
@@ -1876,7 +2049,7 @@ void CMenu::SettingsWindow()
 					Separator();
 					if (Button("Yes, remove!", ImVec2(150, 0)))
 					{
-						g_CFG.RemoveConfig(selected);
+						g_CFG.RemoveVisuals(selected);
 						selected.clear();
 						CloseCurrentPopup();
 					}
@@ -1888,7 +2061,7 @@ void CMenu::SettingsWindow()
 					EndPopup();
 				}
 			}
-			else if (configName == g_CFG.GetCurrentConfig())
+			else if (configName == g_CFG.GetCurrentVisualConfig())
 			{
 				PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 				std::string buttonText = "> " + configName + " <";
@@ -1906,8 +2079,10 @@ void CMenu::SettingsWindow()
 				}
 			}
 		}
+		}
 
-		End();
+
+		ImGui::End();
 	}
 
 	PopStyleVar(2);
@@ -1916,7 +2091,7 @@ void CMenu::SettingsWindow()
 /* Debug Menu */
 void CMenu::DebugMenu()
 {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	using namespace ImGui;
 	if (!ShowDebugMenu) { return; }
 
@@ -1945,11 +2120,11 @@ void CMenu::DebugMenu()
 			}
 		}
 
-		End();
+		ImGui::End();
 	}
 
 	PopStyleVar(2);
-	#endif
+#endif
 }
 
 /* Window for the camera feature */
@@ -2073,7 +2248,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	static std::once_flag initFlag;
 	std::call_once(initFlag, [&] {
 		Init(pDevice);
-	});
+		});
 
 	pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
 	pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);

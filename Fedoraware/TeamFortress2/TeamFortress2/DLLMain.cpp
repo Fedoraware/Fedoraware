@@ -110,6 +110,10 @@ void LoadDefaultConfig()
 		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 	}
 
+	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\Visuals\\" + g_CFG.GetCurrentConfig() + ".fw")) {
+		g_CFG.LoadVisuals(g_CFG.GetCurrentVisualConfig());
+	}
+
 	g_Draw.RemakeFonts
 	({
 		{ 0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.Value, Vars::Fonts::FONT_ESP::nWeight.Value, Vars::Fonts::FONT_ESP::nFlags.Value},

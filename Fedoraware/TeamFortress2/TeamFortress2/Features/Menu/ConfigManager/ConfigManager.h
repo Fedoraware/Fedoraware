@@ -27,7 +27,10 @@ class CConfigManager
 	void LoadJson(const char* name, DragBox_t& val);
 
 	std::string CurrentConfig = "default";
+	std::string CurrentVisualConfig = "default";
 	std::string ConfigPath;
+
+
 
 public:
 	const std::string ConfigExtension = ".fw";
@@ -37,8 +40,13 @@ public:
 	bool LoadConfig(const std::string& configName);
 	void RemoveConfig(const std::string& configName);
 
+	bool SaveVisuals(const std::string& configName);
+	bool LoadVisuals(const std::string& configName);
+	void RemoveVisuals(const std::string& configName);
 	std::string GetCurrentConfig() { return CurrentConfig; }
+	std::string GetCurrentVisualConfig() { return CurrentVisualConfig; }
 	std::string GetConfigPath() { return ConfigPath; }
+	std::string GetVisualConfigPath() { return ConfigPath + "\\Visuals"; }
 };
 
 inline CConfigManager g_CFG;
