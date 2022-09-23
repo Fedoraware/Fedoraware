@@ -1759,7 +1759,12 @@ void CMenu::SettingsWindow()
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
-		if (Button("Back up visuals")) {
+		if (Button("Open visual configs folder", ImVec2(200, 0)))
+		{
+			ShellExecuteA(NULL, NULL, g_CFG.GetVisualConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
+		}
+		Dummy({ 0, 5 });
+		if (Button("Back up visuals", ImVec2(200,0))) {
 			g_CFG.BackupVisuals();
 		}
 		ImGui::PushFont(SectionFont);
