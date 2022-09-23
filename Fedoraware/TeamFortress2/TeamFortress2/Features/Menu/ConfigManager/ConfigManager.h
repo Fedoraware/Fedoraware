@@ -39,7 +39,7 @@ public:
 	bool SaveConfig(const std::string& configName);
 	bool LoadConfig(const std::string& configName);
 	void RemoveConfig(const std::string& configName);
-
+	void BackupVisuals();
 	bool SaveVisuals(const std::string& configName);
 	bool LoadVisuals(const std::string& configName);
 	void RemoveVisuals(const std::string& configName);

@@ -1759,6 +1759,9 @@ void CMenu::SettingsWindow()
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (Button("Back up visuals")) {
+			g_CFG.BackupVisuals();
+		}
 		ImGui::PushFont(SectionFont);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });

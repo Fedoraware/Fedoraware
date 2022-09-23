@@ -1952,3 +1952,16 @@ void CConfigManager::RemoveVisuals(const std::string& configName)
 {
 	std::filesystem::remove(ConfigPath + "\\Visuals\\" + configName + ConfigExtension);
 }
+
+void CConfigManager::BackupVisuals() {
+	for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath())) {
+		if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
+			continue;
+
+		std::string configName = entry.path().filename().string();
+		configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
+		LoadConfig(configName);
+
+		SaveVisuals(configName);
+	}
+}
