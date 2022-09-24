@@ -63,6 +63,8 @@ public:
 	void SetPtr(const char* keyName, void* value);
 	void SetColor(const char* keyName, Color_t value);
 	void SetBool(const char* keyName, bool value) { SetInt(keyName, value ? 1 : 0); }
+
+	void* operator new(size_t iAllocSize);
 };
 
 class CKeyValUtils

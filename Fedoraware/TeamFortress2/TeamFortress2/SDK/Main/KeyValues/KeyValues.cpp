@@ -418,3 +418,8 @@ void KeyValues::SetColor(const char* keyName, Color_t value)
 		dat->m_Color[3] = value.a;
 	}
 }
+
+void* KeyValues::operator new(size_t iAllocSize)
+{
+	return I::KeyValuesSystem->AllocKeyValuesMemory((int)iAllocSize);
+}
