@@ -120,19 +120,20 @@ int BlastDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		// Projectile is getting closer
-		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
+		/*const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
 		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
 		const float flHyp = sqrtf(pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()));
 		if ( flHypPred < flHyp && pPatient->GetVecOrigin().DistTo(vPredicted) < pProjectile->GetVelocity().Length())	//	this is way too sensitive
-		{
-			if (pProjectile->IsCritBoosted()) { return 2; }
+		*/
+		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
+		if (pPatient->GetAbsOrigin().DistTo(pProjectile->GetAbsOrigin()) <= 275.f) {
 			hasRockets = true;
 		}
 	}
 
 	if (hasRockets)
 	{
-		if (pPatient->GetHealth() < 80)
+		if (pPatient->GetHealth() < 150)
 		{
 			return 2;
 		}
