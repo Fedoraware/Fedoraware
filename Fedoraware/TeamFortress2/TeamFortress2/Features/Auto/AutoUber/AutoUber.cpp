@@ -133,7 +133,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 
 	if (hasRockets)
 	{
-		if (pPatient->GetHealth() < 150)
+		if (pPatient->GetHealth() < 235)
 		{
 			return 2;
 		}
