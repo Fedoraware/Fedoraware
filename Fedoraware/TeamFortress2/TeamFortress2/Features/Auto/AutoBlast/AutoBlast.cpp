@@ -42,10 +42,11 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			switch (pProjectile->GetClassID())
 			{
 			case ETFClassID::CTFGrenadePipebombProjectile:
+			case ETFClassID::CTFStunBall:
 				{
 					if (pProjectile->GetTouched())
 					{
-						continue; //Ignore landed stickies
+						continue; //Ignore landed stickies and sandman balls
 					}
 
 					break;
@@ -53,7 +54,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 			case ETFClassID::CTFProjectile_Arrow:
 				{
-					if (pProjectile->GetVecVelocity().IsZero())
+					if (pProjectile->GetVelocity().IsZero())
 					{
 						continue; //Ignore arrows with no velocity / not moving
 					}
