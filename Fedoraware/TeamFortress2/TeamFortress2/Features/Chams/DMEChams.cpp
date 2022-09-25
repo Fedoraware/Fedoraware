@@ -28,7 +28,7 @@ namespace ProxySkins
 	static IMaterial* serenity = nullptr;
 	static IMaterial* fade = nullptr;
 
-	static KeyValues* Proxies = new KeyValues("Proxies");
+	static KeyValues* Proxies = nullptr;
 
 	IMaterial* CreateProxySkin(const char* materialPath, const char* materialName) {
 		auto kv = new KeyValues("VertexLitGeneric");
@@ -42,6 +42,8 @@ namespace ProxySkins
 
 	void Init()
 	{
+		Proxies = new KeyValues("Proxies");
+
 		{	// initialise proxies subkey
 			g_KeyValUtils.Initialize(Proxies, (char*)"proxies");
 			{
@@ -209,7 +211,7 @@ void CDMEChams::CreateMaterials(){
 	v_MatList.push_back(CreateNRef("m_pMatFlat", m_pMatFlatkv));
 	v_MatList.push_back(CreateNRef("m_pMatWFShaded", m_pMatWFShadedkv));
 	v_MatList.push_back(CreateNRef("m_pMatWFShiny", m_pMatWFShinykv));
-	v_MatList.push_back(CreateNRef("m_pMatWFFlat", m_pMatWFFlatkv)); 
+	v_MatList.push_back(CreateNRef("m_pMatWFFlat", m_pMatWFFlatkv));
 	v_MatList.push_back(CreateNRef("m_pMatFresnel", m_pMatFresnelkv));
 	v_MatList.push_back(CreateNRef("m_pMatBrick", m_pMatBrickkv));
 	v_MatList.push_back(CreateNRef("m_pMatScuffed", m_pMatOverlaykv));
@@ -611,7 +613,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			I::RenderView->SetBlend(1.0f);
 		}
-		
+
 		// I wanted these to be 1 line each leave me alone.
 		const int proxyIndex = (drawType <= 1) ? (drawType ? Vars::Chams::DME::HandsProxySkin.Value : Vars::Chams::DME::WeaponsProxySkin.Value) : 0;
 		const bool proxyWF = (drawType <= 1) ? (drawType ? Vars::Chams::DME::HandsProxyWF.Value : Vars::Chams::DME::WeaponsProxyWF.Value) : false;
@@ -658,7 +660,7 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					}
 				}
 			}
-			
+
 			I::RenderView->SetBlend(alpha);
 
 

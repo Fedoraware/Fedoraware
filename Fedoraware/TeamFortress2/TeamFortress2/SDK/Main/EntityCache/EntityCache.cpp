@@ -71,7 +71,7 @@ void CEntityCache::Fill()
 			{
 				continue;
 			}
-			
+
 			switch (nClassID)
 			{
 				case ETFClassID::CTFPlayer:
@@ -129,6 +129,8 @@ void CEntityCache::Fill()
 				case ETFClassID::CTFProjectile_EnergyRing:
 				case ETFClassID::CTFProjectile_HealingBolt:
 				case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+				case ETFClassID::CTFStunBall:
+				case ETFClassID::CTFBall_Ornament:
 				{
 					m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
 
