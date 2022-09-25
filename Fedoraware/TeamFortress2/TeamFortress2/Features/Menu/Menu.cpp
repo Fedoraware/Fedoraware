@@ -1460,7 +1460,7 @@ void CMenu::MenuHvH()
 
 			WCombo("Teleport Mode", &Vars::Misc::CL_Move::TeleportMode.Value, { "Plain", "Smooth" }); HelpMarker("How the teleport should be done");
 			if (Vars::Misc::CL_Move::TeleportMode.Value) {
-				WSlider("Smooth Teleport Factor", &Vars::Misc::CL_Move::TeleportFactor.Value, 1, 11, "%d");
+				WSlider("Smooth Teleport Factor", &Vars::Misc::CL_Move::TeleportFactor.Value, 2, 6, "%d");
 			}
 			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne", "Retain Fakelag", "Stop Recharge Movement", "Safe Tick" }, { &Vars::Misc::CL_Move::RechargeWhileDead.Value, &Vars::Misc::CL_Move::AutoRecharge.Value, &Vars::Misc::CL_Move::WaitForDT.Value, &Vars::Misc::CL_Move::AntiWarp.Value, &Vars::Misc::CL_Move::NotInAir.Value, &Vars::Misc::CL_Move::RetainFakelag.Value, &Vars::Misc::CL_Move::StopMovement.Value, &Vars::Misc::CL_Move::SafeTick.Value }, "Options");
 			HelpMarker("Enable various features regarding tickbase exploits");
