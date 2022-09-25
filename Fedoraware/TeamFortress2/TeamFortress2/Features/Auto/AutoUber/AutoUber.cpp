@@ -13,6 +13,7 @@ int vaccChangeTimer = 0;
 
 int BulletDangerValue(CBaseEntity* pPatient)
 {
+	if (!Vars::Triggerbot::Uber::BulletRes.Value) { return 0; }
 	bool anyZoomedSnipers = false;
 	bool anyHeavys = false;
 
@@ -74,6 +75,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 
 int FireDangerValue(CBaseEntity* pPatient)
 {
+	if (!Vars::Triggerbot::Uber::FireRes.Value) { return 0; }
 	int shouldSwitch = 0;
 
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
@@ -105,6 +107,7 @@ int FireDangerValue(CBaseEntity* pPatient)
 
 int BlastDangerValue(CBaseEntity* pPatient)
 {
+	if (!Vars::Triggerbot::Uber::BlastRes.Value) { return 0; }
 	bool hasRockets = false;
 
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
@@ -176,9 +179,9 @@ int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
 	if (pShouldPop)
 	{
 		int charges = ChargeCount();
-		if (bulletDanger > 1 && Vars::Triggerbot::Uber::BulletRes.Value) { *pShouldPop = true; }
-		if (fireDanger > 1 && Vars::Triggerbot::Uber::FireRes.Value) { *pShouldPop = true; }
-		if (blastDanger > 1 && Vars::Triggerbot::Uber::BlastRes.Value) { *pShouldPop = true; }
+		if (bulletDanger > 1) { *pShouldPop = true; }
+		if (fireDanger > 1) { *pShouldPop = true; }
+		if (blastDanger > 1) { *pShouldPop = true; }
 	}
 
 	if (!(bulletDanger || fireDanger || blastDanger))
