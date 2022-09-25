@@ -466,7 +466,15 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
 						}
 					}
+					case 5:
+						{
+						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - fontHeight - 3, { 255, 255, 255, 255 }, ALIGN_CENTERHORIZONTAL, L"%d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+				                }
+						//hhhs0j — Today at 15:19
+						//Add a dt indicator but only with numbers
+
 				}
+				
 			}
 		}
 	}
