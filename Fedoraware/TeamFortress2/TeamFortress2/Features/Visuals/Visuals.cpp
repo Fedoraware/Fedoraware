@@ -465,6 +465,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						else{
 							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
 						}
+						break;
 					}
 					case 5:
 						{
