@@ -122,6 +122,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Rocket &&
+		    pProjectile->GetClassID() != ETFClassID::CTFProjectile_SentryRocket &&
 			pProjectile->GetClassID() != ETFClassID::CTFGrenadePipebombProjectile)
 			continue;
 
