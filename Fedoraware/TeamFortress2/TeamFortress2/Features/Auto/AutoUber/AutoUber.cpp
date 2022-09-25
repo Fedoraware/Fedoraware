@@ -14,9 +14,9 @@ int vaccChangeTimer = 0;
 int BulletDangerValue(CBaseEntity* pPatient)
 {
 	bool anyZoomedSnipers = false;
-	bool anyNiggers = false;
+	bool anyEnemies = false;
 
-	// Find dangerous niggrs in other team
+	// Find dangerous playes in other team
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!player->IsAlive())
@@ -101,7 +101,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 					
 				}
 			}
-			bool anyNiggers = true;
+			bool anyEnemies = true;
 		}
 
 	}
@@ -141,7 +141,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		}
 	}
 
-	return (anyZoomedSnipers || anyNiggers) ? 1 : 0;
+	return (anyZoomedSnipers || anyEnemies) ? 1 : 0;
 }
 
 int FireDangerValue(CBaseEntity* pPatient)
