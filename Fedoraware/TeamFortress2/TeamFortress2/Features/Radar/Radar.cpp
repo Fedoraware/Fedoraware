@@ -47,7 +47,7 @@ void CRadar::DrawWindow()
 void CRadar::DrawRadar()
 {
 	// Title gradient
-	if (!F::Menu.IsOpen)
+	if (!F::Menu.IsOpen && !Vars::Radar::Main::NoTitleGradient.Value)
 	{
 		g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3,
 			RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },

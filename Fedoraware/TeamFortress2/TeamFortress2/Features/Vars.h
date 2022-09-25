@@ -425,6 +425,7 @@ namespace Vars
 			inline CVar<int> BackAlpha{ 128 };
 			inline CVar<int> LineAlpha{ 255 };
 			inline CVar<int> Range{ 1500 };
+			inline CVar<bool> NoTitleGradient{ false };
 		}
 
 		namespace Players
