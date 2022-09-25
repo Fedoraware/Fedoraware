@@ -64,3 +64,4 @@
   - [hivec2](https://github.com/hivec2)
   - [wsock](https://github.com/wsock)
   - [hyperventilation](https://github.com/hyperventilation)
+  - [frel0](https://github.com/frel0)
