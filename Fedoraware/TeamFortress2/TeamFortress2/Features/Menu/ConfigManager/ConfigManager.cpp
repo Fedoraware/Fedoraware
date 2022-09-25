@@ -261,6 +261,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 	try
 	{
 		WriteTree.clear();
+
+		SAVE_VAR(Vars::Visuals::MoveSimSeperators);
 		// Menu
 		{
 			SAVE_OTHER(Vars::Menu::CheatName);
@@ -1080,6 +1082,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 	{
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
+
+		LOAD_VAR(Vars::Visuals::MoveSimSeperators);
 
 		// Menu
 		{

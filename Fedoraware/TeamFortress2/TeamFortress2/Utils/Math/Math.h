@@ -1496,4 +1496,13 @@ namespace Math
 	__forceinline void Clamp(t& n, const t& lower, const t& upper) {
 		n = std::max(lower, std::min(n, upper));
 	}
+
+	inline auto GetRotatedPosition(Vec3 start, const float rotation, const float distance)
+	{
+		const auto rad = DEG2RAD(rotation);
+		start.x += cosf(rad) * distance;
+		start.y += sinf(rad) * distance;
+
+		return start;
+	}
 }

@@ -601,23 +601,25 @@ void CVisuals::DrawMovesimLine()
 	{
 		if (!G::PredLinesBackup.empty())
 		{
-			for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
+			if (!Vars::Visuals::MoveSimSeperators.Value)
 			{
-				RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+				for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
+				{
+					RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+				}
+			}
+			else
+			{
+				for (size_t i = 2; i < G::PredLinesBackup.size(); i += 2)
+				{
+					const auto& vStart = G::PredLinesBackup[i - 2];
+					const auto& vRotate = G::PredLinesBackup[i - 1];
+					const auto& vEnd = G::PredLinesBackup[i];
+					RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false);
+					RenderLine(vStart, vEnd,	Vars::Aimbot::Projectile::PredictionColor, false);
+				}
 			}
 		}
-		//if (!G::PredictionLines.empty())
-		//{
-		//	for (size_t i = 1; i < G::PredictionLines.size(); i++)
-		//	{
-		//		I::DebugOverlay->AddLineOverlay(G::PredictionLines.at(i - 1), G::PredictionLines.at(i),
-		//										Vars::Aimbot::Projectile::PredictionColor.r,
-		//										Vars::Aimbot::Projectile::PredictionColor.g,
-		//										Vars::Aimbot::Projectile::PredictionColor.b,
-		//										false,
-		//										1.f);
-		//	}
-		//}
 	}
 }
 
