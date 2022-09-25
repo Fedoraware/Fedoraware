@@ -176,9 +176,9 @@ int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
 	if (pShouldPop)
 	{
 		int charges = ChargeCount();
-		if (bulletDanger > 1) { *pShouldPop = true; }
-		if (fireDanger > 1) { *pShouldPop = true; }
-		if (blastDanger > 1) { *pShouldPop = true; }
+		if (bulletDanger > 1 && Vars::Triggerbot::Uber::BulletRes.Value) { *pShouldPop = true; }
+		if (fireDanger > 1 && Vars::Triggerbot::Uber::FireRes.Value) { *pShouldPop = true; }
+		if (blastDanger > 1 && Vars::Triggerbot::Uber::BlastRes.Value) { *pShouldPop = true; }
 	}
 
 	if (!(bulletDanger || fireDanger || blastDanger))
