@@ -203,6 +203,7 @@ namespace Vars
 			inline CVar<float> HealthLeft{ 35.0f };
 			inline CVar<bool> VoiceCommand{ false };
 			inline CVar<int> ReactFoV{25};
+			inline CVar<bool> BulletRes{ true }; inline CVar<bool> BlastRes{ true }; inline CVar<bool> FireRes{ true };
 		}
 	}
 
