@@ -445,7 +445,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 								}
 								case 1: // Sapper ????
 								{
-									iWeaponSlot = -1; // Can't seem to get the sapper to show :/
+									iWeaponSlot = 4;
 									break;
 								}
 								// case 2: // Knife
