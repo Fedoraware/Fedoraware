@@ -373,7 +373,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				// Cheater detection ESP
 				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
 				{
-					g_Draw.String(FONT, nTextX, y + nTextOffset, { 255, 0, 0, 255 }, ALIGN_DEFAULT, "CHEATER");
+					g_Draw.String(FONT, middle, y - 28, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, "CHEATER");
 					nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 				}
 
@@ -386,7 +386,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 
 			// Class ESP
-			if (Vars::ESP::Players::Class.Value)
+	                if (Vars::ESP::Players::Class.Value)
 			{
 				if (Vars::ESP::Players::Class.Value == 1 || Vars::ESP::Players::Class.Value == 3)
 				{
@@ -400,8 +400,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - offset - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
+					if (Vars::ESP::Players::CheaterDetection.Value && G::PlayerPriority[pi.friendsID].Mode == 4)
+					{
+					g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 30 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
 								   nClassNum);
+					}
+					else
+					g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - offset - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
+							nClassNum);
 				}
 
 				if (Vars::ESP::Players::Class.Value >= 2)
