@@ -209,6 +209,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CVoiceBanMgr_GetPlayerBan.cpp" />
     <ClCompile Include="TeamFortress2\Features\TickHandler\TickHandler.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseViewModel_ShouldFlipViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />

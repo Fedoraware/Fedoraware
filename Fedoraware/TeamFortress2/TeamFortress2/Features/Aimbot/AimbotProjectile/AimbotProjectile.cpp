@@ -259,7 +259,7 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
 	const INetChannel* pNetChannel = I::EngineClient->GetNetChannelInfo();
-	static ConVar* cl_flipviewmodels = g_ConVars.cl_flipviewmodels;
+	ConVar* cl_flipviewmodels = g_ConVars.cl_flipviewmodels;
 
 	G::PredictionLines.clear();
 
@@ -273,7 +273,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		return false;
 	}
 
-	static bool oValue = cl_flipviewmodels->GetBool(); // assume false
+	bool oValue = cl_flipviewmodels->GetBool(); // assume false
 	if (Vars::Debug::DebugInfo.Value)
 	{
 		cl_flipviewmodels->SetValue(oValue);
@@ -1206,6 +1206,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
+	running = false;
+
 	static int nLastTracerTick = pCmd->tick_count;
 
 	IsFlameThrower = false;
@@ -1220,6 +1222,9 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		                         : F::AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
 
+	ConVar* flippy = I::Cvar->FindVar("cl_flipviewmodels");
+	Flippy = flippy->GetBool();
+
 	Target_t target {};
 	if (GetTarget(pLocal, pWeapon, pCmd, target) || GetSplashTarget(pLocal, pWeapon, pCmd, target))
 	{
@@ -1233,6 +1238,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 		if (ShouldFire(pCmd))
 		{
+			running = true;
 			pCmd->buttons |= IN_ATTACK;
 
 			if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
@@ -1307,4 +1313,6 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			Aim(pCmd, pWeapon, target.m_vAngleTo);
 		}
 	}
+
+	flippy->SetValue(Flippy);
 }

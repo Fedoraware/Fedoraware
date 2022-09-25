@@ -45,6 +45,9 @@ class CAimbotProjectile {
 	bool IsBoosted = false;
 
 public:
+
+	bool Flippy = false;
+	bool running = false;
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
 
