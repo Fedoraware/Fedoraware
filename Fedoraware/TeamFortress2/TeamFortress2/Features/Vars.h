@@ -204,6 +204,7 @@ namespace Vars
 			inline CVar<bool> VoiceCommand{ false };
 			inline CVar<int> ReactFoV{25};
 			inline CVar<bool> BulletRes{ true }; inline CVar<bool> BlastRes{ true }; inline CVar<bool> FireRes{ true };
+			inline CVar<int> ReactClasses{0b000000000};	//	this is intuitive
 		}
 	}
 

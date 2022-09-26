@@ -443,6 +443,10 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
 				SAVE_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 				SAVE_VAR(Vars::Triggerbot::Uber::ReactFoV);
+				SAVE_VAR(Vars::Triggerbot::Uber::ReactClasses);
+				SAVE_VAR(Vars::Triggerbot::Uber::BlastRes);
+				SAVE_VAR(Vars::Triggerbot::Uber::BulletRes);
+				SAVE_VAR(Vars::Triggerbot::Uber::FireRes);
 			}
 		}
 
@@ -1267,6 +1271,10 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
 				LOAD_VAR(Vars::Triggerbot::Uber::VoiceCommand);
 				LOAD_VAR(Vars::Triggerbot::Uber::ReactFoV);
+				LOAD_VAR(Vars::Triggerbot::Uber::ReactClasses);
+				LOAD_VAR(Vars::Triggerbot::Uber::BlastRes);
+				LOAD_VAR(Vars::Triggerbot::Uber::BulletRes);
+				LOAD_VAR(Vars::Triggerbot::Uber::FireRes);
 			}
 		}
 

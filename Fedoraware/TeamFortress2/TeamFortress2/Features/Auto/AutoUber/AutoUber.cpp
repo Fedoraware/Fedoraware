@@ -14,9 +14,9 @@ int vaccChangeTimer = 0;
 int BulletDangerValue(CBaseEntity* pPatient)
 {
 	bool anyZoomedSnipers = false;
-	bool anyHeavys = false;
+	bool anyEnemies = false;
 
-	// Find dangerous snipers in other team
+	// Find dangerous playes in other team
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!player->IsAlive())
@@ -25,9 +25,31 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		if (player->GetDormant())
 			continue;
 
-		if (player->GetClassNum() != CLASS_SNIPER &&
-			player->GetClassNum() != CLASS_HEAVY)
-			continue;
+		switch (player->GetClassNum()){
+		case 1: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 0)) { continue; } break;	//	scout
+		case 2: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 7)) { continue; } break;	//	sniper
+		case 3: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 1)) { continue; } break;	//	soldier
+		case 6: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 4)) { continue; } break;	//	heavy
+		case 7: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 2)) { continue; } break;	//	pyro
+		case 8: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 8)) { continue; } break;	//	spy
+		case 9: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 5)) { continue; } break;	//	engineer
+		default: { continue; }
+		}
+
+		if (HAS_CONDITION(player, TFCond_Bonked))
+		{
+			return false;
+		}
+
+		if (player->GetActiveWeapon()->GetSlot() == SLOT_MELEE)
+		{
+			return false;
+		}
+
+		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox_Drink || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFWeaponPDA)
+		{
+			return false;
+		}
 
 		// Ignore ignored players
 		if (F::AutoGlobal.ShouldIgnore(player)) { continue; }
@@ -35,11 +57,10 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		const Vec3 vAngleTo = Math::CalcAngle(player->GetEyePosition(), pPatient->GetWorldSpaceCenter());
 		const float flFOVTo = Math::CalcFov(player->GetEyeAngles(), vAngleTo);
 
-		if (G::PlayerPriority[player->GetIndex()].Mode != 4 && Vars::Triggerbot::Uber::ReactFoV.Value){ 
+		if (G::PlayerPriority[player->GetIndex()].Mode != 4 && Vars::Triggerbot::Uber::ReactFoV.Value) {
 			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > (float)Vars::Triggerbot::Uber::ReactFoV.Value) { continue; }	//	account for choking :D
-		}	//	respect FoV if player is not a cheater :D
-
-		// Check for any zoomed snipers
+		}	
+	
 		if (HAS_CONDITION(player, TFCond_Zoomed))
 		{
 			anyZoomedSnipers = true;
@@ -49,27 +70,80 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			}
 		}
 
-		// Check for any dangerous heavys
-		if (HAS_CONDITION(player, TFCond_Slowed))
+
+		if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_PELVIS),
+			player->GetEyePosition()))
 		{
 			if (const auto& pWeapon = player->GetActiveWeapon())
 			{
-				if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_PELVIS), player->GetEyePosition()))
+				if (player->GetClassNum() == CLASS_SPY && pWeapon->GetSlot() == SLOT_PRIMARY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() == CLASS_MEDIC || player->GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER)
 				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
-						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && (
-							HAS_CONDITION(player, TFCond_Ubercharged) ||
-							HAS_CONDITION(player, TFCondEx2_BulletImmune))))
-					{
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && 
+							(player->GetClassNum() == CLASS_SPY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() == CLASS_MEDIC || player->GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER))) {
 						return 2;
 					}
-					anyHeavys = true;
 				}
 			}
+
+			if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFShotgun_Pyro || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFShotgun_Soldier)
+			{
+				{
+					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
+							(player->GetClassNum() == CLASS_PYRO)))) {
+						return 2;
+					}
+
+					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
+							(player->GetClassNum() == CLASS_SOLDIER)))) {
+						return 2;
+					}
+					
+				}
+			}
+			bool anyEnemies = true;
+		}
+
+	}
+
+	bool hasHitscan = false;
+
+	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+	{
+		if (pProjectile->GetVelocity().IsZero())
+			continue;
+
+		if (pProjectile->GetTeamNum() == pPatient->GetTeamNum())
+			continue;
+
+		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Arrow &&
+			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
+			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyRing
+			)
+			continue;
+
+		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
+		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
+		const float flHyp = sqrtf(pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()));
+		if (flHypPred < flHyp && pPatient->GetVecOrigin().DistTo(vPredicted) < pProjectile->GetVelocity().Length())
+		{
+			if (pProjectile->IsCritBoosted()) { return 2; }
+			hasHitscan = true;
+		}
+
+	}
+
+	if (hasHitscan)
+	{
+		if (pPatient->GetHealth() < 449)
+		{
+			return 2;
 		}
 	}
 
-	return (anyZoomedSnipers || anyHeavys) ? 1 : 0;
+	return (anyZoomedSnipers || anyEnemies) ? 1 : 0;
 }
 
 int FireDangerValue(CBaseEntity* pPatient)
