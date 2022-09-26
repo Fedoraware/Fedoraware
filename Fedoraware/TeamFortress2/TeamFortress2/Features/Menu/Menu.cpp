@@ -472,7 +472,7 @@ void CMenu::MenuTrigger()
 				MultiCombo({ "Bullet", "Blast", "Fire"}, {&Vars::Triggerbot::Uber::BulletRes.Value, &Vars::Triggerbot::Uber::BlastRes.Value, &Vars::Triggerbot::Uber::FireRes.Value }, "Allowed Resistances");
 			}
 			{
-				static std::vector Names{ "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Sniper", "Spy" };
+				static std::vector Names{ "Scout", "Soldier", "Pyro", "Heavy", "Engineer", "Sniper", "Spy" };
 				static std::vector Values{ 1 << 0, 1 << 1, 1 << 2, 1 << 4, 1 << 5, 1 << 7, 1 << 8 };
 
 				MultiFlags(Names, Values, &Vars::Triggerbot::Uber::ReactClasses.Value, "Hitscan React Classes###TriggerbotAutoVaccClasses");
