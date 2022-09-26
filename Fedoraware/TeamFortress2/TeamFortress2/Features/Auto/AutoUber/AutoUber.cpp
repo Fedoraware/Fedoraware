@@ -36,8 +36,12 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		default: { continue; }
 		}
 
-		if (HAS_CONDITION(player, TFCond_Bonked))
+		if (HAS_CONDITION(player, (TFCond_Bonked | TFCond_Cloaked))) //is enemy cloaked/bonked?
 		{
+			return false;
+		}
+		
+		if (Utils::isFeigningDeath(player)) { 
 			return false;
 		}
 
@@ -119,10 +123,9 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			continue;
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Arrow &&
-			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
-			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyRing
-			)
-			continue;
+		    pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
+		    pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyRing)
+		     continue;
 
 		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
 		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
@@ -148,29 +151,17 @@ int BulletDangerValue(CBaseEntity* pPatient)
 
 int FireDangerValue(CBaseEntity* pPatient)
 {
-	int shouldSwitch = 0;
-
+		bool shouldSwitch = false;
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (!player->IsAlive())
-			continue;
-
-		if (player->GetClassNum() != CLASS_PYRO) // Pyro only
-			continue;
-
-		if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) > 450.f)
-			continue;
-
-		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower)
+		if (!player->IsAlive()) //just incase..
+			continue; 
+		
+		if (HAS_CONDITION(pPatient, TFCond_OnFire))
 		{
-			if (HAS_CONDITION(pPatient, TFCond_OnFire))
-			{
-				if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
-				return 2;
-			}
-
-			if (HAS_CONDITION(player, TFCondEx_PhlogUber)) { return 2; }
-			shouldSwitch = 1;
+			if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
+			return 2;
+			shouldSwitch = true;
 		}
 	}
 
@@ -197,7 +188,8 @@ int BlastDangerValue(CBaseEntity* pPatient)
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Rocket &&
 		    pProjectile->GetClassID() != ETFClassID::CTFProjectile_SentryRocket &&
-			pProjectile->GetClassID() != ETFClassID::CTFGrenadePipebombProjectile)
+		    pProjectile->GetClassID() != ETFClassID::CTFFlameRocket && //cowmangler i think..
+		    pProjectile->GetClassID() != ETFClassID::CTFGrenadePipebombProjectile)
 			continue;
 
 		// Projectile is getting closer
