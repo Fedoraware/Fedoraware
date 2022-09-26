@@ -25,14 +25,16 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		if (player->GetDormant())
 			continue;
 
-		if (player->GetClassNum() != CLASS_ENGINEER &&
-			player->GetClassNum() != CLASS_SCOUT &&
-			player->GetClassNum() != CLASS_PYRO &&
-			player->GetClassNum() != CLASS_HEAVY &&
-			player->GetClassNum() != CLASS_SOLDIER &&
-			player->GetClassNum() != CLASS_SNIPER &&
-			player->GetClassNum() != CLASS_SPY)
-			continue;
+		switch (player->GetClassNum()){
+		case 1: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 0)) { continue; } break;	//	scout
+		case 2: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 7)) { continue; } break;	//	sniper
+		case 3: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 1)) { continue; } break;	//	soldier
+		case 6: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 4)) { continue; } break;	//	heavy
+		case 7: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 2)) { continue; } break;	//	pyro
+		case 8: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 8)) { continue; } break;	//	spy
+		case 9: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 5)) { continue; } break;	//	engineer
+		default: { continue; }
+		}
 
 		if (HAS_CONDITION(player, TFCond_Bonked))
 		{
