@@ -8,6 +8,7 @@
 MAKE_HOOK(IsLocalPlayerUsingVisionFilterFlags, g_Pattern.Find(L"client.dll", L"55 8B EC 8A 45 ? 56 8B 35"), bool, __cdecl,
 		  int nFlags, bool bWeaponsCheck)
 {
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(nFlags, bWeaponsCheck); }
 	switch (Vars::Visuals::VisionModifier.Value)
 	{
 		case 1:

@@ -3,6 +3,8 @@
 MAKE_HOOK(CHudCrosshair_GetDrawPosition, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 57 E8 ? ? ? ? 8B 08 89 4D C8 8B 48 04 8B 40 08"), void, __cdecl,
 		  float* pX, float* pY, bool* pbBehindCamera, Vec3 angleCrosshairOffset)
 {
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(pX, pY, pbBehindCamera, angleCrosshairOffset); }
+
 	if (Vars::Visuals::CrosshairAimPos.Value && !G::AimPos.IsZero())
 	{
 		Vec3 vScreen;

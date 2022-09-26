@@ -2,6 +2,7 @@
 
 MAKE_HOOK(CRendering3dView_EnableWorldFog, g_Pattern.Find(L"client.dll", L"55 8B EC 8B 0D ? ? ? ? 83 EC 0C 8B 01 53 56 FF 90 ? ? ? ? 8B F0 85 F6 74 07 8B 06 8B CE FF 50 08"), void, __cdecl)
 {
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(); }
 	if (Vars::Visuals::Fog::DisableFog.Value)
 	{
 		return;
