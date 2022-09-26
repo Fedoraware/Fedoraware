@@ -475,7 +475,7 @@ void CMenu::MenuTrigger()
 				static std::vector Names{ "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Sniper", "Spy" };
 				static std::vector Values{ 1 << 0, 1 << 1, 1 << 2, 1 << 4, 1 << 5, 1 << 7, 1 << 8 };
 
-				MultiFlags(Names, Values, &Vars::Triggerbot::Detonate::DetonateTargets.Value, "Hitscan React Classes###TriggerbotAutoVaccClasses");
+				MultiFlags(Names, Values, &Vars::Triggerbot::Uber::ReactClasses.Value, "Hitscan React Classes###TriggerbotAutoVaccClasses");
 			}
 			WSlider("Health left (%)###TriggerUberHealthLeft", &Vars::Triggerbot::Uber::HealthLeft.Value, 1.f, 99.f, "%.0f%%", 1.0f); HelpMarker("The amount of health the heal target must be below to actiavte");
 			WSlider("Reaction FoV###TriggerUberReactFoV", &Vars::Triggerbot::Uber::ReactFoV.Value, 0, 90, "%d", 1); HelpMarker("Checks whether you are within a certain FoV from legit players before auto ubering.");
