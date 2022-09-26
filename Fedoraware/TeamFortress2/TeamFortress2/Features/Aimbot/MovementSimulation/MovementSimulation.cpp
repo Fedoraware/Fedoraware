@@ -335,7 +335,7 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	G::PredictionLines.push_back(m_MoveData.m_vecAbsOrigin);
 	if (Vars::Visuals::MoveSimSeperators.Value)
 	{
-		G::PredictionLines.push_back(Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, 5));
+	    G::PredictionLines.push_back(Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorsDist.Value));
 	}
 
 	moveDataOut = m_MoveData;
