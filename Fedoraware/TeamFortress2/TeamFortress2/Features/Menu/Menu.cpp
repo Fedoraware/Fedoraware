@@ -1105,6 +1105,7 @@ void CMenu::MenuVisuals()
 				if (WCombo("Screen Overlay", &Vars::Visuals::VisualOverlay.Value, { "None", "Fire", "Jarate", "Bleed", "Stealth", "Dodge" })) {
 					I::ViewRender->SetScreenOverlayMaterial(nullptr);
 				}
+				WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
 				WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
 				WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
 				WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
