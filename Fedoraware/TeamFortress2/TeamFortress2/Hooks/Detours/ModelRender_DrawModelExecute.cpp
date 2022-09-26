@@ -11,6 +11,8 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), void, __fastcall,
 		  void* ecx, void* edx, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(ecx, edx, pState, pInfo, pBoneToWorld); }
+
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(pInfo.m_nEntIndex);
 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);

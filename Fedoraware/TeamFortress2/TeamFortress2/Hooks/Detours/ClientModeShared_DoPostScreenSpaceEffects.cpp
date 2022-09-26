@@ -7,6 +7,8 @@
 MAKE_HOOK(ClientModeShared_DoPostScreenSpaceEffects, Utils::GetVFuncPtr(I::ClientModeShared, 39), bool, __fastcall,
 		  void* ecx, void* edx, const CViewSetup* pSetup)
 {
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(ecx, edx, pSetup); }
+
 	F::Chams.Render();
 	F::Glow.Render();
 

@@ -669,6 +669,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 		//Visuals
 		{
+			SAVE_VAR(Vars::Visuals::CleanScreenshots);
 			SAVE_VAR(Vars::Visuals::RemoveMOTD);
 			SAVE_VAR(Vars::Visuals::RemoveDisguises);
 			SAVE_VAR(Vars::Visuals::DrawOnScreenConditions);
@@ -1491,6 +1492,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		//Visuals
 		{
+			LOAD_VAR(Vars::Visuals::CleanScreenshots);
 			LOAD_VAR(Vars::Visuals::RemoveMOTD);
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
 			LOAD_VAR(Vars::Visuals::DrawOnScreenConditions);

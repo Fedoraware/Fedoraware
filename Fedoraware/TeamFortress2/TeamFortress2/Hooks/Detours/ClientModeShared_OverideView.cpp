@@ -6,6 +6,7 @@ MAKE_HOOK(ClientModeShared_OverrrideView, Utils::GetVFuncPtr(I::ClientModeShared
 		  void* ecx, void* edx, CViewSetup* pView)
 {
 	Hook.Original<FN>()(ecx, edx, pView);
+	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(ecx, edx, pView); }
 	F::Visuals.FOV(pView);
 	F::Visuals.ThirdPerson(pView);
 }

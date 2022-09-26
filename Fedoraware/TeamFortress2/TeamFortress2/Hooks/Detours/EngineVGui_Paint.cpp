@@ -140,6 +140,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastc
 
 			if (CBaseEntity* pLocal = g_EntityCache.GetLocal())
 			{
+				if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return FinishDrawing(I::VGuiSurface); }
 				F::Visuals.DrawAntiAim(pLocal);
 				F::Visuals.DrawTickbaseInfo(pLocal);
 				F::Visuals.DrawAimbotFOV(pLocal);

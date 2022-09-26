@@ -461,6 +461,7 @@ namespace Vars
 
 	namespace Visuals
 	{
+		inline CVar<bool> CleanScreenshots{ true };
 		inline CVar<bool> RemoveDisguises{ false };
 		inline CVar<bool> RemoveTaunts{ false };
 		inline CVar<bool> DrawOnScreenConditions{ false };

@@ -21,5 +21,5 @@ MAKE_HOOK(ViewRender_RenderView, Utils::GetVFuncPtr(I::ViewRender, 6), void, __f
 	});
 
 	Hook.Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, view, nClearFlags, whatToDraw);
-	F::CameraWindow.RenderView(ecx, view);
+	if (!(I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value)) { F::CameraWindow.RenderView(ecx, view); }
 }

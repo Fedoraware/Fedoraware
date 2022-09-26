@@ -4,7 +4,7 @@
 
 bool CESP::ShouldRun()
 {
-	if (/*!Vars::ESP::Main::Active.m_Var ||*/ I::EngineVGui->IsGameUIVisible())
+	if (!(I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) && I::EngineVGui->IsGameUIVisible())
 	{
 		return false;
 	}
