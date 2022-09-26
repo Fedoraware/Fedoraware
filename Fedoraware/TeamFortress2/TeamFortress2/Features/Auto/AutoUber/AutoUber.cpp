@@ -40,11 +40,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		{
 			return false;
 		}
-		
-		if (Utils::isFeigningDeath(player)) { 
-			return false;
-		}
-
+	
 		if (player->GetActiveWeapon()->GetSlot() == SLOT_MELEE)
 		{
 			return false;
