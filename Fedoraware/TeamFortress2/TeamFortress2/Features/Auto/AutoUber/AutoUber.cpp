@@ -3,7 +3,7 @@
 #include "../../Vars.h"
 #include "../AutoGlobal/AutoGlobal.h"
 
-const static int changeTimer = 50;
+const static int changeTimer = 1; // i am lazy to change code, this should be fine.
 const static int defaultResistance = 0;
 
 int vaccChangeState = 0;
