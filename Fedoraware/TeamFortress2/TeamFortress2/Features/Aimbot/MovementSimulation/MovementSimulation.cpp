@@ -335,10 +335,12 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	reinterpret_cast<ProcessMovement_FN>(Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
 
 	G::PredictionLines.push_back(m_MoveData.m_vecAbsOrigin);
-	if (Vars::Visuals::MoveSimSeperators.Value && (iTick % Vars::Visuals::SeperatorSpacing.Value))
+	if (Vars::Visuals::MoveSimSeperators.Value)
 	{
 	    G::PredictionLines.push_back(Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value));
 	}
+
+	iTick++;
 
 	moveDataOut = m_MoveData;
 	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;

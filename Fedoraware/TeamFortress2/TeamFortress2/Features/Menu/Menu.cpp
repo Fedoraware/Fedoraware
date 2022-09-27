@@ -1121,19 +1121,19 @@ void CMenu::MenuVisuals()
 				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 				MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
 				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+				if (Vars::Visuals::MoveSimSeperators.Value)
+				{
+					WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
+					//WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
+				}
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};
 					static std::vector flagValues{ 1, 2, 4, 8, 32 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
 				}
-				if (Vars::Visuals::MoveSimSeperators.Value)
-				{
-					WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
-					WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
-				}
-				WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
 				MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
 				HelpMarker("What & How should events be logged");
+				WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
 				ColorPickerL("GUI Notif Background", Colors::NotifBG);
 				ColorPickerL("GUI Notif Outline", Colors::NotifOutline, 1);
 				ColorPickerL("GUI Notif Colour", Colors::NotifText, 2);
