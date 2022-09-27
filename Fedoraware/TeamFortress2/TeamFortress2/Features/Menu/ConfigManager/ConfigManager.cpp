@@ -262,7 +262,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 	{
 		WriteTree.clear();
 
-		SAVE_VAR(Vars::Visuals::MoveSimSeperators);
 		// Menu
 		{
 			SAVE_OTHER(Vars::Menu::CheatName);
@@ -737,6 +736,9 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 			SAVE_VAR(Vars::Visuals::ViewmodelSway);
 			SAVE_VAR(Vars::Visuals::MoveSimLine);
+			SAVE_VAR(Vars::Visuals::MoveSimSeperators);
+			SAVE_VAR(Vars::Visuals::SeperatorLength);
+			SAVE_VAR(Vars::Visuals::SeperatorSpacing);
 			SAVE_OTHER(Vars::Visuals::VMOffsets);
 			SAVE_OTHER(Vars::Visuals::OnScreenConditions);
 			SAVE_VAR(Vars::Visuals::VMRoll);
@@ -1088,7 +1090,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
 
-		LOAD_VAR(Vars::Visuals::MoveSimSeperators);
 
 		// Menu
 		{
@@ -1566,6 +1567,9 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 			LOAD_VAR(Vars::Visuals::ViewmodelSway);
 			LOAD_VAR(Vars::Visuals::MoveSimLine);
+			LOAD_VAR(Vars::Visuals::MoveSimSeperators);
+			LOAD_VAR(Vars::Visuals::SeperatorLength);
+			LOAD_VAR(Vars::Visuals::SeperatorSpacing);
 			LOAD_OTHER(Vars::Visuals::VMOffsets);
 			LOAD_OTHER(Vars::Visuals::OnScreenConditions);
 			LOAD_VAR(Vars::Visuals::VMRoll);
