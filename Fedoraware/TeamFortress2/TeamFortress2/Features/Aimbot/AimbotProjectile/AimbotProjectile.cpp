@@ -394,7 +394,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				// we have found a point.
 				if (bNeedsTimeCheck){
-					if (TICKS_TO_TIME(n) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos)/projInfo.m_flVelocity)) { break; }	//	lol
+					if (TICKS_TO_TIME(n - 1) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos)/projInfo.m_flVelocity)) { break; }	//	lol
 				}
 
 				//const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
