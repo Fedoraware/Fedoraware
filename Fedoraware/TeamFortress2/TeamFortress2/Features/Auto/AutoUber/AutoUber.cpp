@@ -163,7 +163,7 @@ int FireDangerValue(CBaseEntity* pPatient)
 
 		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower)
 		{
-			if (HAS_CONDITION(pPatient, TFCond_OnFire))
+			if (HAS_CONDITION(pPatient, TFCond_OnFire) && pPatient->GetHealth() < 250)
 			{
 				if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
 				return 2;

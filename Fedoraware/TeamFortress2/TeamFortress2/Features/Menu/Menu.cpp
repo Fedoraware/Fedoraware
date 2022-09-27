@@ -1119,8 +1119,11 @@ void CMenu::MenuVisuals()
 				ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 				WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 				WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
-				WToggle("Movement simulation lines", &Vars::Visuals::MoveSimLine.Value);
-				WToggle("Movement sim line lines", &Vars::Visuals::MoveSimSeperators.Value); HelpMarker("Dont turn this on/off if there is a line lol (i'm lazy and stupid)");
+				MultiCombo({ "Plain", "With Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
+				if (Vars::Visuals::MoveSimSeperators.Value)
+				{
+					WSlider("Seperator Distance", &Vars::Visuals::SeperatorsDist.Value, 6, 12, "%d", ImGuiSliderFlags_Logarithmic);
+				}
 				WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
 				ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 				{
