@@ -352,6 +352,13 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			const Vec3 lastViewAngles = G::LastUserCmd->viewangles;
 			DebugLine("lastViewAngles", tfm::format(": [%.1f, %.1f, %.1f]", lastViewAngles.x, lastViewAngles.y, lastViewAngles.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
+
+		{
+			if (CTFPlayerAnimState* animState = pLocal->GetAnimState()){	// fix that fake stand shit
+				Activity mainAct = animState->GetCurrentMainActivity();
+				DebugLine("MainAct", tfm::format(": %i", (int)mainAct).c_str(), { xoffset, yoffset }); yoffset += 15;
+			}
+		}
 	}
 }
 
