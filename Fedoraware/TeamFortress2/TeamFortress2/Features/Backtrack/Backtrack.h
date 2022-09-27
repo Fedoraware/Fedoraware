@@ -62,19 +62,20 @@ private:
 	//	utils
 	void CleanRecords();
 
+	std::unordered_map<int, bool> mDidShoot;
 	std::unordered_map<CBaseEntity*, std::vector<TickRecordNew>> mRecords;
 public:
 	void SimTimeChanged(void* pEntity, float flSimtime);
 	void Restart();	//	called whenever lol
-	void CLMove();	//	called in CL_Move
-	TickRecordNew Run(CUserCmd* pCmd, bool bAimbot);	//	returns the best record
+	void FrameStageNotify();	//	called in FRAME_NET_UPDATE_END
+	void ReportShot(int iIndex, void* pWpn);
+	TickRecordNew Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns the best record
 };
 
 class CBacktrack
 {
-	void UpdateRecords();
-	std::optional<TickRecord> GetLastRecord(int entIdx);
-	std::optional<TickRecord> GetFirstRecord(int entIdx);
+	//std::optional<TickRecord> GetLastRecord(int entIdx);
+	//std::optional<TickRecord> GetFirstRecord(int entIdx);
 
 	void UpdateDatagram();
 	float GetLatency();
@@ -84,14 +85,13 @@ class CBacktrack
 	std::deque<CIncomingSequence> Sequences;
 
 public:
-	void Run();
+	//void Run();
 	void AdjustPing(INetChannel* netChannel);
 	void ResetLatency();
 	//bool IsGoodTick(float simTime);
-	bool IsTickInRange(int tickCount);
 
 	std::deque<TickRecord>* GetPlayerRecords(int entIdx);
-	std::optional<TickRecord> GetRecord(int entIdx, BacktrackMode mode);
+	//std::optional<TickRecord> GetRecord(int entIdx, BacktrackMode mode);
 
 	bool AllowLatency = false;
 	std::array<std::deque<TickRecord>, 64> Records;

@@ -80,5 +80,5 @@ void SimTime(const CRecvProxyData *data, void *pPlayer, void *out){
 void NetVarHooks::Init(){
 	
     HookNetvar({"DT_TFPlayer", "m_bViewingCYOAPDA"}, CyoaAnimHookProxy, CyoaView);
-    HookNetvar({"DT_TFPlayer", "m_flSimulationTime"}, SimTimeHookProxy, SimTime);
+    HookNetvar({"DT_BaseEntity", "m_flSimulationTime"}, SimTimeHookProxy, SimTime);
 }

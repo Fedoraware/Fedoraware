@@ -571,6 +571,23 @@ public: //Everything else, lol.
 		return Vec3();
 	}
 
+	
+	__inline Vec3 GetHitboxPosMatrix(const int nHitbox, matrix3x4 BoneMatrix[128]) {
+		if (const auto& pModel = GetModel()) {
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
+					if (const auto& pBox = pSet->hitbox(nHitbox)) {
+						Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
+						Math::VectorTransform(vPos, BoneMatrix[pBox->bone], vOut);
+						return vOut;
+					}
+				}
+			}
+		}
+
+		return Vec3();
+	}
+
 	__inline Vec3 GetBonePos(const int nBone) {
 		matrix3x4 BoneMatrix[128];
 		if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
