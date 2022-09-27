@@ -39,9 +39,35 @@ struct TickRecord
 	Vec3 EyeAngles = { };
 };
 
+struct TickRecordNew{
+	float flSimTime = 0.f;
+	float flCreateTime = 0.f;
+	int iTickCount = 0;
+	bool bOnShot = false;
+	BoneMatrixes BoneMatrix{};
+};
+
 enum class BacktrackMode
 {
 	First, Last, Distance, FOV
+};
+
+class CBacktrackNew
+{
+private:
+	//	logic
+	bool IsTracked(TickRecordNew Record);
+	bool WithinRewind(TickRecordNew Record);
+
+	//	utils
+	void CleanRecords();
+
+	std::unordered_map<CBaseEntity*, std::vector<TickRecordNew>> mRecords;
+public:
+	void SimTimeChanged(void* pEntity, float flSimtime);
+	void Restart();	//	called whenever lol
+	void CLMove();	//	called in CL_Move
+	TickRecordNew Run(CUserCmd* pCmd, bool bAimbot);	//	returns the best record
 };
 
 class CBacktrack
@@ -72,3 +98,4 @@ public:
 };
 
 ADD_FEATURE(CBacktrack, Backtrack)
+ADD_FEATURE(CBacktrackNew, BacktrackNew)

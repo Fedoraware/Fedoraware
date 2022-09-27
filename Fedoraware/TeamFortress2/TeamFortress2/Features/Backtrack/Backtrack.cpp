@@ -8,6 +8,67 @@
 	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
 }*/
 
+bool CBacktrackNew::IsTracked(TickRecordNew Record){
+	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
+}
+
+bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	
+	if (!pLocal || !iNetChan) { return false; }
+
+	const float flDelay = std::clamp(iNetChan->GetLatency(MAX_FLOWS) + G::LerpTime, 0.f, 1.f);	//	TODO:: sv_maxunlag
+	const float flDelta = flDelay - TICKS_TO_TIME(pLocal->m_nTickBase() - Record.flSimTime);
+
+	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
+}
+
+void CBacktrackNew::CleanRecords(){
+	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
+	{
+			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+			std::vector<TickRecordNew> vRecords = mRecords[pEntity];
+
+			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { vRecords.clear(); continue; }
+			else if (vRecords.size() < 1) { continue; }
+			while (!IsTracked(vRecords.back())){ vRecords.pop_back(); }
+	}
+	for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)){
+		
+	}
+}
+
+void CBacktrackNew::SimTimeChanged(void* pEntity, float flSimtime){
+	if (CBaseEntity* pTarget = reinterpret_cast<CBaseEntity*>(pEntity)){
+		if (!pTarget->IsPlayer()) { return; }
+
+		matrix3x4 bones[128];
+		if (!pTarget->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) { return; }
+
+		mRecords[pTarget].push_back({
+			flSimtime,
+			I::GlobalVars->curtime,
+			I::GlobalVars->tickcount,
+			*reinterpret_cast<BoneMatrixes*>(&bones),
+		});
+
+		while (mRecords[pTarget].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pTarget].pop_back(); }	//	schizoid check
+	}
+}
+
+void CBacktrackNew::Restart(){
+	mRecords.clear();
+}
+
+void CBacktrackNew::CLMove(){
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	if (!pLocal || !iNetChan) { return Restart(); }
+
+	CleanRecords();
+}
+
 bool CBacktrack::IsTickInRange(int tickCount)
 {
 	if (!G::CurrentUserCmd) { return false; }
@@ -15,6 +76,7 @@ bool CBacktrack::IsTickInRange(int tickCount)
 	const int deltaTicks = std::abs(tickCount - G::CurrentUserCmd->tick_count + TIME_TO_TICKS(GetLatency()));
 	return TICKS_TO_TIME(deltaTicks) <= 0.2f - TICKS_TO_TIME(2);
 }
+
 
 void CBacktrack::UpdateRecords()
 {
