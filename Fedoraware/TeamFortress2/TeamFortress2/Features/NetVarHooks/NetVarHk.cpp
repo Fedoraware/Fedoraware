@@ -66,19 +66,7 @@ void CyoaView(const CRecvProxyData *data, void *pPlayer, void *out){
     *value_out = false;
 }
 
-static ProxyFnHook SimTimeHookProxy{};
-void SimTime(const CRecvProxyData *data, void *pPlayer, void *out){
-	float* flSimulationTime = (float*)out;
-	float flNewSimulationTime = data->m_Value.m_Float;
-
-	//	callback to backtrack
-	F::BacktrackNew.SimTimeChanged(pPlayer, flNewSimulationTime);
-	*flSimulationTime = flNewSimulationTime;
-	return;
-}	
-
 void NetVarHooks::Init(){
 	
     HookNetvar({"DT_TFPlayer", "m_bViewingCYOAPDA"}, CyoaAnimHookProxy, CyoaView);
-    HookNetvar({"DT_BaseEntity", "m_flSimulationTime"}, SimTimeHookProxy, SimTime);
 }

@@ -29,32 +29,41 @@ void CBacktrackNew::CleanRecords(){
 	{
 			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 			if (!pEntity) { continue; }
-			std::vector<TickRecordNew> vRecords = mRecords[pEntity];
+			std::deque<TickRecordNew> vRecords = mRecords[pEntity];
 
 			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { vRecords.clear(); continue; }
 			else if (vRecords.size() < 1) { continue; }
-			if (!IsTracked(vRecords.back())){ vRecords.pop_back(); }
+			if (!IsTracked(vRecords.front())){ vRecords.pop_front(); }
 	}
 }
 
-void CBacktrackNew::SimTimeChanged(void* pEntity, float flSimtime){
-	if (CBaseEntity* pTarget = reinterpret_cast<CBaseEntity*>(pEntity)){
-		if (!pTarget->IsPlayer()) { return; }
+void CBacktrackNew::MakeRecords(){
+	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
+	{
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+		if (!pEntity) { continue; }
+		if (!pEntity->IsPlayer()) { return; }
+		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
+		
+		Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
 
-		matrix3x4 bones[128];
-		if (!pTarget->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) { return; }
+		if (flSimTime != flOldSimTime){	//	create record on simulated players
+			Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
+			matrix3x4 bones[128];
+			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
+			Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
+			mRecords[pEntity].push_back({
+				flSimTime,
+				I::GlobalVars->curtime,
+				I::GlobalVars->tickcount,
+				mDidShoot[pEntity->GetIndex()],
+				*reinterpret_cast<BoneMatrixes*>(&bones),
+			});
+		}
 
-		mRecords[pTarget].push_back({
-			flSimtime,
-			I::GlobalVars->curtime,
-			I::GlobalVars->tickcount,
-			mDidShoot[pTarget->GetIndex()],
-			*reinterpret_cast<BoneMatrixes*>(&bones),
-		});
-
-		mDidShoot[pTarget->GetIndex()] = false;
-
-		if (mRecords[pTarget].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pTarget].pop_back(); }	//	schizoid check
+		//cleanup
+		mDidShoot[pEntity->GetIndex()] = false;
+		//if (mRecords[pEntity].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pEntity].pop_back(); }	//	schizoid check
 	}
 }
 
@@ -67,6 +76,7 @@ void CBacktrackNew::FrameStageNotify(){
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!pLocal || !iNetChan) { return Restart(); }
 
+	MakeRecords();
 	CleanRecords();
 }
 
@@ -85,18 +95,23 @@ TickRecordNew CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = false, CBaseEnti
 	if (pEntity){ if (pEntity != oldEnt) { iLastIndex = 0; oldEnt = pEntity; } }
 	if (iOldTickCount != iCurTickCount) { iLastIndex = 0; iOldTickCount = iCurTickCount; }
 
+	TickRecordNew returnTick{};
+
 	if (bAimbot && pEntity){	//	if we're aimbotting we don't care what record we get
-		while (true){
-			TickRecordNew returnTick{};
-			if (iLastIndex > mRecords[pEntity].size()) { return returnTick; }	//	return blank data if we failed to find anything
-			if (IsTracked(mRecords[pEntity].at(iLastIndex)) && WithinRewind(mRecords[pEntity].at(iLastIndex))) { returnTick = mRecords[pEntity].at(iLastIndex); return returnTick; } 
-			else { iLastIndex++; }
+		if (mRecords[pEntity].size()){
+			return mRecords[pEntity].front();
 		}
+		//while (true){
+		//	const int curIndex = mRecords[pEntity].size() - iLastIndex;
+		//	if (curIndex >= mRecords[pEntity].size() - 1 || mRecords[pEntity].empty()) { return returnTick; }	//	return blank data if we failed to find anything
+		//	if (IsTracked(mRecords[pEntity].at(curIndex)) && WithinRewind(mRecords[pEntity].at(curIndex))) { returnTick = mRecords[pEntity].at(iLastIndex); return returnTick; } 
+		//	else { iLastIndex++; }
+		//}
 	}
 	else{
 		const Vec3 vAngles = pCmd->viewangles;
 	}
-
+	return returnTick;
 }
 
 

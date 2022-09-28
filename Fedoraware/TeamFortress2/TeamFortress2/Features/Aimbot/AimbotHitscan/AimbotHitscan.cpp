@@ -433,19 +433,17 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
 			{
 				TickRecordNew pLastTick = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
-				if (pLastTick.flSimTime != 0.f)
+				if (pLastTick.flSimTime > target.m_pEntity->GetSimulationTime() - 1.f && pLastTick.flCreateTime > I::GlobalVars->curtime - 1.f)
 				{
-					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, reinterpret_cast<matrix3x4*>(&pLastTick.BoneMatrix.BoneMatrix));
+					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, reinterpret_cast<matrix3x4*>(&pLastTick.BoneMatrix));
 					target.SimTime = pLastTick.flSimTime;
+					if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
+					{
+						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
+						target.ShouldBacktrack = true;
+						return true;
+					}
 				}
-
-				if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
-				{
-					target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-					target.ShouldBacktrack = true;
-					return true;
-				}
-
 				target.ShouldBacktrack = false;
 				if (Vars::Backtrack::Latency.Value > 200)
 				{

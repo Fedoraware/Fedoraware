@@ -61,11 +61,11 @@ private:
 
 	//	utils
 	void CleanRecords();
+	void MakeRecords();
 
 	std::unordered_map<int, bool> mDidShoot;
-	std::unordered_map<CBaseEntity*, std::vector<TickRecordNew>> mRecords;
+	std::unordered_map<CBaseEntity*, std::deque<TickRecordNew>> mRecords;
 public:
-	void SimTimeChanged(void* pEntity, float flSimtime);
 	void Restart();	//	called whenever lol
 	void FrameStageNotify();	//	called in FRAME_NET_UPDATE_END
 	void ReportShot(int iIndex, void* pWpn);
