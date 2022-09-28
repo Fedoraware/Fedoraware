@@ -432,7 +432,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			Vec3 hitboxpos;
 			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
 			{
-				const auto& vLastRec = F::BacktrackNew.GetRecord(target.m_pEntity, BacktrackMode::Last);
+				const auto& vLastRec = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
 				if (vLastRec)
 				{
 					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));

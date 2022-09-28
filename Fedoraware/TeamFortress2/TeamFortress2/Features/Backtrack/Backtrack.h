@@ -57,21 +57,30 @@ class CBacktrackNew
 private:
 	//	logic
 	bool IsTracked(TickRecordNew Record);
-	bool WithinRewind(TickRecordNew Record);
 
 	//	utils
 	void CleanRecords();
 	void MakeRecords();
+	//	utils - fake latency
+	void UpdateDatagram();
+	float GetLatency();
 
+	//	data
 	std::unordered_map<int, bool> mDidShoot;
 	std::unordered_map<CBaseEntity*, std::deque<TickRecordNew>> mRecords;
+	//	data - fake latency
+	std::deque<CIncomingSequence> dSequences;
+	float flLatencyRampup = 0.f;
+	int iLastInSequence = 0;
 public:
+	bool WithinRewind(TickRecordNew Record);
 	void Restart();	//	called whenever lol
 	void CLMove();	//	called in CLMove
 	void ReportShot(int iIndex, void* pWpn);
 	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
-	std::optional<TickRecordNew> GetRecord(CBaseEntity* pEntity, BacktrackMode bMode);
-	TickRecordNew Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns the best record
+	std::optional<TickRecordNew> Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns a valid record
+	void AdjustPing(INetChannel* netChannel);	//	blurgh
+	bool bFakeLatency = false;
 };
 
 class CBacktrack
@@ -84,7 +93,7 @@ class CBacktrack
 
 	float LatencyRampup = 0.f;
 	int LastInSequence = 0;
-	std::deque<CIncomingSequence> Sequences;
+	
 
 public:
 	//void Run();
