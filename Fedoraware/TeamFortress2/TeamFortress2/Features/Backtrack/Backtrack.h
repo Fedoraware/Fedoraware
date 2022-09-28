@@ -75,7 +75,7 @@ private:
 public:
 	bool WithinRewind(TickRecordNew Record);
 	void Restart();	//	called whenever lol
-	void CLMove();	//	called in CLMove
+	void FrameStageNotify();	//	called in FrameStageNotify
 	void ReportShot(int iIndex, void* pWpn);
 	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
 	std::optional<TickRecordNew> Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns a valid record

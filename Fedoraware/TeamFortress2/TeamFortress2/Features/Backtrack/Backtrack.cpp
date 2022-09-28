@@ -99,12 +99,12 @@ void CBacktrackNew::Restart(){
 	iLastInSequence = 0;
 }
 
-void CBacktrackNew::CLMove(){
+void CBacktrackNew::FrameStageNotify(){
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!pLocal || !iNetChan) { return Restart(); }
 
-	flLatencyRampup = std::min(1.f, flLatencyRampup + I::GlobalVars->interval_per_tick);
+	flLatencyRampup = std::min(1.f, flLatencyRampup += I::GlobalVars->interval_per_tick);
 	UpdateDatagram();
 	MakeRecords();
 	CleanRecords();
