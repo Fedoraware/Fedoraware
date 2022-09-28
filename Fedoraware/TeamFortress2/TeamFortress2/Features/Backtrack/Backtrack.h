@@ -67,8 +67,10 @@ private:
 	std::unordered_map<CBaseEntity*, std::deque<TickRecordNew>> mRecords;
 public:
 	void Restart();	//	called whenever lol
-	void FrameStageNotify();	//	called in FRAME_NET_UPDATE_END
+	void CLMove();	//	called in CLMove
 	void ReportShot(int iIndex, void* pWpn);
+	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
+	std::optional<TickRecordNew> GetRecord(CBaseEntity* pEntity, BacktrackMode bMode);
 	TickRecordNew Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns the best record
 };
 

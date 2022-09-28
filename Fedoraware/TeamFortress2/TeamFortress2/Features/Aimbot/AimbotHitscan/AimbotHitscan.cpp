@@ -432,11 +432,11 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			Vec3 hitboxpos;
 			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
 			{
-				TickRecordNew pLastTick = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
-				if (pLastTick.flSimTime > target.m_pEntity->GetSimulationTime() - 1.f && pLastTick.flCreateTime > I::GlobalVars->curtime - 1.f)
+				const auto& vLastRec = F::BacktrackNew.GetRecord(target.m_pEntity, BacktrackMode::Last);
+				if (vLastRec)
 				{
-					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, reinterpret_cast<matrix3x4*>(&pLastTick.BoneMatrix));
-					target.SimTime = pLastTick.flSimTime;
+					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
+					target.SimTime = vLastRec->flSimTime;
 					if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
 					{
 						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);

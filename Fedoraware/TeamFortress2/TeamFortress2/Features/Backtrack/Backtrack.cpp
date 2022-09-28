@@ -19,7 +19,7 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	if (!pLocal || !iNetChan) { return false; }
 
 	const float flDelay = std::clamp(iNetChan->GetLatency(MAX_FLOWS) + G::LerpTime, 0.f, 1.f);	//	TODO:: sv_maxunlag
-	const float flDelta = flDelay - TICKS_TO_TIME(pLocal->m_nTickBase() - Record.flSimTime);
+	const float flDelta = flDelay - TICKS_TO_TIME(pLocal->m_nTickBase() - Record.iTickCount);
 
 	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
 }
@@ -29,15 +29,17 @@ void CBacktrackNew::CleanRecords(){
 	{
 			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 			if (!pEntity) { continue; }
-			std::deque<TickRecordNew> vRecords = mRecords[pEntity];
 
-			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { vRecords.clear(); continue; }
-			else if (vRecords.size() < 1) { continue; }
-			if (!IsTracked(vRecords.front())){ vRecords.pop_front(); }
+			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
+			else if (mRecords[pEntity].size() < 1) { continue; }
+			if (!IsTracked(mRecords[pEntity].front()) || !WithinRewind(mRecords[pEntity].front())){ mRecords[pEntity].pop_front(); }
+			if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_front(); }
 	}
 }
 
 void CBacktrackNew::MakeRecords(){
+	const float flCurTime = I::GlobalVars->curtime;
+	const int iTickcount = I::GlobalVars->tickcount;
 	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 	{
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
@@ -54,8 +56,8 @@ void CBacktrackNew::MakeRecords(){
 			Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
 			mRecords[pEntity].push_back({
 				flSimTime,
-				I::GlobalVars->curtime,
-				I::GlobalVars->tickcount,
+				flCurTime,
+				iTickcount,
 				mDidShoot[pEntity->GetIndex()],
 				*reinterpret_cast<BoneMatrixes*>(&bones),
 			});
@@ -63,7 +65,7 @@ void CBacktrackNew::MakeRecords(){
 
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
-		//if (mRecords[pEntity].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pEntity].pop_back(); }	//	schizoid check
+		if (mRecords[pEntity].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pEntity].pop_front(); }	//	schizoid check
 	}
 }
 
@@ -71,7 +73,7 @@ void CBacktrackNew::Restart(){
 	mRecords.clear();
 }
 
-void CBacktrackNew::FrameStageNotify(){
+void CBacktrackNew::CLMove(){
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!pLocal || !iNetChan) { return Restart(); }
@@ -115,7 +117,24 @@ TickRecordNew CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = false, CBaseEnti
 }
 
 
+std::optional<TickRecordNew> CBacktrackNew::GetRecord(CBaseEntity* pEntity, BacktrackMode Mode)
+{
+	auto& entRecord = mRecords[pEntity];
+	if (!entRecord.empty()) {
+		return { entRecord.front() };
+	}
 
+	return std::nullopt;
+}
+
+std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
+	if (mRecords[pEntity].empty())
+	{
+		return nullptr;
+	}
+
+	return &mRecords[pEntity];
+}
 
 //void CBacktrack::Run()
 //{
