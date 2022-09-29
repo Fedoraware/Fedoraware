@@ -444,11 +444,10 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 						return true;
 					}
 				}
-				if (Vars::Backtrack::Latency.Value > 200)
-				{
-					return false;
-				}
+				if (Vars::Backtrack::Latency.Value > (200.f - I::GlobalVars->interval_per_tick) )
+				{ return false; }
 			}
+
 			if (!ScanHitboxes(pLocal, target))
 			{
 				return false;

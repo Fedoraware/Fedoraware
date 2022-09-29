@@ -235,10 +235,12 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 				target.m_vPos = hitboxpos;
 				target.ShouldBacktrack = true;
 			}
-			else if (Vars::Backtrack::Latency.Value > 200 && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
-			{ return false; }
 		}
+		if (Vars::Backtrack::Latency.Value > (200.f - I::GlobalVars->interval_per_tick) && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
+		{ return false; }
 	}
+
+
 
 	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value))
 	{
