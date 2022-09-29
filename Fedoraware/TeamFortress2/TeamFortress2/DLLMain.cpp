@@ -77,6 +77,9 @@ void Initialize()
 
 	g_ConVars.Init();
 	F::LuaEngine.Init();
+
+	F::Statistics.m_SteamID = g_SteamInterfaces.User->GetSteamID();
+
 	F::Commands.Init();
 
 	InitRichPresence();
