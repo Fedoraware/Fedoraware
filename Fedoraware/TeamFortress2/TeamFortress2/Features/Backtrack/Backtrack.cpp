@@ -60,7 +60,7 @@ void CBacktrackNew::MakeRecords(){
 			if (mRecords[pEntity].size()){	// as long as we have 1 record we can check for lagcomp breaking here
 				const Vec3 vPrevOrigin = mRecords[pEntity].front().vOrigin;
 				const Vec3 vDelta = vOrigin - vPrevOrigin;
-				if (vDelta.Length2DSqr() > 4096.f) { Utils::ConLog("LagCompensation", "Cleared borked records", {255, 0, 0, 255}); mRecords[pEntity].clear(); }
+				if (vDelta.Length2DSqr() > 4096.f) { /*Utils::ConLog("LagCompensation", "Cleared borked records", {255, 0, 0, 255});*/ mRecords[pEntity].clear(); }
 			}
 
 			mRecords[pEntity].push_front({
@@ -142,14 +142,22 @@ void CBacktrackNew::ReportShot(int iIndex, void* pWpn){
 	}
 }
 
-std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = false, CBaseEntity* pEntity = nullptr){
+std::pair<std::optional<TickRecordNew>, float> CBacktrackNew::GetClosestRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
+	std::pair<std::optional<TickRecordNew>, float> cReturnTick{std::nullopt, 90.f};
+	for (const auto& rCurQuery : mRecords[pEntity]){
+		if (!WithinRewind(rCurQuery)) { continue; }
+		const Vec3 vAngleTo = Math::CalcAngle(vPos, rCurQuery.vOrigin);
+		const float flFOVTo = Math::CalcFov(vAngles, vAngleTo);
+		if (flFOVTo < cReturnTick.second) { cReturnTick = {rCurQuery, flFOVTo}; }	//	this is borked i think
+	}
+	return cReturnTick;
+}
+
+std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd = nullptr, bool bAimbot = false, CBaseEntity* pEntity = nullptr){
 	static int iOldTickCount = I::GlobalVars->tickcount;
 	const int iCurTickCount = I::GlobalVars->tickcount;
 	static int iLastIndex = 0;
 	static CBaseEntity* oldEnt = pEntity; 
-
-	if (pEntity){ if (pEntity != oldEnt) { iLastIndex = 0; oldEnt = pEntity; } }
-	if (iOldTickCount != iCurTickCount) { iLastIndex = 0; iOldTickCount = iCurTickCount; }
 
 	if (bAimbot && pEntity){	//	if we're aimbotting we don't care what record we get
 		if (mRecords[pEntity].empty()) { return std::nullopt; }
@@ -161,8 +169,28 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = f
 		}
 		return rReturnRecord;
 	}
-	else{
-		const Vec3 vAngles = pCmd->viewangles;
+	else if (pCmd && G::IsAttacking){
+		CBaseEntity* pLocal = g_EntityCache.GetLocal();
+		if (!pLocal) { return std::nullopt; }
+		
+		const Vec3 vPos = pLocal->m_vecOrigin();
+		const Vec3 vAngles = pLocal->GetAbsAngles();
+
+		std::pair<std::optional<TickRecordNew>, float> cReturnTick{std::nullopt, 30.f};
+		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		{
+			if (!pEnemy || !pEnemy->IsAlive()) { continue; }	//	dont scan
+			PlayerInfo_t pInfo{};	//	dont care about ignored players
+			if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
+				if (G::IsIgnored(pInfo.friendsID)) { continue; }
+			}
+			std::pair<std::optional<TickRecordNew>, float> closest = GetClosestRecord(pCmd, pEnemy, vAngles, vPos);
+			if (closest.first) {
+				if (closest.second < cReturnTick.second) { cReturnTick = closest; }
+			}
+		}
+		if (cReturnTick.first)
+		{ pCmd->tick_count = TIME_TO_TICKS(cReturnTick.first->flSimTime + G::LerpTime); return std::nullopt; }
 	}
 	return std::nullopt;
 }

@@ -64,6 +64,7 @@ private:
 	//	utils
 	void CleanRecords();
 	void MakeRecords();
+	std::pair<std::optional<TickRecordNew>, float> GetClosestRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos);
 	//	utils - fake latency
 	void UpdateDatagram();
 	float GetLatency();

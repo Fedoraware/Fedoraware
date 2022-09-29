@@ -21,6 +21,7 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/TickHandler/TickHandler.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 void AttackingUpdate(){
 	if (!G::IsAttacking) { return; }
@@ -147,6 +148,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
+		F::BacktrackNew.Run(pCmd, false, nullptr);
 
 		F::EnginePrediction.Start(pCmd);
 		{
