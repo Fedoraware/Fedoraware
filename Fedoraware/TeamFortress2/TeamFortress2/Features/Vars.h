@@ -706,7 +706,10 @@ namespace Vars
 			inline CVar<int> DTTicks{ 21 };
 			inline CVar<bool> WaitForDT{ false };
 			inline CVar<bool> Fakelag{ false };
-			inline CVar<int> FakelagMode{ 0 }; // 0 - plain, 1 - random, 2 - vel based
+			inline CVar<int> FakelagMode{ 0 }; // 0 - plain, 1 - random
+			inline CVar<bool> WhileMoving { false };
+			inline CVar<bool> WhileVisible { false };
+			inline CVar<bool> PredictVisibility { false };
 			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22 };
 			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3
