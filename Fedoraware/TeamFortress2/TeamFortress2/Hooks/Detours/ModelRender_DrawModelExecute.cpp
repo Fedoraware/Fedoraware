@@ -40,11 +40,6 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 			{
 				return;
 			}
-
-			if (pEntity->m_vecVelocity().Length2D() < 5.f)
-			{
-				return;
-			}
 			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
 			{
 				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.GetLocal() && pEntity->GetTeamNum() ==

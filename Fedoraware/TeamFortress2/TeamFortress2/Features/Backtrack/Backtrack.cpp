@@ -4,6 +4,13 @@ bool CBacktrackNew::IsTracked(TickRecordNew Record){
 	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
+bool CBacktrackNew::IsLagComped(TickRecordNew Record, CBaseEntity* pEntity){
+	const Vec3 vCurOrigin = pEntity->GetVecOrigin();
+	const Vec3 vRecOrigin = Record.vOrigin;
+	const Vec3 vDelta = vRecOrigin - vCurOrigin;
+	return vDelta.Length2DSqr() < 4096.f;
+}
+
 bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
@@ -24,7 +31,7 @@ void CBacktrackNew::CleanRecords(){
 
 			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
 			else if (mRecords[pEntity].size() < 1) { continue; }
-			if (!IsTracked(mRecords[pEntity].back())){ mRecords[pEntity].pop_back(); }
+			if (!IsTracked(mRecords[pEntity].back()) || !IsLagComped(mRecords[pEntity].back(), pEntity)){ mRecords[pEntity].pop_back(); }
 			if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_back(); }
 	}
 }
@@ -52,6 +59,8 @@ void CBacktrackNew::MakeRecords(){
 				iTickcount,
 				mDidShoot[pEntity->GetIndex()],
 				*reinterpret_cast<BoneMatrixes*>(&bones),
+				pEntity->GetVecOrigin(),
+				pEntity->GetAbsAngles(),
 			});
 		}
 

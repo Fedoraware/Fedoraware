@@ -45,6 +45,8 @@ struct TickRecordNew{
 	int iTickCount = 0;
 	bool bOnShot = false;
 	BoneMatrixes BoneMatrix{};
+	Vec3 vOrigin = {};
+	Vec3 vAngles = {};
 };
 
 enum class BacktrackMode
@@ -57,6 +59,7 @@ class CBacktrackNew
 private:
 	//	logic
 	bool IsTracked(TickRecordNew Record);
+	bool IsLagComped(TickRecordNew Record, CBaseEntity* pEntity);
 
 	//	utils
 	void CleanRecords();
