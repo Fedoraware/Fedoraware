@@ -1124,7 +1124,7 @@ void CMenu::MenuVisuals()
 				if (Vars::Visuals::MoveSimSeperators.Value)
 				{
 					WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
-					//WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
+					WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
 				}
 				{
 					static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose"};

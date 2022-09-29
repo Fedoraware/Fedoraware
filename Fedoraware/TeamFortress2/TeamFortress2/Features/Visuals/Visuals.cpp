@@ -627,17 +627,17 @@ void CVisuals::DrawMovesimLine()
 			{
 				for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 				{
-					RenderLine(G::PredLinesBackup.at(i - 1), G::PredLinesBackup.at(i), Vars::Aimbot::Projectile::PredictionColor, false);
+					RenderLine(G::PredLinesBackup.at(i - 1).first, G::PredLinesBackup.at(i).first, Vars::Aimbot::Projectile::PredictionColor, false);
 				}
 			}
 			else
 			{
-				for (size_t i = 2; i < G::PredLinesBackup.size(); i += 2)
+				for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 				{
-					const auto& vStart = G::PredLinesBackup[i - 2];
-					const auto& vRotate = G::PredLinesBackup[i - 1];
-					const auto& vEnd = G::PredLinesBackup[i];
-					RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false);
+					const auto& vStart = G::PredLinesBackup[i - 1].first;
+					const auto& vRotate = G::PredLinesBackup[i - 1].second;	//	splirp vec
+					const auto& vEnd = G::PredLinesBackup[i].first;
+					if ((i % Vars::Visuals::SeperatorSpacing.Value) == 0) { RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false); }
 					RenderLine(vStart, vEnd,	Vars::Aimbot::Projectile::PredictionColor, false);
 				}
 			}

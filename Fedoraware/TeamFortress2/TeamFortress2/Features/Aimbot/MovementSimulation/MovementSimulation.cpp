@@ -99,8 +99,6 @@ bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 		return false;
 	}
 
-	iTick = 0;	//	reset counter
-
 	//set player
 	m_pPlayer = pPlayer;
 
@@ -334,13 +332,7 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	using ProcessMovement_FN = void(__thiscall*)(void*, CBaseEntity*, CMoveData*);
 	reinterpret_cast<ProcessMovement_FN>(Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
 
-	G::PredictionLines.push_back(m_MoveData.m_vecAbsOrigin);
-	if (Vars::Visuals::MoveSimSeperators.Value)
-	{
-	    G::PredictionLines.push_back(Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value));
-	}
-
-	iTick++;
+	G::PredictionLines.push_back( { m_MoveData.m_vecAbsOrigin, Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) } );
 
 	moveDataOut = m_MoveData;
 	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;
