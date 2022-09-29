@@ -141,7 +141,7 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = f
 		if (mRecords[pEntity].empty()) { return std::nullopt; }
 		std::optional<TickRecordNew> rReturnRecord = std::nullopt;
 		for (const auto& rCurQuery : mRecords[pEntity]){
-			if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery) || !IsLagComped(rCurQuery, pEntity)) { continue; }	//	this record is borked :D
+			if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }	//	this record is borked :D
 			if (rCurQuery.bOnShot) { rReturnRecord = rCurQuery; break; }	//	this record is an onshot record
 			rReturnRecord = rCurQuery;	//	nothing special, continue
 		}
