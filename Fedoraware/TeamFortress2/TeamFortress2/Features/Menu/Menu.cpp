@@ -1494,25 +1494,21 @@ void CMenu::MenuHvH()
 			/* Section: Fakelag */
 			SectionTitle("Fakelag");
 			WToggle("Enable Fakelag", &Vars::Misc::CL_Move::Fakelag.Value);
-			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.Value, { "Plain", "Random", "Velocity Based", "Adaptive", "Smart Adaptive" }); HelpMarker("Controls how fakelag will be controlled.");
-
-			if (Vars::Misc::CL_Move::FakelagMode.Value == 0 || Vars::Misc::CL_Move::FakelagMode.Value == 2)
-			{
-				WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.Value, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)");
-				if (Vars::Misc::CL_Move::FakelagMode.Value == 0)
-				{
-					WToggle("Fakelag on key", &Vars::Misc::CL_Move::FakelagOnKey.Value); HelpMarker("Fakelag will only activate when an assigned key is held");
-					if (Vars::Misc::CL_Move::FakelagOnKey.Value)
-					{
-						InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
-					}
-				}
-			}
-			if (Vars::Misc::CL_Move::FakelagMode.Value == 1)
-			{
+			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value }, "Flags###FakeLagFlags");
+			if (Vars::Misc::CL_Move::FakelagOnKey.Value)
+			{ InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held"); }
+			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.Value, { "Plain", "Random", "Adaptive" }); HelpMarker("Controls how fakelag will be controlled.");
+			
+			switch (Vars::Misc::CL_Move::FakelagMode.Value){
+			case 0: { WSlider("Fakelag value", &Vars::Misc::CL_Move::FakelagValue.Value, 1, 22, "%d"); HelpMarker("How much lag you should fake(?)"); break; }
+			case 1: {
 				WSlider("Random max###flRandMax", &Vars::Misc::CL_Move::FakelagMax.Value, Vars::Misc::CL_Move::FakelagMin.Value + 1, 22, "%d"); HelpMarker("Maximum random fakelag value");
 				WSlider("Random min###flRandMin", &Vars::Misc::CL_Move::FakelagMin.Value, 1, Vars::Misc::CL_Move::FakelagMax.Value - 1, "%d"); HelpMarker("Minimum random fakelag value");
+				break;
 			}
+			}	//	add more here if you add your own fakelag modes :D
+			
+			
 		} EndChild();
 
 		/* Column 2 */
