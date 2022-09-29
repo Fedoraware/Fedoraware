@@ -154,6 +154,7 @@ std::pair<std::optional<TickRecordNew>, float> CBacktrackNew::GetClosestRecord(C
 }
 
 std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd = nullptr, bool bAimbot = false, CBaseEntity* pEntity = nullptr){
+	if (!Vars::Backtrack::Enabled.Value) { return std::nullopt; }
 	static int iOldTickCount = I::GlobalVars->tickcount;
 	const int iCurTickCount = I::GlobalVars->tickcount;
 	static int iLastIndex = 0;
