@@ -435,7 +435,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 				const auto& vLastRec = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
 				if (vLastRec)
 				{
-					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_HEAD, (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
+					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
 					target.SimTime = vLastRec->flSimTime;
 					if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
 					{

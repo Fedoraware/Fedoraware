@@ -59,7 +59,7 @@ class CBacktrackNew
 private:
 	//	logic
 	bool IsTracked(TickRecordNew Record);
-	bool IsLagComped(TickRecordNew Record, CBaseEntity* pEntity);
+	bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
 	void CleanRecords();

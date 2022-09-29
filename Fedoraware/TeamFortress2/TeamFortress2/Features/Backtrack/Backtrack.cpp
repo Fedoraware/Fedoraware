@@ -4,10 +4,11 @@ bool CBacktrackNew::IsTracked(TickRecordNew Record){
 	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
-bool CBacktrackNew::IsLagComped(TickRecordNew Record, CBaseEntity* pEntity){
-	const Vec3 vCurOrigin = pEntity->GetVecOrigin();
-	const Vec3 vRecOrigin = Record.vOrigin;
-	const Vec3 vDelta = vRecOrigin - vCurOrigin;
+bool CBacktrackNew::IsBackLagComped(CBaseEntity* pEntity){
+	if (mRecords[pEntity].size() < 2) { return true; }	//	we dont have enough to compare, this will never happen in normal gameplay
+	const Vec3 vBackRecordOrigin = mRecords[pEntity].back().vOrigin;
+	const Vec3 vNextRecordOrigin = mRecords[pEntity].at(mRecords[pEntity].size() - 1).vOrigin;
+	const Vec3 vDelta = vBackRecordOrigin - vNextRecordOrigin;
 	return vDelta.Length2DSqr() < 4096.f;
 }
 
@@ -26,13 +27,13 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 void CBacktrackNew::CleanRecords(){
 	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 	{
-			CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
-			if (!pEntity) { continue; }
-
-			if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
-			else if (mRecords[pEntity].size() < 1) { continue; }
-			if (!IsTracked(mRecords[pEntity].back()) || !IsLagComped(mRecords[pEntity].back(), pEntity)){ mRecords[pEntity].pop_back(); }
-			if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_back(); }
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+		if (!pEntity) { continue; }
+		
+		if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
+		else if (mRecords[pEntity].size() < 1) { continue; }
+		if (!IsTracked(mRecords[pEntity].back()) || !IsBackLagComped(pEntity)){ mRecords[pEntity].pop_back(); }
+		if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_back(); }
 	}
 }
 
@@ -46,13 +47,13 @@ void CBacktrackNew::MakeRecords(){
 		if (!pEntity->IsPlayer()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
 		
-		Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
+		//Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
 
 		if (flSimTime != flOldSimTime){	//	create record on simulated players
-			Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
+			//Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
 			matrix3x4 bones[128];
 			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
-			Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
+			//Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
 			mRecords[pEntity].push_front({
 				flSimTime,
 				flCurTime,
@@ -66,7 +67,7 @@ void CBacktrackNew::MakeRecords(){
 
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
-		if (mRecords[pEntity].size() > 66){ Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255}); mRecords[pEntity].pop_back(); }	//	schizoid check
+		if (mRecords[pEntity].size() > 66){ /*Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255});*/ mRecords[pEntity].pop_back(); }	//	schizoid check
 	}
 }
 
@@ -91,10 +92,12 @@ void CBacktrackNew::UpdateDatagram()
 // Returns the current (custom) backtrack latency
 float CBacktrackNew::GetLatency()
 {
+	static float flLastWarn = I::GlobalVars->curtime;
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
-		const float flRealLatency = std::clamp(iNetChan->GetLatency(FLOW_OUTGOING), 0.f, 1.f) + G::LerpTime;
-		const float flFakeLatency = std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000;
+		const float flRealLatency = iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING) + G::LerpTime;
+		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
 		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
+		if (fabsf(flLastWarn - I::GlobalVars->curtime) > 2.f) { Utils::ConLog("LagCompensation", tfm::format("GetLatency() => %.3f", flAdjustedLatency).c_str(), {255, 0, 0, 255}); flLastWarn = I::GlobalVars->curtime; }
 		return flAdjustedLatency;
 	}
 
@@ -138,7 +141,7 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd, bool bAimbot = f
 		if (mRecords[pEntity].empty()) { return std::nullopt; }
 		std::optional<TickRecordNew> rReturnRecord = std::nullopt;
 		for (const auto& rCurQuery : mRecords[pEntity]){
-			if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }	//	this record is borked :D
+			if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery) || !IsLagComped(rCurQuery, pEntity)) { continue; }	//	this record is borked :D
 			if (rCurQuery.bOnShot) { rReturnRecord = rCurQuery; break; }	//	this record is an onshot record
 			rReturnRecord = rCurQuery;	//	nothing special, continue
 		}
