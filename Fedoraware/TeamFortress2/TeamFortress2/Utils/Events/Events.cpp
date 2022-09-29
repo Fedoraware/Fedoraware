@@ -5,6 +5,7 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -35,6 +36,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
 		F::Resolver.OnPlayerHurt(pEvent);
+		F::BacktrackNew.PlayerHurt(pEvent);
 	}
 
 	// Run Lua callbacks

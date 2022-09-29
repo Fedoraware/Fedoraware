@@ -59,7 +59,7 @@ class CBacktrackNew
 private:
 	//	logic
 	bool IsTracked(TickRecordNew Record);
-	bool IsBackLagComped(CBaseEntity* pEntity);
+	//bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
 	void CleanRecords();
@@ -77,6 +77,7 @@ private:
 	int iLastInSequence = 0;
 public:
 	bool WithinRewind(TickRecordNew Record);
+	void PlayerHurt(CGameEvent* pEvent);	//	called on player_hurt event
 	void Restart();	//	called whenever lol
 	void FrameStageNotify();	//	called in FrameStageNotify
 	void ReportShot(int iIndex, void* pWpn);

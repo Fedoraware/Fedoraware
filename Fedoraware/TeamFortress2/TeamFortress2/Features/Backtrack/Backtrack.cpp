@@ -4,13 +4,15 @@ bool CBacktrackNew::IsTracked(TickRecordNew Record){
 	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
-bool CBacktrackNew::IsBackLagComped(CBaseEntity* pEntity){
-	if (mRecords[pEntity].size() < 2) { return true; }	//	we dont have enough to compare, this will never happen in normal gameplay
-	const Vec3 vBackRecordOrigin = mRecords[pEntity].back().vOrigin;
-	const Vec3 vNextRecordOrigin = mRecords[pEntity].at(mRecords[pEntity].size() - 1).vOrigin;
-	const Vec3 vDelta = vBackRecordOrigin - vNextRecordOrigin;
-	return vDelta.Length2DSqr() < 4096.f;
-}
+
+//	this shit and doesn't make sense.
+//bool CBacktrackNew::IsBackLagComped(CBaseEntity* pEntity){
+//	if (mRecords[pEntity].size() < 2) { return true; }	//	we dont have enough to compare, this will never happen in normal gameplay
+//	const Vec3 vBackRecordOrigin = mRecords[pEntity].back().vOrigin;
+//	const Vec3 vNextRecordOrigin = mRecords[pEntity].at(mRecords[pEntity].size() - 1).vOrigin;
+//	const Vec3 vDelta = vBackRecordOrigin - vNextRecordOrigin;
+//	return vDelta.Length2DSqr() < 4096.f;
+//}
 
 bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
@@ -32,7 +34,7 @@ void CBacktrackNew::CleanRecords(){
 		
 		if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
 		else if (mRecords[pEntity].size() < 1) { continue; }
-		if (!IsTracked(mRecords[pEntity].back()) || !IsBackLagComped(pEntity)){ mRecords[pEntity].pop_back(); }
+		if (!IsTracked(mRecords[pEntity].back())){ mRecords[pEntity].pop_back(); }
 		if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_back(); }
 	}
 }
@@ -54,13 +56,20 @@ void CBacktrackNew::MakeRecords(){
 			matrix3x4 bones[128];
 			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
 			//Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
+			const Vec3 vOrigin = pEntity->GetAbsOrigin();
+			if (mRecords[pEntity].size()){	// as long as we have 1 record we can check for lagcomp breaking here
+				const Vec3 vPrevOrigin = mRecords[pEntity].front().vOrigin;
+				const Vec3 vDelta = vOrigin - vPrevOrigin;
+				if (vDelta.Length2DSqr() > 4096.f) { Utils::ConLog("LagCompensation", "Cleared borked records", {255, 0, 0, 255}); mRecords[pEntity].clear(); }
+			}
+
 			mRecords[pEntity].push_front({
 				flSimTime,
 				flCurTime,
 				iTickcount,
 				mDidShoot[pEntity->GetIndex()],
 				*reinterpret_cast<BoneMatrixes*>(&bones),
-				pEntity->GetVecOrigin(),
+				vOrigin,
 				pEntity->GetAbsAngles(),
 			});
 		}
@@ -92,16 +101,21 @@ void CBacktrackNew::UpdateDatagram()
 // Returns the current (custom) backtrack latency
 float CBacktrackNew::GetLatency()
 {
-	static float flLastWarn = I::GlobalVars->curtime;
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
 		const float flRealLatency = iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING) + G::LerpTime;
 		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
 		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
-		if (fabsf(flLastWarn - I::GlobalVars->curtime) > 2.f) { Utils::ConLog("LagCompensation", tfm::format("GetLatency() => %.3f", flAdjustedLatency).c_str(), {255, 0, 0, 255}); flLastWarn = I::GlobalVars->curtime; }
 		return flAdjustedLatency;
 	}
 
 	return 0.f;	//	we failed to get net channel and therefor have no latency.
+}
+
+void CBacktrackNew::PlayerHurt(CGameEvent* pEvent){
+	const int iIndex = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
+	if (CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex)){
+		mRecords[pEntity].clear();	//	bone cache has gone to poop for this entity, they must be cleansed in holy fire :smiling_imp:
+	}
 }
 
 void CBacktrackNew::Restart(){
