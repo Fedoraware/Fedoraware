@@ -82,6 +82,7 @@ public:
 	void FrameStageNotify();	//	called in FrameStageNotify
 	void ReportShot(int iIndex, void* pWpn);
 	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
+	std::optional<TickRecordNew> GetLastRecord(CBaseEntity* pEntity);
 	std::optional<TickRecordNew> Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns a valid record
 	void AdjustPing(INetChannel* netChannel);	//	blurgh
 	bool bFakeLatency = false;

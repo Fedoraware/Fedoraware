@@ -176,6 +176,16 @@ std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
 	return &mRecords[pEntity];
 }
 
+std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
+	if (mRecords[pEntity].empty()) { return std::nullopt; }
+	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
+	for (const auto& rCurQuery : mRecords[pEntity]){
+		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
+		rReturnRecord = rCurQuery;
+	}
+	return rReturnRecord;
+}
+
 // Adjusts the fake latency ping
 void CBacktrackNew::AdjustPing(INetChannel* netChannel)
 {
