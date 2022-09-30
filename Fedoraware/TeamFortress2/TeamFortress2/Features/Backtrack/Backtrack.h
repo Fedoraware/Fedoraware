@@ -81,7 +81,7 @@ public:
 	void PlayerHurt(CGameEvent* pEvent);	//	called on player_hurt event
 	void Restart();	//	called whenever lol
 	void FrameStageNotify();	//	called in FrameStageNotify
-	void ReportShot(int iIndex, void* pWpn);
+	void ReportShot(int iIndex);
 	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
 	std::optional<TickRecordNew> GetLastRecord(CBaseEntity* pEntity);
 	std::optional<TickRecordNew> Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns a valid record

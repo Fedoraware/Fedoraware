@@ -136,10 +136,12 @@ void CBacktrackNew::FrameStageNotify(){
 	CleanRecords();
 }
 
-void CBacktrackNew::ReportShot(int iIndex, void* pWpn){
-	if (CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pWpn)){
-		mDidShoot[iIndex] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
-	}
+void CBacktrackNew::ReportShot(int iIndex){
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
+	if (!pEntity) { return; }
+	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
+	if (!pWeapon) { return; }
+	mDidShoot[iIndex] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
 }
 
 std::pair<std::optional<TickRecordNew>, float> CBacktrackNew::GetClosestRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
