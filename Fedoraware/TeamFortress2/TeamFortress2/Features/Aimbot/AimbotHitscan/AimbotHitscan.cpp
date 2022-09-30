@@ -429,30 +429,29 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 	case ETargetType::PLAYER:
 		{
-			Vec3 hitboxpos;
-			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+		//	if we failed to scan hitboxes for the player at curtime, or, if the player is unsimulated at curtime, or if we cant hit the curtime record due to latency, do backtrack.
+		if ((!ScanHitboxes(pLocal, target) && (Vars::Backtrack::Enabled.Value && Vars::Backtrack::Latency.Value > (200.f - I::GlobalVars->interval_per_tick))) || (G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value))
 			{
-				const auto& vLastRec = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
-				if (vLastRec)
+				if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
 				{
-					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
-					target.SimTime = vLastRec->flSimTime;
-					if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
+					Vec3 hitboxpos;
+					const auto& vLastRec = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
+					if (vLastRec)
 					{
-						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-						target.ShouldBacktrack = true;
-						return true;
+						hitboxpos = target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
+						target.SimTime = vLastRec->flSimTime;
+						if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
+						{
+							target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
+							target.ShouldBacktrack = true;
+							return true;
+						}
 					}
 				}
-				if (Vars::Backtrack::Latency.Value > (200.f - I::GlobalVars->interval_per_tick) )
-				{ return false; }
-			}
-
-			if (!ScanHitboxes(pLocal, target))
-			{
 				return false;
 			}
 
+			//	we failed to target this player due to !ScaHitboxes or the player being unsimulated, as well as backtrack failing to get a viable record
 			if (Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)){
 				if (G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value){
 					return false;

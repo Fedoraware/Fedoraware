@@ -21,9 +21,9 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	if (!pLocal || !iNetChan) { return false; }
 
 	const float flDelay = std::clamp(GetLatency(), 0.f, 1.f);	//	TODO:: sv_maxunlag
-	const float flDelta = flDelay - TICKS_TO_TIME(pLocal->m_nTickBase() - Record.iTickCount);
+	const float flDelta = flDelay - (TICKS_TO_TIME(pLocal->m_nTickBase()) - Record.flSimTime);
 
-	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
+	return flDelta > -(.2f - I::GlobalVars->interval_per_tick) && flDelta < .2f;	//	in short, check if the record is +- 200ms from us
 }
 
 void CBacktrackNew::CleanRecords(){
