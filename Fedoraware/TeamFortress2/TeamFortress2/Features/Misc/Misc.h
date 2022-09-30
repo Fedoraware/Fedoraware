@@ -56,6 +56,22 @@ ADD_FEATURE(CMisc, Misc)
 
 constexpr auto MAX_NOTIFY_SIZE = 8;
 
+class CStatistics
+{
+public:
+	int m_nHighestKillstreak = 0;
+	int m_nTotalKills = 0;
+	int m_nTotalDeaths = 0;
+	int m_nCurrentKillstreak = 0;
+	CSteamID m_SteamID;
+
+	void Clear();
+	void Submit();
+	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
+};
+
+ADD_FEATURE(CStatistics, Statistics);
+
 class NotifyText {
 public:
 	std::string Text;

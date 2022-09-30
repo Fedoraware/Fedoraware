@@ -1324,3 +1324,82 @@ void CNotifications::Think()
 		y += size;
 	}
 }
+
+#include <thread>
+
+#include <windows.h>
+#include <wininet.h>
+#include <string.h>
+#include <iostream>
+#pragma comment(lib, "wininet")
+
+void CStatistics::Clear()
+{
+	m_nCurrentKillstreak = m_nHighestKillstreak = m_nTotalDeaths = m_nTotalKills = 0;
+}
+
+void CStatistics::Submit()
+{
+	if (!Vars::Misc::StoreStatistics.Value)
+	{
+		return;
+	}
+
+	std::string data_format = tfm::format("{\r\n    \"steamid\": \"%s\",\r\n    \"kills\": %d,\r\n    \"deaths\": %d,\r\n    \"highest_killstreak\": %d\r\n}", m_SteamID.SteamRender(), m_nTotalKills, m_nTotalDeaths, m_nHighestKillstreak);
+	
+	std::wstring url = L"http://198.244.189.210:4077/submit_info";
+	HINTERNET session = InternetOpen(L"Hello", PRE_CONFIG_INTERNET_ACCESS, NULL, NULL, 0);
+	LPVOID data = (LPVOID)data_format.c_str();
+	LPCSTR header = "Content-Type: application/json";
+	HINTERNET hInternet = InternetOpenA("BALLSSSSS", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+	HINTERNET hConnection = InternetConnectA(hInternet, "198.244.189.210", 4077, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 1);
+	HINTERNET hRequest = HttpOpenRequestA(hConnection, "POST", "/submit_info", NULL, NULL, NULL, 0, 1);
+	if (HttpSendRequestA(hRequest, header, strlen(header), data, strlen(data_format.c_str())))
+	{
+		I::Cvar->ConsolePrintf("yeah");
+	}
+
+	InternetCloseHandle(hInternet);
+	InternetCloseHandle(hConnection);
+	InternetCloseHandle(hRequest);
+									
+}
+
+void CStatistics::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
+{
+	if (uNameHash == FNV1A::HashConst("player_death"))
+	{
+		const int attacker = Utils::GetPlayerForUserID(pEvent->GetInt("attacker"));
+		const int userid = Utils::GetPlayerForUserID(pEvent->GetInt("userid"));
+
+		if (userid == I::EngineClient->GetLocalPlayer())
+		{
+			m_nCurrentKillstreak = 0;
+			m_nTotalDeaths++;
+			return;
+		}
+
+		if (attacker != I::EngineClient->GetLocalPlayer())
+		{
+			return;
+		}
+
+		m_nTotalKills++;
+		m_nCurrentKillstreak++;
+
+		if (m_nCurrentKillstreak > m_nHighestKillstreak)
+		{
+			m_nHighestKillstreak = m_nCurrentKillstreak;
+		}
+	}
+	else if (uNameHash == FNV1A::HashConst("player_spawn"))
+	{
+		const int userid = Utils::GetPlayerForUserID(pEvent->GetInt("userid"));
+
+		if (userid == I::EngineClient->GetLocalPlayer())
+		{
+			m_nCurrentKillstreak = 0;
+		}
+	}
+}
+

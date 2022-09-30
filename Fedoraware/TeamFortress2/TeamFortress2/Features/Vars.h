@@ -643,6 +643,7 @@ namespace Vars
 		inline CVar<float> SpamInterval{ 4.f };
 		inline CVar<bool> NoPush{ false };
 		inline CVar<bool> EdgeJump{ false };
+		inline CVar<bool> StoreStatistics{ false };
 		inline CVar<int> EdgeJumpKey{ VK_MENU };
 		inline CVar<bool> AntiAFK{ false };
 		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}

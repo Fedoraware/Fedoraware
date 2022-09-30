@@ -25,12 +25,26 @@ void CTickshiftHandler::Doubletap(CUserCmd* pCmd, CBaseEntity* pLocal){	//	calle
 	switch (Vars::Misc::CL_Move::DTMode.Value){
 	case 0: { if (!kDoubletap.Down())	{ return; }	break; }	
 	case 2: { if (kDoubletap.Down())	{ return; }	break; }	
+	case 3: { return; }
 	}
 
 	if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
 	{
 		bDoubletap = G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
 	}
+}
+
+bool CTickshiftHandler::MeleeDoubletapCheck(CBaseEntity* pLocal){
+	static KeyHelper kDoubletap{ &Vars::Misc::CL_Move::DoubletapKey.Value };
+	if (bTeleport || bRecharge || bSpeedhack || (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)) { return false; }
+	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return false; }
+	if (G::ShouldShift) { return false; }
+	switch (Vars::Misc::CL_Move::DTMode.Value){
+	case 0: { if (!kDoubletap.Down())	{ return false; }	break; }	
+	case 2: { if (kDoubletap.Down())	{ return false; }	break; }	
+	case 3: { return false; }
+	}
+	return Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
 }
 
 void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalTick){

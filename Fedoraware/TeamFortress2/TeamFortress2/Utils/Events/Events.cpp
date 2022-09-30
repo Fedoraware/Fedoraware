@@ -6,6 +6,7 @@
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/Misc/Misc.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -31,6 +32,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
 	F::ChatInfo.Event(pEvent, uNameHash);
 	F::AntiAim.Event(pEvent, uNameHash);
+	F::Statistics.Event(pEvent, uNameHash);
 	/*F::Killstreaker.FireEvents(pEvent, uNameHash);*/
 
 	if (uNameHash == FNV1A::HashConst("player_hurt"))

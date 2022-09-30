@@ -1,6 +1,7 @@
 #include "AimbotMelee.h"
 #include "../../Vars.h"
 
+#include "../../TickHandler/TickHandler.h"
 #include "../../Backtrack/Backtrack.h"
 
 bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
@@ -34,7 +35,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 			return false;
 		}
 
-		static constexpr float FL_DELAY = 0.2f; //it just works
+		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
 
 		if (pLocal->OnSolid())
 		{
