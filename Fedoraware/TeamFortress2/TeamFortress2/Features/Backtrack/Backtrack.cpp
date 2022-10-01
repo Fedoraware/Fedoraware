@@ -179,8 +179,8 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
 
 std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox){
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	if (!pLocal) { return; }
-	if (mRecords[pEntity].empty()) { return; }
+	if (!pLocal) { return std::nullopt; }
+	if (mRecords[pEntity].empty()) { return std::nullopt; }
 	switch (iMode){
 	case BacktrackMode::ALL: {
 		for (const auto& rCurQuery : mRecords[pEntity]){ 
@@ -188,21 +188,21 @@ std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, Backtra
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
 		}
-		return;
+		return std::nullopt;
 	}
 	case BacktrackMode::FIRST: {
 		if (std::optional<TickRecordNew> FirstRecord = GetFirstRecord(pEntity)){
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&FirstRecord->BoneMatrix.BoneMatrix));
 			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return FirstRecord; }
 		}
-		return;
+		return std::nullopt;
 	}
 	case BacktrackMode::LAST: {
 		if (std::optional<TickRecordNew> LastRecord = GetLastRecord(pEntity)){
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&LastRecord->BoneMatrix.BoneMatrix));
 			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return LastRecord; }
 		}
-		return;
+		return std::nullopt;
 	}
 	case BacktrackMode::ADAPTIVE: {
 		std::optional<TickRecordNew> ReturnTick{};
@@ -222,10 +222,10 @@ std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, Backtra
 				if (rCurQuery.bOnShot) { return rCurQuery; }
 			}
 		}
-		return;
+		return std::nullopt;
 	}
 	}
-	return; 
+	return std::nullopt; 
 }
 
 std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
@@ -247,7 +247,7 @@ std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
 	return rReturnRecord;
 }
 
-std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
+std::optional<TickRecordNew> CBacktrackNew::GetFirstRecord(CBaseEntity* pEntity){
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
 	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
 	for (const auto& rCurQuery : mRecords[pEntity]){

@@ -296,7 +296,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			// Backtrack
 			{
 				SAVE_VAR(Vars::Backtrack::Enabled);
-				SAVE_VAR(Vars::Backtrack::LastTick);
 				SAVE_VAR(Vars::Backtrack::Latency);
 				SAVE_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams
@@ -323,6 +322,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
@@ -1126,7 +1126,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			// Backtrack
 			{
 				LOAD_VAR(Vars::Backtrack::Enabled);
-				LOAD_VAR(Vars::Backtrack::LastTick);
 				LOAD_VAR(Vars::Backtrack::Latency);
 				LOAD_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams
@@ -1153,6 +1152,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				//LOAD_VAR(Vars::Aimbot::Hitscan::Active);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				LOAD_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);

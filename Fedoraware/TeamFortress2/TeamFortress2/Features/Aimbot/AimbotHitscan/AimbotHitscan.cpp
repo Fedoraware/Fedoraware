@@ -429,13 +429,13 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 	case ETargetType::PLAYER:
 		{
-			if (ScanHitboxes(pLocal, target) && !((Vars::Backtrack::Enabled.Value && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value))
+			if (ScanHitboxes(pLocal, target) && !((Vars::Backtrack::Enabled.Value && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4))
 			{
 				return true;
 			}
 			if (Vars::Backtrack::Enabled.Value)
 			{
-				if (std::optional<TickRecordNew> ValidRecord = F::BacktrackNew.Aimbot(target.m_pEntity, BacktrackMode::ALL, GetHitbox(pLocal, pLocal->GetActiveWeapon()))){
+				if (std::optional<TickRecordNew> ValidRecord = F::BacktrackNew.Aimbot(target.m_pEntity, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, GetHitbox(pLocal, pLocal->GetActiveWeapon()))){
 					target.SimTime = ValidRecord->flSimTime;
 					target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
 					target.ShouldBacktrack = true;

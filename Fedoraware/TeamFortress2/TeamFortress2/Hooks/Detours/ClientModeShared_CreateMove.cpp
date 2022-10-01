@@ -148,7 +148,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
-		F::BacktrackNew.Run(pCmd, false, nullptr);
+		F::BacktrackNew.Run(pCmd);
 
 		F::EnginePrediction.Start(pCmd);
 		{

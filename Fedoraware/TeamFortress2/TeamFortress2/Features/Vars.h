@@ -43,7 +43,6 @@ namespace Vars
 	namespace Backtrack
 	{
 		inline CVar<bool> Enabled{ false };
-		inline CVar<bool> LastTick{ false };
 		inline CVar<bool> FakeLatency{ false };
 		inline CVar<int> Latency{ 0 };
 		
@@ -87,6 +86,7 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{ 0 }; //0 - FOV,		1 - Distance
+			inline CVar<int> BackTrackMethod{ 0 };
 			inline CVar<bool> RespectFOV{ true };
 			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{ 2 }; //0 - Head,		1 - Body,	2 - Auto
