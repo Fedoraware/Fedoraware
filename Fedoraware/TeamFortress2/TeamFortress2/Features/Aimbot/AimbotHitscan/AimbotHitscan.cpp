@@ -429,7 +429,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 	case ETargetType::PLAYER:
 		{
-			if (ScanHitboxes(pLocal, target) && !((Vars::Backtrack::Enabled.Value && Vars::Backtrack::Latency.Value > (200.f - I::GlobalVars->interval_per_tick)) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value))
+			if (ScanHitboxes(pLocal, target) && !((Vars::Backtrack::Enabled.Value && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value))
 			{
 				return true;
 			}

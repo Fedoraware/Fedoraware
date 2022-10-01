@@ -178,18 +178,8 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		
 				return true;
 			};
-		
-			/* Backstrack stab */
-			if (Vars::Backtrack::LastTick.Value)
-			{
-				// Last Tick
-				std::optional<TickRecordNew> vLastRec = F::BacktrackNew.GetLastRecord(pEnemy);
-				if (vLastRec && DoBacktrack(*vLastRec))
-				{
-					return;
-				}
-			}
-			else
+
+			//backtrack
 			{
 				// Any Tick
 				for (const auto& pTick : *pRecords)
