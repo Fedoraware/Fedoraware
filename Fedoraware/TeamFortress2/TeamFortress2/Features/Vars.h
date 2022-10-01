@@ -43,7 +43,6 @@ namespace Vars
 	namespace Backtrack
 	{
 		inline CVar<bool> Enabled{ false };
-		inline CVar<bool> FakeLatency{ false };
 		inline CVar<int> Latency{ 0 };
 		
 
