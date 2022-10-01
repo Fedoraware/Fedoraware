@@ -74,7 +74,6 @@ private:
 	float GetLatency();
 
 	//	data
-	std::unordered_map<int, bool> mDidShoot;
 	std::unordered_map<CBaseEntity*, std::deque<TickRecordNew>> mRecords;
 	//	data - fake latency
 	std::deque<CIncomingSequence> dSequences;
@@ -93,6 +92,7 @@ public:
 	std::optional<TickRecordNew> Run(CUserCmd* pCmd);	//	returns a valid record
 	void AdjustPing(INetChannel* netChannel);	//	blurgh
 	bool bFakeLatency = false;
+	std::unordered_map<int, bool> mDidShoot;
 };
 
 class CBacktrack

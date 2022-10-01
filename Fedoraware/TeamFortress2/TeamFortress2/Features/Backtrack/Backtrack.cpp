@@ -11,7 +11,7 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	if (!pLocal || !iNetChan) { return false; }
 
 	const float flDelay = std::clamp(GetLatency(), 0.f, 1.f);	//	TODO:: sv_maxunlag
-	const float flDelta = flDelay - (TICKS_TO_TIME(pLocal->m_nTickBase()) - Record.flSimTime);
+	const float flDelta = flDelay - TICKS_TO_TIME(I::GlobalVars->tickcount - Record.iTickCount);
 
 	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
 }
@@ -131,7 +131,7 @@ void CBacktrackNew::ReportShot(int iIndex){
 	if (!pEntity) { return; }
 	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
 	if (!pWeapon) { return; }
-	mDidShoot[iIndex] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
+	mDidShoot[pEntity->GetIndex()] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
 }
 
 std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){

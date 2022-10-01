@@ -1,4 +1,5 @@
 #include "Resolver.h"
+#include "../Backtrack/Backtrack.h"
 
 static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
@@ -49,6 +50,10 @@ void CResolver::Run()
 		}
 
 		if (entity->IsTaunting()) {
+			continue;
+		}
+
+		if (F::BacktrackNew.mDidShoot[entity->GetIndex()]) {
 			continue;
 		}
 
