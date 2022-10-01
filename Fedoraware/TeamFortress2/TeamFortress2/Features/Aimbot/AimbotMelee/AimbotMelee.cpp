@@ -223,7 +223,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	Vec3 hitboxpos;
 
 	//Backtrack the target if required
-	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value && target.m_TargetType == ETargetType::PLAYER)
+	if (Vars::Backtrack::Enabled.Value && target.m_TargetType == ETargetType::PLAYER)
 	{
 		const auto& record = F::BacktrackNew.GetLastRecord(target.m_pEntity);
 		if (record) {
@@ -243,7 +243,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 
 
 
-	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value))
+	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value))
 	{
 		if (!CanMeleeHit(pLocal, pWeapon, target.m_vAngleTo, target.m_pEntity->GetIndex()))
 		{
@@ -334,7 +334,7 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 	}
 
-	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+	if (Vars::Backtrack::Enabled.Value)
 	{
 		const float flRange = pWeapon->GetSwingRange(pLocal);
 

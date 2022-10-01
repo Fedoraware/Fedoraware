@@ -238,7 +238,7 @@ public: //Everything else, lol
 		bool bResult = false;
 		if (const auto& pOwner = I::ClientEntityList->GetClientEntityFromHandle(GethOwner()))
 		{
-			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
+			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(-1);
 			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 424)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
 		} return bResult;
