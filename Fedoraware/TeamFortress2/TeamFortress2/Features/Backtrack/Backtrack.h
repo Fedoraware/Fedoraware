@@ -51,7 +51,11 @@ struct TickRecordNew{
 
 enum class BacktrackMode
 {
-	First, Last, Distance, FOV
+	ALL,		//	iterates through every tick (slow probably)
+	FIRST,		//	first
+	LAST,		//	last
+	ADAPTIVE,	//	prefers on shot records, last
+	ONSHOT,		//	only returns on shot records
 };
 
 class CBacktrackNew
@@ -64,7 +68,7 @@ private:
 	//	utils
 	void CleanRecords();
 	void MakeRecords();
-	std::pair<std::optional<TickRecordNew>, float> GetClosestRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos);
+	std::optional<TickRecordNew> GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos);
 	//	utils - fake latency
 	void UpdateDatagram();
 	float GetLatency();
@@ -81,10 +85,12 @@ public:
 	void PlayerHurt(CGameEvent* pEvent);	//	called on player_hurt event
 	void Restart();	//	called whenever lol
 	void FrameStageNotify();	//	called in FrameStageNotify
-	void ReportShot(int iIndex, void* pWpn);
+	void ReportShot(int iIndex);
 	std::deque<TickRecordNew>* GetRecords(CBaseEntity* pEntity);
+	std::optional<TickRecordNew> Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox);
 	std::optional<TickRecordNew> GetLastRecord(CBaseEntity* pEntity);
-	std::optional<TickRecordNew> Run(CUserCmd* pCmd, bool bAimbot, CBaseEntity* pEntity);	//	returns a valid record
+	std::optional<TickRecordNew> GetFirstRecord(CBaseEntity* pEntity);
+	std::optional<TickRecordNew> Run(CUserCmd* pCmd);	//	returns a valid record
 	void AdjustPing(INetChannel* netChannel);	//	blurgh
 	bool bFakeLatency = false;
 };
