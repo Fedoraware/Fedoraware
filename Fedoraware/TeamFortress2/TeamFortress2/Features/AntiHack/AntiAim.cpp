@@ -213,7 +213,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 
 	// Manual yaw key
-	static KeyHelper kManual(&Vars::AntiHack::AntiAim::InvertKey.Value);
+	static KeyHelper kManual(&Vars::AntiHack::AntiAim::ManualKey.Value);
 	bManualing = kManual.Down();
 
 	if (!Vars::AntiHack::AntiAim::Active.Value || G::ForceSendPacket || G::AvoidingBackstab || G::ShouldShift) { return; }
