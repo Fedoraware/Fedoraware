@@ -136,18 +136,21 @@ void CBacktrackNew::ReportShot(int iIndex){
 
 std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
 	Vec3 vForward = {};
-	Math::AngleVectors(pCmd->viewangles, &vForward);
+
+	std::optional<TickRecordNew> cReturnRecord{};
+	float flLastAngle = 45.f;
 
 	for (const auto& rCurQuery : mRecords[pEntity]){
 		if (!WithinRewind(rCurQuery)) { continue; }
 		for (int iCurHitbox = 0; iCurHitbox < 18; iCurHitbox++){
-			Vec3 vMins = {}, vMaxs = {}, vCenter = {};
-			if (!pEntity->GetHitboxMinsAndMaxsFromMatrix(HITBOX_HEAD, vMins, vMaxs, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix), &vCenter)) { continue; }
-			if (!Math::RayToOBB(vPos, vForward, vCenter, vMins, vMaxs, (float(*)[4])(&rCurQuery.BoneMatrix.BoneMatrix))) { continue; }
-			return rCurQuery;
+			//	it's possible to set entity positions and bones back to this record and then see what hitbox we will hit and rewind to that record, bt i dont wanna
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(iCurHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+			const Vec3 vAngleTo = Math::CalcAngle(vPos, vHitboxPos);
+			const float flFOVTo = Math::CalcFov(vAngles, vAngleTo);
+			if (flFOVTo < flLastAngle) { cReturnRecord = rCurQuery; flLastAngle = flFOVTo; }
 		}
 	}
-	return std::nullopt;
+	return cReturnRecord;
 }
 
 std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
