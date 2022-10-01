@@ -237,7 +237,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 				target.ShouldBacktrack = true;
 			}
 		}
-		if (Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
+		if (F::BacktrackNew.bFakeLatency && Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
 		{ return false; }
 	}
 
