@@ -433,20 +433,13 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			{
 				return true;
 			}
-			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+			if (Vars::Backtrack::Enabled.Value)
 			{
-				Vec3 hitboxpos;
-				const auto& vLastRec = F::BacktrackNew.Run(nullptr, true, target.m_pEntity);
-				if (vLastRec)
-				{
-					hitboxpos = target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&vLastRec->BoneMatrix.BoneMatrix));
-					target.SimTime = vLastRec->flSimTime;
-					if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
-					{
-						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-						target.ShouldBacktrack = true;
-						return true;
-					}
+				if (std::optional<TickRecordNew> ValidRecord = F::BacktrackNew.Aimbot(target.m_pEntity, BacktrackMode::ALL, GetHitbox(pLocal, pLocal->GetActiveWeapon()))){
+					target.SimTime = ValidRecord->flSimTime;
+					target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(GetHitbox(pLocal, pLocal->GetActiveWeapon()), (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
+					target.ShouldBacktrack = true;
+					return true;
 				}
 			}
 			return false;
