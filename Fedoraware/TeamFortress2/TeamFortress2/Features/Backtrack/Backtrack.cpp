@@ -10,7 +10,7 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	
 	if (!pLocal || !iNetChan) { return false; }
 
-	const float flDelay = std::clamp(iNetChan->GetLatency(FLOW_OUTGOING) + GetLatency(), 0.f, 1.f);	//	TODO:: sv_maxunlag
+	const float flDelay = std::clamp(GetLatency() - iNetChan->GetLatency(FLOW_OUTGOING) - iNetChan->GetLatency(FLOW_INCOMING), 0.f, 1.f);	//	TODO:: sv_maxunlag
 	const float flDelta = flDelay - (I::GlobalVars->curtime - Record.flSimTime);
 
 	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
