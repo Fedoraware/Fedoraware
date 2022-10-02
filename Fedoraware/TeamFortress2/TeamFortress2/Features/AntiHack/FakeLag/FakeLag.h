@@ -13,9 +13,10 @@ class CFakeLag {
 	Vec3 vLastPosition;
 
 	bool IsVisible(CBaseEntity* pLocal);
+	bool IsAllowed(CBaseEntity* pLocal);
+	bool DuckLogic(CBaseEntity* pLocal);
 
 public:
-	bool IsAllowed(CBaseEntity* pLocal);
 	void OnTick(CUserCmd* pCmd, bool* pSendPacket);
 };
 

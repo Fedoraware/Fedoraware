@@ -349,6 +349,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 		}
 
 		{
+			const float m_flDucktime = pLocal->m_flDucktime();
+			DebugLine("m_flDucktime", tfm::format(": %.1f", m_flDucktime).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
+
+		{
 			const Vec3 lastViewAngles = G::LastUserCmd->viewangles;
 			DebugLine("lastViewAngles", tfm::format(": [%.1f, %.1f, %.1f]", lastViewAngles.x, lastViewAngles.y, lastViewAngles.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}

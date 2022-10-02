@@ -1,5 +1,4 @@
 #include "Resolver.h"
-#include "../Backtrack/Backtrack.h"
 
 static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
@@ -13,6 +12,14 @@ bool CResolver::ShouldAutoResolve()
 	}
 
 	return true;
+}
+
+void CResolver::ReportShot(int iIndex){
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
+	if (!pEntity) { return; }
+	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
+	if (!pWeapon) { return; }
+	mDidShoot[pEntity->GetIndex()] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
 }
 
 /* Run the resolver and apply the resolved angles */
@@ -53,7 +60,7 @@ void CResolver::Run()
 			continue;
 		}
 
-		if (F::BacktrackNew.mDidShoot[entity->GetIndex()]) {
+		if (mDidShoot[entity->GetIndex()]) {
 			continue;
 		}
 
@@ -154,6 +161,7 @@ void CResolver::Run()
 			break;
 		}
 	}
+	mDidShoot.clear();
 }
 
 /* Update resolver data (for Bruteforce) */

@@ -20,8 +20,16 @@ bool CFakeLag::IsVisible(CBaseEntity* pLocal) {
 	return false;
 }
 
+bool CFakeLag::DuckLogic(CBaseEntity* pLocal) {	//	0, do nothing, 1 choke, 2 
+	//	logically we can wait until ducktime is close to 800, as that is when our actual animation transitions from ducked to unducked
+	const bool bOldDuck = pLocal->IsDucking();
+	if (Vars::Misc::CL_Move::WhileUnducking.Value){
+		if (bOldDuck && !(G::LastUserCmd->buttons & IN_DUCK)) { return true; }
+	}
+	return false;
+}
+
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
-	static int iOldTick = I::GlobalVars->tickcount;
 	const int doubleTapAllowed = 22 - G::ShiftedTicks;
 	const bool retainFakelagTest = Vars::Misc::CL_Move::RetainFakelag.Value ? G::ShiftedTicks != 1 : !G::ShiftedTicks;
 
@@ -29,22 +37,20 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	if (ChokeCounter > 21) 
 	{ return false; }
 
-	if (iOldTick == I::GlobalVars->tickcount){
-		iOldTick = I::GlobalVars->tickcount;
-		return false;
-	}
-
 	// Are we attacking? TODO: Add more logic here
 	if (G::IsAttacking) 
 	{ return false; }
 
+	// Are we recharging
+	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) 
+	{ return false; }
+
+	if (DuckLogic(pLocal))
+	{ return true; }	//	no other checks, we want this
+
 	// Is a fakelag key set and pressed?
 	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.Value };
 	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.Value && Vars::Misc::CL_Move::FakelagMode.Value == 0) 
-	{ return false; }
-
-	// Are we recharging
-	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) 
 	{ return false; }
 
 	// Do we have enough velocity for velocity mode?

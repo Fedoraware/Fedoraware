@@ -1493,7 +1493,7 @@ void CMenu::MenuHvH()
 			/* Section: Fakelag */
 			SectionTitle("Fakelag");
 			WToggle("Enable Fakelag", &Vars::Misc::CL_Move::Fakelag.Value);
-			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value }, "Flags###FakeLagFlags");
+			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility", "While Unducking" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value, &Vars::Misc::CL_Move::WhileUnducking.Value }, "Flags###FakeLagFlags");
 			if (Vars::Misc::CL_Move::FakelagOnKey.Value)
 			{ InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held"); }
 			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.Value, { "Plain", "Random", "Adaptive" }); HelpMarker("Controls how fakelag will be controlled.");

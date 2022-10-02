@@ -710,6 +710,7 @@ namespace Vars
 			inline CVar<bool> WhileMoving { false };
 			inline CVar<bool> WhileVisible { false };
 			inline CVar<bool> PredictVisibility { false };
+			inline CVar<bool> WhileUnducking { false };
 			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22 };
 			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3
