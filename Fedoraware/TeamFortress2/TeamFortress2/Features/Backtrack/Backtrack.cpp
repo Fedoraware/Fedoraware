@@ -10,8 +10,8 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	
 	if (!pLocal || !iNetChan) { return false; }
 
-	const float flDelay = std::clamp(GetLatency() - iNetChan->GetLatency(FLOW_OUTGOING) - iNetChan->GetLatency(FLOW_INCOMING), 0.f, 1.f);	//	TODO:: sv_maxunlag
-	const float flDelta = flDelay - (I::GlobalVars->curtime - Record.flSimTime);
+	const float flDelay = std::clamp(GetLatency() + iNetChan->GetLatency(FLOW_INCOMING), 0.f, 1.f);	//	TODO:: sv_maxunlag
+	const float flDelta = flDelay - (TICKS_TO_TIME(pLocal->m_nTickBase()) -TICKS_TO_TIME(Record.iTickCount));
 
 	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
 }
@@ -257,6 +257,7 @@ std::optional<TickRecordNew> CBacktrackNew::GetFirstRecord(CBaseEntity* pEntity)
 		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
 		return rCurQuery;
 	}
+	return std::nullopt;
 }
 
 // Adjusts the fake latency ping
