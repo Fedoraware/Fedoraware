@@ -110,9 +110,6 @@ bool CAntiAim::FindEdge(float edgeOrigYaw)
 	if (edgeLeftDist >= 260) { edgeLeftDist = 999999999.f; }
 	if (edgeRightDist >= 260) { edgeRightDist = 999999999.f; }
 
-	// If none of the vectors found a wall, then dont edge
-	if (Utils::CompareFloat(edgeLeftDist, edgeRightDist)) { return false; }
-
 	// Depending on the edge, choose a direction to face
 	bEdge = edgeRightDist < edgeLeftDist;
 	if (G::RealViewAngles.x == 89.f) // Check for real up
@@ -120,7 +117,7 @@ bool CAntiAim::FindEdge(float edgeOrigYaw)
 		bEdge = !bEdge;
 	}
 
-	return true;
+	return bEdge;
 }
 
 bool CAntiAim::IsOverlapping(float epsilon = 45.f)
@@ -189,7 +186,7 @@ float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
 			
 			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 		}
-		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + + (iMode == 2 ? flBaseOffset : 0));
+		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + (iMode == 2 ? flBaseOffset : 0));
 	}
 	}
 	return pCmd->viewangles.y;
