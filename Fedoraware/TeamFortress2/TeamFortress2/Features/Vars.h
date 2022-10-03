@@ -90,7 +90,8 @@ namespace Vars
 			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{ 2 }; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{ 0b00111 }; // {legs, arms, body, pelvis, head}
-			inline CVar<int> MultiHitboxes{ 0b0101 }; // {legs, arms, body, pelvis, head}
+			inline CVar<int> MultiHitboxes{ 0b00101 }; // {legs, arms, body, pelvis, head}
+			inline CVar<int> StaticHitboxes{ 0b11000 }; // {legs, arms, body, pelvis, head}
 			inline CVar<float> PointScale{ .54f };
 			inline CVar<int> SmoothingAmount{ 4 };
 			inline CVar<int> TapFire{ 0 }; //0 - Off, 1 - Distance, 2 - Always
