@@ -102,10 +102,10 @@ float CBacktrackNew::GetLatency()
 }
 
 void CBacktrackNew::PlayerHurt(CGameEvent* pEvent){
-	const int iIndex = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
-	if (CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex)){
-		mRecords[pEntity].clear();	//	bone cache has gone to poop for this entity, they must be cleansed in holy fire :smiling_imp:
-	}
+	//const int iIndex = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
+	//if (CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex)){
+	//	mRecords[pEntity].clear();	//	bone cache has gone to poop for this entity, they must be cleansed in holy fire :smiling_imp:
+	//}
 }
 
 void CBacktrackNew::Restart(){

@@ -131,6 +131,7 @@ void CMisc::DetectChoke()
 {
 	static int iOldTick = I::GlobalVars->tickcount;
 	if (I::GlobalVars->tickcount == iOldTick) {return;}
+	iOldTick = I::GlobalVars->tickcount;
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!pEntity->IsAlive() || pEntity->GetDormant())
