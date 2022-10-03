@@ -522,18 +522,10 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (pCmd->buttons & IN_JUMP)
 	{
-		if (!s_bState && !pLocal->OnSolid())
+		if (!pLocal->OnSolid())
 		{
 			pCmd->buttons &= ~IN_JUMP;
 		}
-		else if (s_bState)
-		{
-			s_bState = false;
-		}
-	}
-	else if (!s_bState)
-	{
-		s_bState = true;
 	}
 }
 
