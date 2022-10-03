@@ -824,6 +824,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::Directional);
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
+			SAVE_VAR(Vars::Misc::StoreStatistics);
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::RageRetry);
@@ -1651,6 +1652,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::NoPush);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::EdgeJumpKey);
+			LOAD_VAR(Vars::Misc::StoreStatistics);
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::Directional);
 			LOAD_VAR(Vars::Misc::AntiAFK);
