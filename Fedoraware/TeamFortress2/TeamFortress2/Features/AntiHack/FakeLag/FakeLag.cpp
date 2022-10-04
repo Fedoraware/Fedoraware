@@ -30,11 +30,13 @@ bool CFakeLag::DuckLogic(CBaseEntity* pLocal) {	//	0, do nothing, 1 choke, 2
 }
 
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	const int doubleTapAllowed = 22 - G::ShiftedTicks;
 	const bool retainFakelagTest = Vars::Misc::CL_Move::RetainFakelag.Value ? G::ShiftedTicks != 1 : !G::ShiftedTicks;
+	if (!iNetChan) { return false; }	//	no netchannel no fakelag
 
 	// Failsafe, in case we're trying to choke too many ticks
-	if (ChokeCounter > 21) 
+	if (std::max(ChokeCounter, iNetChan->m_nChokedPackets) > 21) 
 	{ return false; }
 
 	// Are we attacking? TODO: Add more logic here
