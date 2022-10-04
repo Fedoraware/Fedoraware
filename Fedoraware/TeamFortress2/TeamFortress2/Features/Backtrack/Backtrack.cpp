@@ -10,10 +10,11 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	
 	if (!pLocal || !iNetChan) { return false; }
 
-	const float flDelay = std::clamp(GetLatency() + iNetChan->GetLatency(FLOW_INCOMING), 0.f, 1.f);	//	TODO:: sv_maxunlag
-	const float flDelta = flDelay - (TICKS_TO_TIME(pLocal->m_nTickBase()) -TICKS_TO_TIME(Record.iTickCount));
+	const float flTickArriveTime = GetLatency() - iNetChan->GetLatency(FLOW_INCOMING) - iNetChan->GetLatency(FLOW_OUTGOING);
+	const float flRawDelta = TICKS_TO_TIME(abs(Record.iTickCount - G::LastUserCmd->tick_count + 1));
+	const float flDelta = fabsf(flRawDelta + flTickArriveTime);
 
-	return fabsf(flDelta) < .2f;	//	in short, check if the record is +- 200ms from us
+	return flDelta < .2f;	//	in short, check if the record is +- 200ms from us
 }
 
 void CBacktrackNew::CleanRecords(){
@@ -25,7 +26,7 @@ void CBacktrackNew::CleanRecords(){
 		if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
 		else if (mRecords[pEntity].size() < 1) { continue; }
 		if (!IsTracked(mRecords[pEntity].back())){ mRecords[pEntity].pop_back(); }
-		if (mRecords[pEntity].size() > 66) { mRecords[pEntity].pop_back(); }
+		if (mRecords[pEntity].size() > 67) { mRecords[pEntity].pop_back(); }
 	}
 }
 
@@ -66,7 +67,7 @@ void CBacktrackNew::MakeRecords(){
 
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
-		if (mRecords[pEntity].size() > 66){ /*Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255});*/ mRecords[pEntity].pop_back(); }	//	schizoid check
+		if (mRecords[pEntity].size() > 67){ /*Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255});*/ mRecords[pEntity].pop_back(); }	//	schizoid check
 	}
 }
 
@@ -93,7 +94,7 @@ float CBacktrackNew::GetLatency()
 {
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
 		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING) + G::LerpTime;
-		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
+		const float flFakeLatency = flLatencyRampup * (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
 		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
 		return flAdjustedLatency;
 	}

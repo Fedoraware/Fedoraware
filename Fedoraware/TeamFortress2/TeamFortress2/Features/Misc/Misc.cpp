@@ -1358,7 +1358,7 @@ void CStatistics::Submit()
 	HINTERNET hRequest = HttpOpenRequestA(hConnection, "POST", "/submit_info", NULL, NULL, NULL, 0, 1);
 	if (HttpSendRequestA(hRequest, header, strlen(header), data, strlen(data_format.c_str())))
 	{
-		I::Cvar->ConsolePrintf("yeah");
+		Utils::ConLog("FWARE-Statistics-Server", "Succesfully sent statistics.", {255, 0, 114, 255});
 	}
 
 	InternetCloseHandle(hInternet);

@@ -36,6 +36,14 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 		}
 		break;
 	}
+	case clc_Move: {
+		const int iAllowedNewCommands = 24 - G::ShiftedTicks;
+		CLC_Move& moveMsg = reinterpret_cast<CLC_Move&>(msg);
+		if (moveMsg.m_nNewCommands > iAllowedNewCommands) {
+			G::ShiftedTicks -= moveMsg.m_nNewCommands - iAllowedNewCommands;
+		}
+		break;
+	}
 	}
 
 	return Hook.Original<FN>()(netChannel, edi, msg, bForceReliable, bVoice);
