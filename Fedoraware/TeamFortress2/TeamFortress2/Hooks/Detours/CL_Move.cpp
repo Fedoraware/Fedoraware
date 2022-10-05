@@ -6,13 +6,6 @@ MAKE_HOOK(CL_Move, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC ? 83 3D ? ? ? 
 {
 	static Hooks::CL_Move::FN oClMove = Hook.Original<FN>();
 
-	if (!Vars::Misc::CL_Move::Enabled.Value)
-	{
-		oClMove(accumulated_extra_samples, bFinalTick);
-	}
-	else {
-		F::Ticks.CLMove(accumulated_extra_samples, bFinalTick);
-	}
-	
+	F::Ticks.CLMove(accumulated_extra_samples, bFinalTick);
 	I::EngineClient->FireEvents();
 }

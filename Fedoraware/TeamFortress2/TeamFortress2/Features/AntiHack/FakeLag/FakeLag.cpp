@@ -44,10 +44,10 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal) {
 	{ return false; }
 
 	// Are we recharging
-	if (ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) 
+	if ((ChokeCounter >= doubleTapAllowed || G::Recharging || G::RechargeQueued || !retainFakelagTest) && Vars::Misc::CL_Move::Enabled.Value)
 	{ return false; }
 
-	if (DuckLogic(pLocal))
+	if (DuckLogic(pLocal) || (Vars::Misc::CL_Move::WhileInAir.Value && !pLocal->OnSolid()))
 	{ return true; }	//	no other checks, we want this
 
 	// Is a fakelag key set and pressed?

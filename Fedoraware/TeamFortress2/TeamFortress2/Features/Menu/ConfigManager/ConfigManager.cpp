@@ -867,6 +867,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::SafeTick);
+				SAVE_VAR(Vars::Misc::CL_Move::SafeTickAirOverride);
+				SAVE_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::StopMovement);
@@ -885,6 +887,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileMoving);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileInAir);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileUnducking);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileVisible);
+				SAVE_VAR(Vars::Misc::CL_Move::PredictVisibility);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
@@ -1698,6 +1705,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				LOAD_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::SafeTick);
+				LOAD_VAR(Vars::Misc::CL_Move::SafeTickAirOverride);
+				LOAD_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::StopMovement);
@@ -1716,6 +1725,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileMoving);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileInAir);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileUnducking);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileVisible);
+				LOAD_VAR(Vars::Misc::CL_Move::PredictVisibility);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R

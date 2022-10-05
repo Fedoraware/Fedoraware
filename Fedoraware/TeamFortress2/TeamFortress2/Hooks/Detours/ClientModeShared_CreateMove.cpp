@@ -215,8 +215,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	else{ AttackingUpdate(); }
 
 	// do this at the end just in case aimbot / triggerbot fired.
-	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
-		if (pCmd->buttons & IN_ATTACK && Vars::Misc::CL_Move::SafeTick.Value) {
+	if (const auto& pWeapon = g_EntityCache.GetWeapon(); const auto& pLocal = g_EntityCache.GetLocal()) {
+		if (pCmd->buttons & IN_ATTACK && (Vars::Misc::CL_Move::SafeTick.Value || (Vars::Misc::CL_Move::SafeTickAirOverride.Value && !pLocal->OnSolid()))) {
 			if (G::NextSafeTick > I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {
 				pCmd->buttons &= ~IN_ATTACK;
 			}

@@ -688,6 +688,8 @@ namespace Vars
 			inline CVar<bool> Enabled{ false };
 			inline CVar<bool> Doubletap{ false };
 			inline CVar<bool> SafeTick{ false };
+			inline CVar<bool> SafeTickAirOverride{ false };
+			inline CVar<int> PassiveRecharge{ 0 };
 			inline CVar<bool> SEnabled{ false };
 			inline CVar<int> SFactor{ 1 };
 			inline CVar<bool> NotInAir{ false };
@@ -712,6 +714,7 @@ namespace Vars
 			inline CVar<bool> WhileVisible { false };
 			inline CVar<bool> PredictVisibility { false };
 			inline CVar<bool> WhileUnducking { false };
+			inline CVar<bool> WhileInAir { false };
 			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22 };
 			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3

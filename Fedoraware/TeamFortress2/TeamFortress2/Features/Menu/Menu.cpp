@@ -1483,11 +1483,12 @@ void CMenu::MenuHvH()
 			if (Vars::Misc::CL_Move::TeleportMode.Value) {
 				WSlider("Smooth Teleport Factor", &Vars::Misc::CL_Move::TeleportFactor.Value, 2, 6, "%d");
 			}
-			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne", "Retain Fakelag", "Stop Recharge Movement", "Safe Tick" }, { &Vars::Misc::CL_Move::RechargeWhileDead.Value, &Vars::Misc::CL_Move::AutoRecharge.Value, &Vars::Misc::CL_Move::WaitForDT.Value, &Vars::Misc::CL_Move::AntiWarp.Value, &Vars::Misc::CL_Move::NotInAir.Value, &Vars::Misc::CL_Move::RetainFakelag.Value, &Vars::Misc::CL_Move::StopMovement.Value, &Vars::Misc::CL_Move::SafeTick.Value }, "Options");
+			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne", "Retain Fakelag", "Stop Recharge Movement", "Safe Tick", "Safe Tick Airborne" }, { &Vars::Misc::CL_Move::RechargeWhileDead.Value, &Vars::Misc::CL_Move::AutoRecharge.Value, &Vars::Misc::CL_Move::WaitForDT.Value, &Vars::Misc::CL_Move::AntiWarp.Value, &Vars::Misc::CL_Move::NotInAir.Value, &Vars::Misc::CL_Move::RetainFakelag.Value, &Vars::Misc::CL_Move::StopMovement.Value, &Vars::Misc::CL_Move::SafeTick.Value, &Vars::Misc::CL_Move::SafeTickAirOverride.Value }, "Options");
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
 			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 2;
 			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 22, "%d"); HelpMarker("How many ticks to shift");
+			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 22, "%d");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
 			if (Vars::Misc::CL_Move::SEnabled.Value)
 			{
@@ -1498,7 +1499,7 @@ void CMenu::MenuHvH()
 			/* Section: Fakelag */
 			SectionTitle("Fakelag");
 			WToggle("Enable Fakelag", &Vars::Misc::CL_Move::Fakelag.Value);
-			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility", "While Unducking" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value, &Vars::Misc::CL_Move::WhileUnducking.Value }, "Flags###FakeLagFlags");
+			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility", "While Unducking", "While Airborne" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value, &Vars::Misc::CL_Move::WhileUnducking.Value, &Vars::Misc::CL_Move::WhileInAir.Value }, "Flags###FakeLagFlags");
 			if (Vars::Misc::CL_Move::FakelagOnKey.Value)
 			{ InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held"); }
 			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.Value, { "Plain", "Random", "Adaptive" }); HelpMarker("Controls how fakelag will be controlled.");
