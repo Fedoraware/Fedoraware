@@ -230,6 +230,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCache.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCaches.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_MaintainSequenceTransitions.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_PushAllowBoneAccess.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />

@@ -212,6 +212,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseViewModel_ShouldFlipViewModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\FX_FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CLagCompensationManager_StartLagCompensation.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_MaintainSequenceTransitions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />

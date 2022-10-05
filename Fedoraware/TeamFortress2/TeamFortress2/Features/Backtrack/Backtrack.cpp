@@ -10,9 +10,9 @@ bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to
 	
 	if (!pLocal || !iNetChan) { return false; }
 
-	const float flTickArriveTime = GetLatency() - iNetChan->GetLatency(FLOW_INCOMING) - iNetChan->GetLatency(FLOW_OUTGOING);
-	const float flRawDelta = TICKS_TO_TIME(abs(Record.iTickCount - G::LastUserCmd->tick_count + 1));
-	const float flDelta = fabsf(flRawDelta + flTickArriveTime);
+	const float flTickArriveTime = GetLatency() + iNetChan->GetLatency(FLOW_INCOMING);
+	const float flRawDelta = (I::GlobalVars->curtime - Record.flSimTime);
+	const float flDelta = fabsf(flTickArriveTime - flRawDelta);
 
 	return flDelta < .2f;	//	in short, check if the record is +- 200ms from us
 }
@@ -94,8 +94,8 @@ float CBacktrackNew::GetLatency()
 {
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
 		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING) + G::LerpTime;
-		const float flFakeLatency = flLatencyRampup * (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
-		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
+		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
+		const float flAdjustedLatency = flLatencyRampup * std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
 		return flAdjustedLatency;
 	}
 
