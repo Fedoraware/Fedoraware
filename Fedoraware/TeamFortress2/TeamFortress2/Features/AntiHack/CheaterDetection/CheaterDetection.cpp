@@ -126,7 +126,7 @@ void CCheaterDetection::OnTick()
 
 		//analytical analysis
 		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first) { if ((mData[pEntity].pChoke.second / mData[pEntity].pChoke.first) > (14.f / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }); mData[pEntity].pChoke = { 0, 0.f }; } }
-		if (mData[pEntity].flHitchance && server.flHighAccuracy) { if (mData[pEntity].flHitchance > (std::min(server.flHighAccuracy * 2, .95f)) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, std::min(server.flHighAccuracy * 2, .95f)).c_str(), {224, 255, 131, 255}); } }
+		if (mData[pEntity].flHitchance && server.flHighAccuracy && mData[pEntity].mShots.first > 25) { if (mData[pEntity].flHitchance > (server.flHighAccuracy) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, server.flHighAccuracy).c_str(), {224, 255, 131, 255}); } }
 		if (mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (std::max(server.flAverageScorePerSecond, server.flFloorScore) * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); } }
 	
 		if (mData[pEntity].iPlayerSuspicion > INT_MAX_SUSPICION) { mData[pEntity].iPlayerSuspicion = 0; G::PlayerPriority[pInfo.friendsID].Mode = 4; }
@@ -179,7 +179,9 @@ void CCheaterDetection::FindHitchances(){	//	runs every 20 seconds
 	if (!flTotal || !iScanAmount) { return; }
 	const float flAvg = flTotal / iScanAmount;
 
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f}", flAvg).c_str(), {224, 255, 131, 255});
+	server.flHighAccuracy = std::min(server.flHighAccuracy * 2, .95f);
+
+	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f | %.1f}", flAvg, server.flHighAccuracy).c_str(), {224, 255, 131, 255});
 }
 
 void CCheaterDetection::Reset(){
