@@ -56,7 +56,7 @@ class CCheaterDetection {
 	bool AreAnglesSuspicious(CBaseEntity* pEntity);
 	void OnDormancy(CBaseEntity* pEntity);
 
-	// player mafmatics
+	// player utils
 	void CalculateHitChance(CBaseEntity* pEntity);
 
 	// server functions

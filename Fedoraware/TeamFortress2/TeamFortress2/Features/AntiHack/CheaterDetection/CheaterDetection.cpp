@@ -47,7 +47,7 @@ bool CCheaterDetection::ShouldScanEntity(CBaseEntity* pEntity){
 
 bool CCheaterDetection::IsPitchLegal(CBaseEntity* pSuspect){
 	const Vec3 vAngles = pSuspect->GetEyeAngles();
-	return fabsf(vAngles.x) >= 90.f;
+	return fabsf(vAngles.x) <= 90.f;
 }
 
 void CCheaterDetection::ReportTickCount(std::pair<CBaseEntity*, int> pReport){
@@ -60,7 +60,7 @@ void CCheaterDetection::ReportTickCount(std::pair<CBaseEntity*, int> pReport){
 bool CCheaterDetection::CheckBHop(CBaseEntity* pEntity){
 	const bool bOnGround = pEntity->OnSolid();	//	NOTE: groundentity isn't networked properly sometimes i think
 	if (bOnGround) { mData[pEntity].pBhop.first++; }
-	else if (mData[pEntity].pBhop.first < 2) { mData[pEntity].pBhop.second++; mData[pEntity].pBhop.first = 0; }
+	else if (mData[pEntity].pBhop.first == 1) { mData[pEntity].pBhop.second++; mData[pEntity].pBhop.first = 0; }
 	else { mData[pEntity].pBhop = {0, 0}; }
 
 	if (mData[pEntity].pBhop.second > INT_MAX_BHOP) { mData[pEntity].iPlayerSuspicion++; mData[pEntity].pBhop = {0, 0}; return true; }
@@ -111,7 +111,7 @@ void CCheaterDetection::OnTick()
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 		if (!pEntity) { continue; }
 		if (pEntity->GetDormant()) { OnDormancy(pEntity); continue; }
-		if (!ShouldScanEntity(pEntity)) { continue; }
+		if (!ShouldScanEntity(pEntity)) { OnDormancy(pEntity); continue; }
 		if (pEntity == pLocal) { continue; }	//	i think for this code to run the local player has to be cheating anyway :thinking:
 		bool bMarked = false;	//	used for suspicion reduction
 
@@ -128,6 +128,8 @@ void CCheaterDetection::OnTick()
 		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first) { if ((mData[pEntity].pChoke.second / mData[pEntity].pChoke.first) > (14.f / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }); mData[pEntity].pChoke = { 0, 0.f }; } }
 		if (mData[pEntity].flHitchance && server.flQ2) { if (mData[pEntity].flHitchance > (server.flQ2 + server.flQ3 * 1.6) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, (server.flQ2 + server.flQ3 * 1.6)).c_str(), {224, 255, 131, 255}); } }
 		if (mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (server.flAverageScorePerSecond * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); } }
+	
+		if (mData[pEntity].iPlayerSuspicion > INT_MAX_SUSPICION) { mData[pEntity].iPlayerSuspicion = 0; G::PlayerPriority[pInfo.friendsID].Mode = 4; }
 	}
 }
 
@@ -146,20 +148,20 @@ void CCheaterDetection::FindScores(){	//	runs every 5 seconds
 	if (!cResource){ return; }
 	flLastScoreTime = I::GlobalVars->curtime;
 	
-	int iTotalScore = 0;
+	float flTotalAvg = 0;
 	int iTotalPlayers = 0;
 	for (int n = 1; n < I::EngineClient->GetMaxClients(); n++)
 	{
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 		if (!pEntity || !cResource->GetValid(pEntity->GetIndex())) { continue; }
-		const int iScore = cResource->GetScore(pEntity->GetIndex());
-		iTotalScore += iScore; iTotalPlayers++;	//	used for calculating the average score
+		const float iScore = cResource->GetScore(pEntity->GetIndex()) / cResource->GetConnectionTime(pEntity->GetIndex());
+		flTotalAvg += iScore; iTotalPlayers++;	//	used for calculating the average score
 	}
 
-	if (!iTotalScore || !iTotalPlayers) { return; }
+	if (!flTotalAvg || !iTotalPlayers) { return; }
 
 	// now that we've gone through all players (including local) find the avg
-	server.flAverageScorePerSecond = ((float)iTotalScore / (float)iTotalPlayers);
+	server.flAverageScorePerSecond = (flTotalAvg / (float)iTotalPlayers);
 	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated avg. server score per second at %.1f.", server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255});
 }
 
@@ -169,13 +171,17 @@ void CCheaterDetection::FindHitchances(){	//	runs every 20 seconds
 
 	if (server.mAccuracies.size() < 1) { return; }
 
+	float flTotal = 0.f; int iScanAmount = 0;
 	std::vector<float> vUnsorted{};
-	std::map<CBaseEntity*, float>::iterator iter = server.mAccuracies.begin();
-	while (iter != server.mAccuracies.end()){
-		const float flAccuracy = iter->second;
-		vUnsorted.push_back(flAccuracy);
-		iter++;
+	for (int n = 1; n < I::EngineClient->GetMaxClients(); n++)
+	{
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+		if (!pEntity) { continue; }
+		vUnsorted.push_back(mData[pEntity].flHitchance);
+		flTotal+=mData[pEntity].flHitchance; iScanAmount++;
 	}
+
+	if (!flTotal || !iScanAmount) { return; }
 
 	// we now have an unsorted vector, lets sort it
 	std::sort(vUnsorted.begin(), vUnsorted.end());
@@ -189,7 +195,9 @@ void CCheaterDetection::FindHitchances(){	//	runs every 20 seconds
 	server.flQ2 = vUnsorted.at(vUnsorted.size()*(2/4));
 	server.flQ3 = vUnsorted.at(vUnsorted.size()*(3/4));
 
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated med. server hitchance at %.1f.", server.flQ2).c_str(), {224, 255, 131, 255});
+	const float flAverage = flTotal / iScanAmount;
+
+	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f <%.1f | %.1f | %1.f>}", flAverage, server.flQ1, server.flQ2, server.flQ3).c_str(), {224, 255, 131, 255});
 }
 
 void CCheaterDetection::Reset(){
