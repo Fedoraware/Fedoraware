@@ -146,7 +146,7 @@ void CMisc::DetectChoke()
 		}
 		else
 		{
-			F::BadActors.ReportTickCount(pEntity, G::ChokeMap[pEntity->GetIndex()]);
+			F::BadActors.ReportTickCount({pEntity, G::ChokeMap[pEntity->GetIndex()]});
 			G::ChokeMap[pEntity->GetIndex()] = 0;
 		}
 	}

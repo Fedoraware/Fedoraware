@@ -2,6 +2,7 @@
 #include "../../Features/ChatInfo/ChatInfo.h"
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/AntiAim.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
@@ -39,6 +40,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	{
 		F::Resolver.OnPlayerHurt(pEvent);
 		F::BacktrackNew.PlayerHurt(pEvent);
+		F::BadActors.ReportDamage(pEvent);
 	}
 
 	// Run Lua callbacks
