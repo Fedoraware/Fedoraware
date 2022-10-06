@@ -47,7 +47,7 @@ bool CCheaterDetection::ShouldScanEntity(CBaseEntity* pEntity){
 
 bool CCheaterDetection::IsPitchLegal(CBaseEntity* pSuspect){
 	const Vec3 vAngles = pSuspect->GetEyeAngles();
-	return fabsf(vAngles.x) <= 90.f;
+	return fabsf(vAngles.x) < 90.f;
 }
 
 void CCheaterDetection::ReportTickCount(std::pair<CBaseEntity*, int> pReport){
@@ -126,8 +126,8 @@ void CCheaterDetection::OnTick()
 
 		//analytical analysis
 		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first) { if ((mData[pEntity].pChoke.second / mData[pEntity].pChoke.first) > (14.f / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }); mData[pEntity].pChoke = { 0, 0.f }; } }
-		if (mData[pEntity].flHitchance && server.flQ2) { if (mData[pEntity].flHitchance > (server.flQ2 + server.flQ3 * 1.6) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, (server.flQ2 + server.flQ3 * 1.6)).c_str(), {224, 255, 131, 255}); } }
-		if (mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (server.flAverageScorePerSecond * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); } }
+		if (mData[pEntity].flHitchance && server.flHighAccuracy) { if (mData[pEntity].flHitchance > (std::min(server.flHighAccuracy * 2, .95f)) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, std::min(server.flHighAccuracy * 2, .95f)).c_str(), {224, 255, 131, 255}); } }
+		if (mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (std::max(server.flAverageScorePerSecond, server.flFloorScore) * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); } }
 	
 		if (mData[pEntity].iPlayerSuspicion > INT_MAX_SUSPICION) { mData[pEntity].iPlayerSuspicion = 0; G::PlayerPriority[pInfo.friendsID].Mode = 4; }
 	}
@@ -135,8 +135,6 @@ void CCheaterDetection::OnTick()
 
 void CCheaterDetection::FillServerInfo(){
 	server.flAverageScorePerSecond = 0.f;
-	server.mAccuracies.clear();
-	server.flQ1 = 0.f; server.flQ2 = 0.f; server.flQ3 = 0.f;
 	server.iTickRate = 1.f / I::GlobalVars->interval_per_tick;
 	server.flMultiplier = 66.7 / server.iTickRate;
 	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server tickrate & created appropriate multiplier {%.1f | %.1f}.", server.iTickRate, server.flMultiplier).c_str(), {224, 255, 131, 255});
@@ -169,35 +167,19 @@ void CCheaterDetection::FindHitchances(){	//	runs every 20 seconds
 	if (I::GlobalVars->curtime - flLastAccuracyTime < 20.f) { return; }
 	flLastAccuracyTime = I::GlobalVars->curtime;
 
-	if (server.mAccuracies.size() < 1) { return; }
-
 	float flTotal = 0.f; int iScanAmount = 0;
 	std::vector<float> vUnsorted{};
 	for (int n = 1; n < I::EngineClient->GetMaxClients(); n++)
 	{
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
-		if (!pEntity) { continue; }
-		vUnsorted.push_back(mData[pEntity].flHitchance);
-		flTotal+=mData[pEntity].flHitchance; iScanAmount++;
+		if (!pEntity || !mData[pEntity].mShots.first) { continue; }
+		flTotal+= mData[pEntity].flHitchance; iScanAmount++;
 	}
 
 	if (!flTotal || !iScanAmount) { return; }
+	const float flAvg = flTotal / iScanAmount;
 
-	// we now have an unsorted vector, lets sort it
-	std::sort(vUnsorted.begin(), vUnsorted.end());
-
-	// now that it's sorted, lets find the quartiles
-	const auto Q1 = vUnsorted.size() / 4;
-	const auto Q2 = vUnsorted.size() / 2;
-	const auto Q3 = Q1 + Q2;
-
-	server.flQ1 = vUnsorted.at(vUnsorted.size()*(1/4));
-	server.flQ2 = vUnsorted.at(vUnsorted.size()*(2/4));
-	server.flQ3 = vUnsorted.at(vUnsorted.size()*(3/4));
-
-	const float flAverage = flTotal / iScanAmount;
-
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f <%.1f | %.1f | %1.f>}", flAverage, server.flQ1, server.flQ2, server.flQ3).c_str(), {224, 255, 131, 255});
+	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f}", flAvg).c_str(), {224, 255, 131, 255});
 }
 
 void CCheaterDetection::Reset(){
@@ -220,7 +202,6 @@ void CCheaterDetection::OnLoad(){
 
 void CCheaterDetection::CalculateHitChance(CBaseEntity* pEntity){
 	mData[pEntity].flHitchance = (float)mData[pEntity].mShots.first / (float)mData[pEntity].mShots.second;
-	server.mAccuracies[pEntity] = mData[pEntity].flHitchance;
 }
 
 void CCheaterDetection::ReportShot(int iIndex){
@@ -232,7 +213,7 @@ void CCheaterDetection::ReportShot(int iIndex){
 void CCheaterDetection::ReportDamage(CGameEvent* pEvent){
 	const int iIndex = pEvent->GetInt("attacker");
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
-	if (!pEntity){ return; }
+	if (!pEntity || pEntity->GetDormant()){ return; }
 	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1){ return; }
 	mData[pEntity].iLastDamageEventTick = I::GlobalVars->tickcount;
 	mData[pEntity].mShots.first++;

@@ -21,8 +21,7 @@ struct PlayerData {
 
 struct ServerData {
 	float flAverageScorePerSecond = 0.f;					//	used to determine if our player is in the top 99% or just average within the server
-	std::map<CBaseEntity*, float> mAccuracies{};			//	stores the accuracy for all players
-	float flQ1, flQ2, flQ3;									//	quartiles
+	float flHighAccuracy;									//	highest acceptable accuracy
 	int iTickRate = 0;										//	used for data
 	float flMultiplier = 1.f;								//	66.7 / iTickRate, real players should have shorter flicks on servers where the tickrate is higher, and larger flicks on lower tickrate servers
 	float flFloorScore = 0.05f;								//	assume this as the minimum average score, what if a majority of the server is friendly, instead of a minimum score to be included, just set this as the average
