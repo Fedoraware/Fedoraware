@@ -125,9 +125,9 @@ void CCheaterDetection::OnTick()
 		if (CheckBHop(pEntity)) { bMarked = true; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for bunny-hopping.", pInfo.name).c_str(), {224, 255, 131, 255}); }
 
 		//analytical analysis
-		if ((mData[pEntity].pChoke.second / mData[pEntity].pChoke.first) > (14.f / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }); mData[pEntity].pChoke = { 0, 0.f }; }
-		if (mData[pEntity].flHitchance > (server.flQ2 + server.flQ3 * 1.6) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, (server.flQ2 + server.flQ3 * 1.6)).c_str(), {224, 255, 131, 255}); }
-		if (mData[pEntity].flScorePerSecond > (server.flAverageScorePerSecond * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); }
+		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first) { if ((mData[pEntity].pChoke.second / mData[pEntity].pChoke.first) > (14.f / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }); mData[pEntity].pChoke = { 0, 0.f }; } }
+		if (mData[pEntity].flHitchance && server.flQ2) { if (mData[pEntity].flHitchance > (server.flQ2 + server.flQ3 * 1.6) && !mData[pEntity].pDetections.first && flScanningTime > 120.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, (server.flQ2 + server.flQ3 * 1.6)).c_str(), {224, 255, 131, 255}); } }
+		if (mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (server.flAverageScorePerSecond * 3) && !mData[pEntity].pDetections.second && flScanningTime > 10.f) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), {224, 255, 131, 255}); } }
 	}
 }
 
@@ -167,6 +167,8 @@ void CCheaterDetection::FindHitchances(){	//	runs every 20 seconds
 	if (I::GlobalVars->curtime - flLastAccuracyTime < 20.f) { return; }
 	flLastAccuracyTime = I::GlobalVars->curtime;
 
+	if (server.mAccuracies.size() < 1) { return; }
+
 	std::vector<float> vUnsorted{};
 	std::map<CBaseEntity*, float>::iterator iter = server.mAccuracies.begin();
 	while (iter != server.mAccuracies.end()){
@@ -205,6 +207,7 @@ void CCheaterDetection::Reset(){
 void CCheaterDetection::OnLoad(){
 	Reset();
 	FillServerInfo();
+	flLastAccuracyTime = I::GlobalVars->curtime; flLastScoreTime = I::GlobalVars->curtime;
 }
 
 void CCheaterDetection::CalculateHitChance(CBaseEntity* pEntity){
