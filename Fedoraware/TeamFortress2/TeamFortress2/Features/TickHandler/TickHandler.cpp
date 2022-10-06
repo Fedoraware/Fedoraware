@@ -53,6 +53,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
+	if (G::WaitForShift > 0) { G::WaitForShift--; }
 	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
 
@@ -68,8 +69,6 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 		while (iAvailableTicks > 1) { CLMoveFunc(accumulated_extra_samples, false); }
 		return CLMoveFunc(accumulated_extra_samples, true);
 	}
-
-	if (G::WaitForShift > 0) { G::WaitForShift--; }
 
 	if (bTeleport){
 		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? std::min(std::min(Vars::Misc::CL_Move::TeleportFactor.Value, 2), iAvailableTicks) : iAvailableTicks);
