@@ -130,9 +130,7 @@ void CBacktrackNew::FrameStageNotify(){
 void CBacktrackNew::ReportShot(int iIndex){
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity) { return; }
-	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
-	if (!pWeapon) { return; }
-	mDidShoot[pEntity->GetIndex()] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
+	mDidShoot[pEntity->GetIndex()] = true;
 }
 
 std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){

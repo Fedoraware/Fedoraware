@@ -214,6 +214,8 @@ void CCheaterDetection::ReportDamage(CGameEvent* pEvent){
 	const int iIndex = pEvent->GetInt("attacker");
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity || pEntity->GetDormant()){ return; }
+	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
+	if (!pWeapon || Utils::GetWeaponType(pWeapon) != EWeaponType::HITSCAN) { return; }
 	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1){ return; }
 	mData[pEntity].iLastDamageEventTick = I::GlobalVars->tickcount;
 	mData[pEntity].mShots.first++;

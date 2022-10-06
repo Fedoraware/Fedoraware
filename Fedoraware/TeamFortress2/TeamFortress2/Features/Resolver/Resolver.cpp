@@ -18,9 +18,7 @@ bool CResolver::ShouldAutoResolve()
 void CResolver::ReportShot(int iIndex){
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity) { return; }
-	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
-	if (!pWeapon) { return; }
-	mDidShoot[pEntity->GetIndex()] = Utils::GetWeaponType(pWeapon) == EWeaponType::HITSCAN;
+	mDidShoot[pEntity->GetIndex()] = true;
 }
 
 /* Run the resolver and apply the resolved angles */
