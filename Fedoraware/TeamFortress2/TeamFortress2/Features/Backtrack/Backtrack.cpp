@@ -16,12 +16,11 @@ bool CBacktrackNew::IsSimulationReliable(CBaseEntity* pEntity){
 bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
-	
-	if (!pLocal || !iNetChan) { return false; }
 
-	const float flTickArriveTime = GetLatency() + iNetChan->GetLatency(FLOW_INCOMING);
-	const float flRawDelta = (I::GlobalVars->curtime - Record.flSimTime);
-	const float flDelta = fabsf(flTickArriveTime - flRawDelta);
+	if (!pLocal || !iNetChan) { return false; }
+	
+	const float flCorrect = std::clamp(iNetChan->GetLatency(FLOW_INCOMING) + GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
+	const float flDelta = fabsf(flCorrect - (I::GlobalVars->curtime - Record.flSimTime));
 
 	return flDelta < .2f;	//	in short, check if the record is +- 200ms from us
 }
@@ -105,7 +104,7 @@ void CBacktrackNew::UpdateDatagram()
 float CBacktrackNew::GetLatency()
 {
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
-		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING) + G::LerpTime;
+		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING);
 		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
 		const float flAdjustedLatency = flLatencyRampup * std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
 		return flAdjustedLatency;
