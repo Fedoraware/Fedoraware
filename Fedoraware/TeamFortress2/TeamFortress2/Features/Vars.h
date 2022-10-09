@@ -683,6 +683,20 @@ namespace Vars
 			inline CVar<float> Distance{ 150.f };
 		}
 
+		namespace CheaterDetection
+		{
+			inline CVar<bool> Enabled{false};
+			inline CVar<int> Methods{0b1111100};			//	OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
+			inline CVar<int> Protections{0b111};			//	double scans, lagging client, timing out
+			inline CVar<int> SuspicionGate{10};				//	the amount of infractions prior to marking someone as a cheater
+			inline CVar<int> PacketManipGate{14};			//	the avg choke for someone to receive and infraction for packet choking
+			inline CVar<int> BHopMaxDelay{1};				//	max groundticks used when detecting a bunny hop.
+			inline CVar<int> BHopDetectionsRequired{5};		//	how many times must some be seen bunny hopping to receive an infraction
+			inline CVar<float> ScoreMultiplier{2.f};		//	multiply the avg score/s by this to receive the maximum amount
+			inline CVar<float> MinimumFlickDistance{20.f};	//	min mouse flick size to suspect someone of angle cheats.
+			inline CVar<float> MaximumNoise{5.f};			//	max mouse noise prior to a flick to mark somebody
+		}
+
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled{ false };

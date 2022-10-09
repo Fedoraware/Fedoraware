@@ -2,6 +2,7 @@
 #include "../../../SDK/SDK.h"
 struct PlayerData {
 	//Data
+	float flJoinTime = 0.f;
 	Vec2 vLastAngle = {0, 0};
 	int iPlayerSuspicion = 0;
 	int iNonDormantCleanQueries = 0;

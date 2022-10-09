@@ -862,6 +862,20 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::Followbot::Distance);
 			}
 
+			// Cheater Detection
+			{
+				SAVE_VAR(Vars::Misc::CheaterDetection::Enabled);
+				SAVE_VAR(Vars::Misc::CheaterDetection::Methods);
+				SAVE_VAR(Vars::Misc::CheaterDetection::Protections);
+				SAVE_VAR(Vars::Misc::CheaterDetection::SuspicionGate);
+				SAVE_VAR(Vars::Misc::CheaterDetection::PacketManipGate);
+				SAVE_VAR(Vars::Misc::CheaterDetection::BHopMaxDelay);
+				SAVE_VAR(Vars::Misc::CheaterDetection::BHopDetectionsRequired);
+				SAVE_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
+			}
+
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
@@ -1698,6 +1712,20 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::Misc::Followbot::Enabled);
 				LOAD_VAR(Vars::Misc::Followbot::Distance);
+			}
+
+			// Cheater Detection
+			{
+				LOAD_VAR(Vars::Misc::CheaterDetection::Enabled);
+				LOAD_VAR(Vars::Misc::CheaterDetection::Methods);
+				LOAD_VAR(Vars::Misc::CheaterDetection::Protections);
+				LOAD_VAR(Vars::Misc::CheaterDetection::SuspicionGate);
+				LOAD_VAR(Vars::Misc::CheaterDetection::PacketManipGate);
+				LOAD_VAR(Vars::Misc::CheaterDetection::BHopMaxDelay);
+				LOAD_VAR(Vars::Misc::CheaterDetection::BHopDetectionsRequired);
+				LOAD_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
 			}
 
 			// CL_Move
