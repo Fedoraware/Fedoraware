@@ -146,7 +146,7 @@ void CCheaterDetection::OnTick()
 
 		const Vec3 vAngles = pEntity->GetEyeAngles();
 		mData[pEntity].vLastAngle = {vAngles.x, vAngles.y};
-		if (mData[pEntity].iPlayerSuspicion > INT_MAX_SUSPICION) { mData[pEntity].iPlayerSuspicion = 0; G::PlayerPriority[pInfo.friendsID].Mode = 4; }
+		if (mData[pEntity].iPlayerSuspicion >= INT_MAX_SUSPICION) { mData[pEntity].iPlayerSuspicion = 0; G::PlayerPriority[pInfo.friendsID].Mode = 4; }
 	}
 }
 
@@ -187,7 +187,7 @@ void CCheaterDetection::FindHitchances(){	//	runs every 30 seconds
 	const float flAvg = (float)server.iHits / (float)server.iMisses;
 	server.flHighAccuracy = std::clamp(flAvg * 2, .05f, .95f);
 
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.1f | %.1f}", flAvg, server.flHighAccuracy).c_str(), {224, 255, 131, 255});
+	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.5f | %.5f}", flAvg, server.flHighAccuracy).c_str(), {224, 255, 131, 255});
 }
 
 void CCheaterDetection::Reset(){
