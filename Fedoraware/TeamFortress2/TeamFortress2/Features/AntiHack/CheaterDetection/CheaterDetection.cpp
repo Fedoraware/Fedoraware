@@ -77,7 +77,7 @@ bool CCheaterDetection::AreAnglesSuspicious(CBaseEntity* pEntity){
 
 		if (flDelta > (20.f)) { 
 			if (!mData[pEntity].bDidDamage) { mData[pEntity].pTrustAngles = {true, {vCurAngles.x, vCurAngles.y}}; }
-			else { return true; }	//	20 degree flick followed by damage, very suspicious.
+			else { return true; }	//	20 degree flick followed by damage, very suspicious. (this is bad redo it probably)
 		}
 	}
 	else {
@@ -90,6 +90,15 @@ bool CCheaterDetection::AreAnglesSuspicious(CBaseEntity* pEntity){
 		else { mData[pEntity].pTrustAngles = {false, {0, 0}}; }
 	}
 	return false;
+}
+
+void CCheaterDetection::SimTime(CBaseEntity* pEntity){
+	const float flSimDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
+	const int iTickDelta = TIME_TO_TICKS(flSimDelta);
+	if (mData[pEntity].pChoke.first = 0) { mData[pEntity].pChoke.second = iTickDelta; return; }
+	mData[pEntity].pChoke.first++;
+	mData[pEntity].pChoke.second+= iTickDelta;
+	return;
 }
 
 void CCheaterDetection::OnDormancy(CBaseEntity* pEntity){
@@ -122,6 +131,7 @@ void CCheaterDetection::OnTick()
 		if (!I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pInfo)) { continue; }
 
 		CalculateHitChance(pEntity);
+		SimTime(pEntity);
 
 		if (!IsPitchLegal(pEntity)) { bMarked = true; mData[pEntity].iPlayerSuspicion = INT_MAX_SUSPICION; Utils::ConLog("CheaterDetection", tfm::format("%s marked for OOB angles.", pInfo.name).c_str(), {224, 255, 131, 255}); }
 		if (AreAnglesSuspicious(pEntity)) { bMarked = true; mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for suspicious angles.", pInfo.name).c_str(), {224, 255, 131, 255}); }

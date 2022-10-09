@@ -58,10 +58,11 @@ class CCheaterDetection {
 	bool IsPitchLegal(CBaseEntity* pEntity);
 	bool CheckBHop(CBaseEntity* pEntity);
 	bool AreAnglesSuspicious(CBaseEntity* pEntity);
-	void OnDormancy(CBaseEntity* pEntity);
+	void SimTime(CBaseEntity* pEntity);
 
 	// player utils
 	void CalculateHitChance(CBaseEntity* pEntity);
+	void OnDormancy(CBaseEntity* pEntity);
 
 	// server functions
 	void FindScores();
