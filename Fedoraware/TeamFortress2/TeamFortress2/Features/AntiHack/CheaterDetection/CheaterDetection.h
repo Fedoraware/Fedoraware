@@ -9,6 +9,9 @@ struct PlayerData {
 	std::pair<bool, Vec2> pTrustAngles = {false, {0, 0}};
 	std::pair<bool, bool> pDetections = {false, false};	//	high hitchance, high avg score
 
+	//Immediate Data
+	bool bDidDamage = false;
+
 	//Tickbase Manipulation
 	std::pair<int, int> pChoke = {0, 0};
 
@@ -21,6 +24,8 @@ struct PlayerData {
 
 struct ServerData {
 	float flAverageScorePerSecond = 0.f;					//	used to determine if our player is in the top 99% or just average within the server
+	int iMisses = 0;										//	total shots fired
+	int iHits = 0;											//	total shots hit
 	float flHighAccuracy;									//	highest acceptable accuracy
 	int iTickRate = 0;										//	used for data
 	float flMultiplier = 1.f;								//	66.7 / iTickRate, real players should have shorter flicks on servers where the tickrate is higher, and larger flicks on lower tickrate servers
