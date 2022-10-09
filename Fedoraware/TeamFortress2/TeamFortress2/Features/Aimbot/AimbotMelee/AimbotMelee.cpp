@@ -222,45 +222,28 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 {
 	Vec3 hitboxpos;
 
-	// Backtrack the target if required
-	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value && target.m_TargetType == ETargetType::PLAYER)
+	//Backtrack the target if required
+	if (Vars::Backtrack::Enabled.Value && target.m_TargetType == ETargetType::PLAYER)
 	{
-		if (const auto& pLastTick = F::Backtrack.GetRecord(target.m_pEntity->GetIndex(), BacktrackMode::Last))
-		{
-			if (const auto& pHDR = pLastTick->HDR)
-			{
-				if (const auto& pSet = pHDR->GetHitboxSet(pLastTick->HitboxSet))
-				{
-					if (const auto& pBox = pSet->hitbox(HITBOX_PELVIS))
-					{
-						const Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f;
-						Vec3 vOut;
-						const matrix3x4& bone = pLastTick->BoneMatrix.BoneMatrix[pBox->bone];
-						Math::VectorTransform(vPos, bone, vOut);
-						hitboxpos = vOut;
-						target.SimTime = pLastTick->SimulationTime;
-					}
-				}
+		const auto& record = F::BacktrackNew.GetLastRecord(target.m_pEntity);
+		if (record) {
+			hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_PELVIS, (matrix3x4*)(&record->BoneMatrix));
+			target.SimTime = record->flSimTime;
+
+			// Check if the backtrack pos is visible
+			if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos)) {
+				target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
+				target.m_vPos = hitboxpos;
+				target.ShouldBacktrack = true;
 			}
 		}
-
-		// Check if the backtrack pos is visible
-		if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
-		{
-			target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-			target.m_vPos = hitboxpos;
-			target.ShouldBacktrack = true;
-			return true;
-		}
-
-		// Check if the player is in range for a non-backtrack hit
-		if (Vars::Backtrack::Latency.Value > 200)
-		{
-			return false;
-		}
+		if (F::BacktrackNew.bFakeLatency && Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
+		{ return false; }
 	}
 
-	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value))
+
+
+	if (Vars::Aimbot::Melee::RangeCheck.Value && !(Vars::Backtrack::Enabled.Value))
 	{
 		if (!CanMeleeHit(pLocal, pWeapon, target.m_vAngleTo, target.m_pEntity->GetIndex()))
 		{
@@ -351,11 +334,11 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 	}
 
-	if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+	if (Vars::Backtrack::Enabled.Value)
 	{
 		const float flRange = pWeapon->GetSwingRange(pLocal);
 
-		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange * 1.9f) // It just works?
+		if (Target.m_vPos.DistTo(pLocal->GetShootPos()) > flRange) // why was this being multiplied.
 		{
 			//I::DebugOverlay->AddLineOverlay(Target.m_vPos, pLocal->GetShootPos(), 255, 0, 0, false, 1.f);
 			return false;

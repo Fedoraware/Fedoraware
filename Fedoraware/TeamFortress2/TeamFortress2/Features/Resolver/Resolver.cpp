@@ -1,4 +1,5 @@
 #include "Resolver.h"
+#include "../AntiHack/AntiAim.h"
 
 static std::vector YawResolves{ 0.0f, 180.0f, 65.0f, -65.0f, -180.0f };
 
@@ -14,16 +15,21 @@ bool CResolver::ShouldAutoResolve()
 	return true;
 }
 
+void CResolver::ReportShot(int iIndex){
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
+	if (!pEntity) { return; }
+	mDidShoot[pEntity->GetIndex()] = true;
+}
+
 /* Run the resolver and apply the resolved angles */
 void CResolver::Run()
 {
 	if (!Vars::AntiHack::Resolver::Resolver.Value) { return; }
 
 	Vec3 localHead;
-	if (const auto& pLocal = g_EntityCache.GetLocal())
-	{
-		localHead = pLocal->GetEyePosition();
-	}
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return; }
+	localHead = pLocal->GetEyePosition();
 
 	UpdateSniperDots();
 
@@ -49,6 +55,10 @@ void CResolver::Run()
 		}
 
 		if (entity->IsTaunting()) {
+			continue;
+		}
+
+		if (mDidShoot[entity->GetIndex()]) {
 			continue;
 		}
 
@@ -136,7 +146,14 @@ void CResolver::Run()
 			*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
 			break;
 		}
-		case 6:
+		case 6:	//	find edge
+		{
+			const Vec3 vAngleTo = Math::CalcAngle(entity->GetAbsOrigin(), pLocal->GetAbsOrigin());	//	baseyaw
+			const bool bEdge = G::RealViewAngles.x == 89.f ? F::AntiAim.FindEdge(vAngleTo.y) : F::AntiAim.FindEdge(vAngleTo.y);	//	this is terrible but should work fine
+			*m_angEyeAnglesY = vAngleTo.y + (bEdge ? 90 : -90);
+			break;
+		}
+		case 7:
 		{
 			// Auto resolver
 			if (ShouldAutoResolve())
@@ -149,6 +166,7 @@ void CResolver::Run()
 			break;
 		}
 	}
+	mDidShoot.clear();
 }
 
 /* Update resolver data (for Bruteforce) */

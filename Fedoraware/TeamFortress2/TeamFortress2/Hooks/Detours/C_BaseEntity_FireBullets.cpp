@@ -96,19 +96,6 @@ void DrawBeam(const Vector& source, const Vector& end)
 //C_TFWeaponBaseGun_FireProjectile L"client.dll", L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"
 //C_TFWeaponBaseGun_FireBullet L"client.dll", L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"
 
-MAKE_HOOK(FX_FireBullets, g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? 83 C4 28 C2 04 00"), void, __cdecl,
-		  void* pWpn, int iPlayer, const Vector* vecOrigin, const Vector* vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
-{
-	//static auto C_TEFireBullets__PostDataUpdate_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? C2 ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC");
-	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
-	if (reinterpret_cast<DWORD>(_ReturnAddress()) != C_TFWeaponBaseGun__FireBullet_Call)
-	{
-		return;
-	}
-
-	return Hook.Original<FN>()(pWpn, iPlayer, vecOrigin, vecAngles, iWeapon, iMode, iSeed, flSpread, flDamage, bCritical);
-}
-
 bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
 {
 	static int nLastTickCount = 0;

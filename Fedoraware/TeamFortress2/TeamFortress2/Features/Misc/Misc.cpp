@@ -131,6 +131,7 @@ void CMisc::DetectChoke()
 {
 	static int iOldTick = I::GlobalVars->tickcount;
 	if (I::GlobalVars->tickcount == iOldTick) {return;}
+	iOldTick = I::GlobalVars->tickcount;
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!pEntity->IsAlive() || pEntity->GetDormant())
@@ -145,7 +146,7 @@ void CMisc::DetectChoke()
 		}
 		else
 		{
-			F::BadActors.ReportTickCount(pEntity, G::ChokeMap[pEntity->GetIndex()]);
+			F::BadActors.ReportTickCount({pEntity, G::ChokeMap[pEntity->GetIndex()]});
 			G::ChokeMap[pEntity->GetIndex()] = 0;
 		}
 	}
@@ -518,23 +519,24 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	static bool s_bState = false;
+	const bool bJumpHeld = pCmd->buttons & IN_JUMP;
+	const bool bCurHop = bJumpHeld && pLocal->OnSolid();
+	static bool bHopping = bCurHop;
 
-	if (pCmd->buttons & IN_JUMP)
-	{
-		if (!s_bState && !pLocal->OnSolid())
-		{
-			pCmd->buttons &= ~IN_JUMP;
-		}
-		else if (s_bState)
-		{
-			s_bState = false;
-		}
+	if (bCurHop) {	//	this is our initial jump
+		bHopping = true; return;
 	}
-	else if (!s_bState)
-	{
-		s_bState = true;
+	else if (bHopping && !pLocal->OnSolid() && bJumpHeld) {	//	 we are not on the ground and the key is in the same hold cycle
+		pCmd->buttons &= ~IN_JUMP; return;
 	}
+	else if (bHopping && !bJumpHeld) {	//	we are no longer in the jump key cycle
+		bHopping = false; return;
+	}
+	else if (!bHopping && bJumpHeld) {	//	we exited the cycle but now we want back in, don't mess with keys for doublejump, enter us back into the cycle for next tick
+		bHopping = true; return;
+	}
+	
+	return;
 }
 
 void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
@@ -978,11 +980,11 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 
 			// Get the hitbox position (Backtrack if possible)
 			Vec3 targetPos = target->GetHitboxPos(HITBOX_HEAD);
-			if (Vars::Backtrack::Enabled.Value)
-			{
-				const auto& btRecord = F::Backtrack.GetRecord(target->GetIndex(), BacktrackMode::Last);
-				if (btRecord) { targetPos = btRecord->HeadPosition; }
-			}
+			//if (Vars::Backtrack::Enabled.Value)
+			//{
+			//	const auto& btRecord = F::Backtrack.GetRecord(target->GetIndex(), BacktrackMode::Last);
+			//	if (btRecord) { targetPos = btRecord->HeadPosition; }
+			//}
 
 			// Is the player visible?
 			if (Utils::VisPos(pLocal, target, pPos, targetPos))
@@ -1356,7 +1358,7 @@ void CStatistics::Submit()
 	HINTERNET hRequest = HttpOpenRequestA(hConnection, "POST", "/submit_info", NULL, NULL, NULL, 0, 1);
 	if (HttpSendRequestA(hRequest, header, strlen(header), data, strlen(data_format.c_str())))
 	{
-		I::Cvar->ConsolePrintf("yeah");
+		Utils::ConLog("FWARE-Statistics-Server", "Succesfully sent statistics.", {255, 0, 114, 255});
 	}
 
 	InternetCloseHandle(hInternet);

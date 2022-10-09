@@ -40,11 +40,6 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 			{
 				return;
 			}
-
-			if (pEntity->m_vecVelocity().Length2D() < 5.f)
-			{
-				return;
-			}
 			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
 			{
 				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.GetLocal() && pEntity->GetTeamNum() ==
@@ -74,25 +69,23 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
+				const auto& vRecords = F::BacktrackNew.GetRecords(pEntity);
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					const auto& lastRecord = F::Backtrack.GetRecord(pEntity->GetIndex(), BacktrackMode::Last);
-					if (lastRecord)
+					std::optional<TickRecordNew> vLastRec = F::BacktrackNew.GetLastRecord(pEntity);
+					if (vLastRec)
 					{
-						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&lastRecord->BoneMatrix));
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&vLastRec->BoneMatrix));
 					}
 				}
 				else
 				{
-					const auto& entRecords = F::Backtrack.GetPlayerRecords(pEntity->GetIndex());
-					if (entRecords)
+					if (vRecords)
 					{
-						for (auto& record : *entRecords)
+						for (auto& record : *vRecords)
 						{
-							if (F::Backtrack.IsTickInRange(record.TickCount))
-							{
-								OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix));
-							}
+							I::RenderView->SetColorModulation( record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
+							if (F::BacktrackNew.WithinRewind(record)) { OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix)); }
 						}
 					}
 				}

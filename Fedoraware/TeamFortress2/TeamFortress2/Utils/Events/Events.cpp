@@ -2,9 +2,11 @@
 #include "../../Features/ChatInfo/ChatInfo.h"
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/AntiAim.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Killstreak/Killstreak.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Misc/Misc.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
@@ -37,6 +39,8 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
 		F::Resolver.OnPlayerHurt(pEvent);
+		F::BacktrackNew.PlayerHurt(pEvent);
+		F::BadActors.ReportDamage(pEvent);
 	}
 
 	// Run Lua callbacks

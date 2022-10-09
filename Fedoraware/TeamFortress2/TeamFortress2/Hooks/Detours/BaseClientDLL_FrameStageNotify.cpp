@@ -7,6 +7,7 @@
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 35), void, __fastcall,
 		  void* ecx, void* edx, EClientFrameStage curStage)
@@ -68,7 +69,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 		case EClientFrameStage::FRAME_NET_UPDATE_END:
 		{
 			g_EntityCache.Fill();
-			F::Backtrack.Run();
+			F::BacktrackNew.FrameStageNotify();
 			F::MoveSim.FillVelocities();
 			F::Visuals.FillSightlines();
 			G::BulletTracerFix = true;

@@ -24,11 +24,13 @@ private:
 	void UpdateSniperDots();
 	float ResolveSniperDot(CBaseEntity* pOwner);
 	std::unordered_map<CBaseEntity*, CBaseEntity*> SniperDotMap;
+	std::unordered_map<int, bool> mDidShoot;
 public:
 	bool ShouldAutoResolve();
 	void Run();
 	void Update(CUserCmd* pCmd);
 	void OnPlayerHurt(CGameEvent* pEvent);
+	void ReportShot(int iIndex);
 
 	std::unordered_map<int, ResolveMode> ResolvePlayers;
 	std::unordered_map<int, ResolverData> ResolveData;

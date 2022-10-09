@@ -381,6 +381,21 @@ public: //Everything else, lol.
 		return false;
 	}
 
+	__inline bool GetHitboxMinsAndMaxsFromMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4* matrix, Vec3* vCenter) {
+		if (const auto& pModel = GetModel()) {
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
+					if (const auto& pBox = pSet->hitbox(nHitbox)) {
+						vMins = pBox->bbmin; vMaxs = pBox->bbmax;
+						if (vCenter) Math::VectorTransform(((pBox->bbmin + pBox->bbmax) * 0.5f), matrix[pBox->bone], *vCenter);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	__inline bool GetHitboxMinsAndMaxs(const int nHitbox, Vec3& vMins, Vec3& vMaxs, Vec3* vCenter) {
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
@@ -563,6 +578,23 @@ public: //Everything else, lol.
 							Math::VectorTransform(vPos, BoneMatrix[pBox->bone], vOut);
 							return vOut;
 						}
+					}
+				}
+			}
+		}
+
+		return Vec3();
+	}
+
+	
+	__inline Vec3 GetHitboxPosMatrix(const int nHitbox, matrix3x4 BoneMatrix[128]) {
+		if (const auto& pModel = GetModel()) {
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
+					if (const auto& pBox = pSet->hitbox(nHitbox)) {
+						Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
+						Math::VectorTransform(vPos, BoneMatrix[pBox->bone], vOut);
+						return vOut;
 					}
 				}
 			}

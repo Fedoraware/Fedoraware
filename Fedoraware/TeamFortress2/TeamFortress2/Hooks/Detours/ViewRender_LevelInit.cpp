@@ -2,6 +2,8 @@
 
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/TickHandler/TickHandler.h"
+#include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
 #include "../../Features/Misc/Misc.h"
 
@@ -16,5 +18,7 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 	Hook.Original<FN>()(ecx, edx);
 
 	F::Visuals.ModulateWorld();
-	F::Backtrack.ResetLatency();
+	F::BacktrackNew.Restart();
+	F::Ticks.Reset();
+	F::BadActors.OnLoad();
 }
