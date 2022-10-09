@@ -4,6 +4,15 @@ bool CBacktrackNew::IsTracked(TickRecordNew Record){
 	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
+//	should return true if the current position on the client has a lag comp record created for it by the server (SHOULD)
+//	if the player has updated more than once, only the first update will have a backtrack record (i think)
+//	dont use this yet
+bool CBacktrackNew::IsSimulationReliable(CBaseEntity* pEntity){
+	const float flSimTimeDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
+	const int iTicksSimTimeDelta = flSimTimeDelta / I::GlobalVars->interval_per_tick;
+	return iTicksSimTimeDelta == 1;
+}
+
 bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
@@ -33,6 +42,9 @@ void CBacktrackNew::CleanRecords(){
 void CBacktrackNew::MakeRecords(){
 	const float flCurTime = I::GlobalVars->curtime;
 	const int iTickcount = I::GlobalVars->tickcount;
+	if (iLastCreationTick == iTickcount) { return; }
+	iLastCreationTick = iTickcount;
+
 	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 	{
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);

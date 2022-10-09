@@ -63,6 +63,7 @@ class CBacktrackNew
 private:
 	//	logic
 	bool IsTracked(TickRecordNew Record);
+	bool IsSimulationReliable(CBaseEntity* pEntity);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
@@ -76,6 +77,7 @@ private:
 	//	data
 	std::unordered_map<CBaseEntity*, std::deque<TickRecordNew>> mRecords;
 	std::unordered_map<int, bool> mDidShoot;
+	int iLastCreationTick = 0;
 
 	//	data - fake latency
 	std::deque<CIncomingSequence> dSequences;
