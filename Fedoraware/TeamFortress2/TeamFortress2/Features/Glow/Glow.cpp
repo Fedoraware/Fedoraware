@@ -63,7 +63,7 @@ void CGlowEffect::Init()
 		TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 	m_pRenderBuffer2->IncrementReferenceCount();
 
-	/*static KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
+	static KeyValues* m_pMatBlurXkv = new KeyValues("BlurFilterX");
 	static KeyValues* m_pMatBlurXwfkv = new KeyValues("BlurFilterX");
 	static KeyValues* m_pMatBlurYkv = new KeyValues("BlurFilterY");
 	static KeyValues* m_pMatBlurYwfkv = new KeyValues("BlurFilterY");
@@ -85,7 +85,7 @@ void CGlowEffect::Init()
 	m_pMatBlurXwf = F::DMEChams.CreateNRef("m_pMatBlurXwf", m_pMatBlurXwfkv, false);
 	m_pMatBlurY = F::DMEChams.CreateNRef("m_pMatBlurY", m_pMatBlurYkv, false);
 	m_pMatBlurYwf = F::DMEChams.CreateNRef("m_pMatBlurYwf", m_pMatBlurYwfkv, false);
-	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);*/
+	m_pMatHaloAddToScreen = F::DMEChams.CreateNRef("m_pMatHaloAddToScreen", m_pMatHaloAddToScreenkv, false);
 }
 
 void CGlowEffect::CreateMaterials(){
@@ -471,13 +471,11 @@ void CGlowEffect::Render()
 				pRenderContext->Viewport(0, 0, w, h);
 
 				pRenderContext->SetRenderTarget(m_pRenderBuffer2);
-				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0,
-					0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 				//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurX, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 
 				pRenderContext->SetRenderTarget(m_pRenderBuffer1);
-				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0,
-					0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+				pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 				//pRenderContext->DrawScreenSpaceRectangle(m_pMatBlurY, 0, 0, w, h, 0.0f, 0.0f, w, h, w, h);
 			}
 			pRenderContext->PopRenderTargetAndViewport();
@@ -517,6 +515,13 @@ void CGlowEffect::Render()
 			const float flScale = (Vars::Glow::Main::Scale.Value * 0.05f);
 			pRenderContext->DrawScreenSpaceRectangle( m_pMatHaloAddToScreen, 0, 0, w, h, +flScale, +flScale, (float)nViewportWidth / 4 - 1, (float)nViewportHeight/ 4 - 1, m_pRtQuarterSize1->GetActualWidth(), m_pRtQuarterSize1->GetActualHeight() );
 			pRenderContext->DrawScreenSpaceRectangle( m_pMatHaloAddToScreen, 0, 0, w, h, -flScale, -flScale, (float)nViewportWidth / 4 - 1, (float)nViewportHeight/ 4 - 1, m_pRtQuarterSize1->GetActualWidth(), m_pRtQuarterSize1->GetActualHeight() );
+			break;
+		}
+		case 3:{
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			break;
 		}
 		}

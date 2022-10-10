@@ -719,7 +719,7 @@ void CMenu::MenuVisuals()
 			{
 				SectionTitle("Glow Main");
 				WToggle("Glow", &Vars::Glow::Main::Active.Value);
-				WCombo("Glow Type###GlowTypeSelect", &Vars::Glow::Main::Type.Value, { "Blur", "Stencil", "FPStencil" }); HelpMarker("Method in which glow will be rendered");
+				WCombo("Glow Type###GlowTypeSelect", &Vars::Glow::Main::Type.Value, { "Blur", "Stencil", "FPStencil", "Wireframe" }); HelpMarker("Method in which glow will be rendered");
 				if (Vars::Glow::Main::Type.Value != 1) { WSlider("Glow scale", &Vars::Glow::Main::Scale.Value, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); }
 
 				SectionTitle("Player Glow");
