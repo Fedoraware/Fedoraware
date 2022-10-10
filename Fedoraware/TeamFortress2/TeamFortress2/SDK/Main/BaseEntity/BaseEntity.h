@@ -455,7 +455,7 @@ public: //Everything else, lol.
 	__inline bool IsVulnerable() {
 		int nCond = GetCond();
 		int nCondEx = GetCondEx();
-		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked || nCondEx & TFCondEx_PhlogUber || nCondEx & TFCondEx_UberchargedHidden || nCondEx & TFCondEx_UberchargedCanteen);
+		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked || nCondEx & TFCondEx_PyroHeal || nCondEx & TFCondEx_UberchargedHidden || nCondEx & TFCondEx_UberchargedCanteen);
 	}
 
 	__inline bool IsVisible() {
