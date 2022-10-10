@@ -7,7 +7,7 @@ bool IsHitboxValid(int nHitbox, int index, bool bStatic = false)
 	const int iStatic = Vars::Aimbot::Hitscan::StaticHitboxes.Value;
 	switch (nHitbox)
 	{
-//	case -1: return true;
+	case -1: return true;
 	case HITBOX_HEAD: return (index & (1 << 0) && !(!bStatic && iStatic & (1 << 0)));
 	case HITBOX_PELVIS: return (index & (1 << 1) && !(!bStatic && iStatic & (1 << 1)));
 	case HITBOX_SPINE_0:
@@ -901,7 +901,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)
 		{
+			Utils::ConLog("Aimbot", tfm::format("Old pCmd->tick_count {%d}", pCmd->tick_count).c_str(), {126, 0, 255, 255});
 			pCmd->tick_count = TIME_TO_TICKS(tickCount + simTime);
+			Utils::ConLog("Aimbot", tfm::format("Set pCmd->tickcount to {%d | <%.1f | %.1f | %.1f>}", pCmd->tick_count, TICKS_TO_TIME(pCmd->tick_count), simTime, tickCount).c_str(), {126, 0, 255, 255});
 		}
 
 		Aim(pCmd, target.m_vAngleTo);
