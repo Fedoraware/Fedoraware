@@ -136,6 +136,7 @@ bool CCheaterDetection::IsDuckSpeed(CBaseEntity* pEntity){
 
 void CCheaterDetection::SimTime(CBaseEntity* pEntity){
 	if (Vars::Misc::CheaterDetection::Methods.Value & ~(1 << 2)) {
+		if (mData[pEntity].iNonDormantCleanQueries < 6) { return; }
 		const float flSimDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
 		const int iTickDelta = TIME_TO_TICKS(flSimDelta);
 		if (mData[pEntity].pChoke.first = 0) { mData[pEntity].pChoke.second = iTickDelta; return; }
