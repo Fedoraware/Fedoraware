@@ -1522,8 +1522,8 @@ void CMenu::MenuHvH()
 			WToggle("Enable Cheater Detection", &Vars::Misc::CheaterDetection::Enabled.Value);
 			if (Vars::Misc::CheaterDetection::Enabled.Value){
 				{
-					static std::vector flagNames{ "Accuracy", "Score", "Simtime Changes", "Packet Choking", "Bunnyhopping", "Aim Flicking & Aimbot", "OOB Angles" };
-					static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6 };
+					static std::vector flagNames{ "Accuracy", "Score", "Simtime Changes", "Packet Choking", "Bunnyhopping", "Aim Flicking & Aimbot", "OOB Angles", "Aimbot", "Duck Speed" };
+					static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7, 1 << 8 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::CheaterDetection::Methods.Value, "Detection Methods###CheaterDetectionMethods");
 					HelpMarker("Methods by which to detect bad actors.");
 				}
@@ -1549,6 +1549,11 @@ void CMenu::MenuHvH()
 				if (Vars::Misc::CheaterDetection::Methods.Value & (1<<5)) {
 					WSlider("Minimum Aim-Flick", &Vars::Misc::CheaterDetection::MinimumFlickDistance.Value, 5.f, 30.f, "%.1f"); HelpMarker("The distance someones view angles must flick prior to be being suspected by the cheat detector."); 
 					WSlider("Maximum Post Flick Noise", &Vars::Misc::CheaterDetection::MaximumNoise.Value, 5.f, 15.f, "%.1f"); HelpMarker("The maximum distance the players mouse can move post-flick before the cheat detector considers it as a legit flick (mouse moved fast, etc)."); 
+				}
+
+				if (Vars::Misc::CheaterDetection::Methods.Value & (1<<7)){
+					WSlider("Maximum Scaled Aimbot FoV", &Vars::Misc::CheaterDetection::MaxScaledAimbotFoV.Value, 5.f, 30.f, "%.1f"); HelpMarker("The maximum FoV (post scaling) for the aimbot detection."); 
+					WSlider("Minimum Aimbot FoV", &Vars::Misc::CheaterDetection::MinimumAimbotFoV.Value, 5.f, 30.f, "%.1f"); HelpMarker("The minimum FoV to infract a player for aimbot."); 
 				}
 			}
 			SectionTitle("Resolver");

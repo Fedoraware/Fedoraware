@@ -686,7 +686,7 @@ namespace Vars
 		namespace CheaterDetection
 		{
 			inline CVar<bool> Enabled{false};
-			inline CVar<int> Methods{0b1111100};			//	OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
+			inline CVar<int> Methods{0b111111100};			//	Duckspeed, Aimbot, OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
 			inline CVar<int> Protections{0b111};			//	double scans, lagging client, timing out
 			inline CVar<int> SuspicionGate{10};				//	the amount of infractions prior to marking someone as a cheater
 			inline CVar<int> PacketManipGate{14};			//	the avg choke for someone to receive and infraction for packet choking
@@ -695,6 +695,8 @@ namespace Vars
 			inline CVar<float> ScoreMultiplier{2.f};		//	multiply the avg score/s by this to receive the maximum amount
 			inline CVar<float> MinimumFlickDistance{20.f};	//	min mouse flick size to suspect someone of angle cheats.
 			inline CVar<float> MaximumNoise{5.f};			//	max mouse noise prior to a flick to mark somebody
+			inline CVar<float> MinimumAimbotFoV{3.f};		//	scaled with how many ticks a player has choked up to ->
+			inline CVar<float> MaxScaledAimbotFoV{20.f};	//	self explanatory
 		}
 
 		namespace CL_Move

@@ -17,10 +17,11 @@ struct PlayerData {
 	std::pair<int, int> pChoke = {0, 0};
 
 	//Analytics
-	std::pair<int, int> mShots = {0, 0};
+	std::pair<int, float> pDuckInfo = {0, 0};
+	std::pair<int, int> pShots = {0, 0};
 	float flHitchance = 0.f;
 	float flScorePerSecond = 0.f;
-	int iLastDamageEventTick = 0; // lets not recalculate hitchance for a player multiple times (explosive dmg, weird shell weapon behaviour)
+	int iLastDamageEventTick = 0;	// lets not recalculate hitchance for a player multiple times (explosive dmg, weird shell weapon behaviour)
 };
 
 struct ServerData {
@@ -60,6 +61,8 @@ class CCheaterDetection {
 	bool CheckBHop(CBaseEntity* pEntity);
 	bool AreAnglesSuspicious(CBaseEntity* pEntity);
 	void SimTime(CBaseEntity* pEntity);
+	void AimbotCheck(CBaseEntity* pEntity);
+	bool IsDuckSpeed(CBaseEntity* pEntity);
 
 	// player utils
 	void CalculateHitChance(CBaseEntity* pEntity);

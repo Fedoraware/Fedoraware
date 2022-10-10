@@ -874,6 +874,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
 				SAVE_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
 				SAVE_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MinimumAimbotFoV);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MaxScaledAimbotFoV);
 			}
 
 			// CL_Move
@@ -1726,6 +1728,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
 				LOAD_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
 				LOAD_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MinimumAimbotFoV);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MaxScaledAimbotFoV);
 			}
 
 			// CL_Move
