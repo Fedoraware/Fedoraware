@@ -71,10 +71,10 @@ void CCheaterDetection::ReportTickCount(std::pair<CBaseEntity*, int> pReport){
 bool CCheaterDetection::CheckBHop(CBaseEntity* pEntity){
 	const bool bOnGround = pEntity->OnSolid();	//	NOTE: groundentity isn't networked properly sometimes i think
 	if (bOnGround) { mData[pEntity].pBhop.first++; }
-	else if (mData[pEntity].pBhop.first <= Vars::Misc::CheaterDetection::BHopMaxDelay.Value) { mData[pEntity].pBhop.second++; mData[pEntity].pBhop.first = 0; }
+	else if (mData[pEntity].pBhop.first <= Vars::Misc::CheaterDetection::BHopMaxDelay.Value && mData[pEntity].pBhop.first > 0) { mData[pEntity].pBhop.second++; mData[pEntity].pBhop.first = 0; }
 	else { mData[pEntity].pBhop = {0, 0}; }
 
-	if (mData[pEntity].pBhop.second > Vars::Misc::CheaterDetection::BHopDetectionsRequired.Value) { mData[pEntity].iPlayerSuspicion++; mData[pEntity].pBhop = {0, 0}; return true; }
+	if (mData[pEntity].pBhop.second >= Vars::Misc::CheaterDetection::BHopDetectionsRequired.Value) { mData[pEntity].iPlayerSuspicion++; mData[pEntity].pBhop = {0, 0}; return true; }
 	return false;
 }
 
