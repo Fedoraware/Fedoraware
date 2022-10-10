@@ -1439,7 +1439,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Burning");
 	}
 
-	if (nCond & TFCond_Ubercharged || nCondEx & TFCondEx_PhlogUber || nCondEx & TFCondEx_UberchargedCanteen || nCondEx & TFCondEx_UberchargedHidden)
+	if (pEntity->IsUbered())
 	{
 		szCond.emplace_back(L"Ubered");
 	}
