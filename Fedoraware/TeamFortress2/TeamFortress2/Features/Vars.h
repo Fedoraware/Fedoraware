@@ -375,7 +375,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<int> Type{0};	//	blur, stencil, stencil2
+			inline CVar<int> Type{0};	//	blur, stencil, fps stencil, wireframe
 			inline CVar<int> Scale{ 5 };
 		}
 
