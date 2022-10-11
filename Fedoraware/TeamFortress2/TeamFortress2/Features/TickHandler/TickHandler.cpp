@@ -53,18 +53,22 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
+	if (G::WaitForShift > 0) { G::WaitForShift--; }
 	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
 
 void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick){
 	G::ShiftedTicks = iAvailableTicks;	//	put this above incremenet to prevent jittering
-
-	while (iAvailableTicks > std::max(Vars::Misc::CL_Move::DTTicks.Value, 22)) { CLMoveFunc(accumulated_extra_samples, iAvailableTicks == Vars::Misc::CL_Move::DTTicks.Value); }	//	skim any excess ticks
+	while (iAvailableTicks > Vars::Misc::CL_Move::DTTicks.Value) { CLMoveFunc(accumulated_extra_samples, false); }	//	skim any excess ticks
 
 	iAvailableTicks++;	//	since we now have full control over CL_Move, increment.
 	if (iAvailableTicks <= 0) { iAvailableTicks = 0; return; }	//	ruhroh
 
-	if (G::WaitForShift) { G::WaitForShift--; }
+	if (!Vars::Misc::CL_Move::Enabled.Value){	//	
+		G::WaitForShift = G::ShiftedTicks = 0;
+		while (iAvailableTicks > 1) { CLMoveFunc(accumulated_extra_samples, false); }
+		return CLMoveFunc(accumulated_extra_samples, true);
+	}
 
 	if (bTeleport){
 		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? std::min(std::min(Vars::Misc::CL_Move::TeleportFactor.Value, 2), iAvailableTicks) : iAvailableTicks);
@@ -72,8 +76,8 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 	}
 	if (bRecharge){
 		if (iAvailableTicks <= Vars::Misc::CL_Move::DTTicks.Value) { return; }
-		else { bRecharge = false; }
-		G::WaitForShift = round(1.f / I::GlobalVars->interval_per_tick) - Vars::Misc::CL_Move::DTTicks.Value;
+		else { bRecharge = false; G::RechargeQueued = false; }
+		G::WaitForShift = iTickRate - Vars::Misc::CL_Move::DTTicks.Value;
 	}
 	if (bDoubletap){
 		while (iAvailableTicks){ CLMoveFunc(accumulated_extra_samples, iAvailableTicks == 1); } bDoubletap = false; return;
@@ -82,8 +86,12 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 		iAvailableTicks = 0;
 		for (int i = 0; i < Vars::Misc::CL_Move::SFactor.Value; i++) { CLMoveFunc(accumulated_extra_samples, i == Vars::Misc::CL_Move::SFactor.Value); } return;
 	}
+	if (I::GlobalVars->tickcount >= iNextPassiveTick && Vars::Misc::CL_Move::PassiveRecharge.Value && G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value) {
+		iNextPassiveTick = I::GlobalVars->tickcount + (iTickRate / Vars::Misc::CL_Move::PassiveRecharge.Value);
+		return;
+	}
 
-	CLMoveFunc(accumulated_extra_samples, true); return;
+	return CLMoveFunc(accumulated_extra_samples, true);
 }
 
 void CTickshiftHandler::CreateMove(CUserCmd* pCmd){
@@ -97,4 +105,11 @@ void CTickshiftHandler::CreateMove(CUserCmd* pCmd){
 	Speedhack(pCmd);
 	 
 	G::ShouldShift = bDoubletap; G::Teleporting = bTeleport; G::Recharging = bRecharge;
+}
+
+void CTickshiftHandler::Reset(){
+	bSpeedhack = bDoubletap = bRecharge = bTeleport = false;
+	iAvailableTicks = 0;
+	iNextPassiveTick = 0; 
+	iTickRate = round(1.f / I::GlobalVars->interval_per_tick);
 }

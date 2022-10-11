@@ -10,7 +10,6 @@ private:
 
 	// logic
 	float EdgeDistance(float edgeRayYaw);
-	bool FindEdge(float edgeOrigYaw);
 	bool IsOverlapping(float epsilon);
 	bool ShouldAntiAim(CBaseEntity* pLocal);
 	
@@ -37,6 +36,7 @@ private:
 
 	Timer tAATimer{};
 public:
+	bool FindEdge(float edgeOrigYaw);
 	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
 	void Draw(CBaseEntity* pLocal);

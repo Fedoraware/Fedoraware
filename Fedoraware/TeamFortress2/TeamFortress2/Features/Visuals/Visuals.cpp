@@ -326,6 +326,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			DebugLine("Client TickCount", tfm::format(": %i", ctickcount).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
 
+		if (const int cmdtickcount = G::LastUserCmd->tick_count)
+		{
+			DebugLine("pCmd TickCount", tfm::format(": %i", cmdtickcount).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
+
 		{	//	movement data to help me make epic strafe prediction!
 			const Vec3 m_vecVelocity = pLocal->m_vecVelocity();
 			const Vec3 m_vecViewOffset = pLocal->m_vecViewOffset();
@@ -346,6 +351,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 		{
 			const int m_hGroundEntity = pLocal->m_hGroundEntity();
 			DebugLine("m_hGroundEntity", tfm::format(": %d", m_hGroundEntity).c_str(), { xoffset, yoffset }); yoffset += 15;
+		}
+
+		{
+			const float m_flDucktime = pLocal->m_flDucktime();
+			DebugLine("m_flDucktime", tfm::format(": %.1f", m_flDucktime).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
 
 		{

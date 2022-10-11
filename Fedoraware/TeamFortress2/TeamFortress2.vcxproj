@@ -219,6 +219,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Extrapolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase__Interpolate.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CLagCompensationManager_StartLagCompensation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LatchInterpolationAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCache.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_InvalidateBoneCaches.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_MaintainSequenceTransitions.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_PushAllowBoneAccess.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
@@ -298,6 +300,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_ClientCmd_Unrestricted.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_IsPlayingTimeDemo.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineVGui_Paint.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\FX_FireBullets.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Input_GetUserCmd.cpp" />

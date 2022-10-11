@@ -296,9 +296,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			// Backtrack
 			{
 				SAVE_VAR(Vars::Backtrack::Enabled);
-				SAVE_VAR(Vars::Backtrack::LastTick);
 				SAVE_VAR(Vars::Backtrack::Latency);
-				SAVE_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams
 				{
 					SAVE_VAR(Vars::Backtrack::BtChams::Enabled);
@@ -323,6 +321,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				//SAVE_VAR(Vars::Aimbot::Hitscan::Active);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				SAVE_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
@@ -331,6 +330,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
+				SAVE_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::PointScale);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
@@ -825,6 +825,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::Directional);
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
+			SAVE_VAR(Vars::Misc::StoreStatistics);
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			SAVE_VAR(Vars::Misc::CheatsBypass);
 			SAVE_VAR(Vars::Misc::RageRetry);
@@ -861,11 +862,29 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::Followbot::Distance);
 			}
 
+			// Cheater Detection
+			{
+				SAVE_VAR(Vars::Misc::CheaterDetection::Enabled);
+				SAVE_VAR(Vars::Misc::CheaterDetection::Methods);
+				SAVE_VAR(Vars::Misc::CheaterDetection::Protections);
+				SAVE_VAR(Vars::Misc::CheaterDetection::SuspicionGate);
+				SAVE_VAR(Vars::Misc::CheaterDetection::PacketManipGate);
+				SAVE_VAR(Vars::Misc::CheaterDetection::BHopMaxDelay);
+				SAVE_VAR(Vars::Misc::CheaterDetection::BHopDetectionsRequired);
+				SAVE_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MinimumAimbotFoV);
+				SAVE_VAR(Vars::Misc::CheaterDetection::MaxScaledAimbotFoV);
+			}
+
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::SafeTick);
+				SAVE_VAR(Vars::Misc::CL_Move::SafeTickAirOverride);
+				SAVE_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::StopMovement);
@@ -884,6 +903,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMin);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMax);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagMode);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileMoving);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileInAir);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileUnducking);
+				SAVE_VAR(Vars::Misc::CL_Move::WhileVisible);
+				SAVE_VAR(Vars::Misc::CL_Move::PredictVisibility);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R
@@ -1126,9 +1150,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			// Backtrack
 			{
 				LOAD_VAR(Vars::Backtrack::Enabled);
-				LOAD_VAR(Vars::Backtrack::LastTick);
 				LOAD_VAR(Vars::Backtrack::Latency);
-				LOAD_VAR(Vars::Backtrack::FakeLatency);
 				//Bt Chams
 				{
 					LOAD_VAR(Vars::Backtrack::BtChams::Enabled);
@@ -1153,6 +1175,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				//LOAD_VAR(Vars::Aimbot::Hitscan::Active);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SortMethod);
+				LOAD_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);
@@ -1161,6 +1184,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
+				LOAD_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::PointScale);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				LOAD_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
@@ -1653,6 +1677,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::NoPush);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::EdgeJumpKey);
+			LOAD_VAR(Vars::Misc::StoreStatistics);
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::Directional);
 			LOAD_VAR(Vars::Misc::AntiAFK);
@@ -1691,11 +1716,29 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::Followbot::Distance);
 			}
 
+			// Cheater Detection
+			{
+				LOAD_VAR(Vars::Misc::CheaterDetection::Enabled);
+				LOAD_VAR(Vars::Misc::CheaterDetection::Methods);
+				LOAD_VAR(Vars::Misc::CheaterDetection::Protections);
+				LOAD_VAR(Vars::Misc::CheaterDetection::SuspicionGate);
+				LOAD_VAR(Vars::Misc::CheaterDetection::PacketManipGate);
+				LOAD_VAR(Vars::Misc::CheaterDetection::BHopMaxDelay);
+				LOAD_VAR(Vars::Misc::CheaterDetection::BHopDetectionsRequired);
+				LOAD_VAR(Vars::Misc::CheaterDetection::ScoreMultiplier);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MinimumFlickDistance);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MaximumNoise);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MinimumAimbotFoV);
+				LOAD_VAR(Vars::Misc::CheaterDetection::MaxScaledAimbotFoV);
+			}
+
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled); //Enabled
 				LOAD_VAR(Vars::Misc::CL_Move::Doubletap); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::SafeTick);
+				LOAD_VAR(Vars::Misc::CL_Move::SafeTickAirOverride);
+				LOAD_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::StopMovement);
@@ -1714,6 +1757,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMin);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMax);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagMode);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileMoving);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileInAir);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileUnducking);
+				LOAD_VAR(Vars::Misc::CL_Move::WhileVisible);
+				LOAD_VAR(Vars::Misc::CL_Move::PredictVisibility);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue); // { 0x52, L"Recharge Key" }; //R

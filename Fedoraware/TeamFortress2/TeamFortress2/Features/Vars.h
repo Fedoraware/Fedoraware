@@ -43,9 +43,7 @@ namespace Vars
 	namespace Backtrack
 	{
 		inline CVar<bool> Enabled{ false };
-		inline CVar<bool> LastTick{ false };
-		inline CVar<bool> FakeLatency{ false };
-		inline CVar<float> Latency{ 200.f };
+		inline CVar<int> Latency{ 0 };
 		
 
 		namespace BtChams
@@ -87,11 +85,13 @@ namespace Vars
 		{
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{ 0 }; //0 - FOV,		1 - Distance
+			inline CVar<int> BackTrackMethod{ 0 };
 			inline CVar<bool> RespectFOV{ true };
 			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{ 2 }; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{ 0b00111 }; // {legs, arms, body, pelvis, head}
-			inline CVar<int> MultiHitboxes{ 0b0101 }; // {legs, arms, body, pelvis, head}
+			inline CVar<int> MultiHitboxes{ 0b00101 }; // {legs, arms, body, pelvis, head}
+			inline CVar<int> StaticHitboxes{ 0b11000 }; // {legs, arms, body, pelvis, head}
 			inline CVar<float> PointScale{ .54f };
 			inline CVar<int> SmoothingAmount{ 4 };
 			inline CVar<int> TapFire{ 0 }; //0 - Off, 1 - Distance, 2 - Always
@@ -375,7 +375,7 @@ namespace Vars
 		namespace Main
 		{
 			inline CVar<bool> Active{ false };
-			inline CVar<int> Type{0};	//	blur, stencil, stencil2
+			inline CVar<int> Type{0};	//	blur, stencil, fps stencil, wireframe
 			inline CVar<int> Scale{ 5 };
 		}
 
@@ -683,11 +683,29 @@ namespace Vars
 			inline CVar<float> Distance{ 150.f };
 		}
 
+		namespace CheaterDetection
+		{
+			inline CVar<bool> Enabled{false};
+			inline CVar<int> Methods{0b111111100};			//	Duckspeed, Aimbot, OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
+			inline CVar<int> Protections{0b111};			//	double scans, lagging client, timing out
+			inline CVar<int> SuspicionGate{10};				//	the amount of infractions prior to marking someone as a cheater
+			inline CVar<int> PacketManipGate{14};			//	the avg choke for someone to receive and infraction for packet choking
+			inline CVar<int> BHopMaxDelay{1};				//	max groundticks used when detecting a bunny hop.
+			inline CVar<int> BHopDetectionsRequired{5};		//	how many times must some be seen bunny hopping to receive an infraction
+			inline CVar<float> ScoreMultiplier{2.f};		//	multiply the avg score/s by this to receive the maximum amount
+			inline CVar<float> MinimumFlickDistance{20.f};	//	min mouse flick size to suspect someone of angle cheats.
+			inline CVar<float> MaximumNoise{5.f};			//	max mouse noise prior to a flick to mark somebody
+			inline CVar<float> MinimumAimbotFoV{3.f};		//	scaled with how many ticks a player has choked up to ->
+			inline CVar<float> MaxScaledAimbotFoV{20.f};	//	self explanatory
+		}
+
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled{ false };
 			inline CVar<bool> Doubletap{ false };
 			inline CVar<bool> SafeTick{ false };
+			inline CVar<bool> SafeTickAirOverride{ false };
+			inline CVar<int> PassiveRecharge{ 0 };
 			inline CVar<bool> SEnabled{ false };
 			inline CVar<int> SFactor{ 1 };
 			inline CVar<bool> NotInAir{ false };
@@ -711,6 +729,8 @@ namespace Vars
 			inline CVar<bool> WhileMoving { false };
 			inline CVar<bool> WhileVisible { false };
 			inline CVar<bool> PredictVisibility { false };
+			inline CVar<bool> WhileUnducking { false };
+			inline CVar<bool> WhileInAir { false };
 			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
 			inline CVar<int> FakelagMax{ 22 };
 			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3

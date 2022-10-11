@@ -165,4 +165,11 @@ public:
 		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_iStreaks");
 		return reinterpret_cast<int*>(this + offset + 4 * idx);
 	}
+
+	float GetConnectionTime(int idx)
+	{
+		if (!this) { return 0.f; }
+		static auto offset = g_NetVars.get_offset("DT_TFPlayerResource", "m_flConnectTime");
+		return *reinterpret_cast<float*>(this + offset + 4 * idx);
+	}
 };

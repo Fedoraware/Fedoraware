@@ -2,29 +2,30 @@
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
 
-bool IsHitboxValid(int nHitbox, int index)
+bool IsHitboxValid(int nHitbox, int index, bool bStatic = false)
 {
+	const int iStatic = Vars::Aimbot::Hitscan::StaticHitboxes.Value;
 	switch (nHitbox)
 	{
 	case -1: return true;
-	case HITBOX_HEAD: return (index & (1 << 0));
-	case HITBOX_PELVIS: return (index & (1 << 1));
+	case HITBOX_HEAD: return (index & (1 << 0) && !(!bStatic && iStatic & (1 << 0)));
+	case HITBOX_PELVIS: return (index & (1 << 1) && !(!bStatic && iStatic & (1 << 1)));
 	case HITBOX_SPINE_0:
 	case HITBOX_SPINE_1:
 	case HITBOX_SPINE_2:
-	case HITBOX_SPINE_3: return (index & (1 << 2));
+	case HITBOX_SPINE_3: return (index & (1 << 2) && !(!bStatic && iStatic & (1 << 2)));
 	case HITBOX_UPPERARM_L:
 	case HITBOX_LOWERARM_L:
 	case HITBOX_HAND_L:
 	case HITBOX_UPPERARM_R:
 	case HITBOX_LOWERARM_R:
-	case HITBOX_HAND_R: return (index & (1 << 3));
+	case HITBOX_HAND_R: return (index & (1 << 3) && !(!bStatic && iStatic & (1 << 3)));
 	case HITBOX_HIP_L:
 	case HITBOX_KNEE_L:
 	case HITBOX_FOOT_L:
 	case HITBOX_HIP_R:
 	case HITBOX_KNEE_R:
-	case HITBOX_FOOT_R: return (index & (1 << 4));
+	case HITBOX_FOOT_R: return (index & (1 << 4) && !(!bStatic && iStatic & (1 << 4)));
 	}
 	return false;
 };
@@ -305,7 +306,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 					{
 						for (int nHitbox = -1; nHitbox < target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
 						{
-							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value)) { continue; }
+							if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value, (target.m_pEntity->GetVelocity().Length() < 10.f))) { continue; }
 							if (nHitbox == -1) { nHitbox = PriorityHitbox; }
 							else if (nHitbox == PriorityHitbox) { continue; }
 
@@ -320,7 +321,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 								return true;
 							}
 
-							if (IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::MultiHitboxes.Value))
+							if (IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::MultiHitboxes.Value, (target.m_pEntity->GetVelocity().Length() < 10.f)))
 							{
 								if (const mstudiobbox_t* pBox = pSet->hitbox(nHitbox))
 								{
@@ -429,59 +430,24 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 	case ETargetType::PLAYER:
 		{
-			Vec3 hitboxpos;
-			if (Vars::Backtrack::Enabled.Value && Vars::Backtrack::LastTick.Value)
+			if (ScanHitboxes(pLocal, target) && !((F::BacktrackNew.bFakeLatency && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4))
 			{
-				if (const auto& pLastTick = F::Backtrack.GetRecord(target.m_pEntity->GetIndex(), BacktrackMode::Last))
-				{
-					if (const auto& pHDR = pLastTick->HDR)
-					{
-						if (const auto& pSet = pHDR->GetHitboxSet(pLastTick->HitboxSet))
-						{
-							if (const auto& pBox = pSet->hitbox(target.m_nAimedHitbox))
-							{
-								const Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f;
-								Vec3 vOut;
-								const matrix3x4& bone = pLastTick->BoneMatrix.BoneMatrix[pBox->bone];
-								Math::VectorTransform(vPos, bone, vOut);
-								hitboxpos = vOut;
-								target.SimTime = pLastTick->SimulationTime;
-							}
-						}
+				return true;
+			}
+			if (Vars::Backtrack::Enabled.Value)
+			{
+				for (int nHitbox = 0; nHitbox < target.m_pEntity->GetNumOfHitboxes(); nHitbox++){
+					if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value, (target.m_pEntity->GetVelocity().Length() < 10.f))) { continue; }
+					if (std::optional<TickRecordNew> ValidRecord = F::BacktrackNew.Aimbot(target.m_pEntity, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, nHitbox)){
+						target.SimTime = ValidRecord->flSimTime;
+						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
+						target.ShouldBacktrack = true;
+						return true;
 					}
 				}
-
-				if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
-				{
-					target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
-					target.ShouldBacktrack = true;
-					return true;
-				}
-
-				target.ShouldBacktrack = false;
-				if (Vars::Backtrack::Latency.Value > 200)
-				{
-					return false;
-				}
 			}
-			else
-			{
-				target.ShouldBacktrack = false;
-			}
-			if (!ScanHitboxes(pLocal, target))
-			{
-				return false;
-			}
-
-			if (Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)){
-				if (G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value){
-					return false;
-				}
-			}
-
-			break;
+			return false;
 		}
-
 	case ETargetType::BUILDING:
 		{
 			if (!Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))

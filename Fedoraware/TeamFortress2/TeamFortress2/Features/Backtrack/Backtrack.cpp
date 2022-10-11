@@ -1,211 +1,286 @@
 #include "Backtrack.h"
 
-/*bool CBacktrack::IsGoodTick(const float simTime)
-{
-	const float latency = std::clamp(GetLatency(), 0.f, 0.9f);
-	const float deltaTime = latency - (I::GlobalVars->curtime - simTime);
-
-	return std::abs(deltaTime) <= 0.2f - TICKS_TO_TIME(2);
-}*/
-
-bool CBacktrack::IsTickInRange(int tickCount)
-{
-	if (!G::CurrentUserCmd) { return false; }
-
-	const int deltaTicks = std::abs(tickCount - G::CurrentUserCmd->tick_count + TIME_TO_TICKS(GetLatency()));
-	return TICKS_TO_TIME(deltaTicks) <= 0.2f - TICKS_TO_TIME(2);
+bool CBacktrackNew::IsTracked(TickRecordNew Record){
+	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
-void CBacktrack::UpdateRecords()
-{
-	const auto& pLocal = g_EntityCache.GetLocal();
-	if (!pLocal || !pLocal->IsAlive())
+//	should return true if the current position on the client has a lag comp record created for it by the server (SHOULD)
+//	if the player has updated more than once, only the first update will have a backtrack record (i think)
+//	dont use this yet
+bool CBacktrackNew::IsSimulationReliable(CBaseEntity* pEntity){
+	const float flSimTimeDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
+	const int iTicksSimTimeDelta = flSimTimeDelta / I::GlobalVars->interval_per_tick;
+	return iTicksSimTimeDelta == 1;
+}
+
+bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+
+	if (!pLocal || !iNetChan) { return false; }
+	
+	const float flCorrect = std::clamp(iNetChan->GetLatency(FLOW_INCOMING) + GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
+	const float flDelta = fabsf(flCorrect - (I::GlobalVars->curtime - Record.flSimTime));
+
+	return flDelta < .2f;	//	in short, check if the record is +- 200ms from us
+}
+
+void CBacktrackNew::CleanRecords(){
+	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 	{
-		for (auto& record : Records)
-		{
-			record.clear();
-		}
-		return;
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+		if (!pEntity) { continue; }
+		
+		if (pEntity->GetDormant() || !pEntity->IsAlive() || !pEntity->IsPlayer()) { mRecords[pEntity].clear(); continue; }
+		else if (mRecords[pEntity].size() < 1) { continue; }
+		if (!IsTracked(mRecords[pEntity].back())){ mRecords[pEntity].pop_back(); }
+		if (mRecords[pEntity].size() > 67) { mRecords[pEntity].pop_back(); }
 	}
+}
 
-	for (int i = 0; i < I::EngineClient->GetMaxClients(); i++)
+void CBacktrackNew::MakeRecords(){
+	const float flCurTime = I::GlobalVars->curtime;
+	const int iTickcount = I::GlobalVars->tickcount;
+	if (iLastCreationTick == iTickcount) { return; }
+	iLastCreationTick = iTickcount;
+
+	for (int n = 1; n < I::ClientEntityList->GetHighestEntityIndex(); n++)
 	{
-		// Check if the entity is valid
-		const auto& pEntity = I::ClientEntityList->GetClientEntity(i);
-		if (!pEntity || pEntity->GetDormant() || !pEntity->IsAlive()) { Records[i].clear(); continue; }
-		// if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { continue; } // Nothing personell kid
+		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
+		if (!pEntity) { continue; }
+		if (!pEntity->IsPlayer()) { return; }
+		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
+		
+		//Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
 
-		// Get bone matrix
-		matrix3x4 bones[128];
-		pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, 0.0f);
+		if (flSimTime != flOldSimTime){	//	create record on simulated players
+			//Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
+			matrix3x4 bones[128];
+			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
+			//Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
+			const Vec3 vOrigin = pEntity->GetAbsOrigin();
+			if (mRecords[pEntity].size()){	// as long as we have 1 record we can check for lagcomp breaking here
+				const Vec3 vPrevOrigin = mRecords[pEntity].front().vOrigin;
+				const Vec3 vDelta = vOrigin - vPrevOrigin;
+				if (vDelta.Length2DSqr() > 4096.f) { /*Utils::ConLog("LagCompensation", "Cleared borked records", {255, 0, 0, 255});*/ mRecords[pEntity].clear(); }
+			}
 
-		// Get model info
-		model_t* model = pEntity->GetModel();
-		studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
-
-		if (model && hdr)
-		{
-			Records[i].push_front({
-				pEntity->GetSimulationTime(),
-				I::GlobalVars->tickcount,
-				pEntity->GetHitboxPos(HITBOX_HEAD),
-				pEntity->GetAbsOrigin(),
+			mRecords[pEntity].push_front({
+				flSimTime,
+				flCurTime,
+				iTickcount,
+				mDidShoot[pEntity->GetIndex()],
 				*reinterpret_cast<BoneMatrixes*>(&bones),
-				model,
-				hdr,
-				pEntity->GetHitboxSet(),
-				pEntity->m_vecMins(),
-				pEntity->m_vecMaxs(),
-				pEntity->GetWorldSpaceCenter(),
-				pEntity->GetEyeAngles(),
+				vOrigin,
+				pEntity->GetAbsAngles(),
 			});
 		}
 
-		// Remove old out-of-range records
-		while (static_cast<int>(Records[i].size()) > std::clamp(TIME_TO_TICKS(GetLatency()), 0, TIME_TO_TICKS(0.9f)))
-		{
-			Records[i].pop_back();
-		}
-	}
-}
-
-void CBacktrack::Run()
-{
-	if (!Vars::Backtrack::Enabled.Value)
-	{
-		LatencyRampup = 0.f;
-		if (Vars::Aimbot::Projectile::StrafePredictionAir.Value || Vars::Aimbot::Projectile::StrafePredictionGround.Value)
-		{
-			if (g_EntityCache.GetLocal())
-			{
-				UpdateRecords();
-			}
-		}
-		return;
-	}
-
-	LatencyRampup = std::min(1.f, LatencyRampup += I::GlobalVars->interval_per_tick);
-
-	if (g_EntityCache.GetLocal())
-	{
-		UpdateDatagram();
-		UpdateRecords();
-		//else
-		//{
-		//	for (auto& record : Records)
-		//	{
-		//		record.clear();
-		//	}
-		//}
-	}
-	else
-	{
-		Sequences.clear();
+		//cleanup
+		mDidShoot[pEntity->GetIndex()] = false;
+		if (mRecords[pEntity].size() > 67){ /*Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255});*/ mRecords[pEntity].pop_back(); }	//	schizoid check
 	}
 }
 
 // Store the last 2048 sequences
-void CBacktrack::UpdateDatagram()
+void CBacktrackNew::UpdateDatagram()
 {
-	const INetChannel* netChannel = I::EngineClient->GetNetChannelInfo();
-	if (netChannel)
+	if (INetChannel* INetChan = I::EngineClient->GetNetChannelInfo())
 	{
-		if (netChannel->m_nInSequenceNr > LastInSequence)
+		if (INetChan->m_nInSequenceNr > iLastInSequence)
 		{
-			LastInSequence = netChannel->m_nInSequenceNr;
-			Sequences.push_front(CIncomingSequence(netChannel->m_nInReliableState, netChannel->m_nInSequenceNr, I::GlobalVars->realtime));
+			iLastInSequence = INetChan->m_nInSequenceNr;
+			dSequences.push_front(CIncomingSequence(INetChan->m_nInReliableState, INetChan->m_nInSequenceNr, I::GlobalVars->realtime));
 		}
 
-		if (Sequences.size() > 2048)
+		if (dSequences.size() > 2048)
 		{
-			Sequences.pop_back();
+			dSequences.pop_back();
 		}
 	}
 }
 
 // Returns the current (custom) backtrack latency
-float CBacktrack::GetLatency()
+float CBacktrackNew::GetLatency()
 {
-	float realLatency = 0.f;
-
-	if (const auto netChannel = I::EngineClient->GetNetChannelInfo())
-	{
-		realLatency = std::clamp(netChannel->GetLatency(FLOW_OUTGOING), 0.f, 0.9f);
+	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
+		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING);
+		const float flFakeLatency = flLatencyRampup * std::clamp((float)Vars::Backtrack::Latency.Value, 0.f, 800.f) / 1000.f;
+		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
+		return flAdjustedLatency;
 	}
 
-	float flLatency = Vars::Backtrack::Latency.Value;
-
-	if (flLatency <= 200 || !AllowLatency)
-	{
-		flLatency = 200;
-	}
-
-	return LatencyRampup * std::clamp(flLatency * 0.001f, 0.f, 0.9f - realLatency);
+	return 0.f;	//	we failed to get net channel and therefor have no latency.
 }
 
-// Adjusts the fake latency ping
-void CBacktrack::AdjustPing(INetChannel* netChannel)
-{
-	for (const auto& sequence : Sequences)
-	{
-		if (I::GlobalVars->realtime - sequence.CurTime >= GetLatency())
-		{
-			netChannel->m_nInReliableState = sequence.InReliableState;
-			netChannel->m_nInSequenceNr = sequence.SequenceNr;
-			break;
+void CBacktrackNew::PlayerHurt(CGameEvent* pEvent){
+	//const int iIndex = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
+	//if (CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex)){
+	//	mRecords[pEntity].clear();	//	bone cache has gone to poop for this entity, they must be cleansed in holy fire :smiling_imp:
+	//}
+}
+
+void CBacktrackNew::Restart(){
+	mRecords.clear(); 
+	dSequences.clear();
+	flLatencyRampup = 0.f;
+	iLastInSequence = 0;
+}
+
+void CBacktrackNew::FrameStageNotify(){
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	if (!pLocal || !iNetChan) { return Restart(); }
+
+	flLatencyRampup = std::min(1.f, flLatencyRampup += I::GlobalVars->interval_per_tick);
+	MakeRecords();
+	CleanRecords();
+}
+
+void CBacktrackNew::ReportShot(int iIndex){
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
+	if (!pEntity) { return; }
+	mDidShoot[pEntity->GetIndex()] = true;
+}
+
+std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
+	Vec3 vForward = {};
+
+	std::optional<TickRecordNew> cReturnRecord{};
+	float flLastAngle = 45.f;
+
+	for (const auto& rCurQuery : mRecords[pEntity]){
+		if (!WithinRewind(rCurQuery)) { continue; }
+		for (int iCurHitbox = 0; iCurHitbox < 18; iCurHitbox++){
+			//	it's possible to set entity positions and bones back to this record and then see what hitbox we will hit and rewind to that record, bt i dont wanna
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(iCurHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+			const Vec3 vAngleTo = Math::CalcAngle(vPos, vHitboxPos);
+			const float flFOVTo = Math::CalcFov(vAngles, vAngleTo);
+			if (flFOVTo < flLastAngle) { cReturnRecord = rCurQuery; flLastAngle = flFOVTo; }
 		}
 	}
+	return cReturnRecord;
 }
 
-void CBacktrack::ResetLatency()
-{
-	LastInSequence = 0;
-	LatencyRampup = 0.f;
+std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
+	if (!Vars::Backtrack::Enabled.Value) { return std::nullopt; }
+	UpdateDatagram();
+	if (G::IsAttacking){
+		CBaseEntity* pLocal = g_EntityCache.GetLocal();
+		if (!pLocal) { return std::nullopt; }
+		
+		Vec3 vPos = pLocal->GetShootPos();
+		const Vec3 vAngles = pCmd->viewangles;
+
+		std::optional<TickRecordNew> cReturnTick;
+		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+		{
+			if (!pEnemy || !pEnemy->IsAlive()) { continue; }	//	dont scan
+			PlayerInfo_t pInfo{};	//	dont care about ignored players
+			if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
+				if (G::IsIgnored(pInfo.friendsID)) { continue; }
+			}
+			if (std::optional<TickRecordNew> checkRec = GetHitRecord(pCmd, pEnemy, vAngles, vPos)){
+				cReturnTick = checkRec;
+				break;
+			}
+		}
+		if (cReturnTick)
+		{ pCmd->tick_count = TIME_TO_TICKS(cReturnTick->flSimTime + G::LerpTime); return std::nullopt; }
+	}
+	return std::nullopt;
 }
 
-/* Returns all records of a given player */
-std::deque<TickRecord>* CBacktrack::GetPlayerRecords(int entIdx)
-{
-	if (Records[entIdx].empty())
+std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox){
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return std::nullopt; }
+	if (mRecords[pEntity].empty()) { return std::nullopt; }
+	switch (iMode){
+	case BacktrackMode::ALL: {
+		for (const auto& rCurQuery : mRecords[pEntity]){ 
+			if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
+		}
+		return std::nullopt;
+	}
+	case BacktrackMode::FIRST: {
+		if (std::optional<TickRecordNew> FirstRecord = GetFirstRecord(pEntity)){
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&FirstRecord->BoneMatrix.BoneMatrix));
+			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return FirstRecord; }
+		}
+		return std::nullopt;
+	}
+	case BacktrackMode::LAST: {
+		if (std::optional<TickRecordNew> LastRecord = GetLastRecord(pEntity)){
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&LastRecord->BoneMatrix.BoneMatrix));
+			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return LastRecord; }
+		}
+		return std::nullopt;
+	}
+	case BacktrackMode::ADAPTIVE: {
+		std::optional<TickRecordNew> ReturnTick{};
+		for (const auto& rCurQuery : mRecords[pEntity]){ 
+			if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { ReturnTick = rCurQuery; }
+			if (ReturnTick->bOnShot) { break; }
+		}
+		return ReturnTick;
+	}
+	case BacktrackMode::ONSHOT: {
+		for (const auto& rCurQuery : mRecords[pEntity]){ 
+			if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
+			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { 
+				if (rCurQuery.bOnShot) { return rCurQuery; }
+			}
+		}
+		return std::nullopt;
+	}
+	}
+	return std::nullopt; 
+}
+
+std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
+	if (mRecords[pEntity].empty())
 	{
 		return nullptr;
 	}
 
-	return &Records[entIdx];
+	return &mRecords[pEntity];
 }
 
-// Returns the last valid backtrack tick (further away from the player)
-std::optional<TickRecord> CBacktrack::GetLastRecord(int entIdx)
-{
-	const auto& entRecord = Records[entIdx];
-	if (!entRecord.empty()) {
-		return { entRecord.back() };
+std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
+	if (mRecords[pEntity].empty()) { return std::nullopt; }
+	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
+	for (const auto& rCurQuery : mRecords[pEntity]){
+		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
+		rReturnRecord = rCurQuery;
 	}
+	return rReturnRecord;
+}
 
+std::optional<TickRecordNew> CBacktrackNew::GetFirstRecord(CBaseEntity* pEntity){
+	if (mRecords[pEntity].empty()) { return std::nullopt; }
+	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
+	for (const auto& rCurQuery : mRecords[pEntity]){
+		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
+		return rCurQuery;
+	}
 	return std::nullopt;
 }
 
-/* Returns the first valid backtrack tick(close to the player) */
-std::optional<TickRecord> CBacktrack::GetFirstRecord(int entIdx)
+// Adjusts the fake latency ping
+void CBacktrackNew::AdjustPing(INetChannel* netChannel)
 {
-	const auto& entRecord = Records[entIdx];
-	for (const auto& record : entRecord)
+	for (const auto& cSequence : dSequences)
 	{
-		if (IsTickInRange(record.TickCount))
+		if (I::GlobalVars->realtime - cSequence.CurTime >= GetLatency())
 		{
-			return record;
+			netChannel->m_nInReliableState = cSequence.InReliableState;
+			netChannel->m_nInSequenceNr = cSequence.SequenceNr;
+			break;
 		}
-	}
-
-	return std::nullopt;
-}
-
-/* Returns the best tick for the chosen mode */
-std::optional<TickRecord> CBacktrack::GetRecord(int entIdx, BacktrackMode mode)
-{
-	switch (mode)
-	{
-	case BacktrackMode::First: { return GetFirstRecord(entIdx); }
-	default: { return GetLastRecord(entIdx); }
 	}
 }

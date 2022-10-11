@@ -5,6 +5,7 @@
 #include "Features/Visuals/Visuals.h"
 #include "Features/Misc/Misc.h"
 #include "Features/Vars.h"
+#include "Features/TickHandler/TickHandler.h"
 
 #include "Features/Menu/Menu.h"
 
@@ -77,6 +78,7 @@ void Initialize()
 
 	g_ConVars.Init();
 	F::LuaEngine.Init();
+	F::Ticks.Reset();
 
 	F::Statistics.m_SteamID = g_SteamInterfaces.User->GetSteamID();
 

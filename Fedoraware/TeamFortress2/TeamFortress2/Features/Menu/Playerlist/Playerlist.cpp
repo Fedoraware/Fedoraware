@@ -11,7 +11,7 @@
 #include <boost/property_tree/ptree.hpp>
 
 const char* resolveListPitch[]{"None", "Up", "Down", "Zero", "Auto"};
-const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert", "Auto"};
+const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert", "Edge", "Auto"};
 const char* priorityModes[]{ "Friend", "Ignore", "Default", "Rage", "Cheater" };
 
 struct ListPlayer {

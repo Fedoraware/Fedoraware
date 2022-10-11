@@ -21,6 +21,7 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/TickHandler/TickHandler.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 void AttackingUpdate(){
 	if (!G::IsAttacking) { return; }
@@ -147,6 +148,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
 		F::BadActors.OnTick();
+		F::BacktrackNew.Run(pCmd);
 
 		F::EnginePrediction.Start(pCmd);
 		{
@@ -213,8 +215,8 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 	else{ AttackingUpdate(); }
 
 	// do this at the end just in case aimbot / triggerbot fired.
-	if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
-		if (pCmd->buttons & IN_ATTACK && Vars::Misc::CL_Move::SafeTick.Value) {
+	if (const auto& pWeapon = g_EntityCache.GetWeapon(); const auto& pLocal = g_EntityCache.GetLocal()) {
+		if (pCmd->buttons & IN_ATTACK && (Vars::Misc::CL_Move::SafeTick.Value || (Vars::Misc::CL_Move::SafeTickAirOverride.Value && !pLocal->OnSolid()))) {
 			if (G::NextSafeTick > I::GlobalVars->tickcount && G::ShouldShift && G::ShiftedTicks) {
 				pCmd->buttons &= ~IN_ATTACK;
 			}
