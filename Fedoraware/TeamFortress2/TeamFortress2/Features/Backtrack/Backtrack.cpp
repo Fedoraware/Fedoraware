@@ -105,8 +105,8 @@ float CBacktrackNew::GetLatency()
 {
 	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo()){
 		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING);
-		const float flFakeLatency = (float)std::clamp(Vars::Backtrack::Latency.Value, 0, 800) / 1000.f;
-		const float flAdjustedLatency = flLatencyRampup * std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
+		const float flFakeLatency = flLatencyRampup * std::clamp((float)Vars::Backtrack::Latency.Value, 0.f, 800.f) / 1000.f;
+		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
 		return flAdjustedLatency;
 	}
 
