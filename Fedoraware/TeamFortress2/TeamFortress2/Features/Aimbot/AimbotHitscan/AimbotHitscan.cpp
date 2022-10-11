@@ -901,9 +901,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)
 		{
-			Utils::ConLog("Aimbot", tfm::format("Old pCmd->tick_count {%d}", pCmd->tick_count).c_str(), {126, 0, 255, 255});
 			pCmd->tick_count = TIME_TO_TICKS(tickCount + simTime);
-			Utils::ConLog("Aimbot", tfm::format("Set pCmd->tickcount to {%d | <%.1f | %.1f | %.1f>}", pCmd->tick_count, TICKS_TO_TIME(pCmd->tick_count), simTime, tickCount).c_str(), {126, 0, 255, 255});
 		}
 
 		Aim(pCmd, target.m_vAngleTo);
