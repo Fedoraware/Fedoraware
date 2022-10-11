@@ -133,7 +133,6 @@ void CBacktrackNew::FrameStageNotify(){
 	if (!pLocal || !iNetChan) { return Restart(); }
 
 	flLatencyRampup = std::min(1.f, flLatencyRampup += I::GlobalVars->interval_per_tick);
-	UpdateDatagram();
 	MakeRecords();
 	CleanRecords();
 }
@@ -164,7 +163,9 @@ std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEn
 }
 
 std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
-	if (G::IsAttacking && Vars::Backtrack::Enabled.Value){
+	if (!Vars::Backtrack::Enabled.Value) { return std::nullopt; }
+	UpdateDatagram();
+	if (G::IsAttacking){
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 		if (!pLocal) { return std::nullopt; }
 		
