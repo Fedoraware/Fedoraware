@@ -21,7 +21,7 @@
 #include "../../Resources/DVD-Icon.h"
 #include "../../Resources/64x64_Circle_Mask.h"
 
-MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
+MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
 {
 	static auto StartDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(
