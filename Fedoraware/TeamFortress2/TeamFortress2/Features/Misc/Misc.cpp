@@ -844,7 +844,7 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 					bReturn = false;
 				}
 
-				if (Vars::Misc::TauntFollowsCamera.Value)
+				if (Vars::Misc::TauntFollowsCamera.Value && !spinKey.Down())
 				{
 					Vec3 vAngle = I::EngineClient->GetViewAngles();
 					pCmd->viewangles.y = vAngle.y;
