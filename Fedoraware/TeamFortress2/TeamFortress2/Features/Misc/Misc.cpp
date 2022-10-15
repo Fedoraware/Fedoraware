@@ -807,9 +807,9 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 	{
 		if (pLocal->IsTaunting())
 		{
+			static KeyHelper spinKey{ &Vars::Misc::TauntSpinKey.Value };
 			if (Vars::Misc::TauntSpin.Value)
 			{
-				static KeyHelper spinKey{ &Vars::Misc::TauntSpinKey.Value };
 				if (spinKey.Down())
 				{
 					if (m_flSpinYaw > 180)
