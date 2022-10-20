@@ -72,7 +72,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 				const auto& vRecords = F::BacktrackNew.GetRecords(pEntity);
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					std::optional<TickRecordNew> vLastRec = F::BacktrackNew.GetLastRecord(pEntity);
+					std::optional<TickRecord> vLastRec = F::BacktrackNew.GetLastRecord(pEntity);
 					if (vLastRec)
 					{
 						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&vLastRec->BoneMatrix));

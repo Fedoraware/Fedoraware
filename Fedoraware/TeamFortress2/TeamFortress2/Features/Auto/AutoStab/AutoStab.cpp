@@ -125,7 +125,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (bBacktrackable)
 		{
-			auto DoBacktrack = [&](TickRecordNew pTick) -> bool {
+			auto DoBacktrack = [&](TickRecord pTick) -> bool {
 				pEnemy->SetAbsOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
 		

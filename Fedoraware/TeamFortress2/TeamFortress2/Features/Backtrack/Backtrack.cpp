@@ -1,6 +1,6 @@
 #include "Backtrack.h"
 
-bool CBacktrackNew::IsTracked(TickRecordNew Record){
+bool CBacktrackNew::IsTracked(TickRecord Record){
 	return I::GlobalVars->curtime - Record.flCreateTime < 1.f;
 }
 
@@ -13,7 +13,7 @@ bool CBacktrackNew::IsSimulationReliable(CBaseEntity* pEntity){
 	return iTicksSimTimeDelta == 1;
 }
 
-bool CBacktrackNew::WithinRewind(TickRecordNew Record){	//	check if we can go to this tick, ie, within 200ms of us
+bool CBacktrackNew::WithinRewind(TickRecord Record){	//	check if we can go to this tick, ie, within 200ms of us
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 
@@ -143,10 +143,10 @@ void CBacktrackNew::ReportShot(int iIndex){
 	mDidShoot[pEntity->GetIndex()] = true;
 }
 
-std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
+std::optional<TickRecord> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, const Vec3 vAngles, const Vec3 vPos){
 	Vec3 vForward = {};
 
-	std::optional<TickRecordNew> cReturnRecord{};
+	std::optional<TickRecord> cReturnRecord{};
 	float flLastAngle = 45.f;
 
 	for (const auto& rCurQuery : mRecords[pEntity]){
@@ -162,7 +162,7 @@ std::optional<TickRecordNew> CBacktrackNew::GetHitRecord(CUserCmd* pCmd, CBaseEn
 	return cReturnRecord;
 }
 
-std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
+std::optional<TickRecord> CBacktrackNew::Run(CUserCmd* pCmd){
 	if (!Vars::Backtrack::Enabled.Value) { return std::nullopt; }
 	UpdateDatagram();
 	if (G::IsAttacking){
@@ -172,7 +172,7 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
 		Vec3 vPos = pLocal->GetShootPos();
 		const Vec3 vAngles = pCmd->viewangles;
 
-		std::optional<TickRecordNew> cReturnTick;
+		std::optional<TickRecord> cReturnTick;
 		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!pEnemy || !pEnemy->IsAlive()) { continue; }	//	dont scan
@@ -180,7 +180,7 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
 			if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
 				if (G::IsIgnored(pInfo.friendsID)) { continue; }
 			}
-			if (std::optional<TickRecordNew> checkRec = GetHitRecord(pCmd, pEnemy, vAngles, vPos)){
+			if (std::optional<TickRecord> checkRec = GetHitRecord(pCmd, pEnemy, vAngles, vPos)){
 				cReturnTick = checkRec;
 				break;
 			}
@@ -191,7 +191,7 @@ std::optional<TickRecordNew> CBacktrackNew::Run(CUserCmd* pCmd){
 	return std::nullopt;
 }
 
-std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox){
+std::optional<TickRecord> CBacktrackNew::Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox){
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return std::nullopt; }
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
@@ -205,21 +205,21 @@ std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, Backtra
 		return std::nullopt;
 	}
 	case BacktrackMode::FIRST: {
-		if (std::optional<TickRecordNew> FirstRecord = GetFirstRecord(pEntity)){
+		if (std::optional<TickRecord> FirstRecord = GetFirstRecord(pEntity)){
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&FirstRecord->BoneMatrix.BoneMatrix));
 			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return FirstRecord; }
 		}
 		return std::nullopt;
 	}
 	case BacktrackMode::LAST: {
-		if (std::optional<TickRecordNew> LastRecord = GetLastRecord(pEntity)){
+		if (std::optional<TickRecord> LastRecord = GetLastRecord(pEntity)){
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&LastRecord->BoneMatrix.BoneMatrix));
 			if (Utils::VisPos(pLocal,pEntity, pLocal->GetShootPos(), vHitboxPos)) { return LastRecord; }
 		}
 		return std::nullopt;
 	}
 	case BacktrackMode::ADAPTIVE: {
-		std::optional<TickRecordNew> ReturnTick{};
+		std::optional<TickRecord> ReturnTick{};
 		for (const auto& rCurQuery : mRecords[pEntity]){ 
 			if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
 			const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
@@ -242,7 +242,7 @@ std::optional<TickRecordNew> CBacktrackNew::Aimbot(CBaseEntity* pEntity, Backtra
 	return std::nullopt; 
 }
 
-std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
+std::deque<TickRecord>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
 	if (mRecords[pEntity].empty())
 	{
 		return nullptr;
@@ -251,9 +251,9 @@ std::deque<TickRecordNew>* CBacktrackNew::GetRecords(CBaseEntity* pEntity){
 	return &mRecords[pEntity];
 }
 
-std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
+std::optional<TickRecord> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
-	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
+	std::optional<TickRecord> rReturnRecord = std::nullopt;
 	for (const auto& rCurQuery : mRecords[pEntity]){
 		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
 		rReturnRecord = rCurQuery;
@@ -261,9 +261,9 @@ std::optional<TickRecordNew> CBacktrackNew::GetLastRecord(CBaseEntity* pEntity){
 	return rReturnRecord;
 }
 
-std::optional<TickRecordNew> CBacktrackNew::GetFirstRecord(CBaseEntity* pEntity){
+std::optional<TickRecord> CBacktrackNew::GetFirstRecord(CBaseEntity* pEntity){
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
-	std::optional<TickRecordNew> rReturnRecord = std::nullopt;
+	std::optional<TickRecord> rReturnRecord = std::nullopt;
 	for (const auto& rCurQuery : mRecords[pEntity]){
 		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
 		return rCurQuery;
