@@ -46,7 +46,7 @@ enum class BacktrackMode {
 
 class CBacktrackNew {
 	//	logic
-	bool IsTracked(TickRecord Record);
+	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
 
@@ -68,7 +68,7 @@ class CBacktrackNew {
 	float flLatencyRampup = 0.f;
 	int iLastInSequence = 0;
 public:
-	bool WithinRewind(TickRecord Record);
+	bool WithinRewind(const TickRecord& record);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
 	void Restart(); //	called whenever lol
 	void FrameStageNotify(); //	called in FrameStageNotify
