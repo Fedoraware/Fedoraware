@@ -215,6 +215,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_MaintainSequenceTransitions.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_ComputePropOpacity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNewParticleEffect_DrawModel.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_CanBuild.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
