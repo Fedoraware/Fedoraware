@@ -858,6 +858,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::RunescapeChat);
 			SAVE_VAR(Vars::Misc::AntiAutobal);
 			SAVE_VAR(Vars::Misc::AntiViewmodelFlip);
+			SAVE_VAR(Vars::Visuals::ParticlesIgnoreZ);
 
 			// Followbot
 			{
@@ -1619,6 +1620,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 			LOAD_VAR(Vars::Visuals::NoStaticPropFade);
 			LOAD_VAR(Vars::Misc::AntiViewmodelFlip);
+			LOAD_VAR(Vars::Visuals::ParticlesIgnoreZ);
 
 			// Beans I LOVE Beans
 			{

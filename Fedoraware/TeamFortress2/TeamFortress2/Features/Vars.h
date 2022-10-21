@@ -582,6 +582,7 @@ namespace Vars
 		inline CVar<bool> EquipRegionUnlock{ false };
 
 		inline CVar<bool> NoStaticPropFade{ false };
+		inline CVar<bool> ParticlesIgnoreZ{ false };
 
 
 		namespace RagdollEffects
