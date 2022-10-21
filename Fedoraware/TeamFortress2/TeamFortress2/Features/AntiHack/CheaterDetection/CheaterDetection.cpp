@@ -65,7 +65,6 @@ void CCheaterDetection::ReportTickCount(std::pair<CBaseEntity*, int> pReport){
 		mData[pReport.first].pChoke.first++;
 		mData[pReport.first].pChoke.second+= pReport.second;
 	}
-	return;
 }
 
 bool CCheaterDetection::CheckBHop(CBaseEntity* pEntity){
