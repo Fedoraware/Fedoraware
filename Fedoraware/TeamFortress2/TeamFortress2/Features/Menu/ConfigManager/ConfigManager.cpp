@@ -805,6 +805,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 		//Misc
 		{
 			SAVE_VAR(Vars::Misc::AccurateMovement);
+			SAVE_VAR(Vars::Misc::DirectionalOnlyOnMove);
 			SAVE_VAR(Vars::Misc::AutoJump);
 			SAVE_VAR(Vars::Misc::AutoVote);
 			SAVE_VAR(Vars::Misc::DuckJump);
@@ -1665,6 +1666,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		//Misc
 		{
 			LOAD_VAR(Vars::Misc::AccurateMovement);
+			LOAD_VAR(Vars::Misc::DirectionalOnlyOnMove);
 			LOAD_VAR(Vars::Misc::AutoJump);
 			LOAD_VAR(Vars::Misc::AutoVote);
 			LOAD_VAR(Vars::Misc::DuckJump);
