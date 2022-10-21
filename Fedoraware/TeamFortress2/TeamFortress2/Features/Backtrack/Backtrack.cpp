@@ -279,7 +279,10 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { ReturnTick = rCurQuery; }
-				if (ReturnTick->bOnShot) { break; }
+				if (ReturnTick.has_value())
+				{
+					if (ReturnTick->bOnShot) { break; }
+				}
 			}
 			return ReturnTick;
 		}
