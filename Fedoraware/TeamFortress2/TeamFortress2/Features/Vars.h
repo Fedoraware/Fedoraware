@@ -581,6 +581,8 @@ namespace Vars
 		inline CVar<int> Rain{ false };
 		inline CVar<bool> EquipRegionUnlock{ false };
 
+		inline CVar<bool> NoStaticPropFade{ false };
+
 		namespace RagdollEffects
 		{
 			inline CVar<bool> EnemyOnly{ false };
