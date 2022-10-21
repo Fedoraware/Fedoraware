@@ -61,10 +61,10 @@ void CAimbotGlobal::SortTargets(std::vector<Target_t>* targets, const ESortMetho
 
 bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 {
-	if (*((BYTE*)I::TFGameRules + 1034))
-	{
-		return true;
-	}
+	//if (*((BYTE*)I::TFGameRules + 1034))
+	//{
+	//	return true;
+	//}
 
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	CBaseCombatWeapon* pWeapon = g_EntityCache.GetWeapon();
