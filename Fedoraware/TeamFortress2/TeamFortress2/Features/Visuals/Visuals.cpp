@@ -369,6 +369,10 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 				DebugLine("MainAct", tfm::format(": %i", (int)mainAct).c_str(), { xoffset, yoffset }); yoffset += 15;
 			}
 		}
+
+		bool truce = (*((BYTE*)I::TFGameRules + 1034));
+		DebugLine("Truce", tfm::format("%d", truce).c_str(), { xoffset,yoffset });
+
 	}
 }
 
