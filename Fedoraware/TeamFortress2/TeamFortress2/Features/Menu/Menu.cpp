@@ -1195,6 +1195,7 @@ void CMenu::MenuVisuals()
 				WSlider("VM Off Y", &Vars::Visuals::VMOffsets.y, -45.f, 45.f);
 				WSlider("VM Off Z", &Vars::Visuals::VMOffsets.z, -45.f, 45.f);
 				WSlider("VM Roll", &Vars::Visuals::VMRoll.Value, -180, 180);
+				WToggle("Anti viewmodel flip", &Vars::Misc::AntiViewmodelFlip.Value); HelpMarker("This is scuffed");
 
 				SectionTitle("DT Indicator");
 				WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin", "SEOwned", "Numeric" }); HelpMarker("What style the bar should draw in.");

@@ -583,6 +583,7 @@ namespace Vars
 
 		inline CVar<bool> NoStaticPropFade{ false };
 
+
 		namespace RagdollEffects
 		{
 			inline CVar<bool> EnemyOnly{ false };
@@ -661,6 +662,7 @@ namespace Vars
 		inline CVar<int> PingTarget{ 0 };
 		inline CVar<bool> ExtendFreeze{ false };
 		inline CVar<bool> ViewmodelFlip{ false };
+		inline CVar<bool> AntiViewmodelFlip{ false }; // scuffed
 		inline CVar<int> AutoJoin{ false };
 		inline CVar<bool> KillstreakWeapon{ false };
 		inline CVar<bool> PartyNetworking{ false };
