@@ -39,7 +39,7 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent) {
 	if (uNameHash == FNV1A::HashConst("player_hurt"))
 	{
 		F::Resolver.OnPlayerHurt(pEvent);
-		F::BacktrackNew.PlayerHurt(pEvent);
+		F::Backtrack.PlayerHurt(pEvent);
 		F::BadActors.ReportDamage(pEvent);
 	}
 

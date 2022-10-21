@@ -117,7 +117,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pEnemy->GetHitboxPos(HITBOX_PELVIS));
 
-		const auto& pRecords = F::BacktrackNew.GetRecords(pEnemy);
+		const auto& pRecords = F::Backtrack.GetRecords(pEnemy);
 		const bool bBacktrackable = pRecords != nullptr && Vars::Backtrack::Enabled.Value;
 
 		Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
@@ -184,7 +184,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				// Any Tick
 				for (const auto& pTick : *pRecords)
 				{
-					if (!F::BacktrackNew.WithinRewind(pTick)) { continue; }
+					if (!F::Backtrack.WithinRewind(pTick)) { continue; }
 					if (DoBacktrack(pTick)) { return; }
 				}
 			}

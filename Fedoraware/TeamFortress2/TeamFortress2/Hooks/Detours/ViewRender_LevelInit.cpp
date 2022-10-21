@@ -18,7 +18,7 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 	Hook.Original<FN>()(ecx, edx);
 
 	F::Visuals.ModulateWorld();
-	F::BacktrackNew.Restart();
+	F::Backtrack.Restart();
 	F::Ticks.Reset();
 	F::BadActors.OnLoad();
 }

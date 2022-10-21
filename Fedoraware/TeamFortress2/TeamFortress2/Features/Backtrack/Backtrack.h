@@ -32,19 +32,14 @@ struct TickRecord {
 };
 
 enum class BacktrackMode {
-	ALL,
-	//	iterates through every tick (slow probably)
-	FIRST,
-	//	first
-	LAST,
-	//	last
-	ADAPTIVE,
-	//	prefers on shot records, last
-	ONSHOT,
-	//	only returns on shot records
+	ALL, //	iterates through every tick (slow probably)
+	FIRST, // first
+	LAST, // last
+	ADAPTIVE, // prefers on shot records, last
+	ONSHOT, // only returns on shot records
 };
 
-class CBacktrackNew {
+class CBacktrack {
 	//	logic
 	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
@@ -67,6 +62,7 @@ class CBacktrackNew {
 	std::deque<CIncomingSequence> dSequences;
 	float flLatencyRampup = 0.f;
 	int iLastInSequence = 0;
+
 public:
 	bool WithinRewind(const TickRecord& record);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
@@ -82,4 +78,4 @@ public:
 	bool bFakeLatency = false;
 };
 
-ADD_FEATURE(CBacktrackNew, BacktrackNew)
+ADD_FEATURE(CBacktrack, Backtrack)
