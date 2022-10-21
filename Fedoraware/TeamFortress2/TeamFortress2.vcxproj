@@ -222,9 +222,11 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CLagCompensationManager_StartLagCompensation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CL_LatchInterpolationAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNetGraphPanel_DrawTextFields.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CNewParticleEffect_DrawModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CServerGameClients_ProcessUsercmds.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_ComputePropOpacity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CVoiceBanMgr_GetPlayerBan.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
