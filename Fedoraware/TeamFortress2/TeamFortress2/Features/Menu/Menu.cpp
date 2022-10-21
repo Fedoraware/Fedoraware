@@ -1425,7 +1425,7 @@ void CMenu::MenuVisuals()
 				WToggle("No Title Gradient", &Vars::Radar::Main::NoTitleGradient.Value);
 
 				SectionTitle("Players");
-				WToggle("Shot players", &Vars::Radar::Players::Active.Value); HelpMarker("lol");
+				WToggle("Show players", &Vars::Radar::Players::Active.Value); HelpMarker("lol");
 				WCombo("Icon###radari", &Vars::Radar::Players::IconType.Value, { "Scoreboard", "Portraits", "Avatar" }); HelpMarker("What sort of icon to represent players with");
 				WCombo("Background###radarb", &Vars::Radar::Players::BackGroundType.Value, { "Off", "Rectangle", "Texture" }); HelpMarker("What sort of background to put on players on the radar");
 				WToggle("Outline###radaro", &Vars::Radar::Players::Outline.Value); HelpMarker("Will put an outline on players on the radar");
