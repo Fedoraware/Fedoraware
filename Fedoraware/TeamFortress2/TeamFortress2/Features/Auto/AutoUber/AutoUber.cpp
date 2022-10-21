@@ -3,8 +3,9 @@
 #include "../../Vars.h"
 #include "../AutoGlobal/AutoGlobal.h"
 
-const static int changeTimer = 1; // i am lazy to change code, this should be fine.
-const static int defaultResistance = 0;
+// This code is terrible and unoptimized
+
+constexpr static int CHANGE_TIMER = 5; // i am lazy to change code, this should be fine.
 
 int vaccChangeState = 0;
 int vaccChangeTicks = 0;
@@ -20,19 +21,31 @@ int BulletDangerValue(CBaseEntity* pPatient)
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!player->IsAlive())
+		{
 			continue;
+		}
 
 		if (player->GetDormant())
+		{
 			continue;
+		}
 
-		switch (player->GetClassNum()){
-		case 1: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 0)) { continue; } break;	//	scout
-		case 2: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 7)) { continue; } break;	//	sniper
-		case 3: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 1)) { continue; } break;	//	soldier
-		case 6: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 4)) { continue; } break;	//	heavy
-		case 7: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 2)) { continue; } break;	//	pyro
-		case 8: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 8)) { continue; } break;	//	spy
-		case 9: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 5)) { continue; } break;	//	engineer
+		switch (player->GetClassNum())
+		{
+		case 1: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 0)) { continue; }
+			break; //	scout
+		case 2: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 7)) { continue; }
+			break; //	sniper
+		case 3: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 1)) { continue; }
+			break; //	soldier
+		case 6: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 4)) { continue; }
+			break; //	heavy
+		case 7: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 2)) { continue; }
+			break; //	pyro
+		case 8: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 8)) { continue; }
+			break; //	spy
+		case 9: if (!(Vars::Triggerbot::Uber::ReactClasses.Value & 1 << 5)) { continue; }
+			break; //	engineer
 		default: { continue; }
 		}
 
@@ -46,7 +59,8 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			return false;
 		}
 
-		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox_Drink || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFWeaponPDA)
+		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox_Drink || player->GetActiveWeapon()->GetClassID() ==
+			ETFClassID::CTFWeaponPDA)
 		{
 			return false;
 		}
@@ -57,10 +71,11 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		const Vec3 vAngleTo = Math::CalcAngle(player->GetEyePosition(), pPatient->GetWorldSpaceCenter());
 		const float flFOVTo = Math::CalcFov(player->GetEyeAngles(), vAngleTo);
 
-		if (G::PlayerPriority[player->GetIndex()].Mode != 4 && Vars::Triggerbot::Uber::ReactFoV.Value) {
-			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > (float)Vars::Triggerbot::Uber::ReactFoV.Value) { continue; }	//	account for choking :D
-		}	
-	
+		if (G::PlayerPriority[player->GetIndex()].Mode != 4 && Vars::Triggerbot::Uber::ReactFoV.Value)
+		{
+			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > static_cast<float>(Vars::Triggerbot::Uber::ReactFoV.Value)) { continue; } //	account for choking :D
+		}
+
 		if (HAS_CONDITION(player, TFCond_Zoomed))
 		{
 			anyZoomedSnipers = true;
@@ -72,15 +87,18 @@ int BulletDangerValue(CBaseEntity* pPatient)
 
 
 		if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_PELVIS),
-			player->GetEyePosition()))
+		                  player->GetEyePosition()))
 		{
 			if (const auto& pWeapon = player->GetActiveWeapon())
 			{
-				if (player->GetClassNum() == CLASS_SPY && pWeapon->GetSlot() == SLOT_PRIMARY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() == CLASS_MEDIC || player->GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER)
+				if (player->GetClassNum() == CLASS_SPY && pWeapon->GetSlot() == SLOT_PRIMARY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() ==
+					CLASS_MEDIC || player->GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER)
 				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 350.f ||
-						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f && 
-							(player->GetClassNum() == CLASS_SPY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() == CLASS_MEDIC || player->GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER))) {
+						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 600.f &&
+							(player->GetClassNum() == CLASS_SPY || player->GetClassNum() == CLASS_SCOUT || player->GetClassNum() == CLASS_HEAVY || player->GetClassNum() == CLASS_MEDIC || player->
+								GetClassNum() == CLASS_SNIPER || player->GetClassNum() == CLASS_ENGINEER)))
+					{
 						return 2;
 					}
 				}
@@ -91,21 +109,22 @@ int BulletDangerValue(CBaseEntity* pPatient)
 				{
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
 						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
-							(player->GetClassNum() == CLASS_PYRO)))) {
+							(player->GetClassNum() == CLASS_PYRO))))
+					{
 						return 2;
 					}
 
 					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
 						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
-							(player->GetClassNum() == CLASS_SOLDIER)))) {
+							(player->GetClassNum() == CLASS_SOLDIER))))
+					{
 						return 2;
 					}
-					
 				}
 			}
-			bool anyEnemies = true;
-		}
 
+			anyEnemies = true;
+		}
 	}
 
 	bool hasHitscan = false;
@@ -113,16 +132,22 @@ int BulletDangerValue(CBaseEntity* pPatient)
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 	{
 		if (pProjectile->GetVelocity().IsZero())
+		{
 			continue;
+		}
 
 		if (pProjectile->GetTeamNum() == pPatient->GetTeamNum())
+		{
 			continue;
+		}
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Arrow &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyRing
-			)
+		)
+		{
 			continue;
+		}
 
 		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
 		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
@@ -132,7 +157,6 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			if (pProjectile->IsCritBoosted()) { return 2; }
 			hasHitscan = true;
 		}
-
 	}
 
 	if (hasHitscan)
@@ -153,13 +177,19 @@ int FireDangerValue(CBaseEntity* pPatient)
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!player->IsAlive())
+		{
 			continue;
+		}
 
 		if (player->GetClassNum() != CLASS_PYRO) // Pyro only
+		{
 			continue;
+		}
 
 		if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) > 450.f)
+		{
 			continue;
+		}
 
 		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower)
 		{
@@ -184,30 +214,35 @@ int BlastDangerValue(CBaseEntity* pPatient)
 	for (const auto& pProjectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 	{
 		if (hasRockets && !pProjectile->IsCritBoosted())
+		{
 			continue;
+		}
 
 		if (pProjectile->GetVelocity().IsZero())
+		{
 			continue;
+		}
 
 		if (pProjectile->GetTouched()) // Ignore landed Stickies
+		{
 			continue;
+		}
 
 		if (pProjectile->GetTeamNum() == pPatient->GetTeamNum())
+		{
 			continue;
+		}
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Rocket &&
-		    pProjectile->GetClassID() != ETFClassID::CTFProjectile_SentryRocket &&
+			pProjectile->GetClassID() != ETFClassID::CTFProjectile_SentryRocket &&
 			pProjectile->GetClassID() != ETFClassID::CTFGrenadePipebombProjectile)
+		{
 			continue;
+		}
 
 		// Projectile is getting closer
-		/*const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
-		const float flHyp = sqrtf(pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()));
-		if ( flHypPred < flHyp && pPatient->GetVecOrigin().DistTo(vPredicted) < pProjectile->GetVelocity().Length())	//	this is way too sensitive
-		*/
-		Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
-		if (pPatient->GetAbsOrigin().DistTo(pProjectile->GetAbsOrigin()) <= 275.f) {
+		if (pPatient->GetAbsOrigin().DistTo(pProjectile->GetAbsOrigin()) <= 275.f)
+		{
 			hasRockets = true;
 		}
 	}
@@ -245,9 +280,9 @@ int ChargeCount()
 
 int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
 {
-	int bulletDanger = BulletDangerValue(pPatient);
-	int fireDanger = FireDangerValue(pPatient);
-	int blastDanger = BlastDangerValue(pPatient);
+	const int bulletDanger = BulletDangerValue(pPatient);
+	const int fireDanger = FireDangerValue(pPatient);
+	const int blastDanger = BlastDangerValue(pPatient);
 	if (pShouldPop)
 	{
 		int charges = ChargeCount();
@@ -261,7 +296,7 @@ int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
 		return -1;
 	}
 
-	vaccChangeTimer = changeTimer;
+	vaccChangeTimer = CHANGE_TIMER;
 
 	// vaccinator_change_timer = (int) change_timer;
 	if (bulletDanger >= fireDanger && bulletDanger >= blastDanger) { return 0; }
@@ -273,10 +308,10 @@ int OptimalResistance(CBaseEntity* pPatient, bool* pShouldPop)
 void SetResistance(int pResistance)
 {
 	Math::Clamp(pResistance, 0, 2);
-	vaccChangeTimer = changeTimer;
+	vaccChangeTimer = CHANGE_TIMER;
 	vaccIdealResist = pResistance;
 
-	int curResistance = CurrentResistance();
+	const int curResistance = CurrentResistance();
 	if (pResistance == curResistance) { return; }
 	if (pResistance > curResistance)
 	{
@@ -292,15 +327,11 @@ void DoResistSwitching(CUserCmd* pCmd)
 {
 	if (vaccChangeTimer > 0)
 	{
-		if (vaccChangeTimer == 1 && false)
-		{
-			SetResistance(defaultResistance - 1);
-		}
 		vaccChangeTimer--;
 	}
 	else
 	{
-		vaccChangeTimer = changeTimer;
+		vaccChangeTimer = CHANGE_TIMER;
 	}
 
 	if (!vaccChangeState) { return; }
@@ -333,7 +364,9 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		pWeapon->GetWeaponID() != TF_WEAPON_MEDIGUN || //Not medigun, return
 		G::CurItemDefIndex == Medic_s_TheKritzkrieg || //Kritzkrieg,  return
 		ChargeCount() < 1) //Not charged
+	{
 		return;
+	}
 
 	//Check local status, if enabled. Don't pop if local already is not vulnerable
 	if (Vars::Triggerbot::Uber::PopLocal.Value && pLocal->IsVulnerable())
@@ -347,10 +380,9 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 			bool shouldPop = false;
 
 
-
 			DoResistSwitching(pCmd);
 
-			int optResistance = OptimalResistance(pLocal, &shouldPop);
+			const int optResistance = OptimalResistance(pLocal, &shouldPop);
 			if (optResistance >= 0 && optResistance != CurrentResistance())
 			{
 				SetResistance(optResistance);
@@ -377,21 +409,24 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 	{
 		//Ignore if target is somehow dead, or already not vulnerable
 		if (!pTarget->IsAlive() || !pTarget->IsVulnerable())
+		{
 			return;
+		}
 
 		//Dont waste if not a friend, fuck off scrub
 		if (Vars::Triggerbot::Uber::OnlyFriends.Value && !g_EntityCache.IsFriend(pTarget->GetIndex()))
+		{
 			return;
+		}
 
 		//Check target's status
 		m_flHealth = static_cast<float>(pTarget->GetHealth());
 		m_flMaxHealth = static_cast<float>(pTarget->GetMaxHealth());
 
-		int iTargetIndex = pTarget->GetIndex();
-
 		if (Vars::Triggerbot::Uber::VoiceCommand.Value)
 		{
-			for (auto& iEntity : G::MedicCallers)
+			const int iTargetIndex = pTarget->GetIndex();
+			for (const auto& iEntity : G::MedicCallers)
 			{
 				if (iEntity == iTargetIndex)
 				{
@@ -409,7 +444,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 			bool shouldPop = false;
 			DoResistSwitching(pCmd);
 
-			int optResistance = OptimalResistance(pTarget, &shouldPop);
+			const int optResistance = OptimalResistance(pTarget, &shouldPop);
 			if (optResistance >= 0 && optResistance != CurrentResistance())
 			{
 				SetResistance(optResistance);

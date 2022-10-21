@@ -69,10 +69,10 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
-				const auto& vRecords = F::BacktrackNew.GetRecords(pEntity);
+				const auto& vRecords = F::Backtrack.GetRecords(pEntity);
 				if (Vars::Backtrack::BtChams::LastOnly.Value)
 				{
-					std::optional<TickRecordNew> vLastRec = F::BacktrackNew.GetLastRecord(pEntity);
+					std::optional<TickRecord> vLastRec = F::Backtrack.GetLastRecord(pEntity);
 					if (vLastRec)
 					{
 						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&vLastRec->BoneMatrix));
@@ -85,7 +85,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 						for (auto& record : *vRecords)
 						{
 							I::RenderView->SetColorModulation( record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
-							if (F::BacktrackNew.WithinRewind(record)) { OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix)); }
+							if (F::Backtrack.WithinRewind(record)) { OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix)); }
 						}
 					}
 				}

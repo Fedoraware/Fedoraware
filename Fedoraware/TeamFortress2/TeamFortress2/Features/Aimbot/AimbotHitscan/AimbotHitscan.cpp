@@ -430,7 +430,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 	case ETargetType::PLAYER:
 		{
-			if (ScanHitboxes(pLocal, target) && !((F::BacktrackNew.bFakeLatency && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4))
+			if (ScanHitboxes(pLocal, target) && !((F::Backtrack.bFakeLatency && Vars::Backtrack::Latency.Value > 200) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4))
 			{
 				return true;
 			}
@@ -438,7 +438,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			{
 				for (int nHitbox = 0; nHitbox < target.m_pEntity->GetNumOfHitboxes(); nHitbox++){
 					if (!IsHitboxValid(nHitbox, Vars::Aimbot::Hitscan::ScanHitboxes.Value, (target.m_pEntity->GetVelocity().Length() < 10.f))) { continue; }
-					if (std::optional<TickRecordNew> ValidRecord = F::BacktrackNew.Aimbot(target.m_pEntity, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, nHitbox)){
+					if (std::optional<TickRecord> ValidRecord = F::Backtrack.Aimbot(target.m_pEntity, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, nHitbox)){
 						target.SimTime = ValidRecord->flSimTime;
 						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
 						target.ShouldBacktrack = true;

@@ -6,7 +6,7 @@
 MAKE_HOOK(FX_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 8B 5D ? 56 53"), void, __cdecl,
 	void *pWpn, int iPlayer, const Vec3 &vecOrigin, const Vec3 &vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
 {
-	F::BacktrackNew.ReportShot(iPlayer);
+	F::Backtrack.ReportShot(iPlayer);
 	F::Resolver.ReportShot(iPlayer);
 	F::BadActors.ReportShot(iPlayer);
 

@@ -225,7 +225,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	//Backtrack the target if required
 	if (Vars::Backtrack::Enabled.Value && target.m_TargetType == ETargetType::PLAYER)
 	{
-		const auto& record = F::BacktrackNew.GetLastRecord(target.m_pEntity);
+		const auto& record = F::Backtrack.GetLastRecord(target.m_pEntity);
 		if (record) {
 			hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_PELVIS, (matrix3x4*)(&record->BoneMatrix));
 			target.SimTime = record->flSimTime;
@@ -237,7 +237,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 				target.ShouldBacktrack = true;
 			}
 		}
-		if (F::BacktrackNew.bFakeLatency && Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
+		if (F::Backtrack.bFakeLatency && Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
 		{ return false; }
 	}
 
