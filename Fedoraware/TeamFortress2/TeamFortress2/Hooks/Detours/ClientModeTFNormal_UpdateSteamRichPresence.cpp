@@ -9,6 +9,4 @@ MAKE_HOOK(ClientModeTFNormal_UpdateSteamRichPresence, g_Pattern.Find(L"client.dl
 {
 	F::DiscordRPC.Update();
 	F::Misc.SteamRPC();
-
-	return;
 }
