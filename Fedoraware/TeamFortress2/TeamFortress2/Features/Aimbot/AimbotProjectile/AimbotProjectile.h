@@ -40,7 +40,8 @@ class CAimbotProjectile {
 	bool ShouldFire(CUserCmd* pCmd);
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 	bool GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
-
+	float m_flTravelTime = 0.0f;
+	float m_flTravelTimeStart = 0.0f;
 	bool IsFlameThrower = false;
 	bool IsBoosted = false;
 

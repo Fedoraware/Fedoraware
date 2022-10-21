@@ -464,6 +464,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					{
 						G::PredictedPos = vPredictedPos;
 						F::MoveSim.Restore();
+						m_flTravelTime = out.m_flTime;
 						return true;
 					}
 				}
@@ -1218,9 +1219,21 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 	}
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
-		                         ? (pCmd->buttons & IN_ATTACK)
-		                         : F::AimbotGlobal.IsKeyDown());
+							 ? (pCmd->buttons & IN_ATTACK)
+							 : F::AimbotGlobal.IsKeyDown());
 	if (!bShouldAim) { return; }
+
+	if (Vars::Aimbot::Projectile::WaitForHit.Value && m_flTravelTimeStart)
+	{
+		if (I::GlobalVars->curtime > m_flTravelTimeStart)
+		{
+			m_flTravelTimeStart = 0.0f;
+		}
+		else
+		{
+			return;
+		}
+	}
 
 	ConVar* flippy = I::Cvar->FindVar("cl_flipviewmodels");
 	Flippy = flippy->GetBool();
@@ -1280,6 +1293,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		if (bIsAttacking)
 		{
 			G::IsAttacking = true;
+			m_flTravelTimeStart = I::GlobalVars->curtime + m_flTravelTime;
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				F::Visuals.DrawProjectileTracer(pLocal, target.m_vPos);
