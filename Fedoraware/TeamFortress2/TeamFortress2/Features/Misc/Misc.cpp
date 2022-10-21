@@ -10,7 +10,7 @@
 extern int attackStringW;
 extern int attackStringH;
 
-void CMisc::RunPre(CUserCmd* pCmd, bool *pSendPacket)
+void CMisc::RunPre(CUserCmd* pCmd, bool* pSendPacket)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -37,7 +37,8 @@ void CMisc::RunPre(CUserCmd* pCmd, bool *pSendPacket)
 	DetectChoke();
 }
 
-void CMisc::RunMid(CUserCmd* pCmd, const int nOldGroundEnt){
+void CMisc::RunMid(CUserCmd* pCmd, const int nOldGroundEnt)
+{
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		EdgeJump(pCmd, nOldGroundEnt);
@@ -57,7 +58,8 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 	}
 }
 
-void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket){
+void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
+{
 	bMovementStopped = false;
 	if (!G::ShouldStop) { return; }
 	Utils::StopMovement(pCmd);
@@ -67,14 +69,16 @@ void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket){
 	*pSendPacket = false;
 }
 
-void CMisc::ChokeCheck(bool* pSendPacket){
+void CMisc::ChokeCheck(bool* pSendPacket)
+{
 	static int iChokedPackets = 0;
 	if (!*pSendPacket) { iChokedPackets++; }
 	else { iChokedPackets = 0; }
 	if (iChokedPackets > 22) { *pSendPacket = true; iChokedPackets = 0; }
 }
 
-void CMisc::DoubletapPacket(bool* pSendPacket){
+void CMisc::DoubletapPacket(bool* pSendPacket)
+{
 	*pSendPacket = (G::ShouldShift || G::Teleporting) ? G::ShiftedTicks == 1 : *pSendPacket;
 }
 
@@ -109,20 +113,22 @@ void CMisc::WeaponSway()
 	}
 }
 
-void CMisc::PrintProjAngles(CBaseEntity* pLocal){
-	if (!Vars::Debug::DebugInfo.Value){ return; }
-	if (!pLocal->IsAlive() || pLocal->IsAGhost()){ return; }
+void CMisc::PrintProjAngles(CBaseEntity* pLocal)
+{
+	if (!Vars::Debug::DebugInfo.Value) { return; }
+	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 	static float flNextPrint = 0.f; if (flNextPrint > I::GlobalVars->curtime) { return; }
 	const Vec3 vLocalEyeAngles = pLocal->GetEyeAngles();
 	const Vec3 vLocalEyePosition = pLocal->GetEyePosition();
-	for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)){
-		if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) != pLocal){ continue; }
+	for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+	{
+		if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) != pLocal) { continue; }
 		const Vec3 vProjAngles = pEntity->GetAbsAngles();
 		const Vec3 vProjPosition = pEntity->GetAbsOrigin();
 
 		const Vec3 vDeltaAng = vLocalEyeAngles - vProjAngles;
 		const Vec3 vDeltaPos = vLocalEyePosition - vProjPosition;
-		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), {255, 180, 0, 255});
+		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), { 255, 180, 0, 255 });
 		flNextPrint = I::GlobalVars->curtime + 1.f;
 	}
 }
@@ -130,7 +136,7 @@ void CMisc::PrintProjAngles(CBaseEntity* pLocal){
 void CMisc::DetectChoke()
 {
 	static int iOldTick = I::GlobalVars->tickcount;
-	if (I::GlobalVars->tickcount == iOldTick) {return;}
+	if (I::GlobalVars->tickcount == iOldTick) { return; }
 	iOldTick = I::GlobalVars->tickcount;
 	for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
@@ -146,7 +152,7 @@ void CMisc::DetectChoke()
 		}
 		else
 		{
-			F::BadActors.ReportTickCount({pEntity, G::ChokeMap[pEntity->GetIndex()]});
+			F::BadActors.ReportTickCount({ pEntity, G::ChokeMap[pEntity->GetIndex()] });
 			G::ChokeMap[pEntity->GetIndex()] = 0;
 		}
 	}
@@ -188,12 +194,14 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 			continue;
 		}
 
-		if (CBaseCombatWeapon* pWeapon = pEnemy->GetActiveWeapon()){
+		if (CBaseCombatWeapon* pWeapon = pEnemy->GetActiveWeapon())
+		{
 			if (pWeapon->GetWeaponID() != TF_WEAPON_KNIFE) { continue; }
 		}
 
 		PlayerInfo_t pInfo{};
-		if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
+		if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo))
+		{
 			if (G::IsIgnored(pInfo.friendsID)) { continue; }
 		}
 
@@ -233,7 +241,8 @@ void CMisc::InstantRespawnMVM() {
 void CMisc::CheatsBypass()
 {
 	static bool cheatset = false;
-	if (ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats")) {
+	if (ConVar* sv_cheats = g_ConVars.FindVar("sv_cheats"))
+	{
 		if (Vars::Misc::CheatsBypass.Value && sv_cheats)
 		{
 			sv_cheats->SetValue(1);
@@ -384,18 +393,21 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 	bFastAccel = false;
 	static bool flipVar = false;
 	flipVar = !flipVar;
-	
-	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value) && !flipVar){
+
+	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value) && !flipVar)
+	{
 		return;
 	}
 
 	const bool bShouldAccel = !G::ShouldShift && Vars::Misc::FastAccel.Value;
 	const bool bShouldAccelFinal = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : bShouldAccel;
-	if (!bShouldAccelFinal) {
+	if (!bShouldAccelFinal)
+	{
 		return;
 	}
 
-	if (G::Recharging || G::RechargeQueued || G::Frozen) {
+	if (G::Recharging || G::RechargeQueued || G::Frozen)
+	{
 		return;
 	}
 
@@ -404,7 +416,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		return;
 	}
 
-	if (pLocal->IsCharging()) {	//	demoman charge
+	if (pLocal->IsCharging())
+	{	//	demoman charge
 		return;
 	}
 
@@ -418,11 +431,13 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 	const int maxSpeed = std::min(pLocal->GetMaxSpeed() * (pCmd->forwardmove < 0 ? .9f : 1.f) - 1, 510.f); //	get our max speed, then if we are going backwards, reduce it.
 	const float curSpeed = pLocal->GetVecVelocity().Length2D();
 
-	if (curSpeed > maxSpeed) {	
+	if (curSpeed > maxSpeed)
+	{
 		return;	//	no need to accelerate if we are moving at our max speed
 	}
 
-	if (pLocal->GetClassNum() == ETFClass::CLASS_HEAVY && pCmd->buttons & IN_ATTACK2 && pLocal->IsDucking()) {
+	if (pLocal->GetClassNum() == ETFClass::CLASS_HEAVY && pCmd->buttons & IN_ATTACK2 && pLocal->IsDucking())
+	{
 		return;
 	}
 
@@ -437,7 +452,8 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 		pCmd->viewangles.z = 270.f;
 		G::UpdateView = false; bFastAccel = true;
-		if (Vars::Misc::FakeAccelAngle.Value) {
+		if (Vars::Misc::FakeAccelAngle.Value)
+		{
 			*pSendPacket = false;
 		}
 	}
@@ -479,19 +495,22 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (speed > speedLimit)
 	{
-		switch (iStopMode) {
-		case 1: {
-			Vec3 direction = pLocal->GetVecVelocity().toAngle();
-			direction.y = pCmd->viewangles.y - direction.y;
-			const Vec3 negatedDirection = direction.fromAngle() * -speed;
-			pCmd->forwardmove = negatedDirection.x;
-			pCmd->sidemove = negatedDirection.y;
-			break;
-		}
-		case 2: {
-			G::ShouldStop = true;
-			break;
-		}
+		switch (iStopMode)
+		{
+			case 1:
+			{
+				Vec3 direction = pLocal->GetVecVelocity().toAngle();
+				direction.y = pCmd->viewangles.y - direction.y;
+				const Vec3 negatedDirection = direction.fromAngle() * -speed;
+				pCmd->forwardmove = negatedDirection.x;
+				pCmd->sidemove = negatedDirection.y;
+				break;
+			}
+			case 2:
+			{
+				G::ShouldStop = true;
+				break;
+			}
 		}
 	}
 	else
@@ -523,19 +542,23 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const bool bCurHop = bJumpHeld && pLocal->OnSolid();
 	static bool bHopping = bCurHop;
 
-	if (bCurHop) {	//	this is our initial jump
+	if (bCurHop)
+	{	//	this is our initial jump
 		bHopping = true; return;
 	}
-	else if (bHopping && !pLocal->OnSolid() && bJumpHeld) {	//	 we are not on the ground and the key is in the same hold cycle
+	else if (bHopping && !pLocal->OnSolid() && bJumpHeld)
+	{	//	 we are not on the ground and the key is in the same hold cycle
 		pCmd->buttons &= ~IN_JUMP; return;
 	}
-	else if (bHopping && !bJumpHeld) {	//	we are no longer in the jump key cycle
+	else if (bHopping && !bJumpHeld)
+	{	//	we are no longer in the jump key cycle
 		bHopping = false; return;
 	}
-	else if (!bHopping && bJumpHeld) {	//	we exited the cycle but now we want back in, don't mess with keys for doublejump, enter us back into the cycle for next tick
+	else if (!bHopping && bJumpHeld)
+	{	//	we exited the cycle but now we want back in, don't mess with keys for doublejump, enter us back into the cycle for next tick
 		bHopping = true; return;
 	}
-	
+
 	return;
 }
 
@@ -573,9 +596,11 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	switch (Vars::Misc::AutoStrafe.Value)
 	{
-	default:
-		break;
-	case 1:
+		default:
+		{
+			break;
+		}
+		case 1:
 		{
 			if (pCmd->mousedx && (!isJumping || wasJumping))
 			{
@@ -584,8 +609,16 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 			wasJumping = isJumping;
 			break;
 		}
-	case 2:
+		case 2:
 		{
+			if (Vars::Misc::DirectionalOnlyOnMove.Value)
+			{
+				if (!(pCmd->buttons & (IN_MOVELEFT | IN_MOVERIGHT | IN_FORWARD | IN_BACK)))
+				{
+					break;
+				}
+			}
+
 			const float speed = pLocal->GetVelocity().Length2D();
 
 			if (speed < 2.0f)
@@ -595,24 +628,22 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 			const auto vel = pLocal->GetVelocity();
 
-			constexpr auto perfectDelta = [](float speed) noexcept {
-				if (const auto& pLocal = g_EntityCache.GetLocal())
+			constexpr auto perfectDelta = [](float speed, CBaseEntity* pLocal) noexcept
+			{
+				auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
+				static auto airVar = g_ConVars.FindVar("sv_airaccelerate");
+				static auto wishSpeed = 90.0f;
+
+				const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
+
+				if (term < 1.0f && term > -1.0f)
 				{
-					static auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
-					static auto airVar = g_ConVars.FindVar("sv_airaccelerate");
-					static auto wishSpeed = 30.0f;
-
-					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
-
-					if (term < 1.0f && term > -1.0f)
-					{
-						return acosf(term);
-					}
+					return acosf(term);
 				}
 				return 0.0f;
 			};
 
-			const float pDelta = perfectDelta(speed);
+			const float pDelta = perfectDelta(speed, pLocal);
 			if ((!isJumping || wasJumping) && pDelta)
 			{
 				const float yaw = DEG2RAD(pCmd->viewangles.y);
@@ -678,12 +709,12 @@ void CMisc::ChatSpam()
 
 			switch (Vars::Misc::ChatSpam.Value)
 			{
-			case 2: spamMsg = SPAM_LBOX[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_LBOX) - 1)];
-				break;
-			case 3: spamMsg = SPAM_CH[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_CH) - 1)];
-				break;
-			default: spamMsg = SPAM_FED[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_FED) - 1)];
-				break;
+				case 2: spamMsg = SPAM_LBOX[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_LBOX) - 1)];
+					break;
+				case 3: spamMsg = SPAM_CH[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_CH) - 1)];
+					break;
+				default: spamMsg = SPAM_FED[Utils::RandIntSimple(0, ARRAYSIZE(SPAM_FED) - 1)];
+					break;
 			}
 
 			Utils::ReplaceSpecials(spamMsg);
@@ -698,10 +729,10 @@ void CMisc::ChatSpam()
 			std::string voiceCommand;
 			switch (Vars::Misc::VoicechatSpam.Value)
 			{
-			case 1: voiceCommand = "0 0"; break;
-			case 2: voiceCommand = "2 0"; break;
-			case 3: voiceCommand = "2 6"; break;
-			default: voiceCommand = tfm::format("%i %i", Utils::RandIntSimple(0, 2), Utils::RandIntSimple(0, 8)); break;
+				case 1: voiceCommand = "0 0"; break;
+				case 2: voiceCommand = "2 0"; break;
+				case 3: voiceCommand = "2 6"; break;
+				default: voiceCommand = tfm::format("%i %i", Utils::RandIntSimple(0, 2), Utils::RandIntSimple(0, 8)); break;
 			}
 
 			voiceCommand.insert(0, "voicemenu ");
@@ -753,7 +784,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 			pCmd->buttons |= IN_ATTACK | IN_JUMP;
 
 			const Vec3 vVelocity = pLocal->GetVelocity();
-			Vec3 vAngles = {vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f};
+			Vec3 vAngles = { vVelocity.IsZero() ? 89.0f : 45.0f, Math::VelocityToAngles(vVelocity).y - 180.0f, 0.0f };
 
 			if (G::CurItemDefIndex != Soldier_m_TheOriginal && !vVelocity.IsZero())
 			{
@@ -877,7 +908,8 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const auto localAngles = I::EngineClient->GetViewAngles();
 	const auto aimAngles = Math::CalcAngle(pLocal->GetEyePosition(), aimTarget->GetWorldSpaceCenter());
 
-	auto mod = [](float a, float n) {
+	auto mod = [](float a, float n)
+	{
 		return a - std::floor(a / n) * n;
 	};
 
@@ -885,7 +917,8 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (angleDelta < -5.f)
 	{
 		cl_flipviewmodels->SetValue(true);
-	} else if (angleDelta > 5.f)
+	}
+	else if (angleDelta > 5.f)
 	{
 		cl_flipviewmodels->SetValue(false);
 	}
@@ -903,8 +936,9 @@ void CMisc::ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal)
 void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	// 1<<17 = TFCond_Charging
-	
-	if (pLocal && pLocal->IsAlive() && !pLocal->IsCharging() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f) {
+
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsCharging() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f)
+	{
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?
 			pLocal->OnSolid() ? 1 : 2 : 0
@@ -914,54 +948,65 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 		static int nShiftTickG = 0;
 		static int nShiftTickA = 0;
 
-		switch (stopType) {
-		case 0: {
-			nShiftTickG = 0;
-			nShiftTickA = 0;
-			return;
-		}
-		case 1: {
-			switch (nShiftTickG) {
-			case 0: {
-				G::ShouldStop = true;
-				predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
-				nShiftTickG++;
-				break;
+		switch (stopType)
+		{
+			case 0:
+			{
+				nShiftTickG = 0;
+				nShiftTickA = 0;
+				return;
 			}
+			case 1:
+			{
+				switch (nShiftTickG)
+				{
+					case 0:
+					{
+						G::ShouldStop = true;
+						predEndPoint = pLocal->GetVecOrigin() + pLocal->GetVecVelocity();
+						nShiftTickG++;
+						break;
+					}
 
-			default: {
-				nShiftTickG++;
-				break;
-			}
-			}//
+					default:
+					{
+						nShiftTickG++;
+						break;
+					}
+				}//
 
-			currentPos = pLocal->GetVecOrigin();
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / currentPos.Dist2D(predEndPoint)));
-			//	the "slight stop" that u can see when we do this is due to (i believe) the player reaching the desired point, and then constantly accelerating backwards, meaning their velocity-
-			//	when they finish shifting ticks, is lower than when they started.
-			//	alot of things worked better than (1/dist) as the scale, but caused issues on different classes, for now this is the best I can get it to.
-			return;
-		}
-		case 2: {
-			switch (nShiftTickA) {
-			case 0: {
-				predEndPoint = pLocal->GetVecOrigin();
-				nShiftTickA++;
-				break;
+				currentPos = pLocal->GetVecOrigin();
+				Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, (1.f / currentPos.Dist2D(predEndPoint)));
+				//	the "slight stop" that u can see when we do this is due to (i believe) the player reaching the desired point, and then constantly accelerating backwards, meaning their velocity-
+				//	when they finish shifting ticks, is lower than when they started.
+				//	alot of things worked better than (1/dist) as the scale, but caused issues on different classes, for now this is the best I can get it to.
+				return;
 			}
-			default: {
-				nShiftTickA++;
-				break;
-			}
-			}
+			case 2:
+			{
+				switch (nShiftTickA)
+				{
+					case 0:
+					{
+						predEndPoint = pLocal->GetVecOrigin();
+						nShiftTickA++;
+						break;
+					}
+					default:
+					{
+						nShiftTickA++;
+						break;
+					}
+				}
 
-			currentPos = pLocal->GetVecOrigin();
-			Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, 500);
-			return;
-		}
-		default: {
-			return;
-		}
+				currentPos = pLocal->GetVecOrigin();
+				Utils::WalkTo(pCmd, pLocal, predEndPoint, currentPos, 500);
+				return;
+			}
+			default:
+			{
+				return;
+			}
 		}
 	}
 }
@@ -972,7 +1017,7 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 	{
 		if (!G::WeaponCanHeadShot && pLocal->IsScoped()) { return false; }
 		if (!pWeapon->CanShoot(pLocal)) { return false; }
-		
+
 		for (const auto& target : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			if (!target->IsAlive()) { continue; }
@@ -1150,24 +1195,24 @@ void CMisc::SteamRPC()
 
 		switch (Vars::Misc::Steam::MatchGroup.Value)
 		{
-		case 0:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
-			break;
-		case 1:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "MannUp");
-			break;
-		case 2:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Competitive6v6");
-			break;
-		case 3:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Casual");
-			break;
-		case 4:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "BootCamp");
-			break;
-		default:
-			g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
-			break;
+			case 0:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+				break;
+			case 1:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "MannUp");
+				break;
+			case 2:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Competitive6v6");
+				break;
+			case 3:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Casual");
+				break;
+			case 4:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "BootCamp");
+				break;
+			default:
+				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+				break;
 		}
 	}
 
@@ -1180,38 +1225,38 @@ void CMisc::SteamRPC()
 	*/
 	switch (Vars::Misc::Steam::MapText.Value)
 	{
-	case 0:
-		if (Vars::Misc::Steam::CustomText.Value.empty())
-		{
+		case 0:
+			if (Vars::Misc::Steam::CustomText.Value.empty())
+			{
+				g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+			}
+			else
+			{
+				g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.Value.c_str());
+			}
+			break;
+		case 1:
 			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
-		}
-		else
-		{
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.Value.c_str());
-		}
-		break;
-	case 1:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
-		break;
-	case 2:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
-		break;
-	case 3:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
-		break;
-	case 4:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
-		break;
-	case 5:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
-		break;
-	default:
-		g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
-		break;
+			break;
+		case 2:
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
+			break;
+		case 3:
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
+			break;
+		case 4:
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
+			break;
+		case 5:
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
+			break;
+		default:
+			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+			break;
 	}
 
 	g_SteamInterfaces.Friends015->SetRichPresence("steam_player_group_size",
-	                                              std::to_string(Vars::Misc::Steam::GroupSize.Value).c_str());
+												  std::to_string(Vars::Misc::Steam::GroupSize.Value).c_str());
 }
 
 void CMisc::UnlockAchievements()
@@ -1250,9 +1295,9 @@ void CMisc::LockAchievements()
 // TODO: Move this out of Misc.cpp
 void CNotifications::Think()
 {
-	constexpr int x{1};
-	int y{1};
-	constexpr int size{20};
+	constexpr int x{ 1 };
+	int y{ 1 };
+	constexpr int size{ 20 };
 
 	if (NotificationTexts.size() > (MAX_NOTIFY_SIZE + 1))
 	{
@@ -1313,15 +1358,15 @@ void CNotifications::Think()
 
 		delete[] wc; // Memory leak
 
-		g_Draw.Line(x, y, x, y + 19, {Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a});
+		g_Draw.Line(x, y, x, y + 19, { Colors::NotifOutline.r, Colors::NotifOutline.g, Colors::NotifOutline.b, color.a });
 		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
-		                     {Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a},
-		                     {
-			                     Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, 1
-		                     }, true);
+							 { Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, color.a },
+							 {
+								 Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, 1
+							 }, true);
 		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
-		              {Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a},
-		              ALIGN_DEFAULT, notify->Text.c_str());
+					  { Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a },
+					  ALIGN_DEFAULT, notify->Text.c_str());
 
 		y += size;
 	}
@@ -1348,7 +1393,7 @@ void CStatistics::Submit()
 	}
 
 	std::string data_format = tfm::format("{\r\n    \"steamid\": \"%s\",\r\n    \"kills\": %d,\r\n    \"deaths\": %d,\r\n    \"highest_killstreak\": %d\r\n}", m_SteamID.SteamRender(), m_nTotalKills, m_nTotalDeaths, m_nHighestKillstreak);
-	
+
 	std::wstring url = L"http://198.244.189.210:4077/submit_info";
 	HINTERNET session = InternetOpen(L"Hello", PRE_CONFIG_INTERNET_ACCESS, NULL, NULL, 0);
 	LPVOID data = (LPVOID)data_format.c_str();
@@ -1358,13 +1403,13 @@ void CStatistics::Submit()
 	HINTERNET hRequest = HttpOpenRequestA(hConnection, "POST", "/submit_info", NULL, NULL, NULL, 0, 1);
 	if (HttpSendRequestA(hRequest, header, strlen(header), data, strlen(data_format.c_str())))
 	{
-		Utils::ConLog("FWARE-Statistics-Server", "Succesfully sent statistics.", {255, 0, 114, 255});
+		Utils::ConLog("FWARE-Statistics-Server", "Succesfully sent statistics.", { 255, 0, 114, 255 });
 	}
 
 	InternetCloseHandle(hInternet);
 	InternetCloseHandle(hConnection);
 	InternetCloseHandle(hRequest);
-									
+
 }
 
 void CStatistics::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)

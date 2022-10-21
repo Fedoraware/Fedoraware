@@ -628,6 +628,7 @@ namespace Vars
 		inline CVar<bool> AutoVote{ false };
 		inline CVar<bool> DuckJump{ false };
 		inline CVar<int> AutoStrafe{ 2 };
+		inline CVar<bool> DirectionalOnlyOnMove{ false };
 		inline CVar<bool> Directional{ false };
 		inline CVar<bool> TauntSlide{ false };
 		inline CVar<bool> TauntControl{ false };
