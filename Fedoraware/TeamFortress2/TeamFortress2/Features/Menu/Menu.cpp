@@ -2157,6 +2157,14 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 {
 	if (!ConfigLoaded) { return; }
 
+	if (F::Menu.IsOpen)
+	{
+		if (!Utils::IsGameWindowInFocus())
+		{
+			F::Menu.IsOpen = false;
+		}
+	}
+
 	static std::once_flag initFlag;
 	std::call_once(initFlag, [&] {
 		Init(pDevice);
