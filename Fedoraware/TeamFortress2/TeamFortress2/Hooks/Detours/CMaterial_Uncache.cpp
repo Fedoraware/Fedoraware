@@ -6,7 +6,8 @@ MAKE_HOOK(CMaterial_Uncache, g_Pattern.E8(L"MaterialSystem.dll", L"E8 ? ? ? ? 83
 {
 	if (ecx)
 	{
-		if (std::find(F::DMEChams.v_MatListGlobal.begin(), F::DMEChams.v_MatListGlobal.end(), ecx) != F::DMEChams.v_MatListGlobal.end()){
+		if (std::find(F::DMEChams.v_MatListGlobal.begin(), F::DMEChams.v_MatListGlobal.end(), ecx) != F::DMEChams.v_MatListGlobal.end())
+		{
 			return;
 		}
 	}

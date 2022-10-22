@@ -29,7 +29,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 
 
 
-				
+
 				// Remove punch effect
 				{
 					G::PunchAngles = pLocal->GetPunchAngles();	//	use in aimbot 

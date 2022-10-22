@@ -21,7 +21,8 @@ void CConVars::Init()
 	sv_maxusrcmdprocessticks_holdaim = I::Cvar->FindVar("sv_maxusrcmdprocessticks_holdaim");
 
 	ConCommandBase* cmdBase = I::Cvar->GetCommands();
-	while (cmdBase != nullptr) {
+	while (cmdBase != nullptr)
+	{
 		constexpr int FCVAR_HIDDEN = (int)EConVarFlags::FCVAR_HIDDEN;
 		constexpr int FCVAR_DEVELOPMENT_ONLY = (int)EConVarFlags::FCVAR_DEVELOPMENT_ONLY;
 		constexpr int FCVAR_CHEAT = (int)EConVarFlags::FCVAR_CHEAT;
@@ -29,8 +30,10 @@ void CConVars::Init()
 		cmdBase->m_nFlags &= ~(FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY | FCVAR_CHEAT | FCVAR_NOT_CONNECTED);
 
 
-		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase)) {
-			if (convar->GetName() == "name") {
+		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase))
+		{
+			if (convar->GetName() == "name")
+			{
 				convar->m_fnChangeCallback = 0;
 				convar->InternalSetValue(0);
 				convar->m_fnChangeCallback = 0;
@@ -43,8 +46,10 @@ void CConVars::Init()
 	}
 }
 
-ConVar* CConVars::FindVar(const char* cvarname) {
-	if (!cvarMap[FNV1A::HashConst(cvarname)]) {
+ConVar* CConVars::FindVar(const char* cvarname)
+{
+	if (!cvarMap[FNV1A::HashConst(cvarname)])
+	{
 		cvarMap[FNV1A::HashConst(cvarname)] = I::Cvar->FindVar(cvarname);
 	}
 	return cvarMap[FNV1A::HashConst(cvarname)];

@@ -5,7 +5,8 @@
 #include "../Backtrack/Backtrack.h"
 #include "../Vars.h"
 
-class NetVarHooks {
+class NetVarHooks
+{
 private:
 	bool HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn function);
 

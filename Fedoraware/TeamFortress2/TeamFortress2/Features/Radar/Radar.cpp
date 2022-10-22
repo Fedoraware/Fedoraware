@@ -2,8 +2,8 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 
-constexpr Color_t clrBlack = {0, 0, 0, 255};
-constexpr Color_t clrWhite = {255, 255, 255, 255};
+constexpr Color_t clrBlack = { 0, 0, 0, 255 };
+constexpr Color_t clrWhite = { 255, 255, 255, 255 };
 
 static void SquareConstraints(ImGuiSizeCallbackData* data) { data->DesiredSize.x = data->DesiredSize.y = std::max(data->DesiredSize.x, data->DesiredSize.y); }
 
@@ -50,16 +50,16 @@ void CRadar::DrawRadar()
 	if (!F::Menu.IsOpen && !Vars::Radar::Main::NoTitleGradient.Value)
 	{
 		g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3,
-			RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },
-			Vars::Menu::Colors::MenuAccent, true);
+							RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },
+							Vars::Menu::Colors::MenuAccent, true);
 
 		g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3,
-			RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize,
-			Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
+							RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize,
+							Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
 	}
 
 	//Build the bg color with the wanted alpha.
-	const Color_t clrBack = {36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.Value)};
+	const Color_t clrBack = { 36, 36, 36, static_cast<byte>(Vars::Radar::Main::BackAlpha.Value) };
 
 
 	//Background
@@ -67,16 +67,16 @@ void CRadar::DrawRadar()
 
 	//Outline
 	g_Draw.OutlinedRect(RadarX - RadarSize, RadarY - RadarSize, RadarSize * 2, RadarSize * 2, {
-		                    43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
-	                    });
+							43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
+						});
 
 	//Center lines
 	g_Draw.Line(RadarX, RadarY - RadarSize, RadarX, RadarY + RadarSize - 1, {
-		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
-	            });
+					43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
+				});
 	g_Draw.Line(RadarX - RadarSize, RadarY, RadarX + RadarSize - 1, RadarY, {
-		            43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
-	            });
+					43, 43, 45, static_cast<byte>(Vars::Radar::Main::LineAlpha.Value)
+				});
 }
 
 bool CRadar::GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity)
@@ -84,7 +84,7 @@ bool CRadar::GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity)
 	//Calculate the delta and initial position of the entity
 	const Vec3 vDelta = pEntity->GetAbsOrigin() - LocalOrigin;
 	auto vPos = Vec2((vDelta.y * (-LocalCos) + vDelta.x * LocalSin),
-	                 (vDelta.x * (-LocalCos) - vDelta.y * LocalSin));
+					 (vDelta.x * (-LocalCos) - vDelta.y * LocalSin));
 
 	//Range, keep in bounds
 	//Credits are due to whoever wrote this, does what I want and is fast so idc. Code probably older than Jesus.
@@ -171,8 +171,8 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 	if (Vars::Radar::Buildings::Active.Value)
 	{
 		const auto& buildings = g_EntityCache.GetGroup(Vars::Radar::Buildings::IgnoreTeam.Value
-			                                              ? EGroupType::BUILDINGS_ENEMIES
-			                                              : EGroupType::BUILDINGS_ALL);
+													   ? EGroupType::BUILDINGS_ENEMIES
+													   : EGroupType::BUILDINGS_ALL);
 
 		for (const auto& building : buildings)
 		{
@@ -190,7 +190,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 					switch (pObject->GetClassID())
 					{
-					case ETFClassID::CObjectSentrygun:
+						case ETFClassID::CObjectSentrygun:
 						{
 							int nTexture = (pObject->GetLevel() + 40);
 
@@ -202,7 +202,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
 							break;
 						}
-					case ETFClassID::CObjectDispenser:
+						case ETFClassID::CObjectDispenser:
 						{
 							if (Vars::Radar::Buildings::Outline.Value)
 							{
@@ -212,7 +212,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, 44);
 							break;
 						}
-					case ETFClassID::CObjectTeleporter:
+						case ETFClassID::CObjectTeleporter:
 						{
 							int nTexture = 46; //Exit texture ID
 
@@ -230,7 +230,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 							g_Draw.Texture(nX, nY, nSize, nSize, clrDraw, nTexture);
 							break;
 						}
-					default: break;
+						default: break;
 					}
 
 					if (Vars::Radar::Buildings::Health.Value)
@@ -248,7 +248,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 						g_Draw.Rect(((nX - nW) - 1), nY, nW, nSize, Colors::OutlineESP);
 						g_Draw.Rect(((nX - nW) - 1), (nY + nSize - (nSize * flRatio)), nW, (nSize * flRatio),
-						            clrHealth);
+									clrHealth);
 					}
 				}
 			}
@@ -261,20 +261,23 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 		for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
 			if (!player->IsAlive() || player == g_EntityCache.GetObservedTarget() || player->IsAGhost() || player ==
-				pLocal) { continue; }
+				pLocal)
+			{
+				continue;
+			}
 
 			const int nEntTeam = player->GetTeamNum();
 			const int nLocalTeam = pLocal->GetTeamNum();
 
 			switch (Vars::Radar::Players::IgnoreCloaked.Value)
 			{
-			case 0: { break; }
-			case 1:
+				case 0: { break; }
+				case 1:
 				{
 					if (player->IsCloaked()) { continue; }
 					break;
 				}
-			case 2:
+				case 2:
 				{
 					if (player->IsCloaked() && nEntTeam != nLocalTeam) { continue; }
 					break;
@@ -285,13 +288,13 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 			switch (Vars::Radar::Players::IgnoreTeam.Value)
 			{
-			case 0: { break; }
-			case 1:
+				case 0: { break; }
+				case 1:
 				{
 					if (nEntTeam == nLocalTeam) { continue; }
 					break;
 				}
-			case 2:
+				case 2:
 				{
 					if (nEntTeam == nLocalTeam && !bIsFriend) { continue; }
 					break;
@@ -379,13 +382,13 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 					g_Draw.Rect(((nX - nWidth) - 1), nY, nWidth, nSize, Colors::OutlineESP);
 					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize * flRatio),
-					            clrHealth);
+								clrHealth);
 
 					if (flOverHeal > 0.0f)
 					{
 						flRatio = (flOverHeal / flMaxHealth);
 						g_Draw.Rect(((nX - nWidth) - 1), (nY + (nSize + 1) - (nSize * flRatio)), nWidth,
-						            (nSize * flRatio), Colors::Overheal);
+									(nSize * flRatio), Colors::Overheal);
 					}
 				}
 

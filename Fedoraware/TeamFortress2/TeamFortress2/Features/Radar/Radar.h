@@ -1,7 +1,8 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-class CRadar {
+class CRadar
+{
 	bool ShouldRun();
 	void DrawRadar();
 	bool GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity);

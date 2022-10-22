@@ -1,7 +1,8 @@
 #pragma once
 #include "../../NetVars/NetVars.h"
 
-class CPlayerResource {
+class CPlayerResource
+{
 public:
 	NETVAR(m_iPing, void*, "CPlayerResource", "m_iPing");
 	NETVAR(m_iScore, void*, "CPlayerResource", "m_iScore");
@@ -15,7 +16,8 @@ public:
 	NETVAR(m_iUserID, void*, "CPlayerResource", "m_iUserID");
 };
 
-class CTFPlayerResource : public CPlayerResource {
+class CTFPlayerResource : public CPlayerResource
+{
 public:
 	NETVAR(m_iTotalScore, void*, "CTFPlayerResource", "m_iTotalScore");
 	NETVAR(m_iMaxHealth, void*, "CTFPlayerResource", "m_iMaxHealth");

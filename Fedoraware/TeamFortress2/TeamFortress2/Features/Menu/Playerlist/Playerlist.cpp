@@ -10,11 +10,12 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-const char* resolveListPitch[]{"None", "Up", "Down", "Zero", "Auto"};
-const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert", "Edge", "Auto"};
+const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
+const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert", "Edge", "Auto" };
 const char* priorityModes[]{ "Friend", "Ignore", "Default", "Rage", "Cheater" };
 
-struct ListPlayer {
+struct ListPlayer
+{
 	const char* Name{};
 	int UserID{};
 	uint32_t FriendsID{};
@@ -92,12 +93,12 @@ void CPlayerList::Render()
 	// Draw the playerlist
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
 	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
-	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::PushFont(F::Menu.Verdana);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		ImGui::GradientRect(&F::Menu.TitleGradient, {winPos.x, winPos.y}, winSize.x, 3);
+		ImGui::GradientRect(&F::Menu.TitleGradient, { winPos.x, winPos.y }, winSize.x, 3);
 		ImGui::Dummy(ImVec2());
 
 		// Check if we are in-game
@@ -115,7 +116,7 @@ void CPlayerList::Render()
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5, 5 });
 			const int columnCount = Vars::AntiHack::Resolver::Resolver.Value ? 6 : 4;
-			if (ImGui::BeginTable("Playerlist", columnCount, 
+			if (ImGui::BeginTable("Playerlist", columnCount,
 				ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable))
 			{
 				ImGui::TableSetupColumn("Name");
@@ -149,7 +150,7 @@ void CPlayerList::Render()
 
 						switch (column)
 						{
-						case 0:
+							case 0:
 							{
 								/* Name */
 								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(Player.Color.r, Player.Color.g, Player.Color.b, Player.Alive ? Player.Color.a : 127).Value);
@@ -158,21 +159,21 @@ void CPlayerList::Render()
 								break;
 							}
 
-						case 1:
+							case 1:
 							{
 								/* Class */
 								ImGui::Text("%s", Utils::GetClassByIndex(Player.Class));
 								break;
 							}
 
-						case 2:
+							case 2:
 							{
 								/* Health */
 								ImGui::Text("%i/%i", Player.Health, Player.MaxHealth);
 								break;
 							}
 
-						case 3:
+							case 3:
 							{
 								/* Priority */
 								if (ImGui::Selectable(priorityModes[G::PlayerPriority[Player.FriendsID].Mode]))
@@ -196,7 +197,7 @@ void CPlayerList::Render()
 								break;
 							}
 
-						case 4:
+							case 4:
 							{
 								// Pitch resolver
 								if (ImGui::Selectable(resolveListPitch[F::Resolver.ResolvePlayers[Player.FriendsID].m_Pitch]))
@@ -219,7 +220,7 @@ void CPlayerList::Render()
 								break;
 							}
 
-						case 5:
+							case 5:
 							{
 								// Yaw resolver
 								ImGui::PushID(1); // in case of m_Yaw = m_Pitch
@@ -298,7 +299,8 @@ void CPlayerList::Save()
 
 		// Save the file
 		write_json(g_CFG.GetConfigPath() + "\\Core\\Playerlist.json", writeTree);
-	} catch (...) { }
+	}
+	catch (...) {}
 }
 
 void CPlayerList::Load()
@@ -321,5 +323,6 @@ void CPlayerList::Load()
 
 			G::PlayerPriority[userID] = prio;
 		}
-	} catch (...) { }
+	}
+	catch (...) {}
 }

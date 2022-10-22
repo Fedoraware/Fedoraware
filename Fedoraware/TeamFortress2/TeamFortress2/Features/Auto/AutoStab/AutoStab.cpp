@@ -29,7 +29,7 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 }
 
 bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles,
-                           CBaseEntity** pEntityOut)
+						   CBaseEntity** pEntityOut)
 {
 	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
 
@@ -46,7 +46,7 @@ bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, cons
 	CGameTrace Trace = {};
 	CTraceFilterHitscan Filter = {};
 	Filter.pSkip = pLocal;
-	Utils::TraceHull(vTraceStart, vTraceEnd, {-18.0f, -18.0f, -18.0f}, {18.0f, 18.0f, 18.0f}, MASK_SOLID, &Filter, &Trace);
+	Utils::TraceHull(vTraceStart, vTraceEnd, { -18.0f, -18.0f, -18.0f }, { 18.0f, 18.0f, 18.0f }, MASK_SOLID, &Filter, &Trace);
 	if (IsEntityValid(pLocal, Trace.entity))
 	{
 		if (pEntityOut && !*pEntityOut)
@@ -86,7 +86,7 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	}
 
 	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(),
-	                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+		(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 	{
 		return;
 	}
@@ -111,7 +111,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			continue;
 		}
 
-		if (!IsEntityValid(pLocal, pEnemy)){ continue; }
+		if (!IsEntityValid(pLocal, pEnemy)) { continue; }
 
 		CBaseEntity* pTraceEnemy = nullptr;
 
@@ -125,33 +125,34 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (bBacktrackable)
 		{
-			auto DoBacktrack = [&](TickRecord pTick) -> bool {
+			auto DoBacktrack = [&](TickRecord pTick) -> bool
+			{
 				pEnemy->SetAbsOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
-		
+
 				// Extract the required bones
 				const auto pBoneMatrix = (matrix3x4*)&pTick.BoneMatrix;
 				const Vec3 vPelvisPos = Vec3(pBoneMatrix[HITBOX_PELVIS][0][3],
-				                             pBoneMatrix[HITBOX_PELVIS][1][3],
-				                             pBoneMatrix[HITBOX_PELVIS][2][3]);
-		
+											 pBoneMatrix[HITBOX_PELVIS][1][3],
+											 pBoneMatrix[HITBOX_PELVIS][2][3]);
+
 				vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), vPelvisPos);
-		
+
 				// Set origins and eye angles for further logic
 				pEnemy->SetAbsOrigin(pTick.vOrigin);
 				pEnemy->SetEyeAngles(pTick.vAngles);
-		
+
 				// Check stab range (option)
 				const float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
 				if (flRange <= 0.0f) { return false; }
-		
+
 				if (pTick.vOrigin.DistTo(pLocal->m_vecOrigin()) > flRange)
 				{
 					pEnemy->SetAbsOrigin(vOriginalPos);
 					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
-		
+
 				// Can we backstab the target?
 				if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pTick.vOrigin - pLocal->m_vecOrigin())))
 				{
@@ -159,23 +160,23 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
-		
+
 				// Silent backstab
 				if (Vars::Triggerbot::Stab::Silent.Value)
 				{
 					Utils::FixMovement(pCmd, vAngleTo);
 					G::SilentTime = true;
 				}
-		
+
 				pCmd->viewangles = vAngleTo;
 				pCmd->buttons |= IN_ATTACK;
 				m_bShouldDisguise = true;
 
 				pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime + G::LerpTime);
-		
+
 				pEnemy->SetAbsOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
-		
+
 				return true;
 			};
 
@@ -198,7 +199,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			}
 
 			if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(),
-			                 (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+				(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 			{
 				continue;
 			}

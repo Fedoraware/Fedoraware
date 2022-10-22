@@ -21,8 +21,10 @@ void bf_write::StartWriting(void* pData, int nBytes, int iStartBit, int nBits)
 	{
 		m_nDataBits = nBytes << 3;
 	}
-	else {
-		if (nBits <= nBytes * 8) {
+	else
+	{
+		if (nBits <= nBytes * 8)
+		{
 			m_nDataBits = nBits;
 		}
 	}
@@ -411,7 +413,8 @@ void bf_write::WriteSignedVarInt64(int64_t data)
 int	bf_write::ByteSizeVarInt32(uint32_t data)
 {
 	int size = 1;
-	while (data > 0x7F) {
+	while (data > 0x7F)
+	{
 		size++;
 		data >>= 7;
 	}
@@ -421,7 +424,8 @@ int	bf_write::ByteSizeVarInt32(uint32_t data)
 int	bf_write::ByteSizeVarInt64(uint64_t data)
 {
 	int size = 1;
-	while (data > 0x7F) {
+	while (data > 0x7F)
+	{
 		size++;
 		data >>= 7;
 	}
@@ -777,7 +781,8 @@ bool bf_write::WriteString(const char* pStr)
 		{
 			WriteChar(*pStr);
 			++pStr;
-		} while (*(pStr - 1) != 0);
+		}
+		while (*(pStr - 1) != 0);
 	}
 	else
 	{
@@ -1033,7 +1038,8 @@ uint32_t bf_read::ReadVarInt32()
 		b = ReadUBitLong(8);
 		result |= (b & 0x7F) << (7 * count);
 		++count;
-	} while (b & 0x80);
+	}
+	while (b & 0x80);
 
 	return result;
 }
@@ -1053,7 +1059,8 @@ uint64_t bf_read::ReadVarInt64()
 		b = ReadUBitLong(8);
 		result |= static_cast<uint64_t>(b & 0x7F) << (7 * count);
 		++count;
-	} while (b & 0x80);
+	}
+	while (b & 0x80);
 
 	return result;
 }

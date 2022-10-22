@@ -7,7 +7,7 @@
 inline const char* lol(int nClassNum)
 {
 	//literally just took this from ESP cuz too lazy lol
-	static const char* szClasses[] = {"Unknown Class", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer"};
+	static const char* szClasses[] = { "Unknown Class", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer" };
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
 }
 
@@ -82,18 +82,18 @@ void CDiscordRPC::Update()
 
 		switch (Vars::Misc::Discord::WhatImagesShouldBeUsed.Value)
 		{
-		case 0:
-			discordPresence.smallImageKey = "tf2";
-			discordPresence.largeImageKey = "fedora";
-			discordPresence.smallImageText = "Team Fortress 2";
-			discordPresence.largeImageText = "Fedoraware";
-			break;
-		case 1:
-			discordPresence.smallImageKey = "fedora";
-			discordPresence.largeImageKey = "tf2";
-			discordPresence.smallImageText = "Fedoraware";
-			discordPresence.largeImageText = "Team Fortress 2";
-			break;
+			case 0:
+				discordPresence.smallImageKey = "tf2";
+				discordPresence.largeImageKey = "fedora";
+				discordPresence.smallImageText = "Team Fortress 2";
+				discordPresence.largeImageText = "Fedoraware";
+				break;
+			case 1:
+				discordPresence.smallImageKey = "fedora";
+				discordPresence.largeImageKey = "tf2";
+				discordPresence.smallImageText = "Fedoraware";
+				discordPresence.largeImageText = "Team Fortress 2";
+				break;
 		}
 
 		discordPresence.instance = 1;

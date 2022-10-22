@@ -40,13 +40,15 @@ struct Vertex_t
 	}
 };
 
-class VMatrix {
+class VMatrix
+{
 private:
 	Vec3 m[4][4];
 
 public:
-	const matrix3x4 &As3x4() const {
-		return *((const matrix3x4 *)this);
+	const matrix3x4& As3x4() const
+	{
+		return *((const matrix3x4*)this);
 	}
 };
 
@@ -58,7 +60,8 @@ public:
 	float m_flValue;
 	unsigned int _pad1;
 
-	__inline CAttribute(std::uint16_t nAttributeDefIndex, float flVal) {
+	__inline CAttribute(std::uint16_t nAttributeDefIndex, float flVal)
+	{
 		m_nAttributeDefIndex = nAttributeDefIndex;
 		m_flValue = flVal;
 	}
@@ -70,7 +73,8 @@ public:
 	void* _pad0;
 	CUtlVector<CAttribute> m_Attributes;
 
-	__inline void Add(int iIndex, float flValue) {
+	__inline void Add(int iIndex, float flValue)
+	{
 		if (m_Attributes.Count() > 14) return;
 
 		CAttribute Attr(iIndex, flValue);
@@ -276,9 +280,9 @@ public:
 public:
 	CreateClientClassFn		m_pCreateFn;
 	CreateEventFn			m_pCreateEventFn;	// Only called for event objects.
-	char *m_pNetworkName;
-	RecvTable *m_pRecvTable;
-	CClientClass *m_pNext;
+	char* m_pNetworkName;
+	RecvTable* m_pRecvTable;
+	CClientClass* m_pNext;
 	int m_ClassID;
 };
 
@@ -287,7 +291,7 @@ class CBaseEntity; //forward declare
 class CTraceFilter
 {
 public:
-	virtual bool ShouldHitEntity(void *entity, int contents_mask) = 0;
+	virtual bool ShouldHitEntity(void* entity, int contents_mask) = 0;
 	virtual ETraceType GetTraceType() const = 0;
 };
 
@@ -316,7 +320,7 @@ public:
 	}
 
 private:
-	CBaseTrace(const CBaseTrace &othr);
+	CBaseTrace(const CBaseTrace& othr);
 };
 
 class CGameTrace : public CBaseTrace
@@ -326,7 +330,8 @@ public:
 	bool DidHitNonWorldEntity() const;
 	int  GetEntityIndex() const;
 
-	bool DidHit() const {
+	bool DidHit() const
+	{
 		return (flFraction < 1 || bAllSolid || bStartSolid);
 	}
 
@@ -335,11 +340,11 @@ public:
 	csurface_t		surface;
 	int				hit_group;
 	short			physics_bone;
-	CBaseEntity	*entity;
+	CBaseEntity* entity;
 	int				hitbox;
 
-	CGameTrace() { }
-	CGameTrace(const CGameTrace &othr);
+	CGameTrace() {}
+	CGameTrace(const CGameTrace& othr);
 };
 
 // basic rectangle struct used for drawing
@@ -406,7 +411,7 @@ public:
 	CFileWeaponInfo();
 
 	// Each game can override this to get whatever values it wants from the script.
-	virtual void Parse(void *pKeyValuesData, const char *szWeaponName);
+	virtual void Parse(void* pKeyValuesData, const char* szWeaponName);
 
 
 public:
@@ -450,15 +455,15 @@ public:
 // CLIENT DLL
 	// Sprite data, read from the data file
 	int						iSpriteCount;
-	CHudTexture *iconActive;
-	CHudTexture *iconInactive;
-	CHudTexture *iconAmmo;
-	CHudTexture *iconAmmo2;
-	CHudTexture *iconCrosshair;
-	CHudTexture *iconAutoaim;
-	CHudTexture *iconZoomedCrosshair;
-	CHudTexture *iconZoomedAutoaim;
-	CHudTexture *iconSmall;
+	CHudTexture* iconActive;
+	CHudTexture* iconInactive;
+	CHudTexture* iconAmmo;
+	CHudTexture* iconAmmo2;
+	CHudTexture* iconCrosshair;
+	CHudTexture* iconAutoaim;
+	CHudTexture* iconZoomedCrosshair;
+	CHudTexture* iconZoomedAutoaim;
+	CHudTexture* iconSmall;
 
 	// TF2 specific
 	bool					bShowUsageHint;							// if true, then when you receive the weapon, show a hint about it
@@ -565,11 +570,11 @@ public:
 	virtual const char* GetTextureGroupName() const = 0;
 
 	virtual EPreviewImageRetVal GetPreviewImageProperties(int* width, int* height,
-		EImageFormat* imageFormat, bool* isTranslucent) const = 0;
+														  EImageFormat* imageFormat, bool* isTranslucent) const = 0;
 
 	virtual EPreviewImageRetVal GetPreviewImage(unsigned char* data,
-		int width, int height,
-		EImageFormat imageFormat) const = 0;
+												int width, int height,
+												EImageFormat imageFormat) const = 0;
 
 	virtual int				GetMappingWidth() = 0;
 	virtual int				GetMappingHeight() = 0;
@@ -577,8 +582,8 @@ public:
 	virtual bool			InMaterialPage(void) = 0;
 	virtual	void			GetMaterialOffset(float* pOffset) = 0;
 	virtual void			GetMaterialScale(float* pScale) = 0;
-	virtual IMaterial*      GetMaterialPage(void) = 0;
-	virtual IMaterialVar*   FindVar(const char* varName, bool* found, bool complain = true) = 0;
+	virtual IMaterial* GetMaterialPage(void) = 0;
+	virtual IMaterialVar* FindVar(const char* varName, bool* found, bool complain = true) = 0;
 	virtual void			IncrementReferenceCount(void) = 0;
 	virtual void			DecrementReferenceCount(void) = 0;
 	virtual int 			GetEnumerationID(void) const = 0;
@@ -608,19 +613,19 @@ public:
 	virtual bool			NeedsLightmapBlendAlpha(void) = 0;
 	virtual bool			NeedsSoftwareLighting(void) = 0;
 	virtual int				ShaderParamCount() const = 0;
-	virtual IMaterialVar**  GetShaderParams(void) = 0;
+	virtual IMaterialVar** GetShaderParams(void) = 0;
 	virtual bool			IsErrorMaterial() const = 0;
 	virtual void			SetUseFixedFunctionBakedLighting(bool bEnable) = 0;
 	virtual float			GetAlphaModulation() = 0;
 	virtual void			GetColorModulation(float* r, float* g, float* b) = 0;
 	virtual MorphFormat_t	GetMorphFormat() const = 0;
-	virtual IMaterialVar*   FindVarFast(char const* pVarName, unsigned int* pToken) = 0;
-	virtual void			SetShaderAndParams(void * pKeyValues) = 0;
-	virtual const char*     GetShaderName() const = 0;
+	virtual IMaterialVar* FindVarFast(char const* pVarName, unsigned int* pToken) = 0;
+	virtual void			SetShaderAndParams(void* pKeyValues) = 0;
+	virtual const char* GetShaderName() const = 0;
 	virtual void			DeleteIfUnreferenced() = 0;
 	virtual bool			IsSpriteCard() = 0;
 	virtual void			CallBindProxy(void* proxyData) = 0;
-	virtual IMaterial*      CheckProxyReplacement(void* proxyData) = 0;
+	virtual IMaterial* CheckProxyReplacement(void* proxyData) = 0;
 	virtual void			RefreshPreservingMaterialVars() = 0;
 	virtual bool			WasReloadedFromWhitelist() = 0;
 	virtual bool			IsPrecached() const = 0;
@@ -629,51 +634,51 @@ public:
 class IMaterialVar
 {
 public:
-	virtual ITexture *GetTextureValue(void) = 0;
+	virtual ITexture* GetTextureValue(void) = 0;
 
-	virtual char const *GetName(void) const = 0;
+	virtual char const* GetName(void) const = 0;
 	virtual MaterialVarSym_t	GetNameAsSymbol() const = 0;
 
 	virtual void			SetFloatValue(float val) = 0;
 
 	virtual void			SetIntValue(int val) = 0;
 
-	virtual void			SetStringValue(char const *val) = 0;
-	virtual char const *GetStringValue(void) const = 0;
+	virtual void			SetStringValue(char const* val) = 0;
+	virtual char const* GetStringValue(void) const = 0;
 
 	// Use FourCC values to pass app-defined data structures between
 	// the proxy and the shader. The shader should ignore the data if
 	// its FourCC type not correct.	
-	virtual void			SetFourCCValue(void *type, void *pData) = 0;
-	virtual void			GetFourCCValue(void *type, void **ppData) = 0;
+	virtual void			SetFourCCValue(void* type, void* pData) = 0;
+	virtual void			GetFourCCValue(void* type, void** ppData) = 0;
 
 	// Vec (dim 2-4)
-	virtual void			SetVecValue(float const *val, int numcomps) = 0;
+	virtual void			SetVecValue(float const* val, int numcomps) = 0;
 	virtual void			SetVecValue(float x, float y) = 0;
 	virtual void			SetVecValue(float x, float y, float z) = 0;
 	virtual void			SetVecValue(float x, float y, float z, float w) = 0;
-	virtual void			GetLinearVecValue(float *val, int numcomps) const = 0;
+	virtual void			GetLinearVecValue(float* val, int numcomps) const = 0;
 
 	// revisit: is this a good interface for textures?
-	virtual void			SetTextureValue(ITexture *) = 0;
+	virtual void			SetTextureValue(ITexture*) = 0;
 
-	virtual IMaterial *GetMaterialValue(void) = 0;
-	virtual void			SetMaterialValue(IMaterial *) = 0;
+	virtual IMaterial* GetMaterialValue(void) = 0;
+	virtual void			SetMaterialValue(IMaterial*) = 0;
 
 	virtual bool			IsDefined() const = 0;
 	virtual void			SetUndefined() = 0;
 
 	// Matrix
-	virtual void			SetMatrixValue(VMatrix const &matrix) = 0;
-	virtual const VMatrix &GetMatrixValue() = 0;
+	virtual void			SetMatrixValue(VMatrix const& matrix) = 0;
+	virtual const VMatrix& GetMatrixValue() = 0;
 	virtual bool			MatrixIsIdentity() const = 0;
 
 	// Copy....
-	virtual void			CopyFrom(IMaterialVar *pMaterialVar) = 0;
+	virtual void			CopyFrom(IMaterialVar* pMaterialVar) = 0;
 
-	virtual void			SetValueAutodetectType(char const *val) = 0;
+	virtual void			SetValueAutodetectType(char const* val) = 0;
 
-	virtual IMaterial *GetOwningMaterial() = 0;
+	virtual IMaterial* GetOwningMaterial() = 0;
 
 	//set just 1 component
 	virtual void			SetVecComponentValue(float fVal, int nComponent) = 0;
@@ -681,8 +686,8 @@ public:
 protected:
 	virtual int				GetIntValueInternal(void) const = 0;
 	virtual float			GetFloatValueInternal(void) const = 0;
-	virtual float const *GetVecValueInternal() const = 0;
-	virtual void			GetVecValueInternal(float *val, int numcomps) const = 0;
+	virtual float const* GetVecValueInternal() const = 0;
+	virtual void			GetVecValueInternal(float* val, int numcomps) const = 0;
 	virtual int				VectorSizeInternal() const = 0;
 };
 
@@ -741,32 +746,33 @@ public:
 class ICollideable
 {
 public:
-	virtual void			*GetEntityHandle() = 0;
-	virtual const Vec3		&OBBMinsPreScaled() const = 0;
-	virtual const Vec3		&OBBMaxsPreScaled() const = 0;
-	virtual const Vec3		&OBBMins() const = 0;
-	virtual const Vec3		&OBBMaxs() const = 0;
-	virtual void			WorldSpaceTriggerBounds(Vec3 *pVecWorldMins, Vec3 *pVecWorldMaxs) const = 0;
-	virtual bool			TestCollision(const Ray_t &ray, unsigned int fContentsMask, CGameTrace &tr) = 0;
-	virtual bool			TestHitboxes(const Ray_t &ray, unsigned int fContentsMask, CGameTrace &tr) = 0;
+	virtual void* GetEntityHandle() = 0;
+	virtual const Vec3& OBBMinsPreScaled() const = 0;
+	virtual const Vec3& OBBMaxsPreScaled() const = 0;
+	virtual const Vec3& OBBMins() const = 0;
+	virtual const Vec3& OBBMaxs() const = 0;
+	virtual void			WorldSpaceTriggerBounds(Vec3* pVecWorldMins, Vec3* pVecWorldMaxs) const = 0;
+	virtual bool			TestCollision(const Ray_t& ray, unsigned int fContentsMask, CGameTrace& tr) = 0;
+	virtual bool			TestHitboxes(const Ray_t& ray, unsigned int fContentsMask, CGameTrace& tr) = 0;
 	virtual int				GetCollisionModelIndex() = 0;
-	virtual const model_t	*GetCollisionModel() = 0;
-	virtual const Vec3		&GetCollisionOrigin() const = 0;
-	virtual const Vec3		&GetCollisionAngles() const = 0;
-	virtual const matrix3x4 &CollisionToWorldTransform() const = 0;
+	virtual const model_t* GetCollisionModel() = 0;
+	virtual const Vec3& GetCollisionOrigin() const = 0;
+	virtual const Vec3& GetCollisionAngles() const = 0;
+	virtual const matrix3x4& CollisionToWorldTransform() const = 0;
 	virtual SolidType_t		GetSolid() const = 0;
 	virtual int				GetSolidFlags() const = 0;
-	virtual void			*GetIClientUnknown() = 0;
+	virtual void* GetIClientUnknown() = 0;
 	virtual int				GetCollisionGroup() const = 0;
-	virtual void			WorldSpaceSurroundingBounds(Vec3 *pVecMins, Vec3 *pVecMaxs) = 0;
+	virtual void			WorldSpaceSurroundingBounds(Vec3* pVecMins, Vec3* pVecMaxs) = 0;
 	virtual bool			ShouldTouchTrigger(int triggerSolidFlags) const = 0;
-	virtual const matrix3x4 *GetRootParentToWorldTransform() const = 0;
+	virtual const matrix3x4* GetRootParentToWorldTransform() const = 0;
 };
 
 class CCollisionProperty : public ICollideable
 {
 public:
-	__inline void SetCollisionBounds(const Vec3 &mins, const Vec3 &maxs) {
+	__inline void SetCollisionBounds(const Vec3& mins, const Vec3& maxs)
+	{
 		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03"));
 		FN(this, mins, maxs);
 	}

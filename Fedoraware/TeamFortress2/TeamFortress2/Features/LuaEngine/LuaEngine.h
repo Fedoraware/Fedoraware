@@ -3,7 +3,8 @@
 #include "../../SDK/SDK.h"
 #include "sol/sol.hpp"
 
-class CLuaEngine {
+class CLuaEngine
+{
 public:
 	void ExecuteFile(const std::string& file);
 	void ExecuteString(const std::string& expression);

@@ -34,7 +34,7 @@ void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 				PathNodes.pop_front();
 				garbageNodes--;
 			}
-			
+
 			return;
 		}
 	}
@@ -111,12 +111,14 @@ void CFollowbot::Run(CUserCmd* pCmd)
 				if (!pLocal->OnSolid())
 				{
 					currentNode.OnGround = true;
-				} else
+				}
+				else
 				{
 					pCmd->buttons |= IN_JUMP;
 				}
 			}
-		} else
+		}
+		else
 		{
 			PathNodes.pop_front();
 		}

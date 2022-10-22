@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class CPlayerList {
+class CPlayerList
+{
 	void Save();
 	void Load();
 

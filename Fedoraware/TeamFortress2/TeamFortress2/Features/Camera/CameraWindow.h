@@ -3,7 +3,8 @@
 
 using RenderViewFN = void(__fastcall*)(void* ecx, void* edx, const CViewSetup& view, ClearFlags_t nClearFlags, RenderViewInfo_t whatToDraw);
 
-class CCameraWindow {
+class CCameraWindow
+{
 public:
 	IMaterial* CameraMat;
 	ITexture* CameraTex;

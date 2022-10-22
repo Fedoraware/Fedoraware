@@ -1,7 +1,8 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-class CMisc {
+class CMisc
+{
 	void AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal);
@@ -13,7 +14,7 @@ class CMisc {
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void StopMovement(CUserCmd* pCmd, bool *pSendPacket);
+	void StopMovement(CUserCmd* pCmd, bool* pSendPacket);
 
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
@@ -33,7 +34,7 @@ class CMisc {
 	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket);
 	float m_flSpinYaw = 0.f;
-	
+
 	bool SteamCleared = false;
 public:
 	bool TauntControl(CUserCmd* pCmd);
@@ -72,24 +73,26 @@ public:
 
 ADD_FEATURE(CStatistics, Statistics);
 
-class NotifyText {
+class NotifyText
+{
 public:
 	std::string Text;
 	Color_t Color;
 	float Time;
 
-	NotifyText() { }
-	NotifyText(std::string text, Color_t color, float time) : Text{std::move(text)}, Color{color}, Time{time} { }
+	NotifyText() {}
+	NotifyText(std::string text, Color_t color, float time) : Text{ std::move(text) }, Color{ color }, Time{ time } { }
 };
 
-class CNotifications {
+class CNotifications
+{
 	std::vector<std::shared_ptr<NotifyText>> NotificationTexts;
 
 public:
 	CNotifications() = default;
 
-	__forceinline void Add(const std::string& text, Color_t color = {255, 255, 255, 255},
-	                       float time = Vars::Visuals::NotificationLifetime.Value)
+	__forceinline void Add(const std::string& text, Color_t color = { 255, 255, 255, 255 },
+						   float time = Vars::Visuals::NotificationLifetime.Value)
 	{
 		NotificationTexts.push_back(std::make_shared<NotifyText>(text, color, time));
 	}

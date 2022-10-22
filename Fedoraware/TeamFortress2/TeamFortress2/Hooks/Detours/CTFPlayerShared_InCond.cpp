@@ -177,8 +177,8 @@ MAKE_HOOK(CTFPlayerShared_InCond, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC
 
 	if (nCond == TF_COND_ZOOMED)
 	{
-		if (dwRetAddr == dwPlayerShouldDraw || 
-			dwRetAddr == dwWearableShouldDraw || 
+		if (dwRetAddr == dwPlayerShouldDraw ||
+			dwRetAddr == dwWearableShouldDraw ||
 			(Vars::Visuals::RemoveScope.Value && dwRetAddr == dwHudScopeShouldDraw))
 		{
 			return false;

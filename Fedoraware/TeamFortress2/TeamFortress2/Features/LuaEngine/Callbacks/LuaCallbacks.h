@@ -4,7 +4,8 @@
 
 #include "../../SDK/SDK.h"
 
-class CLuaCallbacks {
+class CLuaCallbacks
+{
 	void HandleError(const sol::protected_function_result& result);
 
 	std::unordered_map<std::string, std::unordered_map<std::string, sol::function>> Callbacks;

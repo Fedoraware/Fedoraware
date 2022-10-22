@@ -19,7 +19,8 @@ void CCameraWindow::Draw()
 {
 	if (!CameraMat || !I::EngineClient->IsInGame() ||
 		Vars::Visuals::CameraMode.Value == 0 ||
-		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw)) {
+		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw))
+	{
 		return;
 	}
 
@@ -39,19 +40,23 @@ void CCameraWindow::Draw()
 void CCameraWindow::Update()
 {
 	if (Vars::Visuals::CameraMode.Value <= 1) { return; }
-	if (const auto& pLocal = g_EntityCache.GetLocal()) {
-		switch (Vars::Visuals::CameraMode.Value) {
-		case 2:
+	if (const auto& pLocal = g_EntityCache.GetLocal())
+	{
+		switch (Vars::Visuals::CameraMode.Value)
+		{
+			case 2:
 			{
 				// Spy camera
-				for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)) {
+				for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+				{
 					if (!player->IsAlive())
 						continue;
 
 					if (player->GetClassNum() != CLASS_SPY)
 						continue;
 
-					if (pLocal->GetAbsOrigin().DistTo(player->GetAbsOrigin()) <= 350.f) {
+					if (pLocal->GetAbsOrigin().DistTo(player->GetAbsOrigin()) <= 350.f)
+					{
 						CameraOrigin = player->GetEyePosition();
 						CameraAngles = player->GetEyeAngles();
 						CanDraw = true;
@@ -62,12 +67,12 @@ void CCameraWindow::Update()
 				break;
 			}
 
-		case 3:
-		case 4:
+			case 3:
+			case 4:
 			{
 				// Teleporter camera
 				const auto& buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
-				
+
 				for (const auto& pBuilding : buildings)
 				{
 					if (!pBuilding->IsAlive()) { continue; }
@@ -98,7 +103,8 @@ void CCameraWindow::Update()
 									ViewRect.h = height;
 									ViewRect.x = vScreen.x - (width * 0.5);
 									ViewRect.y = vScreen.y - height;
-								} else { CanDraw = true; }
+								}
+								else { CanDraw = true; }
 							}
 
 							return;
@@ -116,20 +122,23 @@ void CCameraWindow::Update()
 void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 {
 	if (!CameraTex || Vars::Visuals::CameraMode.Value == 0 ||
-		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw)) {
+		(Vars::Visuals::CameraMode.Value > 1 && !CanDraw))
+	{
 		return;
 	}
 
 	CViewSetup mirrorView = pViewSetup;
 	mirrorView.x = 0;
 	mirrorView.y = 0;
-	if (Vars::Visuals::CameraMode.Value != 1) {
-		// Custom origin & angles
+	if (Vars::Visuals::CameraMode.Value != 1)
+	{
+// Custom origin & angles
 		mirrorView.origin = CameraOrigin;
 		mirrorView.angles = CameraAngles;
 	}
-	else {
-		// Mirror cam
+	else
+	{
+  // Mirror cam
 		const Vec3 viewAngles = I::EngineClient->GetViewAngles();
 		const Vec3 camAngles = { 0.f, viewAngles.y + 180.f, viewAngles.z };
 		mirrorView.angles = camAngles;
@@ -142,7 +151,8 @@ void CCameraWindow::RenderView(void* ecx, const CViewSetup& pViewSetup)
 	RenderCustomView(ecx, mirrorView, CameraTex);
 }
 
-void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture) {
+void CCameraWindow::RenderCustomView(void* ecx, const CViewSetup& pViewSetup, ITexture* pTexture)
+{
 	const auto renderCtx = I::MaterialSystem->GetRenderContext();
 
 	renderCtx->PushRenderTargetAndViewport();

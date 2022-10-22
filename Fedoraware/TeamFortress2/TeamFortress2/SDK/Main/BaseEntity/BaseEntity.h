@@ -11,7 +11,8 @@
 
 #define HAS_CONDITION(ent, cond) (ent->GetCond() & cond)
 
-enum ShouldTransmitState_t {
+enum ShouldTransmitState_t
+{
 	SHOULDTRANSMIT_START = 0,
 	SHOULDTRANSMIT_END
 };
@@ -82,7 +83,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(TickBase, int, this, "DT_BasePlayer", "localdata", "m_nTickBase")
 		M_DYNVARGET(SimulationTime, float, this, "DT_BaseEntity", "m_flSimulationTime")
 		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), "DT_BaseEntity", "m_flSimulationTime");
-		M_DYNVARGET(hOwner, int, this, "DT_BaseEntity", "m_hOwnerEntity")
+	M_DYNVARGET(hOwner, int, this, "DT_BaseEntity", "m_hOwnerEntity")
 		M_DYNVARGET(Health, int, this, "DT_BasePlayer", "m_iHealth")
 		M_DYNVARGET(TeamNum, int, this, "DT_BaseEntity", "m_iTeamNum")
 		M_DYNVARGET(Flags, int, this, "DT_BasePlayer", "m_fFlags")
@@ -109,7 +110,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(Streaks, int*, this, "DT_TFPlayer", "m_Shared", "m_nStreaks")
 		M_DYNVARGET(Crits, int, this, "DT_TFPlayer", "m_Shared", "tfsharedlocaldata", "m_ScoreData", "m_iCrits")
 
-	M_OFFSETGET(PipebombType, int, 0x8FC)
+		M_OFFSETGET(PipebombType, int, 0x8FC)
 		M_OFFSETGET(PipebombPulsed, bool, 0x908)	//	this is incredibly fucking lazy.
 		M_OFFSETGET(Touched, bool, 0x8F8)
 		M_OFFSETGET(PunchAngles, Vec3, 0xE8C)
@@ -248,17 +249,20 @@ public: //Virtuals from renderable
 		M_VIRTUALGET(Model, model_t*, Renderable(), model_t* (__thiscall*)(void*), 9)
 		M_VIRTUALGET(RgflCoordinateFrame, matrix3x4&, Renderable(), matrix3x4& (__thiscall*)(void*), 34)
 
-		__inline void GetRenderBounds(Vec3& vMins, Vec3& vMaxs) {
+		__inline void GetRenderBounds(Vec3& vMins, Vec3& vMaxs)
+	{
 		const auto pRend = Renderable();
 		GetVFunc<void(__thiscall*)(void*, Vec3&, Vec3&)>(pRend, 20)(pRend, vMins, vMaxs);
 	}
 
-	__inline bool SetupBones(matrix3x4* pOut, int nMax, int nMask, float flTime) {
+	__inline bool SetupBones(matrix3x4* pOut, int nMax, int nMask, float flTime)
+	{
 		const auto pRend = Renderable();
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
 	}
 
-	__inline int DrawModel(int nFlags) {
+	__inline int DrawModel(int nFlags)
+	{
 		const auto pRend = Renderable();
 		return GetVFunc<int(__thiscall*)(void*, int)>(pRend, 10)(pRend, nFlags);
 	}
@@ -271,26 +275,31 @@ public: //Virtuals from networkable
 		M_VIRTUALGET(Index, int, Networkable(), int(__thiscall*)(void*), 9)
 
 public: //Everything else, lol.
-	__inline size_t* GetMyWeapons() {
+	__inline size_t* GetMyWeapons()
+	{
 		static auto dwOff = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
 		return reinterpret_cast<size_t*>(this + dwOff);
 	}
 
-	__inline bool* PDAman() {
+	__inline bool* PDAman()
+	{
 		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_bViewingCYOAPDA");
 		return reinterpret_cast<bool*>(this + dwOff);
 		//M_DYNVARGET(ViewingCYOAPDA, bool, this, "DT_TFPlayer", "m_bViewingCYOAPDA")
 	}
 
-	__inline float* GetHeadScale() {
+	__inline float* GetHeadScale()
+	{
 		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flHeadScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
-	__inline float* GetTorsoScale() {
+	__inline float* GetTorsoScale()
+	{
 		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flTorsoScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
-	__inline float* GetHandScale() {
+	__inline float* GetHandScale()
+	{
 		static auto dwOff = g_NetVars.get_offset("DT_TFPlayer", "m_flHandScale");
 		return reinterpret_cast<float*>(this + dwOff);
 	}
@@ -302,20 +311,24 @@ public: //Everything else, lol.
 	}
 
 
-	__inline CBaseEntity* GetGroundEntity() {
+	__inline CBaseEntity* GetGroundEntity()
+	{
 		DYNVAR(pHandle, int, "DT_BasePlayer", "m_hGroundEntity");
 		return reinterpret_cast<CBaseEntity*>(I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
 
-	__inline CBaseEntity* FirstMoveChild() {
+	__inline CBaseEntity* FirstMoveChild()
+	{
 		return I::ClientEntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B0) & 0xFFF);
 	}
 
-	__inline CBaseEntity* NextMovePeer() {
+	__inline CBaseEntity* NextMovePeer()
+	{
 		return I::ClientEntityList->GetClientEntity(*reinterpret_cast<int*>(this + 0x1B4) & 0xFFF);
 	}
 
-	__inline CBaseCombatWeapon* GetActiveWeapon() {
+	__inline CBaseCombatWeapon* GetActiveWeapon()
+	{
 		DYNVAR(pHandle, int, "DT_BaseCombatCharacter", "m_hActiveWeapon");
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
 	}
@@ -329,7 +342,8 @@ public: //Everything else, lol.
 		return maxSpeed(this, bIgnoreSpecialAbility);
 	}
 
-	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot) {
+	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot)
+	{
 		static DWORD dwMyWeapons = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
 		int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(hWeapon));
@@ -342,32 +356,42 @@ public: //Everything else, lol.
 		return FN(this, eCond);
 	}
 
-	__inline ETFClassID GetClassID() {
+	__inline ETFClassID GetClassID()
+	{
 		const auto& pCC = GetClientClass();
 		return pCC ? ETFClassID(pCC->m_ClassID) : ETFClassID(0);
 	}
 
-	__inline CTFPlayerAnimState* GetAnimState() {
+	__inline CTFPlayerAnimState* GetAnimState()
+	{
 		return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1BF8);
 	}
 
-	__inline void SetPoseParam(std::array<float, MAXSTUDIOPOSEPARAM> param) {
+	__inline void SetPoseParam(std::array<float, MAXSTUDIOPOSEPARAM> param)
+	{
 		static DWORD dwOffset = g_NetVars.get_offset("DT_BaseAnimating", "m_flPoseParameter");
 		*reinterpret_cast<std::array<float, MAXSTUDIOPOSEPARAM>*>(this + dwOffset) = param;
 	}
 
-	__inline std::array<float, MAXSTUDIOPOSEPARAM> GetPoseParam() {
+	__inline std::array<float, MAXSTUDIOPOSEPARAM> GetPoseParam()
+	{
 		static DWORD dwOffset = g_NetVars.get_offset("DT_BaseAnimating", "m_flPoseParameter");
 		return *reinterpret_cast<std::array<float, MAXSTUDIOPOSEPARAM>*>(this + dwOffset);
 	}
 
-	__inline bool GetHitboxMinsAndMaxsAndMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4& matrix, Vec3* vCenter) {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+	__inline bool GetHitboxMinsAndMaxsAndMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4& matrix, Vec3* vCenter)
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
-					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
-						if (const auto& pBox = pSet->hitbox(nHitbox)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
+				{
+					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
+					{
+						if (const auto& pBox = pSet->hitbox(nHitbox))
+						{
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
 							memcpy(matrix, BoneMatrix[pBox->bone], sizeof(matrix3x4));
 							if (vCenter) Math::VectorTransform(((pBox->bbmin + pBox->bbmax) * 0.5f), BoneMatrix[pBox->bone], *vCenter);
@@ -381,11 +405,16 @@ public: //Everything else, lol.
 		return false;
 	}
 
-	__inline bool GetHitboxMinsAndMaxsFromMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4* matrix, Vec3* vCenter) {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
-				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
-					if (const auto& pBox = pSet->hitbox(nHitbox)) {
+	__inline bool GetHitboxMinsAndMaxsFromMatrix(const int nHitbox, Vec3& vMins, Vec3& vMaxs, matrix3x4* matrix, Vec3* vCenter)
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
+				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
+				{
+					if (const auto& pBox = pSet->hitbox(nHitbox))
+					{
 						vMins = pBox->bbmin; vMaxs = pBox->bbmax;
 						if (vCenter) Math::VectorTransform(((pBox->bbmin + pBox->bbmax) * 0.5f), matrix[pBox->bone], *vCenter);
 						return true;
@@ -396,13 +425,19 @@ public: //Everything else, lol.
 		return false;
 	}
 
-	__inline bool GetHitboxMinsAndMaxs(const int nHitbox, Vec3& vMins, Vec3& vMaxs, Vec3* vCenter) {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+	__inline bool GetHitboxMinsAndMaxs(const int nHitbox, Vec3& vMins, Vec3& vMaxs, Vec3* vCenter)
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
-					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
-						if (const auto& pBox = pSet->hitbox(nHitbox)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
+				{
+					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
+					{
+						if (const auto& pBox = pSet->hitbox(nHitbox))
+						{
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
 							if (vCenter) Math::VectorTransform(((pBox->bbmin + pBox->bbmax) * 0.5f), BoneMatrix[pBox->bone], *vCenter);
 							return true;
@@ -415,130 +450,151 @@ public: //Everything else, lol.
 		return false;
 	}
 
-	__inline bool IsClass(const int nClass) {
+	__inline bool IsClass(const int nClass)
+	{
 		return (GetClassNum() == nClass);
 	}
 
-	__inline bool IsSentrygun() {
+	__inline bool IsSentrygun()
+	{
 		return GetClassID() == ETFClassID::CObjectSentrygun;
 	}
 
-	__inline bool IsDispenser() {
+	__inline bool IsDispenser()
+	{
 		return GetClassID() == ETFClassID::CObjectDispenser;
 	}
 
-	__inline bool IsTeleporter() {
+	__inline bool IsTeleporter()
+	{
 		return GetClassID() == ETFClassID::CObjectTeleporter;
 	}
 
-	__inline bool IsInValidTeam() {
+	__inline bool IsInValidTeam()
+	{
 		const int nTeam = GetTeamNum();
 		return (nTeam == 2 || nTeam == 3);
 	}
 
-	__inline bool IsSwimming() {
+	__inline bool IsSwimming()
+	{
 		return (GetWaterLevel() > 1);
 	}
 
-	__inline bool IsAlive() {
+	__inline bool IsAlive()
+	{
 		return (GetLifeState() == LIFE_ALIVE);
 	}
 
-	__inline bool IsBaseCombatWeapon() {
+	__inline bool IsBaseCombatWeapon()
+	{
 		return (GetClassID() == ETFClassID::CBaseCombatWeapon);
 	}
 
-	__inline bool IsWearable() {
+	__inline bool IsWearable()
+	{
 		return (GetClassID() == ETFClassID::CTFWearable);
 	}
 
-	__inline bool IsVulnerable() {
+	__inline bool IsVulnerable()
+	{
 		int nCond = GetCond();
 		int nCondEx = GetCondEx();
 		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked || nCondEx & TFCondEx_UberchargedHidden || nCondEx & TFCondEx_UberchargedCanteen);
 	}
 
-	__inline bool IsVisible() {
+	__inline bool IsVisible()
+	{
 		int nCond = GetCond();
 		int nCondEx = GetCondEx();
 
-		if (nCond & (TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding)) {
+		if (nCond & (TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
+		{
 			return false;
 		}
 
 		return (nCond & TFCond_Cloaked);
 	}
 
-	__inline bool IsCritBoosted() {
+	__inline bool IsCritBoosted()
+	{
 		int nCond = GetCond(), nCondEx = GetCondEx();
 
 		return (nCond & TFCond_Kritzkrieged ||
-			nCond & TFCond_MiniCrits ||
-			nCondEx & TFCondEx_CritCanteen ||
-			nCondEx & TFCondEx_CritOnFirstBlood ||
-			nCondEx & TFCondEx_CritOnWin ||
-			nCondEx & TFCondEx_CritOnKill ||
-			nCondEx & TFCondEx_CritDemoCharge ||
-			nCondEx & TFCondEx_CritOnFlagCapture ||
-			nCondEx & TFCondEx_HalloweenCritCandy ||
-			nCondEx & TFCondEx_PyroCrits ||
-			IsCritTempRune());
+				nCond & TFCond_MiniCrits ||
+				nCondEx & TFCondEx_CritCanteen ||
+				nCondEx & TFCondEx_CritOnFirstBlood ||
+				nCondEx & TFCondEx_CritOnWin ||
+				nCondEx & TFCondEx_CritOnKill ||
+				nCondEx & TFCondEx_CritDemoCharge ||
+				nCondEx & TFCondEx_CritOnFlagCapture ||
+				nCondEx & TFCondEx_HalloweenCritCandy ||
+				nCondEx & TFCondEx_PyroCrits ||
+				IsCritTempRune());
 	}
 
-	__inline bool IsCritBoostedNoMini() {
+	__inline bool IsCritBoostedNoMini()
+	{
 		int nCond = GetCond(), nCondEx = GetCondEx();
 
 		return (nCond & TFCond_Kritzkrieged ||
-			nCondEx & TFCondEx_CritCanteen ||
-			nCondEx & TFCondEx_CritOnFirstBlood ||
-			nCondEx & TFCondEx_CritOnWin ||
-			nCondEx & TFCondEx_CritOnKill ||
-			nCondEx & TFCondEx_CritDemoCharge ||
-			nCondEx & TFCondEx_CritOnFlagCapture ||
-			nCondEx & TFCondEx_HalloweenCritCandy ||
-			nCondEx & TFCondEx_PyroCrits ||
-			IsCritTempRune());
+				nCondEx & TFCondEx_CritCanteen ||
+				nCondEx & TFCondEx_CritOnFirstBlood ||
+				nCondEx & TFCondEx_CritOnWin ||
+				nCondEx & TFCondEx_CritOnKill ||
+				nCondEx & TFCondEx_CritDemoCharge ||
+				nCondEx & TFCondEx_CritOnFlagCapture ||
+				nCondEx & TFCondEx_HalloweenCritCandy ||
+				nCondEx & TFCondEx_PyroCrits ||
+				IsCritTempRune());
 	}
 
-	__inline const wchar_t* GetRune() {
-		if (IsStrengthRune())	{ return (L"Strength Rune"); }
-		if (IsHasteRune())		{ return (L"Haste Rune"); }
-		if (IsRegenRune())		{ return (L"Regen Rune"); }
-		if (IsResistRune())		{ return (L"Resist Rune"); }
-		if (IsVampireRune())	{ return (L"Vampire Rune"); }
-		if (IsReflectRune())	{ return (L"Reflect Rune"); }
-		if (IsPrecisionRune())	{ return (L"Precision Rune"); }
-		if (IsAgilityRune())	{ return (L"Agility Rune"); }
-		if (IsKnockoutRune())	{ return (L"Knockout Rune"); }
-		if (IsImbalanceRune())	{ return (L"Imbalance Rune"); }
-		if (IsKingRune())		{ return (L"King"); }
-		if (IsPlagueRune())		{ return (L"Plague Rune"); }
-		if (IsSupernovaRune())	{ return (L"Supernova Rune"); }
+	__inline const wchar_t* GetRune()
+	{
+		if (IsStrengthRune()) { return (L"Strength Rune"); }
+		if (IsHasteRune()) { return (L"Haste Rune"); }
+		if (IsRegenRune()) { return (L"Regen Rune"); }
+		if (IsResistRune()) { return (L"Resist Rune"); }
+		if (IsVampireRune()) { return (L"Vampire Rune"); }
+		if (IsReflectRune()) { return (L"Reflect Rune"); }
+		if (IsPrecisionRune()) { return (L"Precision Rune"); }
+		if (IsAgilityRune()) { return (L"Agility Rune"); }
+		if (IsKnockoutRune()) { return (L"Knockout Rune"); }
+		if (IsImbalanceRune()) { return (L"Imbalance Rune"); }
+		if (IsKingRune()) { return (L"King"); }
+		if (IsPlagueRune()) { return (L"Plague Rune"); }
+		if (IsSupernovaRune()) { return (L"Supernova Rune"); }
 		return nullptr;
 	}
 
-	__inline bool IsKingBuffed() {
+	__inline bool IsKingBuffed()
+	{
 		return IsBuffedByKing();
 	}
 
-	__inline bool IsPlayer() {
+	__inline bool IsPlayer()
+	{
 		return (GetClassID() == ETFClassID::CTFPlayer);
 	}
 
-	__inline bool IsBuilding() {
-		switch (GetClassID()) {
-		case ETFClassID::CObjectDispenser:
-		case ETFClassID::CObjectSentrygun:
-		case ETFClassID::CObjectTeleporter: return true;
-		default: return false;
+	__inline bool IsBuilding()
+	{
+		switch (GetClassID())
+		{
+			case ETFClassID::CObjectDispenser:
+			case ETFClassID::CObjectSentrygun:
+			case ETFClassID::CObjectTeleporter: return true;
+			default: return false;
 		}
 	}
 
-	__inline bool IsPickup() {
-		switch (GetClassID()) {
-		case ETFClassID::CBaseAnimating: return GetModelName()[24] != 'h';
-		case ETFClassID::CTFAmmoPack: return true;
-		default: return false;
+	__inline bool IsPickup()
+	{
+		switch (GetClassID())
+		{
+			case ETFClassID::CBaseAnimating: return GetModelName()[24] != 'h';
+			case ETFClassID::CTFAmmoPack: return true;
+			default: return false;
 		}
 	}
 
@@ -546,13 +602,13 @@ public: //Everything else, lol.
 	{
 		switch (GetClassID())
 		{
-		case ETFClassID::CHeadlessHatman:
-		case ETFClassID::CTFTankBoss:
-		case ETFClassID::CMerasmus:
-		case ETFClassID::CZombie:
-		case ETFClassID::CEyeballBoss:
-			return true;
-		default: return false;
+			case ETFClassID::CHeadlessHatman:
+			case ETFClassID::CTFTankBoss:
+			case ETFClassID::CMerasmus:
+			case ETFClassID::CZombie:
+			case ETFClassID::CEyeballBoss:
+				return true;
+			default: return false;
 		}
 	}
 
@@ -560,20 +616,26 @@ public: //Everything else, lol.
 	{
 		switch (GetClassID())
 		{
-		case ETFClassID::CTFPumpkinBomb:
-		case ETFClassID::CTFGenericBomb:
-			return true;
-		default: return false;
+			case ETFClassID::CTFPumpkinBomb:
+			case ETFClassID::CTFGenericBomb:
+				return true;
+			default: return false;
 		}
 	}
 
-	__inline Vec3 GetHitboxPos(const int nHitbox) {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+	__inline Vec3 GetHitboxPos(const int nHitbox)
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime)) {
-					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
-						if (const auto& pBox = pSet->hitbox(nHitbox)) {
+				if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
+				{
+					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
+					{
+						if (const auto& pBox = pSet->hitbox(nHitbox))
+						{
 							Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
 							Math::VectorTransform(vPos, BoneMatrix[pBox->bone], vOut);
 							return vOut;
@@ -586,12 +648,17 @@ public: //Everything else, lol.
 		return Vec3();
 	}
 
-	
-	__inline Vec3 GetHitboxPosMatrix(const int nHitbox, matrix3x4 BoneMatrix[128]) {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
-				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
-					if (const auto& pBox = pSet->hitbox(nHitbox)) {
+
+	__inline Vec3 GetHitboxPosMatrix(const int nHitbox, matrix3x4 BoneMatrix[128])
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
+				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
+				{
+					if (const auto& pBox = pSet->hitbox(nHitbox))
+					{
 						Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
 						Math::VectorTransform(vPos, BoneMatrix[pBox->bone], vOut);
 						return vOut;
@@ -603,7 +670,8 @@ public: //Everything else, lol.
 		return Vec3();
 	}
 
-	__inline Vec3 GetBonePos(const int nBone) {
+	__inline Vec3 GetBonePos(const int nBone)
+	{
 		matrix3x4 BoneMatrix[128];
 		if (SetupBones(BoneMatrix, 128, 0x100, I::GlobalVars->curtime))
 			return Vec3(BoneMatrix[nBone][0][3], BoneMatrix[nBone][1][3], BoneMatrix[nBone][2][3]);
@@ -611,18 +679,21 @@ public: //Everything else, lol.
 		return Vec3(0.0f, 0.0f, 0.0f);
 	}
 
-	__inline Vec3 GetEyePosition() {
+	__inline Vec3 GetEyePosition()
+	{
 		return (GetViewOffset() + GetAbsOrigin());
 	}
 
-	__inline Vec3 GetWorldSpaceCenter() {
+	__inline Vec3 GetWorldSpaceCenter()
+	{
 		Vec3 vMin, vMax; GetRenderBounds(vMin, vMax);
 		Vec3 vWorldSpaceCenter = GetAbsOrigin();
 		vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
 		return vWorldSpaceCenter;
 	}
 
-	__inline Vec3 GetVelocity() {
+	__inline Vec3 GetVelocity()
+	{
 		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0"));
 		Vec3 v;
 		FN(this, v);
@@ -630,13 +701,17 @@ public: //Everything else, lol.
 	}
 
 	// This does not return your actual shoot pos for projectile weapons! Use Utils::GetRealShootPos(...) instead
-	__inline Vec3 GetShootPos() {
+	__inline Vec3 GetShootPos()
+	{
 		return  GetVecOrigin() + GetViewOffset();
 	}
 
-	__inline int GetNumOfHitboxes() {
-		if (const auto& pModel = GetModel()) {
-			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel)) {
+	__inline int GetNumOfHitboxes()
+	{
+		if (const auto& pModel = GetModel())
+		{
+			if (const auto& pHdr = I::ModelInfoClient->GetStudioModel(pModel))
+			{
 				if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet()))
 					return pSet->numhitboxes;
 			}
@@ -645,87 +720,104 @@ public: //Everything else, lol.
 		return 0;
 	}
 
-	__inline int GetCritMult() {
+	__inline int GetCritMult()
+	{
 		DYNVAR(m_iCritMult, int, "DT_TFPlayer", "m_Shared", "m_iCritMult");
 		return Math::RemapValClamped(m_iCritMult.GetValue(this), 0.0f, 255.0f, 1.0f, 4.0f);
 	}
 
-	__inline float GetPlayerMaxVelocity() {
-		switch (GetClassNum()) {
-		case ETFClass::CLASS_SCOUT: return 400.0f;
-		case ETFClass::CLASS_DEMOMAN: return 280.0f;
-		case ETFClass::CLASS_ENGINEER: return 300.0f;
-		case ETFClass::CLASS_HEAVY: return 230.0f; //110 when spinning minigun
-		case ETFClass::CLASS_MEDIC: return 320.0f;
-		case ETFClass::CLASS_PYRO: return 300.0f;
-		case ETFClass::CLASS_SNIPER: return 300.0f;
-		case ETFClass::CLASS_SOLDIER: return 240.0f;
-		case ETFClass::CLASS_SPY: return 320.0f;
-		default: return 1.0f;
+	__inline float GetPlayerMaxVelocity()
+	{
+		switch (GetClassNum())
+		{
+			case ETFClass::CLASS_SCOUT: return 400.0f;
+			case ETFClass::CLASS_DEMOMAN: return 280.0f;
+			case ETFClass::CLASS_ENGINEER: return 300.0f;
+			case ETFClass::CLASS_HEAVY: return 230.0f; //110 when spinning minigun
+			case ETFClass::CLASS_MEDIC: return 320.0f;
+			case ETFClass::CLASS_PYRO: return 300.0f;
+			case ETFClass::CLASS_SNIPER: return 300.0f;
+			case ETFClass::CLASS_SOLDIER: return 240.0f;
+			case ETFClass::CLASS_SPY: return 320.0f;
+			default: return 1.0f;
 		}
 	}
 
-	__inline bool OnSolid() {
+	__inline bool OnSolid()
+	{
 		return m_hGroundEntity() >= 0 || IsOnGround();
 	}
 
-	__inline const char* GetModelName() {
+	__inline const char* GetModelName()
+	{
 		return I::ModelInfoClient->GetModelName(GetModel());
 	}
 
-	__inline void SetTickBase(const int nTickBase) {
+	__inline void SetTickBase(const int nTickBase)
+	{
 		DYNVAR_SET(int, this, nTickBase, "DT_BasePlayer", "localdata", "m_nTickBase");
 	}
 
-	__inline void UpTickBase() {
+	__inline void UpTickBase()
+	{
 		static CDynamicNetvar<int> n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) + 1);
 	}
-	__inline void DownTickBase() {
+	__inline void DownTickBase()
+	{
 		static CDynamicNetvar<int> n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) - 1);
 	}
 
-	__inline void ClearPunchAngle() { //m_vecPunchAngle
+	__inline void ClearPunchAngle()
+	{ //m_vecPunchAngle
 		*reinterpret_cast<Vec3*>(this + 0xE8C) = Vec3(0.0f, 0.0f, 0.0f);
 	}
 
-	__inline void SetRenderAngles(const Vec3& vAngles) {
+	__inline void SetRenderAngles(const Vec3& vAngles)
+	{
 		Vec3* pRenderAngles = const_cast<Vec3*>(&this->GetRenderAngles());
 		*pRenderAngles = vAngles;
 	}
 
-	__inline void SetAbsOrigin(const Vec3& vOrigin) {
+	__inline void SetAbsOrigin(const Vec3& vOrigin)
+	{
 		typedef void(__thiscall* FN)(CBaseEntity*, const Vec3&);
 		static DWORD dwFN = g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
 		FN func = (FN)dwFN;
 		func(this, vOrigin);
 	}
 
-	__inline void PostDataUpdate(int updateType) {
+	__inline void PostDataUpdate(int updateType)
+	{
 		typedef void(__thiscall* FN)(CBaseEntity*, int);
 		static DWORD dwFn = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB");
 		FN func = (FN)dwFn;
 		func(this, updateType);
 	}
 
-	__inline void SetAbsAngles(const Vec3& vAngles) {
+	__inline void SetAbsAngles(const Vec3& vAngles)
+	{
 		Vec3* pAbsAngles = const_cast<Vec3*>(&this->GetAbsAngles());
 		*pAbsAngles = vAngles;
 	}
 
-	__inline void SetCurrentCmd(CUserCmd* pCmd) {
+	__inline void SetCurrentCmd(CUserCmd* pCmd)
+	{
 		DYNVAR_SET(CUserCmd*, (this - 0x4), pCmd, "DT_BasePlayer", "localdata", "m_hConstraintEntity");
 	}
 
-	__inline void SetVecOrigin(const Vec3& vOrigin) {
+	__inline void SetVecOrigin(const Vec3& vOrigin)
+	{
 		DYNVAR_SET(Vec3, this, vOrigin, "DT_BaseEntity", "m_vecOrigin");
 	}
 
-	__inline void RemoveEffect(const BYTE Effect) {
+	__inline void RemoveEffect(const BYTE Effect)
+	{
 		*reinterpret_cast<byte*>(this + 0x7C) &= ~Effect;
 
-		if (Effect == EF_NODRAW) {
+		if (Effect == EF_NODRAW)
+		{
 			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 FF 75 08 8B F1 B8"));
 
 			if (AddToLeafSystemFn)
@@ -733,65 +825,79 @@ public: //Everything else, lol.
 		}
 	}
 
-	__inline void SetGlowEnabled(const bool bState) {
+	__inline void SetGlowEnabled(const bool bState)
+	{
 		DYNVAR_SET(bool, this, bState, "DT_TFPlayer", "m_bGlowEnabled");
 	}
 
-	__inline void SetCond(const int nCond) {
+	__inline void SetCond(const int nCond)
+	{
 		DYNVAR_SET(int, this, nCond, "DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 	}
 
-	__inline void SetFov(const int nFov) {
+	__inline void SetFov(const int nFov)
+	{
 		DYNVAR_SET(int, this, nFov, "DT_BasePlayer", "m_iFOV");
 	}
 
-	__inline void ForceTauntCam(const int nTo) {
+	__inline void ForceTauntCam(const int nTo)
+	{
 		DYNVAR_SET(int, this, nTo, "DT_TFPlayer", "m_nForceTauntCam");
 	}
 
-	__inline void SetFlags(const int nFlags) {
+	__inline void SetFlags(const int nFlags)
+	{
 		DYNVAR_SET(int, this, nFlags, "DT_BasePlayer", "m_fFlags");
 	}
 
-	__inline void AddCond(const int nCond) {
+	__inline void AddCond(const int nCond)
+	{
 		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
-	__inline void AddCondEx(const int nCond) {
+	__inline void AddCondEx(const int nCond)
+	{
 		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCondEx");
 		*reinterpret_cast<DWORD*>(this + offset) |= nCond;
 	}
 
-	__inline void RemoveCond(const int nCond) {
+	__inline void RemoveCond(const int nCond)
+	{
 		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCond");
 		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
-	__inline void RemoveCondEx(const int nCond) {
+	__inline void RemoveCondEx(const int nCond)
+	{
 		static DWORD offset = g_NetVars.get_offset("DT_TFPlayer", "m_Shared", "m_nPlayerCondEx");
 		*reinterpret_cast<DWORD*>(this + offset) &= ~nCond;
 	}
 
-	__inline void SetEyeAngles(const Vec3& vAngles) {
+	__inline void SetEyeAngles(const Vec3& vAngles)
+	{
 		DYNVAR_SET(Vec3, this, vAngles, "DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]");
 	}
 
-	__inline void IncreaseTickBase() {
+	__inline void IncreaseTickBase()
+	{
 		static CDynamicNetvar<int>n("DT_BasePlayer", "localdata", "m_nTickBase");
 		n.SetValue(this, n.GetValue(this) + 1);
 	}
 
-	__inline void SetAnimTime(const float flAnimTime) {
+	__inline void SetAnimTime(const float flAnimTime)
+	{
 		DYNVAR_SET(float, this, flAnimTime, "DT_BaseEntity", "m_flAnimTime");
 	}
 
-	__inline void EstimateAbsVelocity(Vec3& vVel){
+	__inline void EstimateAbsVelocity(Vec3& vVel)
+	{
 		static auto fnEstimateABSVelocity = reinterpret_cast<void(__thiscall*)(void*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2"));
 		fnEstimateABSVelocity(this, vVel);
 	}
 
-	__inline float TickVelocity2D(){	//	bad
+	__inline float TickVelocity2D()
+	{	//	bad
 		const int iDivide = floor(1000.f / I::GlobalVars->interval_per_tick);
 		const float flVel = this->m_vecVelocity().Length2D();
 		return flVel / iDivide;

@@ -111,7 +111,8 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
-	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig() + ".fw")) {
+	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig() + ".fw"))
+	{
 		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 	}
 
@@ -125,7 +126,7 @@ void LoadDefaultConfig()
 		{ 0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.Value, Vars::Fonts::FONT_INDICATORS::nWeight.Value, Vars::Fonts::FONT_INDICATORS::nFlags.Value},
 		{ 0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		{ 0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW},
-		});
+	 });
 	F::Menu.ConfigLoaded = true;
 }
 
@@ -139,10 +140,11 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	//"mss32.dll" being one of the last modules to be loaded
 	//So wait for that before proceeding, after it's up everything else should be too
 	//Allows us to correctly use autoinject and just start the game.
-	while (!GetModuleHandleW(L"mss32.dll") || 
-		   !GetModuleHandleW(L"ntdll.dll") || 
-		   !GetModuleHandleW(L"stdshader_dx9.dll") || 
-		   !GetModuleHandleW(L"materialsystem.dll")) {
+	while (!GetModuleHandleW(L"mss32.dll") ||
+		   !GetModuleHandleW(L"ntdll.dll") ||
+		   !GetModuleHandleW(L"stdshader_dx9.dll") ||
+		   !GetModuleHandleW(L"materialsystem.dll"))
+	{
 		Sleep(5000);
 	}
 
@@ -153,7 +155,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Loaded();
 
-	while (!GetAsyncKeyState(VK_F11) || F::Menu.IsOpen) {
+	while (!GetAsyncKeyState(VK_F11) || F::Menu.IsOpen)
+	{
 		Sleep(20);
 	}
 
@@ -167,7 +170,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
-	{	
+	{
 		Utils::RemovePEH(hinstDLL);
 		if (const auto hMainThread = CreateThread(nullptr, 0, MainThread, hinstDLL, 0, nullptr))
 		{

@@ -25,7 +25,8 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 {
 	color.a = 150;
 
-	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float {
+	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float
+	{
 		auto vecAngle = Vec3();
 		Math::AngleVectors(vecViewAngle, &vecAngle);
 
@@ -35,7 +36,8 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 		return -atan2(vecAngle.x * vecAim.y - vecAngle.y * vecAim.x, vecAngle.x * vecAim.x + vecAngle.y * vecAim.y);
 	};
 
-	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float {
+	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float
+	{
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	};
 
@@ -56,12 +58,12 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	//constexpr float arrow_length = 20.0f;
 	const float arrowLength = Vars::Visuals::ArrowLength.Value;
 
-	const Vec3 line{x2 - x1, y2 - y1, 0.0f};
+	const Vec3 line{ x2 - x1, y2 - y1, 0.0f };
 	const float length = line.Length();
 
 	const float fpointOnLine = arrowLength / (atanf(arrowAngle) * length);
 	const Vec3 pointOnLine = Vec3(x2, y2, 0) + (line * fpointOnLine * -1.0f);
-	const Vec3 normalVector{-line.y, line.x, 0.0f};
+	const Vec3 normalVector{ -line.y, line.x, 0.0f };
 	const Vec3 normal = Vec3(arrowLength, arrowLength, 0.0f) / (length * 2);
 
 	const Vec3 rotation = normal * normalVector;
@@ -73,7 +75,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 
 	//float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 1000.0f, 100.0f, 0.0f, 1.0f), 0.0f, 1.0f);
 	const float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), Vars::Visuals::MaxDist.Value,
-	                                       Vars::Visuals::MinDist.Value, 0.0f, 1.0f), 0.0f, 1.0f);
+								  Vars::Visuals::MinDist.Value, 0.0f, 1.0f), 0.0f, 1.0f);
 	Color_t heatColor = color;
 	heatColor.a = static_cast<byte>(fMap * 255.0f);
 
@@ -86,10 +88,10 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	else
 	{
 		Vertex_t t1, t2, t3;
-		t1.Init({cx + left.x, cy + left.y});
-		t2.Init({cx + right.x, cy + right.y});
-		t3.Init({cx + x2, cy + y2});
-		std::array<Vertex_t, 3> verts{t1, t2, t3};
+		t1.Init({ cx + left.x, cy + left.y });
+		t2.Init({ cx + right.x, cy + right.y });
+		t3.Init({ cx + x2, cy + y2 });
+		std::array<Vertex_t, 3> verts{ t1, t2, t3 };
 		g_Draw.DrawTexturedPolygon(3, verts.data(), heatColor);
 	}
 }

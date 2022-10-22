@@ -555,7 +555,8 @@ typedef CThreadNullMutex CSourceMutex;
 #define COORD_DENOMINATOR			(1<<(COORD_FRACTIONAL_BITS))
 #define COORD_RESOLUTION			(1.0/(COORD_DENOMINATOR))
 
-typedef enum {
+typedef enum
+{
 	EMPTY,
 	SINGLE,
 	SINGLE_NPC,

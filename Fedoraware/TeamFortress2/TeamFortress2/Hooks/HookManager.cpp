@@ -4,8 +4,9 @@
 #include "../SDK/Includes/proxyfnhook.h"
 #include "MenuHook/MenuHook.h"
 
-inline uintptr_t GetVFuncPtr(void *pBaseClass, unsigned int nIndex) {
-	return static_cast<uintptr_t>((*static_cast<int **>(pBaseClass))[nIndex]);
+inline uintptr_t GetVFuncPtr(void* pBaseClass, unsigned int nIndex)
+{
+	return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 }
 
 CHook::CHook(const std::string& name, void* pInitFunction)

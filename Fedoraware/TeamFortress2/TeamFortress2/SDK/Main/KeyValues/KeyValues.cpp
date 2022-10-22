@@ -51,18 +51,18 @@ int KeyValues::GetInt(const char* keyName, int defaultValue)
 	{
 		switch (dat->m_iDataType)
 		{
-		case TYPE_STRING:
-			return atoi(dat->m_sValue);
-		case TYPE_WSTRING:
-			return _wtoi(dat->m_wsValue);
-		case TYPE_FLOAT:
-			return (int)dat->m_flValue;
-		case TYPE_UINT64:
-			return 0;
-		case TYPE_INT:
-		case TYPE_PTR:
-		default:
-			return dat->m_iValue;
+			case TYPE_STRING:
+				return atoi(dat->m_sValue);
+			case TYPE_WSTRING:
+				return _wtoi(dat->m_wsValue);
+			case TYPE_FLOAT:
+				return (int)dat->m_flValue;
+			case TYPE_UINT64:
+				return 0;
+			case TYPE_INT:
+			case TYPE_PTR:
+			default:
+				return dat->m_iValue;
 		};
 	}
 	return defaultValue;
@@ -75,18 +75,18 @@ uint64_t KeyValues::GetUint64(const char* keyName, uint64_t defaultValue)
 	{
 		switch (dat->m_iDataType)
 		{
-		case TYPE_STRING:
-			return (uint64_t)_atoi64(dat->m_sValue);
-		case TYPE_WSTRING:
-			return _wtoi64(dat->m_wsValue);
-		case TYPE_FLOAT:
-			return (int)dat->m_flValue;
-		case TYPE_UINT64:
-			return *((uint64_t*)dat->m_sValue);
-		case TYPE_INT:
-		case TYPE_PTR:
-		default:
-			return dat->m_iValue;
+			case TYPE_STRING:
+				return (uint64_t)_atoi64(dat->m_sValue);
+			case TYPE_WSTRING:
+				return _wtoi64(dat->m_wsValue);
+			case TYPE_FLOAT:
+				return (int)dat->m_flValue;
+			case TYPE_UINT64:
+				return *((uint64_t*)dat->m_sValue);
+			case TYPE_INT:
+			case TYPE_PTR:
+			default:
+				return dat->m_iValue;
 		};
 	}
 	return defaultValue;
@@ -99,19 +99,19 @@ float KeyValues::GetFloat(const char* keyName, float defaultValue)
 	{
 		switch (dat->m_iDataType)
 		{
-		case TYPE_STRING:
-			return (float)atof(dat->m_sValue);
-		case TYPE_WSTRING:
-			return (float)_wtof(dat->m_wsValue);
-		case TYPE_FLOAT:
-			return dat->m_flValue;
-		case TYPE_INT:
-			return (float)dat->m_iValue;
-		case TYPE_UINT64:
-			return (float)(*((uint64_t*)dat->m_sValue));
-		case TYPE_PTR:
-		default:
-			return 0.0f;
+			case TYPE_STRING:
+				return (float)atof(dat->m_sValue);
+			case TYPE_WSTRING:
+				return (float)_wtof(dat->m_wsValue);
+			case TYPE_FLOAT:
+				return dat->m_flValue;
+			case TYPE_INT:
+				return (float)dat->m_iValue;
+			case TYPE_UINT64:
+				return (float)(*((uint64_t*)dat->m_sValue));
+			case TYPE_PTR:
+			default:
+				return 0.0f;
 		};
 	}
 	return defaultValue;
@@ -125,40 +125,40 @@ const char* KeyValues::GetString(const char* keyName, const char* defaultValue)
 		char buf[64];
 		switch (dat->m_iDataType)
 		{
-		case TYPE_FLOAT:
-			snprintf(buf, sizeof(buf), "%f", dat->m_flValue);
-			SetString(keyName, buf);
-			break;
-		case TYPE_PTR:
-			snprintf(buf, sizeof(buf), "%lld", (int64_t)(size_t)dat->m_pValue);
-			SetString(keyName, buf);
-			break;
-		case TYPE_INT:
-			snprintf(buf, sizeof(buf), "%d", dat->m_iValue);
-			SetString(keyName, buf);
-			break;
-		case TYPE_UINT64:
-			snprintf(buf, sizeof(buf), "%lld", *((uint64_t*)(dat->m_sValue)));
-			SetString(keyName, buf);
-			break;
-		case TYPE_WSTRING:
-		{
-			char wideBuf[512];
-			int result = Utils::UnicodeToUTF8(dat->m_wsValue, wideBuf, 512);
-			if (result)
+			case TYPE_FLOAT:
+				snprintf(buf, sizeof(buf), "%f", dat->m_flValue);
+				SetString(keyName, buf);
+				break;
+			case TYPE_PTR:
+				snprintf(buf, sizeof(buf), "%lld", (int64_t)(size_t)dat->m_pValue);
+				SetString(keyName, buf);
+				break;
+			case TYPE_INT:
+				snprintf(buf, sizeof(buf), "%d", dat->m_iValue);
+				SetString(keyName, buf);
+				break;
+			case TYPE_UINT64:
+				snprintf(buf, sizeof(buf), "%lld", *((uint64_t*)(dat->m_sValue)));
+				SetString(keyName, buf);
+				break;
+			case TYPE_WSTRING:
 			{
-				SetString(keyName, wideBuf);
+				char wideBuf[512];
+				int result = Utils::UnicodeToUTF8(dat->m_wsValue, wideBuf, 512);
+				if (result)
+				{
+					SetString(keyName, wideBuf);
+				}
+				else
+				{
+					return defaultValue;
+				}
+				break;
 			}
-			else
-			{
+			case TYPE_STRING:
+				break;
+			default:
 				return defaultValue;
-			}
-			break;
-		}
-		case TYPE_STRING:
-			break;
-		default:
-			return defaultValue;
 		};
 
 		return dat->m_sValue;
@@ -174,46 +174,46 @@ const wchar_t* KeyValues::GetWString(const char* keyName, const wchar_t* default
 		wchar_t wbuf[64];
 		switch (dat->m_iDataType)
 		{
-		case TYPE_FLOAT:
-			swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%f", dat->m_flValue);
-			SetWString(keyName, wbuf);
+			case TYPE_FLOAT:
+				swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%f", dat->m_flValue);
+				SetWString(keyName, wbuf);
+				break;
+			case TYPE_PTR:
+				swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%lld", (int64_t)(size_t)dat->m_pValue);
+				SetWString(keyName, wbuf);
+				break;
+			case TYPE_INT:
+				swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%d", dat->m_iValue);
+				SetWString(keyName, wbuf);
+				break;
+			case TYPE_UINT64:
+			{
+				swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%lld", *((uint64_t*)(dat->m_sValue)));
+				SetWString(keyName, wbuf);
+			}
 			break;
-		case TYPE_PTR:
-			swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%lld", (int64_t)(size_t)dat->m_pValue);
-			SetWString(keyName, wbuf);
-			break;
-		case TYPE_INT:
-			swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%d", dat->m_iValue);
-			SetWString(keyName, wbuf);
-			break;
-		case TYPE_UINT64:
-		{
-			swprintf(wbuf, Q_ARRAYSIZE(wbuf), L"%lld", *((uint64_t*)(dat->m_sValue)));
-			SetWString(keyName, wbuf);
-		}
-		break;
 
-		case TYPE_WSTRING:
-			break;
-		case TYPE_STRING:
-		{
-			int bufSize = strlen(dat->m_sValue) + 1;
-			wchar_t* pWBuf = new wchar_t[bufSize];
-			int result = Utils::UTF8ToUnicode(dat->m_sValue, pWBuf, bufSize * sizeof(wchar_t));
-			if (result >= 0)
+			case TYPE_WSTRING:
+				break;
+			case TYPE_STRING:
 			{
-				SetWString(keyName, pWBuf);
-			}
-			else
-			{
+				int bufSize = strlen(dat->m_sValue) + 1;
+				wchar_t* pWBuf = new wchar_t[bufSize];
+				int result = Utils::UTF8ToUnicode(dat->m_sValue, pWBuf, bufSize * sizeof(wchar_t));
+				if (result >= 0)
+				{
+					SetWString(keyName, pWBuf);
+				}
+				else
+				{
+					delete[] pWBuf;
+					return defaultValue;
+				}
 				delete[] pWBuf;
-				return defaultValue;
+				break;
 			}
-			delete[] pWBuf;
-			break;
-		}
-		default:
-			return defaultValue;
+			default:
+				return defaultValue;
 		};
 
 		return (const wchar_t*)dat->m_wsValue;
@@ -228,16 +228,16 @@ void* KeyValues::GetPtr(const char* keyName, void* defaultValue)
 	{
 		switch (dat->m_iDataType)
 		{
-		case TYPE_PTR:
-			return dat->m_pValue;
+			case TYPE_PTR:
+				return dat->m_pValue;
 
-		case TYPE_WSTRING:
-		case TYPE_STRING:
-		case TYPE_FLOAT:
-		case TYPE_INT:
-		case TYPE_UINT64:
-		default:
-			return NULL;
+			case TYPE_WSTRING:
+			case TYPE_STRING:
+			case TYPE_FLOAT:
+			case TYPE_INT:
+			case TYPE_UINT64:
+			default:
+				return NULL;
 		};
 	}
 	return defaultValue;

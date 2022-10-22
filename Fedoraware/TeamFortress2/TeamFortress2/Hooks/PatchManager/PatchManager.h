@@ -4,7 +4,8 @@
 
 class BytePatch;
 
-class CPatchManager {
+class CPatchManager
+{
 public:
 	void Init();
 	void Restore();

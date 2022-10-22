@@ -2,12 +2,14 @@
 #include "../../../SDK/SDK.h"
 #include "../ImGui/TextEditor.h"
 
-struct CustomMaterial {
+struct CustomMaterial
+{
 	std::string FileName = "Default.vmt";
 	IMaterial* Material = nullptr;
 };
 
-class CMaterialEditor {
+class CMaterialEditor
+{
 	std::string GetMaterialPath(const std::string& matFileName);
 	void LoadMaterials();
 	void WriteMaterial(const CustomMaterial& material, const std::string& content);

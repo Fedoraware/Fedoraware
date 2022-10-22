@@ -12,8 +12,8 @@ void CAutoQueue::Run()
 	// Auto queue
 	if (Vars::Misc::AutoCasualQueue.Value > 0)
 	{
-		if (!I::TFPartyClient->BInStandbyQueue() 	&&
-			!I::TFGCClientSystem->BHaveLiveMatch() 	&&
+		if (!I::TFPartyClient->BInStandbyQueue() &&
+			!I::TFGCClientSystem->BHaveLiveMatch() &&
 			!I::TFGCClientSystem->GetNumMatchInvites())
 		{
 			I::TFPartyClient->LoadSavedCasualCriteria();
@@ -39,10 +39,12 @@ void CAutoQueue::Run()
 			sv_cheats->SetValue(1);
 			fps_max->SetValue(1);
 			host_timescale->SetValue(25);
-		} else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::EngineClient->IsConnected() && lastConnect)
+		}
+		else if (I::TFGCClientSystem->BHaveLiveMatch() && !I::EngineClient->IsConnected() && lastConnect)
 		{
 			I::TFGCClientSystem->JoinMMMatch();
-		} else if (I::EngineClient->IsConnected() && !lastConnect)
+		}
+		else if (I::EngineClient->IsConnected() && !lastConnect)
 		{
 			fps_max->SetValue(0);
 			host_timescale->SetValue(1);

@@ -3,7 +3,8 @@
 
 #pragma warning ( disable : 4091 )
 
-class CIncomingSequence {
+class CIncomingSequence
+{
 public:
 	int InReliableState;
 	int SequenceNr;
@@ -17,11 +18,13 @@ public:
 	}
 };
 
-using BoneMatrixes = struct {
+using BoneMatrixes = struct
+{
 	float BoneMatrix[128][3][4];
 };
 
-struct TickRecord {
+struct TickRecord
+{
 	float flSimTime = 0.f;
 	float flCreateTime = 0.f;
 	int iTickCount = 0;
@@ -31,7 +34,8 @@ struct TickRecord {
 	Vec3 vAngles = {};
 };
 
-enum class BacktrackMode {
+enum class BacktrackMode
+{
 	ALL, //	iterates through every tick (slow probably)
 	FIRST, // first
 	LAST, // last
@@ -39,8 +43,9 @@ enum class BacktrackMode {
 	ONSHOT, // only returns on shot records
 };
 
-class CBacktrack {
-	//	logic
+class CBacktrack
+{
+//	logic
 	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
 	//bool IsBackLagComped(CBaseEntity* pEntity);

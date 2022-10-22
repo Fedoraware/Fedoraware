@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class CSpectatorList {
+class CSpectatorList
+{
 private:
 	struct Spectator_t
 	{

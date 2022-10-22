@@ -4,15 +4,15 @@
 class CBaseClientDLL
 {
 public:
-	CClientClass *GetAllClasses()
+	CClientClass* GetAllClasses()
 	{
-		typedef CClientClass *(__thiscall *FN)(PVOID);
+		typedef CClientClass* (__thiscall* FN)(PVOID);
 		return GetVFunc<FN>(this, 8)(this);
 	}
 
-	bool WriteUsercmdDeltaToBuffer(bf_write *buf, int from, int to, bool isnewcommand)
+	bool WriteUsercmdDeltaToBuffer(bf_write* buf, int from, int to, bool isnewcommand)
 	{
-		typedef bool(__thiscall *FN)(PVOID, bf_write *, int, int, bool);
+		typedef bool(__thiscall* FN)(PVOID, bf_write*, int, int, bool);
 		return GetVFunc<FN>(this, 23)(this, buf, from, to, isnewcommand);
 	}
 
@@ -21,9 +21,9 @@ public:
 	//	GetClientVoiceMgr()->UpdateSpeakerStatus(entindex, !!bTalking);
 	//}
 
-	bool GetPlayerView(CViewSetup &playerView)
+	bool GetPlayerView(CViewSetup& playerView)
 	{
-		typedef bool (__thiscall *FN)(PVOID, CViewSetup &);
+		typedef bool(__thiscall* FN)(PVOID, CViewSetup&);
 		return GetVFunc<FN>(this, 59)(this, playerView);
 	}
 };

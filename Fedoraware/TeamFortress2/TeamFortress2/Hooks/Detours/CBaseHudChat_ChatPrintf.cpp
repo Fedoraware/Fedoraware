@@ -9,7 +9,7 @@ struct ChatFlags_t
 };
 
 MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pChatElement, 19), void, __cdecl,
-	void* ecx, int iPlayerIndex, int iFilter, const char* fmt, ...)
+		  void* ecx, int iPlayerIndex, int iFilter, const char* fmt, ...)
 {
 	va_list marker;
 	char buffer[4096];
@@ -17,11 +17,13 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 	vsnprintf_s(buffer, sizeof(buffer), fmt, marker);
 	va_end(marker);
 
-	if (strlen(buffer) > 0 && buffer[strlen(buffer) - 1] == '\n') {
+	if (strlen(buffer) > 0 && buffer[strlen(buffer) - 1] == '\n')
+	{
 		buffer[strlen(buffer) - 1] = 0;
 	}
 	char* msg = buffer;
-	while (*msg && (*msg == '\n' || *msg == '\r' || *msg == '\x1A')) {
+	while (*msg && (*msg == '\n' || *msg == '\r' || *msg == '\x1A'))
+	{
 		msg++;
 	}
 	if (!*msg) { return; }
@@ -52,7 +54,7 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 
 		if (iPlayerIndex == I::EngineClient->GetLocalPlayer())
 		{
-			chatFlag = { Colors::Local.to_hex_alpha(), "[You]"};
+			chatFlag = { Colors::Local.to_hex_alpha(), "[You]" };
 			flagSet = true;
 		}
 		else if (g_EntityCache.IsFriend(iPlayerIndex))
@@ -62,11 +64,11 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 		}
 		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 4)
 		{
-			static constexpr auto RED = Color_t{255, 0, 0, 255};
-			chatFlag = { RED.to_hex_alpha(), "[Cheater]"};
+			static constexpr auto RED = Color_t{ 255, 0, 0, 255 };
+			chatFlag = { RED.to_hex_alpha(), "[Cheater]" };
 			flagSet = true;
 		}
-		
+
 		if (flagSet)
 		{
 			finalMsg = chatFlag.Colour + chatFlag.Name + " \x3" + finalMsg;

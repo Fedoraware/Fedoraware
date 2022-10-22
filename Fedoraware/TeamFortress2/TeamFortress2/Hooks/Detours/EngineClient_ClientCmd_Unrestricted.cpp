@@ -45,7 +45,8 @@ MAKE_HOOK(EngineClient_ClientCmd_Unrestricted, Utils::GetVFuncPtr(I::EngineClien
 		}
 	}
 
-	if (cmdString == "disconnect"){
+	if (cmdString == "disconnect")
+	{
 		F::DMEChams.DeleteMaterials();	//	schizoid
 	}
 

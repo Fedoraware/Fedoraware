@@ -5,10 +5,10 @@
 #include "../../Backtrack/Backtrack.h"
 
 bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
-                               int nTargetIndex)
+							   int nTargetIndex)
 {
-	static Vec3 vecSwingMins = {-18.0f, -18.0f, -18.0f};
-	static Vec3 vecSwingMaxs = {18.0f, 18.0f, 18.0f};
+	static Vec3 vecSwingMins = { -18.0f, -18.0f, -18.0f };
+	static Vec3 vecSwingMaxs = { 18.0f, 18.0f, 18.0f };
 
 	const float flRange = (pWeapon->GetSwingRange(pLocal));
 
@@ -45,7 +45,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		else
 		{
 			vecTraceStart += (pLocal->GetVelocity() * FL_DELAY) - (Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat()) *
-				0.5f * FL_DELAY * FL_DELAY);
+																   0.5f * FL_DELAY * FL_DELAY);
 		}
 
 		Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
@@ -81,22 +81,22 @@ bool CAimbotMelee::AimFriendlyBuilding(CBaseObject* pBuilding)
 	{
 		switch (pBuilding->GetLevel())
 		{
-		case 1:
-		{
-			maxAmmo = 150;
-			break;
-		}
-		case 2:
-		{
-			maxAmmo = 200;
-			break;
-		}
-		case 3:
-		{
-			maxAmmo = 200;
-			maxRocket = 20; //Yeah?
-			break;
-		}
+			case 1:
+			{
+				maxAmmo = 150;
+				break;
+			}
+			case 2:
+			{
+				maxAmmo = 200;
+				break;
+			}
+			case 3:
+			{
+				maxAmmo = 200;
+				maxRocket = 20; //Yeah?
+				break;
+			}
 		}
 	}
 
@@ -141,10 +141,10 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 			{
 				continue;
 			}
-			
+
 			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
 			const float flDistTo = vLocalPos.DistTo(vPos);
-			validTargets.push_back({pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority});
+			validTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
 
@@ -153,7 +153,7 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 	{
 		const bool hasWrench = (pWeapon->GetWeaponID() == TF_WEAPON_WRENCH);
 		const bool canDestroySapper = (G::CurItemDefIndex == Pyro_t_Homewrecker || G::CurItemDefIndex == Pyro_t_TheMaul || G::CurItemDefIndex == Pyro_t_NeonAnnihilator || G::CurItemDefIndex ==
-			Pyro_t_NeonAnnihilatorG);
+									   Pyro_t_NeonAnnihilatorG);
 
 		for (const auto& pObject : g_EntityCache.GetGroup(hasWrench || canDestroySapper ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
@@ -191,7 +191,7 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 			}
 
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			validTargets.push_back({pObject, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pObject, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -211,7 +211,7 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 				continue;
 			}
 
-			validTargets.push_back({pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pNPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -226,19 +226,23 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	if (Vars::Backtrack::Enabled.Value && target.m_TargetType == ETargetType::PLAYER)
 	{
 		const auto& record = F::Backtrack.GetLastRecord(target.m_pEntity);
-		if (record) {
+		if (record)
+		{
 			hitboxpos = target.m_pEntity->GetHitboxPosMatrix(HITBOX_PELVIS, (matrix3x4*)(&record->BoneMatrix));
 			target.SimTime = record->flSimTime;
 
 			// Check if the backtrack pos is visible
-			if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos)) {
+			if (Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), hitboxpos))
+			{
 				target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), hitboxpos);
 				target.m_vPos = hitboxpos;
 				target.ShouldBacktrack = true;
 			}
 		}
 		if (F::Backtrack.bFakeLatency && Vars::Backtrack::Latency.Value > 200.f && !target.ShouldBacktrack) // Check if the player is in range for a non-backtrack hit
-		{ return false; }
+		{
+			return false;
+		}
 	}
 
 
@@ -292,14 +296,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	switch (Vars::Aimbot::Melee::AimMethod.Value)
 	{
-	case 0:
+		case 0:
 		{
 			pCmd->viewangles = vAngle;
 			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
-	case 1:
+		case 1:
 		{
 			if (Vars::Aimbot::Melee::SmoothingAmount.Value == 0)
 			{
@@ -316,14 +320,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 			break;
 		}
 
-	case 2:
+		case 2:
 		{
 			Utils::FixMovement(pCmd, vAngle);
 			pCmd->viewangles = vAngle;
 			break;
 		}
 
-	default: break;
+		default: break;
 	}
 }
 

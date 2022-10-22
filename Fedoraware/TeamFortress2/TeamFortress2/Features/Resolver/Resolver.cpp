@@ -15,7 +15,8 @@ bool CResolver::ShouldAutoResolve()
 	return true;
 }
 
-void CResolver::ReportShot(int iIndex){
+void CResolver::ReportShot(int iIndex)
+{
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity) { return; }
 	mDidShoot[pEntity->GetIndex()] = true;
@@ -38,35 +39,41 @@ void CResolver::Run()
 		CBaseEntity* entity;
 		PlayerInfo_t temp{};
 
-		if (!(entity = I::ClientEntityList->GetClientEntity(i))) {
+		if (!(entity = I::ClientEntityList->GetClientEntity(i)))
+		{
 			continue;
 		}
 
-		if (entity->GetDormant()) {
+		if (entity->GetDormant())
+		{
 			continue;
 		}
 
-		if (!I::EngineClient->GetPlayerInfo(i, &temp)) {
+		if (!I::EngineClient->GetPlayerInfo(i, &temp))
+		{
 			continue;
 		}
 
-		if (!entity->GetLifeState() == LIFE_ALIVE) {
+		if (!entity->GetLifeState() == LIFE_ALIVE)
+		{
 			continue;
 		}
 
-		if (entity->IsTaunting()) {
+		if (entity->IsTaunting())
+		{
 			continue;
 		}
 
-		if (mDidShoot[entity->GetIndex()]) {
+		if (mDidShoot[entity->GetIndex()])
+		{
 			continue;
 		}
 
 		const Vector vX = entity->GetEyeAngles();
 		auto* m_angEyeAnglesX = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-			get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
+														 get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]"));
 		auto* m_angEyeAnglesY = reinterpret_cast<float*>(reinterpret_cast<DWORD>(entity) + g_NetVars.
-			get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
+														 get_offset("DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[1]"));
 
 		auto findResolve = F::Resolver.ResolvePlayers.find(temp.friendsID);
 		ResolveMode resolveMode;
@@ -78,92 +85,93 @@ void CResolver::Run()
 		// Pitch resolver 
 		switch (resolveMode.m_Pitch)
 		{
-		case 1:
-		{
-			*m_angEyeAnglesX = -89; // Up
-			break;
-		}
-		case 2:
-		{
-			*m_angEyeAnglesX = 89; // Down
-			break;
-		}
-		case 3:
-		{
-			*m_angEyeAnglesX = 0; // Zero
-			break;
-		}
-		case 4:
-		{
-			// if we can resolve using the sniper dot, do that
-			if (const float SniperDotYaw = ResolveSniperDot(entity)) {
-				*m_angEyeAnglesX = SniperDotYaw;
+			case 1:
+			{
+				*m_angEyeAnglesX = -89; // Up
 				break;
 			}
-
-			// Auto (Will resolve fake up/down) (poorly)
-			if (vX.x >= 90)
+			case 2:
 			{
-				*m_angEyeAnglesX = -89;
+				*m_angEyeAnglesX = 89; // Down
+				break;
 			}
-
-			if (vX.x <= -90)
+			case 3:
 			{
-				*m_angEyeAnglesX = 89;
+				*m_angEyeAnglesX = 0; // Zero
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case 4:
+			{
+				// if we can resolve using the sniper dot, do that
+				if (const float SniperDotYaw = ResolveSniperDot(entity))
+				{
+					*m_angEyeAnglesX = SniperDotYaw;
+					break;
+				}
+
+				// Auto (Will resolve fake up/down) (poorly)
+				if (vX.x >= 90)
+				{
+					*m_angEyeAnglesX = -89;
+				}
+
+				if (vX.x <= -90)
+				{
+					*m_angEyeAnglesX = 89;
+				}
+				break;
+			}
+			default:
+				break;
 		}
 
 		// Yaw resolver
 		const Vec3 vAngleTo = Math::CalcAngle(entity->GetEyePosition(), localHead);
 		switch (resolveMode.m_Yaw)
 		{
-		case 1:
-		{
-			*m_angEyeAnglesY = vAngleTo.y; // Forward
-			break;
-		}
-		case 2:
-		{
-			*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
-			break;
-		}
-		case 3:
-		{
-			*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
-			break;
-		}
-		case 4:
-		{
-			*m_angEyeAnglesY = vAngleTo.y + 90.f; // Right
-			break;
-		}
-		case 5:
-		{
-			*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
-			break;
-		}
-		case 6:	//	find edge
-		{
-			const Vec3 vAngleTo = Math::CalcAngle(entity->GetAbsOrigin(), pLocal->GetAbsOrigin());	//	baseyaw
-			const bool bEdge = G::RealViewAngles.x == 89.f ? F::AntiAim.FindEdge(vAngleTo.y) : F::AntiAim.FindEdge(vAngleTo.y);	//	this is terrible but should work fine
-			*m_angEyeAnglesY = vAngleTo.y + (bEdge ? 90 : -90);
-			break;
-		}
-		case 7:
-		{
-			// Auto resolver
-			if (ShouldAutoResolve())
+			case 1:
 			{
-				*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				*m_angEyeAnglesY = vAngleTo.y; // Forward
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case 2:
+			{
+				*m_angEyeAnglesY = vAngleTo.y + 180.f; // Backward
+				break;
+			}
+			case 3:
+			{
+				*m_angEyeAnglesY = vAngleTo.y - 90.f; // Left
+				break;
+			}
+			case 4:
+			{
+				*m_angEyeAnglesY = vAngleTo.y + 90.f; // Right
+				break;
+			}
+			case 5:
+			{
+				*m_angEyeAnglesY += 180; // Invert (this doesn't work properly)
+				break;
+			}
+			case 6:	//	find edge
+			{
+				const Vec3 vAngleTo = Math::CalcAngle(entity->GetAbsOrigin(), pLocal->GetAbsOrigin());	//	baseyaw
+				const bool bEdge = G::RealViewAngles.x == 89.f ? F::AntiAim.FindEdge(vAngleTo.y) : F::AntiAim.FindEdge(vAngleTo.y);	//	this is terrible but should work fine
+				*m_angEyeAnglesY = vAngleTo.y + (bEdge ? 90 : -90);
+				break;
+			}
+			case 7:
+			{
+				// Auto resolver
+				if (ShouldAutoResolve())
+				{
+					*m_angEyeAnglesY = YawResolves[ResolveData[temp.friendsID].Mode];
+				}
+				break;
+			}
+			default:
+				break;
 		}
 	}
 	mDidShoot.clear();
@@ -183,7 +191,7 @@ void CResolver::Update(CUserCmd* pCmd)
 		{
 			PlayerInfo_t temp{};
 			const int aimTarget = G::CurrentTargetIdx;
-			
+
 			if (const auto& pTarget = I::ClientEntityList->GetClientEntity(aimTarget))
 			{
 				if (I::EngineClient->GetPlayerInfo(aimTarget, &temp))
@@ -231,25 +239,30 @@ void CResolver::Update(CUserCmd* pCmd)
 	}
 }
 
-void CResolver::UpdateSniperDots() {
+void CResolver::UpdateSniperDots()
+{
 	SniperDotMap.clear();
 
 	// Find sniper dots
 	for (int i = I::EngineClient->GetMaxClients() + 1; i <= I::ClientEntityList->GetHighestEntityIndex(); i++)
 	{
-		if (CBaseEntity* eTarget = I::ClientEntityList->GetClientEntity(i)) {
+		if (CBaseEntity* eTarget = I::ClientEntityList->GetClientEntity(i))
+		{
 			if (eTarget->GetClassID() != ETFClassID::CSniperDot)
 				continue;
 
-			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(eTarget->m_hOwnerEntity())) {
+			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(eTarget->m_hOwnerEntity()))
+			{
 				SniperDotMap[pOwner] = eTarget;
 			}
 		}
 	}
 }
 
-float CResolver::ResolveSniperDot(CBaseEntity* pOwner) {
-	if (CBaseEntity* SniperDot = SniperDotMap[pOwner]) {
+float CResolver::ResolveSniperDot(CBaseEntity* pOwner)
+{
+	if (CBaseEntity* SniperDot = SniperDotMap[pOwner])
+	{
 		const Vec3 DotOrigin = SniperDot->m_vecOrigin();
 		const Vec3 EyePosition = pOwner->GetEyePosition();
 		const Vec3 delta = DotOrigin - EyePosition;
@@ -269,7 +282,8 @@ void CResolver::OnPlayerHurt(CGameEvent* pEvent)
 	const int attacker = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("attacker"));
 	const bool bCrit = pEvent->GetBool("crit");
 
-	if (attacker == I::EngineClient->GetLocalPlayer()) {
+	if (attacker == I::EngineClient->GetLocalPlayer())
+	{
 		PlayerInfo_t temp{};
 
 		if (!I::EngineClient->GetPlayerInfo(victim, &temp)) { return; }

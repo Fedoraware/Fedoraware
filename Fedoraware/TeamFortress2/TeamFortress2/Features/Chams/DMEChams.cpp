@@ -30,7 +30,8 @@ namespace ProxySkins
 
 	static KeyValues* Proxies = nullptr;
 
-	IMaterial* CreateProxySkin(const char* materialPath, const char* materialName) {
+	IMaterial* CreateProxySkin(const char* materialPath, const char* materialName)
+	{
 		auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", materialPath);
 		kv->SetString("$additive", "1");
@@ -53,7 +54,8 @@ namespace ProxySkins
 				Sine->SetString("sineperiod", "50000");
 				Sine->SetString("sinemin", "0");
 				Sine->SetString("sinemax", "360");
-				if (Sine) {
+				if (Sine)
+				{
 					Proxies->AddSubkey(Sine);
 				}
 			}
@@ -63,7 +65,8 @@ namespace ProxySkins
 				TextureScroll->SetString("texturescrollvar", "$BasetextureTransform");
 				TextureScroll->SetString("texturescrollrate", "0.1");
 				TextureScroll->SetString("texturescrollangle", "$scrollanglevar");
-				if (TextureScroll) {
+				if (TextureScroll)
+				{
 					Proxies->AddSubkey(TextureScroll);
 				}
 			}
@@ -93,7 +96,8 @@ bool CDMEChams::ShouldRun()
 	return true;
 }
 
-IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV, bool bSave) {
+IMaterial* CDMEChams::CreateNRef(char const* szName, void* pKV, bool bSave)
+{
 	IMaterial* returnMaterial = I::MaterialSystem->Create(szName, pKV);
 	returnMaterial->IncrementReferenceCount();
 	v_MatListGlobal.push_back(returnMaterial);
@@ -107,9 +111,10 @@ void CDMEChams::Init()
 }
 
 //TODO: add glow to this shit.
-void CDMEChams::CreateMaterials(){
+void CDMEChams::CreateMaterials()
+{
 	if (!v_MatList.empty()) { DeleteMaterials(); }
-	if (bSetup){ return; }
+	if (bSetup) { return; }
 	KeyValues* m_pMatShadedkv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatShinykv = new KeyValues("VertexLitGeneric");
 	KeyValues* m_pMatFlatkv = new KeyValues("UnlitGeneric");
@@ -218,10 +223,12 @@ void CDMEChams::CreateMaterials(){
 	bSetup = true;
 }
 
-void CDMEChams::DeleteMaterials(){
-	if (v_MatList.size() == 0U){ return; }
-	for (IMaterial* material : v_MatList){
-		if (!material){ continue; }
+void CDMEChams::DeleteMaterials()
+{
+	if (v_MatList.size() == 0U) { return; }
+	for (IMaterial* material : v_MatList)
+	{
+		if (!material) { continue; }
 		material->DecrementReferenceCount();
 		material->DeleteIfUnreferenced();
 		material = nullptr;
@@ -230,231 +237,280 @@ void CDMEChams::DeleteMaterials(){
 	v_MatList.clear(); bSetup = false;
 }
 
-IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams) {
-	if (chams.drawMaterial == 9) {
+IMaterial* CDMEChams::GetChamMaterial(const Chams_t& chams)
+{
+	if (chams.drawMaterial == 9)
+	{
 		return F::MaterialEditor.GetByName(chams.customMaterial);
 	}
 	return v_MatList.at(chams.drawMaterial) ? v_MatList.at(chams.drawMaterial) : nullptr;	//	this check is only if we end up out of range, unless it crashes
 }
 
-IMaterial* CDMEChams::GetProxyMaterial(int nIndex) {
+IMaterial* CDMEChams::GetProxyMaterial(int nIndex)
+{
 	using namespace ProxySkins;
-	switch (nIndex) {
-	case 1:
-		return spectrumSplattered;
-	case 2:
-		return electroSkullsBlue;
-	case 3:
-		return frozenAurora;
-	case 4:
-		return jazzy;
-	case 5:
-		return hana;
-	case 6:
-		return wtf;
-	case 7:
-		return ghost;
-	case 8:
-		return flames;
-	case 9:
-		return spookwood;
-	case 10:
-		return edgy;
-	case 11:
-		return serenity;
-	case 12:
-		return fade;
-	default:
-		return nullptr;
+	switch (nIndex)
+	{
+		case 1:
+			return spectrumSplattered;
+		case 2:
+			return electroSkullsBlue;
+		case 3:
+			return frozenAurora;
+		case 4:
+			return jazzy;
+		case 5:
+			return hana;
+		case 6:
+			return wtf;
+		case 7:
+			return ghost;
+		case 8:
+			return flames;
+		case 9:
+			return spookwood;
+		case 10:
+			return edgy;
+		case 11:
+			return serenity;
+		case 12:
+			return fade;
+		default:
+			return nullptr;
 	}
 }
 
-int GetType(int EntIndex) {
+int GetType(int EntIndex)
+{
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(EntIndex);
 	if (!pEntity) { return 0; }
-	switch (pEntity->GetClassID()) {
-	case ETFClassID::CTFViewModel: {
-		return 1;
-	}
-	case ETFClassID::CBasePlayer:
-	case ETFClassID::CTFPlayer: {
-		return 2;
-	}
-	case ETFClassID::CRagdollPropAttached:
-	case ETFClassID::CRagdollProp:
-	case ETFClassID::CTFRagdoll: {
-		return 3;
-	}
-	case ETFClassID::CTFWearable: {
-		return 4;
-	}
-	case ETFClassID::CTFAmmoPack: {
-		return 6;
-	}
-	case ETFClassID::CBaseAnimating: {
-		const auto szName = pEntity->GetModelName();
-
-		if (Hash::IsAmmo(szName))
+	switch (pEntity->GetClassID())
+	{
+		case ETFClassID::CTFViewModel:
+		{
+			return 1;
+		}
+		case ETFClassID::CBasePlayer:
+		case ETFClassID::CTFPlayer:
+		{
+			return 2;
+		}
+		case ETFClassID::CRagdollPropAttached:
+		case ETFClassID::CRagdollProp:
+		case ETFClassID::CTFRagdoll:
+		{
+			return 3;
+		}
+		case ETFClassID::CTFWearable:
+		{
+			return 4;
+		}
+		case ETFClassID::CTFAmmoPack:
 		{
 			return 6;
 		}
-
-		if (Hash::IsHealth(szName))
+		case ETFClassID::CBaseAnimating:
 		{
-			return 7;
-		}
+			const auto szName = pEntity->GetModelName();
 
-		break;
-	}
-	case ETFClassID::CObjectSentrygun:
-	case ETFClassID::CObjectDispenser:
-	case ETFClassID::CObjectTeleporter: {
-		return 8;
-	}
-	case ETFClassID::CTFProjectile_Rocket:
-	case ETFClassID::CTFGrenadePipebombProjectile:
-	case ETFClassID::CTFProjectile_Jar:
-	case ETFClassID::CTFProjectile_JarGas:
-	case ETFClassID::CTFProjectile_JarMilk:
-	case ETFClassID::CTFProjectile_Arrow:
-	case ETFClassID::CTFProjectile_SentryRocket:
-	case ETFClassID::CTFProjectile_Flare:
-	case ETFClassID::CTFProjectile_Cleaver:
-	case ETFClassID::CTFProjectile_EnergyBall:
-	case ETFClassID::CTFProjectile_HealingBolt:
-	case ETFClassID::CTFProjectile_ThrowableBreadMonster: {
-		return 9;
-	}
-	case ETFClassID::CBaseDoor: {
-		return 10;
-	}
+			if (Hash::IsAmmo(szName))
+			{
+				return 6;
+			}
+
+			if (Hash::IsHealth(szName))
+			{
+				return 7;
+			}
+
+			break;
+		}
+		case ETFClassID::CObjectSentrygun:
+		case ETFClassID::CObjectDispenser:
+		case ETFClassID::CObjectTeleporter:
+		{
+			return 8;
+		}
+		case ETFClassID::CTFProjectile_Rocket:
+		case ETFClassID::CTFGrenadePipebombProjectile:
+		case ETFClassID::CTFProjectile_Jar:
+		case ETFClassID::CTFProjectile_JarGas:
+		case ETFClassID::CTFProjectile_JarMilk:
+		case ETFClassID::CTFProjectile_Arrow:
+		case ETFClassID::CTFProjectile_SentryRocket:
+		case ETFClassID::CTFProjectile_Flare:
+		case ETFClassID::CTFProjectile_Cleaver:
+		case ETFClassID::CTFProjectile_EnergyBall:
+		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+		{
+			return 9;
+		}
+		case ETFClassID::CBaseDoor:
+		{
+			return 10;
+		}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
-	if (pWeapon) {
+	if (pWeapon)
+	{
 		return 5;
 	}
 	return -1;
 }
 
-Chams_t GetPlayerChams(CBaseEntity* pEntity) {
+Chams_t GetPlayerChams(CBaseEntity* pEntity)
+{
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (pEntity && pLocal)
 	{
-		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.chamsActive) {
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.chamsActive)
+		{
 			return Vars::Chams::Players::Target;
 		}
-		if (pEntity == pLocal) {
+		if (pEntity == pLocal)
+		{
 			return Vars::Chams::Players::Local;
 		}
-		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive) {
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive)
+		{
 			return Vars::Chams::Players::Friend;
 		}
-		if (pEntity->GetTeamNum() != pLocal->GetTeamNum()) {
+		if (pEntity->GetTeamNum() != pLocal->GetTeamNum())
+		{
 			return Vars::Chams::Players::Enemy;
 		}
-		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+		{
 			return Vars::Chams::Players::Team;
 		}
 	}
 	return Chams_t();
 }
 
-Chams_t GetBuildingChams(CBaseEntity* pEntity) {
+Chams_t GetBuildingChams(CBaseEntity* pEntity)
+{
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (pEntity && pLocal)
 	{
-		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive) {
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive)
+		{
 			return Vars::Chams::Buildings::Target;
 		}
-		if (pEntity->GetIndex() == pLocal->GetIndex()) {
+		if (pEntity->GetIndex() == pLocal->GetIndex())
+		{
 			return Vars::Chams::Buildings::Local;
 		}
-		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive) {
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive)
+		{
 			return Vars::Chams::Buildings::Friend;
 		}
-		if (pEntity->GetTeamNum() != pLocal->GetTeamNum()) {
+		if (pEntity->GetTeamNum() != pLocal->GetTeamNum())
+		{
 			return Vars::Chams::Buildings::Enemy;
 		}
-		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+		{
 			return Vars::Chams::Buildings::Team;
 		}
 	}
 	return Chams_t();
 }
 
-Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr) {
-	switch (nIndex) {
-	case 0: {
-		return Vars::Chams::DME::Weapon;
-	}
-	case 1: {
-		return Vars::Chams::DME::Hands;
-	}
-	case 2: {
-		return pEntity ? GetPlayerChams(pEntity) : Chams_t();
-	}
-	case 3: {
-		return Vars::Chams::Players::Ragdoll;
-	}
-	case 4: {
-		if (!Vars::Chams::Players::Wearables.Value) { return Chams_t(); }
-		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
-			return GetPlayerChams(pOwner);
+Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
+{
+	switch (nIndex)
+	{
+		case 0:
+		{
+			return Vars::Chams::DME::Weapon;
 		}
-		return Chams_t();
-	}
-	case 5: {
-		if (!Vars::Chams::Players::Weapons.Value) { return Chams_t(); }
-		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity())) {
-			return GetPlayerChams(pOwner);
+		case 1:
+		{
+			return Vars::Chams::DME::Hands;
 		}
-		return Chams_t();
-	}
-	case 6: {
-		return Vars::Chams::World::Ammo;
-	}
-	case 7: {
-		return Vars::Chams::World::Health;
-	}
-	case 8: {
-		if (!pEntity) { return Chams_t(); }
-		const auto& Building = reinterpret_cast<CBaseObject*>(pEntity);
-		if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
-		if (CBaseEntity* pOwner = Building->GetOwner()) {
-			return GetBuildingChams(pOwner);
+		case 2:
+		{
+			return pEntity ? GetPlayerChams(pEntity) : Chams_t();
 		}
-		else if (int teamNum = pEntity->GetTeamNum()) {	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
-			CBaseEntity* pLocal = g_EntityCache.GetLocal();
-			if (pLocal) {
-				return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+		case 3:
+		{
+			return Vars::Chams::Players::Ragdoll;
+		}
+		case 4:
+		{
+			if (!Vars::Chams::Players::Wearables.Value) { return Chams_t(); }
+			if (!pEntity) { return Chams_t(); }
+			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity()))
+			{
+				return GetPlayerChams(pOwner);
 			}
+			return Chams_t();
 		}
-		return Chams_t();
-	}
-	case 9: {
-		if (!pEntity) { return Chams_t(); }
-		if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower()))) {
-			return GetPlayerChams(pOwner);
+		case 5:
+		{
+			if (!Vars::Chams::Players::Weapons.Value) { return Chams_t(); }
+			if (!pEntity) { return Chams_t(); }
+			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity()))
+			{
+				return GetPlayerChams(pOwner);
+			}
+			return Chams_t();
 		}
-		return Chams_t();
-	}
-	default:
-		return Chams_t();
+		case 6:
+		{
+			return Vars::Chams::World::Ammo;
+		}
+		case 7:
+		{
+			return Vars::Chams::World::Health;
+		}
+		case 8:
+		{
+			if (!pEntity) { return Chams_t(); }
+			const auto& Building = reinterpret_cast<CBaseObject*>(pEntity);
+			if (!Building || !(!Building->GetCarried() && Building->GetConstructed())) { return Chams_t(); }
+			if (CBaseEntity* pOwner = Building->GetOwner())
+			{
+				return GetBuildingChams(pOwner);
+			}
+			else if (int teamNum = pEntity->GetTeamNum())
+			{	// if we don't have an owner, we need to do this, or else spawned buildings that do have a team will return no cham struct.
+				CBaseEntity* pLocal = g_EntityCache.GetLocal();
+				if (pLocal)
+				{
+					return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+				}
+			}
+			return Chams_t();
+		}
+		case 9:
+		{
+			if (!pEntity) { return Chams_t(); }
+			if (CBaseEntity* pOwner = I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())))
+			{
+				return GetPlayerChams(pOwner);
+			}
+			return Chams_t();
+		}
+		default:
+			return Chams_t();
 	}
 }
 
-void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld) {
+void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
+{
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
 	Chams_t chams = Vars::Chams::Players::FakeAng;
-	if (!chams.chamsActive || !F::FakeAng.DrawChams) {
+	if (!chams.chamsActive || !F::FakeAng.DrawChams)
+	{
 		return;
 	}
 
-	if (!pRenderContext) {
+	if (!pRenderContext)
+	{
 		return;
 	}
 
@@ -477,20 +533,23 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 		if (chamsMaterial == v_MatList.at(7))
 		{
-			if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false)) {
+			if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false))
+			{
 				$envmaptint->SetVecValue(
 					Color::TOFLOAT(chams.colour.r) * 4,
 					Color::TOFLOAT(chams.colour.g) * 4,
 					Color::TOFLOAT(chams.colour.b) * 4);
 			}
-			if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false)) {
+			if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false))
+			{
 				$selfillumtint->SetVecValue(
 					Color::TOFLOAT(chams.fresnelBase.r) * 4,
 					Color::TOFLOAT(chams.fresnelBase.g) * 4,
 					Color::TOFLOAT(chams.fresnelBase.b) * 4);
 			}
 		}
-		else {
+		else
+		{
 			I::RenderView->SetColorModulation(
 				Color::TOFLOAT(rainbow ? Utils::Rainbow().r : chams.colour.r),
 				Color::TOFLOAT(rainbow ? Utils::Rainbow().g : chams.colour.g),
@@ -499,7 +558,8 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 		I::RenderView->SetBlend(chams.colour.a);
 
-		if (dmeHook) {
+		if (dmeHook)
+		{
 			dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
 		}
 
@@ -508,7 +568,8 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 			// Overlay
 			IMaterial* pMaterial = v_MatList.at(9);
 
-			if (pMaterial) {
+			if (pMaterial)
+			{
 				if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 				{
 					$phongtint->SetVecValue(
@@ -533,7 +594,8 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 				I::ModelRender->ForcedMaterialOverride(pMaterial);
 			}
 
-			if (dmeHook) {
+			if (dmeHook)
+			{
 				dmeHook->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, reinterpret_cast<matrix3x4*>(&F::FakeAng.BoneMatrix));
 			}
 		}
@@ -552,8 +614,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 	const auto ModelRender_DrawModelExecute = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
-	if (!ModelRender_DrawModelExecute || !pRenderContext){ return false; }
-	if (v_MatList.size() < 9) { CreateMaterials(); return false;}	//	super schizoid
+	if (!ModelRender_DrawModelExecute || !pRenderContext) { return false; }
+	if (v_MatList.size() < 9) { CreateMaterials(); return false; }	//	super schizoid
 
 	m_bRendering = false;
 	if (ShouldRun())
@@ -576,7 +638,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				&& szModelName.find("shogun_warbanner") == std::string_view::npos
 				&& szModelName.find("targe") == std::string_view::npos //same as world model, can't filter
 				&& szModelName.find("shield") == std::string_view::npos //same as world model, can't filter
-				&& szModelName.find("repair_claw") == std::string_view::npos)) {
+				&& szModelName.find("repair_claw") == std::string_view::npos))
+			{
 				return false;
 			}
 		}
@@ -585,21 +648,27 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(pInfo.m_nEntIndex);
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-		if (drawType == 3) {	//	don't interfere with ragdolls
-			if (Vars::Visuals::RagdollEffects::RagdollType.Value) {
-				if (Vars::Visuals::RagdollEffects::EnemyOnly.Value) {
-					if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+		if (drawType == 3)
+		{	//	don't interfere with ragdolls
+			if (Vars::Visuals::RagdollEffects::RagdollType.Value)
+			{
+				if (Vars::Visuals::RagdollEffects::EnemyOnly.Value)
+				{
+					if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
+					{
 						return false;
 					}
 				}
-				else {
+				else
+				{
 					return false;
 				}
 			}
 		}
 
 		//do fakeang chams before this check right here
-		if (pEntity == pLocal) {
+		if (pEntity == pLocal)
+		{
 			RenderFakeAng(pState, pInfo, pBoneToWorld);
 		}
 
@@ -631,20 +700,23 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 
 			if (chamsMaterial == v_MatList.at(7))
 			{
-				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false)) {
+				if (IMaterialVar* $envmaptint = chamsMaterial->FindVar("$envmaptint", nullptr, false))
+				{
 					$envmaptint->SetVecValue(
 						Color::TOFLOAT(chams.colour.r) * 4,
 						Color::TOFLOAT(chams.colour.g) * 4,
 						Color::TOFLOAT(chams.colour.b) * 4);
 				}
-				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false)) {
+				if (IMaterialVar* $selfillumtint = chamsMaterial->FindVar("$selfillumtint", nullptr, false))
+				{
 					$selfillumtint->SetVecValue(
 						Color::TOFLOAT(chams.fresnelBase.r) * 4,
 						Color::TOFLOAT(chams.fresnelBase.g) * 4,
 						Color::TOFLOAT(chams.fresnelBase.b) * 4);
 				}
 			}
-			else {
+			else
+			{
 				I::RenderView->SetColorModulation(
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().r : chams.colour.r),
 					Color::TOFLOAT(rainbow ? Utils::Rainbow().g : chams.colour.g),
@@ -652,10 +724,13 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			}
 
 			float alpha = Color::TOFLOAT(chams.colour.a);
-			if (pEntity && pLocal) {
-				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value) {
+			if (pEntity && pLocal)
+			{
+				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value)
+				{
 					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
-					if (alpha < 0.05f) {	//dont draw if we are too close
+					if (alpha < 0.05f)
+					{	//dont draw if we are too close
 						return true;
 					}
 				}
@@ -664,7 +739,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			I::RenderView->SetBlend(alpha);
 
 
-			if (ModelRender_DrawModelExecute) {
+			if (ModelRender_DrawModelExecute)
+			{
 				ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 			}
 
@@ -672,13 +748,15 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			if (proxyIndex)
 			{
 				IMaterial* pMaterial = GetProxyMaterial(proxyIndex);
-				if (pMaterial) {
+				if (pMaterial)
+				{
 					pMaterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, proxyWF);
 					I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 				}
 
-				if (ModelRender_DrawModelExecute) {
+				if (ModelRender_DrawModelExecute)
+				{
 					ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}
@@ -688,7 +766,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 				// Overlay
 				IMaterial* pMaterial = v_MatList.at(9);
 
-				if (pMaterial) {
+				if (pMaterial)
+				{
 					if (IMaterialVar* $phongtint = pMaterial->FindVar("$phongtint", nullptr, false))
 					{
 						$phongtint->SetVecValue(
@@ -713,7 +792,8 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 					I::ModelRender->ForcedMaterialOverride(pMaterial);
 				}
 
-				if (ModelRender_DrawModelExecute) {
+				if (ModelRender_DrawModelExecute)
+				{
 					ModelRender_DrawModelExecute->Original<void(__thiscall*)(CModelRender*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4*)>()(I::ModelRender, pState, pInfo, pBoneToWorld);
 				}
 			}

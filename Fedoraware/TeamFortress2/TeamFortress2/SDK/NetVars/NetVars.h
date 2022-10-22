@@ -6,7 +6,8 @@ class CNetVars
 	struct node;
 	using map_type = std::unordered_map<std::string, std::shared_ptr<node>>;
 
-	struct node {
+	struct node
+	{
 		node(DWORD offset) : offset(offset) {}
 		map_type nodes;
 		DWORD offset;
@@ -20,19 +21,22 @@ public:
 private:
 	void populate_nodes(class RecvTable* recv_table, map_type* map);
 
-	DWORD get_offset_recursive(map_type& map, int acc, const char* name) {
+	DWORD get_offset_recursive(map_type& map, int acc, const char* name)
+	{
 		return acc + map[name]->offset;
 	}
 
 	template<typename ...args_t>
-	DWORD get_offset_recursive(map_type& map, int acc, const char* name, args_t ...args) {
+	DWORD get_offset_recursive(map_type& map, int acc, const char* name, args_t ...args)
+	{
 		const auto& node = map[name];
 		return get_offset_recursive(node->nodes, acc + node->offset, args...);
 	}
 
 public:
 	template<typename ...args_t>
-	DWORD get_offset(const char* name, args_t ...args) {
+	DWORD get_offset(const char* name, args_t ...args)
+	{
 		const auto& node = nodes[name];
 		return get_offset_recursive(node->nodes, node->offset, args...);
 	}
@@ -48,20 +52,24 @@ private:
 
 public:
 	template<typename... args_t>
-	CDynamicNetvar(args_t... a) {
+	CDynamicNetvar(args_t... a)
+	{
 		dwOffset = g_NetVars.get_offset(a...);
 	}
 
 	template<typename... args_t>
-	CDynamicNetvar(int nOffset, args_t... a) {
+	CDynamicNetvar(int nOffset, args_t... a)
+	{
 		dwOffset = g_NetVars.get_offset(a...) + nOffset;
 	}
 
-	T GetValue(void* base) {
+	T GetValue(void* base)
+	{
 		return *reinterpret_cast<T*>(reinterpret_cast<DWORD>(base) + dwOffset);
 	}
 
-	void SetValue(void* base, T val) {
+	void SetValue(void* base, T val)
+	{
 		*reinterpret_cast<T*>(reinterpret_cast<DWORD>(base) + dwOffset) = val;
 	}
 };

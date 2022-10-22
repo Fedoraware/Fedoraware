@@ -1,7 +1,7 @@
 #include "ConVar.h"
 #include "../Interfaces.h"
 
-ConCommandBase *ConCommandBase::s_pConCommandBases = nullptr;
+ConCommandBase* ConCommandBase::s_pConCommandBases = nullptr;
 static int	s_nCVarFlag = 0;
 static int	s_nDLLIdentifier = -1;
 static bool	s_bRegistered = false;
@@ -9,7 +9,7 @@ static bool	s_bRegistered = false;
 class CDefaultAccessor : public IConCommandBaseAccessor
 {
 public:
-	virtual bool RegisterConCommandBase(ConCommandBase *pVar)
+	virtual bool RegisterConCommandBase(ConCommandBase* pVar)
 	{
 		I::Cvar->RegisterConCommand(pVar);
 		return true;
@@ -18,16 +18,16 @@ public:
 };
 
 static CDefaultAccessor s_DefaultAccessor;
-IConCommandBaseAccessor *ConCommandBase::s_pAccessor = &s_DefaultAccessor;
+IConCommandBaseAccessor* ConCommandBase::s_pAccessor = &s_DefaultAccessor;
 
-void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor *pAccessor)
+void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor* pAccessor)
 {
 	if (s_bRegistered)
 		return;
 	s_bRegistered = true;
 	s_nCVarFlag = nCVarFlag;
 	s_nDLLIdentifier = I::Cvar->AllocateDLLIdentifier();
-	ConCommandBase *pCur, *pNext;
+	ConCommandBase* pCur, * pNext;
 	ConCommandBase::s_pAccessor = pAccessor ? pAccessor : &s_DefaultAccessor;
 	pCur = ConCommandBase::s_pConCommandBases;
 	while (pCur)
@@ -40,27 +40,27 @@ void ConVar_Register(int nCVarFlag, IConCommandBaseAccessor *pAccessor)
 	ConCommandBase::s_pConCommandBases = NULL;
 }
 
-ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags)
+ConVar::ConVar(const char* pName, const char* pDefaultValue, int flags)
 {
 	Create(pName, pDefaultValue, flags);
 }
 
-ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags, const char *pHelpString)
+ConVar::ConVar(const char* pName, const char* pDefaultValue, int flags, const char* pHelpString)
 {
 	Create(pName, pDefaultValue, flags, pHelpString);
 }
 
-ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags, const char *pHelpString, bool bMin, float fMin, bool bMax, float fMax)
+ConVar::ConVar(const char* pName, const char* pDefaultValue, int flags, const char* pHelpString, bool bMin, float fMin, bool bMax, float fMax)
 {
 	Create(pName, pDefaultValue, flags, pHelpString, bMin, fMin, bMax, fMax);
 }
 
-ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags, const char *pHelpString, FnChangeCallback_t callback)
+ConVar::ConVar(const char* pName, const char* pDefaultValue, int flags, const char* pHelpString, FnChangeCallback_t callback)
 {
 	Create(pName, pDefaultValue, flags, pHelpString, false, 0.0, false, 0.0, callback);
 }
 
-ConVar::ConVar(const char *pName, const char *pDefaultValue, int flags, const char *pHelpString, bool bMin, float fMin, bool bMax, float fMax, FnChangeCallback_t callback)
+ConVar::ConVar(const char* pName, const char* pDefaultValue, int flags, const char* pHelpString, bool bMin, float fMin, bool bMax, float fMax, FnChangeCallback_t callback)
 {
 	Create(pName, pDefaultValue, flags, pHelpString, bMin, fMin, bMax, fMax, callback);
 }
@@ -79,7 +79,7 @@ bool ConVar::IsFlagSet(int flag) const
 	return (flag & m_pParent->m_nFlags) ? true : false;
 }
 
-const char *ConVar::GetHelpText(void) const
+const char* ConVar::GetHelpText(void) const
 {
 	return m_pParent->m_pszHelpString;
 }
@@ -104,12 +104,12 @@ bool ConVar::IsCommand(void) const
 	return false;
 }
 
-const char *ConVar::GetName(void) const
+const char* ConVar::GetName(void) const
 {
 	return m_pParent->m_pszName;
 }
 
-const char *ConVar::GetBaseName(void) const
+const char* ConVar::GetBaseName(void) const
 {
 	return m_pParent->m_pszName;
 }
@@ -129,7 +129,7 @@ bool ConVar::GetBool(void) const
 	return m_pParent->m_Value.m_nValue == 1;
 }
 
-const char *ConVar::GetString(void) const
+const char* ConVar::GetString(void) const
 {
 	return m_pParent->m_Value.m_pszString;
 }
@@ -139,15 +139,15 @@ int ConVar::GetSplitScreenPlayerSlot(void) const
 	return 0;
 }
 
-void ConVar::InternalSetValue(const char *value)
+void ConVar::InternalSetValue(const char* value)
 {
 	float fNewValue;
 	char  tempVal[32];
-	char *val;
+	char* val;
 
 	float flOldValue = m_Value.m_fValue;
 
-	val = (char *)value;
+	val = (char*)value;
 	fNewValue = (float)atof(value);
 
 	if (ClampValue(fNewValue))
@@ -165,7 +165,7 @@ void ConVar::InternalSetValue(const char *value)
 	}
 }
 
-void ConVar::ChangeStringValue(const char *tempVal, float flOldValue)
+void ConVar::ChangeStringValue(const char* tempVal, float flOldValue)
 {
 	UNREFERENCED_PARAMETER(flOldValue);
 	int len = strlen(tempVal) + 1;
@@ -185,7 +185,7 @@ void ConVar::ChangeStringValue(const char *tempVal, float flOldValue)
 
 }
 
-bool ConVar::ClampValue(float &value)
+bool ConVar::ClampValue(float& value)
 {
 	if (m_bHasMin && (value < m_fMinVal))
 	{
@@ -249,9 +249,9 @@ void ConVar::InternalSetColorValue(DWORD cValue)
 	InternalSetIntValue(color);
 }
 
-void ConVar::Create(const char *pName, const char *pDefaultValue, int flags, const char *pHelpString, bool bMin, float fMin, bool bMax, float fMax, FnChangeCallback_t callback)
+void ConVar::Create(const char* pName, const char* pDefaultValue, int flags, const char* pHelpString, bool bMin, float fMin, bool bMax, float fMax, FnChangeCallback_t callback)
 {
-	static const char *empty_string = "";
+	static const char* empty_string = "";
 
 	m_pParent = this;
 
@@ -274,7 +274,7 @@ void ConVar::Create(const char *pName, const char *pDefaultValue, int flags, con
 	BaseClass::Create(pName, pHelpString, flags);
 }
 
-void ConVar::SetValue(const char *value)
+void ConVar::SetValue(const char* value)
 {
 	m_pParent->InternalSetValue(value);
 }
@@ -294,7 +294,7 @@ void ConVar::SetValue(DWORD value)
 	m_pParent->InternalSetColorValue(value);
 }
 
-const char *ConVar::GetDefault(void) const
+const char* ConVar::GetDefault(void) const
 {
 	return m_pParent->m_pszDefaultValue;
 }
@@ -309,7 +309,7 @@ ConCommandBase::ConCommandBase(void)
 	m_pNext = NULL;
 }
 
-ConCommandBase::ConCommandBase(const char *pName, const char *pHelpString, int flags)
+ConCommandBase::ConCommandBase(const char* pName, const char* pHelpString, int flags)
 {
 	Create(pName, pHelpString, flags);
 }
@@ -328,9 +328,9 @@ int ConCommandBase::GetDLLIdentifier() const
 	return s_nDLLIdentifier;
 }
 
-void ConCommandBase::Create(const char *pName, const char *pHelpString, int flags)
+void ConCommandBase::Create(const char* pName, const char* pHelpString, int flags)
 {
-	static const char *empty_string = "";
+	static const char* empty_string = "";
 
 	m_bRegistered = false;
 
@@ -361,7 +361,7 @@ void ConCommandBase::Init()
 	}
 }
 
-const char *ConCommandBase::GetName(void) const
+const char* ConCommandBase::GetName(void) const
 {
 	return m_pszName;
 }
@@ -396,7 +396,7 @@ int ConCommandBase::GetFlags(void) const
 	return m_nFlags;
 }
 
-const char *ConCommandBase::GetHelpText(void) const
+const char* ConCommandBase::GetHelpText(void) const
 {
 	return m_pszHelpString;
 }

@@ -12,7 +12,7 @@ private:
 	float EdgeDistance(float edgeRayYaw);
 	bool IsOverlapping(float epsilon);
 	bool ShouldAntiAim(CBaseEntity* pLocal);
-	
+
 	// angles
 	float CalculateCustomRealPitch(float WishPitch, bool FakeDown);
 	void SetupPitch(int iMode, CUserCmd* pCmd);
@@ -31,8 +31,8 @@ private:
 	bool bManualing = false;
 	bool bSaved = false;
 	Vec3 vSavedAngles = {};
-	std::pair<bool, bool> p_bJitter = {false, false};
-	std::pair<bool, std::pair<bool, bool>> p_p_bManualYaw = {false, {false, false}};	//	{vert/hori, {left/right, down/up}}
+	std::pair<bool, bool> p_bJitter = { false, false };
+	std::pair<bool, std::pair<bool, bool>> p_p_bManualYaw = { false, {false, false} };	//	{vert/hori, {left/right, down/up}}
 
 	Timer tAATimer{};
 public:

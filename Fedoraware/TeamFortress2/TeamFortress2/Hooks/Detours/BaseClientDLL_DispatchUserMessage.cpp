@@ -59,7 +59,7 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 			std::string chatType(typeBuffer);
 			std::string playerName(nameBuffer);
 			std::string chatMessage(msgBuffer);
-			
+
 			F::RSChat.PushChat(I::ClientEntityList->GetClientEntity(entIdx), Utils::ConvertUtf8ToWide(chatMessage));
 
 			// F::RSChat.PushChat(I::ClientEntityList->GetClientEntity(entIdx), chatMessage);
@@ -108,7 +108,7 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 			{
 				G::MedicCallers.push_back(iEntityID);
 			}
-			
+
 			break;
 		}
 

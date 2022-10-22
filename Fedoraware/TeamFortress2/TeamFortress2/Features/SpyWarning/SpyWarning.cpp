@@ -29,7 +29,8 @@ bool CSpyWarning::ShouldRun(CBaseEntity* pLocal)
 
 void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 {
-	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float {
+	auto GetClockwiseAngle = [&](const Vec3& vecViewAngle, const Vec3& vecAimAngle) -> float
+	{
 		auto vecAngle = Vec3();
 		Math::AngleVectors(vecViewAngle, &vecAngle);
 
@@ -39,7 +40,8 @@ void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 		return -atan2(vecAngle.x * vecAim.y - vecAngle.y * vecAim.x, vecAngle.x * vecAim.x + vecAngle.y * vecAim.y);
 	};
 
-	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float {
+	auto MapFloat = [&](float x, float in_min, float in_max, float out_min, float out_max) -> float
+	{
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	};
 
@@ -58,12 +60,12 @@ void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 	constexpr float arrow_angle = DEG2RAD(90.0f);
 	constexpr float arrow_length = 10.0f;
 
-	const Vec3 line{x2 - x1, y2 - y1, 0.0f};
+	const Vec3 line{ x2 - x1, y2 - y1, 0.0f };
 	const float length = line.Length();
 
 	const float fpoint_on_line = arrow_length / (atanf(arrow_angle) * length);
 	const Vec3 point_on_line = Vec3(x2, y2, 0) + (line * fpoint_on_line * -1.0f);
-	const Vec3 normal_vector{-line.y, line.x, 0.0f};
+	const Vec3 normal_vector{ -line.y, line.x, 0.0f };
 	const Vec3 normal = Vec3(arrow_length, arrow_length, 0.0f) / (length * 2);
 
 	const Vec3 rotation = normal * normal_vector;
@@ -73,11 +75,11 @@ void CSpyWarning::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos)
 	const auto cx = static_cast<float>(g_ScreenSize.w / 2);
 	const auto cy = static_cast<float>((g_ScreenSize.h / 2) - 100);
 
-	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, {255, 255, 255, 255});
-	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, {255, 255, 255, 255});
+	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, { 255, 255, 255, 255 });
+	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, { 255, 255, 255, 255 });
 
 	const float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 400.0f, 200.0f, 0.0f, 1.0f), 0.0f, 1.0f);
-	const Color_t heatColor = {255, 0, 0, static_cast<byte>(fMap * 255.0f)};
+	const Color_t heatColor = { 255, 0, 0, static_cast<byte>(fMap * 255.0f) };
 
 	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, heatColor);
 	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, heatColor);
@@ -166,7 +168,7 @@ void CSpyWarning::Run()
 
 			static constexpr int SIZE = 40;
 			g_Draw.Texture(((g_ScreenSize.w / 2) - (SIZE / 2)), (((g_ScreenSize.h / 2) - 100) - (SIZE / 2)), SIZE, SIZE,
-			               Colors::White, 8);
+						   Colors::White, 8);
 
 			for (const auto& spy : m_vecSpies)
 			{
@@ -193,14 +195,14 @@ void CSpyWarning::Run()
 			if (flTimer)
 			{
 				const float flAlpha = Math::RemapValClamped(I::GlobalVars->curtime - flTimer, 0.0f, FL_DURATION,
-				                                            0.5f, 0.0f);
+															0.5f, 0.0f);
 
 				if (flAlpha <= 0.0f)
 				{
 					flTimer = 0.0f;
 				}
 
-				g_Draw.Rect(0, 0, g_ScreenSize.w, g_ScreenSize.h, {255, 0, 0, static_cast<byte>(flAlpha * 255.0f)});
+				g_Draw.Rect(0, 0, g_ScreenSize.w, g_ScreenSize.h, { 255, 0, 0, static_cast<byte>(flAlpha * 255.0f) });
 			}
 		}
 	}

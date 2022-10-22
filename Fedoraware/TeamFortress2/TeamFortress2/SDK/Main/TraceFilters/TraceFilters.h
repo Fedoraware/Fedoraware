@@ -4,15 +4,15 @@
 class CTraceFilterHitscan : public CTraceFilter
 {
 public:
-	virtual bool ShouldHitEntity(void *pEntityHandle, int nContentsMask);
+	virtual bool ShouldHitEntity(void* pEntityHandle, int nContentsMask);
 	virtual ETraceType GetTraceType() const;
-	CBaseEntity *pSkip = nullptr;
+	CBaseEntity* pSkip = nullptr;
 };
 
 class CTraceFilterWorldAndPropsOnly : public CTraceFilter
 {
 public:
-	virtual bool ShouldHitEntity(void *pEntityHandle, int nContentsMask);
+	virtual bool ShouldHitEntity(void* pEntityHandle, int nContentsMask);
 	virtual ETraceType	GetTraceType() const;
-	CBaseEntity *pSkip = nullptr;
+	CBaseEntity* pSkip = nullptr;
 };

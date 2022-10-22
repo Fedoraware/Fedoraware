@@ -1,7 +1,8 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-class CCritHack {
+class CCritHack
+{
 private:
 	bool AreRandomCritsEnabled();
 	bool IsEnabled();

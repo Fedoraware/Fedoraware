@@ -45,7 +45,8 @@ void UnregisterCallback(const char* type, const char* name)
 
 void OnPanic(sol::optional<std::string> errorMsg)
 {
-	if (errorMsg) {
+	if (errorMsg)
+	{
 		const auto& msg = errorMsg.value();
 		I::Cvar->ConsoleColorPrintf({ 235, 59, 90, 255 }, "Panic:\n%s", msg.c_str());
 	}
@@ -76,7 +77,7 @@ void CLuaEngine::Init()
 		vecClass["Dot"] = &Vec3::Dot;
 		vecClass["Cross"] = &Vec3::Cross;
 		vecClass["IsZero"] = &Vec3::IsZero;
-		
+
 		// Vec2
 		auto vec2Class = LuaState.new_usertype<Vec2>("Vec2", sol::constructors<Vec2(), Vec2(float, float)>());
 		vec2Class["x"] = &Vec2::x;
@@ -218,7 +219,8 @@ void CLuaEngine::Init()
 		// Input
 		auto inputTable = LuaState.create_named_table("Input");
 		inputTable["IsDown"] = [](int key) { return (GetAsyncKeyState(key) & 0x8000) != 0; };
-		inputTable["GetMousePos"] = [] {
+		inputTable["GetMousePos"] = []
+		{
 			int x, y;
 			I::VGuiSurface->SurfaceGetCursorPos(x, y);
 			return Vec2(x, y);
@@ -312,26 +314,28 @@ void CLuaEngine::Init()
 
 	/* Register commands */
 	{
-		F::Commands.Register("lua_load", [&](const std::deque<std::string>& args) {
-			if (args.empty())
-			{
-				F::Commands.Error("Usage: lua_load <path>");
-				return;
-			}
+		F::Commands.Register("lua_load", [&](const std::deque<std::string>& args)
+							 {
+								 if (args.empty())
+								 {
+									 F::Commands.Error("Usage: lua_load <path>");
+									 return;
+								 }
 
-			ExecuteFile(args.front());
-		});
+								 ExecuteFile(args.front());
+							 });
 
-		F::Commands.Register("lua_do", [&](const std::deque<std::string>& args) {
-			if (args.empty())
-			{
-				F::Commands.Error("Usage: lua_do <expression>");
-				return;
-			}
+		F::Commands.Register("lua_do", [&](const std::deque<std::string>& args)
+							 {
+								 if (args.empty())
+								 {
+									 F::Commands.Error("Usage: lua_do <expression>");
+									 return;
+								 }
 
-			const std::string expr = boost::algorithm::join(args, " ");
-			ExecuteString(expr);
-		});
+								 const std::string expr = boost::algorithm::join(args, " ");
+								 ExecuteString(expr);
+							 });
 	}
 }
 

@@ -1,30 +1,32 @@
 #pragma once
 #include "../../../SDK/SDK.h"
-struct PlayerData {
-	//Data
+struct PlayerData
+{
+//Data
 	float flJoinTime = 0.f;
-	Vec2 vLastAngle = {0, 0};
+	Vec2 vLastAngle = { 0, 0 };
 	int iPlayerSuspicion = 0;
 	int iNonDormantCleanQueries = 0;
-	std::pair<int, int> pBhop = {0, 0};
-	std::pair<bool, Vec2> pTrustAngles = {false, {0, 0}};
-	std::pair<bool, bool> pDetections = {false, false};	//	high hitchance, high avg score
+	std::pair<int, int> pBhop = { 0, 0 };
+	std::pair<bool, Vec2> pTrustAngles = { false, {0, 0} };
+	std::pair<bool, bool> pDetections = { false, false };	//	high hitchance, high avg score
 
 	//Immediate Data
 	bool bDidDamage = false;
 
 	//Tickbase Manipulation
-	std::pair<int, int> pChoke = {0, 0};
+	std::pair<int, int> pChoke = { 0, 0 };
 
 	//Analytics
-	std::pair<int, float> pDuckInfo = {0, 0};
-	std::pair<int, int> pShots = {0, 0};
+	std::pair<int, float> pDuckInfo = { 0, 0 };
+	std::pair<int, int> pShots = { 0, 0 };
 	float flHitchance = 0.f;
 	float flScorePerSecond = 0.f;
 	int iLastDamageEventTick = 0;	// lets not recalculate hitchance for a player multiple times (explosive dmg, weird shell weapon behaviour)
 };
 
-struct ServerData {
+struct ServerData
+{
 	float flAverageScorePerSecond = 0.f;					//	used to determine if our player is in the top 99% or just average within the server
 	int iMisses = 0;										//	total shots fired
 	int iHits = 0;											//	total shots hit
@@ -38,8 +40,9 @@ struct ServerData {
 constexpr int INT_MAX_SUSPICION = 25;
 constexpr int INT_MAX_BHOP = 5;
 
-class CCheaterDetection {
-	// data
+class CCheaterDetection
+{
+// data
 	int iLastScanTick = 0;
 	float flLastFrameTime = 0.f;
 	float flFirstScanTime = 0.f;

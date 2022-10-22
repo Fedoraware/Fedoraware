@@ -92,13 +92,13 @@ void CCommands::Init()
 				 I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "Value of %s is: %s\n", cvarName.c_str(), foundCVar->GetString());
 			 });
 	Register("f_hash", [](const std::deque<std::string>& args)
-			{
-				std::hash<std::string_view> m_Hash;
-				const char* hashString = args[0].c_str();
-				I::Cvar->ConsolePrintf("%lu\n", m_Hash(hashString));
-				
-				return;
-			});
+			 {
+				 std::hash<std::string_view> m_Hash;
+				 const char* hashString = args[0].c_str();
+				 I::Cvar->ConsolePrintf("%lu\n", m_Hash(hashString));
+
+				 return;
+			 });
 	Register("f_dumpmaterials", [](const std::deque<std::string>& args)
 			 {
 				 for (IMaterial* scanMat : F::DMEChams.v_MatList)

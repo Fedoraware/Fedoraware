@@ -25,174 +25,174 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 {
 	switch (G::CurItemDefIndex)
 	{
-	case Soldier_m_RocketLauncher:
-	case Soldier_m_RocketLauncherR:
-	case Soldier_m_TheBlackBox:
-	case Soldier_m_TheCowMangler5000:
-	case Soldier_m_TheOriginal:
-	case Soldier_m_FestiveRocketLauncher:
-	case Soldier_m_TheBeggarsBazooka:
-	case Soldier_m_SilverBotkillerRocketLauncherMkI:
-	case Soldier_m_GoldBotkillerRocketLauncherMkI:
-	case Soldier_m_RustBotkillerRocketLauncherMkI:
-	case Soldier_m_BloodBotkillerRocketLauncherMkI:
-	case Soldier_m_CarbonadoBotkillerRocketLauncherMkI:
-	case Soldier_m_DiamondBotkillerRocketLauncherMkI:
-	case Soldier_m_SilverBotkillerRocketLauncherMkII:
-	case Soldier_m_GoldBotkillerRocketLauncherMkII:
-	case Soldier_m_FestiveBlackBox:
-	case Soldier_m_TheAirStrike:
-	case Soldier_m_WoodlandWarrior:
-	case Soldier_m_SandCannon:
-	case Soldier_m_AmericanPastoral:
-	case Soldier_m_SmalltownBringdown:
-	case Soldier_m_ShellShocker:
-	case Soldier_m_AquaMarine:
-	case Soldier_m_Autumn:
-	case Soldier_m_BlueMew:
-	case Soldier_m_BrainCandy:
-	case Soldier_m_CoffinNail:
-	case Soldier_m_HighRollers:
-	case Soldier_m_Warhawk:
+		case Soldier_m_RocketLauncher:
+		case Soldier_m_RocketLauncherR:
+		case Soldier_m_TheBlackBox:
+		case Soldier_m_TheCowMangler5000:
+		case Soldier_m_TheOriginal:
+		case Soldier_m_FestiveRocketLauncher:
+		case Soldier_m_TheBeggarsBazooka:
+		case Soldier_m_SilverBotkillerRocketLauncherMkI:
+		case Soldier_m_GoldBotkillerRocketLauncherMkI:
+		case Soldier_m_RustBotkillerRocketLauncherMkI:
+		case Soldier_m_BloodBotkillerRocketLauncherMkI:
+		case Soldier_m_CarbonadoBotkillerRocketLauncherMkI:
+		case Soldier_m_DiamondBotkillerRocketLauncherMkI:
+		case Soldier_m_SilverBotkillerRocketLauncherMkII:
+		case Soldier_m_GoldBotkillerRocketLauncherMkII:
+		case Soldier_m_FestiveBlackBox:
+		case Soldier_m_TheAirStrike:
+		case Soldier_m_WoodlandWarrior:
+		case Soldier_m_SandCannon:
+		case Soldier_m_AmericanPastoral:
+		case Soldier_m_SmalltownBringdown:
+		case Soldier_m_ShellShocker:
+		case Soldier_m_AquaMarine:
+		case Soldier_m_Autumn:
+		case Soldier_m_BlueMew:
+		case Soldier_m_BrainCandy:
+		case Soldier_m_CoffinNail:
+		case Soldier_m_HighRollers:
+		case Soldier_m_Warhawk:
 		{
-			out = {1100.0f, 0.0f};
+			out = { 1100.0f, 0.0f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Soldier_m_TheDirectHit:
+		case Soldier_m_TheDirectHit:
 		{
-			out = {1980.0f, 0.0f};
+			out = { 1980.0f, 0.0f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Soldier_m_TheLibertyLauncher:
+		case Soldier_m_TheLibertyLauncher:
 		{
-			out = {1540.0f, 0.0f};
+			out = { 1540.0f, 0.0f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Demoman_m_GrenadeLauncher:
-	case Demoman_m_GrenadeLauncherR:
-	case Demoman_m_FestiveGrenadeLauncher:
-	case Demoman_m_TheIronBomber:
-	case Demoman_m_Autumn:
-	case Demoman_m_MacabreWeb:
-	case Demoman_m_Rainbow:
-	case Demoman_m_SweetDreams:
-	case Demoman_m_CoffinNail:
-	case Demoman_m_TopShelf:
-	case Demoman_m_Warhawk:
-	case Demoman_m_ButcherBird:
+		case Demoman_m_GrenadeLauncher:
+		case Demoman_m_GrenadeLauncherR:
+		case Demoman_m_FestiveGrenadeLauncher:
+		case Demoman_m_TheIronBomber:
+		case Demoman_m_Autumn:
+		case Demoman_m_MacabreWeb:
+		case Demoman_m_Rainbow:
+		case Demoman_m_SweetDreams:
+		case Demoman_m_CoffinNail:
+		case Demoman_m_TopShelf:
+		case Demoman_m_Warhawk:
+		case Demoman_m_ButcherBird:
 		{
-			out = {1216.f, 0.4f};
+			out = { 1216.f, 0.4f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Soldier_s_TheRighteousBison:
-	case Engi_m_ThePomson6000:
+		case Soldier_s_TheRighteousBison:
+		case Engi_m_ThePomson6000:
 		{
-			out = {1200.0f, 0.0f};
+			out = { 1200.0f, 0.0f };
 			break;
 		}
 
-	case Demoman_m_TheLooseCannon:
+		case Demoman_m_TheLooseCannon:
 		{
-			out = {1453.9f, 0.4f};
+			out = { 1453.9f, 0.4f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Demoman_m_TheLochnLoad:
+		case Demoman_m_TheLochnLoad:
 		{
-			out = {1513.3f, 0.4f};
+			out = { 1513.3f, 0.4f };
 			IsBoosted = true;
 			break;
 		}
 
-	case Engi_m_TheRescueRanger:
-	case Medic_m_FestiveCrusadersCrossbow:
-	case Medic_m_CrusadersCrossbow:
+		case Engi_m_TheRescueRanger:
+		case Medic_m_FestiveCrusadersCrossbow:
+		case Medic_m_CrusadersCrossbow:
 		{
-			out = {2400.0f, 0.2f};
+			out = { 2400.0f, 0.2f };
 			break;
 		}
 
-	case Pyro_m_DragonsFury:
+		case Pyro_m_DragonsFury:
 		{
-			out = {3000.0f, 0.0f, 0.1753f};
+			out = { 3000.0f, 0.0f, 0.1753f };
 			IsFlameThrower = true;
 			break;
 		}
 
-	case Pyro_m_FlameThrower:
-	case Pyro_m_FlameThrowerR:
-	case Pyro_m_TheBackburner:
-	case Pyro_m_TheDegreaser:
-	case Pyro_m_ThePhlogistinator:
-	case Pyro_m_FestiveFlameThrower:
-	case Pyro_m_TheRainblower:
-	case Pyro_m_SilverBotkillerFlameThrowerMkI:
-	case Pyro_m_GoldBotkillerFlameThrowerMkI:
-	case Pyro_m_RustBotkillerFlameThrowerMkI:
-	case Pyro_m_BloodBotkillerFlameThrowerMkI:
-	case Pyro_m_CarbonadoBotkillerFlameThrowerMkI:
-	case Pyro_m_DiamondBotkillerFlameThrowerMkI:
-	case Pyro_m_SilverBotkillerFlameThrowerMkII:
-	case Pyro_m_GoldBotkillerFlameThrowerMkII:
-	case Pyro_m_FestiveBackburner:
-	case Pyro_m_ForestFire:
-	case Pyro_m_BarnBurner:
-	case Pyro_m_BovineBlazemaker:
-	case Pyro_m_EarthSkyandFire:
-	case Pyro_m_FlashFryer:
-	case Pyro_m_TurbineTorcher:
-	case Pyro_m_Autumn:
-	case Pyro_m_PumpkinPatch:
-	case Pyro_m_Nutcracker:
-	case Pyro_m_Balloonicorn:
-	case Pyro_m_Rainbow:
-	case Pyro_m_CoffinNail:
-	case Pyro_m_Warhawk:
-	case Pyro_m_NostromoNapalmer:
+		case Pyro_m_FlameThrower:
+		case Pyro_m_FlameThrowerR:
+		case Pyro_m_TheBackburner:
+		case Pyro_m_TheDegreaser:
+		case Pyro_m_ThePhlogistinator:
+		case Pyro_m_FestiveFlameThrower:
+		case Pyro_m_TheRainblower:
+		case Pyro_m_SilverBotkillerFlameThrowerMkI:
+		case Pyro_m_GoldBotkillerFlameThrowerMkI:
+		case Pyro_m_RustBotkillerFlameThrowerMkI:
+		case Pyro_m_BloodBotkillerFlameThrowerMkI:
+		case Pyro_m_CarbonadoBotkillerFlameThrowerMkI:
+		case Pyro_m_DiamondBotkillerFlameThrowerMkI:
+		case Pyro_m_SilverBotkillerFlameThrowerMkII:
+		case Pyro_m_GoldBotkillerFlameThrowerMkII:
+		case Pyro_m_FestiveBackburner:
+		case Pyro_m_ForestFire:
+		case Pyro_m_BarnBurner:
+		case Pyro_m_BovineBlazemaker:
+		case Pyro_m_EarthSkyandFire:
+		case Pyro_m_FlashFryer:
+		case Pyro_m_TurbineTorcher:
+		case Pyro_m_Autumn:
+		case Pyro_m_PumpkinPatch:
+		case Pyro_m_Nutcracker:
+		case Pyro_m_Balloonicorn:
+		case Pyro_m_Rainbow:
+		case Pyro_m_CoffinNail:
+		case Pyro_m_Warhawk:
+		case Pyro_m_NostromoNapalmer:
 		{
-			out = {1000.0f, 0.0f, 0.33f};
+			out = { 1000.0f, 0.0f, 0.33f };
 			IsFlameThrower = true;
 			break;
 		}
 
-	case Pyro_s_TheDetonator:
-	case Pyro_s_TheFlareGun:
-	case Pyro_s_FestiveFlareGun:
-	case Pyro_s_TheScorchShot:
+		case Pyro_s_TheDetonator:
+		case Pyro_s_TheFlareGun:
+		case Pyro_s_FestiveFlareGun:
+		case Pyro_s_TheScorchShot:
 		{
-			out = {2000.0f, 0.3f};
+			out = { 2000.0f, 0.3f };
 			break;
 		}
 
-	case Pyro_s_TheManmelter:
-	case Scout_s_TheFlyingGuillotine:
-	case Scout_s_TheFlyingGuillotineG:
+		case Pyro_s_TheManmelter:
+		case Scout_s_TheFlyingGuillotine:
+		case Scout_s_TheFlyingGuillotineG:
 		{
-			out = {3000.0f, 0.2f};
+			out = { 3000.0f, 0.2f };
 			break;
 		}
 
-	case Medic_m_SyringeGun:
-	case Medic_m_SyringeGunR:
-	case Medic_m_TheBlutsauger:
-	case Medic_m_TheOverdose:
+		case Medic_m_SyringeGun:
+		case Medic_m_SyringeGunR:
+		case Medic_m_TheBlutsauger:
+		case Medic_m_TheOverdose:
 		{
-			out = {1000.0f, 0.2f};
+			out = { 1000.0f, 0.2f };
 			break;
 		}
 
-	case Sniper_m_TheHuntsman:
-	case Sniper_m_FestiveHuntsman:
-	case Sniper_m_TheFortifiedCompound:
+		case Sniper_m_TheHuntsman:
+		case Sniper_m_FestiveHuntsman:
+		case Sniper_m_TheFortifiedCompound:
 		{
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
@@ -201,10 +201,10 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			};
 			break;
 		}
-	case Demoman_s_StickybombLauncher:
-	case Demoman_s_StickybombLauncherR:
-	case Demoman_s_FestiveStickybombLauncher:
-	case Demoman_s_TheScottishResistance:
+		case Demoman_s_StickybombLauncher:
+		case Demoman_s_StickybombLauncherR:
+		case Demoman_s_FestiveStickybombLauncher:
+		case Demoman_s_TheScottishResistance:
 		{
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
@@ -214,7 +214,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			};
 			break;
 		}
-	case Demoman_s_TheQuickiebombLauncher:
+		case Demoman_s_TheQuickiebombLauncher:
 		{
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
@@ -237,15 +237,18 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 	const float fHyp = sqrt(vDelta.x * vDelta.x + vDelta.y * vDelta.y);
 	const float fDist = vDelta.z;
 	const float fVel = projInfo.m_flVelocity;
-	
-	if (!fGravity){
+
+	if (!fGravity)
+	{
 		const Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vTargetPos);
 		out.m_flPitch = -DEG2RAD(vAngleTo.x);
 		out.m_flYaw = DEG2RAD(vAngleTo.y);
 	}
-	else{	//	arch
+	else
+	{	//	arch
 		const float fRoot = pow(fVel, 4) - fGravity * (fGravity * pow(fHyp, 2) + 2.f * fDist * pow(fVel, 2));
-		if (fRoot < 0.f){
+		if (fRoot < 0.f)
+		{
 			return false;
 		}
 		out.m_flPitch = atan((pow(fVel, 2) - sqrt(fRoot)) / (fGravity * fHyp));
@@ -286,8 +289,8 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 	const float maxTime = predictor.m_pEntity->IsPlayer()
-		                      ? (projInfo.m_flMaxTime == 0.f ? Vars::Aimbot::Projectile::PredictionTime.Value : projInfo.m_flMaxTime)
-		                      : (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
+		? (projInfo.m_flMaxTime == 0.f ? Vars::Aimbot::Projectile::PredictionTime.Value : projInfo.m_flMaxTime)
+		: (projInfo.m_flMaxTime == 0.f ? 1024.f : projInfo.m_flMaxTime);
 	const float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
 	/*
@@ -307,10 +310,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		// get angle offsets for demoman weapons?weew
 		switch (pWeapon->GetWeaponID())
 		{
-		case TF_WEAPON_GRENADELAUNCHER:
-		case TF_WEAPON_PIPEBOMBLAUNCHER:
-		case TF_WEAPON_STICKBOMB:
-		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			case TF_WEAPON_GRENADELAUNCHER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
 				Vec3 vDelta = (staticPos - vLocalPos);
 				const float fRange = Math::VectorNormalize(vDelta);
@@ -325,7 +328,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				break;
 			}
 
-		default: break;
+			default: break;
 		}
 
 		// trace hull of projectile
@@ -337,17 +340,17 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 		switch (pWeapon->GetWeaponID())
 		{
-		case TF_WEAPON_GRENADELAUNCHER:
-		case TF_WEAPON_PIPEBOMBLAUNCHER:
-		case TF_WEAPON_STICKBOMB:
-		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			case TF_WEAPON_GRENADELAUNCHER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
 				Vec3 vecOffset(16.0f, 8.0f, -6.0f);
 				Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
 				break;
 			}
 
-		default: break;
+			default: break;
 		}
 
 		if (!CalcProjAngle(vLocalPos, staticPos, projInfo, out))
@@ -393,8 +396,9 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				} // don't remove.
 
 				// we have found a point.
-				if (bNeedsTimeCheck){
-					if (TICKS_TO_TIME(n - 1) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos)/projInfo.m_flVelocity)) { break; }	//	lol
+				if (bNeedsTimeCheck)
+				{
+					if (TICKS_TO_TIME(n - 1) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos) / projInfo.m_flVelocity)) { break; }	//	lol
 				}
 
 				//const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
@@ -407,10 +411,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				// get angle offsets for demoman weapons?
 				switch (pWeapon->GetWeaponID())
 				{
-				case TF_WEAPON_GRENADELAUNCHER:
-				case TF_WEAPON_PIPEBOMBLAUNCHER:
-				case TF_WEAPON_STICKBOMB:
-				case TF_WEAPON_STICKY_BALL_LAUNCHER:
+					case TF_WEAPON_GRENADELAUNCHER:
+					case TF_WEAPON_PIPEBOMBLAUNCHER:
+					case TF_WEAPON_STICKBOMB:
+					case TF_WEAPON_STICKY_BALL_LAUNCHER:
 					{
 						Vec3 vDelta = (vPredictedPos - vLocalPos);
 						const float fRange = Math::VectorNormalize(vDelta);
@@ -424,7 +428,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 						vPredictedPos.z += (c > 0.0f ? fElevation : 0.0f);
 						break;
 					}
-				default: break;
+					default: break;
 				}
 
 				//Utils::TraceHull(predictor.m_vPosition, vPredictedPos, Vec3(-3.8f, -3.8f, -3.8f), Vec3(3.8f, 3.8f, 3.8f),
@@ -438,17 +442,17 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				switch (pWeapon->GetWeaponID())
 				{
-				case TF_WEAPON_GRENADELAUNCHER:
-				case TF_WEAPON_PIPEBOMBLAUNCHER:
-				case TF_WEAPON_STICKBOMB:
-				case TF_WEAPON_STICKY_BALL_LAUNCHER:
+					case TF_WEAPON_GRENADELAUNCHER:
+					case TF_WEAPON_PIPEBOMBLAUNCHER:
+					case TF_WEAPON_STICKBOMB:
+					case TF_WEAPON_STICKY_BALL_LAUNCHER:
 					{
 						Vec3 vecOffset(16.0f, 8.0f, -6.0f);
 						Utils::GetProjectileFireSetup(pLocal, pCmd->viewangles, vecOffset, &vLocalPos);
 						break;
 					}
 
-				default: break;
+					default: break;
 				}
 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, projInfo, out))
@@ -479,21 +483,21 @@ bool IsPointAllowed(int nHitbox)
 {
 	switch (nHitbox)
 	{
-	case 0: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
-	case 1: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
-	case 2: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
-	case 3:
-	case 4:
-	case 5:
-	case 6: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
-	case 7:
-	case 8:
-	case 9:
-	case 10: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
-	case 11:
-	case 12:
-	case 13:
-	case 14: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
+		case 0: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
+		case 1: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
+		case 2: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
+		case 3:
+		case 4:
+		case 5:
+		case 6: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 0);
+		case 7:
+		case 8:
+		case 9:
+		case 10: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 1);
+		case 11:
+		case 12:
+		case 13:
+		case 14: return Vars::Aimbot::Projectile::AllowedHitboxes.Value & (1 << 2);
 	}
 	return true; // never
 }
@@ -567,7 +571,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	}
 	if (visiblePoints.empty())
 	{
-		return {0, 0, 0};
+		return { 0, 0, 0 };
 	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
@@ -576,14 +580,16 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (classNum)
 	{
-	case CLASS_SOLDIER: {
+		case CLASS_SOLDIER:
+		{
 			if (pLocal->GetActiveWeapon()->GetSlot() != SLOT_PRIMARY)
 			{
 				break;
 			}
 			[[fallthrough]];
 		}
-	case CLASS_DEMOMAN: {
+		case CLASS_DEMOMAN:
+		{
 			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->OnSolid())
 			{
 				aimMethod = 2;
@@ -597,18 +603,18 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		// auto
 		switch (classNum)
 		{
-		case CLASS_SOLDIER:
-		case CLASS_DEMOMAN:
+			case CLASS_SOLDIER:
+			case CLASS_DEMOMAN:
 			{
 				aimMethod = 1;
 				break;
 			}
-		case CLASS_SNIPER:
+			case CLASS_SNIPER:
 			{
 				aimMethod = 0;
 				break;
 			}
-		default:
+			default:
 			{
 				aimMethod = 1;
 				break;
@@ -618,7 +624,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	switch (aimMethod)
 	{
-	case 0:
+		case 0:
 		{
 			//head
 			Math::VectorTransform(vecPoints.at(0), transform, HeadPoint); //	get transformed location of our "best point" for our selected prio hitbox
@@ -633,7 +639,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 			}
 			break;
 		}
-	case 1:
+		case 1:
 		{
 			//torso
 			Math::VectorTransform(vecPoints.at(1), transform, TorsoPoint);
@@ -646,7 +652,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 			}
 			break;
 		}
-	case 2:
+		case 2:
 		{
 			//feet
 			Math::VectorTransform(vecPoints.at(2), transform, FeetPoint);
@@ -697,15 +703,15 @@ Vec3 CAimbotProjectile::GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEnt
 		}
 	}
 
-	return {0, 0, 0};
+	return { 0, 0, 0 };
 }
 
 bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Vec3& vPredictedPos, Solution_t& out, const ProjectileInfo_t& projInfo,
-                                          const Predictor_t& predictor)
+										  const Predictor_t& predictor)
 {
-	Vec3 hullSize = {3.8f, 3.8f, 3.8f};
+	Vec3 hullSize = { 3.8f, 3.8f, 3.8f };
 	Vec3 vVisCheck = pLocal->GetEyePosition();
-	const Vec3 predictedViewAngles = {-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f};
+	const Vec3 predictedViewAngles = { -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f };
 	CGameTrace trace = {};
 	static CTraceFilterWorldAndPropsOnly traceFilter = {};
 	traceFilter.pSkip = predictor.m_pEntity;
@@ -714,9 +720,9 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	{
 		switch (pWeapon->GetWeaponID())
 		{
-		case TF_WEAPON_PARTICLE_CANNON:
+			case TF_WEAPON_PARTICLE_CANNON:
 			{
-				hullSize = {1.f, 1.f, 1.f};
+				hullSize = { 1.f, 1.f, 1.f };
 				Vec3 vecOffset(23.5f, 8.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
 				if (pLocal->IsDucking())
 				{
@@ -725,22 +731,23 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_CROSSBOW:
+			case TF_WEAPON_CROSSBOW:
 			{
-				hullSize = {3.f, 3.f, 3.f};
+				hullSize = { 3.f, 3.f, 3.f };
 				const Vec3 vecOffset(23.5f, -8.0f, -3.0f);
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_RAYGUN_REVENGE:
-		case TF_WEAPON_ROCKETLAUNCHER:
-		case TF_WEAPON_DIRECTHIT:
-		case TF_WEAPON_FLAREGUN:
+			case TF_WEAPON_RAYGUN_REVENGE:
+			case TF_WEAPON_ROCKETLAUNCHER:
+			case TF_WEAPON_DIRECTHIT:
+			case TF_WEAPON_FLAREGUN:
 			{
-				hullSize = {0.f, 3.7f, 3.7f};
+				hullSize = { 0.f, 3.7f, 3.7f };
 
 				Vec3 vecOffset = Vec3(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
-				if (G::CurItemDefIndex == Soldier_m_TheOriginal){
+				if (G::CurItemDefIndex == Soldier_m_TheOriginal)
+				{
 					vecOffset.y = 0.f;
 				}
 				if (pLocal->IsDucking())
@@ -750,26 +757,26 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_SYRINGEGUN_MEDIC:
+			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			{
-				hullSize = {0.f, 1.f, 1.f};
+				hullSize = { 0.f, 1.f, 1.f };
 
 				const Vec3 vecOffset(16.f, 6.f, -8.f); //tf_weaponbase_gun.cpp @L628
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_COMPOUND_BOW:
+			case TF_WEAPON_COMPOUND_BOW:
 			{
-				hullSize = {1.f, 1.f, 1.f};	//	tf_projectile_arrow.cpp @L271
+				hullSize = { 1.f, 1.f, 1.f };	//	tf_projectile_arrow.cpp @L271
 
 				const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_RAYGUN:
-		case TF_WEAPON_DRG_POMSON:
+			case TF_WEAPON_RAYGUN:
+			case TF_WEAPON_DRG_POMSON:
 			{
-				hullSize = {0.1f, 0.1f, 0.1f};
+				hullSize = { 0.1f, 0.1f, 0.1f };
 				Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L568
 				if (pLocal->IsDucking())
 				{
@@ -778,15 +785,15 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
 				break;
 			}
-		case TF_WEAPON_GRENADELAUNCHER:
-		case TF_WEAPON_PIPEBOMBLAUNCHER:
-		case TF_WEAPON_STICKBOMB:
-		case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			case TF_WEAPON_GRENADELAUNCHER:
+			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_STICKBOMB:
+			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
-				hullSize = {2.f, 2.f, 2.f};
+				hullSize = { 2.f, 2.f, 2.f };
 
 				auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
-				Math::AngleVectors({-RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f}, &vecForward, &vecRight, &vecUp);
+				Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);
 				const Vec3 vecVelocity = ((vecForward * projInfo.m_flVelocity) - (vecUp * 200.0f));
 				Math::VectorAngles(vecVelocity, vecAngle);
 				out.m_flPitch = -DEG2RAD(vecAngle.x);
@@ -797,7 +804,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 
 				break;
 			}
-		default: break;
+			default: break;
 		}
 	}
 
@@ -857,7 +864,7 @@ std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCo
 
 			const float flDistTo = (sortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
 			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
-			validTargets.push_back({pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority});
+			validTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, -1, false, priority });
 		}
 	}
 
@@ -887,7 +894,7 @@ std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCo
 				continue;
 			}
 			const float flDistTo = sortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
-			validTargets.push_back({pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ pBuilding, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -907,7 +914,7 @@ std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCo
 				continue;
 			}
 
-			validTargets.push_back({NPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ NPC, ETargetType::NPC, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -928,7 +935,7 @@ std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCo
 				continue;
 			}
 
-			validTargets.push_back({Bombs, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo});
+			validTargets.push_back({ Bombs, ETargetType::BOMBS, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
@@ -953,14 +960,14 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 
 	switch (target.m_TargetType)
 	{
-	case ETargetType::PLAYER:
+		case ETargetType::PLAYER:
 		{
 			vVelocity = target.m_pEntity->GetVelocity();
 			vAcceleration = Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat() * ((target.m_pEntity->GetCondEx2() & TFCondEx2_Parachute) ? 0.224f : 1.0f));
 			break;
 		}
 
-	default: break;
+		default: break;
 	}
 
 	Predictor_t predictor = {
@@ -977,7 +984,7 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 		return false;
 	}
 
-	target.m_vAngleTo = {-RAD2DEG(solution.m_flPitch), RAD2DEG(solution.m_flYaw), 0.0f};
+	target.m_vAngleTo = { -RAD2DEG(solution.m_flPitch), RAD2DEG(solution.m_flYaw), 0.0f };
 
 	return true;
 }
@@ -1014,7 +1021,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 	switch (Vars::Aimbot::Projectile::AimMethod.Value)
 	{
-	case 0:
+		case 0:
 		{
 			// Plain
 			pCmd->viewangles = vAngle;
@@ -1022,7 +1029,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 			break;
 		}
 
-	case 1:
+		case 1:
 		{
 			// Silent
 			Utils::FixMovement(pCmd, vAngle);
@@ -1030,7 +1037,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 			break;
 		}
 
-	default: break;
+		default: break;
 	}
 }
 
@@ -1116,9 +1123,9 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	std::optional<float> splashRadius;
 	switch (pWeapon->GetClassID())
 	{
-	case ETFClassID::CTFRocketLauncher:
-	case ETFClassID::CTFRocketLauncher_AirStrike:
-	case ETFClassID::CTFRocketLauncher_Mortar:
+		case ETFClassID::CTFRocketLauncher:
+		case ETFClassID::CTFRocketLauncher_AirStrike:
+		case ETFClassID::CTFRocketLauncher_Mortar:
 		{
 			//I haven't tested if this is unaccurate in actual gameplay but it still hits
 			splashRadius = 160.f;
@@ -1197,7 +1204,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			}
 
 			const Vec3 vAngleToSplash = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-			outTarget = {pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash};
+			outTarget = { pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash };
 			return true;
 		}
 	}
@@ -1238,7 +1245,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 	ConVar* flippy = I::Cvar->FindVar("cl_flipviewmodels");
 	Flippy = flippy->GetBool();
 
-	Target_t target {};
+	Target_t target{};
 	if (GetTarget(pLocal, pWeapon, pCmd, target) || GetSplashTarget(pLocal, pWeapon, pCmd, target))
 	{
 		// Aim at the current target or splashtarget

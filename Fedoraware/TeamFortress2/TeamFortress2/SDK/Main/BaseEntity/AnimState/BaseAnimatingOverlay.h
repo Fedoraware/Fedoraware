@@ -20,11 +20,11 @@ public:
 	float	m_flCycle;
 	float	m_flPrevCycle;
 	float	m_flWeight;
-	float	m_flPlaybackRate;		  
+	float	m_flPlaybackRate;
 	float	m_flBlendIn;
-	float	m_flBlendOut;		  
+	float	m_flBlendOut;
 	float	m_flKillRate;
-	float	m_flKillDelay;		  
+	float	m_flKillDelay;
 	float	m_flLayerAnimtime;
 	float	m_flLayerFadeOuttime;
 
@@ -46,5 +46,5 @@ public:
 	float m_flLastAccess;
 
 	// Network state changes get forwarded here.
-	C_BaseAnimatingOverlay *m_pOwnerEntity;
+	C_BaseAnimatingOverlay* m_pOwnerEntity;
 };

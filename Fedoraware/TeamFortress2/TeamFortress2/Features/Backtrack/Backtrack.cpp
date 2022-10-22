@@ -92,7 +92,7 @@ void CBacktrack::MakeRecords()
 				*reinterpret_cast<BoneMatrixes*>(&bones),
 				vOrigin,
 				pEntity->GetAbsAngles(),
-			});
+										 });
 		}
 
 		//cleanup
@@ -240,7 +240,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
 	switch (iMode)
 	{
-	case BacktrackMode::ALL:
+		case BacktrackMode::ALL:
 		{
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
@@ -251,7 +251,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			return std::nullopt;
 		}
 
-	case BacktrackMode::FIRST:
+		case BacktrackMode::FIRST:
 		{
 			if (std::optional<TickRecord> FirstRecord = GetFirstRecord(pEntity))
 			{
@@ -261,7 +261,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			return std::nullopt;
 		}
 
-	case BacktrackMode::LAST:
+		case BacktrackMode::LAST:
 		{
 			if (std::optional<TickRecord> LastRecord = GetLastRecord(pEntity))
 			{
@@ -271,7 +271,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			return std::nullopt;
 		}
 
-	case BacktrackMode::ADAPTIVE:
+		case BacktrackMode::ADAPTIVE:
 		{
 			std::optional<TickRecord> ReturnTick{};
 			for (const auto& rCurQuery : mRecords[pEntity])
@@ -287,7 +287,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			return ReturnTick;
 		}
 
-	case BacktrackMode::ONSHOT:
+		case BacktrackMode::ONSHOT:
 		{
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{

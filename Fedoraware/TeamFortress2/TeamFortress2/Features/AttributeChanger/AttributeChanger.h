@@ -5,7 +5,8 @@
 #include <fstream>
 #include <filesystem>
 
-enum AttributeID {
+enum AttributeID
+{
 	IsAustraliumItem = 2027,
 	LootRarity = 2022,
 	ItemStyleOverride = 542,
@@ -16,7 +17,8 @@ enum AttributeID {
 	ParticleEffect = 370
 };
 
-struct AttributeInfo_t {
+struct AttributeInfo_t
+{
 	int ItemDefIndex;
 	int Effect;
 	int Particle;
@@ -25,13 +27,14 @@ struct AttributeInfo_t {
 	bool StyleOverride;
 };
 
-class CAttributeChanger {
+class CAttributeChanger
+{
 	std::unordered_map<int, AttributeInfo_t> AttributeMap;
 
 	std::ifstream ReadStream;
 	std::ofstream WriteStream;
 	std::string AttributePath;
-	
+
 	__inline void SaveInt(const char* szSection, const char* szItem, int value)
 	{
 		const std::string szToSave = std::to_string(value);

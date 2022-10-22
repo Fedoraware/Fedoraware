@@ -79,7 +79,7 @@ bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 
 bool CCritHack::ShouldCrit()
 {
-	static KeyHelper critKey{&Vars::CritHack::CritKey.Value};
+	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
 	if (critKey.Down()) { return true; }
 	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.Value) { return true; }
 
@@ -220,21 +220,21 @@ void CCritHack::Draw()
 
 	if (Vars::Debug::DebugInfo.Value)
 	{
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {255, 255, 255, 255,}, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255, 255, 255, 255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
 	}
 	// Are we currently forcing crits?
 	if (ShouldCrit())
 	{
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {70, 190, 50, 255}, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}
 	if (CritTicks.size() == 0)
 	{
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {255,0,0,255}, ALIGN_CENTERHORIZONTAL, L"Crit Banned");
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255,0,0,255 }, ALIGN_CENTERHORIZONTAL, L"Crit Banned");
 	}
 	static auto tf_weapon_criticals_bucket_cap = g_ConVars.FindVar("tf_weapon_criticals_bucket_cap");
 	const float bucketCap = tf_weapon_criticals_bucket_cap->GetFloat();
 	const std::wstring bucketstr = L"Bucket: " + std::to_wstring(static_cast<int>(bucket)) + L"/" + std::to_wstring(static_cast<int>(bucketCap));
-	g_Draw.String(FONT_INDICATORS, x, currentY += 15, {181, 181, 181, 255}, ALIGN_CENTERHORIZONTAL, bucketstr.c_str());
+	g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketstr.c_str());
 	int w, h;
 	I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_INDICATORS).dwFont, bucketstr.c_str(), w, h);
 	if (w > longestW)
@@ -246,19 +246,19 @@ void CCritHack::Draw()
 		const std::wstring seedText = L"m_nCritSeedRequests: " + std::to_wstring(seedRequests);
 		const std::wstring FoundCrits = L"Found Crit Ticks: " + std::to_wstring(CritTicks.size());
 		const std::wstring commandNumber = L"cmdNumber: " + std::to_wstring(G::CurrentUserCmd->command_number);
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {181, 181, 181, 255}, ALIGN_CENTERHORIZONTAL, seedText.c_str());
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
 		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_INDICATORS).dwFont, seedText.c_str(), w, h);
 		if (w > longestW)
 		{
 			longestW = w;
 		}
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {181, 181, 181, 255}, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
 		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_INDICATORS).dwFont, FoundCrits.c_str(), w, h);
 		if (w > longestW)
 		{
 			longestW = w;
 		}
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, {181, 181, 181, 255}, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
 		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_INDICATORS).dwFont, commandNumber.c_str(), w, h);
 		if (w > longestW)
 		{

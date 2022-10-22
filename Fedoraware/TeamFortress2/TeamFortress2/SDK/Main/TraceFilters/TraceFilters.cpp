@@ -1,45 +1,53 @@
 #include "TraceFilters.h"
 
-bool CTraceFilterHitscan::ShouldHitEntity( void* pEntityHandle, int nContentsMask ) {
-	CBaseEntity* pEntity = reinterpret_cast< CBaseEntity* >( pEntityHandle );
-	CBaseEntity* pLocal = reinterpret_cast< CBaseEntity* >( this->pSkip );
+bool CTraceFilterHitscan::ShouldHitEntity(void* pEntityHandle, int nContentsMask)
+{
+	CBaseEntity* pEntity = reinterpret_cast<CBaseEntity*>(pEntityHandle);
+	CBaseEntity* pLocal = reinterpret_cast<CBaseEntity*>(this->pSkip);
 
-	switch ( pEntity->GetClassID( ) ) {
+	switch (pEntity->GetClassID())
+	{
 		case ETFClassID::CFuncAreaPortalWindow:
 		case ETFClassID::CFuncRespawnRoomVisualizer:
 		case ETFClassID::CSniperDot:
 		case ETFClassID::CTFMedigunShield:
-		case ETFClassID::CTFReviveMarker: {
+		case ETFClassID::CTFReviveMarker:
+		{
 			return false;
 		}
 	}
 
-	if ( pLocal && pLocal->GetClassNum( ) == CLASS_SNIPER ) {
-		switch ( pEntity->GetClassID( ) ) {
+	if (pLocal && pLocal->GetClassNum() == CLASS_SNIPER)
+	{
+		switch (pEntity->GetClassID())
+		{
 			case ETFClassID::CTFPlayer:
 			case ETFClassID::CObjectSentrygun:
 			case ETFClassID::CObjectDispenser:
 			case ETFClassID::CObjectTeleporter:
 			{
-				if ( pLocal->GetTeamNum( ) == pEntity->GetTeamNum( ) )
+				if (pLocal->GetTeamNum() == pEntity->GetTeamNum())
 					return false;
 			} break;
 			default:
-			break;
+				break;
 		}
 	}
 
-	return ( pEntityHandle != pSkip );
+	return (pEntityHandle != pSkip);
 }
 
-ETraceType CTraceFilterHitscan::GetTraceType( ) const {
+ETraceType CTraceFilterHitscan::GetTraceType() const
+{
 	return TRACE_EVERYTHING;
 }
 
-bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity( void* pEntityHandle, int nContentsMask ) {
-	CBaseEntity* pEntity = reinterpret_cast< CBaseEntity* >( pEntityHandle );
+bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity(void* pEntityHandle, int nContentsMask)
+{
+	CBaseEntity* pEntity = reinterpret_cast<CBaseEntity*>(pEntityHandle);
 
-	switch ( pEntity->GetClassID( ) ) {
+	switch (pEntity->GetClassID())
+	{
 		case ETFClassID::CFuncAreaPortalWindow:
 		case ETFClassID::CFuncRespawnRoomVisualizer:
 		case ETFClassID::CSniperDot:
@@ -69,12 +77,13 @@ bool CTraceFilterWorldAndPropsOnly::ShouldHitEntity( void* pEntityHandle, int nC
 			return false;
 		} break;
 		default:
-		break;
+			break;
 	}
 
-	return !( pEntityHandle == pSkip );
+	return !(pEntityHandle == pSkip);
 }
 
-ETraceType CTraceFilterWorldAndPropsOnly::GetTraceType( ) const {
+ETraceType CTraceFilterWorldAndPropsOnly::GetTraceType() const
+{
 	return TRACE_EVERYTHING;
 }

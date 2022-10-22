@@ -1,7 +1,8 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-class CAutoQueue {
+class CAutoQueue
+{
 public:
 	void Run();
 };

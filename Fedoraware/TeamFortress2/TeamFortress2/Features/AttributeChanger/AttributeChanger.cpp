@@ -47,42 +47,42 @@ void CAttributeChanger::Run()
 				{
 					switch (nIndex)
 					{
-					case 264:
-						pWeapon->SetItemDefIndex(1071);
-						break;
-					case 18:
-						pWeapon->SetItemDefIndex(205);
-						break;
-					case 13:
-						pWeapon->SetItemDefIndex(200);
-						break;
-					case 21:
-						pWeapon->SetItemDefIndex(208);
-						break;
-					case 19:
-						pWeapon->SetItemDefIndex(206);
-						break;
-					case 20:
-						pWeapon->SetItemDefIndex(207);
-						break;
-					case 15:
-						pWeapon->SetItemDefIndex(202);
-						break;
-					case 7:
-						pWeapon->SetItemDefIndex(197);
-						break;
-					case 29:
-						pWeapon->SetItemDefIndex(211);
-						break;
-					case 14:
-						pWeapon->SetItemDefIndex(201);
-						break;
-					case 16:
-						pWeapon->SetItemDefIndex(203);
-						break;
-					case 4:
-						pWeapon->SetItemDefIndex(194);
-						break;
+						case 264:
+							pWeapon->SetItemDefIndex(1071);
+							break;
+						case 18:
+							pWeapon->SetItemDefIndex(205);
+							break;
+						case 13:
+							pWeapon->SetItemDefIndex(200);
+							break;
+						case 21:
+							pWeapon->SetItemDefIndex(208);
+							break;
+						case 19:
+							pWeapon->SetItemDefIndex(206);
+							break;
+						case 20:
+							pWeapon->SetItemDefIndex(207);
+							break;
+						case 15:
+							pWeapon->SetItemDefIndex(202);
+							break;
+						case 7:
+							pWeapon->SetItemDefIndex(197);
+							break;
+						case 29:
+							pWeapon->SetItemDefIndex(211);
+							break;
+						case 14:
+							pWeapon->SetItemDefIndex(201);
+							break;
+						case 16:
+							pWeapon->SetItemDefIndex(203);
+							break;
+						case 4:
+							pWeapon->SetItemDefIndex(194);
+							break;
 					}
 
 					const auto& attrInfo = AttributeMap[nIndex];

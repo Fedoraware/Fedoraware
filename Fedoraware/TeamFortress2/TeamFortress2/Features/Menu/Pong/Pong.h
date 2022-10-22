@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class CPong {
+class CPong
+{
 	void Init();
 	void Reset();
 	void DrawMenu();

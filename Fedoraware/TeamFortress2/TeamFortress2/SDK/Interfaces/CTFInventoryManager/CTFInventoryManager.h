@@ -1,7 +1,8 @@
 #pragma once
 #include "../../Includes/Includes.h"
 
-class CTFInventoryManager {
+class CTFInventoryManager
+{
 public:
 	void* GetItemByBackpackPosition(int iBackpackPosition)
 	{

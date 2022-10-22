@@ -136,8 +136,6 @@ class CRunescapeChat
 public:
 	void Draw();
 	void PushChat(CBaseEntity* pEntity, std::wstring szChatText);
-
-	
 };
 
 ADD_FEATURE(CVisuals, Visuals)

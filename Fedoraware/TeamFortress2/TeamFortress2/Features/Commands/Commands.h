@@ -5,7 +5,8 @@
 
 using CommandCallback = std::function<void(std::deque<std::string>)>;
 
-class CCommands {
+class CCommands
+{
 	std::unordered_map<std::string, CommandCallback> CommandMap;
 
 public:

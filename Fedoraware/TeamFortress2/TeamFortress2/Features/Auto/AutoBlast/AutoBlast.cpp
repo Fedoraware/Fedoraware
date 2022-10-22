@@ -41,8 +41,8 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 			switch (pProjectile->GetClassID())
 			{
-			case ETFClassID::CTFGrenadePipebombProjectile:
-			case ETFClassID::CTFStunBall:
+				case ETFClassID::CTFGrenadePipebombProjectile:
+				case ETFClassID::CTFStunBall:
 				{
 					if (pProjectile->GetTouched())
 					{
@@ -52,7 +52,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 					break;
 				}
 
-			case ETFClassID::CTFProjectile_Arrow:
+				case ETFClassID::CTFProjectile_Arrow:
 				{
 					if (pProjectile->GetVelocity().IsZero())
 					{
@@ -62,7 +62,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 					break;
 				}
 
-			default: break;
+				default: break;
 			}
 
 			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(flLatency / 1000.f));
@@ -79,7 +79,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				CGameTrace trace = {};
 				static CTraceFilterWorldAndPropsOnly traceFilter = {};
 				Utils::TraceHull(pProjectile->GetAbsOrigin(), vPredicted, pProjectile->GetCollideableMaxs(), pProjectile->GetCollideableMaxs() * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
-				if (trace.flFraction < 0.98f && !trace.entity){ continue; }
+				if (trace.flFraction < 0.98f && !trace.entity) { continue; }
 				if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0)
 				{
 					pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);

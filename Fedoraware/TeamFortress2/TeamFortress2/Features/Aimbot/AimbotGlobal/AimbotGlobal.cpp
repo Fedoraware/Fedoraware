@@ -9,18 +9,18 @@ namespace SandvichAimbot
 	bool IsSandvich()
 	{
 		return (G::CurItemDefIndex == Heavy_s_RoboSandvich ||
-			G::CurItemDefIndex == Heavy_s_Sandvich ||
-			G::CurItemDefIndex == Heavy_s_FestiveSandvich ||
-			G::CurItemDefIndex == Heavy_s_Fishcake ||
-			G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
-			G::CurItemDefIndex == Heavy_s_SecondBanana);
+				G::CurItemDefIndex == Heavy_s_Sandvich ||
+				G::CurItemDefIndex == Heavy_s_FestiveSandvich ||
+				G::CurItemDefIndex == Heavy_s_Fishcake ||
+				G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
+				G::CurItemDefIndex == Heavy_s_SecondBanana);
 	}
 
 	void RunSandvichAimbot(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, CBaseEntity* pTarget)
 	{
 		const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
-			                         ? (pCmd->buttons & IN_ATTACK)
-			                         : F::AimbotGlobal.IsKeyDown());
+								 ? (pCmd->buttons & IN_ATTACK)
+								 : F::AimbotGlobal.IsKeyDown());
 
 		if (bShouldAim)
 		{
@@ -37,26 +37,28 @@ namespace SandvichAimbot
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	static KeyHelper aimKey{&Vars::Aimbot::Global::AimKey.Value};
+	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.Value };
 	return !Vars::Aimbot::Global::AimKey.Value ? true : aimKey.Down();
 }
 
 void CAimbotGlobal::SortTargets(std::vector<Target_t>* targets, const ESortMethod& method)
 {
 	// Sort by preference
-	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool {
-		switch (method)
-		{
-		case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
-		case ESortMethod::DISTANCE: return (a.m_flDistTo < b.m_flDistTo);
-		default: return false;
-		}
-	});
+	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool
+			  {
+				  switch (method)
+				  {
+					  case ESortMethod::FOV: return (a.m_flFOVTo < b.m_flFOVTo);
+					  case ESortMethod::DISTANCE: return (a.m_flDistTo < b.m_flDistTo);
+					  default: return false;
+				  }
+			  });
 
-	// Sort by priority
-	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool {
-		return (a.n_Priority.Mode > b.n_Priority.Mode);
-	});
+			  // Sort by priority
+	std::sort((*targets).begin(), (*targets).end(), [&](const Target_t& a, const Target_t& b) -> bool
+			  {
+				  return (a.n_Priority.Mode > b.n_Priority.Mode);
+			  });
 }
 
 bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
@@ -91,7 +93,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	{
 		switch (G::CurWeaponType)
 		{
-		case EWeaponType::HITSCAN:
+			case EWeaponType::HITSCAN:
 			{
 				if (G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist())
 				{
@@ -100,7 +102,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 
 				break;
 			}
-		case EWeaponType::PROJECTILE:
+			case EWeaponType::PROJECTILE:
 			{
 				if (pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER || pWeapon->GetWeaponID() == TF_WEAPON_FLAREGUN)
 				{
@@ -126,7 +128,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 
 				break;
 			}
-		default: break;
+			default: break;
 		}
 	}
 

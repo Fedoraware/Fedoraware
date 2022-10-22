@@ -15,7 +15,7 @@ void CTickshiftHandler::Speedhack(CUserCmd* pCmd)
 void CTickshiftHandler::Recharge(CUserCmd* pCmd)
 {
 	//	called from CreateMove
-	static KeyHelper kRecharge{&Vars::Misc::CL_Move::RechargeKey.Value};
+	static KeyHelper kRecharge{ &Vars::Misc::CL_Move::RechargeKey.Value };
 	bRecharge = (((!bTeleport && !bDoubletap && !bSpeedhack) && (kRecharge.Down()) || G::RechargeQueued) || bRecharge) && iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value;
 	G::ShouldStop = (bRecharge && Vars::Misc::CL_Move::StopMovement.Value) || G::ShouldStop;
 }
@@ -23,31 +23,31 @@ void CTickshiftHandler::Recharge(CUserCmd* pCmd)
 void CTickshiftHandler::Teleport(CUserCmd* pCmd)
 {
 	//	called from CreateMove
-	static KeyHelper kTeleport{&Vars::Misc::CL_Move::TeleportKey.Value};
+	static KeyHelper kTeleport{ &Vars::Misc::CL_Move::TeleportKey.Value };
 	bTeleport = (((!bRecharge && !bDoubletap && !bSpeedhack) && kTeleport.Down()) || bTeleport) && iAvailableTicks;
 }
 
 void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	//	called from CreateMove
-	static KeyHelper kDoubletap{&Vars::Misc::CL_Move::DoubletapKey.Value};
+	static KeyHelper kDoubletap{ &Vars::Misc::CL_Move::DoubletapKey.Value };
 	if (bTeleport || bRecharge || bSpeedhack || (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)) { return; }
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return; }
 	if (G::ShouldShift || !pCmd) { return; }
 
 	switch (Vars::Misc::CL_Move::DTMode.Value)
 	{
-	case 0:
+		case 0:
 		{
 			if (!kDoubletap.Down()) { return; }
 			break;
 		}
-	case 2:
+		case 2:
 		{
 			if (kDoubletap.Down()) { return; }
 			break;
 		}
-	case 3: { return; }
+		case 3: { return; }
 	}
 
 	if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
@@ -58,23 +58,23 @@ void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
 
 bool CTickshiftHandler::MeleeDoubletapCheck(CBaseEntity* pLocal)
 {
-	static KeyHelper kDoubletap{&Vars::Misc::CL_Move::DoubletapKey.Value};
+	static KeyHelper kDoubletap{ &Vars::Misc::CL_Move::DoubletapKey.Value };
 	if (bTeleport || bRecharge || bSpeedhack || (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)) { return false; }
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return false; }
 	if (G::ShouldShift) { return false; }
 	switch (Vars::Misc::CL_Move::DTMode.Value)
 	{
-	case 0:
+		case 0:
 		{
 			if (!kDoubletap.Down()) { return false; }
 			break;
 		}
-	case 2:
+		case 2:
 		{
 			if (kDoubletap.Down()) { return false; }
 			break;
 		}
-	case 3: { return false; }
+		case 3: { return false; }
 	}
 	return Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
 }
@@ -87,7 +87,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 		CL_Move = g_HookManager.GetMapHooks()["CL_Move"];
 		return;
 	}
-	
+
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;

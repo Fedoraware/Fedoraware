@@ -91,7 +91,7 @@ void CInterfaces::Init()
 	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);
 	_valid(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient*(__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
+	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
 	_valid(TFPartyClient);
 
 	TFInventoryManager = *reinterpret_cast<CTFInventoryManager**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
@@ -110,21 +110,22 @@ void CInterfaces::Init()
 		ViewRender = **reinterpret_cast<IViewRender***>(static_cast<DWORD>(pdwTable[27]) + 5);
 	_valid(ViewRender);
 
-	Input =	**reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC") + 0x2);
+	Input = **reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC") + 0x2);
 	_valid(Input);
 
-	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
-		static auto fn = reinterpret_cast<IKeyValuesSystem*(__cdecl *)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleW(VSTDLIB), "KeyValuesSystem")));
+	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem*
+	{
+		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleW(VSTDLIB), "KeyValuesSystem")));
 		return fn();
 	};
 
 	KeyValuesSystem = GetKeyValuesSystem();
 	_valid(KeyValuesSystem);
 
-	UniformRandomStream = *reinterpret_cast<IUniformRandomStream **>(g_Pattern.Find(VSTDLIB, L"B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3") + 0x1);
+	UniformRandomStream = *reinterpret_cast<IUniformRandomStream**>(g_Pattern.Find(VSTDLIB, L"B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3") + 0x1);
 	_valid(UniformRandomStream);
 
-	StudioRender = g_Interface.Get<void *>(L"studiorender.dll", "VStudioRender025");
+	StudioRender = g_Interface.Get<void*>(L"studiorender.dll", "VStudioRender025");
 	_valid(StudioRender);
 
 	InputSystem = reinterpret_cast<IInputSystem*>(g_Interface.Get<IInputSystem*>(L"inputsystem.dll", "InputSystemVersion001"));
@@ -174,24 +175,24 @@ void CSteamInterfaces::Init()
 
 	Friends002 = reinterpret_cast<ISteamFriends002*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_002));
 	_validS(Friends002);
-	
+
 	Friends015 = reinterpret_cast<ISteamFriends015*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_015));
 	_validS(Friends015);
-	
-	Utils007   = reinterpret_cast<ISteamUtils007*>(Client->GetISteamUtils(hsNewUser, STEAMUTILS_INTERFACE_VERSION_007));
+
+	Utils007 = reinterpret_cast<ISteamUtils007*>(Client->GetISteamUtils(hsNewUser, STEAMUTILS_INTERFACE_VERSION_007));
 	_validS(Utils007);
-	
-	SteamApps  = reinterpret_cast<ISteamApps006*>(Client->GetISteamApps(hsNewUser, hsNewPipe, STEAMAPPS_INTERFACE_VERSION_006));
+
+	SteamApps = reinterpret_cast<ISteamApps006*>(Client->GetISteamApps(hsNewUser, hsNewPipe, STEAMAPPS_INTERFACE_VERSION_006));
 	_validS(SteamApps);
-	
-	UserStats  = reinterpret_cast<ISteamUserStats011*>(Client->GetISteamUserStats(hsNewUser, hsNewPipe, STEAMUSERSTATS_INTERFACE_VERSION_011));
+
+	UserStats = reinterpret_cast<ISteamUserStats011*>(Client->GetISteamUserStats(hsNewUser, hsNewPipe, STEAMUSERSTATS_INTERFACE_VERSION_011));
 	_validS(UserStats);
-	
-	User       = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, STEAMUSER_INTERFACE_VERSION_017));
+
+	User = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, STEAMUSER_INTERFACE_VERSION_017));
 	_validS(User);
 
 	// Credits to spook953 for teaching me how this works
-	static auto fn = reinterpret_cast<ISteamNetworkingUtils*(__cdecl*)()>(GetProcAddress(GetModuleHandleA("steamnetworkingsockets.dll"), "SteamNetworkingUtils_LibV4"));
+	static auto fn = reinterpret_cast<ISteamNetworkingUtils * (__cdecl*)()>(GetProcAddress(GetModuleHandleA("steamnetworkingsockets.dll"), "SteamNetworkingUtils_LibV4"));
 	NetworkingUtils = fn();
 	_validS(NetworkingUtils);
 

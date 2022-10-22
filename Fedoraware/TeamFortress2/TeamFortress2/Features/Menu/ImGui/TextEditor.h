@@ -10,9 +10,11 @@
 #include <regex>
 #include "imgui.h"
 
-class TextEditor {
+class TextEditor
+{
 public:
-	enum class PaletteIndex {
+	enum class PaletteIndex
+	{
 		Default,
 		Keyword,
 		Number,
@@ -37,20 +39,24 @@ public:
 		Max
 	};
 
-	enum class SelectionMode {
+	enum class SelectionMode
+	{
 		Normal,
 		Word,
 		Line
 	};
 
-	struct Breakpoint {
+	struct Breakpoint
+	{
 		int mLine;
 		bool mEnabled;
 		std::string mCondition;
 
 		Breakpoint()
 			: mLine(-1)
-			  , mEnabled(false) {}
+			, mEnabled(false)
+		{
+		}
 	};
 
 	// Represents a character coordinate from the user's point of view,
@@ -60,7 +66,8 @@ public:
 	// how many space is necessary to reach the next tab stop.
 	// For example, coordinate (1, 5) represents the character 'B' in a line "\tABC", when mTabSize = 4,
 	// because it is rendered as "    ABC" on the screen.
-	struct Coordinates {
+	struct Coordinates
+	{
 		int mLine, mColumn;
 		Coordinates() : mLine(0), mColumn(0) {}
 
@@ -127,7 +134,8 @@ public:
 		}
 	};
 
-	struct Identifier {
+	struct Identifier
+	{
 		Coordinates mLocation;
 		std::string mDeclaration;
 	};
@@ -140,7 +148,8 @@ public:
 	using Palette = std::array<ImU32, static_cast<unsigned>(PaletteIndex::Max)>;
 	using Char = uint8_t;
 
-	struct Glyph {
+	struct Glyph
+	{
 		Char mChar;
 		PaletteIndex mColorIndex = PaletteIndex::Default;
 		bool mComment : 1;
@@ -148,13 +157,16 @@ public:
 		bool mPreprocessor : 1;
 
 		Glyph(Char aChar, PaletteIndex aColorIndex) : mChar(aChar), mColorIndex(aColorIndex),
-		                                              mComment(false), mMultiLineComment(false), mPreprocessor(false) {}
+			mComment(false), mMultiLineComment(false), mPreprocessor(false)
+		{
+		}
 	};
 
 	using Line = std::vector<Glyph>;
 	using Lines = std::vector<Line>;
 
-	struct LanguageDefinition {
+	struct LanguageDefinition
+	{
 		using TokenRegexString = std::pair<std::string, PaletteIndex>;
 		using TokenRegexStrings = std::vector<TokenRegexString>;
 		using TokenizeCallback = bool(*)(const char* in_begin, const char* in_end, const char*& out_begin, const char*& out_end, PaletteIndex& paletteIndex);
@@ -174,7 +186,9 @@ public:
 		bool mCaseSensitive;
 
 		LanguageDefinition()
-			: mPreprocChar('#'), mAutoIndentation(true), mTokenize(nullptr), mCaseSensitive(true) { }
+			: mPreprocChar('#'), mAutoIndentation(true), mTokenize(nullptr), mCaseSensitive(true)
+		{
+		}
 
 		static const LanguageDefinition& CPlusPlus();
 		static const LanguageDefinition& HLSL();
@@ -272,13 +286,15 @@ public:
 private:
 	using RegexList = std::vector<std::pair<std::regex, PaletteIndex>>;
 
-	struct EditorState {
+	struct EditorState
+	{
 		Coordinates mSelectionStart;
 		Coordinates mSelectionEnd;
 		Coordinates mCursorPosition;
 	};
 
-	class UndoRecord {
+	class UndoRecord
+	{
 	public:
 		UndoRecord() {}
 		~UndoRecord() {}

@@ -9,6 +9,6 @@ MAKE_HOOK(C_BaseViewModel_ShouldFlipViewModel, g_Pattern.Find(L"client.dll", L"8
 	{
 		return Hook.Original<FN>()(ecx, edx);
 	}
-	
+
 	return !F::AimbotProjectile.Flippy;
 }

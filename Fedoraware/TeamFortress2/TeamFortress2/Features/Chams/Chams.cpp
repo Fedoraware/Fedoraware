@@ -133,17 +133,21 @@ void CChams::RenderEnts(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		return;
 
 	std::vector<CBaseEntity*> Entities = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
-	
-	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL)) {
+
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
+	{
 		Entities.push_back(Entity);
 	}
-	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH)) {
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
+	{
 		Entities.push_back(Entity);
 	}
-	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO)) {
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
+	{
 		Entities.push_back(Entity);
 	}
-	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES)) {
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+	{
 		Entities.push_back(Entity);
 	}
 
@@ -152,7 +156,7 @@ void CChams::RenderEnts(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 	for (const auto& Entity : Entities)
 	{
-		if (Entity->GetDormant()) 
+		if (Entity->GetDormant())
 			continue;
 
 		const bool isPlayer = Entity->IsPlayer();
@@ -164,7 +168,8 @@ void CChams::RenderEnts(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 		DrawModel(Entity);
 
-		if (isPlayer) {
+		if (isPlayer)
+		{
 			if (Vars::Chams::Players::Wearables.Value)
 			{
 				CBaseEntity* pAttachment = Entity->FirstMoveChild();

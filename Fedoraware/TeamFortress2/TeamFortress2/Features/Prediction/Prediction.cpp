@@ -72,6 +72,6 @@ void CEnginePrediction::End(CUserCmd* pCmd)
 
 		pLocal->SetCurrentCmd(nullptr);
 
-		*I::RandomSeed = -1; 
+		*I::RandomSeed = -1;
 	}
 }

@@ -30,7 +30,8 @@ public: //Netvars
 		M_OFFSETGET(YawToExit, float, 0xFCC)
 
 public: //Everything else, lol
-	__inline CBaseEntity* GetOwner() {
+	__inline CBaseEntity* GetOwner()
+	{
 		DYNVAR(hBuilder, int, "DT_BaseObject", "m_hBuilder");
 		return I::ClientEntityList->GetClientEntityFromHandle(hBuilder.GetValue(this));
 	}

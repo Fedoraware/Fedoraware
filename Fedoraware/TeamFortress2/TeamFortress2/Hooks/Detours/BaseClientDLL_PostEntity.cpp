@@ -8,5 +8,4 @@ MAKE_HOOK(BaseClientDLL_PostEntity, Utils::GetVFuncPtr(I::BaseClientDLL, 6), voi
 	Hook.Original<FN>()(ecx, edx);
 	I::EngineClient->ClientCmd_Unrestricted("r_maxdlights 69420");
 	I::EngineClient->ClientCmd_Unrestricted("r_dynamic 1");
-
 }

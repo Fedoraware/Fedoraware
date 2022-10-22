@@ -1970,7 +1970,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.Value, Vars::Fonts::FONT_INDICATORS::nWeight.Value, Vars::Fonts::FONT_INDICATORS::nFlags.Value},
 			{0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
 			{ 0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW},
-		});
+		 });
 
 		CurrentConfig = configName;
 		F::Notifications.Add("Config " + configName + " loaded");

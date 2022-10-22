@@ -3,10 +3,11 @@
 #include "../../Vars.h"
 
 //credits to KGB
-class CEntitySphereQuery {
+class CEntitySphereQuery
+{
 public:
 	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0,
-	                   const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS)
+					   const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS)
 	{
 		static DWORD dwAddress = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 14 D9 45 0C");
 		reinterpret_cast<void(__thiscall*)(void*, const Vec3&, float, int, int)>(dwAddress)(
@@ -32,7 +33,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 {
 	for (const auto& pExplosive : entityGroup)
 	{
-		if (pExplosive->GetPipebombType() == TYPE_STICKY){
+		if (pExplosive->GetPipebombType() == TYPE_STICKY)
+		{
 			if (!pExplosive->GetPipebombPulsed()) { continue; }
 		}
 
@@ -40,8 +42,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 		// Iterate through entities in sphere radius
 		for (CEntitySphereQuery sphere(pExplosive->GetWorldSpaceCenter(), radius);
-		     (pTarget = sphere.GetCurrentEntity()) != nullptr;
-		     sphere.NextEntity())
+			 (pTarget = sphere.GetCurrentEntity()) != nullptr;
+			 sphere.NextEntity())
 		{
 			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
 				GetTeamNum())
@@ -68,7 +70,8 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 
 				if (trace.flFraction >= 0.99f || trace.entity == pTarget)
 				{
-					if (G::CurItemDefIndex == Demoman_s_TheScottishResistance){	//	super fucking ghetto holy shit
+					if (G::CurItemDefIndex == Demoman_s_TheScottishResistance)
+					{	//	super fucking ghetto holy shit
 						Vec3 vAngleTo = Math::CalcAngle(pLocal->GetWorldSpaceCenter(), pExplosive->GetWorldSpaceCenter());
 						Utils::FixMovement(pCmd, vAngleTo);
 						pCmd->viewangles = vAngleTo;

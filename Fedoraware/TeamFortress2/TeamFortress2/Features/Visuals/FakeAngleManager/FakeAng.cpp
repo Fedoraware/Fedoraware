@@ -2,14 +2,19 @@
 
 //gets called after fakelag.
 
-void CFakeAng::Run(CUserCmd* pCmd) {
-	if (const auto& pLocal = g_EntityCache.GetLocal()) {
-		if (!pCmd) {
+void CFakeAng::Run(CUserCmd* pCmd)
+{
+	if (const auto& pLocal = g_EntityCache.GetLocal())
+	{
+		if (!pCmd)
+		{
 			return;
 		}
-		if (pLocal->IsAlive()) {
+		if (pLocal->IsAlive())
+		{
 
-			if (const auto& pAnimState = pLocal->GetAnimState()) {
+			if (const auto& pAnimState = pLocal->GetAnimState())
+			{
 				Math::Clamp(G::FakeViewAngles.x, -89.f, 89.f);
 
 				float flOldFrameTime = I::GlobalVars->frametime;
@@ -36,7 +41,8 @@ void CFakeAng::Run(CUserCmd* pCmd) {
 				pAnimState->Update(G::FakeViewAngles.y, G::FakeViewAngles.x);
 
 				matrix3x4 bones[128];
-				if (pLocal->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) {
+				if (pLocal->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime))
+				{
 					BoneMatrix = *reinterpret_cast<FakeMatrixes*>(bones);
 				}
 

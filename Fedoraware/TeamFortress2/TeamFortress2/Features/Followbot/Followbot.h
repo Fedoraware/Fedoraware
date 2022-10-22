@@ -3,12 +3,14 @@
 
 #include "../../SDK/SDK.h"
 
-class CFollowbot {
+class CFollowbot
+{
 	bool ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal);
 	void OptimizePath(CBaseEntity* pLocal);
 	CBaseEntity* FindTarget(CBaseEntity* pLocal);
 
-	struct PathNode {
+	struct PathNode
+	{
 		Vec3 Location{};
 		bool OnGround = false;
 	};

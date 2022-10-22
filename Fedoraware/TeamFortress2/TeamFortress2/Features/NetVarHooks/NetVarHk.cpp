@@ -6,8 +6,12 @@ CVar<bool>& RemoveAnims = Vars::Visuals::RemoveTaunts;
 bool NetVarHooks::HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, RecvVarProxyFn function)
 {
 	auto pClass = I::BaseClientDLL->GetAllClasses();
+
 	if (path.size() < 2)
+	{
 		return false;
+	}
+
 	while (pClass)
 	{
 		// Main class found
@@ -49,24 +53,27 @@ bool NetVarHooks::HookNetvar(std::vector<std::string> path, ProxyFnHook& hook, R
 				}
 			}
 		}
+
 		pClass = pClass->m_pNext;
 	}
+
 	return false;
 }
 
 static ProxyFnHook CyoaAnimHookProxy{};
-void CyoaView(const CRecvProxyData *data, void *pPlayer, void *out){
-    int value      = data->m_Value.m_Int;
-    int *value_out = (int*) out;
-    if (!RemoveAnims.Value)
-    {
-        *value_out = value;
-        return;
-    }
-    *value_out = false;
+void CyoaView(const CRecvProxyData* data, void* pPlayer, void* out)
+{
+	int value = data->m_Value.m_Int;
+	int* value_out = (int*)out;
+	if (!RemoveAnims.Value)
+	{
+		*value_out = value;
+		return;
+	}
+	*value_out = false;
 }
 
-void NetVarHooks::Init(){
-	
-    HookNetvar({"DT_TFPlayer", "m_bViewingCYOAPDA"}, CyoaAnimHookProxy, CyoaView);
+void NetVarHooks::Init()
+{
+	HookNetvar({ "DT_TFPlayer", "m_bViewingCYOAPDA" }, CyoaAnimHookProxy, CyoaView);
 }

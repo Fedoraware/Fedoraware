@@ -17,7 +17,8 @@ void Draw_t::InitFonts(const std::vector<Font_t>& fonts)
 		ReloadFonts();
 }
 
-void Draw_t::RemakeFonts(const std::vector<Font_t>& fonts) {
+void Draw_t::RemakeFonts(const std::vector<Font_t>& fonts)
+{
 	m_vecFonts.clear();
 
 	for (const auto& Font : fonts)
@@ -54,32 +55,36 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	switch (align)
 	{
-	case ALIGN_DEFAULT: break;
-	case ALIGN_CENTER: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w / 2);
-		y -= (h / 2);
-		break;
-	}
-	case ALIGN_CENTERVERTICAL: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		y -= (h / 2);
-		break;
-	}
-	case ALIGN_CENTERHORIZONTAL: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w / 2);
-		break;
-	}
-	case ALIGN_REVERSE: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w);
-		break;
-	}
+		case ALIGN_DEFAULT: break;
+		case ALIGN_CENTER:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w / 2);
+			y -= (h / 2);
+			break;
+		}
+		case ALIGN_CENTERVERTICAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			y -= (h / 2);
+			break;
+		}
+		case ALIGN_CENTERHORIZONTAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w / 2);
+			break;
+		}
+		case ALIGN_REVERSE:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w);
+			break;
+		}
 	}
 
 	I::VGuiSurface->DrawSetTextPos(x, y);
@@ -104,32 +109,36 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	switch (align)
 	{
-	case ALIGN_DEFAULT: break;
-	case ALIGN_CENTER: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w / 2);
-		y -= (h / 2);
-		break;
-	}
-	case ALIGN_CENTERVERTICAL: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		y -= (h / 2);
-		break;
-	}
-	case ALIGN_CENTERHORIZONTAL: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w / 2);
-		break;
-	}
-	case ALIGN_REVERSE: {
-		int w = 0, h = 0;
-		I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-		x -= (w);
-		break;
-	}
+		case ALIGN_DEFAULT: break;
+		case ALIGN_CENTER:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w / 2);
+			y -= (h / 2);
+			break;
+		}
+		case ALIGN_CENTERVERTICAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			y -= (h / 2);
+			break;
+		}
+		case ALIGN_CENTERHORIZONTAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w / 2);
+			break;
+		}
+		case ALIGN_REVERSE:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+			x -= (w);
+			break;
+		}
 	}
 
 	I::VGuiSurface->DrawSetTextPos(x, y);
@@ -406,7 +415,7 @@ void Draw_t::RoundedBoxStatic(const int x, const int y, const int w, const int h
 
 void Draw_t::ClearAvatarCache()
 {
-	for (auto &Avatar : m_mapAvatars)
+	for (auto& Avatar : m_mapAvatars)
 	{
 		I::VGuiSurface->DeleteTextureByID(Avatar.second);
 		I::VGuiSurface->DestroyTextureID(Avatar.second);

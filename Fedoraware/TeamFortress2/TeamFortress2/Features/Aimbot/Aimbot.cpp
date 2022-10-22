@@ -21,8 +21,8 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	if (G::Frozen) { return false; }
 
 	if (!Vars::Aimbot::Global::DontWaitForShot.Value && (!G::IsAttacking && !G::WeaponCanAttack) && G::CurWeaponType != EWeaponType::MELEE)
-	{ 
-		return false; 
+	{
+		return false;
 	}	//	don't run if we can't shoot (should stop unbearable dt lag)
 
 	if (!pLocal->IsAlive()
@@ -61,9 +61,11 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	//}
 
 	//	weapon data check for null damage
-	if (CTFWeaponInfo* sWeaponInfo = pWeapon->GetTFWeaponInfo()){
+	if (CTFWeaponInfo* sWeaponInfo = pWeapon->GetTFWeaponInfo())
+	{
 		WeaponData_t sWeaponData = sWeaponInfo->m_WeaponData[0];
-		if (sWeaponData.m_nDamage < 1){
+		if (sWeaponData.m_nDamage < 1)
+		{
 			return false;
 		}
 	}
@@ -94,24 +96,24 @@ void CAimbot::Run(CUserCmd* pCmd)
 
 	switch (G::CurWeaponType)
 	{
-	case EWeaponType::HITSCAN:
+		case EWeaponType::HITSCAN:
 		{
 			F::AimbotHitscan.Run(pLocal, pWeapon, pCmd);
 			break;
 		}
 
-	case EWeaponType::PROJECTILE:
+		case EWeaponType::PROJECTILE:
 		{
 			F::AimbotProjectile.Run(pLocal, pWeapon, pCmd);
 			break;
 		}
 
-	case EWeaponType::MELEE:
+		case EWeaponType::MELEE:
 		{
 			F::AimbotMelee.Run(pLocal, pWeapon, pCmd);
 			break;
 		}
 
-	default: break;
+		default: break;
 	}
 }

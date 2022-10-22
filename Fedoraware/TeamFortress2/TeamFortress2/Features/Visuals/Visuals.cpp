@@ -331,43 +331,33 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 			DebugLine("pCmd TickCount", tfm::format(": %i", cmdtickcount).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
 
-		{	//	movement data to help me make epic strafe prediction!
-			const Vec3 m_vecVelocity = pLocal->m_vecVelocity();
-			const Vec3 m_vecViewOffset = pLocal->m_vecViewOffset();
-			const Vec3 m_vecOrigin = pLocal->m_vecOrigin();
-			const Vec3 eyePosition = pLocal->GetEyePosition();;
-			DebugLine("m_vecVelocity", tfm::format(": [%.1f, %.1f, %.1f]", m_vecVelocity.x, m_vecVelocity.y, m_vecVelocity.z).c_str(), { xoffset, yoffset }); yoffset += 15;
-			DebugLine("playerVelocity", tfm::format(": [%.1f]", m_vecVelocity.Length2D()).c_str(), { xoffset, yoffset }); yoffset += 15;
-			DebugLine("m_vecViewOffset", tfm::format(": [%.1f, %.1f, %.1f]", m_vecViewOffset.x, m_vecViewOffset.y, m_vecViewOffset.z).c_str(), { xoffset, yoffset }); yoffset += 15;
-			DebugLine("m_vecOrigin", tfm::format(": [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z).c_str(), { xoffset, yoffset }); yoffset += 15;
-			DebugLine("eyePosition", tfm::format(": [%.1f, %.1f, %.1f]", eyePosition.x, eyePosition.y, eyePosition.z).c_str(), { xoffset, yoffset }); yoffset += 15;
-		}
+		//	movement data to help me make epic strafe prediction!
+		const Vec3 m_vecVelocity = pLocal->m_vecVelocity();
+		const Vec3 m_vecViewOffset = pLocal->m_vecViewOffset();
+		const Vec3 m_vecOrigin = pLocal->m_vecOrigin();
+		const Vec3 eyePosition = pLocal->GetEyePosition();;
+		DebugLine("m_vecVelocity", tfm::format(": [%.1f, %.1f, %.1f]", m_vecVelocity.x, m_vecVelocity.y, m_vecVelocity.z).c_str(), { xoffset, yoffset }); yoffset += 15;
+		DebugLine("playerVelocity", tfm::format(": [%.1f]", m_vecVelocity.Length2D()).c_str(), { xoffset, yoffset }); yoffset += 15;
+		DebugLine("m_vecViewOffset", tfm::format(": [%.1f, %.1f, %.1f]", m_vecViewOffset.x, m_vecViewOffset.y, m_vecViewOffset.z).c_str(), { xoffset, yoffset }); yoffset += 15;
+		DebugLine("m_vecOrigin", tfm::format(": [%.1f, %.1f, %.1f]", m_vecOrigin.x, m_vecOrigin.y, m_vecOrigin.z).c_str(), { xoffset, yoffset }); yoffset += 15;
+		DebugLine("eyePosition", tfm::format(": [%.1f, %.1f, %.1f]", eyePosition.x, eyePosition.y, eyePosition.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 
-		{
-			const int MaxSpeed = pLocal->GetMaxSpeed();
-			DebugLine("MaxSpeed", tfm::format(": %d", MaxSpeed).c_str(), { xoffset, yoffset }); yoffset += 15;
-		}
+		const int MaxSpeed = pLocal->GetMaxSpeed();
+		DebugLine("MaxSpeed", tfm::format(": %d", MaxSpeed).c_str(), { xoffset, yoffset }); yoffset += 15;
 
-		{
-			const int m_hGroundEntity = pLocal->m_hGroundEntity();
-			DebugLine("m_hGroundEntity", tfm::format(": %d", m_hGroundEntity).c_str(), { xoffset, yoffset }); yoffset += 15;
-		}
+		const int m_hGroundEntity = pLocal->m_hGroundEntity();
+		DebugLine("m_hGroundEntity", tfm::format(": %d", m_hGroundEntity).c_str(), { xoffset, yoffset }); yoffset += 15;
 
-		{
-			const float m_flDucktime = pLocal->m_flDucktime();
-			DebugLine("m_flDucktime", tfm::format(": %.1f", m_flDucktime).c_str(), { xoffset, yoffset }); yoffset += 15;
-		}
+		const float m_flDucktime = pLocal->m_flDucktime();
+		DebugLine("m_flDucktime", tfm::format(": %.1f", m_flDucktime).c_str(), { xoffset, yoffset }); yoffset += 15;
 
-		{
-			const Vec3 lastViewAngles = G::LastUserCmd->viewangles;
-			DebugLine("lastViewAngles", tfm::format(": [%.1f, %.1f, %.1f]", lastViewAngles.x, lastViewAngles.y, lastViewAngles.z).c_str(), { xoffset, yoffset }); yoffset += 15;
-		}
+		const Vec3 lastViewAngles = G::LastUserCmd->viewangles;
+		DebugLine("lastViewAngles", tfm::format(": [%.1f, %.1f, %.1f]", lastViewAngles.x, lastViewAngles.y, lastViewAngles.z).c_str(), { xoffset, yoffset }); yoffset += 15;
 
-		{
-			if (CTFPlayerAnimState* animState = pLocal->GetAnimState()){	// fix that fake stand shit
-				Activity mainAct = animState->GetCurrentMainActivity();
-				DebugLine("MainAct", tfm::format(": %i", (int)mainAct).c_str(), { xoffset, yoffset }); yoffset += 15;
-			}
+		if (CTFPlayerAnimState* animState = pLocal->GetAnimState())
+		{	// fix that fake stand shit
+			Activity mainAct = animState->GetCurrentMainActivity();
+			DebugLine("MainAct", tfm::format(": %i", (int)mainAct).c_str(), { xoffset, yoffset }); yoffset += 15;
 		}
 
 		bool truce = (*((BYTE*)I::TFGameRules + 1034));
@@ -378,7 +368,8 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 
 void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 {
-	if (!pLocal->IsAlive() || !I::Input->CAM_IsThirdPerson()) {
+	if (!pLocal->IsAlive() || !I::Input->CAM_IsThirdPerson())
+	{
 		return;
 	}
 
@@ -394,10 +385,14 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 		{
 			constexpr auto distance = 50.f;
 			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
+			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
+			}
 
 			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
+			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
+			}
 		}
 	}
 }
@@ -482,13 +477,16 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					}
 					case 4:
 					{
-						if (G::ShiftedTicks == 0 || G::Recharging){
+						if (G::ShiftedTicks == 0 || G::Recharging)
+						{
 							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, L"Recharge! (%i / %i)", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
 						}
-						else if (G::WaitForShift){
+						else if (G::WaitForShift)
+						{
 							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, L"Wait! (%i / 25)", G::WaitForShift);
 						}
-						else{
+						else
+						{
 							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
 						}
 						break;
@@ -502,7 +500,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						//Add a dt indicator but only with numbers
 
 				}
-				
+
 			}
 		}
 	}
@@ -652,7 +650,7 @@ void CVisuals::DrawMovesimLine()
 					const auto& vRotate = G::PredLinesBackup[i - 1].second;	//	splirp vec
 					const auto& vEnd = G::PredLinesBackup[i].first;
 					if ((i % Vars::Visuals::SeperatorSpacing.Value) == 0) { RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false); }
-					RenderLine(vStart, vEnd,	Vars::Aimbot::Projectile::PredictionColor, false);
+					RenderLine(vStart, vEnd, Vars::Aimbot::Projectile::PredictionColor, false);
 				}
 			}
 		}

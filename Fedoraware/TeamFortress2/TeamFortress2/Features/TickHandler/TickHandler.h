@@ -1,13 +1,14 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-class CTickshiftHandler {
+class CTickshiftHandler
+{
 	// logic
 	void Speedhack(CUserCmd* pCmd);
 	void Recharge(CUserCmd* pCmd);
 	void Teleport(CUserCmd* pCmd);
 	void Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal);
-	
+
 	// utils
 	void CLMoveFunc(float accumulated_extra_samples, bool bFinalTick);
 

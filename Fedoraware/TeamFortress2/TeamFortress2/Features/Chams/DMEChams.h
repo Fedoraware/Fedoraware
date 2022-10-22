@@ -3,7 +3,8 @@
 
 using DMEFN = void(__stdcall*)(CModelRender*, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 
-struct ChamInfo {
+struct ChamInfo
+{
 	int $flags = 0;
 	int $flags_defined = 0;
 	int $flags2 = 0;

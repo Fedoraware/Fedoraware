@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../SDK/SDK.h"
 
-class CLuaMenu {
+class CLuaMenu
+{
 	void LoadScripts();
 	void MainWindow();
 

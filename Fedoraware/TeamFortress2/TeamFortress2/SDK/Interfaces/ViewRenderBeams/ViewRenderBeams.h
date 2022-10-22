@@ -153,33 +153,33 @@ public:
 
 	// These will go away!
 	virtual void	CreateBeamEnts(int startEnt, int endEnt, int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
-		float brightness, float speed, int startFrame,
-		float framerate, float r, float g, float b, int type = -1) = 0;
+								   float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
+								   float brightness, float speed, int startFrame,
+								   float framerate, float r, float g, float b, int type = -1) = 0;
 	virtual void	CreateBeamEntPoint(int	nStartEntity, const Vector* pStart, int nEndEntity, const Vector* pEnd,
-		int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
-		float brightness, float speed, int startFrame,
-		float framerate, float r, float g, float b) = 0;
+									   int modelIndex, int haloIndex, float haloScale,
+									   float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
+									   float brightness, float speed, int startFrame,
+									   float framerate, float r, float g, float b) = 0;
 	virtual void	CreateBeamPoints(Vector& start, Vector& end, int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
-		float brightness, float speed, int startFrame,
-		float framerate, float r, float g, float b) = 0;
+									 float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
+									 float brightness, float speed, int startFrame,
+									 float framerate, float r, float g, float b) = 0;
 	virtual void	CreateBeamRing(int startEnt, int endEnt, int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
-		float brightness, float speed, int startFrame,
-		float framerate, float r, float g, float b, int flags = 0) = 0;
+								   float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
+								   float brightness, float speed, int startFrame,
+								   float framerate, float r, float g, float b, int flags = 0) = 0;
 	virtual void	CreateBeamRingPoint(const Vector& center, float start_radius, float end_radius, int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
-		float brightness, float speed, int startFrame,
-		float framerate, float r, float g, float b, int flags = 0) = 0;
+										float life, float width, float m_nEndWidth, float m_nFadeLength, float amplitude,
+										float brightness, float speed, int startFrame,
+										float framerate, float r, float g, float b, int flags = 0) = 0;
 	virtual void	CreateBeamCirclePoints(int type, Vector& start, Vector& end,
-		int modelIndex, int haloIndex, float haloScale, float life, float width,
-		float m_nEndWidth, float m_nFadeLength, float amplitude, float brightness, float speed,
-		int startFrame, float framerate, float r, float g, float b) = 0;
+										   int modelIndex, int haloIndex, float haloScale, float life, float width,
+										   float m_nEndWidth, float m_nFadeLength, float amplitude, float brightness, float speed,
+										   int startFrame, float framerate, float r, float g, float b) = 0;
 	virtual void	CreateBeamFollow(int startEnt, int modelIndex, int haloIndex, float haloScale,
-		float life, float width, float m_nEndWidth, float m_nFadeLength, float r, float g, float b,
-		float brightness) = 0;
+									 float life, float width, float m_nEndWidth, float m_nFadeLength, float r, float g, float b,
+									 float brightness) = 0;
 };
 
 #endif

@@ -20,12 +20,12 @@ public:
 	virtual void PostEntityPacketReceived(void) = 0;
 	virtual void PostNetworkDataReceived(int commands_acknowledged) = 0;
 	virtual void OnReceivedUncompressedPacket(void) = 0;
-	virtual void GetViewOrigin(Vec3 &org) = 0;
-	virtual void SetViewOrigin(Vec3 &org) = 0;
-	virtual void GetViewAngles(Vec3 &ang) = 0;
-	virtual void SetViewAngles(Vec3 &ang) = 0;
-	virtual void GetLocalViewAngles(Vec3 &ang) = 0;
-	virtual void SetLocalViewAngles(Vec3 &ang) = 0;
+	virtual void GetViewOrigin(Vec3& org) = 0;
+	virtual void SetViewOrigin(Vec3& org) = 0;
+	virtual void GetViewAngles(Vec3& ang) = 0;
+	virtual void SetViewAngles(Vec3& ang) = 0;
+	virtual void GetLocalViewAngles(Vec3& ang) = 0;
+	virtual void SetLocalViewAngles(Vec3& ang) = 0;
 };
 
 class CPrediction : public IPrediction
@@ -49,16 +49,16 @@ public:
 	virtual bool InPrediction();
 	virtual bool IsFirstTimePredicted();
 	virtual int	 GetIncomingPacketNumber();
-	virtual void GetViewOrigin(Vec3 &org);
-	virtual void SetViewOrigin(Vec3 &org);
-	virtual void GetViewAngles(Vec3 &ang);
-	virtual void SetViewAngles(Vec3 &ang);			 
-	virtual void GetLocalViewAngles(Vec3 &ang);
-	virtual void SetLocalViewAngles(Vec3 &ang);			 
-	virtual void RunCommand(CBaseEntity *player, CUserCmd *ucmd, CMoveHelper *moveHelper);
-	virtual void SetupMove(CBaseEntity *player, CUserCmd *ucmd, CMoveHelper *pHelper, CMoveData *move);
-	virtual void FinishMove(CBaseEntity *player, CUserCmd *ucmd, CMoveData *move);
-	virtual void SetIdealPitch(CBaseEntity *player, const Vec3 &origin, const Vec3 &angles, const Vec3 &viewheight);
+	virtual void GetViewOrigin(Vec3& org);
+	virtual void SetViewOrigin(Vec3& org);
+	virtual void GetViewAngles(Vec3& ang);
+	virtual void SetViewAngles(Vec3& ang);
+	virtual void GetLocalViewAngles(Vec3& ang);
+	virtual void SetLocalViewAngles(Vec3& ang);
+	virtual void RunCommand(CBaseEntity* player, CUserCmd* ucmd, CMoveHelper* moveHelper);
+	virtual void SetupMove(CBaseEntity* player, CUserCmd* ucmd, CMoveHelper* pHelper, CMoveData* move);
+	virtual void FinishMove(CBaseEntity* player, CUserCmd* ucmd, CMoveData* move);
+	virtual void SetIdealPitch(CBaseEntity* player, const Vec3& origin, const Vec3& angles, const Vec3& viewheight);
 	virtual void _Update
 	(
 		bool received_new_world_update,

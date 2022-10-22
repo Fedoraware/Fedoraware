@@ -18,7 +18,8 @@ MAKE_HOOK(ModelRender_DrawModelExecute, Utils::GetVFuncPtr(I::ModelRender, 19), 
 	DrawBT(ecx, edx, pEntity, pState, pInfo, pBoneToWorld);
 
 
-	if (!F::Glow.m_bRendering) {
+	if (!F::Glow.m_bRendering)
+	{
 		if (F::DMEChams.Render(pState, pInfo, pBoneToWorld)) { return; }
 	}
 
@@ -84,7 +85,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 					{
 						for (auto& record : *vRecords)
 						{
-							I::RenderView->SetColorModulation( record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
+							I::RenderView->SetColorModulation(record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
 							if (F::Backtrack.WithinRewind(record)) { OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix)); }
 						}
 					}

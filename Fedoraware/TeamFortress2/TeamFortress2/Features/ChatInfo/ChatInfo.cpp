@@ -7,17 +7,18 @@
 int attackStringW;
 int attackStringH;
 
-static std::string yellow({'\x7', 'C', '8', 'A', '9', '0', '0'}); //C8A900 //CACACA
-static std::string blue({'\x7', '0', 'D', '9', '2', 'F', 'F'}); //0D92FF
-static std::string red({'\x7', 'F', 'F', '3', 'A', '3', 'A'}); //FF3A3A
-static std::string green({'\x7', '3', 'A', 'F', 'F', '4', 'D'}); //3AFF4D
-static std::string white({'\x7', 'F', 'F', 'F', 'F', 'F', 'F'}); //FFFFFF
-static std::string gsyellow({ '\x7', 'C', 'A', 'C', 'A', 'C', 'A'}); //CACACA
-static std::string gsblue({'\x7', '7', '6', '7', '6', '7', '6'}); //767676
-static std::string gsred({'\x7', '7', '5', '7', '5', '7', '5'}); //757575
-static std::string gsgreen({'\x7', 'B', '0', 'B', '0', 'B', '0'}); //b0b0b0
+static std::string yellow({ '\x7', 'C', '8', 'A', '9', '0', '0' }); //C8A900 //CACACA
+static std::string blue({ '\x7', '0', 'D', '9', '2', 'F', 'F' }); //0D92FF
+static std::string red({ '\x7', 'F', 'F', '3', 'A', '3', 'A' }); //FF3A3A
+static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
+static std::string white({ '\x7', 'F', 'F', 'F', 'F', 'F', 'F' }); //FFFFFF
+static std::string gsyellow({ '\x7', 'C', 'A', 'C', 'A', 'C', 'A' }); //CACACA
+static std::string gsblue({ '\x7', '7', '6', '7', '6', '7', '6' }); //767676
+static std::string gsred({ '\x7', '7', '5', '7', '5', '7', '5' }); //757575
+static std::string gsgreen({ '\x7', 'B', '0', 'B', '0', 'B', '0' }); //b0b0b0
 
-enum VoteLogger {
+enum VoteLogger
+{
 	VoteText = 1 << 0,
 	VoteConsole = 1 << 1,
 	VoteChat = 1 << 2,
@@ -81,7 +82,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & VoteConsole) // console
 				{
-					I::Cvar->ConsoleColorPrintf({133, 255, 66, 255}, tfm::format("%s \n", voteLine).c_str());
+					I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", voteLine).c_str());
 				}
 				if (votingOptions & VoteChat) // chat
 				{
@@ -124,20 +125,20 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				auto wattackString = std::wstring(attackString.begin(), attackString.end());
 				const wchar_t* wcattackString = wattackString.c_str();
 				I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_COND].dwFont, wcattackString,
-				                        attackStringW, attackStringH);
+											attackStringW, attackStringH);
 				const std::string chatAttackString(
-					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) +" You hit \x3" + pi.name + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " for " + (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red) + std::to_string(nDamage) + " damage " + (bCrit ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) + "(crit) " : "") + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + "(" +
+					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " You hit \x3" + pi.name + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " for " + (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red) + std::to_string(nDamage) + " damage " + (bCrit ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) + "(crit) " : "") + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + "(" +
 					std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
 				if (Vars::Visuals::DamageLoggerChat.Value)
 				{
 					I::ClientModeShared->m_pChatElement->ChatPrintf(0,
-					                                          chatAttackString.c_str());
+																	chatAttackString.c_str());
 				}
 
 				if (Vars::Visuals::DamageLoggerConsole.Value)
 				{
-					I::Cvar->ConsoleColorPrintf({219, 145, 59, 255}, "%s\n", attackString.c_str());
+					I::Cvar->ConsoleColorPrintf({ 219, 145, 59, 255 }, "%s\n", attackString.c_str());
 				}
 
 				if (Vars::Visuals::DamageLoggerText.Value)
@@ -169,7 +170,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 {
 	switch (type)
 	{
-	case VoteStart:
+		case VoteStart:
 		{
 			const int team = msgData.ReadByte();
 			const int voteID = msgData.ReadLong();
@@ -188,7 +189,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 
 					const auto bluntLine = tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoTarget.name);
 					const auto verboseLine = tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoCaller.friendsID, infoTarget.name,
-					                                     infoTarget.friendsID);
+														 infoTarget.friendsID);
 
 					const int votingOptions = Vars::Misc::VotingOptions.Value;
 					const bool verboseVoting = votingOptions & VoteVerbose;
@@ -204,7 +205,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					// Log to Console
 					if (votingOptions & VoteConsole)
 					{
-						I::Cvar->ConsoleColorPrintf({133, 255, 66, 255}, tfm::format("%s \n", chosenLine).c_str());
+						I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", chosenLine).c_str());
 					}
 
 					// Log to Chat

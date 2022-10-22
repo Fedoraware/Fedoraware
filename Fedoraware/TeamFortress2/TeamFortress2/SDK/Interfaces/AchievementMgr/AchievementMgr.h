@@ -26,7 +26,7 @@ public:
 class IAchievementMgr
 {
 public:
-	virtual IAchievement * GetAchievementByIndex(int index) = 0;
+	virtual IAchievement* GetAchievementByIndex(int index) = 0;
 	virtual CBaseAchievement* GetAchievementByID(int id) = 0;
 	virtual int GetAchievementCount() = 0;
 	virtual void InitializeAchievements() = 0;

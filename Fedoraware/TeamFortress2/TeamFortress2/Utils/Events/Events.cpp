@@ -14,7 +14,8 @@ void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 	if (deqEvents.empty())
 		return;
 
-	for (auto szEvent : deqEvents) {
+	for (auto szEvent : deqEvents)
+	{
 		I::GameEventManager->AddListener(this, szEvent, false);
 
 		if (!I::GameEventManager->FindListener(this, szEvent))
@@ -27,7 +28,8 @@ void CEventListener::Destroy()
 	I::GameEventManager->RemoveListener(this);
 }
 
-void CEventListener::FireGameEvent(CGameEvent* pEvent) {
+void CEventListener::FireGameEvent(CGameEvent* pEvent)
+{
 	if (pEvent == nullptr) { return; }
 
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());

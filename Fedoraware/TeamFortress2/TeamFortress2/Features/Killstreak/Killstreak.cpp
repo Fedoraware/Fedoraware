@@ -85,9 +85,9 @@ void CKillstreaker::ApplyKillstreak()
 			if (streaksPlayer && streaksPlayer->m_Value)
 			{
 				streaksPlayer->Set(0, GetCurrentStreak());
-				streaksPlayer->Set(1,GetCurrentStreak());
-				streaksPlayer->Set(2,GetCurrentStreak());
-				streaksPlayer->Set(3,GetCurrentStreak());
+				streaksPlayer->Set(1, GetCurrentStreak());
+				streaksPlayer->Set(2, GetCurrentStreak());
+				streaksPlayer->Set(3, GetCurrentStreak());
 			}
 		}
 	}

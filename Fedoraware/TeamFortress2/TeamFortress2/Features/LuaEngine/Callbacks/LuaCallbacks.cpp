@@ -31,7 +31,8 @@ void CLuaCallbacks::HandleError(const sol::protected_function_result& result)
 }
 
 /* Simple callback without any args */
-void CLuaCallbacks::ByType(const char* type) {
+void CLuaCallbacks::ByType(const char* type)
+{
 	for (const auto& [name, callback] : Callbacks[type])
 	{
 		if (callback.valid())
@@ -41,7 +42,8 @@ void CLuaCallbacks::ByType(const char* type) {
 	}
 }
 
-void CLuaCallbacks::OnCreateMove(CUserCmd* pCmd, bool* pSendPacket) {
+void CLuaCallbacks::OnCreateMove(CUserCmd* pCmd, bool* pSendPacket)
+{
 	for (const auto& [name, callback] : Callbacks["CreateMove"])
 	{
 		if (callback.valid())
@@ -51,7 +53,8 @@ void CLuaCallbacks::OnCreateMove(CUserCmd* pCmd, bool* pSendPacket) {
 	}
 }
 
-void CLuaCallbacks::OnFireGameEvent(CGameEvent* pEvent) {
+void CLuaCallbacks::OnFireGameEvent(CGameEvent* pEvent)
+{
 	for (const auto& [name, callback] : Callbacks["FireGameEvent"])
 	{
 		if (callback.valid())

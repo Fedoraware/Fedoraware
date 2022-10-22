@@ -3,7 +3,8 @@
 #include "../../SDK/SDK.h"
 #include "ImGui/imgui_color_gradient.h"
 
-class CMenu {
+class CMenu
+{
 	void DrawMenu();
 	void DrawTabbar();
 	void MenuAimbot();
@@ -22,7 +23,8 @@ class CMenu {
 	void DrawKeybinds();
 	void LoadStyle();
 
-	enum class MenuTab {
+	enum class MenuTab
+	{
 		Aimbot,
 		Trigger,
 		Visuals,
@@ -30,7 +32,8 @@ class CMenu {
 		Misc
 	};
 
-	enum class VisualsTab {
+	enum class VisualsTab
+	{
 		Players,
 		Buildings,
 		World,

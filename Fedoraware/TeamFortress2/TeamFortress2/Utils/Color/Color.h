@@ -9,8 +9,9 @@
 
 using byte = unsigned char;
 
-struct Color_t { 
-	byte r = 0, g = 0, b = 0, a = 0; 
+struct Color_t
+{
+	byte r = 0, g = 0, b = 0, a = 0;
 	[[nodiscard]] std::string to_hex() const
 	{
 		std::stringstream ss;
@@ -29,13 +30,15 @@ struct Color_t {
 	}
 };
 
-struct Gradient_t {
+struct Gradient_t
+{
 	Color_t startColour = { 0,0,0,255 };
 	Color_t endColour = { 0,0,0,255 };
 };
 
 // TODO: Move this shit to a file that isn't this
-struct Chams_t {
+struct Chams_t
+{
 	bool	showObstructed = false;
 	int		drawMaterial = 0;	// 1/shaded, 2/shiny, 3/flat, 4/wfshaded, 5/wfshiny, 6/wfflat, 7/fresnel, 8/brick
 	int		overlayType = 0;
@@ -50,7 +53,8 @@ struct Chams_t {
 	std::string customMaterial = "None";
 };
 
-struct DragBox_t {
+struct DragBox_t
+{
 	int x = 100;
 	int y = 100;
 	int w = 80;
@@ -61,15 +65,18 @@ struct DragBox_t {
 
 namespace Color
 {
-	inline float TOFLOAT(byte x) {
+	inline float TOFLOAT(byte x)
+	{
 		return (static_cast<float>(x) / 255.0f);
 	}
 
-	inline Vec3 TOVEC3(const Color_t &x) {
+	inline Vec3 TOVEC3(const Color_t& x)
+	{
 		return Vec3(TOFLOAT(x.r), TOFLOAT(x.g), TOFLOAT(x.b));
 	}
 
-	inline unsigned long TODWORD(const Color_t &x) {
+	inline unsigned long TODWORD(const Color_t& x)
+	{
 		return (static_cast<unsigned long>(((x.r & 0xFF) << 24) | ((x.g & 0xFF) << 16) | ((x.b & 0xFF) << 8) | (x.a & 0xFF)));
 	}
 }

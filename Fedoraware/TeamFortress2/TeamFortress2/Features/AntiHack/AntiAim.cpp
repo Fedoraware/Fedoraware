@@ -43,31 +43,41 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 	pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed); //	not a good idea
 }
 
-void CAntiAim::ManualMouseEvent(CUserCmd* pCmd){
+void CAntiAim::ManualMouseEvent(CUserCmd* pCmd)
+{
 	if (!bSaved) { vSavedAngles = I::EngineClient->GetViewAngles(); bSaved = true; }
 	const short dMouseX = pCmd->mousedx;
 	const short dMouseY = pCmd->mousedy;
-	if (abs(dMouseX) > abs(dMouseY)){
-		if (dMouseX > 25) { p_p_bManualYaw = {false, {false, false}}; }	//right
-		else if (dMouseX < -25) { p_p_bManualYaw = {false, {true, false}}; }	//left
+	if (abs(dMouseX) > abs(dMouseY))
+	{
+		if (dMouseX > 25) { p_p_bManualYaw = { false, {false, false} }; }	//right
+		else if (dMouseX < -25) { p_p_bManualYaw = { false, {true, false} }; }	//left
 	}
-	else {
-		if (dMouseY > 25) { p_p_bManualYaw = {true, {false, true}}; }	//down
-		else if (dMouseY < -25) { p_p_bManualYaw = {true, {false, false}}; }	//up
+	else
+	{
+		if (dMouseY > 25) { p_p_bManualYaw = { true, {false, true} }; }	//down
+		else if (dMouseY < -25) { p_p_bManualYaw = { true, {false, false} }; }	//up
 	}
 	I::EngineClient->SetViewAngles(vSavedAngles);
 	return;
 }
 
-bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal){
-	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost()) 
-	{ return false; }
+bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal)
+{
+	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost())
+	{
+		return false;
+	}
 
 	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP || pLocal->GetMoveType() == MOVETYPE_LADDER || pLocal->GetMoveType() == MOVETYPE_OBSERVER)
-	{ return false; }
+	{
+		return false;
+	}
 
 	if (pLocal->IsCharging())
-	{ return false; }
+	{
+		return false;
+	}
 
 	if (G::IsAttacking) { return false; }
 
@@ -131,63 +141,72 @@ float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown)
 	return FakeDown ? 720 + WishPitch : -720 + WishPitch;
 }
 
-float CAntiAim::YawIndex(int iIndex){
-	float &flLastYaw = bSendState ? flLastRealOffset : flLastFakeOffset;
-	switch (iIndex){
-	case 1: { return 0.f; }
-	case 2: { return 90.f; }
-	case 3: { return -90.f; }
-	case 4: { return 180.f; }
-	case 5: { flLastYaw = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; return flLastYaw; }
-	case 6: { return flLastYaw += (bSendState ? 1.f : -1.f) * Vars::AntiHack::AntiAim::SpinSpeed.Value; }
-	case 7: { return (bEdge ? 1.f : -1.f) * (bSendState ? 90.f : -90.f); }
-	case 8: { return flLastYaw = bWasHit ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; }
-	case 9: { return bSendState ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value; }
-	case 10: { return bSendState ? (bInvert ? 90.f : -90.f) : (bInvert ? -90.f : 90.f); }
-	case 11: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : 0.f) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : 0.f); }
-	case 12: { return bSendState ? (p_bJitter.first ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f)) : 0.f) : (p_bJitter.second ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f)) : 0.f); }
-	case 13: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : -Vars::AntiHack::AntiAim::RealJitter.Value) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : -Vars::AntiHack::AntiAim::FakeJitter.Value); }
-	case 14: { return p_p_bManualYaw.first ? (p_p_bManualYaw.second.second ? 180.f : 0.f) : (p_p_bManualYaw.second.first ? 90.f : -90.f); }
-	default: { return 0.f; }
+float CAntiAim::YawIndex(int iIndex)
+{
+	float& flLastYaw = bSendState ? flLastRealOffset : flLastFakeOffset;
+	switch (iIndex)
+	{
+		case 1: { return 0.f; }
+		case 2: { return 90.f; }
+		case 3: { return -90.f; }
+		case 4: { return 180.f; }
+		case 5: { flLastYaw = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; return flLastYaw; }
+		case 6: { return flLastYaw += (bSendState ? 1.f : -1.f) * Vars::AntiHack::AntiAim::SpinSpeed.Value; }
+		case 7: { return (bEdge ? 1.f : -1.f) * (bSendState ? 90.f : -90.f); }
+		case 8: { return flLastYaw = bWasHit ? Utils::RandFloatRange(-180.0f, 180.0f) : flLastYaw; }
+		case 9: { return bSendState ? Vars::AntiHack::AntiAim::CustomRealYaw.Value : Vars::AntiHack::AntiAim::CustomFakeYaw.Value; }
+		case 10: { return bSendState ? (bInvert ? 90.f : -90.f) : (bInvert ? -90.f : 90.f); }
+		case 11: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : 0.f) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : 0.f); }
+		case 12: { return bSendState ? (p_bJitter.first ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::RealJitter.Value, 0.f)) : 0.f) : (p_bJitter.second ? Utils::RandFloatRange(fminf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f), fmaxf(Vars::AntiHack::AntiAim::FakeJitter.Value, 0.f)) : 0.f); }
+		case 13: { return bSendState ? (p_bJitter.first ? Vars::AntiHack::AntiAim::RealJitter.Value : -Vars::AntiHack::AntiAim::RealJitter.Value) : (p_bJitter.second ? Vars::AntiHack::AntiAim::FakeJitter.Value : -Vars::AntiHack::AntiAim::FakeJitter.Value); }
+		case 14: { return p_p_bManualYaw.first ? (p_p_bManualYaw.second.second ? 180.f : 0.f) : (p_p_bManualYaw.second.first ? 90.f : -90.f); }
+		default: { return 0.f; }
 	}
 }
 
-void CAntiAim::SetupPitch(int iMode, CUserCmd* pCmd){
-	switch (iMode){
-	case 1: { pCmd->viewangles.x = 0.f; G::FakeViewAngles.x = 0.f; return; }
-	case 2: { pCmd->viewangles.x = -89.f; G::FakeViewAngles.x = -89.f; return; }
-	case 3: { pCmd->viewangles.x = 89.f; G::FakeViewAngles.x = 89.f; return; }
-	case 4: { pCmd->viewangles.x = -271.f; G::FakeViewAngles.x = -89.f; return; }
-	case 5: { pCmd->viewangles.x = 271.f; G::FakeViewAngles.x = 89.f; return; }
-	case 6: { flLastPitch = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-89.0f, 89.0f) : flLastPitch; pCmd->viewangles.x = flLastPitch; G::FakeViewAngles.x = flLastPitch; return; }	//	problem?
-	case 7: { pCmd->viewangles.x = -45.f; G::FakeViewAngles.x = -45.f; return; }
-	case 8: { pCmd->viewangles.x = bPitchFlip ? 89.f : -89.f; G::FakeViewAngles.x = bPitchFlip ? 89.f : -89.f; bPitchFlip = !bPitchFlip; return; }
-	case 9:
-	case 10: { pCmd->viewangles.x = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, iMode == 10); G::FakeViewAngles.x = iMode == 10 ? 89.f : -89.f; return; }
+void CAntiAim::SetupPitch(int iMode, CUserCmd* pCmd)
+{
+	switch (iMode)
+	{
+		case 1: { pCmd->viewangles.x = 0.f; G::FakeViewAngles.x = 0.f; return; }
+		case 2: { pCmd->viewangles.x = -89.f; G::FakeViewAngles.x = -89.f; return; }
+		case 3: { pCmd->viewangles.x = 89.f; G::FakeViewAngles.x = 89.f; return; }
+		case 4: { pCmd->viewangles.x = -271.f; G::FakeViewAngles.x = -89.f; return; }
+		case 5: { pCmd->viewangles.x = 271.f; G::FakeViewAngles.x = 89.f; return; }
+		case 6: { flLastPitch = tAATimer.Run(Vars::AntiHack::AntiAim::RandInterval.Value * 10) ? Utils::RandFloatRange(-89.0f, 89.0f) : flLastPitch; pCmd->viewangles.x = flLastPitch; G::FakeViewAngles.x = flLastPitch; return; }	//	problem?
+		case 7: { pCmd->viewangles.x = -45.f; G::FakeViewAngles.x = -45.f; return; }
+		case 8: { pCmd->viewangles.x = bPitchFlip ? 89.f : -89.f; G::FakeViewAngles.x = bPitchFlip ? 89.f : -89.f; bPitchFlip = !bPitchFlip; return; }
+		case 9:
+		case 10: { pCmd->viewangles.x = CalculateCustomRealPitch(Vars::AntiHack::AntiAim::CustomRealPitch.Value, iMode == 10); G::FakeViewAngles.x = iMode == 10 ? 89.f : -89.f; return; }
 	}
 }
 
-float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd){
-	//	0 offset, 1 at player, 2 at player + offset
+float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd)
+{
+//	0 offset, 1 at player, 2 at player + offset
 	const float flBaseOffset = Vars::AntiHack::AntiAim::BaseYawOffset.Value;
-	switch (iMode){
-	case 0: { return pCmd->viewangles.y + flBaseOffset; }
-	case 1:
-	case 2: {
-		float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
-		for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)){
-			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }	//	is enemy valid
-			PlayerInfo_t pInfo{ };
-			if (I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo)){
-				if (G::IsIgnored(pInfo.friendsID)) { continue; }
+	switch (iMode)
+	{
+		case 0: { return pCmd->viewangles.y + flBaseOffset; }
+		case 1:
+		case 2:
+		{
+			float flSmallestAngleTo = 0.f; float flSmallestFovTo = 360.f;
+			for (CBaseEntity* pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+			{
+				if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetDormant()) { continue; }	//	is enemy valid
+				PlayerInfo_t pInfo{ };
+				if (I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo))
+				{
+					if (G::IsIgnored(pInfo.friendsID)) { continue; }
+				}
+				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
+				const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
+
+				if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 			}
-			const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
-			const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
-			
-			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
+			return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + (iMode == 2 ? flBaseOffset : 0));
 		}
-		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + (iMode == 2 ? flBaseOffset : 0));
-	}
 	}
 	return pCmd->viewangles.y;
 }
@@ -197,16 +216,16 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::AAActive = false;
 	G::RealViewAngles = G::ViewAngles;
 	G::FakeViewAngles = G::ViewAngles;
-	G::AntiAim = {false, false};
+	G::AntiAim = { false, false };
 
 	if (F::Misc.bMovementStopped || F::Misc.bFastAccel) { return; }
 
 	// AA toggle key
-	static KeyHelper kAA{&Vars::AntiHack::AntiAim::ToggleKey.Value};
+	static KeyHelper kAA{ &Vars::AntiHack::AntiAim::ToggleKey.Value };
 	Vars::AntiHack::AntiAim::Active.Value = (kAA.Pressed() ? !Vars::AntiHack::AntiAim::Active.Value : Vars::AntiHack::AntiAim::Active.Value);
 
 	// AA invert key
-	static KeyHelper kInvert{&Vars::AntiHack::AntiAim::InvertKey.Value};
+	static KeyHelper kInvert{ &Vars::AntiHack::AntiAim::InvertKey.Value };
 	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 
 	// Manual yaw key
@@ -219,7 +238,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	{
 		if (!ShouldAntiAim(pLocal)) { return; }
 		if (bManualing) { ManualMouseEvent(pCmd); }
-		else if (bSaved) { I::EngineClient->SetViewAngles(vSavedAngles); bSaved = false; vSavedAngles = {0, 0, 0}; }
+		else if (bSaved) { I::EngineClient->SetViewAngles(vSavedAngles); bSaved = false; vSavedAngles = { 0, 0, 0 }; }
 
 		const bool bPitchSet = Vars::AntiHack::AntiAim::Pitch.Value;
 		const bool bYawSet = Vars::AntiHack::AntiAim::YawReal.Value || Vars::AntiHack::AntiAim::YawFake.Value;
@@ -304,10 +323,11 @@ void CAntiAim::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 	}
 }
 
-void CAntiAim::Draw(CBaseEntity* pLocal){
+void CAntiAim::Draw(CBaseEntity* pLocal)
+{
 	if (!pLocal->IsAlive() || !bManualing) { return; }
 	if (Vars::AntiHack::AntiAim::YawFake.Value != 14 && Vars::AntiHack::AntiAim::YawReal.Value != 14) { return; }
 
 	const char* cText = p_p_bManualYaw.first ? (p_p_bManualYaw.second.second ? "BACKWARDS" : "FORWARDS") : (p_p_bManualYaw.second.first ? "LEFT" : "RIGHT");
-	g_Draw.String(FONT_MENU, g_ScreenSize.w / 2, (g_ScreenSize.h/2) + 25, { 255, 0, 0, 255 }, ALIGN_CENTER, cText);
+	g_Draw.String(FONT_MENU, g_ScreenSize.w / 2, (g_ScreenSize.h / 2) + 25, { 255, 0, 0, 255 }, ALIGN_CENTER, cText);
 }

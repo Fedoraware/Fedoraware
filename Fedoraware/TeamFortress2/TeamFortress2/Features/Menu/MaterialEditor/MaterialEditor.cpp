@@ -46,7 +46,7 @@ void CMaterialEditor::LoadMaterials()
 		{
 			const std::string str((std::istreambuf_iterator(inStream)), std::istreambuf_iterator<char>());
 			const auto kv = new KeyValues(matName.c_str());
-			
+
 			g_KeyValUtils.LoadFromBuffer(kv, matName.c_str(), str.c_str());
 			IMaterial* newMaterial = F::DMEChams.CreateNRef(std::string("m_pmat" + matName).c_str(), kv);
 			MaterialMap[matName] = { matPath, newMaterial };

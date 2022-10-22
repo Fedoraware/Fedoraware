@@ -238,14 +238,15 @@ bool CMovementSimulation::StrafePrediction()
 	const bool shouldPredict = m_pPlayer->OnSolid() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
 	if (!shouldPredict) { return false; }
 
-	if (bFirstRunTick){			//	we've already done the math, don't do it again
+	if (bFirstRunTick)
+	{			//	we've already done the math, don't do it again
 		flAverageYaw = 0.f;
 		flInitialYaw = 0.f;
 		bFirstRunTick = false;	//	if we fail the math here, don't try it again, it won't work.
 
 		const int iSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
 		if (!iSamples) { return false; }
-		
+
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
 			if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
@@ -278,7 +279,7 @@ bool CMovementSimulation::StrafePrediction()
 			*/
 
 			float flFinal = (flCompareYaw - flRecordYaw);
-			flFinal = ((flFinal + 180) - floor(flFinal/360) * 360) - 180;
+			flFinal = ((flFinal + 180) - floor(flFinal / 360) * 360) - 180;
 			flAverageYaw += flFinal;
 
 			flCompareYaw = flRecordYaw;
@@ -286,16 +287,17 @@ bool CMovementSimulation::StrafePrediction()
 
 		flAverageYaw /= i;
 
-		while (flAverageYaw > 360.f){ flAverageYaw -= 360.f; }
-		while (flAverageYaw < -360.f){ flAverageYaw += 360.f; }
+		while (flAverageYaw > 360.f) { flAverageYaw -= 360.f; }
+		while (flAverageYaw < -360.f) { flAverageYaw += 360.f; }
 
 		if (fabsf(flAverageYaw) < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
 		{
 			return false;
 		}
 
-		if (Vars::Debug::DebugInfo.Value){
-			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), {83, 255, 83, 255});
+		if (Vars::Debug::DebugInfo.Value)
+		{
+			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), { 83, 255, 83, 255 });
 		}
 	}
 	if (flAverageYaw == 0.f) { return false; }	//	fix
@@ -332,7 +334,7 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 	using ProcessMovement_FN = void(__thiscall*)(void*, CBaseEntity*, CMoveData*);
 	reinterpret_cast<ProcessMovement_FN>(Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
 
-	G::PredictionLines.push_back( { m_MoveData.m_vecAbsOrigin, Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) } );
+	G::PredictionLines.push_back({ m_MoveData.m_vecAbsOrigin, Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) });
 
 	moveDataOut = m_MoveData;
 	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;

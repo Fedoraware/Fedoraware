@@ -2,7 +2,8 @@
 #include "../Menu.h"
 #include "../../Fedworking/Fedworking.h"
 
-enum MessageType {
+enum MessageType
+{
 	Broadcast,	// [ Type, SubType, SenderID ]
 	Request,	// [ Type, SubType, SenderID, TargetID ]
 	Update,		// [ Type, SubType, SenderID, PlayerY, PlayerVel, BallPosX, BallPosY, BallVelX, BallVelY ]
@@ -10,7 +11,8 @@ enum MessageType {
 	Pong		// [ Type, SubType, SenderID, PlayerY, Score, BallVelX ]
 };
 
-enum class GameState {
+enum class GameState
+{
 	None,
 	Hosting,
 	Joining,
@@ -40,13 +42,14 @@ void CPong::Render()
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 1.f));
 	ImGui::SetNextWindowSize({ WindowSize.x, WindowSize.y });
-	
+
 	if (ImGui::Begin("Pong", &IsOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
 	{
 		if (CurrentState != GameState::Match)
 		{
 			DrawMenu();
-		} else if (CurrentState == GameState::Match)
+		}
+		else if (CurrentState == GameState::Match)
 		{
 			DrawGame();
 			UpdateGame();
@@ -95,11 +98,13 @@ void CPong::DrawMenu()
 				CurrentState = GameState::Joining;
 				IsMultiplayer = true;
 			}
-		} else
+		}
+		else
 		{
 			ImGui::Text("Enable 'Party Networking' to play online!");
 		}
-	} else
+	}
+	else
 	{
 		if (CurrentState == GameState::Hosting)
 		{
@@ -113,7 +118,7 @@ void CPong::DrawMenu()
 			for (const auto& match : FoundMatches)
 			{
 				if (I::EngineClient->Time() - match.second > 15.f) { continue; }
-				
+
 				if (ImGui::Button(tfm::format("Match #%i", match.first).c_str()))
 				{
 					JoinMatch(match.first);
@@ -137,20 +142,20 @@ void CPong::DrawGame()
 
 	// Draw Player
 	drawList->AddRectFilled({ windowPos.x + XOffset, windowPos.y + LeftY - (0.5f * RacketSize.y) },
-		{ windowPos.x + XOffset + RacketSize.x, windowPos.y + LeftY + (0.5f * RacketSize.y) },
-		ImColor(255, 255, 255));
+							{ windowPos.x + XOffset + RacketSize.x, windowPos.y + LeftY + (0.5f * RacketSize.y) },
+							ImColor(255, 255, 255));
 
-	// Draw Enemy
+						// Draw Enemy
 	drawList->AddRectFilled({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + RightY - (0.5f * RacketSize.y) },
-		{ windowPos.x + (WindowSize.x - XOffset - RacketSize.x), windowPos.y + RightY + (0.5f * RacketSize.y) },
-		ImColor(255, 255, 255));
+							{ windowPos.x + (WindowSize.x - XOffset - RacketSize.x), windowPos.y + RightY + (0.5f * RacketSize.y) },
+							ImColor(255, 255, 255));
 
-	// Draw Ball
+						// Draw Ball
 	drawList->AddCircleFilled({ windowPos.x + BallPos.x, windowPos.y + BallPos.y },
-		BallSize,
-		ImColor(255, 255, 255));
+							  BallSize,
+							  ImColor(255, 255, 255));
 
-	// Draw Scores
+						  // Draw Scores
 	drawList->AddText({ windowPos.x + XOffset, windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(LeftScore).c_str());
 	drawList->AddText({ windowPos.x + (WindowSize.x - XOffset), windowPos.y + 30.f }, ImColor(255, 255, 255), std::to_string(RightScore).c_str());
 }
@@ -262,7 +267,8 @@ void CPong::UpdateInput()
 		{
 			LeftVelocity = 0.f;
 		}
-	} else
+	}
+	else
 	{
 		// Player controller (Right)
 		if (cursorPos.y - windowPos.y < RightY)
@@ -315,7 +321,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 
 	switch (subType)
 	{
-	case Broadcast:
+		case Broadcast:
 		{
 			if (dataVector.size() == 3)
 			{
@@ -324,7 +330,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			break;
 		}
 
-	case Request:
+		case Request:
 		{
 			if (dataVector.size() == 4)
 			{
@@ -345,7 +351,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			break;
 		}
 
-	case Update:
+		case Update:
 		{
 			if (senderID == EnemyID && dataVector.size() == 9)
 			{
@@ -383,7 +389,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			break;
 		}
 
-	case Response:
+		case Response:
 		{
 			if (senderID == EnemyID && dataVector.size() == 5)
 			{
@@ -397,7 +403,7 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 			break;
 		}
 
-	case Pong:
+		case Pong:
 		{
 			if (senderID == EnemyID && dataVector.size() == 6)
 			{
@@ -409,7 +415,8 @@ void CPong::ReceiveData(const std::vector<std::string>& dataVector)
 				{
 					RightY = playerY;
 					RightScore = score;
-				} else
+				}
+				else
 				{
 					LeftY = playerY;
 					LeftScore = score;
@@ -438,7 +445,8 @@ void CPong::UpdateNetwork()
 		if (CurrentState == GameState::Hosting)
 		{
 			BroadcastMatch();
-		} else if (CurrentState == GameState::Match && IsHost)
+		}
+		else if (CurrentState == GameState::Match && IsHost)
 		{
 			SendMatch(LeftY, LeftVelocity, BallPos, BallVelocity);
 		}
