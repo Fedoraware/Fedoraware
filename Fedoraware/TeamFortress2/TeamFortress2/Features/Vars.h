@@ -678,7 +678,7 @@ namespace Vars
 		inline CVar<bool> AutoAcceptItemDrops{ false };
 		inline CVar<bool> RegionChanger{ false };
 		inline CVar<int> RegionsAllowed{ 0 };
-		inline CVar<bool> AutoCasualQueue{ false };
+		inline CVar<int> AutoCasualQueue{ 0 };
 		inline CVar<bool> JoinSpam{ false };
 		inline CVar<bool> AntiVAC{ false };
 		inline CVar<int> InstantAccept{ false };

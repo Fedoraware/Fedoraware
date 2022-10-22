@@ -2,10 +2,15 @@
 
 void CAutoQueue::Run()
 {
-	if (!I::EngineVGui->IsGameUIVisible() || I::EngineClient->IsInGame()) { return; }
+	const bool bInGame = (!I::EngineVGui->IsGameUIVisible() || I::EngineClient->IsInGame());
+
+	if (bInGame && Vars::Misc::AutoCasualQueue.Value == 1)
+	{
+		return;
+	}
 
 	// Auto queue
-	if (Vars::Misc::AutoCasualQueue.Value)
+	if (Vars::Misc::AutoCasualQueue.Value > 0)
 	{
 		if (!I::TFPartyClient->BInStandbyQueue() 	&&
 			!I::TFGCClientSystem->BHaveLiveMatch() 	&&
@@ -14,6 +19,11 @@ void CAutoQueue::Run()
 			I::TFPartyClient->LoadSavedCasualCriteria();
 			I::TFPartyClient->RequestQueueForMatch(k_eTFMatchGroup_Casual_Default);
 		}
+	}
+
+	if (bInGame)
+	{
+		return;
 	}
 
 	// Auto accept
