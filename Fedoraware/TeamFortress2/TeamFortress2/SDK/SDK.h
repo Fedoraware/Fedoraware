@@ -254,7 +254,10 @@ namespace Utils
 
 		while (!hwGame) {
 			hwGame = FindWindowW(nullptr, L"Team Fortress 2");
-			return false;
+			if (!hwGame)
+			{
+				return false;
+			}
 		}
 
 		return (GetForegroundWindow() == hwGame);

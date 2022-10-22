@@ -2211,14 +2211,6 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 {
 	if (!ConfigLoaded) { return; }
 
-	if (F::Menu.IsOpen)
-	{
-		if (!Utils::IsGameWindowInFocus())
-		{
-			F::Menu.IsOpen = false;
-		}
-	}
-
 	static std::once_flag initFlag;
 	std::call_once(initFlag, [&]
 				   {
@@ -2237,6 +2229,16 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		F::Menu.IsOpen = !F::Menu.IsOpen;
 		I::ViewRender->SetScreenOverlayMaterial(nullptr);
 		I::VGuiSurface->SetCursorAlwaysVisible(F::Menu.IsOpen);
+	}
+
+	if (F::Menu.IsOpen)
+	{
+		if (!Utils::IsGameWindowInFocus())
+		{
+			F::Menu.IsOpen = false;
+			I::ViewRender->SetScreenOverlayMaterial(nullptr);
+			I::VGuiSurface->SetCursorAlwaysVisible(F::Menu.IsOpen);
+		}
 	}
 
 	// Begin current frame

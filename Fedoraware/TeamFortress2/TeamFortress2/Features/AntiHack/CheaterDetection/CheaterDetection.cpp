@@ -309,3 +309,11 @@ void CCheaterDetection::ReportDamage(CGameEvent* pEvent)
 	mData[pEntity].pShots.first++; mData[pEntity].bDidDamage = true;
 	server.iHits++;
 }
+
+#include "../../Hooks/Hooks.h"
+
+MAKE_HOOK(asdfaasfsda, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 56 8B 75 08 8D 8D"), void, __fastcall,
+		  void* ecx, void* edx, int* pTrace, int iDamageType, const char* pCustomImpactName)
+{
+	Hook.Original<FN>()(ecx, edx, pTrace, iDamageType, pCustomImpactName);
+}
