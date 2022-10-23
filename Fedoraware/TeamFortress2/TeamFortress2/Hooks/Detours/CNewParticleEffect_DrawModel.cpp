@@ -15,4 +15,6 @@ MAKE_HOOK(CNewParticleEffect_DrawModel, g_Pattern.Find(L"client.dll", L"55 8B EC
 		pRC->DepthRange(0.0f, 1.0f);
 		return nReturn;
 	}
+
+	return Hook.Original<FN>()(ecx, edx, flags);	//	warning
 }

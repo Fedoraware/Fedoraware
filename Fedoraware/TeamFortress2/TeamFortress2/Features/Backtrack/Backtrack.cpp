@@ -23,10 +23,19 @@ bool CBacktrack::WithinRewind(const TickRecord& record)
 
 	if (!pLocal || !iNetChan) { return false; }
 
-	const float flCorrect = std::clamp(iNetChan->GetLatency(FLOW_INCOMING) + GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
-	const float flDelta = fabsf(flCorrect - (I::GlobalVars->curtime - record.flSimTime));
+	const float flCorrect = std::clamp(GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
+	const float flDelta = fabsf(flCorrect - (TICKS_TO_TIME(pLocal->GetTickBase()) - record.flSimTime));
 
-	return flDelta < .2f; //	in short, check if the record is +- 200ms from us
+	return flDelta < .2f - TICKS_TO_TIME(1); //	in short, check if the record is +- 200ms from us
+}
+
+//	hypothetically if their simtime is within 200ms of us we can hit their original, but idc
+bool CBacktrack::CanHitOriginal(){
+	const auto pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return false; }
+
+	const float flDelta = std::clamp(GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
+	return flDelta < .2f - TICKS_TO_TIME(1);
 }
 
 void CBacktrack::CleanRecords()
@@ -130,6 +139,7 @@ float CBacktrack::GetLatency()
 	{
 		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING);
 		const float flFakeLatency = flLatencyRampup * std::clamp(static_cast<float>(Vars::Backtrack::Latency.Value), 0.f, 800.f) / 1000.f;
+		const float flFakeLatency = flLatencyRampup * std::clamp((float)Vars::Backtrack::Latency.Value, 0.f, 800.f) / 1000.f;
 		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
 		return flAdjustedLatency;
 	}
