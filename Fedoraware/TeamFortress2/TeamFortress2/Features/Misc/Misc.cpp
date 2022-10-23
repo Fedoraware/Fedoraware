@@ -1387,6 +1387,13 @@ void CStatistics::Clear()
 
 void CStatistics::Submit()
 {
+	constexpr bool bIsDown = true;	//	set this to false if we ever get a working server
+	if (bIsDown) {
+		Utils::ConLog("FWARE-Statistics-Server", "Statistic server un-available.", { 255, 0, 114, 255 });
+		return;
+	}
+
+
 	if (!Vars::Misc::StoreStatistics.Value)
 	{
 		return;
