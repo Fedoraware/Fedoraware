@@ -117,7 +117,7 @@ void CBacktrack::MakeRecords()
 // Store the last 2048 sequences
 void CBacktrack::UpdateDatagram()
 {
-	if (const auto iNetChan = I::EngineClient->GetNetChannelInfo())
+	if (INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo())
 	{
 		if (iNetChan->m_nInSequenceNr > iLastInSequence)
 		{
@@ -135,15 +135,7 @@ void CBacktrack::UpdateDatagram()
 // Returns the current (custom) backtrack latency
 float CBacktrack::GetLatency()
 {
-	if (const auto iNetChan = I::EngineClient->GetNetChannelInfo())
-	{
-		const float flRealLatency = iNetChan->GetLatency(FLOW_OUTGOING);
-		const float flFakeLatency = flLatencyRampup * std::clamp(static_cast<float>(Vars::Backtrack::Latency.Value), 0.f, 800.f) / 1000.f;
-		const float flAdjustedLatency = std::clamp((flRealLatency + (bFakeLatency ? flFakeLatency : 0.f)), 0.f, 1.f);
-		return flAdjustedLatency;
-	}
-
-	return 0.f; //	we failed to get net channel and therefor have no latency.
+	return flLatencyRampup * std::clamp(static_cast<float>(Vars::Backtrack::Latency.Value), 0.f, 800.f) / 1000.f;
 }
 
 void CBacktrack::PlayerHurt(CGameEvent* pEvent)
@@ -164,8 +156,8 @@ void CBacktrack::Restart()
 
 void CBacktrack::FrameStageNotify()
 {
-	const auto pLocal = g_EntityCache.GetLocal();
-	const auto iNetChan = I::EngineClient->GetNetChannelInfo();
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!pLocal || !iNetChan) { return Restart(); }
 
 	flLatencyRampup = std::min(1.f, flLatencyRampup += I::GlobalVars->interval_per_tick);
