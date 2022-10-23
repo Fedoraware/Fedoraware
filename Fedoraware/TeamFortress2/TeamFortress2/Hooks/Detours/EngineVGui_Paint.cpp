@@ -5,6 +5,7 @@
 #include "../../Features/PlayerArrows/PlayerArrows.h"
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
+#include "../../Features/Misc/Notifications/Notifications.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/CritHack/CritHack.h"
 #include "../../Features/Menu/Menu.h"

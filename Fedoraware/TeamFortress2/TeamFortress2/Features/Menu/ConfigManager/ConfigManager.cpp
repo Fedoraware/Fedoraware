@@ -6,7 +6,7 @@
 
 #include "../../Vars.h"
 #include "../../../SDK/SDK.h"
-#include "../../Misc/Misc.h"
+#include "../../Misc/Notifications/Notifications.h"
 
 #define SAVE_VAR(x) SaveJson(#x, x.Value)
 #define LOAD_VAR(x) LoadJson(#x, x.Value)

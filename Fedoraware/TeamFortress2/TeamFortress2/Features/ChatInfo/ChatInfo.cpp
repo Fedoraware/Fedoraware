@@ -1,7 +1,7 @@
 #include "ChatInfo.h"
 
 #include "../Vars.h"
-#include "../Misc/Misc.h"
+#include "../Misc/Notifications/Notifications.h"
 #include "../../Features/Visuals/Visuals.h"
 
 int attackStringW;
