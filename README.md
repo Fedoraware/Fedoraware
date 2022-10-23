@@ -58,7 +58,7 @@
   - [SylveonBottle](https://github.com/SylveonBottle)
   - [NotAnUser1](https://github.com/NotAnUser1)
   - [VOID-Nightmare](https://github.com/VOID-Nightmare)
-  - [Fourteen](https://github.com/NitroTF2)
+  - Fourteen
   - [vicinity-gush8](https://github.com/vicinity-gush8)
   - [XJN2](https://github.com/XJN2)
   - [hivec2](https://github.com/hivec2)
