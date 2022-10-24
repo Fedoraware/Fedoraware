@@ -862,7 +862,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			if (Vars::Aimbot::Hitscan::TapFire.Value && nWeaponID == TF_WEAPON_MINIGUN && !pLocal->IsPrecisionRune())
 			{
 				const bool bDo = Vars::Aimbot::Hitscan::TapFire.Value == 1
-					? pLocal->GetAbsOrigin().DistTo(target.m_pEntity->GetAbsOrigin()) > 1000.0f
+					? pLocal->GetShootPos().DistTo(target.m_vPos) > Vars::Aimbot::Hitscan::TapFireDist.Value
 					: true;
 
 				if (bDo && pWeapon->GetWeaponSpread() != 0.f)

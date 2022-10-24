@@ -95,6 +95,7 @@ namespace Vars
 			inline CVar<float> PointScale{ .54f };
 			inline CVar<int> SmoothingAmount{ 4 };
 			inline CVar<int> TapFire{ 0 }; //0 - Off, 1 - Distance, 2 - Always
+			inline CVar<float> TapFireDist { 1000.f };
 			inline CVar<bool> ScanBuildings{ false };
 			inline CVar<bool> WaitForHeadshot{ false };
 			inline CVar<bool> WaitForCharge{ false };
