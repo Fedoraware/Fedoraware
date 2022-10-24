@@ -157,7 +157,7 @@ void CResolver::Run()
 			case 6:	//	find edge
 			{
 				const Vec3 vAngleTo = Math::CalcAngle(entity->GetAbsOrigin(), pLocal->GetAbsOrigin());	//	baseyaw
-				const bool bEdge = G::RealViewAngles.x == 89.f ? F::AntiAim.FindEdge(vAngleTo.y) : F::AntiAim.FindEdge(vAngleTo.y);	//	this is terrible but should work fine
+				const bool bEdge = m_angEyeAnglesX == (float*)89 ? !F::AntiAim.FindEdge(vAngleTo.y) : F::AntiAim.FindEdge(vAngleTo.y);	//	this is terrible but should work fine
 				*m_angEyeAnglesY = vAngleTo.y + (bEdge ? 90 : -90);
 				break;
 			}
