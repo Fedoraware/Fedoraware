@@ -26,17 +26,19 @@ bool CBacktrack::WithinRewind(const TickRecord& record)
 	const float flCorrect = std::clamp(GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
 	const float flDelta = fabsf(flCorrect - (TICKS_TO_TIME(pLocal->GetTickBase()) - record.flSimTime));
 
-	return flDelta < .2f - TICKS_TO_TIME(2); //	in short, check if the record is +- 200ms from us
+	return flDelta < .200f - TICKS_TO_TIME(2); //	in short, check if the record is +- 200ms from us
 }
 
 //	hypothetically if their simtime is within 200ms of us we can hit their original, but idc
-bool CBacktrack::CanHitOriginal(){
+bool CBacktrack::CanHitOriginal(CBaseEntity* pEntity){
 	const auto pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return false; }
 	if (!bFakeLatency) { return true; }
+	if (GetLatency() > .200f - TICKS_TO_TIME(2)) { return false; }
 
-	const float flDelta = std::clamp(GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
-	return flDelta < .2f - TICKS_TO_TIME(2);
+	const float flCorrect = std::clamp(GetLatency() + G::LerpTime, 0.f, g_ConVars.sv_maxunlag->GetFloat());
+	const float flDelta = fabsf(flCorrect - (TICKS_TO_TIME(pLocal->GetTickBase()) - pEntity->GetSimulationTime()));
+	return flDelta < .200f - TICKS_TO_TIME(2);
 }
 
 void CBacktrack::CleanRecords()

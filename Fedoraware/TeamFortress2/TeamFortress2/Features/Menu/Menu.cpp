@@ -33,7 +33,7 @@ void CMenu::DrawMenu()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 700, 500 });
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 
-	if (ImGui::Begin(Vars::Menu::CheatName.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
+	if (ImGui::Begin("MainWindow", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
@@ -1885,6 +1885,9 @@ void CMenu::SettingsWindow()
 		{
 			I::ViewRender->SetScreenOverlayMaterial(nullptr);
 		}
+
+		WInputText("Cheat Name", &Vars::Menu::CheatName);
+		WInputText("Chat Info Prefix", &Vars::Menu::CheatPrefix);
 
 		SetNextItemWidth(100);
 		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);

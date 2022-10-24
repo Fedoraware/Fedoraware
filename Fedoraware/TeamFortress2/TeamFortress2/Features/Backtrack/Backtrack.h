@@ -70,7 +70,7 @@ class CBacktrack
 
 public:
 	bool WithinRewind(const TickRecord& record);
-	bool CanHitOriginal();
+	bool CanHitOriginal(CBaseEntity* pEntity);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
 	void Restart(); //	called whenever lol
 	void FrameStageNotify(); //	called in FrameStageNotify
