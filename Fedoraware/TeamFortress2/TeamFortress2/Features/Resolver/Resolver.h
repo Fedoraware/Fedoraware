@@ -6,9 +6,7 @@ struct ResolveData{
 	bool bEnabled = false;			//	should we resolve this player
 
 	//bruteforce data
-	int iPitchIndex = 0;
 	int iYawIndex = 0;
-	int iCurrentMissed = 0;			//	cycle pitch or yaw when this reaches a certain threshold 
 
 	//logical data
 	std::pair<int, float> pLastSniperPitch = {0, 0.f};
@@ -43,10 +41,13 @@ private:
 	//data
 	std::unordered_map<CBaseEntity*, CBaseEntity*> mSniperDots;
 	std::unordered_map<CBaseEntity*, ResolveData> mResolverData;
+	std::pair<int, CBaseEntity*> pWaiting = {0, nullptr};
 public:
+	void Aimbot(CBaseEntity* pEntity);
 	void FrameStageNotify();
+	void CreateMove();
 	void FXFireBullet(int iIndex, const Vec3 vAngles);
-	//void OnPlayerHurt(CGameEvent* pEvent);
+	void OnPlayerHurt(CGameEvent* pEvent);
 	std::unordered_map<uint32_t, std::pair<int, int>> mResolverMode;	//	pitch, yaw
 };
 

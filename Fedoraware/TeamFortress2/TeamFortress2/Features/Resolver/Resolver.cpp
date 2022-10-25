@@ -1,6 +1,8 @@
 #include "Resolver.h"
 #include "../AntiHack/AntiAim.h"
 
+static std::vector<float> vYawRotations{ 0.0f, 180.0f, 90.0f, -90.0f};
+
 void PResolver::UpdateSniperDots(){
 	mSniperDots.clear();
 	for (int i = I::EngineClient->GetMaxClients() + 1; i <= I::ClientEntityList->GetHighestEntityIndex(); i++)
@@ -110,6 +112,16 @@ int PResolver::GetYawMode(CBaseEntity* pEntity){
 	return mResolverMode[pInfo.friendsID].second;
 }
 
+void PResolver::Aimbot(CBaseEntity* pEntity){
+	if (abs(I::GlobalVars->tickcount - pWaiting.first) < 66) { return; }
+
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	if (!iNetChan) { return; }
+
+	const int iDelay = 6 + TIME_TO_TICKS(G::LerpTime + iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING));
+	pWaiting = {I::GlobalVars->tickcount + iDelay, pEntity};
+}
+
 void PResolver::FrameStageNotify(){
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return; }
@@ -139,9 +151,14 @@ void PResolver::FrameStageNotify(){
 		else {
 			switch (GetPitchMode(pEntity)){
 			case 0: break;
-			case 1: vAdjustedAngle.x = -89.f; break;
-			case 2: vAdjustedAngle.x = 89.f; break;
-			case 3: vAdjustedAngle.x = 0.f; break;
+			case 1: vAdjustedAngle.x = -89.f; break;				//up
+			case 2: vAdjustedAngle.x = 89.f; break;					//down
+			case 3: vAdjustedAngle.x = 0.f; break;					//zero
+			case 4: {												//auto
+				if (mResolverData[pEntity].vOriginalAngles.x >= 90.f) { vAdjustedAngle.x = -89.f; }
+				else if (mResolverData[pEntity].vOriginalAngles.x <= -90.f) { vAdjustedAngle.x = 89.f; }
+				break;
+			}
 			}
 		}
 
@@ -159,15 +176,27 @@ void PResolver::FrameStageNotify(){
 			case 3: vAdjustedAngle.y = flBaseYaw - 90.f; break;		//side1
 			case 4: vAdjustedAngle.y = flBaseYaw + 90.f; break;		//side2
 			case 5: vAdjustedAngle.y += 180.f; break;				//invert
-			case 6:{
+			case 6:{												//edge
 				const bool bEdge = vAdjustedAngle.x == 89 ? !F::AntiAim.FindEdge(flBaseYaw) : F::AntiAim.FindEdge(flBaseYaw);
 				vAdjustedAngle.y = flBaseYaw + (bEdge ? 90.f : -90.f);
+				break;
+			}
+			case 7:{												//auto
+				vAdjustedAngle.y = vYawRotations[mResolverData[pEntity].iYawIndex];
 				break;
 			}
 			}
 		}
 
 		SetAngles(vAdjustedAngle, pEntity);
+	}
+}
+
+void PResolver::CreateMove(){
+	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second) { 
+		mResolverData[pWaiting.second].iYawIndex++;
+		if (mResolverData[pWaiting.second].iYawIndex > 3) { mResolverData[pWaiting.second].iYawIndex = 0; }
+		pWaiting = {0, nullptr};
 	}
 }
 
@@ -183,4 +212,14 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 
 	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngAdjusted};	//	doesnt account for fakeyaw players in fov calculations BEWARE
 	SetAngles(vAngAdjusted, pEntity);
+}
+
+void PResolver::OnPlayerHurt(CGameEvent* pEvent){
+	const bool bLocal = I::EngineClient->GetPlayerForUserID(pEvent->GetInt("attacker")) == I::EngineClient->GetLocalPlayer();
+	if (!bLocal) { return; }
+
+	const CBaseEntity* pVictim = I::ClientEntityList->GetClientEntity(I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid")));
+
+	if (pVictim == pWaiting.second) { pWaiting = {0, nullptr}; }
+	return;
 }

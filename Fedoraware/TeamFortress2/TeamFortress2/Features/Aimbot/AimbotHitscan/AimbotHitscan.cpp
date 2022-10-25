@@ -1,6 +1,7 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../Resolver/Resolver.h"
 
 bool IsHitboxValid(int nHitbox, int index, bool bStatic = false)
 {
@@ -888,6 +889,8 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		if (bIsAttacking)
 		{
+			F::Resolver.Aimbot(target.m_pEntity);
+
 			G::IsAttacking = true;
 			nextSafeTick = pCmd->tick_count; // just in case.weew
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
