@@ -201,16 +201,22 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 	if (!pEntity) { return; }
 
 	Vec3 vAngAdjusted = vAngles;
+	Vec3 vAngStore = vAngles;
 
 	if (!IsOnShotPitchReliable(vAngles.x)){
 		float flAdjustedPitch = vAngles.x;
 		while (flAdjustedPitch > 360) { flAdjustedPitch -= 360.f; }	//	fix for local fire, remove post debug
 		while (flAdjustedPitch < 0) { flAdjustedPitch += 360.f; }	//	fix for local fire, remove post debug
 		vAngAdjusted.x = GetRealPitch(flAdjustedPitch);
-		//Utils::ConLog("Resolver", tfm::format("%.1f", vAngAdjusted.x).c_str(), {0, 222, 255, 255});
+		vAngStore.x = vAngAdjusted.x;
+
+		if (fabsf(flAdjustedPitch) > 89.f) { vAngStore.y += 180; }	//	account for likely yaw faking
+		while (vAngStore.y > 360) { vAngStore.y -= 360.f; }	//	hacky fix for previous line
+		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
+		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
 	}
 
-	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngAdjusted};	//	doesnt account for fakeyaw players in fov calculations BEWARE
+	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngStore};
 	SetAngles(vAngAdjusted, pEntity);
 }
 

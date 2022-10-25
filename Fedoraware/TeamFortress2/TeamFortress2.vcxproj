@@ -212,7 +212,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_SendSignonData.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CLagCompensationManager_StartLagCompensation.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNewParticleEffect_DrawModel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
