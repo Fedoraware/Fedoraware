@@ -545,23 +545,6 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 		case 2: //Silent
 		{
-			if (Vars::AntiHack::AntiAim::InvalidShootPitch.Value && Vars::AntiHack::AntiAim::Active.Value && ((Vars::AntiHack::AntiAim::YawReal.Value && Vars::AntiHack::AntiAim::YawFake.Value) ||
-				Vars::AntiHack::AntiAim::Pitch.Value))
-			{
-				G::UpdateView = false;
-
-				if (vAngle.x > 0.f)
-				{
-					vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, 89.0f, 180.0f, 91.0f);
-				}
-				else
-				{
-					vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, -89.0f, -180.0f, -91.0f);
-				}
-
-				vAngle.y -= 180.f;
-			}
-
 			if (Vars::Aimbot::Global::FlickatEnemies.Value && !G::ShouldShift)
 			{
 				if (G::IsAttacking)

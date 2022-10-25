@@ -213,6 +213,12 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = { false, false };
 
+	if (G::IsAttacking && Vars::AntiHack::AntiAim::InvalidShootPitch.Value){
+		G::UpdateView = false;
+		pCmd->viewangles.x = CalculateCustomRealPitch(-pCmd->viewangles.x, false) + 180;
+		pCmd->viewangles.y += 180;
+	}
+
 	if (F::Misc.bMovementStopped || F::Misc.bFastAccel) { return; }
 
 	// AA toggle key
