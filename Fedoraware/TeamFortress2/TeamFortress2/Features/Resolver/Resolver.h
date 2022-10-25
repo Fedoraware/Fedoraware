@@ -1,42 +1,53 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
-struct ResolveMode
-{
-	int m_Pitch = 4; // Default to AUTO
-	int m_Yaw = 0;
+struct ResolveData{
+	//config data
+	bool bEnabled = false;			//	should we resolve this player
+
+	//bruteforce data
+	int iPitchIndex = 0;
+	int iYawIndex = 0;
+	int iCurrentMissed = 0;			//	cycle pitch or yaw when this reaches a certain threshold 
+
+	//logical data
+	std::pair<int, float> pLastSniperPitch = {0, 0.f};
+	float flPitchNoise = 0.f;		//	noise around sniper dot pitch
+	float flWishYaw = 0.f;			//	the yaw we want to force on this player
+
+	//historical data
+	std::pair<int, Vec3> pLastFireAngles = {0, {}};
+	Vec2 vLastTickAngles = {0.f, 0.f};
+	Vec2 vOriginalAngles = {0.f, 0.f};
 };
 
-struct ResolverData
-{
-	float LastShot = 0.f;
-	float LastHit = 0.f;
-	int Mode = 0;
-	bool RequiresUpdate = false;
-};
-
-struct BruteData
-{
-	int BruteNum = 0;
-	int HitStreak = 0;
-};
-
-class CResolver
+class PResolver
 {
 private:
+	//sniper dots
 	void UpdateSniperDots();
-	float ResolveSniperDot(CBaseEntity* pOwner);
-	std::unordered_map<CBaseEntity*, CBaseEntity*> SniperDotMap;
-	std::unordered_map<int, bool> mDidShoot;
-public:
-	bool ShouldAutoResolve();
-	void Run();
-	void Update(CUserCmd* pCmd);
-	void OnPlayerHurt(CGameEvent* pEvent);
-	void ReportShot(int iIndex);
+	std::optional<float> GetPitchForSniperDot(CBaseEntity* pEntity);
 
-	std::unordered_map<int, ResolveMode> ResolvePlayers;
-	std::unordered_map<int, ResolverData> ResolveData;
+	//logic
+	std::optional<float> PredictBaseYaw(CBaseEntity* pEntity);
+
+	//misc
+	bool ShouldRun();
+	bool ShouldRunEntity(CBaseEntity* pEntity);
+	bool IsOnShotPitchReliable(const float flPitch);
+	float GetRealPitch(const float flPitch);
+	void SetAngles(const Vec3 vAngles, CBaseEntity* pEntity);
+	int GetPitchMode(CBaseEntity* pEntity);
+	int GetYawMode(CBaseEntity* pEntity);
+
+	//data
+	std::unordered_map<CBaseEntity*, CBaseEntity*> mSniperDots;
+	std::unordered_map<CBaseEntity*, ResolveData> mResolverData;
+public:
+	void FrameStageNotify();
+	void FXFireBullet(int iIndex, const Vec3 vAngles);
+	//void OnPlayerHurt(CGameEvent* pEvent);
+	std::unordered_map<uint32_t, std::pair<int, int>> mResolverMode;	//	pitch, yaw
 };
 
-ADD_FEATURE(CResolver, Resolver)
+ADD_FEATURE(PResolver, Resolver)

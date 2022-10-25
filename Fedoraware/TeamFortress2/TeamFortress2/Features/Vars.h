@@ -806,6 +806,8 @@ namespace Vars
 		namespace Resolver
 		{
 			inline CVar<bool> Resolver{ false };
+			inline CVar<bool> AutoResolveCheaters{ false };
+			inline CVar<bool> IgnoreAirborne{ false };
 		}
 	}
 

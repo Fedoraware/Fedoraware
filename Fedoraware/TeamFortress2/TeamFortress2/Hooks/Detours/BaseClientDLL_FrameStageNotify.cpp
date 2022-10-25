@@ -38,7 +38,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 			}
 
 			// Resolver
-			F::Resolver.Run();
+			F::Resolver.FrameStageNotify();
 
 			F::Visuals.SkyboxChanger();
 
