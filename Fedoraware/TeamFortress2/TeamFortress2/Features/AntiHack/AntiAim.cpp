@@ -62,6 +62,20 @@ void CAntiAim::ManualMouseEvent(CUserCmd* pCmd)
 	return;
 }
 
+void CAntiAim::FakeShotAngles(CUserCmd* pCmd){
+	if (!G::IsAttacking || G::CurWeaponType != EWeaponType::HITSCAN || !Vars::AntiHack::AntiAim::InvalidShootPitch.Value){ return; }
+
+	const Vec3 vOldAngles = pCmd->viewangles;
+	const float fOldSideMove = pCmd->sidemove;
+	const float fOldForwardMove = pCmd->forwardmove;
+
+	G::UpdateView = false;
+	pCmd->viewangles.x = CalculateCustomRealPitch(-pCmd->viewangles.x, false) + 180;
+	pCmd->viewangles.y += 180;
+
+	FixMovement(pCmd, vOldAngles, fOldSideMove, fOldForwardMove);
+}
+
 bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal)
 {
 	if (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsInBumperKart() || pLocal->IsAGhost())
@@ -213,11 +227,7 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = { false, false };
 
-	if (G::IsAttacking && Vars::AntiHack::AntiAim::InvalidShootPitch.Value){
-		G::UpdateView = false;
-		pCmd->viewangles.x = CalculateCustomRealPitch(-pCmd->viewangles.x, false) + 180;
-		pCmd->viewangles.y += 180;
-	}
+	FakeShotAngles(pCmd);
 
 	if (F::Misc.bMovementStopped || F::Misc.bFastAccel) { return; }
 

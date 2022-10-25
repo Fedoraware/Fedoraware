@@ -7,6 +7,7 @@ private:
 	// utils
 	void FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove);
 	void ManualMouseEvent(CUserCmd* pCmd);
+	void FakeShotAngles(CUserCmd* pCmd);
 
 	// logic
 	float EdgeDistance(float edgeRayYaw);
