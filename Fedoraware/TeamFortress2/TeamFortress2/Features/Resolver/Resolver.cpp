@@ -81,12 +81,8 @@ bool PResolver::IsOnShotPitchReliable(const float flPitch){
 }
 
 float PResolver::GetRealPitch(const float flPitch){
-	const float flRemainder = fmodf(flPitch, 360.f);	//	will return ((pitch/360)r * 360)
-
-	if (flRemainder > 180.f) { return flRemainder - 360.f; }
-	else if (flRemainder < -180.f){ return flRemainder + 360.f; }
-
-	return flRemainder;
+	if (flPitch < 157.5f) { return 89.f; }
+	else { return -89.f; }
 }
 
 void PResolver::SetAngles(const Vec3 vAngles, CBaseEntity* pEntity){
@@ -207,7 +203,11 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 	Vec3 vAngAdjusted = vAngles;
 
 	if (!IsOnShotPitchReliable(vAngles.x)){
-		vAngAdjusted.x = GetRealPitch(vAngles.x);
+		float flAdjustedPitch = vAngles.x;
+		while (flAdjustedPitch > 360) { flAdjustedPitch -= 360.f; }	//	fix for local fire, remove post debug
+		while (flAdjustedPitch < 0) { flAdjustedPitch += 360.f; }	//	fix for local fire, remove post debug
+		vAngAdjusted.x = GetRealPitch(flAdjustedPitch);
+		//Utils::ConLog("Resolver", tfm::format("%.1f", vAngAdjusted.x).c_str(), {0, 222, 255, 255});
 	}
 
 	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngAdjusted};	//	doesnt account for fakeyaw players in fov calculations BEWARE
