@@ -43,9 +43,9 @@ private:
 	//data
 	std::unordered_map<CBaseEntity*, CBaseEntity*> mSniperDots;
 	std::unordered_map<CBaseEntity*, ResolveData> mResolverData;
-	std::pair<int, CBaseEntity*> pWaiting = {0, nullptr};
+	std::pair<int, std::pair<CBaseEntity*, bool>> pWaiting = {0, {nullptr, false}};
 public:
-	void Aimbot(CBaseEntity* pEntity);
+	void Aimbot(CBaseEntity* pEntity, const bool bHeadshot);
 	void FrameStageNotify();
 	void CreateMove();
 	void FXFireBullet(int iIndex, const Vec3 vAngles);
