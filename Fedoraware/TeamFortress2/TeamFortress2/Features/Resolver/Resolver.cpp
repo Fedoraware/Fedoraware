@@ -71,9 +71,12 @@ bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 	if (!pEntity->OnSolid() && Vars::AntiHack::Resolver::IgnoreAirborne.Value) { return false; }
 	if (!pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
 
-	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first < 2) { return false; }	//	the networked angles are accurate
-	if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
+	//if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
 	return true;
+}
+
+bool PResolver::KeepOnShot(CBaseEntity* pEntity){
+	return abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first) < 2;
 }
 
 bool PResolver::IsOnShotPitchReliable(const float flPitch){
@@ -143,6 +146,7 @@ void PResolver::FrameStageNotify(){
 		mResolverData[pEntity].vOriginalAngles = {pEntity->GetEyeAngles().x, pEntity->GetEyeAngles().y};
 
 		if (!ShouldRunEntity(pEntity)) { continue; }
+		if (KeepOnShot(pEntity)) { SetAngles(mResolverData[pEntity].pLastFireAngles.second, pEntity); continue; }
 
 		Vec3 vAdjustedAngle = pEntity->GetEyeAngles();
 

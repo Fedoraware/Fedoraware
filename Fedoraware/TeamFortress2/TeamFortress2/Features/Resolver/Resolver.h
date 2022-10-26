@@ -31,6 +31,7 @@ private:
 	//misc
 	bool ShouldRun();
 	bool ShouldRunEntity(CBaseEntity* pEntity);
+	bool KeepOnShot(CBaseEntity* pEntity);
 	bool IsOnShotPitchReliable(const float flPitch);
 	float GetRealPitch(const float flPitch);
 	void SetAngles(const Vec3 vAngles, CBaseEntity* pEntity);
