@@ -172,17 +172,14 @@ bool CCritHack::ShouldCrit()
 		CBaseEntity* Player;
 		if ((Player = I::ClientEntityList->GetClientEntity(G::CurrentTargetIdx)))
 		{
-			if (!Player->GetDormant() || Player->IsAlive())
+			if (G::CurItemDefIndex == Heavy_t_TheHolidayPunch)
 			{
-				if (G::CurItemDefIndex == Heavy_t_TheHolidayPunch)
-				{
-					if (Player->OnSolid())
-						return true;
-				}
-
-				if (MeleeDamage <= Player->GetHealth())
+				if (Player->OnSolid())
 					return true;
 			}
+
+			if (MeleeDamage <= Player->GetHealth())
+				return true;
 		}
 	}
 
