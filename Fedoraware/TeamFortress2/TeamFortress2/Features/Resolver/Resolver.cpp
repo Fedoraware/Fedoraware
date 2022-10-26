@@ -71,9 +71,12 @@ bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 	if (!pEntity->OnSolid() && Vars::AntiHack::Resolver::IgnoreAirborne.Value) { return false; }
 	if (!pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
 
-	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first < 2) { return false; }	//	the networked angles are accurate
-	if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
+	//if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
 	return true;
+}
+
+bool PResolver::KeepOnShot(CBaseEntity* pEntity){
+	return abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first) < 2;
 }
 
 bool PResolver::IsOnShotPitchReliable(const float flPitch){
@@ -116,14 +119,14 @@ void PResolver::OnDormancy(CBaseEntity* pEntity){
 	mResolverData[pEntity].vOriginalAngles = {};
 }
 
-void PResolver::Aimbot(CBaseEntity* pEntity){
+void PResolver::Aimbot(CBaseEntity* pEntity, const bool bHeadshot){
 	if (abs(I::GlobalVars->tickcount - pWaiting.first) < 66) { return; }
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!iNetChan) { return; }
 
 	const int iDelay = 6 + TIME_TO_TICKS(G::LerpTime + iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING));
-	pWaiting = {I::GlobalVars->tickcount + iDelay, pEntity};
+	pWaiting = {I::GlobalVars->tickcount + iDelay, {pEntity, bHeadshot}};
 }
 
 void PResolver::FrameStageNotify(){
@@ -143,6 +146,7 @@ void PResolver::FrameStageNotify(){
 		mResolverData[pEntity].vOriginalAngles = {pEntity->GetEyeAngles().x, pEntity->GetEyeAngles().y};
 
 		if (!ShouldRunEntity(pEntity)) { continue; }
+		if (KeepOnShot(pEntity)) { SetAngles(mResolverData[pEntity].pLastFireAngles.second, pEntity); continue; }
 
 		Vec3 vAdjustedAngle = pEntity->GetEyeAngles();
 
@@ -209,10 +213,10 @@ void PResolver::FrameStageNotify(){
 }
 
 void PResolver::CreateMove(){
-	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second) { 
-		mResolverData[pWaiting.second].iYawIndex++;
-		if (mResolverData[pWaiting.second].iYawIndex > 3) { mResolverData[pWaiting.second].iYawIndex = 0; }
-		pWaiting = {0, nullptr};
+	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second.first) { 
+		mResolverData[pWaiting.second.first].iYawIndex++;
+		if (mResolverData[pWaiting.second.first].iYawIndex > 3) { mResolverData[pWaiting.second.first].iYawIndex = 0; }
+		pWaiting = {0, {nullptr, false}};
 	}
 }
 
@@ -252,6 +256,12 @@ void PResolver::OnPlayerHurt(CGameEvent* pEvent){
 
 	const CBaseEntity* pVictim = I::ClientEntityList->GetClientEntity(I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid")));
 
-	if (pVictim == pWaiting.second) { pWaiting = {0, nullptr}; }
+	if (pVictim == pWaiting.second.first) { 
+		if (pWaiting.second.second && G::WeaponCanHeadShot){	//	should be headshot
+			const bool bCrit = pEvent->GetBool("crit");
+			if (!bCrit) { return; }
+		}
+		pWaiting = {0, {nullptr, false}}; 
+	}
 	return;
 }

@@ -318,6 +318,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 							// properly check if we hit the hitbox we were scanning and not just a hitbox. (only if the hitbox we are scanning is head)
 							{
 								target.m_vPos = vHitbox;
+								target.m_nAimedHitbox = nHitbox;
 								target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
 								return true;
 							}
@@ -352,6 +353,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 									// there is no need to scan multiple times just because we hit the arm or whatever. Only count as failure if this hitbox was head.
 										{
 											target.m_vPos = vTransformed;
+											target.m_nAimedHitbox = nHitbox;
 											target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
 											target.m_bHasMultiPointed = true;
 											return true;
@@ -445,6 +447,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 						target.SimTime = ValidRecord->flSimTime;
 						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
 						target.ShouldBacktrack = true;
+						target.m_nAimedHitbox = nHitbox;
 						return true;
 					}
 				}
@@ -872,7 +875,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		if (bIsAttacking)
 		{
-			F::Resolver.Aimbot(target.m_pEntity);
+			F::Resolver.Aimbot(target.m_pEntity, target.m_nAimedHitbox == 0);
 
 			G::IsAttacking = true;
 			nextSafeTick = pCmd->tick_count; // just in case.weew
