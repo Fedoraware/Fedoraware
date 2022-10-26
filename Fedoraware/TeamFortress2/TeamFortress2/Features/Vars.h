@@ -38,6 +38,7 @@ namespace Vars
 		inline CVar<bool> AvoidRandom{ false };
 		inline CVar<bool> AlwaysMelee{ false };
 		inline CVar<int> CritKey{ VK_SHIFT };
+		inline CVar<bool> AutoMeleeCrit{ false };
 	}
 
 	namespace Backtrack
