@@ -11,6 +11,7 @@ struct ResolveData{
 	//logical data
 	std::pair<int, float> pLastSniperPitch = {0, 0.f};
 	float flPitchNoise = 0.f;		//	noise around sniper dot pitch
+	int iPitchNoiseSteps = 0;
 
 	//historical data
 	std::pair<int, Vec3> pLastFireAngles = {0, {}};

@@ -69,7 +69,7 @@ bool PResolver::ShouldRun(){
 
 bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 	if (!pEntity->OnSolid() && Vars::AntiHack::Resolver::IgnoreAirborne.Value) { return false; }
-	if (pEntity->GetDormant() || !pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
+	if (!pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
 
 	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first < 2) { return false; }	//	the networked angles are accurate
 	if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
@@ -108,6 +108,14 @@ int PResolver::GetYawMode(CBaseEntity* pEntity){
 	return mResolverMode[pInfo.friendsID].second;
 }
 
+void PResolver::OnDormancy(CBaseEntity* pEntity){
+	mResolverData[pEntity].pLastSniperPitch = {0, 0.f};
+	mResolverData[pEntity].flPitchNoise = 0.f;
+	mResolverData[pEntity].iPitchNoiseSteps = 0;
+	mResolverData[pEntity].pLastFireAngles = {0, {}};
+	mResolverData[pEntity].vOriginalAngles = {};
+}
+
 void PResolver::Aimbot(CBaseEntity* pEntity){
 	if (abs(I::GlobalVars->tickcount - pWaiting.first) < 66) { return; }
 
@@ -130,6 +138,8 @@ void PResolver::FrameStageNotify(){
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(i);
 		if (!pEntity) { continue; }
 
+		if (pEntity->GetDormant()) { OnDormancy(pEntity); continue; }
+
 		mResolverData[pEntity].vOriginalAngles = {pEntity->GetEyeAngles().x, pEntity->GetEyeAngles().y};
 
 		if (!ShouldRunEntity(pEntity)) { continue; }
@@ -139,6 +149,16 @@ void PResolver::FrameStageNotify(){
 		if (std::optional<float> flPitch = GetPitchForSniperDot(pEntity))
 		{
 			vAdjustedAngle.x = flPitch.value();
+
+			//	get noise
+			if (mResolverData[pEntity].pLastSniperPitch.first){
+				const float flNoise = mResolverData[pEntity].pLastSniperPitch.second - flPitch.value();
+				mResolverData[pEntity].flPitchNoise *= mResolverData[pEntity].iPitchNoiseSteps;
+				mResolverData[pEntity].flPitchNoise += flNoise;
+				mResolverData[pEntity].iPitchNoiseSteps++;
+				mResolverData[pEntity].flPitchNoise /= mResolverData[pEntity].iPitchNoiseSteps;
+			}
+
 			mResolverData[pEntity].pLastSniperPitch = {I::GlobalVars->tickcount, flPitch.value()};
 		}
 		else if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastSniperPitch.first < 66 && mResolverData[pEntity].flPitchNoise < 5.f) {
