@@ -98,7 +98,7 @@ bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal)
 	return true;
 }
 
-float CAntiAim::EdgeDistance(float edgeRayYaw)
+float CAntiAim::EdgeDistance(float edgeRayYaw, CBaseEntity* pEntity = g_EntityCache.GetLocal())
 {
 	// Main ray tracing area
 	CGameTrace trace;
@@ -111,8 +111,8 @@ float CAntiAim::EdgeDistance(float edgeRayYaw)
 	forward.x = cp * cy;
 	forward.y = cp * sy;
 	forward.z = -sp;
-	forward = forward * 300.0f + g_EntityCache.GetLocal()->GetEyePosition();
-	ray.Init(g_EntityCache.GetLocal()->GetEyePosition(), forward);
+	forward = forward * 300.0f + pEntity->GetEyePosition();
+	ray.Init(pEntity->GetEyePosition(), forward);
 	// trace::g_pFilterNoPlayer to only focus on the enviroment
 	CTraceFilterWorldAndPropsOnly Filter = {};
 	I::EngineTrace->TraceRay(ray, 0x4200400B, &Filter, &trace);
@@ -121,13 +121,13 @@ float CAntiAim::EdgeDistance(float edgeRayYaw)
 	return edgeDistance;
 }
 
-bool CAntiAim::FindEdge(float edgeOrigYaw)
+bool CAntiAim::FindEdge(float edgeOrigYaw, CBaseEntity* pEntity = g_EntityCache.GetLocal())
 {
 	// distance two vectors and report their combined distances
-	float edgeLeftDist = EdgeDistance(edgeOrigYaw - 21);
-	edgeLeftDist = edgeLeftDist + EdgeDistance(edgeOrigYaw - 27);
-	float edgeRightDist = EdgeDistance(edgeOrigYaw + 21);
-	edgeRightDist = edgeRightDist + EdgeDistance(edgeOrigYaw + 27);
+	float edgeLeftDist = EdgeDistance(edgeOrigYaw - 21, pEntity);
+	edgeLeftDist = edgeLeftDist + EdgeDistance(edgeOrigYaw - 27, pEntity);
+	float edgeRightDist = EdgeDistance(edgeOrigYaw + 21, pEntity);
+	edgeRightDist = edgeRightDist + EdgeDistance(edgeOrigYaw + 27, pEntity);
 
 	// If the distance is too far, then set the distance to max so the angle
 	// isnt used

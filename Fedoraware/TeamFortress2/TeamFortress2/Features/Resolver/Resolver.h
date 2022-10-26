@@ -11,11 +11,9 @@ struct ResolveData{
 	//logical data
 	std::pair<int, float> pLastSniperPitch = {0, 0.f};
 	float flPitchNoise = 0.f;		//	noise around sniper dot pitch
-	float flWishYaw = 0.f;			//	the yaw we want to force on this player
 
 	//historical data
 	std::pair<int, Vec3> pLastFireAngles = {0, {}};
-	Vec2 vLastTickAngles = {0.f, 0.f};
 	Vec2 vOriginalAngles = {0.f, 0.f};
 };
 
@@ -37,6 +35,8 @@ private:
 	void SetAngles(const Vec3 vAngles, CBaseEntity* pEntity);
 	int GetPitchMode(CBaseEntity* pEntity);
 	int GetYawMode(CBaseEntity* pEntity);
+	void OnDormancy(CBaseEntity* pEntity);
+	
 
 	//data
 	std::unordered_map<CBaseEntity*, CBaseEntity*> mSniperDots;

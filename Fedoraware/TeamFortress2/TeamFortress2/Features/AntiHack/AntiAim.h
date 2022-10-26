@@ -10,7 +10,7 @@ private:
 	void FakeShotAngles(CUserCmd* pCmd);
 
 	// logic
-	float EdgeDistance(float edgeRayYaw);
+	float EdgeDistance(float edgeRayYaw, CBaseEntity* pEntity);
 	bool IsOverlapping(float epsilon);
 	bool ShouldAntiAim(CBaseEntity* pLocal);
 
@@ -37,7 +37,7 @@ private:
 
 	Timer tAATimer{};
 public:
-	bool FindEdge(float edgeOrigYaw);
+	bool FindEdge(float edgeOrigYaw, CBaseEntity* pEntity);
 	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
 	void Draw(CBaseEntity* pLocal);
