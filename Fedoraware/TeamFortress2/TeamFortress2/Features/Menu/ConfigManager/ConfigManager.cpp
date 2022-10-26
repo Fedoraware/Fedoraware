@@ -973,6 +973,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//Resolver
 			{
 				SAVE_VAR(Vars::AntiHack::Resolver::Resolver);
+				SAVE_VAR(Vars::AntiHack::Resolver::IgnoreAirborne);
 			}
 		}
 
@@ -1833,6 +1834,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//Resolver
 			{
 				LOAD_VAR(Vars::AntiHack::Resolver::Resolver);
+				LOAD_VAR(Vars::AntiHack::Resolver::IgnoreAirborne);
 			}
 		}
 
