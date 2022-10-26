@@ -28,9 +28,9 @@ bool CFakeLag::DuckLogic(CBaseEntity* pLocal)
 	const bool bOldDuck = pLocal->IsDucking();
 	if (Vars::Misc::CL_Move::WhileUnducking.Value)
 	{
-		if (bOldDuck && !(G::LastUserCmd->buttons & IN_DUCK)) { return true; }
+		if (bOldDuck && !(G::LastUserCmd->buttons & IN_DUCK)) { return false; }
 	}
-	return false;
+	return true;
 }
 
 bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
@@ -42,6 +42,12 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 
 	// Failsafe, in case we're trying to choke too many ticks
 	if (std::max(ChokeCounter, iNetChan->m_nChokedPackets) > 21)
+	{
+		return false;
+	}
+
+	// Should fix an issue with getting teleported back to the ground for now, pretty ghetto imo
+	if (!pLocal->OnSolid() && pInAirTicks.first && pInAirTicks.second > 13)
 	{
 		return false;
 	}
@@ -58,14 +64,14 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 		return false;
 	}
 
-	if (DuckLogic(pLocal) || (Vars::Misc::CL_Move::WhileInAir.Value && !pLocal->OnSolid()))
+	if (!DuckLogic(pLocal) || (Vars::Misc::CL_Move::WhileInAir.Value && pLocal->OnSolid()))
 	{
-		return true;
+		return false;
 	}	//	no other checks, we want this
 
 	// Is a fakelag key set and pressed?
 	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.Value };
-	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.Value && Vars::Misc::CL_Move::FakelagMode.Value == 0)
+	if (!fakelagKey.Down() && Vars::Misc::CL_Move::FakelagOnKey.Value)
 	{
 		return false;
 	}
@@ -125,10 +131,15 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket)
 		// Set a new random amount (if desired)
 		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random) { ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value); }
 		ChokeCounter = 0;
+		pInAirTicks = {pLocal->OnSolid(), 0};
 		return;
 	}
 
 	G::IsChoking = true;
 	*pSendPacket = false;
 	ChokeCounter++;
+
+	if (!pLocal->OnSolid()){
+		pInAirTicks.second++;
+	}
 }

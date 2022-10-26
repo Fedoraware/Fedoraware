@@ -138,7 +138,7 @@ void CBacktrack::UpdateDatagram()
 // Returns the current (custom) backtrack latency
 float CBacktrack::GetLatency()
 {
-	return flLatencyRampup * std::clamp(static_cast<float>(Vars::Backtrack::Latency.Value), 0.f, 800.f) / 1000.f;
+	return bFakeLatency ? flLatencyRampup * std::clamp(static_cast<float>(Vars::Backtrack::Latency.Value), 0.f, 800.f) / 1000.f : 0.f;
 }
 
 void CBacktrack::PlayerHurt(CGameEvent* pEvent)

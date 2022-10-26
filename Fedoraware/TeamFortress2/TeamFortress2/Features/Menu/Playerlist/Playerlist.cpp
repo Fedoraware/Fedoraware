@@ -200,7 +200,7 @@ void CPlayerList::Render()
 							case 4:
 							{
 								// Pitch resolver
-								if (ImGui::Selectable(resolveListPitch[F::Resolver.ResolvePlayers[Player.FriendsID].m_Pitch]))
+								if (ImGui::Selectable(resolveListPitch[F::Resolver.mResolverMode[Player.FriendsID].first]))
 								{
 									ImGui::OpenPopup("pitch_popup");
 								}
@@ -211,7 +211,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(resolveListPitch[i]))
 										{
-											F::Resolver.ResolvePlayers[Player.FriendsID].m_Pitch = i;
+											F::Resolver.mResolverMode[Player.FriendsID].first = i;
 										}
 									}
 
@@ -224,7 +224,7 @@ void CPlayerList::Render()
 							{
 								// Yaw resolver
 								ImGui::PushID(1); // in case of m_Yaw = m_Pitch
-								if (ImGui::Selectable(resolveListYaw[F::Resolver.ResolvePlayers[Player.FriendsID].m_Yaw]))
+								if (ImGui::Selectable(resolveListYaw[F::Resolver.mResolverMode[Player.FriendsID].second]))
 								{
 									ImGui::OpenPopup("yaw_popup");
 								}
@@ -235,7 +235,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(resolveListYaw[i]))
 										{
-											F::Resolver.ResolvePlayers[Player.FriendsID].m_Yaw = i;
+											F::Resolver.mResolverMode[Player.FriendsID].second = i;
 										}
 									}
 

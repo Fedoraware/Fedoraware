@@ -6,6 +6,7 @@
 MAKE_HOOK(GameEventManager_FireEventClientSide, Utils::GetVFuncPtr(I::GameEventManager, 8), bool, __fastcall,
 		  void* ecx, void* edx, CGameEvent* pEvent)
 {
+	if (!ecx || !edx || !pEvent) { return false; }
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
 	F::Killstreaker.FireEvents(pEvent, uNameHash);
 

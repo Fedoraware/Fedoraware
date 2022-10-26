@@ -170,7 +170,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Ticks.CreateMove(pCmd);
 		F::CritHack.Run(pCmd);
 		F::Misc.RunPost(pCmd, pSendPacket);
-		F::Resolver.Update(pCmd);
+		F::Resolver.CreateMove();
 		F::Followbot.Run(pCmd);
 		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
@@ -235,7 +235,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			}
 			else
 			{
-				G::NextSafeTick = I::GlobalVars->tickcount + g_ConVars.sv_maxusrcmdprocessticks_holdaim->GetInt();
+				G::NextSafeTick = I::GlobalVars->tickcount + g_ConVars.sv_maxusrcmdprocessticks_holdaim->GetInt() + 1;
 			}
 		}
 	}

@@ -687,13 +687,13 @@ void CVisuals::DrawSightlines()
 {
 	if (Vars::ESP::Players::SniperSightlines.Value)
 	{
-		if (!F::Visuals.m_SightLines.empty())
+		if (!m_SightLines.empty())
 		{
-			for (const auto& sightline : F::Visuals.m_SightLines)
+			for (const auto& sightline : m_SightLines)
 			{
 				if (sightline.m_bDraw)
 				{
-					F::Visuals.RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+					RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
 				}
 			}
 		}

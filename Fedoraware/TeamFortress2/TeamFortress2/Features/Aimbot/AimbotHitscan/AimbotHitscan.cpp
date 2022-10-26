@@ -1,6 +1,7 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../Resolver/Resolver.h"
 
 bool IsHitboxValid(int nHitbox, int index, bool bStatic = false)
 {
@@ -317,6 +318,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 							// properly check if we hit the hitbox we were scanning and not just a hitbox. (only if the hitbox we are scanning is head)
 							{
 								target.m_vPos = vHitbox;
+								target.m_nAimedHitbox = nHitbox;
 								target.m_vAngleTo = Math::CalcAngle(vLocalPos, vHitbox);
 								return true;
 							}
@@ -351,6 +353,7 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 									// there is no need to scan multiple times just because we hit the arm or whatever. Only count as failure if this hitbox was head.
 										{
 											target.m_vPos = vTransformed;
+											target.m_nAimedHitbox = nHitbox;
 											target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
 											target.m_bHasMultiPointed = true;
 											return true;
@@ -444,6 +447,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 						target.SimTime = ValidRecord->flSimTime;
 						target.m_vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), target.m_pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&ValidRecord->BoneMatrix.BoneMatrix)));
 						target.ShouldBacktrack = true;
+						target.m_nAimedHitbox = nHitbox;
 						return true;
 					}
 				}
@@ -544,23 +548,6 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 		case 2: //Silent
 		{
-			if (Vars::AntiHack::AntiAim::InvalidShootPitch.Value && Vars::AntiHack::AntiAim::Active.Value && ((Vars::AntiHack::AntiAim::YawReal.Value && Vars::AntiHack::AntiAim::YawFake.Value) ||
-				Vars::AntiHack::AntiAim::Pitch.Value))
-			{
-				G::UpdateView = false;
-
-				if (vAngle.x > 0.f)
-				{
-					vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, 89.0f, 180.0f, 91.0f);
-				}
-				else
-				{
-					vAngle.x = Math::RemapValClamped(vAngle.x, 0.0f, -89.0f, -180.0f, -91.0f);
-				}
-
-				vAngle.y -= 180.f;
-			}
-
 			if (Vars::Aimbot::Global::FlickatEnemies.Value && !G::ShouldShift)
 			{
 				if (G::IsAttacking)
@@ -888,6 +875,8 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		if (bIsAttacking)
 		{
+			F::Resolver.Aimbot(target.m_pEntity, target.m_nAimedHitbox == 0);
+
 			G::IsAttacking = true;
 			nextSafeTick = pCmd->tick_count; // just in case.weew
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)

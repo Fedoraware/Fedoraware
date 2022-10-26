@@ -37,7 +37,7 @@ void CFakeAng::Run(CUserCmd* pCmd)
 				I::GlobalVars->frametime = 0.0f;
 
 				pAnimState->m_flCurrentFeetYaw = G::FakeViewAngles.y;
-				pAnimState->m_flGoalFeetYaw = G::FakeViewAngles.x;
+				pAnimState->m_flGoalFeetYaw = G::FakeViewAngles.y;
 				pAnimState->Update(G::FakeViewAngles.y, G::FakeViewAngles.x);
 
 				matrix3x4 bones[128];
