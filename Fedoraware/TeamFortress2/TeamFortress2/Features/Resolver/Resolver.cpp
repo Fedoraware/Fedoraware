@@ -207,13 +207,19 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 		float flAdjustedPitch = vAngles.x;
 		while (flAdjustedPitch > 360) { flAdjustedPitch -= 360.f; }	//	fix for local fire, remove post debug
 		while (flAdjustedPitch < 0) { flAdjustedPitch += 360.f; }	//	fix for local fire, remove post debug
+
+		vAngStore.x = flAdjustedPitch;
+		vAngStore.x += 360.f;
+		vAngStore.x *= -1;
+
 		vAngAdjusted.x = GetRealPitch(flAdjustedPitch);
-		vAngStore.x = vAngAdjusted.x;
 
 		if (fabsf(flAdjustedPitch) > 89.f) { vAngStore.y += 180; }	//	account for likely yaw faking
 		while (vAngStore.y > 360) { vAngStore.y -= 360.f; }	//	hacky fix for previous line
-		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
-		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
+		vAngStore.x += 540;	//	(360+180)
+		//Utils::ConLog("Resolver", tfm::format("sent %.1f %.1f", vAngles.x, vAngles.y).c_str(), {0, 222, 255, 255});
+		//Utils::ConLog("Resolver", tfm::format("adjusted %.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
+		//Utils::ConLog("Resolver", tfm::format("adjusted 2 %.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
 	}
 
 	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngStore};
