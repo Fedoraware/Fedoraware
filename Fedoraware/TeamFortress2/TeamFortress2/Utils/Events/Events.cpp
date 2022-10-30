@@ -31,6 +31,7 @@ void CEventListener::Destroy()
 void CEventListener::FireGameEvent(CGameEvent* pEvent)
 {
 	if (pEvent == nullptr) { return; }
+	if (I::EngineClient->IsPlayingTimeDemo()) { return; }
 
 	const FNV1A_t uNameHash = FNV1A::Hash(pEvent->GetName());
 	F::ChatInfo.Event(pEvent, uNameHash);

@@ -134,6 +134,12 @@ public:
 		return GetVFunc<FN>(this, 86)(this);
 	}
 
+	bool IsPlayingTimeDemo()
+	{
+		typedef bool(__thiscall *FN)(PVOID);
+		return GetVFunc<FN>(this, 78)(this);
+	}
+
 	CNetChannel* GetNetChannelInfo()
 	{
 		typedef CNetChannel* (__thiscall *FN)(PVOID);

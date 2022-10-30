@@ -108,7 +108,7 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 		return;
 	} //	ruhroh
 
-	if (!Vars::Misc::CL_Move::Enabled.Value)
+	if (!Vars::Misc::CL_Move::Enabled.Value || I::EngineClient->IsPlayingTimeDemo())
 	{
 		//	
 		G::WaitForShift = G::ShiftedTicks = 0;

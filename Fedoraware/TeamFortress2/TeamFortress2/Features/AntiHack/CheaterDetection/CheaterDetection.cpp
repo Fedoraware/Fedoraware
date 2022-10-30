@@ -5,6 +5,8 @@ bool CCheaterDetection::ShouldScan()
 	const int iProtFlags = Vars::Misc::CheaterDetection::Protections.Value;
 	const int iDetectFlags = Vars::Misc::CheaterDetection::Methods.Value;
 
+	if (I::EngineClient->IsPlayingTimeDemo()) { return false; }
+
 	if (!Vars::Misc::CheaterDetection::Enabled.Value && !iDetectFlags) { return false; }
 
 	if (iLastScanTick == I::GlobalVars->tickcount && iProtFlags & (1 << 2)) { return false; }
