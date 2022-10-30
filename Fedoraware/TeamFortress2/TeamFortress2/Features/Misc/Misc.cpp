@@ -12,12 +12,15 @@ extern int attackStringH;
 
 void CMisc::RunPre(CUserCmd* pCmd, bool* pSendPacket)
 {
+	bMovementStopped = false; bMovementScuffed = false;
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
 		FastStop(pCmd, pLocal);
 		StopMovement(pCmd, pSendPacket);
+		FastDeltaMove(pCmd, pSendPacket);
 		//PrintProjAngles(pLocal);
 		AccurateMovement(pCmd, pLocal);
+		FastAccel(pCmd, pLocal, pSendPacket);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -53,20 +56,70 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 		LegJitter(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
-		FastAccel(pCmd, pLocal, pSendPacket);
 		ChokeCheck(pSendPacket);
 	}
 }
 
 void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 {
-	bMovementStopped = false;
 	if (!G::ShouldStop) { return; }
 	Utils::StopMovement(pCmd);
 	if (G::ShouldStop) { return; }
-	G::UpdateView = false; bMovementStopped = true;
+	G::UpdateView = false; bMovementStopped = true; bMovementScuffed = true;
 	if (G::Recharging) { return; }
 	*pSendPacket = false;
+}
+
+void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
+	if (!Vars::Misc::FastDeltaStrafe.Value) { return; }
+
+	bool bChanged = false;
+
+	static bool bFwd = pCmd->forwardmove > 0;
+	static bool bSde = pCmd->sidemove > 0;
+	const bool bCurFwd = pCmd->forwardmove > 0;
+	const bool bCurSde = pCmd->sidemove > 0;
+
+	if (fabsf(pCmd->sidemove) > 400){
+		if (bSde != bCurSde){
+			pCmd->viewangles.y += bSde ? -90.f : 90.f;	//	face left or right depending
+			pCmd->viewangles.x = 90.f;	//	look down
+			pCmd->sidemove = bSde ? -pCmd->forwardmove : pCmd->forwardmove;	//	set our forward move to our sidemove
+			bChanged = true;
+		}
+
+		if (bChanged){
+			bMovementScuffed = true;
+			Utils::ConLog("FastDeltaMove", "Activated", { 213, 146, 255, 255 });
+			G::UpdateView = false;
+			*pSendPacket = false;
+		}
+
+		// "why is dis one in anoda place doe" because if you're moving forward and you stop pressing the button foe 1 tick it no work :D
+		bSde = bCurSde;
+
+		if (bChanged) { return; }
+	}
+	if (fabsf(pCmd->forwardmove) > 400) {
+		if (bFwd != bCurFwd){
+			pCmd->viewangles.x = 90.f;	//	look down
+			pCmd->viewangles.y += bFwd ? 0.f : 180.f;
+			pCmd->sidemove *= bFwd ? 1 : -1;
+			bChanged = true;
+		}
+
+		if (bChanged){
+			bMovementScuffed = true;
+			Utils::ConLog("FastDeltaMove", "Activated", { 213, 146, 255, 255 });
+			G::UpdateView = false;
+			*pSendPacket = false;
+		}
+
+		// "why dont u weset it outside of dis doe" because if the user stop press buton foe 1 tick it no work :D
+		bFwd = bCurFwd;
+
+		if (bChanged) { return; }
+	}
 }
 
 void CMisc::ChokeCheck(bool* pSendPacket)
@@ -394,7 +447,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 	static bool flipVar = false;
 	flipVar = !flipVar;
 
-	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value) && !flipVar)
+	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value && (bMovementScuffed || bMovementStopped)) && !flipVar)
 	{
 		return;
 	}
@@ -461,7 +514,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 
 void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (!Vars::Misc::AccurateMovement.Value)
+	if (!Vars::Misc::AccurateMovement.Value || (bMovementScuffed || bMovementStopped))
 	{
 		return;
 	}

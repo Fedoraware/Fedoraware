@@ -1716,6 +1716,7 @@ void CMenu::MenuMisc()
 			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, false);
 			WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
+			WToggle("Fast Delta Strafe", &Vars::Misc::FastDeltaStrafe.Value); HelpMarker("Allows you to change direction instantly.");
 			WToggle("Fast Accel", &Vars::Misc::FastAccel.Value); HelpMarker("Makes you accelerate to full speed faster.");
 			WToggle("Crouch Speed", &Vars::Misc::CrouchSpeed.Value); HelpMarker("Allows you to move at full speed while crouched.");
 			if (Vars::Misc::CrouchSpeed.Value || Vars::Misc::FastAccel.Value)

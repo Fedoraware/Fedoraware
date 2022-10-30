@@ -625,6 +625,7 @@ namespace Vars
 
 	namespace Misc
 	{
+		inline CVar<bool> FastDeltaStrafe{false};
 		inline CVar<int> AccurateMovement{ false };
 		inline CVar<bool> AutoJump{ false };
 		inline CVar<bool> AutoVote{ false };

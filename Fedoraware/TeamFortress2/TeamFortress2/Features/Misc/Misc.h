@@ -15,6 +15,7 @@ class CMisc
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void StopMovement(CUserCmd* pCmd, bool* pSendPacket);
+	void FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket);
 
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
@@ -36,6 +37,7 @@ class CMisc
 	float m_flSpinYaw = 0.f;
 
 	bool SteamCleared = false;
+	bool bMovementScuffed = false;
 public:
 	bool TauntControl(CUserCmd* pCmd);
 	void RunPre(CUserCmd* pCmd, bool* pSendPacket);
