@@ -1,6 +1,6 @@
 #include "AimbotMelee.h"
 #include "../../Vars.h"
-
+#include "../MovementSimulation/MovementSimulation.h"
 #include "../../TickHandler/TickHandler.h"
 #include "../../Backtrack/Backtrack.h"
 
@@ -36,21 +36,54 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		}
 
 		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
+		
+		if (FL_DELAY == 0.f) { return false; }
+		
+		const int iTicks = TIME_TO_TICKS(FL_DELAY);
 
-		if (pLocal->OnSolid())
-		{
-			vecTraceStart += (pLocal->GetVelocity() * FL_DELAY);
+		if (!bCached){
+			if (F::MoveSim.Initialize(g_EntityCache.GetLocal()))
+			{
+				CMoveData moveData = {};
+				Vec3 absOrigin = {};
+				for (int i = 0; i < iTicks; i++){
+					F::MoveSim.RunTick(moveData, absOrigin);
+				}
+				vecTraceStart = absOrigin;
+				vecTraceStart.z += 64;	//	viewheight bcs lazy
+				bCached = true;
+				vCached = vecTraceStart;
+				F::MoveSim.Restore();
+			}
+			else { return false; }
+		}
+		else{
+			vecTraceStart = vCached;
 		}
 
-		else
-		{
-			vecTraceStart += (pLocal->GetVelocity() * FL_DELAY) - (Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat()) *
-																   0.5f * FL_DELAY * FL_DELAY);
+		CBaseEntity* pTarget = I::ClientEntityList->GetClientEntity(nTargetIndex);
+		if (!pTarget) { return false; }
+
+		if (F::MoveSim.Initialize(pTarget)){
+			CMoveData moveData = {};
+			Vec3 absOrigin = {};
+			for (int i = 0; i < iTicks; i++){
+				F::MoveSim.RunTick(moveData, absOrigin);
+			}
+
+			const Vec3 vRestore = pTarget->GetAbsOrigin();
+			pTarget->SetAbsOrigin(absOrigin);
+
+			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
+			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
+			const bool bReturn = (trace.entity && trace.entity->GetIndex() == nTargetIndex);
+
+			pTarget->SetAbsOrigin(vRestore);
+			F::MoveSim.Restore();
+			return bReturn;
 		}
 
-		Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
-		Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
-		return (trace.entity && trace.entity->GetIndex() == nTargetIndex);
+		return false;
 	}
 
 	return true;
@@ -372,6 +405,8 @@ bool CAimbotMelee::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 
 void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
+	bCached = false;
+
 	if (!Vars::Aimbot::Global::Active.Value || G::AutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 	{
 		return;

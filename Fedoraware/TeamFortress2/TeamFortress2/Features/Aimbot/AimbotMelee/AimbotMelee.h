@@ -13,6 +13,9 @@ class CAimbotMelee
 	void Aim(CUserCmd* pCmd, Vec3& vAngle);
 	bool ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& Target);
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
+
+	bool bCached = false;
+	Vec3 vCached{};
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
 };
