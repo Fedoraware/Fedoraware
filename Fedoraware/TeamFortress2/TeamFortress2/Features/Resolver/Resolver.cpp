@@ -80,7 +80,12 @@ bool PResolver::KeepOnShot(CBaseEntity* pEntity){
 }
 
 bool PResolver::IsOnShotPitchReliable(const float flPitch){
-	return fabsf(flPitch) <= 90.f;
+	if (flPitch > 180) {
+		return flPitch > 273.f;
+	}
+	else {
+		return flPitch < 87.f;
+	}
 }
 
 float PResolver::GetRealPitch(const float flPitch){
@@ -221,6 +226,8 @@ void PResolver::CreateMove(){
 }
 
 void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
+	if (iIndex == I::EngineClient->GetLocalPlayer()) { return; }
+
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity) { return; }
 
