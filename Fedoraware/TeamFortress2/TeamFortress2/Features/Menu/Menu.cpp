@@ -1180,6 +1180,7 @@ void CMenu::MenuVisuals()
 						WInputText("Custom Tracer", &Vars::Visuals::ParticleName); HelpMarker("If you want to use a custom particle tracer");
 					}
 					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
+					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
 					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
 					ColorPickerL("Inner line color", Colors::NoscopeLines1);
 					ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
@@ -2261,6 +2262,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		DrawMenu();
 		DrawCameraWindow();
 		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
+		AddDraggable("Ping", Vars::Visuals::OnScreenPing, Vars::Visuals::DrawOnScreenPing.Value, true);
 		AddDraggable("DT Bar", Vars::Misc::CL_Move::DTIndicator, Vars::Misc::CL_Move::DTBarStyle.Value, true);
 		AddDraggable("Crits", Vars::CritHack::IndicatorPos, Vars::CritHack::Indicators.Value, true);
 

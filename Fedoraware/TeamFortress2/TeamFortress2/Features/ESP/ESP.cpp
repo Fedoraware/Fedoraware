@@ -130,6 +130,9 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		return;
 	}
 
+	CTFPlayerResource* cResource = g_EntityCache.GetPR();
+	if (!cResource) { return; }
+
 	for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!Player->IsAlive() || Player->IsAGhost())
@@ -142,6 +145,10 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value)) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) - 256.f, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value), Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+
+		if (Player->GetDormant()){
+			Player->m_iHealth() = cResource->GetHealth(Player->GetIndex());
+		}
 
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();

@@ -84,6 +84,30 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	//ConditionH = y + nTextOffset;
 }
 
+void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal){
+	if (!Vars::Visuals::DrawOnScreenPing.Value) { return; }
+	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
+
+	CTFPlayerResource* cResource = g_EntityCache.GetPR();
+	if (!cResource) { return; }
+
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	if (!iNetChan) { return; }
+
+	const float flLatencyReal = (iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING)) * 1000;
+	const int flLatencyScoreBoard = cResource->GetPing(pLocal->GetIndex());
+
+	const int x = Vars::Visuals::OnScreenPing.x;
+	const int y = Vars::Visuals::OnScreenPing.y;
+	const int h = Vars::Visuals::OnScreenPing.h;
+
+	const int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
+	{
+		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255 }, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
+		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255 }, ALIGN_DEFAULT,	"ping scoreboard : %d", flLatencyScoreBoard);
+	}
+}
+
 void CVisuals::SkyboxChanger()
 {
 	using LoadNamedSkysFn = bool(_cdecl*)(const char*);
