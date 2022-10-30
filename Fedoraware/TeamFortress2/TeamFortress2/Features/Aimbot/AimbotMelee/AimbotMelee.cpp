@@ -294,8 +294,8 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	}
 	else if (target.ShouldBacktrack)
 	{
-		const float flRange = (pWeapon->GetSwingRange(pLocal)) * 3;
-		Utils::ConLog("AimbotMelee", tfm::format("flRange : %.1f", flRange).c_str(), {133, 255, 159, 255});
+		const float flRange = (pWeapon->GetSwingRange(pLocal)) * 1.9f;
+		//Utils::ConLog("AimbotMelee", tfm::format("flRange : %.1f", flRange).c_str(), {133, 255, 159, 255});
 		if (hitboxpos.Dist2D(pLocal->GetShootPos()) > flRange)
 		{ return false; }
 	}
@@ -374,6 +374,10 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 	if (!Vars::Aimbot::Global::AutoShoot.Value)
 	{
 		return false;
+	}
+
+	if (Target.ShouldBacktrack){
+		return true;
 	}
 
 	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
