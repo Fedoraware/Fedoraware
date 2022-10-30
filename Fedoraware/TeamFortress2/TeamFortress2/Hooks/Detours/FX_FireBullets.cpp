@@ -6,10 +6,19 @@
 MAKE_HOOK(FX_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 8B 5D ? 56 53"), void, __cdecl,
 		  void* pWpn, int iPlayer, const Vec3& vecOrigin, const Vec3& vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
 {
+<<<<<<< Updated upstream
 	F::Backtrack.ReportShot(iPlayer);
 	F::Resolver.FXFireBullet(iPlayer, vecAngles);
 	F::BadActors.ReportShot(iPlayer);
+=======
+>>>>>>> Stashed changes
 
+	if (iPlayer != I::EngineClient->GetLocalPlayer()){
+		Utils::ConLog("FX_FireBullets", tfm::format("%d {%.1f, %.1f, %.1f}", iPlayer, vecAngles.x, vecAngles.y, vecAngles.z).c_str(), {0, 222, 255, 255});
+		F::Backtrack.ReportShot(iPlayer);
+		F::Resolver.FXFireBullet(iPlayer, vecAngles);
+		F::BadActors.ReportShot(iPlayer);
+	}
 	//Utils::ConLog("FX_FireBullets", tfm::format("Entity[%d]", iPlayer).c_str(), {0, 222, 255, 255});
 	//Utils::ConLog("FX_FireBullets", tfm::format("%d {%.1f, %.1f, %.1f}", iPlayer, vecAngles.x, vecAngles.y, vecAngles.z).c_str(), {0, 222, 255, 255});
 
