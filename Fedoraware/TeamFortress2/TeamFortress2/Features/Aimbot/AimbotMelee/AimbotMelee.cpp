@@ -64,6 +64,12 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		CBaseEntity* pTarget = I::ClientEntityList->GetClientEntity(nTargetIndex);
 		if (!pTarget) { return false; }
 
+		if (pTarget->GetVelocity().Length() < 10.f || !pTarget->IsPlayer()){
+			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
+			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
+			return (trace.entity && trace.entity->GetIndex() == nTargetIndex);
+		}
+
 		if (F::MoveSim.Initialize(pTarget)){
 			CMoveData moveData = {};
 			Vec3 absOrigin = {};
