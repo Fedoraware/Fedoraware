@@ -315,6 +315,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::CritHack::AvoidRandom);
 				SAVE_VAR(Vars::CritHack::AlwaysMelee);
 				SAVE_VAR(Vars::CritHack::CritKey);
+				SAVE_VAR(Vars::CritHack::AutoMeleeCrit);
 			}
 
 			//Hitscan
@@ -367,6 +368,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::StrafePredictionMaxDistance);
 				SAVE_VAR(Vars::Aimbot::Projectile::MinSplashPredictionDistance);
 				SAVE_VAR(Vars::Aimbot::Projectile::MaxSplashPredictionDistance);
+				SAVE_VAR(Vars::Aimbot::Projectile::WaitForHit);
 				//SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -676,8 +678,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Visuals::RemoveMOTD);
 			SAVE_VAR(Vars::Visuals::RemoveDisguises);
 			SAVE_VAR(Vars::Visuals::DrawOnScreenConditions);
-			SAVE_VAR(Vars::Visuals::ConditionX);
-			SAVE_VAR(Vars::Visuals::ConditionY);
 			SAVE_VAR(Vars::Visuals::RemoveTaunts);
 			SAVE_VAR(Vars::Visuals::FieldOfView);
 			SAVE_VAR(Vars::Visuals::AimFOVAlpha);
@@ -896,6 +896,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportMode);
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportFactor);
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::RetainFakelag);
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
@@ -972,6 +973,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			//Resolver
 			{
 				SAVE_VAR(Vars::AntiHack::Resolver::Resolver);
+				SAVE_VAR(Vars::AntiHack::Resolver::IgnoreAirborne);
 			}
 		}
 
@@ -1174,6 +1176,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::CritHack::AvoidRandom);
 				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
+				LOAD_VAR(Vars::CritHack::AutoMeleeCrit);
 			}
 
 			//Hitscan
@@ -1226,6 +1229,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::StrafePredictionMaxDistance);
 				LOAD_VAR(Vars::Aimbot::Projectile::MinSplashPredictionDistance);
 				LOAD_VAR(Vars::Aimbot::Projectile::MaxSplashPredictionDistance);
+				LOAD_VAR(Vars::Aimbot::Projectile::WaitForHit);
 				//LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
 			}
 
@@ -1534,8 +1538,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Visuals::RemoveMOTD);
 			LOAD_VAR(Vars::Visuals::RemoveDisguises);
 			LOAD_VAR(Vars::Visuals::DrawOnScreenConditions);
-			LOAD_VAR(Vars::Visuals::ConditionX);
-			LOAD_VAR(Vars::Visuals::ConditionY);
 			LOAD_VAR(Vars::Visuals::RemoveTaunts);
 			LOAD_VAR(Vars::Visuals::RemoveScreenEffects);
 			LOAD_VAR(Vars::Visuals::RemoveScreenOverlays);
@@ -1754,6 +1756,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::StopMovement);
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportMode);
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportFactor);
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::RetainFakelag);
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
@@ -1831,6 +1834,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			//Resolver
 			{
 				LOAD_VAR(Vars::AntiHack::Resolver::Resolver);
+				LOAD_VAR(Vars::AntiHack::Resolver::IgnoreAirborne);
 			}
 		}
 

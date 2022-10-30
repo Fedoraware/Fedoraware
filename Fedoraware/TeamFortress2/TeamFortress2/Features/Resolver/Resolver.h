@@ -11,11 +11,10 @@ struct ResolveData{
 	//logical data
 	std::pair<int, float> pLastSniperPitch = {0, 0.f};
 	float flPitchNoise = 0.f;		//	noise around sniper dot pitch
-	float flWishYaw = 0.f;			//	the yaw we want to force on this player
+	int iPitchNoiseSteps = 0;
 
 	//historical data
 	std::pair<int, Vec3> pLastFireAngles = {0, {}};
-	Vec2 vLastTickAngles = {0.f, 0.f};
 	Vec2 vOriginalAngles = {0.f, 0.f};
 };
 
@@ -32,18 +31,21 @@ private:
 	//misc
 	bool ShouldRun();
 	bool ShouldRunEntity(CBaseEntity* pEntity);
+	bool KeepOnShot(CBaseEntity* pEntity);
 	bool IsOnShotPitchReliable(const float flPitch);
 	float GetRealPitch(const float flPitch);
 	void SetAngles(const Vec3 vAngles, CBaseEntity* pEntity);
 	int GetPitchMode(CBaseEntity* pEntity);
 	int GetYawMode(CBaseEntity* pEntity);
+	void OnDormancy(CBaseEntity* pEntity);
+	
 
 	//data
 	std::unordered_map<CBaseEntity*, CBaseEntity*> mSniperDots;
 	std::unordered_map<CBaseEntity*, ResolveData> mResolverData;
-	std::pair<int, CBaseEntity*> pWaiting = {0, nullptr};
+	std::pair<int, std::pair<CBaseEntity*, bool>> pWaiting = {0, {nullptr, false}};
 public:
-	void Aimbot(CBaseEntity* pEntity);
+	void Aimbot(CBaseEntity* pEntity, const bool bHeadshot);
 	void FrameStageNotify();
 	void CreateMove();
 	void FXFireBullet(int iIndex, const Vec3 vAngles);

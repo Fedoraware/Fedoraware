@@ -83,6 +83,106 @@ bool CCritHack::ShouldCrit()
 	if (critKey.Down()) { return true; }
 	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.Value) { return true; }
 
+	//Check if auto melee crit is enabled and player is using melee
+	if (Vars::CritHack::AutoMeleeCrit.Value && G::CurWeaponType == EWeaponType::MELEE)
+	{
+		//Base melee damage
+		int MeleeDamage = 65;
+
+		//Could be missing wepaons or reskins
+		switch (G::CurItemDefIndex)
+		{
+		case Scout_t_SunonaStick:
+		{
+			//The Sun on a Stick has a -25% melee damage stat
+			MeleeDamage = 26;
+			break;
+		}
+		case Scout_t_TheFanOWar:
+		{
+			//The Fan O'War has a -75% melee damage stat
+			MeleeDamage = 9;
+			break;
+		}
+		case Scout_t_TheWrapAssassin:
+		{
+			//The Wrap Assassin has a -65% melee damage stat
+			MeleeDamage = 12;
+			break;
+		}
+		case Soldier_t_TheDisciplinaryAction:
+		case Engi_t_TheJag:
+		{
+			//The Disciplinary Action and The Jag have a -25% melee damage stat
+			MeleeDamage = 49;
+			break;
+		}
+		case Soldier_t_TheEqualizer:
+		{
+			//The Equalizer does more damage the lower the local player's health is
+			break;
+		}
+		case Pyro_t_HotHand:
+		{
+			//The Hot Hand has a -20% melee damage stat
+			MeleeDamage = 28;
+			break;
+		}
+		case Pyro_t_SharpenedVolcanoFragment:
+		case Medic_t_Amputator:
+		{
+			//The Sharpened Volcano Fragment and The Amputator have a -20% melee damage stat
+			MeleeDamage = 52;
+			break;
+		}
+		case Pyro_t_TheBackScratcher:
+		{
+			//The Back Scratcher has a +25% melee damage stat
+			MeleeDamage = 81;
+			break;
+		}
+		case Demoman_t_TheScotsmansSkullcutter:
+		{
+			//The Scotsmans Skullcutter has a +20% melee damage stat
+			MeleeDamage = 78;
+			break;
+		}
+		case Heavy_t_WarriorsSpirit:
+		{
+			//The Warriors Spirit has a +30% melee damage stat
+			MeleeDamage = 85;
+			break;
+		}
+		case Sniper_t_TheTribalmansShiv:
+		{
+			//The Tribalmans Shiv has a -50% melee damage stat
+			MeleeDamage = 37;
+			break;
+		}
+		case Sniper_t_TheShahanshah:
+		{
+			//The Shahanshah has a -25% melee damage stat when above half health and a +25% when below half health
+			//81 if below half health
+			//49 if above half health
+			break;
+		}
+		default: break;
+		}
+
+		CBaseEntity* Player;
+		if ((Player = I::ClientEntityList->GetClientEntity(G::CurrentTargetIdx)))
+		{
+			if (G::CurItemDefIndex == Heavy_t_TheHolidayPunch)
+			{
+				if (Player->OnSolid())
+					return true;
+			}
+
+			if (MeleeDamage <= Player->GetHealth())
+				return true;
+		}
+	}
+
 	return false;
 }
 

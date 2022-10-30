@@ -69,15 +69,23 @@ bool PResolver::ShouldRun(){
 
 bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 	if (!pEntity->OnSolid() && Vars::AntiHack::Resolver::IgnoreAirborne.Value) { return false; }
-	if (pEntity->GetDormant() || !pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
+	if (!pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
 
-	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first < 2) { return false; }	//	the networked angles are accurate
-	if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
+	//if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
 	return true;
 }
 
+bool PResolver::KeepOnShot(CBaseEntity* pEntity){
+	return abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first) < 2;
+}
+
 bool PResolver::IsOnShotPitchReliable(const float flPitch){
-	return fabsf(flPitch) <= 90.f;
+	if (flPitch > 180) {
+		return flPitch > 273.f;
+	}
+	else {
+		return flPitch < 87.f;
+	}
 }
 
 float PResolver::GetRealPitch(const float flPitch){
@@ -108,14 +116,22 @@ int PResolver::GetYawMode(CBaseEntity* pEntity){
 	return mResolverMode[pInfo.friendsID].second;
 }
 
-void PResolver::Aimbot(CBaseEntity* pEntity){
+void PResolver::OnDormancy(CBaseEntity* pEntity){
+	mResolverData[pEntity].pLastSniperPitch = {0, 0.f};
+	mResolverData[pEntity].flPitchNoise = 0.f;
+	mResolverData[pEntity].iPitchNoiseSteps = 0;
+	mResolverData[pEntity].pLastFireAngles = {0, {}};
+	mResolverData[pEntity].vOriginalAngles = {};
+}
+
+void PResolver::Aimbot(CBaseEntity* pEntity, const bool bHeadshot){
 	if (abs(I::GlobalVars->tickcount - pWaiting.first) < 66) { return; }
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!iNetChan) { return; }
 
 	const int iDelay = 6 + TIME_TO_TICKS(G::LerpTime + iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING));
-	pWaiting = {I::GlobalVars->tickcount + iDelay, pEntity};
+	pWaiting = {I::GlobalVars->tickcount + iDelay, {pEntity, bHeadshot}};
 }
 
 void PResolver::FrameStageNotify(){
@@ -130,15 +146,28 @@ void PResolver::FrameStageNotify(){
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(i);
 		if (!pEntity) { continue; }
 
+		if (pEntity->GetDormant()) { OnDormancy(pEntity); continue; }
+
 		mResolverData[pEntity].vOriginalAngles = {pEntity->GetEyeAngles().x, pEntity->GetEyeAngles().y};
 
 		if (!ShouldRunEntity(pEntity)) { continue; }
+		if (KeepOnShot(pEntity)) { SetAngles(mResolverData[pEntity].pLastFireAngles.second, pEntity); continue; }
 
 		Vec3 vAdjustedAngle = pEntity->GetEyeAngles();
 
 		if (std::optional<float> flPitch = GetPitchForSniperDot(pEntity))
 		{
 			vAdjustedAngle.x = flPitch.value();
+
+			//	get noise
+			if (mResolverData[pEntity].pLastSniperPitch.first){
+				const float flNoise = mResolverData[pEntity].pLastSniperPitch.second - flPitch.value();
+				mResolverData[pEntity].flPitchNoise *= mResolverData[pEntity].iPitchNoiseSteps;
+				mResolverData[pEntity].flPitchNoise += flNoise;
+				mResolverData[pEntity].iPitchNoiseSteps++;
+				mResolverData[pEntity].flPitchNoise /= mResolverData[pEntity].iPitchNoiseSteps;
+			}
+
 			mResolverData[pEntity].pLastSniperPitch = {I::GlobalVars->tickcount, flPitch.value()};
 		}
 		else if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastSniperPitch.first < 66 && mResolverData[pEntity].flPitchNoise < 5.f) {
@@ -173,7 +202,7 @@ void PResolver::FrameStageNotify(){
 			case 4: vAdjustedAngle.y = flBaseYaw + 90.f; break;		//side2
 			case 5: vAdjustedAngle.y += 180.f; break;				//invert
 			case 6:{												//edge
-				const bool bEdge = vAdjustedAngle.x == 89 ? !F::AntiAim.FindEdge(flBaseYaw) : F::AntiAim.FindEdge(flBaseYaw);
+				const bool bEdge = vAdjustedAngle.x == 89 ? !F::AntiAim.FindEdge(flBaseYaw, pEntity) : F::AntiAim.FindEdge(flBaseYaw, pEntity);
 				vAdjustedAngle.y = flBaseYaw + (bEdge ? 90.f : -90.f);
 				break;
 			}
@@ -189,14 +218,16 @@ void PResolver::FrameStageNotify(){
 }
 
 void PResolver::CreateMove(){
-	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second) { 
-		mResolverData[pWaiting.second].iYawIndex++;
-		if (mResolverData[pWaiting.second].iYawIndex > 3) { mResolverData[pWaiting.second].iYawIndex = 0; }
-		pWaiting = {0, nullptr};
+	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second.first) { 
+		mResolverData[pWaiting.second.first].iYawIndex++;
+		if (mResolverData[pWaiting.second.first].iYawIndex > 3) { mResolverData[pWaiting.second.first].iYawIndex = 0; }
+		pWaiting = {0, {nullptr, false}};
 	}
 }
 
 void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
+	if (iIndex == I::EngineClient->GetLocalPlayer()) { return; }
+
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity) { return; }
 
@@ -207,13 +238,19 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 		float flAdjustedPitch = vAngles.x;
 		while (flAdjustedPitch > 360) { flAdjustedPitch -= 360.f; }	//	fix for local fire, remove post debug
 		while (flAdjustedPitch < 0) { flAdjustedPitch += 360.f; }	//	fix for local fire, remove post debug
+
+		vAngStore.x = flAdjustedPitch;
+		vAngStore.x += 360.f;
+		vAngStore.x *= -1;
+
 		vAngAdjusted.x = GetRealPitch(flAdjustedPitch);
-		vAngStore.x = vAngAdjusted.x;
 
 		if (fabsf(flAdjustedPitch) > 89.f) { vAngStore.y += 180; }	//	account for likely yaw faking
 		while (vAngStore.y > 360) { vAngStore.y -= 360.f; }	//	hacky fix for previous line
-		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
-		//Utils::ConLog("Resolver", tfm::format("%.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
+		vAngStore.x += 540;	//	(360+180)
+		//Utils::ConLog("Resolver", tfm::format("sent %.1f %.1f", vAngles.x, vAngles.y).c_str(), {0, 222, 255, 255});
+		//Utils::ConLog("Resolver", tfm::format("adjusted %.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
+		//Utils::ConLog("Resolver", tfm::format("adjusted 2 %.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
 	}
 
 	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngStore};
@@ -226,6 +263,12 @@ void PResolver::OnPlayerHurt(CGameEvent* pEvent){
 
 	const CBaseEntity* pVictim = I::ClientEntityList->GetClientEntity(I::EngineClient->GetPlayerForUserID(pEvent->GetInt("userid")));
 
-	if (pVictim == pWaiting.second) { pWaiting = {0, nullptr}; }
+	if (pVictim == pWaiting.second.first) { 
+		if (pWaiting.second.second && G::WeaponCanHeadShot){	//	should be headshot
+			const bool bCrit = pEvent->GetBool("crit");
+			if (!bCrit) { return; }
+		}
+		pWaiting = {0, {nullptr, false}}; 
+	}
 	return;
 }

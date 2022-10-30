@@ -38,6 +38,7 @@ namespace Vars
 		inline CVar<bool> AvoidRandom{ false };
 		inline CVar<bool> AlwaysMelee{ false };
 		inline CVar<int> CritKey{ VK_SHIFT };
+		inline CVar<bool> AutoMeleeCrit{ false };
 	}
 
 	namespace Backtrack
@@ -492,9 +493,6 @@ namespace Vars
 		inline CVar<bool> OutOfFOVArrowsOutline{ false };
 		inline CVar<float> FovArrowsDist{ 0.15f };
 		inline CVar<int> SpectatorList{ 2 }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-
-		inline CVar<int> ConditionX{ 100 };
-		inline CVar<int> ConditionY{ 200 };
 
 		inline CVar<int> FreecamKey{ 0 };
 		inline CVar<float> FreecamSpeed{ 10.f };
