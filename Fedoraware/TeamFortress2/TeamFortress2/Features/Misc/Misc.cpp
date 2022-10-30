@@ -90,7 +90,6 @@ void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
 
 		if (bChanged){
 			bMovementScuffed = true;
-			Utils::ConLog("FastDeltaMove", "Activated", { 213, 146, 255, 255 });
 			G::UpdateView = false;
 			*pSendPacket = false;
 		}
@@ -110,7 +109,6 @@ void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
 
 		if (bChanged){
 			bMovementScuffed = true;
-			Utils::ConLog("FastDeltaMove", "Activated", { 213, 146, 255, 255 });
 			G::UpdateView = false;
 			*pSendPacket = false;
 		}
