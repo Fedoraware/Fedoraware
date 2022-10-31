@@ -5,6 +5,15 @@ MAKE_HOOK(C_TFPlayer_AvoidPlayers, g_Pattern.Find(L"client.dll", L"55 8B EC 81 E
 {
 	if (!Vars::Misc::NoPush.Value)
 	{
-		Hook.Original<FN>()(ecx, edx, pCmd);
+		{
+			Hook.Original<FN>()(ecx, edx, pCmd);
+		}
+	}
+	else if (Vars::Misc::NoPush.Value && Vars::Misc::NoPushIdle.Value)
+	{
+		if (pCmd->forwardmove == 0 && pCmd->sidemove == 0 && g_EntityCache.GetLocal()->OnSolid())
+		{
+			Hook.Original<FN>()(ecx, edx, pCmd);
+		}
 	}
 }

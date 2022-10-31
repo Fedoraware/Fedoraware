@@ -829,6 +829,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::AutoScoutJump);
 			SAVE_VAR(Vars::Misc::ChatSpam);
 			SAVE_VAR(Vars::Misc::NoPush);
+			SAVE_VAR(Vars::Misc::NoPushIdle);
 			SAVE_VAR(Vars::Misc::AutoStrafe);
 			SAVE_VAR(Vars::Misc::Directional);
 			SAVE_VAR(Vars::Misc::EdgeJump);
@@ -1697,6 +1698,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::AutoScoutJump);
 			LOAD_VAR(Vars::Misc::ChatSpam);
 			LOAD_VAR(Vars::Misc::NoPush);
+			LOAD_VAR(Vars::Misc::NoPushIdle);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::EdgeJumpKey);
 			LOAD_VAR(Vars::Misc::StoreStatistics);
