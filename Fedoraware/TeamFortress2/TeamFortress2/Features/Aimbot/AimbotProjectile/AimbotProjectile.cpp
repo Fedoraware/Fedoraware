@@ -501,7 +501,7 @@ bool IsPointAllowed(int nHitbox)
 	}
 	return true; // never
 }
-bool CAimbotProjectile::IsKeyDown()
+bool CAimbotProjectile::bounceKey()
 {
 	static KeyHelper bounceKey{ &Vars::Aimbot::Projectile::BounceKey.Value };
 	return !Vars::Aimbot::Projectile::BounceKey.Value ? true : bounceKey.Down();
@@ -554,11 +554,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 
 	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
-	// If bouncekey is pressed, set aimmethod to 2
-
-	if (IsKeyDown())
+	if (bounceKey())
 		aimMethod = 2;
-	
 	int curPoint = 0, testPoints = 0; //maybe better way to do this
 	for (const auto& point : vecPoints)
 	{

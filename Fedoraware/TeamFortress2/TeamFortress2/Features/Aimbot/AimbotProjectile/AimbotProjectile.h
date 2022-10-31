@@ -51,7 +51,7 @@ class CAimbotProjectile
 
 public:
 
-	bool IsKeyDown();
+	bool bounceKey();
 	bool Flippy = false;
 	bool running = false;
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
