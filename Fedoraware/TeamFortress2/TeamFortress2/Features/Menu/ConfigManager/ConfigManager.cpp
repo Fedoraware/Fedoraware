@@ -354,6 +354,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				SAVE_VAR(Vars::Aimbot::Projectile::BounceKey);
 				SAVE_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				SAVE_VAR(Vars::Aimbot::Projectile::PredictionTime);
@@ -1219,6 +1220,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				LOAD_VAR(Vars::Aimbot::Projectile::BounceKey);
 				LOAD_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				LOAD_VAR(Vars::Aimbot::Projectile::PredictionTime);

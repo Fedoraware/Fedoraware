@@ -390,6 +390,7 @@ void CMenu::MenuAimbot()
 				SectionTitle("Preferences");
 				WToggle("Predict Obscured Enemies", &Vars::Aimbot::Projectile::PredictObscured.Value); HelpMarker("Will predict enemies that cannot yet be targetted because of a wall etc and shoot if they are predicted to peek (FPS)");
 				WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at targets feet if they're on the ground in order to launch them into the air");
+				InputKeybind("Bounce Target", Vars::Aimbot::Projectile::BounceKey); HelpMarker("Forces feet aim to bounce target on keypress");
 				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Will flip your viewmodel if it can hit from that side");
 				WToggle("Charge loose cannon", &Vars::Aimbot::Projectile::ChargeLooseCannon.Value); HelpMarker("Will charge your loose cannon in order to double donk");
 				
