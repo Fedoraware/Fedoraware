@@ -35,4 +35,22 @@ public: //Everything else, lol
 		DYNVAR(hBuilder, int, "DT_BaseObject", "m_hBuilder");
 		return I::ClientEntityList->GetClientEntityFromHandle(hBuilder.GetValue(this));
 	}
+
+	//Pasted from https://github.com/Lak3/tf2-internal-base
+	inline int MaxAmmoShells()
+	{
+		if ((GetLevel() == 1) || GetMiniBuilding())
+			return 150;
+		else
+			return 200;
+	}
+	inline void GetAmmoCount(int& iShells, int& iMaxShells, int& iRockets, int& iMaxRockets)
+	{
+		const bool bIsMini = GetMiniBuilding();
+
+		iShells = GetAmmo();
+		iMaxShells = MaxAmmoShells();
+		iRockets = bIsMini ? 0 : GetRockets();
+		iMaxRockets = (bIsMini || (GetLevel() < 3)) ? 0 : 20;
+	}
 };
