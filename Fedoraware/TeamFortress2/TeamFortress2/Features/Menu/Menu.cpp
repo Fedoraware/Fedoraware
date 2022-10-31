@@ -1889,6 +1889,7 @@ void CMenu::SettingsWindow()
 		{
 			I::ViewRender->SetScreenOverlayMaterial(nullptr);
 		}
+		if (Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value)) { LoadStyle(); }
 
 		WInputText("Cheat Name", &Vars::Menu::CheatName);
 		WInputText("Chat Info Prefix", &Vars::Menu::CheatPrefix);
@@ -2238,7 +2239,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		I::VGuiSurface->SetCursorAlwaysVisible(F::Menu.IsOpen);
 	}
 
-	if (F::Menu.IsOpen)
+	if (F::Menu.IsOpen && Vars::Menu::CloseOnUnfocus.Value)
 	{
 		if (!Utils::IsGameWindowInFocus())
 		{
