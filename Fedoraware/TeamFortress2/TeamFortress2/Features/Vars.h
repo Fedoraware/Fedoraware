@@ -19,9 +19,10 @@ namespace Vars
 		inline bool ModernDesign = false;
 		inline bool ShowPlayerlist = false;
 		inline bool ShowKeybinds = false;
-		inline CVar<bool> Vignette{true};
-
 		inline CVar<bool> ShowDVD{ false };
+		inline CVar<bool> Vignette{ true };
+		inline CVar<bool> CloseOnUnfocus{ true };
+
 		inline CVar<int> MenuKey{ 0 };
 
 		namespace Colors
@@ -119,6 +120,7 @@ namespace Vars
 			inline CVar<float> ScanScale{ 0.95f }; // how to scale the points.
 			inline CVar<int> AllowedHitboxes{ 0b000 }; // 111, Feet, Body, Head.
 			inline CVar<bool> FeetAimIfOnGround{ false };
+			inline CVar<int> BounceKey{ 0x0 };
 			inline CVar<bool> SplashPrediction{ false };
 			inline CVar<int> MinSplashPredictionDistance{ 0 };
 			inline CVar<int> MaxSplashPredictionDistance{ 10000 };
