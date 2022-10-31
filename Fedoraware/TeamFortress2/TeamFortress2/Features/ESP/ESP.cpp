@@ -852,6 +852,22 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					condStrings.emplace_back(L"Disabled");
 				}
 
+				if (building->IsSentrygun() && !building->GetConstructing())
+				{
+					int iShells;
+					int iMaxShells;
+					int iRockets;
+					int iMaxRockets;
+
+					building->GetAmmoCount(iShells, iMaxShells, iRockets, iMaxRockets);
+
+					if (iShells < iMaxShells)
+						condStrings.emplace_back(L"Needs Ammo");
+
+					if (iRockets < iMaxRockets)
+						condStrings.emplace_back(L"Needs Rockets");
+				}
+
 				if (!condStrings.empty())
 				{
 					for (auto& condString : condStrings)
