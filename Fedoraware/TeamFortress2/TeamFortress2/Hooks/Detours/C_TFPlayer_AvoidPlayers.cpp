@@ -11,7 +11,7 @@ MAKE_HOOK(C_TFPlayer_AvoidPlayers, g_Pattern.Find(L"client.dll", L"55 8B EC 81 E
 	}
 	else if (Vars::Misc::NoPush.Value && Vars::Misc::NoPushIdle.Value)
 	{
-		if (pCmd->forwardmove == 0 && pCmd->sidemove == 0 && g_EntityCache.GetLocal()->OnSolid())
+		if (!GetAsyncKeyState(VK_W) || !GetAsyncKeyState(VK_A) || !GetAsyncKeyState(VK_S) || !GetAsyncKeyState(VK_D)) && g_EntityCache.GetLocal()->OnSolid()
 		{
 			Hook.Original<FN>()(ecx, edx, pCmd);
 		}
