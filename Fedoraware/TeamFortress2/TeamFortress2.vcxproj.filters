@@ -180,6 +180,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CStaticPropMgr_ComputePropOpacity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNewParticleEffect_DrawModel.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Notifications\Notifications.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CL_ReadPackets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
