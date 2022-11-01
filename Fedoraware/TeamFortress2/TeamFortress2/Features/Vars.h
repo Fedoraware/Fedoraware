@@ -651,8 +651,7 @@ namespace Vars
 		inline CVar<int> ChatSpam{ 0 };
 		inline CVar<int> VoicechatSpam{ 0 };
 		inline CVar<float> SpamInterval{ 4.f };
-		inline CVar<bool> NoPush{ false };
-		inline CVar<bool> NoPushIdle{ false };
+		inline CVar<int> NoPush{ 0 };	//	0 off, 1 on, 2 on while not afk
 		inline CVar<bool> EdgeJump{ false };
 		inline CVar<bool> StoreStatistics{ false };
 		inline CVar<int> EdgeJumpKey{ VK_MENU };

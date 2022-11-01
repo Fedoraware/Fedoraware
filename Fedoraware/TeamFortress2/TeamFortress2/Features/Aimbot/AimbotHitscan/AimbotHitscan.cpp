@@ -887,12 +887,12 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		}
 
 		// Set the players tickcount (Backtrack / Interpolation removal)
-		const float tickCount = G::LerpTime;
+		const float flLerpTime = TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime));
 		const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
 		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(tickCount + simTime);
+			pCmd->tick_count = TIME_TO_TICKS(flLerpTime + simTime);
 		}
 
 		Aim(pCmd, target.m_vAngleTo);

@@ -3,17 +3,10 @@
 MAKE_HOOK(C_TFPlayer_AvoidPlayers, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 57 8B F9 89 7D D4 83 78 30 00"), void, __fastcall,
 		  void* ecx, void* edx, CUserCmd* pCmd)
 {
-	if (!Vars::Misc::NoPush.Value)
-	{
-		{
-			Hook.Original<FN>()(ecx, edx, pCmd);
-		}
+	switch (Vars::Misc::NoPush.Value){
+	case 0: break;
+	case 1: return; 
+	case 2: if (pCmd->buttons & (IN_FORWARD | IN_BACK | IN_MOVERIGHT | IN_MOVELEFT)) { return; } break;
 	}
-	else if (Vars::Misc::NoPush.Value && Vars::Misc::NoPushIdle.Value)
-	{
-		if (!GetAsyncKeyState(VK_W) || !GetAsyncKeyState(VK_A) || !GetAsyncKeyState(VK_S) || !GetAsyncKeyState(VK_D)) && g_EntityCache.GetLocal()->OnSolid()
-		{
-			Hook.Original<FN>()(ecx, edx, pCmd);
-		}
-	}
+	Hook.Original<FN>()(ecx, edx, pCmd);
 }
