@@ -445,7 +445,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 	static bool flipVar = false;
 	flipVar = !flipVar;
 
-	if ((G::AAActive || Vars::Misc::FakeAccelAngle.Value && (bMovementScuffed || bMovementStopped)) && !flipVar)
+	if ((G::AAActive || bMovementScuffed || bMovementStopped) || (Vars::Misc::FakeAccelAngle.Value && !flipVar))
 	{
 		return;
 	}
@@ -462,7 +462,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		return;
 	}
 
-	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->OnSolid() || G::IsAttacking)
+	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsAGhost() || !pLocal->OnSolid() || G::IsAttacking)
 	{
 		return;
 	}
@@ -519,7 +519,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (!pLocal->IsAlive()
 		|| pLocal->IsSwimming()
-		|| pLocal->IsInBumperKart()
+		|| (pLocal->IsInBumperKart() && Vars::Misc::AccurateMovement.Value != 2)
 		|| pLocal->IsAGhost()
 		|| pLocal->IsCharging()
 		|| !pLocal->OnSolid())

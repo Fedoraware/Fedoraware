@@ -108,9 +108,6 @@ EGroupType CAimbotMelee::GetGroupType(CBaseCombatWeapon* pWeapon)
 /* Aim at friendly building with the wrench */
 bool CAimbotMelee::AimFriendlyBuilding(CBaseObject* pBuilding)
 {
-	int maxAmmo = 0;
-	int maxRocket = 0;
-
 	if (pBuilding->GetLevel() != 3 || pBuilding->GetSapped() || pBuilding->GetHealth() < pBuilding->GetMaxHealth())
 	{
 		return true;
@@ -118,30 +115,15 @@ bool CAimbotMelee::AimFriendlyBuilding(CBaseObject* pBuilding)
 
 	if (pBuilding->IsSentrygun())
 	{
-		switch (pBuilding->GetLevel())
-		{
-			case 1:
-			{
-				maxAmmo = 150;
-				break;
-			}
-			case 2:
-			{
-				maxAmmo = 200;
-				break;
-			}
-			case 3:
-			{
-				maxAmmo = 200;
-				maxRocket = 20; //Yeah?
-				break;
-			}
-		}
-	}
+		int iShells;
+		int iMaxShells;
+		int iRockets;
+		int iMaxRockets;
 
-	if (pBuilding->GetAmmo() < maxAmmo || pBuilding->GetRockets() < maxRocket)
-	{
-		return true;
+		pBuilding->GetAmmoCount(iShells, iMaxShells, iRockets, iMaxRockets);
+
+		if (iShells < iMaxShells || iRockets < iMaxRockets)
+			return true;
 	}
 
 	return false;

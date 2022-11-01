@@ -268,6 +268,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_OTHER(Vars::Menu::CheatPrefix);
 			SAVE_VAR(Vars::Menu::Vignette);
 			SAVE_VAR(Vars::Menu::ShowDVD);
+			SAVE_VAR(Vars::Menu::CloseOnUnfocus);
 			SAVE_VAR(Vars::Menu::MenuKey);
 		}
 
@@ -353,6 +354,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				SAVE_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				SAVE_VAR(Vars::Aimbot::Projectile::BounceKey);
 				SAVE_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				SAVE_VAR(Vars::Aimbot::Projectile::PredictionTime);
@@ -1131,6 +1133,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_OTHER(Vars::Menu::CheatPrefix);
 			LOAD_VAR(Vars::Menu::Vignette);
 			LOAD_VAR(Vars::Menu::ShowDVD);
+			LOAD_VAR(Vars::Menu::CloseOnUnfocus);
 			LOAD_VAR(Vars::Menu::MenuKey);
 		}
 
@@ -1217,6 +1220,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::VisTestPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::AllowedHitboxes);
 				LOAD_VAR(Vars::Aimbot::Projectile::FeetAimIfOnGround);
+				LOAD_VAR(Vars::Aimbot::Projectile::BounceKey);
 				LOAD_VAR(Vars::Aimbot::Projectile::SplashPrediction);
 				LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 				LOAD_VAR(Vars::Aimbot::Projectile::PredictionTime);

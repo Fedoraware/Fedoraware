@@ -202,7 +202,7 @@ void PResolver::FrameStageNotify(){
 			case 4: vAdjustedAngle.y = flBaseYaw + 90.f; break;		//side2
 			case 5: vAdjustedAngle.y += 180.f; break;				//invert
 			case 6:{												//edge
-				const bool bEdge = vAdjustedAngle.x == 89 ? !F::AntiAim.FindEdge(flBaseYaw, pEntity) : F::AntiAim.FindEdge(flBaseYaw, pEntity);
+				const bool bEdge = vAdjustedAngle.x == 89 ? F::AntiAim.FindEdge(flBaseYaw, pEntity) : !F::AntiAim.FindEdge(flBaseYaw, pEntity);
 				vAdjustedAngle.y = flBaseYaw + (bEdge ? 90.f : -90.f);
 				break;
 			}
