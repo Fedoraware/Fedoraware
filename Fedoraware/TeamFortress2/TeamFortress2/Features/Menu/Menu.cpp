@@ -1691,6 +1691,10 @@ void CMenu::MenuMisc()
 		{
 			SectionTitle("Movement");
 			WToggle("No Push", &Vars::Misc::NoPush.Value); HelpMarker("Will make teammates unable to push you around");
+			if (Vars::Misc::NoPush.Value) 
+			{
+				WToggle("Idle Push", &Vars::Misc::NoPushIdle.Value); HelpMarker("Let players push you when you aren't moving to prevent suspicion");
+			}
 			WCombo("Fast Stop", &Vars::Misc::AccurateMovement.Value, { "Off", "Legacy", "Instant", "Adaptive" }); HelpMarker("Will stop you from sliding once you stop pressing movement buttons");
 			WToggle("Fast Strafe", &Vars::Misc::FastDeltaStrafe.Value); HelpMarker("Allows you to change direction instantly.");
 			WToggle("Fast Accel", &Vars::Misc::FastAccel.Value); HelpMarker("Makes you accelerate to full speed faster.");
