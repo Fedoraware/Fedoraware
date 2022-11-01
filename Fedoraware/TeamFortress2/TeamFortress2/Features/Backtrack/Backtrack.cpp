@@ -83,7 +83,7 @@ void CBacktrack::MakeRecords()
 			matrix3x4 bones[128];
 			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
 			//Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
-			const Vec3 vOrigin = pEntity->GetAbsOrigin();
+			const Vec3 vOrigin = pEntity->m_vecOrigin();
 			if (!mRecords[pEntity].empty())
 			{
 				// as long as we have 1 record we can check for lagcomp breaking here

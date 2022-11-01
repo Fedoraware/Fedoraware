@@ -94,7 +94,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 		case FL_Random: { return ChokeCounter < ChosenAmount; }
 		case FL_Adaptive:
 		{
-			const Vec3 vDelta = vLastPosition - pLocal->GetAbsOrigin();
+			const Vec3 vDelta = vLastPosition - pLocal->m_vecOrigin();
 			return vDelta.Length2DSqr() < 4096.f;
 		}
 		default: { return false; }
@@ -126,7 +126,7 @@ void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket)
 	// Are we even allowed to choke?
 	if (!IsAllowed(pLocal))
 	{
-		vLastPosition = pLocal->GetAbsOrigin();
+		vLastPosition = pLocal->m_vecOrigin();
 		*pSendPacket = true;
 		// Set a new random amount (if desired)
 		if (Vars::Misc::CL_Move::FakelagMode.Value == FL_Random) { ChosenAmount = Utils::RandIntSimple(Vars::Misc::CL_Move::FakelagMin.Value, Vars::Misc::CL_Move::FakelagMax.Value); }
