@@ -501,11 +501,6 @@ bool IsPointAllowed(int nHitbox)
 	}
 	return true; // never
 }
-bool CAimbotProjectile::bounceKey()
-{
-	static KeyHelper bounceKey{ &Vars::Aimbot::Projectile::BounceKey.Value };
-	return !Vars::Aimbot::Projectile::BounceKey.Value ? true : bounceKey.Down();
-}
 
 //	Tries to find the best position to aim at on our target.
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos)
@@ -551,11 +546,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z}
 	};
 
-
-
 	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
-	if (bounceKey())
-		aimMethod = 2;
+
 	int curPoint = 0, testPoints = 0; //maybe better way to do this
 	for (const auto& point : vecPoints)
 	{
@@ -587,6 +579,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 
 	const int classNum = pLocal->GetClassNum();
 
+	static KeyHelper bounceKey{ &Vars::Aimbot::Projectile::BounceKey.Value };
+
 	switch (classNum)
 	{
 		case CLASS_SOLDIER:
@@ -599,7 +593,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		}
 		case CLASS_DEMOMAN:
 		{
-			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && pEntity->OnSolid())
+			if (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && (bounceKey.Down() || !Vars::Aimbot::Projectile::BounceKey.Value)))
 			{
 				aimMethod = 2;
 			}
