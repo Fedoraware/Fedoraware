@@ -258,6 +258,35 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 	return out.m_flVelocity;
 }
 
+bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& projInfo, Solution_t& out)
+{
+	const float fGravity = g_ConVars.sv_gravity->GetFloat() * projInfo.m_flGravity;
+	const Vec3 vDelta = vTargetPos - vLocalPos;
+	const float fHyp = sqrt(vDelta.x * vDelta.x + vDelta.y * vDelta.y);
+	const float fDist = vDelta.z;
+	const float fVel = projInfo.m_flVelocity;
+
+	if (!fGravity)
+	{
+		const Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vTargetPos);
+		out.m_flPitch = -DEG2RAD(vAngleTo.x);
+		out.m_flYaw = DEG2RAD(vAngleTo.y);
+	}
+	else
+	{	//	arch
+		const float fRoot = pow(fVel, 4) - fGravity * (fGravity * pow(fHyp, 2) + 2.f * fDist * pow(fVel, 2));
+		if (fRoot < 0.f)
+		{
+			return false;
+		}
+		out.m_flPitch = atan((pow(fVel, 2) - sqrt(fRoot)) / (fGravity * fHyp));
+		out.m_flYaw = atan2(vDelta.y, vDelta.x);
+	}
+	out.m_flTime = fHyp / (cos(out.m_flPitch) * fVel);
+
+	return true;
+}
+
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)
 {
 	const INetChannel* pNetChannel = I::EngineClient->GetNetChannelInfo();
