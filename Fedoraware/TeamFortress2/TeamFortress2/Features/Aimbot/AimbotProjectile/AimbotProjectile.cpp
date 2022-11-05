@@ -89,7 +89,18 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1216.f, 0.4f };
 			IsBoosted = true;
+			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f; //https://wiki.teamfortress.com/wiki/Grenade_Launcher
 			break;
+			
+		}
+
+		case Demoman_m_TheIronBomber:
+		{
+			out = { 1216.f, 0.4f };
+			IsBoosted = true;
+			Vars::Aimbot::Projectile::PredictionTime.Value = 1.6f; // "-30% fuse time on grenades"
+			break;
+
 		}
 
 		case Soldier_s_TheRighteousBison:
@@ -103,6 +114,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1453.9f, 0.4f };
 			IsBoosted = true;
+			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f;
 			break;
 		}
 
@@ -110,6 +122,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1513.3f, 0.4f };
 			IsBoosted = true;
+			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f;
 			break;
 		}
 
