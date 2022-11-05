@@ -57,6 +57,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1100.0f, 0.0f };
 			IsBoosted = true;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -64,6 +65,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1980.0f, 0.0f };
 			IsBoosted = true;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -71,13 +73,13 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1540.0f, 0.0f };
 			IsBoosted = true;
+			m_flPredictionTime;
 			break;
 		}
 
 		case Demoman_m_GrenadeLauncher:
 		case Demoman_m_GrenadeLauncherR:
 		case Demoman_m_FestiveGrenadeLauncher:
-		case Demoman_m_TheIronBomber:
 		case Demoman_m_Autumn:
 		case Demoman_m_MacabreWeb:
 		case Demoman_m_Rainbow:
@@ -89,7 +91,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1216.f, 0.4f };
 			IsBoosted = true;
-			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f; //https://wiki.teamfortress.com/wiki/Grenade_Launcher
+			m_flPredictionTime = 2.2f; //https://wiki.teamfortress.com/wiki/Grenade_Launcher
+			m_flPredictionTime;
 			break;
 			
 		}
@@ -98,7 +101,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1216.f, 0.4f };
 			IsBoosted = true;
-			Vars::Aimbot::Projectile::PredictionTime.Value = 1.6f; // "-30% fuse time on grenades"
+			m_flPredictionTime = 1.5f; // 1.6 causes the cheat to miss
+			m_flPredictionTime;
 			break;
 
 		}
@@ -107,6 +111,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Engi_m_ThePomson6000:
 		{
 			out = { 1200.0f, 0.0f };
+			m_flPredictionTime;
 			break;
 		}
 
@@ -114,7 +119,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1453.9f, 0.4f };
 			IsBoosted = true;
-			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f;
+			m_flPredictionTime = 2.2f;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -122,7 +128,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1513.3f, 0.4f };
 			IsBoosted = true;
-			Vars::Aimbot::Projectile::PredictionTime.Value = 2.3f;
+			m_flPredictionTime = 2.2f;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -131,6 +138,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Medic_m_CrusadersCrossbow:
 		{
 			out = { 2400.0f, 0.2f };
+			m_flPredictionTime;
 			break;
 		}
 
@@ -138,6 +146,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 3000.0f, 0.0f, 0.1753f };
 			IsFlameThrower = true;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -174,6 +183,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			out = { 1000.0f, 0.0f, 0.33f };
 			IsFlameThrower = true;
+			m_flPredictionTime;
 			break;
 		}
 
@@ -183,6 +193,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Pyro_s_TheScorchShot:
 		{
 			out = { 2000.0f, 0.3f };
+			m_flPredictionTime;
 			break;
 		}
 
@@ -191,6 +202,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Scout_s_TheFlyingGuillotineG:
 		{
 			out = { 3000.0f, 0.2f };
+			m_flPredictionTime;
 			break;
 		}
 
@@ -200,6 +212,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Medic_m_TheOverdose:
 		{
 			out = { 1000.0f, 0.2f };
+			m_flPredictionTime;
 			break;
 		}
 
@@ -209,9 +222,10 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		{
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
-				Math::RemapValClamped(charge, 0.0f, 1.f, 1800, 2600),
+				Math::RemapValClamped(charge, 0.0f, 1.f, 1812.1, 2600),
 				Math::RemapValClamped(charge, 0.0f, 1.f, 0.5, 0.1)
 			};
+			m_flPredictionTime;
 			break;
 		}
 		case Demoman_s_StickybombLauncher:
@@ -225,6 +239,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 				Math::RemapValClamped(charge, 0.0f, 1.f, 925.38, 2409.2),
 				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
 			};
+			m_flPredictionTime;
 			break;
 		}
 		case Demoman_s_TheQuickiebombLauncher:
@@ -235,41 +250,12 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 				Math::RemapValClamped(charge, 0.0f, 1.f, 930.88, 2409.2),
 				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
 			};
-
+			m_flPredictionTime;
 			break;
 		}
 	}
 
 	return out.m_flVelocity;
-}
-
-bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTargetPos, const ProjectileInfo_t& projInfo, Solution_t& out)
-{
-	const float fGravity = g_ConVars.sv_gravity->GetFloat() * projInfo.m_flGravity;
-	const Vec3 vDelta = vTargetPos - vLocalPos;
-	const float fHyp = sqrt(vDelta.x * vDelta.x + vDelta.y * vDelta.y);
-	const float fDist = vDelta.z;
-	const float fVel = projInfo.m_flVelocity;
-
-	if (!fGravity)
-	{
-		const Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vTargetPos);
-		out.m_flPitch = -DEG2RAD(vAngleTo.x);
-		out.m_flYaw = DEG2RAD(vAngleTo.y);
-	}
-	else
-	{	//	arch
-		const float fRoot = pow(fVel, 4) - fGravity * (fGravity * pow(fHyp, 2) + 2.f * fDist * pow(fVel, 2));
-		if (fRoot < 0.f)
-		{
-			return false;
-		}
-		out.m_flPitch = atan((pow(fVel, 2) - sqrt(fRoot)) / (fGravity * fHyp));
-		out.m_flYaw = atan2(vDelta.y, vDelta.x);
-	}
-	out.m_flTime = fHyp / (cos(out.m_flPitch) * fVel);
-
-	return true;
 }
 
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& predictor, const ProjectileInfo_t& projInfo, Solution_t& out)

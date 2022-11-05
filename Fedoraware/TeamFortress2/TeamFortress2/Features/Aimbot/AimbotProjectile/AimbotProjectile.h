@@ -46,6 +46,7 @@ class CAimbotProjectile
 	bool GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget);
 	float m_flTravelTime = 0.0f;
 	float m_flTravelTimeStart = 0.0f;
+	float m_flPredictionTime = Vars::Aimbot::Projectile::PredictionTime.Value;
 	bool IsFlameThrower = false;
 	bool IsBoosted = false;
 
