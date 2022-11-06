@@ -68,7 +68,6 @@ bool CESP::GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int
 	if (Utils::W2S(vTrans[3], flb) && Utils::W2S(vTrans[5], brt)
 		&& Utils::W2S(vTrans[0], blb) && Utils::W2S(vTrans[4], frt)
 		&& Utils::W2S(vTrans[2], frb) && Utils::W2S(vTrans[1], brb)
-		&& Utils::W2S(vTrans[6], blt) && Utils::W2S(vTrans[7], flt)
 		&& Utils::W2S(vTrans[6], blt) && Utils::W2S(vTrans[7], flt))
 	{
 		const Vec3 arr[] = { flb, brt, blb, frt, frb, brb, blt, flt };
