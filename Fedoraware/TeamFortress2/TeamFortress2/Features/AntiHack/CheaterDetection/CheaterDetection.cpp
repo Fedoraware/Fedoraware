@@ -260,7 +260,7 @@ void CCheaterDetection::FindHitchances()
 	flLastAccuracyTime = I::GlobalVars->curtime;
 
 	const float flAvg = (float)server.iHits / (float)server.iMisses;
-	server.flHighAccuracy = std::clamp(flAvg * 2, .05f, .95f);
+	server.flHighAccuracy = std::clamp(flAvg * 2, .001f, .95f);
 
 	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.5f | %.5f}", flAvg, server.flHighAccuracy).c_str(), { 224, 255, 131, 255 });
 }
@@ -304,18 +304,10 @@ void CCheaterDetection::ReportDamage(CGameEvent* pEvent)
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
 	if (!pEntity || pEntity->GetDormant()) { return; }
 	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
-	if (!pWeapon || Utils::GetWeaponType(pWeapon) != EWeaponType::HITSCAN) { return; }
+	if (!pWeapon) { return; }
 	AimbotCheck(pEntity);
 	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1) { return; }
 	mData[pEntity].iLastDamageEventTick = I::GlobalVars->tickcount;
 	mData[pEntity].pShots.first++; mData[pEntity].bDidDamage = true;
 	server.iHits++;
-}
-
-#include "../../Hooks/Hooks.h"
-
-MAKE_HOOK(asdfaasfsda, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 56 8B 75 08 8D 8D"), void, __fastcall,
-		  void* ecx, void* edx, int* pTrace, int iDamageType, const char* pCustomImpactName)
-{
-	Hook.Original<FN>()(ecx, edx, pTrace, iDamageType, pCustomImpactName);
 }
