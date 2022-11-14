@@ -593,7 +593,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		}
 		case CLASS_DEMOMAN:
 		{
-			if (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && (bounceKey.Down() || !Vars::Aimbot::Projectile::BounceKey.Value)))
+			if (bounceKey.Down() || (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value)))
 			{
 				aimMethod = 2;
 			}
