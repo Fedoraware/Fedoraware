@@ -104,6 +104,7 @@ void CSpectatorList::DrawDefault()
 		0);
 
 	// 38 to 43
+	g_Draw.OutlinedRect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, Vars::Menu::Colors::MenuAccent);
 	g_Draw.Rect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, { 43, 43, 45, 250 });
 
 g_Draw.String(FONT_MENU,
