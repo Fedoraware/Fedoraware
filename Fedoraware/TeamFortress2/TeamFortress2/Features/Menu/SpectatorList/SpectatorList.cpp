@@ -106,12 +106,12 @@ void CSpectatorList::DrawDefault()
 	// 38 to 43
 	g_Draw.Rect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, { 43, 43, 45, 250 });
 
-	g_Draw.String(FONT_IMGUI,
-				  SpecListX + (SpecListW / 2),
-				  SpecListY + (SpecListTitleBarH / 2),
-				  Vars::Menu::Colors::MenuAccent,
-				  ALIGN_CENTER,
-				  "%hs", "Spectators");
+g_Draw.String(FONT_MENU,
+		SpecListX + (SpecListW / 2),
+		SpecListY + (SpecListTitleBarH / 2),
+		{ 255, 255, 255, 255 },
+		ALIGN_CENTER,
+		"%hs", "Spectators");
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
