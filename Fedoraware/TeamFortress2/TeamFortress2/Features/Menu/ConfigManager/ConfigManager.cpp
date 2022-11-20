@@ -1790,3 +1790,9 @@ void CConfigManager::RemoveVisual(const std::string& configName)
 {
 	std::filesystem::remove(ConfigPath + "\\Visuals\\" + configName + ConfigExtension);
 }
+
+void CConfigManager::BackupConfig() {
+	for (const auto& entry : std::filesystem::directory_iterator(ConfigPath)) {
+		std::filesystem::copy(entry.path(), ConfigPath + "\\Visuals" + "\\" + entry.path().stem().string());
+	}
+}

@@ -40,7 +40,7 @@ public:
 	bool LoadVisual(const std::string& configName);
 	void RemoveConfig(const std::string& configName);
 	void RemoveVisual(const std::string& configName);
-
+	void BackupConfig();
 	std::string GetCurrentConfig() { return CurrentConfig; }
 	std::string GetCurrentVisuals() { return CurrentVisuals; }
 	std::string GetConfigPath() { return ConfigPath; }
