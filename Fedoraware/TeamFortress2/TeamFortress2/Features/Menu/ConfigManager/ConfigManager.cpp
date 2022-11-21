@@ -1772,7 +1772,6 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		 });
 
 		CurrentVisuals = configName;
-		F::Notifications.Add("Visual config " + configName + " loaded");
 	}
 	catch (...)
 	{
