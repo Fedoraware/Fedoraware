@@ -149,6 +149,7 @@
     <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.cpp" />
     <ClCompile Include="TeamFortress2\Features\AutoQueue\AutoQueue.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.cpp" />
     <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="TeamFortress2\Features\Commands\Commands.cpp" />
@@ -328,6 +329,7 @@
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
+    <ClInclude Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Notifications\Notifications.h" />
     <ClInclude Include="TeamFortress2\Features\TickHandler\TickHandler.h" />
