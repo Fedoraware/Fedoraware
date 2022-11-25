@@ -688,8 +688,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 			{
 				LOAD_VAR(Vars::CritHack::Active);
-				LOAD_VAR(Vars::CritHack::Indicators);
-				LOAD_OTHER(Vars::CritHack::IndicatorPos);
 				LOAD_VAR(Vars::CritHack::AvoidRandom);
 				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
@@ -1402,6 +1400,8 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Backtrack::BtChams::Material);
 		LOAD_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
 		LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
+		LOAD_VAR(Vars::CritHack::Indicators);
+		LOAD_OTHER(Vars::CritHack::IndicatorPos);
 		//ESP
 		LOAD_VAR(Vars::ESP::Main::Active);
 		LOAD_VAR(Vars::ESP::Main::Outlinedbar);
@@ -1772,7 +1772,6 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		 });
 
 		CurrentVisuals = configName;
-		F::Notifications.Add("Visual config " + configName + " loaded");
 	}
 	catch (...)
 	{

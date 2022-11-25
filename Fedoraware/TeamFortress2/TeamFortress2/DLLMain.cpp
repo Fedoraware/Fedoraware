@@ -111,10 +111,19 @@ void Uninitialize()
 
 void LoadDefaultConfig()
 {
+	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\Visuals\\default.fw"))
+	{
+		g_CFG.LoadVisual("default");
+	}
+
+	Sleep(200);
+
 	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig() + ".fw"))
 	{
 		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 	}
+
+	Sleep(200);
 
 	g_Draw.RemakeFonts
 	({

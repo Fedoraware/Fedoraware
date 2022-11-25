@@ -856,6 +856,11 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 }
 
+bool IsForceANature()
+{
+	return (G::CurItemDefIndex == Scout_m_ForceANature || G::CurItemDefIndex == Scout_m_FestiveForceANature);
+}
+
 void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static int iJumpKey = VK_RBUTTON;
@@ -870,7 +875,7 @@ void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (pLocal->GetClassNum() != CLASS_SCOUT || G::CurItemDefIndex != Scout_m_ForceANature || pLocal->IsDucking())
+	if (pLocal->GetClassNum() != CLASS_SCOUT || !IsForceANature() || pLocal->IsDucking())
 	{
 		return;
 	}
