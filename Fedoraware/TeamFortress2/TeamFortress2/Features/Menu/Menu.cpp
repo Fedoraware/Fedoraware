@@ -1914,6 +1914,10 @@ void CMenu::SettingsWindow()
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetVisualsPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (Button("Backup Configs", ImVec2(200, 0)))
+		{
+			g_CFG.BackupConfig();
+		}
 		Dummy({ 0, 5 });
 		ImGui::PushFont(SectionFont);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
