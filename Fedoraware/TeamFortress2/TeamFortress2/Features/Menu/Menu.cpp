@@ -7,6 +7,7 @@
 #include "../Misc/Misc.h"
 #include "../Chams/DMEChams.h"
 #include "../Glow/Glow.h"
+#include "../Killsay/Killsay.h"
 
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
@@ -1755,6 +1756,33 @@ void CMenu::MenuMisc()
 			SectionTitle("Sound");
 			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
 
+			SectionTitle("Killsays");
+			Checkbox("Killsays", &Vars::Misc::Killsay.Value);
+			std::vector<std::string> vecKillsays = {};
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath() + "\\Killsays"))
+			{
+				std::string a(std::filesystem::path(entry).filename().string());
+				vecKillsays.push_back(a);
+			}
+
+			if (!vecKillsays.empty())
+			{
+				SetNextItemWidth(F::Menu.ItemWidth);
+				if (ImGui::BeginCombo("Killsay file", Vars::Misc::KillsayFile.c_str()))
+				{
+					for (const auto& killsay : vecKillsays)
+					{
+						bool bThisKillsayIsValid = killsay == Vars::Misc::KillsayFile.c_str();
+						if (ImGui::Selectable(killsay.c_str(), &bThisKillsayIsValid))
+						{
+							F::Killsay.m_bFilled = false;
+							Vars::Misc::KillsayFile = killsay;
+						}
+					}
+					
+					ImGui::EndCombo();
+				}
+			}
 
 
 		} EndChild();

@@ -259,6 +259,11 @@ CConfigManager::CConfigManager()
 	{
 		std::filesystem::create_directory(ConfigPath + "\\Visuals");
 	}
+
+	if (!std::filesystem::exists(ConfigPath + "\\Killsays"))
+	{
+		std::filesystem::create_directory(ConfigPath + "\\Killsays");
+	}
 }
 
 bool CConfigManager::SaveConfig(const std::string& configName)
@@ -761,6 +766,12 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Melee::WhipTeam);
 			}
 		}
+
+		LOAD_VAR(Vars::Visuals::ThirdpersonOffsetWithArrows);
+		LOAD_VAR(Vars::Visuals::ThirdpersonArrowOffsetKey);
+		LOAD_VAR(Vars::Visuals::ThirdPersonKey);
+		LOAD_VAR(Vars::Visuals::FreecamKey);
+		LOAD_VAR(Vars::Visuals::FreecamSpeed);
 
 		//Triggerbot
 		{
@@ -1570,9 +1581,6 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::OutOfFOVArrowsOutline);
 		LOAD_VAR(Vars::Visuals::SpectatorList);
 
-		LOAD_VAR(Vars::Visuals::FreecamKey);
-		LOAD_VAR(Vars::Visuals::FreecamSpeed);
-
 		LOAD_VAR(Vars::Visuals::CameraMode);
 		LOAD_VAR(Vars::Visuals::CameraFOV);
 
@@ -1586,7 +1594,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::ToolTips);
 
 		LOAD_VAR(Vars::Visuals::ThirdPerson);
-		LOAD_VAR(Vars::Visuals::ThirdPersonKey);
+		
 		LOAD_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 		LOAD_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 		LOAD_VAR(Vars::Visuals::ThirdPersonServerHitbox);
@@ -1594,8 +1602,8 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::ThirdpersonDist);
 		LOAD_VAR(Vars::Visuals::ThirdpersonRight);
 		LOAD_VAR(Vars::Visuals::ThirdpersonUp);
-		LOAD_VAR(Vars::Visuals::ThirdpersonOffsetWithArrows);
-		LOAD_VAR(Vars::Visuals::ThirdpersonArrowOffsetKey);
+		
+		
 		LOAD_VAR(Vars::Visuals::ThirdpersonCrosshair);
 
 		LOAD_VAR(Vars::Visuals::WorldModulation);

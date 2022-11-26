@@ -628,7 +628,7 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> FastDeltaStrafe{false};
+		inline CVar<bool> FastDeltaStrafe{ false };
 		inline CVar<int> AccurateMovement{ false };
 		inline CVar<bool> AutoJump{ false };
 		inline CVar<bool> AutoVote{ false };
@@ -688,6 +688,9 @@ namespace Vars
 		inline CVar<bool> AntiVAC{ false };
 		inline CVar<int> InstantAccept{ false };
 		inline CVar<bool> RunescapeChat{ false };
+
+		inline CVar<bool> Killsay{ false };
+		inline std::string KillsayFile = "";
 		namespace Followbot
 		{
 			inline CVar<bool> Enabled{ false };
