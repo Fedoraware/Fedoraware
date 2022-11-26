@@ -726,10 +726,26 @@ bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& 
 			float alpha = Color::TOFLOAT(chams.colour.a);
 			if (pEntity && pLocal)
 			{
-				if (drawType == 2 && pEntity != pLocal && pEntity->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive() && Vars::Chams::Players::FadeoutTeammates.Value)
+				CBaseEntity* pOwner = pEntity;
+				if (drawType == 4 || drawType == 5){
+					pOwner = I::ClientEntityList->GetClientEntityFromHandle(pEntity->m_hOwnerEntity());
+				}
+
+				if (pOwner && pOwner->IsPlayer() && pOwner != pLocal && pOwner->GetTeamNum() == pLocal->GetTeamNum() && pLocal->IsAlive())
 				{
-					alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
-					if (alpha < 0.05f)
+					if (Vars::Chams::Players::FadeoutTeammates.Value){
+						alpha = Math::RemapValClamped(pLocal->GetWorldSpaceCenter().DistTo(pEntity->GetWorldSpaceCenter()), 450.f, 100.f, Color::TOFLOAT(chams.colour.a), 0.0f);
+					}
+
+					if (Vars::Visuals::FadeOutFoV.Value > 0.f){
+						Vec3 vPos = pOwner->GetWorldSpaceCenter();
+						Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), vPos);
+						const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
+						const float flAlpha = Math::RemapValClamped(flFOVTo, 0.f, Vars::Visuals::FadeOutFoV.Value, .05f, Color::TOFLOAT(chams.colour.a));
+						alpha = fminf(flAlpha, alpha);
+					}
+					
+					if (alpha < 0.01f)
 					{	//dont draw if we are too close
 						return true;
 					}

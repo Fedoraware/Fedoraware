@@ -467,6 +467,7 @@ namespace Vars
 
 	namespace Visuals
 	{
+		inline CVar<float> FadeOutFoV{0.f};
 		inline CVar<bool> CleanScreenshots{ true };
 		inline CVar<bool> RemoveDisguises{ false };
 		inline CVar<bool> RemoveTaunts{ false };
