@@ -53,6 +53,11 @@ const char* ClassToString(const int nClass)
 
 void CKillsay::FireGameEvent(FNV1A_t uNameHash, CGameEvent* pEvent)
 {
+        if (!Vars::Misc::Killsay.Value) 
+        {
+                return;
+        }
+
 	if (Vars::Misc::KillsayFile.empty())
 	{
 		return;
