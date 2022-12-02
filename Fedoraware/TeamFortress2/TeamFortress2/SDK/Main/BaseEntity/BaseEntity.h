@@ -364,7 +364,7 @@ public: //Everything else, lol.
 
 	__inline CTFPlayerAnimState* GetAnimState()
 	{
-		return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1BF8);
+		return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1D00);
 	}
 
 	__inline void SetPoseParam(std::array<float, MAXSTUDIOPOSEPARAM> param)
@@ -681,13 +681,13 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetEyePosition()
 	{
-		return (GetViewOffset() + GetAbsOrigin());
+		return (GetViewOffset() + m_vecOrigin());
 	}
 
 	__inline Vec3 GetWorldSpaceCenter()
 	{
 		Vec3 vMin, vMax; GetRenderBounds(vMin, vMax);
-		Vec3 vWorldSpaceCenter = GetAbsOrigin();
+		Vec3 vWorldSpaceCenter = m_vecOrigin();
 		vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
 		return vWorldSpaceCenter;
 	}
@@ -778,14 +778,6 @@ public: //Everything else, lol.
 	{
 		Vec3* pRenderAngles = const_cast<Vec3*>(&this->GetRenderAngles());
 		*pRenderAngles = vAngles;
-	}
-
-	__inline void SetAbsOrigin(const Vec3& vOrigin)
-	{
-		typedef void(__thiscall* FN)(CBaseEntity*, const Vec3&);
-		static DWORD dwFN = g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
-		FN func = (FN)dwFN;
-		func(this, vOrigin);
 	}
 
 	__inline void PostDataUpdate(int updateType)

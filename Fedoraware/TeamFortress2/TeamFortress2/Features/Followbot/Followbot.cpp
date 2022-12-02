@@ -13,7 +13,7 @@ bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 	if (!pTarget) { return false; }
 	if (pTarget->GetDormant()) { return false; }
 	if (!pTarget->IsAlive()) { return false; }
-	if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 900.f) { return false; } // We're too slow or got stuck
+	if (pLocal->m_vecOrigin().DistTo(pTarget->m_vecOrigin()) > 900.f) { return false; } // We're too slow or got stuck
 
 	return true;
 }
@@ -26,7 +26,7 @@ void CFollowbot::OptimizePath(CBaseEntity* pLocal)
 	for (size_t i = 0; i < PathNodes.size(); i++)
 	{
 		auto& currentNode = PathNodes[i];
-		if (pLocal->GetAbsOrigin().Dist2D(currentNode.Location) < NODE_DISTANCE)
+		if (pLocal->m_vecOrigin().Dist2D(currentNode.Location) < NODE_DISTANCE)
 		{
 			int garbageNodes = static_cast<int>(i);
 			while (garbageNodes > 1 && !PathNodes.empty())
@@ -46,7 +46,7 @@ CBaseEntity* CFollowbot::FindTarget(CBaseEntity* pLocal)
 	{
 		if (!pPlayer || !pPlayer->IsAlive()) { continue; }
 		if (pPlayer->GetIndex() == pLocal->GetIndex()) { continue; }
-		if (pLocal->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin()) > 280.f) { continue; }
+		if (pLocal->m_vecOrigin().DistTo(pPlayer->m_vecOrigin()) > 280.f) { continue; }
 		if (Vars::Misc::Followbot::FriendsOnly.Value && !g_EntityCache.IsFriend(pPlayer->GetIndex())) { continue; }
 
 		if (ValidTarget(pPlayer, pLocal))
@@ -81,14 +81,14 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	{
 		if (PathNodes.empty())
 		{
-			PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->OnSolid() });
+			PathNodes.push_back({ CurrentTarget->m_vecOrigin(), CurrentTarget->OnSolid() });
 		}
 		else
 		{
 			const auto& lastNode = PathNodes.back();
-			if (CurrentTarget->GetAbsOrigin().DistTo(lastNode.Location) >= 5.f)
+			if (CurrentTarget->m_vecOrigin().DistTo(lastNode.Location) >= 5.f)
 			{
-				PathNodes.push_back({ CurrentTarget->GetAbsOrigin(), CurrentTarget->OnSolid() });
+				PathNodes.push_back({ CurrentTarget->m_vecOrigin(), CurrentTarget->OnSolid() });
 			}
 		}
 	}
@@ -97,11 +97,11 @@ void CFollowbot::Run(CUserCmd* pCmd)
 	if (!PathNodes.empty())
 	{
 		auto& currentNode = PathNodes.front();
-		const Vec3 localPos = pLocal->GetAbsOrigin();
+		const Vec3 localPos = pLocal->m_vecOrigin();
 
 		if (localPos.Dist2D(currentNode.Location) >= NODE_DISTANCE)
 		{
-			if (localPos.DistTo(CurrentTarget->GetAbsOrigin()) >= Vars::Misc::Followbot::Distance.Value)
+			if (localPos.DistTo(CurrentTarget->m_vecOrigin()) >= Vars::Misc::Followbot::Distance.Value)
 			{
 				Utils::WalkTo(pCmd, pLocal, currentNode.Location);
 			}

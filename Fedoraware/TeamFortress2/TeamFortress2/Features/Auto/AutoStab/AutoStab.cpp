@@ -93,11 +93,6 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 	pCmd->buttons |= IN_ATTACK;
 	m_bShouldDisguise = true;
-
-	if (Vars::Misc::DisableInterpolation.Value)
-	{
-		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
-	}
 }
 
 void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
@@ -120,14 +115,14 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		const auto& pRecords = F::Backtrack.GetRecords(pEnemy);
 		const bool bBacktrackable = pRecords != nullptr && Vars::Backtrack::Enabled.Value;
 
-		Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
+		Vec3 vOriginalPos = pEnemy->m_vecOrigin();
 		Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
 
 		if (bBacktrackable)
 		{
 			auto DoBacktrack = [&](TickRecord pTick) -> bool
 			{
-				pEnemy->SetAbsOrigin(vOriginalPos);
+				pEnemy->SetVecOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
 
 				// Extract the required bones
@@ -139,7 +134,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), vPelvisPos);
 
 				// Set origins and eye angles for further logic
-				pEnemy->SetAbsOrigin(pTick.vOrigin);
+				pEnemy->SetVecOrigin(pTick.vOrigin);
 				pEnemy->SetEyeAngles(pTick.vAngles);
 
 				// Check stab range (option)
@@ -148,7 +143,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 				if (pTick.vOrigin.DistTo(pLocal->m_vecOrigin()) > flRange)
 				{
-					pEnemy->SetAbsOrigin(vOriginalPos);
+					pEnemy->SetVecOrigin(vOriginalPos);
 					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
@@ -156,7 +151,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				// Can we backstab the target?
 				if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pTick.vOrigin - pLocal->m_vecOrigin())))
 				{
-					pEnemy->SetAbsOrigin(vOriginalPos);
+					pEnemy->SetVecOrigin(vOriginalPos);
 					pEnemy->SetEyeAngles(vOriginalEyeAngles);
 					return false;
 				}
@@ -172,9 +167,9 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				pCmd->buttons |= IN_ATTACK;
 				m_bShouldDisguise = true;
 
-				pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime + G::LerpTime);
+				pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime);
 
-				pEnemy->SetAbsOrigin(vOriginalPos);
+				pEnemy->SetVecOrigin(vOriginalPos);
 				pEnemy->SetEyeAngles(vOriginalEyeAngles);
 
 				return true;
@@ -214,10 +209,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			pCmd->buttons |= IN_ATTACK;
 			m_bShouldDisguise = true;
 
-			if (Vars::Misc::DisableInterpolation.Value)
-			{
-				pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
-			}
+			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime());
 
 			return;
 		}

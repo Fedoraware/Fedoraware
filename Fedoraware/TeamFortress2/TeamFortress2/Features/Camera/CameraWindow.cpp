@@ -55,7 +55,7 @@ void CCameraWindow::Update()
 					if (player->GetClassNum() != CLASS_SPY)
 						continue;
 
-					if (pLocal->GetAbsOrigin().DistTo(player->GetAbsOrigin()) <= 350.f)
+					if (pLocal->m_vecOrigin().DistTo(player->m_vecOrigin()) <= 350.f)
 					{
 						CameraOrigin = player->GetEyePosition();
 						CameraAngles = player->GetEyeAngles();
@@ -80,7 +80,7 @@ void CCameraWindow::Update()
 					const auto& building = reinterpret_cast<CBaseObject*>(pBuilding);
 					const auto nType = static_cast<EBuildingType>(building->GetType());
 
-					const float distance = pLocal->GetAbsOrigin().DistTo(building->GetAbsOrigin());
+					const float distance = pLocal->m_vecOrigin().DistTo(building->m_vecOrigin());
 					if (distance > 260.f) { continue; }
 
 					if (nType == EBuildingType::TELEPORTER && building->GetObjectMode() == 0)
@@ -95,7 +95,7 @@ void CCameraWindow::Update()
 							if (Vars::Visuals::CameraMode.Value == 4)
 							{
 								Vec3 vScreen;
-								if (Utils::W2S(building->GetAbsOrigin(), vScreen))
+								if (Utils::W2S(building->m_vecOrigin(), vScreen))
 								{
 									const float height = Math::RemapValClamped(100.f, 0.f, distance, 100.f, 600.f);
 									const float width = Math::RemapValClamped(100.f, 0.f, distance, 80.f, 400.f);

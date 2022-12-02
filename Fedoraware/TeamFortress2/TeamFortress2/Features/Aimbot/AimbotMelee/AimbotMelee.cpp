@@ -77,14 +77,14 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 				F::MoveSim.RunTick(moveData, absOrigin);
 			}
 
-			const Vec3 vRestore = pTarget->GetAbsOrigin();
-			pTarget->SetAbsOrigin(absOrigin);
+			const Vec3 vRestore = pTarget->m_vecOrigin();
+			pTarget->SetVecOrigin(absOrigin);
 
 			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
 			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
 			const bool bReturn = (trace.entity && trace.entity->GetIndex() == nTargetIndex);
 
-			pTarget->SetAbsOrigin(vRestore);
+			pTarget->SetVecOrigin(vRestore);
 			F::MoveSim.Restore();
 			return bReturn;
 		}
@@ -420,7 +420,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 		if (bIsAttacking && target.m_TargetType == ETargetType::PLAYER)
 		{
 			const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
-			pCmd->tick_count = TIME_TO_TICKS(simTime + G::LerpTime);
+			pCmd->tick_count = TIME_TO_TICKS(simTime);
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.Value == 2)

@@ -140,7 +140,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		}
 
 		// distance things
-		const Vec3 vDelta = Player->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = Player->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value)) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) - 256.f, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value), Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
@@ -198,7 +198,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		// Player lights
 		if (Vars::ESP::Players::Dlights.Value)
 		{
-			CreateDLight(nIndex, drawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.Value);
+			CreateDLight(nIndex, drawColor, Player->m_vecOrigin(), Vars::ESP::Players::DlightRadius.Value);
 		}
 
 		int x = 0, y = 0, w = 0, h = 0;
@@ -273,10 +273,10 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				if (I::Input->CAM_IsThirdPerson())
 				{
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 				}
 
-				if (Utils::W2S(Player->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(Player->m_vecOrigin(), vScreen))
 				{
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, drawColor);
 				}
@@ -637,7 +637,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 		}
 
 		// distance things
-		const Vec3 vDelta = pBuilding->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = pBuilding->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::Buildings::Alpha.Value, 0.f) : Vars::ESP::Buildings::Alpha.Value);
@@ -650,7 +650,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 		// Building lights
 		if (Vars::ESP::Buildings::Dlights.Value)
 		{
-			CreateDLight(building->GetIndex(), drawColor, building->GetAbsOrigin(),
+			CreateDLight(building->GetIndex(), drawColor, building->m_vecOrigin(),
 						 Vars::ESP::Buildings::DlightRadius.Value);
 		}
 
@@ -714,10 +714,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 				if (I::Input->CAM_IsThirdPerson())
 				{
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 				}
 
-				if (Utils::W2S(building->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(building->m_vecOrigin(), vScreen))
 				{
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, drawColor);
 				}
@@ -913,7 +913,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			{
 				if (building->IsTeleporter() && building->GetObjectMode() == 1)
 				{
-					const Vec3 Origin = building->GetAbsOrigin();
+					const Vec3 Origin = building->m_vecOrigin();
 
 					Vec3 Forward{};
 					Vec3 Right{};
@@ -961,7 +961,7 @@ void CESP::DrawWorld() const
 	for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 	{
 		// distance things
-		const Vec3 vDelta = health->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = health->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
@@ -981,9 +981,9 @@ void CESP::DrawWorld() const
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
 				if (I::Input->CAM_IsThirdPerson())
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 
-				if (Utils::W2S(health->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(health->m_vecOrigin(), vScreen))
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Colors::Health);
 			}
 
@@ -1023,7 +1023,7 @@ void CESP::DrawWorld() const
 	for (const auto& ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 	{
 		// distance things
-		const Vec3 vDelta = ammo->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = ammo->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
@@ -1043,9 +1043,9 @@ void CESP::DrawWorld() const
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
 				if (I::Input->CAM_IsThirdPerson())
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 
-				if (Utils::W2S(ammo->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(ammo->m_vecOrigin(), vScreen))
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Colors::Ammo);
 			}
 
@@ -1085,7 +1085,7 @@ void CESP::DrawWorld() const
 	for (const auto& NPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
 	{
 		// distance things
-		const Vec3 vDelta = NPC->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = NPC->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
@@ -1143,9 +1143,9 @@ void CESP::DrawWorld() const
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
 				if (I::Input->CAM_IsThirdPerson())
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 
-				if (Utils::W2S(NPC->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(NPC->m_vecOrigin(), vScreen))
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Utils::GetEntityDrawColor(NPC, true));
 			}
 
@@ -1185,7 +1185,7 @@ void CESP::DrawWorld() const
 	for (const auto& Bombs : g_EntityCache.GetGroup(EGroupType::WORLD_BOMBS))
 	{
 		// distance things
-		const Vec3 vDelta = Bombs->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = Bombs->m_vecOrigin() - pLocal->m_vecOrigin();
 		const float flDistance = vDelta.Length2D();
 		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
 		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
@@ -1228,9 +1228,9 @@ void CESP::DrawWorld() const
 				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
 
 				if (I::Input->CAM_IsThirdPerson())
-					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+					Utils::W2S(pLocal->m_vecOrigin(), vOrigin);
 
-				if (Utils::W2S(Bombs->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(Bombs->m_vecOrigin(), vScreen))
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, Utils::GetEntityDrawColor(Bombs, true));
 			}
 

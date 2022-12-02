@@ -60,11 +60,11 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent)
 		{
 			if (std::strstr(itemName, "medkit"))
 			{
-				F::Visuals.PickupDatas.push_back({ 1, I::EngineClient->Time(), pEntity->GetAbsOrigin() });
+				F::Visuals.PickupDatas.push_back({ 1, I::EngineClient->Time(), pEntity->m_vecOrigin() });
 			}
 			else if (std::strstr(itemName, "ammopack"))
 			{
-				F::Visuals.PickupDatas.push_back({ 0, I::EngineClient->Time(), pEntity->GetAbsOrigin() });
+				F::Visuals.PickupDatas.push_back({ 0, I::EngineClient->Time(), pEntity->m_vecOrigin() });
 			}
 		}
 	}

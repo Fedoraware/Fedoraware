@@ -40,7 +40,7 @@ std::optional<float> PResolver::PredictBaseYaw(CBaseEntity* pEntity){
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 		if (!pLocal) { return std::nullopt; }
 		if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return std::nullopt; }
-		return Math::CalcAngle(pEntity->GetAbsOrigin(), pLocal->GetAbsOrigin()).y;
+		return Math::CalcAngle(pEntity->m_vecOrigin(), pLocal->m_vecOrigin()).y;
 	}
 
 	bool bFound = false;
@@ -48,7 +48,7 @@ std::optional<float> PResolver::PredictBaseYaw(CBaseEntity* pEntity){
 	for (CBaseEntity* pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!pTarget || pTarget->IsAGhost() || !pTarget->IsAlive() || pTarget->GetTeamNum() == pEntity->GetTeamNum()) { continue; }
-		const Vec3 vAngleTo = Math::CalcAngle(pEntity->GetAbsOrigin(), pTarget->GetAbsOrigin());
+		const Vec3 vAngleTo = Math::CalcAngle(pEntity->m_vecOrigin(), pTarget->m_vecOrigin());
 		const float flFOVTo = Math::CalcFov(mResolverData[pEntity].pLastFireAngles.second, vAngleTo);
 	
 		if (flFOVTo < flSmallestFovTo) { bFound = true; flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
@@ -132,7 +132,7 @@ void PResolver::Aimbot(CBaseEntity* pEntity, const bool bHeadshot){
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!iNetChan) { return; }
 
-	const int iDelay = 6 + TIME_TO_TICKS(G::LerpTime + iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING));
+	const int iDelay = 6 + TIME_TO_TICKS(iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING));
 	pWaiting = {I::GlobalVars->tickcount + iDelay, {pEntity, bHeadshot}};
 }
 
@@ -196,7 +196,7 @@ void PResolver::FrameStageNotify(){
 		const int iYawMode = GetYawMode(pEntity);
 		if (iYawMode){
 			std::optional<float> flTempYaw = PredictBaseYaw(pEntity);
-			if (!flTempYaw) { flTempYaw = Math::CalcAngle(pEntity->GetAbsOrigin(), pLocal->GetAbsOrigin()).y; }
+			if (!flTempYaw) { flTempYaw = Math::CalcAngle(pEntity->m_vecOrigin(), pLocal->m_vecOrigin()).y; }
 
 			const float flBaseYaw = flTempYaw.value();
 

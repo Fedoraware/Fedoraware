@@ -834,7 +834,7 @@ namespace Utils
 
 			if (nType == EBuildingType::TELEPORTER && building->GetObjectMode() == 1 && building->GetOwner()->GetIndex() == ownerIdx)
 			{
-				*out = building->GetAbsOrigin();
+				*out = building->m_vecOrigin();
 				return true;
 			}
 		}
@@ -927,7 +927,7 @@ namespace Utils
 	__inline Vec3 GetHeadOffset(CBaseEntity* pEntity)
 	{
 		const Vec3 headPos = pEntity->GetHitboxPos(HITBOX_HEAD);
-		const Vec3 entPos = pEntity->GetAbsOrigin();
+		const Vec3 entPos = pEntity->m_vecOrigin();
 		const Vec3 delta = entPos - headPos;
 		return delta * -1.f;
 	}

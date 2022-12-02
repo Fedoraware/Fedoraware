@@ -155,7 +155,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			continue;
 		}
 
-		const Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity());
+		const Vec3 vPredicted = (pProjectile->m_vecOrigin() + pProjectile->GetVelocity());
 		const float flHypPred = sqrtf(pPatient->GetVecOrigin().DistToSqr(vPredicted));
 		const float flHyp = sqrtf(pPatient->GetVecOrigin().DistToSqr(pProjectile->GetVecOrigin()));
 		if (flHypPred < flHyp && pPatient->GetVecOrigin().DistTo(vPredicted) < pProjectile->GetVelocity().Length())
@@ -254,7 +254,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 		}
 
 		// Projectile is getting closer
-		if (pPatient->GetAbsOrigin().DistTo(pProjectile->GetAbsOrigin()) <= 275.f)
+		if (pPatient->m_vecOrigin().DistTo(pProjectile->m_vecOrigin()) <= 275.f)
 		{
 			hasRockets = true;
 		}

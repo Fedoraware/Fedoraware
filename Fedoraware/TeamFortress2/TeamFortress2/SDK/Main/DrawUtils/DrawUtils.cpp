@@ -53,42 +53,51 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	wsprintfW(wstr, L"%hs", cbuffer);
 
+	if (font_idx > m_vecFonts.size())
+	{
+		return;
+	}
+
+	const auto& font = m_vecFonts.at(font_idx);
+
+	const auto dwFont = font.dwFont;
+
 	switch (align)
 	{
-		case ALIGN_DEFAULT: break;
-		case ALIGN_CENTER:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERVERTICAL:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERHORIZONTAL:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			break;
-		}
-		case ALIGN_REVERSE:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w);
-			break;
-		}
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w / 2);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERVERTICAL:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERHORIZONTAL:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w / 2);
+		break;
+	}
+	case ALIGN_REVERSE:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w);
+		break;
+	}
 	}
 
 	I::VGuiSurface->DrawSetTextPos(x, y);
-	I::VGuiSurface->DrawSetTextFont(m_vecFonts.at(font_idx).dwFont);
+	I::VGuiSurface->DrawSetTextFont(dwFont);
 	I::VGuiSurface->DrawSetTextColor(clr.r, clr.g, clr.b, clr.a);
 	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
 }
@@ -107,42 +116,52 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	//wsprintfW(wstr, L"%ls", cbuffer);
 
+
+	if (font_idx > m_vecFonts.size())
+	{
+		return;
+	}
+
+	const auto& font = m_vecFonts.at(font_idx);
+
+	const auto dwFont = font.dwFont;
+
 	switch (align)
 	{
-		case ALIGN_DEFAULT: break;
-		case ALIGN_CENTER:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERVERTICAL:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERHORIZONTAL:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			break;
-		}
-		case ALIGN_REVERSE:
-		{
-			int w = 0, h = 0;
-			I::VGuiSurface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w);
-			break;
-		}
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w / 2);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERVERTICAL:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERHORIZONTAL:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w / 2);
+		break;
+	}
+	case ALIGN_REVERSE:
+	{
+		int w = 0, h = 0;
+		I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+		x -= (w);
+		break;
+	}
 	}
 
 	I::VGuiSurface->DrawSetTextPos(x, y);
-	I::VGuiSurface->DrawSetTextFont(m_vecFonts.at(font_idx).dwFont);
+	I::VGuiSurface->DrawSetTextFont(dwFont);
 	I::VGuiSurface->DrawSetTextColor(clr.r, clr.g, clr.b, clr.a);
 	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
 }

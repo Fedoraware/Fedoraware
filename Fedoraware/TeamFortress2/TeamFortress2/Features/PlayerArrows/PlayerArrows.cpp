@@ -140,7 +140,7 @@ void CPlayerArrows::Run()
 			///*
 			//Vec3 vEntForward = {};
 			//Math::AngleVectors(pEnemy->GetEyeAngles(), &vEntForward);
-			//Vec3 vToEnt = pEnemy->GetAbsOrigin() - pLocal->GetAbsOrigin();
+			//Vec3 vToEnt = pEnemy->m_vecOrigin() - pLocal->m_vecOrigin();
 			//vToEnt.NormalizeInPlace();
 
 			//if (vEntForward.Dot(vToEnt) < 0.5071f)

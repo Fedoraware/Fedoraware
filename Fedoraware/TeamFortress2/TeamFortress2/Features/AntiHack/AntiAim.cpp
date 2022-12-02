@@ -209,7 +209,7 @@ float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd)
 				{
 					if (G::IsIgnored(pInfo.friendsID)) { continue; }
 				}
-				const Vec3 vAngleTo = Math::CalcAngle(pLocal->GetAbsOrigin(), pEnemy->GetAbsOrigin());
+				const Vec3 vAngleTo = Math::CalcAngle(pLocal->m_vecOrigin(), pEnemy->m_vecOrigin());
 				const float flFOVTo = Math::CalcFov(I::EngineClient->GetViewAngles(), vAngleTo);
 
 				if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }

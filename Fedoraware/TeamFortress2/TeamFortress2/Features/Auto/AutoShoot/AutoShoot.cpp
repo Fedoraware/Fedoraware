@@ -51,8 +51,7 @@ bool CAutoShoot::IsAimingAtValidTarget(CBaseEntity* pLocal, CUserCmd* pCmd, floa
 						return false;
 				}
 
-				if (Vars::Misc::DisableInterpolation.Value)
-					*pSimTime = pEntity->GetSimulationTime();
+				*pSimTime = pEntity->GetSimulationTime();
 
 				break;
 			}
@@ -157,9 +156,9 @@ void CAutoShoot::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* 
 		if (G::WeaponCanAttack)
 			G::IsAttacking = true;
 
-		if (fSimTime && Vars::Misc::DisableInterpolation.Value && G::WeaponCanAttack)
+		if (fSimTime && G::WeaponCanAttack)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(fSimTime + G::LerpTime);
+			pCmd->tick_count = TIME_TO_TICKS(fSimTime);
 		}
 	}
 }

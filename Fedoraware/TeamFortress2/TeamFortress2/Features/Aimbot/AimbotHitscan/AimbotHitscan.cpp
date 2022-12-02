@@ -145,7 +145,7 @@ std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseComba
 						nHitbox = HITBOX_PELVIS;
 					}*/
 					// Min damage is 18, max damage is 51 (non headshot)
-					const float flDistTo = pTarget->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin());
+					const float flDistTo = pTarget->m_vecOrigin().DistTo(pLocal->m_vecOrigin());
 					const int nAmbassadorBodyshotDamage = Math::RemapValClamped(flDistTo, 90, 900, 51, 18);
 
 					if (pTarget->GetHealth() < (nAmbassadorBodyshotDamage + 2)) // whatever
@@ -887,12 +887,11 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		}
 
 		// Set the players tickcount (Backtrack / Interpolation removal)
-		const float flLerpTime = TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime));
 		const float simTime = target.ShouldBacktrack ? target.SimTime : target.m_pEntity->GetSimulationTime();
-		if ((Vars::Misc::DisableInterpolation.Value && target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
+		if ((target.m_TargetType == ETargetType::PLAYER && bIsAttacking) ||
 			target.ShouldBacktrack)
 		{
-			pCmd->tick_count = TIME_TO_TICKS(flLerpTime + simTime);
+			pCmd->tick_count = TIME_TO_TICKS(simTime);
 		}
 
 		Aim(pCmd, target.m_vAngleTo);

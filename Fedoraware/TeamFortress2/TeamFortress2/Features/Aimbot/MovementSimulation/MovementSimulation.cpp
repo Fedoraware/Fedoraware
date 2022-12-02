@@ -249,7 +249,7 @@ bool CMovementSimulation::StrafePrediction()
 
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
-			if (pLocal->GetAbsOrigin().DistTo(m_pPlayer->GetAbsOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
+			if (pLocal->m_vecOrigin().DistTo(m_pPlayer->m_vecOrigin()) > Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value)
 			{
 				return false;
 			}

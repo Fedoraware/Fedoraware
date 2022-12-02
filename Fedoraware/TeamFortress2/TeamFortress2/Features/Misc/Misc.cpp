@@ -175,7 +175,7 @@ void CMisc::PrintProjAngles(CBaseEntity* pLocal)
 	{
 		if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) != pLocal) { continue; }
 		const Vec3 vProjAngles = pEntity->GetAbsAngles();
-		const Vec3 vProjPosition = pEntity->GetAbsOrigin();
+		const Vec3 vProjPosition = pEntity->m_vecOrigin();
 
 		const Vec3 vDeltaAng = vLocalEyeAngles - vProjAngles;
 		const Vec3 vDeltaPos = vLocalEyePosition - vProjPosition;
@@ -1109,7 +1109,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static KeyHelper peekKey{ &Vars::Misc::CL_Move::AutoPeekKey.Value };
 	if (pLocal->IsAlive() && Vars::Misc::CL_Move::AutoPeekKey.Value && peekKey.Down())
 	{
-		const Vec3 localPos = pLocal->GetAbsOrigin();
+		const Vec3 localPos = pLocal->m_vecOrigin();
 
 		// We just started peeking. Save the return position!
 		if (!posPlaced)

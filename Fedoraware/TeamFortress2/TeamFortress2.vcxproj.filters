@@ -58,12 +58,9 @@
     <ClCompile Include="TeamFortress2\Features\Visuals\FakeAngleManager\FakeAng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CheckSimpleMaterial.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_AddToCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CEconItemSchema_GetItemDefinition.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\ClientModeTFNormal_UpdateSteamRichPresence.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\ClientState_GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CMatchInviteNotification_OnTick.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFGCClientSystem_UpdateAssignedLobby.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CViewRender_DrawUnderwaterOverlay.cpp" />
@@ -95,7 +92,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
@@ -104,10 +100,8 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFWeaponBase_CalcIsAttackCritical.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\DoEnginePostProcessing.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_ClientCmd_Unrestricted.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\EngineClient_IsPlayingTimeDemo.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\EngineVGui_Paint.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\GameEventManager_FireEventClientSide.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\GetClientInterpAmount.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\Input_GetUserCmd.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\IsLocalPlayerUsingVisionFilterFlags.cpp" />
@@ -164,7 +158,6 @@
     <ClCompile Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.cpp" />
     <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
     <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Disconnect.cpp" />
@@ -181,6 +174,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\CNewParticleEffect_DrawModel.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Notifications\Notifications.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killsay\Killsay.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />

@@ -24,7 +24,7 @@ namespace SandvichAimbot
 
 		if (bShouldAim)
 		{
-			Vec3 tr = pTarget->GetAbsOrigin() - pLocal->GetEyePosition();
+			Vec3 tr = pTarget->m_vecOrigin() - pLocal->GetEyePosition();
 			Vec3 angle;
 			Math::VectorAngles(tr, angle);
 			Math::ClampAngles(angle);

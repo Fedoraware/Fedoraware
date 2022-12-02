@@ -363,7 +363,7 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 		static constexpr Color_t realColour = { 0, 255,0, 255 };
 		static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
 
-		const auto& vOrigin = pLocal->GetAbsOrigin();
+		const auto& vOrigin = pLocal->m_vecOrigin();
 
 		Vec3 vScreen1, vScreen2;
 		if (Utils::W2S(vOrigin, vScreen1))

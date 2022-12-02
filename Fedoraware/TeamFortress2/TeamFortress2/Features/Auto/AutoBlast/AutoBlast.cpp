@@ -65,7 +65,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				default: break;
 			}
 
-			Vec3 vPredicted = (pProjectile->GetAbsOrigin() + pProjectile->GetVelocity().Scale(flLatency / 1000.f));
+			Vec3 vPredicted = (pProjectile->m_vecOrigin() + pProjectile->GetVelocity().Scale(flLatency / 1000.f));
 
 			//I cant remember if the airblast radius range from 2007 SDK was 185.0f or not..
 			/*
@@ -78,7 +78,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			{
 				CGameTrace trace = {};
 				static CTraceFilterWorldAndPropsOnly traceFilter = {};
-				Utils::TraceHull(pProjectile->GetAbsOrigin(), vPredicted, pProjectile->GetCollideableMaxs(), pProjectile->GetCollideableMaxs() * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
+				Utils::TraceHull(pProjectile->m_vecOrigin(), vPredicted, pProjectile->GetCollideableMaxs(), pProjectile->GetCollideableMaxs() * -1.f, MASK_SHOT_HULL, &traceFilter, &trace);
 				if (trace.flFraction < 0.98f && !trace.entity) { continue; }
 				if (Vars::Triggerbot::Blast::Rage.Value || Vars::Triggerbot::Blast::Fov.Value == 0)
 				{

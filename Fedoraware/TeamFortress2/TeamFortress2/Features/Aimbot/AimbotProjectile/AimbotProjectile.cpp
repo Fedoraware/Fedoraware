@@ -398,10 +398,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				// we have found a point.
 				if (bNeedsTimeCheck)
 				{
-					if (TICKS_TO_TIME(n - 1) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos) / projInfo.m_flVelocity)) { break; }	//	lol
+					if (TICKS_TO_TIME(n - 1) > (pLocal->m_vecOrigin().DistTo(vPredictedPos) / projInfo.m_flVelocity)) { break; }	//	lol
 				}
 
-				//const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
+				//const Vec3 vAimDelta = predictor.m_pEntity->m_vecOrigin() - aimPosition;
 				//vPredictedPos.x += abs(vAimDelta.x);
 				//vPredictedPos.y += abs(vAimDelta.y);
 				//vPredictedPos.z += abs(vAimDelta.z);
@@ -505,8 +505,8 @@ bool IsPointAllowed(int nHitbox)
 //	Tries to find the best position to aim at on our target.
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos)
 {
-	Vec3 retVec = pLocal->GetAbsOrigin();
-	Vec3 localPos = pLocal->GetAbsOrigin();
+	Vec3 retVec = pLocal->m_vecOrigin();
+	Vec3 localPos = pLocal->m_vecOrigin();
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
@@ -543,7 +543,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 	const matrix3x4 transform = {
 		{1.f, 0, 0, targetPredPos.x},
 		{0, 1.f, 0, targetPredPos.y},
-		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z}
+		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->m_vecOrigin().z : targetPredPos.z}
 	};
 
 	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
@@ -1144,7 +1144,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	const auto& sortMethod = static_cast<ESortMethod>(Vars::Aimbot::Projectile::SortMethod.Value);
 	const auto& vLocalAngles = I::EngineClient->GetViewAngles();
 	const auto& vLocalShootPos = pLocal->GetShootPos();
-	const auto& vLocalOrigin = pLocal->GetAbsOrigin();
+	const auto& vLocalOrigin = pLocal->m_vecOrigin();
 
 	for (const auto& pTarget : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
@@ -1156,7 +1156,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 		}
 
 		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
-		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
+		const auto& vTargetOrigin = pTarget->m_vecOrigin();
 
 		if (vLocalOrigin.DistTo(vTargetOrigin) < Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value) { continue; } // Don't shoot too close
 		if (vLocalOrigin.DistTo(vTargetOrigin) > Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value) { continue; } // Don't shoot too far

@@ -20,7 +20,7 @@ public:
 	Vec3 GetOrigin()
 	{
 		if (!IsValid()) { return { }; }
-		return BaseEntity->GetAbsOrigin();
+		return BaseEntity->m_vecOrigin();
 	}
 
 	Vec3 GetAngles()
@@ -92,7 +92,7 @@ public:
 	void SetOrigin(const Vec3& v)
 	{
 		if (!IsValid()) { return; }
-		BaseEntity->SetAbsOrigin(v);
+		BaseEntity->SetVecOrigin(v);
 		BaseEntity->SetVecOrigin(v);
 	}
 

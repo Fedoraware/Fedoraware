@@ -56,7 +56,6 @@ void CEntityCache::Fill()
 					continue;
 				}
 
-				pEntity->SetAbsOrigin(dormantData.Location);
 				pEntity->SetVecOrigin(dormantData.Location);
 
 				pEntity->m_lifeState() = LIFE_ALIVE;

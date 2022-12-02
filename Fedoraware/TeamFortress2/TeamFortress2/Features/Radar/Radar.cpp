@@ -82,7 +82,7 @@ void CRadar::DrawRadar()
 bool CRadar::GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity)
 {
 	//Calculate the delta and initial position of the entity
-	const Vec3 vDelta = pEntity->GetAbsOrigin() - LocalOrigin;
+	const Vec3 vDelta = pEntity->m_vecOrigin() - LocalOrigin;
 	auto vPos = Vec2((vDelta.y * (-LocalCos) + vDelta.x * LocalSin),
 					 (vDelta.x * (-LocalCos) - vDelta.y * LocalSin));
 
@@ -130,7 +130,7 @@ bool CRadar::GetDrawPosition(int& x, int& y, int& z, CBaseEntity* pEntity)
 void CRadar::DrawPoints(CBaseEntity* pLocal)
 {
 	//Update members that we use calculating the draw position in "GetDrawPosition()"
-	LocalOrigin = pLocal->GetAbsOrigin();
+	LocalOrigin = pLocal->m_vecOrigin();
 	LocalYaw = I::EngineClient->GetViewAngles().y * (PI / 180.f);
 	Range = static_cast<float>(Vars::Radar::Main::Range.Value);
 	LocalCos = cos(LocalYaw), LocalSin = sin(LocalYaw);

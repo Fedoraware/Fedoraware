@@ -24,7 +24,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 				if (G::FreecamActive && Vars::Visuals::FreecamKey.Value && GetAsyncKeyState(Vars::Visuals::FreecamKey.Value) & 0x8000)
 				{
 					pLocal->SetVecOrigin(G::FreecamPos);
-					pLocal->SetAbsOrigin(G::FreecamPos);
+					pLocal->SetVecOrigin(G::FreecamPos);
 				}
 
 

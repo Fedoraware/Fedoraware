@@ -644,7 +644,6 @@ namespace Vars
 		inline CVar<bool> TauntFollowsCamera{ false };
 		inline CVar<bool> BypassPure{ false };
 		inline CVar<bool> NoisemakerSpam{ false };
-		inline CVar<bool> DisableInterpolation{ false };
 		inline CVar<bool> MedalFlip{ false };
 		inline CVar<bool> AutoRocketJump{ false };
 		inline CVar<bool> NonLethalRocketJump{ true };
