@@ -2,7 +2,6 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
-#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -33,7 +32,6 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 	msgData.SetAssertOnOverflow(false);
 
 	F::ChatInfo.UserMessage(type, msgData);
-	F::LuaCallbacks.OnUserMessage(type, msgData);
 	msgData.Seek(0);
 
 	switch (type)
@@ -61,39 +59,6 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 			std::string chatMessage(msgBuffer);
 
 			F::RSChat.PushChat(I::ClientEntityList->GetClientEntity(entIdx), Utils::ConvertUtf8ToWide(chatMessage));
-
-			// F::RSChat.PushChat(I::ClientEntityList->GetClientEntity(entIdx), chatMessage);
-			/*if (Vars::Misc::ChatCensor.Value)
-			{
-				PlayerInfo_t senderInfo{};
-				if (I::Engine->GetPlayerInfo(entIdx, &senderInfo))
-				{
-					if (entIdx == I::Engine->GetLocalPlayer()) { break; }
-					if (G::IsIgnored(senderInfo.friendsID) || g_EntityCache.IsFriend(entIdx))
-					{
-						break;
-					}
-
-					const std::vector<std::string> toReplace = { " ", "4", "3", "0", "6", "5", "7", "@", ".", ",", "-", "!" };
-					const std::vector<std::string> replaceWith = { "", "a", "e", "o", "g", "s", "t", "a", "", "", "", "i" };
-
-					for (std::vector<int>::size_type i = 0; i != toReplace.size(); i++)
-					{
-						boost::replace_all(chatMessage, toReplace[i], replaceWith[i]);
-					}
-
-					for (auto& word : BAD_WORDS)
-					{
-						if (boost::contains(chatMessage, word))
-						{
-							const std::string cmd = "say_team \"" + CLEAR_MSG + "\"";
-							I::Engine->ServerCmd(cmd.c_str(), true);
-							I::ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%s[FeD] \x3 %s\x1 wrote\x3 %s", clr, playerName, chatMessage).c_str());
-							break;
-						}
-					}
-				}
-			}*/
 
 			break;
 		}

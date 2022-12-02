@@ -18,7 +18,6 @@
 #include "SDK/Includes/Enums.h"
 #include "Utils/Events/Events.h"
 
-#include "Features/LuaEngine/LuaEngine.h"
 #include "SDK/Discord/include/discord_rpc.h"
 #include "Features/Discord/Discord.h"
 
@@ -90,7 +89,6 @@ void Initialize()
 	}
 
 	g_ConVars.Init();
-	F::LuaEngine.Init();
 	F::Ticks.Reset();
 
 	F::Statistics.m_SteamID = g_SteamInterfaces.User->GetSteamID();
@@ -112,7 +110,6 @@ void Uninitialize()
 	g_Events.Destroy();
 	g_HookManager.Release();
 	g_PatchManager.Restore();
-	F::LuaEngine.Reset();
 
 	ShutdownRichPresence();
 

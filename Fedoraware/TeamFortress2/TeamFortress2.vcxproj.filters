@@ -27,7 +27,6 @@
     <ClCompile Include="TeamFortress2\Features\Discord\Discord.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
-    <ClCompile Include="TeamFortress2\Features\LuaEngine\LuaEngine.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_color_gradient.cpp" />
@@ -155,8 +154,6 @@
     <ClCompile Include="TeamFortress2\Utils\MinHook\hook.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\trampoline.c" />
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.cpp" />
-    <ClCompile Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
     <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
@@ -179,13 +176,6 @@
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\LuaEngine.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseEntity.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WEngineClient.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WGameEvent.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WPlayerResource.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserCmd.hpp" />
     <ClInclude Include="TeamFortress2\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="TeamFortress2\Resources\DVD-Icon.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
@@ -685,11 +675,6 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\UniformRandomStream\UniformRandomStream.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ViewRender\ViewRender.h" />
-    <ClInclude Include="TeamFortress2\SDK\Lua\include\lauxlib.h" />
-    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.h" />
-    <ClInclude Include="TeamFortress2\SDK\Lua\include\lua.hpp" />
-    <ClInclude Include="TeamFortress2\SDK\Lua\include\luaconf.h" />
-    <ClInclude Include="TeamFortress2\SDK\Lua\include\lualib.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseEntity\AnimState\Activity.h" />
     <ClInclude Include="TeamFortress2\SDK\Main\BaseEntity\AnimState\BaseAnimatingOverlay.h" />
@@ -731,15 +716,6 @@
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\LuaMenu\LuaMenu.h" />
-    <ClInclude Include="TeamFortress2\SDK\sol2\sol\config.hpp" />
-    <ClInclude Include="TeamFortress2\SDK\sol2\sol\forward.hpp" />
-    <ClInclude Include="TeamFortress2\SDK\sol2\sol\sol.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Callbacks\LuaCallbacks.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WBaseCombatWeapon.h" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WUserMessage.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WDraw.hpp" />
-    <ClInclude Include="TeamFortress2\Features\LuaEngine\Wrapper\WClientMode.hpp" />
     <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHk.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ICenterPrint\ICenterPrint.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\IOcclusionSystem\IOcclusionSystem.h" />
@@ -749,7 +725,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
-    <Library Include="TeamFortress2\SDK\Lua\lua54.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -1,7 +1,6 @@
 #include "AntiAim.h"
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
-#include "../LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../Misc/Misc.h"
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove)
@@ -274,9 +273,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			const float flRealYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawReal.Value);
 			pCmd->viewangles.y = flRealYaw;
 
-			// Lua callback
-			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, true);
-
 			// Check if our real angle is overlapping with the fake angle
 			if (Vars::AntiHack::AntiAim::YawFake.Value && IsOverlapping())
 			{
@@ -293,9 +289,6 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 			p_bJitter.second = !p_bJitter.second;
 			const float flFakeYaw = flBaseYaw + YawIndex(Vars::AntiHack::AntiAim::YawFake.Value);
 			pCmd->viewangles.y = flFakeYaw;
-
-			// Lua callback
-			F::LuaCallbacks.OnAntiAim(pCmd, pSendPacket, false);
 
 			G::FakeViewAngles = pCmd->viewangles;
 			G::AntiAim.second = true;
