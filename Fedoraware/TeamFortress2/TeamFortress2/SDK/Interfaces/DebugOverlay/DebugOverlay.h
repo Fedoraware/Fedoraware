@@ -62,6 +62,7 @@ public:
 	virtual void AddTextOverlayRGB(const Vec3& origin, int line_offset, float duration, float r, float g, float b, float alpha, PRINTF_FORMAT_STRING const char* format, ...) = 0;
 	virtual void AddTextOverlayRGB(const Vec3& origin, int line_offset, float duration, int r, int g, int b, int a, PRINTF_FORMAT_STRING const char* format, ...) = 0;
 
+	virtual void Unknown_1() = 0;
 	virtual void AddLineOverlayAlpha(const Vec3& origin, const Vec3& dest, int r, int g, int b, int a, bool noDepthTest, float duration) = 0;
 	virtual void AddBoxOverlay2(const Vec3& origin, const Vec3& mins, const Vec3& max, Vec3 const& orientation, const Color_t& faceColor, const Color_t& edgeColor, float duration) = 0;
 
