@@ -8,6 +8,7 @@
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Misc/Misc.h"
+#include "../../Features/Killsay/Killsay.h"
 
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
@@ -37,6 +38,8 @@ void CEventListener::FireGameEvent(CGameEvent* pEvent)
 	F::ChatInfo.Event(pEvent, uNameHash);
 	F::AntiAim.Event(pEvent, uNameHash);
 	F::Statistics.Event(pEvent, uNameHash);
+	// Lol
+	F::Killsay.FireGameEvent(uNameHash, pEvent);
 	/*F::Killstreaker.FireEvents(pEvent, uNameHash);*/
 
 	if (uNameHash == FNV1A::HashConst("player_hurt"))

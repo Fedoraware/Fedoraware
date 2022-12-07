@@ -856,6 +856,11 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 }
 
+bool IsForceANature()
+{
+	return (G::CurItemDefIndex == Scout_m_ForceANature || G::CurItemDefIndex == Scout_m_FestiveForceANature);
+}
+
 void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static int iJumpKey = VK_RBUTTON;
@@ -870,7 +875,7 @@ void CMisc::AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (pLocal->GetClassNum() != CLASS_SCOUT || G::CurItemDefIndex != Scout_m_ForceANature || pLocal->IsDucking())
+	if (pLocal->GetClassNum() != CLASS_SCOUT || !IsForceANature() || pLocal->IsDucking())
 	{
 		return;
 	}
@@ -988,7 +993,7 @@ void CMisc::FastStop(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	// 1<<17 = TFCond_Charging
 
-	if (pLocal && pLocal->IsAlive() && !pLocal->IsCharging() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 10.f)
+	if (pLocal && pLocal->IsAlive() && !pLocal->IsCharging() && !pLocal->IsTaunting() && !pLocal->IsStunned() && pLocal->GetVelocity().Length2D() > 5.f)
 	{
 		const int stopType = (
 			G::ShouldShift && G::ShiftedTicks && Vars::Misc::CL_Move::AntiWarp.Value ?

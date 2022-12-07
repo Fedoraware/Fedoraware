@@ -236,8 +236,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
-				Math::RemapValClamped(charge, 0.0f, 1.f, 925.38, 2409.2),
-				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 4.f, 900, 2400),
+				Math::RemapValClamped(charge, 0.0f, 4.f, 0.483f, 0.085f)
 			};
 			m_flPredictionTime;
 			break;
@@ -621,7 +621,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, con
 		}
 		case CLASS_DEMOMAN:
 		{
-			if (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value && (bounceKey.Down() || !Vars::Aimbot::Projectile::BounceKey.Value)))
+			if (bounceKey.Down() || (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value)))
 			{
 				aimMethod = 2;
 			}

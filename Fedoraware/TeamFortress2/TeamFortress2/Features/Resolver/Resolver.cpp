@@ -36,7 +36,7 @@ std::optional<float> PResolver::GetPitchForSniperDot(CBaseEntity* pEntity){
 }
 
 std::optional<float> PResolver::PredictBaseYaw(CBaseEntity* pEntity){
-	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first > 66 || !mResolverData[pEntity].pLastFireAngles.first) { //staleness & validity check
+	if (I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first.first > 66 || !mResolverData[pEntity].pLastFireAngles.first.first) { //staleness & validity check
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 		if (!pLocal) { return std::nullopt; }
 		if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return std::nullopt; }
@@ -76,7 +76,9 @@ bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 }
 
 bool PResolver::KeepOnShot(CBaseEntity* pEntity){
-	return abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first) < 2;
+	if (abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first.first) < 2) { return true; }
+	if (mResolverData[pEntity].pLastFireAngles.first.second) { return true; }	//	this person has not unchoked since shooting
+	return false;
 }
 
 bool PResolver::IsOnShotPitchReliable(const float flPitch){
@@ -120,7 +122,7 @@ void PResolver::OnDormancy(CBaseEntity* pEntity){
 	mResolverData[pEntity].pLastSniperPitch = {0, 0.f};
 	mResolverData[pEntity].flPitchNoise = 0.f;
 	mResolverData[pEntity].iPitchNoiseSteps = 0;
-	mResolverData[pEntity].pLastFireAngles = {0, {}};
+	mResolverData[pEntity].pLastFireAngles = {{0, false}, {}};
 	mResolverData[pEntity].vOriginalAngles = {};
 }
 
@@ -149,6 +151,10 @@ void PResolver::FrameStageNotify(){
 		if (pEntity->GetDormant()) { OnDormancy(pEntity); continue; }
 
 		mResolverData[pEntity].vOriginalAngles = {pEntity->GetEyeAngles().x, pEntity->GetEyeAngles().y};
+
+		if (abs(I::GlobalVars->tickcount - mResolverData[pEntity].pLastFireAngles.first.first) >= 2){
+			mResolverData[pEntity].pLastFireAngles.first.second = (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) ? mResolverData[pEntity].pLastFireAngles.first.second : false;
+		}
 
 		if (!ShouldRunEntity(pEntity)) { continue; }
 		if (KeepOnShot(pEntity)) { SetAngles(mResolverData[pEntity].pLastFireAngles.second, pEntity); continue; }
@@ -248,7 +254,7 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 		Utils::ConLog("Resolver", tfm::format("adjusted 2 %.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
 	}
 
-	mResolverData[pEntity].pLastFireAngles = { I::GlobalVars->tickcount, vAngStore};
+	mResolverData[pEntity].pLastFireAngles = { { I::GlobalVars->tickcount, true }, vAngStore};
 	SetAngles(vAngAdjusted, pEntity);
 }
 

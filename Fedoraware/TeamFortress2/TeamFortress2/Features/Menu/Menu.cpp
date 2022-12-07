@@ -7,6 +7,7 @@
 #include "../Misc/Misc.h"
 #include "../Chams/DMEChams.h"
 #include "../Glow/Glow.h"
+#include "../Killsay/Killsay.h"
 
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_stdlib.h"
@@ -296,7 +297,7 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("Crits");
 			WToggle("Crit hack", &Vars::CritHack::Active.Value);  HelpMarker("Enables the crit hack (BETA)");
-			MultiCombo({ "Indicators", "Avoid Random", "Always Melee", "Auto Melee Crit"}, {&Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value, &Vars::CritHack::AutoMeleeCrit.Value}, "Misc###CrithackMiscOptions");
+			MultiCombo({ "Indicators", "Avoid Random", "Always Melee", "Auto Melee Crit" }, { &Vars::CritHack::Indicators.Value, &Vars::CritHack::AvoidRandom.Value, &Vars::CritHack::AlwaysMelee.Value, &Vars::CritHack::AutoMeleeCrit.Value }, "Misc###CrithackMiscOptions");
 			HelpMarker("Misc options for crithack");
 			InputKeybind("Crit key", Vars::CritHack::CritKey); HelpMarker("Will try to force crits when the key is held");
 
@@ -318,7 +319,8 @@ void CMenu::MenuAimbot()
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
 			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto" }); // this could probably be removed entirely since it actually does nothing.
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
-			if (Vars::Aimbot::Hitscan::TapFire.Value == 1){
+			if (Vars::Aimbot::Hitscan::TapFire.Value == 1)
+			{
 				WSlider("Tap Fire Distance###HitscanTapfireDistance", &Vars::Aimbot::Hitscan::TapFireDist.Value, 250.f, 1000.f, "%.0f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The distance at which tapfire will activate.");
 			}
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
@@ -347,7 +349,7 @@ void CMenu::MenuAimbot()
 			WToggle("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.Value); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
 			WToggle("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.Value); HelpMarker("The aimbot will aim for body when damage is lethal to it");
 			WToggle("Piss on Team", &Vars::Aimbot::Hitscan::ExtinguishTeam.Value); HelpMarker("Will aim at burning teammates with The Sydney Sleeper");
-			
+
 			SectionTitle("Melee");
 			{
 				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.Value, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
@@ -393,7 +395,7 @@ void CMenu::MenuAimbot()
 				InputKeybind("Bounce Target", Vars::Aimbot::Projectile::BounceKey); HelpMarker("Forces feet aim to bounce target on keypress");
 				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Will flip your viewmodel if it can hit from that side");
 				WToggle("Charge loose cannon", &Vars::Aimbot::Projectile::ChargeLooseCannon.Value); HelpMarker("Will charge your loose cannon in order to double donk");
-				
+
 				SectionTitle("Splash");
 				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Will shoot the area near the target to hit them with splash damage");
 				WSlider("Minimum splash distance", &Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 0.f, Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value); HelpMarker("The minimum distance to try going for splash damage");
@@ -560,7 +562,7 @@ void CMenu::MenuVisuals()
 					WCombo("Class###PlayerIconClass", &Vars::ESP::Players::Class.Value, { "Off", "Icon", "Text", "Both" }); HelpMarker("Will draw the class the player is");
 					WToggle("Weapon text", &Vars::ESP::Players::WeaponText.Value);
 					WToggle("Weapon icons", &Vars::ESP::Players::WeaponIcon.Value); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
-					ColorPickerL("Invulnerable colour", Colors::WeaponIcon);
+					ColorPickerL("Weapon icon/text colour", Colors::WeaponIcon);
 					WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the player has");
 					if (Vars::ESP::Players::HealthBarStyle.Value == 0)
 					{
@@ -1198,6 +1200,7 @@ void CMenu::MenuVisuals()
 					WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
 					WToggle("No prop fade", &Vars::Visuals::NoStaticPropFade.Value); HelpMarker("Make props not fade");
 					WToggle("Particles IgnoreZ", &Vars::Visuals::ParticlesIgnoreZ.Value); HelpMarker("All particles will draw through walls");
+					WSlider("Fade Out Team FoV", &Vars::Visuals::FadeOutFoV.Value, 0.f, 60.f); HelpMarker("Fades teammates within FoV (0 means disabled)");
 
 					SectionTitle("Beams");
 					{
@@ -1711,8 +1714,8 @@ void CMenu::MenuMisc()
 			{
 				InputKeybind("Edge jump key", Vars::Misc::EdgeJumpKey, true);  HelpMarker("Edge jump bind, leave as None for always on");
 			}
-			
-			
+
+
 			SectionTitle("Automation");
 			WToggle("Auto rocket jump", &Vars::Misc::AutoRocketJump.Value); HelpMarker("Will rocket jump at the angle you're looking at when you press RMB with a rocket launcher");
 			if (Vars::Misc::AutoRocketJump.Value)
@@ -1753,6 +1756,33 @@ void CMenu::MenuMisc()
 			SectionTitle("Sound");
 			MultiFlags({ "Footsteps", "Noisemaker" }, { 1 << 0, 1 << 1 }, &Vars::Misc::SoundBlock.Value, "Block Sounds###SoundRemovals");
 
+			SectionTitle("Killsays");
+			Checkbox("Killsays", &Vars::Misc::Killsay.Value);
+			std::vector<std::string> vecKillsays = {};
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath() + "\\Killsays"))
+			{
+				std::string a(std::filesystem::path(entry).filename().string());
+				vecKillsays.push_back(a);
+			}
+
+			if (!vecKillsays.empty())
+			{
+				SetNextItemWidth(F::Menu.ItemWidth);
+				if (ImGui::BeginCombo("Killsay file", Vars::Misc::KillsayFile.c_str()))
+				{
+					for (const auto& killsay : vecKillsays)
+					{
+						bool bThisKillsayIsValid = killsay == Vars::Misc::KillsayFile.c_str();
+						if (ImGui::Selectable(killsay.c_str(), &bThisKillsayIsValid))
+						{
+							F::Killsay.m_bFilled = false;
+							Vars::Misc::KillsayFile = killsay;
+						}
+					}
+					
+					ImGui::EndCombo();
+				}
+			}
 
 
 		} EndChild();
@@ -1791,13 +1821,13 @@ void CMenu::MenuMisc()
 			WToggle("Friends only###FollowbotFriends", &Vars::Misc::Followbot::FriendsOnly.Value); HelpMarker("Only follow friends");
 			WSlider("Follow Distance###FollowbotDistance", &Vars::Misc::Followbot::Distance.Value, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
 
-			SectionTitle("Leaderboard");
+			/*SectionTitle("Leaderboard");
 			WToggle("Send statistics", &Vars::Misc::StoreStatistics.Value); HelpMarker("Will send your steamid/kills/deaths/highest killstreak whenever you leave the server");
 
 			if (Button("Open leaderboards", { GetWindowSize().x - 2 * GetStyle().WindowPadding.x, 20 }))
 			{
 				ShellExecute(0, 0, L"http://198.244.189.210:4077/leaderboard", 0, 0, SW_SHOW);
-			}
+			}*/
 		} EndChild();
 
 		/* Column 3 */
@@ -1909,152 +1939,331 @@ void CMenu::SettingsWindow()
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (Button("Open visuals folder", ImVec2(200, 0)))
+		{
+			ShellExecuteA(NULL, NULL, g_CFG.GetVisualsPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
+		}
+		Dummy({ 0, 5 });
+		ImGui::PushFont(SectionFont);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		if (ImGui::BeginTable("ConfigTable", 2))
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
+			if (ImGui::TabButton("General", CurrentConfigTab == ConfigTab::General))
+			{
+				CurrentConfigTab = ConfigTab::General;
+			}
+
+			if (ImGui::TabButton("Visuals", CurrentConfigTab == ConfigTab::Visuals))
+			{
+				CurrentConfigTab = ConfigTab::Visuals;
+			}
+
+			ImGui::PopStyleColor(1);
+			ImGui::EndTable();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopFont();
 
 		static std::string selected;
+		static std::string selectedvis;
 		int nConfig = 0;
 
-		// Load config files
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+		if (CurrentConfigTab == ConfigTab::General)
 		{
-			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 			{
-				continue;
-			}
-			nConfig++;
-		}
-
-		// Current config
-		const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
-		Text(cfgText.c_str());
-
-		// Config name field
-		if (nConfig < 100)
-		{
-			std::string newConfigName = {};
-
-			PushItemWidth(200);
-			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
-			{
-				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 				{
-					g_CFG.SaveConfig(newConfigName);
+					continue;
 				}
-			}
-			PopItemWidth();
-		}
-
-		// Config list
-		for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
-		{
-			if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
-			{
-				continue;
+				nConfig++;
 			}
 
-			std::string configName = entry.path().filename().string();
-			configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
+			// Current config
+			const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
+			Text(cfgText.c_str());
 
-			if (configName == selected)
+			// Config name field
+			if (nConfig < 100)
 			{
-				const ImGuiStyle* style2 = &GetStyle();
-				const ImVec4* colors2 = style2->Colors;
-				ImVec4 buttonColor = colors2[ImGuiCol_Button];
-				buttonColor.w *= .5f;
-				PushStyleColor(ImGuiCol_Button, buttonColor);
+				std::string newConfigName = {};
 
-				// Config name button
-				if (Button(configName.c_str(), ImVec2(200, 20)))
+				PushItemWidth(200);
+				if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-					selected = configName;
-				}
-				PopStyleColor();
-
-				// Save config button
-				if (Button("Save", ImVec2(61, 20)))
-				{
-					if (configName != g_CFG.GetCurrentConfig())
+					if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
 					{
-						OpenPopup("Save config?");
-					}
-					else
-					{
-						g_CFG.SaveConfig(selected);
-						selected.clear();
+						g_CFG.SaveConfig(newConfigName);
 					}
 				}
+				PopItemWidth();
+			}
 
-				// Load config button
-				SameLine();
-				if (Button("Load", ImVec2(61, 20)))
+			// Config list
+
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
+			{
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 				{
-					g_CFG.LoadConfig(selected);
-					selected.clear();
-					LoadStyle();
+					continue;
 				}
 
-				// Remove config button
-				SameLine();
-				if (Button("Remove", ImVec2(62, 20)))
-				{
-					OpenPopup("Remove config?");
-				}
+				std::string configName = entry.path().filename().string();
+				configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
 
-				// Save config dialog
-				if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+				if (configName == selected)
 				{
-					Text("Do you really want to override this config?");
+					const ImGuiStyle* style2 = &GetStyle();
+					const ImVec4* colors2 = style2->Colors;
+					ImVec4 buttonColor = colors2[ImGuiCol_Button];
+					buttonColor.w *= .5f;
+					PushStyleColor(ImGuiCol_Button, buttonColor);
 
-					Separator();
-					if (Button("Yes, override!", ImVec2(150, 0)))
+					// Config name button
+					if (Button(configName.c_str(), ImVec2(200, 20)))
 					{
-						g_CFG.SaveConfig(selected);
-						selected.clear();
-						CloseCurrentPopup();
+						selected = configName;
+					}
+					PopStyleColor();
+
+					// Save config button
+					if (Button("Save", ImVec2(61, 20)))
+					{
+						if (configName != g_CFG.GetCurrentConfig())
+						{
+							OpenPopup("Save config?");
+						}
+						else
+						{
+							g_CFG.SaveConfig(selected);
+							selected.clear();
+						}
 					}
 
+					// Load config button
 					SameLine();
-					if (Button("No", ImVec2(120, 0)))
+					if (Button("Load", ImVec2(61, 20)))
 					{
-						CloseCurrentPopup();
-					}
-					EndPopup();
-				}
-
-				// Delete config dialog
-				if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-				{
-					Text("Do you really want to delete this config?");
-
-					Separator();
-					if (Button("Yes, remove!", ImVec2(150, 0)))
-					{
-						g_CFG.RemoveConfig(selected);
+						g_CFG.LoadConfig(selected);
 						selected.clear();
-						CloseCurrentPopup();
+						LoadStyle();
 					}
+
+					// Remove config button
 					SameLine();
-					if (Button("No", ImVec2(150, 0)))
+					if (Button("Remove", ImVec2(62, 20)))
 					{
-						CloseCurrentPopup();
+						OpenPopup("Remove config?");
 					}
-					EndPopup();
+
+					// Save config dialog
+					if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to override this config?");
+
+						Separator();
+						if (Button("Yes, override!", ImVec2(150, 0)))
+						{
+							g_CFG.SaveConfig(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+
+						SameLine();
+						if (Button("No", ImVec2(120, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+
+					// Delete config dialog
+					if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to delete this config?");
+
+						Separator();
+						if (Button("Yes, remove!", ImVec2(150, 0)))
+						{
+							g_CFG.RemoveConfig(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+						SameLine();
+						if (Button("No", ImVec2(150, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+				}
+				else if (configName == g_CFG.GetCurrentConfig())
+				{
+					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
+					std::string buttonText = "> " + configName + " <";
+					if (Button(buttonText.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+					PopStyleColor();
+				}
+				else
+				{
+					if (Button(configName.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
 				}
 			}
-			else if (configName == g_CFG.GetCurrentConfig())
+
+		}
+		else
+		{
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
 			{
-				PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
-				std::string buttonText = "> " + configName + " <";
-				if (Button(buttonText.c_str(), ImVec2(200, 20)))
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
 				{
-					selected = configName;
+					continue;
 				}
-				PopStyleColor();
+				nConfig++;
 			}
-			else
+
+			// Current config
+			const std::string cfgText = "Loaded: " + g_CFG.GetCurrentVisuals();
+			Text(cfgText.c_str());
+
+			// Config name field
+			if (nConfig < 100)
 			{
-				if (Button(configName.c_str(), ImVec2(200, 20)))
+				std::string newConfigName = {};
+
+				PushItemWidth(200);
+				if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-					selected = configName;
+					if (!std::filesystem::exists(g_CFG.GetVisualsPath() + "\\" + newConfigName))
+					{
+						g_CFG.SaveVisual(newConfigName);
+					}
+				}
+				PopItemWidth();
+			}
+
+			// Config list
+
+			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
+			{
+				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
+				{
+					continue;
+				}
+
+				std::string configName = entry.path().filename().string();
+				configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
+
+				if (configName == selected)
+				{
+					const ImGuiStyle* style2 = &GetStyle();
+					const ImVec4* colors2 = style2->Colors;
+					ImVec4 buttonColor = colors2[ImGuiCol_Button];
+					buttonColor.w *= .5f;
+					PushStyleColor(ImGuiCol_Button, buttonColor);
+
+					// Config name button
+					if (Button(configName.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+					PopStyleColor();
+
+					// Save config button
+					if (Button("Save", ImVec2(61, 20)))
+					{
+						if (configName != g_CFG.GetCurrentVisuals())
+						{
+							OpenPopup("Save config?");
+						}
+						else
+						{
+							g_CFG.SaveVisual(selected);
+							selected.clear();
+						}
+					}
+
+					// Load config button
+					SameLine();
+					if (Button("Load", ImVec2(61, 20)))
+					{
+						g_CFG.LoadVisual(selected);
+						selected.clear();
+						LoadStyle();
+					}
+
+					// Remove config button
+					SameLine();
+					if (Button("Remove", ImVec2(62, 20)))
+					{
+						OpenPopup("Remove config?");
+					}
+
+					// Save config dialog
+					if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to override this config?");
+
+						Separator();
+						if (Button("Yes, override!", ImVec2(150, 0)))
+						{
+							g_CFG.SaveVisual(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+
+						SameLine();
+						if (Button("No", ImVec2(120, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+
+					// Delete config dialog
+					if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						Text("Do you really want to delete this config?");
+
+						Separator();
+						if (Button("Yes, remove!", ImVec2(150, 0)))
+						{
+							g_CFG.RemoveVisual(selected);
+							selected.clear();
+							CloseCurrentPopup();
+						}
+						SameLine();
+						if (Button("No", ImVec2(150, 0)))
+						{
+							CloseCurrentPopup();
+						}
+						EndPopup();
+					}
+				}
+				else if (configName == g_CFG.GetCurrentVisuals())
+				{
+					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
+					std::string buttonText = "> " + configName + " <";
+					if (Button(buttonText.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
+					PopStyleColor();
+				}
+				else
+				{
+					if (Button(configName.c_str(), ImVec2(200, 20)))
+					{
+						selected = configName;
+					}
 				}
 			}
 		}

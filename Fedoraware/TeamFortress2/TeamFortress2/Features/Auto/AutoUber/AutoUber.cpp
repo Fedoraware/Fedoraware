@@ -54,13 +54,19 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			return false;
 		}
 
-		if (player->GetActiveWeapon()->GetSlot() == SLOT_MELEE)
+		const auto& pWeapon = player->GetActiveWeapon();
+
+		if (!pWeapon)
+		{
+			return 0;
+		}
+
+		if (pWeapon->GetSlot() == SLOT_MELEE)
 		{
 			return false;
 		}
 
-		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFLunchBox_Drink || player->GetActiveWeapon()->GetClassID() ==
-			ETFClassID::CTFWeaponPDA)
+		if (pWeapon->GetClassID() == ETFClassID::CTFLunchBox || pWeapon->GetClassID() == ETFClassID::CTFLunchBox_Drink || pWeapon->GetClassID() == ETFClassID::CTFWeaponPDA)
 		{
 			return false;
 		}
@@ -102,23 +108,23 @@ int BulletDangerValue(CBaseEntity* pPatient)
 						return 2;
 					}
 				}
-			}
 
-			if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFShotgun_Pyro || player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFShotgun_Soldier)
-			{
+				if (pWeapon->GetClassID() == ETFClassID::CTFShotgun_Pyro || pWeapon->GetClassID() == ETFClassID::CTFShotgun_Soldier)
 				{
-					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
-						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
-						(player->GetClassNum() == CLASS_PYRO))))
 					{
-						return 2;
-					}
+						if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
+							(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
+							(player->GetClassNum() == CLASS_PYRO))))
+						{
+							return 2;
+						}
 
-					if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
-						(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
-						(player->GetClassNum() == CLASS_SOLDIER))))
-					{
-						return 2;
+						if (pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 50.f ||
+							(pPatient->GetVecOrigin().DistTo(player->GetVecOrigin()) < 250.f && (
+							(player->GetClassNum() == CLASS_SOLDIER))))
+						{
+							return 2;
+						}
 					}
 				}
 			}
@@ -191,7 +197,14 @@ int FireDangerValue(CBaseEntity* pPatient)
 			continue;
 		}
 
-		if (player->GetActiveWeapon()->GetClassID() == ETFClassID::CTFFlameThrower)
+		const auto& pPlayerWeapon = player->GetActiveWeapon();
+
+		if (!pPlayerWeapon)
+		{
+			return 0;
+		}
+
+		if (pPlayerWeapon->GetClassID() == ETFClassID::CTFFlameThrower)
 		{
 			if (HAS_CONDITION(pPatient, TFCond_OnFire) && pPatient->GetHealth() < 250)
 			{
@@ -408,7 +421,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 	if (const auto& pTarget = pWeapon->GetHealingTarget())
 	{
 		//Ignore if target is somehow dead, or already not vulnerable
-		if (!pTarget->IsAlive() || !pTarget->IsVulnerable())
+		if (!pTarget->IsAlive() || !pTarget->IsVulnerable() || pTarget->GetDormant())
 		{
 			return;
 		}

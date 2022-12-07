@@ -14,7 +14,7 @@ struct ResolveData{
 	int iPitchNoiseSteps = 0;
 
 	//historical data
-	std::pair<int, Vec3> pLastFireAngles = {0, {}};
+	std::pair<std::pair<int, bool>, Vec3> pLastFireAngles = { { 0, false }, {} };
 	Vec2 vOriginalAngles = {0.f, 0.f};
 };
 
