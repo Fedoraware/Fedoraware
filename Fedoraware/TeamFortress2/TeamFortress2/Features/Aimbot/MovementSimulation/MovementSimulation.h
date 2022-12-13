@@ -16,6 +16,7 @@ private:
 	bool bFirstRunTick = true;
 	bool m_bOldInPrediction = false;
 	bool m_bOldFirstTimePredicted = false;
+	bool bDontPredict = false;
 	float m_flOldFrametime = 0.0f;
 	int iTick = 0;
 
