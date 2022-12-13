@@ -152,6 +152,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 	// Run Features
 	{
+		F::Visuals.DebugSelfPredict(g_EntityCache.GetLocal());
+
+
 		F::Misc.RunPre(pCmd, pSendPacket);
 		F::Fedworking.Run();
 		F::CameraWindow.Update();
