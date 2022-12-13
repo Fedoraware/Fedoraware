@@ -44,7 +44,6 @@ public:
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
 	void DrawAimbotFOV(CBaseEntity* pLocal);
 	void DrawDebugInfo(CBaseEntity* pLocal);
-	void DebugSelfPredict(CBaseEntity* pLocal);
 	void DrawAntiAim(CBaseEntity* pLocal);
 	void DrawTickbaseInfo(CBaseEntity* pLocal);
 	void DrawMenuSnow();

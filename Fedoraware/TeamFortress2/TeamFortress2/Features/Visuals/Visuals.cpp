@@ -1,7 +1,6 @@
 #include "Visuals.h"
 #include "../Vars.h"
 #include "../ESP/ESP.h"
-#include "../Aimbot/MovementSimulation/MovementSimulation.h"
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
@@ -36,23 +35,6 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 
 		I::DebugOverlay->AddBoxOverlay2(matrixOrigin, bbox->bbmin, bbox->bbmax, bboxAngle, colourface, colouredge, time);
 	}
-}
-
-void CVisuals::DebugSelfPredict(CBaseEntity* pLocal){
-	if (!pLocal) { return;  }
-	if (!pLocal->IsAlive()) { return; }
-
-	G::PredictionLines.clear();
-	G::PredLinesBackup.clear();
-	CMoveData moveData = {};
-	Vec3 absOrigin = {};
-	if (F::MoveSim.Initialize(pLocal)) {
-		for (int n = 0; n < 66; n++) {
-			F::MoveSim.RunTick(moveData, absOrigin);
-		}
-		F::MoveSim.Restore();
-	}
-	G::PredLinesBackup = G::PredictionLines;
 }
 
 void CVisuals::ScopeLines(CBaseEntity* pLocal)
