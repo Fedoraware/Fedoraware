@@ -31,7 +31,7 @@ void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	//	called from CreateMove
 	static KeyHelper kDoubletap{ &Vars::Misc::CL_Move::DoubletapKey.Value };
-	if (bTeleport || bRecharge || bSpeedhack || (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)) { return; }
+	if (bTeleport || bRecharge || bSpeedhack/*|| (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)*/) { return; }
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return; }
 	if (G::ShouldShift || !pCmd) { return; }
 
@@ -98,10 +98,11 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 
 void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 {
-	G::ShiftedTicks = iAvailableTicks; //	put this above incremenet to prevent jittering
+	iAvailableTicks = G::ShiftedTicks;
 	while (iAvailableTicks > Vars::Misc::CL_Move::DTTicks.Value) { CLMoveFunc(accumulated_extra_samples, false); } //	skim any excess ticks
 
 	iAvailableTicks++; //	since we now have full control over CL_Move, increment.
+	G::ShiftedTicks = iAvailableTicks;
 	if (iAvailableTicks <= 0)
 	{
 		iAvailableTicks = 0;
