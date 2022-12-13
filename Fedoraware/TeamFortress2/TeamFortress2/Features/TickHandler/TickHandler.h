@@ -22,6 +22,7 @@ class CTickshiftHandler
 	int iTickRate = 0;
 
 public:
+	int iDeficit = 0;
 	bool MeleeDoubletapCheck(CBaseEntity* pLocal);	//	checks if we WILL doubletap, used by melee aimbot from AimbotMelee.cpp
 	void CLMove(float accumulated_extra_samples, bool bFinalTick);	//	to be run from CL_Move.cpp
 	void CreateMove(CUserCmd* pCmd);								//	to be run from ClientModeShared_CreateMove.cpp

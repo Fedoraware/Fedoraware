@@ -730,6 +730,7 @@ namespace Vars
 			inline CVar<int> TeleportFactor{ 2 };
 			inline CVar<int> RechargeKey{ 0x48 }; //H
 			inline CVar<int> DoubletapKey{ 0x56 }; //V
+			inline CVar<bool> AutoRetain{ true };
 			inline CVar<bool> RetainFakelag{ false };
 			inline CVar<bool> RechargeWhileDead{ false };
 			inline CVar<bool> AutoRecharge{ false }; //H
