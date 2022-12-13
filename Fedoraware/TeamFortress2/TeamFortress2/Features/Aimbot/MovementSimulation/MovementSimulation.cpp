@@ -184,7 +184,7 @@ void CMovementSimulation::FillVelocities()
 		for (const auto& pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 		{
 			const int iEntIndex = pEntity->GetIndex();
-			if (!pEntity->IsAlive() || pEntity->GetDormant())
+			if (!pEntity->IsAlive() || pEntity->GetDormant() || pEntity->GetVelocity().IsZero())
 			{
 				m_Velocities[iEntIndex].clear();
 				continue;
@@ -238,6 +238,8 @@ bool CMovementSimulation::StrafePrediction()
 	const bool shouldPredict = m_pPlayer->OnSolid() ? Vars::Aimbot::Projectile::StrafePredictionGround.Value : Vars::Aimbot::Projectile::StrafePredictionAir.Value;
 	if (!shouldPredict) { return false; }
 
+	//fix in air strafe pred
+
 	if (bFirstRunTick)
 	{			//	we've already done the math, don't do it again
 		flAverageYaw = 0.f;
@@ -271,16 +273,9 @@ bool CMovementSimulation::StrafePrediction()
 		for (; i < iSamples; i++)
 		{
 			const float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
-			/*
-				To avoid explaining this later,
-				a yaw change of -1 to 1 will show as flRecordYaw = 1, flCompareYaw = 359, with a difference of 358 degrees when the difference is actually 2 degrees.
-				remapping values above 180 to 0 (and reversing them) will cause the issue of -1 to 1 showing a difference of 0 degrees.
-				remapping values above 180 to -180 will cause another issue that should be fixed below anyway.
-			*/
 
-			float flFinal = (flCompareYaw - flRecordYaw);
-			flFinal = ((flFinal + 180) - floor(flFinal / 360) * 360) - 180;
-			flAverageYaw += flFinal;
+			const float flDelta = Math::AngleDiffRad(flCompareYaw * (PI / 180), flRecordYaw * (PI / 180)) * (180 / PI);
+			flAverageYaw += flDelta;
 
 			flCompareYaw = flRecordYaw;
 		}
