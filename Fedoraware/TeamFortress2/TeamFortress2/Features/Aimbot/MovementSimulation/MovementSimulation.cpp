@@ -291,7 +291,6 @@ bool CMovementSimulation::StrafePrediction()
 
 		const float flMaxDelta = (60.f / fmaxf((float)iSamples / 2.f, 1.f));
 
-		Utils::ConLog("MovementSimulation", tfm::format("flMaxDelta calculated to %f", flMaxDelta).c_str(), { 83, 255, 83, 255 });
 
 		if (fabsf(flAverageYaw) > flMaxDelta) {
 			m_Velocities[m_pPlayer->GetIndex()].clear();
