@@ -18,6 +18,7 @@
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/AntiHack/AntiAim.h"
+#include "../../Features/TickHandler/TickHandler.h"
 
 #include "../../Resources/DVD-Icon.h"
 #include "../../Resources/64x64_Circle_Mask.h"

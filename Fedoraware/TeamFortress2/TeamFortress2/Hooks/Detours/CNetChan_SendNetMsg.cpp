@@ -52,6 +52,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 
 		case clc_Move:
 		{
+			static int iOldShift = G::ShiftedTicks;
 			const int iAllowedNewCommands = fmax(fmin(24 - G::ShiftedTicks, 22), 0);
 			const auto& moveMsg = reinterpret_cast<CLC_Move&>(msg);
 			const int iCmdCount = moveMsg.m_nNewCommands + moveMsg.m_nBackupCommands;
@@ -61,6 +62,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 				G::ShiftedTicks -= iCmdCount - iAllowedNewCommands;
 				F::Ticks.iDeficit = iCmdCount - iAllowedNewCommands;
 			}
+			iOldShift = G::ShiftedTicks;
 			break;
 		}
 	}
