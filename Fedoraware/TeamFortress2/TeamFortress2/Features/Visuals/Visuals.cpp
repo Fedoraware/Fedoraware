@@ -541,7 +541,7 @@ void CVisuals::DrawMenuSnow()
 		{
 //	do gravity
 			constexpr int drift = 1;
-			flake.position.first += Utils::RandFloatRange(-drift, drift);
+			flake.position.first += Utils::RandIntSimple(-drift, drift);
 			flake.position.second += drift;
 
 			//	calculate alpha
