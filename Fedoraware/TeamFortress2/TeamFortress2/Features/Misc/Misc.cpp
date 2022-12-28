@@ -597,7 +597,7 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 	{	//	this is our initial jump
 		bHopping = true; return;
 	}
-	else if (bHopping && !pLocal->OnSolid() && bJumpHeld)
+	else if (bHopping && bJumpHeld && (!pLocal->OnSolid() || pLocal->IsDucking()))
 	{	//	 we are not on the ground and the key is in the same hold cycle
 		pCmd->buttons &= ~IN_JUMP; return;
 	}
