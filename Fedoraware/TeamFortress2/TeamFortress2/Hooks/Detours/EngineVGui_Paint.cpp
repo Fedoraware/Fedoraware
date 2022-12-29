@@ -166,6 +166,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 				F::Visuals.DrawOnScreenPing(pLocal);
 				F::Visuals.DrawServerHitboxes();
 				F::AntiAim.Draw(pLocal);
+				//F::Ticks.DrawDebug();
 			}
 
 			F::Visuals.DrawPredictionLine();
