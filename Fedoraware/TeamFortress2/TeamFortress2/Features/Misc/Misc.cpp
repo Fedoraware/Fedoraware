@@ -589,6 +589,7 @@ void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 		bHopping = true; return;
 	}
 	else if (bCurHop && bTried) {
+		//	we tried and failed to bunnyhop, let go of the key and try again the next tick
 		bTried = false;
 		pCmd->buttons &= ~IN_JUMP; return;
 	}
