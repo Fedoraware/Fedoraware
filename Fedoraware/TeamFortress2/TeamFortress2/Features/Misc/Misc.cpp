@@ -44,7 +44,8 @@ void CMisc::RunMid(CUserCmd* pCmd, const int nOldGroundEnt)
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
-		EdgeJump(pCmd, nOldGroundEnt);
+		EdgeJump(pLocal, pCmd, nOldGroundEnt);
+		DuckJump(pLocal, pCmd);
 	}
 }
 
@@ -411,30 +412,27 @@ void CMisc::RageRetry(CBaseEntity* pLocal)
 	}
 }
 
-void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt)
+void CMisc::EdgeJump(CBaseEntity* pLocal, CUserCmd* pCmd, const int nOldGroundEnt)
 {
-	if (const auto& pLocal = g_EntityCache.GetLocal())
+	if ((nOldGroundEnt >= 0) && Vars::Misc::EdgeJump.Value)
 	{
-		// Edge Jump
-		if ((nOldGroundEnt >= 0) && Vars::Misc::EdgeJump.Value)
+		static KeyHelper edgeKey{ &Vars::Misc::EdgeJumpKey.Value };
+		if (!Vars::Misc::EdgeJumpKey.Value || edgeKey.Down())
 		{
-			static KeyHelper edgeKey{ &Vars::Misc::EdgeJumpKey.Value };
-			if (!Vars::Misc::EdgeJumpKey.Value || edgeKey.Down())
+			if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming())
 			{
-				if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming())
-				{
-					pCmd->buttons |= IN_JUMP;
-				}
+				pCmd->buttons |= IN_JUMP;
 			}
 		}
+	}
+}
 
-		// Duck Jump
-		if ((Vars::Misc::DuckJump.Value || Vars::Misc::Followbot::Enabled.Value))
+void CMisc::DuckJump(CBaseEntity* pLocal, CUserCmd* pCmd) {
+	if ((Vars::Misc::DuckJump.Value || Vars::Misc::Followbot::Enabled.Value))
+	{
+		if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming() && !pLocal->IsStunned())
 		{
-			if (pLocal->IsAlive() && !pLocal->OnSolid() && !pLocal->IsSwimming() && !pLocal->IsStunned())
-			{
-				pCmd->buttons |= IN_DUCK;
-			}
+			pCmd->buttons |= IN_DUCK;
 		}
 	}
 }

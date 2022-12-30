@@ -25,7 +25,8 @@ class CMisc
 	void DetectChoke();
 	void ChokeCheck(bool* pSendPacket);
 	void DoubletapPacket(bool* pSendPacket);
-	void EdgeJump(CUserCmd* pCmd, const int nOldGroundEnt);
+	void EdgeJump(CBaseEntity* pLocal, CUserCmd* pCmd, const int nOldGroundEnt);
+	void DuckJump(CBaseEntity* pLocal, CUserCmd* pCmd);
 
 	void PrintProjAngles(CBaseEntity* pLocal);
 
