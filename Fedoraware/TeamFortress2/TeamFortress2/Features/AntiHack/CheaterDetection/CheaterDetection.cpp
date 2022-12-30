@@ -158,6 +158,63 @@ bool CCheaterDetection::IsDuckSpeed(CBaseEntity* pEntity)
 	return false;
 }
 
+void CCheaterDetection::BacktrackCheck(CGameEvent* pEvent) {
+	//	get victim & attacker
+	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(pEvent->GetInt("weaponid")));
+	if (Utils::GetWeaponType(pWeapon) == EWeaponType::PROJECTILE || Utils::GetWeaponType(pWeapon) == EWeaponType::UNKNOWN) { return; }	//	check that our attacker has lag compensation on their weapon.
+	CBaseEntity* pAttacker = I::ClientEntityList->GetClientEntity(pEvent->GetInt("attacker"));
+	CBaseEntity* pVictim = I::ClientEntityList->GetClientEntity(pEvent->GetInt("userid"));
+	if (!pVictim || !pAttacker) { return; }
+	if (pVictim->GetDormant() || pAttacker->GetDormant()) { return; }
+	if (pVictim->GetVelocity().Length() < 16.f) { return; }	//	don't check static players
+
+	const Vec3 vEyeAng = pAttacker->GetEyeAngles();			//	get attacker angles & pos
+	const Vec3 vEyePos = pAttacker->GetEyePosition();		//	
+
+	const float flAttackerLatency = 0.f;					//	TODO: Get player latencies every 30 seconds from the server somehow :thinking:
+
+	Vec3 vForward = {};
+	Math::AngleVectors(vEyeAng, &vForward);					//	create a fwd vector for the attacker
+
+	const Vec3 vTraceStart = vEyePos;									  //
+	const Vec3 vTraceEnd = (vTraceStart + (vForward * 8192.0f));		  //
+																		  //
+	CGameTrace trace = {};												  //
+	CTraceFilterHitscan filter = {};									  //
+	filter.pSkip = pAttacker;											  //
+
+	const Vec3 vRestorePos = pVictim->m_vecOrigin();
+	float flTime = 0.f;
+
+	const auto& pRecords = F::Backtrack.GetRecords(pVictim);
+	if (!pRecords) { return; }
+
+	for (const auto& pTick : *pRecords)
+	{
+		pVictim->m_vecOrigin() = pTick.vOrigin;
+		Utils::Trace(vTraceStart, vTraceEnd, (MASK_SHOT), &filter, &trace);		//	do a trace along the players view angle
+		if (trace.entity == pVictim) { flTime = pTick.flCreateTime; break; }	//	we hit a player with the trace and therefor have the time that the attacker was lag comped to
+	}
+
+	pVictim->m_vecOrigin() = vRestorePos;					//	restore old player origin
+
+	if (flTime == 0) { return; }
+
+	const float flDelta = I::GlobalVars->curtime - flTime;	//	get delta between attackers shot and servers time
+	switch (mData[pAttacker].iLagCompChecks) {
+	case 0: {
+		mData[pAttacker].iOrigDelta += flDelta; mData[pAttacker].iLagCompChecks++; return;
+	}
+	case 1: {
+		mData[pAttacker].iOrigDelta += flDelta; mData[pAttacker].iOrigDelta /= 2; mData[pAttacker].iLagCompChecks++; return;
+	}
+	}
+
+	if (flDelta > mData[pAttacker].iOrigDelta + TICKS_TO_TIME(2)) {
+		//	infract?
+	}
+}
+
 void CCheaterDetection::SimTime(CBaseEntity* pEntity)
 {
 	if (Vars::Misc::CheaterDetection::Methods.Value & ~(1 << 2))
@@ -304,11 +361,14 @@ void CCheaterDetection::ReportShot(int iIndex)
 void CCheaterDetection::ReportDamage(CGameEvent* pEvent)
 {
 	const int iIndex = pEvent->GetInt("attacker");
+	if (iIndex == I::EngineClient->GetLocalPlayer()) { return; }
 	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
-	if (!pEntity || pEntity->GetDormant()) { return; }
+	if (!pEntity) { return; }
+	if (pEntity->GetDormant()) { return; }
 	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
 	if (!pWeapon) { return; }
 	AimbotCheck(pEntity);
+	//BacktrackCheck(pEvent);
 	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1) { return; }
 	mData[pEntity].iLastDamageEventTick = I::GlobalVars->tickcount;
 	mData[pEntity].pShots.first++; mData[pEntity].bDidDamage = true;

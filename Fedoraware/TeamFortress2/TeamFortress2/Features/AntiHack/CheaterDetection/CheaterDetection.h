@@ -1,5 +1,7 @@
 #pragma once
 #include "../../../SDK/SDK.h"
+#include "../../Backtrack/Backtrack.h"
+
 struct PlayerData
 {
 //Data
@@ -10,6 +12,8 @@ struct PlayerData
 	std::pair<int, int> pBhop = { 0, 0 };
 	std::pair<bool, Vec2> pTrustAngles = { false, {0, 0} };
 	std::pair<bool, bool> pDetections = { false, false };	//	high hitchance, high avg score
+	int iOrigDelta = 0;	//	the difference between the players expected lag comp amount and the amount they actually had, re-calculated each life based on the first 2 shots that deal damage.
+	int iLagCompChecks = 0;	//	reset each life.
 
 	//Immediate Data
 	bool bDidDamage = false;
@@ -66,6 +70,7 @@ class CCheaterDetection
 	void SimTime(CBaseEntity* pEntity);
 	void AimbotCheck(CBaseEntity* pEntity);
 	bool IsDuckSpeed(CBaseEntity* pEntity);
+	void BacktrackCheck(CGameEvent* pEvent);
 
 	// player utils
 	void CalculateHitChance(CBaseEntity* pEntity);
