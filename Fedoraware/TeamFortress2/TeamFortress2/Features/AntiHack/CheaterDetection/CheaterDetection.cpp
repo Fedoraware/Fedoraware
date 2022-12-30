@@ -259,7 +259,7 @@ void CCheaterDetection::FindScores()
 
 void CCheaterDetection::FindHitchances()
 {	//	runs every 30 seconds
-	if (I::GlobalVars->curtime - flLastAccuracyTime < 30.f) { return; }
+	if (I::GlobalVars->curtime - flLastAccuracyTime < 30.f || !server.iHits || !server.iMisses) { return; }
 	flLastAccuracyTime = I::GlobalVars->curtime;
 
 	const float flAvg = (float)server.iHits / (float)server.iMisses;
