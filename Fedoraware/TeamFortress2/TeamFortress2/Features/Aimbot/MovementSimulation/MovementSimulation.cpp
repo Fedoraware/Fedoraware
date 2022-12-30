@@ -273,7 +273,7 @@ bool CMovementSimulation::StrafePrediction()
 		{
 			const float flRecordYaw = Math::VelocityToAngles(mVelocityRecord.at(i)).y;
 
-			const float flDelta = Math::AngleDiffRad(flCompareYaw * (PI / 180), flRecordYaw * (PI / 180)) * (180 / PI);
+			const float flDelta = RAD2DEG(Math::AngleDiffRad(DEG2RAD(flCompareYaw), DEG2RAD(flRecordYaw)));
 			flAverageYaw += flDelta;
 
 			flCompareYaw = flRecordYaw;

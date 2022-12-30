@@ -1572,7 +1572,7 @@ void CMenu::MenuHvH()
 			if (Vars::Misc::CheaterDetection::Enabled.Value)
 			{
 				{
-					static std::vector flagNames{ "Accuracy", "Score", "Simtime Changes", "Packet Choking", "Bunnyhopping", "Aim Flicking & Aimbot", "OOB Angles", "Aimbot", "Duck Speed" };
+					static std::vector flagNames{ "Accuracy", "Score", "Simtime Changes", "Packet Choking", "Bunnyhopping", "Aim Flicking", "OOB Angles", "Aimbot", "Duck Speed" };
 					static std::vector flagValues{ 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7, 1 << 8 };
 					MultiFlags(flagNames, flagValues, &Vars::Misc::CheaterDetection::Methods.Value, "Detection Methods###CheaterDetectionMethods");
 					HelpMarker("Methods by which to detect bad actors.");

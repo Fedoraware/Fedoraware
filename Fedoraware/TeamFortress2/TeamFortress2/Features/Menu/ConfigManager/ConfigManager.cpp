@@ -290,6 +290,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Global::AimNPC);
 				SAVE_VAR(Vars::Aimbot::Global::AimBombs);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreOptions);
+				SAVE_VAR(Vars::Aimbot::Global::TickTolerance);
 				SAVE_VAR(Vars::Aimbot::Global::BAimLethal);
 				SAVE_VAR(Vars::Aimbot::Global::showHitboxes);
 				SAVE_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
@@ -321,6 +322,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
+				SAVE_VAR(Vars::Aimbot::Hitscan::TapFireDist);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
@@ -676,7 +678,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimNPC);
 				LOAD_VAR(Vars::Aimbot::Global::AimBombs);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
-				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
+				LOAD_VAR(Vars::Aimbot::Global::TickTolerance);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
 				LOAD_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
 				LOAD_VAR(Vars::Aimbot::Global::HitboxLifetime);
@@ -709,6 +711,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::RespectFOV);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
+				LOAD_VAR(Vars::Aimbot::Hitscan::TapFireDist);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);

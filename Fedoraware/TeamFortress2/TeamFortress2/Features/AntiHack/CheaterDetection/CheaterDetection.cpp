@@ -96,18 +96,20 @@ bool CCheaterDetection::AreAnglesSuspicious(CBaseEntity* pEntity)
 	if (G::ChokeMap[pEntity->GetIndex()] > 0 || pEntity->GetVelocity().Length() < 10.f || mData[pEntity].vLastAngle.IsZero()) { mData[pEntity].pTrustAngles = { false, {0, 0} }; return false; } //	angles don't update the way I WANT them to if the player is not moving.
 	if (!mData[pEntity].pTrustAngles.first)
 	{	//	we are not suspicious of this player yet
-		const Vec3 vCurAngles = pEntity->GetEyeAngles();
-		const Vec2 vDelta = Vec2{ vCurAngles.x, vCurAngles.y } - mData[pEntity].vLastAngle;
-		const float flDelta = vDelta.Length();
+		const Vec3 vCurAngle = pEntity->GetEyeAngles();
+		const float flDeltaX = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.x), DEG2RAD(mData[pEntity].vLastAngle.x)));
+		const float flDeltaY = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.y), DEG2RAD(mData[pEntity].vLastAngle.y)));
+		const float flDelta = sqrtf(pow(flDeltaX, 2) + pow(flDeltaY, 2));
 
-		if (flDelta > (Vars::Misc::CheaterDetection::MinimumFlickDistance.Value)) { mData[pEntity].pTrustAngles = { true, {vCurAngles.x, vCurAngles.y} }; }
+		if (flDelta > (Vars::Misc::CheaterDetection::MinimumFlickDistance.Value)) { mData[pEntity].pTrustAngles = { true, {vCurAngle.x, vCurAngle.y} }; }
 	}
 	else
 	{
   //	check for noise on this player (how much their mouse moves after the initial flick)
-		const Vec3 vCurAngles = pEntity->GetEyeAngles();
-		const Vec2 vDelta = Vec2{ vCurAngles.x, vCurAngles.y } - mData[pEntity].pTrustAngles.second;
-		const float flDelta = vDelta.Length();
+		const Vec3 vCurAngle = pEntity->GetEyeAngles();
+		const float flDeltaX = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.x), DEG2RAD(mData[pEntity].vLastAngle.x)));
+		const float flDeltaY = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.y), DEG2RAD(mData[pEntity].vLastAngle.y)));
+		const float flDelta = sqrtf(pow(flDeltaX, 2) + pow(flDeltaY, 2));
 
 		if (flDelta < (Vars::Misc::CheaterDetection::MaximumNoise.Value * server.flMultiplier)) { mData[pEntity].pTrustAngles = { false, {0, 0} }; return true; }
 		else { mData[pEntity].pTrustAngles = { false, {0, 0} }; }
@@ -118,8 +120,9 @@ bool CCheaterDetection::AreAnglesSuspicious(CBaseEntity* pEntity)
 void CCheaterDetection::AimbotCheck(CBaseEntity* pEntity)
 {
 	const Vec3 vCurAngle = pEntity->GetEyeAngles();
-	const Vec2 vCurAngle2 = { vCurAngle.x, vCurAngle.y };
-	const float flDelta = vCurAngle.DistTo(mData[pEntity].vLastAngle);	//	aimbot flick (unscaled)
+	const float flDeltaX = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.x), DEG2RAD(mData[pEntity].vLastAngle.x)));
+	const float flDeltaY = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.y), DEG2RAD(mData[pEntity].vLastAngle.y)));
+	const float flDelta  = sqrtf(pow(flDeltaX, 2) + pow(flDeltaY, 2));
 	const float flScaled = std::clamp(flDelta * G::ChokeMap[pEntity->GetIndex()], 0.f, Vars::Misc::CheaterDetection::MaxScaledAimbotFoV.Value);	//	aimbot flick scaled
 
 	if (flScaled > Vars::Misc::CheaterDetection::MinimumAimbotFoV.Value)
