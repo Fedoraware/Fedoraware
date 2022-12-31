@@ -1128,21 +1128,17 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 {
 	if (!Vars::Aimbot::Projectile::SplashPrediction.Value) { return false; }
 
-	// TODO: I have no clue if these values are accurate
 	std::optional<float> splashRadius;
-	switch (pWeapon->GetClassID())
-	{
-		case ETFClassID::CTFRocketLauncher:
-		case ETFClassID::CTFRocketLauncher_AirStrike:
-		case ETFClassID::CTFRocketLauncher_Mortar:
-		{
-			//I haven't tested if this is unaccurate in actual gameplay but it still hits
-			splashRadius = 160.f;
-			break;
-		}
-	//Flares
-	//Stickybombs
-	}
+	float AirStrikeModifier;
+
+	splashRadius = Utils::ATTRIB_HOOK_FLOAT(148, "mult_explosion_radius", pWeapon, 0, 1);
+	AirStrikeModifier = 0.8f; //tf_weaponbase_rocket.cpp @L674
+	float splashRadiusModified = splashRadius.value() * AirStrikeModifier; //this value will only be used if you are blast jumping with the air strike
+
+	//check if you are rocket jumping, and change the value appropriately, because the air strike blast radius changes if you are rocket jumping.
+	const int nCondEx2 = pLocal->GetCondEx2();
+	if (nCondEx2 & TFCondEx2_BlastJumping)
+		splashRadius = splashRadiusModified;
 
 	// Don't do it with the direct hit or if the splash radius is unknown
 	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || !splashRadius) { return false; }
