@@ -511,24 +511,24 @@ bool IsPointAllowed(int nHitbox)
 //	Tries to find the best position to aim at on our target.
 std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity, const Vec3& targetPredPos)
 {
-	std::optional<Vec3> retVec = pLocal->GetAbsOrigin();
-	Vec3 localPos = pLocal->GetAbsOrigin();
+	std::optional<Vec3> vRetVec = pLocal->GetAbsOrigin();
+	const Vec3 vLocalPos = pLocal->GetAbsOrigin();
 
-	const Vec3 vLocalPos = pLocal->GetShootPos();
+	const Vec3 vShootPos = pLocal->GetShootPos();
 
 	const bool bIsDucking = (pEntity->m_bDucked() || pEntity->m_fFlags() & FL_DUCKING);
 
-	const float bboxScale = Vars::Aimbot::Projectile::ScanScale.Value; // stop shoot flor (:D)
+	const float flBBoxScale = Vars::Aimbot::Projectile::ScanScale.Value; // stop shoot flor (:D)
 
 	// this way overshoots players that are crouching and I don't know why.
-	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking) * bboxScale;
-	const auto vMins = Vec3(-vMaxs.x, -vMaxs.y, vMaxs.z - vMaxs.z * bboxScale);
+	const Vec3 vMaxs = I::GameMovement->GetPlayerMaxs(bIsDucking) * flBBoxScale;
+	const auto vMins = Vec3(-vMaxs.x, -vMaxs.y, vMaxs.z - vMaxs.z * flBBoxScale);
 
-	const Vec3 headDelta = Utils::GetHeadOffset(pEntity);
+	const Vec3 vHeadDelta = Utils::GetHeadOffset(pEntity);
 
-	const std::vector vecPoints = {
+	const std::vector vPoints = {
 		// oh you don't like 15 points because it fucks your fps??? TOO BAD!//
-		Vec3(headDelta.x, headDelta.y, vMaxs.z), //	head bone probably
+		Vec3(vHeadDelta.x, vHeadDelta.y, vMaxs.z), //	head bone probably
 		Vec3(0, 0, (vMins.z + vMaxs.z) / 2), //	middles (scan first bc they are more accurate)
 		Vec3(0, 0, vMins.z), //	-
 		Vec3(vMins.x, vMins.y, vMaxs.z), //	top four corners
@@ -545,105 +545,104 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 		Vec3(vMaxs.x, vMins.y, vMins.z) //	-
 	};
 
-	std::vector<Vec3> visiblePoints{};
+	std::vector<Vec3> vVisPoints{};
 	const matrix3x4 transform = {
 		{1.f, 0, 0, targetPredPos.x},
 		{0, 1.f, 0, targetPredPos.y},
 		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z}
 	};
 
-	int aimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
+	int iAimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
 
-	int curPoint = 0, testPoints = 0; //maybe better way to do this
-	for (const auto& point : vecPoints)
+	int iCurPoint = 0, iTestPoints = 0; //maybe better way to do this
+	for (const auto& vPoint : vPoints)
 	{
-		if (testPoints > Vars::Aimbot::Projectile::VisTestPoints.Value) { break; }
-		if (static_cast<int>(visiblePoints.size()) >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
-		if (!IsPointAllowed(curPoint))
+		if (iTestPoints > Vars::Aimbot::Projectile::VisTestPoints.Value) { break; }
+		if (static_cast<int>(vVisPoints.size()) >= Vars::Aimbot::Projectile::ScanPoints.Value) { break; }
+		if (!IsPointAllowed(iCurPoint))
 		{
-			curPoint++;
+			iCurPoint++;
 			continue;
 		}
 
 		Vec3 vTransformed = {};
-		Math::VectorTransform(point, transform, vTransformed);
+		Math::VectorTransform(vPoint, transform, vTransformed);
 
-		if (Utils::VisPosMask(pLocal, pEntity, vLocalPos, vTransformed, MASK_SHOT_HULL))
+		if (Utils::VisPosMask(pLocal, pEntity, vShootPos, vTransformed, MASK_SHOT_HULL))
 		{
-			if (curPoint == aimMethod && aimMethod < 3) { return vTransformed; } // return this value now if it is going to get returned anyway, avoid useless scanning.
-			visiblePoints.push_back(vTransformed);
+			if (iCurPoint == iAimMethod && iAimMethod < 3) { return vTransformed; } // return this value now if it is going to get returned anyway, avoid useless scanning.
+			vVisPoints.push_back(vTransformed);
 		}
-		curPoint++;
-		testPoints++; // Only increment this if we actually tested.
+		iCurPoint++;
+		iTestPoints++; // Only increment this if we actually tested.
 	}
-	if (visiblePoints.empty())
+	if (vVisPoints.empty())
 	{
 		return std::nullopt;
 	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
+	
+	const auto& pWeapon = g_EntityCache.GetWeapon();
+	if (!pWeapon) { return vRetVec; }
+	
+	const int iClassNum = pLocal->GetClassNum();
+	const int iSlot = pWeapon->GetSlot();
 
-	const int classNum = pLocal->GetClassNum();
+	static KeyHelper kBounce{ &Vars::Aimbot::Projectile::BounceKey.Value };
 
-	static KeyHelper bounceKey{ &Vars::Aimbot::Projectile::BounceKey.Value };
+	if (kBounce.Down())	//	player demands we aim at feet (fetishist ngl)
+	{ iAimMethod = 2; }
 
-	switch (classNum)
+	while (iAimMethod == 3)
 	{
-		case CLASS_SOLDIER:
-		{
-			if (pLocal->GetActiveWeapon()->GetSlot() != SLOT_PRIMARY)
-			{
+		if (pEntity->OnSolid() && Vars::Aimbot::Projectile::FeetAimIfOnGround.Value) {
+			switch (iClassNum) {
+			case CLASS_SOLDIER: {
+				if (iSlot == 0) { iAimMethod = 2; }
 				break;
 			}
-			[[fallthrough]];
-		}
-		case CLASS_DEMOMAN:
-		{
-			if (bounceKey.Down() || (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value)))
-			{
-				aimMethod = 2;
+			case CLASS_DEMOMAN: {
+				if (iSlot < 2) { iAimMethod = 2; }
+				break;
 			}
-			break;
+			default: {
+				break;
+			}
+			}
+			if (iAimMethod == 2) { break; }	//	i forgor how loops work and disabled optimisation on this function for a while until realising what i had done lmao
+		}
+
+		switch (iClassNum)
+		{
+		case CLASS_SNIPER:
+		{ iAimMethod = 0; break; }	//	keeping breaks here to prevent warnings but i doubt they are needed
+		default:
+		{ iAimMethod = 1; break; }
 		}
 	}
-
-	if (aimMethod == 3 && classNum)
+	
+	if (Vars::Debug::DebugInfo.Value)
 	{
-		// auto
-		switch (classNum)
-		{
-			case CLASS_SOLDIER:
-			case CLASS_DEMOMAN:
-			{
-				aimMethod = 1;
-				break;
-			}
-			case CLASS_SNIPER:
-			{
-				aimMethod = 0;
-				break;
-			}
-			default:
-			{
-				aimMethod = 1;
-				break;
-			}
-		}
+		I::Cvar->ConsolePrintf("iAimMethod	: %d\n", iAimMethod);
+		I::Cvar->ConsolePrintf("iWeaponID	: %d\n", pWeapon->GetWeaponID());
+		I::Cvar->ConsolePrintf("iWeaponSlot	: %d\n", iSlot);
+		I::Cvar->ConsolePrintf("iClassNum	: %d\n", iClassNum);
 	}
 
-	switch (aimMethod)
+	switch (iAimMethod)
 	{
 		case 0:
 		{
 			//head
-			Math::VectorTransform(vecPoints.at(0), transform, HeadPoint); //	get transformed location of our "best point" for our selected prio hitbox
-			for (const auto& aimPoint : visiblePoints)
+			Math::VectorTransform(vPoints.at(0), transform, HeadPoint); //	get transformed location of our "best point" for our selected prio hitbox
+			for (const auto& vAimPoint : vVisPoints)
 			{
 				//	iterate through visible points
-				if (aimPoint.DistTo(HeadPoint) < retVec.value().DistTo(HeadPoint))
+				if (vAimPoint.DistTo(HeadPoint) < vRetVec.value().DistTo(HeadPoint))
 				{
 					//	if the distance to our best point is lower than the previous selected point,
-					retVec = aimPoint; //	set the new point to our currently selected point
+					vRetVec = vAimPoint; //	set the new point to our currently selected point
 				}
 			}
 			break;
@@ -651,12 +650,12 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 		case 1:
 		{
 			//torso
-			Math::VectorTransform(vecPoints.at(1), transform, TorsoPoint);
-			for (const auto& aimPoint : visiblePoints)
+			Math::VectorTransform(vPoints.at(1), transform, TorsoPoint);
+			for (const auto& vAimPoint : vVisPoints)
 			{
-				if (aimPoint.DistTo(TorsoPoint) < retVec.value().DistTo(TorsoPoint))
+				if (vAimPoint.DistTo(TorsoPoint) < vRetVec.value().DistTo(TorsoPoint))
 				{
-					retVec = aimPoint;
+					vRetVec = vAimPoint;
 				}
 			}
 			break;
@@ -664,18 +663,18 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 		case 2:
 		{
 			//feet
-			Math::VectorTransform(vecPoints.at(2), transform, FeetPoint);
-			for (const auto& aimPoint : visiblePoints)
+			Math::VectorTransform(vPoints.at(2), transform, FeetPoint);
+			for (const auto& vAimPoint : vVisPoints)
 			{
-				if (aimPoint.DistTo(FeetPoint) < retVec.value().DistTo(FeetPoint))
+				if (vAimPoint.DistTo(FeetPoint) < vRetVec.value().DistTo(FeetPoint))
 				{
-					retVec = aimPoint;
+					vRetVec = vAimPoint;
 				}
 			}
 			break;
 		}
 	}
-	return retVec;
+	return vRetVec.value().DistTo(vLocalPos) < 1.f ? std::nullopt : vRetVec;	//	messy lol
 }
 
 std::optional<Vec3> CAimbotProjectile::GetAimPosBuilding(CBaseEntity* pLocal, CBaseEntity* pEntity)
