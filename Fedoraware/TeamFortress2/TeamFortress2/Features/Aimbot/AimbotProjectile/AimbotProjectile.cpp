@@ -219,8 +219,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
-				Math::RemapValClamped(charge, 0.0f, 1.f, 930.88, 2409.2),
-				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 930.88, 2409.2),
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 0.483f, 0.085f)
 			};
 
 			break;
