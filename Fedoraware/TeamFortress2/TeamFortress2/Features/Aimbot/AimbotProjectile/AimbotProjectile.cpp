@@ -582,54 +582,96 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 	}
 
 	Vec3 HeadPoint, TorsoPoint, FeetPoint;
-
+	
+	const auto& pWeapon = g_EntityCache.GetWeapon();
+	if (!pWeapon) { return retVec; }
+	
 	const int classNum = pLocal->GetClassNum();
 
 	static KeyHelper bounceKey{ &Vars::Aimbot::Projectile::BounceKey.Value };
 
-	switch (classNum)
+if (aimMethod == 3)
 	{
-		case CLASS_SOLDIER:
-		{
-			if (pLocal->GetActiveWeapon()->GetSlot() != SLOT_PRIMARY)
-			{
-				break;
-			}
-			[[fallthrough]];
-		}
-		case CLASS_DEMOMAN:
-		{
-			if (bounceKey.Down() || (pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value)))
-			{
-				aimMethod = 2;
-			}
-			break;
-		}
-	}
-
-	if (aimMethod == 3 && classNum)
-	{
-		// auto
 		switch (classNum)
 		{
 			case CLASS_SOLDIER:
+			{
+				if(pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value))
+				{
+					switch (pWeapon->GetWeaponID())
+					{
+						case TF_WEAPON_ROCKETLAUNCHER:
+						case TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT:
+							aimMethod = 2;
+							break;
+						case TF_WEAPON_RAYGUN: //righteous bison
+							aimMethod = 1;
+							break;
+					default: aimMethod = 1; break;
+					}
+				}
+				[[fallthrough]];
+			}
 			case CLASS_DEMOMAN:
 			{
-				aimMethod = 1;
-				break;
+				if(pEntity->OnSolid() && (Vars::Aimbot::Projectile::FeetAimIfOnGround.Value))
+				{
+					switch (pWeapon->GetWeaponID())
+					{
+						case TF_WEAPON_GRENADELAUNCHER:
+						case TF_WEAPON_CANNON: //loose cannon
+							aimMethod = 1;
+							break;
+						case TF_WEAPON_PIPEBOMBLAUNCHER: //sticky launchers
+							aimMethod = 2;
+							break;
+					default: aimMethod = 1; break;
+					}
+				}
+			break;
 			}
 			case CLASS_SNIPER:
 			{
 				aimMethod = 0;
 				break;
 			}
-			default:
-			{
-				aimMethod = 1;
-				break;
-			}
+			default: aimMethod = 1; break;
+			break;
 		}
+		if (bounceKey.Down())
+			aimMethod = 2;
 	}
+	//debug
+	if (Vars::Debug::DebugInfo.Value)
+	{
+		aimMethod;
+		I::Cvar->ConsolePrintf("aimMethod: %d\n", aimMethod);
+	//	I::Cvar->ConsolePrintf("Weapon: %s\n", pWeapon->GetWeaponID());
+	}
+
+//	if (aimMethod == 3 && classNum)
+//	{
+//		// auto
+//		switch (classNum)
+//		{
+//			case CLASS_SOLDIER:
+//			case CLASS_DEMOMAN:
+//			{
+//				aimMethod = 1;
+//				break;
+//			}
+//			case CLASS_SNIPER:
+//			{
+//				aimMethod = 0;
+//				break;
+//			}
+//			default:
+//			{
+//				aimMethod = 1;
+//				break;
+//			}
+//		}
+//	}
 
 	switch (aimMethod)
 	{
