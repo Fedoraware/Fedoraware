@@ -219,8 +219,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
-				Math::RemapValClamped(charge, 0.0f, 1.f, 930.88, 2409.2),
-				Math::RemapValClamped(charge, 0.0f, 1.f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 930.88, 2409.2),
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 0.483f, 0.085f)
 			};
 
 			break;
@@ -1127,21 +1127,14 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 {
 	if (!Vars::Aimbot::Projectile::SplashPrediction.Value) { return false; }
 
-	// TODO: I have no clue if these values are accurate
 	std::optional<float> splashRadius;
-	switch (pWeapon->GetClassID())
-	{
-		case ETFClassID::CTFRocketLauncher:
-		case ETFClassID::CTFRocketLauncher_AirStrike:
-		case ETFClassID::CTFRocketLauncher_Mortar:
-		{
-			//I haven't tested if this is unaccurate in actual gameplay but it still hits
-			splashRadius = 160.f;
-			break;
-		}
-	//Flares
-	//Stickybombs
-	}
+
+	splashRadius = Utils::ATTRIB_HOOK_FLOAT(148, "mult_explosion_radius", pWeapon, 0, 1);
+	float splashRadiusModified = splashRadius.value() * 0.8; //this value will only be used if you are blast jumping with the air strike
+
+	//check if you are rocket jumping, and change the value appropriately, because the air strike blast radius changes if you are rocket jumping.
+	if (pLocal->GetCondEx2() & TFCondEx2_BlastJumping)
+		splashRadius = splashRadiusModified;
 
 	// Don't do it with the direct hit or if the splash radius is unknown
 	if (pWeapon->GetClassID() == ETFClassID::CTFRocketLauncher_DirectHit || !splashRadius) { return false; }
