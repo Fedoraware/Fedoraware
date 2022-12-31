@@ -48,7 +48,7 @@ public:
 	virtual void AddLineOverlay(const Vec3& origin, const Vec3& dest, int r, int g, int b, bool noDepthTest, float duration) = 0;
 	virtual void AddTextOverlay(const Vec3& origin, float duration, PRINTF_FORMAT_STRING const char* format, ...) = 0;
 	virtual void AddTextOverlay(const Vec3& origin, int line_offset, float duration, PRINTF_FORMAT_STRING const char* format, ...) = 0;
-	virtual void AddScreenTextOverlay(float flXPos, float flYPos, float flDuration, int r, int g, int b, int a, const char* text) = 0;
+	virtual void AddScreenTextOverlay(float flXPos, float flYPos, int line_offset, float flDuration, int r, int g, int b, int a, const char* text) = 0;
 	virtual void AddSweptBoxOverlay(const Vec3& start, const Vec3& end, const Vec3& mins, const Vec3& max, const Vec3& angles, int r, int g, int b, int a, float flDuration) = 0;
 	virtual void AddGridOverlay(const Vec3& origin) = 0;
 	virtual int ScreenPosition(const Vec3& point, Vec3& screen) = 0;

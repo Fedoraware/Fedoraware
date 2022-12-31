@@ -330,9 +330,11 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 	{
 		int yoffset = 10, xoffset = 10;
 
-			// header
 		{
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player");
+			g_Draw.String(FONT_INDICATORS, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware");
+		} 
+		{
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player"); // header
 		}
 		// alive
 		{
