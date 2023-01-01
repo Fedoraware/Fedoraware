@@ -30,6 +30,7 @@ void CMisc::RunPre(CUserCmd* pCmd, bool* pSendPacket)
 		AntiBackstab(pLocal, pCmd);
 		ViewmodelFlip(pCmd, pLocal);
 		AutoPeek(pCmd, pLocal);
+		StickySpam(pLocal, pCmd);
 	}
 
 	AntiAFK(pCmd);
@@ -399,6 +400,35 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 	{
 		G::FreecamActive = false;
 	}
+}
+
+void CMisc::StickySpam(CBaseEntity* pLocal, CUserCmd* pCmd) {
+	static KeyHelper kSpam{ &Vars::Misc::StickySpamKey.Value };
+	if (!G::WeaponCanAttack || !kSpam.Down()) { return; }
+
+	CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
+	const int iAmmo = pWeapon->GetClip1();
+
+	if (iAmmo == 0) { return; }
+	if (pWeapon->GetWeaponID() != TF_WEAPON_PIPEBOMBLAUNCHER) { return; }
+	
+	const float flChargingTime = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
+	const float flCharge = Math::RemapValClamped(flChargingTime, 0.f, 4.f, 0, 100);
+
+	//Utils::ConLog("CMisc::StickySpam", tfm::format("flCharge			:	%.0f", flCharge).c_str(), { 132, 255, 201, 255 });
+	//Utils::ConLog("CMisc::StickySpam", tfm::format("flChargeT		:	%.1f", flChargingTime).c_str(), { 132, 255, 201, 255 });
+
+	static bool bHasStarted = false;
+	static bool bFlip = false;
+
+	if (flCharge >= Vars::Misc::StickyChargePercent.Value && bHasStarted) { bFlip = false; }
+	else { bFlip = true; }
+
+	if (bFlip) { pCmd->buttons |= IN_ATTACK; bHasStarted = true; }
+	else { pCmd->buttons &= ~IN_ATTACK; bHasStarted = false; }
+
+	//Utils::ConLog("CMisc::StickySpam", tfm::format("bFlip				:	%d", bFlip).c_str(), { 132, 255, 201, 255 });
+	//Utils::ConLog("CMisc::StickySpam", tfm::format("bHasStarted		:	%d\n", bFlip).c_str(), { 132, 255, 201, 255 });
 }
 
 void CMisc::RageRetry(CBaseEntity* pLocal)

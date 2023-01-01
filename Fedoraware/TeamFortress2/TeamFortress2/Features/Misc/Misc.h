@@ -10,6 +10,7 @@ class CMisc
 	void ExtendFreeze(CBaseEntity* pLocal);
 	void Freecam(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void RageRetry(CBaseEntity* pLocal);
+	void StickySpam(CBaseEntity* pLocal, CUserCmd* pCmd);
 	void AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd);
 	void LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);

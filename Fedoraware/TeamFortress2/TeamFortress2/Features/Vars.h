@@ -655,6 +655,8 @@ namespace Vars
 		inline CVar<int> NoPush{ 0 };	//	0 off, 1 on, 2 on while not afk, 3 semi while afk
 		inline CVar<bool> EdgeJump{ false };
 		inline CVar<bool> StoreStatistics{ false };
+		inline CVar<int> StickySpamKey{ 0x0 };
+		inline CVar<int> StickyChargePercent{ 0 };
 		inline CVar<int> EdgeJumpKey{ VK_MENU };
 		inline CVar<bool> AntiAFK{ false };
 		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
