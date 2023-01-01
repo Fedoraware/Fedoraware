@@ -1133,7 +1133,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	float splashRadiusModified = splashRadius.value() * 0.8; //this value will only be used if you are blast jumping with the air strike
 
 	//check if you are rocket jumping, and change the value appropriately, because the air strike blast radius changes if you are rocket jumping.
-	if (pLocal->GetCondEx2() & TFCondEx2_BlastJumping)
+	if (pLocal->GetCondEx2() & TFCondEx2_BlastJumping && G::CurItemDefIndex == Soldier_m_TheAirStrike)
 		splashRadius = splashRadiusModified;
 
 	// Don't do it with the direct hit or if the splash radius is unknown
