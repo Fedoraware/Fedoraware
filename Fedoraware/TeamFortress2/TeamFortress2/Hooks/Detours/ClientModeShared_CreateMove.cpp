@@ -163,7 +163,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
-			F::Misc.RunMid(pCmd, nOldFlags);
+			F::Misc.RunMid(pCmd, nOldGroundEnt);
 		}
 		F::EnginePrediction.End(pCmd);
 
