@@ -480,6 +480,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			SAVE_VAR(Vars::Misc::Directional);
 			SAVE_VAR(Vars::Misc::StickySpamKey);
 			SAVE_VAR(Vars::Misc::StickyChargePercent);
+			SAVE_VAR(Vars::Misc::InfiniteEatKey);
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::EdgeJumpKey);
 			SAVE_VAR(Vars::Misc::StoreStatistics);
@@ -867,6 +868,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			LOAD_VAR(Vars::Misc::NoPush);
 			LOAD_VAR(Vars::Misc::StickySpamKey);
 			LOAD_VAR(Vars::Misc::StickyChargePercent);
+			LOAD_VAR(Vars::Misc::InfiniteEatKey);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::EdgeJumpKey);
 			LOAD_VAR(Vars::Misc::StoreStatistics);

@@ -1717,6 +1717,7 @@ void CMenu::MenuMisc()
 
 
 			SectionTitle("Automation");
+			InputKeybind("Infinite Sandwich key", Vars::Misc::InfiniteEatKey, true);  HelpMarker("Glutton bind, none for off.");
 			InputKeybind("Sticky Spam key", Vars::Misc::StickySpamKey, true);  HelpMarker("Sticky Spam Bind, none for off.");
 			if (Vars::Misc::StickySpamKey.Value) {
 				WSlider("Sticky Charge Percent", &Vars::Misc::StickyChargePercent.Value, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);

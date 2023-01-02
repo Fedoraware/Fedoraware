@@ -31,6 +31,7 @@ void CMisc::RunPre(CUserCmd* pCmd, bool* pSendPacket)
 		ViewmodelFlip(pCmd, pLocal);
 		AutoPeek(pCmd, pLocal);
 		StickySpam(pLocal, pCmd);
+		Glutton(pLocal, pCmd);
 	}
 
 	AntiAFK(pCmd);
@@ -429,6 +430,23 @@ void CMisc::StickySpam(CBaseEntity* pLocal, CUserCmd* pCmd) {
 
 	//Utils::ConLog("CMisc::StickySpam", tfm::format("bFlip				:	%d", bFlip).c_str(), { 132, 255, 201, 255 });
 	//Utils::ConLog("CMisc::StickySpam", tfm::format("bHasStarted		:	%d\n", bFlip).c_str(), { 132, 255, 201, 255 });
+}
+
+void CMisc::Glutton(CBaseEntity* pLocal, CUserCmd* pCmd) {
+	static KeyHelper kGlutton{ &Vars::Misc::InfiniteEatKey.Value };
+	if (!pLocal->IsAlive() || !kGlutton.Down()) { return; }
+
+	CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
+	const int iWeaponID = pWeapon->GetWeaponID();
+	if (iWeaponID != TF_WEAPON_LUNCHBOX) { return; }
+
+	pCmd->buttons |= IN_ATTACK;
+
+	static float flLastSendTime = I::GlobalVars->curtime;		//	dont get disconnected
+	if (fabsf(I::GlobalVars->curtime - flLastSendTime) > .5f) {
+		I::EngineClient->ClientCmd_Unrestricted("taunt");
+		flLastSendTime = I::GlobalVars->curtime;
+	}
 }
 
 void CMisc::RageRetry(CBaseEntity* pLocal)
