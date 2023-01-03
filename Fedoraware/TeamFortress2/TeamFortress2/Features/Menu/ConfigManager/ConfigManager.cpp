@@ -1243,6 +1243,8 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_VAR(Vars::Visuals::SkyModulation);
 		SAVE_VAR(Vars::Visuals::PropWireframe);
 		SAVE_VAR(Vars::Visuals::SkyboxChanger);
+		SAVE_VAR(Vars::Visuals::ParticleColors);
+		SAVE_VAR(Vars::Visuals::RGBParticles);
 		SAVE_VAR(Vars::Visuals::BulletTracer);
 		SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 		SAVE_VAR(Vars::Visuals::AimbotViewmodel);
@@ -1331,6 +1333,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_OTHER(Colors::WorldModulation);
 		SAVE_OTHER(Colors::SkyModulation);
 		SAVE_OTHER(Colors::StaticPropModulation);
+		SAVE_OTHER(Colors::ParticleColor);
 		SAVE_OTHER(Colors::FOVCircle);
 		SAVE_OTHER(Colors::Bones);
 		SAVE_OTHER(Colors::BulletTracer);
@@ -1623,6 +1626,8 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::SkyModulation);
 		LOAD_VAR(Vars::Visuals::PropWireframe);
 		LOAD_VAR(Vars::Visuals::SkyboxChanger);
+		LOAD_VAR(Vars::Visuals::ParticleColors);
+		LOAD_VAR(Vars::Visuals::RGBParticles);
 		LOAD_VAR(Vars::Visuals::ParticleTracer);
 		LOAD_VAR(Vars::Visuals::BulletTracer);
 		LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
@@ -1717,6 +1722,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_OTHER(Colors::WorldModulation);
 		LOAD_OTHER(Colors::SkyModulation);
 		LOAD_OTHER(Colors::StaticPropModulation);
+		LOAD_OTHER(Colors::ParticleColor);
 		LOAD_OTHER(Colors::FOVCircle);
 		LOAD_OTHER(Colors::Bones);
 		LOAD_OTHER(Colors::BulletTracer);
