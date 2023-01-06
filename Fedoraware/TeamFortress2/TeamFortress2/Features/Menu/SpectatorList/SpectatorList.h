@@ -14,7 +14,7 @@ private:
 	};
 
 	std::vector<Spectator_t> Spectators;
-	int SpecListW = 160, SpecListTitleBarH = 24;
+	int SpecListW = 300, SpecListTitleBarH = 12;
 
 public:
 	int SpecListX = 30, SpecListY = 100;
