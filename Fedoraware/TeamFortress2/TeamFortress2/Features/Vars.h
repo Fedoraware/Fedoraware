@@ -538,6 +538,8 @@ namespace Vars
 		inline CVar<bool> BulletTracer{ false };
 		inline CVar<bool> AimbotViewmodel{ false };
 		inline CVar<bool> ViewmodelSway{ false };
+		inline CVar<float> ViewmodelSwayScale{ 5.f };
+		inline CVar<float> ViewmodelSwayInterp{ 0.05f };
 		inline CVar<bool> MoveSimLine{ false };
 		inline CVar<bool> MoveSimSeperators{ false };
 		inline CVar<int> SeperatorLength{ 12 };

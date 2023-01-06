@@ -1166,6 +1166,11 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 					WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
+					if (Vars::Visuals::ViewmodelSway.Value)
+					{
+						WSlider("Viewmodel Sway Scale", &Vars::Visuals::ViewmodelSwayScale.Value, 0.01, 5, "%.2f");
+						WSlider("Viewmodel Sway Interp", &Vars::Visuals::ViewmodelSwayInterp.Value, 0.01, 1, "%.2f"); HelpMarker("How long until the viewmodel returns to its original position (in seconds)");
+					}
 					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
 					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 					if (Vars::Visuals::MoveSimSeperators.Value)
