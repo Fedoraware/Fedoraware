@@ -383,11 +383,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				return false;
 			}
 
-			for (int n = 0; n < TIME_TO_TICKS(fLatency); n++) {
-				//ik this causes issues with maxtime but I prefer this behaviour
-				F::MoveSim.RunTick(moveData, absOrigin);
-			}
-
 			for (int n = 0; n < TIME_TO_TICKS(maxTime); n++)
 			{
 				F::MoveSim.RunTick(moveData, absOrigin);
@@ -400,12 +395,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					if (Vars::Aimbot::Projectile::PredictObscured.Value) { continue; }
 					else { break; }
 				} // don't remove.
-
-				// we have found a point.
-				if (bNeedsTimeCheck)
-				{
-					if (TICKS_TO_TIME(n - 1) > (pLocal->GetAbsOrigin().DistTo(vPredictedPos) / projInfo.m_flVelocity)) { break; }	//	lol
-				}
 
 				//const Vec3 vAimDelta = predictor.m_pEntity->GetAbsOrigin() - aimPosition;
 				//vPredictedPos.x += abs(vAimDelta.x);
@@ -464,6 +453,10 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 				if (!CalcProjAngle(vLocalPos, vPredictedPos, projInfo, out))
 				{
 					break;
+				}
+
+				if (TIME_TO_TICKS(out.m_flTime) > (n + 1)) {
+					continue;
 				}
 
 				out.m_flTime += fLatency;

@@ -1538,8 +1538,8 @@ void CMenu::MenuHvH()
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
 			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 2;
-			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 22, "%d"); HelpMarker("How many ticks to shift");
-			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 22, "%d");
+			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 21, "%d"); HelpMarker("How many ticks to shift");
+			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
 			if (Vars::Misc::CL_Move::SEnabled.Value)
 			{
