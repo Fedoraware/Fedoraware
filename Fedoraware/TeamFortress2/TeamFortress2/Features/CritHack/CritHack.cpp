@@ -95,7 +95,7 @@ bool CCritHack::NoRandomCrits(CBaseCombatWeapon* pWeapon)
 		case TF_WEAPON_BUFF_ITEM:
 		//pyro
 		case TF_WEAPON_JAR_GAS:
-		case TF_WEAPON_FLAMETHROWER_ROCKET:
+		case TF_WEAPON_FLAME_BALL:
 		case TF_WEAPON_ROCKETPACK:
 		//demo
 		case TF_WEAPON_PARACHUTE: //also for soldier
