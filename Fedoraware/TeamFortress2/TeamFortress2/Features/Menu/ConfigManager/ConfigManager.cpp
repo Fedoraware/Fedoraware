@@ -1245,6 +1245,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_VAR(Vars::Visuals::SkyboxChanger);
 		SAVE_VAR(Vars::Visuals::ParticleColors);
 		SAVE_VAR(Vars::Visuals::RGBParticles);
+		SAVE_VAR(Vars::Visuals::RainbowSpeed);
 		SAVE_VAR(Vars::Visuals::BulletTracer);
 		SAVE_VAR(Vars::Visuals::BulletTracerRainbow);
 		SAVE_VAR(Vars::Visuals::AimbotViewmodel);
@@ -1628,6 +1629,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::SkyboxChanger);
 		LOAD_VAR(Vars::Visuals::ParticleColors);
 		LOAD_VAR(Vars::Visuals::RGBParticles);
+		LOAD_VAR(Vars::Visuals::RainbowSpeed);
 		LOAD_VAR(Vars::Visuals::ParticleTracer);
 		LOAD_VAR(Vars::Visuals::BulletTracer);
 		LOAD_VAR(Vars::Visuals::BulletTracerRainbow);
