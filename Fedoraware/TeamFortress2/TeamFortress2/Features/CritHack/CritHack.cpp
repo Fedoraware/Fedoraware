@@ -77,6 +77,52 @@ bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 	return false;
 }
 
+bool CCritHack::NoRandomCrits(CBaseCombatWeapon* pWeapon)
+{
+	float CritChance = Utils::ATTRIB_HOOK_FLOAT(1, "mult_crit_chance", pWeapon, 0, 1);
+	if (CritChance == 0)
+	{
+		return true;
+	}
+	else 
+	return false;
+	//list of weapons that cant random crit, but dont have the attribute for it
+	switch (pWeapon->GetWeaponID())
+	{
+		//scout
+		case TF_WEAPON_JAR_MILK:
+		//soldier
+		case TF_WEAPON_BUFF_ITEM:
+		//pyro
+		case TF_WEAPON_JAR_GAS:
+		case TF_WEAPON_FLAMETHROWER_ROCKET:
+		case TF_WEAPON_ROCKETPACK:
+		//demo
+		case TF_WEAPON_PARACHUTE: //also for soldier
+		//heavy
+		case TF_WEAPON_LUNCHBOX:
+		//engineer
+		case TF_WEAPON_PDA_ENGINEER_BUILD:
+		case TF_WEAPON_PDA_ENGINEER_DESTROY:
+		case TF_WEAPON_LASER_POINTER:
+		//medic
+		case TF_WEAPON_MEDIGUN:
+		//sniper
+		case TF_WEAPON_SNIPERRIFLE:
+		case TF_WEAPON_SNIPERRIFLE_CLASSIC:
+		case TF_WEAPON_SNIPERRIFLE_DECAP:
+		case TF_WEAPON_COMPOUND_BOW:
+		case TF_WEAPON_JAR:
+		//spy
+		case TF_WEAPON_KNIFE:
+		case TF_WEAPON_PDA_SPY_BUILD:
+		case TF_WEAPON_PDA_SPY:
+			return true;
+			break;
+		default: return false; break;
+	}
+}
+
 bool CCritHack::ShouldCrit()
 {
 	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
@@ -322,19 +368,29 @@ void CCritHack::Draw()
 	{
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255, 255, 255, 255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
 	}
+	//Can this weapon do random crits?
+	if (NoRandomCrits(pWeapon) == true)
+	{
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255, 95, 95, 255 }, ALIGN_CENTERHORIZONTAL, L"No Random Crits");
+	}
 	// Are we currently forcing crits?
-	if (ShouldCrit())
+	if (ShouldCrit() && NoRandomCrits(pWeapon) == false)
 	{
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 70, 190, 50, 255 }, ALIGN_CENTERHORIZONTAL, "Forcing crits...");
 	}
-	if (CritTicks.size() == 0)
+	//crit banned check
+	if (CritTicks.size() == 0 && NoRandomCrits(pWeapon) == false)
 	{
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255,0,0,255 }, ALIGN_CENTERHORIZONTAL, L"Crit Banned");
 	}
 	static auto tf_weapon_criticals_bucket_cap = g_ConVars.FindVar("tf_weapon_criticals_bucket_cap");
 	const float bucketCap = tf_weapon_criticals_bucket_cap->GetFloat();
 	const std::wstring bucketstr = L"Bucket: " + std::to_wstring(static_cast<int>(bucket)) + L"/" + std::to_wstring(static_cast<int>(bucketCap));
-	g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketstr.c_str());
+	// crit bucket (this sucks)
+	if (NoRandomCrits(pWeapon) == false)	
+	{
+			g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketstr.c_str()); 
+	}
 	int w, h;
 	I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts.at(FONT_INDICATORS).dwFont, bucketstr.c_str(), w, h);
 	if (w > longestW)
