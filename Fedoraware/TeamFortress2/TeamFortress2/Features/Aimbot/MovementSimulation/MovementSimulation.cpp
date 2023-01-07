@@ -191,6 +191,10 @@ void CMovementSimulation::FillVelocities()
 				continue;
 			}
 
+			if (G::ChokeMap[pEntity->GetIndex()]) {	//	dont recache the same angle for lagging players.
+				continue;
+			}
+
 			const Vec3 vVelocity = pEntity->GetVelocity();
 			m_Velocities[iEntIndex].push_front(vVelocity);
 
