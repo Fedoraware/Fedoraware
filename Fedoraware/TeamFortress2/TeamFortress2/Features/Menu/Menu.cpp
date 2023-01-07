@@ -1157,6 +1157,10 @@ void CMenu::MenuVisuals()
 					{
 						WToggle("Rainbow Particles", &Vars::Visuals::RGBParticles.Value);
 					}
+					if (Vars::Visuals::RGBParticles.Value)
+					{
+						WSlider("Rainbow Speed", &Vars::Visuals::RainbowSpeed.Value, 0.1, 5, "%.2f");
+					}
 					ColorPickerL("Particle Color", Colors::ParticleColor);
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
 					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
