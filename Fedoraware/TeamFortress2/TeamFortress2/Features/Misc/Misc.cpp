@@ -151,18 +151,20 @@ void CMisc::AntiAFK(CUserCmd* pCmd)
 void CMisc::WeaponSway()
 {
 	static ConVar* cl_wpn_sway_interp = g_ConVars.FindVar("cl_wpn_sway_interp");
-	if (cl_wpn_sway_interp)
+	static ConVar* cl_wpn_sway_scale = g_ConVars.FindVar("cl_wpn_sway_scale");
+	if (cl_wpn_sway_interp || cl_wpn_sway_scale)
+	{
 	{
 		if (Vars::Visuals::ViewmodelSway.Value)
 		{
-			cl_wpn_sway_interp->SetValue(0.05f);
+			cl_wpn_sway_interp->SetValue(Vars::Visuals::ViewmodelSwayInterp.Value);
+			cl_wpn_sway_scale->SetValue(Vars::Visuals::ViewmodelSwayScale.Value);
 		}
 		else
 		{
-			if (cl_wpn_sway_interp->GetFloat())
-			{
 				cl_wpn_sway_interp->SetValue(0.0f);
-			}
+				cl_wpn_sway_scale->SetValue(0.0f);
+		}
 		}
 	}
 }

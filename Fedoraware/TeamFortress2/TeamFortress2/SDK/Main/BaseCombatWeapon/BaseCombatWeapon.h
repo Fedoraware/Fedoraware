@@ -218,7 +218,7 @@ public: //Everything else, lol
 
 	__inline bool DoSwingTrace(CGameTrace& Trace)
 	{
-		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 453)(Trace);
+		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 454)(Trace);
 	}
 
 	__inline int LookupAttachment(const char* pAttachmentName)
@@ -246,7 +246,7 @@ public: //Everything else, lol
 
 	__inline bool CanFireRandomCriticalShot(const float flCritChance)
 	{
-		return GetVFunc<bool(__thiscall*)(decltype(this), float)>(this, 423)(this, flCritChance);
+		return GetVFunc<bool(__thiscall*)(decltype(this), float)>(this, 424)(this, flCritChance);
 	}
 
 	__inline bool CanWeaponHeadShot()
