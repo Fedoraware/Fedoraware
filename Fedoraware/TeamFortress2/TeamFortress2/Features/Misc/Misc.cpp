@@ -407,7 +407,7 @@ void CMisc::Freecam(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CMisc::StickySpam(CBaseEntity* pLocal, CUserCmd* pCmd) {
 	static KeyHelper kSpam{ &Vars::Misc::StickySpamKey.Value };
-	if (!G::WeaponCanAttack || !kSpam.Down()) { return; }
+	if (!G::WeaponCanAttack || !kSpam.Down() || !pLocal->IsAlive()) { return; }
 
 	CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
 	const int iAmmo = pWeapon->GetClip1();
