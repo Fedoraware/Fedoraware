@@ -105,11 +105,12 @@ void CSpectatorList::DrawDefault()
 
 	// 38 to 43
 	g_Draw.Rect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, { 43, 43, 45, 250 });
+	g_Draw.Rect(SpecListX, SpecListY, SpecListW, SpecListTitleBarH, Vars::Menu::Colors::MenuAccent);
 
-	g_Draw.String(FONT_MENU,
+	g_Draw.String(FONT_MENU, // FONT_IMGUI - dont know where this goes to or what it is but it looks poop
 				  SpecListX + (SpecListW / 2),
 				  SpecListY + (SpecListTitleBarH / 2),
-				  Vars::Menu::Colors::MenuAccent,
+		                   {255, 255, 255, 255},
 				  ALIGN_CENTER,
 				  "%hs", "Spectators");
 
