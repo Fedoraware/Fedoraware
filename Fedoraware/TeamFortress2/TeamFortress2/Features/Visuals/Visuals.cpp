@@ -105,6 +105,7 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal){
 	{
 		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255 }, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
 		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255 }, ALIGN_DEFAULT,	"ping scoreboard : %d", flLatencyScoreBoard);
+		g_Draw.String(FONT_INDICATORS, x, y + h - nTextOffset, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware"); // make this hoe draggable
 	}
 }
 
@@ -331,7 +332,7 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 		int yoffset = 10, xoffset = 10;
 
 		{
-			g_Draw.String(FONT_INDICATORS, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware");
+			//g_Draw.String(FONT_INDICATORS, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware"); ( fuck you )
 		} 
 		{
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player"); // header
