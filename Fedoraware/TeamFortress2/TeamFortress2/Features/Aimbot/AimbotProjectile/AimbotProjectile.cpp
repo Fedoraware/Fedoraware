@@ -583,9 +583,13 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 	const int iSlot = pWeapon->GetSlot();
 
 	static KeyHelper kBounce{ &Vars::Aimbot::Projectile::BounceKey.Value };
+	static KeyHelper critHack{ &Vars::CritHack::CritKey.Value };
 
 	if (kBounce.Down())	//	player demands we aim at feet (fetishist ngl)
 	{ iAimMethod = 2; }
+	
+	if (critHack.Down() && pWeapon->GetWeaponID() == TF_WEAPON_DIRECTHIT) // aim at body with crithack on the direct hit (very minor improvement to the already shitty proj aimbot)
+	{ iAimMethod = 1;  }
 
 	while (iAimMethod == 3)
 	{
