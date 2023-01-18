@@ -561,7 +561,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 			
-			if (g_EntityCache.IsFriend(nIndex))
+			if (g_EntityCache.IsFriend(nIndex) && Vars::ESP::Players::FriendCond.Value)
 			{
 				size_t FONT = FONT_ESP_COND;
 				int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
