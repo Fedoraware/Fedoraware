@@ -1499,12 +1499,16 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Bonked");
 	}
 
-	if (nCond & TFCond_Kritzkrieged || nCond & TFCond_MiniCrits ||
+	if (nCond & TFCond_Kritzkrieged || 
 		nCondEx & TFCondEx_CritCanteen || nCondEx & TFCondEx_CritOnFirstBlood || nCondEx & TFCondEx_CritOnWin ||
 		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
 		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
 	{
 		szCond.emplace_back(L"Crit boosted");
+	}
+	if (nCond & TFCond_MiniCrits)
+	{
+	 szCond.emplace_back(L"Mini-Crits");
 	}
 
 	if (nCond & TFCond_Cloaked)
