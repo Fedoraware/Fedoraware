@@ -77,6 +77,8 @@ namespace Vars
 			inline CVar<int> IgnoreOptions{ 0b0000000 }; //disguised, fakelagging players, vaccinator, taunting, friends, deadringer,cloaked, invul
 			inline CVar<int> TickTolerance{ 7 };
 			inline CVar<bool> BAimLethal{ false }; // This is in global cause i remmebered hunterman exists
+			inline CVar<int> BaimKey{ VK_LCONTROL };
+			inline CVar<bool> BaimAlways{ false };
 			inline CVar<bool> showHitboxes{ false }; // original codenz
 			inline CVar<bool> ClearPreviousHitbox{ false };
 			inline CVar<int> HitboxLifetime{ 2 };
