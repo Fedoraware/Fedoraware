@@ -30,6 +30,18 @@ struct SpriteRenderInfo_t
     void* m_pParticles{};
 };
 
+//rainbow speed!!! separated from other rainbow shit so that it doesnt mess with everything (pasted from utils)
+__inline Color_t Rainbow()
+{
+    return
+    {
+        static_cast<byte>(floor(sin(I::GlobalVars->curtime * Vars::Visuals::RainbowSpeed.Value + 0.0f) * 127.0f + 128.0f)),
+        static_cast<byte>(floor(sin(I::GlobalVars->curtime * Vars::Visuals::RainbowSpeed.Value + 2.0f) * 127.0f + 128.0f)),
+        static_cast<byte>(floor(sin(I::GlobalVars->curtime * Vars::Visuals::RainbowSpeed.Value + 4.0f) * 127.0f + 128.0f)),
+        255
+    };
+};
+
 MAKE_HOOK(C_OP_RenderSprites_RenderSpriteCard, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 28 56 8B 75 10 57 8B 7D 14 8B C7 99 83 E7 03 83 E2 03"), void, __fastcall, 
         void* ecx, void* edx, void* meshBuilder, void* pCtx, SpriteRenderInfo_t& info, int hParticle, void* pSortList, void* pCamera)
 {
@@ -38,9 +50,9 @@ MAKE_HOOK(C_OP_RenderSprites_RenderSpriteCard, g_Pattern.Find(L"client.dll", L"5
 
     if (Vars::Visuals::ParticleColors.Value == true)
     {
-        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 0].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Utils::Rainbow().r : colors.r); //red
-        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 1].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Utils::Rainbow().g : colors.g); //green
-        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 2].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Utils::Rainbow().b : colors.b); //blue
+        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 0].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Rainbow().r : colors.r); //red
+        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 1].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Rainbow().g : colors.g); //green
+        info.m_pRGB[((hParticle / 4) * info.m_nRGBStride) + 2].m128_f32[hParticle & 0x3] = Color::TOFLOAT(rainbow ? Rainbow().b : colors.b); //blue
     }
 
     Hook.Original<FN>()(ecx, edx, meshBuilder, pCtx, info, hParticle, pSortList, pCamera);

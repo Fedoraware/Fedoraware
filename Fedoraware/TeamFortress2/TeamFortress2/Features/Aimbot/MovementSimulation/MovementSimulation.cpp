@@ -191,6 +191,10 @@ void CMovementSimulation::FillVelocities()
 				continue;
 			}
 
+			if (G::ChokeMap[pEntity->GetIndex()]) {	//	dont recache the same angle for lagging players.
+				continue;
+			}
+
 			const Vec3 vVelocity = pEntity->GetVelocity();
 			m_Velocities[iEntIndex].push_front(vVelocity);
 
@@ -265,7 +269,7 @@ bool CMovementSimulation::StrafePrediction()
 		const int iSamples = fmin(Vars::Aimbot::Projectile::StrafePredictionSamples.Value, mVelocityRecord.size());
 		if (!iSamples) { return false; }
 
-		flInitialYaw = Math::VelocityToAngles(m_MoveData.m_vecVelocity).y;
+		flInitialYaw = m_MoveData.m_vecViewAngles.y;		//Math::VelocityToAngles(m_MoveData.m_vecVelocity).y;
 		float flCompareYaw = flInitialYaw;
 
 		int i = 0;
@@ -286,6 +290,7 @@ bool CMovementSimulation::StrafePrediction()
 
 		if (fabsf(flAverageYaw) < Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value)
 		{
+			flAverageYaw = 0;
 			return false;
 		}
 

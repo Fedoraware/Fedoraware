@@ -1157,6 +1157,10 @@ void CMenu::MenuVisuals()
 					{
 						WToggle("Rainbow Particles", &Vars::Visuals::RGBParticles.Value);
 					}
+					if (Vars::Visuals::RGBParticles.Value)
+					{
+						WSlider("Rainbow Speed", &Vars::Visuals::RainbowSpeed.Value, 0.1, 5, "%.2f");
+					}
 					ColorPickerL("Particle Color", Colors::ParticleColor);
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
 					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
@@ -1166,6 +1170,11 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
 					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 					WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
+					if (Vars::Visuals::ViewmodelSway.Value)
+					{
+						WSlider("Viewmodel Sway Scale", &Vars::Visuals::ViewmodelSwayScale.Value, 0.01, 5, "%.2f");
+						WSlider("Viewmodel Sway Interp", &Vars::Visuals::ViewmodelSwayInterp.Value, 0.01, 1, "%.2f"); HelpMarker("How long until the viewmodel returns to its original position (in seconds)");
+					}
 					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
 					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
 					if (Vars::Visuals::MoveSimSeperators.Value)
@@ -1538,8 +1547,8 @@ void CMenu::MenuHvH()
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
 			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 2;
-			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 22, "%d"); HelpMarker("How many ticks to shift");
-			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 22, "%d");
+			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 21, "%d"); HelpMarker("How many ticks to shift");
+			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
 			if (Vars::Misc::CL_Move::SEnabled.Value)
 			{

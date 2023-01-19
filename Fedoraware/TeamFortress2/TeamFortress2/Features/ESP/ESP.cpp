@@ -560,6 +560,17 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 			}
+			
+			if (g_EntityCache.IsFriend(nIndex) && Vars::ESP::Players::FriendCond.Value)
+			{
+				size_t FONT = FONT_ESP_COND;
+				int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
+				std::vector<std::wstring> cond_strings = GetPlayerConds(Player);
+
+			g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, 
+				L"FRIEND"); // ez pz lemon squeezy
+			nTextOffset += g_Draw.m_vecFonts[FONT_ESP_COND].nTall;
+		    }
 
 			// Health bar
 			if (Vars::ESP::Players::HealthBar.Value)
@@ -597,7 +608,15 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				if (Vars::ESP::Players::HealthText.Value == 2)
 				{
-					g_Draw.String(FONT, x - 2, (y + h) - (ratio * h) - 15, nHealth > nMaxHealth ? Colors::Overheal : healthColor, ALIGN_CENTERHORIZONTAL, "%d", nHealth);
+					if (Vars::ESP::Players::Choked.Value) {					
+						nTextOffset = 10; 
+					}
+					if (nHealth > nMaxHealth) {
+						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Colors::Overheal, ALIGN_CENTERHORIZONTAL, "+%d", nHealth - nMaxHealth);
+					} 
+					else {
+						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Colors::White, ALIGN_CENTERHORIZONTAL, "%d", nHealth); 
+					}
 				}
 
 				x += 1;
@@ -860,11 +879,11 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 					building->GetAmmoCount(iShells, iMaxShells, iRockets, iMaxRockets);
 
-					if (iShells < iMaxShells)
-						condStrings.emplace_back(L"Needs Ammo");
+					if (iShells == 0)
+						condStrings.emplace_back(L"No Ammo");
 
-					if (iRockets < iMaxRockets)
-						condStrings.emplace_back(L"Needs Rockets");
+					if (!bIsMini && iRockets == 0)
+						condStrings.emplace_back(L"No Rockets");
 				}
 
 				if (!condStrings.empty())
@@ -1480,12 +1499,16 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Bonked");
 	}
 
-	if (nCond & TFCond_Kritzkrieged || nCond & TFCond_MiniCrits ||
+	if (nCond & TFCond_Kritzkrieged || 
 		nCondEx & TFCondEx_CritCanteen || nCondEx & TFCondEx_CritOnFirstBlood || nCondEx & TFCondEx_CritOnWin ||
 		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
 		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
 	{
 		szCond.emplace_back(L"Crit boosted");
+	}
+	if (nCond & TFCond_MiniCrits)
+	{
+	 szCond.emplace_back(L"Mini-Crits");
 	}
 
 	if (nCond & TFCond_Cloaked)

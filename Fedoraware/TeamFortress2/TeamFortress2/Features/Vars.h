@@ -246,6 +246,7 @@ namespace Vars
 			inline CVar<bool> WeaponText{ false };
 			inline CVar<int> HealthText{ 0 }; // 0 - Off, 1 - Default, 2 - Bar
 			inline CVar<bool> Cond{ false };
+			inline CVar<bool> FriendCond{ false };
 			inline CVar<bool> HealthBar{ false };
 			inline CVar<int> HealthBarStyle{ 0 }; // 0 - gradient, 1 - old
 			inline CVar<int> Box{ 0 }; //0 - OFF, 1 - Simple, 2 - Corners
@@ -537,9 +538,12 @@ namespace Vars
 		inline CVar<bool> SkyModulation{ false };
 		inline CVar<bool> ParticleColors{ false };
 		inline CVar<bool> RGBParticles{ false };
+		inline CVar<float> RainbowSpeed{ 1.f };
 		inline CVar<bool> BulletTracer{ false };
 		inline CVar<bool> AimbotViewmodel{ false };
 		inline CVar<bool> ViewmodelSway{ false };
+		inline CVar<float> ViewmodelSwayScale{ 5.f };
+		inline CVar<float> ViewmodelSwayInterp{ 0.05f };
 		inline CVar<bool> MoveSimLine{ false };
 		inline CVar<bool> MoveSimSeperators{ false };
 		inline CVar<int> SeperatorLength{ 12 };
