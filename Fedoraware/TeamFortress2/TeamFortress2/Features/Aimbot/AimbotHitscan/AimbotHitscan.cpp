@@ -154,6 +154,44 @@ std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseComba
 					}
 				}
 			}
+			else if (Vars::Aimbot::Global::BaimKey.Value)
+			{
+				if (GetAsyncKeyState(Vars::Aimbot::Global::BaimKey.Value)) // this is a really bad way of doing it for every weapon including the ambassador but i really cannot be bothered to find another way.
+				{
+					nHitbox = HITBOX_SPINE_1;
+				}
+
+				if (G::CurItemDefIndex == Spy_m_TheAmbassador || G::CurItemDefIndex ==
+					Spy_m_FestiveAmbassador)
+				{
+					const float flDistTo = pTarget->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin());
+					const int nAmbassadorBodyshotDamage = Math::RemapValClamped(flDistTo, 90, 900, 51, 18);
+
+					if (pTarget->GetHealth() < (nAmbassadorBodyshotDamage + 2)) 
+					{
+						nHitbox = HITBOX_SPINE_1;
+					}
+				}
+			}
+			else if (Vars::Aimbot::Global::BaimAlways.Value) // paste n repeat...
+			{
+				if (Vars::Aimbot::Global::BaimAlways.Value)
+				{
+					nHitbox = HITBOX_SPINE_1;
+				}
+				
+				if (G::CurItemDefIndex == Spy_m_TheAmbassador || G::CurItemDefIndex ==
+					Spy_m_FestiveAmbassador)
+				{
+					const float flDistTo = pTarget->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin());
+					const int nAmbassadorBodyshotDamage = Math::RemapValClamped(flDistTo, 90, 900, 51, 18);
+
+					if (pTarget->GetHealth() < (nAmbassadorBodyshotDamage + 2)) 
+					{
+						nHitbox = HITBOX_SPINE_1;
+					}
+				}
+			}
 
 			PriorityHitbox = nHitbox;
 
