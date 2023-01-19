@@ -348,6 +348,8 @@ void CMenu::MenuAimbot()
 			WToggle("Auto scope", &Vars::Aimbot::Hitscan::AutoScope.Value); HelpMarker("The aimbot will automatically scope in to shoot");
 			WToggle("Auto rev minigun", &Vars::Aimbot::Hitscan::AutoRev.Value); HelpMarker("Will rev heavy's minigun regardless of if aimbot has a target");
 			WToggle("Bodyaim if lethal", &Vars::Aimbot::Global::BAimLethal.Value); HelpMarker("The aimbot will aim for body when damage is lethal to it");
+			WToggle("Bodyaim Always", &Vars::Aimbot::Global::BaimAlways.Value); HelpMarker("Tell your hitbox selection up yours and always shoot at the targets body");
+			InputKeybind("Bodyaim key", Vars::Aimbot::Global::BaimKey); HelpMarker("Will always shoot at the targets body when you hold a key");
 			WToggle("Piss on Team", &Vars::Aimbot::Hitscan::ExtinguishTeam.Value); HelpMarker("Will aim at burning teammates with The Sydney Sleeper");
 
 			SectionTitle("Melee");
