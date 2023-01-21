@@ -1754,7 +1754,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_OTHER(Colors::bonecolor);
 		LOAD_OTHER(Colors::HitboxFace);
 		LOAD_OTHER(Colors::HitboxEdge);
-		LOAD_OTHER(Colors::FeetColor)
+		LOAD_OTHER(Colors::FeetColor);
 
 		LOAD_OTHER(Vars::Chams::Players::Local);
 		LOAD_OTHER(Vars::Chams::Players::FakeAng);
