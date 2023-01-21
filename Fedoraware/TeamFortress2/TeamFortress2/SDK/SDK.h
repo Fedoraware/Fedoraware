@@ -181,6 +181,7 @@ namespace Colors
 	inline Color_t FOVCircle =					{ 255, 255, 255, 10 };
 	inline Color_t Bones =						{ 255, 255, 255, 255 };
 	inline Color_t BulletTracer =				{ 255, 255, 255, 255 };
+	inline Color_t FeetColor =					{ 255, 150, 0, 255 }; //orange-ish color - like fire was my idea
 	inline Color_t FresnelBase =				{ 0,0,0,255 };
 	inline Color_t FresnelBaseHands =			{ 0,0,0,255 };
 	inline Color_t FresnelBaseWeps =			{ 0,0,0,255 };

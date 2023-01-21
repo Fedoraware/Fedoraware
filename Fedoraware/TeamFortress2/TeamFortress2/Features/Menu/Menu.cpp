@@ -581,6 +581,7 @@ void CMenu::MenuVisuals()
 						ColorPickerL("Overheal Colour", Colors::Overheal);
 					}
 					WCombo("Health Text###ESPPlayerHealthText", &Vars::ESP::Players::HealthText.Value, { "Off", "Default", "Bar" }); HelpMarker("Draws the player health as a text");
+					WToggle("Distance", &Vars::ESP::Players::Distance.Value); HelpMarker("Shows the distance from you to the player in meters");
 					WToggle("Condition", &Vars::ESP::Players::Cond.Value); HelpMarker("Will draw what conditions the player is under");
 					ColorPickerL("Condition colour", Colors::Cond);
 					WToggle("GUID", &Vars::ESP::Players::GUID.Value); HelpMarker("Show's the players Steam ID");
@@ -789,6 +790,7 @@ void CMenu::MenuVisuals()
 					WToggle("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.Value); HelpMarker("Will draw a box around the buildings name to make it stand out");
 					WToggle("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the building has");
 					WToggle("Health text###buildinghealth", &Vars::ESP::Buildings::Health.Value); HelpMarker("Will draw the building's health, as well as its max health");
+					WToggle("Distance", &Vars::ESP::Buildings::Distance.Value); HelpMarker("Shows the distance from you to the building in meters");
 					WToggle("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.Value); HelpMarker("Shows who built the building");
 					WToggle("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.Value); HelpMarker("Will draw what level the building is");
 					WToggle("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.Value); HelpMarker("Will draw what conditions the building is under");
@@ -905,24 +907,28 @@ void CMenu::MenuVisuals()
 					WToggle("Name###WorldESPHealthpackName", &Vars::ESP::World::HealthName.Value); HelpMarker("Will draw ESP on healthpacks");
 					WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
 					WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
+					WToggle("Health Distance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
 					ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
 
 					SectionTitle("Ammopack");
 					WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
 					WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
 					WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
+					WToggle("Ammo Distance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
 					ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
 
 					SectionTitle("NPC");
 					WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
 					WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
 					WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
+					WToggle("NPC Distance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
 					ColorPickerL("NPC colour", Colors::NPC); HelpMarker("Color for NPC ESP");
 
 					SectionTitle("Bombs");
-					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on NPCs");
-					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to NPCs");
-					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
+					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on bombs");
+					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to bombs");
+					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on bombs");
+					WToggle("Bomb Distance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
 					ColorPickerL("Bomb Colour", Colors::Bomb); HelpMarker("Color for bomb ESP");
 
 				} EndChild();
@@ -1162,6 +1168,18 @@ void CMenu::MenuVisuals()
 						WSlider("Rainbow Speed", &Vars::Visuals::RainbowSpeed.Value, 0.1, 5, "%.2f");
 					}
 					ColorPickerL("Particle Color", Colors::ParticleColor);
+					if (Vars::Visuals::HalloweenSpellFootsteps.Value)
+					{
+						if (!Vars::Visuals::ParticleColors.Value) //Particle colors overrides the color picker
+						{
+							WCombo("Color Type", &Vars::Visuals::ColorType.Value, { "Color Picker", "Rainbow" });
+							if (Vars::Visuals::ColorType.Value == 0)
+							{
+								ColorPickerL("Footstep Color", Colors::FeetColor);
+							}
+						}
+						WToggle("Dash only", &Vars::Visuals::DashOnly.Value);
+					}
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
 					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
 					WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);

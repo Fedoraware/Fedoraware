@@ -245,6 +245,7 @@ namespace Vars
 			inline CVar<int> HealthText{ 0 }; // 0 - Off, 1 - Default, 2 - Bar
 			inline CVar<bool> Cond{ false };
 			inline CVar<bool> FriendCond{ false };
+			inline CVar<bool> Distance{ false };
 			inline CVar<bool> HealthBar{ false };
 			inline CVar<int> HealthBarStyle{ 0 }; // 0 - gradient, 1 - old
 			inline CVar<int> Box{ 0 }; //0 - OFF, 1 - Simple, 2 - Corners
@@ -271,6 +272,7 @@ namespace Vars
 			inline CVar<bool> Owner{ false };
 			inline CVar<bool> Level{ false };
 			inline CVar<bool> Cond{ false };
+			inline CVar<bool> Distance{ false };
 			inline CVar<bool> HealthBar{ false };
 			inline CVar<bool> TeleExitDir{ false };
 			inline Color_t TeleExitDirColor{ 255, 255, 255, 255 };
@@ -288,18 +290,23 @@ namespace Vars
 			inline CVar<bool> HealthName{ false };
 			inline CVar<int> HealthBox{ false };
 			inline CVar<bool> HealthLine{ false };
-
+			inline CVar<bool> HealthDistance{ false };
+	
 			inline CVar<bool> AmmoName{ false };
 			inline CVar<int> AmmoBox{ false };
 			inline CVar<bool> AmmoLine{ false };
+			inline CVar<bool> AmmoDistance{ false };
+
 
 			inline CVar<bool> NPCName{ false };
 			inline CVar<int> NPCBox{ false };
 			inline CVar<bool> NPCLine{ false };
+			inline CVar<bool> NPCDistance{ false };
 
 			inline CVar<bool> BombName{ false };
 			inline CVar<int> BombBox{ false };
 			inline CVar<bool> BombLine{ false };
+			inline CVar<bool> BombDistance{ false };
 
 			inline CVar<float> Alpha{ 1.0f };
 		}
@@ -537,6 +544,9 @@ namespace Vars
 		inline CVar<bool> ParticleColors{ false };
 		inline CVar<bool> RGBParticles{ false };
 		inline CVar<float> RainbowSpeed{ 1.f };
+		inline CVar<bool> HalloweenSpellFootsteps{ false };
+		inline CVar<int> ColorType{ 0 }; //0 - color picker 1 - rainbow
+		inline CVar<bool> DashOnly{ false };
 		inline CVar<bool> BulletTracer{ false };
 		inline CVar<bool> AimbotViewmodel{ false };
 		inline CVar<bool> ViewmodelSway{ false };

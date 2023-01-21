@@ -259,7 +259,9 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseEntity_SetAbsVelocity.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BasePlayer_CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseViewModel_ShouldFlipViewModel.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_OP_RenderSprites_RenderSpriteCard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_AvoidPlayers.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_FireEvent.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFRagdoll_CreateTFRagdoll.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CSoundEmitterSystem_EmitSound.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFWeaponBase_CalcIsAttackCritical.cpp" />
