@@ -245,6 +245,7 @@ namespace Vars
 			inline CVar<int> HealthText{ 0 }; // 0 - Off, 1 - Default, 2 - Bar
 			inline CVar<bool> Cond{ false };
 			inline CVar<bool> FriendCond{ false };
+			inline CVar<bool> Distance{ false };
 			inline CVar<bool> HealthBar{ false };
 			inline CVar<int> HealthBarStyle{ 0 }; // 0 - gradient, 1 - old
 			inline CVar<int> Box{ 0 }; //0 - OFF, 1 - Simple, 2 - Corners
@@ -270,6 +271,7 @@ namespace Vars
 			inline CVar<bool> Health{ false };
 			inline CVar<bool> Owner{ false };
 			inline CVar<bool> Level{ false };
+			inline CVar<bool> Distance{ false };
 			inline CVar<bool> Cond{ false };
 			inline CVar<bool> HealthBar{ false };
 			inline CVar<bool> TeleExitDir{ false };
@@ -286,18 +288,22 @@ namespace Vars
 			inline CVar<bool> Active{ false };
 
 			inline CVar<bool> HealthName{ false };
+			inline CVar<bool> HealthDistance{ false };
 			inline CVar<int> HealthBox{ false };
 			inline CVar<bool> HealthLine{ false };
 
 			inline CVar<bool> AmmoName{ false };
+			inline CVar<bool> AmmoDistance{ false };
 			inline CVar<int> AmmoBox{ false };
 			inline CVar<bool> AmmoLine{ false };
 
 			inline CVar<bool> NPCName{ false };
+			inline CVar<bool> NPCDistance{ false };
 			inline CVar<int> NPCBox{ false };
 			inline CVar<bool> NPCLine{ false };
 
 			inline CVar<bool> BombName{ false };
+			inline CVar<bool> BombDistance{ false };
 			inline CVar<int> BombBox{ false };
 			inline CVar<bool> BombLine{ false };
 
