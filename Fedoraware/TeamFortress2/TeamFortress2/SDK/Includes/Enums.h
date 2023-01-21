@@ -694,7 +694,9 @@ enum ETFConds
 
 	TFCond_MiniCrits = (TFCond_Buffed | TFCond_CritCola),
 	TFCond_IgnoreStates = (TFCond_Ubercharged | TFCond_Bonked),
-	TFCondEx_IgnoreStates = (TFCondEx_PyroHeal)
+	TFCondEx_IgnoreStates = (TFCondEx_PyroHeal),
+	TFCondEx_Criticals = (TFCondEx_CritCanteen | TFCondEx_CritOnFirstBlood | TFCondEx_CritOnWin | TFCondEx_CritOnKill |
+		TFCondEx_CritDemoCharge | TFCondEx_CritOnFlagCapture | TFCondEx_HalloweenCritCandy | TFCondEx_PyroCrits)
 };
 
 enum ETFMatchGroup
