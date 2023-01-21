@@ -1162,6 +1162,18 @@ void CMenu::MenuVisuals()
 						WSlider("Rainbow Speed", &Vars::Visuals::RainbowSpeed.Value, 0.1, 5, "%.2f");
 					}
 					ColorPickerL("Particle Color", Colors::ParticleColor);
+					if (Vars::Visuals::HalloweenSpellFootsteps.Value)
+					{
+						if (!Vars::Visuals::ParticleColors.Value) //Particle colors overrides the color picker
+						{
+							WCombo("Color Type", &Vars::Visuals::ColorType.Value, { "Color Picker", "Rainbow" });
+							if (Vars::Visuals::ColorType.Value == 0)
+							{
+								ColorPickerL("Footstep Color", Colors::FeetColor);
+							}
+						}
+						WToggle("Dash only", &Vars::Visuals::DashOnly.Value);
+					}
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
 					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
 					WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
