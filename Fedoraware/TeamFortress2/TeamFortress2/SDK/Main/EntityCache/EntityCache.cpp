@@ -212,12 +212,15 @@ void CEntityCache::UpdateFriends()
 	static size_t CurSize, OldSize;
 	const auto Players = GetGroup(EGroupType::PLAYERS_ALL);
 	CurSize = Players.size();
-
 	if (CurSize != OldSize)
 	{
+        uint_fast64_t mask;
+        bool flag;
 		for (const auto& Player : Players)
 		{
-			Friends[Player->GetIndex()] = IsPlayerOnSteamFriendList(Player);
+             mask = (uint_fast64_t)2 << Player->GetIndex();
+             flag = IsPlayerOnSteamFriendList(Player);
+             friends = (friends & ~mask) | (-flag & mask);
 		}
 	}
 
@@ -237,14 +240,6 @@ void CEntityCache::Clear()
 	}
 }
 
-bool CEntityCache::IsFriend(int entIdx)
-{
-	if (entIdx < 0 || entIdx >= 129)
-	{
-		return false;
-	}
-	return Friends[entIdx];
-}
 
 const std::vector<CBaseEntity*>& CEntityCache::GetGroup(const EGroupType& Group)
 {

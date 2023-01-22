@@ -23,9 +23,11 @@ class CEntityCache
 	void UpdateFriends();
 
 public:
+
 	void Fill();
 	void Clear();
-	bool IsFriend(int entIdx);
+    uint_fast64_t friends;
+    bool IsFriend(int entIdx) { return (friends >> entIdx) & 1; }
 
 	CBaseEntity* GetLocal() { return m_pLocal; }
 	CBaseCombatWeapon* GetWeapon() { return m_pLocalWeapon; }
@@ -33,7 +35,6 @@ public:
 	CTFPlayerResource* GetPR() { return m_pPlayerResource; }
 
 	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
-	bool Friends[129] = { false };
 };
 
 inline CEntityCache g_EntityCache;
