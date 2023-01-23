@@ -2,6 +2,7 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/ChatInfo/ChatInfo.h"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -32,6 +33,7 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 	msgData.SetAssertOnOverflow(false);
 
 	F::ChatInfo.UserMessage(type, msgData);
+	F::LuaCallbacks.OnUserMessage(type, msgData);
 	msgData.Seek(0);
 
 	switch (type)

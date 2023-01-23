@@ -6,6 +6,7 @@
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
+#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/Backtrack/Backtrack.h"
 
 MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 35), void, __fastcall,
@@ -129,4 +130,6 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 			break;
 		}
 	}
+
+	F::LuaCallbacks.OnFrameStage(static_cast<int>(curStage));
 }
