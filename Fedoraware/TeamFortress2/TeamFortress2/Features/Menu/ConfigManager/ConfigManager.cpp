@@ -249,12 +249,6 @@ CConfigManager::CConfigManager()
 		std::filesystem::create_directory(ConfigPath + "\\Materials");
 	}
 
-	// Create 'Lua' folder for Lua scripts
-	if (!std::filesystem::exists(ConfigPath + "\\Lua"))
-	{
-		std::filesystem::create_directory(ConfigPath + "\\Lua");
-	}
-
 	if (!std::filesystem::exists(ConfigPath + "\\Visuals"))
 	{
 		std::filesystem::create_directory(ConfigPath + "\\Visuals");
