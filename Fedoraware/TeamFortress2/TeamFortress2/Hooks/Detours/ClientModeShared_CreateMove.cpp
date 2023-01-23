@@ -19,7 +19,6 @@
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
-#include "../../Features/LuaEngine/Callbacks/LuaCallbacks.h"
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
 
@@ -174,9 +173,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Followbot.Run(pCmd);
 		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
-
-	// Run Lua callbacks
-	F::LuaCallbacks.OnCreateMove(pCmd, pSendPacket);
 
 	if (*pSendPacket)
 	{
