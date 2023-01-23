@@ -214,6 +214,7 @@ void CEntityCache::UpdateFriends()
 	CurSize = Players.size();
 	if (CurSize != OldSize)
 	{
+		friends = 0;
         uint_fast64_t mask;
         bool flag;
 		for (const auto& Player : Players)
@@ -233,6 +234,7 @@ void CEntityCache::Clear()
 	m_pLocalWeapon = nullptr;
 	m_pObservedTarget = nullptr;
 	m_pPlayerResource = nullptr;
+	friends = 0;
 
 	for (auto& Group : m_vecGroups)
 	{
