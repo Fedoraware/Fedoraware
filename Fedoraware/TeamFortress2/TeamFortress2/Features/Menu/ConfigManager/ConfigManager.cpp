@@ -676,6 +676,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimBombs);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				LOAD_VAR(Vars::Aimbot::Global::TickTolerance);
+                                LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
 				LOAD_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
 				LOAD_VAR(Vars::Aimbot::Global::HitboxLifetime);
