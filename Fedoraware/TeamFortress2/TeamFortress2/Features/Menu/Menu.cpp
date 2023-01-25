@@ -1158,6 +1158,7 @@ void CMenu::MenuVisuals()
 					{
 						I::ViewRender->SetScreenOverlayMaterial(nullptr);
 					}
+					WToggle("Menu Celebration", &Vars::Menu::MenuCelebration.Value); //i put this here instead of the menu tab to avoid clutter (put var in menu because it is part of the menu though)
 					WToggle("Particle Colors", &Vars::Visuals::ParticleColors.Value);
 					if (Vars::Visuals::ParticleColors.Value)
 					{
