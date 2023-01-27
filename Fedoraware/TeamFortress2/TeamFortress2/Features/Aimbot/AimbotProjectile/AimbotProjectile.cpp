@@ -87,7 +87,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 		case Demoman_m_Warhawk:
 		case Demoman_m_ButcherBird:
 		{
-			out = { 1216.f, 0.4f };
+			out = { 1216.f, 0.5f };
 			IsBoosted = true;
 			break;
 		}
@@ -101,14 +101,14 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 
 		case Demoman_m_TheLooseCannon:
 		{
-			out = { 1453.9f, 0.4f };
+			out = { 1453.9f, 0.5f };
 			IsBoosted = true;
 			break;
 		}
 
 		case Demoman_m_TheLochnLoad:
 		{
-			out = { 1513.3f, 0.4f };
+			out = { 1513.3f, 0.5f };
 			IsBoosted = true;
 			break;
 		}
@@ -210,7 +210,7 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
 				Math::RemapValClamped(charge, 0.0f, 4.f, 900, 2400),
-				Math::RemapValClamped(charge, 0.0f, 4.f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 4.f, 0.5f, 0.0f)
 			};
 			break;
 		}
@@ -219,8 +219,8 @@ bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, Projectile
 			//Probably wrong
 			const float charge = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime());
 			out = {
-				Math::RemapValClamped(charge, 0.0f, 1.2f, 930.88, 2409.2),
-				Math::RemapValClamped(charge, 0.0f, 1.2f, 0.483f, 0.085f)
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 900, 2400),
+				Math::RemapValClamped(charge, 0.0f, 1.2f, 0.5f, 0.0f)
 			};
 
 			break;
