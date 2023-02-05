@@ -1,61 +1,47 @@
-<h1 align="center">MFED IS CURRENTLY BANNED ON GITHUB BC OF ANGRY RIJIN USERS, USE THIS REPO UNTIL HIS ACCOUNT IS UNBANNED</h1>
-
-<hr/>
-
+<h2 align="center" style="margin-top: 0px;">Fedoraware</h2>  
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
-<h1 align="center" style="margin-top: 0px;">Fedoraware</h1>  
-<h1 align="center" style="margin-top: 0px;">SE-Owned but awesome</h1>
+<h2 align="center" style="margin-top: 0px;">SE-Owned but coollllll</h2>
 <p align="center">
-<a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/M-FeD/Fedoraware"></a>  
-<a href="https://discord.gg/NGhFSWdHxK"><img alt="Fedoraware Discord Server :trollface:" src="https://img.shields.io/discord/937420218672771112?label=Discord&logo=Discord"></a>  
-<a href="https://github.com/tf2cheater2013/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/M-FeD/Fedoraware/MSBuild"></a>
-<a href="https://github.com/tf2cheater2013/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/M-FeD/Fedoraware"></a>
+<a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>
+<a href="https://discord.gg/YcVKhnAAEY"><img alt="Fedoraware Discord Server" src="https://img.shields.io/discord/1069923050499354624?label=Discord&logo=Discord"></a>  
+<a href="https://github.com/tf2cheater2013/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Fedoraware/Fedoraware/msbuild.yml?branch=main"></a>
+<a href="https://github.com/tf2cheater2013/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tf2cheater2013/Fedoraware"></a>
 </p>  
 
+<hr/>
 
+<p align="center">
+<a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">
+<img src=".github/assets/download.png" align="center" width="100%" height="auto">
+</a>
+</p>
 
-## Notes
-- It is recommended to use dxlevel 90+ due to issues with imgui.
-- You will have issues with injecting if you are on Windows 10 upgraded from Windows 7.
-- The source code is most likely __DETECTED__, use a VMProtected manual mapping injector or [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). Any of these methods could be useless in the future, and end up getting you VAC Banned. We are not responsible for anything that could happen to your account.
+## Notes:
+- It is required to use dxlevel 90+ due to issues with ImGui.
+- You might have issues with injecting if you are on Windows 10 upgraded from Windows 7.
+- The source code is most likely __DETECTED__, use [VAC Bypass by danielkrupinski](https://github.com/danielkrupinski/VAC-Bypass). In the event you get VAC Banned, we are not responsible. Don't cheat on accounts you care about.
+- Read the [Fedoraware Documentation](https://fedoraware.github.io/Docs/) to learn more about Fedoraware and its Features.
 
 ## Guide:
-- If you are lazy and you just want a compiled .dll file, go to the [Actions](https://github.com/M-FeD/Fedoraware/actions) tab of this repo and select the latest workflow, and then select the Fedoraware button under the Artifacts category. This will download a zip file which you'll need to extract, after that you will get the .dll file.
-- To inject Fedoraware into TF2, you'll have to also use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject it into TF2.
-- __If you have any problems, you can leave them - [Issues](https://github.com/M-FeD/Fedoraware/issues)__
-- Should you choose to compile this cheat yourself, you may enable enhanced instruction sets to possibly increase performance. __Properties -> C/C++ -> Code Generation -> Enable Enhanced Instruction Set__. Be sure to check what's the best instruction set you can use by checking in [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html), otherwise the cheat won't work on your PC. 
-
-## Differences to original SE-Owned:
-- An ImGui menu
-- Manual projectile aim z-adjust
-- New fonts
-- A playerlist
-- A DUCKING flag added to ESP
-- A default config ready to use out of the box
-- A Skybox Changer
-- Doubletap
-- Anti-warp
-- Dragons fury added to projectile aimbot (not pSilent)
-- More chams
-- A Nullcore style useful buttons panel
-- Directional autostrafe
-- Fakelag
-- Duck speed
-- Some fixes
-- Some other misc features
-![ScreenShot](https://i.imgur.com/Bhmsdqt.jpg)
+- We suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
+- Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
+- __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__ (Dear god please link a config and follow the issue template)
 
 ## Media:  
-- [[TF2/FEDORAware] Best TF2 Paste? (by c1R)](https://www.youtube.com/watch?v=7gDLPRXtdw8)
-- [[TF2/FEDORAWARE] The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
-- [[TF2/Fedoraware] Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
+- [Fedoraware is the best free cheat in tf2 (by bean)](https://www.youtube.com/watch?v=FyeaMghYZL0)
+- [The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
+- [Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
 
-### Credits to:
+![Screenshot](https://user-images.githubusercontent.com/17802843/161588254-5cf29b82-fd70-41c1-90c3-f77b29014a68.png)
+
+## Credits to:
   - [spook953](https://github.com/spook953)
   - [Lak3](https://github.com/Lak3)
-  - [M-FeD](https://github.com/M-FeD)
+  - [Baan](https://github.com/xxmyn)
+  - [lnx00](https://github.com/lnx00)
+  - [Johnathon Walnut](https://github.com/johnathon-walnut)
   - [JAGNEmk](https://github.com/JAGNEmk)
   - [r00t](https://github.com/l-r00t-l)
   - [lykanfox](https://github.com/lykanfox)
@@ -63,5 +49,20 @@
   - [HutchyBean](https://github.com/HutchyBean)
   - [SinnerK0N](https://github.com/SinnerK0N)
   - [John Page The Fourth](https://github.com/relaxtakenotes)
-  - [Baan](https://github.com/tf2cheater2013)
-  - [lnx00](https://github.com/lnx00)
+  - [canedoly](https://github.com/canedoly)
+  - [lolnoenemy](https://github.com/lolnoenemy)
+  - [reestart](https://github.com/restarrt)
+  - [Ind1g0](https://github.com/lnd1g0)
+  - [AscendedSion](https://github.com/AscendedSion)
+  - [resiki8182](https://github.com/resiki8182)
+  - [SylveonBottle](https://github.com/SylveonBottle)
+  - [NotAnUser1](https://github.com/NotAnUser1)
+  - [VOID-Nightmare](https://github.com/VOID-Nightmare)
+  - Fourteen
+  - [vicinity-gush8](https://github.com/vicinity-gush8)
+  - [XJN2](https://github.com/XJN2)
+  - [hivec2](https://github.com/hivec2)
+  - [wsock](https://github.com/wsock)
+  - [hyperventilation](https://github.com/hyperventilation)
+  - [frel0](https://github.com/frel0)
+  - [stax](https://github.com/stax132349)
