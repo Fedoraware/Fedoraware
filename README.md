@@ -1,4 +1,4 @@
-<h2 align="center" style="margin-top: 0px;">Fedoraware</h2>  
+<h2 align="center" style="margin-top: 0px;">Fedoraware Legacy</h2>  
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
 </p>
