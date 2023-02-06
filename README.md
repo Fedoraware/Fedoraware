@@ -1,3 +1,5 @@
+> Due to lack of interest, Fedoraware is no longer being maintained.<br/>If you still want to use it, check some of the [active forks](https://useful-forks.github.io/?repo=Fedoraware/Fedoraware).
+
 <h2 align="center" style="margin-top: 0px;">Fedoraware</h2>  
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="200" src=".github/assets/fedoraware.png" alt="Fedoraware logo." align="center">
