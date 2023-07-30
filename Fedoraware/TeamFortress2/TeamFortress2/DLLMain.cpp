@@ -148,9 +148,6 @@ void LoadDefaultConfig()
 	F::Menu.ConfigLoaded = true;
 }
 
-
-LONG WINAPI UnhandledExFilter(PEXCEPTION_POINTERS ExPtr);
-
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
 	//AddVectoredExceptionHandler(0, UnhandledExFilter);

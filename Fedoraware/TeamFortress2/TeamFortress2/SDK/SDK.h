@@ -255,7 +255,7 @@ namespace Utils
 		static HWND hwGame = nullptr;
 
 		while (!hwGame) {
-			hwGame = FindWindowW(nullptr, L"Team Fortress 2");
+			hwGame = FindWindowA(nullptr, "Team Fortress 2");
 			if (!hwGame)
 			{
 				return false;
