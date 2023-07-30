@@ -17,10 +17,10 @@ void CMisc::RunPre(CUserCmd* pCmd, bool* pSendPacket)
 	{
 		FastStop(pCmd, pLocal);
 		StopMovement(pCmd, pSendPacket);
-		FastDeltaMove(pCmd, pSendPacket);
+		FastDeltaMove(pCmd, pSendPacket, pLocal);
 		//PrintProjAngles(pLocal);
 		AccurateMovement(pCmd, pLocal);
-		FastAccel(pCmd, pLocal, pSendPacket);
+		FastAccel(pCmd, pLocal);
 		AutoJump(pCmd, pLocal);
 		AutoStrafe(pCmd, pLocal);
 		NoiseMakerSpam(pLocal);
@@ -73,8 +73,8 @@ void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 	*pSendPacket = false;
 }
 
-void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
-	if (!Vars::Misc::FastDeltaStrafe.Value) { return; }
+void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal) {
+	if (pLocal->IsInBumperKart() ? Vars::Misc::AltMovement.Value & 0 << 0 : Vars::Misc::AltMovement.Value & 0 << 3) { return; }
 
 	bool bChanged = false;
 
@@ -83,15 +83,15 @@ void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
 	const bool bCurFwd = pCmd->forwardmove > 0;
 	const bool bCurSde = pCmd->sidemove > 0;
 
-	if (fabsf(pCmd->sidemove) > 400){
-		if (bSde != bCurSde){
+	if (fabsf(pCmd->sidemove) > 400) {
+		if (bSde != bCurSde) {
 			pCmd->viewangles.y += bSde ? -90.f : 90.f;	//	face left or right depending
 			pCmd->viewangles.x = 90.f;	//	look down
 			pCmd->sidemove = bSde ? -pCmd->forwardmove : pCmd->forwardmove;	//	set our forward move to our sidemove
 			bChanged = true;
 		}
 
-		if (bChanged){
+		if (bChanged) {
 			bMovementScuffed = true;
 			G::UpdateView = false;
 			*pSendPacket = false;
@@ -103,14 +103,14 @@ void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket){
 		if (bChanged) { return; }
 	}
 	if (fabsf(pCmd->forwardmove) > 400) {
-		if (bFwd != bCurFwd){
+		if (bFwd != bCurFwd) {
 			pCmd->viewangles.x = 90.f;	//	look down
 			pCmd->viewangles.y += bFwd ? 0.f : 180.f;
 			pCmd->sidemove *= bFwd ? 1 : -1;
 			bChanged = true;
 		}
 
-		if (bChanged){
+		if (bChanged) {
 			bMovementScuffed = true;
 			G::UpdateView = false;
 			*pSendPacket = false;
@@ -478,20 +478,17 @@ void CMisc::DuckJump(CBaseEntity* pLocal, CUserCmd* pCmd) {
 	pCmd->buttons |= IN_DUCK;
 }
 
-void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
+void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	bFastAccel = false;
-	static bool flipVar = false;
-	flipVar = !flipVar;
 
-	if ((G::AAActive || bMovementScuffed || bMovementStopped) || (Vars::Misc::FakeAccelAngle.Value && !flipVar))
+	if ((G::AAActive || bMovementScuffed || bMovementStopped))
 	{
 		return;
 	}
 
-	const bool bShouldAccel = !G::ShouldShift && Vars::Misc::FastAccel.Value;
-	const bool bShouldAccelFinal = pLocal->IsDucking() ? Vars::Misc::CrouchSpeed.Value : bShouldAccel;
-	if (!bShouldAccelFinal)
+	const bool bShouldAccel = !G::ShouldShift && pLocal->IsInBumperKart() ? (Vars::Misc::AltMovement.Value & 1 << 0) : pLocal->IsDucking() ? (Vars::Misc::AltMovement.Value & 1 << 1) : (Vars::Misc::AltMovement.Value & 1 << 2);
+	if (!bShouldAccel)
 	{
 		return;
 	}
@@ -542,10 +539,6 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket)
 		pCmd->viewangles.y = fmodf(pCmd->viewangles.y - angMoveReverse.y, 360.0f);	//	this doesn't have to be clamped inbetween 180 and -180 because the engine automatically fixes it.
 		pCmd->viewangles.z = 270.f;
 		G::UpdateView = false; bFastAccel = true;
-		if (Vars::Misc::FakeAccelAngle.Value)
-		{
-			*pSendPacket = false;
-		}
 	}
 }
 
@@ -558,7 +551,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 	if (!pLocal->IsAlive()
 		|| pLocal->IsSwimming()
-		|| (pLocal->IsInBumperKart() && Vars::Misc::AccurateMovement.Value != 2)
+		|| (pLocal->IsInBumperKart() && !(Vars::Misc::AltMovement.Value & 1 << 0))
 		|| pLocal->IsAGhost()
 		|| pLocal->IsCharging()
 		|| !pLocal->OnSolid())
@@ -581,7 +574,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	const float speed = pLocal->GetVecVelocity().Length2D();
 	const float speedLimit = 10.f;
 
-	const int iStopMode = (Vars::Misc::AccurateMovement.Value == 3) ? (G::ShiftedTicks ? 1 : 2) : Vars::Misc::AccurateMovement.Value;
+	const int iStopMode = pLocal->IsInBumperKart() ? 2 : (Vars::Misc::AccurateMovement.Value == 3) ? (G::ShiftedTicks ? 1 : 2) : Vars::Misc::AccurateMovement.Value;
 
 	if (speed > speedLimit)
 	{

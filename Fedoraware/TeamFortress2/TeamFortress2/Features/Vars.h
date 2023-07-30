@@ -643,8 +643,8 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> FastDeltaStrafe{ false };
 		inline CVar<int> AccurateMovement{ false };
+		inline CVar<int> AltMovement{ 0b0000 };	//	0000 {Fast Strafe, Fast Accel, Fast Crouch, Kart Control}
 		inline CVar<bool> AutoJump{ false };
 		inline CVar<bool> AutoVote{ false };
 		inline CVar<bool> DuckJump{ false };
@@ -677,9 +677,6 @@ namespace Vars
 		inline CVar<bool> AntiAFK{ false };
 		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
 		inline CVar<bool> CheatsBypass{ false };
-		inline CVar<bool> CrouchSpeed{ false };
-		inline CVar<bool> FastAccel{ false };
-		inline CVar<bool> FakeAccelAngle{ false };
 		inline CVar<bool> AntiAutobal{ false };
 		inline CVar<bool> RageRetry{ false };
 		inline CVar<int> RageRetryHealth{ 20 };

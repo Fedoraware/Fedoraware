@@ -17,7 +17,7 @@ class CMisc
 	void ViewmodelFlip(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void StopMovement(CUserCmd* pCmd, bool* pSendPacket);
-	void FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket);
+	void FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal);
 
 	void AntiAFK(CUserCmd* pCmd);
 	void ChatSpam();
@@ -36,7 +36,7 @@ class CMisc
 	void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoRocketJump(CUserCmd* pCmd, CBaseEntity* pLocal);
 	void AutoScoutJump(CUserCmd* pCmd, CBaseEntity* pLocal);
-	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal, bool* pSendPacket);
+	void FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal);
 	float m_flSpinYaw = 0.f;
 
 	bool SteamCleared = false;
