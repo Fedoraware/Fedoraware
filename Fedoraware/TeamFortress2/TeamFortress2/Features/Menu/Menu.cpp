@@ -709,8 +709,6 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Chams Misc");
 
-					WToggle("DME chams###dmeactive", &Vars::Chams::DME::Active.Value); HelpMarker("DME chams master switch");
-
 					SectionTitle("Backtrack chams");
 					WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
 					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);

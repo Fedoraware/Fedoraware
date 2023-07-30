@@ -89,8 +89,7 @@ namespace ProxySkins
 
 bool CDMEChams::ShouldRun()
 {
-	if (!Vars::Chams::DME::Active.Value || I::EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.
-		Value)
+	if (I::EngineVGui->IsGameUIVisible() || !Vars::Chams::Main::Active.Value)
 		return false;
 
 	return true;

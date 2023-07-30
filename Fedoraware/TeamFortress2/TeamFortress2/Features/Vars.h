@@ -361,8 +361,6 @@ namespace Vars
 
 		namespace DME
 		{
-			inline CVar<bool> Active{ false };
-
 			inline Chams_t Hands{ 1, 0, 0, true };
 			inline Chams_t Weapon{ 1, 0, 0, true };
 

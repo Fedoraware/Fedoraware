@@ -433,7 +433,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 		case ETargetType::PLAYER:
 		{
-			if (ScanHitboxes(pLocal, target) && !(!F::Backtrack.CanHitOriginal(target.m_pEntity) || G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4))
+			if (ScanHitboxes(pLocal, target) && !(!F::Backtrack.CanHitOriginal(target.m_pEntity) || ((G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value && Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)) || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4) && !G::ShouldShift)) 
 			{
 				return true;
 			}

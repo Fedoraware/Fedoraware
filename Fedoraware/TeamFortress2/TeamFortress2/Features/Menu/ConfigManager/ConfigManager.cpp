@@ -1131,7 +1131,6 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_VAR(Vars::Chams::Buildings::Material);
 		SAVE_VAR(Vars::Chams::Buildings::IgnoreZ);
 		SAVE_VAR(Vars::Chams::World::Active);
-		SAVE_VAR(Vars::Chams::DME::Active);
 		SAVE_VAR(Vars::Chams::DME::HandsGlowOverlay);
 		SAVE_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 		SAVE_VAR(Vars::Chams::DME::HandsRainbow);
@@ -1516,7 +1515,6 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Chams::Buildings::Material);
 		LOAD_VAR(Vars::Chams::Buildings::IgnoreZ);
 		LOAD_VAR(Vars::Chams::World::Active);
-		LOAD_VAR(Vars::Chams::DME::Active);
 		LOAD_VAR(Vars::Chams::DME::HandsGlowOverlay);
 		LOAD_VAR(Vars::Chams::DME::WeaponGlowOverlay);
 		LOAD_VAR(Vars::Chams::DME::HandsRainbow);
