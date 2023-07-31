@@ -538,12 +538,16 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 		Vec3(vMaxs.x, vMins.y, vMins.z) //	-
 	};
 
+
 	std::vector<Vec3> vVisPoints{};
 	const matrix3x4 transform = {
 		{1.f, 0, 0, targetPredPos.x},
 		{0, 1.f, 0, targetPredPos.y},
 		{0, 0, 1.f, pEntity->GetVecVelocity().IsZero() ? pEntity->GetAbsOrigin().z : targetPredPos.z}
 	};
+
+	Vec3 vMustBeVisible = {};	// TODO: this might be the wrong point.
+	Math::VectorTransform(vPoints[1], transform, vMustBeVisible);
 
 	int iAimMethod = Vars::Aimbot::Projectile::AimPosition.Value;
 
@@ -560,6 +564,10 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 
 		Vec3 vTransformed = {};
 		Math::VectorTransform(vPoint, transform, vTransformed);
+
+		if (!Utils::VisPos(pLocal, pEntity, vMustBeVisible, vTransformed, MASK_SHOT)){	//	hopefully stop shooting parts of bounding box that phase through a wall or magic like n shiet
+			continue;
+		}
 
 		if (Utils::VisPosMask(pLocal, pEntity, vShootPos, vTransformed, MASK_SHOT_HULL))
 		{
