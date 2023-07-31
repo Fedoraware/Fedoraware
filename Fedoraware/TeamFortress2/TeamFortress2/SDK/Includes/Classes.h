@@ -776,6 +776,12 @@ public:
 		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03"));
 		FN(this, mins, maxs);
 	}
+
+	__inline void CalcNearestPoint(const Vec3& vecWorldPt, Vec3* pVecNearestWorldPt)
+	{
+		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, Vec3*)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 8D 45 ? 56 50 FF 75 ? 8B F1"));
+		FN(this, vecWorldPt, pVecNearestWorldPt);
+	}
 };
 
 struct StartSoundParams_t
