@@ -1584,7 +1584,8 @@ void CMenu::MenuHvH()
 					break;
 				}
 			}	//	add more here if you add your own fakelag modes :D
-
+			WToggle("Retain BlastJump", &Vars::Misc::CL_Move::RetainBlastJump.Value); HelpMarker("Will attempt to retain the blast jumping condition as soldier and runs independently of fakelag.");
+			WToggle("Unchoke On Attack", &Vars::Misc::CL_Move::UnchokeOnAttack.Value); HelpMarker("Will exit a fakelag cycle if you are attacking.");
 
 		} EndChild();
 

@@ -545,6 +545,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRetain);
 				SAVE_VAR(Vars::Misc::CL_Move::RetainFakelag);
+				SAVE_VAR(Vars::Misc::CL_Move::RetainBlastJump);
+				SAVE_VAR(Vars::Misc::CL_Move::UnchokeOnAttack);
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				SAVE_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::AntiWarp);
@@ -929,6 +931,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey); // { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRetain);
 				LOAD_VAR(Vars::Misc::CL_Move::RetainFakelag);
+				LOAD_VAR(Vars::Misc::CL_Move::RetainBlastJump);
+				LOAD_VAR(Vars::Misc::CL_Move::UnchokeOnAttack);
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeWhileDead);
 				LOAD_VAR(Vars::Misc::CL_Move::AutoRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::AntiWarp);

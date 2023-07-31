@@ -163,6 +163,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			F::Auto.Run(pCmd);
 			F::AntiAim.Run(pCmd, pSendPacket);
 			F::Misc.RunMid(pCmd, nOldGroundEnt);
+			F::FakeLag.OnTick(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
 		}
 		F::EnginePrediction.End(pCmd);
 
@@ -171,7 +172,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		F::Misc.RunPost(pCmd, pSendPacket);
 		F::Resolver.CreateMove();
 		F::Followbot.Run(pCmd);
-		F::FakeLag.OnTick(pCmd, pSendPacket);
 	}
 
 	if (*pSendPacket)
