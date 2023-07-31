@@ -134,7 +134,7 @@ void CEntityCache::Fill()
 				{
 					m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
 
-					if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && pEntity->GetPipebombType() == TYPE_STICKY)
+					if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && (pEntity->GetPipebombType() == TYPE_STICKY || pEntity->GetPipebombPulsed()))
 					{
 						if (I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
 						{
