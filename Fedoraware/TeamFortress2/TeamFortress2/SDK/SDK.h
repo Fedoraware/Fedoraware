@@ -536,7 +536,7 @@ namespace Utils
 		CTraceFilterHitscan filter = {};
 		filter.pSkip = pSkip;
 		Trace(from, to, (MASK_SHOT | CONTENTS_GRATE), &filter, &trace);
-		return ((trace.entity && trace.entity == pEntity) || trace.flFraction > 0.99f);
+		return ((trace.entity && trace.entity == pEntity) || trace.flFraction == 1.f);
 	}
 
 	__inline bool VisPosMask(CBaseEntity* pSkip, const CBaseEntity* pEntity, const Vec3& from, const Vec3& to, unsigned int nMask)
@@ -545,7 +545,7 @@ namespace Utils
 		CTraceFilterHitscan filter = {};
 		filter.pSkip = pSkip;
 		Trace(from, to, nMask, &filter, &trace);
-		return ((trace.entity && trace.entity == pEntity) || trace.flFraction > 0.99f);
+		return ((trace.entity && trace.entity == pEntity) || trace.flFraction == 1.f);
 	}
 
 	__inline bool VisPosHitboxId(CBaseEntity *pSkip, const CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to, int nHitbox)

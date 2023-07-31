@@ -565,10 +565,6 @@ std::optional<Vec3> CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntit
 		Vec3 vTransformed = {};
 		Math::VectorTransform(vPoint, transform, vTransformed);
 
-		if (!Utils::VisPos(pLocal, pEntity, vMustBeVisible, vTransformed, MASK_SHOT)){	//	hopefully stop shooting parts of bounding box that phase through a wall or magic like n shiet
-			continue;
-		}
-
 		if (Utils::VisPosMask(pLocal, pEntity, vShootPos, vTransformed, MASK_SHOT_HULL))
 		{
 			if (iCurPoint == iAimMethod && iAimMethod < 3) { return vTransformed; } // return this value now if it is going to get returned anyway, avoid useless scanning.
@@ -752,7 +748,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			case TF_WEAPON_DIRECTHIT:
 			case TF_WEAPON_FLAREGUN:
 			{
-				hullSize = { 0.f, 3.7f, 3.7f };
+				hullSize = { 1.f, 1.f, 1.f };
 
 				Vec3 vecOffset = Vec3(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
 				if (G::CurItemDefIndex == Soldier_m_TheOriginal)
@@ -768,7 +764,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			}
 			case TF_WEAPON_SYRINGEGUN_MEDIC:
 			{
-				hullSize = { 0.f, 1.f, 1.f };
+				hullSize = { 1.f, 1.f, 1.f };
 
 				const Vec3 vecOffset(16.f, 6.f, -8.f); //tf_weaponbase_gun.cpp @L628
 				Utils::GetProjectileFireSetup(pLocal, predictedViewAngles, vecOffset, &vVisCheck);
@@ -785,7 +781,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			case TF_WEAPON_RAYGUN:
 			case TF_WEAPON_DRG_POMSON:
 			{
-				hullSize = { 0.1f, 0.1f, 0.1f };
+				hullSize = { 1.f, 1.f, 1.f };
 				Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L568
 				if (pLocal->IsDucking())
 				{
@@ -799,7 +795,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 			case TF_WEAPON_STICKBOMB:
 			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
-				hullSize = { 2.f, 2.f, 2.f };
+				hullSize = { 4.f, 4.f, 4.f };
 
 				auto vecAngle = Vec3(), vecForward = Vec3(), vecRight = Vec3(), vecUp = Vec3();
 				Math::AngleVectors({ -RAD2DEG(out.m_flPitch), RAD2DEG(out.m_flYaw), 0.0f }, &vecForward, &vecRight, &vecUp);
@@ -823,7 +819,7 @@ bool CAimbotProjectile::WillProjectileHit(CBaseEntity* pLocal, CBaseCombatWeapon
 	//	UTIL_TraceHull( vecEye, vecSrc, -Vector(8,8,8), Vector(8,8,8), MASK_SOLID_BRUSHONLY, &traceFilter, &trace ); @tf_weaponbase_gun.cpp L696 pills
 	Utils::TraceHull(vVisCheck, vPredictedPos, hullSize * 1.01f, hullSize * -1.01f, MASK_SHOT_HULL, &traceFilter, &trace);
 
-	return trace.flFraction == 1.f || trace.entity;
+	return !trace.DidHit() && trace.flFraction == 1.f;
 }
 
 std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
