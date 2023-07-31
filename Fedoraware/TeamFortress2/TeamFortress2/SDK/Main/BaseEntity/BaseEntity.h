@@ -110,9 +110,9 @@ public: //Netvars & conditions
 		M_DYNVARGET(Streaks, int*, this, "DT_TFPlayer", "m_Shared", "m_nStreaks")
 		M_DYNVARGET(Crits, int, this, "DT_TFPlayer", "m_Shared", "tfsharedlocaldata", "m_ScoreData", "m_iCrits")
 
-		M_OFFSETGET(PipebombType, int, 0x8FC)
+		M_OFFSETGET(PipebombType, int, 0x8F8)												
 		M_OFFSETGET(PipebombPulsed, bool, 0x908)	//	this is incredibly fucking lazy.
-		M_OFFSETGET(Touched, bool, 0x8F8)
+		M_OFFSETGET(Touched, bool, 0x8FC)	
 		M_OFFSETGET(PunchAngles, Vec3, 0xE8C)
 		M_OFFSETGET(VecVelocity, Vec3, 0x120)
 		M_OFFSETGET(WaterJumpTime, float, 0x10FC)
@@ -903,10 +903,7 @@ public: //Everything else, lol.
 		return flVel / iDivide;
 	}
 
-	/*
 	__inline CCollisionProperty* GetCollision() {
-		return *reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
+		return reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
 	}
-	*/ // why push this when A) It doesn't work, and B) Isn't used
-
 };
