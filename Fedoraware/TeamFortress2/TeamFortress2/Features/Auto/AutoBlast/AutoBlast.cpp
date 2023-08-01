@@ -42,11 +42,20 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			switch (pProjectile->GetClassID())
 			{
 				case ETFClassID::CTFGrenadePipebombProjectile:
+				{
+					if (pProjectile->GetPipebombType() == TYPE_STICKY)	//	should ignore landed stickies and pills.
+					{
+						continue; //Ignore landed stickies
+					}
+
+					break;
+				}
+
 				case ETFClassID::CTFStunBall:
 				{
 					if (pProjectile->GetTouched())
 					{
-						continue; //Ignore landed stickies and sandman balls
+						continue; //Ignore landed sandman balls
 					}
 
 					break;
