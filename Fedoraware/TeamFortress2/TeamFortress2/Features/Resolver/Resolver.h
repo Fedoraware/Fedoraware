@@ -6,7 +6,7 @@ struct ResolveData{
 	bool bEnabled = false;			//	should we resolve this player
 
 	//bruteforce data
-	int iYawIndex = 0;
+	int iYawIndex = -1;
 
 	//logical data
 	std::pair<int, float> pLastSniperPitch = {0, 0.f};

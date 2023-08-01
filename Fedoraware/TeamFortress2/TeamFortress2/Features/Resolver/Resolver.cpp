@@ -213,6 +213,7 @@ void PResolver::FrameStageNotify(){
 				break;
 			}
 			case 7:{												//auto
+				if (mResolverData[pEntity].iYawIndex == -1) { break; }	//	have a starting index where we do nothing to their yaw, just in case.
 				vAdjustedAngle.y = vYawRotations[mResolverData[pEntity].iYawIndex];
 				break;
 			}
@@ -226,7 +227,7 @@ void PResolver::FrameStageNotify(){
 void PResolver::CreateMove(){
 	if (I::GlobalVars->tickcount > pWaiting.first && pWaiting.second.first) { 
 		mResolverData[pWaiting.second.first].iYawIndex++;
-		if (mResolverData[pWaiting.second.first].iYawIndex > 3) { mResolverData[pWaiting.second.first].iYawIndex = 0; }
+		if (mResolverData[pWaiting.second.first].iYawIndex > 3) { mResolverData[pWaiting.second.first].iYawIndex = -1; }
 		pWaiting = {0, {nullptr, false}};
 	}
 }
