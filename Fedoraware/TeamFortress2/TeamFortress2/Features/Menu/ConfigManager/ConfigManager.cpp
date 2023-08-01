@@ -366,6 +366,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				//SAVE_VAR(Vars::Aimbot::Melee::Active);
 				SAVE_VAR(Vars::Aimbot::Melee::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Melee::RespectFOV);
+				SAVE_VAR(Vars::Aimbot::Melee::RequireBind);
 				SAVE_VAR(Vars::Aimbot::Melee::AimMethod);
 				//SAVE_VAR(Vars::Aimbot::Melee::AimFOV);
 				SAVE_VAR(Vars::Aimbot::Melee::SmoothingAmount);
@@ -758,6 +759,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Melee::AimMethod);
 				//LOAD_VAR(Vars::Aimbot::Melee::AimFOV);
 				LOAD_VAR(Vars::Aimbot::Melee::RespectFOV);
+				LOAD_VAR(Vars::Aimbot::Melee::RequireBind);
 				LOAD_VAR(Vars::Aimbot::Melee::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Melee::RangeCheck);
 				LOAD_VAR(Vars::Aimbot::Melee::PredictSwing);

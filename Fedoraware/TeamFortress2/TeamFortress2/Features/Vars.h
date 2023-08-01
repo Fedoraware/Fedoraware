@@ -143,6 +143,7 @@ namespace Vars
 			//inline CVar<bool> Active			{ false };
 			inline CVar<int> SortMethod{ 1 }; //0 - FOV,		1 - Distance
 			inline CVar<bool> RespectFOV{ false };
+			inline CVar<bool> RequireBind{ true };
 			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> SmoothingAmount{ 8 };
 			inline CVar<bool> RangeCheck{ false };

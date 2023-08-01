@@ -393,7 +393,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 	Target_t target = {};
 
-	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : F::AimbotGlobal.IsKeyDown());
+	const bool bShouldAim = (Vars::Aimbot::Melee::RequireBind.Value ? Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : F::AimbotGlobal.IsKeyDown() : true);
 
 	if (GetTarget(pLocal, pWeapon, target) && bShouldAim)
 	{

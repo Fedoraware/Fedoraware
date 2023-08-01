@@ -343,6 +343,7 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("Melee");
 			{
+				WToggle("Require Aimbot Bind", &Vars::Aimbot::Melee::RequireBind.Value); HelpMarker("Requires the aimbot keybind to be held in order to run, otherwise it will remain on at all times.");
 				WCombo("Sort method###MeleeSortMethod", &Vars::Aimbot::Melee::SortMethod.Value, { "FOV", "Distance", }); HelpMarker("Which method the aimbot uses to decide which target to aim at");
 				if (Vars::Aimbot::Melee::SortMethod.Value == 1)
 				{
