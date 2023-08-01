@@ -323,6 +323,7 @@
     <ClCompile Include="TeamFortress2\Utils\MinHook\hde\hde64.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\hook.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\trampoline.c" />
+    <ClCompile Include="TeamFortress2\Utils\Minidump\Minidump.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -871,6 +872,7 @@
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\table64.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\MinHook.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\trampoline.h" />
+    <ClInclude Include="TeamFortress2\Utils\Minidump\Minidump.h" />
     <ClInclude Include="TeamFortress2\Utils\Pattern\Pattern.h" />
     <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
     <ClInclude Include="TeamFortress2\Utils\Timer\Timer.hpp" />
