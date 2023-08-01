@@ -10,7 +10,7 @@ constexpr float NODE_DISTANCE = 20.f;
 
 bool CFollowbot::ValidTarget(CBaseEntity* pTarget, CBaseEntity* pLocal)
 {
-	if (!pTarget) { return false; }
+	if (!pTarget || !pTarget->IsPlayer()) { return false; }
 	if (pTarget->GetDormant()) { return false; }
 	if (!pTarget->IsAlive()) { return false; }
 	if (pLocal->GetAbsOrigin().DistTo(pTarget->GetAbsOrigin()) > 900.f) { return false; } // We're too slow or got stuck
