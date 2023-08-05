@@ -60,7 +60,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 
 	if (Vars::Misc::CL_Move::WhileInAir.Value && !pLocal->OnSolid())
 	{
-		return false;
+		return true;
 	}	//	no other checks, we want this
 
 	// Is a fakelag key set and pressed?
