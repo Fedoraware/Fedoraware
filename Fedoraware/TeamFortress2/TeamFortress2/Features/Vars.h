@@ -22,7 +22,7 @@ namespace Vars
 		inline CVar<bool> ShowDVD{ false };
 		inline CVar<bool> MenuCelebration{ true }; //used in EngineVGui_Paint
 		inline CVar<bool> Vignette{ true };
-		inline CVar<bool> CloseOnUnfocus{ true };
+		inline CVar<bool> CloseOnUnfocus{ false };
 
 		inline CVar<int> MenuKey{ 0 };
 
