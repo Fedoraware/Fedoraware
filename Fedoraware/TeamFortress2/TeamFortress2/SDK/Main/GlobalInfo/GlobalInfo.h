@@ -102,7 +102,7 @@ namespace G
 
 	inline std::vector<int> MedicCallers;
 
-	inline bool ShouldUpdateMaterialCache = false;
+	inline bool ShouldUpdateMaterialCache = true;	//	start at true or this will only be cached on colour change through menu.
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{

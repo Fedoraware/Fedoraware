@@ -898,13 +898,10 @@ bool ModColChanged() // check if colours have been changed
 {
 	static auto oldW = Colors::WorldModulation;
 	static auto oldS = Colors::SkyModulation;
-	const auto curW = Colors::WorldModulation;
-	const auto curS = Colors::SkyModulation;
 
-	if (curW.r != oldW.r || curW.g != oldW.g || curW.b != oldW.b || curS.r != oldS.r || curS.g != oldS.g || curS.b != oldS.b)
-	{
-		oldW = curW;
-		oldS = curS;
+	if (Colors::WorldModulation != oldW || Colors::SkyModulation != oldS) {
+		oldW == Colors::WorldModulation;
+		oldS == Colors::SkyModulation;
 		return true;
 	}
 	return false;
@@ -914,13 +911,11 @@ bool ModSetChanged() // check if modulation has been switched
 {
 	static auto oldS = Vars::Visuals::SkyModulation.Value;
 	static auto oldW = Vars::Visuals::WorldModulation.Value;
-	const auto curS = Vars::Visuals::SkyModulation.Value;
-	const auto curW = Vars::Visuals::WorldModulation.Value;
 
-	if (curS != oldS || curW != oldW)
+	if (Vars::Visuals::SkyModulation.Value != oldS || Vars::Visuals::WorldModulation.Value != oldW)
 	{
-		oldW = curW;
-		oldS = curS;
+		oldW = Vars::Visuals::WorldModulation.Value;
+		oldS = Vars::Visuals::SkyModulation.Value;
 		return true;
 	}
 	return false;
@@ -1019,14 +1014,18 @@ void CVisuals::ModulateWorld()
 		oConnectionState = connectionState;
 		shouldModulate = false;
 	}
-	else if (!Vars::Visuals::WorldModulation.Value)
-	{
-		if (!shouldModulate)
-		{
-			ApplyModulation({ 255, 255, 255, 255 });
-			shouldModulate = true;
-		}
-	} // i don't know why i need to do this
+	if (!shouldModulate) {
+		if (!Vars::Visuals::WorldModulation.Value) { ApplyModulation({ 255, 255, 255, 255 }); shouldModulate = true; }
+		if (!Vars::Visuals::SkyModulation.Value) { ApplySkyboxModulation({ 255, 255, 255, 255 }); shouldModulate = true; }
+	}
+	//else if (!Vars::Visuals::WorldModulation.Value)
+	//{
+	//	if (!shouldModulate)
+	//	{
+	//		ApplyModulation({ 255, 255, 255, 255 });
+	//		shouldModulate = true;
+	//	}
+	//} // i don't know why i need to do this
 }
 
 void CVisuals::RestoreWorldModulation() // keep this because its mentioned in @DLLMain.cpp if you find a better way to do this, remove it ig.

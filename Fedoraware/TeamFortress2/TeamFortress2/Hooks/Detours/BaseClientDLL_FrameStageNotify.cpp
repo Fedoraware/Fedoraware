@@ -121,10 +121,7 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 					F::Visuals.rain.Run();
 				}
 
-				if (Vars::Visuals::SkyModulation.Value || Vars::Visuals::WorldModulation.Value)
-				{
-					F::Visuals.ModulateWorld();
-				}
+				F::Visuals.ModulateWorld();
 			}
 			break;
 		}
