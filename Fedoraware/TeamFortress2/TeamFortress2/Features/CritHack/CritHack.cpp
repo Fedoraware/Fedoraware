@@ -170,8 +170,8 @@ bool CCritHack::ShouldCrit()
 		}
 		case Pyro_t_HotHand:
 		{
-			//The Hot Hand has a -20% melee damage stat
-			MeleeDamage = 28;
+			//The Hot Hand has a -20% melee damage stat (and attacks twice)
+			MeleeDamage = 56;
 			break;
 		}
 		case Pyro_t_SharpenedVolcanoFragment:
