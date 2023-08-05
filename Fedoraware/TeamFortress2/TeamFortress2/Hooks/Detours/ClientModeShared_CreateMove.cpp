@@ -147,7 +147,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
 			G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon);
 		}
-	}	//	we always need this :c
+	}	//	we always need this :c 
 
 	// Run Features
 	{
