@@ -321,6 +321,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::PointScale);
+				SAVE_VAR(Vars::Aimbot::Hitscan::PreserveTarget);
+				SAVE_VAR(Vars::Aimbot::Hitscan::IgnorePreservedFoV);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
 				SAVE_VAR(Vars::Aimbot::Hitscan::WaitForCharge);
@@ -713,6 +715,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::PointScale);
+				LOAD_VAR(Vars::Aimbot::Hitscan::PreserveTarget);
+				LOAD_VAR(Vars::Aimbot::Hitscan::IgnorePreservedFoV);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanBuildings);
 				LOAD_VAR(Vars::Aimbot::Hitscan::WaitForHeadshot);
 				LOAD_VAR(Vars::Aimbot::Hitscan::WaitForCharge);

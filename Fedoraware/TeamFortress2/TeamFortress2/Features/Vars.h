@@ -107,6 +107,8 @@ namespace Vars
 			inline CVar<bool> AutoScope{ false };
 			inline CVar<bool> AutoRev{ false };
 			inline CVar<bool>ExtinguishTeam{ false };
+			inline CVar<bool> PreserveTarget{false};
+			inline CVar<bool> IgnorePreservedFoV{false};
 		}
 
 		namespace Projectile

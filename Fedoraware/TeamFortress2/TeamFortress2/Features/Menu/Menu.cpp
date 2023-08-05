@@ -331,6 +331,10 @@ void CMenu::MenuAimbot()
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::StaticHitboxes.Value, "Static Hitboxes###AimbotStaticOnlyScanning");
 			}
 			WSlider("Point Scale###HitscanMultipointScale", &Vars::Aimbot::Hitscan::PointScale.Value, 0.5f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+			WToggle("Preserve Target", &Vars::Aimbot::Hitscan::PreserveTarget.Value); HelpMarker("Prioritises the target that you most recently aimed at.");
+			if (Vars::Aimbot::Hitscan::PreserveTarget.Value) {
+				WToggle("Preserved Target Ignores FoV", &Vars::Aimbot::Hitscan::IgnorePreservedFoV.Value); HelpMarker("Ignores FoV check for preserved target.");
+			}
 			WToggle("Buildings Multipoint", &Vars::Aimbot::Hitscan::ScanBuildings.Value); HelpMarker("Scans the building hitbox to improve hitchance");
 			WToggle("Wait for headshot", &Vars::Aimbot::Hitscan::WaitForHeadshot.Value); HelpMarker("The aimbot will wait until it can headshot (if applicable)");
 			WToggle("Wait for charge", &Vars::Aimbot::Hitscan::WaitForCharge.Value); HelpMarker("The aimbot will wait until the rifle has charged long enough to kill in one shot");

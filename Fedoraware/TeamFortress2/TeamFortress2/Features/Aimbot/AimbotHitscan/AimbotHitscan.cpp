@@ -155,23 +155,32 @@ std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseComba
 				}
 			}
 
+			// Get the target priority
+			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
+
+			
+
 			PriorityHitbox = nHitbox;
 
 			Vec3 vPos = pTarget->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
+			const float flDistTo = vLocalPos.DistTo(vPos);
+			const bool bPreserve = (PrioTarget == pTarget && Vars::Aimbot::Hitscan::PreserveTarget.Value);
+			const bool bIgnoreFoV = bPreserve && Vars::Aimbot::Hitscan::IgnorePreservedFoV.Value;
 
 			// Should we respect the Aim FOV?
-			if (respectFOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
+			if ((respectFOV && !bIgnoreFoV) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
 			}
 
-			// Get the target priority
-			const auto& priority = F::AimbotGlobal.GetPriority(pTarget->GetIndex());
+			if (bPreserve) {
+				validTargets.push_back({ pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, {6} });	//	ghetto af
+				continue;
+			}
 
 			// The target is valid! Add it to the target vector.
-			const float flDistTo = vLocalPos.DistTo(vPos);
 			validTargets.push_back({
 				pTarget, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo, nHitbox, false, priority
 								   });
@@ -770,6 +779,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			pCmd->buttons |= IN_ATTACK2;
 		}
 	}
+	else {
+		PrioTarget = nullptr;
+	}
 
 	if (GetTarget(pLocal, pWeapon, target) && bShouldAim)
 	{
@@ -797,6 +809,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		}
 
 		G::CurrentTargetIdx = target.m_pEntity->GetIndex();
+		PrioTarget = target.m_pEntity;
 		G::HitscanRunning = true;
 		G::HitscanSilentActive = Vars::Aimbot::Hitscan::AimMethod.Value == 2;
 

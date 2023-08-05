@@ -16,6 +16,7 @@ class CAimbotHitscan
 	bool IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon);
 
 	int PriorityHitbox = 1; // this is the first hitbox we want to scan, just ignore it.
+	CBaseEntity* PrioTarget = nullptr;
 
 public:
 	void Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);
