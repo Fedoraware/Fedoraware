@@ -74,7 +74,7 @@ void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 }
 
 void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal) {
-	if (pLocal->IsInBumperKart() ? Vars::Misc::AltMovement.Value & 0 << 0 : Vars::Misc::AltMovement.Value & 0 << 3) { return; }
+	if (pLocal->IsInBumperKart() ? ~(Vars::Misc::AltMovement.Value & 1 << 0) : ~(Vars::Misc::AltMovement.Value & 1 << 3)) { return; }
 
 	bool bChanged = false;
 
