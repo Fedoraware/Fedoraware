@@ -54,7 +54,7 @@
 #include "../Features/Vars.h"
 
 #define TICK_INTERVAL		( I::GlobalVars->interval_per_tick )
-#define TIME_TO_TICKS( dt )	( static_cast<int>( 0.5f + static_cast<float>(dt) / TICK_INTERVAL ) )
+#define TIME_TO_TICKS( dt )	( static_cast<int>( (TICK_INTERVAL / 2) + static_cast<float>(dt) / TICK_INTERVAL ) )
 #ifndef TICKS_TO_TIME
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
 #endif

@@ -35,9 +35,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 			return false;
 		}
 
-		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
-
-		if (FL_DELAY == 0.f) { return false; }
+		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && (Vars::Misc::CL_Move::AntiWarp.Value && pLocal->OnSolid())) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), TICK_INTERVAL);
 
 		const int iTicks = TIME_TO_TICKS(FL_DELAY);
 
@@ -64,7 +62,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		CBaseEntity* pTarget = I::ClientEntityList->GetClientEntity(nTargetIndex);
 		if (!pTarget) { return false; }
 
-		if (pTarget->GetVelocity().Length() < 10.f || !pTarget->IsPlayer()) {
+		if (pTarget->GetVelocity().Length() < 10.f || !pTarget->IsPlayer() || iTicks < 2) {
 			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
 			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
 			return (trace.entity && trace.entity == pTarget);
@@ -277,8 +275,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	}
 	else if (target.ShouldBacktrack)
 	{
-		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
-		if (FL_DELAY == 0.f) { return false; }
+		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && (Vars::Misc::CL_Move::AntiWarp.Value && pLocal->OnSolid())) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), TICK_INTERVAL);
 
 		if (F::MoveSim.Initialize(g_EntityCache.GetLocal()))
 		{
