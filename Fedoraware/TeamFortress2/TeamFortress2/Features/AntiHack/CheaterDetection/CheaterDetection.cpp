@@ -7,7 +7,7 @@ bool CCheaterDetection::ShouldScan()
 
 	if (I::EngineClient->IsPlayingTimeDemo()) { return false; }
 
-	if (!Vars::Misc::CheaterDetection::Enabled.Value && !iDetectFlags) { return false; }
+	if (!Vars::Misc::CheaterDetection::Enabled.Value || !iDetectFlags) { return false; }
 
 	if (iLastScanTick == I::GlobalVars->tickcount && iProtFlags & (1 << 2)) { return false; }
 
@@ -119,6 +119,8 @@ bool CCheaterDetection::AreAnglesSuspicious(CBaseEntity* pEntity)
 
 void CCheaterDetection::AimbotCheck(CBaseEntity* pEntity)
 {
+	if (fabsf(mData[pEntity].flLastAimbotTime - I::GlobalVars->curtime < 1.f)) { return; }
+	if (!(Vars::Misc::CheaterDetection::Methods.Value & (1 << 7))) { return; }
 	const Vec3 vCurAngle = pEntity->GetEyeAngles();
 	const float flDeltaX = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.x), DEG2RAD(mData[pEntity].vLastAngle.x)));
 	const float flDeltaY = RAD2DEG(Math::AngleDiffRad(DEG2RAD(vCurAngle.y), DEG2RAD(mData[pEntity].vLastAngle.y)));
@@ -132,6 +134,7 @@ void CCheaterDetection::AimbotCheck(CBaseEntity* pEntity)
 
 		mData[pEntity].iPlayerSuspicion++;
 		Utils::ConLog("CheaterDetection", tfm::format("%s infracted for aimbot.", pInfo.name).c_str(), { 224, 255, 131, 255 });
+		mData[pEntity].flLastAimbotTime = I::GlobalVars->curtime;
 	}
 }
 

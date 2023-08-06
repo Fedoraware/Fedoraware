@@ -14,6 +14,7 @@ struct PlayerData
 	std::pair<bool, bool> pDetections = { false, false };	//	high hitchance, high avg score
 	int iOrigDelta = 0;	//	the difference between the players expected lag comp amount and the amount they actually had, re-calculated each life based on the first 2 shots that deal damage.
 	int iLagCompChecks = 0;	//	reset each life.
+	float flLastAimbotTime = 0.f;
 
 	//Immediate Data
 	bool bDidDamage = false;
