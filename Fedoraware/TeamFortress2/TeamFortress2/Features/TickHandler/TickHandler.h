@@ -22,6 +22,7 @@ class CTickshiftHandler
 	int iTickRate = 0;
 
 public:
+	bool bIgnoreSendNetMsg = false;
 	int iDeficit = 0;
 	int iPredicted = 0;	//	DEBUG
 	bool MeleeDoubletapCheck(CBaseEntity* pLocal);	//	checks if we WILL doubletap, used by melee aimbot from AimbotMelee.cpp

@@ -52,6 +52,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 
 		case clc_Move:
 		{
+			if (F::Ticks.bIgnoreSendNetMsg) { break; }
 			static int iOldShift = G::ShiftedTicks;
 			const int iAllowedNewCommands = fmax(fmin(24 - G::ShiftedTicks, 22), 0);
 			const auto& moveMsg = reinterpret_cast<CLC_Move&>(msg);
