@@ -5,7 +5,7 @@
 #include "../../Backtrack/Backtrack.h"
 
 bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vecViewAngles,
-							   int nTargetIndex)
+	int nTargetIndex)
 {
 	static Vec3 vecSwingMins = { -18.0f, -18.0f, -18.0f };
 	static Vec3 vecSwingMaxs = { 18.0f, 18.0f, 18.0f };
@@ -36,17 +36,17 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		}
 
 		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
-		
+
 		if (FL_DELAY == 0.f) { return false; }
-		
+
 		const int iTicks = TIME_TO_TICKS(FL_DELAY);
 
-		if (!bCached){
+		if (!bCached) {
 			if (F::MoveSim.Initialize(g_EntityCache.GetLocal()))
 			{
 				CMoveData moveData = {};
 				Vec3 absOrigin = {};
-				for (int i = 0; i < iTicks; i++){
+				for (int i = 0; i < iTicks; i++) {
 					F::MoveSim.RunTick(moveData, absOrigin);
 				}
 				vecTraceStart = absOrigin;
@@ -57,23 +57,23 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 			}
 			else { return false; }
 		}
-		else{
+		else {
 			vecTraceStart = vCached;
 		}
 
 		CBaseEntity* pTarget = I::ClientEntityList->GetClientEntity(nTargetIndex);
 		if (!pTarget) { return false; }
 
-		if (pTarget->GetVelocity().Length() < 10.f || !pTarget->IsPlayer()){
+		if (pTarget->GetVelocity().Length() < 10.f || !pTarget->IsPlayer()) {
 			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
 			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
-			return (trace.entity && trace.entity->GetIndex() == nTargetIndex);
+			return (trace.entity && trace.entity == pTarget);
 		}
 
-		if (F::MoveSim.Initialize(pTarget)){
+		if (F::MoveSim.Initialize(pTarget)) {
 			CMoveData moveData = {};
 			Vec3 absOrigin = {};
-			for (int i = 0; i < iTicks; i++){
+			for (int i = 0; i < iTicks; i++) {
 				F::MoveSim.RunTick(moveData, absOrigin);
 			}
 
@@ -82,7 +82,7 @@ bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 
 			Vec3 vecTraceEnd = vecTraceStart + (vecForward * flRange);
 			Utils::TraceHull(vecTraceStart, vecTraceEnd, vecSwingMins, vecSwingMaxs, MASK_SHOT, &filter, &trace);
-			const bool bReturn = (trace.entity && trace.entity->GetIndex() == nTargetIndex);
+			const bool bReturn = (trace.entity && trace.entity == pTarget);
 
 			pTarget->SetAbsOrigin(vRestore);
 			F::MoveSim.Restore();
@@ -174,7 +174,7 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 	{
 		const bool hasWrench = (pWeapon->GetWeaponID() == TF_WEAPON_WRENCH);
 		const bool canDestroySapper = (G::CurItemDefIndex == Pyro_t_Homewrecker || G::CurItemDefIndex == Pyro_t_TheMaul || G::CurItemDefIndex == Pyro_t_NeonAnnihilator || G::CurItemDefIndex ==
-									   Pyro_t_NeonAnnihilatorG);
+			Pyro_t_NeonAnnihilatorG);
 
 		for (const auto& pObject : g_EntityCache.GetGroup(hasWrench || canDestroySapper ? EGroupType::BUILDINGS_ALL : EGroupType::BUILDINGS_ENEMIES))
 		{
@@ -277,14 +277,32 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	}
 	else if (target.ShouldBacktrack)
 	{
-		const float flRange = (pWeapon->GetSwingRange(pLocal)) * 1.9f;
-		//Utils::ConLog("AimbotMelee", tfm::format("flRange : %.1f", flRange).c_str(), {133, 255, 159, 255});
-		if (hitboxpos.Dist2D(pLocal->GetShootPos()) > flRange)
-		{ return false; }
+		const float FL_DELAY = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && Vars::Misc::CL_Move::AntiWarp.Value) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
+		if (FL_DELAY == 0.f) { return false; }
+
+		if (F::MoveSim.Initialize(g_EntityCache.GetLocal()))
+		{
+			const int iTicks = TIME_TO_TICKS(FL_DELAY);
+			const Vec3 vPointDelta = pLocal->GetShootPos() - pLocal->GetAbsOrigin();
+			const float flRange = (pWeapon->GetSwingRange(pLocal)) * 1.9f;
+
+			CMoveData moveData = {};
+			Vec3 absOrigin = {};
+			for (int i = 0; i < iTicks; i++) {
+				F::MoveSim.RunTick(moveData, absOrigin);
+			}
+			const Vec3 vShootPos = absOrigin + vPointDelta;
+
+			const bool bInRange = hitboxpos.DistTo(vShootPos) < flRange;
+			F::MoveSim.Restore();
+			return bInRange;
+		}
 	}
 	else {
 		if (!Utils::VisPos(pLocal, target.m_pEntity, pLocal->GetShootPos(), target.m_vPos))
-		{ return false; }
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -317,38 +335,38 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 	switch (Vars::Aimbot::Melee::AimMethod.Value)
 	{
-		case 0:
+	case 0:
+	{
+		pCmd->viewangles = vAngle;
+		I::EngineClient->SetViewAngles(pCmd->viewangles);
+		break;
+	}
+
+	case 1:
+	{
+		if (Vars::Aimbot::Melee::SmoothingAmount.Value == 0)
 		{
+			// plain aim at 0 smoothing factor
 			pCmd->viewangles = vAngle;
 			I::EngineClient->SetViewAngles(pCmd->viewangles);
 			break;
 		}
 
-		case 1:
-		{
-			if (Vars::Aimbot::Melee::SmoothingAmount.Value == 0)
-			{
-				// plain aim at 0 smoothing factor
-				pCmd->viewangles = vAngle;
-				I::EngineClient->SetViewAngles(pCmd->viewangles);
-				break;
-			}
+		Vec3 vecDelta = vAngle - pCmd->viewangles;
+		Math::ClampAngles(vecDelta);
+		pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.Value;
+		I::EngineClient->SetViewAngles(pCmd->viewangles);
+		break;
+	}
 
-			Vec3 vecDelta = vAngle - pCmd->viewangles;
-			Math::ClampAngles(vecDelta);
-			pCmd->viewangles += vecDelta / Vars::Aimbot::Melee::SmoothingAmount.Value;
-			I::EngineClient->SetViewAngles(pCmd->viewangles);
-			break;
-		}
+	case 2:
+	{
+		Utils::FixMovement(pCmd, vAngle);
+		pCmd->viewangles = vAngle;
+		break;
+	}
 
-		case 2:
-		{
-			Utils::FixMovement(pCmd, vAngle);
-			pCmd->viewangles = vAngle;
-			break;
-		}
-
-		default: break;
+	default: break;
 	}
 }
 
@@ -359,7 +377,7 @@ bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, 
 		return false;
 	}
 
-	if (Target.ShouldBacktrack){
+	if (Target.ShouldBacktrack) {
 		return true;
 	}
 
