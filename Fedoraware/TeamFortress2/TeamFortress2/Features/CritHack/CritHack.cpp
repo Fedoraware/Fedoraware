@@ -125,6 +125,8 @@ bool CCritHack::NoRandomCrits(CBaseCombatWeapon* pWeapon)
 
 bool CCritHack::ShouldCrit()
 {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return false; }	//	will never hit
 	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
 	if (critKey.Down()) { return true; }
 	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.Value) { return true; }
@@ -133,7 +135,7 @@ bool CCritHack::ShouldCrit()
 	if (Vars::CritHack::AutoMeleeCrit.Value && G::CurWeaponType == EWeaponType::MELEE)
 	{
 		//Base melee damage
-		int MeleeDamage = 65;
+		int MeleeDamage = pLocal->GetClassNum() == ETFClass::CLASS_SCOUT ? 35 : 65;
 
 		//Could be missing wepaons or reskins
 		switch (G::CurItemDefIndex)
@@ -165,6 +167,7 @@ bool CCritHack::ShouldCrit()
 		}
 		case Soldier_t_TheEqualizer:
 		{
+			MeleeDamage = std::ceil(107.25 - (0.37295 * pLocal->GetHealth()));
 			//The Equalizer does more damage the lower the local player's health is
 			break;
 		}
@@ -207,6 +210,8 @@ bool CCritHack::ShouldCrit()
 		}
 		case Sniper_t_TheShahanshah:
 		{
+			const int iHalfHealth = pLocal->GetMaxHealth() / 2;
+			MeleeDamage = pLocal->GetHealth() > iHalfHealth ? 49 : 81;
 			//The Shahanshah has a -25% melee damage stat when above half health and a +25% when below half health
 			//81 if below half health
 			//49 if above half health
@@ -215,16 +220,23 @@ bool CCritHack::ShouldCrit()
 		default: break;
 		}
 
-		CBaseEntity* Player;
-		if ((Player = I::ClientEntityList->GetClientEntity(G::CurrentTargetIdx)))
+		CBaseEntity* pTarget = I::ClientEntityList->GetClientEntity(G::CurrentTargetIdx);
+		if (pTarget)
 		{
 			if (G::CurItemDefIndex == Heavy_t_TheHolidayPunch)
 			{
-				if (Player->OnSolid())
+				if ((MeleeDamage >= pTarget->GetHealth()) && pTarget->IsVulnerable()) {
+					return false;
+				}
+				else if (pTarget->OnSolid() && !pTarget->IsTaunting() && !pTarget->GetViewingCYOAPDA()) {
 					return true;
+				}
+				else {
+					return false;
+				}
 			}
 
-			if (MeleeDamage <= Player->GetHealth())
+			if (MeleeDamage <= pTarget->GetHealth())
 				return true;
 		}
 	}
