@@ -225,11 +225,14 @@ bool CCritHack::ShouldCrit()
 		{
 			if (G::CurItemDefIndex == Heavy_t_TheHolidayPunch)
 			{
-				if (MeleeDamage >= pTarget->GetHealth()) {
+				if ((MeleeDamage >= pTarget->GetHealth()) && pTarget->IsVulnerable()) {
 					return false;
 				}
 				else if (pTarget->OnSolid() && !pTarget->IsTaunting() && !pTarget->GetViewingCYOAPDA()) {
 					return true;
+				}
+				else {
+					return false;
 				}
 			}
 
