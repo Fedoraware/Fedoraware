@@ -155,7 +155,7 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 		return;
 	}
 
-	if (I::GlobalVars->tickcount >= iNextPassiveTick && Vars::Misc::CL_Move::PassiveRecharge.Value && G::ShiftedTicks < Vars::Misc::CL_Move::DTTicks.Value)
+	if (I::GlobalVars->tickcount >= iNextPassiveTick && Vars::Misc::CL_Move::PassiveRecharge.Value && G::ShiftedTicks <= Vars::Misc::CL_Move::DTTicks.Value)
 	{
 		iNextPassiveTick = I::GlobalVars->tickcount + (iTickRate / Vars::Misc::CL_Move::PassiveRecharge.Value);
 		return;
