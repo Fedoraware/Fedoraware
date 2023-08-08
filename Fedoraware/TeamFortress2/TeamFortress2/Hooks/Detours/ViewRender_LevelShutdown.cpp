@@ -7,6 +7,6 @@ MAKE_HOOK(ViewRender_LevelShutdown, Utils::GetVFuncPtr(I::ViewRender, 2), void, 
 		  void* ecx, void* edx)
 {
 	F::Visuals.ClearMaterialHandles();
-	F::Statistics.Submit();
+	//F::Statistics.Submit();
 	Hook.Original<FN>()(ecx, edx);
 }

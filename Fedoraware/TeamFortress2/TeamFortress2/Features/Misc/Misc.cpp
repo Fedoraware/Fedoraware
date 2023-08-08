@@ -184,7 +184,7 @@ void CMisc::PrintProjAngles(CBaseEntity* pLocal)
 
 		const Vec3 vDeltaAng = vLocalEyeAngles - vProjAngles;
 		const Vec3 vDeltaPos = vLocalEyePosition - vProjPosition;
-		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), { 255, 180, 0, 255 });
+		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), { 255, 180, 0, 255 }, Vars::Debug::Logging.Value);
 		flNextPrint = I::GlobalVars->curtime + 1.f;
 	}
 }
@@ -1381,7 +1381,7 @@ void CMisc::LockAchievements()
 	}
 }
 
-#ifdef 0	// it's down lol
+#if 0	// it's down lol
 #include <thread>
 
 #include <windows.h>

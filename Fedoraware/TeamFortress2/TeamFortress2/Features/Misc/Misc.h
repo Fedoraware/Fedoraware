@@ -60,6 +60,7 @@ public:
 
 ADD_FEATURE(CMisc, Misc)
 
+#if 0
 class CStatistics
 {
 public:
@@ -75,3 +76,4 @@ public:
 };
 
 ADD_FEATURE(CStatistics, Statistics);
+#endif

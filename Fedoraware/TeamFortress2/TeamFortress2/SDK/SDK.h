@@ -773,8 +773,8 @@ namespace Utils
 		}
 	}
 
-	__inline void ConLog(const char* cFunction, const char* cLog, Color_t cColour){
-		if (!Vars::Debug::Logging.Value) { return; }
+	__inline void ConLog(const char* cFunction, const char* cLog, Color_t cColour, const bool bShouldPrint){
+		if (!bShouldPrint) { return; }
 		I::Cvar->ConsoleColorPrintf(cColour, "[%s] ", cFunction);
 		I::Cvar->ConsoleColorPrintf({ 255, 255, 255, 255 }, "%s\n", cLog);
 	}

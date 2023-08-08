@@ -13,7 +13,7 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 {
 	F::Visuals.StoreMaterialHandles();
 	F::Visuals.OverrideWorldTextures();
-	F::Statistics.Clear();
+	//F::Statistics.Clear();
 
 	F::Backtrack.Restart();
 	F::Ticks.Reset();

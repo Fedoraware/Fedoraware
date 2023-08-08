@@ -91,7 +91,7 @@ void Initialize()
 	g_ConVars.Init();
 	F::Ticks.Reset();
 
-	F::Statistics.m_SteamID = g_SteamInterfaces.User->GetSteamID();
+	//F::Statistics.m_SteamID = g_SteamInterfaces.User->GetSteamID();
 
 	F::Commands.Init();
 
