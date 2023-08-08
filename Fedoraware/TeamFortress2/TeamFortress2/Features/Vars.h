@@ -742,7 +742,6 @@ namespace Vars
 			inline CVar<bool> SEnabled{ false };
 			inline CVar<int> SFactor{ 1 };
 			inline CVar<bool> NotInAir{ false };
-			inline CVar<bool> StopMovement{ false };
 			inline CVar<int> TeleportKey{ 0x52 }; //R
 			inline CVar<int> TeleportMode{ 0 };
 			inline CVar<int> TeleportFactor{ 2 };

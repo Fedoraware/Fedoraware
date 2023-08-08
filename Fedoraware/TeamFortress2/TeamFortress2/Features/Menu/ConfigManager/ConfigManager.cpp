@@ -540,7 +540,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
-				SAVE_VAR(Vars::Misc::CL_Move::StopMovement);
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey); // { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
 				SAVE_VAR(Vars::Misc::CL_Move::TeleportMode);
@@ -931,7 +930,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Misc::CL_Move::PassiveRecharge);
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT); // { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir); // { true, L"Doubletap" };
-				LOAD_VAR(Vars::Misc::CL_Move::StopMovement);
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey); // { 0x46, L"Teleport Key" }; //F
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportMode);
 				LOAD_VAR(Vars::Misc::CL_Move::TeleportFactor);

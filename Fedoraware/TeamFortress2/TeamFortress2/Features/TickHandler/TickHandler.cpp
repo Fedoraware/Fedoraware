@@ -16,15 +16,17 @@ void CTickshiftHandler::Recharge(CUserCmd* pCmd)
 {
 	//	called from CreateMove
 	static KeyHelper kRecharge{ &Vars::Misc::CL_Move::RechargeKey.Value };
-	bRecharge = (((!bTeleport && !bDoubletap && !bSpeedhack) && (kRecharge.Down()) || G::RechargeQueued) || bRecharge) && iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value;
-	G::ShouldStop = (bRecharge && Vars::Misc::CL_Move::StopMovement.Value) || G::ShouldStop;
+	const bool bBusy = bTeleport || bDoubletap || bSpeedhack;
+	const bool bRequested = kRecharge.Down() || G::RechargeQueued;
+	const bool bTeleportCompliant = Vars::Misc::CL_Move::TeleportMode.Value != 2 ? iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value : !iAvailableTicks;
+	bRecharge = (!bBusy && bTeleportCompliant && bRequested) || bRecharge;
 }
 
 void CTickshiftHandler::Teleport(CUserCmd* pCmd)
 {
 	//	called from CreateMove
 	static KeyHelper kTeleport{ &Vars::Misc::CL_Move::TeleportKey.Value };
-	bTeleport = (((!bRecharge && !bDoubletap && !bSpeedhack) && kTeleport.Down()) || bTeleport) && iAvailableTicks;
+	bTeleport = (((!bRecharge && !bDoubletap && !bSpeedhack) && kTeleport.Down()) || (bTeleport && Vars::Misc::CL_Move::TeleportMode.Value != 2)) && iAvailableTicks;
 }
 
 void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
@@ -122,7 +124,7 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 	if (bTeleport)
 	{
 		bIgnoreSendNetMsg = true;
-		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? std::min(std::min(Vars::Misc::CL_Move::TeleportFactor.Value, 2), iAvailableTicks) : iAvailableTicks);
+		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? std::clamp(Vars::Misc::CL_Move::TeleportFactor.Value, 2, iAvailableTicks) : iAvailableTicks);
 		for (int i = 0; i < iWishTicks; i++) { CLMoveFunc(accumulated_extra_samples, i == iWishTicks); }
 		return;
 	}
