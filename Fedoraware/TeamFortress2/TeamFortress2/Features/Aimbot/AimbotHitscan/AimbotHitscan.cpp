@@ -781,6 +781,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 	}
 	else {
 		PrioTarget = nullptr;
+		G::CurrentTargetIdx = 0;
 	}
 
 	if (GetTarget(pLocal, pWeapon, target) && bShouldAim)

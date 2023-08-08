@@ -268,7 +268,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	if (!G::WeaponCanAttack)
 	{
-		return true; // we can't attack, so it shouldn't matter if we say we've solved it, also shouldn't f wit da chammies iykyk
+		return false; // fix chams elsewhere this definitely fucked with it.
 	}
 
 	if (!pNetChannel || !cl_flipviewmodels)
@@ -1226,7 +1226,10 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.Value == VK_LBUTTON
 							 ? (pCmd->buttons & IN_ATTACK)
 							 : F::AimbotGlobal.IsKeyDown());
-	if (!bShouldAim) { return; }
+	if (!bShouldAim) { 
+		G::CurrentTargetIdx = 0;
+		return; 
+	}
 
 	if (Vars::Aimbot::Projectile::WaitForHit.Value && m_flTravelTimeStart)
 	{

@@ -452,4 +452,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			Aim(pCmd, target.m_vAngleTo);
 		}
 	}
+	else {
+		G::CurrentTargetIdx = 0;
+	}
 }
