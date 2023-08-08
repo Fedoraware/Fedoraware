@@ -41,10 +41,20 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 		return false;
 	}
 
+	if (bAttacked && !G::IsChoking) { 
+		bAttacked = false; 
+		return false; 
+	}
+
 	// Are we attacking? TODO: Add more logic here
-	if (G::IsAttacking && Vars::Misc::CL_Move::UnchokeOnAttack.Value)
+	if (G::IsAttacking)
 	{
-		return false;
+		if (Vars::AntiHack::AntiAim::RehideAntiAimPostShot.Value) {
+			bAttacked = true;
+		}
+		if (Vars::Misc::CL_Move::UnchokeOnAttack.Value) {
+			return false;
+		}
 	}
 
 	// Special Cases
@@ -128,7 +138,7 @@ void CFakeLag::Prediction(const int nOldGroundInt, const int nOldFlags) {
 void CFakeLag::OnTick(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags)
 {
 	Prediction(nOldGroundInt, nOldFlags);
-	G::IsChoking = false;	//	do this first
+	G::IsChoking = !*pSendPacket;	//	do this first
 	if (G::ShouldShift) { return; }
 	if (!Vars::Misc::CL_Move::Fakelag.Value && !bPreservingBlast) { ChokeCounter = 0; return; }
 

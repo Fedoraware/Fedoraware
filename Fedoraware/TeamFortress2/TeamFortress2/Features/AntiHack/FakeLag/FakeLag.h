@@ -14,6 +14,7 @@ class CFakeLag
 	int ChosenAmount = 0; // How many ticks should be choked
 	bool bPreservingBlast = false;
 	bool bUnducking = false;
+	bool bAttacked = false;
 	std::pair<bool, int> pInAirTicks = { false, 0 };	//	started on ground, ticks in air
 	Vec3 vLastPosition;
 

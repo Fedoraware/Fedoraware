@@ -615,6 +615,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::AntiHack::AntiAim::FakeJitter);
 				SAVE_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
+				SAVE_VAR(Vars::AntiHack::AntiAim::RehideAntiAimPostShot);
 				SAVE_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
 				SAVE_VAR(Vars::AntiHack::AntiAim::LegJitter);
 				SAVE_VAR(Vars::AntiHack::AntiAim::InvalidShootPitch);
@@ -1005,6 +1006,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::AntiHack::AntiAim::FakeJitter);
 				LOAD_VAR(Vars::AntiHack::AntiAim::RandInterval);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiOverlap);
+				LOAD_VAR(Vars::AntiHack::AntiAim::RehideAntiAimPostShot);
 				LOAD_VAR(Vars::AntiHack::AntiAim::AntiBackstab);
 				LOAD_VAR(Vars::AntiHack::AntiAim::LegJitter);
 				LOAD_VAR(Vars::AntiHack::AntiAim::InvalidShootPitch);

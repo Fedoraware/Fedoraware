@@ -824,6 +824,7 @@ namespace Vars
 			inline CVar<float> FakeJitter{ 0 };
 			inline CVar<float> RealJitter{ 0 };
 			inline CVar<int> RandInterval{ 25 };
+			inline CVar<bool> RehideAntiAimPostShot{ true };
 			inline CVar<bool> AntiBackstab{ false };
 			inline CVar<bool> LegJitter{ false }; // frick u fourteen
 			inline CVar<bool> AntiOverlap{ false };
