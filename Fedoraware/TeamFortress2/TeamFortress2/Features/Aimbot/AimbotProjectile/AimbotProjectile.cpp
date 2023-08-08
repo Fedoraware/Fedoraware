@@ -1123,6 +1123,27 @@ bool CAimbotProjectile::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWe
 bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Target_t& outTarget)
 {
 	if (!Vars::Aimbot::Projectile::SplashPrediction.Value) { return false; }
+	//Utils::ConLog("Splash Prediction", tfm::format("pWeapon->GetDamageType := %d", pWeapon->GetDamageType()).c_str(), {255, 180, 0, 255}, Vars::Debug::Logging.Value);
+	//Utils::ConLog("Splash Prediction", tfm::format("pWeapon->GetDamageRadius := %.3f", pWeapon->GetDamageRadius()).c_str(), {255, 180, 0, 255}, Vars::Debug::Logging.Value);
+	
+	switch (pWeapon->GetWeaponID())
+	{
+	case TF_WEAPON_PARTICLE_CANNON:
+	case TF_WEAPON_CROSSBOW:
+	case TF_WEAPON_RAYGUN_REVENGE:
+	case TF_WEAPON_SYRINGEGUN_MEDIC:
+	case TF_WEAPON_COMPOUND_BOW:
+	case TF_WEAPON_GRENADELAUNCHER:
+	case TF_WEAPON_PIPEBOMBLAUNCHER:
+	case TF_WEAPON_STICKBOMB:
+	case TF_WEAPON_STICKY_BALL_LAUNCHER:
+	case TF_WEAPON_FLAREGUN:
+	{
+		return false;
+	}
+	default: break;
+	}
+
 
 	std::optional<float> splashRadius;
 
