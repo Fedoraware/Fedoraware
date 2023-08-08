@@ -1559,7 +1559,7 @@ void CMenu::MenuHvH()
 			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne", "Retain Fakelag", "Stop Recharge Movement", "Safe Tick", "Safe Tick Airborne", "Auto Retain" }, { &Vars::Misc::CL_Move::RechargeWhileDead.Value, &Vars::Misc::CL_Move::AutoRecharge.Value, &Vars::Misc::CL_Move::WaitForDT.Value, &Vars::Misc::CL_Move::AntiWarp.Value, &Vars::Misc::CL_Move::NotInAir.Value, &Vars::Misc::CL_Move::RetainFakelag.Value, &Vars::Misc::CL_Move::StopMovement.Value, &Vars::Misc::CL_Move::SafeTick.Value, &Vars::Misc::CL_Move::SafeTickAirOverride.Value, &Vars::Misc::CL_Move::AutoRetain.Value }, "Options");
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
-			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 2;
+			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 3;
 			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 21, "%d"); HelpMarker("How many ticks to shift");
 			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
