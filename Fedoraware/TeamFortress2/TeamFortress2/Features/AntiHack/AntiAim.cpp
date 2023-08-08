@@ -36,10 +36,9 @@ void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSid
 	const float flRollUp = vecUp.z * pCmd->sidemove; //	chunky
 	const float x = vecOldForward.x * flPitchSide + vecOldForward.y * flYawSide + vecOldForward.x * flPitchForward + vecOldForward.y * flYawForward + vecOldForward.z * flRollUp;
 	const float y = vecOldRight.x * flPitchSide + vecOldRight.y * flYawSide + vecOldRight.x * flPitchForward + vecOldRight.y * flYawForward + vecOldRight.z * flRollUp;
-	const float z = vecOldUp.x * flYawSide + vecOldUp.y * flPitchSide + vecOldUp.x * flYawForward + vecOldUp.y * flPitchForward + vecOldUp.z * flRollUp;
 	pCmd->forwardmove = std::clamp(x, -flMaxForwardSpeed, flMaxForwardSpeed);
 	pCmd->sidemove = std::clamp(y, -flMaxSideSpeed, flMaxSideSpeed);
-	pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed); //	not a good idea
+	//pCmd->upmove = std::clamp(z, -flMaxUpSpeed, flMaxUpSpeed); //	not a good idea
 }
 
 void CAntiAim::ManualMouseEvent(CUserCmd* pCmd)
@@ -225,6 +224,9 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::RealViewAngles = G::ViewAngles;
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = { false, false };
+
+	while (fabsf(flLastFakeOffset) > 180) { flLastFakeOffset += (flLastFakeOffset > 0) ? -360 : 360; }
+	while (fabsf(flLastRealOffset) > 180) { flLastRealOffset += (flLastRealOffset > 0) ? -360 : 360; }
 
 	FakeShotAngles(pCmd);
 
