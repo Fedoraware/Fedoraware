@@ -57,7 +57,7 @@ MAKE_HOOK(CNetChan_SendNetMsg, g_Pattern.Find(L"engine.dll", L"55 8B EC 57 8B F9
 			const int iTicksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 2;	//	there are 2 backup commands
 			const int iAllowedNewCommands = fmax(iTicksMax - G::ShiftedTicks, 0);	//	how many commands we can send before we are dipping into the ticks we are storing.
 			const auto& moveMsg = reinterpret_cast<CLC_Move&>(msg);
-			const int iCmdCount = moveMsg.m_nNewCommands + moveMsg.m_nBackupCommands;
+			const int iCmdCount = moveMsg.m_nNewCommands;// + moveMsg.m_nBackupCommands;
 			if (iCmdCount > iAllowedNewCommands)
 			{
 				Utils::ConLog("clc_Move", tfm::format("%d sent <%d | %d>, max was %d.", iCmdCount, moveMsg.m_nNewCommands, moveMsg.m_nBackupCommands, iAllowedNewCommands).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
