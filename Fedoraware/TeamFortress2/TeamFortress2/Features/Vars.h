@@ -900,5 +900,6 @@ namespace Vars
 	namespace Debug
 	{
 		inline CVar<bool> DebugInfo{ false };
+		inline CVar<bool> Logging{false};
 	}
 }

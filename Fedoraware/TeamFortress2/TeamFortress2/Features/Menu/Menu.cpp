@@ -95,7 +95,6 @@ void CMenu::DrawMenu()
 			}
 			ImGui::HelpMarker("Material Editor");
 
-#ifdef _DEBUG
 // Debug Menu
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_BUG_REPORT))
@@ -103,7 +102,6 @@ void CMenu::DrawMenu()
 				ShowDebugMenu = !ShowDebugMenu;
 			}
 			ImGui::HelpMarker("Debug Menu");
-#endif
 		}
 
 		// Tabbar
@@ -1559,7 +1557,7 @@ void CMenu::MenuHvH()
 			MultiCombo({ "Recharge While Dead", "Auto Recharge", "Wait for DT", "Anti-warp", "Avoid airborne", "Retain Fakelag", "Stop Recharge Movement", "Safe Tick", "Safe Tick Airborne", "Auto Retain" }, { &Vars::Misc::CL_Move::RechargeWhileDead.Value, &Vars::Misc::CL_Move::AutoRecharge.Value, &Vars::Misc::CL_Move::WaitForDT.Value, &Vars::Misc::CL_Move::AntiWarp.Value, &Vars::Misc::CL_Move::NotInAir.Value, &Vars::Misc::CL_Move::RetainFakelag.Value, &Vars::Misc::CL_Move::StopMovement.Value, &Vars::Misc::CL_Move::SafeTick.Value, &Vars::Misc::CL_Move::SafeTickAirOverride.Value, &Vars::Misc::CL_Move::AutoRetain.Value }, "Options");
 			HelpMarker("Enable various features regarding tickbase exploits");
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
-			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 3;
+			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 3;	// remove the 2 backup cmd's and the cmd that we will send when we dt.
 			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 21, "%d"); HelpMarker("How many ticks to shift");
 			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
@@ -2306,7 +2304,6 @@ void CMenu::SettingsWindow()
 /* Debug Menu */
 void CMenu::DebugMenu()
 {
-#ifdef _DEBUG
 	using namespace ImGui;
 	if (!ShowDebugMenu) { return; }
 
@@ -2318,6 +2315,7 @@ void CMenu::DebugMenu()
 		const auto& pLocal = g_EntityCache.GetLocal();
 
 		Checkbox("Show Debug info", &Vars::Debug::DebugInfo.Value);
+		Checkbox("Console Logging", &Vars::Debug::Logging.Value);
 		Checkbox("Allow secure servers", I::AllowSecureServers);
 
 		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
@@ -2339,7 +2337,6 @@ void CMenu::DebugMenu()
 	}
 
 	PopStyleVar(2);
-#endif
 }
 
 /* Window for the camera feature */

@@ -249,10 +249,14 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 
 		if (fabsf(flAdjustedPitch) > 89.f) { vAngStore.y += 180; }	//	account for likely yaw faking
 		while (vAngStore.y > 360) { vAngStore.y -= 360.f; }	//	hacky fix for previous line
+
 		vAngStore.x += 540;	//	(360+180)
-		Utils::ConLog("Resolver", tfm::format("sent %.1f %.1f", vAngles.x, vAngles.y).c_str(), {0, 222, 255, 255});
-		Utils::ConLog("Resolver", tfm::format("adjusted %.1f %.1f", vAngAdjusted.x, vAngAdjusted.y).c_str(), {0, 222, 255, 255});
-		Utils::ConLog("Resolver", tfm::format("adjusted 2 %.1f %.1f", vAngStore.x, vAngStore.y).c_str(), {0, 222, 255, 255});
+
+		PlayerInfo_t pInfo{};
+		if (I::EngineClient->GetPlayerInfo(iIndex, &pInfo)) {
+			Utils::ConLog("Resolver", tfm::format("%s networked angles: %.1f %.1f", pInfo.name, vAngles.x, vAngles.y).c_str(), { 0, 222, 255, 255 });
+			Utils::ConLog("Resolver", tfm::format("%s corrected angles: %.1f %.1f", pInfo.name, vAngStore.x, vAngStore.y).c_str(), { 0, 222, 255, 255 });
+		}
 	}
 
 	mResolverData[pEntity].pLastFireAngles = { { I::GlobalVars->tickcount, true }, vAngStore};

@@ -1381,7 +1381,7 @@ void CMisc::LockAchievements()
 	}
 }
 
-
+#ifdef 0	// it's down lol
 #include <thread>
 
 #include <windows.h>
@@ -1466,4 +1466,6 @@ void CStatistics::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 		}
 	}
 }
+
+#endif
 

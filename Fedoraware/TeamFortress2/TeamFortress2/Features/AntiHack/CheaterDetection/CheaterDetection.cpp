@@ -290,7 +290,7 @@ void CCheaterDetection::FillServerInfo()
 	server.flAverageScorePerSecond = 0.f;
 	server.iTickRate = 1.f / I::GlobalVars->interval_per_tick;
 	server.flMultiplier = 66.7 / server.iTickRate;
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server tickrate & created appropriate multiplier {%.1f | %.1f}.", server.iTickRate, server.flMultiplier).c_str(), { 224, 255, 131, 255 });
+	//Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server tickrate & created appropriate multiplier {%.1f | %.1f}.", server.iTickRate, server.flMultiplier).c_str(), { 224, 255, 131, 255 });
 }
 
 void CCheaterDetection::FindScores()
@@ -314,7 +314,7 @@ void CCheaterDetection::FindScores()
 
 	// now that we've gone through all players (including local) find the avg
 	server.flAverageScorePerSecond = (flTotalAvg / (float)iTotalPlayers);
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated avg. server score per second at %.1f.", server.flAverageScorePerSecond).c_str(), { 224, 255, 131, 255 });
+	//Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated avg. server score per second at %.1f.", server.flAverageScorePerSecond).c_str(), { 224, 255, 131, 255 });
 }
 
 void CCheaterDetection::FindHitchances()
@@ -325,7 +325,7 @@ void CCheaterDetection::FindHitchances()
 	const float flAvg = (float)server.iHits / (float)server.iMisses;
 	server.flHighAccuracy = std::clamp(flAvg * 2, .001f, .95f);
 
-	Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.5f | %.5f}", flAvg, server.flHighAccuracy).c_str(), { 224, 255, 131, 255 });
+	//Utils::ConLog("CheaterDetection[UTIL]", tfm::format("Calculated server hitchance data {%.5f | %.5f}", flAvg, server.flHighAccuracy).c_str(), { 224, 255, 131, 255 });
 }
 
 void CCheaterDetection::Reset()
