@@ -623,8 +623,8 @@ void CMenu::MenuVisuals()
 						"Spook wood",
 						"Edgy",
 						"Starlight serenity",
-						"Fade"
-						"bad to the bone"
+						"Fade",
+						"bad to the bone",
 						"skulls and roses"
 					};
 					static std::vector dmeGlowMaterial{
