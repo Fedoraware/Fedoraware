@@ -612,20 +612,20 @@ void CMenu::MenuVisuals()
 					};
 					static std::vector DMEProxyMaterials{
 						"None",
-						"Spectrum splattered",
-						"Electro skulls",
+						"Spectrum Splattered",
+						"Electro Skulls",
 						"Jazzy",
-						"Frozen aurora",
+						"Frozen Aurora",
 						"Hana",
 						"IDK",
-						"Ghost thing",
+						"Ghost Thing",
 						"Flames",
-						"Spook wood",
+						"Spook Wood",
 						"Edgy",
-						"Starlight serenity",
+						"Starlight Serenity",
 						"Fade",
-						"bad to the bone",
-						"skulls and roses"
+						"Bad to the Bone",
+						"Skulls and Roses"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
