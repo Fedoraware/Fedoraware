@@ -27,6 +27,8 @@ namespace ProxySkins
 	static IMaterial* edgy = nullptr;
 	static IMaterial* serenity = nullptr;
 	static IMaterial* fade = nullptr;
+	static IMaterial* bad_to_the_bone = nullptr;
+	static IMaterial* Skulls_and_roses = nullptr;
 
 	static KeyValues* Proxies = nullptr;
 
@@ -84,6 +86,8 @@ namespace ProxySkins
 		edgy = CreateProxySkin("patterns/workshop/500642896/500642896", "edgy");
 		serenity = CreateProxySkin("patterns/workshop/smissmas_2020/2265040710/2265040710_starlight2", "serenity");
 		fade = CreateProxySkin("patterns/workshop/smissmas_2020/2265040710/2265040710_serenity", "fade");
+		bad_to_the_bone = CreateProxySkin("patterns/workshop/screamfortress_2018/1181531026/1181531026_boned_pattern", "bad_to_the_bone");
+		Skulls_and_roses = CreateProxySkin("patterns/workshop/screamfortress_2020/1857212370/1857212370_deathdeluxe", "Skulls_and_roses");
 	}
 }
 
@@ -274,6 +278,10 @@ IMaterial* CDMEChams::GetProxyMaterial(int nIndex)
 			return serenity;
 		case 12:
 			return fade;
+		case 13:
+			return bad_to_the_bone;
+		case 14:
+			return Skulls_and_roses;
 		default:
 			return nullptr;
 	}
