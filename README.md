@@ -6,10 +6,10 @@
 </p>
 <h2 align="center" style="margin-top: 0px;">SE-Owned but coollllll</h2>
 <p align="center">
-<a href="https://github.com/tf2cheater2013/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/tf2cheater2013/Fedoraware"></a>
+<a href="https://github.com/Fedoraware/Fedoraware/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/Fedoraware/Fedoraware"></a>
 <a href="https://discord.gg/p7ahhu7P6M"><img alt="Fedoraware Discord Server" src="https://img.shields.io/discord/1115064843209289849?label=Discord&logo=Discord"></a>  
-<a href="https://github.com/tf2cheater2013/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Fedoraware/Fedoraware/msbuild.yml?branch=main"></a>
-<a href="https://github.com/tf2cheater2013/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tf2cheater2013/Fedoraware"></a>
+<a href="https://github.com/Fedoraware/Fedoraware/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Fedoraware/Fedoraware/msbuild.yml?branch=main"></a>
+<a href="https://github.com/Fedoraware/Fedoraware/commits/main"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/Fedoraware/Fedoraware"></a>
 </p>  
 
 <hr/>
@@ -27,16 +27,14 @@
 - Read the [Fedoraware Documentation](https://fedoraware.github.io/Docs/) to learn more about Fedoraware and its Features.
 
 ## Guide:
-- We suggest using [Fedoraloader](https://github.com/lnx00/Fedoraloader/releases/) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
-- Alternatively, use an injector like [Xenos](https://github.com/relaxtakenotes/xenos) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
-- __If you have any problems, you can leave them - [Issues](https://github.com/tf2cheater2013/Fedoraware/issues)__ (Dear god please link a config and follow the issue template)
+- We suggest using [Fedoraloader](https://github.com/Fedoraware/Fedoraloader/releases) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
+- Alternatively, use an injector like [Xenos](https://github.com/DarthTon/Xenos/releases) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
+- __If you have any problems, you can open an - [issue](https://github.com/Fedoraware/Fedoraware/issues)__
 
 ## Media:  
 - [Fedoraware is the best free cheat in tf2 (by bean)](https://www.youtube.com/watch?v=FyeaMghYZL0)
 - [The Crew (by Josep)](https://www.youtube.com/watch?v=7I44S9sSOcc)
 - [Playing as Michael Jackson (by km)](https://www.youtube.com/watch?v=cVD3BBEMNPo)
-
-![Screenshot](https://user-images.githubusercontent.com/17802843/161588254-5cf29b82-fd70-41c1-90c3-f77b29014a68.png)
 
 ## Credits to:
   - [spook953](https://github.com/spook953)
