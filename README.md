@@ -29,6 +29,7 @@
 ## Guide:
 - We suggest using [Fedoraloader](https://github.com/Fedoraware/Fedoraloader/releases) as it downloads the latest build and injects it with minimal crashing. It also includes VAC Bypass
 - Alternatively, use an injector like [Xenos](https://github.com/DarthTon/Xenos/releases) to inject the dll into TF2. [(Tutorial)](https://www.youtube.com/watch?v=PT3kVA053IY)
+- __If you have any suggestions for the cheat, or questions about it, you can open a thread in [discussions](https://github.com/Fedoraware/Fedoraware/discussions)__
 - __If you have any problems, you can open an - [issue](https://github.com/Fedoraware/Fedoraware/issues)__
 
 ## Media:  
