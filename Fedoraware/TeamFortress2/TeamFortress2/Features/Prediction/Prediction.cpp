@@ -20,13 +20,20 @@ int CEnginePrediction::GetTickbase(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 void CEnginePrediction::Start(CUserCmd* pCmd)
 {
+	// credits for some sigs https://www.unknowncheats.me/forum/3333826-post1.html
+
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-	if (pLocal && pLocal->IsAlive() && I::MoveHelper)
+	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
 	{
+		static auto fnResetInstanceCounters = reinterpret_cast<void(__cdecl*)()>(g_Pattern.Find(L"client.dll", L"68 ? ? ? ? 6A ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 83 C4 ? C3"));
+
+		fnResetInstanceCounters();
 		pLocal->SetCurrentCmd(pCmd);
+
 		oldrandomseed = *I::RandomSeed;
 		*I::RandomSeed = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
+
 
 		m_fOldCurrentTime = I::GlobalVars->curtime;
 		m_fOldFrameTime = I::GlobalVars->frametime;
@@ -43,7 +50,28 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 		I::Prediction->m_bFirstTimePredicted = false;
 		I::Prediction->m_bInPrediction = true;
 
+		I::GameMovement->StartTrackPredictionErrors(pLocal);
+
+		//if (pCmd->weaponselect) {
+		//	if (CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon()) { 
+		//		pLocal->SelectItem(pWeapon->GetName(), pCmd->weaponsubtype); 
+		//	}
+		//}
+
+		pLocal->UpdateButtonState(pCmd->buttons);
+
 		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
+
+		const int iThinkTick = pLocal->m_nNextThinkTick();
+
+		if (pLocal->PhysicsRunThink(0)) {
+			pLocal->PreThink();
+		}
+
+		if (iThinkTick > 0 && iThinkTick <= I::GlobalVars->tickcount) {
+			pLocal->SetNextThink(-1, NULL);
+			pLocal->Think();
+		}
 
 		I::MoveHelper->SetHost(pLocal);
 
@@ -51,6 +79,8 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 		I::GameMovement->ProcessMovement(pLocal, &m_MoveData);
 		I::Prediction->FinishMove(pLocal, pCmd, &m_MoveData);
 
+		pLocal->PostThink();
+		I::GameMovement->FinishTrackPredictionErrors(pLocal);
 		pLocal->SetTickBase(nOldTickBase);
 
 		I::Prediction->m_bInPrediction = bOldInPrediction;
@@ -62,14 +92,13 @@ void CEnginePrediction::End(CUserCmd* pCmd)
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-	if (pLocal && pLocal->IsAlive() && I::MoveHelper)
+	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
 	{
 		I::MoveHelper->SetHost(nullptr);
 
 		I::GlobalVars->curtime = m_fOldCurrentTime;
 		I::GlobalVars->frametime = m_fOldFrameTime;
 		I::GlobalVars->tickcount = m_nOldTickCount;
-
 		pLocal->SetCurrentCmd(nullptr);
 
 		*I::RandomSeed = -1;
