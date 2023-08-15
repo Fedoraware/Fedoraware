@@ -37,14 +37,14 @@ struct TickRecord
 enum class BacktrackMode
 {
 	ALL, //	iterates through every tick (slow probably)
-	FIRST, // first
 	LAST, // last
-	ADAPTIVE, // prefers on shot records, last
-	ONSHOT, // only returns on shot records
+	PREFERONSHOT, // prefers on shot records, last
 };
 
 class CBacktrack
 {
+	const Color_t BT_LOG_COLOUR{ 150, 0, 212, 255};
+
 //	logic
 	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
