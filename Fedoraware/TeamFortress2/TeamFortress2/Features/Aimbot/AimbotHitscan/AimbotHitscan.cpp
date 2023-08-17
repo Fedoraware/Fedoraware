@@ -162,10 +162,13 @@ std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseComba
 
 			PriorityHitbox = nHitbox;
 
-			Vec3 vPos = pTarget->GetHitboxPos(nHitbox);
-			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
-			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
-			const float flDistTo = vLocalPos.DistTo(vPos);
+			const AimInfo_t tTargetInfo = F::AimbotGlobal.GetInfo(pTarget, vLocalPos, vLocalAngles, Vars::Aimbot::Hitscan::SortMethod.Value);
+
+			const Vec3 vPos = tTargetInfo.vPos;
+			const Vec3 vAngleTo = tTargetInfo.vAngleTo;
+			const float flFOVTo = tTargetInfo.flFoVTo;
+			const float flDistTo = tTargetInfo.flDist;
+
 			const bool bPreserve = (PrioTarget == pTarget && Vars::Aimbot::Hitscan::PreserveTarget.Value);
 			const bool bIgnoreFoV = bPreserve && Vars::Aimbot::Hitscan::IgnorePreservedFoV.Value;
 
