@@ -174,7 +174,9 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 			if (vTargetPoint.DistTo(vShootPos) > flRange)	//	range check
 			{ continue; }
-			if (!CanBackstabEx(vOrigin, pTick.vOrigin, pTick.vAngles))	//	ang check
+			if (!CanBackstabEx(vShootPos, pTick.vOrigin, pTick.vAngles))	//	ang check
+			{ continue; }
+			if (!CanBackstab(vAngleTo, pTick.vAngles, (vTargetPoint - vShootPos)))	//	ang check
 			{ continue; }
 
 			// Silent backstab
