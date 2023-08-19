@@ -65,6 +65,15 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
 
+	if (Vars::Triggerbot::Stab::IgnRazor.Value) {
+		CBaseEntity* pAttachment = pEntity->FirstMoveChild();
+
+		for (int n = 0; n < 32; n++) {
+			if (!pAttachment) { continue; }
+			if (pAttachment->GetClassID() == ETFClassID::CTFWearableRazorback) { return false; }	//	Credits to mfed
+		}
+	}
+
 	if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
 	return true;
@@ -74,12 +83,6 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 {
 	CBaseEntity* pEnemy = TraceMelee(pLocal, pWeapon, pCmd->viewangles, pLocal->GetShootPos());
 	if (!pEnemy) { return; }
-
-	if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
-		pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
-	{
-		return;
-	}
 
 	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(),
 		(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
@@ -121,10 +124,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!IsEntityValid(pLocal, pEnemy)) { continue; }
-		const auto& pEnemyWeapon = pEnemy->GetWeaponFromSlot(SLOT_SECONDARY);
-		if (pEnemyWeapon && Vars::Triggerbot::Stab::IgnRazor.Value && pEnemyWeapon->GetItemDefIndex() == Sniper_s_TheRazorback)
-		{ continue; }
-
+		
 		//	NON BACKTRACK
 		if (F::Backtrack.CanHitOriginal(pEnemy)) {
 			Vec3 vTargetPoint{};

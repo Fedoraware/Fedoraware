@@ -1913,6 +1913,10 @@ void CMenu::MenuMisc()
 				F::DMEChams.CreateMaterials();
 				F::Glow.CreateMaterials();
 			}
+			if (Button("Print Hashes", ImVec2(btnWidth, 20)))
+			{
+				Hash::PrintHash();
+			}
 			//if (Button("CPrint", ImVec2(btnWidth, 20))){
 			//	I::CenterPrint->Print((char*)"niggaz");
 			//}
