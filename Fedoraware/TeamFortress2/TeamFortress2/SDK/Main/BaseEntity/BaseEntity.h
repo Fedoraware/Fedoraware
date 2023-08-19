@@ -686,9 +686,9 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetWorldSpaceCenter()
 	{
-		Vec3 vMin, vMax; GetRenderBounds(vMin, vMax);
+		const Vec3 vMax = I::GameMovement->GetPlayerMaxs(this->IsDucking());
 		Vec3 vWorldSpaceCenter = GetAbsOrigin();
-		vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
+		vWorldSpaceCenter.z += (vMax.z / 2.0f);
 		return vWorldSpaceCenter;
 	}
 

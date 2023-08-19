@@ -862,6 +862,9 @@ std::vector<Target_t> CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCo
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
 
+			I::DebugOverlay->AddBoxOverlay2(vPos, {1, 1, 1}, { -1, -1, -1 }, { 0, 0, 0 }, {255, 255, 255, 255}, { 255, 255, 255, 255 }, I::GlobalVars->interval_per_tick * 2);
+			I::DebugOverlay->AddLineOverlay(vPos, vLocalPos, 255, 255, 255, true, I::GlobalVars->interval_per_tick * 2);
+
 			if (respectFOV && flFOVTo > Vars::Aimbot::Global::AimFOV.Value)
 			{
 				continue;
