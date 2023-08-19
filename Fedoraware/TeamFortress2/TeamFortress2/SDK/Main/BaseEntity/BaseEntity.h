@@ -686,9 +686,9 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetWorldSpaceCenter()
 	{
-		Vec3 vMin, vMax; GetRenderBounds(vMin, vMax);
+		const Vec3 vMax = I::GameMovement->GetPlayerMaxs(this->IsDucking());
 		Vec3 vWorldSpaceCenter = GetAbsOrigin();
-		vWorldSpaceCenter.z += (vMin.z + vMax.z) / 2.0f;
+		vWorldSpaceCenter.z += (vMax.z / 2.0f);
 		return vWorldSpaceCenter;
 	}
 
@@ -905,5 +905,49 @@ public: //Everything else, lol.
 
 	__inline CCollisionProperty* GetCollision() {
 		return reinterpret_cast<CCollisionProperty*>(this + 0x1C8);
+	}
+
+	__inline void UpdateButtonState(int nUserCmdButtonMask)
+	{
+		static auto fnUpdateButtonState = reinterpret_cast<void(__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 81 ? ? ? ? 8B D0"));
+		fnUpdateButtonState(this, nUserCmdButtonMask);
+	}
+
+	__inline void SetNextThink(float thinkTime, const char* szContext)
+	{
+		static auto fnSetNextThink = reinterpret_cast<void(__thiscall*)(void*, float, const char*)>(g_Pattern.Find(L"client.dll", L"55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53"));
+		fnSetNextThink(this, thinkTime, szContext);
+	}
+
+	__inline int GetNextThinkTick(const char* szContext)
+	{
+		static auto fnGetNextThinkTick = reinterpret_cast<int(__thiscall*)(void*, const char*)>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86"));
+		return fnGetNextThinkTick(this, szContext);
+	}
+
+	__inline bool PhysicsRunThink(int thinkMethod = 0)
+	{
+		static auto fnPhysicsRunThink = reinterpret_cast<bool(__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 53 8B D9 56 57 8B 83 ? ? ? ? C1 E8"));
+		return fnPhysicsRunThink(this, thinkMethod);
+	}
+
+	__inline void SelectItem(const char* pstr, int iSubType) {
+		typedef bool(__thiscall* FN)(PVOID, const char*, int);
+		GetVFunc<FN>(this, 270)(this, pstr, iSubType);
+	}
+
+	__inline void PreThink() {
+		typedef bool(__thiscall* FN)(PVOID);
+		GetVFunc<FN>(this, 260)(this);
+	}
+
+	__inline void Think() {
+		typedef bool(__thiscall* FN)(PVOID);
+		GetVFunc<FN>(this, 174)(this);
+	}
+
+	__inline void PostThink() {
+		typedef bool(__thiscall* FN)(PVOID);
+		GetVFunc<FN>(this, 261)(this);
 	}
 };

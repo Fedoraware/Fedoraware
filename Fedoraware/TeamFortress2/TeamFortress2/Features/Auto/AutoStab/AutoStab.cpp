@@ -2,6 +2,14 @@
 
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../Aimbot/MovementSimulation/MovementSimulation.h"
+#include "../../TickHandler/TickHandler.h"
+
+bool CAutoStab::CanBackstabEx(const Vec3 vFrom, const Vec3 vTo, const Vec3 vTargetAng) {
+	const Vec3 vAngleTo = Math::CalcAngle(vTo, vFrom);
+	const float flFOVTo = Math::CalcFov(vTargetAng, vAngleTo);
+	return flFOVTo > 90.f;
+}
 
 bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 {
@@ -28,19 +36,18 @@ bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
 	return true;
 }
 
-bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles,
-						   CBaseEntity** pEntityOut)
+CBaseEntity* CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles, const Vec3 vStart)
 {
 	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
 
 	if (flRange <= 0.0f)
 	{
-		return false;
+		return nullptr;
 	}
 
 	auto vForward = Vec3();
 	Math::AngleVectors(vViewAngles, &vForward);
-	Vec3 vTraceStart = pLocal->GetShootPos();
+	Vec3 vTraceStart = vStart;
 	Vec3 vTraceEnd = (vTraceStart + (vForward * flRange));
 
 	CGameTrace Trace = {};
@@ -48,22 +55,24 @@ bool CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, cons
 	Filter.pSkip = pLocal;
 	Utils::TraceHull(vTraceStart, vTraceEnd, { -18.0f, -18.0f, -18.0f }, { 18.0f, 18.0f, 18.0f }, MASK_SOLID, &Filter, &Trace);
 	if (IsEntityValid(pLocal, Trace.entity))
-	{
-		if (pEntityOut && !*pEntityOut)
-		{
-			*pEntityOut = Trace.entity;
-		}
+	{ return Trace.entity; }
 
-		return true;
-	}
-
-	return false;
+	return nullptr;
 }
 
 bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
+
+	if (Vars::Triggerbot::Stab::IgnRazor.Value) {
+		CBaseEntity* pAttachment = pEntity->FirstMoveChild();
+
+		for (int n = 0; n < 32; n++) {
+			if (!pAttachment) { continue; }
+			if (pAttachment->GetClassID() == ETFClassID::CTFWearableRazorback) { return false; }	//	Credits to mfed
+		}
+	}
 
 	if (F::AutoGlobal.ShouldIgnore(pEntity)) { return false; }
 
@@ -72,18 +81,8 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	CBaseEntity* pEnemy = nullptr;
-
-	if (!TraceMelee(pLocal, pWeapon, pCmd->viewangles, &pEnemy))
-	{
-		return;
-	}
-
-	if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
-		pEnemy->GetWeaponFromSlot(SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
-	{
-		return;
-	}
+	CBaseEntity* pEnemy = TraceMelee(pLocal, pWeapon, pCmd->viewangles, pLocal->GetShootPos());
+	if (!pEnemy) { return; }
 
 	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(),
 		(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
@@ -96,114 +95,89 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 	if (Vars::Misc::DisableInterpolation.Value)
 	{
-		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
+		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime)));
 	}
 }
 
 void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
+	// validate stab range
+	const float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
+	if (flRange <= 0.0f) { return; }
+
+	Vec3 vShootPos{};
+	Vec3 vOrigin{};
+	if (Vars::Debug::DebugInfo.Value && F::MoveSim.Initialize(pLocal))
+	{
+		CMoveData moveData = {};
+		Vec3 absOrigin = {};
+		F::MoveSim.RunTick(moveData, absOrigin);
+		vOrigin = absOrigin;
+		vShootPos = vOrigin + pLocal->GetViewOffset();
+		F::MoveSim.Restore();
+	}
+	else { 
+		vOrigin = pLocal->m_vecOrigin();
+		vShootPos = vOrigin + pLocal->GetViewOffset();
+	}
+
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		const auto& pEnemyWeapon = pEnemy->GetWeaponFromSlot(SLOT_SECONDARY);
-		if (Vars::Triggerbot::Stab::IgnRazor.Value && pEnemy->GetClassNum() == CLASS_SNIPER &&
-			pEnemyWeapon && pEnemyWeapon->GetItemDefIndex() == Sniper_s_TheRazorback)
-		{
-			continue;
-		}
-
 		if (!IsEntityValid(pLocal, pEnemy)) { continue; }
-
-		CBaseEntity* pTraceEnemy = nullptr;
-
-		Vec3 vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), pEnemy->GetHitboxPos(HITBOX_PELVIS));
-
-		const auto& pRecords = F::Backtrack.GetRecords(pEnemy);
-		const bool bBacktrackable = pRecords != nullptr && Vars::Backtrack::Enabled.Value;
-
-		Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
-		Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
-
-		if (bBacktrackable)
-		{
-			auto DoBacktrack = [&](TickRecord pTick) -> bool
+		
+		//	NON BACKTRACK
+		if (F::Backtrack.CanHitOriginal(pEnemy)) {
+			Vec3 vTargetPoint{};
+			pEnemy->GetCollision()->CalcNearestPoint(vShootPos, &vTargetPoint);	//	we can backstab any part of the bounding box.
+			Vec3 vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
+			if (vTargetPoint.DistTo(vShootPos) <= flRange)	//	range check
 			{
-				pEnemy->SetAbsOrigin(vOriginalPos);
-				pEnemy->SetEyeAngles(vOriginalEyeAngles);
-
-				// Extract the required bones
-				const auto pBoneMatrix = (matrix3x4*)&pTick.BoneMatrix;
-				const Vec3 vPelvisPos = Vec3(pBoneMatrix[HITBOX_PELVIS][0][3],
-											 pBoneMatrix[HITBOX_PELVIS][1][3],
-											 pBoneMatrix[HITBOX_PELVIS][2][3]);
-
-				vAngleTo = Math::CalcAngle(pLocal->GetShootPos(), vPelvisPos);
-
-				// Set origins and eye angles for further logic
-				pEnemy->SetAbsOrigin(pTick.vOrigin);
-				pEnemy->SetEyeAngles(pTick.vAngles);
-
-				// Check stab range (option)
-				const float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
-				if (flRange <= 0.0f) { return false; }
-
-				if (pTick.vOrigin.DistTo(pLocal->m_vecOrigin()) > flRange)
+				if (CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (vTargetPoint - vShootPos)))	//	angle check
 				{
-					pEnemy->SetAbsOrigin(vOriginalPos);
-					pEnemy->SetEyeAngles(vOriginalEyeAngles);
-					return false;
-				}
+					if (TraceMelee(pLocal, pWeapon, vAngleTo, vShootPos) == pEnemy)	//	vis check
+					{
+						// Silent backstab
+						if (Vars::Triggerbot::Stab::Silent.Value)
+						{
+							Utils::FixMovement(pCmd, vAngleTo);
+							G::SilentTime = true;
+						}
 
-				// Can we backstab the target?
-				if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pTick.vOrigin - pLocal->m_vecOrigin())))
-				{
-					pEnemy->SetAbsOrigin(vOriginalPos);
-					pEnemy->SetEyeAngles(vOriginalEyeAngles);
-					return false;
-				}
+						pCmd->viewangles = vAngleTo;
+						pCmd->buttons |= IN_ATTACK;
+						m_bShouldDisguise = true;
 
-				// Silent backstab
-				if (Vars::Triggerbot::Stab::Silent.Value)
-				{
-					Utils::FixMovement(pCmd, vAngleTo);
-					G::SilentTime = true;
-				}
-
-				pCmd->viewangles = vAngleTo;
-				pCmd->buttons |= IN_ATTACK;
-				m_bShouldDisguise = true;
-
-				pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime + G::LerpTime);
-
-				pEnemy->SetAbsOrigin(vOriginalPos);
-				pEnemy->SetEyeAngles(vOriginalEyeAngles);
-
-				return true;
-			};
-
-			//backtrack
-			{
-				// Any Tick
-				for (const auto& pTick : *pRecords)
-				{
-					if (!F::Backtrack.WithinRewind(pTick)) { continue; }
-					if (DoBacktrack(pTick)) { return; }
+						pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime)));
+						return;
+					}
 				}
 			}
 		}
-		else
+
+		//	BACKTRACK
+		const Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
+		const Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
+		const auto& pRecords = Vars::Backtrack::Enabled.Value ? F::Backtrack.GetRecords(pEnemy) : nullptr;
+		const bool bDoBT = pRecords;
+		if (!bDoBT) { return; }
+
+		for (const auto& pTick : *pRecords)
 		{
-			/* Default stab */
-			if (!TraceMelee(pLocal, pWeapon, vAngleTo, &pTraceEnemy) || pTraceEnemy != pEnemy)
-			{
-				continue;
-			}
+			if (!F::Backtrack.WithinRewind(pTick)) { continue; }
 
-			if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(),
-				(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
-			{
-				continue;
-			}
+			pEnemy->SetAbsOrigin(pTick.vOrigin);	//	set these 4 CalcNearestPoint
+			pEnemy->SetEyeAngles(pTick.vAngles);
 
+			Vec3 vTargetPoint{};
+			pEnemy->GetCollision()->CalcNearestPoint(vShootPos, &vTargetPoint);	//	we can backstab any part of the bounding box.
+			const Vec3 vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
+
+			if (vTargetPoint.DistTo(vShootPos) > flRange)	//	range check
+			{ continue; }
+			if (!CanBackstabEx(vOrigin, pTick.vOrigin, pTick.vAngles))	//	ang check
+			{ continue; }
+
+			// Silent backstab
 			if (Vars::Triggerbot::Stab::Silent.Value)
 			{
 				Utils::FixMovement(pCmd, vAngleTo);
@@ -214,13 +188,15 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			pCmd->buttons |= IN_ATTACK;
 			m_bShouldDisguise = true;
 
-			if (Vars::Misc::DisableInterpolation.Value)
-			{
-				pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime() + G::LerpTime);
-			}
+			pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime + TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime)));
 
+			pEnemy->SetAbsOrigin(vOriginalPos);
+			pEnemy->SetEyeAngles(vOriginalEyeAngles);
 			return;
 		}
+
+		pEnemy->SetAbsOrigin(vOriginalPos);
+		pEnemy->SetEyeAngles(vOriginalEyeAngles);
 	}
 }
 

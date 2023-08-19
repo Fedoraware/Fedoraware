@@ -612,18 +612,20 @@ void CMenu::MenuVisuals()
 					};
 					static std::vector DMEProxyMaterials{
 						"None",
-						"Spectrum splattered",
-						"Electro skulls",
+						"Spectrum Splattered",
+						"Electro Skulls",
 						"Jazzy",
-						"Frozen aurora",
+						"Frozen Aurora",
 						"Hana",
 						"IDK",
-						"Ghost thing",
+						"Ghost Thing",
 						"Flames",
-						"Spook wood",
+						"Spook Wood",
 						"Edgy",
-						"Starlight serenity",
-						"Fade"
+						"Starlight Serenity",
+						"Fade",
+						"Bad to the Bone",
+						"Skulls and Roses"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
@@ -1910,6 +1912,10 @@ void CMenu::MenuMisc()
 			{
 				F::DMEChams.CreateMaterials();
 				F::Glow.CreateMaterials();
+			}
+			if (Button("Print Hashes", ImVec2(btnWidth, 20)))
+			{
+				Hash::PrintHash();
 			}
 			//if (Button("CPrint", ImVec2(btnWidth, 20))){
 			//	I::CenterPrint->Print((char*)"niggaz");

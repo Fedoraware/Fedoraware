@@ -4,18 +4,13 @@
 MAKE_HOOK(NetChannel_SendDatagram, g_Pattern.Find(L"engine.dll", L"55 8B EC B8 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 53 56 8B D9"), int, __fastcall,
 		  INetChannel* netChannel, void* edx, bf_write* datagram)
 {
-	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-
-	if (!pLocal || !pLocal->IsAlive() || pLocal->IsAGhost())
-	{
-		F::Backtrack.bFakeLatency = false;
+	if (!netChannel || datagram) {
 		return Hook.Original<FN>()(netChannel, edx, datagram);
 	}
 
-	if (!Vars::Backtrack::Enabled.Value || !Vars::Backtrack::Latency.Value ||
-		!netChannel || netChannel->IsLoopback() || !I::EngineClient->IsConnected() ||
-		!I::EngineClient->IsInGame() || I::EngineClient->IsDrawingLoadingImage())
-	{
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+
+	if (!pLocal || !pLocal->IsAlive() || pLocal->IsAGhost() || !Vars::Backtrack::Enabled.Value || !Vars::Backtrack::Latency.Value) {
 		F::Backtrack.bFakeLatency = false;
 		return Hook.Original<FN>()(netChannel, edx, datagram);
 	}

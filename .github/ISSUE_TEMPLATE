@@ -5,20 +5,20 @@ title: A quick Description of Bug
 labels: bug
 assignees: ''
 ---
-<!-- This template was pasted from https://github.com/nullworks/cathook, an amazing cheat made for Linux :) -->
-
+<!-- The template provide below is specifically for bug reports, if you intend to ask a question or recommend a feature/improvement, please head to the discussions tab instead. -->
 **Fedoraware Version Date:**  
+**Windows Version:**    <!-- https://learn.microsoft.com/en-us/windows/client-management/client-tools/windows-version-search -->
 
-## Config used:
-<!-- Please upload your "Team Fortress 2\FedFigs\<your config name>.fed" file to a file hosting service. We recommend https://catbox.moe/-->
-<!-- Drag and drop the link here. -->
+## Configs used:
+<!-- Upload both your normal and visual configs found in Team Fortress 2/FedFigs and Team Fortress 2/FedFigs respectively. You can upload the contents of these files to any text based hosting server. -->
 
-## Description:  
-<!-- Please provide a clear and concise description of what the bug is. -->
+## Description:
+<!-- Provide a description of what the issue is. -->
+<!-- If possible, also provide a video of the issue occurring. -->
 
-## Steps to reproduce:  
-- [ ] I am able to consistently reproduce this error
-<!-- If you can consistently get this error, please let us know! This will tremendously help us at the time of fixing this error, or else, we would just have to guess every time we try fixing it :p -->
+## Steps to reproduce:
+- [ ] With the steps below I am able to consistently reproduce this issue.
+<!-- If you are unable to consistently reproduce this issue, you must provide all other info in this template, or your report will be removed. -->
 
 Steps to reproduce the behavior:  
 <!-- Example only, please delete these steps and enter your own. -->
@@ -26,7 +26,5 @@ Steps to reproduce the behavior:
 2. Do Y
 3. Notice Z
 
-## Additional context 
-<!-- Is there anything specific else that we should know that could help us find/fix this bug? -->
-
-- [ ] I have included the steps to reproduce to the best I am able to share.
+## Additional info:
+<!-- Please provide any info relating to this issue that has not been declared previously in your report. -->
