@@ -35,6 +35,25 @@ namespace SandvichAimbot
 	}
 }
 
+//	eventually use this in everything
+AimInfo_t CAimbotGlobal::GetInfo(CBaseEntity* pTarget, const Vec3 vFrom, const Vec3 vAng, const bool bDist) {
+	float flBest = FLT_MAX;
+	AimInfo_t tReturn{};
+	for (int nHitbox = 0; nHitbox < pTarget->GetNumOfHitboxes(); nHitbox++)
+	{
+		const Vec3 vHitbox = pTarget->GetHitboxPos(nHitbox);
+		const Vec3 vAngleTo = Math::CalcAngle(vFrom, vHitbox);
+		const float flFOVTo = Math::CalcFov(vAng, vAngleTo);
+		const float flDist = vFrom.DistTo(vHitbox);
+
+		if (bDist ? flDist < flBest : flFOVTo < flBest) {
+			flBest = bDist ? flDist : flFOVTo;
+			tReturn = {vAngleTo, vHitbox, flFOVTo, flDist};
+		}
+	}
+	return tReturn;
+}
+
 bool CAimbotGlobal::IsKeyDown()
 {
 	static KeyHelper aimKey{ &Vars::Aimbot::Global::AimKey.Value };
