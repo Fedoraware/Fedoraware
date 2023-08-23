@@ -1,5 +1,6 @@
 #include "Resolver.h"
 #include "../AntiHack/AntiAim.h"
+#include "../Backtrack/Backtrack.h"
 
 static std::vector<float> vYawRotations{ 0.0f, 180.0f, 90.0f, -90.0f};
 
@@ -229,6 +230,7 @@ void PResolver::CreateMove(){
 		mResolverData[pWaiting.second.first].iYawIndex++;
 		if (mResolverData[pWaiting.second.first].iYawIndex > 3) { mResolverData[pWaiting.second.first].iYawIndex = -1; }
 		pWaiting = {0, {nullptr, false}};
+		F::Backtrack.ResolverUpdate(pWaiting.second.first);
 	}
 }
 

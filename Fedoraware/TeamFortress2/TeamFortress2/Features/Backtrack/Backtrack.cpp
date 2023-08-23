@@ -1,10 +1,16 @@
 #include "Backtrack.h"
+#include "../Aimbot/MovementSimulation/MovementSimulation.h"
 
 #define ROUND_TO_TICKS(t) (TICKS_TO_TIME(TIME_TO_TICKS(t)))
 
 bool CBacktrack::IsTracked(const TickRecord& record)
 {
-	return I::GlobalVars->curtime - record.flCreateTime < 1.f;
+	return record.flSimTime >= I::GlobalVars->curtime - 1.f;
+}
+
+//	i know this seems stupid, but i think it's a good idea to wait until the record is created rather than try and forward track.
+bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
+	return mRecords[pEntity].front().flSimTime > pEntity->GetSimulationTime();
 }
 
 //	should return true if the current position on the client has a lag comp record created for it by the server (SHOULD)
@@ -79,28 +85,26 @@ void CBacktrack::MakeRecords()
 		if (!pEntity) { continue; }
 		if (!pEntity->IsPlayer()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
+		const float flDelta = flSimTime - flOldSimTime;
 
-		//Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
 
-		if (flSimTime > flOldSimTime)
+		const Vec3 vOrigin = pEntity->m_vecOrigin();
+		if (!mRecords[pEntity].empty())
+		{
+			// as long as we have 1 record we can check for lagcomp breaking here
+			const Vec3 vPrevOrigin = mRecords[pEntity].front().vOrigin;
+			const Vec3 vDelta = vOrigin - vPrevOrigin;
+			if (vDelta.Length2DSqr() > 4096.f)
+			{
+				mRecords[pEntity].clear();
+			}
+		}
+
+		if (Vars::Backtrack::UnchokePrediction.Value ? IsSimulationReliable(pEntity) : flDelta > 0)	//	this is silly
 		{
 			//	create record on simulated players
-			//Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
 			matrix3x4 bones[128];
 			if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flSimTime)) { continue; }
-			//Utils::ConLog("LagCompensation", "Creating Record", {255, 0, 0, 255});
-			const Vec3 vOrigin = pEntity->m_vecOrigin();
-			if (!mRecords[pEntity].empty())
-			{
-				// as long as we have 1 record we can check for lagcomp breaking here
-				const Vec3 vPrevOrigin = mRecords[pEntity].front().vOrigin;
-				const Vec3 vDelta = vOrigin - vPrevOrigin;
-				if (vDelta.Length2DSqr() > 4096.f)
-				{
-					/*Utils::ConLog("LagCompensation", "Cleared borked records", {255, 0, 0, 255});*/
-					mRecords[pEntity].clear();
-				}
-			}
 
 			mRecords[pEntity].push_front({
 				flSimTime,
@@ -112,7 +116,51 @@ void CBacktrack::MakeRecords()
 				pEntity->GetAbsAngles(),
 										 });
 		}
+		else if (Vars::Backtrack::UnchokePrediction.Value) {	//	user is choking, predict location of next record.
+			//	IF THE CHEAT LAGS HERE, IT CAN CREATE A PREDICTED RECORD FOR AFTER A PLAYER HAS EXITED A CHOKE, WHICH IS BAD (probably)!!!!
+			const Vec3 vOriginalPos = pEntity->GetAbsOrigin();
+			const Vec3 vOriginalEyeAngles = pEntity->GetEyeAngles();
+			const float flNextSimTime = flSimTime + I::GlobalVars->interval_per_tick;
+			const float flDeltaRecorded = flNextSimTime - mRecords[pEntity].empty() ? flSimTime : mRecords[pEntity].front().flSimTime;
+			if (flDeltaRecorded < I::GlobalVars->interval_per_tick) { continue; }	//	maybe they are smooth warping???.
+			//if (pEntity->GetVelocity().Length2D() > 4096.f) { continue; }	//	this will only happen on people that are stuck or it will be caught elsewhere, dont use
+			if (F::MoveSim.Initialize(pEntity))
+			{
+				CMoveData moveData = {};
+				Vec3 absOrigin = {};
+				F::MoveSim.RunTick(moveData, absOrigin);
+				
+				//	we've predicted their next record, and we can probably predict their next lag record but if they are fakelagging it's pointless n shieet
+				//	i was going to check if this lag comp would be valid here but it seems almost pointless now, dont do it.
+				//	might need to do this for setupbones
+				pEntity->SetAbsOrigin(moveData.m_vecAbsOrigin);
+				pEntity->SetEyeAngles(moveData.m_vecAbsViewAngles);
 
+				matrix3x4 bones[128];
+				if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flNextSimTime)) { //	if we fail bones we fail lyfe
+					pEntity->SetAbsOrigin(vOriginalPos);
+					pEntity->SetEyeAngles(vOriginalEyeAngles);
+					continue; 
+				}
+
+				//create lag record
+				mRecords[pEntity].push_front({
+				flNextSimTime,
+				flCurTime + I::GlobalVars->interval_per_tick,
+				iTickcount + 1,
+				false,
+				*reinterpret_cast<BoneMatrixes*>(&bones),
+				absOrigin,
+				moveData.m_vecAbsViewAngles,
+					});
+
+				//restore
+				pEntity->SetAbsOrigin(vOriginalPos);
+				pEntity->SetEyeAngles(vOriginalEyeAngles);
+
+				F::MoveSim.Restore();
+			}
+		}
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
 		if (mRecords[pEntity].size() > 67)
@@ -153,6 +201,10 @@ void CBacktrack::PlayerHurt(CGameEvent* pEvent)
 	//if (CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex)){
 	//	mRecords[pEntity].clear();	//	bone cache has gone to poop for this entity, they must be cleansed in holy fire :smiling_imp:
 	//}
+}
+
+void CBacktrack::ResolverUpdate(CBaseEntity* pEntity) {
+	mRecords[pEntity].clear();	//	TODO: eventually remake records and rotate them or smthn idk, maybe just rotate them
 }
 
 void CBacktrack::Restart()
@@ -254,7 +306,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 		{
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
-				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
+				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery) || IsEarly(pEntity)) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
 			}
@@ -276,7 +328,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			std::optional<TickRecord> ReturnTick{};
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
-				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery)) { continue; }
+				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery) || IsEarly(pEntity)) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { ReturnTick = rCurQuery; }
 				if (ReturnTick.has_value())
@@ -306,7 +358,7 @@ std::optional<TickRecord> CBacktrack::GetLastRecord(CBaseEntity* pEntity)
 	std::optional<TickRecord> rReturnRecord = std::nullopt;
 	for (const auto& rCurQuery : mRecords[pEntity])
 	{
-		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery)) { continue; }
+		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
 		rReturnRecord = rCurQuery;
 	}
 	return rReturnRecord;
@@ -314,13 +366,14 @@ std::optional<TickRecord> CBacktrack::GetLastRecord(CBaseEntity* pEntity)
 
 std::optional<TickRecord> CBacktrack::GetFirstRecord(CBaseEntity* pEntity)
 {
-	if (mRecords[pEntity].empty()) { return std::nullopt; }
-	std::optional<TickRecord> rReturnRecord = std::nullopt;
-	for (int nIndex = 2; nIndex < mRecords[pEntity].size(); nIndex++)
-	{
-		if (!IsTracked(mRecords[pEntity][nIndex]) || !WithinRewind(mRecords[pEntity][nIndex])) { continue; }
-		return mRecords[pEntity][nIndex];
-	}
+	//	UNUSED AND TRASH! UPDATE B4 USE
+	//if (mRecords[pEntity].empty()) { return std::nullopt; }
+	//std::optional<TickRecord> rReturnRecord = std::nullopt;
+	//for (int nIndex = 2; nIndex < mRecords[pEntity].size(); nIndex++)
+	//{
+	//	if (!IsTracked(mRecords[pEntity][nIndex]) || !WithinRewind(mRecords[pEntity][nIndex])) { continue; }
+	//	return mRecords[pEntity][nIndex];
+	//}
 	return std::nullopt;
 }
 
