@@ -48,6 +48,7 @@ class CBacktrack
 //	logic
 	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
+	bool IsEarly(CBaseEntity* pEntity);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
@@ -72,6 +73,7 @@ public:
 	bool WithinRewind(const TickRecord& record);
 	bool CanHitOriginal(CBaseEntity* pEntity);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
+	void ResolverUpdate(CBaseEntity* pEntity);	//	omfg
 	void Restart(); //	called whenever lol
 	void FrameStageNotify(); //	called in FrameStageNotify
 	void ReportShot(int iIndex);
