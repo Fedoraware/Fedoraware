@@ -121,7 +121,7 @@ void CBacktrack::MakeRecords()
 			const Vec3 vOriginalPos = pEntity->GetAbsOrigin();
 			const Vec3 vOriginalEyeAngles = pEntity->GetEyeAngles();
 			const float flNextSimTime = flSimTime + I::GlobalVars->interval_per_tick;
-			const float flDeltaRecorded = flNextSimTime - mRecords[pEntity].front().flSimTime;
+			const float flDeltaRecorded = flNextSimTime - mRecords[pEntity].empty() ? flSimTime : mRecords[pEntity].front().flSimTime;
 			if (flDeltaRecorded < I::GlobalVars->interval_per_tick) { continue; }	//	maybe they are smooth warping???.
 			//if (pEntity->GetVelocity().Length2D() > 4096.f) { continue; }	//	this will only happen on people that are stuck or it will be caught elsewhere, dont use
 			if (F::MoveSim.Initialize(pEntity))
