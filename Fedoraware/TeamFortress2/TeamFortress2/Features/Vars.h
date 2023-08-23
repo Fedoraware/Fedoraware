@@ -45,7 +45,8 @@ namespace Vars
 
 	namespace Backtrack
 	{
-		inline CVar<bool> Enabled{ false };
+		inline CVar<bool> Enabled{ true };
+		inline CVar<bool> UnchokePrediction{ true };
 		inline CVar<int> Latency{ 0 };
 		
 

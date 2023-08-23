@@ -1,10 +1,11 @@
 #include "Backtrack.h"
+#include "../Aimbot/MovementSimulation/MovementSimulation.h"
 
 #define ROUND_TO_TICKS(t) (TICKS_TO_TIME(TIME_TO_TICKS(t)))
 
 bool CBacktrack::IsTracked(const TickRecord& record)
 {
-	return I::GlobalVars->curtime - record.flCreateTime < 1.f;
+	return record.flSimTime >= I::GlobalVars->curtime - 1.f;
 }
 
 //	should return true if the current position on the client has a lag comp record created for it by the server (SHOULD)
@@ -79,10 +80,11 @@ void CBacktrack::MakeRecords()
 		if (!pEntity) { continue; }
 		if (!pEntity->IsPlayer()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
+		const float flDelta = flSimTime - flOldSimTime;
 
 		//Utils::ConLog("LagCompensation", tfm::format("SimTime = %.1f\nOldSimTime = %.1f", flSimTime, flOldSimTime).c_str(), {255, 0, 0, 255});
 
-		if (flSimTime > flOldSimTime)
+		if (Vars::Backtrack::UnchokePrediction.Value ? flDelta != I::GlobalVars->interval_per_tick : flDelta > 0)	//	this is silly
 		{
 			//	create record on simulated players
 			//Utils::ConLog("LagCompensation", "Setting Up Bones", {255, 0, 0, 255});
@@ -112,7 +114,30 @@ void CBacktrack::MakeRecords()
 				pEntity->GetAbsAngles(),
 										 });
 		}
+		else if (Vars::Backtrack::UnchokePrediction.Value) {	//	user is choking, predict location of next record.
+			const float flNextSimTime = flSimTime + I::GlobalVars->interval_per_tick;
+			const float flDelta = flNextSimTime - mRecords[pEntity].front().flSimTime;
+			if (flDelta < I::GlobalVars->interval_per_tick) { continue; }	//	we have already predicted a record for this user.
+			if (F::MoveSim.Initialize(pEntity))
+			{
+				CMoveData moveData = {};
+				Vec3 absOrigin = {};
+				F::MoveSim.RunTick(moveData, absOrigin);
 
+				matrix3x4 bones[128];
+				if (!pEntity->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, flNextSimTime)) { continue; }
+				mRecords[pEntity].push_front({
+				flNextSimTime,
+				flCurTime + I::GlobalVars->interval_per_tick,
+				iTickcount + 1,
+				false,
+				*reinterpret_cast<BoneMatrixes*>(&bones),
+				absOrigin,
+				moveData.m_vecAbsViewAngles,
+					});
+				F::MoveSim.Restore();
+			}
+		}
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
 		if (mRecords[pEntity].size() > 67)
