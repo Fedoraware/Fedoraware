@@ -261,23 +261,23 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 			if (G::IsIgnored(pInfo.friendsID)) { continue; }
 		}
 
-		Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
+		const Vec3 vEnemyPos = pEnemy->GetShootPos();
 		if (!Utils::VisPos(pLocal, pEnemy, vLocalPos, vEnemyPos)) { continue; }
 		if (!target && vLocalPos.DistTo(vEnemyPos) < 150.f)
 		{
 			target = pEnemy;
-			vTargetPos = target->GetWorldSpaceCenter();
+			vTargetPos = target->GetShootPos();
 		}
 		else if (vLocalPos.DistTo(vEnemyPos) < vLocalPos.DistTo(vTargetPos) && vLocalPos.DistTo(vEnemyPos) < 150.f)
 		{
 			target = pEnemy;
-			vTargetPos = target->GetWorldSpaceCenter();
+			vTargetPos = target->GetShootPos();
 		}
 	}
 
 	if (target)
 	{
-		vTargetPos = target->GetWorldSpaceCenter();
+		vTargetPos = target->GetShootPos();
 		const Vec3 vAngleToSpy = Math::CalcAngle(vLocalPos, vTargetPos);
 		G::AvoidingBackstab = true;
 		Utils::FixMovement(pCmd, vAngleToSpy);

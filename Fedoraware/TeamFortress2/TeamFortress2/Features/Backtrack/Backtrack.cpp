@@ -83,10 +83,12 @@ void CBacktrack::MakeRecords()
 	{
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 		if (!pEntity) { continue; }
+		if (pEntity == g_EntityCache.GetLocal()) { continue; }
 		if (!pEntity->IsPlayer()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
 		const float flDelta = flSimTime - flOldSimTime;
 
+		if (flDelta < 0) { continue; }	//	i think fucking not
 
 		const Vec3 vOrigin = pEntity->m_vecOrigin();
 		if (!mRecords[pEntity].empty())
@@ -100,7 +102,7 @@ void CBacktrack::MakeRecords()
 			}
 		}
 
-		if (Vars::Backtrack::UnchokePrediction.Value ? IsSimulationReliable(pEntity) : flDelta > 0)	//	this is silly
+		if (IsSimulationReliable(pEntity))
 		{
 			//	create record on simulated players
 			matrix3x4 bones[128];
@@ -116,13 +118,12 @@ void CBacktrack::MakeRecords()
 				pEntity->GetAbsAngles(),
 										 });
 		}
-		else if (Vars::Backtrack::UnchokePrediction.Value) {	//	user is choking, predict location of next record.
-			//	IF THE CHEAT LAGS HERE, IT CAN CREATE A PREDICTED RECORD FOR AFTER A PLAYER HAS EXITED A CHOKE, WHICH IS BAD (probably)!!!!
+		else if (Vars::Backtrack::UnchokePrediction.Value && flSimTime == flOldSimTime) {	//	user is choking, predict location of next record.
 			const Vec3 vOriginalPos = pEntity->GetAbsOrigin();
 			const Vec3 vOriginalEyeAngles = pEntity->GetEyeAngles();
 			const float flNextSimTime = flSimTime + I::GlobalVars->interval_per_tick;
 			const float flDeltaRecorded = flNextSimTime - mRecords[pEntity].empty() ? flSimTime : mRecords[pEntity].front().flSimTime;
-			if (flDeltaRecorded < I::GlobalVars->interval_per_tick) { continue; }	//	maybe they are smooth warping???.
+			if (flDeltaRecorded < I::GlobalVars->interval_per_tick) { continue; }	//	we already predicted a tick for this player. if we havent then their simtime is being reported wrong (should be caught prior)
 			//if (pEntity->GetVelocity().Length2D() > 4096.f) { continue; }	//	this will only happen on people that are stuck or it will be caught elsewhere, dont use
 			if (F::MoveSim.Initialize(pEntity))
 			{
