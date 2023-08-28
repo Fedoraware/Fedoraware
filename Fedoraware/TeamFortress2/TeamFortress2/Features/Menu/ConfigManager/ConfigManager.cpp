@@ -218,11 +218,11 @@ void CConfigManager::LoadJson(const char* name, DragBox_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
-		if (auto getValue = (*getChild).get_optional<int>("x")) { val.x = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("y")) { val.y = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("w")) { val.w = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("h")) { val.h = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("c")) { val.c = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("x")) { val.x = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("y")) { val.y = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("w")) { val.w = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("h")) { val.h = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("c")) { val.c = *getValue; }
 		val.update = true;
 	}
 }
@@ -649,6 +649,12 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 bool CConfigManager::LoadConfig(const std::string& configName)
 {
+	// Check if the visual config exists
+	if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + configName + ConfigExtension))
+	{
+		return false;
+	}
+
 	// Read ptree from json
 	try
 	{
@@ -1415,6 +1421,12 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 
 bool CConfigManager::LoadVisual(const std::string& configName)
 {
+	// Check if the visual config exists
+	if (!std::filesystem::exists(g_CFG.GetVisualsPath() + "\\" + configName + ConfigExtension))
+	{
+		return false;
+	}
+
 	try
 	{
 		ReadTree.clear();

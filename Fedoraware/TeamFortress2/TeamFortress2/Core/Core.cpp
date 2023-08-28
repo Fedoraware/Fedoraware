@@ -22,23 +22,11 @@
 #include "../Features/Discord/Discord.h"
 #include "../Utils/Minidump/Minidump.h"
 
-/* TODO: Move to another file */
-
 void LoadDefaultConfig()
 {
 	// Load default visuals
-	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\Visuals\\default.fw"))
-	{
-		g_CFG.LoadVisual("default");
-	}
-
-	Sleep(200);
-
-	// Load default config
-	if (std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + g_CFG.GetCurrentConfig() + ".fw"))
-	{
-		g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
-	}
+	g_CFG.LoadVisual(g_CFG.GetCurrentVisuals());
+	g_CFG.LoadConfig(g_CFG.GetCurrentConfig());
 
 	Sleep(200);
 
@@ -54,6 +42,7 @@ void LoadDefaultConfig()
 		{0x0, "Verdana", 18, 1600, FONTFLAG_ANTIALIAS},
 		{0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW},
 	});
+
 	F::Menu.ConfigLoaded = true;
 }
 
