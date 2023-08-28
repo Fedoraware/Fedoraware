@@ -4,11 +4,27 @@
 #include "../../SDK/Main/EntityCache/EntityCache.h"
 #include "../Vars.h"
 
+#include "../../SDK/Discord/include/discord_register.h"
+#include "../../SDK/Discord/include/discord_rpc.h"
+
 inline const char* lol(int nClassNum)
 {
 	//literally just took this from ESP cuz too lazy lol
 	static const char* szClasses[] = { "Unknown Class", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer" };
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
+}
+
+void CDiscordRPC::Init()
+{
+	DiscordEventHandlers handlers = {};
+	Discord_Initialize("889495873183154226", &handlers, 0, "");
+	Discord_ClearPresence();
+}
+
+void CDiscordRPC::Shutdown()
+{
+	Discord_ClearPresence();
+	Discord_Shutdown();
 }
 
 void CDiscordRPC::Update()

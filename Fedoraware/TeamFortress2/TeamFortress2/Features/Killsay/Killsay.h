@@ -1,6 +1,5 @@
 #pragma once
-
-#include "../../SDK.h"
+#include "../Feature.h"
 
 class CKillsay
 {

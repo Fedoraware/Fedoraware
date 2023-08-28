@@ -2002,47 +2002,33 @@ void CMenu::SettingsWindow()
 
 		static std::string selected;
 		static std::string selectedvis;
-		int nConfig = 0;
 
+		// General config tab
 		if (CurrentConfigTab == ConfigTab::General)
 		{
-			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
-			{
-				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
-				{
-					continue;
-				}
-				nConfig++;
-			}
-
 			// Current config
 			const std::string cfgText = "Loaded: " + g_CFG.GetCurrentConfig();
 			Text(cfgText.c_str());
 
 			// Config name field
-			if (nConfig < 100)
-			{
-				std::string newConfigName = {};
+			std::string newConfigName = {};
 
-				PushItemWidth(200);
-				if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
+			PushItemWidth(200);
+			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
 				{
-					if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
-					{
-						g_CFG.SaveConfig(newConfigName);
-					}
+					g_CFG.SaveConfig(newConfigName);
 				}
-				PopItemWidth();
 			}
+			PopItemWidth();
 
 			// Config list
 
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 			{
-				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
-				{
-					continue;
-				}
+				if (!entry.is_regular_file()) { continue; }
+				if (entry.path().extension() != g_CFG.ConfigExtension) { continue; }
 
 				std::string configName = entry.path().filename().string();
 				configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());
@@ -2153,45 +2139,33 @@ void CMenu::SettingsWindow()
 			}
 
 		}
-		else
-		{
-			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
-			{
-				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
-				{
-					continue;
-				}
-				nConfig++;
-			}
 
+		// Visuals config tab
+		else if (CurrentConfigTab == ConfigTab::Visuals)
+		{
 			// Current config
 			const std::string cfgText = "Loaded: " + g_CFG.GetCurrentVisuals();
 			Text(cfgText.c_str());
 
 			// Config name field
-			if (nConfig < 100)
-			{
-				std::string newConfigName = {};
+			std::string newConfigName = {};
 
-				PushItemWidth(200);
-				if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
+			PushItemWidth(200);
+			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				if (!std::filesystem::exists(g_CFG.GetVisualsPath() + "\\" + newConfigName))
 				{
-					if (!std::filesystem::exists(g_CFG.GetVisualsPath() + "\\" + newConfigName))
-					{
-						g_CFG.SaveVisual(newConfigName);
-					}
+					g_CFG.SaveVisual(newConfigName);
 				}
-				PopItemWidth();
 			}
+			PopItemWidth();
 
 			// Config list
 
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
 			{
-				if (std::string(std::filesystem::path(entry).filename().string()).find(g_CFG.ConfigExtension) == std::string_view::npos)
-				{
-					continue;
-				}
+				if (!entry.is_regular_file()) { continue; }
+				if (entry.path().extension() != g_CFG.ConfigExtension) { continue; }
 
 				std::string configName = entry.path().filename().string();
 				configName.erase(configName.end() - g_CFG.ConfigExtension.size(), configName.end());

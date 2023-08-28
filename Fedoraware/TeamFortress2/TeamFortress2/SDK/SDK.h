@@ -61,8 +61,6 @@
 #define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
-#define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
-
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include <optional>
 
@@ -474,26 +472,6 @@ namespace Utils
 			L"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
 
 		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
-	}
-
-	__inline void RemovePEH(HINSTANCE hinstDLL)
-	{
-		DWORD dwProtect = 0x0;
-		auto pImageDOS = reinterpret_cast<PIMAGE_DOS_HEADER>(hinstDLL);
-
-		if (pImageDOS->e_magic == IMAGE_DOS_SIGNATURE)
-		{
-			auto pImageNT = reinterpret_cast<PIMAGE_NT_HEADERS>(pImageDOS + pImageDOS->e_lfanew);
-			const auto SizeOfPE = pImageNT->FileHeader.SizeOfOptionalHeader;
-
-			if (pImageNT->Signature == IMAGE_NT_SIGNATURE && SizeOfPE)
-			{
-				const auto HeaderSize = static_cast<size_t>(SizeOfPE);
-				VirtualProtect(reinterpret_cast<LPVOID>(hinstDLL), HeaderSize, PAGE_EXECUTE_READWRITE, &dwProtect);
-				RtlZeroMemory(reinterpret_cast<LPVOID>(hinstDLL), HeaderSize);
-				VirtualProtect(reinterpret_cast<LPVOID>(hinstDLL), HeaderSize, dwProtect, &dwProtect);
-			}
-		}
 	}
 
 	__inline int SeedFileLineHash(int seedvalue, const char *sharedname, int additionalSeed)

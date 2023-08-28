@@ -9,6 +9,7 @@
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Killsay/Killsay.h"
 
+// TODO: Add listener to all events
 void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 {
 	if (deqEvents.empty())

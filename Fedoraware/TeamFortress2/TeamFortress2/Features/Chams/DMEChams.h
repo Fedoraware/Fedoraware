@@ -1,5 +1,5 @@
 #pragma once
-#include "../../SDK/SDK.h"
+#include "../Feature.h"
 
 using DMEFN = void(__stdcall*)(CModelRender*, const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld);
 

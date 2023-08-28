@@ -1,5 +1,5 @@
 #pragma once
-#include "../../SDK/SDK.h"
+#include "../Feature.h"
 
 using RenderViewFN = void(__fastcall*)(void* ecx, void* edx, const CViewSetup& view, ClearFlags_t nClearFlags, RenderViewInfo_t whatToDraw);
 

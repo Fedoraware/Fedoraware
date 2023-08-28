@@ -10,9 +10,8 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		return;
 	}
 
-	id = pWeapon->GetWeaponID();
-
-	if (id != TF_WEAPON_FLAMETHROWER && id != TF_WEAPON_FLAME_BALL)
+	const int weaponId = pWeapon->GetWeaponID();
+	if (weaponId != TF_WEAPON_FLAMETHROWER && weaponId != TF_WEAPON_FLAME_BALL)
 	{
 		return;
 	}

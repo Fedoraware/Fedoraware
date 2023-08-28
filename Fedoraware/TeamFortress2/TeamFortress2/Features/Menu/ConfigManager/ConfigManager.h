@@ -29,6 +29,7 @@ class CConfigManager
 	std::string CurrentConfig = "default";
 	std::string CurrentVisuals = "default";
 	std::string ConfigPath;
+	std::string VisualsPath;
 
 public:
 	const std::string ConfigExtension = ".fw";
@@ -41,10 +42,10 @@ public:
 	void RemoveConfig(const std::string& configName);
 	void RemoveVisual(const std::string& configName);
 
-	std::string GetCurrentConfig() { return CurrentConfig; }
-	std::string GetCurrentVisuals() { return CurrentVisuals; }
-	std::string GetConfigPath() { return ConfigPath; }
-	std::string GetVisualsPath() { return ConfigPath + "\\Visuals"; }
+	const std::string& GetCurrentConfig() { return CurrentConfig; }
+	const std::string& GetCurrentVisuals() { return CurrentVisuals; }
+	const std::string& GetConfigPath() { return ConfigPath; }
+	const std::string& GetVisualsPath() { return VisualsPath; }
 };
 
 inline CConfigManager g_CFG;

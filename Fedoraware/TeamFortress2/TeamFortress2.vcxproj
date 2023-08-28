@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <!-- <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" /> -->
+    <ClCompile Include="TeamFortress2\Core\Core.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="TeamFortress2\Features\AntiHack\FakeLag\FakeLag.cpp" />
@@ -159,7 +160,7 @@
     <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
     <ClCompile Include="TeamFortress2\Features\Followbot\Followbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
-    <ClCompile Include="TeamFortress2\DLLMain.cpp" />
+    <ClCompile Include="TeamFortress2\DllMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
@@ -328,8 +329,10 @@
   </ItemGroup>
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
+    <ClInclude Include="TeamFortress2\Core\Core.h" />
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
+    <ClInclude Include="TeamFortress2\Features\Feature.h" />
     <ClInclude Include="TeamFortress2\Features\Killsay\Killsay.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Notifications\Notifications.h" />
     <ClInclude Include="TeamFortress2\Features\TickHandler\TickHandler.h" />
