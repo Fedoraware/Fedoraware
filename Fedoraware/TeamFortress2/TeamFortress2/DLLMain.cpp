@@ -10,7 +10,7 @@ void RemovePEH(HINSTANCE hinstDLL)
 	{
 		return;
 	}
-	
+
 	const auto pImageNT = reinterpret_cast<PIMAGE_NT_HEADERS>(pImageDOS + pImageDOS->e_lfanew);
 	const auto sizeOfPe = pImageNT->FileHeader.SizeOfOptionalHeader;
 

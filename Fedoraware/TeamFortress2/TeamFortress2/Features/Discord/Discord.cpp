@@ -11,6 +11,19 @@ inline const char* lol(int nClassNum)
 	return (nClassNum < 10 && nClassNum > 0) ? szClasses[nClassNum] : szClasses[0];
 }
 
+void CDiscordRPC::Init()
+{
+	DiscordEventHandlers handlers = {};
+	Discord_Initialize("889495873183154226", &handlers, 0, "");
+	Discord_ClearPresence();
+}
+
+void CDiscordRPC::Shutdown()
+{
+	Discord_ClearPresence();
+	Discord_Shutdown();
+}
+
 void CDiscordRPC::Update()
 {
 	if (Vars::Misc::Discord::EnableRPC.Value)

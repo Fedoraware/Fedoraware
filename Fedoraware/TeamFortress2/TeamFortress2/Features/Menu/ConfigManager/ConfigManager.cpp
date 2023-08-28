@@ -230,6 +230,7 @@ void CConfigManager::LoadJson(const char* name, DragBox_t& val)
 CConfigManager::CConfigManager()
 {
 	ConfigPath = std::filesystem::current_path().string() + "\\FedFigs";
+	VisualsPath = ConfigPath + "\\Visuals";
 
 	// Create 'FedFigs' folder
 	if (!std::filesystem::exists(ConfigPath))
@@ -249,9 +250,9 @@ CConfigManager::CConfigManager()
 		std::filesystem::create_directory(ConfigPath + "\\Materials");
 	}
 
-	if (!std::filesystem::exists(ConfigPath + "\\Visuals"))
+	if (!std::filesystem::exists(VisualsPath))
 	{
-		std::filesystem::create_directory(ConfigPath + "\\Visuals");
+		std::filesystem::create_directory(VisualsPath);
 	}
 
 	if (!std::filesystem::exists(ConfigPath + "\\Killsays"))

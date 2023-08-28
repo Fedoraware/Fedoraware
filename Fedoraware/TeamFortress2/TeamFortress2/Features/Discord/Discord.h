@@ -6,6 +6,9 @@
 class CDiscordRPC
 {
 public:
+	void Init();
+	void Shutdown();
+
 	void Update();
 };
 
