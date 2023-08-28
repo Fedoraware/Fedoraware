@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include "Core/Core.h"
+#include "Utils/Minidump/Minidump.h"
 
 void RemovePEH(HINSTANCE hinstDLL)
 {
