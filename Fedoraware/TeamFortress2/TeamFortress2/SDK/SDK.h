@@ -355,6 +355,19 @@ namespace Utils
 		return out;
 	}
 
+	__inline bool IsSteamFriend(CBaseEntity* pPlayer)
+	{
+		PlayerInfo_t pi = { };
+
+		if (I::EngineClient->GetPlayerInfo(pPlayer->GetIndex(), &pi) && pi.friendsID)
+		{
+			const CSteamID steamID{ pi.friendsID, 1, k_EUniversePublic, k_EAccountTypeIndividual };
+			return g_SteamInterfaces.Friends002->HasFriend(steamID, k_EFriendFlagImmediate);
+		}
+
+		return false;
+	}
+
 	__inline const char* GetClassByIndex(const int nClass)
 	{
 		static const char* szClasses[] = { "unknown", "scout", "sniper", "soldier", "demoman",
