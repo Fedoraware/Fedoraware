@@ -12,7 +12,7 @@
     <ClCompile Include="TeamFortress2\Features\Fedworking\Fedworking.cpp" />
     <ClCompile Include="TeamFortress2\Features\Followbot\Followbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Killstreak\Killstreak.cpp" />
-    <ClCompile Include="TeamFortress2\DLLMain.cpp" />
+    <ClCompile Include="TeamFortress2\DllMain.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="TeamFortress2\Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
@@ -181,6 +181,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_OP_RenderSprites_RenderSpriteCard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_TFPlayer_FireEvent.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Minidump\Minidump.cpp" />
+    <ClCompile Include="TeamFortress2\Core\Core.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
@@ -732,6 +733,7 @@
     <ClInclude Include="TeamFortress2\Features\Misc\Notifications\Notifications.h" />
     <ClInclude Include="TeamFortress2\Features\Killsay\Killsay.h" />
     <ClInclude Include="TeamFortress2\Utils\Minidump\Minidump.h" />
+    <ClInclude Include="TeamFortress2\Core\Core.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />
