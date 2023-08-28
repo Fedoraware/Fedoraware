@@ -305,7 +305,7 @@ bool CMovementSimulation::StrafePrediction()
 
 		if (Vars::Debug::DebugInfo.Value)
 		{
-			Utils::ConLog("MovementSimulation", tfm::format("flAverageYaw calculated to %f", flAverageYaw).c_str(), { 83, 255, 83, 255 }, Vars::Debug::Logging.Value);
+			Utils::ConLog("MovementSimulation", std::format("flAverageYaw calculated to {:.2f}", flAverageYaw).c_str(), { 83, 255, 83, 255 }, Vars::Debug::Logging.Value);
 		}
 	}
 	if (flAverageYaw == 0.f) { return false; }	//	fix

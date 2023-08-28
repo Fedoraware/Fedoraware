@@ -119,7 +119,7 @@ void CPong::DrawMenu()
 			{
 				if (I::EngineClient->Time() - match.second > 15.f) { continue; }
 
-				if (ImGui::Button(tfm::format("Match #%i", match.first).c_str()))
+				if (ImGui::Button(std::format("Match #{:d}", match.first).c_str()))
 				{
 					JoinMatch(match.first);
 				}

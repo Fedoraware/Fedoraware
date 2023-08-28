@@ -305,7 +305,7 @@ namespace ImGui
 		{
 			for (size_t i = 0; i < titles.size(); i++)
 			{
-				Selectable((*options[i]) ? tfm::format("+ %s", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
+				Selectable((*options[i]) ? std::format("+ {}", titles[i]).c_str() : titles[i], options[i], ImGuiSelectableFlags_DontClosePopups);
 			}
 
 			EndCombo();
@@ -342,7 +342,7 @@ namespace ImGui
 			for (size_t i = 0; i < flagNames.size(); i++)
 			{
 				const bool flagActive = *flagVar & flagValues[i];
-				if (Selectable(flagActive ? tfm::format("+ %s", flagNames[i]).c_str() : flagNames[i], flagActive, ImGuiSelectableFlags_DontClosePopups))
+				if (Selectable(flagActive ? std::format("+ {}", flagNames[i]).c_str() : flagNames[i], flagActive, ImGuiSelectableFlags_DontClosePopups))
 				{
 					if (flagActive)
 					{

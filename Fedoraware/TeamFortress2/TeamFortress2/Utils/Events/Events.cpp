@@ -20,7 +20,7 @@ void CEventListener::Setup(const std::deque<const char*>& deqEvents)
 		I::GameEventManager->AddListener(this, szEvent, false);
 
 		if (!I::GameEventManager->FindListener(this, szEvent))
-			throw std::runtime_error(tfm::format("failed to add listener: %s", szEvent));
+			throw std::runtime_error(std::format("failed to add listener: {}", szEvent));
 	}
 }
 

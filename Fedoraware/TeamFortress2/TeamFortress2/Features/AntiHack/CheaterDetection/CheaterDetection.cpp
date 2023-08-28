@@ -133,7 +133,7 @@ void CCheaterDetection::AimbotCheck(CBaseEntity* pEntity)
 		if (!I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pInfo)) { return; }
 
 		mData[pEntity].iPlayerSuspicion++;
-		Utils::ConLog("CheaterDetection", tfm::format("%s infracted for aimbot.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value);
+		Utils::ConLog("CheaterDetection", std::format("{} infracted for aimbot.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value);
 		mData[pEntity].flLastAimbotTime = I::GlobalVars->curtime;
 	}
 }
@@ -266,17 +266,28 @@ void CCheaterDetection::OnTick()
 		CalculateHitChance(pEntity);
 		SimTime(pEntity);
 
-		if (iDetectionFlags & (1 << 6) && !IsPitchLegal(pEntity)) { mData[pEntity].iPlayerSuspicion = Vars::Misc::CheaterDetection::SuspicionGate.Value; Utils::ConLog("CheaterDetection", tfm::format("%s marked for OOB angles.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
-		if (iDetectionFlags & (1 << 5) && AreAnglesSuspicious(pEntity)) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for suspicious angles.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
-		if (iDetectionFlags & (1 << 4) && CheckBHop(pEntity)) { Utils::ConLog("CheaterDetection", tfm::format("%s infracted for bunny-hopping.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
-		if (iDetectionFlags & (1 << 8) && IsDuckSpeed(pEntity)) { Utils::ConLog("CheaterDetection", tfm::format("%s infracted for suspected duck speed.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); mData[pEntity].iPlayerSuspicion++; }
+		if (iDetectionFlags & (1 << 6) && !IsPitchLegal(pEntity)) { mData[pEntity].iPlayerSuspicion = Vars::Misc::CheaterDetection::SuspicionGate.Value; Utils::ConLog("CheaterDetection", std::format("{} marked for OOB angles.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
+		if (iDetectionFlags & (1 << 5) && AreAnglesSuspicious(pEntity)) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", std::format("{} infracted for suspicious angles.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
+		if (iDetectionFlags & (1 << 4) && CheckBHop(pEntity)) { Utils::ConLog("CheaterDetection", std::format("{} infracted for bunny-hopping.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); }
+		if (iDetectionFlags & (1 << 8) && IsDuckSpeed(pEntity)) { Utils::ConLog("CheaterDetection", std::format("{} infracted for suspected duck speed.", pInfo.name).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); mData[pEntity].iPlayerSuspicion++; }
 
 		//analytical analysis
-		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first) { if (((float)mData[pEntity].pChoke.second / (float)mData[pEntity].pChoke.first) > (Vars::Misc::CheaterDetection::PacketManipGate.Value / server.flMultiplier) && mData[pEntity].pChoke.first > 10) { mData[pEntity].iPlayerSuspicion++; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for high avg packet choking {%.1f / %.1f}.", pInfo.name, mData[pEntity].pChoke.second, (14.f / server.flMultiplier)).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); mData[pEntity].pChoke = { 0, 0.f }; } }
+		if (mData[pEntity].pChoke.second && mData[pEntity].pChoke.first)
+		{
+			if (((float)mData[pEntity].pChoke.second / (float)mData[pEntity].pChoke.first) > (Vars::Misc::CheaterDetection::PacketManipGate.Value / server.flMultiplier) && mData[pEntity].pChoke.first > 10)
+			{
+				mData[pEntity].iPlayerSuspicion++;
+				const float chocked = mData[pEntity].pChoke.second;
+				const float ratio = (14.f / server.flMultiplier);
+				Utils::ConLog("CheaterDetection", std::format("{} infracted for high avg packet choking [{:.1f} / {:.1f}].", pInfo.name, chocked, ratio).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value);
+				mData[pEntity].pChoke = { 0, 0.f };
+			}
+		}
+
 		if (flScanningTime > 60.f)
 		{
-			if (iDetectionFlags & (1 << 0) && mData[pEntity].flHitchance && server.flHighAccuracy && mData[pEntity].pShots.first > 25) { if (mData[pEntity].flHitchance > (server.flHighAccuracy) && !mData[pEntity].pDetections.first) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high accuracy {%.1f / %.1f}.", pInfo.name, mData[pEntity].flHitchance, server.flHighAccuracy).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); } }
-			if (iDetectionFlags & (1 << 1) && mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (std::max(server.flAverageScorePerSecond, server.flFloorScore) * Vars::Misc::CheaterDetection::ScoreMultiplier.Value) && !mData[pEntity].pDetections.second) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", tfm::format("%s infracted for extremely high score per second {%.1f / %.1f}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); } }
+			if (iDetectionFlags & (1 << 0) && mData[pEntity].flHitchance && server.flHighAccuracy && mData[pEntity].pShots.first > 25) { if (mData[pEntity].flHitchance > (server.flHighAccuracy) && !mData[pEntity].pDetections.first) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", std::format("{} infracted for extremely high accuracy {{{:.1f} / {:.1f}}}.", pInfo.name, mData[pEntity].flHitchance, server.flHighAccuracy).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); } }
+			if (iDetectionFlags & (1 << 1) && mData[pEntity].flScorePerSecond && server.flAverageScorePerSecond) { if (mData[pEntity].flScorePerSecond > (std::max(server.flAverageScorePerSecond, server.flFloorScore) * Vars::Misc::CheaterDetection::ScoreMultiplier.Value) && !mData[pEntity].pDetections.second) { mData[pEntity].iPlayerSuspicion += 5; Utils::ConLog("CheaterDetection", std::format("{} infracted for extremely high score per second {{{:.1f} / {:.1f}}}.", pInfo.name, mData[pEntity].flScorePerSecond, server.flAverageScorePerSecond).c_str(), { 224, 255, 131, 255 }, Vars::Debug::Logging.Value); } }
 		}
 
 		const Vec3 vAngles = pEntity->GetEyeAngles();

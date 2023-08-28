@@ -72,7 +72,9 @@ bool NET_SignonState::ReadFromBuffer(bf_read& buffer)
 
 const char* NET_SignonState::ToString(void) const
 {
-    return tfm::format("net_SignonState: state %i, count %i", m_nSignonState, m_nSpawnCount).c_str();
+    static std::string fmt;
+    fmt = std::format("net_SignonState: state {:d}, count {:d}", m_nSignonState, m_nSpawnCount);
+    return fmt.c_str();
 }
 
 #define NET_TICK_SCALEUP	100000.0f
@@ -97,12 +99,16 @@ bool NET_Tick::ReadFromBuffer(bf_read& buffer)
 
 const char* NET_Tick::ToString(void) const
 {
-    return tfm::format("%s: tick %i", GetName(), m_nTick).c_str();
+    static std::string fmt;
+    fmt = std::format("{}: tick {:d}", GetName(), m_nTick);
+    return fmt.c_str();
 }
 
 const char* CLC_VoiceData::ToString(void) const
 {
-    return tfm::format("%s: %i bytes", GetName(), static_cast<int>(m_nLength * 0.125f)).c_str();
+	static std::string fmt;
+    fmt = std::format("{}: {:d} bytes", GetName(), static_cast<int>(m_nLength * 0.125f));
+    return fmt.c_str();
 }
 
 
@@ -141,6 +147,8 @@ bool CLC_BaselineAck::ReadFromBuffer(bf_read& buffer)
 
 const char* CLC_BaselineAck::ToString(void) const
 {
-    return tfm::format("%s: tick %i", GetName(), m_nBaselineTick).c_str();
+    static std::string fmt;
+    fmt = std::format("{}: tick {:d}", GetName(), m_nBaselineTick);
+    return fmt.c_str();
 }
 

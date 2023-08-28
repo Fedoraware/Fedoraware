@@ -378,7 +378,8 @@ void CCritHack::Draw()
 
 	if (Vars::Debug::DebugInfo.Value)
 	{
-		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255, 255, 255, 255, }, ALIGN_CENTERHORIZONTAL, tfm::format("%x", reinterpret_cast<float*>(pWeapon + 0xA54)).c_str());
+		//const void* ptr = static_cast<void*>(pWeapon + 0xA54);
+		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 255, 255, 255, 255, }, ALIGN_CENTERHORIZONTAL, std::format("{:#x}", reinterpret_cast<uintptr_t>(pWeapon + 0xA54)).c_str());
 	}
 	//Can this weapon do random crits?
 	if (NoRandomCrits(pWeapon) == true)

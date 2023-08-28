@@ -35,7 +35,7 @@ public:
 	CBaseEntity* GetObservedTarget() { return m_pObservedTarget; }
 	CTFPlayerResource* GetPR() { return m_pPlayerResource; }
 
-	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
+	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& group);
 	bool IsFriend(int entIdx) { return m_Friends[entIdx]; }
 };
 
