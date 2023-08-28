@@ -332,6 +332,7 @@
     <ClInclude Include="TeamFortress2\Core\Core.h" />
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
+    <ClInclude Include="TeamFortress2\Features\Feature.h" />
     <ClInclude Include="TeamFortress2\Features\Killsay\Killsay.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Notifications\Notifications.h" />
     <ClInclude Include="TeamFortress2\Features\TickHandler\TickHandler.h" />

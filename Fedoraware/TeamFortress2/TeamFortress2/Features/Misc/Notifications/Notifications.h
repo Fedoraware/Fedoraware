@@ -1,5 +1,5 @@
 #pragma once
-#include "../../SDK/SDK.h"
+#include "../../Feature.h"
 
 constexpr int MAX_NOTIFY_SIZE = 8;
 

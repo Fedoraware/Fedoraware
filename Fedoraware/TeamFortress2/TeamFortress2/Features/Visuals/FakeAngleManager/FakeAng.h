@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../SDK/SDK.h"
+#include "../../Feature.h"
 
 #pragma warning ( disable : 4091 )
 

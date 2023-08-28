@@ -4,6 +4,9 @@
 #include "../../SDK/Main/EntityCache/EntityCache.h"
 #include "../Vars.h"
 
+#include "../../SDK/Discord/include/discord_register.h"
+#include "../../SDK/Discord/include/discord_rpc.h"
+
 inline const char* lol(int nClassNum)
 {
 	//literally just took this from ESP cuz too lazy lol

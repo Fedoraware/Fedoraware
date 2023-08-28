@@ -734,6 +734,7 @@
     <ClInclude Include="TeamFortress2\Features\Killsay\Killsay.h" />
     <ClInclude Include="TeamFortress2\Utils\Minidump\Minidump.h" />
     <ClInclude Include="TeamFortress2\Core\Core.h" />
+    <ClInclude Include="TeamFortress2\Features\Feature.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="TeamFortress2\SDK\DirectX\d3dx9.lib" />

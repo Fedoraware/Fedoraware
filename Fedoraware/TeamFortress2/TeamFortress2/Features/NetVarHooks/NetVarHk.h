@@ -1,5 +1,6 @@
 #pragma once
-#include "../../../SDK/SDK.h"
+#include "../Feature.h"
+
 #include "../../Hooks/HookManager.h"
 #include "../../SDK/Includes/proxyfnhook.h"
 #include "../Backtrack/Backtrack.h"

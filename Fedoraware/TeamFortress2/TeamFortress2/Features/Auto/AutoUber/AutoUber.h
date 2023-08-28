@@ -1,6 +1,5 @@
 #pragma once
-
-#include "../../../SDK/SDK.h"
+#include "../AutoGlobal/AutoGlobal.h"
 
 class CAutoUber
 {

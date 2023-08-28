@@ -1,7 +1,6 @@
 #pragma once
 #include <mutex>
-
-#include "../../SDK/SDK.h"
+#include "../Feature.h"
 
 class CFollowbot
 {

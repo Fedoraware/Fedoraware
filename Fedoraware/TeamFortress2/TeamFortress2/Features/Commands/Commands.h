@@ -1,7 +1,6 @@
 #pragma once
 #include <functional>
-
-#include "../../SDK/SDK.h"
+#include "../Feature.h"
 
 using CommandCallback = std::function<void(std::deque<std::string>)>;
 

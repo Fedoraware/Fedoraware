@@ -61,8 +61,6 @@
 #define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
-#define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
-
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include <optional>
 

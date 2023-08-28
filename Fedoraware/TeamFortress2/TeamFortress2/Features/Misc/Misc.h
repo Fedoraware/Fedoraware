@@ -1,5 +1,5 @@
 #pragma once
-#include "../../SDK/SDK.h"
+#include "../Feature.h"
 
 class CMisc
 {
@@ -59,21 +59,3 @@ public:
 };
 
 ADD_FEATURE(CMisc, Misc)
-
-#if 0
-class CStatistics
-{
-public:
-	int m_nHighestKillstreak = 0;
-	int m_nTotalKills = 0;
-	int m_nTotalDeaths = 0;
-	int m_nCurrentKillstreak = 0;
-	CSteamID m_SteamID;
-
-	void Clear();
-	void Submit();
-	void Event(CGameEvent* pEvent, const FNV1A_t uNameHash);
-};
-
-ADD_FEATURE(CStatistics, Statistics);
-#endif

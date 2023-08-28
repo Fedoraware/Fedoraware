@@ -1,7 +1,5 @@
 #pragma once
-#include "../../SDK/SDK.h"
-#include "../../SDK/Discord/include/discord_register.h"
-#include "../../SDK/Discord/include/discord_rpc.h"
+#include "../Feature.h"
 
 class CDiscordRPC
 {
