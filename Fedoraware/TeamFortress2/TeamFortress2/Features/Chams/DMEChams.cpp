@@ -40,7 +40,7 @@ namespace ProxySkins
 		kv->SetString("$scrollanglevar", "0");
 		kv->SetString("$wireframe", "0");
 		kv->AddSubkey(Proxies);
-		return I::MaterialSystem->Create(tfm::format("DMEProxy_%s", materialName).c_str(), kv);
+		return I::MaterialSystem->Create(std::format("DMEProxy_{}", materialName).c_str(), kv);
 	}
 
 	void Init()

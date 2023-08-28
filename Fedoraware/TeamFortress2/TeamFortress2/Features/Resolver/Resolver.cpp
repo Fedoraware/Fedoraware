@@ -256,8 +256,8 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 
 		PlayerInfo_t pInfo{};
 		if (I::EngineClient->GetPlayerInfo(iIndex, &pInfo)) {
-			Utils::ConLog("Resolver", tfm::format("%s networked angles: %.1f %.1f", pInfo.name, vAngles.x, vAngles.y).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
-			Utils::ConLog("Resolver", tfm::format("%s corrected angles: %.1f %.1f", pInfo.name, vAngStore.x, vAngStore.y).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
+			Utils::ConLog("Resolver", std::format("{} networked angles: {:.1f} {:.1f}", pInfo.name, vAngles.x, vAngles.y).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
+			Utils::ConLog("Resolver", std::format("{} corrected angles: {:.1f} {:.1f}", pInfo.name, vAngStore.x, vAngStore.y).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
 		}
 	}
 

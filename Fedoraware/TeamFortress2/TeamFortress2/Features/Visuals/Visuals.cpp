@@ -1082,7 +1082,7 @@ void CVisuals::PickupTimers()
 			continue;
 		}
 
-		auto timerText = tfm::format("%.1f", 10.f - timeDiff);
+		auto timerText = std::format("{:.1f}", 10.f - timeDiff);
 		auto color = pickupData->Type ? Colors::Health : Colors::Ammo;
 
 		Vec3 vScreen;

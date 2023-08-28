@@ -48,7 +48,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(nIndex, &pi);
 
-				std::string classString = tfm::format("%s %s is now a %s", Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
+				std::string classString = std::format("{} {} is now a {}", Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
 				auto wclassString = std::wstring(classString.begin(), classString.end());
 
 				if (Vars::Visuals::ChatInfoText.Value)
@@ -58,7 +58,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::ChatInfoChat.Value)
 				{
-					const std::string changeClassString = tfm::format("%s %s %s is now a %s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
+					const std::string changeClassString = std::format("{} {} {} is now a {}", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
 					I::ClientModeShared->m_pChatElement->ChatPrintf(0, changeClassString.c_str());
 				}
 			}
@@ -74,7 +74,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const int votingOptions = Vars::Misc::VotingOptions.Value;
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				auto voteLine = tfm::format("%s %s %s voted %s", Vars::Menu::CheatPrefix.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+				auto voteLine = std::format("{} {} {} voted {}", Vars::Menu::CheatPrefix.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
 				if (votingOptions & VoteText) // text
 				{
@@ -82,15 +82,15 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & VoteConsole) // console
 				{
-					I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", voteLine).c_str());
+					I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, std::format("{} \n", voteLine).c_str());
 				}
 				if (votingOptions & VoteChat) // chat
 				{
-					I::ClientModeShared->m_pChatElement->ChatPrintf(0, tfm::format("%s %s \x3%s %svoted %s%s", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow), bVotedYes ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) : (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red), bVotedYes ? "Yes" : "No").c_str());
+					I::ClientModeShared->m_pChatElement->ChatPrintf(0, std::format("{} {} \x3{} {}voted {}{}", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow), bVotedYes ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) : (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red), bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & VoteParty) // party
 				{
-					I::EngineClient->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", voteLine).c_str());
+					I::EngineClient->ClientCmd_Unrestricted(std::format("tf_party_chat \"{}\"", voteLine).c_str());
 				}
 			}
 		}
@@ -187,8 +187,8 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 				{
 					const bool bSameTeam = team == pLocal->GetTeamNum();
 
-					const auto bluntLine = tfm::format("%s %s called a vote on %s", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoTarget.name);
-					const auto verboseLine = tfm::format("%s %s [U:1:%s] called a vote on %s [U:1:%s]", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoCaller.friendsID, infoTarget.name,
+					const auto bluntLine = std::format("{} {} called a vote on {}", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoTarget.name);
+					const auto verboseLine = std::format("{} {} [U:1:{:d}] called a vote on {} [U:1:{}]", bSameTeam ? "" : "(Enemy)", infoCaller.name, infoCaller.friendsID, infoTarget.name,
 														 infoTarget.friendsID);
 
 					const int votingOptions = Vars::Misc::VotingOptions.Value;
@@ -205,7 +205,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					// Log to Console
 					if (votingOptions & VoteConsole)
 					{
-						I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, tfm::format("%s \n", chosenLine).c_str());
+						I::Cvar->ConsoleColorPrintf({ 133, 255, 66, 255 }, std::format("{} \n", chosenLine).c_str());
 					}
 
 					// Log to Chat
@@ -217,7 +217,7 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					// Log to Party
 					if (votingOptions & VoteParty)
 					{
-						I::EngineClient->ClientCmd_Unrestricted(tfm::format("tf_party_chat \"%s\"", chosenLine).c_str());
+						I::EngineClient->ClientCmd_Unrestricted(std::format("tf_party_chat \"{}\"", chosenLine).c_str());
 					}
 
 					// Auto Vote
@@ -225,11 +225,11 @@ void CChatInfo::UserMessage(UserMessageType type, bf_read& msgData)
 					{
 						if (G::IsIgnored(infoTarget.friendsID) || g_EntityCache.IsFriend(target))
 						{
-							I::EngineClient->ClientCmd_Unrestricted(tfm::format("vote %d option2", voteID).c_str()); //f2 on ignored and steam friends
+							I::EngineClient->ClientCmd_Unrestricted(std::format("vote {:d} option2", voteID).c_str()); //f2 on ignored and steam friends
 						}
 						else
 						{
-							I::EngineClient->ClientCmd_Unrestricted(tfm::format("vote %d option1", voteID).c_str()); //f1 on everyone else
+							I::EngineClient->ClientCmd_Unrestricted(std::format("vote {:d} option1", voteID).c_str()); //f1 on everyone else
 						}
 					}
 				}

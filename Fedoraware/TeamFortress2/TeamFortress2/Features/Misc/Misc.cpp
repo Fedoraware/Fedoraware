@@ -184,7 +184,7 @@ void CMisc::PrintProjAngles(CBaseEntity* pLocal)
 
 		const Vec3 vDeltaAng = vLocalEyeAngles - vProjAngles;
 		const Vec3 vDeltaPos = vLocalEyePosition - vProjPosition;
-		Utils::ConLog("ProjDebug", tfm::format("dAngles [%.1f, %.1f, %.1f] : dPosition [%.1f, %.1f, %.1f]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), { 255, 180, 0, 255 }, Vars::Debug::Logging.Value);
+		Utils::ConLog("ProjDebug", std::format("dAngles [{:.1f}, {:.1f}, {:.1f}] : dPosition [{:.1f}, {:.1f}, {:.1f}]", vDeltaAng.x, vDeltaAng.y, vDeltaAng.z, vDeltaPos.x, vDeltaPos.y, vDeltaPos.z).c_str(), { 255, 180, 0, 255 }, Vars::Debug::Logging.Value);
 		flNextPrint = I::GlobalVars->curtime + 1.f;
 	}
 }
@@ -825,7 +825,7 @@ void CMisc::ChatSpam()
 				case 1: voiceCommand = "0 0"; break;
 				case 2: voiceCommand = "2 0"; break;
 				case 3: voiceCommand = "2 6"; break;
-				default: voiceCommand = tfm::format("%i %i", Utils::RandIntSimple(0, 2), Utils::RandIntSimple(0, 8)); break;
+				default: voiceCommand = std::format("{:d} {:d}", Utils::RandIntSimple(0, 2), Utils::RandIntSimple(0, 8)); break;
 			}
 
 			voiceCommand.insert(0, "voicemenu ");

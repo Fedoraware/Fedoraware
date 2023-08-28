@@ -4,7 +4,7 @@
 
 // direct references to localized strings
 typedef unsigned long StringIndex_t;
-const unsigned long INVALID_LOCALIZE_STRING_INDEX = (StringIndex_t)-1;
+inline constexpr unsigned long INVALID_LOCALIZE_STRING_INDEX = static_cast<StringIndex_t>(-1);
 
 class ILocalize
 {

@@ -1,4 +1,6 @@
 #pragma once
+#include <bitset>
+
 #include "../BaseEntity/BaseEntity.h"
 #include "../BaseCombatWeapon/BaseCombatWeapon.h"
 #include "../PlayerResource/PlayerResource.h"
@@ -19,6 +21,7 @@ class CEntityCache
 	CBaseEntity* m_pObservedTarget = nullptr;
 	CTFPlayerResource* m_pPlayerResource = nullptr;
 
+	std::bitset<128> m_Friends;
 	std::unordered_map<EGroupType, std::vector<CBaseEntity*>> m_vecGroups;
 	void UpdateFriends();
 
@@ -26,15 +29,14 @@ public:
 
 	void Fill();
 	void Clear();
-    uint_fast64_t friends;
-    bool IsFriend(int entIdx) { return (friends >> entIdx) & 1; }
 
 	CBaseEntity* GetLocal() { return m_pLocal; }
 	CBaseCombatWeapon* GetWeapon() { return m_pLocalWeapon; }
 	CBaseEntity* GetObservedTarget() { return m_pObservedTarget; }
 	CTFPlayerResource* GetPR() { return m_pPlayerResource; }
 
-	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& Group);
+	const std::vector<CBaseEntity*>& GetGroup(const EGroupType& group);
+	bool IsFriend(int entIdx) { return m_Friends[entIdx]; }
 };
 
 inline CEntityCache g_EntityCache;

@@ -261,7 +261,7 @@ void CPlayerList::Render()
 
 						if (ImGui::Selectable("Votekick"))
 						{
-							I::EngineClient->ClientCmd_Unrestricted(tfm::format("callvote kick %i", Player.UserID).c_str());
+							I::EngineClient->ClientCmd_Unrestricted(std::format("callvote kick {:d}", Player.UserID).c_str());
 						}
 
 						ImGui::EndPopup();
