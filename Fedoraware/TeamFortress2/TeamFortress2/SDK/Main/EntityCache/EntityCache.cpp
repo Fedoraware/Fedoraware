@@ -1,5 +1,7 @@
 #include "EntityCache.h"
 
+#include <ranges>
+
 #include "../GlobalInfo/GlobalInfo.h"
 #include "../../../Features/ESP/ESP.h"
 
@@ -43,7 +45,7 @@ void CEntityCache::Fill()
 				}
 
 				// Is any dormant data available?
-				if (!G::DormantPlayerESP.count(entIdx))
+				if (!G::DormantPlayerESP.contains(entIdx))
 				{
 					continue;
 				}
@@ -200,7 +202,7 @@ bool IsPlayerOnSteamFriendList(CBaseEntity* pPlayer)
 
 	if (I::EngineClient->GetPlayerInfo(pPlayer->GetIndex(), &pi) && pi.friendsID)
 	{
-		CSteamID steamID{ pi.friendsID, 1, k_EUniversePublic, k_EAccountTypeIndividual };
+		const CSteamID steamID{ pi.friendsID, 1, k_EUniversePublic, k_EAccountTypeIndividual };
 		return g_SteamInterfaces.Friends002->HasFriend(steamID, k_EFriendFlagImmediate);
 	}
 
@@ -209,23 +211,19 @@ bool IsPlayerOnSteamFriendList(CBaseEntity* pPlayer)
 
 void CEntityCache::UpdateFriends()
 {
-	static size_t CurSize, OldSize;
-	const auto Players = GetGroup(EGroupType::PLAYERS_ALL);
-	CurSize = Players.size();
-	if (CurSize != OldSize)
+	static size_t oldSize = 0;
+
+	const auto players = GetGroup(EGroupType::PLAYERS_ALL);
+	const size_t curSize = players.size();
+	if (curSize == oldSize) { return; }
+
+	m_Friends.reset();
+	for (const auto& player : players)
 	{
-		friends = 0;
-        uint_fast64_t mask;
-        bool flag;
-		for (const auto& Player : Players)
-		{
-             mask = (uint_fast64_t)2 << Player->GetIndex();
-             flag = IsPlayerOnSteamFriendList(Player);
-             friends = (friends & ~mask) | (-flag & mask);
-		}
+		m_Friends[player->GetIndex()] = IsPlayerOnSteamFriendList(player);
 	}
 
-	OldSize = CurSize;
+	oldSize = curSize;
 }
 
 void CEntityCache::Clear()
@@ -234,11 +232,11 @@ void CEntityCache::Clear()
 	m_pLocalWeapon = nullptr;
 	m_pObservedTarget = nullptr;
 	m_pPlayerResource = nullptr;
-	friends = 0;
+	m_Friends.reset();
 
-	for (auto& Group : m_vecGroups)
+	for (auto& group : m_vecGroups | std::views::values)
 	{
-		Group.second.clear();
+		group.clear();
 	}
 }
 
