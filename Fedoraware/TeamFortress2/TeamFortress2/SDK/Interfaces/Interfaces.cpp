@@ -168,33 +168,33 @@ void CInterfaces::Init()
 void CSteamInterfaces::Init()
 {
 	Client = g_Interface.Get<ISteamClient017*>(STEAMCLIENT, STEAMCLIENT_INTERFACE_VERSION_017);
-	VALIDATE_STEAM(Client);
+	VALIDATE_STEAM(Client)
 
-	const HSteamPipe hsNewPipe = Client->CreateSteamPipe();              VALIDATE_STEAM(hsNewPipe);
-	const HSteamPipe hsNewUser = Client->ConnectToGlobalUser(hsNewPipe); VALIDATE_STEAM(hsNewUser);
+	const HSteamPipe hsNewPipe = Client->CreateSteamPipe();              VALIDATE_STEAM(hsNewPipe)
+	const HSteamPipe hsNewUser = Client->ConnectToGlobalUser(hsNewPipe); VALIDATE_STEAM(hsNewUser)
 
 	Friends002 = reinterpret_cast<ISteamFriends002*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_002));
-	VALIDATE_STEAM(Friends002);
+	VALIDATE_STEAM(Friends002)
 
 	Friends015 = reinterpret_cast<ISteamFriends015*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_015));
-	VALIDATE_STEAM(Friends015);
+	VALIDATE_STEAM(Friends015)
 
 	Utils007 = reinterpret_cast<ISteamUtils007*>(Client->GetISteamUtils(hsNewUser, STEAMUTILS_INTERFACE_VERSION_007));
-	VALIDATE_STEAM(Utils007);
+	VALIDATE_STEAM(Utils007)
 
 	SteamApps = reinterpret_cast<ISteamApps006*>(Client->GetISteamApps(hsNewUser, hsNewPipe, STEAMAPPS_INTERFACE_VERSION_006));
-	VALIDATE_STEAM(SteamApps);
+	VALIDATE_STEAM(SteamApps)
 
 	UserStats = reinterpret_cast<ISteamUserStats011*>(Client->GetISteamUserStats(hsNewUser, hsNewPipe, STEAMUSERSTATS_INTERFACE_VERSION_011));
-	VALIDATE_STEAM(UserStats);
+	VALIDATE_STEAM(UserStats)
 
 	User = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, STEAMUSER_INTERFACE_VERSION_017));
-	VALIDATE_STEAM(User);
+	VALIDATE_STEAM(User)
 
 	// Credits to spook953 for teaching me how this works
 	static auto fn = reinterpret_cast<ISteamNetworkingUtils * (__cdecl*)()>(GetProcAddress(GetModuleHandleA("steamnetworkingsockets.dll"), "SteamNetworkingUtils_LibV4"));
 	NetworkingUtils = fn();
-	VALIDATE_STEAM(NetworkingUtils);
+	VALIDATE_STEAM(NetworkingUtils)
 
 	/*Networking = reinterpret_cast<ISteamNetworking004*>(Client->GetISteamNetworking(hsNewUser, hsNewPipe, _(STEAMNETWORKINGUTILS_INTERFACE_VERSION)));
 	_validS(Networking);*/

@@ -198,7 +198,8 @@ void CMovementSimulation::FillVelocities()
 			const Vec3 vVelocity = pEntity->GetVelocity();
 			m_Velocities[iEntIndex].push_front(vVelocity);
 
-			while (m_Velocities[iEntIndex].size() > Vars::Aimbot::Projectile::StrafePredictionSamples.Value)
+			const size_t predSamples = Vars::Aimbot::Projectile::StrafePredictionSamples.Value;
+			while (m_Velocities[iEntIndex].size() > predSamples)
 			{
 				m_Velocities[iEntIndex].pop_back();
 			}

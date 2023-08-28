@@ -301,8 +301,8 @@ namespace bitbuf
 		return(n >> 1) ^ -static_cast<int64_t>(n & 1);
 	}
 
-	const int kMaxVarintBytes = 10;
-	const int kMaxVarint32Bytes = 5;
+	inline constexpr int kMaxVarintBytes = 10;
+	inline constexpr int kMaxVarint32Bytes = 5;
 }
 
 class bf_write
