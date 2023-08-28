@@ -71,6 +71,20 @@ void LoadDefaultConfig()
 	F::Menu.ConfigLoaded = true;
 }
 
+void CCore::OnLoaded()
+{
+	LoadDefaultConfig();
+
+	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent, "%s Loaded!\n", Vars::Menu::CheatName.c_str());
+	I::EngineClient->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
+
+	const int dxLevel = g_ConVars.FindVar("mat_dxlevel")->GetInt();
+	if (dxLevel < 90)
+	{
+		MessageBoxA(nullptr, "Your DirectX version is too low!\nPlease use dxlevel 90 or higher", "dxlevel too low", MB_OK | MB_ICONWARNING);
+	}
+}
+
 void CCore::Load()
 {
 	g_SteamInterfaces.Init();
@@ -104,21 +118,9 @@ void CCore::Load()
 	F::Commands.Init();
 
 	InitRichPresence();
-	
-	LoadDefaultConfig();
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "achievement_earned", "player_death", "vote_started", "teamplay_round_start", "player_spawn", "item_pickup" }); // all events @ https://github.com/tf2cheater2013/gameevents.txt
 
-	// Loaded
-	{
-		I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent, "%s Loaded!\n", Vars::Menu::CheatName.c_str());
-		I::EngineClient->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
-
-		const int dxLevel = g_ConVars.FindVar("mat_dxlevel")->GetInt();
-		if (dxLevel < 90)
-		{
-			MessageBoxA(nullptr, "Your DirectX version is too low!\nPlease use dxlevel 90 or higher", "dxlevel too low", MB_OK | MB_ICONWARNING);
-		}
-	}
+	OnLoaded();
 }
 
 void CCore::Unload()
@@ -140,4 +142,10 @@ void CCore::Unload()
 
 	F::Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
 	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent, "%s Unloaded!\n", Vars::Menu::CheatName.c_str());
+}
+
+bool CCore::ShouldUnload()
+{
+	const bool unloadKey = GetAsyncKeyState(VK_F11) & 0x8000;
+	return unloadKey && !F::Menu.IsOpen;
 }
