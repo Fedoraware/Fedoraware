@@ -1953,6 +1953,8 @@ void CMenu::SettingsWindow()
 
 	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
+		PushItemWidth(-1);
+
 		/* General Menu Settings */
 		if (ImGui::CollapsingHeader("Menu Settings"))
 		{
@@ -2022,8 +2024,6 @@ void CMenu::SettingsWindow()
 
 			// Config name field
 			std::string newConfigName = {};
-
-			PushItemWidth(200);
 			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + newConfigName))
@@ -2031,7 +2031,6 @@ void CMenu::SettingsWindow()
 					g_CFG.SaveConfig(newConfigName);
 				}
 			}
-			PopItemWidth();
 
 			// Config list
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
@@ -2163,7 +2162,6 @@ void CMenu::SettingsWindow()
 			// Config name field
 			std::string newConfigName = {};
 
-			PushItemWidth(200);
 			if (InputTextWithHint("###configname", "New config name", &newConfigName, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				if (!std::filesystem::exists(g_CFG.GetVisualsPath() + "\\" + newConfigName))
@@ -2171,10 +2169,8 @@ void CMenu::SettingsWindow()
 					g_CFG.SaveVisual(newConfigName);
 				}
 			}
-			PopItemWidth();
 
 			// Config list
-
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
 			{
 				if (!entry.is_regular_file()) { continue; }
@@ -2198,34 +2194,41 @@ void CMenu::SettingsWindow()
 					}
 					PopStyleColor();
 
-					// Save config button
-					if (Button("Save", ImVec2(61, 20)))
+					// Config action buttons
+					if (BeginTable("ConfigActions", 3))
 					{
-						if (configName != g_CFG.GetCurrentVisuals())
+						// Save config button
+						TableNextColumn();
+						if (Button("Save", buttonSize))
 						{
-							OpenPopup("Save config?");
+							if (configName != g_CFG.GetCurrentVisuals())
+							{
+								OpenPopup("Save config?");
+							}
+							else
+							{
+								g_CFG.SaveVisual(selected);
+								selected.clear();
+							}
 						}
-						else
+
+						// Load config button
+						TableNextColumn();
+						if (Button("Load", buttonSize))
 						{
-							g_CFG.SaveVisual(selected);
+							g_CFG.LoadVisual(selected);
 							selected.clear();
+							LoadStyle();
 						}
-					}
 
-					// Load config button
-					SameLine();
-					if (Button("Load", ImVec2(61, 20)))
-					{
-						g_CFG.LoadVisual(selected);
-						selected.clear();
-						LoadStyle();
-					}
+						// Remove config button
+						TableNextColumn();
+						if (Button("Remove", buttonSize))
+						{
+							OpenPopup("Remove config?");
+						}
 
-					// Remove config button
-					SameLine();
-					if (Button("Remove", ImVec2(62, 20)))
-					{
-						OpenPopup("Remove config?");
+						EndTable();
 					}
 
 					// Save config dialog
@@ -2289,6 +2292,7 @@ void CMenu::SettingsWindow()
 			}
 		}
 
+		PopItemWidth();
 		End();
 	}
 
