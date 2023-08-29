@@ -1950,7 +1950,7 @@ void CMenu::SettingsWindow()
 
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
-	SetNextWindowSize(ImVec2(250.f, 0.f));
+	SetNextWindowSize(ImVec2(230.f, 0.f));
 
 	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
@@ -1966,10 +1966,10 @@ void CMenu::SettingsWindow()
 			{
 				I::ViewRender->SetScreenOverlayMaterial(nullptr);
 			}
-			if (Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value)) { LoadStyle(); }
+			Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value);
 
 			WInputText("Cheat Name", &Vars::Menu::CheatName);
-			WInputText("Chat Info Prefix", &Vars::Menu::CheatPrefix);
+			WInputText("Chat Prefix", &Vars::Menu::CheatPrefix);
 
 			SetNextItemWidth(100);
 			InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);	

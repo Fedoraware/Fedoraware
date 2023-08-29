@@ -161,7 +161,6 @@ void CMaterialEditor::EditorWindow()
 	using namespace ImGui;
 
 	SetNextWindowSize(ImVec2(450, 400), ImGuiCond_Once);
-	PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
 	if (Begin("Material Editor", &EditorOpen, ImGuiWindowFlags_NoCollapse))
 	{
 		// Toolbar
@@ -195,7 +194,6 @@ void CMaterialEditor::EditorWindow()
 
 		End();
 	}
-	PopStyleVar();
 }
 
 void CMaterialEditor::Render()
