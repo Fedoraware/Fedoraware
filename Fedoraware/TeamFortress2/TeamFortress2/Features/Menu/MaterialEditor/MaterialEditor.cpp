@@ -132,7 +132,7 @@ void CMaterialEditor::MainWindow()
 		// Material list
 		if (BeginChild("ListChild###Materials"))
 		{
-			if (ListBoxHeader("###MaterialList", { GetWindowWidth(), GetWindowHeight() }))
+			if (BeginListBox("###MaterialList", { GetWindowWidth(), GetWindowHeight() }))
 			{
 				for (auto const& [name, mat] : MaterialMap)
 				{
@@ -145,7 +145,7 @@ void CMaterialEditor::MainWindow()
 					}
 				}
 
-				ListBoxFooter();
+				EndListBox();
 			}
 		}
 		EndChild();
