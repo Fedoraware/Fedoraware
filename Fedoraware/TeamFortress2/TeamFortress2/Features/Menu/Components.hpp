@@ -1,6 +1,8 @@
 #pragma once
 #include "ImGui/imgui_internal.h"
 
+inline std::bitset<255> VALID_KEYS;
+
 namespace ImGui
 {
 	/* Color_t to ImVec4 */
@@ -89,6 +91,26 @@ namespace ImGui
 
 	__inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false)
 	{
+		// Init the valid keys bitset
+		static std::once_flag initFlag;
+		std::call_once(initFlag, [] {
+			for (short i = 0x00; i <= 0x07; i++) { VALID_KEYS[i] = true; }
+			for (short i = 0x30; i <= 0x5A; i++) { VALID_KEYS[i] = true; } // 0 - 9
+			for (short i = 0x41; i <= 0x5A; i++) { VALID_KEYS[i] = true; } // A - Z
+
+			VALID_KEYS[VK_SHIFT] = true;
+			VALID_KEYS[VK_CONTROL] = true;
+			VALID_KEYS[VK_MENU] = true;
+			VALID_KEYS[VK_PRIOR] = true;
+			VALID_KEYS[VK_NEXT] = true;
+			VALID_KEYS[VK_END] = true;
+			VALID_KEYS[VK_HOME] = true;
+			VALID_KEYS[VK_LSHIFT] = true;
+			VALID_KEYS[VK_RSHIFT] = true;
+			VALID_KEYS[VK_DELETE] = true;
+			VALID_KEYS[VK_BACK] = true;
+		});
+
 		auto VK2STR = [&](const short key) -> const char*
 		{
 			switch (key)
@@ -98,6 +120,7 @@ namespace ImGui
 				case VK_MBUTTON: return "MMB";
 				case VK_XBUTTON1: return "Mouse4";
 				case VK_XBUTTON2: return "Mouse5";
+				case VK_BACK: return "Back";
 				case VK_SPACE: return "Space";
 				case 0x0: return "None";
 				case VK_A: return "A";
@@ -155,15 +178,14 @@ namespace ImGui
 				default: break;
 			}
 
-			WCHAR output[16] = { L"\0" };
-			if (const int result = GetKeyNameTextW(MapVirtualKeyW(key, MAPVK_VK_TO_VSC) << 16, output, 16))
+			CHAR buffer[16] = {};
+			const int result = GetKeyNameTextA(MapVirtualKeyW(key, MAPVK_VK_TO_VSC) << 16, buffer, 16);
+			if (result != 0)
 			{
-				char outputt[128];
-				sprintf(outputt, "%ws", output);
-				return outputt;
+				return buffer;
 			}
 
-			return "Unknown";
+			return nullptr;
 		};
 
 		const auto id = GetID(label);
@@ -171,91 +193,52 @@ namespace ImGui
 
 		if (GetActiveID() == id)
 		{
-			Button("...", ImVec2(100, 20));
+			// Active
+			SetNextItemAllowOverlap();
+			Button("...", ImVec2(100, 0));
 
-			static float time = I::EngineClient->Time();
-			const float elapsed = I::EngineClient->Time() - time;
-			static CVar<int>* curr = nullptr, * prevv = curr;
-			if (curr != prevv)
+			if (!IsItemHovered() && IsMouseClicked(ImGuiMouseButton_Left))
 			{
-				time = I::EngineClient->Time();
-				prevv = curr;
-			}
-
-			if (curr == nullptr && elapsed > 0.1f)
-			{
-				for (short n = 0; n < 256; n++)
-				{
-					if ((n > 0x0 && n < 0x7) ||
-						(n > L'A' - 1 && n < L'Z' + 1) ||
-						(n > L'0' - 1 && n < L'9' + 1) ||
-						n == VK_LSHIFT ||
-						n == VK_RSHIFT ||
-						n == VK_SHIFT ||
-						n == VK_ESCAPE ||
-						n == VK_HOME ||
-						n == VK_CONTROL ||
-						n == VK_MENU ||
-						n == VK_PRIOR ||
-						n == VK_NEXT ||
-						n == VK_DELETE ||
-						n == VK_HOME ||
-						n == VK_END ||
-						bAllowSpecial && (
-						n == VK_INSERT ||
-						n == VK_F9 ||
-						n == VK_F10 ||
-						n == VK_F12
-						))
-					{
-						if ((!IsItemHovered() && GetIO().MouseClicked[0]))
-						{
-							ClearActiveID();
-							break;
-						}
-						if (GetAsyncKeyState(n) & 0x8000)
-						{
-							if (n == VK_HOME || n == VK_INSERT)
-							{
-								break;
-							}
-
-							if (n == VK_ESCAPE && bAllowNone)
-							{
-								ClearActiveID();
-								output.Value = 0x0;
-								break;
-							}
-
-							output.Value = n;
-							ClearActiveID();
-							break;
-						}
-					} //loop
-				}
-			}
-
-			if (curr != prevv)
-			{
-				time = I::EngineClient->Time();
-				prevv = curr;
-			}
-
-			GetCurrentContext()->ActiveIdAllowOverlap = true;
-			if ((!IsItemHovered() && GetIO().MouseClicked[0]))
-			{
+				// Keybinding canceled
 				ClearActiveID();
 			}
+			else if (IsKeyPressed(ImGuiKey_Escape) && bAllowNone)
+			{
+				// Keybinding escaped
+				output.Value = 0;
+				ClearActiveID();
+			}
+			else
+			{
+				SetActiveID(id, GetCurrentWindow());
+
+				// Get the pressed key
+				for (short key = 0; key < 255; key++)
+				{
+					if (!(GetAsyncKeyState(key) & 0x8000)) { continue; }
+					if (!VALID_KEYS[key]) { continue; }
+					if (!bAllowSpecial && (key == VK_INSERT || key == VK_F9 || key == VK_F10 || key == VK_F12)) { continue; }
+
+					output.Value = key;
+					ClearActiveID();
+					break;
+				}
+			}
 		}
-		else if (Button(VK2STR(output.Value), ImVec2(100, 20)))
+		else
 		{
-			SetActiveID(id, GetCurrentWindow());
+			// Inactive
+			const char* keyName = VK2STR(output.Value);
+			if (Button(keyName ? keyName : "Unknown", ImVec2(100, 0)))
+			{
+				SetActiveID(id, GetCurrentWindow());
+			}
 		}
 
 		SameLine();
 		Text("%s", label);
-		PopID();
 
+		PopID();
 		return true;
 	}
 

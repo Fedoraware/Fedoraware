@@ -41,8 +41,9 @@
 #include "Localize/Localize.h"
 #include "CCommonHostState/CCommonHostState.h"
 #include "ICenterPrint/ICenterPrint.h"
-#include "../DirectX/DirectX.h"
 #include "IOcclusionSystem/IOcclusionSystem.h"
+
+#include <d3d9.h>
 
 class CThirdPersonManager
 {

@@ -21,7 +21,7 @@ namespace Vars
 		inline bool ShowKeybinds = false;
 		inline CVar<bool> ShowDVD{ false };
 		inline CVar<bool> MenuCelebration{ true }; //used in EngineVGui_Paint
-		inline CVar<bool> Vignette{ true };
+		inline CVar<bool> Vignette{ false };
 		inline CVar<bool> CloseOnUnfocus{ false };
 
 		inline CVar<int> MenuKey{ 0 };
