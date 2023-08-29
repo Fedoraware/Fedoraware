@@ -1949,35 +1949,44 @@ void CMenu::SettingsWindow()
 
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
+	ImGui::SetNextWindowSize(ImVec2(250.f, 0.f));
 
-	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
+	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
-		if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
-		if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
-		Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
-		if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
+		/* General Menu Settings */
+		if (ImGui::CollapsingHeader("Menu Settings"))
 		{
-			I::ViewRender->SetScreenOverlayMaterial(nullptr);
+			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
+			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
+			Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
+			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
+			{
+				I::ViewRender->SetScreenOverlayMaterial(nullptr);
+			}
+			if (Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value)) { LoadStyle(); }
+
+			WInputText("Cheat Name", &Vars::Menu::CheatName);
+			WInputText("Chat Info Prefix", &Vars::Menu::CheatPrefix);
+
+			SetNextItemWidth(100);
+			InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);	
 		}
-		if (Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value)) { LoadStyle(); }
-
-		WInputText("Cheat Name", &Vars::Menu::CheatName);
-		WInputText("Chat Info Prefix", &Vars::Menu::CheatPrefix);
-
-		SetNextItemWidth(100);
-		InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);
 
 		Dummy({ 0, 5 });
 
-		if (Button("Open configs folder", ImVec2(200, 0)))
+		/* Config Tool Buttons */
+		if (Button("Open configs folder", ImVec2(-1, 0)))
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
-		if (Button("Open visuals folder", ImVec2(200, 0)))
+		if (Button("Open visuals folder", ImVec2(-1, 0)))
 		{
 			ShellExecuteA(NULL, NULL, g_CFG.GetVisualsPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
+
 		Dummy({ 0, 5 });
+
+		/* Config Tabs */
 		ImGui::PushFont(SectionFont);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -2003,7 +2012,8 @@ void CMenu::SettingsWindow()
 		static std::string selected;
 		static std::string selectedvis;
 
-		// General config tab
+		/* Config list*/
+		constexpr auto buttonSize = ImVec2(-1, 20);
 		if (CurrentConfigTab == ConfigTab::General)
 		{
 			// Current config
@@ -2024,7 +2034,6 @@ void CMenu::SettingsWindow()
 			PopItemWidth();
 
 			// Config list
-
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetConfigPath()))
 			{
 				if (!entry.is_regular_file()) { continue; }
@@ -2042,40 +2051,46 @@ void CMenu::SettingsWindow()
 					PushStyleColor(ImGuiCol_Button, buttonColor);
 
 					// Config name button
-					if (Button(configName.c_str(), ImVec2(200, 20)))
+					if (Button(configName.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
 					PopStyleColor();
 
-					// Save config button
-					if (Button("Save", ImVec2(61, 20)))
+					if (BeginTable("ConfigActions", 3))
 					{
-						if (configName != g_CFG.GetCurrentConfig())
+						// Save config button
+						TableNextColumn();
+						if (Button("Save", buttonSize))
 						{
-							OpenPopup("Save config?");
+							if (configName != g_CFG.GetCurrentConfig())
+							{
+								OpenPopup("Save config?");
+							}
+							else
+							{
+								g_CFG.SaveConfig(selected);
+								selected.clear();
+							}
 						}
-						else
+
+						// Load config button
+						TableNextColumn();
+						if (Button("Load", buttonSize))
 						{
-							g_CFG.SaveConfig(selected);
+							g_CFG.LoadConfig(selected);
 							selected.clear();
+							LoadStyle();
 						}
-					}
 
-					// Load config button
-					SameLine();
-					if (Button("Load", ImVec2(61, 20)))
-					{
-						g_CFG.LoadConfig(selected);
-						selected.clear();
-						LoadStyle();
-					}
+						// Remove config button
+						TableNextColumn();
+						if (Button("Remove", buttonSize))
+						{
+							OpenPopup("Remove config?");
+						}
 
-					// Remove config button
-					SameLine();
-					if (Button("Remove", ImVec2(62, 20)))
-					{
-						OpenPopup("Remove config?");
+						EndTable();
 					}
 
 					// Save config dialog
@@ -2123,7 +2138,7 @@ void CMenu::SettingsWindow()
 				{
 					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 					std::string buttonText = "> " + configName + " <";
-					if (Button(buttonText.c_str(), ImVec2(200, 20)))
+					if (Button(buttonText.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
@@ -2131,7 +2146,7 @@ void CMenu::SettingsWindow()
 				}
 				else
 				{
-					if (Button(configName.c_str(), ImVec2(200, 20)))
+					if (Button(configName.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
@@ -2139,8 +2154,6 @@ void CMenu::SettingsWindow()
 			}
 
 		}
-
-		// Visuals config tab
 		else if (CurrentConfigTab == ConfigTab::Visuals)
 		{
 			// Current config
@@ -2179,7 +2192,7 @@ void CMenu::SettingsWindow()
 					PushStyleColor(ImGuiCol_Button, buttonColor);
 
 					// Config name button
-					if (Button(configName.c_str(), ImVec2(200, 20)))
+					if (Button(configName.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
@@ -2260,7 +2273,7 @@ void CMenu::SettingsWindow()
 				{
 					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 					std::string buttonText = "> " + configName + " <";
-					if (Button(buttonText.c_str(), ImVec2(200, 20)))
+					if (Button(buttonText.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
@@ -2268,7 +2281,7 @@ void CMenu::SettingsWindow()
 				}
 				else
 				{
-					if (Button(configName.c_str(), ImVec2(200, 20)))
+					if (Button(configName.c_str(), buttonSize))
 					{
 						selected = configName;
 					}
