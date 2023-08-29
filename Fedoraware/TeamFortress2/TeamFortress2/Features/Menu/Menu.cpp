@@ -26,6 +26,8 @@
 int unuPrimary = 0;
 int unuSecondary = 0;
 
+constexpr auto SIZE_FULL_WIDTH = ImVec2(-1, 20);
+
 /* The main menu */
 void CMenu::DrawMenu()
 {
@@ -1802,7 +1804,7 @@ void CMenu::MenuMisc()
 				{
 					for (const auto& killsay : vecKillsays)
 					{
-						bool bThisKillsayIsValid = killsay == Vars::Misc::KillsayFile.c_str();
+						bool bThisKillsayIsValid = (killsay == Vars::Misc::KillsayFile);
 						if (ImGui::Selectable(killsay.c_str(), &bThisKillsayIsValid))
 						{
 							F::Killsay.m_bFilled = false;
@@ -1882,39 +1884,38 @@ void CMenu::MenuMisc()
 			WInputInt("Group size", &Vars::Misc::Steam::GroupSize.Value); HelpMarker("Sets party size");
 
 			SectionTitle("Utilities");
-			const auto btnWidth = GetWindowSize().x - 2 * GetStyle().WindowPadding.x;
-			if (Button("Full update", ImVec2(btnWidth, 20)))
+			if (Button("Full update", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("cl_fullupdate");
-			if (Button("Reload HUD", ImVec2(btnWidth, 20)))
+			if (Button("Reload HUD", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("hud_reloadscheme");
-			if (Button("Restart sound", ImVec2(btnWidth, 20)))
+			if (Button("Restart sound", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("snd_restart");
-			if (Button("Stop sound", ImVec2(btnWidth, 20)))
+			if (Button("Stop sound", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("stopsound");
-			if (Button("Status", ImVec2(btnWidth, 20)))
+			if (Button("Status", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("status");
-			if (Button("Ping", ImVec2(btnWidth, 20)))
+			if (Button("Ping", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("ping");
-			if (Button("Pong", ImVec2(btnWidth, 20)))
+			if (Button("Pong", SIZE_FULL_WIDTH))
 				F::Pong.IsOpen = !F::Pong.IsOpen;
-			if (Button("Retry", ImVec2(btnWidth, 20)))
+			if (Button("Retry", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("retry");
-			if (Button("Exit", ImVec2(btnWidth, 20)))
+			if (Button("Exit", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("exit");
-			if (Button("Console", ImVec2(btnWidth, 20)))
+			if (Button("Console", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("showconsole");
-			if (Button("Demo playback", ImVec2(btnWidth, 20)))
+			if (Button("Demo playback", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("demoui");
-			if (Button("Demo trackbar", ImVec2(btnWidth, 20)))
+			if (Button("Demo trackbar", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("demoui2");
-			if (Button("Itemtest", ImVec2(btnWidth, 20)))
+			if (Button("Itemtest", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("itemtest");
-			if (Button("Fix Chams", ImVec2(btnWidth, 20)))
+			if (Button("Fix Chams", SIZE_FULL_WIDTH))
 			{
 				F::DMEChams.CreateMaterials();
 				F::Glow.CreateMaterials();
 			}
-			if (Button("Print Hashes", ImVec2(btnWidth, 20)))
+			if (Button("Print Hashes", SIZE_FULL_WIDTH))
 			{
 				Hash::PrintHash();
 			}
@@ -1925,11 +1926,11 @@ void CMenu::MenuMisc()
 
 			if (!I::EngineClient->IsConnected())
 			{
-				if (Button("Unlock all achievements", ImVec2(btnWidth, 20)))
+				if (Button("Unlock all achievements", SIZE_FULL_WIDTH))
 				{
 					F::Misc.UnlockAchievements();
 				}
-				if (Button("Lock all achievements", ImVec2(btnWidth, 20)))
+				if (Button("Lock all achievements", SIZE_FULL_WIDTH))
 				{
 					F::Misc.LockAchievements();
 				}
@@ -1949,14 +1950,14 @@ void CMenu::SettingsWindow()
 
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(10, 10));
-	ImGui::SetNextWindowSize(ImVec2(250.f, 0.f));
+	SetNextWindowSize(ImVec2(250.f, 0.f));
 
 	if (Begin("Settings", &ShowSettings, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
 		PushItemWidth(-1);
 
 		/* General Menu Settings */
-		if (ImGui::CollapsingHeader("Menu Settings"))
+		if (CollapsingHeader("Menu Settings"))
 		{
 			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
@@ -1977,45 +1978,44 @@ void CMenu::SettingsWindow()
 		Dummy({ 0, 5 });
 
 		/* Config Tool Buttons */
-		if (Button("Open configs folder", ImVec2(-1, 0)))
+		if (Button("Open configs folder", SIZE_FULL_WIDTH))
 		{
-			ShellExecuteA(NULL, NULL, g_CFG.GetConfigPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
+			ShellExecuteA(nullptr, nullptr, g_CFG.GetConfigPath().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 		}
-		if (Button("Open visuals folder", ImVec2(-1, 0)))
+		if (Button("Open visuals folder", SIZE_FULL_WIDTH))
 		{
-			ShellExecuteA(NULL, NULL, g_CFG.GetVisualsPath().c_str(), NULL, NULL, SW_SHOWNORMAL);
+			ShellExecuteA(nullptr, nullptr, g_CFG.GetVisualsPath().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 		}
 
 		Dummy({ 0, 5 });
 
 		/* Config Tabs */
-		ImGui::PushFont(SectionFont);
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-		if (ImGui::BeginTable("ConfigTable", 2))
+		PushFont(SectionFont);
+		PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
+		PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		if (BeginTable("ConfigTable", 2))
 		{
-			ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
-			if (ImGui::TabButton("General", CurrentConfigTab == ConfigTab::General))
+			PushStyleColor(ImGuiCol_Text, TextLight.Value);
+			if (TabButton("General", CurrentConfigTab == ConfigTab::General))
 			{
 				CurrentConfigTab = ConfigTab::General;
 			}
 
-			if (ImGui::TabButton("Visuals", CurrentConfigTab == ConfigTab::Visuals))
+			if (TabButton("Visuals", CurrentConfigTab == ConfigTab::Visuals))
 			{
 				CurrentConfigTab = ConfigTab::Visuals;
 			}
 
-			ImGui::PopStyleColor(1);
-			ImGui::EndTable();
+			PopStyleColor(1);
+			EndTable();
 		}
-		ImGui::PopStyleVar(2);
-		ImGui::PopFont();
+		PopStyleVar(2);
+		PopFont();
 
 		static std::string selected;
 		static std::string selectedvis;
 
 		/* Config list*/
-		constexpr auto buttonSize = ImVec2(-1, 20);
 		if (CurrentConfigTab == ConfigTab::General)
 		{
 			// Current config
@@ -2050,7 +2050,7 @@ void CMenu::SettingsWindow()
 					PushStyleColor(ImGuiCol_Button, buttonColor);
 
 					// Config name button
-					if (Button(configName.c_str(), buttonSize))
+					if (Button(configName.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
@@ -2060,7 +2060,7 @@ void CMenu::SettingsWindow()
 					{
 						// Save config button
 						TableNextColumn();
-						if (Button("Save", buttonSize))
+						if (Button("Save", SIZE_FULL_WIDTH))
 						{
 							if (configName != g_CFG.GetCurrentConfig())
 							{
@@ -2075,7 +2075,7 @@ void CMenu::SettingsWindow()
 
 						// Load config button
 						TableNextColumn();
-						if (Button("Load", buttonSize))
+						if (Button("Load", SIZE_FULL_WIDTH))
 						{
 							g_CFG.LoadConfig(selected);
 							selected.clear();
@@ -2084,7 +2084,7 @@ void CMenu::SettingsWindow()
 
 						// Remove config button
 						TableNextColumn();
-						if (Button("Remove", buttonSize))
+						if (Button("Remove", SIZE_FULL_WIDTH))
 						{
 							OpenPopup("Remove config?");
 						}
@@ -2137,7 +2137,7 @@ void CMenu::SettingsWindow()
 				{
 					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 					std::string buttonText = "> " + configName + " <";
-					if (Button(buttonText.c_str(), buttonSize))
+					if (Button(buttonText.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
@@ -2145,7 +2145,7 @@ void CMenu::SettingsWindow()
 				}
 				else
 				{
-					if (Button(configName.c_str(), buttonSize))
+					if (Button(configName.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
@@ -2188,7 +2188,7 @@ void CMenu::SettingsWindow()
 					PushStyleColor(ImGuiCol_Button, buttonColor);
 
 					// Config name button
-					if (Button(configName.c_str(), buttonSize))
+					if (Button(configName.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
@@ -2199,7 +2199,7 @@ void CMenu::SettingsWindow()
 					{
 						// Save config button
 						TableNextColumn();
-						if (Button("Save", buttonSize))
+						if (Button("Save", SIZE_FULL_WIDTH))
 						{
 							if (configName != g_CFG.GetCurrentVisuals())
 							{
@@ -2214,7 +2214,7 @@ void CMenu::SettingsWindow()
 
 						// Load config button
 						TableNextColumn();
-						if (Button("Load", buttonSize))
+						if (Button("Load", SIZE_FULL_WIDTH))
 						{
 							g_CFG.LoadVisual(selected);
 							selected.clear();
@@ -2223,7 +2223,7 @@ void CMenu::SettingsWindow()
 
 						// Remove config button
 						TableNextColumn();
-						if (Button("Remove", buttonSize))
+						if (Button("Remove", SIZE_FULL_WIDTH))
 						{
 							OpenPopup("Remove config?");
 						}
@@ -2276,7 +2276,7 @@ void CMenu::SettingsWindow()
 				{
 					PushStyleColor(ImGuiCol_Button, GetStyle().Colors[ImGuiCol_ButtonActive]);
 					std::string buttonText = "> " + configName + " <";
-					if (Button(buttonText.c_str(), buttonSize))
+					if (Button(buttonText.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
@@ -2284,7 +2284,7 @@ void CMenu::SettingsWindow()
 				}
 				else
 				{
-					if (Button(configName.c_str(), buttonSize))
+					if (Button(configName.c_str(), SIZE_FULL_WIDTH))
 					{
 						selected = configName;
 					}
