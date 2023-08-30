@@ -2089,48 +2089,51 @@ void CMenu::SettingsWindow()
 							OpenPopup("Remove config?");
 						}
 
+						// Dialogs
+						{
+							// Save config dialog
+							if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+							{
+								Text("Do you really want to override this config?");
+
+								Separator();
+								if (Button("Yes, override!", ImVec2(150, 0)))
+								{
+									g_CFG.SaveConfig(selected);
+									selected.clear();
+									CloseCurrentPopup();
+								}
+
+								SameLine();
+								if (Button("No", ImVec2(120, 0)))
+								{
+									CloseCurrentPopup();
+								}
+								EndPopup();
+							}
+
+							// Delete config dialog
+							if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+							{
+								Text("Do you really want to delete this config?");
+
+								Separator();
+								if (Button("Yes, remove!", ImVec2(150, 0)))
+								{
+									g_CFG.RemoveConfig(selected);
+									selected.clear();
+									CloseCurrentPopup();
+								}
+								SameLine();
+								if (Button("No", ImVec2(150, 0)))
+								{
+									CloseCurrentPopup();
+								}
+								EndPopup();
+							}
+						}
+
 						EndTable();
-					}
-
-					// Save config dialog
-					if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-					{
-						Text("Do you really want to override this config?");
-
-						Separator();
-						if (Button("Yes, override!", ImVec2(150, 0)))
-						{
-							g_CFG.SaveConfig(selected);
-							selected.clear();
-							CloseCurrentPopup();
-						}
-
-						SameLine();
-						if (Button("No", ImVec2(120, 0)))
-						{
-							CloseCurrentPopup();
-						}
-						EndPopup();
-					}
-
-					// Delete config dialog
-					if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-					{
-						Text("Do you really want to delete this config?");
-
-						Separator();
-						if (Button("Yes, remove!", ImVec2(150, 0)))
-						{
-							g_CFG.RemoveConfig(selected);
-							selected.clear();
-							CloseCurrentPopup();
-						}
-						SameLine();
-						if (Button("No", ImVec2(150, 0)))
-						{
-							CloseCurrentPopup();
-						}
-						EndPopup();
 					}
 				}
 				else if (configName == g_CFG.GetCurrentConfig())
@@ -2170,7 +2173,7 @@ void CMenu::SettingsWindow()
 				}
 			}
 
-			// Config list
+			// Visuals list
 			for (const auto& entry : std::filesystem::directory_iterator(g_CFG.GetVisualsPath()))
 			{
 				if (!entry.is_regular_file()) { continue; }
@@ -2194,16 +2197,16 @@ void CMenu::SettingsWindow()
 					}
 					PopStyleColor();
 
-					// Config action buttons
+					// Visuals action buttons
 					if (BeginTable("ConfigActions", 3))
 					{
-						// Save config button
+						// Visuals config button
 						TableNextColumn();
 						if (Button("Save", SIZE_FULL_WIDTH))
 						{
 							if (configName != g_CFG.GetCurrentVisuals())
 							{
-								OpenPopup("Save config?");
+								OpenPopup("Save visuals?");
 							}
 							else
 							{
@@ -2212,7 +2215,7 @@ void CMenu::SettingsWindow()
 							}
 						}
 
-						// Load config button
+						// Load visuals button
 						TableNextColumn();
 						if (Button("Load", SIZE_FULL_WIDTH))
 						{
@@ -2221,55 +2224,58 @@ void CMenu::SettingsWindow()
 							LoadStyle();
 						}
 
-						// Remove config button
+						// Remove visual button
 						TableNextColumn();
 						if (Button("Remove", SIZE_FULL_WIDTH))
 						{
-							OpenPopup("Remove config?");
+							OpenPopup("Remove visuals?");
+						}
+
+						// Dialogs
+						{
+							// Save config dialog
+							if (BeginPopupModal("Save visuals?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+							{
+								Text("Do you really want to override this config?");
+
+								Separator();
+								if (Button("Yes, override!", ImVec2(150, 0)))
+								{
+									g_CFG.SaveVisual(selected);
+									selected.clear();
+									CloseCurrentPopup();
+								}
+
+								SameLine();
+								if (Button("No", ImVec2(120, 0)))
+								{
+									CloseCurrentPopup();
+								}
+								EndPopup();
+							}
+
+							// Delete config dialog
+							if (BeginPopupModal("Remove visuals?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+							{
+								Text("Do you really want to delete this config?");
+
+								Separator();
+								if (Button("Yes, remove!", ImVec2(150, 0)))
+								{
+									g_CFG.RemoveVisual(selected);
+									selected.clear();
+									CloseCurrentPopup();
+								}
+								SameLine();
+								if (Button("No", ImVec2(150, 0)))
+								{
+									CloseCurrentPopup();
+								}
+								EndPopup();
+							}
 						}
 
 						EndTable();
-					}
-
-					// Save config dialog
-					if (BeginPopupModal("Save config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-					{
-						Text("Do you really want to override this config?");
-
-						Separator();
-						if (Button("Yes, override!", ImVec2(150, 0)))
-						{
-							g_CFG.SaveVisual(selected);
-							selected.clear();
-							CloseCurrentPopup();
-						}
-
-						SameLine();
-						if (Button("No", ImVec2(120, 0)))
-						{
-							CloseCurrentPopup();
-						}
-						EndPopup();
-					}
-
-					// Delete config dialog
-					if (BeginPopupModal("Remove config?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-					{
-						Text("Do you really want to delete this config?");
-
-						Separator();
-						if (Button("Yes, remove!", ImVec2(150, 0)))
-						{
-							g_CFG.RemoveVisual(selected);
-							selected.clear();
-							CloseCurrentPopup();
-						}
-						SameLine();
-						if (Button("No", ImVec2(150, 0)))
-						{
-							CloseCurrentPopup();
-						}
-						EndPopup();
 					}
 				}
 				else if (configName == g_CFG.GetCurrentVisuals())

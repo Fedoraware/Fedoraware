@@ -161,22 +161,6 @@ namespace Utils
 		return false;
 	}
 
-	inline std::vector<std::string> SplitString(const std::string& pString, const std::string& pDelimeter)
-	{
-		std::vector<std::string> strings;
-
-		std::string::size_type pos = 0;
-		std::string::size_type prev = 0;
-		while ((pos = pString.find(pDelimeter, prev)) != std::string::npos)
-		{
-			strings.push_back(pString.substr(prev, pos - prev));
-			prev = pos + 1;
-		}
-
-		strings.push_back(pString.substr(prev));
-		return strings;
-	}
-
 	inline Vec3 GetRotatedPosition(Vec3 vOrigin, const float flRotation, const float flDistance)
 	{
 		const auto rad = DEG2RAD(flRotation);
