@@ -1,4 +1,10 @@
 #pragma once
+#define abstract_class class
+#include "../Steam/steam_api.h"
+#include "../Steam/steamtypes.h"
+#include "../Steam/isteamnetworkingutils.h"
+#include "../Steam/steamclientpublic.h"
+
 #include "Classes.h"
 #include "Const.h"
 #include "Enums.h"

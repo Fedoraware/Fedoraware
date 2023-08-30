@@ -1,6 +1,7 @@
 #include "../Hooks.h"
 
-static const std::map<std::string, int> DataCenterHashMap{
+const std::unordered_map<std::string, unsigned> DATA_CENTER_HASH
+{
 	{"ams",  DC_AMS},
 	{"atl",  DC_ATL},
 	{"bom",  DC_BOM},
@@ -36,6 +37,15 @@ static const std::map<std::string, int> DataCenterHashMap{
 	{"waw",  DC_WAW}
 };
 
+void POPID_ToString(SteamNetworkingPOPID popID, char* out)
+{
+	out[0] = static_cast<char>(popID >> 16);
+	out[1] = static_cast<char>(popID >> 8);
+	out[2] = static_cast<char>(popID);
+	out[3] = static_cast<char>(popID >> 24);
+	out[4] = 0;
+}
+
 MAKE_HOOK(ISteamNetworkingUtils_GetDirectPingToPOP, Utils::GetVFuncPtr(g_SteamInterfaces.NetworkingUtils, 9), int, __fastcall,
 		  void* ecx, void* edx, SteamNetworkingPOPID popID)
 {
@@ -44,24 +54,16 @@ MAKE_HOOK(ISteamNetworkingUtils_GetDirectPingToPOP, Utils::GetVFuncPtr(g_SteamIn
 		return Hook.Original<FN>()(ecx, edx, popID);
 	}
 
-
 	char popIDName[5];
-	popID.ToString(popIDName);
+	POPID_ToString(popID, popIDName);
 
-	for (auto& dc : DataCenterHashMap)
+	const auto pos = DATA_CENTER_HASH.find(popIDName);
+	if (pos != DATA_CENTER_HASH.end())
 	{
-		if (dc.first == popIDName &&
-			Vars::Misc::RegionsAllowed.Value & dc.second)
-		{
-			return 1;
-		}
-		if (dc.first == popIDName &&
-			!(Vars::Misc::RegionsAllowed.Value & dc.second))
-		{
-			return INT_MAX;
-		}
+		const unsigned value = pos->second;
+		const bool isAllowed = Vars::Misc::RegionsAllowed.Value & value;
+		return isAllowed ? 1 : 999999;
 	}
-
 
 	return Hook.Original<FN>()(ecx, edx, popID);
 }

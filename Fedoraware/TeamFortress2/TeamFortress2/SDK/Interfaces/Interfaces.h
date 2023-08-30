@@ -1,5 +1,4 @@
 #pragma once
-
 #include "EngineClient/EngineClient.h"
 #include "EngineEffects/EngineEffects.h"
 #include "BaseClientDLL/BaseClientDLL.h"
@@ -18,8 +17,6 @@
 #include "Surface/Surface.h"
 #include "EngineVGui/EngineVGui.h"
 #include "NetChannel/NetChannel.h"
-#include "Steam/Steamworks.h"
-#include "Steam/SteamTypes.h"
 #include "GameEvent/GameEvent.h"
 #include "Material/Material.h"
 #include "ModelRender/ModelRender.h"
@@ -34,7 +31,6 @@
 #include "ViewRenderBeams/ViewRenderBeams.h"
 #include "EngineSound/EngineSound.h"
 #include "CTFGameRules/CTFGameRules.h"
-#include "Steam/ISteamNetworkingUtils.h"
 #include "CTFGCClientSystem/CTFGCClientSystem.h"
 #include "CTFPartyClient/CTFPartyClient.h"
 #include "CTFInventoryManager/CTFInventoryManager.h"
@@ -169,14 +165,14 @@ public:
 class CSteamInterfaces
 {
 public:
-	ISteamFriends002* Friends002 = nullptr;
-	ISteamFriends015* Friends015 = nullptr;
-	ISteamApps006* SteamApps = nullptr;
-	ISteamUserStats011* UserStats = nullptr;
-	ISteamClient017* Client = nullptr;
-	ISteamUser017* User = nullptr;
-	ISteamUtils007* Utils007 = nullptr;
-	ISteamNetworking004* Networking = nullptr;
+	ISteamFriends* Friends002 = nullptr;
+	ISteamFriends* Friends015 = nullptr;
+	ISteamApps* SteamApps = nullptr;
+	ISteamUserStats* UserStats = nullptr;
+	ISteamClient* Client = nullptr;
+	ISteamUser* User = nullptr;
+	ISteamUtils* Utils007 = nullptr;
+	ISteamNetworking* Networking = nullptr;
 	ISteamNetworkingUtils* NetworkingUtils = nullptr;
 
 	void Init();

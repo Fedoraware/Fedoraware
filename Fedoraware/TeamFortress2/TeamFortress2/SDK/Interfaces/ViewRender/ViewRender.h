@@ -1,4 +1,5 @@
 #pragma once
+#define abstract_class class
 
 class CViewSetup;
 class CBaseEntity;

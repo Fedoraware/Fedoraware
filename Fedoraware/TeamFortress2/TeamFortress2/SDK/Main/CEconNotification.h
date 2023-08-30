@@ -1,6 +1,4 @@
 #pragma once
-
-#include "../Interfaces/Steam/CSteamID.h"
 #include "KeyValues/KeyValues.h"
 
 class CEconNotification
