@@ -383,15 +383,15 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 		}
 		else
 		{
-			const int nAvatar = g_SteamInterfaces.Friends015->GetMediumFriendAvatar(CSteamID(nID));
+			const int nAvatar = g_SteamInterfaces.Friends->GetMediumFriendAvatar(CSteamID(nID));
 
 			uint32 w = { }, h = { };
-			if (g_SteamInterfaces.Utils007->GetImageSize(nAvatar, &w, &h))
+			if (g_SteamInterfaces.Utils->GetImageSize(nAvatar, &w, &h))
 			{
 				const int nSize = static_cast<int>(4 * w * h * sizeof(uint8));
 				uint8* pData = reinterpret_cast<uint8*>(malloc(nSize));
 
-				if (g_SteamInterfaces.Utils007->GetImageRGBA(nAvatar, pData, nSize))
+				if (g_SteamInterfaces.Utils->GetImageRGBA(nAvatar, pData, nSize))
 				{
 					const int nTextureID = I::VGuiSurface->CreateNewTextureID(true);
 					if (I::VGuiSurface->IsTextureIDValid(nTextureID))

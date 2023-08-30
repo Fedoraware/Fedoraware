@@ -165,14 +165,12 @@ public:
 class CSteamInterfaces
 {
 public:
-	ISteamFriends* Friends002 = nullptr;
-	ISteamFriends* Friends015 = nullptr;
-	ISteamApps* SteamApps = nullptr;
+	ISteamFriends* Friends = nullptr;
+	ISteamApps* Apps = nullptr;
 	ISteamUserStats* UserStats = nullptr;
 	ISteamClient* Client = nullptr;
 	ISteamUser* User = nullptr;
-	ISteamUtils* Utils007 = nullptr;
-	ISteamNetworking* Networking = nullptr;
+	ISteamUtils* Utils = nullptr;
 	ISteamNetworkingUtils* NetworkingUtils = nullptr;
 
 	void Init();

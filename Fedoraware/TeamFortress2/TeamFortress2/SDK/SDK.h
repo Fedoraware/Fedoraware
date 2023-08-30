@@ -362,7 +362,7 @@ namespace Utils
 		if (I::EngineClient->GetPlayerInfo(pPlayer->GetIndex(), &pi) && pi.friendsID)
 		{
 			const CSteamID steamID{ pi.friendsID, 1, k_EUniversePublic, k_EAccountTypeIndividual };
-			return g_SteamInterfaces.Friends002->HasFriend(steamID, k_EFriendFlagImmediate);
+			return g_SteamInterfaces.Friends->HasFriend(steamID, k_EFriendFlagImmediate);
 		}
 
 		return false;
