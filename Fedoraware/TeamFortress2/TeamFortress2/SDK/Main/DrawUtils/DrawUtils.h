@@ -41,7 +41,8 @@ enum EStringAlign {
 	ALIGN_REVERSE
 };
 
-struct Draw_t {
+class CDraw {
+public:
 	std::array<Font_t, FONT_ENUM_SIZE> m_Fonts{};
 	std::unordered_map<uint64, int> m_mapAvatars{};
 
@@ -77,4 +78,4 @@ struct Draw_t {
 	void ClearAvatarCache();
 };
 
-inline Draw_t g_Draw;
+inline CDraw g_Draw;
