@@ -158,4 +158,5 @@ inline bool servernetadr_t::operator<(const servernetadr_t &netadr) const
 	return (m_unIP < netadr.m_unIP) || (m_unIP == netadr.m_unIP && m_usQueryPort < netadr.m_usQueryPort);
 }
 
+#undef snprintf
 #endif // SERVERNETADR_H
