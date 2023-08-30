@@ -7,15 +7,15 @@
 #include "../ImGui/imgui_internal.h"
 
 #include <mutex>
+#include <ranges>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-const char* resolveListPitch[]{ "None", "Up", "Down", "Zero", "Auto" };
-const char* resolveListYaw[]{ "None", "Forward", "Backward", "Left", "Right", "Invert", "Edge", "Auto" };
-const char* priorityModes[]{ "Friend", "Ignore", "Default", "Rage", "Cheater" };
+const char* resolveListPitch[]{"None", "Up", "Down", "Zero", "Auto"};
+const char* resolveListYaw[]{"None", "Forward", "Backward", "Left", "Right", "Invert", "Edge", "Auto"};
+const char* priorityModes[]{"Friend", "Ignore", "Default", "Rage", "Cheater"};
 
-struct ListPlayer
-{
+struct ListPlayer {
 	const char* Name{};
 	int UserID{};
 	uint32_t FriendsID{};
@@ -33,43 +33,42 @@ std::multimap<int, ListPlayer> PlayerCache{};
 void CPlayerList::UpdatePlayers()
 {
 	static Timer updateTimer{};
-	if (updateTimer.Run(1000))
+	if (!updateTimer.Run(1000)) { return; }
+
+	// Get info for every player
+	std::multimap<int, ListPlayer> listBuffer{};
+	for (int i = 1; i <= I::GlobalVars->maxclients; i++)
 	{
-		std::multimap<int, ListPlayer> listBuffer{};
-		for (int i = 1; i <= I::GlobalVars->maxclients; i++)
-		{
-			const auto& pr = g_EntityCache.GetPR();
-			if (pr && pr->GetValid(i) && pr->GetConnected(i))
-			{
-				PlayerInfo_t info{};
-				if (I::EngineClient->GetPlayerInfo(i, &info))
-				{
-					ListPlayer player{
-						pr->GetPlayerName(i),
-						pr->GetUserID(i),
-						pr->GetAccountID(i),
-						Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
-						pr->GetHealth(i),
-						pr->GetMaxHealth(i),
-						pr->GetClass(i),
-						pr->IsAlive(i),
-						info.fakeplayer
-					};
+		const auto& pr = g_EntityCache.GetPR();
+		if (!pr || !pr->GetValid(i) || !pr->GetConnected(i)) { continue; }
 
-					listBuffer.emplace(pr->GetTeam(i), player);
-				}
-			}
-		}
+		PlayerInfo_t info{};
+		if (!I::EngineClient->GetPlayerInfo(i, &info)) { continue; }
 
-		std::lock_guard lock(mutex);
-		listBuffer.swap(PlayerCache);
+		ListPlayer player{
+			.Name = pr->GetPlayerName(i),
+			.UserID = pr->GetUserID(i),
+			.FriendsID = pr->GetAccountID(i),
+			.Color = Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
+			.Health = pr->GetHealth(i),
+			.MaxHealth = pr->GetMaxHealth(i),
+			.Class = pr->GetClass(i),
+			.Alive = pr->IsAlive(i),
+			.FakePlayer = info.fakeplayer
+		};
+
+		listBuffer.emplace(pr->GetTeam(i), player);
 	}
+
+	// Swap the buffers
+	std::lock_guard lock(mutex);
+	listBuffer.swap(PlayerCache);
 }
 
 void CPlayerList::Run()
 {
 	// Save every 10 seconds, if needed
-	static Timer saveTimer{ };
+	static Timer saveTimer{};
 	if (saveTimer.Run(10000))
 	{
 		if (ShouldSave)
@@ -93,12 +92,12 @@ void CPlayerList::Render()
 	// Draw the playerlist
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
 	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
-		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::PushFont(F::Menu.Verdana);
 		const auto winSize = ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 		auto winPos = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		ImGui::GradientRect(&F::Menu.TitleGradient, { winPos.x, winPos.y }, winSize.x, 3);
+		ImGui::GradientRect(&F::Menu.TitleGradient, {winPos.x, winPos.y}, winSize.x, 3);
 		ImGui::Dummy(ImVec2());
 
 		// Check if we are in-game
@@ -114,10 +113,10 @@ void CPlayerList::Render()
 		}
 		else
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5, 5 });
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {5, 5});
 			const int columnCount = Vars::AntiHack::Resolver::Resolver.Value ? 6 : 4;
 			if (ImGui::BeginTable("Playerlist", columnCount,
-				ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable))
+			                      ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable))
 			{
 				ImGui::TableSetupColumn("Name");
 				ImGui::TableSetupColumn("Class");
@@ -132,7 +131,7 @@ void CPlayerList::Render()
 
 				std::lock_guard lock(mutex);
 
-				for (const auto& [Team, Player] : PlayerCache)
+				for (const auto& player : PlayerCache | std::views::values)
 				{
 					ImGui::TableNextRow();
 
@@ -150,33 +149,33 @@ void CPlayerList::Render()
 
 						switch (column)
 						{
-							case 0:
+						case 0:
 							{
 								/* Name */
-								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(Player.Color.r, Player.Color.g, Player.Color.b, Player.Alive ? Player.Color.a : 127).Value);
-								ImGui::Text("%s", Player.Name);
+								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(player.Color.r, player.Color.g, player.Color.b, player.Alive ? player.Color.a : 127).Value);
+								ImGui::Text("%s", player.Name);
 								ImGui::PopStyleColor();
 								break;
 							}
 
-							case 1:
+						case 1:
 							{
 								/* Class */
-								ImGui::Text("%s", Utils::GetClassByIndex(Player.Class));
+								ImGui::Text("%s", Utils::GetClassByIndex(player.Class));
 								break;
 							}
 
-							case 2:
+						case 2:
 							{
 								/* Health */
-								ImGui::Text("%i/%i", Player.Health, Player.MaxHealth);
+								ImGui::Text("%i/%i", player.Health, player.MaxHealth);
 								break;
 							}
 
-							case 3:
+						case 3:
 							{
 								/* Priority */
-								if (ImGui::Selectable(priorityModes[G::PlayerPriority[Player.FriendsID].Mode]))
+								if (ImGui::Selectable(priorityModes[G::PlayerPriority[player.FriendsID].Mode]))
 								{
 									ImGui::OpenPopup("priority_popup");
 								}
@@ -187,7 +186,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(priorityModes[i]))
 										{
-											G::PlayerPriority[Player.FriendsID].Mode = i;
+											G::PlayerPriority[player.FriendsID].Mode = i;
 											ShouldSave = true;
 										}
 									}
@@ -197,10 +196,10 @@ void CPlayerList::Render()
 								break;
 							}
 
-							case 4:
+						case 4:
 							{
 								// Pitch resolver
-								if (ImGui::Selectable(resolveListPitch[F::Resolver.mResolverMode[Player.FriendsID].first]))
+								if (ImGui::Selectable(resolveListPitch[F::Resolver.mResolverMode[player.FriendsID].first]))
 								{
 									ImGui::OpenPopup("pitch_popup");
 								}
@@ -211,7 +210,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(resolveListPitch[i]))
 										{
-											F::Resolver.mResolverMode[Player.FriendsID].first = i;
+											F::Resolver.mResolverMode[player.FriendsID].first = i;
 										}
 									}
 
@@ -220,11 +219,11 @@ void CPlayerList::Render()
 								break;
 							}
 
-							case 5:
+						case 5:
 							{
 								// Yaw resolver
 								ImGui::PushID(1); // in case of m_Yaw = m_Pitch
-								if (ImGui::Selectable(resolveListYaw[F::Resolver.mResolverMode[Player.FriendsID].second]))
+								if (ImGui::Selectable(resolveListYaw[F::Resolver.mResolverMode[player.FriendsID].second]))
 								{
 									ImGui::OpenPopup("yaw_popup");
 								}
@@ -235,7 +234,7 @@ void CPlayerList::Render()
 									{
 										if (ImGui::MenuItem(resolveListYaw[i]))
 										{
-											F::Resolver.mResolverMode[Player.FriendsID].second = i;
+											F::Resolver.mResolverMode[player.FriendsID].second = i;
 										}
 									}
 
@@ -251,17 +250,17 @@ void CPlayerList::Render()
 					ImGui::SameLine();
 					ImGui::Selectable("##contextmenu", false, ImGuiSelectableFlags_SpanAllColumns);
 
-					if (!Player.FakePlayer && ImGui::BeginPopupContextItem())
+					if (!player.FakePlayer && ImGui::BeginPopupContextItem())
 					{
 						if (ImGui::Selectable("Profile"))
 						{
 							g_SteamInterfaces.Friends->ActivateGameOverlayToUser(
-								"steamid", CSteamID(0x0110000100000000ULL + Player.FriendsID));
+								"steamid", CSteamID(0x0110000100000000ULL + player.FriendsID));
 						}
 
 						if (ImGui::Selectable("Votekick"))
 						{
-							I::EngineClient->ClientCmd_Unrestricted(std::format("callvote kick {:d}", Player.UserID).c_str());
+							I::EngineClient->ClientCmd_Unrestricted(std::format("callvote kick {:d}", player.UserID).c_str());
 						}
 
 						ImGui::EndPopup();

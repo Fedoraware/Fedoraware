@@ -572,7 +572,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 
 	const float speed = pLocal->GetVecVelocity().Length2D();
-	const float speedLimit = 10.f;
+	constexpr float speedLimit = 10.f;
 
 	const int iStopMode = pLocal->IsInBumperKart() ? 2 : (Vars::Misc::AccurateMovement.Value == 3) ? (G::ShiftedTicks ? 1 : 2) : Vars::Misc::AccurateMovement.Value;
 
@@ -723,7 +723,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 			constexpr auto perfectDelta = [](float speed, CBaseEntity* pLocal) noexcept
 			{
-				auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
+				const auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
 				static auto airVar = g_ConVars.FindVar("sv_airaccelerate");
 				static auto wishSpeed = 90.0f;
 
@@ -975,7 +975,7 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 
 				if (Vars::Misc::TauntFollowsCamera.Value && !spinKey.Down())
 				{
-					Vec3 vAngle = I::EngineClient->GetViewAngles();
+					const Vec3 vAngle = I::EngineClient->GetViewAngles();
 					pCmd->viewangles.y = vAngle.y;
 
 					bReturn = false;

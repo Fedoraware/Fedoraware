@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef abstract_class
 #define abstract_class class __declspec(novtable)
+#endif
 
 #include "EngineClient/EngineClient.h"
 #include "EngineEffects/EngineEffects.h"
