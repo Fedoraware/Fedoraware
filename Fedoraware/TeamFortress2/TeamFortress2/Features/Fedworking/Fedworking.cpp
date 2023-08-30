@@ -2,6 +2,8 @@
 #include "../Menu/Pong/Pong.h"
 #include "../../Utils/Base64/Base64.hpp"
 
+#include <boost/algorithm/string.hpp>
+
 enum MessageType
 {
 	None,
@@ -18,7 +20,9 @@ void CFedworking::HandleMessage(const char* pMessage)
 	const std::string msg = Base64::Decode(encMsg);
 	if (msg.empty()) { return; }
 
-	const auto dataVector = Utils::SplitString(msg, "&");
+	std::vector<std::string> dataVector;
+	split(dataVector, msg, boost::is_any_of("&"));
+
 	int msgType;
 	try { msgType = std::stoi(dataVector[0]); }
 	catch (...) { ConsoleLog("Failed to read message type!"); return; }

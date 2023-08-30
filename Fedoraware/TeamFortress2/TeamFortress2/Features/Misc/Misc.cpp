@@ -572,7 +572,7 @@ void CMisc::AccurateMovement(CUserCmd* pCmd, CBaseEntity* pLocal)
 	}
 
 	const float speed = pLocal->GetVecVelocity().Length2D();
-	const float speedLimit = 10.f;
+	constexpr float speedLimit = 10.f;
 
 	const int iStopMode = pLocal->IsInBumperKart() ? 2 : (Vars::Misc::AccurateMovement.Value == 3) ? (G::ShiftedTicks ? 1 : 2) : Vars::Misc::AccurateMovement.Value;
 
@@ -723,7 +723,7 @@ void CMisc::AutoStrafe(CUserCmd* pCmd, CBaseEntity* pLocal)
 
 			constexpr auto perfectDelta = [](float speed, CBaseEntity* pLocal) noexcept
 			{
-				auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
+				const auto speedVar = pLocal->TeamFortress_CalculateMaxSpeed();
 				static auto airVar = g_ConVars.FindVar("sv_airaccelerate");
 				static auto wishSpeed = 90.0f;
 
@@ -975,7 +975,7 @@ bool CMisc::TauntControl(CUserCmd* pCmd)
 
 				if (Vars::Misc::TauntFollowsCamera.Value && !spinKey.Down())
 				{
-					Vec3 vAngle = I::EngineClient->GetViewAngles();
+					const Vec3 vAngle = I::EngineClient->GetViewAngles();
 					pCmd->viewangles.y = vAngle.y;
 
 					bReturn = false;
@@ -1254,7 +1254,7 @@ void CMisc::SteamRPC()
 	{
 		if (SteamCleared == false) //stupid way to return back to normal rpc
 		{
-			g_SteamInterfaces.Friends015->SetRichPresence("steam_display", "");
+			g_SteamInterfaces.Friends->SetRichPresence("steam_display", "");
 			//this will only make it say "Team Fortress 2" until the player leaves/joins some server. its bad but its better than making 1000 checks to recreate the original
 			SteamCleared = true;
 		}
@@ -1262,7 +1262,7 @@ void CMisc::SteamRPC()
 	}
 
 	SteamCleared = false;
-	g_SteamInterfaces.Friends015->SetRichPresence("steam_display", "#TF_RichPresence_Display");
+	g_SteamInterfaces.Friends->SetRichPresence("steam_display", "#TF_RichPresence_Display");
 
 	/*
 	"TF_RichPresence_State_MainMenu"              "Main Menu"
@@ -1277,31 +1277,31 @@ void CMisc::SteamRPC()
 	*/
 	if (!I::EngineClient->IsInGame() && Vars::Misc::Steam::OverrideMenu.Value)
 	{
-		g_SteamInterfaces.Friends015->SetRichPresence("state", "MainMenu");
+		g_SteamInterfaces.Friends->SetRichPresence("state", "MainMenu");
 	}
 	else
 	{
-		g_SteamInterfaces.Friends015->SetRichPresence("state", "PlayingMatchGroup");
+		g_SteamInterfaces.Friends->SetRichPresence("state", "PlayingMatchGroup");
 
 		switch (Vars::Misc::Steam::MatchGroup.Value)
 		{
 			case 0:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "SpecialEvent");
 				break;
 			case 1:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "MannUp");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "MannUp");
 				break;
 			case 2:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Competitive6v6");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "Competitive6v6");
 				break;
 			case 3:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "Casual");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "Casual");
 				break;
 			case 4:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "BootCamp");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "BootCamp");
 				break;
 			default:
-				g_SteamInterfaces.Friends015->SetRichPresence("matchgrouploc", "SpecialEvent");
+				g_SteamInterfaces.Friends->SetRichPresence("matchgrouploc", "SpecialEvent");
 				break;
 		}
 	}
@@ -1318,34 +1318,34 @@ void CMisc::SteamRPC()
 		case 0:
 			if (Vars::Misc::Steam::CustomText.Value.empty())
 			{
-				g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+				g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Fedoraware");
 			}
 			else
 			{
-				g_SteamInterfaces.Friends015->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.Value.c_str());
+				g_SteamInterfaces.Friends->SetRichPresence("currentmap", Vars::Misc::Steam::CustomText.Value.c_str());
 			}
 			break;
 		case 1:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Fedoraware");
 			break;
 		case 2:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Figoraware");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Figoraware");
 			break;
 		case 3:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Meowhook.club");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Meowhook.club");
 			break;
 		case 4:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Rathook.cc");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Rathook.cc");
 			break;
 		case 5:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Nitro.tf");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Nitro.tf");
 			break;
 		default:
-			g_SteamInterfaces.Friends015->SetRichPresence("currentmap", "Fedoraware");
+			g_SteamInterfaces.Friends->SetRichPresence("currentmap", "Fedoraware");
 			break;
 	}
 
-	g_SteamInterfaces.Friends015->SetRichPresence("steam_player_group_size",
+	g_SteamInterfaces.Friends->SetRichPresence("steam_player_group_size",
 												  std::to_string(Vars::Misc::Steam::GroupSize.Value).c_str());
 }
 

@@ -1,7 +1,7 @@
 #include "Interfaces.h"
 
-#define VALIDATE(x) if (!(x)) { MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR); };
-#define VALIDATE_STEAM(x) if (!(x)) { MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR); }
+#define VALIDATE(x) if (!(x)) MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR)
+#define VALIDATE_STEAM(x) if (!(x)) MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
 
 #define CLIENT L"client.dll"
 #define STEAMCLIENT L"steamclient.dll"
@@ -17,185 +17,183 @@ void CInterfaces::Init()
 	using namespace I;
 
 	BaseClientDLL = g_Interface.Get<CBaseClientDLL*>(CLIENT, CLIENT_DLL_INTERFACE_VERSION);
-	VALIDATE(BaseClientDLL)
+	VALIDATE(BaseClientDLL);
 
 	ClientDLLSharedAppSystems = g_Interface.Get<CClientDLLSharedAppSystems*>(CLIENT, CLIENT_DLL_SHARED_APPSYSTEMS);
-	VALIDATE(ClientDLLSharedAppSystems)
+	VALIDATE(ClientDLLSharedAppSystems);
 
 	ClientEntityList = g_Interface.Get<CClientEntityList*>(CLIENT, VCLIENTENTITYLIST_INTERFACE_VERSION);
-	VALIDATE(ClientEntityList)
+	VALIDATE(ClientEntityList);
 
 	Prediction = g_Interface.Get<CPrediction*>(CLIENT, VCLIENT_PREDICTION_INTERFACE_VERSION);
-	VALIDATE(Prediction)
+	VALIDATE(Prediction);
 
 	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
-	VALIDATE(GameMovement)
+	VALIDATE(GameMovement);
 
 	CenterPrint = g_Interface.Get<ICenterPrint*>(CLIENT, VCENTERPRINT_INTERFACE_VERSION);
-	VALIDATE(CenterPrint)
+	VALIDATE(CenterPrint);
 
 	ModelInfoClient = g_Interface.Get<CModelInfoClient*>(ENGINE, VMODELINFO_CLIENT_INTERFACE_VERSION);
-	VALIDATE(ModelInfoClient)
+	VALIDATE(ModelInfoClient);
 
 	EngineClient = g_Interface.Get<CEngineClient*>(ENGINE, VENGINE_CLIENT_INTERFACE_VERSION_13);
-	VALIDATE(EngineClient)
+	VALIDATE(EngineClient);
 
 	EngineEffects = g_Interface.Get<IVEngineEffects*>(ENGINE, VENGINE_EFFECTS_INTERFACE_VERSION);
-	VALIDATE(EngineEffects)
+	VALIDATE(EngineEffects);
 
 	EngineTrace = g_Interface.Get<CEngineTrace*>(ENGINE, VENGINE_TRACE_CLIENT_INTERFACE_VERSION);
-	VALIDATE(EngineTrace)
+	VALIDATE(EngineTrace);
 
 	VGuiPanel = g_Interface.Get<CPanel*>(VGUI2, VGUI_PANEL_INTERFACE_VERSION);
-	VALIDATE(VGuiPanel)
+	VALIDATE(VGuiPanel);
 
 	VGuiSurface = g_Interface.Get<CSurface*>(MATSURFACE, VGUI_SURFACE_INTERFACE_VERSION);
-	VALIDATE(VGuiSurface)
+	VALIDATE(VGuiSurface);
 
 	Cvar = g_Interface.Get<ICvar*>(VSTDLIB, VENGINE_CVAR_INTERFACE_VERSION);
-	VALIDATE(Cvar)
+	VALIDATE(Cvar);
 
 	GlobalVars = *reinterpret_cast<CGlobalVarsBase**>(g_Pattern.Find(ENGINE, L"A1 ? ? ? ? 8B 11 68") + 0x8);
-	VALIDATE(GlobalVars)
+	VALIDATE(GlobalVars);
 
 	ClientState = *reinterpret_cast<CClientState**>(g_Pattern.Find(ENGINE, L"68 ? ? ? ? E8 ? ? ? ? 83 C4 08 5F 5E 5B 5D C3") + 0x1);
-	VALIDATE(ClientState)
+	VALIDATE(ClientState);
 
-	void* ClientTable = reinterpret_cast<void*>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 8B 02 D9 05"));
-	VALIDATE(ClientTable)
+	auto ClientTable = reinterpret_cast<void*>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 8B 02 D9 05"));
+	VALIDATE(ClientTable);
 
 	ClientModeShared = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);
-	VALIDATE(ClientModeShared)
+	VALIDATE(ClientModeShared);
 
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE, VENGINE_VGUI_VERSION);
-	VALIDATE(EngineVGui)
+	VALIDATE(EngineVGui);
 
 	DemoPlayer = **reinterpret_cast<void***>(g_Pattern.Find(ENGINE, L"8B 0D ? ? ? ? 85 C9 74 3B 8B 01 8B 40 18 FF D0 84 C0 74 30") + 0x2);
-	VALIDATE(DemoPlayer)
+	VALIDATE(DemoPlayer);
 
 	RenderView = g_Interface.Get<IVRenderView*>(ENGINE, VENGINE_RENDERVIEW_INTERFACE_VERSION);
-	VALIDATE(RenderView)
+	VALIDATE(RenderView);
 
 	DebugOverlay = g_Interface.Get<CDebugOverlay*>(ENGINE, VENGINE_DEBUGOVERLAY_INTERFACE_VERSION);
-	VALIDATE(RenderView)
+	VALIDATE(RenderView);
 
 	GameEventManager = g_Interface.Get<CGameEventManager*>(ENGINE, GAMEEVENTSMANAGER_ENGINE_INTERFACE);
-	VALIDATE(GameEventManager)
+	VALIDATE(GameEventManager);
 
 	ModelRender = g_Interface.Get<CModelRender*>(ENGINE, VENGINE_MODELRENDER_INTERFACE);
-	VALIDATE(ModelRender)
+	VALIDATE(ModelRender);
 
 	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, VMATERIALSYSTEM_INTERFACE);
-	VALIDATE(MaterialSystem)
+	VALIDATE(MaterialSystem);
 
 	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);
-	VALIDATE(TFGCClientSystem)
+	VALIDATE(TFGCClientSystem);
 
 	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
-	VALIDATE(TFPartyClient)
+	VALIDATE(TFPartyClient);
 
 	TFInventoryManager = *reinterpret_cast<CTFInventoryManager**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
-	VALIDATE(TFInventoryManager)
+	VALIDATE(TFInventoryManager);
 
 	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34") + 0x2);
-	VALIDATE(RandomSeed)
+	VALIDATE(RandomSeed);
 
 	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, L"C6 05 ? ? ? ? ? 8A C3") + 0x2);
-	VALIDATE(AllowSecureServers)
+	VALIDATE(AllowSecureServers);
 
-	const auto pdwClient = reinterpret_cast<PDWORD>(BaseClientDLL);     VALIDATE(pdwClient);
-	const auto pdwTable = *reinterpret_cast<PDWORD*>(pdwClient); VALIDATE(pdwTable);
+	const auto pdwClient = reinterpret_cast<PDWORD>(BaseClientDLL);
+	VALIDATE(pdwClient);
 
-	if (pdwTable)
-		ViewRender = **reinterpret_cast<IViewRender***>(static_cast<DWORD>(pdwTable[27]) + 5);
-	VALIDATE(ViewRender)
+	const auto pdwTable = *reinterpret_cast<PDWORD*>(pdwClient);
+	VALIDATE(pdwTable);
+
+	ViewRender = **reinterpret_cast<IViewRender***>(pdwTable[27] + 5);
+	VALIDATE(ViewRender);
 
 	Input = **reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC") + 0x2);
-	VALIDATE(Input)
+	VALIDATE(Input);
 
-	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem*
-	{
+	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
 		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleW(VSTDLIB), "KeyValuesSystem")));
 		return fn();
 	};
 
 	KeyValuesSystem = GetKeyValuesSystem();
-	VALIDATE(KeyValuesSystem)
+	VALIDATE(KeyValuesSystem);
 
 	UniformRandomStream = *reinterpret_cast<IUniformRandomStream**>(g_Pattern.Find(VSTDLIB, L"B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3") + 0x1);
-	VALIDATE(UniformRandomStream)
+	VALIDATE(UniformRandomStream);
 
 	StudioRender = g_Interface.Get<void*>(L"studiorender.dll", "VStudioRender025");
-	VALIDATE(StudioRender)
+	VALIDATE(StudioRender);
 
 	InputSystem = g_Interface.Get<IInputSystem*>(L"inputsystem.dll", "InputSystemVersion001");
-	VALIDATE(InputSystem)
+	VALIDATE(InputSystem);
 
 	EffectsClient = g_Interface.Get<CEffectsClient*>(CLIENT, IEFFECTS_INTERFACE_VERSION);
-	VALIDATE(EffectsClient)
+	VALIDATE(EffectsClient);
 
-	typedef IAchievementMgr* (*getachievementmgr)();
+	using getachievementmgr = IAchievementMgr* (*)();
 
-	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(I::EngineClient, 115));
-	VALIDATE(AchievementMgr)
+	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(EngineClient, 115));
+	VALIDATE(AchievementMgr);
 
 	ViewRenderBeams = **reinterpret_cast<IViewRenderBeams***>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?") + 0x2);
-	VALIDATE(ViewRenderBeams)
+	VALIDATE(ViewRenderBeams);
 
 	EngineSound = g_Interface.Get<IEngineSound*>(L"engine.dll", "IEngineSoundClient003");
-	VALIDATE(EngineSound)
+	VALIDATE(EngineSound);
 
 	TFGameRules = *reinterpret_cast<CTFGameRules**>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB ? ? ? ? ?") + 0x1);
-	VALIDATE(TFGameRules)
+	VALIDATE(TFGameRules);
 
 	ThirdPersonManager = *reinterpret_cast<CThirdPersonManager**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 42 8B 86") + 0x1);
-	VALIDATE(ThirdPersonManager)
+	VALIDATE(ThirdPersonManager);
 
 	// Forgive the double cast but this was annoying meeeeee
 	DirectXDevice = reinterpret_cast<IDirect3DDevice9*>(**reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1));
-	VALIDATE(DirectXDevice)
+	VALIDATE(DirectXDevice);
 
 	ClientModeTF = *reinterpret_cast<ClientModeTFNormal**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 35 ? ? ? ?") + 0x1);
-	VALIDATE(ClientModeTF)
+	VALIDATE(ClientModeTF);
 
 	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
-	VALIDATE(Localize)
+	VALIDATE(Localize);
 
 	HostState = *reinterpret_cast<CCommonHostState**>(g_Pattern.Find(L"engine.dll", L"8B 15 ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85") + 0x1);
-	VALIDATE(HostState)
+	VALIDATE(HostState);
 }
 
 void CSteamInterfaces::Init()
 {
-	Client = g_Interface.Get<ISteamClient017*>(STEAMCLIENT, STEAMCLIENT_INTERFACE_VERSION_017);
-	VALIDATE_STEAM(Client)
+	Client = g_Interface.Get<ISteamClient*>(STEAMCLIENT, STEAMCLIENT_INTERFACE_VERSION);
+	VALIDATE_STEAM(Client);
 
-	const HSteamPipe hsNewPipe = Client->CreateSteamPipe();              VALIDATE_STEAM(hsNewPipe)
-	const HSteamPipe hsNewUser = Client->ConnectToGlobalUser(hsNewPipe); VALIDATE_STEAM(hsNewUser)
+	const HSteamPipe hsNewPipe = Client->CreateSteamPipe();
+	VALIDATE_STEAM(hsNewPipe);
 
-	Friends002 = reinterpret_cast<ISteamFriends002*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_002));
-	VALIDATE_STEAM(Friends002)
+	const HSteamPipe hsNewUser = Client->ConnectToGlobalUser(hsNewPipe);
+	VALIDATE_STEAM(hsNewUser);
 
-	Friends015 = reinterpret_cast<ISteamFriends015*>(Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION_015));
-	VALIDATE_STEAM(Friends015)
+	Friends = Client->GetISteamFriends(hsNewUser, hsNewPipe, STEAMFRIENDS_INTERFACE_VERSION);
+	VALIDATE_STEAM(Friends);
 
-	Utils007 = reinterpret_cast<ISteamUtils007*>(Client->GetISteamUtils(hsNewUser, STEAMUTILS_INTERFACE_VERSION_007));
-	VALIDATE_STEAM(Utils007)
+	Utils = Client->GetISteamUtils(hsNewUser, STEAMUTILS_INTERFACE_VERSION);
+	VALIDATE_STEAM(Utils);
 
-	SteamApps = reinterpret_cast<ISteamApps006*>(Client->GetISteamApps(hsNewUser, hsNewPipe, STEAMAPPS_INTERFACE_VERSION_006));
-	VALIDATE_STEAM(SteamApps)
+	Apps = Client->GetISteamApps(hsNewUser, hsNewPipe, STEAMAPPS_INTERFACE_VERSION);
+	VALIDATE_STEAM(Apps);
 
-	UserStats = reinterpret_cast<ISteamUserStats011*>(Client->GetISteamUserStats(hsNewUser, hsNewPipe, STEAMUSERSTATS_INTERFACE_VERSION_011));
-	VALIDATE_STEAM(UserStats)
+	UserStats = Client->GetISteamUserStats(hsNewUser, hsNewPipe, STEAMUSERSTATS_INTERFACE_VERSION);
+	VALIDATE_STEAM(UserStats);
 
-	User = reinterpret_cast<ISteamUser017*>(Client->GetISteamUser(hsNewUser, hsNewPipe, STEAMUSER_INTERFACE_VERSION_017));
-	VALIDATE_STEAM(User)
+	User = Client->GetISteamUser(hsNewUser, hsNewPipe, STEAMUSER_INTERFACE_VERSION);
+	VALIDATE_STEAM(User);
 
 	// Credits to spook953 for teaching me how this works
 	static auto fn = reinterpret_cast<ISteamNetworkingUtils * (__cdecl*)()>(GetProcAddress(GetModuleHandleA("steamnetworkingsockets.dll"), "SteamNetworkingUtils_LibV4"));
 	NetworkingUtils = fn();
-	VALIDATE_STEAM(NetworkingUtils)
-
-	/*Networking = reinterpret_cast<ISteamNetworking004*>(Client->GetISteamNetworking(hsNewUser, hsNewPipe, _(STEAMNETWORKINGUTILS_INTERFACE_VERSION)));
-	_validS(Networking);*/
+	VALIDATE_STEAM(NetworkingUtils);
 }

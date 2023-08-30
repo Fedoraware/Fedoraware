@@ -119,7 +119,7 @@ void CSpectatorList::DrawDefault()
 
 		constexpr int nSpacing = 5;
 		constexpr int nModeW = 15;
-		const int nFontTall = g_Draw.m_vecFonts[FONT_MENU].nTall;
+		const int nFontTall = g_Draw.GetFont(FONT_MENU).nTall;
 		const int nModeX = SpecListX + nSpacing;
 		const int nNameX = nModeX + nModeW + (nSpacing * 2);
 		int y = SpecListY + SpecListTitleBarH;
@@ -152,7 +152,7 @@ void CSpectatorList::DrawClassic()
 
 		int nDrawY = (g_ScreenSize.h / 2) - 300;
 		const int centerr = g_ScreenSize.c;
-		const int addyy = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
+		const int addyy = g_Draw.GetFont(FONT_ESP_NAME).nTall;
 
 		g_Draw.String(
 			FONT_ESP_NAME,
@@ -166,10 +166,10 @@ void CSpectatorList::DrawClassic()
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME].dwFont,
+			I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_ESP_NAME).dwFont,
 										(Spectator.Mode + Spectator.Name).c_str(), w, h);
 
-			const int nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME].nTall;
+			const int nAddY = g_Draw.GetFont(FONT_ESP_NAME).nTall;
 			if (Vars::Visuals::SpectatorList.Value == 3)
 			{
 				PlayerInfo_t pi{};

@@ -1,4 +1,10 @@
 #pragma once
+
+// Steamworks SDK
+#pragma warning(push, 0)
+#include "../Steam/steam_api.h"
+#pragma warning(pop)
+
 #include "Classes.h"
 #include "Const.h"
 #include "Enums.h"

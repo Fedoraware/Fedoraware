@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef abstract_class
+#define abstract_class class __declspec(novtable)
+#endif
+
 class CViewSetup;
 class CBaseEntity;
 struct vrect_t;
