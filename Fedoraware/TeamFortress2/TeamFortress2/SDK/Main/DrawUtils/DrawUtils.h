@@ -56,11 +56,11 @@ public:
 	void DrawFilledTriangle(const std::array<Vec2, 3>& points, const Color_t& clr);
 	void DrawOutlinedTriangle(const std::array<Vec2, 3>& points, const Color_t& clr);
 	void Rect(int x, int y, int w, int h, const Color_t& clr);
-	void RectOverlay(int x, int y, int w, int h, float bwidthp, const Color_t& clr, const Color_t& overlay_clr, bool horizontal);
+	void RectOverlay(int x, int y, int w, int h, float bwidthp, const Color_t& clr, const Color_t& outline_clr, bool horizontal);
 	void OutlinedRect(int x, int y, int w, int h, const Color_t& clr);
 	void GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
 	void GradientRectWH(int x, int y, int w, int h, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
-	void OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& overlay_clr, bool horizontal);
+	void OutlinedGradientBar(int x, int y, int w, int h, float bwidthp, const Color_t& top_clr, const Color_t& bottom_clr, const Color_t& outline_clr, bool horizontal);
 	void GradientRectA(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
 	void FilledCircle(int x, int y, int radius, int segments, Color_t clr);

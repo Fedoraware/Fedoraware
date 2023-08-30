@@ -43,14 +43,13 @@ void CVisuals::ScopeLines(CBaseEntity* pLocal)
 	{
 		const int centerX = g_ScreenSize.w / 2;
 		const int centerY = g_ScreenSize.h / 2;
-		const Color_t line1 = { Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255 };
-		const Color_t line2 = { Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255 };
+		const Color_t line1 = {Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255};
+		const Color_t line2 = {Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255};
 
 		g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
 		g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
 		g_Draw.GradientRect(centerX - 1, 0, centerX + 1, centerY, line2, line1, false);
 		g_Draw.GradientRect(centerX - 1, centerY, centerX + 1, g_ScreenSize.h, line1, line2, false);
-
 	}
 }
 
@@ -61,16 +60,16 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
 	const int x = Vars::Visuals::OnScreenConditions.c;
-	int y = Vars::Visuals::OnScreenConditions.y;
+	const int y = Vars::Visuals::OnScreenConditions.y;
 
-	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
+	const std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 
 	int nTextOffset = g_Draw.GetFont(FONT_MENU).nTall;
 	//int longestText = 40;
 	int width, height;
 	for (const std::wstring& cond : conditionsVec)
 	{
-		g_Draw.String(FONT_MENU, x, y + nTextOffset, { 255, 255, 255, 255 }, ALIGN_CENTER, cond.data());
+		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
 		I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_MENU).dwFont, cond.data(), width, height);
 		//if (width > longestText)
 		//{
@@ -84,14 +83,15 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	//ConditionH = y + nTextOffset;
 }
 
-void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal){
+void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
+{
 	if (!Vars::Visuals::DrawOnScreenPing.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
 	CTFPlayerResource* cResource = g_EntityCache.GetPR();
 	if (!cResource) { return; }
 
-	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	const INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	if (!iNetChan) { return; }
 
 	const float flLatencyReal = (iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING)) * 1000;
@@ -103,18 +103,18 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal){
 
 	const int nTextOffset = g_Draw.GetFont(FONT_MENU).nTall;
 	{
-		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255 }, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
-		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255 }, ALIGN_DEFAULT,	"ping scoreboard : %d", flLatencyScoreBoard);
+		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
+		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping scoreboard : %d", flLatencyScoreBoard);
 	}
 }
 
 void CVisuals::SkyboxChanger()
 {
 	using LoadNamedSkysFn = bool(_cdecl*)(const char*);
-	static auto LoadSkys = (LoadNamedSkysFn)g_Pattern.Find(
-		L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45");
+	static auto LoadSkys = reinterpret_cast<LoadNamedSkysFn>(g_Pattern.Find(
+		L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
-	const char* skybNames[] = {
+	static const char* skybNames[] = {
 		"Custom",
 		"sky_tf2_04",
 		"sky_upward",
@@ -139,6 +139,7 @@ void CVisuals::SkyboxChanger()
 		"sky_island_01",
 		"sky_rainbow_01"
 	};
+
 	if (Vars::Visuals::SkyboxChanger.Value)
 	{
 		if (Vars::Skybox::SkyboxNum == 0)
@@ -205,7 +206,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		{
 			if (!I::EngineVGui->IsGameUIVisible() && !I::VGuiSurface->IsCursorVisible())
 			{
-				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.Value };
+				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.Value};
 				if (tpKey.Pressed())
 				{
 					Vars::Visuals::ThirdPerson.Value = !Vars::Visuals::ThirdPerson.Value;
@@ -250,7 +251,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 			const Vec3 viewangles = I::EngineClient->GetViewAngles(); // Use engine view angles so anti aim doesn't make your camera go crazy mode
 			Vec3 vForward, vRight, vUp;
 			Math::AngleVectors(viewangles, &vForward, &vRight, &vUp);
-			static KeyHelper offsetKey{ &Vars::Visuals::ThirdpersonArrowOffsetKey.Value };
+			static KeyHelper offsetKey{&Vars::Visuals::ThirdpersonArrowOffsetKey.Value};
 
 			if (Vars::Visuals::ThirdpersonOffsetWithArrows.Value)
 			{
@@ -317,7 +318,7 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
-void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = { 255, 255, 255, 255 })
+void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = {255, 255, 255, 255})
 {
 	g_Draw.String(FONT_MENU, offsets.first, offsets.second += 15, clr, ALIGN_DEFAULT, title);
 	g_Draw.String(FONT_MENU, offsets.first + 125, offsets.second, clr, ALIGN_DEFAULT, value);
@@ -332,18 +333,18 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 
 		{
 			g_Draw.String(FONT_INDICATORS, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware");
-		} 
+		}
 		{
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 119, 255, 225, 255 }, ALIGN_DEFAULT, "Local Player"); // header
+			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, {119, 255, 225, 255}, ALIGN_DEFAULT, "Local Player"); // header
 		}
 		// alive
 		{
 			const bool alive = pLocal->IsAlive();
-			Color_t clr = alive ? Color_t{ 153, 232, 0, 255 } : Color_t{ 167, 0, 0, 255 };
+			Color_t clr = alive ? Color_t{153, 232, 0, 255} : Color_t{167, 0, 0, 255};
 			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
 		}
 
-		if (!G::LastUserCmd){ return; }
+		if (!G::LastUserCmd) { return; }
 		const float flLastFwd = G::LastUserCmd->forwardmove;
 		const float flLastSde = G::LastUserCmd->sidemove;
 		{
@@ -362,8 +363,8 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 
 	if (Vars::AntiHack::AntiAim::Active.Value)
 	{
-		static constexpr Color_t realColour = { 0, 255,0, 255 };
-		static constexpr Color_t fakeColour = { 255, 0, 0, 255 };
+		static constexpr Color_t REAL_COLOUR = {0, 255, 0, 255};
+		static constexpr Color_t FAKE_COLOUR = {255, 0, 0, 255};
 
 		const auto& vOrigin = pLocal->GetAbsOrigin();
 
@@ -373,12 +374,12 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 			constexpr auto distance = 50.f;
 			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
 			{
-				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, realColour);
+				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, REAL_COLOUR);
 			}
 
 			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
 			{
-				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, fakeColour);
+				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, FAKE_COLOUR);
 			}
 		}
 	}
@@ -391,7 +392,6 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 	//Tickbase info
 	if (Vars::Misc::CL_Move::Enabled.Value && Vars::Misc::CL_Move::DTBarStyle.Value)
 	{
-
 		const auto& pWeapon = g_EntityCache.GetWeapon();
 
 		if (pWeapon)
@@ -400,8 +400,10 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 			{
 				const int nY = (g_ScreenSize.h / 2) + 20;
 				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator;
-				const float ratioCurrent = std::clamp(((float)G::ShiftedTicks / (float)Vars::Misc::CL_Move::DTTicks.Value), 0.0f, 1.0f);
-				static float ratioInterp = 0.00f; ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f); Math::Clamp(ratioInterp, 0.00f, 1.00f);
+				const float ratioCurrent = std::clamp((static_cast<float>(G::ShiftedTicks) / static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value)), 0.0f, 1.0f);
+				static float ratioInterp = 0.00f;
+				ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f);
+				Math::Clamp(ratioInterp, 0.00f, 1.00f);
 
 				static Color_t color1, color2;
 
@@ -418,17 +420,18 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 
 				switch (Vars::Misc::CL_Move::DTBarStyle.Value)
 				{
-					case 1:
+				case 1:
 					{
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
 						break;
 					}
-					case 2:
+				case 2:
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
 						const int drawX = DTBox.x;
-						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - fontHeight - 3, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - fontHeight - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks,
+						              Vars::Misc::CL_Move::DTTicks.Value);
 						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Colors::DtOutline);
 						if (G::ShiftedTicks && ratioCurrent)
 						{
@@ -436,61 +439,60 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						}
 						if (G::WaitForShift)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y + fontHeight + DTBox.h, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, L"Not Ready");
+							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y + fontHeight + DTBox.h, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Not Ready");
 						}
 						break;
 					}
-					case 3:
+				case 3:
 					{
-						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);	//	draw the outline
-						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, { 28, 29, 38, 255 });	//	draw the background
+						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline); //	draw the outline
+						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, {28, 29, 38, 255}); //	draw the background
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
-						g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, { 255, 255, 255, 255 }, ALIGN_DEFAULT, L"CHARGE");
+						g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, {255, 255, 255, 255}, ALIGN_DEFAULT, L"CHARGE");
 
 						if (G::ShiftedTicks == 0) // chargless
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 55, 40, 255 }, ALIGN_REVERSE, L"NO CHARGE");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 55, 40, 255}, ALIGN_REVERSE, L"NO CHARGE");
 						}
 						else if (G::Recharging) // charging 
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 126, 0, 255 }, ALIGN_REVERSE, L"CHARGING");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 126, 0, 255}, ALIGN_REVERSE, L"CHARGING");
 						}
 						else if (G::WaitForShift) // waiting
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 255, 46, 46, 255 }, ALIGN_REVERSE, L"DT IMPOSSIBLE");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 46, 46, 255}, ALIGN_REVERSE, L"DT IMPOSSIBLE");
 						}
-						else	// ready
+						else // ready
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, { 66, 255, 0, 255 }, ALIGN_REVERSE, L"READY");
+							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {66, 255, 0, 255}, ALIGN_REVERSE, L"READY");
 						}
 						break;
 					}
-					case 4:
+				case 4:
 					{
 						if (G::ShiftedTicks == 0 || G::Recharging)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, L"Recharge! (%i / %i)", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {255, 64, 64, 255}, ALIGN_CENTERHORIZONTAL, L"Recharge! (%i / %i)", G::ShiftedTicks,
+							              Vars::Misc::CL_Move::DTTicks.Value);
 						}
 						else if (G::WaitForShift)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, L"Wait! (%i / 25)", G::WaitForShift);
+							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {255, 178, 0, 255}, ALIGN_CENTERHORIZONTAL, L"Wait! (%i / 25)", G::WaitForShift);
 						}
 						else
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
+							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {153, 255, 153, 255}, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
 						}
 						break;
 					}
-					case 5:
+				case 5:
 					{
-						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 3, { 255, 255, 255, 255 }, ALIGN_CENTERHORIZONTAL, L"%i/%i", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"%i/%i", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
 						break;
 					}
-						//hhhs0j — Today at 15:19
-						//Add a dt indicator but only with numbers
-
+				//hhhs0j — Today at 15:19
+				//Add a dt indicator but only with numbers
 				}
-
 			}
 		}
 	}
@@ -499,7 +501,8 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 void CVisuals::DrawServerHitboxes()
 {
 	static int iOldTick = I::GlobalVars->tickcount;
-	if (iOldTick == I::GlobalVars->tickcount) { return; } iOldTick = I::GlobalVars->tickcount;
+	if (iOldTick == I::GlobalVars->tickcount) { return; }
+	iOldTick = I::GlobalVars->tickcount;
 	// draw our serverside hitbox on local servers, used to test fakelag & antiaim
 	if (I::Input->CAM_IsThirdPerson() && Vars::Visuals::ThirdPersonServerHitbox.Value)
 	{
@@ -507,8 +510,9 @@ void CVisuals::DrawServerHitboxes()
 		using GetServerAnimating_t = void* (*)(int);
 		static auto GetServerAnimating = reinterpret_cast<GetServerAnimating_t>(g_Pattern.Find(L"server.dll", L"55 8B EC 8B 55 ? 85 D2 7E ? A1"));
 
-		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool);	// C_BaseAnimating, Duration, MonoColour
-		static auto DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(L"server.dll", L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97"));
+		using DrawServerHitboxes_t = void(__thiscall*)(void*, float, bool); // C_BaseAnimating, Duration, MonoColour
+		static auto DrawServerHitboxes = reinterpret_cast<DrawServerHitboxes_t>(g_Pattern.Find(
+			L"server.dll", L"55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97"));
 
 		const auto pLocal = I::ClientEntityList->GetClientEntity(I::EngineClient->GetLocalPlayer());
 		if (pLocal && pLocal->IsAlive())
@@ -524,48 +528,45 @@ void CVisuals::DrawServerHitboxes()
 
 void CVisuals::DrawMenuSnow()
 {
-	{	//	menu snow
-		struct snowFlake
-		{
-			std::pair<int, int> position;
-		};
+	//	menu snow
+	struct SnowFlakeT
+	{
+		int X;
+		int Y;
+	};
 
-		static std::vector<snowFlake> vSnowFlakes;
-		constexpr int snowCount = 1000;
+	static std::vector<SnowFlakeT> vSnowFlakes;
+	constexpr int snowCount = 1000;
 
-		static bool bInit = false;
-		if (!bInit)
+	static bool bInit = false;
+	if (!bInit)
+	{
+		for (int i = 0; i < snowCount; i++)
 		{
-			for (int i = 0; i < snowCount; i++)
-			{
-				vSnowFlakes.push_back({ {Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f)} });
-			}
-			bInit = true;
+			vSnowFlakes.emplace_back(Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f));
 		}
+		bInit = true;
+	}
 
-		for (snowFlake& flake : vSnowFlakes)
+	for (auto& flake : vSnowFlakes)
+	{
+		//	do gravity
+		constexpr int drift = 1;
+		flake.X += Utils::RandIntSimple(-drift, drift);
+		flake.Y += drift;
+
+		//	calculate alpha
+		const float alpha = Math::MapFloat(flake.Y, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
+		//
+		//	recreate snow flakes that are gone
+		if (alpha <= 0.f || flake.X >= g_ScreenSize.w || flake.X <= 0)
 		{
-//	do gravity
-			constexpr int drift = 1;
-			flake.position.first += Utils::RandIntSimple(-drift, drift);
-			flake.position.second += drift;
+			flake.X = Utils::RandIntSimple(0, g_ScreenSize.w);
+			flake.Y = Utils::RandIntSimple(0, 100);
+		} //
 
-			//	calculate alpha
-			float Alpha = Math::MapFloat(flake.position.second, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
-			//
-			//	recreate snow flakes that are gone
-			if (Alpha <= 0.f || flake.position.first >= g_ScreenSize.w || flake.position.first <= 0)
-			{
-				flake = { {
-						Utils::RandIntSimple(0, g_ScreenSize.w),
-						Utils::RandIntSimple(0, 100),
-				},
-				};
-			}//
-
-			Color_t flakeColour = { 255, 255, 255, static_cast<byte>(Alpha * 255.0f) };
-			g_Draw.String(FONT_MENU, flake.position.first, flake.position.second, flakeColour, ALIGN_DEFAULT, "*");
-		}
+		Color_t flakeColour = {255, 255, 255, static_cast<byte>(alpha * 255.0f)};
+		g_Draw.String(FONT_MENU, flake.X, flake.Y, flakeColour, ALIGN_DEFAULT, "*");
 	}
 }
 
@@ -574,11 +575,11 @@ void CVisuals::DrawDVD()
 	{
 		static int iDVD = g_Draw.CreateTextureFromArray(DVDIcon::rawData, 237, 139);
 
-				// DVD Logo
+		// DVD Logo
 		if (iDVD && Vars::Menu::ShowDVD.Value)
 		{
-			static Vec2 logoPos = { 1, 1 };
-			static Vec2 logoVelocity = { 1, -1 };
+			static Vec2 logoPos = {1, 1};
+			static Vec2 logoVelocity = {1, -1};
 
 			if (logoPos.y <= 0 || logoPos.y >= (g_ScreenSize.h - DVDIcon::Height))
 			{
@@ -612,7 +613,7 @@ void CVisuals::DrawPredictionLine()
 					vProjAimStart.y,
 					vProjAimEnd.x,
 					vProjAimEnd.y,
-					{ 255, 255, 255, 255 }
+					{255, 255, 255, 255}
 				);
 			}
 		}
@@ -637,7 +638,7 @@ void CVisuals::DrawMovesimLine()
 				for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 				{
 					const auto& vStart = G::PredLinesBackup[i - 1].first;
-					const auto& vRotate = G::PredLinesBackup[i - 1].second;	//	splirp vec
+					const auto& vRotate = G::PredLinesBackup[i - 1].second; //	splirp vec
 					const auto& vEnd = G::PredLinesBackup[i].first;
 					if ((i % Vars::Visuals::SeperatorSpacing.Value) == 0) { RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false); }
 					RenderLine(vStart, vEnd, Vars::Aimbot::Projectile::PredictionColor, false);
@@ -663,13 +664,14 @@ void CVisuals::ManualNetwork(const StartSoundParams_t& params)
 		&& pEntity->GetDormant()
 		&& pEntity->GetClassID() == ETFClassID::CTFPlayer)
 	{
-		G::DormantPlayerESP[iEntIndex] = { vOrigin, I::EngineClient->Time() };
+		G::DormantPlayerESP[iEntIndex] = {vOrigin, I::EngineClient->Time()};
 	}
 }
 
 void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer)
 {
-	static auto RenderLineFn = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));
+	static auto RenderLineFn = reinterpret_cast<void(__cdecl*)(const Vector&, const Vector&, Color_t, bool)>(g_Pattern.Find(
+		L"engine.dll", L"55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6"));
 	RenderLineFn(v1, v2, c, bZBuffer);
 }
 
@@ -677,14 +679,11 @@ void CVisuals::DrawSightlines()
 {
 	if (Vars::ESP::Players::SniperSightlines.Value)
 	{
-		if (!m_SightLines.empty())
+		for (const auto& sightline : m_SightLines)
 		{
-			for (const auto& sightline : m_SightLines)
+			if (sightline.m_bDraw)
 			{
-				if (sightline.m_bDraw)
-				{
-					RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
-				}
+				RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
 			}
 		}
 	}
@@ -694,28 +693,25 @@ void CVisuals::FillSightlines()
 {
 	if (Vars::ESP::Players::SniperSightlines.Value)
 	{
-		Vec3 vShootPos, vAngle, vForward, vShootEnd;
+		Vec3 vForward;
 		CTraceFilterHitscan filter{};
 		CGameTrace trace{};
 		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			const int iEntityIndex = pEnemy->GetIndex();
-			if (!(pEnemy->IsAlive()) ||
-				!(pEnemy->GetClassNum() == CLASS_SNIPER) ||
-				!(pEnemy->GetCond() & TFCond_Zoomed) ||
-				(pEnemy->GetDormant()))
+			if (pEnemy->IsAlive() && pEnemy->GetClassNum() == CLASS_SNIPER && pEnemy->GetCond() & TFCond_Zoomed && !pEnemy->GetDormant())
 			{
-				m_SightLines[iEntityIndex] = { Vec3{0,0,0}, Vec3{0,0,0}, Color_t{0,0,0,0}, false };
+				m_SightLines[iEntityIndex] = {Vec3{0, 0, 0}, Vec3{0, 0, 0}, Color_t{0, 0, 0, 0}, false};
 				continue;
 			}
-			vShootPos = pEnemy->GetShootPos();
-			vAngle = pEnemy->GetEyeAngles();
+			Vec3 vShootPos = pEnemy->GetShootPos();
+			Vec3 vAngle = pEnemy->GetEyeAngles();
 			Math::AngleVectors(vAngle, &vForward);
-			vShootEnd = vShootPos + (vForward * 8192.f);
+			Vec3 vShootEnd = vShootPos + (vForward * 8192.f);
 
 			Utils::Trace(vShootPos, vShootEnd, MASK_SHOT, &filter, &trace);
 
-			m_SightLines[pEnemy->GetIndex()] = { vShootPos, trace.vEndPos, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true };
+			m_SightLines[pEnemy->GetIndex()] = {vShootPos, trace.vEndPos, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true};
 		}
 	}
 }
@@ -727,39 +723,37 @@ void CVisuals::SetVisionFlags()
 	{
 		switch (Vars::Visuals::VisionModifier.Value)
 		{
-			case 1:
-				localplayer_visionflags->SetValue(1);
-				break;
-			case 2:
-				localplayer_visionflags->SetValue(2);
-				break;
-			case 3:
-				localplayer_visionflags->SetValue(4);
-				break;
-			default:
-				break;
+		case 1:
+			localplayer_visionflags->SetValue(1);
+			break;
+		case 2:
+			localplayer_visionflags->SetValue(2);
+			break;
+		case 3:
+			localplayer_visionflags->SetValue(4);
+			break;
+		default:
+			break;
 		}
 	}
 }
 
 void CVisuals::AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr)
 {
-	m_vecBulletTracers.push_back({ vFrom, vTo, clr, I::GlobalVars->curtime });
+	m_vecBulletTracers.push_back({vFrom, vTo, clr, I::GlobalVars->curtime});
 }
 
 void CVisuals::PruneBulletTracers()
 {
 	const float curtime = I::GlobalVars->curtime;
 
-	if (m_vecBulletTracers.size())
+	if (m_vecBulletTracers.empty()) { return; }
+	for (size_t i = 0; i < m_vecBulletTracers.size(); i++)
 	{
-		for (size_t i = 0; i < m_vecBulletTracers.size(); i++)
+		const auto& bulletTracer = m_vecBulletTracers.at(i);
+		if (curtime > bulletTracer.m_flTimeCreated + 5)
 		{
-			const auto& bulletTracer = m_vecBulletTracers.at(i);
-			if (curtime > bulletTracer.m_flTimeCreated + 5)
-			{
-				m_vecBulletTracers.erase(m_vecBulletTracers.begin(), m_vecBulletTracers.begin() + 1);
-			}
+			m_vecBulletTracers.erase(m_vecBulletTracers.begin(), m_vecBulletTracers.begin() + 1);
 		}
 	}
 }
@@ -767,24 +761,23 @@ void CVisuals::PruneBulletTracers()
 void CVisuals::DrawBulletTracers()
 {
 	const float curTime = I::GlobalVars->curtime;
-	if (m_vecBulletTracers.size())
+
+	if (m_vecBulletTracers.empty()) { return; }
+	for (const auto& bulletTracer : m_vecBulletTracers)
 	{
-		for (const auto& bulletTracer : m_vecBulletTracers)
+		Color_t tracerColor = bulletTracer.m_Color;
+		const float flDistance = curTime - bulletTracer.m_flTimeCreated;
+		if (flDistance < 0)
 		{
-			Color_t tracerColor = bulletTracer.m_Color;
-			const float flDistance = curTime - bulletTracer.m_flTimeCreated;
-			if (flDistance < 0)
-			{
-				tracerColor.a = 255;
-			}
-			else
-			{
-				//I::Cvar->ConsolePrintf("%f\n", flDistance);
-				tracerColor.a = Math::RemapValClamped(flDistance, 0, 1, 255, 0);
-			}
-			/*I::Cvar->ConsolePrintf("a: %d\n", tracerColor.a);*/
-			RenderLine(bulletTracer.m_vStartPos, bulletTracer.m_vEndPos, tracerColor, false);
+			tracerColor.a = 255;
 		}
+		else
+		{
+			//I::Cvar->ConsolePrintf("%f\n", flDistance);
+			tracerColor.a = Math::RemapValClamped(flDistance, 0, 1, 255, 0);
+		}
+		/*I::Cvar->ConsolePrintf("a: %d\n", tracerColor.a);*/
+		RenderLine(bulletTracer.m_vStartPos, bulletTracer.m_vEndPos, tracerColor, false);
 	}
 }
 
@@ -823,8 +816,8 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 		const float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.Value);
 		const float flR = tanf(DEG2RAD(Vars::Aimbot::Global::AimFOV.Value) / 2.0f)
 			/ tanf(
-			DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
-			2.0f) * g_ScreenSize.w;
+				DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
+				2.0f) * g_ScreenSize.w;
 		const Color_t clr = Colors::FOVCircle;
 		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
 	}
@@ -899,9 +892,11 @@ bool ModColChanged() // check if colours have been changed
 	static auto oldW = Colors::WorldModulation;
 	static auto oldS = Colors::SkyModulation;
 
-	if (Colors::WorldModulation != oldW || Colors::SkyModulation != oldS) {
-		oldW == Colors::WorldModulation;
-		oldS == Colors::SkyModulation;
+	if (Colors::WorldModulation != oldW || Colors::SkyModulation != oldS)
+	{
+		oldW = Colors::WorldModulation;
+		oldS = Colors::SkyModulation;
+
 		return true;
 	}
 	return false;
@@ -1009,14 +1004,23 @@ void CVisuals::ModulateWorld()
 
 	if (ModColChanged() || ModSetChanged() || !isUnchanged)
 	{
-		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({ 255, 255, 255, 255 });
-		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({ 255, 255, 255, 255 });
+		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({255, 255, 255, 255});
+		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({255, 255, 255, 255});
 		oConnectionState = connectionState;
 		shouldModulate = false;
 	}
-	if (!shouldModulate) {
-		if (!Vars::Visuals::WorldModulation.Value) { ApplyModulation({ 255, 255, 255, 255 }); shouldModulate = true; }
-		if (!Vars::Visuals::SkyModulation.Value) { ApplySkyboxModulation({ 255, 255, 255, 255 }); shouldModulate = true; }
+	if (!shouldModulate)
+	{
+		if (!Vars::Visuals::WorldModulation.Value)
+		{
+			ApplyModulation({255, 255, 255, 255});
+			shouldModulate = true;
+		}
+		if (!Vars::Visuals::SkyModulation.Value)
+		{
+			ApplySkyboxModulation({255, 255, 255, 255});
+			shouldModulate = true;
+		}
 	}
 	//else if (!Vars::Visuals::WorldModulation.Value)
 	//{
@@ -1030,8 +1034,8 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::RestoreWorldModulation() // keep this because its mentioned in @DLLMain.cpp if you find a better way to do this, remove it ig.
 {
-	ApplyModulation({ 255, 255, 255, 255 });
-	ApplySkyboxModulation({ 255, 255, 255, 255 });
+	ApplyModulation({255, 255, 255, 255});
+	ApplySkyboxModulation({255, 255, 255, 255});
 }
 
 // all world mod stuff above
@@ -1172,7 +1176,6 @@ void CRunescapeChat::Draw()
 	}
 	std::vector<size_t> vecRemovals;
 	const float curTime = I::GlobalVars->curtime;
-	Vec3 vHeadpos;
 	Vec3 vScreen;
 	for (size_t i = 0; i < m_vecChats.size(); i++)
 	{
@@ -1185,41 +1188,41 @@ void CRunescapeChat::Draw()
 		{
 			if (chat.m_pEntity && chat.m_pEntity->IsAlive())
 			{
-				vHeadpos = chat.m_pEntity->GetHitboxPos(HITBOX_HEAD);
+				Vec3 vHeadpos = chat.m_pEntity->GetHitboxPos(HITBOX_HEAD);
 				if (!vHeadpos.IsZero())
 				{
 					vHeadpos.z += 20;
 					if (Utils::W2S(vHeadpos, vScreen))
 					{
-						Color_t col = { 255, 255, 0, 255 };
+						Color_t col = {255, 255, 0, 255};
 						switch (chat.m_Colour)
 						{
-							case eRS_RED:
+						case eRS_RED:
 							{
-								col = { 255, 0, 0, 255 };
+								col = {255, 0, 0, 255};
 								break;
 							}
-							case eRS_GREEN:
+						case eRS_GREEN:
 							{
-								col = { 0, 255, 0, 255 };
+								col = {0, 255, 0, 255};
 								break;
 							}
-							case eRS_CYAN:
+						case eRS_CYAN:
 							{
-								col = { 0, 255, 255, 255 };
+								col = {0, 255, 255, 255};
 								break;
 							}
-							case eRS_PURPLE:
+						case eRS_PURPLE:
 							{
-								col = { 255, 0, 255, 255 };
+								col = {255, 0, 255, 255};
 								break;
 							}
-							case eRS_WHITE:
+						case eRS_WHITE:
 							{
-								col = { 255,255,255,255 };
+								col = {255, 255, 255, 255};
 								break;
 							}
-							default:break;
+						default: break;
 						}
 						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, L"%ls", chat.m_szChatText.c_str());
 					}
@@ -1228,7 +1231,7 @@ void CRunescapeChat::Draw()
 		}
 	}
 
-	for (auto& pos : vecRemovals)
+	for (const auto& pos : vecRemovals)
 	{
 		m_vecChats.erase(m_vecChats.begin() + pos);
 	}
@@ -1240,7 +1243,10 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::wstring szChatText)
 	{
 		return;
 	}
-	if (!pEntity) return;
+	if (!pEntity)
+	{
+		return;
+	}
 
 	EChatColour col = eRS_YELLOW;
 
@@ -1271,10 +1277,8 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::wstring szChatText)
 	}
 
 
-
-
 	int highestOffset = 0;
-	for (auto& chat : m_vecChats)
+	for (const auto& chat : m_vecChats)
 	{
 		if (chat.m_pEntity == pEntity)
 		{
@@ -1284,6 +1288,7 @@ void CRunescapeChat::PushChat(CBaseEntity* pEntity, std::wstring szChatText)
 			}
 		}
 	}
-	Chat_t push = { pEntity, I::GlobalVars->curtime, highestOffset, col, szChatText };
+
+	const Chat_t push = {pEntity, I::GlobalVars->curtime, highestOffset, col, szChatText};
 	m_vecChats.push_back(push);
 }
