@@ -1,12 +1,8 @@
 #pragma once
-#define abstract_class class
 
 // Steamworks SDK
 #pragma warning(push, 0)
 #include "../Steam/steam_api.h"
-#include "../Steam/steamtypes.h"
-#include "../Steam/isteamnetworkingutils.h"
-#include "../Steam/steamclientpublic.h"
 #pragma warning(pop)
 
 #include "Classes.h"

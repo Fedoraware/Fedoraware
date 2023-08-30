@@ -10,3 +10,4 @@
 #define _(s) XorStr(s).c_str()
 #define TOGGLE(label, v) ImGui::Checkbox(label, v);
 #define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
+#define abstract_class class __declspec(novtable)
