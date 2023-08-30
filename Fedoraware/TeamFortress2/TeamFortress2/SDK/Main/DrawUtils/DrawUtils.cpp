@@ -367,11 +367,11 @@ void CDraw::Avatar(const int x, const int y, const int w, const int h, const uin
 {
 	if (const auto nID = static_cast<uint64>(nFriendID + 0x0110000100000000))
 	{
-		if (m_mapAvatars.contains(nID))
+		if (m_Avatars.contains(nID))
 		{
 			// The avatar has been cached
 			I::VGuiSurface->DrawSetColor(255, 255, 255, 255);
-			I::VGuiSurface->DrawSetTexture(m_mapAvatars[nID]);
+			I::VGuiSurface->DrawSetTexture(m_Avatars[nID]);
 			I::VGuiSurface->DrawTexturedRect(x, y, w, h);
 		}
 		else
@@ -392,7 +392,7 @@ void CDraw::Avatar(const int x, const int y, const int w, const int h, const uin
 					if (I::VGuiSurface->IsTextureIDValid(nTextureID))
 					{
 						I::VGuiSurface->DrawSetTextureRGBA(nTextureID, pData, newW, newH, 0, false);
-						m_mapAvatars[nID] = nTextureID;
+						m_Avatars[nID] = nTextureID;
 					}
 				}
 
@@ -428,13 +428,13 @@ void CDraw::RoundedBoxStatic(const int x, const int y, const int w, const int h,
 
 void CDraw::ClearAvatarCache()
 {
-	for (const auto& id : m_mapAvatars | std::views::values)
+	for (const auto& id : m_Avatars | std::views::values)
 	{
 		I::VGuiSurface->DeleteTextureByID(id);
 		I::VGuiSurface->DestroyTextureID(id);
 	}
 
-	m_mapAvatars.clear();
+	m_Avatars.clear();
 }
 
 float CDraw::EaseOut(float start, float end, float speed)

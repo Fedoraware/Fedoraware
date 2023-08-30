@@ -43,9 +43,9 @@ enum EStringAlign {
 
 class CDraw {
 	std::array<Font_t, FONT_ENUM_SIZE> m_Fonts{};
+	std::unordered_map<uint64, int> m_Avatars{};
 
 public:
-	std::unordered_map<uint64, int> m_mapAvatars{};
 
 	void RemakeFonts();
 	void ReloadFonts();
