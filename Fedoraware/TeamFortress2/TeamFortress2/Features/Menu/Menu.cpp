@@ -1067,61 +1067,7 @@ void CMenu::MenuVisuals()
 
 					if (Button("Apply settings###fontapply"))
 					{
-						const Font_t fontEsp = {
-							0x0,
-							Vars::Fonts::FONT_ESP::szName.c_str(),
-							Vars::Fonts::FONT_ESP::nTall.Value,
-							Vars::Fonts::FONT_ESP::nWeight.Value,
-							Vars::Fonts::FONT_ESP::nFlags.Value
-						};
-						const Font_t fontEspName = {
-							0x0,
-							Vars::Fonts::FONT_ESP_NAME::szName.c_str(),
-							Vars::Fonts::FONT_ESP_NAME::nTall.Value,
-							Vars::Fonts::FONT_ESP_NAME::nWeight.Value,
-							Vars::Fonts::FONT_ESP_NAME::nFlags.Value
-						};
-						const Font_t fontEspCond = {
-							0x0,
-							Vars::Fonts::FONT_ESP_COND::szName.c_str(),
-							Vars::Fonts::FONT_ESP_COND::nTall.Value,
-							Vars::Fonts::FONT_ESP_COND::nWeight.Value,
-							Vars::Fonts::FONT_ESP_COND::nFlags.Value
-						};
-						const Font_t fontIndicator = {
-							0x0,
-							Vars::Fonts::FONT_INDICATORS::szName.c_str(),
-							Vars::Fonts::FONT_INDICATORS::nTall.Value,
-							Vars::Fonts::FONT_INDICATORS::nWeight.Value,
-							Vars::Fonts::FONT_INDICATORS::nFlags.Value
-						};
-						const Font_t fontEspPickups = {
-							0x0,
-							Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(),
-							Vars::Fonts::FONT_ESP_PICKUPS::nTall.Value,
-							Vars::Fonts::FONT_ESP_PICKUPS::nWeight.Value,
-							Vars::Fonts::FONT_ESP_PICKUPS::nFlags.Value
-						};
-						const Font_t fontMenu = {
-							0x0,
-							Vars::Fonts::FONT_MENU::szName.c_str(),
-							Vars::Fonts::FONT_MENU::nTall.Value,
-							Vars::Fonts::FONT_MENU::nWeight.Value,
-							Vars::Fonts::FONT_MENU::nFlags.Value
-						};
-
-						const std::vector <Font_t> fonts = {
-							fontEsp,
-							fontEspName,
-							fontEspCond,
-							fontEspPickups,
-							fontMenu,
-							fontIndicator,
-							{ 0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS},
-							{ 0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW},
-						};
-
-						g_Draw.RemakeFonts(fonts);
+						g_Draw.RemakeFonts();
 					}
 				} EndChild();
 

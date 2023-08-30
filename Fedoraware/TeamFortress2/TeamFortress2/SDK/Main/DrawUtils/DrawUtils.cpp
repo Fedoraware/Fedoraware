@@ -2,6 +2,7 @@
 
 #include <ranges>
 
+#include "../../Features/Vars.h"
 #include "../../../SDK/Includes/icons.h"
 
 void ScreenSize_t::Update()
@@ -10,38 +11,24 @@ void ScreenSize_t::Update()
 	this->c = (this->w / 2);
 }
 
-void Draw_t::InitFonts(const std::vector<Font_t>& fonts)
+void Draw_t::RemakeFonts()
 {
-	for (const auto& font : fonts)
-	{
-		m_vecFonts.push_back(font);
-	}
+	m_Fonts[FONT_ESP] = {0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.Value, Vars::Fonts::FONT_ESP::nWeight.Value, Vars::Fonts::FONT_ESP::nFlags.Value};
+	m_Fonts[FONT_ESP_NAME] = {0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.Value, Vars::Fonts::FONT_ESP_NAME::nWeight.Value, Vars::Fonts::FONT_ESP_NAME::nFlags.Value};
+	m_Fonts[FONT_ESP_COND] = {0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.Value, Vars::Fonts::FONT_ESP_COND::nWeight.Value, Vars::Fonts::FONT_ESP_COND::nFlags.Value};
+	m_Fonts[FONT_ESP_PICKUPS] = {0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.Value, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.Value, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.Value};
+	m_Fonts[FONT_MENU] = {0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.Value, Vars::Fonts::FONT_MENU::nWeight.Value, Vars::Fonts::FONT_MENU::nFlags.Value};
+	m_Fonts[FONT_INDICATORS] = {0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.Value, Vars::Fonts::FONT_INDICATORS::nWeight.Value, Vars::Fonts::FONT_INDICATORS::nFlags.Value};
+	m_Fonts[FONT_IMGUI] = {0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS};
+	m_Fonts[FONT_OSRS] = {0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW};
 
-	if (!m_vecFonts.empty())
-	{
-		ReloadFonts();
-	}
-}
-
-void Draw_t::RemakeFonts(const std::vector<Font_t>& fonts)
-{
-	m_vecFonts.clear();
-
-	for (const auto& font : fonts)
-	{
-		m_vecFonts.push_back(font);
-	}
-
-	if (!m_vecFonts.empty())
-	{
-		ReloadFonts();
-	}
+	ReloadFonts();
 }
 
 
 void Draw_t::ReloadFonts()
 {
-	for (auto& v : m_vecFonts)
+	for (auto& v : m_Fonts)
 	{
 		v.dwFont = I::VGuiSurface->CreateFont();
 		I::VGuiSurface->SetFontGlyphSet(v.dwFont, v.szName, v.nTall, v.nWeight, 0, 0, v.nFlags);
@@ -65,13 +52,7 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	wsprintfW(wstr, L"%hs", cbuffer);
 
-	if (font_idx > m_vecFonts.size())
-	{
-		return;
-	}
-
-	const auto& font = m_vecFonts.at(font_idx);
-
+	const auto& font = m_Fonts.at(font_idx);
 	const auto dwFont = font.dwFont;
 
 	switch (align)
@@ -128,16 +109,7 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 	vswprintf_s(wstr, str, va_alist);
 	va_end(va_alist);
 
-	//wsprintfW(wstr, L"%ls", cbuffer);
-
-
-	if (font_idx > m_vecFonts.size())
-	{
-		return;
-	}
-
-	const auto& font = m_vecFonts.at(font_idx);
-
+	const auto& font = m_Fonts.at(font_idx);
 	const auto dwFont = font.dwFont;
 
 	switch (align)

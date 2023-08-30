@@ -65,13 +65,13 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 
 	std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 
-	int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
+	int nTextOffset = g_Draw.m_Fonts[FONT_MENU].nTall;
 	//int longestText = 40;
 	int width, height;
 	for (const std::wstring& cond : conditionsVec)
 	{
 		g_Draw.String(FONT_MENU, x, y + nTextOffset, { 255, 255, 255, 255 }, ALIGN_CENTER, cond.data());
-		I::VGuiSurface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, cond.data(), width, height);
+		I::VGuiSurface->GetTextSize(g_Draw.m_Fonts[FONT_MENU].dwFont, cond.data(), width, height);
 		//if (width > longestText)
 		//{
 		//	longestText = width;
@@ -101,7 +101,7 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal){
 	const int y = Vars::Visuals::OnScreenPing.y;
 	const int h = Vars::Visuals::OnScreenPing.h;
 
-	const int nTextOffset = g_Draw.m_vecFonts[FONT_MENU].nTall;
+	const int nTextOffset = g_Draw.m_Fonts[FONT_MENU].nTall;
 	{
 		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255 }, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
 		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255 }, ALIGN_DEFAULT,	"ping scoreboard : %d", flLatencyScoreBoard);

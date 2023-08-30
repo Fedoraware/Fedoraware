@@ -28,7 +28,9 @@ enum EFonts {
 	FONT_MENU,
 	FONT_INDICATORS,
 	FONT_IMGUI,
-	FONT_OSRS
+	FONT_OSRS,
+
+	FONT_ENUM_SIZE // End of the font enum
 };
 
 enum EStringAlign {
@@ -40,11 +42,10 @@ enum EStringAlign {
 };
 
 struct Draw_t {
-	std::vector<Font_t> m_vecFonts = {};
-	std::unordered_map<uint64, int> m_mapAvatars = {};
+	std::array<Font_t, FONT_ENUM_SIZE> m_Fonts{};
+	std::unordered_map<uint64, int> m_mapAvatars{};
 
-	void InitFonts(const std::vector<Font_t>& fonts);
-	void RemakeFonts(const std::vector<Font_t>& fonts);
+	void RemakeFonts();
 	void ReloadFonts();
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
