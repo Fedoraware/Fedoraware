@@ -287,7 +287,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, nHealth > nMaxHealth ? Colors::Overheal : healthColor,
 							  ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
-				nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+				nTextOffset += g_Draw.GetFont(FONT).nTall;
 			}
 
 			if (Vars::Debug::DebugInfo.Value)
@@ -306,7 +306,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					{
 						g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::UberColor, ALIGN_DEFAULT, L"%.0f%%",
 									  pMedGun->GetUberCharge() * 100.0f);
-						nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+						nTextOffset += g_Draw.GetFont(FONT).nTall;
 					}
 
 					if (Vars::ESP::Players::Uber.Value == 2 && pMedGun->GetUberCharge())
@@ -350,11 +350,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				int middle = x + w / 2;
 				if (Vars::ESP::Players::Name.Value)
 				{
-					int offset = g_Draw.m_Fonts[FONT_NAME].nTall + g_Draw.m_Fonts[FONT_NAME].nTall / 4;
+					int offset = g_Draw.GetFont(FONT_NAME).nTall +g_Draw.GetFont(FONT_NAME).nTall / 4;
 					if (Vars::ESP::Players::NameBox.Value)
 					{
 						int wideth, heighth;
-						I::VGuiSurface->GetTextSize(g_Draw.m_Fonts[FONT_NAME].dwFont,
+						I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_NAME).dwFont,
 													Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = drawColor;
 						LineColor.a = 180;
@@ -380,14 +380,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
 				{
 					g_Draw.String(FONT, middle, y - 28, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, "CHEATER");
-					nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+					nTextOffset += g_Draw.GetFont(FONT).nTall;
 				}
 
 				// GUID ESP
 				if (Vars::ESP::Players::GUID.Value)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "%s", pi.guid);
-					nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+					nTextOffset += g_Draw.GetFont(FONT).nTall;
 				}
 			}
 
@@ -397,7 +397,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Players::Class.Value == 1 || Vars::ESP::Players::Class.Value == 3)
 				{
 					int offset = Vars::ESP::Players::Name.Value
-						? g_Draw.m_Fonts[FONT_NAME].nTall + g_Draw.m_Fonts[FONT_NAME].nTall * 0.3f
+						? g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall * 0.3f
 						: 0;
 
 					if (offset && Vars::ESP::Players::NameBox.Value)
@@ -420,7 +420,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%ls",
 								  GetPlayerClass(nClassNum));
-					nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+					nTextOffset += g_Draw.GetFont(FONT).nTall;
 				}
 			}
 
@@ -568,7 +568,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			if (Vars::ESP::Players::Cond.Value)
 			{
 				size_t FONT = FONT_ESP_COND;
-				int offset = g_Draw.m_Fonts[FONT].nTall / 4;
+				int offset = g_Draw.GetFont(FONT).nTall / 4;
 				std::vector<std::wstring> cond_strings = GetPlayerConds(Player);
 
 				if (!cond_strings.empty())
@@ -576,7 +576,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					for (auto& condString : cond_strings)
 					{
 						g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
-						nTextOffset += g_Draw.m_Fonts[FONT_ESP_COND].nTall;
+						nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
 					}
 				}
 			}
@@ -584,12 +584,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			if (g_EntityCache.IsFriend(nIndex) && Vars::ESP::Players::FriendCond.Value)
 			{
 				size_t FONT = FONT_ESP_COND;
-				int offset = g_Draw.m_Fonts[FONT].nTall / 4;
+				int offset = g_Draw.GetFont(FONT).nTall / 4;
 				std::vector<std::wstring> cond_strings = GetPlayerConds(Player);
 
 			g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, 
 				L"FRIEND"); // ez pz lemon squeezy
-			nTextOffset += g_Draw.m_Fonts[FONT_ESP_COND].nTall;
+			nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
 		    }
 
 			// Health bar
@@ -805,12 +805,12 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					}
 				}
 
-				nTextTopOffset += g_Draw.m_Fonts[FONT_NAME].nTall + g_Draw.m_Fonts[FONT_NAME].nTall / 4;
+				nTextTopOffset += g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall / 4;
 				if (Vars::ESP::Buildings::NameBox.Value)
 				{
 					int wideth, heighth;
 					const int middle = x + w / 2;
-					I::VGuiSurface->GetTextSize(g_Draw.m_Fonts[FONT_NAME].dwFont, szName, wideth, heighth);
+					I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_NAME).dwFont, szName, wideth, heighth);
 					Color_t LineColor = drawColor;
 					LineColor.a = 180;
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
@@ -849,7 +849,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					PlayerInfo_t pi;
 					if (I::EngineClient->GetPlayerInfo(pOwner->GetIndex(), &pi))
 					{
-						nTextTopOffset += g_Draw.m_Fonts[FONT_NAME].nTall + g_Draw.m_Fonts[FONT_NAME].nTall /
+						nTextTopOffset += g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall /
 							4;
 						g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, drawColor, ALIGN_CENTERHORIZONTAL,
 									  L"Built by: %ls", Utils::ConvertUtf8ToWide(pi.name).data());
@@ -863,14 +863,14 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			if (Vars::ESP::Buildings::Health.Value)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, healthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
-				nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+				nTextOffset += g_Draw.GetFont(FONT).nTall;
 			}
 
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"Building: %0.f%%",
 							  flConstructed);
-				nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+				nTextOffset += g_Draw.GetFont(FONT).nTall;
 			}
 
 			// Building level
@@ -878,7 +878,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%d/3",
 							  building->GetLevel());
-				nTextOffset += g_Draw.m_Fonts[FONT].nTall;
+				nTextOffset +=g_Draw.GetFont(FONT).nTall;
 			}
 
 			// Building conditions
@@ -921,7 +921,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					for (auto& condString : condStrings)
 					{
 						g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
-						nTextOffset += g_Draw.m_Fonts[FONT_ESP_COND].nTall;
+						nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
 					}
 				}
 			}
@@ -1202,7 +1202,7 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += g_Draw.m_Fonts[FONT].nTall + g_Draw.m_Fonts[FONT].nTall / 4;
+				nTextTopOffset += g_Draw.GetFont(FONT).nTall + g_Draw.GetFont(FONT).nTall / 4;
 				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(NPC, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 
@@ -1297,7 +1297,7 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += g_Draw.m_Fonts[FONT].nTall + g_Draw.m_Fonts[FONT].nTall / 4;
+				nTextTopOffset += g_Draw.GetFont(FONT).nTall + g_Draw.GetFont(FONT).nTall / 4;
 				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(Bombs, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 

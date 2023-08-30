@@ -405,7 +405,7 @@ void CCritHack::Draw()
 			g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, bucketstr.c_str()); 
 	}
 	int w, h;
-	I::VGuiSurface->GetTextSize(g_Draw.m_Fonts.at(FONT_INDICATORS).dwFont, bucketstr.c_str(), w, h);
+	I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_INDICATORS).dwFont, bucketstr.c_str(), w, h);
 	if (w > longestW)
 	{
 		longestW = w;
@@ -416,19 +416,19 @@ void CCritHack::Draw()
 		const std::wstring FoundCrits = L"Found Crit Ticks: " + std::to_wstring(CritTicks.size());
 		const std::wstring commandNumber = L"cmdNumber: " + std::to_wstring(G::CurrentUserCmd->command_number);
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, seedText.c_str());
-		I::VGuiSurface->GetTextSize(g_Draw.m_Fonts.at(FONT_INDICATORS).dwFont, seedText.c_str(), w, h);
+		I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_INDICATORS).dwFont, seedText.c_str(), w, h);
 		if (w > longestW)
 		{
 			longestW = w;
 		}
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, FoundCrits.c_str());
-		I::VGuiSurface->GetTextSize(g_Draw.m_Fonts.at(FONT_INDICATORS).dwFont, FoundCrits.c_str(), w, h);
+		I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_INDICATORS).dwFont, FoundCrits.c_str(), w, h);
 		if (w > longestW)
 		{
 			longestW = w;
 		}
 		g_Draw.String(FONT_INDICATORS, x, currentY += 15, { 181, 181, 181, 255 }, ALIGN_CENTERHORIZONTAL, commandNumber.c_str());
-		I::VGuiSurface->GetTextSize(g_Draw.m_Fonts.at(FONT_INDICATORS).dwFont, commandNumber.c_str(), w, h);
+		I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_INDICATORS).dwFont, commandNumber.c_str(), w, h);
 		if (w > longestW)
 		{
 			longestW = w;

@@ -42,8 +42,9 @@ enum EStringAlign {
 };
 
 class CDraw {
-public:
 	std::array<Font_t, FONT_ENUM_SIZE> m_Fonts{};
+
+public:
 	std::unordered_map<uint64, int> m_mapAvatars{};
 
 	void RemakeFonts();
@@ -76,6 +77,8 @@ public:
 	float Linear(float start, float end, float speed);
 	bool Timer();
 	void ClearAvatarCache();
+
+	const Font_t& GetFont(size_t idx) { return m_Fonts[idx]; }
 };
 
 inline CDraw g_Draw;
