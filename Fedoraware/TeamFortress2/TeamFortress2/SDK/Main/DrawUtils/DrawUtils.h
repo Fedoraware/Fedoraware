@@ -49,8 +49,12 @@ public:
 
 	void RemakeFonts();
 	void ReloadFonts();
-	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
-	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
+	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...); // TODO: Remove this
+	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...); // TODO: Remove this
+
+	void String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
+	void String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
+
 	void Line(int x, int y, int x1, int y1, const Color_t& clr);
 	void DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr);
 	void DrawFilledTriangle(const std::array<Vec2, 3>& points, const Color_t& clr);

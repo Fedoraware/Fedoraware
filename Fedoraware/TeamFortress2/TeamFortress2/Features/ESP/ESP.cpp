@@ -132,24 +132,24 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 	CTFPlayerResource* cResource = g_EntityCache.GetPR();
 	if (!cResource) { return; }
 
-	for (const auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
+	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		if (!Player->IsAlive() || Player->IsAGhost())
+		if (!player->IsAlive() || player->IsAGhost())
 		{
 			continue;
 		}
 
 		// distance things
-		const Vec3 vDelta = Player->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const Vec3 vDelta = player->GetAbsOrigin() - pLocal->GetAbsOrigin();
 		const float flDistance = vDelta.Length2D();
-		if (flDistance >= (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value)) { continue; }
-		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) - 256.f, (Player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value), Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
+		if (flDistance >= (player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value)) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, (player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value) - 256.f, (player->GetDormant() ? Vars::ESP::Main::DormantDist.Value : Vars::ESP::Main::NetworkedDist.Value), Vars::ESP::Players::Alpha.Value, 0.f) : Vars::ESP::Players::Alpha.Value);
 
-		if (Player->GetDormant()){
-			Player->m_iHealth() = cResource->GetHealth(Player->GetIndex());
+		if (player->GetDormant()){
+			player->m_iHealth() = cResource->GetHealth(player->GetIndex());
 		}
 
-		int nIndex = Player->GetIndex();
+		int nIndex = player->GetIndex();
 		bool bIsLocal = nIndex == I::EngineClient->GetLocalPlayer();
 
 		if (!bIsLocal)
@@ -159,12 +159,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				case 0: { break; }
 				case 1:
 				{
-					if (Player->IsCloaked()) { continue; }
+					if (player->IsCloaked()) { continue; }
 					break;
 				}
 				case 2:
 				{
-					if (Player->IsCloaked() && Player->GetTeamNum() != pLocal->GetTeamNum()) { continue; }
+					if (player->IsCloaked() && player->GetTeamNum() != pLocal->GetTeamNum()) { continue; }
 					break;
 				}
 			}
@@ -174,12 +174,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				case 0: break;
 				case 1:
 				{
-					if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; }
+					if (player->GetTeamNum() == pLocal->GetTeamNum()) { continue; }
 					break;
 				}
 				case 2:
 				{
-					if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(nIndex)) { continue; }
+					if (player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(nIndex)) { continue; }
 					break;
 				}
 			}
@@ -193,28 +193,30 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 		}
 
-		Color_t drawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+		Color_t drawColor = Utils::GetEntityDrawColor(player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 		// Player lights
 		if (Vars::ESP::Players::Dlights.Value)
 		{
-			CreateDLight(nIndex, drawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.Value);
+			CreateDLight(nIndex, drawColor, player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.Value);
 		}
 
 		int x = 0, y = 0, w = 0, h = 0;
 		Vec3 vTrans[8];
-		if (GetDrawBounds(Player, vTrans, x, y, w, h))
+		if (GetDrawBounds(player, vTrans, x, y, w, h))
 		{
-			int nHealth = Player->GetHealth(), nMaxHealth = Player->GetMaxHealth();
+			int nHealth = player->GetHealth(), nMaxHealth = player->GetMaxHealth();
 			Color_t healthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
-			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME;
+			//size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME;
+			const auto& FONT = g_Draw.GetFont(FONT_ESP);
+			const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
 
-			int nTextX = x + w + 3, nTextOffset = 0, nClassNum = Player->GetClassNum();
+			int nTextX = x + w + 3, nTextOffset = 0, nClassNum = player->GetClassNum();
 
 			if (Vars::ESP::Players::Uber.Value == 2 && nClassNum == CLASS_MEDIC)
 			{
-				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
+				if (const auto& pMedGun = player->GetWeaponFromSlot(SLOT_SECONDARY))
 				{
 					nTextX += 5;
 				}
@@ -225,11 +227,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				const Color_t clrBone = Vars::ESP::Players::Bones.Value == 1 ? Colors::Bones : healthColor;
 
-				DrawBones(Player, { 8, 7, 6, 4 }, clrBone);
-				DrawBones(Player, { 11, 10, 9, 4 }, clrBone);
-				DrawBones(Player, { 0, 4, 1 }, clrBone);
-				DrawBones(Player, { 14, 13, 1 }, clrBone);
-				DrawBones(Player, { 17, 16, 1 }, clrBone);
+				DrawBones(player, { 8, 7, 6, 4 }, clrBone);
+				DrawBones(player, { 11, 10, 9, 4 }, clrBone);
+				DrawBones(player, { 0, 4, 1 }, clrBone);
+				DrawBones(player, { 14, 13, 1 }, clrBone);
+				DrawBones(player, { 17, 16, 1 }, clrBone);
 			}
 
 			// Box ESP (Outlined, Rect, 3D)
@@ -276,7 +278,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
 				}
 
-				if (Utils::W2S(Player->GetAbsOrigin(), vScreen))
+				if (Utils::W2S(player->GetAbsOrigin(), vScreen))
 				{
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, drawColor);
 				}
@@ -287,26 +289,26 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, nHealth > nMaxHealth ? Colors::Overheal : healthColor,
 							  ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
-				nTextOffset += g_Draw.GetFont(FONT).nTall;
+				nTextOffset += FONT.nTall;
 			}
 
 			if (Vars::Debug::DebugInfo.Value)
 			{
 				Vec3 vPlayerVelocity{};
-				Player->EstimateAbsVelocity(vPlayerVelocity);
+				player->EstimateAbsVelocity(vPlayerVelocity);
 				g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, L"SPEED (%.0f)", vPlayerVelocity.Length());
 			}
 
 			// Ubercharge status/bar
 			if (Vars::ESP::Players::Uber.Value && nClassNum == CLASS_MEDIC)
 			{
-				if (const auto& pMedGun = Player->GetWeaponFromSlot(SLOT_SECONDARY))
+				if (const auto& pMedGun = player->GetWeaponFromSlot(SLOT_SECONDARY))
 				{
 					if (Vars::ESP::Players::Uber.Value == 1)
 					{
 						g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::UberColor, ALIGN_DEFAULT, L"%.0f%%",
 									  pMedGun->GetUberCharge() * 100.0f);
-						nTextOffset += g_Draw.GetFont(FONT).nTall;
+						nTextOffset += FONT.nTall;
 					}
 
 					if (Vars::ESP::Players::Uber.Value == 2 && pMedGun->GetUberCharge())
@@ -350,11 +352,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				int middle = x + w / 2;
 				if (Vars::ESP::Players::Name.Value)
 				{
-					int offset = g_Draw.GetFont(FONT_NAME).nTall +g_Draw.GetFont(FONT_NAME).nTall / 4;
+					int offset = FONT_NAME.nTall + FONT_NAME.nTall / 4;
 					if (Vars::ESP::Players::NameBox.Value)
 					{
 						int wideth, heighth;
-						I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_NAME).dwFont,
+						I::VGuiSurface->GetTextSize(FONT_NAME.dwFont,
 													Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = drawColor;
 						LineColor.a = 180;
@@ -380,14 +382,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
 				{
 					g_Draw.String(FONT, middle, y - 28, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, "CHEATER");
-					nTextOffset += g_Draw.GetFont(FONT).nTall;
+					nTextOffset += FONT.nTall;
 				}
 
 				// GUID ESP
 				if (Vars::ESP::Players::GUID.Value)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::White, ALIGN_DEFAULT, "%s", pi.guid);
-					nTextOffset += g_Draw.GetFont(FONT).nTall;
+					nTextOffset += FONT.nTall;
 				}
 			}
 
@@ -397,7 +399,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Players::Class.Value == 1 || Vars::ESP::Players::Class.Value == 3)
 				{
 					int offset = Vars::ESP::Players::Name.Value
-						? g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall * 0.3f
+						? FONT_NAME.nTall + FONT_NAME.nTall * 0.3f
 						: 0;
 
 					if (offset && Vars::ESP::Players::NameBox.Value)
@@ -420,11 +422,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				{
 					g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%ls",
 								  GetPlayerClass(nClassNum));
-					nTextOffset += g_Draw.GetFont(FONT).nTall;
+					nTextOffset += FONT.nTall;
 				}
 			}
 
-			const auto& pWeapon = Player->GetActiveWeapon();
+			const auto& pWeapon = player->GetActiveWeapon();
 			if (pWeapon)
 			{
 				int weaponoffset = 0;
@@ -440,7 +442,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						);
 
 					int iWeaponSlot = pWeapon->GetSlot();
-					int iPlayerClass = Player->GetClassNum();
+					int iPlayerClass = player->GetClassNum();
 
 					const char* szItemName = "";
 
@@ -489,7 +491,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						default: break;
 					}
 
-					void* pCurItemData = CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot(Player, iWeaponSlot, 0);
+					void* pCurItemData = CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot(player, iWeaponSlot, 0);
 					if (pCurItemData)
 					{
 						int offset = 0;
@@ -557,7 +559,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			//Distance ESP
 			if (Vars::ESP::Players::Distance.Value)
 			{
-				const Vec3 vDelta = Player->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const Vec3 vDelta = player->GetAbsOrigin() - pLocal->GetAbsOrigin();
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
@@ -567,9 +569,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			// Player conditions
 			if (Vars::ESP::Players::Cond.Value)
 			{
-				size_t FONT = FONT_ESP_COND;
-				int offset = g_Draw.GetFont(FONT).nTall / 4;
-				std::vector<std::wstring> cond_strings = GetPlayerConds(Player);
+				//size_t FONT = FONT_ESP_COND;
+				const auto& FONT = g_Draw.GetFont(FONT_ESP_COND);
+
+				int offset = FONT.nTall / 4;
+				std::vector<std::wstring> cond_strings = GetPlayerConds(player);
 
 				if (!cond_strings.empty())
 				{
@@ -600,7 +604,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				Color_t HealthColor = flHealth > flMaxHealth ? Colors::Overheal : Utils::GetHealthColor(nHealth, nMaxHealth);
 
-				if (!Player->IsVulnerable())
+				if (!player->IsVulnerable())
 				{
 					clr = { Colors::Invuln, Colors::Invuln };
 				}
@@ -702,7 +706,10 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 
 			const auto nType = static_cast<EBuildingType>(building->GetType());
 
-			size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
+			//size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
+			const auto& FONT = g_Draw.GetFont(FONT_ESP);
+			const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
+			const auto& FONT_COND = g_Draw.GetFont(FONT_ESP_COND);
 
 			const bool bIsMini = building->GetMiniBuilding();
 
@@ -801,12 +808,12 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					}
 				}
 
-				nTextTopOffset += g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall / 4;
+				nTextTopOffset += FONT_NAME.nTall + FONT_NAME.nTall / 4;
 				if (Vars::ESP::Buildings::NameBox.Value)
 				{
 					int wideth, heighth;
 					const int middle = x + w / 2;
-					I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_NAME).dwFont, szName, wideth, heighth);
+					I::VGuiSurface->GetTextSize(FONT_NAME.dwFont, szName, wideth, heighth);
 					Color_t LineColor = drawColor;
 					LineColor.a = 180;
 					//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
@@ -845,7 +852,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					PlayerInfo_t pi;
 					if (I::EngineClient->GetPlayerInfo(pOwner->GetIndex(), &pi))
 					{
-						nTextTopOffset += g_Draw.GetFont(FONT_NAME).nTall + g_Draw.GetFont(FONT_NAME).nTall /
+						nTextTopOffset += FONT_NAME.nTall + FONT_NAME.nTall /
 							4;
 						g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, drawColor, ALIGN_CENTERHORIZONTAL,
 									  L"Built by: %ls", Utils::ConvertUtf8ToWide(pi.name).data());
@@ -859,14 +866,14 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			if (Vars::ESP::Buildings::Health.Value)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, healthColor, ALIGN_DEFAULT, L"%d / %d", nHealth, nMaxHealth);
-				nTextOffset += g_Draw.GetFont(FONT).nTall;
+				nTextOffset += FONT.nTall;
 			}
 
 			if (flConstructed < 100.0f && static_cast<int>(flConstructed) != 0)
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"Building: %0.f%%",
 							  flConstructed);
-				nTextOffset += g_Draw.GetFont(FONT).nTall;
+				nTextOffset += FONT.nTall;
 			}
 
 			// Building level
@@ -874,7 +881,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			{
 				g_Draw.String(FONT, nTextX, y + nTextOffset, drawColor, ALIGN_DEFAULT, L"%d/3",
 							  building->GetLevel());
-				nTextOffset +=g_Draw.GetFont(FONT).nTall;
+				nTextOffset +=FONT.nTall;
 			}
 
 			// Building conditions
@@ -999,7 +1006,8 @@ void CESP::DrawWorld() const
 	}
 
 	Vec3 vScreen = {};
-	constexpr size_t FONT = FONT_ESP_PICKUPS;
+	//constexpr size_t FONT = FONT_ESP_PICKUPS;
+	const auto& FONT = g_Draw.GetFont(FONT_ESP_PICKUPS);
 
 	I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
 
@@ -1198,7 +1206,7 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += g_Draw.GetFont(FONT).nTall + g_Draw.GetFont(FONT).nTall / 4;
+				nTextTopOffset += FONT.nTall + FONT.nTall / 4;
 				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(NPC, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 
@@ -1293,7 +1301,7 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += g_Draw.GetFont(FONT).nTall + g_Draw.GetFont(FONT).nTall / 4;
+				nTextTopOffset += FONT.nTall + FONT.nTall / 4;
 				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(Bombs, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 

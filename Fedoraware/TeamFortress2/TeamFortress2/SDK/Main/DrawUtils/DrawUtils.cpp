@@ -152,6 +152,121 @@ void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, con
 	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
 }
 
+void CDraw::String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...)
+{
+	if (str == nullptr)
+	{
+		return;
+	}
+
+	va_list va_alist;
+	char cbuffer[1024] = {'\0'};
+	wchar_t wstr[1024] = {'\0'};
+
+	va_start(va_alist, str);
+	vsprintf_s(cbuffer, str, va_alist);
+	va_end(va_alist);
+
+	wsprintfW(wstr, L"%hs", cbuffer);
+
+	const auto dwFont = font.dwFont;
+
+	switch (align)
+	{
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w / 2);
+			y -= (h / 2);
+			break;
+		}
+	case ALIGN_CENTERVERTICAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			y -= (h / 2);
+			break;
+		}
+	case ALIGN_CENTERHORIZONTAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w / 2);
+			break;
+		}
+	case ALIGN_REVERSE:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w);
+			break;
+		}
+	}
+
+	I::VGuiSurface->DrawSetTextPos(x, y);
+	I::VGuiSurface->DrawSetTextFont(dwFont);
+	I::VGuiSurface->DrawSetTextColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
+}
+
+void CDraw::String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...)
+{
+	if (str == nullptr)
+	{
+		return;
+	}
+
+	va_list va_alist;
+	wchar_t wstr[1024] = {'\0'};
+
+	va_start(va_alist, str);
+	vswprintf_s(wstr, str, va_alist);
+	va_end(va_alist);
+
+	const auto dwFont = font.dwFont;
+
+	switch (align)
+	{
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w / 2);
+			y -= (h / 2);
+			break;
+		}
+	case ALIGN_CENTERVERTICAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			y -= (h / 2);
+			break;
+		}
+	case ALIGN_CENTERHORIZONTAL:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w / 2);
+			break;
+		}
+	case ALIGN_REVERSE:
+		{
+			int w = 0, h = 0;
+			I::VGuiSurface->GetTextSize(dwFont, wstr, w, h);
+			x -= (w);
+			break;
+		}
+	}
+
+	I::VGuiSurface->DrawSetTextPos(x, y);
+	I::VGuiSurface->DrawSetTextFont(dwFont);
+	I::VGuiSurface->DrawSetTextColor(clr.r, clr.g, clr.b, clr.a);
+	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
+}
+
 void CDraw::Line(int x, int y, int x1, int y1, const Color_t& clr)
 {
 	I::VGuiSurface->DrawSetColor(clr.r, clr.g, clr.b, clr.a);
