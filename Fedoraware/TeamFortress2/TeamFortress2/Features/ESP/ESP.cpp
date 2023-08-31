@@ -590,7 +590,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
  
                                               const wchar_t* friendLabel = L"FRIEND";
                                               g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
-                                              nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
+                                              nTextOffset += g_Draw.GetFont(FONT).nTall;
                                           }
 
 
