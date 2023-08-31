@@ -2,8 +2,8 @@
 
 #include <ranges>
 
-#include "../../Features/Vars.h"
-#include "../../../SDK/Includes/icons.h"
+#include "../../../Features/Vars.h"
+#include "../../Includes/icons.h"
 
 void ScreenSize_t::Update()
 {
