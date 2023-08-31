@@ -580,18 +580,16 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 			}
-			                   if (g_EntityCache.IsFriend(nIndex))
-                                         {
- 
-
-	                                      const size_t FONT = FONT_ESP_COND;
-                                              const int offset = g_Draw.m_vecFonts[FONT].nTall / 4;
-                                              const std::vector<std::wstring> condStrings = GetPlayerConds(Player); 
- 
-                                              const wchar_t* friendLabel = L"FRIEND";
-                                              g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
-                                              nTextOffset += g_Draw.GetFont(FONT).nTall;
-                                          }
+			if (g_EntityCache.IsFriend(nIndex))
+			{
+				const size_t FONT = FONT_ESP_COND;
+				const int offset = g_Draw.GetFont[FONT].nTall / 4;
+				const std::vector<std::wstring> condStrings = GetPlayerConds(Player); 
+				
+				const wchar_t* friendLabel = L"FRIEND";
+				g_Draw.String(FONT, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
+				nTextOffset += g_Draw.GetFont(FONT).nTall;
+			}
 
 
 			// Health bar
