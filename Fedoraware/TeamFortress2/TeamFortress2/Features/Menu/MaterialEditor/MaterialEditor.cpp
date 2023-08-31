@@ -3,8 +3,9 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../ImGui/imgui_impl_win32.h"
-#include "../ImGui/imgui_stdlib.h"
+#include <ImGui/imgui_impl_win32.h>
+#include <ImGui/imgui_stdlib.h>
+
 #include "../ConfigManager/ConfigManager.h"
 #include "../../Chams/DMEChams.h"
 

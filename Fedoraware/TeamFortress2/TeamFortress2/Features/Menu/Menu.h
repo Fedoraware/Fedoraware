@@ -1,8 +1,7 @@
 #pragma once
 #include "../Feature.h"
 
-#include "ImGui/imgui_impl_dx9.h"
-#include "ImGui/imgui_color_gradient.h"
+#include <ImGui/imgui_color_gradient.h>
 
 class CMenu
 {

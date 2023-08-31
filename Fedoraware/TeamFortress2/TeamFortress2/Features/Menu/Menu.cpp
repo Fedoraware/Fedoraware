@@ -9,8 +9,10 @@
 #include "../Glow/Glow.h"
 #include "../Killsay/Killsay.h"
 
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_stdlib.h"
+#include <ImGui/imgui_impl_win32.h>
+#include <ImGui/imgui_impl_dx9.h>
+#include <ImGui/imgui_stdlib.h>
+
 #include "Fonts/IconsMaterialDesign.h"
 #include "Playerlist/Playerlist.h"
 #include "MaterialEditor/MaterialEditor.h"

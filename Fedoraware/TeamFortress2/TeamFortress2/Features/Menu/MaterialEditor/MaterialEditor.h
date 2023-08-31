@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Feature.h"
-#include "../ImGui/TextEditor.h"
+#include <ImGui/TextEditor.h>
 
 struct CustomMaterial
 {

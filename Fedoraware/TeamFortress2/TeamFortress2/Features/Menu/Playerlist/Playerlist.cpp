@@ -3,8 +3,9 @@
 #include "../../Resolver/Resolver.h"
 #include "../../Menu/Menu.h"
 #include "../ConfigManager/ConfigManager.h"
-#include "../ImGui/imgui_color_gradient.h"
-#include "../ImGui/imgui_internal.h"
+
+#include <ImGui/imgui_color_gradient.h>
+#include <ImGui/imgui_internal.h>
 
 #include <mutex>
 #include <ranges>
