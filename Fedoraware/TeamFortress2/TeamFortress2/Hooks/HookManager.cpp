@@ -1,7 +1,9 @@
 #include "HookManager.h"
+
+#include <ranges>
+
 #include "Hooks.h"
 #include "../SDK/SDK.h"
-#include "../SDK/Includes/proxyfnhook.h"
 #include "MenuHook/MenuHook.h"
 
 inline uintptr_t GetVFuncPtr(void* pBaseClass, unsigned int nIndex)
@@ -18,8 +20,8 @@ CHook::CHook(const std::string& name, void* pInitFunction)
 
 void CHookManager::Release()
 {
-	MH_Uninitialize();
-	SetWindowLongPtr(WndProc::hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(WndProc::Original));
+	assert(MH_Uninitialize() == MH_OK);
+	WndProc::Unload();
 }
 
 void CHookManager::Init()
@@ -32,14 +34,14 @@ void CHookManager::Init()
 	MH_Initialize();
 	{
 		WndProc::Init();
-		for (const auto& hook : GetMapHooks())
+		for (const auto& hook : GetMapHooks() | std::views::values)
 		{
-			hook.second->Init();
+			hook->Init();
 		}
 	}
 
-	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
+	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
 	{
-		MessageBoxW(0, L"MH failed to enable all hooks!", L"ERROR!", MB_ICONERROR);
+		MessageBoxW(nullptr, L"MH failed to enable all hooks!", L"ERROR!", MB_ICONERROR);
 	}
 }

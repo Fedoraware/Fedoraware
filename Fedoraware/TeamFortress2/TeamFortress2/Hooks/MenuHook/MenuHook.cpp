@@ -55,3 +55,8 @@ void WndProc::Init()
 
 	Original = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(Func)));
 }
+
+void WndProc::Unload()
+{
+	SetWindowLongPtr(hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(Original));
+}
