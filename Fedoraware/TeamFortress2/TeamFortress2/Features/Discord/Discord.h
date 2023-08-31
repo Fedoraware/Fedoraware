@@ -3,6 +3,8 @@
 
 class CDiscordRPC
 {
+	bool m_IsActive = false;
+
 public:
 	void Init();
 	void Shutdown();

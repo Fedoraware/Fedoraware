@@ -2,7 +2,7 @@
 
 // Steamworks SDK
 #pragma warning(push, 0)
-#include "../Steam/steam_api.h"
+#include <Steam/steam_api.h>
 #pragma warning(pop)
 
 #include "Classes.h"

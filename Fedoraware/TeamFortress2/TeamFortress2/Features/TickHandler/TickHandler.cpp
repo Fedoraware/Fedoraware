@@ -193,9 +193,11 @@ void CTickshiftHandler::Reset()
 void CTickshiftHandler::DrawDebug()
 {
 	int yoffset = 50, xoffset = 960;
-	g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "TickShift Handler (DEBUG)");
-	g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Predicted Storage = %d", iPredicted);
-	g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Reported Storage = %d", iAvailableTicks);
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+
+	g_Draw.String(menuFont, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "TickShift Handler (DEBUG)");
+	g_Draw.String(menuFont, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Predicted Storage = %d", iPredicted);
+	g_Draw.String(menuFont, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Reported Storage = %d", iAvailableTicks);
 	const int iDelta = fabs(iPredicted - iAvailableTicks);
-	g_Draw.String(FONT_MENU, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Delta Storages = %d", iDelta);
+	g_Draw.String(menuFont, xoffset, yoffset += 15, { 255, 255, 225, 255 }, ALIGN_CENTER, "Delta Storages = %d", iDelta);
 }

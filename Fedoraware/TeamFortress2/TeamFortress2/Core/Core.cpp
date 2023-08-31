@@ -3,23 +3,18 @@
 #include "../Hooks/HookManager.h"
 #include "../Hooks/PatchManager/PatchManager.h"
 
-#include "../Features/NetVarHooks/NetVarHk.h"
+#include "../Features/NetVarHooks/NetVarHooks.h"
 #include "../Features/Visuals/Visuals.h"
-#include "../Features/Misc/Misc.h"
 #include "../Features/Vars.h"
 #include "../Features/TickHandler/TickHandler.h"
 
 #include "../Features/Menu/Menu.h"
-
 #include "../Features/Menu/ConfigManager/ConfigManager.h"
 #include "../Features/Menu/../AttributeChanger/AttributeChanger.h"
 #include "../Features/Commands/Commands.h"
-
-#include "../SDK/Includes/Enums.h"
-#include "../Utils/Events/Events.h"
-
-#include "../SDK/Discord/include/discord_rpc.h"
 #include "../Features/Discord/Discord.h"
+
+#include "../Utils/Events/Events.h"
 #include "../Utils/Minidump/Minidump.h"
 
 void LoadDefaultConfig()

@@ -2,8 +2,8 @@
 
 #include <ranges>
 
-#include "../../Features/Vars.h"
-#include "../../../SDK/Includes/icons.h"
+#include "../../../Features/Vars.h"
+#include "../../Includes/icons.h"
 
 void ScreenSize_t::Update()
 {
@@ -35,7 +35,7 @@ void CDraw::ReloadFonts()
 	}
 }
 
-void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...)
+void CDraw::String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...)
 {
 	if (str == nullptr)
 	{
@@ -52,7 +52,6 @@ void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, con
 
 	wsprintfW(wstr, L"%hs", cbuffer);
 
-	const auto& font = m_Fonts.at(font_idx);
 	const auto dwFont = font.dwFont;
 
 	switch (align)
@@ -95,7 +94,7 @@ void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, con
 	I::VGuiSurface->DrawPrintText(wstr, wcslen(wstr));
 }
 
-void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...)
+void CDraw::String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...)
 {
 	if (str == nullptr)
 	{
@@ -109,7 +108,6 @@ void CDraw::String(const size_t& font_idx, int x, int y, const Color_t& clr, con
 	vswprintf_s(wstr, str, va_alist);
 	va_end(va_alist);
 
-	const auto& font = m_Fonts.at(font_idx);
 	const auto dwFont = font.dwFont;
 
 	switch (align)

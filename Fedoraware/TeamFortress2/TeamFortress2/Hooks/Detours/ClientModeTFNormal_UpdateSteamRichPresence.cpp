@@ -1,6 +1,5 @@
 #include "../Hooks.h"
 
-#include "../../SDK/Discord/include/discord_rpc.h"
 #include "../../Features/Discord/Discord.h"
 #include "../../Features/Misc/Misc.h"
 

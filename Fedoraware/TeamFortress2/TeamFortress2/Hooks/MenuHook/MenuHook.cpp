@@ -1,4 +1,6 @@
 #include "MenuHook.h"
+#include <ImGui/imgui_impl_dx9.h>
+
 #include "../../Features/Menu/Menu.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -52,4 +54,9 @@ void WndProc::Init()
 	}
 
 	Original = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(Func)));
+}
+
+void WndProc::Unload()
+{
+	SetWindowLongPtr(hwWindow, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(Original));
 }

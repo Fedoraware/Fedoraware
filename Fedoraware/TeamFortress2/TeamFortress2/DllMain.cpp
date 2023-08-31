@@ -49,6 +49,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Core.Unload();
 
+#ifndef _DEBUG
+	SetUnhandledExceptionFilter(nullptr);
+#endif
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 }
 

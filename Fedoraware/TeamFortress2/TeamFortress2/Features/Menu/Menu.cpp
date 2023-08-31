@@ -9,8 +9,10 @@
 #include "../Glow/Glow.h"
 #include "../Killsay/Killsay.h"
 
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_stdlib.h"
+#include <ImGui/imgui_impl_win32.h>
+#include <ImGui/imgui_impl_dx9.h>
+#include <ImGui/imgui_stdlib.h>
+
 #include "Fonts/IconsMaterialDesign.h"
 #include "Playerlist/Playerlist.h"
 #include "MaterialEditor/MaterialEditor.h"
@@ -20,6 +22,8 @@
 #include "ConfigManager/ConfigManager.h"
 
 #include <mutex>
+
+#include "../Discord/Discord.h"
 
 #pragma warning (disable : 4309)
 
@@ -2260,6 +2264,7 @@ void CMenu::DebugMenu()
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 200));
 
+	ImGui::SetNextWindowSize({ 400.f, 0.f });
 	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
 		const auto& pLocal = g_EntityCache.GetLocal();
@@ -2270,6 +2275,11 @@ void CMenu::DebugMenu()
 
 		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
 		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
+
+		if (Button("Update Discord RPC"))
+		{
+			F::DiscordRPC.Update();
+		}
 
 		// Particle tester
 		if (CollapsingHeader("Particles"))

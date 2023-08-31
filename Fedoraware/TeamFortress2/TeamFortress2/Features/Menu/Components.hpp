@@ -1,5 +1,6 @@
 #pragma once
-#include "ImGui/imgui_internal.h"
+#include <ranges>
+#include <ImGui/imgui_internal.h>
 
 inline std::bitset<255> VALID_KEYS;
 
@@ -12,7 +13,7 @@ namespace ImGui
 	}
 
 	/* ImVec4 to Color_t */
-	inline Color_t VecToColor(ImVec4 color)
+	inline Color_t VecToColor(const ImVec4& color)
 	{
 		return {
 			static_cast<byte>(color.x * 256.0f > 255 ? 255 : color.x * 256.0f),
@@ -28,7 +29,7 @@ namespace ImGui
 		{
 			if (Vars::Menu::ModernDesign)
 			{
-				SetTooltip(desc);
+				SetTooltip("%s", desc);
 			}
 			else
 			{
@@ -111,7 +112,7 @@ namespace ImGui
 			VALID_KEYS[VK_BACK] = true;
 		});
 
-		auto VK2STR = [&](const short key) -> const char*
+		auto VK2STR = [&](const int key) -> const char*
 		{
 			switch (key)
 			{
@@ -249,7 +250,7 @@ namespace ImGui
 		PushItemWidth(F::Menu.ItemWidth);
 		if (BeginCombo(label, current_mat->c_str(), flags))
 		{
-			for (const auto& [name, mat] : F::MaterialEditor.MaterialMap)
+			for (const auto& name : F::MaterialEditor.MaterialMap | std::views::keys)
 			{
 				if (Selectable(name.c_str(), name == *current_mat))
 				{
@@ -266,7 +267,7 @@ namespace ImGui
 	}
 
 	/* Combobox with multiple selectable items */
-	__inline void MultiCombo(std::vector<const char*> titles, std::vector<bool*> options,
+	__inline void MultiCombo(std::vector<const char*> titles, const std::vector<bool*>& options,
 							 const std::string& comboName)
 	{
 		if (titles.size() != options.size()) { return; }
@@ -296,7 +297,7 @@ namespace ImGui
 		PopItemWidth();
 	}
 
-	__inline void MultiFlags(std::vector<const char*> flagNames, std::vector<int> flagValues, int* flagVar, const std::string& comboName)
+	__inline void MultiFlags(std::vector<const char*> flagNames, const std::vector<int>& flagValues, int* flagVar, const std::string& comboName)
 	{
 		if (flagNames.size() != flagValues.size()) { return; }
 
@@ -392,7 +393,7 @@ namespace ImGui
 
 		float t = *v ? 1.0f : 0.0f;
 
-		ImGuiContext& g = *GImGui;
+		const ImGuiContext& g = *GImGui;
 		constexpr float ANIM_SPEED = 0.08f;
 		if (g.LastActiveId == g.CurrentWindow->GetID(label))
 		{

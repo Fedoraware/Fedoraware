@@ -1,8 +1,8 @@
 #pragma once
-
-#include "../Utils/MinHook/MinHook.h"
-#include "../SDK/SDK.h"
+#include <MinHook/MinHook.h>
 #include <stdexcept>
+
+#include "../SDK/SDK.h"
 
 //Credits go entirely to spook953
 

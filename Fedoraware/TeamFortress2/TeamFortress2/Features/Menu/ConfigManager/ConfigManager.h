@@ -7,19 +7,19 @@
 class CConfigManager
 {
 	void SaveJson(const char* name, bool val);
-	void SaveJson(const char* name, const std::string& val);
 	void SaveJson(const char* name, int val);
 	void SaveJson(const char* name, float val);
-	void SaveJson(const char* name, Color_t val);
-	void SaveJson(const char* name, Gradient_t val);
+	void SaveJson(const char* name, const std::string& val);
+	void SaveJson(const char* name, const Color_t& val);
+	void SaveJson(const char* name, const Gradient_t& val);
 	void SaveJson(const char* name, const Vec3& val);
 	void SaveJson(const char* name, const Chams_t& val);
 	void SaveJson(const char* name, const DragBox_t& val);
 
-	void LoadJson(const char* name, std::string& val);
 	void LoadJson(const char* name, bool& val);
 	void LoadJson(const char* name, int& val);
 	void LoadJson(const char* name, float& val);
+	void LoadJson(const char* name, std::string& val);
 	void LoadJson(const char* name, Color_t& val);
 	void LoadJson(const char* name, Gradient_t& val);
 	void LoadJson(const char* name, Vec3& val);

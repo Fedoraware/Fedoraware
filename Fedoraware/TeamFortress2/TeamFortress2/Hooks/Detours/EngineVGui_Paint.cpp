@@ -117,13 +117,14 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 
 					if (F::Menu.IsOpen)
 					{
-						g_Draw.String(FONT_MENU, 5, g_ScreenSize.h - 2  - Vars::Fonts::FONT_MENU::nTall.Value, { 200, 200, 200, 255 }, ALIGN_DEFAULT, L"Build of %hs", __DATE__ " " __TIME__);
+						const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+						g_Draw.String(menuFont, 5, g_ScreenSize.h - 2  - Vars::Fonts::FONT_MENU::nTall.Value, { 200, 200, 200, 255 }, ALIGN_DEFAULT, L"Build of %hs", __DATE__ " " __TIME__);
 						F::Visuals.DrawDVD();
 						if (Vars::Menu::MenuCelebration.Value)
 						{
 							if (curCalTime->tm_mon == 11 && curCalTime->tm_mday == 25) //this *probably* works
 							{
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, 150, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, "MERRY CHRISTMAS!!!!!!!");
+								g_Draw.String(menuFont, g_ScreenSize.c, 150, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, "MERRY CHRISTMAS!!!!!!!");
 							}
 						}
 					}
