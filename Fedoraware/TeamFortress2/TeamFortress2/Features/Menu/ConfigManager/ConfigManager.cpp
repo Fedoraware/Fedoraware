@@ -20,7 +20,7 @@
 boost::property_tree::ptree WriteTree;
 boost::property_tree::ptree ReadTree;
 
-boost::property_tree::ptree ColorToTree(Color_t color)
+boost::property_tree::ptree ColorToTree(const Color_t& color)
 {
 	boost::property_tree::ptree colorTree;
 	colorTree.put("r", color.r);
@@ -31,15 +31,12 @@ boost::property_tree::ptree ColorToTree(Color_t color)
 	return colorTree;
 }
 
-Color_t TreeToColor(const boost::property_tree::ptree& tree)
+void TreeToColor(const boost::property_tree::ptree& tree, Color_t& out)
 {
-	Color_t treeColor;
-	if (auto getValue = tree.get_optional<byte>("r")) { treeColor.r = *getValue; }
-	if (auto getValue = tree.get_optional<byte>("g")) { treeColor.g = *getValue; }
-	if (auto getValue = tree.get_optional<byte>("b")) { treeColor.b = *getValue; }
-	if (auto getValue = tree.get_optional<byte>("a")) { treeColor.a = *getValue; }
-
-	return treeColor;
+	if (auto v = tree.get_optional<byte>("r")) { out.r = *v; }
+	if (auto v = tree.get_optional<byte>("g")) { out.g = *v; }
+	if (auto v = tree.get_optional<byte>("b")) { out.b = *v; }
+	if (auto v = tree.get_optional<byte>("a")) { out.a = *v; }
 }
 
 boost::property_tree::ptree VecToTree(const Vec3& vec)
@@ -52,22 +49,14 @@ boost::property_tree::ptree VecToTree(const Vec3& vec)
 	return vecTree;
 }
 
-Vec3 TreeToVec(const boost::property_tree::ptree& tree)
+void TreeToVec(const boost::property_tree::ptree& tree, Vec3& out)
 {
-	Vec3 treeVec;
-	if (auto getValue = tree.get_optional<float>("x")) { treeVec.x = *getValue; }
-	if (auto getValue = tree.get_optional<float>("y")) { treeVec.y = *getValue; }
-	if (auto getValue = tree.get_optional<float>("z")) { treeVec.z = *getValue; }
-
-	return treeVec;
+	if (auto v = tree.get_optional<float>("x")) { out.x = *v; }
+	if (auto v = tree.get_optional<float>("y")) { out.y = *v; }
+	if (auto v = tree.get_optional<float>("z")) { out.z = *v; }
 }
 
 void CConfigManager::SaveJson(const char* name, bool val)
-{
-	WriteTree.put(name, val);
-}
-
-void CConfigManager::SaveJson(const char* name, const std::string& val)
 {
 	WriteTree.put(name, val);
 }
@@ -82,12 +71,17 @@ void CConfigManager::SaveJson(const char* name, float val)
 	WriteTree.put(name, val);
 }
 
-void CConfigManager::SaveJson(const char* name, Color_t val)
+void CConfigManager::SaveJson(const char* name, const std::string& val)
+{
+	WriteTree.put(name, val);
+}
+
+void CConfigManager::SaveJson(const char* name, const Color_t& val)
 {
 	WriteTree.put_child(name, ColorToTree(val));
 }
 
-void CConfigManager::SaveJson(const char* name, Gradient_t val)
+void CConfigManager::SaveJson(const char* name, const Gradient_t& val)
 {
 	boost::property_tree::ptree gradientTree;
 	gradientTree.put_child("startColour", ColorToTree(val.startColour));
@@ -132,14 +126,6 @@ void CConfigManager::SaveJson(const char* name, const DragBox_t& val)
 	WriteTree.put_child(name, dragBoxTree);
 }
 
-void CConfigManager::LoadJson(const char* name, std::string& val)
-{
-	if (auto getValue = ReadTree.get_optional<std::string>(name))
-	{
-		val = *getValue;
-	}
-}
-
 void CConfigManager::LoadJson(const char* name, bool& val)
 {
 	if (auto getValue = ReadTree.get_optional<bool>(name))
@@ -164,11 +150,19 @@ void CConfigManager::LoadJson(const char* name, float& val)
 	}
 }
 
+void CConfigManager::LoadJson(const char* name, std::string& val)
+{
+	if (auto getValue = ReadTree.get_optional<std::string>(name))
+	{
+		val = *getValue;
+	}
+}
+
 void CConfigManager::LoadJson(const char* name, Color_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
-		val = TreeToColor(*getChild);
+		TreeToColor(*getChild, val);
 	}
 }
 
@@ -176,13 +170,13 @@ void CConfigManager::LoadJson(const char* name, Gradient_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
-		if (const auto getStartColor = (*getChild).get_child_optional("startColour"))
+		if (const auto getStartColor = getChild->get_child_optional("startColour"))
 		{
-			val.startColour = TreeToColor(*getStartColor);
+			TreeToColor(*getStartColor, val.startColour);
 		}
-		if (const auto endColor = (*getChild).get_child_optional("endColour"))
+		if (const auto endColor = getChild->get_child_optional("endColour"))
 		{
-			val.endColour = TreeToColor(*endColor);
+			TreeToColor(*endColor, val.endColour);
 		}
 	}
 }
@@ -191,7 +185,7 @@ void CConfigManager::LoadJson(const char* name, Vec3& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
-		val = TreeToVec(*getChild);
+		TreeToVec(*getChild, val);
 	}
 }
 
@@ -199,18 +193,18 @@ void CConfigManager::LoadJson(const char* name, Chams_t& val)
 {
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
-		if (auto getValue = (*getChild).get_optional<bool>("showObstructed")) { val.showObstructed = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("drawMaterial")) { val.drawMaterial = *getValue; }
-		if (auto getValue = (*getChild).get_optional<int>("overlayType")) { val.overlayType = *getValue; }
-		if (auto getValue = (*getChild).get_optional<bool>("chamsActive")) { val.chamsActive = *getValue; }
-		if (auto getValue = (*getChild).get_optional<bool>("rainbow")) { val.rainbow = *getValue; }
-		if (auto getValue = (*getChild).get_optional<bool>("overlayRainbow")) { val.overlayRainbow = *getValue; }
-		if (auto getValue = (*getChild).get_optional<bool>("overlayPulse")) { val.overlayPulse = *getValue; }
-		if (auto getValue = (*getChild).get_optional<float>("overlayIntensity")) { val.overlayIntensity = *getValue; }
-		if (const auto getChildColor = (*getChild).get_child_optional("fresnelBase")) { val.fresnelBase = TreeToColor(*getChildColor); }
-		if (const auto getChildColor = (*getChild).get_child_optional("colour")) { val.colour = TreeToColor(*getChildColor); }
-		if (const auto getChildColor = (*getChild).get_child_optional("overlayColour")) { val.overlayColour = TreeToColor(*getChildColor); }
-		if (auto getValue = (*getChild).get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
+		if (auto getValue = getChild->get_optional<bool>("showObstructed")) { val.showObstructed = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("drawMaterial")) { val.drawMaterial = *getValue; }
+		if (auto getValue = getChild->get_optional<int>("overlayType")) { val.overlayType = *getValue; }
+		if (auto getValue = getChild->get_optional<bool>("chamsActive")) { val.chamsActive = *getValue; }
+		if (auto getValue = getChild->get_optional<bool>("rainbow")) { val.rainbow = *getValue; }
+		if (auto getValue = getChild->get_optional<bool>("overlayRainbow")) { val.overlayRainbow = *getValue; }
+		if (auto getValue = getChild->get_optional<bool>("overlayPulse")) { val.overlayPulse = *getValue; }
+		if (auto getValue = getChild->get_optional<float>("overlayIntensity")) { val.overlayIntensity = *getValue; }
+		if (const auto getChildColor = getChild->get_child_optional("fresnelBase")) { TreeToColor(*getChildColor, val.fresnelBase); }
+		if (const auto getChildColor = getChild->get_child_optional("colour")) { TreeToColor(*getChildColor, val.colour); }
+		if (const auto getChildColor = getChild->get_child_optional("overlayColour")) { TreeToColor(*getChildColor, val.overlayColour); }
+		if (auto getValue = getChild->get_optional<std::string>("customMaterial")) { val.customMaterial = *getValue; }
 	}
 }
 
@@ -630,7 +624,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 		//Others
 		{
-
 			SAVE_OTHER(Vars::Menu::ModernDesign);
 			SAVE_OTHER(Vars::Menu::ShowPlayerlist);
 			SAVE_OTHER(Vars::Menu::ShowKeybinds);
@@ -664,7 +657,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		// Menu
 		{
-
 			LOAD_VAR(Vars::Menu::MenuKey);
 		}
 
@@ -685,7 +677,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Global::AimBombs);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreOptions);
 				LOAD_VAR(Vars::Aimbot::Global::TickTolerance);
-                                LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
+				LOAD_VAR(Vars::Aimbot::Global::BAimLethal);
 				LOAD_VAR(Vars::Aimbot::Global::showHitboxes);
 				LOAD_VAR(Vars::Aimbot::Global::ClearPreviousHitbox);
 				LOAD_VAR(Vars::Aimbot::Global::HitboxLifetime);
@@ -697,7 +689,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Backtrack::Enabled);
 				LOAD_VAR(Vars::Backtrack::UnchokePrediction);
 				LOAD_VAR(Vars::Backtrack::Latency);
-
 			}
 
 			{
@@ -1027,12 +1018,10 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 		//Others
 		{
-
 			LOAD_OTHER(Vars::Menu::ModernDesign);
 			LOAD_OTHER(Vars::Menu::ShowPlayerlist);
 			LOAD_OTHER(Vars::Menu::ShowKeybinds);
 		}
-
 
 
 		CurrentConfig = configName;
@@ -1051,7 +1040,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 	try
 	{
 		WriteTree.clear();
-		
+
 		SAVE_OTHER(Vars::Menu::CheatName);
 		SAVE_OTHER(Vars::Menu::CheatPrefix);
 		SAVE_VAR(Vars::Menu::Vignette);
@@ -1457,7 +1446,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::ESP::Main::DormantTime);
 		LOAD_VAR(Vars::ESP::Main::DormantDist);
 		LOAD_VAR(Vars::ESP::Main::NetworkedDist);
-			
+
 
 		LOAD_VAR(Vars::ESP::Players::Active);
 		LOAD_VAR(Vars::ESP::Players::ShowLocal);
@@ -1628,7 +1617,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::ToolTips);
 
 		LOAD_VAR(Vars::Visuals::ThirdPerson);
-		
+
 		LOAD_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 		LOAD_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 		LOAD_VAR(Vars::Visuals::ThirdPersonServerHitbox);
@@ -1636,8 +1625,8 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::ThirdpersonDist);
 		LOAD_VAR(Vars::Visuals::ThirdpersonRight);
 		LOAD_VAR(Vars::Visuals::ThirdpersonUp);
-		
-		
+
+
 		LOAD_VAR(Vars::Visuals::ThirdpersonCrosshair);
 
 		LOAD_VAR(Vars::Visuals::WorldModulation);
@@ -1716,7 +1705,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Visuals::Fog::FogEndSkybox);
 		LOAD_OTHER(Vars::Visuals::Fog::FogColor);
 		LOAD_OTHER(Vars::Visuals::Fog::FogColorSkybox);
-		
+
 		LOAD_OTHER(Vars::Menu::Colors::MenuAccent);
 
 		LOAD_OTHER(Colors::OutlineESP);
@@ -1813,7 +1802,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nTall);
 		LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nWeight);
 		LOAD_VAR(Vars::Fonts::FONT_INDICATORS::nFlags);
-		
+
 		g_Draw.RemakeFonts();
 
 		CurrentVisuals = configName;
@@ -1832,5 +1821,5 @@ void CConfigManager::RemoveConfig(const std::string& configName)
 
 void CConfigManager::RemoveVisual(const std::string& configName)
 {
-	std::filesystem::remove(ConfigPath + "\\Visuals\\" + configName + ConfigExtension);
+	std::filesystem::remove(VisualsPath + "\\" + configName + ConfigExtension);
 }
