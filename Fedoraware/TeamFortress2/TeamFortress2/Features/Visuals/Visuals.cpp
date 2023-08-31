@@ -101,10 +101,11 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
 	const int y = Vars::Visuals::OnScreenPing.y;
 	const int h = Vars::Visuals::OnScreenPing.h;
 
-	const int nTextOffset = g_Draw.GetFont(FONT_MENU).nTall;
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+	const int nTextOffset = menuFont.nTall;
 	{
-		g_Draw.String(FONT_MENU, x, y, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
-		g_Draw.String(FONT_MENU, x, y + h - nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping scoreboard : %d", flLatencyScoreBoard);
+		g_Draw.String(menuFont, x, y, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
+		g_Draw.String(menuFont, x, y + h - nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping scoreboard : %d", flLatencyScoreBoard);
 	}
 }
 
@@ -320,8 +321,9 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 
 void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = {255, 255, 255, 255})
 {
-	g_Draw.String(FONT_MENU, offsets.first, offsets.second += 15, clr, ALIGN_DEFAULT, title);
-	g_Draw.String(FONT_MENU, offsets.first + 125, offsets.second, clr, ALIGN_DEFAULT, value);
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+	g_Draw.String(menuFont, offsets.first, offsets.second += 15, clr, ALIGN_DEFAULT, title);
+	g_Draw.String(menuFont, offsets.first + 125, offsets.second, clr, ALIGN_DEFAULT, value);
 }
 
 void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
@@ -330,26 +332,28 @@ void CVisuals::DrawDebugInfo(CBaseEntity* pLocal)
 	if (Vars::Debug::DebugInfo.Value)
 	{
 		int yoffset = 10, xoffset = 10;
+		const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+		const auto& indFont = g_Draw.GetFont(FONT_INDICATORS);
 
 		{
-			g_Draw.String(FONT_INDICATORS, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware");
+			g_Draw.String(indFont, xoffset, yoffset += 15, Utils::Rainbow(), ALIGN_DEFAULT, "Fedoraware");
 		}
 		{
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, {119, 255, 225, 255}, ALIGN_DEFAULT, "Local Player"); // header
+			g_Draw.String(menuFont, xoffset, yoffset += 15, {119, 255, 225, 255}, ALIGN_DEFAULT, "Local Player"); // header
 		}
 		// alive
 		{
 			const bool alive = pLocal->IsAlive();
 			Color_t clr = alive ? Color_t{153, 232, 0, 255} : Color_t{167, 0, 0, 255};
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
+			g_Draw.String(menuFont, xoffset, yoffset += 15, clr, ALIGN_DEFAULT, "%s", alive ? "ALIVE" : "DEAD");
 		}
 
 		if (!G::LastUserCmd) { return; }
 		const float flLastFwd = G::LastUserCmd->forwardmove;
 		const float flLastSde = G::LastUserCmd->sidemove;
 		{
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, {255, 255, 255, 255}, ALIGN_DEFAULT, "%.0f", flLastFwd);
-			g_Draw.String(FONT_MENU, xoffset, yoffset += 15, {255, 255, 255, 255}, ALIGN_DEFAULT, "%.0f", flLastSde);
+			g_Draw.String(menuFont, xoffset, yoffset += 15, {255, 255, 255, 255}, ALIGN_DEFAULT, "%.0f", flLastFwd);
+			g_Draw.String(menuFont, xoffset, yoffset += 15, {255, 255, 255, 255}, ALIGN_DEFAULT, "%.0f", flLastSde);
 		}
 	}
 }
@@ -548,6 +552,7 @@ void CVisuals::DrawMenuSnow()
 		bInit = true;
 	}
 
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
 	for (auto& flake : vSnowFlakes)
 	{
 		//	do gravity
@@ -566,7 +571,7 @@ void CVisuals::DrawMenuSnow()
 		} //
 
 		Color_t flakeColour = {255, 255, 255, static_cast<byte>(alpha * 255.0f)};
-		g_Draw.String(FONT_MENU, flake.X, flake.Y, flakeColour, ALIGN_DEFAULT, "*");
+		g_Draw.String(menuFont, flake.X, flake.Y, flakeColour, ALIGN_DEFAULT, "*");
 	}
 }
 
@@ -1077,6 +1082,7 @@ void CVisuals::PickupTimers()
 {
 	if (!Vars::Visuals::PickupTimers.Value) { return; }
 
+	const auto& pickupFont = g_Draw.GetFont(FONT_ESP_PICKUPS);
 	for (auto pickupData = PickupDatas.begin(); pickupData != PickupDatas.end();)
 	{
 		const float timeDiff = I::EngineClient->Time() - pickupData->Time;
@@ -1092,7 +1098,7 @@ void CVisuals::PickupTimers()
 		Vec3 vScreen;
 		if (Utils::W2S(pickupData->Location, vScreen))
 		{
-			g_Draw.String(FONT_ESP_PICKUPS, vScreen.x, vScreen.y, color, ALIGN_CENTER, timerText.c_str());
+			g_Draw.String(pickupFont, vScreen.x, vScreen.y, color, ALIGN_CENTER, timerText.c_str());
 		}
 
 		++pickupData;

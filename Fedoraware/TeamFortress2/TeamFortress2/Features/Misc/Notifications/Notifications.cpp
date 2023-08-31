@@ -29,6 +29,7 @@ void CNotifications::Think()
 		return;
 	}
 
+	const auto& font = g_Draw.GetFont(FONT_INDICATORS);
 	for (size_t i{}; i < NotificationTexts.size(); ++i)
 	{
 		const auto notify = NotificationTexts[i];
@@ -72,7 +73,7 @@ void CNotifications::Think()
 							 {
 								 Colors::NotifBG.r, Colors::NotifBG.g, Colors::NotifBG.b, 1
 							 }, true);
-		g_Draw.String(FONT_INDICATORS, x + 6, y + 2,
+		g_Draw.String(font, x + 6, y + 2,
 					  { Colors::NotifText.r, Colors::NotifText.g, Colors::NotifText.b, color.a },
 					  ALIGN_DEFAULT, notify->Text.c_str());
 

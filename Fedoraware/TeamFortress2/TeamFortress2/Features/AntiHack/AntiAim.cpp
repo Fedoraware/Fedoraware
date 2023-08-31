@@ -334,6 +334,7 @@ void CAntiAim::Draw(CBaseEntity* pLocal)
 	if (!pLocal->IsAlive() || !bManualing) { return; }
 	if (Vars::AntiHack::AntiAim::YawFake.Value != 14 && Vars::AntiHack::AntiAim::YawReal.Value != 14) { return; }
 
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
 	const char* cText = p_p_bManualYaw.first ? (p_p_bManualYaw.second.second ? "BACKWARDS" : "FORWARDS") : (p_p_bManualYaw.second.first ? "LEFT" : "RIGHT");
-	g_Draw.String(FONT_MENU, g_ScreenSize.w / 2, (g_ScreenSize.h / 2) + 25, { 255, 0, 0, 255 }, ALIGN_CENTER, cText);
+	g_Draw.String(menuFont, g_ScreenSize.w / 2, (g_ScreenSize.h / 2) + 25, { 255, 0, 0, 255 }, ALIGN_CENTER, cText);
 }

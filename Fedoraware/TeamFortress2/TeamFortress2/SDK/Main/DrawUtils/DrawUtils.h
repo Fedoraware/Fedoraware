@@ -49,7 +49,6 @@ public:
 
 	void RemakeFonts();
 	void ReloadFonts();
-	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...); // TODO: Remove this
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...); // TODO: Remove this
 
 	void String(const Font_t& font, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
