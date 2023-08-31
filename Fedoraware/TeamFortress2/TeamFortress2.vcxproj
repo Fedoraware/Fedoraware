@@ -68,14 +68,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)Include</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath>$(ProjectDir)lib\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(DXSDK_DIR)Lib\x86</LibraryPath>
     <TargetName>Fware($(Configuration))</TargetName>
     <IntDir>build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AVX2|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)Include</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath>$(ProjectDir)lib\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(DXSDK_DIR)Lib\x86</LibraryPath>
     <TargetName>Fware($(Configuration))</TargetName>
     <IntDir>build\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -84,7 +84,7 @@
     <TargetName>Fware($(Configuration))</TargetName>
     <IntDir>build\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <LibraryPath>$(ProjectDir)lib\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -107,6 +107,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>discord-rpc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='AVX2|Win32'">
@@ -130,6 +131,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,6 +148,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>discord-rpc-dbg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -303,11 +306,6 @@
     <ClCompile Include="TeamFortress2\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PatchManager\PatchManager.cpp" />
     <ClCompile Include="TeamFortress2\Resources\64x64_Circle_Mask.h" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\connection_win.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_register_win.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\discord_rpc.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\rpc_connection.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Discord\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
@@ -334,6 +332,8 @@
   </ItemGroup>
   <ItemGroup>
     <!-- <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" /> -->
+    <ClInclude Include="include\Discord\discord_register.h" />
+    <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="TeamFortress2\Core\Core.h" />
     <ClInclude Include="TeamFortress2\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="TeamFortress2\Features\Commands\Commands.h" />
@@ -413,49 +413,6 @@
     <ClInclude Include="TeamFortress2\Hooks\RegionSelector\RegionSelector.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\Viewmodel\Viewmodel.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_register.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\include\discord_rpc.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\backoff.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\connection.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\msg_queue.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\allocators.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\cursorstreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\document.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodedstream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\encodings.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\en.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\error\error.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filereadstream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\filewritestream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\fwd.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\biginteger.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\diyfp.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\dtoa.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\ieee754.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\itoa.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\meta.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\pow10.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\regex.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\stack.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strfunc.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\strtod.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\internal\swap.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\istreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorybuffer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\memorystream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\inttypes.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\msinttypes\stdint.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\ostreamwrapper.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\pointer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\prettywriter.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\rapidjson.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\reader.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\schema.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stream.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\stringbuffer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rapidjson\writer.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\rpc_connection.h" />
-    <ClInclude Include="TeamFortress2\SDK\Discord\src\serialization.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Classes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
@@ -602,6 +559,9 @@
     <None Include="cpp.hint" />
     <None Include="packages.config" />
     <None Include="include\Steam\steam_api.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\discord-rpc.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

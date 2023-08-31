@@ -4,7 +4,7 @@
 #include "../../SDK/Main/EntityCache/EntityCache.h"
 #include "../Vars.h"
 
-#include "../../SDK/Discord/include/discord_rpc.h"
+#include <Discord/discord_rpc.h>
 
 const char* APPLICATION_ID = "889495873183154226";
 
