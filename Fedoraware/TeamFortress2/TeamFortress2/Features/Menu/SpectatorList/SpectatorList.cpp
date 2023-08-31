@@ -154,10 +154,11 @@ void CSpectatorList::DrawClassic()
 
 		int nDrawY = (g_ScreenSize.h / 2) - 300;
 		const int centerr = g_ScreenSize.c;
-		const int addyy = g_Draw.GetFont(FONT_ESP_NAME).nTall;
+		const auto& nameFont = g_Draw.GetFont(FONT_ESP_NAME);
+		const int addyy = nameFont.nTall;
 
 		g_Draw.String(
-			FONT_ESP_NAME,
+			nameFont,
 			centerr, nDrawY - addyy,
 			{ 255, 255, 255, 255 },
 			ALIGN_CENTERHORIZONTAL,
@@ -168,10 +169,9 @@ void CSpectatorList::DrawClassic()
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_ESP_NAME).dwFont,
-										(Spectator.Mode + Spectator.Name).c_str(), w, h);
+			I::VGuiSurface->GetTextSize(nameFont.dwFont, (Spectator.Mode + Spectator.Name).c_str(), w, h);
 
-			const int nAddY = g_Draw.GetFont(FONT_ESP_NAME).nTall;
+			const int nAddY = nameFont.nTall;
 			if (Vars::Visuals::SpectatorList.Value == 3)
 			{
 				PlayerInfo_t pi{};
@@ -183,7 +183,7 @@ void CSpectatorList::DrawClassic()
 			}
 
 			g_Draw.String(
-				FONT_ESP_NAME,
+				nameFont,
 				nDrawX, nDrawY,
 				Spectator.IsFriend
 				? Colors::Friend

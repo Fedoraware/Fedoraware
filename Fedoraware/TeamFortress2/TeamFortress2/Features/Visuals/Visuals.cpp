@@ -64,13 +64,14 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 
 	const std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 
-	int nTextOffset = g_Draw.GetFont(FONT_MENU).nTall;
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+	int nTextOffset = menuFont.nTall;
 	//int longestText = 40;
 	int width, height;
 	for (const std::wstring& cond : conditionsVec)
 	{
-		g_Draw.String(FONT_MENU, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
-		I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_MENU).dwFont, cond.data(), width, height);
+		g_Draw.String(menuFont, x, y + nTextOffset, {255, 255, 255, 255}, ALIGN_CENTER, cond.data());
+		I::VGuiSurface->GetTextSize(menuFont.dwFont, cond.data(), width, height);
 		//if (width > longestText)
 		//{
 		//	longestText = width;
@@ -406,6 +407,8 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator;
 				const float ratioCurrent = std::clamp((static_cast<float>(G::ShiftedTicks) / static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value)), 0.0f, 1.0f);
 				static float ratioInterp = 0.00f;
+				const auto& indFont = g_Draw.GetFont(FONT_INDICATORS);
+
 				ratioInterp = g_Draw.EaseIn(ratioInterp, ratioCurrent, 0.95f);
 				Math::Clamp(ratioInterp, 0.00f, 1.00f);
 
@@ -434,7 +437,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					{
 						const auto fontHeight = Vars::Fonts::FONT_INDICATORS::nTall.Value;
 						const int drawX = DTBox.x;
-						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - fontHeight - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks,
+						g_Draw.String(indFont, DTBox.c, DTBox.y - fontHeight - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks,
 						              Vars::Misc::CL_Move::DTTicks.Value);
 						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Colors::DtOutline);
 						if (G::ShiftedTicks && ratioCurrent)
@@ -443,7 +446,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						}
 						if (G::WaitForShift)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y + fontHeight + DTBox.h, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Not Ready");
+							g_Draw.String(indFont, DTBox.c, DTBox.y + fontHeight + DTBox.h, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Not Ready");
 						}
 						break;
 					}
@@ -452,23 +455,23 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline); //	draw the outline
 						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, {28, 29, 38, 255}); //	draw the background
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
-						g_Draw.String(FONT_INDICATORS, DTBox.x, DTBox.y - 10, {255, 255, 255, 255}, ALIGN_DEFAULT, L"CHARGE");
+						g_Draw.String(indFont, DTBox.x, DTBox.y - 10, {255, 255, 255, 255}, ALIGN_DEFAULT, L"CHARGE");
 
 						if (G::ShiftedTicks == 0) // chargless
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 55, 40, 255}, ALIGN_REVERSE, L"NO CHARGE");
+							g_Draw.String(indFont, DTBox.x + DTBox.w, DTBox.y - 10, {255, 55, 40, 255}, ALIGN_REVERSE, L"NO CHARGE");
 						}
 						else if (G::Recharging) // charging 
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 126, 0, 255}, ALIGN_REVERSE, L"CHARGING");
+							g_Draw.String(indFont, DTBox.x + DTBox.w, DTBox.y - 10, {255, 126, 0, 255}, ALIGN_REVERSE, L"CHARGING");
 						}
 						else if (G::WaitForShift) // waiting
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {255, 46, 46, 255}, ALIGN_REVERSE, L"DT IMPOSSIBLE");
+							g_Draw.String(indFont, DTBox.x + DTBox.w, DTBox.y - 10, {255, 46, 46, 255}, ALIGN_REVERSE, L"DT IMPOSSIBLE");
 						}
 						else // ready
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.x + DTBox.w, DTBox.y - 10, {66, 255, 0, 255}, ALIGN_REVERSE, L"READY");
+							g_Draw.String(indFont, DTBox.x + DTBox.w, DTBox.y - 10, {66, 255, 0, 255}, ALIGN_REVERSE, L"READY");
 						}
 						break;
 					}
@@ -476,22 +479,22 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					{
 						if (G::ShiftedTicks == 0 || G::Recharging)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {255, 64, 64, 255}, ALIGN_CENTERHORIZONTAL, L"Recharge! (%i / %i)", G::ShiftedTicks,
+							g_Draw.String(indFont, DTBox.c, DTBox.y - 10, {255, 64, 64, 255}, ALIGN_CENTERHORIZONTAL, L"Recharge! (%i / %i)", G::ShiftedTicks,
 							              Vars::Misc::CL_Move::DTTicks.Value);
 						}
 						else if (G::WaitForShift)
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {255, 178, 0, 255}, ALIGN_CENTERHORIZONTAL, L"Wait! (%i / 25)", G::WaitForShift);
+							g_Draw.String(indFont, DTBox.c, DTBox.y - 10, {255, 178, 0, 255}, ALIGN_CENTERHORIZONTAL, L"Wait! (%i / 25)", G::WaitForShift);
 						}
 						else
 						{
-							g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 10, {153, 255, 153, 255}, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
+							g_Draw.String(indFont, DTBox.c, DTBox.y - 10, {153, 255, 153, 255}, ALIGN_CENTERHORIZONTAL, L"Shift ready!");
 						}
 						break;
 					}
 				case 5:
 					{
-						g_Draw.String(FONT_INDICATORS, DTBox.c, DTBox.y - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"%i/%i", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
+						g_Draw.String(indFont, DTBox.c, DTBox.y - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"%i/%i", G::ShiftedTicks, Vars::Misc::CL_Move::DTTicks.Value);
 						break;
 					}
 				//hhhs0j — Today at 15:19
@@ -1182,6 +1185,7 @@ void CRunescapeChat::Draw()
 	}
 	std::vector<size_t> vecRemovals;
 	const float curTime = I::GlobalVars->curtime;
+	const auto& osrsFont = g_Draw.GetFont(FONT_OSRS);
 	Vec3 vScreen;
 	for (size_t i = 0; i < m_vecChats.size(); i++)
 	{
@@ -1230,7 +1234,8 @@ void CRunescapeChat::Draw()
 							}
 						default: break;
 						}
-						g_Draw.String(FONT_OSRS, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, L"%ls", chat.m_szChatText.c_str());
+
+						g_Draw.String(osrsFont, vScreen.x, vScreen.y - (14 * chat.m_nOffset), col, ALIGN_CENTERHORIZONTAL, L"%ls", chat.m_szChatText.c_str());
 					}
 				}
 			}
