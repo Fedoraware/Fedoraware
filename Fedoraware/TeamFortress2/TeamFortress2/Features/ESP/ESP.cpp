@@ -132,6 +132,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 	CTFPlayerResource* cResource = g_EntityCache.GetPR();
 	if (!cResource) { return; }
 
+	// Store the fonts
+	const auto& FONT = g_Draw.GetFont(FONT_ESP);
+	const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
+	const auto& FONT_COND = g_Draw.GetFont(FONT_ESP_COND);
+
 	for (const auto& player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		if (!player->IsAlive() || player->IsAGhost())
@@ -207,10 +212,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 		{
 			int nHealth = player->GetHealth(), nMaxHealth = player->GetMaxHealth();
 			Color_t healthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
-
-			//size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME;
-			const auto& FONT = g_Draw.GetFont(FONT_ESP);
-			const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
 
 			int nTextX = x + w + 3, nTextOffset = 0, nClassNum = player->GetClassNum();
 
@@ -500,8 +501,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 							offset = 10;
 						}
 						szItemName = C_EconItemView_GetItemName(pCurItemData);
-						g_Draw.String(FONT_ESP, x + (w / 2), y + h + offset, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
-						weaponoffset += Vars::Fonts::FONT_ESP::nTall.Value;
+						g_Draw.String(FONT, x + (w / 2), y + h + offset, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
+						weaponoffset += FONT.nTall;
 					}
 
 
@@ -521,8 +522,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					/*wchar_t szItemName[128]{};
 					if (pWeapon->GetLocalizedBaseItemName(szItemName))
 					{
-						g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
-						weaponoffset += Vars::Fonts::FONT_ESP::nTall.Value;
+						g_Draw.String(FONT, x + (w / 2), y + h, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
+						weaponoffset += FONT.nTall;
 					}*/
 				}
 
@@ -563,32 +564,29 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 
 			// Player conditions
 			if (Vars::ESP::Players::Cond.Value)
 			{
-				//size_t FONT = FONT_ESP_COND;
-				const auto& FONT = g_Draw.GetFont(FONT_ESP_COND);
-
-				int offset = FONT.nTall / 4;
+				int offset = FONT_COND.nTall / 4;
 				std::vector<std::wstring> cond_strings = GetPlayerConds(player);
 
 				if (!cond_strings.empty())
 				{
 					for (auto& condString : cond_strings)
 					{
-						g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
-						nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
+						g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
+						nTextOffset += FONT_COND.nTall;
 					}
 				}
 			}
 			if (g_EntityCache.IsFriend(nIndex))
 			{
 				const wchar_t* friendLabel = L"FRIEND";
-				g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
-				nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
+				g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
+				nTextOffset += FONT_COND.nTall;
 			}
 
 
@@ -668,6 +666,11 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 		return;
 	}
 
+	// Store the fonts
+	const auto& FONT = g_Draw.GetFont(FONT_ESP);
+	const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
+	const auto& FONT_COND = g_Draw.GetFont(FONT_ESP_COND);
+
 	for (const auto& pBuilding : g_EntityCache.GetGroup(Vars::ESP::Buildings::IgnoreTeammates.Value ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_ALL))
 	{
 		if (!pBuilding->IsAlive())
@@ -705,11 +708,6 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 			Color_t healthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
 
 			const auto nType = static_cast<EBuildingType>(building->GetType());
-
-			//size_t FONT = FONT_ESP, FONT_NAME = FONT_ESP_NAME, FONT_COND = FONT_ESP_COND;
-			const auto& FONT = g_Draw.GetFont(FONT_ESP);
-			const auto& FONT_NAME = g_Draw.GetFont(FONT_ESP_NAME);
-			const auto& FONT_COND = g_Draw.GetFont(FONT_ESP_COND);
 
 			const bool bIsMini = building->GetMiniBuilding();
 
@@ -841,7 +839,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 
 			// Building owner ESP
@@ -923,8 +921,8 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				{
 					for (auto& condString : condStrings)
 					{
-						g_Draw.String(FONT_ESP_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
-						nTextOffset += g_Draw.GetFont(FONT_ESP_COND).nTall;
+						g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, condString.data());
+						nTextOffset += FONT_COND.nTall;
 					}
 				}
 			}
@@ -1006,9 +1004,8 @@ void CESP::DrawWorld() const
 	}
 
 	Vec3 vScreen = {};
-	//constexpr size_t FONT = FONT_ESP_PICKUPS;
-	const auto& FONT = g_Draw.GetFont(FONT_ESP_PICKUPS);
-
+	const auto& FONT = g_Draw.GetFont(FONT_ESP);
+	const auto& FONT_PICKUPS = g_Draw.GetFont(FONT_ESP_PICKUPS);
 	I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::World::Alpha.Value);
 
 	for (const auto& health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
@@ -1026,7 +1023,7 @@ void CESP::DrawWorld() const
 			if (Vars::ESP::World::HealthName.Value)
 			{
 				if (Utils::W2S(health->GetVecOrigin(), vScreen))
-					g_Draw.String(FONT, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, L"Health");
+					g_Draw.String(FONT_PICKUPS, vScreen.x, y + h, Colors::Health, ALIGN_CENTER, L"Health");
 			}
 
 			if (Vars::ESP::World::HealthLine.Value)
@@ -1078,7 +1075,7 @@ void CESP::DrawWorld() const
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 		}
 	}
@@ -1098,7 +1095,7 @@ void CESP::DrawWorld() const
 			if (Vars::ESP::World::AmmoName.Value)
 			{
 				if (Utils::W2S(ammo->GetVecOrigin(), vScreen))
-					g_Draw.String(FONT, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, L"Ammo");
+					g_Draw.String(FONT_PICKUPS, vScreen.x, y + h, Colors::Ammo, ALIGN_CENTER, L"Ammo");
 			}
 
 			if (Vars::ESP::World::AmmoLine.Value)
@@ -1149,7 +1146,7 @@ void CESP::DrawWorld() const
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 		}
 	}
@@ -1206,8 +1203,8 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += FONT.nTall + FONT.nTall / 4;
-				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(NPC, true), ALIGN_CENTERHORIZONTAL, szName);
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(NPC, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 
 			if (Vars::ESP::World::NPCLine.Value)
@@ -1259,7 +1256,7 @@ void CESP::DrawWorld() const
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //return as an int, so it doesnt show a shitty decimal number
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 		}
 	}
@@ -1301,8 +1298,8 @@ void CESP::DrawWorld() const
 					}
 				}
 
-				nTextTopOffset += FONT.nTall + FONT.nTall / 4;
-				g_Draw.String(FONT, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(Bombs, true), ALIGN_CENTERHORIZONTAL, szName);
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, Utils::GetEntityDrawColor(Bombs, true), ALIGN_CENTERHORIZONTAL, szName);
 			}
 
 			if (Vars::ESP::World::BombLine.Value)
@@ -1353,7 +1350,7 @@ void CESP::DrawWorld() const
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
 
-				g_Draw.String(FONT_ESP, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
 			}
 		}
 	}
