@@ -18,7 +18,6 @@
 #include "../SDK/Includes/Enums.h"
 #include "../Utils/Events/Events.h"
 
-#include "../SDK/Discord/include/discord_rpc.h"
 #include "../Features/Discord/Discord.h"
 #include "../Utils/Minidump/Minidump.h"
 

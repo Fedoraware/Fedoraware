@@ -23,6 +23,8 @@
 
 #include <mutex>
 
+#include "../Discord/Discord.h"
+
 #pragma warning (disable : 4309)
 
 int unuPrimary = 0;
@@ -2262,6 +2264,7 @@ void CMenu::DebugMenu()
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 200));
 
+	ImGui::SetNextWindowSize({ 400.f, 0.f });
 	if (Begin("Debug", &ShowDebugMenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
 		const auto& pLocal = g_EntityCache.GetLocal();
@@ -2272,6 +2275,11 @@ void CMenu::DebugMenu()
 
 		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
 		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
+
+		if (Button("Update Discord RPC"))
+		{
+			F::DiscordRPC.Update();
+		}
 
 		// Particle tester
 		if (CollapsingHeader("Particles"))
