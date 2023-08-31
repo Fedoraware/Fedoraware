@@ -582,7 +582,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			}
 			if (g_EntityCache.IsFriend(nIndex))
 			{
-				const size_t FONT = FONT_ESP_COND;
+				size_t FONT = FONT_ESP_COND;
 				const int offset = g_Draw.GetFont[FONT].nTall / 4;
 				const std::vector<std::wstring> condStrings = GetPlayerConds(Player); 
 				
