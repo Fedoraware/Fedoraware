@@ -157,7 +157,7 @@
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CAchievementMgr_CheckAchievementsEnabled.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CInterpolatedVarArrayBase_Interpolate.cpp" />
-    <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHk.cpp" />
+    <ClCompile Include="TeamFortress2\Features\NetVarHooks\NetVarHooks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Disconnect.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Detours\CBaseClient_Connect.cpp" />
@@ -343,7 +343,7 @@
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
-    <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHk.h" />
+    <ClInclude Include="TeamFortress2\Features\NetVarHooks\NetVarHooks.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\ICenterPrint\ICenterPrint.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\IOcclusionSystem\IOcclusionSystem.h" />
     <ClInclude Include="TeamFortress2\Features\TickHandler\TickHandler.h" />
