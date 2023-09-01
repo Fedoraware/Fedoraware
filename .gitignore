@@ -397,6 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-Fedoraware-TF2/AVX2
-Fedoraware/*.user
-Fedoraware-TF2/build/
+*.vcxproj.user
+**/AVX2/
+**/build/
