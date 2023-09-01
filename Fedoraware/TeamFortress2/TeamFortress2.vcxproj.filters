@@ -406,6 +406,7 @@
     <None Include="include\Steam\steam_api.json" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="lib\discord-rpc.lib" />
+    <Library Include="lib\Release\discord-rpc.lib" />
+    <Library Include="lib\Debug\discord-rpc.lib" />
   </ItemGroup>
 </Project>
