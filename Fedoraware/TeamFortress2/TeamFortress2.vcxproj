@@ -561,6 +561,7 @@
     <None Include="include\Steam\steam_api.json" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="lib\discord-rpc-dbg.lib" />
     <Library Include="lib\discord-rpc.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
