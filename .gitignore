@@ -397,6 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-Fedoraware/TeamFortress2/AVX2
+Fedoraware-TF2/AVX2
 Fedoraware/*.user
-Fedoraware/TeamFortress2/build/
+Fedoraware-TF2/build/
