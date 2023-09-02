@@ -1,7 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(C_TFPlayer_AvoidPlayers, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 57 8B F9 89 7D D4 83 78 30 00"), void, __fastcall,
-		  void* ecx, void* edx, CUserCmd* pCmd)
+MAKE_HOOK(C_TFPlayer_AvoidPlayers, S::C_TFPlayer_AvoidPlayers(), void, __fastcall, void* ecx, void* edx, CUserCmd* pCmd)
 {
 	switch (Vars::Misc::NoPush.Value){
 	case 0: break;

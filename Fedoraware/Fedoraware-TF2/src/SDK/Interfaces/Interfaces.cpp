@@ -62,7 +62,7 @@ void CInterfaces::Init()
 	ClientState = *S::ClientState_Interface.As<CClientState*>();
 	VALIDATE(ClientState);
 
-	auto ClientTable = reinterpret_cast<void*>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 8B 02 D9 05"));
+	auto ClientTable = S::ClientTable.As<void>();
 	VALIDATE(ClientTable);
 
 	ClientModeShared = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);

@@ -12,8 +12,7 @@ void ClearEffects(CBaseEntity* pEntity)
 	Offset(bool*, pEntity, 0xCA1) = false; // Ice
 }
 
-MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, g_Pattern.Find(L"client.dll", L"55 8B EC B8 ? ? ? ? E8 ? ? ? ? 53 56 57 8B F9 8B 8F ? ? ? ? 85 C9 0F 85"), void, __fastcall,
-		  void* ecx, void* edx)
+MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, S::C_TFRagdoll_CreateTFRagdoll(), void, __fastcall, void* ecx, void* edx)
 {
 	if (Vars::Visuals::RemoveRagdolls.Value) { return; }
 
