@@ -29,7 +29,7 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 	const studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
 	const mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
 
-	for (int i{}; i < set->numhitboxes; ++i)
+	for (int i = 0; i < set->numhitboxes; ++i)
 	{
 		const mstudiobbox_t* bbox = set->hitbox(i);
 		if (!bbox)

@@ -4,7 +4,6 @@
 #include "../../Features/SpyWarning/SpyWarning.h"
 #include "../../Features/PlayerArrows/PlayerArrows.h"
 #include "../../Features/ESP/ESP.h"
-#include "../../Features/Misc/Misc.h"
 #include "../../Features/Misc/Notifications/Notifications.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/CritHack/CritHack.h"
@@ -13,13 +12,9 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/AutoQueue/AutoQueue.h"
-#include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/AntiHack/AntiAim.h"
-#include "../../Features/TickHandler/TickHandler.h"
-
-#include "../../Resources/DVD-Icon.h"
 
 MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
