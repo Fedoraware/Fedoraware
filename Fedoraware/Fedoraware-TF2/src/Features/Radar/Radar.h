@@ -13,7 +13,7 @@ class CRadar
 	Vec3 LocalOrigin;
 
 public:
-	void Run();
+	void Draw();
 	void DrawWindow();
 
 	int RadarX = 100, RadarY = 500;

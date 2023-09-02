@@ -29,14 +29,18 @@ class CVisuals
 	void DrawDebugInfo(CBaseEntity* pLocal);
 	void DrawOnScreenConditions(CBaseEntity* pLocal);
 	void DrawOnScreenPing(CBaseEntity* pLocal);
+
 	void DrawServerHitboxes();
+	void DrawPredictionLine();
+	void PickupTimers();
+	void SetVisionFlags();
 
 	int m_nHudZoom = 0;
 	int m_nHudMotd = 0;
 	IMaterial* m_pMatDev = nullptr;
 
 public:
-	void Draw(CBaseEntity* pLocal);
+	void Draw();
 
 	bool RemoveScope(int nPanel);
 	void FOV(CViewSetup* pView);
@@ -44,20 +48,17 @@ public:
 	void ModulateWorld();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
-	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
 
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
 	void DrawMenuSnow();
 	void DrawDVD();
-	void DrawPredictionLine();
 	void DrawMovesimLine();
 	void ManualNetwork(const StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
 	void DrawSightlines();
 	void FillSightlines();
-	void SetVisionFlags();
 	void AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr);
 	void PruneBulletTracers();
 	void DrawBulletTracers();

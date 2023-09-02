@@ -1,7 +1,7 @@
 #include "Notifications.h"
 
 // Myzarfin added this
-void CNotifications::Think()
+void CNotifications::Draw()
 {
 	constexpr int x{ 1 };
 	int y{ 1 };

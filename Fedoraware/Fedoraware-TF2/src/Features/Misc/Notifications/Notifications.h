@@ -27,7 +27,7 @@ public:
 		NotificationTexts.push_back(std::make_shared<NotifyText>(text, color, time));
 	}
 
-	void Think();
+	void Draw();
 };
 
 ADD_FEATURE(CNotifications, Notifications)

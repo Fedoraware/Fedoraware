@@ -68,6 +68,13 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 
 		StartDrawing(I::VGuiSurface);
 		{
+			// Anti Screenshot
+			if (Vars::Visuals::CleanScreenshots.Value && I::EngineClient->IsTakingScreenshot())
+			{
+				FinishDrawing(I::VGuiSurface);
+				return;
+			}
+
 			// Main Menu stuff
 			if (I::EngineVGui->IsGameUIVisible())
 			{
@@ -107,25 +114,21 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 
 			if (const auto pLocal = g_EntityCache.GetLocal())
 			{
-				if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return FinishDrawing(I::VGuiSurface); }
-				F::Visuals.Draw(pLocal);
 				F::AntiAim.Draw(pLocal);
 				//F::Ticks.DrawDebug();
 			}
 
-			F::Visuals.DrawPredictionLine();
-			F::ESP.Run();
-			F::Visuals.PickupTimers();
-			F::SpyWarning.Run();
-			F::PlayerArrows.Run();
-			F::AutoQueue.Run();
+			F::Visuals.Draw();
+			F::ESP.Draw();
+			F::PlayerArrows.Draw();
 			F::Followbot.Draw();
-			F::SpectatorList.Run();
+			F::SpectatorList.Draw();
 			F::CritHack.Draw();
-			F::Radar.Run();
+			F::Radar.Draw();
+			F::AutoQueue.Run();
+			F::SpyWarning.Run();
 			F::PlayerList.Run();
-			F::Notifications.Think();
-			F::Visuals.SetVisionFlags();
+			F::Notifications.Draw();
 		}
 		FinishDrawing(I::VGuiSurface);
 	}

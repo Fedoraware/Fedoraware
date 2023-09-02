@@ -7,7 +7,7 @@ constexpr Color_t clrWhite = { 255, 255, 255, 255 };
 
 static void SquareConstraints(ImGuiSizeCallbackData* data) { data->DesiredSize.x = data->DesiredSize.y = std::max(data->DesiredSize.x, data->DesiredSize.y); }
 
-void CRadar::Run()
+void CRadar::Draw()
 {
 	if (!ShouldRun()) { return; }
 

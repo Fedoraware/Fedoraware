@@ -96,7 +96,7 @@ void CPlayerArrows::DrawArrowTo(const Vec3& vecFromPos, const Vec3& vecToPos, Co
 	}
 }
 
-void CPlayerArrows::Run()
+void CPlayerArrows::Draw()
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{

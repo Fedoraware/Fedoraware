@@ -2,9 +2,9 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 
-void CVisuals::Draw(CBaseEntity* pLocal)
+void CVisuals::Draw()
 {
-	if (pLocal)
+	if (const auto pLocal = g_EntityCache.GetLocal())
 	{
 		DrawAntiAim(pLocal);
 		DrawTickbaseInfo(pLocal);
@@ -16,6 +16,9 @@ void CVisuals::Draw(CBaseEntity* pLocal)
 	}
 
 	DrawServerHitboxes();
+	DrawPredictionLine();
+	PickupTimers();
+	SetVisionFlags();
 }
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
