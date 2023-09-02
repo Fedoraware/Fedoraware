@@ -20,7 +20,6 @@
 #include "../../Features/TickHandler/TickHandler.h"
 
 #include "../../Resources/DVD-Icon.h"
-#include "../../Resources/64x64_Circle_Mask.h"
 
 MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastcall,
 		  void* ecx, void* edx, int iMode)
@@ -69,50 +68,12 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 
 		StartDrawing(I::VGuiSurface);
 		{
-			//static int nAvatar = 0;
-			//static int nAvatarID = 0;
-			//static uint32 w, h;
-			//static byte removebytes[16384];
-			//if (!nAvatar)
-			//{
-			//	nAvatar = g_SteamInterfaces.Friends015->GetMediumFriendAvatar(CSteamID(g_SteamInterfaces.User->GetSteamID()));
-
-			//	if (g_SteamInterfaces.Utils007->GetImageSize(nAvatar, &w, &h))
-			//	{
-			//		const int nSize = static_cast<int>(4 * w * h * sizeof(uint8));
-
-			//		if (g_SteamInterfaces.Utils007->GetImageRGBA(nAvatar, removebytes, nSize))
-			//		{
-			//			for (int i = 0; i <= 16384; i += 4)
-			//			{
-			//				// Do not convert these to hex >:)
-			//				if (rawData[i] == 105 &&
-			//					rawData[i + 1] == 20 &&
-			//					rawData[i + 2] == 136 &&
-			//					rawData[i + 3] == 0x01)
-			//				{
-			//					removebytes[i] = 0x00;
-			//					removebytes[i + 1] = 0x00;
-			//					removebytes[i + 2] = 0x00;
-			//					removebytes[i + 3] = 0x00;
-			//				}
-			//			}
-			//			nAvatarID = g_Draw.CreateTextureFromArray(removebytes, w, h);
-			//		}
-			//	}
-			//}
-			//if (nAvatarID)
-			//{
-			//	I::Surface->DrawSetTexture(nAvatarID);
-			//	I::Surface->DrawTexturedRect(100, 300, w, h);
-			//	g_Draw.OutlinedCircle(100 + (w / 2), 300 + (h / 2), w / 2, 300, Utils::Rainbow());
-			//}
-
+			// Main Menu stuff
 			if (I::EngineVGui->IsGameUIVisible())
 			{
 				if (!I::EngineClient->IsInGame())
 				{
-					static time_t curTime = time(0);
+					static time_t curTime = time(nullptr);
 					static tm* curCalTime = localtime(&curTime);
 
 					if (F::Menu.IsOpen)
@@ -144,7 +105,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 				F::RSChat.Draw();
 			}
 
-			if (CBaseEntity* pLocal = g_EntityCache.GetLocal())
+			if (const auto pLocal = g_EntityCache.GetLocal())
 			{
 				if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return FinishDrawing(I::VGuiSurface); }
 				F::Visuals.DrawAntiAim(pLocal);
