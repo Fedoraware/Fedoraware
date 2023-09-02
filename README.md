@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/assets/fedoraware.png" alt="Fedoraware Logo" width="200" align="center">
+  <img src=".github/assets/Logo_Full.svg" alt="Fedoraware Logo" width="250" align="center">
   <br/>
   <a href="https://nightly.link/Fedoraware/Fedoraware/workflows/msbuild/main/Fedoraware.zip">
     <img src=".github/assets/download.png" alt="Download Button" width="400" height="auto" align="center">
