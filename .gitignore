@@ -17,9 +17,7 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -396,5 +394,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-Fedoraware/TeamFortress2/AVX2
-Fedoraware/*.user
+
+*.vcxproj.user
+**/AVX2/
+**/bin/

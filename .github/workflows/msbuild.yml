@@ -37,7 +37,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
        name: Fedoraware
-       path: ${{env.SOLUTION_FILE_PATH}}/Release/
+       path: ${{env.SOLUTION_FILE_PATH}}/bin/${{env.BUILD_CONFIGURATION}}/
     
     # Update version in package.json according to the tag
     #- name: Check package version
