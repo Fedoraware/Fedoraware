@@ -396,5 +396,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 *.vcxproj.user
-**/AVX2/
-**/bin/
+AVX2/
+bin/
+build/

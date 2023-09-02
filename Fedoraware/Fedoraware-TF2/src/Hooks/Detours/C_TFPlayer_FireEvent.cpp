@@ -6,7 +6,7 @@ int ColorToInt(const Color_t& col)
     return col.r << 16 | col.g << 8 | col.b;
 }
 
-MAKE_HOOK(C_TFPlayer_FireEvent, g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 ? 81 EC ? ? ? ? 53 56 57 8B F9 3D"), void, __fastcall,
+MAKE_HOOK(C_TFPlayer_FireEvent, S::C_TFPlayer_FireEvent(), void, __fastcall,
     CBaseEntity* ecx, void* edx, const Vector& origin, const QAngle& angles, int event_, const char* options)
 {
     static auto SpawnHalloweenSpellFootsteps = reinterpret_cast<void* (__thiscall*)(CBaseEntity*, ParticleAttachment_t, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC A1 ? ? ? ? 83 EC ? 53 8B 5D"));

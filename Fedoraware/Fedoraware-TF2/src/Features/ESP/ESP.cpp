@@ -12,7 +12,7 @@ bool CESP::ShouldRun()
 	return true;
 }
 
-void CESP::Run()
+void CESP::Draw()
 {
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{

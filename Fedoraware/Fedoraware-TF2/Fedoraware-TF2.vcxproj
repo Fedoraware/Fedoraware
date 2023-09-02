@@ -71,7 +71,7 @@
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\$(Configuration)\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>Fware-$(Configuration)</TargetName>
-    <IntDir>$(SolutionDir)bin\build\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AVX2|Win32'">
@@ -79,13 +79,13 @@
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\$(Configuration)\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>Fware-$(Configuration)</TargetName>
-    <IntDir>$(SolutionDir)bin\build\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>Fware-$(Configuration)</TargetName>
-    <IntDir>$(SolutionDir)bin\build\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)include\;$(DXSDK_DIR)Include\;$(VC_IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\$(Configuration)\;$(DXSDK_DIR)Lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
@@ -308,7 +308,6 @@
     <ClCompile Include="src\Hooks\HookManager.cpp" />
     <ClCompile Include="src\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="src\Hooks\PatchManager\PatchManager.cpp" />
-    <ClCompile Include="src\Resources\64x64_Circle_Mask.h" />
     <ClCompile Include="src\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="src\SDK\Includes\MD5.cpp" />
     <ClCompile Include="src\SDK\Interfaces\ConVar\ConVar.cpp" />
@@ -532,6 +531,7 @@
     <ClInclude Include="include\Steam\steam_api_flat.h" />
     <ClInclude Include="include\Steam\steam_api_internal.h" />
     <ClInclude Include="include\Steam\steam_gameserver.h" />
+    <ClInclude Include="src\SDK\Signatures.h" />
     <ClInclude Include="src\Utils\Base64\Base64.hpp" />
     <ClInclude Include="src\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="src\Utils\Color\Color.h" />

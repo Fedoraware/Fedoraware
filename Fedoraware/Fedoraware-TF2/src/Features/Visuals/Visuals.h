@@ -22,44 +22,47 @@ struct BulletTracer_t
 
 class CVisuals
 {
-private:
+	void DrawAntiAim(CBaseEntity* pLocal);
+	void DrawTickbaseInfo(CBaseEntity* pLocal);
+	void DrawAimbotFOV(CBaseEntity* pLocal);
+	void ScopeLines(CBaseEntity* pLocal);
+	void DrawDebugInfo(CBaseEntity* pLocal);
+	void DrawOnScreenConditions(CBaseEntity* pLocal);
+	void DrawOnScreenPing(CBaseEntity* pLocal);
+
+	void DrawServerHitboxes();
+	void DrawPredictionLine();
+	void PickupTimers();
+	void SetVisionFlags();
+
 	int m_nHudZoom = 0;
 	int m_nHudMotd = 0;
-	IMaterial* m_pMatDev;
+	IMaterial* m_pMatDev = nullptr;
 
 public:
+	void Draw();
+
 	bool RemoveScope(int nPanel);
 	void FOV(CViewSetup* pView);
 	void ThirdPerson(CViewSetup* pView);
 	void ModulateWorld();
 	void RestoreWorldModulation();
 	void OverrideWorldTextures();
-	void PickupTimers();
 	void DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time);
 
-	void DrawOnScreenConditions(CBaseEntity* pLocal);
-	void DrawOnScreenPing(CBaseEntity* pLocal);
-	void ScopeLines(CBaseEntity* pLocal);
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
-	void DrawAimbotFOV(CBaseEntity* pLocal);
-	void DrawDebugInfo(CBaseEntity* pLocal);
-	void DrawAntiAim(CBaseEntity* pLocal);
-	void DrawTickbaseInfo(CBaseEntity* pLocal);
 	void DrawMenuSnow();
 	void DrawDVD();
-	void DrawPredictionLine();
 	void DrawMovesimLine();
 	void ManualNetwork(const StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
 	void DrawSightlines();
 	void FillSightlines();
-	void SetVisionFlags();
 	void AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr);
 	void PruneBulletTracers();
 	void DrawBulletTracers();
 	void DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position);
-	void DrawServerHitboxes();
 
 	std::vector<BulletTracer_t> m_vecBulletTracers;
 

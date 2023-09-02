@@ -130,7 +130,7 @@ bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
 	return true;
 }
 
-MAKE_HOOK(C_BaseEntity_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D"), void, __fastcall,
+MAKE_HOOK(C_BaseEntity_FireBullets, S::C_BaseEntity_FireBullets(), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
 	if (!FireBulletsHandler(pWeapon))

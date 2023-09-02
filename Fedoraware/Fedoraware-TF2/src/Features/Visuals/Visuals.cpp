@@ -2,6 +2,25 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 
+void CVisuals::Draw()
+{
+	if (const auto pLocal = g_EntityCache.GetLocal())
+	{
+		DrawAntiAim(pLocal);
+		DrawTickbaseInfo(pLocal);
+		DrawAimbotFOV(pLocal);
+		ScopeLines(pLocal);
+		DrawDebugInfo(pLocal);
+		DrawOnScreenConditions(pLocal);
+		DrawOnScreenPing(pLocal);
+	}
+
+	DrawServerHitboxes();
+	DrawPredictionLine();
+	PickupTimers();
+	SetVisionFlags();
+}
+
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
 	//I::DebugOverlay->ClearAllOverlays();
@@ -10,7 +29,7 @@ void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_
 	const studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
 	const mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
 
-	for (int i{}; i < set->numhitboxes; ++i)
+	for (int i = 0; i < set->numhitboxes; ++i)
 	{
 		const mstudiobbox_t* bbox = set->hitbox(i);
 		if (!bbox)

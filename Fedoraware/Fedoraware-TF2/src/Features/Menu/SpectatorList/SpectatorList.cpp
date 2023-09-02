@@ -49,7 +49,7 @@ bool CSpectatorList::ShouldRun()
 	return Vars::Visuals::SpectatorList.Value/* && !I::EngineVGui->IsGameUIVisible()*/;
 }
 
-void CSpectatorList::Run()
+void CSpectatorList::Draw()
 {
 	if (!ShouldRun()) { return; }
 
