@@ -126,11 +126,12 @@ DWORD CPattern::FindPattern(const DWORD& dwAddress, const DWORD& dwLength, LPCST
 HMODULE CPattern::GetModuleHandleSafe(LPCSTR szModuleName)
 {
 	HMODULE hModule = nullptr;
-
 	while (!hModule)
 	{
 		hModule = GetModuleHandleA(szModuleName);
-		Sleep(250);
+		if (hModule) { return hModule; }
+
+		Sleep(10);
 	}
 
 	return hModule;
