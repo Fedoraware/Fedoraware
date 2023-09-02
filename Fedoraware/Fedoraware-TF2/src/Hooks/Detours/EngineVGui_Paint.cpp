@@ -108,14 +108,7 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 			if (const auto pLocal = g_EntityCache.GetLocal())
 			{
 				if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return FinishDrawing(I::VGuiSurface); }
-				F::Visuals.DrawAntiAim(pLocal);
-				F::Visuals.DrawTickbaseInfo(pLocal);
-				F::Visuals.DrawAimbotFOV(pLocal);
-				F::Visuals.ScopeLines(pLocal);
-				F::Visuals.DrawDebugInfo(pLocal);
-				F::Visuals.DrawOnScreenConditions(pLocal);
-				F::Visuals.DrawOnScreenPing(pLocal);
-				F::Visuals.DrawServerHitboxes();
+				F::Visuals.Draw(pLocal);
 				F::AntiAim.Draw(pLocal);
 				//F::Ticks.DrawDebug();
 			}

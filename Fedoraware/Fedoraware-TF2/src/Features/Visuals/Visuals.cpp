@@ -2,6 +2,22 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 
+void CVisuals::Draw(CBaseEntity* pLocal)
+{
+	if (pLocal)
+	{
+		DrawAntiAim(pLocal);
+		DrawTickbaseInfo(pLocal);
+		DrawAimbotFOV(pLocal);
+		ScopeLines(pLocal);
+		DrawDebugInfo(pLocal);
+		DrawOnScreenConditions(pLocal);
+		DrawOnScreenPing(pLocal);
+	}
+
+	DrawServerHitboxes();
+}
+
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
 	//I::DebugOverlay->ClearAllOverlays();
