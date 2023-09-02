@@ -82,61 +82,45 @@ DWORD CPattern::E8(LPCWSTR szModuleName, LPCWSTR szPattern)
 
 
 
-std::vector<int> PatternToBytes(LPCSTR szPattern)
-{
-	std::vector<int> bytes;
-	const auto start = const_cast<LPSTR>(szPattern);
-	const auto end = start + strlen(szPattern);
-
-	for (auto pCur = start; pCur < end; ++pCur) {
-		if (*pCur == '?')
-		{
-			++pCur;
-			if (*pCur == '?')
-			{
-				++pCur;
-			}
-
-			bytes.push_back(-1);
-		}
-		else
-		{
-			bytes.push_back(strtoul(pCur, &pCur, 16));
-		}
-	}
-
-	return bytes;
-}
-
 DWORD CPattern::FindPattern(const DWORD& dwAddress, const DWORD& dwLength, LPCSTR szPattern)
 {
-	const auto patternBytes = PatternToBytes(szPattern);
-	if (patternBytes.empty()) { return 0; }
+	auto szPat = szPattern;
+	DWORD dwFirstMatch = 0x0;
 
-	unsigned curMatch = 0u;
-	DWORD dwFirstMatch = 0;
 	for (auto pCur = dwAddress; pCur < dwLength; pCur++)
 	{
-		if (patternBytes[curMatch] == -1 || *reinterpret_cast<BYTE*>(pCur) == patternBytes[curMatch])
+		if (!*szPat)
+		{
+			return dwFirstMatch;
+		}
+
+		const auto pCurByte = *(BYTE*)pCur;
+		const auto pBytePatt = *(BYTE*)szPat;
+
+		if (pBytePatt == '\?' || pCurByte == GET_BYTES(szPat))
 		{
 			if (!dwFirstMatch)
 			{
 				dwFirstMatch = pCur;
 			}
 
-			if (++curMatch == patternBytes.size())
+			//Found
+			if (!szPat[2])
 			{
 				return dwFirstMatch;
 			}
+
+			szPat += (pBytePatt == '\?\?' || pBytePatt != '\?') ? 3 : 2;
 		}
 		else
 		{
-			curMatch = 0;
-			dwFirstMatch = 0;
+			szPat = szPattern;
+			dwFirstMatch = 0x0;
 		}
 	}
 
-	return 0;
+	//Failed to find, return NULL
+	return 0x0;
 }
 
 HMODULE CPattern::GetModuleHandleSafe(LPCSTR szModuleName)

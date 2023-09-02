@@ -1,4 +1,5 @@
 #include "Interfaces.h"
+#include "../Signatures.h"
 
 #define VALIDATE(x) if (!(x)) MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR)
 #define VALIDATE_STEAM(x) if (!(x)) MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
@@ -55,10 +56,10 @@ void CInterfaces::Init()
 	Cvar = g_Interface.Get<ICvar*>(VSTDLIB, VENGINE_CVAR_INTERFACE_VERSION);
 	VALIDATE(Cvar);
 
-	GlobalVars = *reinterpret_cast<CGlobalVarsBase**>(g_Pattern.Find(ENGINE, L"A1 ? ? ? ? 8B 11 68") + 0x8);
+	GlobalVars = *S::GlobalVars_Interface.As<CGlobalVarsBase*>();
 	VALIDATE(GlobalVars);
 
-	ClientState = *reinterpret_cast<CClientState**>(g_Pattern.Find(ENGINE, L"68 ? ? ? ? E8 ? ? ? ? 83 C4 08 5F 5E 5B 5D C3") + 0x1);
+	ClientState = *S::ClientState_Interface.As<CClientState*>();
 	VALIDATE(ClientState);
 
 	auto ClientTable = reinterpret_cast<void*>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 8B 02 D9 05"));
@@ -70,7 +71,7 @@ void CInterfaces::Init()
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE, VENGINE_VGUI_VERSION);
 	VALIDATE(EngineVGui);
 
-	DemoPlayer = **reinterpret_cast<void***>(g_Pattern.Find(ENGINE, L"8B 0D ? ? ? ? 85 C9 74 3B 8B 01 8B 40 18 FF D0 84 C0 74 30") + 0x2);
+	DemoPlayer = **S::DemoPlayer_Interface.As<void**>();
 	VALIDATE(DemoPlayer);
 
 	RenderView = g_Interface.Get<IVRenderView*>(ENGINE, VENGINE_RENDERVIEW_INTERFACE_VERSION);
@@ -88,19 +89,20 @@ void CInterfaces::Init()
 	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, VMATERIALSYSTEM_INTERFACE);
 	VALIDATE(MaterialSystem);
 
-	TFGCClientSystem = *reinterpret_cast<CTFGCClientSystem**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8") + 0x1);
+	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
 	VALIDATE(TFGCClientSystem);
 
 	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
 	VALIDATE(TFPartyClient);
 
-	TFInventoryManager = *reinterpret_cast<CTFInventoryManager**>(g_Pattern.Find(CLIENT, L"B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?") + 0x1);
+	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();
 	VALIDATE(TFInventoryManager);
 
-	RandomSeed = *reinterpret_cast<int32_t**>(g_Pattern.Find(CLIENT, L"C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34") + 0x2);
+	// TODO: This doesn't belong here
+	RandomSeed = *S::RandomSeed.As<int32_t*>();
 	VALIDATE(RandomSeed);
 
-	AllowSecureServers = *reinterpret_cast<bool**>(g_Pattern.Find(ENGINE, L"C6 05 ? ? ? ? ? 8A C3") + 0x2);
+	AllowSecureServers = *S::AllowSecureServers.As<bool*>();
 	VALIDATE(AllowSecureServers);
 
 	const auto pdwClient = reinterpret_cast<PDWORD>(BaseClientDLL);
@@ -112,7 +114,7 @@ void CInterfaces::Init()
 	ViewRender = **reinterpret_cast<IViewRender***>(pdwTable[27] + 5);
 	VALIDATE(ViewRender);
 
-	Input = **reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC") + 0x2);
+	Input = **S::Input_Interface.As<IInput**>();
 	VALIDATE(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
@@ -123,7 +125,7 @@ void CInterfaces::Init()
 	KeyValuesSystem = GetKeyValuesSystem();
 	VALIDATE(KeyValuesSystem);
 
-	UniformRandomStream = *reinterpret_cast<IUniformRandomStream**>(g_Pattern.Find(VSTDLIB, L"B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3") + 0x1);
+	UniformRandomStream = *S::UniformRandomStream_Interface.As<IUniformRandomStream*>();
 	VALIDATE(UniformRandomStream);
 
 	StudioRender = g_Interface.Get<void*>(L"studiorender.dll", "VStudioRender025");
@@ -140,29 +142,29 @@ void CInterfaces::Init()
 	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(EngineClient, 115));
 	VALIDATE(AchievementMgr);
 
-	ViewRenderBeams = **reinterpret_cast<IViewRenderBeams***>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?") + 0x2);
+	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams**>();
 	VALIDATE(ViewRenderBeams);
 
 	EngineSound = g_Interface.Get<IEngineSound*>(L"engine.dll", "IEngineSoundClient003");
 	VALIDATE(EngineSound);
 
-	TFGameRules = *reinterpret_cast<CTFGameRules**>(g_Pattern.Find(L"client.dll", L"8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB ? ? ? ? ?") + 0x1);
+	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules*>();
 	VALIDATE(TFGameRules);
 
-	ThirdPersonManager = *reinterpret_cast<CThirdPersonManager**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 42 8B 86") + 0x1);
+	ThirdPersonManager = *S::ThirdPersonManager_Interface.As<CThirdPersonManager*>();
 	VALIDATE(ThirdPersonManager);
 
 	// Forgive the double cast but this was annoying meeeeee
-	DirectXDevice = reinterpret_cast<IDirect3DDevice9*>(**reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1));
+	DirectXDevice = **S::DirectXDevice.As<IDirect3DDevice9**>();
 	VALIDATE(DirectXDevice);
 
-	ClientModeTF = *reinterpret_cast<ClientModeTFNormal**>(g_Pattern.Find(L"client.dll", L"B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 35 ? ? ? ?") + 0x1);
+	ClientModeTF = *S::ClientModeTFNormal_Interface.As<ClientModeTFNormal*>();
 	VALIDATE(ClientModeTF);
 
 	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
 	VALIDATE(Localize);
 
-	HostState = *reinterpret_cast<CCommonHostState**>(g_Pattern.Find(L"engine.dll", L"8B 15 ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85") + 0x1);
+	HostState = *S::HostState_Interface.As<CCommonHostState*>();
 	VALIDATE(HostState);
 }
 
