@@ -267,7 +267,7 @@ namespace Utils
 	__inline void* InitKeyValue()
 	{
 		using Init_t = PDWORD(__cdecl* )(int);
-		static DWORD dwInitLocation = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 83 C4 14 85 C0 74 10 68") + 0x1;
+		static DWORD dwInitLocation = g_Pattern.Find("client.dll", "E8 ? ? ? ? 83 C4 14 85 C0 74 10 68") + 0x1;
 		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
 		static Init_t InitKeyValues = (Init_t)dwInit;
 
@@ -482,8 +482,8 @@ namespace Utils
 
 	__inline float ATTRIB_HOOK_FLOAT(float baseValue, const char *searchString, CBaseEntity *ent, void *buffer, bool isGlobalConstString)
 	{
-		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(L"client.dll",
-			L"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
+		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find("client.dll",
+			"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
 
 		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
 	}
@@ -932,7 +932,7 @@ namespace Particles {
 	inline void DispatchEffect(const char* pName, const CEffectData& data)
 	{
 		using DispatchEffect_Fn = int(__cdecl*)(const char*, const CEffectData&);
-		static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 83 C4 08 EB 15") + 0x1;
+		static DWORD a = g_Pattern.Find("client.dll", "E8 ? ? ? ? 83 C4 08 EB 15") + 0x1;
 		static DWORD b = ((*(PDWORD)(a)) + a + 4);
 		static DispatchEffect_Fn fn = (DispatchEffect_Fn)b;
 
@@ -942,7 +942,7 @@ namespace Particles {
 	inline int GetParticleSystemIndex(const char* pParticleSystemName)
 	{
 		using GetParticleSystemIndex_Fn = int(__cdecl*)(const char*);
-		static DWORD a = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? D9 EE 83 C4 04 50") + 0x1;
+		static DWORD a = g_Pattern.Find("client.dll", "E8 ? ? ? ? D9 EE 83 C4 04 50") + 0x1;
 		static DWORD b = ((*(PDWORD)(a)) + a + 4);
 		static GetParticleSystemIndex_Fn fn = (GetParticleSystemIndex_Fn)b;
 
@@ -986,7 +986,7 @@ namespace Particles {
 
 	inline void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz) {
 		using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
-		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(L"client.dll", L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83"));
+		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find("client.dll", "55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83"));
 		UTIL_ParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
 
 	}

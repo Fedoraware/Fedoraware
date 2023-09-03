@@ -13,7 +13,7 @@ MAKE_HOOK(FX_FireBullets, S::FX_FireBullets(), void, __cdecl,
 		F::BadActors.ReportShot(iPlayer);
 	}
 
-	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find(L"client.dll", L"83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
+	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find("client.dll", "83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) != C_TFWeaponBaseGun__FireBullet_Call)
 	{
 		return;

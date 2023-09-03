@@ -306,7 +306,7 @@ public: //Everything else, lol.
 
 	int GetAmmoCount(int iAmmoIndex)
 	{
-		static auto FN = reinterpret_cast<int(__thiscall*)(CBaseEntity*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00"));
+		static auto FN = reinterpret_cast<int(__thiscall*)(CBaseEntity*, int)>(g_Pattern.Find("client.dll", "55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00"));
 		return FN(this, iAmmoIndex);
 	}
 
@@ -336,7 +336,7 @@ public: //Everything else, lol.
 	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
 	{
 		typedef float(__thiscall* CalculateMaxSpeedFn)(CBaseEntity*, bool);
-		static DWORD dwFn = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1") + 0x1;
+		static DWORD dwFn = g_Pattern.Find("client.dll", "E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1") + 0x1;
 		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
 		CalculateMaxSpeedFn maxSpeed = (CalculateMaxSpeedFn)dwEstimate;
 		return maxSpeed(this, bIgnoreSpecialAbility);
@@ -352,7 +352,7 @@ public: //Everything else, lol.
 	__inline bool InCond(int eCond)
 	{
 		using fn = bool(__thiscall*)(CBaseEntity*, int);
-		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"));
+		static fn FN = reinterpret_cast<fn>(g_Pattern.Find("client.dll", "55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"));
 		return FN(this, eCond);
 	}
 
@@ -694,7 +694,7 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetVelocity()
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0"));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find("client.dll", "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0"));
 		Vec3 v;
 		FN(this, v);
 		return v;
@@ -783,7 +783,7 @@ public: //Everything else, lol.
 	__inline void SetAbsOrigin(const Vec3& vOrigin)
 	{
 		typedef void(__thiscall* FN)(CBaseEntity*, const Vec3&);
-		static DWORD dwFN = g_Pattern.Find(L"client.dll", L"55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
+		static DWORD dwFN = g_Pattern.Find("client.dll", "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
 		FN func = (FN)dwFN;
 		func(this, vOrigin);
 	}
@@ -791,7 +791,7 @@ public: //Everything else, lol.
 	__inline void PostDataUpdate(int updateType)
 	{
 		typedef void(__thiscall* FN)(CBaseEntity*, int);
-		static DWORD dwFn = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB");
+		static DWORD dwFn = g_Pattern.Find("client.dll", "55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB");
 		FN func = (FN)dwFn;
 		func(this, updateType);
 	}
@@ -818,7 +818,7 @@ public: //Everything else, lol.
 
 		if (Effect == EF_NODRAW)
 		{
-			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 56 FF 75 08 8B F1 B8"));
+			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find("client.dll", "55 8B EC 56 FF 75 08 8B F1 B8"));
 
 			if (AddToLeafSystemFn)
 				AddToLeafSystemFn(this, RENDER_GROUP_OPAQUE_ENTITY);
@@ -892,7 +892,7 @@ public: //Everything else, lol.
 
 	__inline void EstimateAbsVelocity(Vec3& vVel)
 	{
-		static auto fnEstimateABSVelocity = reinterpret_cast<void(__thiscall*)(void*, Vec3&)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2"));
+		static auto fnEstimateABSVelocity = reinterpret_cast<void(__thiscall*)(void*, Vec3&)>(g_Pattern.Find("client.dll", "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2"));
 		fnEstimateABSVelocity(this, vVel);
 	}
 
@@ -909,25 +909,25 @@ public: //Everything else, lol.
 
 	__inline void UpdateButtonState(int nUserCmdButtonMask)
 	{
-		static auto fnUpdateButtonState = reinterpret_cast<void(__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 81 ? ? ? ? 8B D0"));
+		static auto fnUpdateButtonState = reinterpret_cast<void(__thiscall*)(void*, int)>(g_Pattern.Find("client.dll", "55 8B EC 8B 81 ? ? ? ? 8B D0"));
 		fnUpdateButtonState(this, nUserCmdButtonMask);
 	}
 
 	__inline void SetNextThink(float thinkTime, const char* szContext)
 	{
-		static auto fnSetNextThink = reinterpret_cast<void(__thiscall*)(void*, float, const char*)>(g_Pattern.Find(L"client.dll", L"55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53"));
+		static auto fnSetNextThink = reinterpret_cast<void(__thiscall*)(void*, float, const char*)>(g_Pattern.Find("client.dll", "55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53"));
 		fnSetNextThink(this, thinkTime, szContext);
 	}
 
 	__inline int GetNextThinkTick(const char* szContext)
 	{
-		static auto fnGetNextThinkTick = reinterpret_cast<int(__thiscall*)(void*, const char*)>(g_Pattern.Find(L"client.dll", L"55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86"));
+		static auto fnGetNextThinkTick = reinterpret_cast<int(__thiscall*)(void*, const char*)>(g_Pattern.Find("client.dll", "55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86"));
 		return fnGetNextThinkTick(this, szContext);
 	}
 
 	__inline bool PhysicsRunThink(int thinkMethod = 0)
 	{
-		static auto fnPhysicsRunThink = reinterpret_cast<bool(__thiscall*)(void*, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC 53 8B D9 56 57 8B 83 ? ? ? ? C1 E8"));
+		static auto fnPhysicsRunThink = reinterpret_cast<bool(__thiscall*)(void*, int)>(g_Pattern.Find("client.dll", "55 8B EC 53 8B D9 56 57 8B 83 ? ? ? ? C1 E8"));
 		return fnPhysicsRunThink(this, thinkMethod);
 	}
 

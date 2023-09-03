@@ -3,7 +3,7 @@
 MAKE_HOOK(EngineClient_IsPlayingTimeDemo, Utils::GetVFuncPtr(I::EngineClient, 78), bool, __fastcall,
 		  void* ecx, void* edx)
 {
-	static DWORD dwInterpolateServerEntities = g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 30 8B 0D ? ? ? ? 53 33 DB 89 5D DC 89 5D E0");
+	static DWORD dwInterpolateServerEntities = g_Pattern.Find("client.dll", "55 8B EC 83 EC 30 8B 0D ? ? ? ? 53 33 DB 89 5D DC 89 5D E0");
 
 	if (Vars::Misc::DisableInterpolation.Value)
 	{

@@ -2,9 +2,9 @@
 #include <format>
 #include "../Utils/Pattern/Pattern.h"
 
-constexpr auto CLIENT_DLL = "client.dll";
-constexpr auto ENGINE_DLL = "engine.dll";
-constexpr auto VSTDLIB_DLL = "vstdlib.dll";
+static constexpr auto CLIENT_DLL = "client.dll";
+static constexpr auto ENGINE_DLL = "engine.dll";
+static constexpr auto VSTDLIB_DLL = "vstdlib.dll";
 
 class CSignature
 {
@@ -122,6 +122,9 @@ namespace S
 	MAKE_SIGNATURE(S_StartDynamicSound, ENGINE_DLL, "55 8B EC 8B 0D ? ? ? ? 81 EC ? ? ? ? 85 C9", 0x0);
 	MAKE_SIGNATURE(UTIL_TraceLine, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 83 EC ? 8D 4D ? 56 FF 73 ? FF 73 ? E8 ? ? ? ? 6A", 0x0);
 	MAKE_SIGNATURE(ViewRender_PerformScreenSpaceEffects, CLIENT_DLL, "55 8B EC 83 EC ? 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 ? 89 7D ? 8B 01 85 C0 74 ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 57 57 57 57 8D 4D ? 51 50 8B 40 ? FF D0 8B 7D ? 83 C4 ? 8B 75 ? 8B 0D ? ? ? ? 8B 19 8B 0D", 0x0);
+
+	// Functions
+	MAKE_SIGNATURE(CMatchInviteNotification_AcceptMatch, CLIENT_DLL, "55 8B EC 83 EC 10 56 8B F1 8B 86 ? ? ? ? 83 E8 00", 0x0);
 
 	// Values
 	MAKE_SIGNATURE(RandomSeed, CLIENT_DLL, "C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34", 0x2);

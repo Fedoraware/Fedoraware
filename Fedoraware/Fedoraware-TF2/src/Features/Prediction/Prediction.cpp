@@ -26,7 +26,7 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 
 	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
 	{
-		static auto fnResetInstanceCounters = reinterpret_cast<void(__cdecl*)()>(g_Pattern.Find(L"client.dll", L"68 ? ? ? ? 6A ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 83 C4 ? C3"));
+		static auto fnResetInstanceCounters = reinterpret_cast<void(__cdecl*)()>(g_Pattern.Find("client.dll", "68 ? ? ? ? 6A ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 83 C4 ? C3"));
 
 		fnResetInstanceCounters();
 		pLocal->SetCurrentCmd(pCmd);

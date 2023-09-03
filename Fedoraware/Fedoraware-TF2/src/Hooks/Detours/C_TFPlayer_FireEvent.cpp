@@ -9,7 +9,7 @@ int ColorToInt(const Color_t& col)
 MAKE_HOOK(C_TFPlayer_FireEvent, S::C_TFPlayer_FireEvent(), void, __fastcall,
     CBaseEntity* ecx, void* edx, const Vector& origin, const QAngle& angles, int event_, const char* options)
 {
-    static auto SpawnHalloweenSpellFootsteps = reinterpret_cast<void* (__thiscall*)(CBaseEntity*, ParticleAttachment_t, int)>(g_Pattern.Find(L"client.dll", L"55 8B EC A1 ? ? ? ? 83 EC ? 53 8B 5D"));
+    static auto SpawnHalloweenSpellFootsteps = reinterpret_cast<void* (__thiscall*)(CBaseEntity*, ParticleAttachment_t, int)>(g_Pattern.Find("client.dll", "55 8B EC A1 ? ? ? ? 83 EC ? 53 8B 5D"));
 
     if (!Vars::Visuals::HalloweenSpellFootsteps.Value || event_ != 7001 || ecx != g_EntityCache.GetLocal())
     {

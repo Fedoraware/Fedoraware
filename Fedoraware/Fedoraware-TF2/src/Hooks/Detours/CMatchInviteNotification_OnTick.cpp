@@ -2,7 +2,7 @@
 
 MAKE_HOOK(CMatchInviteNotification_OnTick, S::CMatchInviteNotification_OnTick(), void, __fastcall, void* ecx, void* edx)
 {
-	static auto CMatchInviteNotification_AcceptMatch = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 10 56 8B F1 8B 86 ? ? ? ? 83 E8 00"));
+	static auto CMatchInviteNotification_AcceptMatch = reinterpret_cast<void(__thiscall*)(void*)>(S::CMatchInviteNotification_AcceptMatch());
 
 	if (Vars::Misc::InstantAccept.Value == 2)
 	{
