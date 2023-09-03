@@ -18,7 +18,7 @@ MAKE_HOOK(Panel_PaintTraverse, Utils::GetVFuncPtr(I::VGuiPanel, 41), void, __fas
 
 //if (!I::Engine->IsInGame())
 //{
-//	static auto UpdateInventory = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 56 33 DB"));
+//	static auto UpdateInventory = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(LCLIENT_DLL, L"55 8B EC 81 EC ? ? ? ? 53 56 33 DB"));
 //	static int delay = 0;
 //	if (I::BackpackPanel)
 //	{

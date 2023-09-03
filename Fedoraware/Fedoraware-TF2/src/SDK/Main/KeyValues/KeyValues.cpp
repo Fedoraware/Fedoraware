@@ -34,13 +34,13 @@ KeyValues::KeyValues(const char* name)
 KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 {
 	using fn = KeyValues * (__thiscall*)(KeyValues*, const char*, bool);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find("client.dll", "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
+	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
 	return FN(this, keyName, bCreate);
 }
 
 KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
 {
-	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8("client.dll", "E8 ? ? ? ? EB 92"));
+	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(CLIENT_DLL, "E8 ? ? ? ? EB 92"));
 	return KeyValues__AddSubkey(this, pSubkey);
 }
 

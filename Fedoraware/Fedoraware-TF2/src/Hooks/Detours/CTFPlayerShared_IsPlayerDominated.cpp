@@ -6,8 +6,8 @@ MAKE_HOOK(CTFPlayerShared_IsPlayerDominated, S::CTFPlayerShared_IsPlayerDominate
 
 	if (!bResult)
 	{
-		static DWORD dwDesired = g_Pattern.Find("client.dll", "84 C0 74 ? 80 7D ? ? 74 ? 8B 83");
-		static DWORD dwJump = g_Pattern.Find("client.dll", "89 45 BC E8 ? ? ? ? 3B C7 75 1D 80 7D F8 00 75 17 8B 4D C0");
+		static DWORD dwDesired = g_Pattern.Find(CLIENT_DLL, "84 C0 74 ? 80 7D ? ? 74 ? 8B 83");
+		static DWORD dwJump = g_Pattern.Find(CLIENT_DLL, "89 45 BC E8 ? ? ? ? 3B C7 75 1D 80 7D F8 00 75 17 8B 4D C0");
 
 		if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwDesired)
 		{

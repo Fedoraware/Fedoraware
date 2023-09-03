@@ -67,7 +67,7 @@ MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, S::C_TFWeaponBase_CalcIsAttackCri
 	pWeapon->m_iWeaponMode() = nPreviousWeaponMode;
 }
 
-//MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCriticalHelper, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"), bool, __fastcall,
+//MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCriticalHelper, g_Pattern.Find(LCLIENT_DLL, L"55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"), bool, __fastcall,
 //		  void* ecx, void* edx)
 //{
 //    if (!g_EntityCache.GetLocal() || !g_EntityCache.GetWeapon())

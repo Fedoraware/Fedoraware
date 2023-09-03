@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Utils/Utils.h"
+#include "../Signatures.h"
 
 #include "Enums.h"
 #include "Structs.h"
@@ -773,13 +774,13 @@ class CCollisionProperty : public ICollideable
 public:
 	__inline void SetCollisionBounds(const Vec3& mins, const Vec3& maxs)
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&)>(g_Pattern.Find("client.dll", "55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03"));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03"));
 		FN(this, mins, maxs);
 	}
 
 	__inline void CalcNearestPoint(const Vec3& vecWorldPt, Vec3* pVecNearestWorldPt)
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, Vec3*)>(g_Pattern.Find("client.dll", "55 8B EC 83 EC ? 8D 45 ? 56 50 FF 75 ? 8B F1"));
+		static auto FN = reinterpret_cast<void(__thiscall*)(CCollisionProperty*, const Vec3&, Vec3*)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC ? 8D 45 ? 56 50 FF 75 ? 8B F1"));
 		FN(this, vecWorldPt, pVecNearestWorldPt);
 	}
 };

@@ -216,7 +216,7 @@ void CMovementSimulation::FillVelocities()
 // Credits: spook953
 //#include "../../../Hooks/Hooks.h"
 //
-//MAKE_HOOK(C_BasePlayer_CalcPlayerView, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 18 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01 8B 40 38 FF D0 84 C0 75 0B 8B 0D ? ? ? ? 8B 01 FF 50 4C 8B 06 8D 4D E8 51 8B CE FF 90"), void, __fastcall,
+//MAKE_HOOK(C_BasePlayer_CalcPlayerView, g_Pattern.Find(LCLIENT_DLL, L"55 8B EC 83 EC 18 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01 8B 40 38 FF D0 84 C0 75 0B 8B 0D ? ? ? ? 8B 01 FF 50 4C 8B 06 8D 4D E8 51 8B CE FF 90"), void, __fastcall,
 //		  void* ecx, void* edx, Vector& eyeOrigin, Vector& eyeAngles, float& fov)
 //{
 //	static Vector vFrozenOrigin{};
