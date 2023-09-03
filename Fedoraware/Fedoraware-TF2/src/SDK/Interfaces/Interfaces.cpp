@@ -92,7 +92,7 @@ void CInterfaces::Init()
 	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
 	VALIDATE(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
+	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8("client.dll", "E8 ? ? ? ? FF 70 24"))();
 	VALIDATE(TFPartyClient);
 
 	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();

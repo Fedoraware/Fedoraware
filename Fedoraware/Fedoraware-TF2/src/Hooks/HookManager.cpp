@@ -13,8 +13,8 @@ inline uintptr_t GetVFuncPtr(void* pBaseClass, unsigned int nIndex)
 
 CHook::CHook(const std::string& name, void* pInitFunction)
 {
-	this->Name = name;
-	this->InitFunction = pInitFunction;
+	this->m_Name = name;
+	this->m_InitFunction = pInitFunction;
 	g_HookManager.GetMapHooks()[name] = this;
 }
 

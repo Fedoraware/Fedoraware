@@ -40,7 +40,7 @@ KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 
 KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
 {
-	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? EB 92"));
+	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8("client.dll", "E8 ? ? ? ? EB 92"));
 	return KeyValues__AddSubkey(this, pSubkey);
 }
 

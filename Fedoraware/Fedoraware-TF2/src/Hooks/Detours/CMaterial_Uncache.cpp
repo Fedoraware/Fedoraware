@@ -1,7 +1,7 @@
 #include "../Hooks.h"
 #include "../../Features/Chams/DMEChams.h"
 
-MAKE_HOOK(CMaterial_Uncache, g_Pattern.E8(L"MaterialSystem.dll", L"E8 ? ? ? ? 83 7E 1C 00 "), void, __fastcall,
+MAKE_HOOK(CMaterial_Uncache, g_Pattern.E8("MaterialSystem.dll", "E8 ? ? ? ? 83 7E 1C 00 "), void, __fastcall,
 		  IMaterial* ecx, void* edx, bool bPreserveVars)
 {
 	if (ecx)

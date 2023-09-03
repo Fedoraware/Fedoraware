@@ -74,12 +74,6 @@ DWORD CPattern::Find(LPCWSTR szModuleName, LPCWSTR szPattern)
 	return 0x0;
 }
 
-DWORD CPattern::E8(LPCWSTR szModuleName, LPCWSTR szPattern)
-{
-	DWORD dwAddress = Find(szModuleName, szPattern) + 0x1;
-	return *reinterpret_cast<PDWORD>(dwAddress) + dwAddress + 4;
-}
-
 
 
 DWORD CPattern::FindPattern(const DWORD& dwAddress, const DWORD& dwLength, LPCSTR szPattern)
@@ -146,4 +140,10 @@ DWORD CPattern::Find(LPCSTR szModuleName, LPCSTR szPattern)
 	if (!ntHeaders) { return 0x0; }
 
 	return FindPattern(modHandle + ntHeaders->OptionalHeader.BaseOfCode, modHandle + ntHeaders->OptionalHeader.SizeOfCode, szPattern);
+}
+
+DWORD CPattern::E8(LPCSTR szModuleName, LPCSTR szPattern)
+{
+	const DWORD dwAddress = Find(szModuleName, szPattern) + 0x1;
+	return *reinterpret_cast<PDWORD>(dwAddress) + dwAddress + 4;
 }
