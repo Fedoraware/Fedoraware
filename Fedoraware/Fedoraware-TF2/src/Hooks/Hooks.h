@@ -8,38 +8,38 @@
 
 class CHook
 {
-	std::string Name;
-	void* OriginalFunction = nullptr;
-	void* InitFunction = nullptr;
+	std::string m_Name;
+	void* m_OriginalFunction = nullptr;
+	void* m_InitFunction = nullptr;
 
 public:
 	CHook(const std::string& name, void* pInitFunction);
 
 	void CreateHook(void* pTarget, void* pDetour)
 	{
-		if (MH_CreateHook(pTarget, pDetour, &OriginalFunction) != MH_OK)
+		if (MH_CreateHook(pTarget, pDetour, &m_OriginalFunction) != MH_OK)
 		{
-			throw std::runtime_error("Failed to create hook: " + Name);
+			throw std::runtime_error("Failed to create hook: " + m_Name);
 		}
 	}
 
 	void DisableHook()
 	{
-		if (MH_DisableHook(OriginalFunction) != MH_OK)
+		if (MH_DisableHook(m_OriginalFunction) != MH_OK)
 		{
-			throw std::runtime_error("Failed to disable hook: " + Name);
+			throw std::runtime_error("Failed to disable hook: " + m_Name);
 		}
 	}
 
 	void Init()
 	{
-		reinterpret_cast<void(__cdecl*)()>(InitFunction)();
+		reinterpret_cast<void(__cdecl*)()>(m_InitFunction)();
 	}
 
 	template <typename FN>
 	FN Original()
 	{
-		return reinterpret_cast<FN>(OriginalFunction);
+		return reinterpret_cast<FN>(m_OriginalFunction);
 	}
 };
 

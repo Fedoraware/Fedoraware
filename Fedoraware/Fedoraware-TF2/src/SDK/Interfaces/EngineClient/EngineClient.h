@@ -157,7 +157,7 @@ public:
 		typedef void(__thiscall* FN)(void*, KeyValues*);
 		GetVFunc<FN>(this, 127)(this, pKV);
 		//using fn = void(__stdcall*)(void*); // KeyValues* not void* but I don't know what consequences including KeyValues.h will have here
-		//static fn ServerCmdKeyValuesFn = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC B9 ? ? ? ? 5D E9 ? ? ? ? CC CC 55 8B EC 8A 45 08"));
+		//static fn ServerCmdKeyValuesFn = reinterpret_cast<fn>(g_Pattern.Find(LENGINE_DLL, L"55 8B EC B9 ? ? ? ? 5D E9 ? ? ? ? CC CC 55 8B EC 8A 45 08"));
 		//ServerCmdKeyValuesFn(pKV);
 	}
 		

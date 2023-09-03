@@ -163,7 +163,7 @@ public:
 
 	void ForceFullUpdate()
 	{
-		return reinterpret_cast<void(__thiscall*)(CClientState*)>(g_Pattern.Find(L"engine.dll", L"56 8B F1 83 BE ? ? ? ? ? 74 1D"))(this);
+		return reinterpret_cast<void(__thiscall*)(CClientState*)>(g_Pattern.Find(ENGINE_DLL, "56 8B F1 83 BE ? ? ? ? ? 74 1D"))(this);
 	}
 };
 

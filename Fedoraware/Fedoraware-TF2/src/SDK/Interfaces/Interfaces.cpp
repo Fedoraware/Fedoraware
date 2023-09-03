@@ -92,7 +92,7 @@ void CInterfaces::Init()
 	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
 	VALIDATE(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT, L"E8 ? ? ? ? FF 70 24"))();
+	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT_DLL, "E8 ? ? ? ? FF 70 24"))();
 	VALIDATE(TFPartyClient);
 
 	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();
@@ -145,7 +145,7 @@ void CInterfaces::Init()
 	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams**>();
 	VALIDATE(ViewRenderBeams);
 
-	EngineSound = g_Interface.Get<IEngineSound*>(L"engine.dll", "IEngineSoundClient003");
+	EngineSound = g_Interface.Get<IEngineSound*>(ENGINE, "IEngineSoundClient003");
 	VALIDATE(EngineSound);
 
 	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules*>();

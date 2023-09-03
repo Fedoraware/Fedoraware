@@ -91,10 +91,10 @@ void DrawBeam(const Vector& source, const Vector& end)
 	}
 }
 
-//C_BaseCombatWeapon_ItemPostFrame L"client.dll", L"E8 ? ? ? ? 80 BE ? ? ? ? ? 74 07 8B CE E8 ? ? ? ? 8B 06"
-//C_TFWeaponBaseGun_PrimaryAttack L"client.dll", L"E8 ? ? ? ? A1 ? ? ? ? 8D 4D F0"
-//C_TFWeaponBaseGun_FireProjectile L"client.dll", L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"
-//C_TFWeaponBaseGun_FireBullet L"client.dll", L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"
+//C_BaseCombatWeapon_ItemPostFrame LCLIENT_DLL, L"E8 ? ? ? ? 80 BE ? ? ? ? ? 74 07 8B CE E8 ? ? ? ? 8B 06"
+//C_TFWeaponBaseGun_PrimaryAttack LCLIENT_DLL, L"E8 ? ? ? ? A1 ? ? ? ? 8D 4D F0"
+//C_TFWeaponBaseGun_FireProjectile LCLIENT_DLL, L"E8 ? ? ? ? 8B 8F ? ? ? ? 8B F0 33 C0"
+//C_TFWeaponBaseGun_FireBullet LCLIENT_DLL, L"55 8B EC 83 EC 20 53 8B D9 56 57 89 5D FC"
 
 bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
 {

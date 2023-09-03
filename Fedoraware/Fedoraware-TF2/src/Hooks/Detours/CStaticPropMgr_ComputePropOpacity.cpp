@@ -39,8 +39,7 @@ public:
 	Vector					m_LightingOrigin;
 };
 
-MAKE_HOOK(CStaticPropMgr_ComputePropOpacity, g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 0C A1 ? ? ? ? 53 56 57 8B 7D 08 8B D9 8B 30 8D 4F 04 8B 01"), void, __fastcall,
-		  void* ecx, void* edx, CStaticProp* pProp)
+MAKE_HOOK(CStaticPropMgr_ComputePropOpacity, S::CStaticPropMgr_ComputePropOpacity(), void, __fastcall, void* ecx, void* edx, CStaticProp* pProp)
 {
 	if (pProp && Vars::Visuals::NoStaticPropFade.Value)
 	{

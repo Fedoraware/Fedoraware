@@ -435,11 +435,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				if (Vars::ESP::Players::WeaponText.Value)
 				{
 					static auto CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot = reinterpret_cast<void* (__cdecl*)(void*, int, void**)>(
-						g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 53 56 57 8B 7D 08 33 F6 8B 87 ? ? ? ? 81 C7 ? ? ? ? 89 45 FC 8D 49 00")
+						g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 08 53 56 57 8B 7D 08 33 F6 8B 87 ? ? ? ? 81 C7 ? ? ? ? 89 45 FC 8D 49 00")
 						);
 
 					static auto C_EconItemView_GetItemName = reinterpret_cast<const char* (__thiscall*)(void*)>(
-						g_Pattern.Find(L"client.dll", L"56 8B F1 C6 86 ? ? ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 5E 85 C9 75 06")
+						g_Pattern.Find(CLIENT_DLL, "56 8B F1 C6 86 ? ? ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 5E 85 C9 75 06")
 						);
 
 					int iWeaponSlot = pWeapon->GetSlot();
@@ -507,7 +507,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 
 					//static auto C_EconItemView_GetStaticData = reinterpret_cast<void* (__thiscall*)(void*)>(
-					//	g_Pattern.Find(L"client.dll", L"0F B7 41 24 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 50 E8 ? ? ? ? 83 C4 14 C3")
+					//	g_Pattern.Find(LCLIENT_DLL, L"0F B7 41 24 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 50 E8 ? ? ? ? 83 C4 14 C3")
 					//	);
 
 					//void* pItem = pWeapon->m_Item();

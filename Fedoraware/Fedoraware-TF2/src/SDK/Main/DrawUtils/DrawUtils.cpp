@@ -302,7 +302,7 @@ void CDraw::Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex)
 CHudTexture* CDraw::GetIcon(const char* szIcon, int eIconFormat /* = 0*/)
 {
 	using fn = CHudTexture * (__stdcall*)(const char*, int);
-	static auto GetIconFn = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 83 7D 0C ? 56"));
+	static auto GetIconFn = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 83 7D 0C ? 56"));
 	return GetIconFn(szIcon, eIconFormat);
 }
 

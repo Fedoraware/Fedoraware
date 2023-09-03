@@ -6,21 +6,21 @@
 bool CKeyValUtils::LoadFromBuffer(KeyValues* key_value, char const* resource_name, const char* buffer, void* file_system, const char* path_id)
 {
 	using FN = int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*);
-	static FN load_from_the_buffer = (FN)g_Pattern.Find(L"engine.dll", L"55 8B EC 83 EC 38 53 8B 5D 0C");
+	static FN load_from_the_buffer = (FN)g_Pattern.Find(ENGINE_DLL, "55 8B EC 83 EC 38 53 8B 5D 0C");
 	return load_from_the_buffer(key_value, resource_name, buffer, file_system, path_id);
 }
 
 KeyValues* CKeyValUtils::Initialize(KeyValues* key_value, char* name)
 {
 	using FN = KeyValues * (__thiscall*)(KeyValues*, char*);
-	static FN initialize = (FN)(g_Pattern.Find(L"engine.dll", L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
+	static FN initialize = (FN)(g_Pattern.Find(ENGINE_DLL, "FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
 	return initialize(key_value, name);
 }
 
 void KeyValues::Initialize(char* name)
 {
 	using fn = KeyValues * (__thiscall*)(KeyValues*, char*);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
+	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(ENGINE_DLL, "FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
 	FN(this, name);
 }
 
@@ -34,13 +34,13 @@ KeyValues::KeyValues(const char* name)
 KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 {
 	using fn = KeyValues * (__thiscall*)(KeyValues*, const char*, bool);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
+	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
 	return FN(this, keyName, bCreate);
 }
 
 KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
 {
-	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(L"client.dll", L"E8 ? ? ? ? EB 92"));
+	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(CLIENT_DLL, "E8 ? ? ? ? EB 92"));
 	return KeyValues__AddSubkey(this, pSubkey);
 }
 
