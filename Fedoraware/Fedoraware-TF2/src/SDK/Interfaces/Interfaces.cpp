@@ -145,7 +145,7 @@ void CInterfaces::Init()
 	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams**>();
 	VALIDATE(ViewRenderBeams);
 
-	EngineSound = g_Interface.Get<IEngineSound*>(L"engine.dll", "IEngineSoundClient003");
+	EngineSound = g_Interface.Get<IEngineSound*>(ENGINE, "IEngineSoundClient003");
 	VALIDATE(EngineSound);
 
 	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules*>();
