@@ -1,7 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(KeyValues_SetInt, g_Pattern.Find(L"client.dll", L"55 8B EC 6A 01 FF 75 08 E8 ? ? ? ? 85 C0 74 0A 8B 4D 0C 89 48 0C C6 40 10 02"), void, __fastcall,
-		  void* ecx, void* edx, const char* szKeyName, int iValue)
+MAKE_HOOK(KeyValues_SetInt, S::KeyValues_SetInt(), void, __fastcall, void* ecx, void* edx, const char* szKeyName, int iValue)
 {
 	Hook.Original<FN>()(ecx, edx, szKeyName, iValue);
 

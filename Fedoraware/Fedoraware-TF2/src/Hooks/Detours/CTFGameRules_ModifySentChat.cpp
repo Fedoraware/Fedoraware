@@ -6,8 +6,7 @@ struct s_CTFGameRules
 	bool m_bPlayingMedieval;
 };
 
-MAKE_HOOK(CTFGameRules_ModifySentChat, g_Pattern.Find(L"client.dll", L"55 8B EC 80 B9 ? ? ? ? ? 56 8B 75 08 74 26"), void, __fastcall,
-		  void* ecx, void* edx, char* pBuf, int iBufSize)
+MAKE_HOOK(CTFGameRules_ModifySentChat, S::CTFGameRules_ModifySentChat(), void, __fastcall, void* ecx, void* edx, char* pBuf, int iBufSize)
 {
 	if (Vars::Misc::MedievalChat.Value > 0)
 	{

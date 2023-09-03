@@ -90,10 +90,9 @@ struct CEconItemDefinition_t
 	DWORD dword168;
 };
 
-MAKE_HOOK(CEconItemSchema_GetItemDefinition, g_Pattern.Find(L"client.dll", L"55 8B EC 56 8B F1 8D 45 08 57 50 8D 8E ? ? ? ? E8 ? ? ? ? 85 C0 78 22 3B 86 ? ? ? ? 7D 1A 8B 8E ? ? ? ? 8D 14 40 83 7C 91 ? ? 7C 0A 8B 44 91 04 5F 5E 5D C2 04 00"), CEconItemDefinition_t*, __fastcall,
-		  DWORD* ecx, void* edx, int iItemIndex)
+MAKE_HOOK(CEconItemSchema_GetItemDefinition, S::CEconItemSchema_GetItemDefinition(), CEconItemDefinition_t*, __fastcall, DWORD* ecx, void* edx, int iItemIndex)
 {
-	auto pItemDefinition = Hook.Original<FN>()(ecx, edx, iItemIndex);
+	const auto pItemDefinition = Hook.Original<FN>()(ecx, edx, iItemIndex);
 	if (pItemDefinition && Vars::Visuals::EquipRegionUnlock.Value)
 	{
 		pItemDefinition->m_unEquipRegionMask = 0;

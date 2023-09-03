@@ -1,7 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(CSkyboxView_Enable3dSkyboxFog, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 10 57 E8 ? ? ? ? 8B F8 85 FF 74 57 8B 0D ? ? ? ? 56 8B 11 FF 92 ? ? ? ? 8B F0 85 F6 74 07"), void, __fastcall,
-		  void* ecx, void* edx)
+MAKE_HOOK(CSkyboxView_Enable3dSkyboxFog, S::CSkyboxView_Enable3dSkyboxFog(), void, __fastcall, void* ecx, void* edx)
 {
 	if (Vars::Visuals::Fog::DisableFog.Value)
 	{

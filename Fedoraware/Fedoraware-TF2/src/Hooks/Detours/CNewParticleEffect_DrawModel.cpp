@@ -1,7 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(CNewParticleEffect_DrawModel, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 30 53 8B D9 8B 0D ? ? ? ? 56 33 F6 89 75 DC"), int, __fastcall,
-		  void* ecx, void* edx, int flags)
+MAKE_HOOK(CNewParticleEffect_DrawModel, S::CNewParticleEffect_DrawModel(), int, __fastcall, void* ecx, void* edx, int flags)
 {
 	if (!Vars::Visuals::ParticlesIgnoreZ.Value)
 	{

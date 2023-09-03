@@ -158,8 +158,7 @@ enum ETFCond
 	TF_COND_LAST
 };
 
-MAKE_HOOK(CTFPlayerShared_InCond, g_Pattern.Find(L"client.dll", L"55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"), bool, __fastcall,
-		  void* ecx, void* edx, ETFCond nCond)
+MAKE_HOOK(CTFPlayerShared_InCond, S::CTFPlayerShared_InCond(), bool, __fastcall, void* ecx, void* edx, ETFCond nCond)
 {
 	static const auto dwPlayerShouldDraw = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 84 C0 75 C5") + 0x5;
 	static const auto dwWearableShouldDraw = g_Pattern.Find(L"client.dll", L"E8 ? ? ? ? 84 C0 75 E1 6A 03") + 0x5;

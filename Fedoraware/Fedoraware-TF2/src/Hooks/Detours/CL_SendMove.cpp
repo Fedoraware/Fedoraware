@@ -1,7 +1,6 @@
  #include "../Hooks.h"
 
-MAKE_HOOK(CL_SendMove, g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 8D"), void, __cdecl,
-		  void* ecx, void* edx)
+MAKE_HOOK(CL_SendMove, S::CL_SendMove(), void, __cdecl, void* ecx, void* edx)
 {
 	byte data[4000];
 

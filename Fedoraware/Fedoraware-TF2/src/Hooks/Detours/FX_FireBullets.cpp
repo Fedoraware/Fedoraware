@@ -3,7 +3,7 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
-MAKE_HOOK(FX_FireBullets, g_Pattern.Find(L"client.dll", L"55 8B EC 81 EC ? ? ? ? 53 8B 5D ? 56 53"), void, __cdecl,
+MAKE_HOOK(FX_FireBullets, S::FX_FireBullets(), void, __cdecl,
 		  void* pWpn, int iPlayer, const Vec3& vecOrigin, const Vec3& vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
 {
 	if (iPlayer != I::EngineClient->GetLocalPlayer()){
