@@ -8,9 +8,9 @@
 
 # Fedoraware
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/Fedoraware/Fedoraware)](/stargazers)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Fedoraware/Fedoraware)](https://github.com/Fedoraware/Fedoraware/stargazers)
 [![Discord](https://img.shields.io/discord/1115064843209289849?logo=Discord&label=discord)](https://discord.gg/p7ahhu7P6M)
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Fedoraware/Fedoraware/msbuild.yml?branch=main)](/actions)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Fedoraware/Fedoraware/msbuild.yml?branch=main)](https://github.com/Fedoraware/Fedoraware/actions)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/Fedoraware/Fedoraware)
 
 A free and open-source training software for Team Fortress 2 based on [SE-Owned](https://www.unknowncheats.me/forum/team-fortress-2-a/436430-seowned-featured-cheat.html).
