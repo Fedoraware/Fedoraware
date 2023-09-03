@@ -149,11 +149,41 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 	}	//	we always need this :c 
 
-	I::Prediction->Update(I::ClientState->m_nDeltaTick, 
-		I::ClientState->m_nDeltaTick > 0, 
-		I::ClientState->last_command_ack, 
-		I::ClientState->lastoutgoingcommand + I::ClientState->chokedcommands);
+	// Call once(!) per tick
+float GetCurTime(CUserCmd* ucmd) {
+    // Declare and initialize the pointers to the local player and the global structure
+    C_BasePlayer* pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+    CGlobalVarsBase* g_pGlobals = Interfaces::Globals();
 
+    // Check if the pointers are valid
+    if (!pLocalPlayer || !g_pGlobals) {
+        return 0.0f; // Return zero if not
+    }
+	
+    static int g_tick = 0; // The current tick
+    static CUserCmd* g_pLastCmd = nullptr; // The last user command
+
+    // Check if the last user command is valid and has been predicted
+    if (!g_pLastCmd || g_pLastCmd->hasbeenpredicted) {
+        // Update the current tick with the tick base of the local player
+        g_tick = pLocalPlayer->m_nTickBase;
+    }
+    else {
+        // Increment the current tick by one
+        // Required because prediction only runs on frames, not ticks
+        // So if your framerate goes below tickrate, m_nTickBase won't update every tick
+        ++g_tick;
+    }
+
+    // Assign the current user command to the last user command
+    g_pLastCmd = ucmd;
+
+    // Calculate the current time by multiplying the current tick with the interval per tick
+    float curtime = g_tick * g_pGlobals->interval_per_tick;
+
+    // Return the current time
+    return curtime;
+}
 	// Run Features
 	{
 		F::Misc.RunPre(pCmd, pSendPacket);
