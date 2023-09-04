@@ -16,13 +16,13 @@ private:
 
 public:
 	template<typename T>
-	__inline T Get(LPCWSTR szModule, PCCH szObject)
+	__inline T Get(LPCSTR szModule, PCCH szObject)
 	{
-		if (const auto hModule = GetModuleHandleW(szModule))
+		if (const auto hModule = GetModuleHandleA(szModule))
 		{
-			if (const auto Factory = reinterpret_cast<void*(__cdecl*)(const char* pName, int* pReturnCode)>(GetProcAddress(hModule, "CreateInterface")))
+			if (const auto fnFactory = reinterpret_cast<void*(__cdecl*)(const char* pName, int* pReturnCode)>(GetProcAddress(hModule, "CreateInterface")))
 			{
-				return reinterpret_cast<T>(Factory(szObject, nullptr));
+				return reinterpret_cast<T>(fnFactory(szObject, nullptr));
 			}
 		}
 

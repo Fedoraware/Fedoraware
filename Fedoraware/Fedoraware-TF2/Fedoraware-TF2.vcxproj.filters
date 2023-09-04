@@ -132,7 +132,6 @@
     <ClCompile Include="src\Hooks\HookManager.cpp" />
     <ClCompile Include="src\Hooks\MenuHook\MenuHook.cpp" />
     <ClCompile Include="src\Hooks\PatchManager\PatchManager.cpp" />
-    <ClCompile Include="src\Resources\64x64_Circle_Mask.h" />
     <ClCompile Include="src\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="src\SDK\Includes\MD5.cpp" />
     <ClCompile Include="src\SDK\Interfaces\ConVar\ConVar.cpp" />
@@ -399,6 +398,7 @@
     <ClInclude Include="include\Steam\steamuniverse.h" />
     <ClInclude Include="include\Discord\discord_register.h" />
     <ClInclude Include="include\Discord\discord_rpc.h" />
+    <ClInclude Include="src\SDK\Signatures.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
