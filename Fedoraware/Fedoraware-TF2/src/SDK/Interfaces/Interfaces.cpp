@@ -4,56 +4,47 @@
 #define VALIDATE(x) if (!(x)) MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR)
 #define VALIDATE_STEAM(x) if (!(x)) MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
 
-#define CLIENT L"client.dll"
-#define STEAMCLIENT L"steamclient.dll"
-#define ENGINE L"engine.dll"
-#define VGUI2 L"vgui2.dll"
-#define MATSURFACE L"vguimatsurface.dll"
-#define VSTDLIB L"vstdlib.dll"
-#define MATSYSTEM L"materialsystem.dll"
-
-
 void CInterfaces::Init()
 {
 	using namespace I;
 
-	BaseClientDLL = g_Interface.Get<CBaseClientDLL*>(CLIENT, CLIENT_DLL_INTERFACE_VERSION);
+	BaseClientDLL = g_Interface.Get<CBaseClientDLL*>(CLIENT_DLL, CLIENT_DLL_INTERFACE_VERSION);
 	VALIDATE(BaseClientDLL);
 
-	ClientDLLSharedAppSystems = g_Interface.Get<CClientDLLSharedAppSystems*>(CLIENT, CLIENT_DLL_SHARED_APPSYSTEMS);
+	ClientDLLSharedAppSystems = g_Interface.Get<CClientDLLSharedAppSystems*>(CLIENT_DLL, CLIENT_DLL_SHARED_APPSYSTEMS);
 	VALIDATE(ClientDLLSharedAppSystems);
 
-	ClientEntityList = g_Interface.Get<CClientEntityList*>(CLIENT, VCLIENTENTITYLIST_INTERFACE_VERSION);
+	ClientEntityList = g_Interface.Get<CClientEntityList*>(CLIENT_DLL, VCLIENTENTITYLIST_INTERFACE_VERSION);
 	VALIDATE(ClientEntityList);
 
-	Prediction = g_Interface.Get<CPrediction*>(CLIENT, VCLIENT_PREDICTION_INTERFACE_VERSION);
+	Prediction = g_Interface.Get<CPrediction*>(CLIENT_DLL, VCLIENT_PREDICTION_INTERFACE_VERSION);
 	VALIDATE(Prediction);
 
-	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
+	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT_DLL, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
 	VALIDATE(GameMovement);
 
-	CenterPrint = g_Interface.Get<ICenterPrint*>(CLIENT, VCENTERPRINT_INTERFACE_VERSION);
+	CenterPrint = g_Interface.Get<ICenterPrint*>(CLIENT_DLL, VCENTERPRINT_INTERFACE_VERSION);
 	VALIDATE(CenterPrint);
 
-	ModelInfoClient = g_Interface.Get<CModelInfoClient*>(ENGINE, VMODELINFO_CLIENT_INTERFACE_VERSION);
+	ModelInfoClient = g_Interface.Get<CModelInfoClient*>(ENGINE_DLL, VMODELINFO_CLIENT_INTERFACE_VERSION);
 	VALIDATE(ModelInfoClient);
 
-	EngineClient = g_Interface.Get<CEngineClient*>(ENGINE, VENGINE_CLIENT_INTERFACE_VERSION_13);
+	EngineClient = g_Interface.Get<CEngineClient*>(ENGINE_DLL, VENGINE_CLIENT_INTERFACE_VERSION_13);
 	VALIDATE(EngineClient);
 
-	EngineEffects = g_Interface.Get<IVEngineEffects*>(ENGINE, VENGINE_EFFECTS_INTERFACE_VERSION);
+	EngineEffects = g_Interface.Get<IVEngineEffects*>(ENGINE_DLL, VENGINE_EFFECTS_INTERFACE_VERSION);
 	VALIDATE(EngineEffects);
 
-	EngineTrace = g_Interface.Get<CEngineTrace*>(ENGINE, VENGINE_TRACE_CLIENT_INTERFACE_VERSION);
+	EngineTrace = g_Interface.Get<CEngineTrace*>(ENGINE_DLL, VENGINE_TRACE_CLIENT_INTERFACE_VERSION);
 	VALIDATE(EngineTrace);
 
-	VGuiPanel = g_Interface.Get<CPanel*>(VGUI2, VGUI_PANEL_INTERFACE_VERSION);
+	VGuiPanel = g_Interface.Get<CPanel*>("vgui2.dll", VGUI_PANEL_INTERFACE_VERSION);
 	VALIDATE(VGuiPanel);
 
-	VGuiSurface = g_Interface.Get<CSurface*>(MATSURFACE, VGUI_SURFACE_INTERFACE_VERSION);
+	VGuiSurface = g_Interface.Get<CSurface*>("vguimatsurface.dll", VGUI_SURFACE_INTERFACE_VERSION);
 	VALIDATE(VGuiSurface);
 
-	Cvar = g_Interface.Get<ICvar*>(VSTDLIB, VENGINE_CVAR_INTERFACE_VERSION);
+	Cvar = g_Interface.Get<ICvar*>("vstdlib.dll", VENGINE_CVAR_INTERFACE_VERSION);
 	VALIDATE(Cvar);
 
 	GlobalVars = *S::GlobalVars_Interface.As<CGlobalVarsBase*>();
@@ -68,25 +59,25 @@ void CInterfaces::Init()
 	ClientModeShared = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);
 	VALIDATE(ClientModeShared);
 
-	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE, VENGINE_VGUI_VERSION);
+	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE_DLL, VENGINE_VGUI_VERSION);
 	VALIDATE(EngineVGui);
 
 	DemoPlayer = **S::DemoPlayer_Interface.As<void**>();
 	VALIDATE(DemoPlayer);
 
-	RenderView = g_Interface.Get<IVRenderView*>(ENGINE, VENGINE_RENDERVIEW_INTERFACE_VERSION);
+	RenderView = g_Interface.Get<IVRenderView*>(ENGINE_DLL, VENGINE_RENDERVIEW_INTERFACE_VERSION);
 	VALIDATE(RenderView);
 
-	DebugOverlay = g_Interface.Get<CDebugOverlay*>(ENGINE, VENGINE_DEBUGOVERLAY_INTERFACE_VERSION);
+	DebugOverlay = g_Interface.Get<CDebugOverlay*>(ENGINE_DLL, VENGINE_DEBUGOVERLAY_INTERFACE_VERSION);
 	VALIDATE(RenderView);
 
-	GameEventManager = g_Interface.Get<CGameEventManager*>(ENGINE, GAMEEVENTSMANAGER_ENGINE_INTERFACE);
+	GameEventManager = g_Interface.Get<CGameEventManager*>(ENGINE_DLL, GAMEEVENTSMANAGER_ENGINE_INTERFACE);
 	VALIDATE(GameEventManager);
 
-	ModelRender = g_Interface.Get<CModelRender*>(ENGINE, VENGINE_MODELRENDER_INTERFACE);
+	ModelRender = g_Interface.Get<CModelRender*>(ENGINE_DLL, VENGINE_MODELRENDER_INTERFACE);
 	VALIDATE(ModelRender);
 
-	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, VMATERIALSYSTEM_INTERFACE);
+	MaterialSystem = g_Interface.Get<CMaterialSystem*>("materialsystem.dll", VMATERIALSYSTEM_INTERFACE);
 	VALIDATE(MaterialSystem);
 
 	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
@@ -118,7 +109,7 @@ void CInterfaces::Init()
 	VALIDATE(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
-		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleW(VSTDLIB), "KeyValuesSystem")));
+		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "KeyValuesSystem")));
 		return fn();
 	};
 
@@ -128,13 +119,13 @@ void CInterfaces::Init()
 	UniformRandomStream = *S::UniformRandomStream_Interface.As<IUniformRandomStream*>();
 	VALIDATE(UniformRandomStream);
 
-	StudioRender = g_Interface.Get<void*>(L"studiorender.dll", "VStudioRender025");
+	StudioRender = g_Interface.Get<void*>("studiorender.dll", "VStudioRender025");
 	VALIDATE(StudioRender);
 
-	InputSystem = g_Interface.Get<IInputSystem*>(L"inputsystem.dll", "InputSystemVersion001");
+	InputSystem = g_Interface.Get<IInputSystem*>("inputsystem.dll", "InputSystemVersion001");
 	VALIDATE(InputSystem);
 
-	EffectsClient = g_Interface.Get<CEffectsClient*>(CLIENT, IEFFECTS_INTERFACE_VERSION);
+	EffectsClient = g_Interface.Get<CEffectsClient*>(CLIENT_DLL, IEFFECTS_INTERFACE_VERSION);
 	VALIDATE(EffectsClient);
 
 	using getachievementmgr = IAchievementMgr* (*)();
@@ -145,7 +136,7 @@ void CInterfaces::Init()
 	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams**>();
 	VALIDATE(ViewRenderBeams);
 
-	EngineSound = g_Interface.Get<IEngineSound*>(ENGINE, "IEngineSoundClient003");
+	EngineSound = g_Interface.Get<IEngineSound*>(ENGINE_DLL, "IEngineSoundClient003");
 	VALIDATE(EngineSound);
 
 	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules*>();
@@ -161,7 +152,7 @@ void CInterfaces::Init()
 	ClientModeTF = *S::ClientModeTFNormal_Interface.As<ClientModeTFNormal*>();
 	VALIDATE(ClientModeTF);
 
-	Localize = g_Interface.Get<ILocalize*>(VGUI2, VGUI_LOCALIZE_INTERFACE_VERSION);
+	Localize = g_Interface.Get<ILocalize*>("vgui2.dll", VGUI_LOCALIZE_INTERFACE_VERSION);
 	VALIDATE(Localize);
 
 	HostState = *S::HostState_Interface.As<CCommonHostState*>();
@@ -170,7 +161,7 @@ void CInterfaces::Init()
 
 void CSteamInterfaces::Init()
 {
-	Client = g_Interface.Get<ISteamClient*>(STEAMCLIENT, STEAMCLIENT_INTERFACE_VERSION);
+	Client = g_Interface.Get<ISteamClient*>("steamclient.dll", STEAMCLIENT_INTERFACE_VERSION);
 	VALIDATE_STEAM(Client);
 
 	const HSteamPipe hsNewPipe = Client->CreateSteamPipe();

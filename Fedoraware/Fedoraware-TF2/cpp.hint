@@ -11,3 +11,4 @@
 #define TOGGLE(label, v) ImGui::Checkbox(label, v);
 #define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
 #define abstract_class class __declspec(novtable)
+#define MAKE_SIGNATURE(name, module, pattern, offset) inline CSignature name{ module, pattern, offset }

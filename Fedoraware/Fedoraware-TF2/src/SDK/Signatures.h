@@ -5,6 +5,7 @@
 static constexpr auto CLIENT_DLL = "client.dll";
 static constexpr auto ENGINE_DLL = "engine.dll";
 static constexpr auto VSTDLIB_DLL = "vstdlib.dll";
+static constexpr auto MATSURFACE_DLL = "vguimatsurface.dll";
 
 class CSignature
 {
