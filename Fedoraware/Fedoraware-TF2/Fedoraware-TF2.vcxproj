@@ -433,6 +433,7 @@
     <ClInclude Include="src\SDK\Interfaces\ClientEntityList\ClientEntityList.h" />
     <ClInclude Include="src\SDK\Interfaces\ClientModeShared\ClientModeShared.h" />
     <ClInclude Include="src\SDK\Interfaces\ConVar\ConVar.h" />
+    <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />

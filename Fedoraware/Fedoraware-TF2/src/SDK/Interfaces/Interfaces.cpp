@@ -163,7 +163,6 @@ void CInterfaces::Init()
 	ThirdPersonManager = *S::ThirdPersonManager_Interface.As<CThirdPersonManager*>();
 	VALIDATE(ThirdPersonManager);
 
-	// Forgive the double cast but this was annoying meeeeee
 	DirectXDevice = **S::DirectXDevice.As<IDirect3DDevice9**>();
 	VALIDATE(DirectXDevice);
 
@@ -176,8 +175,8 @@ void CInterfaces::Init()
 	HostState = *S::HostState_Interface.As<CCommonHostState*>();
 	VALIDATE(HostState);
 
-	CTFGameMovement = *S::CTFGameMovement_Interface.As<void*>();
-	VALIDATE(CTFGameMovement);
+	TFGameMovement = *S::CTFGameMovement_Interface.As<CTFGameMovement*>();
+	VALIDATE(TFGameMovement);
 }
 
 void CSteamInterfaces::Init()

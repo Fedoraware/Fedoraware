@@ -43,6 +43,7 @@
 #include "CCommonHostState/CCommonHostState.h"
 #include "ICenterPrint/ICenterPrint.h"
 #include "IOcclusionSystem/IOcclusionSystem.h"
+#include "CTFGameMovement/CTFGameMovement.h"
 
 #include <d3d9.h>
 
@@ -214,7 +215,7 @@ namespace I
 	inline void* StudioRender = nullptr;
 	inline IInputSystem* InputSystem = nullptr;
 	inline void* CHud = nullptr;
-	inline void* CTFGameMovement = nullptr;
+	inline CTFGameMovement* TFGameMovement = nullptr;
 	inline IAchievementMgr* AchievementMgr = nullptr;
 	inline IViewRenderBeams* ViewRenderBeams = nullptr;
 	inline IEngineSound* EngineSound = nullptr;

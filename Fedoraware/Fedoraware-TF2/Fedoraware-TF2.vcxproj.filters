@@ -398,6 +398,7 @@
     <ClInclude Include="include\Discord\discord_register.h" />
     <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="src\SDK\Signatures.h" />
+    <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
