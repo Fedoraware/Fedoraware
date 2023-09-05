@@ -69,9 +69,3 @@ DWORD CPattern::Find(LPCSTR szModuleName, LPCSTR szPattern)
 
 	return FindPattern(modHandle + ntHeaders->OptionalHeader.BaseOfCode, modHandle + ntHeaders->OptionalHeader.SizeOfCode, szPattern);
 }
-
-DWORD CPattern::E8(LPCSTR szModuleName, LPCSTR szPattern)
-{
-	const DWORD dwAddress = Find(szModuleName, szPattern) + 0x1;
-	return *reinterpret_cast<PDWORD>(dwAddress) + dwAddress + 4;
-}
