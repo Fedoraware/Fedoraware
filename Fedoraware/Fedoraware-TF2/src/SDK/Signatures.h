@@ -26,6 +26,8 @@ class CSignature
 			const auto msg = std::format("Module: {}\nPattern: {}\nAddress: {:#x} (+{:d})", m_Module, m_Pattern, m_Address, m_Offset);
 			MessageBoxA(nullptr, msg.c_str(), "Pattern not found", MB_OK | MB_ICONERROR);
 		}
+
+		m_Address += m_Offset;
 	}
 
 public:
@@ -36,7 +38,7 @@ public:
 	DWORD operator()()
 	{
 		if (m_Address == 0) { Find(); }
-		return m_Address + m_Offset;
+		return m_Address;
 	}
 
 	template <typename T> T* As() { return reinterpret_cast<T*>(this->operator()()); }
@@ -89,7 +91,6 @@ namespace S
 	MAKE_SIGNATURE(CSoundEmitterSystem_EmitSound, CLIENT_DLL, "55 8B EC 53 56 8B 75 ? 8B D9 57 8B 56", 0x0);
 	MAKE_SIGNATURE(CStaticPropMgr_ComputePropOpacity, ENGINE_DLL, "55 8B EC 83 EC ? A1 ? ? ? ? 53 56 57 8B 7D ? 8B D9", 0x0);
 	MAKE_SIGNATURE(CStaticPropMgr_DrawStaticProps, ENGINE_DLL, "55 8B EC 83 EC ? 8B 15 ? ? ? ? 53 56 57 33 F6", 0x0);
-	MAKE_SIGNATURE(CTFGameMovement_Duck, CLIENT_DLL, "55 8B EC 83 EC 20 53 56 8B D9 57", 0x0);
 	MAKE_SIGNATURE(CTFGameRules_ModifySentChat, CLIENT_DLL, "55 8B EC 80 B9 ? ? ? ? ? 56 8B 75 08 74 26", 0x0);
 	MAKE_SIGNATURE(CTFGCClientSystem_UpdateAssignedLobby, CLIENT_DLL, "55 8B EC 83 EC 28 53 8B D9 56 57 89 5D F0 8B 8B ? ? ? ? 85 C9 0F 84 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 85 C0 74 77", 0x0);
 	MAKE_SIGNATURE(CTFPartyClient_BCanRequestToJoinPlayer, CLIENT_DLL, "55 8B EC 83 EC 08 8B 55 08 56 8B 75 0C 57 8B F9 89 55 F8 89 75 FC 8B 4F 18 85 C9 74 1E", 0x0);

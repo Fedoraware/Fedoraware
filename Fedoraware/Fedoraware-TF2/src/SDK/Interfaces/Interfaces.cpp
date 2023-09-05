@@ -19,6 +19,7 @@ namespace S
 	MAKE_SIGNATURE(ThirdPersonManager_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 ? 8B 86", 0x1);
 	MAKE_SIGNATURE(ClientModeTFNormal_Interface, CLIENT_DLL, "B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 ? 8B 35", 0x1);
 	MAKE_SIGNATURE(HostState_Interface, ENGINE_DLL, "8B 15 ? ? ? ? C6 85", 0x1);
+	MAKE_SIGNATURE(CTFGameMovement_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C6 05 ? ? ? ? ? E8", 0x1);
 
 	MAKE_SIGNATURE(Get_TFPartyClient, CLIENT_DLL, "A1 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 EC ? 53", 0x0);
 	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C", 0x1);
@@ -174,6 +175,9 @@ void CInterfaces::Init()
 
 	HostState = *S::HostState_Interface.As<CCommonHostState*>();
 	VALIDATE(HostState);
+
+	CTFGameMovement = *S::CTFGameMovement_Interface.As<void*>();
+	VALIDATE(CTFGameMovement);
 }
 
 void CSteamInterfaces::Init()
