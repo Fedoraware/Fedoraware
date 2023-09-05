@@ -8,7 +8,6 @@ class CPattern
 
 public:
 	DWORD Find(LPCSTR szModuleName, LPCSTR szPattern);
-	DWORD E8(LPCSTR szModuleName, LPCSTR szPattern);
 };
 
 inline CPattern g_Pattern;

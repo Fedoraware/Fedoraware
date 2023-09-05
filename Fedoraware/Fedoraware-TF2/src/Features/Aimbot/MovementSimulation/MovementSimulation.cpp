@@ -94,7 +94,7 @@ void CMovementSimulation::SetupMoveData(CBaseEntity* pPlayer, CMoveData* pMoveDa
 
 bool CMovementSimulation::Initialize(CBaseEntity* pPlayer)
 {
-	if (!I::CTFGameMovement || !pPlayer || pPlayer->deadflag())
+	if (!pPlayer || pPlayer->deadflag())
 	{
 		return false;
 	}
@@ -319,7 +319,7 @@ bool CMovementSimulation::StrafePrediction()
 
 void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 {
-	if (!I::CTFGameMovement || !m_pPlayer || bDontPredict)
+	if (!m_pPlayer || bDontPredict)
 	{
 		return;
 	}
@@ -339,11 +339,9 @@ void CMovementSimulation::RunTick(CMoveData& moveDataOut, Vec3& m_vecAbsOrigin)
 		m_MoveData.m_vecViewAngles = { 0.0f, Math::VelocityToAngles(m_MoveData.m_vecVelocity).y, 0.0f };
 	}
 
-	//call CTFGameMovement::ProcessMovement
-	using ProcessMovement_FN = void(__thiscall*)(void*, CBaseEntity*, CMoveData*);
-	reinterpret_cast<ProcessMovement_FN>(Utils::GetVFuncPtr(I::CTFGameMovement, 1))(I::CTFGameMovement, m_pPlayer, &m_MoveData);
+	I::TFGameMovement->ProcessMovement(m_pPlayer, &m_MoveData);
 
-	G::PredictionLines.push_back({ m_MoveData.m_vecAbsOrigin, Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) });
+	G::PredictionLines.emplace_back(m_MoveData.m_vecAbsOrigin, Math::GetRotatedPosition(m_MoveData.m_vecAbsOrigin, Math::VelocityToAngles(m_MoveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value));
 
 	moveDataOut = m_MoveData;
 	m_vecAbsOrigin = m_MoveData.m_vecAbsOrigin;

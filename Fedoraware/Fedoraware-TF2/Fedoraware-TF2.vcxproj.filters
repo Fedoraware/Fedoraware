@@ -88,7 +88,6 @@
     <ClCompile Include="src\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />
     <ClCompile Include="src\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
     <ClCompile Include="src\Hooks\Detours\CStaticPropMgr_DrawStaticProps.cpp" />
-    <ClCompile Include="src\Hooks\Detours\CTFGameMovement_Duck.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerInventory_GetMaxItemCount.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
@@ -399,6 +398,7 @@
     <ClInclude Include="include\Discord\discord_register.h" />
     <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="src\SDK\Signatures.h" />
+    <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -258,7 +258,6 @@
     <ClCompile Include="src\Hooks\Detours\CRendering3dView_EnableWorldFog.cpp" />
     <ClCompile Include="src\Hooks\Detours\CSkyboxView_Enable3dSkyboxFog.cpp" />
     <ClCompile Include="src\Hooks\Detours\CStaticPropMgr_DrawStaticProps.cpp" />
-    <ClCompile Include="src\Hooks\Detours\CTFGameMovement_Duck.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFGameRules_ModifySentChat.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerInventory_GetMaxItemCount.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
@@ -434,6 +433,7 @@
     <ClInclude Include="src\SDK\Interfaces\ClientEntityList\ClientEntityList.h" />
     <ClInclude Include="src\SDK\Interfaces\ClientModeShared\ClientModeShared.h" />
     <ClInclude Include="src\SDK\Interfaces\ConVar\ConVar.h" />
+    <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGameRules\CTFGameRules.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGCClientSystem\CTFGCClientSystem.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFPartyClient\CTFPartyClient.h" />

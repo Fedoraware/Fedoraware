@@ -4,6 +4,27 @@
 #define VALIDATE(x) if (!(x)) MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR)
 #define VALIDATE_STEAM(x) if (!(x)) MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
 
+namespace S
+{
+	MAKE_SIGNATURE(GlobalVars_Interface, ENGINE_DLL, "68 ? ? ? ? 50 50 FF 12", 0x1);
+	MAKE_SIGNATURE(ClientState_Interface, ENGINE_DLL, "68 ? ? ? ? E8 ? ? ? ? 83 C4 ? 5F 5E 5B 5D", 0x1);
+	MAKE_SIGNATURE(ClientModeShared, CLIENT_DLL, "8B 0D ? ? ? ? 8B 02 D9 05", 0x2);
+	MAKE_SIGNATURE(DemoPlayer_Interface, ENGINE_DLL, "8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 40 ? FF D0 84 C0 74 ? 8B 0D ? ? ? ? 8B 01 FF 50 ? 83 F8 ? 7D ? 53", 0x2);
+	MAKE_SIGNATURE(TFGCClientSystem_Interface, CLIENT_DLL, "B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D", 0x1);
+	MAKE_SIGNATURE(TFInventoryManager_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05", 0x1);
+	MAKE_SIGNATURE(Input_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 FF 50 ? 8B 45 ? 5F 5E 5B C7 40", 0x2);
+	MAKE_SIGNATURE(UniformRandomStream_Interface, VSTDLIB_DLL, "B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3", 0x1);
+	MAKE_SIGNATURE(ViewRenderBeams_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 FF 50 ? 0F B7 96", 0x2);
+	MAKE_SIGNATURE(TFGameRules_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB", 0x2);
+	MAKE_SIGNATURE(ThirdPersonManager_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 ? 8B 86", 0x1);
+	MAKE_SIGNATURE(ClientModeTFNormal_Interface, CLIENT_DLL, "B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 ? 8B 35", 0x1);
+	MAKE_SIGNATURE(HostState_Interface, ENGINE_DLL, "8B 15 ? ? ? ? C6 85", 0x1);
+	MAKE_SIGNATURE(CTFGameMovement_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C6 05 ? ? ? ? ? E8", 0x1);
+
+	MAKE_SIGNATURE(Get_TFPartyClient, CLIENT_DLL, "A1 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 EC ? 53", 0x0);
+	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C", 0x1);
+}
+
 void CInterfaces::Init()
 {
 	using namespace I;
@@ -38,13 +59,13 @@ void CInterfaces::Init()
 	EngineTrace = g_Interface.Get<CEngineTrace*>(ENGINE_DLL, VENGINE_TRACE_CLIENT_INTERFACE_VERSION);
 	VALIDATE(EngineTrace);
 
-	VGuiPanel = g_Interface.Get<CPanel*>("vgui2.dll", VGUI_PANEL_INTERFACE_VERSION);
+	VGuiPanel = g_Interface.Get<CPanel*>(VGUI2_DLL, VGUI_PANEL_INTERFACE_VERSION);
 	VALIDATE(VGuiPanel);
 
-	VGuiSurface = g_Interface.Get<CSurface*>("vguimatsurface.dll", VGUI_SURFACE_INTERFACE_VERSION);
+	VGuiSurface = g_Interface.Get<CSurface*>(MATSURFACE_DLL, VGUI_SURFACE_INTERFACE_VERSION);
 	VALIDATE(VGuiSurface);
 
-	Cvar = g_Interface.Get<ICvar*>("vstdlib.dll", VENGINE_CVAR_INTERFACE_VERSION);
+	Cvar = g_Interface.Get<ICvar*>(VSTDLIB_DLL, VENGINE_CVAR_INTERFACE_VERSION);
 	VALIDATE(Cvar);
 
 	GlobalVars = *S::GlobalVars_Interface.As<CGlobalVarsBase*>();
@@ -53,10 +74,7 @@ void CInterfaces::Init()
 	ClientState = *S::ClientState_Interface.As<CClientState*>();
 	VALIDATE(ClientState);
 
-	auto ClientTable = S::ClientTable.As<void>();
-	VALIDATE(ClientTable);
-
-	ClientModeShared = **reinterpret_cast<CClientModeShared***>(reinterpret_cast<DWORD>(ClientTable) + 2);
+	ClientModeShared = **S::ClientModeShared.As<CClientModeShared**>();
 	VALIDATE(ClientModeShared);
 
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE_DLL, VENGINE_VGUI_VERSION);
@@ -77,13 +95,13 @@ void CInterfaces::Init()
 	ModelRender = g_Interface.Get<CModelRender*>(ENGINE_DLL, VENGINE_MODELRENDER_INTERFACE);
 	VALIDATE(ModelRender);
 
-	MaterialSystem = g_Interface.Get<CMaterialSystem*>("materialsystem.dll", VMATERIALSYSTEM_INTERFACE);
+	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM_DLL, VMATERIALSYSTEM_INTERFACE);
 	VALIDATE(MaterialSystem);
 
 	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
 	VALIDATE(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(g_Pattern.E8(CLIENT_DLL, "E8 ? ? ? ? FF 70 24"))();
+	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(S::Get_TFPartyClient())();
 	VALIDATE(TFPartyClient);
 
 	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();
@@ -109,7 +127,7 @@ void CInterfaces::Init()
 	VALIDATE(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
-		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "KeyValuesSystem")));
+		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "KeyValuesSystem")));
 		return fn();
 	};
 
@@ -119,7 +137,7 @@ void CInterfaces::Init()
 	UniformRandomStream = *S::UniformRandomStream_Interface.As<IUniformRandomStream*>();
 	VALIDATE(UniformRandomStream);
 
-	StudioRender = g_Interface.Get<void*>("studiorender.dll", "VStudioRender025");
+	StudioRender = g_Interface.Get<void*>(STUDIORENDER_DLL, "VStudioRender025");
 	VALIDATE(StudioRender);
 
 	InputSystem = g_Interface.Get<IInputSystem*>("inputsystem.dll", "InputSystemVersion001");
@@ -145,18 +163,20 @@ void CInterfaces::Init()
 	ThirdPersonManager = *S::ThirdPersonManager_Interface.As<CThirdPersonManager*>();
 	VALIDATE(ThirdPersonManager);
 
-	// Forgive the double cast but this was annoying meeeeee
 	DirectXDevice = **S::DirectXDevice.As<IDirect3DDevice9**>();
 	VALIDATE(DirectXDevice);
 
 	ClientModeTF = *S::ClientModeTFNormal_Interface.As<ClientModeTFNormal*>();
 	VALIDATE(ClientModeTF);
 
-	Localize = g_Interface.Get<ILocalize*>("vgui2.dll", VGUI_LOCALIZE_INTERFACE_VERSION);
+	Localize = g_Interface.Get<ILocalize*>(VGUI2_DLL, VGUI_LOCALIZE_INTERFACE_VERSION);
 	VALIDATE(Localize);
 
 	HostState = *S::HostState_Interface.As<CCommonHostState*>();
 	VALIDATE(HostState);
+
+	TFGameMovement = *S::CTFGameMovement_Interface.As<CTFGameMovement*>();
+	VALIDATE(TFGameMovement);
 }
 
 void CSteamInterfaces::Init()
