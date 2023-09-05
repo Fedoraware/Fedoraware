@@ -5,8 +5,10 @@
 static constexpr auto CLIENT_DLL = "client.dll";
 static constexpr auto ENGINE_DLL = "engine.dll";
 static constexpr auto VSTDLIB_DLL = "vstdlib.dll";
+static constexpr auto VGUI2_DLL = "vgui2.dll";
 static constexpr auto MATSURFACE_DLL = "vguimatsurface.dll";
 static constexpr auto MATSYSTEM_DLL = "MaterialSystem.dll";
+static constexpr auto STUDIORENDER_DLL = "studiorender.dll";
 
 class CSignature
 {
@@ -45,24 +47,6 @@ public:
 // Signatures
 namespace S
 {
-	// Interfaces
-	MAKE_SIGNATURE(GlobalVars_Interface, ENGINE_DLL, "A1 ? ? ? ? 8B 11 68", 0x8);
-	MAKE_SIGNATURE(ClientState_Interface, ENGINE_DLL, "68 ? ? ? ? E8 ? ? ? ? 83 C4 08 5F 5E 5B 5D C3", 0x1);
-	MAKE_SIGNATURE(DemoPlayer_Interface, ENGINE_DLL, "8B 0D ? ? ? ? 85 C9 74 3B 8B 01 8B 40 18 FF D0 84 C0 74 30", 0x2);
-	MAKE_SIGNATURE(TFGCClientSystem_Interface, CLIENT_DLL, "B9 ? ? ? ? 50 E8 ? ? ? ? 8B 5D F8", 0x1);
-	MAKE_SIGNATURE(TFInventoryManager_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ?", 0x1);
-	MAKE_SIGNATURE(Input_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC", 0x2);
-	MAKE_SIGNATURE(UniformRandomStream_Interface, VSTDLIB_DLL, "B9 ? ? ? ? 85 C0 0F 45 C8 89 0D ? ? ? ? 5D C3", 0x1);
-	MAKE_SIGNATURE(ViewRenderBeams_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 FF 50 18 0F B7 96 ? ? ? ?", 0x2);
-	MAKE_SIGNATURE(TFGameRules_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 56 8B 01 8B 80 ? ? ? ? FF D0 84 C0 0F 84 ? ? ? ? 80 BB ? ? ? ? ?", 0x1);
-	MAKE_SIGNATURE(ThirdPersonManager_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 74 42 8B 86", 0x1);
-	MAKE_SIGNATURE(ClientModeTFNormal_Interface, CLIENT_DLL, "B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 04 8B 35 ? ? ? ?", 0x1);
-	MAKE_SIGNATURE(HostState_Interface, ENGINE_DLL, "8B 15 ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85 ? ? ? ? ? C6 85", 0x1);
-
-	MAKE_SIGNATURE(Get_TFPartyClient, CLIENT_DLL, "A1 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 EC ? 53", 0x0);
-	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C", 0x1);
-	MAKE_SIGNATURE(ClientTable, CLIENT_DLL, "8B 0D ? ? ? ? 8B 02 D9 05", 0x0);
-
 	// Hooks
 	MAKE_SIGNATURE(C_BaseAnimating_FrameAdvance, CLIENT_DLL, "55 8B EC 83 EC 14 56 8B F1 57 80 BE ? ? ? ? ? 0F 85 ? ? ? ? 83 BE ? ? ? ? ? 75 05 E8 ? ? ? ? 8B BE ? ? ? ? 85 FF 0F 84 ? ? ? ? F3 0F 10 45 ? 0F 57 D2 A1 ? ? ? ? 0F 2E C2 F3 0F 10 48 ? F3 0F 11 4D", 0x0);
 	MAKE_SIGNATURE(C_BaseAnimating_Interpolate, CLIENT_DLL, "55 8B EC 83 EC 2C 56 8B F1 83 BE ? ? ? ? ? 0F 85 ? ? ? ? F3 0F 10 86 ? ? ? ? 57 33 FF F3 0F 11 45 ? 80 BE ? ? ? ? ? 75 13 FF B6 ? ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 88 01 8D 45 FC 8B CE 50", 0x0);
