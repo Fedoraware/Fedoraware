@@ -3,25 +3,34 @@
 
 #pragma warning (disable : 6031)
 
+namespace S
+{
+	MAKE_SIGNATURE(KeyValUtils_LoadFromBuffer, ENGINE_DLL, "55 8B EC 83 EC ? 53 8B 5D ? 89 4D ? 85 DB 75 ? B0", 0x0);
+	MAKE_SIGNATURE(KeyValUtils_Initialize, ENGINE_DLL, "55 8B EC 56 8B F1 6A ? FF 75 ? C7 06 ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? C7 46 ? ? ? ? ? FF 15 ? ? ? ? 83 C4 ? 89 06 8B C6", 0x0);
+
+	MAKE_SIGNATURE(KeyValues_FindKey, CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 56 8B 75 ? 57 8B F9 85 F6 0F 84", 0x0);
+	MAKE_SIGNATURE(KeyValues_AddSubkey, CLIENT_DLL, "55 8B EC 8B 51 ? 85 D2 75 ? 8B 45 ? 89 41", 0x0);
+}
+
 bool CKeyValUtils::LoadFromBuffer(KeyValues* key_value, char const* resource_name, const char* buffer, void* file_system, const char* path_id)
 {
 	using FN = int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*);
-	static FN load_from_the_buffer = (FN)g_Pattern.Find(ENGINE_DLL, "55 8B EC 83 EC 38 53 8B 5D 0C");
-	return load_from_the_buffer(key_value, resource_name, buffer, file_system, path_id);
+	static FN loadFromBuffer = reinterpret_cast<FN>(S::KeyValUtils_LoadFromBuffer());
+	return loadFromBuffer(key_value, resource_name, buffer, file_system, path_id);
 }
 
 KeyValues* CKeyValUtils::Initialize(KeyValues* key_value, char* name)
 {
 	using FN = KeyValues * (__thiscall*)(KeyValues*, char*);
-	static FN initialize = (FN)(g_Pattern.Find(ENGINE_DLL, "FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
+	static FN initialize = reinterpret_cast<FN>(S::KeyValUtils_Initialize());
 	return initialize(key_value, name);
 }
 
 void KeyValues::Initialize(char* name)
 {
-	using fn = KeyValues * (__thiscall*)(KeyValues*, char*);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(ENGINE_DLL, "FF 15 ? ? ? ? 83 C4 08 89 06 8B C6") - 0x42);
-	FN(this, name);
+	using FN = KeyValues * (__thiscall*)(KeyValues*, char*);
+	static FN initialize = reinterpret_cast<FN>(S::KeyValUtils_Initialize());
+	initialize(this, name);
 }
 
 KeyValues::KeyValues(const char* name)
@@ -33,15 +42,15 @@ KeyValues::KeyValues(const char* name)
 
 KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 {
-	using fn = KeyValues * (__thiscall*)(KeyValues*, const char*, bool);
-	static fn FN = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F 84 ? ? ? ? 80 3E 00 0F 84 ? ? ? ?"));
-	return FN(this, keyName, bCreate);
+	using FN = KeyValues * (__thiscall*)(KeyValues*, const char*, bool);
+	static FN findKey = reinterpret_cast<FN>(S::KeyValues_FindKey());
+	return findKey(this, keyName, bCreate);
 }
 
 KeyValues* KeyValues::AddSubkey(KeyValues* pSubkey)
 {
-	static auto KeyValues__AddSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(g_Pattern.E8(CLIENT_DLL, "E8 ? ? ? ? EB 92"));
-	return KeyValues__AddSubkey(this, pSubkey);
+	static auto addSubkey = reinterpret_cast<KeyValues * (__thiscall*)(KeyValues*, KeyValues*)>(S::KeyValues_AddSubkey());
+	return addSubkey(this, pSubkey);
 }
 
 int KeyValues::GetInt(const char* keyName, int defaultValue)

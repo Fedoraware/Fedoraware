@@ -83,7 +83,7 @@ void CInterfaces::Init()
 	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
 	VALIDATE(TFGCClientSystem);
 
-	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(S::TFPartyClient_Interface())();
+	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(S::Get_TFPartyClient())();
 	VALIDATE(TFPartyClient);
 
 	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();
@@ -109,7 +109,7 @@ void CInterfaces::Init()
 	VALIDATE(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
-		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "KeyValuesSystem")));
+		static auto fn = reinterpret_cast<IKeyValuesSystem * (__cdecl*)()>(reinterpret_cast<DWORD>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "KeyValuesSystem")));
 		return fn();
 	};
 
