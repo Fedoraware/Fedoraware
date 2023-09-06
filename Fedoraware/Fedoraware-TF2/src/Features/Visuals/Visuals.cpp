@@ -2,6 +2,11 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(LoadSkys, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45", 0x0);
+}
+
 void CVisuals::Draw()
 {
 	if (const auto pLocal = g_EntityCache.GetLocal())
@@ -132,8 +137,7 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
 void CVisuals::SkyboxChanger()
 {
 	using LoadNamedSkysFn = bool(_cdecl*)(const char*);
-	static auto LoadSkys = reinterpret_cast<LoadNamedSkysFn>(g_Pattern.Find(
-		ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
+	static auto fnLoadSkys = S::LoadSkys.As<LoadNamedSkysFn>();
 
 	static const char* skybNames[] = {
 		"Custom",
@@ -167,21 +171,21 @@ void CVisuals::SkyboxChanger()
 		{
 			if (Vars::Misc::BypassPure.Value)
 			{
-				LoadSkys(Vars::Skybox::SkyboxName.c_str());
+				fnLoadSkys(Vars::Skybox::SkyboxName.c_str());
 			}
 			else
 			{
-				LoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
+				fnLoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
 			}
 		}
 		else
 		{
-			LoadSkys(skybNames[Vars::Skybox::SkyboxNum]);
+			fnLoadSkys(skybNames[Vars::Skybox::SkyboxNum]);
 		}
 	}
 	else
 	{
-		LoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
+		fnLoadSkys(I::Cvar->FindVar("sv_skyname")->GetString());
 	}
 }
 
