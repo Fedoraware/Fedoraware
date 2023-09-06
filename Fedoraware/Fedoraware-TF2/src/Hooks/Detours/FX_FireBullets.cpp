@@ -3,6 +3,11 @@
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(C_TFWeaponBaseGun_FireBullet_Call, CLIENT_DLL, "83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53", 0x0);
+}
+
 MAKE_HOOK(FX_FireBullets, S::FX_FireBullets(), void, __cdecl,
 		  void* pWpn, int iPlayer, const Vec3& vecOrigin, const Vec3& vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical)
 {
@@ -13,8 +18,8 @@ MAKE_HOOK(FX_FireBullets, S::FX_FireBullets(), void, __cdecl,
 		F::BadActors.ReportShot(iPlayer);
 	}
 
-	static auto C_TFWeaponBaseGun__FireBullet_Call = g_Pattern.Find(CLIENT_DLL, "83 C4 ? 5F 5E 5B 8B E5 5D C2 ? ? CC CC CC CC 53");
-	if (reinterpret_cast<DWORD>(_ReturnAddress()) != C_TFWeaponBaseGun__FireBullet_Call)
+	static auto dwFireBulletCall = S::C_TFWeaponBaseGun_FireBullet_Call();
+	if (reinterpret_cast<DWORD>(_ReturnAddress()) != dwFireBulletCall)
 	{
 		return;
 	}

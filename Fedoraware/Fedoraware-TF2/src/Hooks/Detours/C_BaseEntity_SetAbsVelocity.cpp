@@ -1,16 +1,20 @@
 #include "../Hooks.h"
-
 #include <intrin.h>
+
+namespace S
+{
+	MAKE_SIGNATURE(C_BasePlayer_PostDataUpdate_SetAbsVelocityCall, CLIENT_DLL, "E8 ? ? ? ? 53 8B CF E8 ? ? ? ? 8D 47 F8 39 05", 0x5);
+}
 
 MAKE_HOOK(C_BaseEntity_SetAbsVelocity, S::C_BaseEntity_SetAbsVelocity(), void, __fastcall, void* ecx, void* edx, const Vec3& vecAbsVelocity)
 {
-	static DWORD dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? 53 8B CF E8 ? ? ? ? 8D 47 F8 39 05") + 0x5;
+	static DWORD dwSetAbsVelocityCall = S::C_BasePlayer_PostDataUpdate_SetAbsVelocityCall();
 
-	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwC_BasePlayer_PostDataUpdate_SetAbsVelocityCall)
+	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwSetAbsVelocityCall)
 	{
 		if (const auto pBasePlayer = static_cast<CBaseEntity*>(ecx))
 		{
-			if (G::VelFixRecords.find(pBasePlayer) != G::VelFixRecords.end())
+			if (G::VelFixRecords.contains(pBasePlayer))
 			{
 				const auto& record = G::VelFixRecords[pBasePlayer];
 
