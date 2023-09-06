@@ -68,19 +68,19 @@ void CInterfaces::Init()
 	Cvar = g_Interface.Get<ICvar*>(VSTDLIB_DLL, VENGINE_CVAR_INTERFACE_VERSION);
 	VALIDATE(Cvar);
 
-	GlobalVars = *S::GlobalVars_Interface.As<CGlobalVarsBase*>();
+	GlobalVars = *S::GlobalVars_Interface.As<CGlobalVarsBase**>();
 	VALIDATE(GlobalVars);
 
-	ClientState = *S::ClientState_Interface.As<CClientState*>();
+	ClientState = *S::ClientState_Interface.As<CClientState**>();
 	VALIDATE(ClientState);
 
-	ClientModeShared = **S::ClientModeShared.As<CClientModeShared**>();
+	ClientModeShared = **S::ClientModeShared.As<CClientModeShared***>();
 	VALIDATE(ClientModeShared);
 
 	EngineVGui = g_Interface.Get<CEngineVGui*>(ENGINE_DLL, VENGINE_VGUI_VERSION);
 	VALIDATE(EngineVGui);
 
-	DemoPlayer = **S::DemoPlayer_Interface.As<void**>();
+	DemoPlayer = **S::DemoPlayer_Interface.As<void***>();
 	VALIDATE(DemoPlayer);
 
 	RenderView = g_Interface.Get<IVRenderView*>(ENGINE_DLL, VENGINE_RENDERVIEW_INTERFACE_VERSION);
@@ -98,20 +98,20 @@ void CInterfaces::Init()
 	MaterialSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM_DLL, VMATERIALSYSTEM_INTERFACE);
 	VALIDATE(MaterialSystem);
 
-	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem*>();
+	TFGCClientSystem = *S::TFGCClientSystem_Interface.As<CTFGCClientSystem**>();
 	VALIDATE(TFGCClientSystem);
 
 	TFPartyClient = reinterpret_cast<CTFPartyClient * (__cdecl*)()>(S::Get_TFPartyClient())();
 	VALIDATE(TFPartyClient);
 
-	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager*>();
+	TFInventoryManager = *S::TFInventoryManager_Interface.As<CTFInventoryManager**>();
 	VALIDATE(TFInventoryManager);
 
 	// TODO: This doesn't belong here
-	RandomSeed = *S::RandomSeed.As<int32_t*>();
+	RandomSeed = *S::RandomSeed.As<int32_t**>();
 	VALIDATE(RandomSeed);
 
-	AllowSecureServers = *S::AllowSecureServers.As<bool*>();
+	AllowSecureServers = *S::AllowSecureServers.As<bool**>();
 	VALIDATE(AllowSecureServers);
 
 	const auto pdwClient = reinterpret_cast<PDWORD>(BaseClientDLL);
@@ -123,7 +123,7 @@ void CInterfaces::Init()
 	ViewRender = **reinterpret_cast<IViewRender***>(pdwTable[27] + 5);
 	VALIDATE(ViewRender);
 
-	Input = **S::Input_Interface.As<IInput**>();
+	Input = **S::Input_Interface.As<IInput***>();
 	VALIDATE(Input);
 
 	auto GetKeyValuesSystem = [&]() -> IKeyValuesSystem* {
@@ -134,7 +134,7 @@ void CInterfaces::Init()
 	KeyValuesSystem = GetKeyValuesSystem();
 	VALIDATE(KeyValuesSystem);
 
-	UniformRandomStream = *S::UniformRandomStream_Interface.As<IUniformRandomStream*>();
+	UniformRandomStream = *S::UniformRandomStream_Interface.As<IUniformRandomStream**>();
 	VALIDATE(UniformRandomStream);
 
 	StudioRender = g_Interface.Get<void*>(STUDIORENDER_DLL, "VStudioRender025");
@@ -151,31 +151,31 @@ void CInterfaces::Init()
 	AchievementMgr = reinterpret_cast<IAchievementMgr*>(GetVFunc<getachievementmgr>(EngineClient, 115));
 	VALIDATE(AchievementMgr);
 
-	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams**>();
+	ViewRenderBeams = **S::ViewRenderBeams_Interface.As<IViewRenderBeams***>();
 	VALIDATE(ViewRenderBeams);
 
 	EngineSound = g_Interface.Get<IEngineSound*>(ENGINE_DLL, "IEngineSoundClient003");
 	VALIDATE(EngineSound);
 
-	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules*>();
+	TFGameRules = *S::TFGameRules_Interface.As<CTFGameRules**>();
 	VALIDATE(TFGameRules);
 
-	ThirdPersonManager = *S::ThirdPersonManager_Interface.As<CThirdPersonManager*>();
+	ThirdPersonManager = *S::ThirdPersonManager_Interface.As<CThirdPersonManager**>();
 	VALIDATE(ThirdPersonManager);
 
-	DirectXDevice = **S::DirectXDevice.As<IDirect3DDevice9**>();
+	DirectXDevice = **S::DirectXDevice.As<IDirect3DDevice9***>();
 	VALIDATE(DirectXDevice);
 
-	ClientModeTF = *S::ClientModeTFNormal_Interface.As<ClientModeTFNormal*>();
+	ClientModeTF = *S::ClientModeTFNormal_Interface.As<ClientModeTFNormal**>();
 	VALIDATE(ClientModeTF);
 
 	Localize = g_Interface.Get<ILocalize*>(VGUI2_DLL, VGUI_LOCALIZE_INTERFACE_VERSION);
 	VALIDATE(Localize);
 
-	HostState = *S::HostState_Interface.As<CCommonHostState*>();
+	HostState = *S::HostState_Interface.As<CCommonHostState**>();
 	VALIDATE(HostState);
 
-	TFGameMovement = *S::CTFGameMovement_Interface.As<CTFGameMovement*>();
+	TFGameMovement = *S::CTFGameMovement_Interface.As<CTFGameMovement**>();
 	VALIDATE(TFGameMovement);
 }
 

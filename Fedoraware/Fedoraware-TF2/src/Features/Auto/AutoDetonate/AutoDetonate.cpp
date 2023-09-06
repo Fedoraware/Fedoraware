@@ -2,6 +2,11 @@
 
 #include "../../Vars.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(CEntitySphereQuery, CLIENT_DLL, "55 8B EC 83 EC 14 D9 45 0C", 0x0);
+}
+
 //credits to KGB
 class CEntitySphereQuery
 {
@@ -9,7 +14,7 @@ public:
 	CEntitySphereQuery(const Vec3& center, const float radius, const int flagMask = 0,
 					   const int partitionMask = PARTITION_CLIENT_NON_STATIC_EDICTS)
 	{
-		static DWORD dwAddress = g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 14 D9 45 0C");
+		static DWORD dwAddress = S::CEntitySphereQuery();
 		reinterpret_cast<void(__thiscall*)(void*, const Vec3&, float, int, int)>(dwAddress)(
 			this, center, radius, flagMask, partitionMask);
 	}

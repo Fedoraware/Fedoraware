@@ -41,7 +41,7 @@ public:
 		return m_Address;
 	}
 
-	template <typename T> T* As() { return reinterpret_cast<T*>(this->operator()()); }
+	template <typename T> T As() { return reinterpret_cast<T>(this->operator()()); }
 };
 
 #define MAKE_SIGNATURE(name, module, pattern, offset) inline CSignature name{ module, pattern, offset }

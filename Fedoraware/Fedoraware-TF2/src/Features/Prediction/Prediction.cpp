@@ -1,5 +1,10 @@
 #include "Prediction.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(ResetInstanceCounters, CLIENT_DLL, "68 ? ? ? ? 6A ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 83 C4 ? C3", 0x0);
+}
+
 int CEnginePrediction::GetTickbase(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
 	static int nTick = 0;
@@ -26,7 +31,7 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 
 	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
 	{
-		static auto fnResetInstanceCounters = reinterpret_cast<void(__cdecl*)()>(g_Pattern.Find(CLIENT_DLL, "68 ? ? ? ? 6A ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 83 C4 ? C3"));
+		static auto fnResetInstanceCounters = S::ResetInstanceCounters.As<void(__cdecl*)()>();
 
 		fnResetInstanceCounters();
 		pLocal->SetCurrentCmd(pCmd);

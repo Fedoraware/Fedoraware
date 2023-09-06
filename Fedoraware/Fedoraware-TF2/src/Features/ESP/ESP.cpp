@@ -2,6 +2,12 @@
 #include "../AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../Vars.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot, CLIENT_DLL, "55 8B EC 83 EC 08 53 56 57 8B 7D 08 33 F6 8B 87 ? ? ? ? 81 C7 ? ? ? ? 89 45 FC 8D 49 00", 0x0);
+	MAKE_SIGNATURE(C_EconItemView_GetItemName, CLIENT_DLL, "56 8B F1 C6 86 ? ? ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 5E 85 C9 75 06", 0x0);
+}
+
 bool CESP::ShouldRun()
 {
 	if (!(I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) && I::EngineVGui->IsGameUIVisible())
@@ -434,12 +440,12 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				// Weapon text
 				if (Vars::ESP::Players::WeaponText.Value)
 				{
-					static auto CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot = reinterpret_cast<void* (__cdecl*)(void*, int, void**)>(
-						g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 08 53 56 57 8B 7D 08 33 F6 8B 87 ? ? ? ? 81 C7 ? ? ? ? 89 45 FC 8D 49 00")
+					static auto getEconItemViewByLoadoutSlot = reinterpret_cast<void* (__cdecl*)(void*, int, void**)>(
+						S::CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot()
 						);
 
-					static auto C_EconItemView_GetItemName = reinterpret_cast<const char* (__thiscall*)(void*)>(
-						g_Pattern.Find(CLIENT_DLL, "56 8B F1 C6 86 ? ? ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 5E 85 C9 75 06")
+					static auto getItemName = reinterpret_cast<const char* (__thiscall*)(void*)>(
+						S::C_EconItemView_GetItemName()
 						);
 
 					int iWeaponSlot = pWeapon->GetSlot();
@@ -492,7 +498,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						default: break;
 					}
 
-					void* pCurItemData = CTFPlayerSharedUtils_GetEconItemViewByLoadoutSlot(player, iWeaponSlot, 0);
+					void* pCurItemData = getEconItemViewByLoadoutSlot(player, iWeaponSlot, 0);
 					if (pCurItemData)
 					{
 						int offset = 0;
@@ -500,7 +506,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 						{
 							offset = 10;
 						}
-						szItemName = C_EconItemView_GetItemName(pCurItemData);
+						szItemName = getItemName(pCurItemData);
 						g_Draw.String(FONT, x + (w / 2), y + h + offset, Colors::WeaponIcon, ALIGN_CENTERHORIZONTAL, "%ls", szItemName);
 						weaponoffset += FONT.nTall;
 					}
