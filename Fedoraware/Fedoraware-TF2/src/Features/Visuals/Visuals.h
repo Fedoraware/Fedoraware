@@ -53,7 +53,6 @@ public:
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
 	void DrawMenuSnow();
-	void DrawDVD();
 	void DrawMovesimLine();
 	void ManualNetwork(const StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);

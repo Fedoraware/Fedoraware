@@ -1044,7 +1044,6 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_OTHER(Vars::Menu::CheatName);
 		SAVE_OTHER(Vars::Menu::CheatPrefix);
 		SAVE_VAR(Vars::Menu::Vignette);
-		SAVE_VAR(Vars::Menu::ShowDVD);
 		SAVE_VAR(Vars::Menu::CloseOnUnfocus);
 		SAVE_VAR(Vars::Misc::CL_Move::DTBarStyle);
 		SAVE_OTHER(Vars::Misc::CL_Move::DTIndicator);
@@ -1424,7 +1423,6 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_OTHER(Vars::Menu::CheatName);
 		LOAD_OTHER(Vars::Menu::CheatPrefix);
 		LOAD_VAR(Vars::Menu::Vignette);
-		LOAD_VAR(Vars::Menu::ShowDVD);
 		LOAD_VAR(Vars::Menu::CloseOnUnfocus);
 		LOAD_VAR(Vars::Misc::CL_Move::DTBarStyle);
 		LOAD_OTHER(Vars::Misc::CL_Move::DTIndicator);

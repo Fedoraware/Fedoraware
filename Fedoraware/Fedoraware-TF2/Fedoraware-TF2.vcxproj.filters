@@ -180,7 +180,6 @@
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="src\Features\Commands\Commands.h" />
     <ClInclude Include="src\Features\Menu\Pong\Pong.h" />
-    <ClInclude Include="src\Resources\DVD-Icon.h" />
     <ClInclude Include="src\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="src\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
     <ClInclude Include="src\Features\AntiHack\FakeLag\FakeLag.h" />
