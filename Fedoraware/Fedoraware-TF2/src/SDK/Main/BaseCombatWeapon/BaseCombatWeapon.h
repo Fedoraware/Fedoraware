@@ -8,22 +8,22 @@
 
 namespace S
 {
-	MAKE_SIGNATURE(GetLocalizedBaseItemName, CLIENT_DLL, "55 8B EC 56 8B 75 10 8B 4E 34 85 C9 74 44 57 8B 7D 0C 51 8B CF 8B 07 FF 10", 0x0);
-	MAKE_SIGNATURE(GLocalizationProvider, CLIENT_DLL, "A1 ? ? ? ? A8 01 75 12 83 C8 01 C7 05 ? ? ? ? ? ? ? ? A3 ? ? ? ? B8 ? ? ? ? C3", 0x0);
-	MAKE_SIGNATURE(C_EconItemView_GetStaticData, CLIENT_DLL, "0F B7 41 24 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 50 E8 ? ? ? ? 83 C4 14 C3", 0x0);
-	MAKE_SIGNATURE(C_BaseCombatWeapon_GetName, CLIENT_DLL, "0F B7 81 ? ? ? ? 50 E8 ? ? ? ? 83 C4 04 83 C0 06", 0x0);
+	MAKE_SIGNATURE(GetLocalizedBaseItemName, CLIENT_DLL, "55 8B EC 56 8B 75 ? 8B 4E ? 85 C9 74 ? 57", 0x0);
+	MAKE_SIGNATURE(GLocalizationProvider, CLIENT_DLL, "A1 ? ? ? ? A8 ? 75 ? 83 C8 ? C7 05 ? ? ? ? ? ? ? ? A3 ? ? ? ? B8 ? ? ? ? C3", 0x0);
+	MAKE_SIGNATURE(C_EconItemView_GetStaticData, CLIENT_DLL, "0F B7 41 ? 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 50 E8 ? ? ? ? 83 C4 ? C3 CC CC CC CC CC CC CC 83 C1", 0x0);
+	MAKE_SIGNATURE(C_BaseCombatWeapon_GetName, CLIENT_DLL, "0F B7 81 ? ? ? ? 50 E8 ? ? ? ? 83 C4 ? 83 C0 ? C3 CC CC CC CC CC CC CC CC CC CC CC CC D9 05", 0x0);
 
-	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponData, CLIENT_DLL, "55 8B EC 66 8B ? ? 66 3B 05 ? ? ? ? 73", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_CanFireCriticalShot, CLIENT_DLL, "6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 14 C3", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_GetTFWeaponInfo, CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? 83 C4 04 85 C0 75 02 5D C3 56 50 E8 ? ? ? ? 83 C4 04 0F B7 F0 E8 ? ? ? ? 66 3B F0 75 05 33 C0 5E 5D C3", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponSpread, CLIENT_DLL, "55 8B EC 83 EC 08 56 8B F1 57 6A 01 6A 00 8B 96 ? ? ? ? 8B 86 ? ? ? ? C1 E2 06 56 68 ? ? ? ? 51", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponData, CLIENT_DLL, "55 8B EC 66 8B 45 ? 66 3B 05 ? ? ? ? 73", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CanFireCriticalShot, CLIENT_DLL, "6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 ? C3 CC CC CC 55", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetTFWeaponInfo, CLIENT_DLL, "55 8B EC FF 75 ? E8 ? ? ? ? 83 C4 ? 85 C0 75 ? 5D C3", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponSpread, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 57 6A ? 6A", 0x0);
 
-	MAKE_SIGNATURE(CBaseCombatWeapon_GetSpreadAngles, CLIENT_DLL, "55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 85 F6 74 10 8B 06 8B CE 8B 80 ? ? ? ? FF D0 84 C0 75 02", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_GetProjectileFireSetup, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetSpreadAngles, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 ? 85 F6", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetProjectileFireSetup, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0", 0x0);
 
-	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCritical, CLIENT_DLL, "53 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 14 85 DB 0F 84 ? ? ? ?", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelper, CLIENT_DLL, "55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC", 0x0);
-	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelperMelee, CLIENT_DLL, "55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCritical, CLIENT_DLL, "53 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 ? 85 DB 0F 84", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelper, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 ? 89 75", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelperMelee, CLIENT_DLL, "55 8B EC A1 ? ? ? ? 83 EC ? 83 78 ? ? 57 8B F9 75", 0x0);
 }
 
 class CBaseCombatWeapon : public CBaseEntity
