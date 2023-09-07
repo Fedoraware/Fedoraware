@@ -47,6 +47,11 @@
 
 #include <d3d9.h>
 
+namespace S
+{
+	MAKE_SIGNATURE(CClientState_ForceFullUpdate, ENGINE_DLL, "56 8B F1 83 BE ? ? ? ? ? 74 1D", 0x0);
+}
+
 class CThirdPersonManager
 {
 public:
@@ -164,7 +169,9 @@ public:
 
 	void ForceFullUpdate()
 	{
-		return reinterpret_cast<void(__thiscall*)(CClientState*)>(g_Pattern.Find(ENGINE_DLL, "56 8B F1 83 BE ? ? ? ? ? 74 1D"))(this);
+		using FN = void(__thiscall*)(CClientState*);
+		static FN fnForceFullUpdate = S::CClientState_ForceFullUpdate.As<void(__thiscall*)(CClientState*)>();
+		return fnForceFullUpdate(this);
 	}
 };
 
