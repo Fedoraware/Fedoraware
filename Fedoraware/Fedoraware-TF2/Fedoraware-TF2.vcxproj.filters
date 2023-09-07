@@ -405,8 +405,4 @@
     <None Include="packages.config" />
     <None Include="include\Steam\steam_api.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="lib\Release\discord-rpc.lib" />
-    <Library Include="lib\Debug\discord-rpc.lib" />
-  </ItemGroup>
 </Project>
