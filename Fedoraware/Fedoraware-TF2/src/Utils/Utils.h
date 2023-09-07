@@ -9,7 +9,6 @@
 #include "CRC/CRC.h"
 #include "KeyHelper/KeyHelper.hpp"
 #include "Timer/Timer.hpp"
-#include "BytePatch/BytePatch.hpp"
 
 #include "Hash/FNV1A.h"
 

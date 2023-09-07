@@ -532,7 +532,6 @@
     <ClInclude Include="include\Steam\steam_gameserver.h" />
     <ClInclude Include="src\SDK\Signatures.h" />
     <ClInclude Include="src\Utils\Base64\Base64.hpp" />
-    <ClInclude Include="src\Utils\BytePatch\BytePatch.hpp" />
     <ClInclude Include="src\Utils\Color\Color.h" />
     <ClInclude Include="src\Utils\CRC\CRC.h" />
     <ClInclude Include="src\Utils\Events\Events.h" />
