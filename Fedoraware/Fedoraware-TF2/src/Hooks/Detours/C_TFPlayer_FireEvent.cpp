@@ -11,7 +11,7 @@ int ColorToInt(const Color_t& col)
     return col.r << 16 | col.g << 8 | col.b;
 }
 
-MAKE_HOOK(C_TFPlayer_FireEvent, S::C_TFPlayer_FireEvent(), void, __fastcall,
+MAKE_HOOK(C_TFPlayer_FireEvent, S::CTFPlayer_FireEvent(), void, __fastcall,
     CBaseEntity* ecx, void* edx, const Vector& origin, const QAngle& angles, int event_, const char* options)
 {
     static auto fnSpawnHalloweenSpellFootsteps = S::SpawnHalloweenSpellFootsteps.As<void* (__thiscall*)(CBaseEntity*, ParticleAttachment_t, int)>();

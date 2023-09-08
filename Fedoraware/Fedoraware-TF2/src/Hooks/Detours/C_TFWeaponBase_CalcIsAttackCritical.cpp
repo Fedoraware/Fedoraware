@@ -45,7 +45,7 @@ bool CritHandler()
 	return true;
 }
 
-MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, S::C_TFWeaponBase_CalcIsAttackCritical(), void, __fastcall, void* ecx, void* edx)
+MAKE_HOOK(C_TFWeaponBase_CalcIsAttackCritical, S::CTFWeaponBase_CalcIsAttackCritical(), void, __fastcall, void* ecx, void* edx)
 {
 	const auto& pLocal = g_EntityCache.GetLocal();
 	const auto& pWeapon = g_EntityCache.GetWeapon();

@@ -1,6 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(C_TFPlayer_AvoidPlayers, S::C_TFPlayer_AvoidPlayers(), void, __fastcall, void* ecx, void* edx, CUserCmd* pCmd)
+MAKE_HOOK(C_TFPlayer_AvoidPlayers, S::CTFPlayer_AvoidPlayers(), void, __fastcall, void* ecx, void* edx, CUserCmd* pCmd)
 {
 	switch (Vars::Misc::NoPush.Value){
 	case 0: break;

@@ -3,12 +3,12 @@
 
 namespace S
 {
-	MAKE_SIGNATURE(C_BasePlayer_PostDataUpdate_SetAbsVelocityCall, CLIENT_DLL, "E8 ? ? ? ? 53 8B CF E8 ? ? ? ? 8D 47 F8 39 05", 0x5);
+	MAKE_SIGNATURE(CBasePlayer_PostDataUpdate_SetAbsVelocityCall, CLIENT_DLL, "E8 ? ? ? ? 53 8B CF E8 ? ? ? ? 8D 47 F8 39 05", 0x5);
 }
 
-MAKE_HOOK(C_BaseEntity_SetAbsVelocity, S::C_BaseEntity_SetAbsVelocity(), void, __fastcall, void* ecx, void* edx, const Vec3& vecAbsVelocity)
+MAKE_HOOK(C_BaseEntity_SetAbsVelocity, S::CBaseEntity_SetAbsVelocity(), void, __fastcall, void* ecx, void* edx, const Vec3& vecAbsVelocity)
 {
-	static DWORD dwSetAbsVelocityCall = S::C_BasePlayer_PostDataUpdate_SetAbsVelocityCall();
+	static DWORD dwSetAbsVelocityCall = S::CBasePlayer_PostDataUpdate_SetAbsVelocityCall();
 
 	if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwSetAbsVelocityCall)
 	{

@@ -1,7 +1,7 @@
 #include "../Hooks.h"
 #include "../../Features/CritHack/CritHack.h"
 
-MAKE_HOOK(C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket, S::C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket(), bool, __fastcall, void* ecx, void* edx, float flDamage)
+MAKE_HOOK(C_BaseCombatWeapon_IsAllowedToWithdrawFromCritBucket, S::CBaseCombatWeapon_IsAllowedToWithdrawFromCritBucket(), bool, __fastcall, void* ecx, void* edx, float flDamage)
 {
 	if (F::CritHack.ProtectData)
 	{
