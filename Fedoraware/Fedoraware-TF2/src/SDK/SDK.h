@@ -42,7 +42,7 @@
 #define TEAM_RED		  2
 #define TEAM_BLU		  3
 
-#include "Signatures.h"
+#include "Signatures/Signatures.h"
 #include "Main/BaseEntity/BaseEntity.h"
 #include "Main/BaseCombatWeapon/BaseCombatWeapon.h"
 #include "Main/BaseObject/BaseObject.h"

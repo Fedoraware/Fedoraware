@@ -175,6 +175,7 @@
     <ClCompile Include="src\Hooks\Detours\C_TFPlayer_FireEvent.cpp" />
     <ClCompile Include="src\Utils\Minidump\Minidump.cpp" />
     <ClCompile Include="src\Core\Core.cpp" />
+    <ClCompile Include="src\SDK\Signatures\Signatures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
@@ -395,7 +396,7 @@
     <ClInclude Include="include\Steam\steamuniverse.h" />
     <ClInclude Include="include\Discord\discord_register.h" />
     <ClInclude Include="include\Discord\discord_rpc.h" />
-    <ClInclude Include="src\SDK\Signatures.h" />
+    <ClInclude Include="src\SDK\Signatures\Signatures.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
   </ItemGroup>
   <ItemGroup>

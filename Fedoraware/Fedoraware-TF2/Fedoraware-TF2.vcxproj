@@ -320,6 +320,7 @@
     <ClCompile Include="src\SDK\Main\KeyValues\KeyValues.cpp" />
     <ClCompile Include="src\SDK\Main\TraceFilters\TraceFilters.cpp" />
     <ClCompile Include="src\SDK\NetVars\NetVars.cpp" />
+    <ClCompile Include="src\SDK\Signatures\Signatures.cpp" />
     <ClCompile Include="src\Utils\CRC\CRC.cpp" />
     <ClCompile Include="src\Utils\Events\Events.cpp" />
     <ClCompile Include="src\Utils\Hash\Hash.cpp" />
@@ -530,7 +531,7 @@
     <ClInclude Include="include\Steam\steam_api_flat.h" />
     <ClInclude Include="include\Steam\steam_api_internal.h" />
     <ClInclude Include="include\Steam\steam_gameserver.h" />
-    <ClInclude Include="src\SDK\Signatures.h" />
+    <ClInclude Include="src\SDK\Signatures\Signatures.h" />
     <ClInclude Include="src\Utils\Base64\Base64.hpp" />
     <ClInclude Include="src\Utils\Color\Color.h" />
     <ClInclude Include="src\Utils\CRC\CRC.h" />

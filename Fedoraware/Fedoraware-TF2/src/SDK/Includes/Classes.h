@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Utils/Utils.h"
-#include "../Signatures.h"
+#include "../Signatures/Signatures.h"
 
 #include "Enums.h"
 #include "Structs.h"
