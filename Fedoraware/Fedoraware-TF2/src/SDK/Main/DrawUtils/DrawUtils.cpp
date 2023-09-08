@@ -5,6 +5,11 @@
 #include "../../../Features/Vars.h"
 #include "../../Includes/icons.h"
 
+namespace S
+{
+	MAKE_SIGNATURE(CDraw_GetIcon, CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 83 7D 0C ? 56", 0x0);
+}
+
 void ScreenSize_t::Update()
 {
 	I::EngineClient->GetScreenSize(this->w, this->h);
@@ -297,13 +302,12 @@ void CDraw::Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex)
 	I::VGuiSurface->DrawTexturedRect(x, y, w, h);
 }
 
-//E8 ? ? ? ? 80 7F 3C 00
 // Thanks myzarfin
 CHudTexture* CDraw::GetIcon(const char* szIcon, int eIconFormat /* = 0*/)
 {
-	using fn = CHudTexture * (__stdcall*)(const char*, int);
-	static auto GetIconFn = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 83 7D 0C ? 56"));
-	return GetIconFn(szIcon, eIconFormat);
+	using FN = CHudTexture* (__stdcall*)(const char*, int);
+	static auto fnGetIcon = S::CDraw_GetIcon.As<FN>();
+	return fnGetIcon(szIcon, eIconFormat);
 }
 
 int CDraw::CreateTextureFromArray(const unsigned char* rgba, int w, int h)

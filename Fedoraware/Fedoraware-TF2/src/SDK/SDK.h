@@ -72,6 +72,15 @@
 #pragma warning (disable : 4305)
 #pragma warning (disable : 4172)
 
+namespace S
+{
+	MAKE_SIGNATURE(InitKeyValue, CLIENT_DLL, "55 8B EC FF 15 ? ? ? ? FF 75 ? 8B C8 8B 10 FF 52 ? 5D C3 CC CC CC CC CC CC CC CC CC CC CC 55 8B EC 56", 0x0);
+	MAKE_SIGNATURE(ATTRIB_HOOK_FLOAT, CLIENT_DLL, "55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38", 0x0);
+	MAKE_SIGNATURE(CTE_DispatchEffect, CLIENT_DLL, "55 8B EC 83 EC ? 56 8D 4D ? E8 ? ? ? ? 8B 75", 0x0);
+	MAKE_SIGNATURE(GetParticleSystemIndex, CLIENT_DLL, "55 8B EC 56 8B 75 ? 85 F6 74 ? 8B 0D ? ? ? ? 56 8B 01 FF 50 ? 3D", 0x0);
+	MAKE_SIGNATURE(UTIL_ParticleTracer, CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83", 0x0);
+}
+
 struct ShaderStencilState_t
 {
 	bool                        m_bEnable;
@@ -266,12 +275,9 @@ namespace Utils
 
 	__inline void* InitKeyValue()
 	{
-		using Init_t = PDWORD(__cdecl* )(int);
-		static DWORD dwInitLocation = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? 83 C4 14 85 C0 74 10 68") + 0x1;
-		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
-		static Init_t InitKeyValues = (Init_t)dwInit;
-
-		return InitKeyValues(32);
+		using FN = PDWORD(__cdecl* )(int);
+		static FN fnInitKeyValue = S::InitKeyValue.As<FN>();
+		return fnInitKeyValue(32);
 	}
 
 	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
@@ -482,9 +488,7 @@ namespace Utils
 
 	__inline float ATTRIB_HOOK_FLOAT(float baseValue, const char *searchString, CBaseEntity *ent, void *buffer, bool isGlobalConstString)
 	{
-		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(CLIENT_DLL,
-			"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
-
+		static auto fn = S::ATTRIB_HOOK_FLOAT.As<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>();
 		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
 	}
 
@@ -931,22 +935,16 @@ namespace Utils
 namespace Particles {
 	inline void DispatchEffect(const char* pName, const CEffectData& data)
 	{
-		using DispatchEffect_Fn = int(__cdecl*)(const char*, const CEffectData&);
-		static DWORD a = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? 83 C4 08 EB 15") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static DispatchEffect_Fn fn = (DispatchEffect_Fn)b;
-
-		fn(pName, data);
+		using FN = int(__cdecl*)(const char*, const CEffectData&);
+		static FN fnDispatchEffect = S::CTE_DispatchEffect.As<FN>();
+		fnDispatchEffect(pName, data);
 	}
 
 	inline int GetParticleSystemIndex(const char* pParticleSystemName)
 	{
-		using GetParticleSystemIndex_Fn = int(__cdecl*)(const char*);
-		static DWORD a = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? D9 EE 83 C4 04 50") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static GetParticleSystemIndex_Fn fn = (GetParticleSystemIndex_Fn)b;
-
-		return fn(pParticleSystemName);
+		using FN = int(__cdecl*)(const char*);
+		static FN fnGetParticleSystemIndex = S::GetParticleSystemIndex.As<FN>();
+		return fnGetParticleSystemIndex(pParticleSystemName);
 	}
 
 	inline void DispatchParticleEffect(int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity)
@@ -985,9 +983,8 @@ namespace Particles {
 
 
 	inline void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz) {
-		using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
-		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83"));
-		UTIL_ParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
-
+		using FN = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
+		static auto fnParticleTracer = S::UTIL_ParticleTracer.As<FN>();
+		fnParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
 	}
 }
