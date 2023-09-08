@@ -11,6 +11,25 @@
 
 #define HAS_CONDITION(ent, cond) (ent->GetCond() & cond)
 
+namespace S
+{
+	MAKE_SIGNATURE(TeamFortress_CalculateMaxSpeed, CLIENT_DLL, "55 8B EC 83 EC ? 83 3D ? ? ? ? ? 56 8B F1 75", 0x0);
+
+	MAKE_SIGNATURE(CBaseEntity_GetAmmoCount, CLIENT_DLL, "55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_InCond, CLIENT_DLL, "55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20", 0x0);
+
+	MAKE_SIGNATURE(CBaseEntity_GetVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_SetAbsOrigin, CLIENT_DLL, "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_PostDataUpdate, CLIENT_DLL, "55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB", 0x0);
+
+	MAKE_SIGNATURE(CBaseEntity_RemoveEffect, CLIENT_DLL, "55 8B EC 56 FF 75 08 8B F1 B8", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_EstimateAbsVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_UpdateButtonState, CLIENT_DLL, "55 8B EC 8B 81 ? ? ? ? 8B D0", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_SetNextThink, CLIENT_DLL, "55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_GetNextThinkTick, CLIENT_DLL, "55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_PhysicsRunThink, CLIENT_DLL, "55 8B EC 53 8B D9 56 57 8B 83 ? ? ? ? C1 E8", 0x0);
+}
+
 enum ShouldTransmitState_t
 {
 	SHOULDTRANSMIT_START = 0,
@@ -306,15 +325,15 @@ public: //Everything else, lol.
 
 	int GetAmmoCount(int iAmmoIndex)
 	{
-		static auto FN = reinterpret_cast<int(__thiscall*)(CBaseEntity*, int)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00"));
-		return FN(this, iAmmoIndex);
+		static auto fnGetAmmoCount = S::CBaseEntity_GetAmmoCount.As<int(__thiscall*)(CBaseEntity*, int)>();
+		return fnGetAmmoCount(this, iAmmoIndex);
 	}
 
 
 	__inline CBaseEntity* GetGroundEntity()
 	{
 		DYNVAR(pHandle, int, "DT_BasePlayer", "m_hGroundEntity");
-		return reinterpret_cast<CBaseEntity*>(I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this)));
+		return I::ClientEntityList->GetClientEntityFromHandle(pHandle.GetValue(this));
 	}
 
 	__inline CBaseEntity* FirstMoveChild()
@@ -335,25 +354,23 @@ public: //Everything else, lol.
 
 	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
 	{
-		typedef float(__thiscall* CalculateMaxSpeedFn)(CBaseEntity*, bool);
-		static DWORD dwFn = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? D9 96 ? ? ? ? D9 EE DB F1") + 0x1;
-		static DWORD dwEstimate = ((*(PDWORD)(dwFn)) + dwFn + 0x4);
-		CalculateMaxSpeedFn maxSpeed = (CalculateMaxSpeedFn)dwEstimate;
-		return maxSpeed(this, bIgnoreSpecialAbility);
+		using FN = float(__thiscall*)(CBaseEntity*, bool);
+		static FN fnMaxSpeed = S::TeamFortress_CalculateMaxSpeed.As<FN>();
+		return fnMaxSpeed(this, bIgnoreSpecialAbility);
 	}
 
 	__inline CBaseCombatWeapon* GetWeaponFromSlot(const int nSlot)
 	{
 		static DWORD dwMyWeapons = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
-		int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
+		const int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(hWeapon));
 	}
 
 	__inline bool InCond(int eCond)
 	{
-		using fn = bool(__thiscall*)(CBaseEntity*, int);
-		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20"));
-		return FN(this, eCond);
+		using FN = bool(__thiscall*)(CBaseEntity*, int);
+		static FN fnInCond = S::CBaseEntity_InCond.As<FN>();
+		return fnInCond(this, eCond);
 	}
 
 	__inline ETFClassID GetClassID()
@@ -694,10 +711,10 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetVelocity()
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, Vec3&)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0"));
-		Vec3 v;
-		FN(this, v);
-		return v;
+		static auto fnGetVelocity = S::CBaseEntity_GetVelocity.As<void(__thiscall*)(CBaseEntity*, Vec3&)>();
+		Vec3 out;
+		fnGetVelocity(this, out);
+		return out;
 	}
 
 	// This does not return your actual shoot pos for projectile weapons! Use Utils::GetRealShootPos(...) instead
@@ -782,18 +799,16 @@ public: //Everything else, lol.
 
 	__inline void SetAbsOrigin(const Vec3& vOrigin)
 	{
-		typedef void(__thiscall* FN)(CBaseEntity*, const Vec3&);
-		static DWORD dwFN = g_Pattern.Find(CLIENT_DLL, "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07");
-		FN func = (FN)dwFN;
-		func(this, vOrigin);
+		using FN = void(__thiscall*)(CBaseEntity*, const Vec3&);
+		static FN fnSetAbsOrigin = S::CBaseEntity_SetAbsOrigin.As<FN>();
+		fnSetAbsOrigin(this, vOrigin);
 	}
 
 	__inline void PostDataUpdate(int updateType)
 	{
-		typedef void(__thiscall* FN)(CBaseEntity*, int);
-		static DWORD dwFn = g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB");
-		FN func = (FN)dwFn;
-		func(this, updateType);
+		using FN = void(__thiscall*)(CBaseEntity*, int);
+		static FN fnPostDataUpdate = S::CBaseEntity_PostDataUpdate.As<FN>();
+		fnPostDataUpdate(this, updateType);
 	}
 
 	__inline void SetAbsAngles(const Vec3& vAngles)
@@ -818,10 +833,12 @@ public: //Everything else, lol.
 
 		if (Effect == EF_NODRAW)
 		{
-			static auto AddToLeafSystemFn = reinterpret_cast<int(__thiscall*)(PVOID, int)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 56 FF 75 08 8B F1 B8"));
+			static auto fnAddToLeafSystem = S::CBaseEntity_RemoveEffect.As<int(__thiscall*)(PVOID, int)>();
 
-			if (AddToLeafSystemFn)
-				AddToLeafSystemFn(this, RENDER_GROUP_OPAQUE_ENTITY);
+			if (fnAddToLeafSystem)
+			{
+				fnAddToLeafSystem(this, RENDER_GROUP_OPAQUE_ENTITY);
+			}
 		}
 	}
 
@@ -892,7 +909,7 @@ public: //Everything else, lol.
 
 	__inline void EstimateAbsVelocity(Vec3& vVel)
 	{
-		static auto fnEstimateABSVelocity = reinterpret_cast<void(__thiscall*)(void*, Vec3&)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2"));
+		static auto fnEstimateABSVelocity = S::CBaseEntity_EstimateAbsVelocity.As<void(__thiscall*)(void*, Vec3&)>();
 		fnEstimateABSVelocity(this, vVel);
 	}
 
@@ -909,25 +926,25 @@ public: //Everything else, lol.
 
 	__inline void UpdateButtonState(int nUserCmdButtonMask)
 	{
-		static auto fnUpdateButtonState = reinterpret_cast<void(__thiscall*)(void*, int)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 8B 81 ? ? ? ? 8B D0"));
+		static auto fnUpdateButtonState = S::CBaseEntity_UpdateButtonState.As<void(__thiscall*)(void*, int)>();
 		fnUpdateButtonState(this, nUserCmdButtonMask);
 	}
 
 	__inline void SetNextThink(float thinkTime, const char* szContext)
 	{
-		static auto fnSetNextThink = reinterpret_cast<void(__thiscall*)(void*, float, const char*)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53"));
+		static auto fnSetNextThink = S::CBaseEntity_SetNextThink.As<void(__thiscall*)(void*, float, const char*)>();
 		fnSetNextThink(this, thinkTime, szContext);
 	}
 
 	__inline int GetNextThinkTick(const char* szContext)
 	{
-		static auto fnGetNextThinkTick = reinterpret_cast<int(__thiscall*)(void*, const char*)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86"));
+		static auto fnGetNextThinkTick = S::CBaseEntity_GetNextThinkTick.As<int(__thiscall*)(void*, const char*)>();
 		return fnGetNextThinkTick(this, szContext);
 	}
 
 	__inline bool PhysicsRunThink(int thinkMethod = 0)
 	{
-		static auto fnPhysicsRunThink = reinterpret_cast<bool(__thiscall*)(void*, int)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 53 8B D9 56 57 8B 83 ? ? ? ? C1 E8"));
+		static auto fnPhysicsRunThink = S::CBaseEntity_PhysicsRunThink.As<bool(__thiscall*)(void*, int)>();
 		return fnPhysicsRunThink(this, thinkMethod);
 	}
 
