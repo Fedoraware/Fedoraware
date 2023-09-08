@@ -15,15 +15,12 @@ namespace S
 {
 	MAKE_SIGNATURE(TeamFortress_CalculateMaxSpeed, CLIENT_DLL, "55 8B EC 83 EC ? 83 3D ? ? ? ? ? 56 8B F1 75", 0x0);
 
-	MAKE_SIGNATURE(CBaseEntity_GetAmmoCount, CLIENT_DLL, "55 8B EC 56 8B 75 08 57 8B F9 83 FE FF 75 08 5F 33 C0 5E 5D C2 04 00", 0x0);
-	MAKE_SIGNATURE(CBaseEntity_InCond, CLIENT_DLL, "55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83 FF 20", 0x0);
-
+	MAKE_SIGNATURE(CBaseEntity_GetAmmoCount, CLIENT_DLL, "55 8B EC 56 8B 75 ? 57 8B F9 83 FE ? 75 ? 5F", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_InCond, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 83 FF ? 7D", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_GetVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0", 0x0);
-	MAKE_SIGNATURE(CBaseEntity_SetAbsOrigin, CLIENT_DLL, "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D 08 F3 0F 10 07", 0x0);
-	MAKE_SIGNATURE(CBaseEntity_PostDataUpdate, CLIENT_DLL, "55 8B EC 83 EC 18 53 8B 5D 08 56 57 8B F9 85 DB", 0x0);
-
-	MAKE_SIGNATURE(CBaseEntity_RemoveEffect, CLIENT_DLL, "55 8B EC 56 FF 75 08 8B F1 B8", 0x0);
-	MAKE_SIGNATURE(CBaseEntity_EstimateAbsVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0 75 ? 8B CE E8 ? ? ? ? 8B 45 ? D9 86 ? ? ? ? D9 18 D9 86 ? ? ? ? D9 58 ? D9 86 ? ? ? ? D9 58 ? 5E 8B E5 5D C2", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_SetAbsOrigin, CLIENT_DLL, "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D ? F3 0F 10 07", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_PostDataUpdate, CLIENT_DLL, "55 8B EC 83 EC ? 53 8B 5D ? 56 57 8B F9 85 DB 75 ? 8B 0D", 0x0);
+	MAKE_SIGNATURE(CBaseEntity_RemoveEffect, CLIENT_DLL, "55 8B EC 56 FF 75 ? 8B F1 B8", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_UpdateButtonState, CLIENT_DLL, "55 8B EC 8B 81 ? ? ? ? 8B D0", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_SetNextThink, CLIENT_DLL, "55 8B EC F3 0F 10 45 ? 0F 2E 05 ? ? ? ? 53", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_GetNextThinkTick, CLIENT_DLL, "55 8B EC 8B 45 ? 56 8B F1 85 C0 75 ? 8B 86", 0x0);
@@ -709,6 +706,7 @@ public: //Everything else, lol.
 		return vWorldSpaceCenter;
 	}
 
+	// TODO: This is a duplicate of EstimateAbsVelocity...
 	__inline Vec3 GetVelocity()
 	{
 		static auto fnGetVelocity = S::CBaseEntity_GetVelocity.As<void(__thiscall*)(CBaseEntity*, Vec3&)>();
@@ -909,7 +907,7 @@ public: //Everything else, lol.
 
 	__inline void EstimateAbsVelocity(Vec3& vVel)
 	{
-		static auto fnEstimateABSVelocity = S::CBaseEntity_EstimateAbsVelocity.As<void(__thiscall*)(void*, Vec3&)>();
+		static auto fnEstimateABSVelocity = S::CBaseEntity_GetVelocity.As<void(__thiscall*)(void*, Vec3&)>();
 		fnEstimateABSVelocity(this, vVel);
 	}
 
