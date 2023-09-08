@@ -8,6 +8,7 @@
 #include "../Chams/DMEChams.h"
 #include "../Glow/Glow.h"
 #include "../Killsay/Killsay.h"
+#include "../Discord/Discord.h"
 
 #include <ImGui/imgui_impl_win32.h>
 #include <ImGui/imgui_impl_dx9.h>
@@ -22,8 +23,6 @@
 #include "ConfigManager/ConfigManager.h"
 
 #include <mutex>
-
-#include "../Discord/Discord.h"
 
 #pragma warning (disable : 4309)
 
@@ -1816,11 +1815,18 @@ void CMenu::MenuMisc()
 		if (TableColumnChild("MiscCol3"))
 		{
 			SectionTitle("Discord RPC");
-			WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.Value); HelpMarker("Enable Discord Rich Presence");
-			WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
-			WToggle("Include class", &Vars::Misc::Discord::IncludeClass.Value); HelpMarker("Should Discord Rich Presence contain current class?");
-			WToggle("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.Value); HelpMarker("Should time since you started playing TF2 be included?");
-			WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.Value, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });
+			if (F::DiscordRPC.IsLoaded())
+			{
+				WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.Value); HelpMarker("Enable Discord Rich Presence");
+				WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
+				WToggle("Include class", &Vars::Misc::Discord::IncludeClass.Value); HelpMarker("Should Discord Rich Presence contain current class?");
+				WToggle("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.Value); HelpMarker("Should time since you started playing TF2 be included?");
+				WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.Value, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });	
+			}
+			else
+			{
+				Text("Discord RPC not installed.");
+			}
 
 			SectionTitle("Steam RPC");
 			WToggle("Steam RPC", &Vars::Misc::Steam::EnableRPC.Value); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
@@ -1911,7 +1917,6 @@ void CMenu::SettingsWindow()
 		{
 			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
-			Checkbox("Show DVD bounce", &Vars::Menu::ShowDVD.Value);
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
 			{
 				I::ViewRender->SetScreenOverlayMaterial(nullptr);

@@ -7,27 +7,63 @@
 #include <Discord/discord_rpc.h>
 
 const char* APPLICATION_ID = "889495873183154226";
+HMODULE DiscordLib = nullptr;
+
+using InitializeFN = decltype(Discord_Initialize);
+using ClearPresenceFN = decltype(Discord_ClearPresence);
+using UpdatePresenceFN = decltype(Discord_UpdatePresence);
+using ShutdownFN = decltype(Discord_Shutdown);
+
+namespace Discord
+{
+	InitializeFN* Initialize = nullptr;
+	ClearPresenceFN* ClearPresence = nullptr;
+	UpdatePresenceFN* UpdatePresence = nullptr;
+	ShutdownFN* Shutdown = nullptr;
+}
+
+CDiscordRPC::CDiscordRPC()
+{
+	DiscordLib = LoadLibraryA("discord-rpc.dll");
+	if (!DiscordLib) { return; }
+
+	Discord::Initialize = reinterpret_cast<InitializeFN*>(GetProcAddress(DiscordLib, "Discord_Initialize"));
+	Discord::ClearPresence = reinterpret_cast<ClearPresenceFN*>(GetProcAddress(DiscordLib, "Discord_ClearPresence"));
+	Discord::UpdatePresence = reinterpret_cast<UpdatePresenceFN*>(GetProcAddress(DiscordLib, "Discord_UpdatePresence"));
+	Discord::Shutdown = reinterpret_cast<ShutdownFN*>(GetProcAddress(DiscordLib, "Discord_Shutdown"));
+	if (!Discord::Initialize || !Discord::ClearPresence || !Discord::UpdatePresence || !Discord::Shutdown) { return; }
+
+	m_Loaded = true;
+}
 
 void CDiscordRPC::Init()
 {
+	if (!m_Loaded) { return; }
+
 	DiscordEventHandlers handlers = {};
-	Discord_Initialize(APPLICATION_ID, &handlers, 0, "440");
-	Discord_ClearPresence();
+	Discord::Initialize(APPLICATION_ID, &handlers, 0, "440");
+	Discord::ClearPresence();
 }
 
 void CDiscordRPC::Shutdown()
 {
-	Discord_ClearPresence();
-	Discord_Shutdown();
+	if (!m_Loaded) { return; }
+
+	Discord::ClearPresence();
+	Discord::Shutdown();
+
+	FreeLibrary(DiscordLib);
 }
 
 void CDiscordRPC::Update()
 {
+	if (!m_Loaded) { return; }
+
 	if (!Vars::Misc::Discord::EnableRPC.Value)
 	{
 		if (m_IsActive)
 		{
-			Discord_ClearPresence();
+			Discord::ClearPresence();
 			m_IsActive = false;
 		}
 
@@ -120,6 +156,6 @@ void CDiscordRPC::Update()
 
 	discordPresence.instance = 1;
 
-	Discord_UpdatePresence(&discordPresence);
+	Discord::UpdatePresence(&discordPresence);
 	m_IsActive = true;
 }

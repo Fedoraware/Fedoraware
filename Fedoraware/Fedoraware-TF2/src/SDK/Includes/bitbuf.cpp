@@ -219,7 +219,7 @@ void bf_write::WriteSBitLong(int data, int numbits)
 	nValue &= nPreserveBits;
 	nValue |= nSignExtension;
 
-	nullAssert(nValue == data, "WriteSBitLong: 0x%08x does not fit in %d bits", data, numbits);
+	//nullAssert(nValue == data, "WriteSBitLong: 0x%08x does not fit in %d bits", data, numbits);
 
 	WriteUBitLong(nValue, numbits, false);
 }
@@ -373,7 +373,7 @@ void bf_write::WriteVarInt64(uint64_t data)
 			}
 		}
 
-		nullAssert(false, "Can't get here.");
+		//nullAssert(false, "Can't get here.");
 
 	size10: target[9] = static_cast<uint8_t>((part2 >> 7) | 0x80);
 	size9: target[8] = static_cast<uint8_t>((part2) | 0x80);
@@ -934,7 +934,7 @@ int bf_read::ReadBitsClamped_ptr(void* pOutData, size_t outSizeBytes, size_t nBi
 	{
 		// Should we print a message when we clamp the data being read? Only
 		// in debug builds I think.
-		nullAssert(0, "Oversized network packet received, and clamped.");
+		//nullAssert(0, "Oversized network packet received, and clamped.");
 		readSizeBits = outSizeBits;
 		skippedBits = (int)(nBits - outSizeBits);
 		// What should we do in this case, which should only happen if nBits

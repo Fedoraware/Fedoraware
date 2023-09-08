@@ -6,7 +6,25 @@
 #define TICKS_TO_TIME( t )	( I::GlobalVars->interval_per_tick * ( t ) )
 #endif
 
-inline DWORD calcisattackcriticaloffset = 0;
+namespace S
+{
+	MAKE_SIGNATURE(GetLocalizedBaseItemName, CLIENT_DLL, "55 8B EC 56 8B 75 ? 8B 4E ? 85 C9 74 ? 57", 0x0);
+	MAKE_SIGNATURE(GLocalizationProvider, CLIENT_DLL, "A1 ? ? ? ? A8 ? 75 ? 83 C8 ? C7 05 ? ? ? ? ? ? ? ? A3 ? ? ? ? B8 ? ? ? ? C3", 0x0);
+	MAKE_SIGNATURE(C_EconItemView_GetStaticData, CLIENT_DLL, "0F B7 41 ? 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 50 E8 ? ? ? ? 83 C4 ? C3 CC CC CC CC CC CC CC 83 C1", 0x0);
+	MAKE_SIGNATURE(C_BaseCombatWeapon_GetName, CLIENT_DLL, "0F B7 81 ? ? ? ? 50 E8 ? ? ? ? 83 C4 ? 83 C0 ? C3 CC CC CC CC CC CC CC CC CC CC CC CC D9 05", 0x0);
+
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponData, CLIENT_DLL, "55 8B EC 66 8B 45 ? 66 3B 05 ? ? ? ? 73", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CanFireCriticalShot, CLIENT_DLL, "6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 ? C3 CC CC CC 55", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetTFWeaponInfo, CLIENT_DLL, "55 8B EC FF 75 ? E8 ? ? ? ? 83 C4 ? 85 C0 75 ? 5D C3", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponSpread, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 57 6A ? 6A", 0x0);
+
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetSpreadAngles, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 ? 85 F6", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_GetProjectileFireSetup, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0", 0x0);
+
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCritical, CLIENT_DLL, "53 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 ? 85 DB 0F 84", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelper, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 ? 89 75", 0x0);
+	MAKE_SIGNATURE(CBaseCombatWeapon_CalcIsAttackCriticalHelperMelee, CLIENT_DLL, "55 8B EC A1 ? ? ? ? 83 EC ? 83 78 ? ? 57 8B F9 75", 0x0);
+}
 
 class CBaseCombatWeapon : public CBaseEntity
 {
@@ -100,25 +118,14 @@ public: //Everything else, lol
 
 	inline bool GetLocalizedBaseItemName(wchar_t(&szItemName)[128])
 	{
-		static auto GetLocalizedBaseItemName_Fn = reinterpret_cast<bool(__cdecl*)(wchar_t(&)[128], const void*, const void*)>(
-			g_Pattern.Find(CLIENT_DLL, "55 8B EC 56 8B 75 10 8B 4E 34 85 C9 74 44 57 8B 7D 0C 51 8B CF 8B 07 FF 10")
-			);
-
-		static auto GLocalizationProvider = reinterpret_cast<void* (__cdecl*)()>(
-			g_Pattern.Find(CLIENT_DLL, "A1 ? ? ? ? A8 01 75 12 83 C8 01 C7 05 ? ? ? ? ? ? ? ? A3 ? ? ? ? B8 ? ? ? ? C3")
-			);
-
-		static auto C_EconItemView_GetStaticData = reinterpret_cast<void* (__thiscall*)(void*)>(
-			g_Pattern.Find(CLIENT_DLL, "0F B7 41 24 50 E8 ? ? ? ? 8B C8 E8 ? ? ? ? 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 50 E8 ? ? ? ? 83 C4 14 C3")
-			);
+		static auto fnGetLocalizedBaseItemName = S::GetLocalizedBaseItemName.As<bool(__cdecl*)(wchar_t(&)[128], const void*, const void*)>();
+		static auto fnGLocalizationProvider = S::GLocalizationProvider.As<void* (__cdecl*)()>();
+		static auto fnGetStaticData = S::C_EconItemView_GetStaticData.As<void* (__thiscall*)(void*)>();
 
 		void* pItem = m_Item();
+		const void* pItemStaticData = fnGetStaticData(pItem);
 
-
-		void* pItemStaticData = C_EconItemView_GetStaticData(pItem);
-
-
-		return GetLocalizedBaseItemName_Fn(szItemName, GLocalizationProvider(), pItemStaticData);
+		return fnGetLocalizedBaseItemName(szItemName, fnGLocalizationProvider(), pItemStaticData);
 	}
 
 	NETVAR(m_Item, void*, "CEconEntity", "m_Item");
@@ -133,7 +140,7 @@ public: //Everything else, lol
 
 	inline const char* GetName()
 	{
-		static auto C_BaseCombatWeapon_GetName = reinterpret_cast<const char* (__thiscall*)(void*)>(g_Pattern.Find(CLIENT_DLL, "0F B7 81 ? ? ? ? 50 E8 ? ? ? ? 83 C4 04 83 C0 06"));
+		//static auto C_BaseCombatWeapon_GetName = S::C_BaseCombatWeapon_GetName.As<const char* (__thiscall*)(void*)>();
 		return GetVFunc<const char* (__thiscall*)(void*)>(this, 333)(this);
 		//return C_BaseCombatWeapon_GetName(this);
 	}
@@ -175,23 +182,20 @@ public: //Everything else, lol
 
 	__inline WeaponData_t GetWeaponData()
 	{
-		static int offset = g_Pattern.Find(CLIENT_DLL, "55 8B EC 66 8B ? ? 66 3B 05 ? ? ? ? 73");
-		static auto get_tf_weapon_data_fn = reinterpret_cast<CTFWeaponInfo * (__cdecl*)(int)>(offset);
-		return get_tf_weapon_data_fn(GetWeaponID())->m_WeaponData[0];
+		static auto fnGetWeaponData = S::CBaseCombatWeapon_GetWeaponData.As<CTFWeaponInfo * (__cdecl*)(int)>();
+		return fnGetWeaponData(GetWeaponID())->m_WeaponData[0];
 	}
 
 	__inline bool CanFireCriticalShot()
 	{
-		static int CanFireCriticalShotOffset = g_Pattern.Find(CLIENT_DLL, "6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 E8 ? ? ? ? 50 E8 ? ? ? ? 83 C4 14 C3");
-		static auto CanFireCriticalShotFN = reinterpret_cast<bool* (__cdecl*)(CBaseCombatWeapon*)>(CanFireCriticalShotOffset);
-		return CanFireCriticalShotFN(this);
+		static auto fnCanFireCriticalShot = S::CBaseCombatWeapon_CanFireCriticalShot.As<bool* (__cdecl*)(CBaseCombatWeapon*)>();
+		return fnCanFireCriticalShot(this);
 	}
 
 	__inline CTFWeaponInfo* GetTFWeaponInfo()
 	{
-		static int GetTFWeaponInfoFNOffset = g_Pattern.Find(CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? 83 C4 04 85 C0 75 02 5D C3 56 50 E8 ? ? ? ? 83 C4 04 0F B7 F0 E8 ? ? ? ? 66 3B F0 75 05 33 C0 5E 5D C3");
-		static auto GetTFWeaponInfoFN = reinterpret_cast<CTFWeaponInfo * (__cdecl*)(int)>(GetTFWeaponInfoFNOffset);
-		return GetTFWeaponInfoFN(GetWeaponID());
+		static auto fnGetTFWeaponInfo = S::CBaseCombatWeapon_GetTFWeaponInfo.As<CTFWeaponInfo * (__cdecl*)(int)>();
+		return fnGetTFWeaponInfo(GetWeaponID());
 	}
 
 	__inline float GetSwingRange(CBaseEntity* pLocal)
@@ -201,8 +205,8 @@ public: //Everything else, lol
 
 	__inline float GetWeaponSpread()
 	{
-		static auto GetWeaponSpreadFn = reinterpret_cast<float(__thiscall*)(decltype(this))>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 08 56 8B F1 57 6A 01 6A 00 8B 96 ? ? ? ? 8B 86 ? ? ? ? C1 E2 06 56 68 ? ? ? ? 51"));
-		return GetWeaponSpreadFn(this);
+		static auto fnGetWeaponSpread = S::CBaseCombatWeapon_GetWeaponSpread.As<float(__thiscall*)(decltype(this))>();
+		return fnGetWeaponSpread(this);
 	}
 
 	/*__inline bool WillCrit() {
@@ -329,14 +333,14 @@ public: //Everything else, lol
 
 	__inline void GetSpreadAngles(Vec3& vOut)
 	{
-		static auto GetSpreadAnglesFn = reinterpret_cast<void(__thiscall*)(decltype(this), Vec3&)>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 85 F6 74 10 8B 06 8B CE 8B 80 ? ? ? ? FF D0 84 C0 75 02"));
-		GetSpreadAnglesFn(this, vOut);
+		static auto fnGetSpreadAngles = S::CBaseCombatWeapon_GetSpreadAngles.As<void(__thiscall*)(decltype(this), Vec3&)>();
+		fnGetSpreadAngles(this, vOut);
 	}
 
 	__inline void GetProjectileFireSetup(CBaseEntity* pPlayer, Vec3 vOffset, Vec3* vSrc, Vec3* vForward, bool bHitTeam, float flEndDist)
 	{
-		static auto FN = reinterpret_cast<void(__thiscall*)(CBaseEntity*, CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float)>(g_Pattern.Find(CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0"));
-		FN(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
+		static auto fnGetProjectileFireSetu = S::CBaseCombatWeapon_GetProjectileFireSetup.As<void(__thiscall*)(CBaseEntity*, CBaseEntity*, Vec3, Vec3*, Vec3*, bool, float)>();
+		fnGetProjectileFireSetu(this, pPlayer, vOffset, vSrc, vForward, bHitTeam, flEndDist);
 	}
 
 	__inline bool IsRapidFire()
@@ -354,28 +358,24 @@ public: //Everything else, lol
 
 	__inline bool CalcIsAttackCritical()
 	{
-		static auto func = g_Pattern.Find(CLIENT_DLL, "53 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 14 85 DB 0F 84 ? ? ? ?");
-		typedef bool(__thiscall* fn)(void*);
-		return reinterpret_cast<fn>(func)(this);
+		using FN = bool(__thiscall*)(void*);
+		static auto fnCalcIsAttackCritical = S::CBaseCombatWeapon_CalcIsAttackCritical.As<FN>();
+		
+		return fnCalcIsAttackCritical(this);
 	}
 
 	__inline bool CalcIsAttackCriticalHelper()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
-		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(CLIENT_DLL, "55 8B EC 83 EC 18 56 57 6A 00 68 ? ? ? ? 68 ? ? ? ? 6A 00 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 14 89 75 EC"));
-		if (!pCalcIsAttackCriticalHelper)
-		{
-			pCalcIsAttackCriticalHelper = (FN)calcisattackcriticaloffset;
-			return false;
-		}
-		return pCalcIsAttackCriticalHelper(this);
+		static FN fnCalcIsAttackCriticalHelper = S::CBaseCombatWeapon_CalcIsAttackCriticalHelper.As<FN>();
+		return fnCalcIsAttackCriticalHelper(this);
 	}
 
 	__inline bool CalcIsAttackCriticalHelperMelee()
 	{
 		using FN = bool(__thiscall*)(CBaseCombatWeapon*);
-		static FN pCalcIsAttackCriticalHelper = reinterpret_cast<FN>(g_Pattern.Find(CLIENT_DLL, "55 8B EC A1 ? ? ? ? 83 EC 08 83 78 30 00 57"));
-		return pCalcIsAttackCriticalHelper(this);
+		static FN fnCalcIsAttackCriticalHelper = S::CBaseCombatWeapon_CalcIsAttackCriticalHelperMelee.As<FN>();
+		return fnCalcIsAttackCriticalHelper(this);
 	}
 
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)

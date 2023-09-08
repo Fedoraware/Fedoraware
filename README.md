@@ -21,6 +21,7 @@ A free and open-source training software for Team Fortress 2, based on [SE-Owned
 - You might have issues with injecting if you are on Windows 10 upgraded from Windows 7.
 - The source code is most likely **DETECTED**, use [VAC Bypass by danielkrupinski](https://github.com/Fedoraware/VAC-Bypass-Loader/releases/tag/Release). In the event you get VAC banned, we are not responsible. Don't cheat on accounts you care about.
 - Read the [Fedoraware Documentation](https://fedoraware.github.io/Docs/) to learn more about Fedoraware and its features.
+- If you want to use Discord RPC, you need to download [discord-rpc.dll](https://github.com/Fedoraware/discord-rpc/releases/latest/) into your game folder.
 
 ## Guide
 

@@ -416,8 +416,6 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 	}
 }
 
-#include "../../Resources/DVD-Icon.h"
-
 void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 {
 	//Tickbase info
@@ -600,34 +598,6 @@ void CVisuals::DrawMenuSnow()
 
 		Color_t flakeColour = {255, 255, 255, static_cast<byte>(alpha * 255.0f)};
 		g_Draw.String(menuFont, flake.X, flake.Y, flakeColour, ALIGN_DEFAULT, "*");
-	}
-}
-
-void CVisuals::DrawDVD()
-{
-	{
-		static int iDVD = g_Draw.CreateTextureFromArray(DVDIcon::rawData, 237, 139);
-
-		// DVD Logo
-		if (iDVD && Vars::Menu::ShowDVD.Value)
-		{
-			static Vec2 logoPos = {1, 1};
-			static Vec2 logoVelocity = {1, -1};
-
-			if (logoPos.y <= 0 || logoPos.y >= (g_ScreenSize.h - DVDIcon::Height))
-			{
-				logoVelocity.y = -logoVelocity.y;
-			}
-			if (logoPos.x <= 0 || logoPos.x >= (g_ScreenSize.w - DVDIcon::Width))
-			{
-				logoVelocity.x = -logoVelocity.x;
-			}
-			logoPos += logoVelocity;
-
-			I::VGuiSurface->DrawSetTexture(iDVD);
-			I::VGuiSurface->DrawSetColor(Utils::Rainbow());
-			I::VGuiSurface->DrawTexturedRect(logoPos.x, logoPos.y, DVDIcon::Width, DVDIcon::Height);
-		}
 	}
 }
 
