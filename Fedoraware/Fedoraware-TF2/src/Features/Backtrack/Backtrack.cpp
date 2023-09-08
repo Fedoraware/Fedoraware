@@ -19,8 +19,7 @@ bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
 bool CBacktrack::IsSimulationReliable(CBaseEntity* pEntity)
 {
 	const float flSimTimeDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
-	const int iTicksSimTimeDelta = flSimTimeDelta / I::GlobalVars->interval_per_tick;
-	return iTicksSimTimeDelta == 1;
+	return flSimTimeDelta > 0 && flSimTimeDelta <= I::GlobalVars->interval_per_tick;
 }
 
 //	check if we can go to this tick, ie, within 200ms of us
