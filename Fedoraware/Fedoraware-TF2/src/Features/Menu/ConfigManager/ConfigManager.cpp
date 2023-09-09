@@ -290,6 +290,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			{
 				SAVE_VAR(Vars::Backtrack::Enabled);
 				SAVE_VAR(Vars::Backtrack::UnchokePrediction);
+				SAVE_VAR(Vars::Backtrack::AllowForward);
 				SAVE_VAR(Vars::Backtrack::Latency);
 			}
 
@@ -688,6 +689,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			{
 				LOAD_VAR(Vars::Backtrack::Enabled);
 				LOAD_VAR(Vars::Backtrack::UnchokePrediction);
+				LOAD_VAR(Vars::Backtrack::AllowForward);
 				LOAD_VAR(Vars::Backtrack::Latency);
 			}
 
