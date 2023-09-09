@@ -8,9 +8,8 @@ bool CBacktrack::IsTracked(const TickRecord& record)
 	return record.flSimTime >= I::GlobalVars->curtime - 1.f;
 }
 
-//	i know this seems stupid, but i think it's a good idea to wait until the record is created rather than try and forward track.
 bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
-	return mRecords[pEntity].front().flSimTime > pEntity->GetSimulationTime();
+	return !Vars::Backtrack::AllowForward.Value && mRecords[pEntity].front().flSimTime > pEntity->GetSimulationTime();
 }
 
 //	should return true if the current position on the client has a lag comp record created for it by the server (SHOULD)
@@ -19,7 +18,7 @@ bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
 bool CBacktrack::IsSimulationReliable(CBaseEntity* pEntity)
 {
 	const float flSimTimeDelta = pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime();
-	return flSimTimeDelta > 0 && flSimTimeDelta <= I::GlobalVars->interval_per_tick;
+	return flSimTimeDelta > 0 && flSimTimeDelta < I::GlobalVars->interval_per_tick * 2;	//	there is some innacuracy here, as long as it's less than 2 ticks it should be fine.
 }
 
 //	check if we can go to this tick, ie, within 200ms of us
@@ -88,7 +87,7 @@ void CBacktrack::MakeRecords()
 		const float flDelta = flSimTime - flOldSimTime;
 
 		if (flDelta < 0) { continue; }	//	i think fucking not
-
+		
 		const Vec3 vOrigin = pEntity->m_vecOrigin();
 		if (!mRecords[pEntity].empty())
 		{
@@ -100,6 +99,11 @@ void CBacktrack::MakeRecords()
 				mRecords[pEntity].clear();
 			}
 		}
+
+		//PlayerInfo_t pInfo{};
+		//if (I::EngineClient->GetPlayerInfo(n, &pInfo) && flDelta != I::GlobalVars->interval_per_tick) {
+		//	Utils::ConLog("Backtrack", std::format("{} Expected {:.3f} but got {:.3f}", pInfo.name, I::GlobalVars->interval_per_tick * 1000, flDelta * 1000).c_str(), { 0, 222, 255, 255 }, Vars::Debug::Logging.Value);
+		//}
 
 		if (IsSimulationReliable(pEntity))
 		{
