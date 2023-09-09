@@ -46,6 +46,7 @@ namespace Vars
 	{
 		inline CVar<bool> Enabled{ true };
 		inline CVar<bool> UnchokePrediction{ true };
+		inline CVar<bool> AllowForward{ true };
 		inline CVar<int> Latency{ 0 };
 		
 
