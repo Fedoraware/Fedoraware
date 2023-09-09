@@ -35,7 +35,7 @@ void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
 	static KeyHelper kDoubletap{ &Vars::Misc::CL_Move::DoubletapKey.Value };
 	if (bTeleport || bRecharge || bSpeedhack/*|| (iAvailableTicks < Vars::Misc::CL_Move::DTTicks.Value)*/) { return; }
 	if (G::WaitForShift && Vars::Misc::CL_Move::WaitForDT.Value) { return; }
-	if (G::ShouldShift || !pCmd) { return; }
+	if (G::ShouldShift || !pCmd || !G::ShiftedTicks) { return; }
 
 	switch (Vars::Misc::CL_Move::DTMode.Value)
 	{
