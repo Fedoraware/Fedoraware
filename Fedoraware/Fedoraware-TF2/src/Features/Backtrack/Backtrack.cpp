@@ -82,12 +82,12 @@ void CBacktrack::MakeRecords()
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 		if (!pEntity) { continue; }
 		if (pEntity == g_EntityCache.GetLocal()) { continue; }
-		if (!pEntity->IsPlayer()) { return; }
+		if (!pEntity->IsPlayer() || !pEntity->IsAlive()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
 		const float flDelta = flSimTime - flOldSimTime;
 
 		if (flDelta < 0) { continue; }	//	i think fucking not
-
+		
 		const Vec3 vOrigin = pEntity->m_vecOrigin();
 		if (!mRecords[pEntity].empty())
 		{
