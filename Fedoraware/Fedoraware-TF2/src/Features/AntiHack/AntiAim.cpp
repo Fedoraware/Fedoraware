@@ -225,8 +225,8 @@ void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket)
 	G::FakeViewAngles = G::ViewAngles;
 	G::AntiAim = { false, false };
 
-	while (fabsf(flLastFakeOffset) > 180) { flLastFakeOffset += (flLastFakeOffset > 0) ? -360 : 360; }
-	while (fabsf(flLastRealOffset) > 180) { flLastRealOffset += (flLastRealOffset > 0) ? -360 : 360; }
+	flLastFakeOffset = (int)flLastFakeOffset % 360;
+	flLastRealOffset = (int)flLastRealOffset % 360;
 
 	FakeShotAngles(pCmd);
 

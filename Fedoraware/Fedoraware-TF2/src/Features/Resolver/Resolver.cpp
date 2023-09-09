@@ -250,7 +250,7 @@ void PResolver::FXFireBullet(int iIndex, const Vec3 vAngles){
 		vAngAdjusted.x = GetRealPitch(flAdjustedPitch);
 
 		if (fabsf(flAdjustedPitch) > 89.f) { vAngStore.y += 180; }	//	account for likely yaw faking
-		while (vAngStore.y > 360) { vAngStore.y -= 360.f; }	//	hacky fix for previous line
+		vAngStore.y = (int)vAngStore.y % 360;
 
 		vAngStore.x += 540;	//	(360+180)
 
