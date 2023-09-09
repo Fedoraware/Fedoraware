@@ -82,7 +82,7 @@ void CBacktrack::MakeRecords()
 		CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(n);
 		if (!pEntity) { continue; }
 		if (pEntity == g_EntityCache.GetLocal()) { continue; }
-		if (!pEntity->IsPlayer() || !pEntity->IsAlive()) { return; }
+		if (!pEntity->IsPlayer()) { return; }
 		const float flSimTime = pEntity->GetSimulationTime(), flOldSimTime = pEntity->GetOldSimulationTime();
 		const float flDelta = flSimTime - flOldSimTime;
 
