@@ -1,6 +1,6 @@
 #include "PatchManager.h"
 
-#include "../../SDK/Signatures.h"
+#include "../../SDK/Signatures/Signatures.h"
 #include "../../Utils/Pattern/Pattern.h"
 
 void CPatchManager::Init()

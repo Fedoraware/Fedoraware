@@ -42,7 +42,7 @@
 #define TEAM_RED		  2
 #define TEAM_BLU		  3
 
-#include "Signatures.h"
+#include "Signatures/Signatures.h"
 #include "Main/BaseEntity/BaseEntity.h"
 #include "Main/BaseCombatWeapon/BaseCombatWeapon.h"
 #include "Main/BaseObject/BaseObject.h"
@@ -62,15 +62,19 @@
 #define GetKey(vKey) (Utils::IsGameWindowInFocus() && GetAsyncKeyState(vKey))
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
-//I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
-#include <optional>
-
-#include "../Utils/CRC/CRC.h"
-
 #pragma warning (disable : 6385)
 #pragma warning (disable : 26451)
 #pragma warning (disable : 4305)
 #pragma warning (disable : 4172)
+
+namespace S
+{
+	MAKE_SIGNATURE(InitKeyValue, CLIENT_DLL, "55 8B EC FF 15 ? ? ? ? FF 75 ? 8B C8 8B 10 FF 52 ? 5D C3 CC CC CC CC CC CC CC CC CC CC CC 55 8B EC 56", 0x0);
+	MAKE_SIGNATURE(ATTRIB_HOOK_FLOAT, CLIENT_DLL, "55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38", 0x0);
+	MAKE_SIGNATURE(CTE_DispatchEffect, CLIENT_DLL, "55 8B EC 83 EC ? 56 8D 4D ? E8 ? ? ? ? 8B 75", 0x0);
+	MAKE_SIGNATURE(GetParticleSystemIndex, CLIENT_DLL, "55 8B EC 56 8B 75 ? 85 F6 74 ? 8B 0D ? ? ? ? 56 8B 01 FF 50 ? 3D", 0x0);
+	MAKE_SIGNATURE(UTIL_ParticleTracer, CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83", 0x0);
+}
 
 struct ShaderStencilState_t
 {
@@ -219,7 +223,7 @@ namespace Utils
 
 		if (w > 0.001)
 		{
-			float fl1DBw = 1 / w;
+			const float fl1DBw = 1 / w;
 			m_vScreen.x = (g_ScreenSize.w / 2) + (0.5 * ((worldToScreen[0][0] * vOrigin[0] + worldToScreen[0][1] * vOrigin[1] + worldToScreen[0][2] * vOrigin[2] + worldToScreen[0][3]) * fl1DBw) * g_ScreenSize.w + 0.5);
 			m_vScreen.y = (g_ScreenSize.h / 2) - (0.5 * ((worldToScreen[1][0] * vOrigin[0] + worldToScreen[1][1] * vOrigin[1] + worldToScreen[1][2] * vOrigin[2] + worldToScreen[1][3]) * fl1DBw) * g_ScreenSize.h + 0.5);
 			return true;
@@ -266,12 +270,9 @@ namespace Utils
 
 	__inline void* InitKeyValue()
 	{
-		using Init_t = PDWORD(__cdecl* )(int);
-		static DWORD dwInitLocation = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? 83 C4 14 85 C0 74 10 68") + 0x1;
-		static DWORD dwInit = ((*(PDWORD)(dwInitLocation)) + dwInitLocation + 4);
-		static Init_t InitKeyValues = (Init_t)dwInit;
-
-		return InitKeyValues(32);
+		using FN = PDWORD(__cdecl* )(int);
+		static FN fnInitKeyValue = S::InitKeyValue.As<FN>();
+		return fnInitKeyValue(32);
 	}
 
 	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
@@ -287,15 +288,11 @@ namespace Utils
 					{
 						return Colors::rTeam;
 					}
-					else
-					{
-						return Colors::Enemy;
-					}
+
+					return Colors::Enemy;
 				}
-				else
-				{
-					return Colors::White;
-				}
+
+				return Colors::White;
 			}
 		}
 		else {
@@ -314,11 +311,8 @@ namespace Utils
 		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
 		PlayerInfo_t info{}; I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &info);
 
-		if (pEntity->IsNPC())
-			out = Colors::NPC;
-
-		if (pEntity->IsBomb())
-			out = Colors::Bomb;
+		if (pEntity->IsNPC()) { out = Colors::NPC; }
+		if (pEntity->IsBomb()) { out = Colors::Bomb; }
 
 		if (pEntity->IsPlayer())
 		{
@@ -446,13 +440,13 @@ namespace Utils
 
 	__inline void FixMovement(CUserCmd *pCmd, const Vec3 &vecTargetAngle)
 	{
-		Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, pCmd->upmove);
+		const Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, pCmd->upmove);
 		Vec3 vecMoveAng = Vec3();
 
 		Math::VectorAngles(vecMove, vecMoveAng);
 
-		float fSpeed = Math::FastSqrt(vecMove.x * vecMove.x + vecMove.y * vecMove.y);
-		float fYaw = DEG2RAD(vecTargetAngle.y - pCmd->viewangles.y + vecMoveAng.y);
+		const float fSpeed = Math::FastSqrt(vecMove.x * vecMove.x + vecMove.y * vecMove.y);
+		const float fYaw = DEG2RAD(vecTargetAngle.y - pCmd->viewangles.y + vecMoveAng.y);
 
 		pCmd->forwardmove = (cos(fYaw) * fSpeed);
 		pCmd->sidemove = (sin(fYaw) * fSpeed);
@@ -460,7 +454,7 @@ namespace Utils
 
 	__inline int UnicodeToUTF8(const wchar_t* unicode, char* ansi, int ansiBufferSize)
 	{
-		const int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, NULL, NULL);
+		const int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, nullptr, nullptr);
 		ansi[ansiBufferSize - 1] = 0;
 		return result;
 	}
@@ -474,17 +468,15 @@ namespace Utils
 
 	__inline std::wstring ConvertUtf8ToWide(const std::string_view& str)
 	{
-		const int count = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), NULL, 0);
+		const int count = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), nullptr, 0);
 		std::wstring wstr(count, 0);
-		MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), &wstr[0], count);
+		MultiByteToWideChar(CP_UTF8, 0, str.data(), str.length(), wstr.data(), count);
 		return wstr;
 	}
 
 	__inline float ATTRIB_HOOK_FLOAT(float baseValue, const char *searchString, CBaseEntity *ent, void *buffer, bool isGlobalConstString)
 	{
-		static auto fn = reinterpret_cast<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>(g_Pattern.Find(CLIENT_DLL,
-			"55 8B EC 83 EC 0C 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 F4 89 7D F8 8B 41 08 85 C0 74 38"));
-
+		static auto fn = S::ATTRIB_HOOK_FLOAT.As<float(__cdecl *)(float, const char *, CBaseEntity *, void *, bool)>();
 		return fn(baseValue, searchString, ent, buffer, isGlobalConstString);
 	}
 
@@ -494,9 +486,9 @@ namespace Utils
 
 		CRC32_Init(&retval);
 
-		CRC32_ProcessBuffer(&retval, (void *)&seedvalue, sizeof(int));
-		CRC32_ProcessBuffer(&retval, (void *)&additionalSeed, sizeof(int));
-		CRC32_ProcessBuffer(&retval, (void *)sharedname, strlen(sharedname));
+		CRC32_ProcessBuffer(&retval, &seedvalue, sizeof(int));
+		CRC32_ProcessBuffer(&retval, &additionalSeed, sizeof(int));
+		CRC32_ProcessBuffer(&retval, sharedname, strlen(sharedname));
 
 		CRC32_Final(&retval);
 
@@ -512,14 +504,14 @@ namespace Utils
 
 	__inline void RandomSeed(int iSeed)
 	{
-		static auto RandomSeedFn = reinterpret_cast<void(*)(uint32_t)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomSeed"));
-		RandomSeedFn(iSeed);
+		static auto fnRandomSeed = reinterpret_cast<void(*)(uint32_t)>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "RandomSeed"));
+		fnRandomSeed(iSeed);
 	}
 
 	__inline float RandomFloat(float flMinVal = 0.0f, float flMaxVal = 1.0f)
 	{
-		static auto RandomFloatFn = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomFloat"));
-		return RandomFloatFn(flMinVal, flMaxVal);
+		static auto fnRandomFloat = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "RandomFloat"));
+		return fnRandomFloat(flMinVal, flMaxVal);
 	}
 
 	__inline bool VisPos(CBaseEntity *pSkip, const CBaseEntity *pEntity, const Vec3 &from, const Vec3 &to)
@@ -931,29 +923,21 @@ namespace Utils
 namespace Particles {
 	inline void DispatchEffect(const char* pName, const CEffectData& data)
 	{
-		using DispatchEffect_Fn = int(__cdecl*)(const char*, const CEffectData&);
-		static DWORD a = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? 83 C4 08 EB 15") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static DispatchEffect_Fn fn = (DispatchEffect_Fn)b;
-
-		fn(pName, data);
+		using FN = int(__cdecl*)(const char*, const CEffectData&);
+		static FN fnDispatchEffect = S::CTE_DispatchEffect.As<FN>();
+		fnDispatchEffect(pName, data);
 	}
 
 	inline int GetParticleSystemIndex(const char* pParticleSystemName)
 	{
-		using GetParticleSystemIndex_Fn = int(__cdecl*)(const char*);
-		static DWORD a = g_Pattern.Find(CLIENT_DLL, "E8 ? ? ? ? D9 EE 83 C4 04 50") + 0x1;
-		static DWORD b = ((*(PDWORD)(a)) + a + 4);
-		static GetParticleSystemIndex_Fn fn = (GetParticleSystemIndex_Fn)b;
-
-		return fn(pParticleSystemName);
+		using FN = int(__cdecl*)(const char*);
+		static FN fnGetParticleSystemIndex = S::GetParticleSystemIndex.As<FN>();
+		return fnGetParticleSystemIndex(pParticleSystemName);
 	}
 
-	inline void DispatchParticleEffect(int iEffectIndex, Vector vecOrigin, Vector vecStart, Vector vecAngles, CBaseEntity* pEntity)
+	inline void DispatchParticleEffect(int iEffectIndex, const Vector& vecOrigin, const Vector& vecStart, const Vector& vecAngles, CBaseEntity* pEntity = nullptr)
 	{
-		//E8 ? ? ? ? 83 C4 2C F6 46 30 01
-
-		CEffectData data;
+		CEffectData data{};
 		data.m_nHitBox = iEffectIndex;
 		data.m_vOrigin = vecOrigin;
 		data.m_vStart = vecStart;
@@ -973,21 +957,15 @@ namespace Particles {
 		DispatchEffect("ParticleEffect", data);
 	}
 
-
-	inline void DispatchParticleEffect(const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity = 0);
-	inline void DispatchParticleEffect(const char* pszParticleName, Vec3 vecOrigin, Vec3 vecAngles, CBaseEntity* pEntity)
+	inline void DispatchParticleEffect(const char* pszParticleName, const Vec3& vecOrigin, const Vec3& vecAngles, CBaseEntity* pEntity = nullptr)
 	{
-		//E8 ? ? ? ? 83 C4 20 8D 4D CC
-
-		int iIndex = GetParticleSystemIndex(pszParticleName);
+		const int iIndex = GetParticleSystemIndex(pszParticleName);
 		DispatchParticleEffect(iIndex, vecOrigin, vecOrigin, vecAngles, pEntity);
 	}
 
-
 	inline void ParticleTracer(const char* pszTracerEffectName, const Vector& vecStart, const Vector& vecEnd, int iEntIndex, int iAttachment, bool bWhiz) {
-		using ParticleTracerFn = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
-		static auto UTIL_ParticleTracer = reinterpret_cast<ParticleTracerFn>(g_Pattern.Find(CLIENT_DLL, "55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83"));
-		UTIL_ParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
-
+		using FN = void(__cdecl*)(const char*, const Vec3&, const Vec3&, int, int, bool);
+		static auto fnParticleTracer = S::UTIL_ParticleTracer.As<FN>();
+		fnParticleTracer(pszTracerEffectName, vecStart, vecEnd, iEntIndex, iAttachment, bWhiz);
 	}
 }

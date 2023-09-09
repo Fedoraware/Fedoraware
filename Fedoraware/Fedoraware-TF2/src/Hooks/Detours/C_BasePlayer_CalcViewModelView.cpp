@@ -1,6 +1,6 @@
 #include "../Hooks.h"
 
-MAKE_HOOK(C_BasePlayer_CalcViewModelView, S::C_BasePlayer_CalcViewModelView(), void, __fastcall,
+MAKE_HOOK(C_BasePlayer_CalcViewModelView, S::CBasePlayer_CalcViewModelView(), void, __fastcall,
 		  void* ecx, void* edx, CBaseEntity* pOwner, const Vec3& vEyePosition, Vec3& vEyeAngles)
 {
 	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(ecx, edx, pOwner, vEyePosition, vEyeAngles); }

@@ -130,7 +130,7 @@ bool FireBulletsHandler(CBaseCombatWeapon* pWeapon)
 	return true;
 }
 
-MAKE_HOOK(C_BaseEntity_FireBullets, S::C_BaseEntity_FireBullets(), void, __fastcall,
+MAKE_HOOK(C_BaseEntity_FireBullets, S::CBaseEntity_FireBullets(), void, __fastcall,
 		  void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
 	if (!FireBulletsHandler(pWeapon))

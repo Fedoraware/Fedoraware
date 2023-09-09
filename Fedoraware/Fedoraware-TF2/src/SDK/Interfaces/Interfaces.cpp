@@ -1,5 +1,4 @@
 #include "Interfaces.h"
-#include "../Signatures.h"
 
 #define VALIDATE(x) if (!(x)) MessageBoxA(0, #x, "CInterfaces::Init() -> nullptr", MB_ICONERROR)
 #define VALIDATE_STEAM(x) if (!(x)) MessageBoxA(0, #x, "CSteamInterfaces::Init() -> nullptr", MB_ICONERROR)
@@ -20,6 +19,7 @@ namespace S
 	MAKE_SIGNATURE(ClientModeTFNormal_Interface, CLIENT_DLL, "B9 ? ? ? ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 83 C4 ? 8B 35", 0x1);
 	MAKE_SIGNATURE(HostState_Interface, ENGINE_DLL, "8B 15 ? ? ? ? C6 85", 0x1);
 	MAKE_SIGNATURE(CTFGameMovement_Interface, CLIENT_DLL, "B9 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C6 05 ? ? ? ? ? E8", 0x1);
+	MAKE_SIGNATURE(MoveHelper_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 8B 01 FF 50 ? 56 8B C8 8B 10 FF 52 ? 8B 13", 0x2);
 
 	MAKE_SIGNATURE(Get_TFPartyClient, CLIENT_DLL, "A1 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 EC ? 53", 0x0);
 	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C", 0x1);
@@ -177,6 +177,9 @@ void CInterfaces::Init()
 
 	TFGameMovement = *S::CTFGameMovement_Interface.As<CTFGameMovement**>();
 	VALIDATE(TFGameMovement);
+
+	MoveHelper = **S::MoveHelper_Interface.As<CMoveHelper***>();
+	VALIDATE(MoveHelper);
 }
 
 void CSteamInterfaces::Init()

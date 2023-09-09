@@ -22,11 +22,6 @@ int CalculateTick(int simTicks, CBaseEntity* player)
 MAKE_HOOK(Prediction_RunCommand, Utils::GetVFuncPtr(I::Prediction, 17), void, __fastcall,
 		  void* ecx, void* edx, CBaseEntity* pEntity, CUserCmd* pCmd, CMoveHelper* pMoveHelper)
 {
-	if (pMoveHelper && !I::MoveHelper)
-	{
-		I::MoveHelper = pMoveHelper; /*MAKE_INTERFACE(IMoveHelper, MoveHelper, CLIENT_DLL, "8B 0D ? ? ? ? 8B 01 FF 50 28 56 8B C8", 2, 2);*/
-	}
-
 	const auto& pLocal = g_EntityCache.GetLocal();
 
 	if (pEntity && pEntity->IsAlive() && pLocal && pLocal->IsAlive() && pLocal == pEntity && pCmd && pCmd->command_number)

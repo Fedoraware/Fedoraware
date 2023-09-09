@@ -12,7 +12,7 @@ void ClearEffects(CBaseEntity* pEntity)
 	Offset(bool*, pEntity, 0xCA1) = false; // Ice
 }
 
-MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, S::C_TFRagdoll_CreateTFRagdoll(), void, __fastcall, void* ecx, void* edx)
+MAKE_HOOK(C_TFRagdoll_CreateTFRagdoll, S::CTFRagdoll_CreateTFRagdoll(), void, __fastcall, void* ecx, void* edx)
 {
 	if (Vars::Visuals::RemoveRagdolls.Value) { return; }
 

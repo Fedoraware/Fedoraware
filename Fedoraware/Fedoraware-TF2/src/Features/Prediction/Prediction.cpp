@@ -29,7 +29,7 @@ void CEnginePrediction::Start(CUserCmd* pCmd)
 
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
+	if (pLocal && pLocal->IsAlive() && !G::ShouldShift)
 	{
 		static auto fnResetInstanceCounters = S::ResetInstanceCounters.As<void(__cdecl*)()>();
 
@@ -97,7 +97,7 @@ void CEnginePrediction::End(CUserCmd* pCmd)
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-	if (pLocal && pLocal->IsAlive() && I::MoveHelper && !G::ShouldShift)
+	if (pLocal && pLocal->IsAlive() && !G::ShouldShift)
 	{
 		I::MoveHelper->SetHost(nullptr);
 
