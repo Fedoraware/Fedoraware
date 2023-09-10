@@ -2,39 +2,44 @@
 
 const std::unordered_map<std::string, unsigned> DATA_CENTER_HASH
 {
-	{"ams",  DC_AMS},
-	{"atl",  DC_ATL},
-	{"bom",  DC_BOM},
-	{"dxb",  DC_DXB},
-	{"eat",  DC_EAT},
-	{"mwh",  DC_MWH},
-	{"fra",  DC_FRA},
-	{"gnrt", DC_GNRT},
-	{"gru",  DC_GRU},
-	{"hkg",  DC_HKG},
-	{"iad",  DC_IAD},
-	{"jnb",  DC_JNB},
-	{"lax",  DC_LAX},
-	{"lhr",  DC_LHR},
-	{"lim",  DC_LIM},
-	{"lux",  DC_LUX},
-	{"maa",  DC_MAA},
-	{"mad",  DC_MAD},
-	{"man",  DC_MAN},
-	{"okc",  DC_OKC},
-	{"ord",  DC_ORD},
-	{"par",  DC_PAR},
-	{"scl",  DC_SCL},
-	{"sea",  DC_SEA},
-	{"sgp",  DC_SGP},
-	{"sto",  DC_STO},
+	{"ams", DC_AMS},
+	{"fra", DC_FRA},
+	{"lhr", DC_LHR},
+	{"mad", DC_MAD},
+	{"par", DC_PAR},
+	{"sto", DC_STO},
 	{"sto2", DC_STO},
-	{"syd",  DC_SYD},
-	{"tyo",  DC_TYO},
-	{"tyo2", DC_TYO},
+	{"vie", DC_VIE},
+	{"waw", DC_WAW},
+
+	{"atl", DC_ATL},
+	{"ord", DC_ORD},
+	{"dfw", DC_DFW},
+	{"lax", DC_LAX},
+	{"eat", DC_EAT},
+	{"sea", DC_SEA},
+	{"iad", DC_IAD},
+
+	{"eze", DC_EZE},
+	{"lim", DC_LIM},
+	{"scl", DC_SCL},
+	{"gru", DC_GRU},
+
+	{"maa", DC_MAA},
+	{"bom", DC_BOM},
+	{"dxb", DC_DXB},
+	{"hkg", DC_HKG},
+	{"seo", DC_SEO},
+	{"sgp", DC_SGP},
+	{"tyo", DC_TYO},
 	{"tyo1", DC_TYO},
-	{"vie",  DC_VIE},
-	{"waw",  DC_WAW}
+	{"can", DC_CAN},
+	{"sha", DC_SHA},
+	{"tsn", DC_TSN},
+
+	{"jnb", DC_JNB},
+
+	{"syd", DC_SYD},
 };
 
 void POPID_ToString(SteamNetworkingPOPID popID, char* out)
@@ -44,6 +49,28 @@ void POPID_ToString(SteamNetworkingPOPID popID, char* out)
 	out[2] = static_cast<char>(popID);
 	out[3] = static_cast<char>(popID >> 24);
 	out[4] = 0;
+}
+
+bool IsAllowed(const int nIndex) {
+	if (nIndex <= 7) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 0);
+	}
+	else if (nIndex <= 14) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 1);
+	}
+	else if (nIndex <= 18) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 2);
+	}
+	else if (nIndex <= 28) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 3);
+	}
+	else if (nIndex <= 29) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 4);
+	}
+	else if (nIndex <= 30) {
+		return Vars::Misc::RegionsAllowed.Value & (1 << 5);
+	}
+	return Vars::Misc::RegionsAllowed.Value & (1 << 6);
 }
 
 MAKE_HOOK(ISteamNetworkingUtils_GetDirectPingToPOP, Utils::GetVFuncPtr(g_SteamInterfaces.NetworkingUtils, 9), int, __fastcall,
@@ -60,8 +87,7 @@ MAKE_HOOK(ISteamNetworkingUtils_GetDirectPingToPOP, Utils::GetVFuncPtr(g_SteamIn
 	const auto pos = DATA_CENTER_HASH.find(popIDName);
 	if (pos != DATA_CENTER_HASH.end())
 	{
-		const unsigned value = pos->second;
-		const bool isAllowed = Vars::Misc::RegionsAllowed.Value & value;
+		const bool isAllowed = IsAllowed(pos->second);
 		return isAllowed ? 1 : 999999;
 	}
 
