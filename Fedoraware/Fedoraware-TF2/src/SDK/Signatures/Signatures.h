@@ -100,6 +100,7 @@ namespace S
 	MAKE_SIGNATURE(UTIL_TraceLine, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 83 EC ? 8D 4D ? 56 FF 73 ? FF 73 ? E8 ? ? ? ? 6A", 0x0);
 	MAKE_SIGNATURE(ViewRender_PerformScreenSpaceEffects, CLIENT_DLL, "55 8B EC 83 EC ? 8B 0D ? ? ? ? 53 56 57 33 F6 33 FF 89 75 ? 89 7D ? 8B 01 85 C0 74 ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 57 57 57 57 8D 4D ? 51 50 8B 40 ? FF D0 8B 7D ? 83 C4 ? 8B 75 ? 8B 0D ? ? ? ? 8B 19 8B 0D", 0x0);
 	MAKE_SIGNATURE(CMaterial_Uncache, MATSYSTEM_DLL, "55 8B EC 81 EC ? ? ? ? 56 8B F1 8B 0D ? ? ? ? 57", 0x0);
+	MAKE_SIGNATURE(CTFMatchSummary_OnTick, CLIENT_DLL, "55 8B EC 83 EC ? 53 57 8B F9 E8 ? ? ? ? E8", 0x0);
 
 	// Functions
 	MAKE_SIGNATURE(CMatchInviteNotification_AcceptMatch, CLIENT_DLL, "55 8B EC 83 EC 10 56 8B F1 8B 86 ? ? ? ? 83 E8 00", 0x0);

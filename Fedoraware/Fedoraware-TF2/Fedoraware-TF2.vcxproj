@@ -226,6 +226,7 @@
     <ClCompile Include="src\Hooks\Detours\COcclusionSystem_IsOccluded.cpp" />
     <ClCompile Include="src\Hooks\Detours\CSequenceTransitioner_CheckForSequenceChange.cpp" />
     <ClCompile Include="src\Hooks\Detours\CStaticPropMgr_ComputePropOpacity.cpp" />
+    <ClCompile Include="src\Hooks\Detours\CTFMatchSummary_OnTick.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseAnimating_FrameAdvance.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseAnimating_Interpolate.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseAnimating_MaintainSequenceTransitions.cpp" />
