@@ -445,10 +445,19 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 		case ETargetType::PLAYER:
 		{
-			if (ScanHitboxes(pLocal, target) && !(!F::Backtrack.CanHitOriginal(target.m_pEntity) || ((G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value && Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED)) || Vars::Aimbot::Hitscan::BackTrackMethod.Value == 4) && !G::ShouldShift)) 
+			const bool scanHitbox = ScanHitboxes(pLocal, target);
+			const bool canHitOriginal = F::Backtrack.CanHitOriginal(target.m_pEntity);
+			const bool isChoking = G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value;
+			const bool ignoreUnsimulated = Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED);
+			const bool shouldIgnore = isChoking && ignoreUnsimulated;
+
+			if (G::ShouldShift) { return false; }
+
+			if (scanHitbox && !(!canHitOriginal || shouldIgnore))
 			{
 				return true;
 			}
+
 			if (Vars::Backtrack::Enabled.Value)
 			{
 				for (int nHitbox = 0; nHitbox < target.m_pEntity->GetNumOfHitboxes(); nHitbox++)
