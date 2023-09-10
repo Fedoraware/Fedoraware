@@ -1726,8 +1726,8 @@ void CMenu::MenuMisc()
 			SectionTitle("Queueing");
 			WToggle("Region selector", &Vars::Misc::RegionChanger.Value);
 
-			MultiFlags({ "Amsterdam", "Atlanta", "Mumbai", "Dubai", "Moses Lake", "Washington", "Frankfurt", "Tokyo (GNRT)", "Sao Paulo", "Hong Kong", "Virginia", "Johannesburg", "Los Angeles", "London", "Lima", "Luxembourg", "Chennai", "Madrid", "Manilla", "Oklahoma City", "Chicago", "Paris", "Santiago", "Seattle", "Singapore", "Stockholm", "Sydney", "Tokyo", "Vienna", "Warsaw" },
-					   { DC_AMS,      DC_ATL,    DC_BOM,   DC_DXB,  DC_EAT,		 DC_MWH,	   DC_FRA,		DC_GNRT,		DC_GRU,		 DC_HKG,	  DC_IAD,	  DC_JNB,		  DC_LAX,		 DC_LHR,   DC_LIM, DC_LUX,		 DC_MAA,	DC_MAD,	  DC_MAN,    DC_OKC,		  DC_ORD,	 DC_PAR,  DC_SCL,     DC_SEA,	 DC_SGP,	  DC_STO,	   DC_SYD,   DC_TYO,  DC_VIE,	DC_WAW },
+			MultiFlags({ "Europe",	"North America",	"South America",	"Asia",		"Africa",	"Australia",	"Unknown"},
+					   { (1 << 0),	(1 << 1),			(1 << 2),			(1 << 3),	(1 << 4),	(1 << 5),		(1 << 6)},
 					   &Vars::Misc::RegionsAllowed.Value,
 					   "Regions"
 			);
@@ -2281,6 +2281,14 @@ void CMenu::DebugMenu()
 
 		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
 		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
+
+		if (Button("PingThink"))
+		{
+			if (!*m_bPendingPingRefresh) {
+				I::TFGCClientSystem->PingThink();
+			}
+			I::TFGCClientSystem->PingThink();
+		}
 
 		if (Button("Update Discord RPC"))
 		{
