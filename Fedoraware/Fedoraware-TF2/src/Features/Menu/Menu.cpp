@@ -2282,14 +2282,6 @@ void CMenu::DebugMenu()
 		bool* m_bPendingPingRefresh = reinterpret_cast<bool*>(I::TFGCClientSystem + 828);
 		Checkbox("Pending Ping Refresh", m_bPendingPingRefresh);
 
-		if (Button("PingThink"))
-		{
-			if (!*m_bPendingPingRefresh) {
-				I::TFGCClientSystem->PingThink();
-			}
-			I::TFGCClientSystem->PingThink();
-		}
-
 		if (Button("Update Discord RPC"))
 		{
 			F::DiscordRPC.Update();
