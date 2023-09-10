@@ -176,6 +176,7 @@
     <ClCompile Include="src\Utils\Minidump\Minidump.cpp" />
     <ClCompile Include="src\Core\Core.cpp" />
     <ClCompile Include="src\SDK\Signatures\Signatures.cpp" />
+    <ClCompile Include="src\Hooks\Detours\CTFMatchSummary_OnTick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
