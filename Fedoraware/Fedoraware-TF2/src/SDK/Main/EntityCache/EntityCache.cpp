@@ -200,20 +200,14 @@ void CEntityCache::Fill()
 
 void CEntityCache::UpdateFriends()
 {
-	static size_t oldSize = 0;
-
-	const auto players = GetGroup(EGroupType::PLAYERS_ALL);
-	const size_t curSize = players.size();
-	if (curSize == oldSize) { return; }
-
-	// Check friendship for every player
 	m_Friends.reset();
-	for (const auto& player : players)
+	// Check friendship for every player
+	for (CBaseEntity* pEntity : GetGroup(EGroupType::PLAYERS_ALL))
 	{
-		m_Friends[player->GetIndex()] = Utils::IsSteamFriend(player);
+		PlayerInfo_t pInfo{};
+		if (!I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pInfo)) { continue; }
+		m_Friends[pEntity->GetIndex()] = Utils::IsSteamFriend(pEntity) || G::PlayerPriority[pInfo.friendsID].Mode == 0;
 	}
-
-	oldSize = curSize;
 }
 
 void CEntityCache::Clear()
@@ -222,7 +216,6 @@ void CEntityCache::Clear()
 	m_pLocalWeapon = nullptr;
 	m_pObservedTarget = nullptr;
 	m_pPlayerResource = nullptr;
-	m_Friends.reset();
 
 	for (auto& group : m_vecGroups | std::views::values)
 	{
