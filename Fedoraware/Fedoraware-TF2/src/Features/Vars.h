@@ -91,6 +91,8 @@ namespace Vars
 			inline CVar<int> SortMethod{ 0 }; //0 - FOV,		1 - Distance
 			inline CVar<int> BackTrackMethod{ 0 };
 			inline CVar<bool> RespectFOV{ true };
+			inline CVar<bool> AdaptiveMultiPoint{ true };
+			inline CVar<int> RandomPoints{ 8 };
 			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
 			inline CVar<int> AimHitbox{ 2 }; //0 - Head,		1 - Body,	2 - Auto
 			inline CVar<int> ScanHitboxes{ 0b00111 }; // {legs, arms, body, pelvis, head}
