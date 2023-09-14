@@ -252,6 +252,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, height + 2, Colors::OutlineESP);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, height - 2, Colors::OutlineESP);
+						//ascendedsionwashere
 					}
 
 					break;
@@ -729,6 +731,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Colors::OutlineESP);
 					}
 
 					h -= 1;
@@ -859,7 +862,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 						nTextTopOffset += FONT_NAME.nTall + FONT_NAME.nTall /
 							4;
 						g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, drawColor, ALIGN_CENTERHORIZONTAL,
-									  L"Built by: %ls", Utils::ConvertUtf8ToWide(pi.name).data());
+									  L"Owner: %ls", Utils::ConvertUtf8ToWide(pi.name).data());
 					}
 				}
 			}
@@ -1053,7 +1056,7 @@ void CESP::DrawWorld() const
 
 					if (Vars::ESP::Main::Outlinedbar.Value)
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
-
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Colors::OutlineESP);
 					h -= 1;
 					break;
 				}
@@ -1125,6 +1128,7 @@ void CESP::DrawWorld() const
 
 					if (Vars::ESP::Main::Outlinedbar.Value)
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Colors::OutlineESP);
 
 					h -= 1;
 					break;
@@ -1234,6 +1238,7 @@ void CESP::DrawWorld() const
 
 					if (Vars::ESP::Main::Outlinedbar.Value)
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Colors::OutlineESP);
 
 					h -= 1;
 					break;
@@ -1329,7 +1334,7 @@ void CESP::DrawWorld() const
 
 					if (Vars::ESP::Main::Outlinedbar.Value)
 						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Colors::OutlineESP);
-
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Colors::OutlineESP);
 					h -= 1;
 					break;
 				}
