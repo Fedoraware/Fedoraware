@@ -335,6 +335,10 @@ void CMenu::MenuAimbot()
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Hitscan::StaticHitboxes.Value, "Static Hitboxes###AimbotStaticOnlyScanning");
 			}
+			WToggle("Adaptive Multipoint", &Vars::Aimbot::Hitscan::AdaptiveMultiPoint.Value); HelpMarker("Randomly creates points for each hitbox instead of using static points.");
+			if (Vars::Aimbot::Hitscan::AdaptiveMultiPoint.Value) {
+				WSlider("Point Count###HitscanMultipointCount", &Vars::Aimbot::Hitscan::RandomPoints.Value, 1, 12, "%d", ImGuiSliderFlags_None);
+			}
 			WSlider("Point Scale###HitscanMultipointScale", &Vars::Aimbot::Hitscan::PointScale.Value, 0.5f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 			WToggle("Preserve Target", &Vars::Aimbot::Hitscan::PreserveTarget.Value); HelpMarker("Prioritises the target that you most recently aimed at.");
 			if (Vars::Aimbot::Hitscan::PreserveTarget.Value) {

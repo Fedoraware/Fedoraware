@@ -308,6 +308,8 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::SortMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::RespectFOV);
+				SAVE_VAR(Vars::Aimbot::Hitscan::AdaptiveMultiPoint);
+				SAVE_VAR(Vars::Aimbot::Hitscan::RandomPoints);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//SAVE_VAR(Vars::Aimbot::Hitscan::AimFOV);
@@ -706,6 +708,8 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				//LOAD_VAR(Vars::Aimbot::Hitscan::Active);
 				LOAD_VAR(Vars::Aimbot::Hitscan::SortMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::BackTrackMethod);
+				LOAD_VAR(Vars::Aimbot::Hitscan::AdaptiveMultiPoint);
+				LOAD_VAR(Vars::Aimbot::Hitscan::RandomPoints);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Hitscan::AimHitbox);
 				//LOAD_VAR(Vars::Aimbot::Hitscan::AimFOV);

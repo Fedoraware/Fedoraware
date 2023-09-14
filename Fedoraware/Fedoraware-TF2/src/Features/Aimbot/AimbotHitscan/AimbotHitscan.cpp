@@ -297,6 +297,38 @@ std::vector<Target_t> CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseComba
 	return validTargets;
 }
 
+std::vector<Vec3> CAimbotHitscan::GetRandomPoints(const Vec3 vMaxs, const Vec3 vMins, CBaseEntity* pLocal, const matrix3x4& vTransform) {
+	std::vector<Vec3> vecPoints {};
+	for (int n = 0; n < Vars::Aimbot::Hitscan::RandomPoints.Value; n++) {
+		Vec3 vPushBack = { Utils::RandFloatRange(vMins.x, vMaxs.x), Utils::RandFloatRange(vMins.y, vMaxs.y), Utils::RandFloatRange(vMins.z, vMaxs.z)};
+		Vec3 vTransformed{};
+		Math::VectorTransform(vPushBack, vTransform, vTransformed);
+		vecPoints.push_back(vTransformed);
+	}
+	return vecPoints;
+}
+
+std::vector<Vec3> CAimbotHitscan::GetStaticPoints(const Vec3 vMaxs, const Vec3 vMins, const matrix3x4& vTransform) {
+	const std::vector<Vec3> vecStatics = {
+		Vec3(vMaxs.x, vMaxs.y, vMins.z),
+		Vec3(vMaxs.x, vMins.y, vMins.z),
+		Vec3(vMins.x, vMaxs.y, vMins.z),
+		Vec3(vMins.x, vMins.y, vMins.z),
+		Vec3(vMins.x, vMins.y, vMaxs.z),
+		Vec3(vMins.x, vMaxs.y, vMaxs.z),
+		Vec3(vMaxs.x, vMaxs.y, vMaxs.z),
+		Vec3(vMaxs.x, vMins.y, vMaxs.z),
+	};
+
+	std::vector<Vec3> vecPoints {};
+	for (const Vec3& point : vecStatics) {
+		Vec3 vTransformed{};
+		Math::VectorTransform(point, vTransform, vTransformed);
+		vecPoints.push_back(vTransformed);
+	}
+	return vecPoints;
+}
+
 bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 {
 	const Vec3 vLocalPos = pLocal->GetShootPos();
@@ -343,30 +375,18 @@ bool CAimbotHitscan::ScanHitboxes(CBaseEntity* pLocal, Target_t& target)
 									const Vec3 vMins = pBox->bbmin * fScale;
 									const Vec3 vMaxs = pBox->bbmax * fScale;
 
-									const std::vector<Vec3> vecPoints = {
-										Vec3(vMaxs.x, vMaxs.y, vMins.z),
-										Vec3(vMaxs.x, vMins.y, vMins.z),
-										Vec3(vMins.x, vMaxs.y, vMins.z),
-										Vec3(vMins.x, vMins.y, vMins.z),
-										Vec3(vMins.x, vMins.y, vMaxs.z),
-										Vec3(vMins.x, vMaxs.y, vMaxs.z),
-										Vec3(vMaxs.x, vMaxs.y, vMaxs.z),
-										Vec3(vMins.x, vMins.y, vMaxs.z),
-									};
+									const std::vector<Vec3> vecPoints = Vars::Aimbot::Hitscan::AdaptiveMultiPoint.Value ? GetRandomPoints(vMaxs, vMins, pLocal, boneMatrix[pBox->bone]) : GetStaticPoints(vMaxs, vMins, boneMatrix[pBox->bone]);
 
-									for (const auto& point : vecPoints)
+									for (const Vec3& point : vecPoints)
 									{
-										Vec3 vTransformed = {};
-										Math::VectorTransform(point, boneMatrix[pBox->bone], vTransformed);
-
 										if (nHitbox == 0
-											? Utils::VisPosHitboxId(pLocal, target.m_pEntity, vLocalPos, vTransformed, nHitbox)
+											? Utils::VisPosHitboxId(pLocal, target.m_pEntity, vLocalPos, point, nHitbox)
 											: Utils::VisPos(pLocal, target.m_pEntity, vLocalPos, vHitbox))
 									// there is no need to scan multiple times just because we hit the arm or whatever. Only count as failure if this hitbox was head.
 										{
-											target.m_vPos = vTransformed;
+											target.m_vPos = point;
 											target.m_nAimedHitbox = nHitbox;
-											target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
+											target.m_vAngleTo = Math::CalcAngle(vLocalPos, point);
 											target.m_bHasMultiPointed = true;
 											return true;
 										}

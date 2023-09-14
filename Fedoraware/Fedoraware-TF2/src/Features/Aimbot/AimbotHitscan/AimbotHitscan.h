@@ -4,6 +4,8 @@
 
 class CAimbotHitscan
 {
+	std::vector<Vec3> GetRandomPoints(const Vec3 vMaxs, const Vec3 vMins, CBaseEntity* pLocal, const matrix3x4 &vTransform);
+	std::vector<Vec3> GetStaticPoints(const Vec3 vMaxs, const Vec3 vMins, const matrix3x4& vTransform);
 	int GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	EGroupType GetGroupType(CBaseCombatWeapon* pWeapon);
 	std::vector<Target_t> GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
