@@ -4,8 +4,8 @@
 class CAutoStab
 {
 private:
-	bool CanBackstabEx(const Vec3 vFrom, const Vec3 vTo, const Vec3 vTargetAng);
-	bool CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta);
+	bool CanBackstab(CBaseEntity* pLocal, CBaseEntity* pTarget, CBaseCombatWeapon* pWeapon, Vec3 vLocalAngles);
+	bool CanBackstab(CBaseCombatWeapon* pWeapon, CBaseEntity* pTarget);
 	CBaseEntity* TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles, const Vec3 vStart);
 	bool IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity);
 	void RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd);

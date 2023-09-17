@@ -5,40 +5,25 @@
 #include "../../Aimbot/MovementSimulation/MovementSimulation.h"
 #include "../../TickHandler/TickHandler.h"
 
-bool CAutoStab::CanBackstabEx(const Vec3 vFrom, const Vec3 vTo, const Vec3 vTargetAng) {
-	const Vec3 vAngleTo = Math::CalcAngle(vTo, vFrom);
-	const float flFOVTo = Math::CalcFov(vTargetAng, vAngleTo);
-	return flFOVTo > 90.f;
+bool CAutoStab::CanBackstab(CBaseCombatWeapon* pWeapon, CBaseEntity* pTarget) {
+	static auto CTFKnife_IsBehindAndFacingTarget = reinterpret_cast<bool(__fastcall*)(void*, void*, CBaseEntity*)>(S::CTFKnife_IsBehindAndFacingTarget());
+	return CTFKnife_IsBehindAndFacingTarget(pWeapon, nullptr, pTarget);
 }
 
-bool CAutoStab::CanBackstab(const Vec3& vSrc, const Vec3& vDst, Vec3 vWSCDelta)
-{
-	vWSCDelta.z = 0;
-	vWSCDelta.NormalizeInPlace();
+bool CAutoStab::CanBackstab(CBaseEntity* pLocal, CBaseEntity* pTarget, CBaseCombatWeapon* pWeapon, Vec3 vLocalAngles) {
+	Vec3 vLocalAngB = pLocal->GetEyeAngles();
+	I::Prediction->SetLocalViewAngles(vLocalAngles);
+	const bool bReturnVal = CanBackstab(pWeapon, pTarget);
+	I::Prediction->SetLocalViewAngles(vLocalAngB);
 
-	auto vecEyeSpy = Vec3();
-	Math::AngleVectors(vSrc, &vecEyeSpy);
-	vecEyeSpy.z = 0;
-	vecEyeSpy.NormalizeInPlace();
-
-	auto vecEyeVictim = Vec3();
-	Math::AngleVectors(vDst, &vecEyeVictim);
-	vecEyeVictim.z = 0;
-	vecEyeVictim.NormalizeInPlace();
-
-	if (vWSCDelta.Dot(vecEyeVictim) <= 0.01f ||
-		vWSCDelta.Dot(vecEyeSpy) <= 0.5f ||
-		vecEyeSpy.Dot(vecEyeVictim) <= -0.3f)
-	{
-		return false;
-	}
-
-	return true;
+	return bReturnVal;
 }
 
 CBaseEntity* CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, const Vec3& vViewAngles, const Vec3 vStart)
 {
-	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
+	const float flScale = std::min(1.0f, pLocal->m_flModelScale());
+	const float flRange = Utils::ATTRIB_HOOK_FLOAT((66.f * Vars::Triggerbot::Stab::Range.Value) * flScale, "melee_range_multiplier", pWeapon, 0, true);
+	const float flHull = Utils::ATTRIB_HOOK_FLOAT(18.f, "melee_bounds_multiplier", pWeapon, 0, true) * flScale;
 
 	if (flRange <= 0.0f)
 	{
@@ -53,7 +38,7 @@ CBaseEntity* CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	CGameTrace Trace = {};
 	CTraceFilterHitscan Filter = {};
 	Filter.pSkip = pLocal;
-	Utils::TraceHull(vTraceStart, vTraceEnd, { -18.0f, -18.0f, -18.0f }, { 18.0f, 18.0f, 18.0f }, MASK_SOLID, &Filter, &Trace);
+	Utils::TraceHull(vTraceStart, vTraceEnd, { -flHull, -flHull, -flHull }, { flHull, flHull, flHull }, MASK_SOLID, &Filter, &Trace);
 	if (IsEntityValid(pLocal, Trace.entity))
 	{ return Trace.entity; }
 
@@ -81,11 +66,10 @@ bool CAutoStab::IsEntityValid(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	CBaseEntity* pEnemy = TraceMelee(pLocal, pWeapon, pCmd->viewangles, pLocal->GetShootPos());
+	CBaseEntity* pEnemy = TraceMelee(pLocal, pWeapon, pCmd->viewangles, pLocal->GetEyePosition());
 	if (!pEnemy) { return; }
 
-	if (!CanBackstab(pCmd->viewangles, pEnemy->GetEyeAngles(),
-		(pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
+	if (!CanBackstab(pWeapon, pEnemy))
 	{
 		return;
 	}
@@ -101,25 +85,15 @@ void CAutoStab::RunLegit(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
+	const float flScale = std::min(1.0f, pLocal->m_flModelScale());
 	// validate stab range
-	const float flRange = (48.0f * Vars::Triggerbot::Stab::Range.Value);
+	const float flRange = Utils::ATTRIB_HOOK_FLOAT((66.f * Vars::Triggerbot::Stab::Range.Value) * flScale, "melee_range_multiplier", pWeapon, 0, true);;
 	if (flRange <= 0.0f) { return; }
+	const float flHull = Utils::ATTRIB_HOOK_FLOAT(18.f, "melee_bounds_multiplier", pWeapon, 0, true) * flScale;
+	const float flCheckRange = sqrt(pow(flRange, 2) + pow(flHull, 2));
 
-	Vec3 vShootPos{};
-	Vec3 vOrigin{};
-	if (Vars::Debug::DebugInfo.Value && F::MoveSim.Initialize(pLocal))
-	{
-		CMoveData moveData = {};
-		Vec3 absOrigin = {};
-		F::MoveSim.RunTick(moveData, absOrigin);
-		vOrigin = absOrigin;
-		vShootPos = vOrigin + pLocal->GetViewOffset();
-		F::MoveSim.Restore();
-	}
-	else { 
-		vOrigin = pLocal->m_vecOrigin();
-		vShootPos = vOrigin + pLocal->GetViewOffset();
-	}
+	const Vec3 vShootPos = pLocal->GetEyePosition();
+	const Vec3 vOrigin = pLocal->GetWorldSpaceCenter();
 
 	for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
@@ -129,10 +103,10 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 		if (F::Backtrack.CanHitOriginal(pEnemy)) {
 			Vec3 vTargetPoint{};
 			pEnemy->GetCollision()->CalcNearestPoint(vShootPos, &vTargetPoint);	//	we can backstab any part of the bounding box.
-			Vec3 vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
-			if (vTargetPoint.DistTo(vShootPos) <= flRange)	//	range check
+			const Vec3 vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
+			if (vTargetPoint.DistTo(vShootPos) <= flCheckRange)	//	range check
 			{
-				if (CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (vTargetPoint - vShootPos)))	//	angle check
+				if (CanBackstab(pLocal, pEnemy, pWeapon, vAngleTo))	//	angle check
 				{
 					if (TraceMelee(pLocal, pWeapon, vAngleTo, vShootPos) == pEnemy)	//	vis check
 					{
@@ -156,17 +130,16 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		//	BACKTRACK
 		const Vec3 vOriginalPos = pEnemy->GetAbsOrigin();
-		const Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
+		//const Vec3 vOriginalEyeAngles = pEnemy->GetEyeAngles();
 		const auto& pRecords = Vars::Backtrack::Enabled.Value ? F::Backtrack.GetRecords(pEnemy) : nullptr;
 		const bool bDoBT = pRecords;
-		if (!bDoBT) { return; }
+		if (!bDoBT) { continue; }
 
 		for (const auto& pTick : *pRecords)
 		{
 			if (!F::Backtrack.WithinRewind(pTick)) { continue; }
 
 			pEnemy->SetAbsOrigin(pTick.vOrigin);	//	set these 4 CalcNearestPoint
-			pEnemy->SetEyeAngles(pTick.vAngles);
 
 			Vec3 vTargetPoint{};
 			pEnemy->GetCollision()->CalcNearestPoint(vShootPos, &vTargetPoint);	//	we can backstab any part of the bounding box.
@@ -174,7 +147,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 			if (vTargetPoint.DistTo(vShootPos) > flRange)	//	range check
 			{ continue; }
-			if (!CanBackstabEx(vOrigin, pTick.vOrigin, pTick.vAngles))	//	ang check
+			if (!CanBackstab(pLocal, pEnemy, pWeapon, vAngleTo))	//	ang check
 			{ continue; }
 
 			// Silent backstab
@@ -191,12 +164,10 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			pCmd->tick_count = TIME_TO_TICKS(pTick.flSimTime + TICKS_TO_TIME(TIME_TO_TICKS(G::LerpTime)));
 
 			pEnemy->SetAbsOrigin(vOriginalPos);
-			pEnemy->SetEyeAngles(vOriginalEyeAngles);
 			return;
 		}
 
 		pEnemy->SetAbsOrigin(vOriginalPos);
-		pEnemy->SetEyeAngles(vOriginalEyeAngles);
 	}
 }
 

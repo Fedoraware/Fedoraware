@@ -104,6 +104,7 @@ namespace S
 
 	// Functions
 	MAKE_SIGNATURE(CMatchInviteNotification_AcceptMatch, CLIENT_DLL, "55 8B EC 83 EC 10 56 8B F1 8B 86 ? ? ? ? 83 E8 00", 0x0);
+	MAKE_SIGNATURE(CTFKnife_IsBehindAndFacingTarget, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 83 EC ? 56 57 E8 ? ? ? ? 8B F0", 0x0);
 
 	// Values
 	MAKE_SIGNATURE(RandomSeed, CLIENT_DLL, "C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34", 0x2);

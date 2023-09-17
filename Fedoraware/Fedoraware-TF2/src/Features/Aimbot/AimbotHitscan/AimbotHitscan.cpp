@@ -440,7 +440,6 @@ bool CAimbotHitscan::ScanBuildings(CBaseEntity* pLocal, Target_t& target)
 		{
 			target.m_vPos = point;
 			target.m_vAngleTo = Math::CalcAngle(vLocalPos, point);
-			I::DebugOverlay->AddBoxOverlay2(point, { 2, 2, 2 }, { -2, -2, -2 }, { 0, 0, 0 }, { 255, 0, 0, 255 }, { 255, 0, 0, 255 }, I::GlobalVars->interval_per_tick * 10);
 			return true;
 		}
 	}
