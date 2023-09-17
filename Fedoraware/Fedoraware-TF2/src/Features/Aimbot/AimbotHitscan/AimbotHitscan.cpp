@@ -427,31 +427,20 @@ bool CAimbotHitscan::ScanBuildings(CBaseEntity* pLocal, Target_t& target)
 
 	const Vec3 vLocalPos = pLocal->GetShootPos();
 
-	const float pointScale = Vars::Aimbot::Hitscan::PointScale.Value;
+	constexpr float flScale = 0.95f;	//	Buildings will always be accurate to the server, don't use custom pointscale.
 
-	const Vec3 vMins = target.m_pEntity->GetCollideableMins() * pointScale;
-	const Vec3 vMaxs = target.m_pEntity->GetCollideableMaxs() * pointScale;
+	const Vec3 vMins = target.m_pEntity->GetCollideableMins() * flScale;
+	const Vec3 vMaxs = target.m_pEntity->GetCollideableMaxs() * flScale;
 
-	const std::vector<Vec3> vecPoints = {
-		Vec3(vMins.x * 0.9f, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(vMaxs.x * 0.9f, ((vMins.y + vMaxs.y) * 0.5f), ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMins.y * 0.9f, ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), vMaxs.y * 0.9f, ((vMins.z + vMaxs.z) * 0.5f)),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMins.z * 0.9f),
-		Vec3(((vMins.x + vMaxs.x) * 0.5f), ((vMins.y + vMaxs.y) * 0.5f), vMaxs.z * 0.9f)
-	};
+	const std::vector<Vec3> vecPoints = Vars::Aimbot::Hitscan::AdaptiveMultiPoint.Value ? GetRandomPoints(vMaxs, vMins, pLocal, target.m_pEntity->GetRgflCoordinateFrame()) : GetStaticPoints(vMaxs, vMins, target.m_pEntity->GetRgflCoordinateFrame());
 
-	const matrix3x4& transform = target.m_pEntity->GetRgflCoordinateFrame();
-
-	for (const auto& point : vecPoints)
+	for (const Vec3& point : vecPoints)
 	{
-		Vec3 vTransformed = {};
-		Math::VectorTransform(point, transform, vTransformed);
-
-		if (Utils::VisPos(pLocal, target.m_pEntity, vLocalPos, vTransformed))
+		if (Utils::VisPos(pLocal, target.m_pEntity, vLocalPos, point))
 		{
-			target.m_vPos = vTransformed;
-			target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTransformed);
+			target.m_vPos = point;
+			target.m_vAngleTo = Math::CalcAngle(vLocalPos, point);
+			I::DebugOverlay->AddBoxOverlay2(point, { 2, 2, 2 }, { -2, -2, -2 }, { 0, 0, 0 }, { 255, 0, 0, 255 }, { 255, 0, 0, 255 }, I::GlobalVars->interval_per_tick * 10);
 			return true;
 		}
 	}
