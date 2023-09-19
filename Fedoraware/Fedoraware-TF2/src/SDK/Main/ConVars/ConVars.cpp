@@ -29,19 +29,6 @@ void CConVars::Init()
 		constexpr int FCVAR_NOT_CONNECTED = (int)EConVarFlags::FCVAR_NOT_CONNECTED;
 		cmdBase->m_nFlags &= ~(FCVAR_HIDDEN | FCVAR_DEVELOPMENT_ONLY | FCVAR_CHEAT | FCVAR_NOT_CONNECTED);
 
-
-		if (ConVar* convar = reinterpret_cast<ConVar*>(cmdBase))
-		{
-			if (convar->GetName() == "name")
-			{
-				convar->m_fnChangeCallback = 0;
-				convar->InternalSetValue(0);
-				convar->m_fnChangeCallback = 0;
-			}
-			cvarMap[FNV1A::HashConst(convar->GetName())] = convar;
-
-		}
-
 		cmdBase = cmdBase->m_pNext;
 	}
 }

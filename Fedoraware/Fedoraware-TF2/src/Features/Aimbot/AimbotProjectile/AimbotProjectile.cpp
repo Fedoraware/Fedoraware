@@ -1171,8 +1171,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			continue;
 		}
 
-		const Vec3 vTargetCenter = pTarget->GetWorldSpaceCenter();
-		const Vec3 vTargetOrigin = pTarget->GetAbsOrigin();
+		const Vec3& vTargetCenter = pTarget->GetWorldSpaceCenter();
+		const Vec3& vTargetOrigin = pTarget->GetAbsOrigin();
 
 		if (vLocalOrigin.DistTo(vTargetOrigin) < Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value) { continue; } // Don't shoot too close
 		if (vLocalOrigin.DistTo(vTargetOrigin) > Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value) { continue; } // Don't shoot too far
@@ -1195,7 +1195,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value) { continue; }
 
 			// Can the target receive splash damage? (Don't predict through walls)
-			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
+			Utils::Trace(scanPos, vTargetCenter, MASK_SOLID, &traceFilter, &trace);
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
 
 			// Is the predicted position even visible?
