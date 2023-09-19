@@ -374,16 +374,28 @@ void CCheaterDetection::ReportShot(int iIndex)
 
 void CCheaterDetection::ReportDamage(CGameEvent* pEvent)
 {
-	const int iIndex = pEvent->GetInt("attacker");
-	if (iIndex == I::EngineClient->GetLocalPlayer()) { return; }
-	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(iIndex);
-	if (!pEntity) { return; }
-	if (pEntity->GetDormant()) { return; }
+	auto userid = pEvent->GetInt("userid");
+
+	auto index = I::EngineClient->GetPlayerForUserID(userid);
+	if (index == I::EngineClient->GetLocalPlayer())
+		return;
+
+	CBaseEntity* pEntity = I::ClientEntityList->GetClientEntity(index);
+	if (!pEntity) 
+		return;
+
+	if (pEntity->GetDormant())
+		return;
+
 	CBaseCombatWeapon* pWeapon = pEntity->GetActiveWeapon();
-	if (!pWeapon) { return; }
+	if (!pWeapon) 
+		return;
+
 	AimbotCheck(pEntity);
 	//BacktrackCheck(pEvent);
-	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1) { return; }
+	if (I::GlobalVars->tickcount - mData[pEntity].iLastDamageEventTick <= 1)
+		return;
+
 	mData[pEntity].iLastDamageEventTick = I::GlobalVars->tickcount;
 	mData[pEntity].pShots.first++; mData[pEntity].bDidDamage = true;
 	server.iHits++;
