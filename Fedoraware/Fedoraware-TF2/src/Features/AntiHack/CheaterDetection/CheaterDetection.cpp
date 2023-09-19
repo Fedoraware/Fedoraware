@@ -374,9 +374,9 @@ void CCheaterDetection::ReportShot(int iIndex)
 
 void CCheaterDetection::ReportDamage(CGameEvent* pEvent)
 {
-	auto userid = pEvent->GetInt("userid");
+	const int userid = pEvent->GetInt("userid");
 
-	auto index = I::EngineClient->GetPlayerForUserID(userid);
+	const int index = I::EngineClient->GetPlayerForUserID(userid);
 	if (index == I::EngineClient->GetLocalPlayer())
 		return;
 
