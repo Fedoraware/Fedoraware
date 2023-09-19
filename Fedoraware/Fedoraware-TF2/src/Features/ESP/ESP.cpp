@@ -1505,6 +1505,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	std::vector<std::wstring> szCond{};
 	const int& nCond = pEntity->GetCond();
 	const int& nCondEx = pEntity->GetCondEx();
+	const int& nCondEx2 = pEntity->GetCondEx2();
 	const int& nFlag = pEntity->GetFlags();
 
 	{
@@ -1554,7 +1555,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Overhealed");
 	}
 
-	if (nCondEx & TFCondEx2_BlastJumping)
+	if (nCondEx2 & TFCondEx2_BlastJumping)
 	{
 		szCond.emplace_back(L"Blast Jumping");
 	}
