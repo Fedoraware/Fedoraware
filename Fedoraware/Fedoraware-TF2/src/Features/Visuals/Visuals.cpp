@@ -743,22 +743,13 @@ void CVisuals::SetVisionFlags()
 
 void CVisuals::AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr)
 {
-	m_vecBulletTracers.push_back({vFrom, vTo, clr, I::GlobalVars->curtime});
+	m_vecBulletTracers.push_front({vFrom, vTo, clr, I::GlobalVars->curtime});
 }
 
 void CVisuals::PruneBulletTracers()
 {
-	const float curtime = I::GlobalVars->curtime;
-
 	if (m_vecBulletTracers.empty()) { return; }
-	for (size_t i = 0; i < m_vecBulletTracers.size(); i++)
-	{
-		const auto& bulletTracer = m_vecBulletTracers.at(i);
-		if (curtime > bulletTracer.m_flTimeCreated + 5)
-		{
-			m_vecBulletTracers.erase(m_vecBulletTracers.begin(), m_vecBulletTracers.begin() + 1);
-		}
-	}
+	if (fabsf(m_vecBulletTracers.back().m_flTimeCreated - I::GlobalVars->curtime) > 5.f) { m_vecBulletTracers.pop_back(); }
 }
 
 void CVisuals::DrawBulletTracers()
@@ -796,13 +787,6 @@ void CVisuals::DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position)
 		return;
 	}
 
-	static int lastTickcount = 0;
-	if (lastTickcount == I::GlobalVars->tickcount)
-	{
-		return;
-	}
-
-	lastTickcount = I::GlobalVars->tickcount;
 	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : position;
 	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
 	Vec3 shootPos;

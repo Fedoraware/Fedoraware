@@ -63,7 +63,7 @@ public:
 	void DrawBulletTracers();
 	void DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position);
 
-	std::vector<BulletTracer_t> m_vecBulletTracers;
+	std::deque<BulletTracer_t> m_vecBulletTracers;
 
 	float arrowUp = 0.f;
 	float arrowRight = 0.f;

@@ -1171,8 +1171,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			continue;
 		}
 
-		const auto& vTargetCenter = pTarget->GetWorldSpaceCenter();
-		const auto& vTargetOrigin = pTarget->GetAbsOrigin();
+		const Vec3 vTargetCenter = pTarget->GetWorldSpaceCenter();
+		const Vec3 vTargetOrigin = pTarget->GetAbsOrigin();
 
 		if (vLocalOrigin.DistTo(vTargetOrigin) < Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value) { continue; } // Don't shoot too close
 		if (vLocalOrigin.DistTo(vTargetOrigin) > Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value) { continue; } // Don't shoot too far
@@ -1223,7 +1223,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			}
 
 			const Vec3 vAngleToSplash = Math::CalcAngle(pLocal->GetEyePosition(), scanPos);
-			outTarget = { pTarget, ETargetType::PLAYER, vTargetOrigin, vAngleToSplash };
+			outTarget = { pTarget, ETargetType::PLAYER, scanPos, vAngleToSplash };
 			return true;
 		}
 	}
