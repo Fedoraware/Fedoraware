@@ -23,7 +23,7 @@ CBaseEntity* CAutoStab::TraceMelee(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 {
 	const float flScale = std::min(1.0f, pLocal->m_flModelScale());
 	const float flRange = Utils::ATTRIB_HOOK_FLOAT((66.f * Vars::Triggerbot::Stab::Range.Value) * flScale, "melee_range_multiplier", pWeapon, 0, true);
-	const float flHull = Utils::ATTRIB_HOOK_FLOAT(18.f, "melee_bounds_multiplier", pWeapon, 0, true) * flScale;
+	const float flHull = 18.f * Utils::ATTRIB_HOOK_FLOAT(1.0f, "melee_bounds_multiplier", pWeapon, 0, true) * flScale;
 
 	if (flRange <= 0.0f)
 	{

@@ -49,6 +49,7 @@ class CBacktrack
 	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
 	bool IsEarly(CBaseEntity* pEntity);
+	bool WithinRewindEx(const TickRecord& record, const float flCompTime);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
@@ -70,7 +71,7 @@ class CBacktrack
 	int iLastInSequence = 0;
 
 public:
-	bool WithinRewind(const TickRecord& record);
+	bool WithinRewind(const TickRecord& record, const float flDelay = 0.f);
 	bool CanHitOriginal(CBaseEntity* pEntity);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
 	void ResolverUpdate(CBaseEntity* pEntity);	//	omfg

@@ -21,18 +21,23 @@ bool CBacktrack::IsSimulationReliable(CBaseEntity* pEntity)
 	return flSimTimeDelta > 0 && flSimTimeDelta < I::GlobalVars->interval_per_tick * 2;	//	there is some innacuracy here, as long as it's less than 2 ticks it should be fine.
 }
 
-//	check if we can go to this tick, ie, within 200ms of us
-bool CBacktrack::WithinRewind(const TickRecord& record)
-{
-	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+bool CBacktrack::WithinRewindEx(const TickRecord& record, const float flCompTime) {
 	const auto iNetChan = I::EngineClient->GetNetChannelInfo();
-	if (!iNetChan || !pLocal) { return false; }
+	if (!iNetChan) { return false; }
 
 	const float flTargetTime = record.flSimTime + G::LerpTime;
 	const float flCorrect = ROUND_TO_TICKS(std::clamp(G::LerpTime + ROUND_TO_TICKS(iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING)), 0.f, g_ConVars.sv_maxunlag->GetFloat()));
-	const float flDelta = fabsf(flCorrect - (pLocal->GetSimulationTime() - flTargetTime));
+	const float flDelta = fabsf(flCorrect - (flCompTime - flTargetTime));
 
 	return flDelta < .200f - TICKS_TO_TIME(1);
+}
+
+//	check if we can go to this tick, ie, within 200ms of us
+bool CBacktrack::WithinRewind(const TickRecord& record, const float flDelay)
+{
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!pLocal) { return false; }
+	return WithinRewindEx(record, pLocal->GetSimulationTime() + flDelay);
 }
 
 //	hypothetically if their simtime is within 200ms of us we can hit their original, but idc
