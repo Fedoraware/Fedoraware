@@ -18,6 +18,8 @@ namespace S
 	MAKE_SIGNATURE(CBaseCombatWeapon_GetTFWeaponInfo, CLIENT_DLL, "55 8B EC FF 75 ? E8 ? ? ? ? 83 C4 ? 85 C0 75 ? 5D C3", 0x0);
 	MAKE_SIGNATURE(CBaseCombatWeapon_GetWeaponSpread, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 57 6A ? 6A", 0x0);
 
+	MAKE_SIGNATURE(CTFWeaponBaseMelee_DoSwingTraceInternal, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 56 8B F1", 0x0);
+
 	MAKE_SIGNATURE(CBaseCombatWeapon_GetSpreadAngles, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B F0 83 C4 ? 85 F6", 0x0);
 	MAKE_SIGNATURE(CBaseCombatWeapon_GetProjectileFireSetup, CLIENT_DLL, "53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C 24 ? 8B EC 81 EC ? ? ? ? 56 8B F1 57 8B 06 8B 80 ? ? ? ? FF D0 84 C0", 0x0);
 
@@ -223,6 +225,12 @@ public: //Everything else, lol
 	__inline bool DoSwingTrace(CGameTrace& Trace)
 	{
 		return GetVFunc<int(__thiscall*)(CGameTrace&)>(this, 454)(Trace);
+	}
+
+	__inline bool DoSwingTraceInternal(CGameTrace& Trace)
+	{
+		static auto fnDoSwingTraceInternal = S::CTFWeaponBaseMelee_DoSwingTraceInternal.As<bool(__thiscall*)(decltype(this), CGameTrace&, bool, void*)>();
+		return fnDoSwingTraceInternal(this, Trace, false, nullptr);
 	}
 
 	__inline int LookupAttachment(const char* pAttachmentName)

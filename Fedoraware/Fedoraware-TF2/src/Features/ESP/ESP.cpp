@@ -1503,9 +1503,10 @@ bool InCond(CBaseEntity* pEntity, int eCond)
 std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 {
 	std::vector<std::wstring> szCond{};
-	const int nCond = pEntity->GetCond();
-	const int nCondEx = pEntity->GetCondEx();
-	const int nFlag = pEntity->GetFlags();
+	const int& nCond = pEntity->GetCond();
+	const int& nCondEx = pEntity->GetCondEx();
+	const int& nCondEx2 = pEntity->GetCondEx2();
+	const int& nFlag = pEntity->GetFlags();
 
 	{
 		const float flTickVelSqr = pow(pEntity->TickVelocity2D(), 2);
@@ -1515,11 +1516,6 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	if (const wchar_t* rune = pEntity->GetRune())
 	{	// I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
-	}
-
-	if (pEntity->GetDormant())
-	{
-		szCond.emplace_back(L"Dormant");
 	}
 
 	if (InCond(pEntity, 61))
@@ -1557,6 +1553,11 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	if (pEntity->GetHealth() > pEntity->GetMaxHealth())
 	{
 		szCond.emplace_back(L"Overhealed");
+	}
+
+	if (nCondEx2 & TFCondEx2_BlastJumping)
+	{
+		szCond.emplace_back(L"Blast Jumping");
 	}
 
 	if (nCond & TFCond_OnFire)

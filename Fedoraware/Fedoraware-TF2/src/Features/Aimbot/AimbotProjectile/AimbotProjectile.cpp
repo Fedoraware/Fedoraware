@@ -2,6 +2,7 @@
 #include "../../Vars.h"
 #include "../MovementSimulation/MovementSimulation.h"
 #include "../../Visuals/Visuals.h"
+#include "../../Backtrack/Backtrack.h"
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
@@ -386,6 +387,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			for (int n = 0; n < TIME_TO_TICKS(maxTime); n++)
 			{
 				F::MoveSim.RunTick(moveData, absOrigin);
+				G::PredictionLines.emplace_back(absOrigin, Math::GetRotatedPosition(absOrigin, Math::VelocityToAngles(moveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value));
 				vPredictedPos = absOrigin;
 
 				const std::optional<Vec3> aimPosition = GetAimPos(pLocal, predictor.m_pEntity, vPredictedPos);
@@ -459,17 +461,18 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					continue;
 				}
 
-				out.m_flTime += fLatency;
+				if (out.m_flTime > TICKS_TO_TIME(n)) {
+					continue;
+				}
 
-				if (out.m_flTime < TICKS_TO_TIME(n))
+				out.m_flTime += fLatency - F::Backtrack.GetLatency();
+
+				if (WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor))
 				{
-					if (WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor))
-					{
-						G::PredictedPos = vPredictedPos;
-						F::MoveSim.Restore();
-						m_flTravelTime = out.m_flTime;
-						return true;
-					}
+					G::PredictedPos = vPredictedPos;
+					F::MoveSim.Restore();
+					m_flTravelTime = out.m_flTime;
+					return true;
 				}
 			}
 			F::MoveSim.Restore();
@@ -1171,8 +1174,8 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			continue;
 		}
 
-		const Vec3 vTargetCenter = pTarget->GetWorldSpaceCenter();
-		const Vec3 vTargetOrigin = pTarget->GetAbsOrigin();
+		const Vec3& vTargetCenter = pTarget->GetWorldSpaceCenter();
+		const Vec3& vTargetOrigin = pTarget->GetAbsOrigin();
 
 		if (vLocalOrigin.DistTo(vTargetOrigin) < Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value) { continue; } // Don't shoot too close
 		if (vLocalOrigin.DistTo(vTargetOrigin) > Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value) { continue; } // Don't shoot too far
@@ -1195,7 +1198,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			if ((sortMethod == ESortMethod::FOV || Vars::Aimbot::Projectile::RespectFOV.Value) && flFOVTo > Vars::Aimbot::Global::AimFOV.Value) { continue; }
 
 			// Can the target receive splash damage? (Don't predict through walls)
-			Utils::Trace(scanPos, pTarget->GetWorldSpaceCenter(), MASK_SOLID, &traceFilter, &trace);
+			Utils::Trace(scanPos, vTargetCenter, MASK_SOLID, &traceFilter, &trace);
 			if (trace.flFraction < 0.99f && trace.entity != pTarget) { continue; }
 
 			// Is the predicted position even visible?

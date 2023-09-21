@@ -46,9 +46,9 @@ class CBacktrack
 	const Color_t BT_LOG_COLOUR{ 150, 0, 212, 255};
 
 //	logic
-	bool IsTracked(const TickRecord& record);
 	bool IsSimulationReliable(CBaseEntity* pEntity);
-	bool IsEarly(CBaseEntity* pEntity);
+	inline bool IsEarly(CBaseEntity* pEntity);
+	bool WithinRewindEx(const TickRecord& record, const float flCompTime);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
 
 	//	utils
@@ -57,7 +57,6 @@ class CBacktrack
 	std::optional<TickRecord> GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, Vec3 vAngles, Vec3 vPos);
 	//	utils - fake latency
 	void UpdateDatagram();
-	float GetLatency();
 
 	//	data
 	std::unordered_map<CBaseEntity*, std::deque<TickRecord>> mRecords;
@@ -70,7 +69,9 @@ class CBacktrack
 	int iLastInSequence = 0;
 
 public:
-	bool WithinRewind(const TickRecord& record);
+	float GetLatency();
+	inline bool IsTracked(const TickRecord& record, const float flDelay = 0.f);
+	bool WithinRewind(const TickRecord& record, const float flDelay = I::GlobalVars->interval_per_tick);
 	bool CanHitOriginal(CBaseEntity* pEntity);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
 	void ResolverUpdate(CBaseEntity* pEntity);	//	omfg

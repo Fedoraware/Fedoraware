@@ -41,7 +41,9 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 			{
 				return;
 			}
-			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering)
+			const auto& vRecords = F::Backtrack.GetRecords(pEntity);
+
+			if (!F::Glow.m_bRendering && !F::Chams.m_bRendering && vRecords && !vRecords->empty())
 			{
 				if (Vars::Backtrack::BtChams::EnemyOnly.Value && g_EntityCache.GetLocal() && pEntity->GetTeamNum() ==
 					g_EntityCache.GetLocal()->GetTeamNum())
@@ -70,24 +72,18 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 				I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
 
-				const auto& vRecords = F::Backtrack.GetRecords(pEntity);
-				if (Vars::Backtrack::BtChams::LastOnly.Value)
-				{
+				if (Vars::Backtrack::BtChams::LastOnly.Value) {
 					std::optional<TickRecord> vLastRec = F::Backtrack.GetLastRecord(pEntity);
-					if (vLastRec)
-					{
+					if (vLastRec) { 
+						I::RenderView->SetColorModulation(vLastRec->bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), vLastRec->bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), vLastRec->bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
 						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&vLastRec->BoneMatrix));
 					}
 				}
-				else
-				{
-					if (vRecords)
-					{
-						for (auto& record : *vRecords)
-						{
-							I::RenderView->SetColorModulation(record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
-							if (F::Backtrack.WithinRewind(record)) { OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix)); }
-						}
+				else {
+					for (TickRecord& record : *vRecords) {
+						I::RenderView->SetColorModulation(record.bOnShot ? 1 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g), record.bOnShot ? 0 : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
+						if (!F::Backtrack.WithinRewind(record)) { continue; }
+						OriginalFn(ecx, edx, pState, pInfo, (matrix3x4*)(&record.BoneMatrix));
 					}
 				}
 
