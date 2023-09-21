@@ -387,6 +387,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			for (int n = 0; n < TIME_TO_TICKS(maxTime); n++)
 			{
 				F::MoveSim.RunTick(moveData, absOrigin);
+				G::PredictionLines.emplace_back(absOrigin, Math::GetRotatedPosition(absOrigin, Math::VelocityToAngles(moveData.m_vecVelocity).Length2D() + 90, Vars::Visuals::SeperatorLength.Value));
 				vPredictedPos = absOrigin;
 
 				const std::optional<Vec3> aimPosition = GetAimPos(pLocal, predictor.m_pEntity, vPredictedPos);
