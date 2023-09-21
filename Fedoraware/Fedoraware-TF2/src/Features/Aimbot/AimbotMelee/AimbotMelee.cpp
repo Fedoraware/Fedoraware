@@ -266,6 +266,8 @@ inline bool CAimbotMelee::ShouldAttack() {
 }
 
 void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd) {
+	G::CurrentTargetIdx = 0;
+
 	const bool bShouldAim = (Vars::Aimbot::Melee::RequireBind.Value ? F::AimbotGlobal.IsKeyDown() : true);
 	if (!Vars::Aimbot::Global::Active.Value || G::AutoBackstabRunning || pWeapon->GetWeaponID() == TF_WEAPON_KNIFE || !bShouldAim) {
 		return;
