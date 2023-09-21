@@ -17,7 +17,7 @@ class CAimbotMelee
 	inline bool ShouldAttack();
 	inline float GetSwingRange(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	inline float GetSwingVec(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
-	bool CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles);
+	inline bool CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles);
 	bool FillCache(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	std::vector<Target_t> GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target);

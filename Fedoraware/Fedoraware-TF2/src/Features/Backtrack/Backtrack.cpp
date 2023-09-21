@@ -3,12 +3,12 @@
 
 #define ROUND_TO_TICKS(t) (TICKS_TO_TIME(TIME_TO_TICKS(t)))
 
-bool CBacktrack::IsTracked(const TickRecord& record)
+inline bool CBacktrack::IsTracked(const TickRecord& record, const float flDelay)
 {
-	return record.flSimTime >= I::GlobalVars->curtime - 1.f;
+	return record.flSimTime - flDelay >= I::GlobalVars->curtime - 1.f;
 }
 
-bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
+inline bool CBacktrack::IsEarly(CBaseEntity* pEntity) {
 	return !Vars::Backtrack::AllowForward.Value && mRecords[pEntity].front().flSimTime > pEntity->GetSimulationTime();
 }
 
@@ -29,7 +29,7 @@ bool CBacktrack::WithinRewindEx(const TickRecord& record, const float flCompTime
 	const float flCorrect = ROUND_TO_TICKS(std::clamp(G::LerpTime + ROUND_TO_TICKS(iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING)), 0.f, g_ConVars.sv_maxunlag->GetFloat()));
 	const float flDelta = fabsf(flCorrect - (flCompTime - flTargetTime));
 
-	return flDelta < .200f - TICKS_TO_TIME(1);
+	return flDelta < .200f - TICKS_TO_TIME(2);
 }
 
 //	check if we can go to this tick, ie, within 200ms of us
@@ -37,7 +37,7 @@ bool CBacktrack::WithinRewind(const TickRecord& record, const float flDelay)
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return false; }
-	return WithinRewindEx(record, pLocal->GetSimulationTime() + flDelay);
+	return WithinRewindEx(record, pLocal->GetSimulationTime() + flDelay) && IsTracked(record, flDelay);
 }
 
 //	hypothetically if their simtime is within 200ms of us we can hit their original, but idc
@@ -315,7 +315,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 		{
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
-				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery) || IsEarly(pEntity)) { continue; }
+				if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
 			}
@@ -337,7 +337,7 @@ std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode
 			std::optional<TickRecord> ReturnTick{};
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
-				if (!WithinRewind(rCurQuery) || !IsTracked(rCurQuery) || IsEarly(pEntity)) { continue; }
+				if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { ReturnTick = rCurQuery; }
 				if (ReturnTick.has_value())
@@ -367,7 +367,7 @@ std::optional<TickRecord> CBacktrack::GetLastRecord(CBaseEntity* pEntity)
 	std::optional<TickRecord> rReturnRecord = std::nullopt;
 	for (const auto& rCurQuery : mRecords[pEntity])
 	{
-		if (!IsTracked(rCurQuery) || !WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
+		if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
 		rReturnRecord = rCurQuery;
 	}
 	return rReturnRecord;

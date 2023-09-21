@@ -28,14 +28,13 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle) {
 }
 
 bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target) {
-	const Vec3& vLocalPos = vCache;
-	const Vec3& vLocalAngles = I::EngineClient->GetViewAngles();
+	
+	const Vec3 vShootPos = vCache + pLocal->GetViewOffset();
 	//	not gonna movesim enemies this time cause we can just backtrack them.
 	//	check our current tick first
 	if (F::Backtrack.CanHitOriginal(target.m_pEntity)) {
-		Vec3 vTargetPoint{};
-		target.m_pEntity->GetCollision()->CalcNearestPoint(vLocalPos, &vTargetPoint);
-		target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTargetPoint);
+		const Vec3 vTargetPoint = target.m_pEntity->GetHitboxPos(HITBOX_SPINE_1);
+		target.m_vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
 		if (CanMeleeHit(pLocal, target.m_pEntity, pWeapon, target.m_vAngleTo)) {
 			target.SimTime = target.m_pEntity->GetSimulationTime();	//	technically we will end up backtracking unless we are using doubletap to instant melee, but i see that as a good thing
 			target.m_vPos = vTargetPoint;
@@ -48,10 +47,9 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 			const Vec3 vOriginalPos = target.m_pEntity->GetAbsOrigin();
 			for (TickRecord& record : *pRecords) {
 				if (!F::Backtrack.WithinRewind(record, flSwingTime)) { continue; }
-				Vec3 vTargetPoint{};
 				target.m_pEntity->SetAbsOrigin(record.vOrigin);
-				target.m_pEntity->GetCollision()->CalcNearestPoint(vLocalPos, &vTargetPoint);
-				target.m_vAngleTo = Math::CalcAngle(vLocalPos, vTargetPoint);
+				const Vec3 vTargetPoint = target.m_pEntity->GetHitboxPosMatrix(HITBOX_SPINE_1, (matrix3x4*)(&record.BoneMatrix));
+				target.m_vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
 				if (CanMeleeHit(pLocal, target.m_pEntity, pWeapon, target.m_vAngleTo)) {
 
 					target.SimTime = record.flSimTime;
@@ -68,46 +66,45 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 }
 
 bool CAimbotMelee::FillCache(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon) {
-	flSwingTime = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && (Vars::Misc::CL_Move::AntiWarp.Value && pLocal->OnSolid())) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), TICK_INTERVAL);
+	flSwingTime = std::max(pWeapon->GetWeaponData().m_flSmackDelay - ((F::Ticks.MeleeDoubletapCheck(pLocal) && (Vars::Misc::CL_Move::AntiWarp.Value && pLocal->OnSolid())) ? TICKS_TO_TIME(G::ShiftedTicks) : 0.f), 0.f);
 	const int iTicks = TIME_TO_TICKS(flSwingTime);
 
-	if (Vars::Aimbot::Melee::PredictSwing.Value) {
+	if (Vars::Aimbot::Melee::PredictSwing.Value && iTicks) {
 		if (F::MoveSim.Initialize(pLocal)) {
 			CMoveData moveData = {};
 			Vec3 absOrigin = {};
 			for (int i = 0; i < iTicks; i++) {
 				F::MoveSim.RunTick(moveData, absOrigin);
 			}
-			absOrigin += pLocal->GetViewOffset();
 			vCache = absOrigin;
 			F::MoveSim.Restore();
 		}
 		else { return false; }
 	}
 	else {
-		vCache = pLocal->GetShootPos();
+		vCache = pLocal->GetAbsOrigin();
 	}
 	return true;
 }
 
-bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles) {
-	const float flHull = GetSwingVec(pLocal, pWeapon);
-	const float flRange = GetSwingRange(pLocal, pWeapon);
+inline bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles) {
+	const Vec3 vBackupPos = pLocal->GetAbsOrigin();
+	const Vec3 vBackupAng  = I::EngineClient->GetViewAngles();
 
-	if (flRange <= 0.f) { return false; }
 
-	Vec3 vForward{};
-	Math::AngleVectors(vAngles, &vForward);
+	//	swing pred doesn't seem to work? i genuinely can't tell.
+	pLocal->SetVecOrigin(vCache);
+	pLocal->SetEyeAngles(vAngles);
+	I::RenderView->SetMainView(vCache + pLocal->m_vecViewOffset(), vAngles);
 
-	const Vec3 vTraceStart = vCache;
-	const Vec3 vTraceEnd = (vTraceStart + (vForward * flRange));
-
-	CTraceFilterHitscan filter;
-	filter.pSkip = pLocal;
 	CGameTrace trace;
-	Utils::TraceHull(vTraceStart, vTraceEnd, { -flHull, -flHull, -flHull }, { flHull, flHull, flHull }, MASK_SHOT, &filter, &trace);
+	const bool bSwingTrace = pWeapon->DoSwingTraceInternal(trace);
 
-	return trace.entity == pEntity;
+	pLocal->SetVecOrigin(vBackupPos);
+	pLocal->SetEyeAngles(vBackupAng);
+	I::RenderView->SetMainView(vBackupPos + pLocal->m_vecViewOffset(), vBackupAng);
+
+	return bSwingTrace ? trace.entity == pEntity : false;
 }
 
 inline bool CAimbotMelee::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon) {
