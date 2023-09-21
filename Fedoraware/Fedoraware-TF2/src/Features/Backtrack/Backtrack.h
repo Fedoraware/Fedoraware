@@ -57,7 +57,6 @@ class CBacktrack
 	std::optional<TickRecord> GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, Vec3 vAngles, Vec3 vPos);
 	//	utils - fake latency
 	void UpdateDatagram();
-	float GetLatency();
 
 	//	data
 	std::unordered_map<CBaseEntity*, std::deque<TickRecord>> mRecords;
@@ -70,6 +69,7 @@ class CBacktrack
 	int iLastInSequence = 0;
 
 public:
+	float GetLatency();
 	inline bool IsTracked(const TickRecord& record, const float flDelay = 0.f);
 	bool WithinRewind(const TickRecord& record, const float flDelay = I::GlobalVars->interval_per_tick);
 	bool CanHitOriginal(CBaseEntity* pEntity);

@@ -2,6 +2,7 @@
 #include "../../Vars.h"
 #include "../MovementSimulation/MovementSimulation.h"
 #include "../../Visuals/Visuals.h"
+#include "../../Backtrack/Backtrack.h"
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
@@ -459,17 +460,18 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 					continue;
 				}
 
-				out.m_flTime += fLatency;
+				if (out.m_flTime > TICKS_TO_TIME(n)) {
+					continue;
+				}
 
-				if (out.m_flTime < TICKS_TO_TIME(n))
+				out.m_flTime += fLatency - F::Backtrack.GetLatency();
+
+				if (WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor))
 				{
-					if (WillProjectileHit(pLocal, pWeapon, pCmd, vPredictedPos, out, projInfo, predictor))
-					{
-						G::PredictedPos = vPredictedPos;
-						F::MoveSim.Restore();
-						m_flTravelTime = out.m_flTime;
-						return true;
-					}
+					G::PredictedPos = vPredictedPos;
+					F::MoveSim.Restore();
+					m_flTravelTime = out.m_flTime;
+					return true;
 				}
 			}
 			F::MoveSim.Restore();
