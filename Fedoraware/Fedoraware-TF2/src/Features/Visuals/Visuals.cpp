@@ -31,7 +31,9 @@ void CVisuals::Draw()
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colourface, Color_t colouredge, float time)
 {
-	//I::DebugOverlay->ClearAllOverlays();
+	if (Vars::Aimbot::Global::ClearPreviousHitbox.Value) {
+		I::DebugOverlay->ClearAllOverlays();
+	}
 
 	const model_t* model = pEntity->GetModel();
 	const studiohdr_t* hdr = I::ModelInfoClient->GetStudioModel(model);
