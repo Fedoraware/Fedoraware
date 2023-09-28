@@ -240,7 +240,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			}
 		}
 	}
-
+	
+	F::NoSpread.CreateMoveProjectile(pCmd);
+	
 	G::LastUserCmd = pCmd;
 
 	const bool bShouldSkip = (G::SilentTime || G::AAActive || G::HitscanSilentActive || G::AvoidingBackstab || !G::UpdateView || !F::Misc.TauntControl(pCmd));
