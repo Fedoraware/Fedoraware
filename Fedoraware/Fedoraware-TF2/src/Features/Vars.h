@@ -157,6 +157,11 @@ namespace Vars
 		}
 	}
 
+	namespace NoSpread
+	{
+		inline CVar<bool> Projectile{ true };
+	}
+
 	namespace Triggerbot
 	{
 		namespace Global

@@ -9,6 +9,7 @@ static constexpr auto VGUI2_DLL = "vgui2.dll";
 static constexpr auto MATSURFACE_DLL = "vguimatsurface.dll";
 static constexpr auto MATSYSTEM_DLL = "MaterialSystem.dll";
 static constexpr auto STUDIORENDER_DLL = "studiorender.dll";
+static constexpr auto TIER0_DLL = "tier0.dll";
 
 class CSignature
 {

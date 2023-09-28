@@ -21,6 +21,7 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/NoSpread/NoSpread.h"
 
 void AttackingUpdate()
 {
@@ -240,7 +241,9 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			}
 		}
 	}
-
+	
+	F::NoSpread.CreateMove(pCmd);
+	
 	G::LastUserCmd = pCmd;
 
 	const bool bShouldSkip = (G::SilentTime || G::AAActive || G::HitscanSilentActive || G::AvoidingBackstab || !G::UpdateView || !F::Misc.TauntControl(pCmd));

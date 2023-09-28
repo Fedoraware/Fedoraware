@@ -514,6 +514,18 @@ namespace Utils
 		fnRandomSeed(iSeed);
 	}
 
+	__inline float PlatFloatTime()
+	{
+		static auto fnPlatFloatTime = reinterpret_cast<float(*)()>(GetProcAddress(GetModuleHandleA(TIER0_DLL), "Plat_FloatTime"));
+		return fnPlatFloatTime();
+	}
+
+	__inline int RandomInt(int iMinVal = 0, int iMaxVal = 0x7FFF)
+	{
+		static auto fnRandomInt = reinterpret_cast<int(*)(int, int)>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "RandomInt"));
+		return fnRandomInt(iMinVal, iMaxVal);
+	}
+
 	__inline float RandomFloat(float flMinVal = 0.0f, float flMaxVal = 1.0f)
 	{
 		static auto fnRandomFloat = reinterpret_cast<float(*)(float, float)>(GetProcAddress(GetModuleHandleA(VSTDLIB_DLL), "RandomFloat"));

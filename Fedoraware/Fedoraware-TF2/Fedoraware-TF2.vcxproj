@@ -167,6 +167,7 @@
     <ClCompile Include="src\Features\CritHack\CritHack.cpp" />
     <ClCompile Include="src\Features\Killsay\Killsay.cpp" />
     <ClCompile Include="src\Features\Misc\Notifications\Notifications.cpp" />
+    <ClCompile Include="src\Features\NoSpread\NoSpread.cpp" />
     <ClCompile Include="src\Features\TickHandler\TickHandler.cpp" />
     <ClCompile Include="src\Features\Fedworking\Fedworking.cpp" />
     <ClCompile Include="src\Features\Followbot\Followbot.cpp" />
@@ -342,6 +343,7 @@
     <ClInclude Include="src\Features\Feature.h" />
     <ClInclude Include="src\Features\Killsay\Killsay.h" />
     <ClInclude Include="src\Features\Misc\Notifications\Notifications.h" />
+    <ClInclude Include="src\Features\NoSpread\NoSpread.h" />
     <ClInclude Include="src\Features\TickHandler\TickHandler.h" />
     <ClInclude Include="src\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="src\Features\NetVarHooks\NetVarHooks.h" />

@@ -294,12 +294,18 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Backtrack::Latency);
 			}
 
+			// CritHack
 			{
 				SAVE_VAR(Vars::CritHack::Active);
 				SAVE_VAR(Vars::CritHack::AvoidRandom);
 				SAVE_VAR(Vars::CritHack::AlwaysMelee);
 				SAVE_VAR(Vars::CritHack::CritKey);
 				SAVE_VAR(Vars::CritHack::AutoMeleeCrit);
+			}
+
+			// NoSpread
+			{
+				SAVE_VAR(Vars::NoSpread::Projectile);
 			}
 
 			//Hitscan
@@ -695,12 +701,18 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Backtrack::Latency);
 			}
 
+			// CritHack
 			{
 				LOAD_VAR(Vars::CritHack::Active);
 				LOAD_VAR(Vars::CritHack::AvoidRandom);
 				LOAD_VAR(Vars::CritHack::AlwaysMelee);
 				LOAD_VAR(Vars::CritHack::CritKey);
 				LOAD_VAR(Vars::CritHack::AutoMeleeCrit);
+			}
+
+			// NoSpread
+			{
+				LOAD_VAR(Vars::NoSpread::Projectile);
 			}
 
 			//Hitscan
