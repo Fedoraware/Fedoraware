@@ -177,6 +177,7 @@
     <ClCompile Include="src\Core\Core.cpp" />
     <ClCompile Include="src\SDK\Signatures\Signatures.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFMatchSummary_OnTick.cpp" />
+    <ClCompile Include="src\Features\NoSpread\NoSpread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
@@ -399,6 +400,7 @@
     <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="src\SDK\Signatures\Signatures.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
+    <ClInclude Include="src\Features\NoSpread\NoSpread.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
