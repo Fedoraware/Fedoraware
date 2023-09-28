@@ -2,7 +2,7 @@
 #define VALVE_RAND_MAX 0x7FFF
 
 
-void CNoSpread::CreateMoveProjectile(CUserCmd* cmd)
+void CNoSpread::CreateMoveProjectile(CUserCmd* cmd) // Credits to Nullworks/Cathook team :))
 {
     const auto pLocal = g_EntityCache.GetLocal();
     const auto pWeapon = g_EntityCache.GetWeapon();
