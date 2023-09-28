@@ -242,7 +242,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 	}
 	
-	F::NoSpread.CreateMoveProjectile(pCmd);
+	F::NoSpread.CreateMove(pCmd);
 	
 	G::LastUserCmd = pCmd;
 

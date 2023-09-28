@@ -3,6 +3,6 @@
 
 class CNoSpread {
 public:
-	void CreateMoveProjectile(CUserCmd* cmd);
+	void CreateMove(CUserCmd* cmd);
 };
 ADD_FEATURE(CNoSpread, NoSpread)
