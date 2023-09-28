@@ -21,6 +21,7 @@
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
+#include "../../Features/NoSpread/NoSpread.h"
 
 void AttackingUpdate()
 {
