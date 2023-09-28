@@ -413,6 +413,11 @@ void CMenu::MenuAimbot()
 				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
 				WSlider("Maximum distance", &Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value, 100.f, 10000.f); HelpMarker("Max distance to apply strafe prediction (lower is better)");
 			}
+			
+			SectionTitle("NoSpread");
+			{
+				WToggle("Projectile", &Vars::NoSpread::Projectile.Value); HelpMarker("Enables No-Spread for projectile weapons");
+			}
 		} EndChild();
 
 		/* End */
