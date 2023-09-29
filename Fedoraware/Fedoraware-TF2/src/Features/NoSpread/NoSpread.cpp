@@ -373,7 +373,7 @@ void CNoSpread::ClSendMove()
 {
     bFirstUserCmd = true;
 
-    if (!G::NoSpreadSynced || !Vars::NoSpread::Hitscan.Value || G::ShouldShift)
+    if (!G::NoSpreadSynced || G::ShouldShift)
         return;
 
     flCurrentWeaponSpread = 0.0f;
@@ -453,7 +453,7 @@ void CNoSpread::ClSendMove()
 
 void CNoSpread::ClSendMovePost() {
 
-    if (!Vars::NoSpread::Hitscan.Value || G::ShouldShift)
+    if (!G::NoSpreadSynced || G::ShouldShift)
         return;
 
     const auto pLocal = g_EntityCache.GetLocal();
