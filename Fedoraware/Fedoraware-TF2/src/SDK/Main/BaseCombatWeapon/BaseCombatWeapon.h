@@ -101,6 +101,8 @@ public: //Everything else, lol
 
 	int GetBulletAmount();
 
+	bool IsSpreadWeapon();
+
 	__inline float ObservedCritChance()
 	{
 		DYNVAR_RETURN(float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance");

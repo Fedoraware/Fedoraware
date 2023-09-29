@@ -4,7 +4,7 @@
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
-
+#include "../../Features/NoSpread/NoSpread.h"
 #include "../../Features/Misc/Misc.h"
 
 
@@ -13,6 +13,7 @@ MAKE_HOOK(ViewRender_LevelInit, Utils::GetVFuncPtr(I::ViewRender, 1), void, __fa
 {
 	F::Visuals.StoreMaterialHandles();
 	F::Visuals.OverrideWorldTextures();
+	F::NoSpread.Reset();
 	//F::Statistics.Clear();
 
 	F::Backtrack.Restart();

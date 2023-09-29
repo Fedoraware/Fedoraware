@@ -79,6 +79,11 @@ namespace G
 	inline std::vector<std::pair<Vec3, Vec3>> PredictionLines;
 	inline std::vector<std::pair<Vec3, Vec3>> PredLinesBackup;
 
+	/* No Spread */
+	inline NoSpreadSyncState NoSpreadSynced = NOT_SYNCED;
+	inline bool BadMantissa = false;
+	inline double SentClientFloatTime = 0.0;
+
 	inline CUserCmd* CurrentUserCmd{nullptr}; // Unreliable! Only use this if you really have to.
 	inline CUserCmd* LastUserCmd{nullptr};
 	
