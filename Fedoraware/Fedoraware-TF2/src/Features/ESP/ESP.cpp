@@ -602,13 +602,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 			}
-			if (g_EntityCache.IsFriend(nIndex))
-			{
-				const wchar_t* friendLabel = L"FRIEND";
-				g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Colors::Cond, ALIGN_DEFAULT, friendLabel);
-				nTextOffset += FONT_COND.nTall;
-			}
-
 
 			// Health bar
 			if (Vars::ESP::Players::HealthBar.Value)
