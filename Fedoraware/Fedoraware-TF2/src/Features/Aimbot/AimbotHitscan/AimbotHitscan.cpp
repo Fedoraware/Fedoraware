@@ -457,12 +457,9 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 			const bool canHitOriginal = F::Backtrack.CanHitOriginal(target.m_pEntity);
 			const bool isChoking = G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value;
 			const bool ignoreUnsimulated = Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED);
-			const bool shouldIgnore = isChoking && ignoreUnsimulated;
+			const bool shouldIgnore = isChoking && ignoreUnsimulated && !G::ShouldShift;	//	do not ignore unsimulated while we are shifting (maybe do in the future though idk up to u)
 
-			if (G::ShouldShift) { return false; }
-
-			if (scanHitbox && !(!canHitOriginal || shouldIgnore))
-			{
+			if (scanHitbox && canHitOriginal && !shouldIgnore) {
 				return true;
 			}
 
@@ -777,7 +774,6 @@ void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
 void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
 	static int nLastTracerTick = pCmd->tick_count;
-	static int nextSafeTick = pCmd->tick_count;
 
 	if (!Vars::Aimbot::Global::Active.Value)
 	{
@@ -912,7 +908,6 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 			F::Resolver.Aimbot(target.m_pEntity, target.m_nAimedHitbox == 0);
 
 			G::IsAttacking = true;
-			nextSafeTick = pCmd->tick_count; // just in case.weew
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				//bulletTracer(pLocal, Target);
