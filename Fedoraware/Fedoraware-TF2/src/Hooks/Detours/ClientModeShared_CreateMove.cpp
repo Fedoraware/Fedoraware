@@ -150,12 +150,10 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		}
 	}	//	we always need this :c 
 
-	if (Vars::Misc::FixInputDelay.Value) {
-		I::Prediction->Update(I::ClientState->m_nDeltaTick,
-			I::ClientState->m_nDeltaTick > 0,
-			I::ClientState->last_command_ack,
-			I::ClientState->lastoutgoingcommand + I::ClientState->chokedcommands);
-	}
+	I::Prediction->Update(I::ClientState->m_nDeltaTick,
+		I::ClientState->m_nDeltaTick > 0,
+		I::ClientState->last_command_ack,
+		I::ClientState->lastoutgoingcommand + I::ClientState->chokedcommands);
 
 	// Run Features
 	{
