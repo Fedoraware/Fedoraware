@@ -101,12 +101,8 @@ float CNoSpread::CalcMantissaStep(float flValue)
     return powf(2, iExponent - (127 + 23));
 }
 
-float CNoSpread::ServerCurTime()
+float CNoSpread::ServerCurTime(CBaseEntity* pLocal)
 {
-    const auto pLocal = g_EntityCache.GetLocal();
-    if (!pLocal)
-        return 0.f;
-
     float flServerTime = TICK_INTERVAL * pLocal->m_nTickBase();
     return flServerTime;
 }
@@ -144,9 +140,9 @@ void CNoSpread::Reset()
     UserCmdBackup = {};
 }
 
-bool CNoSpread::IsPerfectShot(CBaseCombatWeapon* weapon, float flProvidedTime)
+bool CNoSpread::IsPerfectShot(CBaseCombatWeapon* weapon, CBaseEntity* pLocal, float flProvidedTime)
 {
-    float flServerTime = flProvidedTime == 0.0 ? ServerCurTime() : flProvidedTime;
+    float flServerTime = flProvidedTime == 0.0 ? ServerCurTime(pLocal) : flProvidedTime;
     float flTimeSinceAttack = flServerTime - weapon->GetLastFireTime();
     WeaponData_t wdata = weapon->GetWeaponData();
     int nBulletsPerShot = wdata.m_nBulletsPerShot;
@@ -433,12 +429,12 @@ void CNoSpread::ClSendMove()
     if (pWeapon && !pWeapon->IsSpreadWeapon())
         return;
 
-    float flCurTime = ServerCurTime();
+    float flCurTime = ServerCurTime(pLocal);
 
     if (!(G::LastUserCmd->buttons & IN_ATTACK))
         return;
 
-    if (pWeapon && IsPerfectShot(pWeapon, flCurTime))
+    if (pWeapon && IsPerfectShot(pWeapon, pLocal, flCurTime))
         return;
 
     if (pWeapon) {
@@ -528,7 +524,7 @@ void CNoSpread::ApplySpreadCorrection(Vec3& vAngles, int iSeed, float flSpread) 
     if (!pLocal->IsAlive())
         return;
 
-    bool bIsFirstShotPerfect = IsPerfectShot(pWeapon);
+    bool bIsFirstShotPerfect = IsPerfectShot(pWeapon, pLocal);
 
     int nBulletsPerShot = pWeapon->GetWeaponData().m_nBulletsPerShot;
 

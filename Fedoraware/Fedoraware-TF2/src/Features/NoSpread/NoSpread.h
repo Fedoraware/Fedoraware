@@ -3,8 +3,8 @@
 
 class CNoSpread {
 private:
-	float ServerCurTime();
-	bool IsPerfectShot(CBaseCombatWeapon* weapon, float flProvidedTime = 0.0f);
+	float ServerCurTime(CBaseEntity* pLocal);
+	bool IsPerfectShot(CBaseCombatWeapon* weapon, CBaseEntity* pLocal, float flProvidedTime = 0.0f);
 
 	bool bWaitingPerfData = false;
 	bool bWaitingForPostSNM = false;
