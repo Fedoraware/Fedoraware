@@ -399,13 +399,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					nTextOffset += FONT.nTall;
 				}
 
-				// Rage flagged ESP
-				if (G::PlayerPriority[pi.friendsID].Mode == 3 && Vars::ESP::Players::CheaterDetection.Value)
-				{
-					g_Draw.String(FONT, middle, y - 28, { 255, 255, 0, 255 }, ALIGN_CENTERHORIZONTAL, "RAGE");
-					nTextOffset += FONT.nTall;
-				}
-
 				// GUID ESP
 				if (Vars::ESP::Players::GUID.Value)
 				{
