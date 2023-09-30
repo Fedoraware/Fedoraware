@@ -608,7 +608,7 @@ void CMenu::MenuVisuals()
 					WToggle("Choked Packets", &Vars::ESP::Players::Choked.Value); HelpMarker("Shows how many packets the player has choked");
 					ColorPickerL("Choked Bar Top", Colors::ChokedBar.startColour);
 					ColorPickerL("Choked Bar Bottom", Colors::ChokedBar.endColour, 1);
-					WToggle("Cheater Detection", &Vars::ESP::Players::CheaterDetection.Value); HelpMarker("Attempts to automatically mark cheaters.");
+					WToggle("Player priority", &Vars::ESP::Players::CheaterDetection.Value); HelpMarker("Will show a player's priority above their head."); //Didn't change the cfg value, compile error when the name is changed even if you replace everything (?)
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
 					ColorPickerL("Skellington colour", Colors::Bones);
