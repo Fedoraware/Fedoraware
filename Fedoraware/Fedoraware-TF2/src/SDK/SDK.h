@@ -516,7 +516,7 @@ namespace Utils
 
 	__inline double PlatFloatTime()
 	{
-		static auto fnPlatFloatTime = reinterpret_cast<float(*)()>(GetProcAddress(GetModuleHandleA(TIER0_DLL), "Plat_FloatTime"));
+		static auto fnPlatFloatTime = reinterpret_cast<double(*)()>(GetProcAddress(GetModuleHandleA(TIER0_DLL), "Plat_FloatTime"));
 		return fnPlatFloatTime();
 	}
 
