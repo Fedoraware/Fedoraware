@@ -41,7 +41,6 @@ MAKE_HOOK(CL_SendMove, S::CL_SendMove(), void, __cdecl, void* ecx, void* edx)
 
 	if (I::ClientState && I::ClientState->m_NetChannel && Vars::NoSpread::Hitscan.Value)
 	{
-		Hook.Original<FN>()(ecx, edx);
 		F::NoSpread.ClSendMovePost();
 	}
 }
