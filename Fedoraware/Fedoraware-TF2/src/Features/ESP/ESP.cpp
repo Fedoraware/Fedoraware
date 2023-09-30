@@ -193,6 +193,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					if (player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(nIndex)) { continue; }
 					break;
 				}
+				case 3:
+				{
+					if (player->GetTeamNum() != pLocal->GetTeamNum()) { continue; }
+					break;
+				}
 			}
 		}
 
