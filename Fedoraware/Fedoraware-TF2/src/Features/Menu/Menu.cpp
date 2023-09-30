@@ -9,6 +9,7 @@
 #include "../Glow/Glow.h"
 #include "../Killsay/Killsay.h"
 #include "../Discord/Discord.h"
+#include "../NoSpread/NoSpread.h"
 
 #include <ImGui/imgui_impl_win32.h>
 #include <ImGui/imgui_impl_dx9.h>
@@ -317,6 +318,7 @@ void CMenu::MenuAimbot()
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			if (Vars::Aimbot::Hitscan::TapFire.Value == 1)
 			{
+				WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
 				WSlider("Tap Fire Distance###HitscanTapfireDistance", &Vars::Aimbot::Hitscan::TapFireDist.Value, 64.f, 4096.f, "%.0f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The distance at which tapfire will activate.");
 			}
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
@@ -416,7 +418,12 @@ void CMenu::MenuAimbot()
 			
 			SectionTitle("NoSpread");
 			{
-				WToggle("Projectile", &Vars::NoSpread::Projectile.Value); HelpMarker("Enables No-Spread for projectile weapons");
+				WToggle("Hitscan", &Vars::NoSpread::Hitscan.Value); HelpMarker("Enables NoSpread for hitscan weapons");
+				WToggle("Projectile", &Vars::NoSpread::Projectile.Value); HelpMarker("Enables NoSpread for projectile weapons (works independent of the sync state)");
+				WToggle("Indicator", &Vars::NoSpread::Indicator.Value); HelpMarker("Shows sync state and mantissa step size");
+				WToggle("Correct Ping", &Vars::NoSpread::CorrectPing.Value); HelpMarker("Attempt to compensate for ping. Disable if you miss a lot on low jitter.");
+				WToggle("Use Average Latency", &Vars::NoSpread::UseAvgLatency.Value);
+				WToggle("Precision Mode", &Vars::NoSpread::ExtremePred.Value); HelpMarker("Makes nospread sync slower, but also more accurate and ping resistant");
 			}
 		} EndChild();
 
@@ -1856,6 +1863,8 @@ void CMenu::MenuMisc()
 				I::EngineClient->ClientCmd_Unrestricted("hud_reloadscheme");
 			if (Button("Restart sound", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("snd_restart");
+			if (Button("Resync NoSpread", SIZE_FULL_WIDTH))
+				F::NoSpread.Reset();
 			if (Button("Stop sound", SIZE_FULL_WIDTH))
 				I::EngineClient->ClientCmd_Unrestricted("stopsound");
 			if (Button("Status", SIZE_FULL_WIDTH))

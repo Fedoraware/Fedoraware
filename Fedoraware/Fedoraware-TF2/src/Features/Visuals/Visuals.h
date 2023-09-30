@@ -29,6 +29,7 @@ class CVisuals
 	void DrawDebugInfo(CBaseEntity* pLocal);
 	void DrawOnScreenConditions(CBaseEntity* pLocal);
 	void DrawOnScreenPing(CBaseEntity* pLocal);
+	void DrawNoSpreadIndicator();
 
 	void DrawServerHitboxes();
 	void DrawPredictionLine();

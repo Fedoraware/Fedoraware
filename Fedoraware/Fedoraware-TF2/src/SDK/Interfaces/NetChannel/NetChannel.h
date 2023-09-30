@@ -469,6 +469,31 @@ public:
 	CVar_t ConVar;
 };
 
+class NET_StringCmd : public CNetMessage
+{
+	DECLARE_NET_MESSAGE(StringCmd);
+
+	int GetGroup() const
+	{
+		return INetChannelInfo::STRINGCMD;
+	}
+
+	NET_StringCmd()
+	{
+		m_szCommand = NULL;
+	};
+	NET_StringCmd(const char* cmd)
+	{
+		m_szCommand = cmd;
+	};
+
+public:
+	const char* m_szCommand; // execute this command
+
+private:
+	char m_szCommandBuffer[1024]; // buffer for received messages
+};
+
 class NET_SignonState : public CNetMessage
 {
 	DECLARE_NET_MESSAGE(SignonState);

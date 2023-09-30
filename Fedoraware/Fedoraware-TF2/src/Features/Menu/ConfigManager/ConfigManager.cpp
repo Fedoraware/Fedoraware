@@ -305,7 +305,11 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 			// NoSpread
 			{
+				SAVE_VAR(Vars::NoSpread::Hitscan);
 				SAVE_VAR(Vars::NoSpread::Projectile);
+				SAVE_VAR(Vars::NoSpread::CorrectPing);
+				SAVE_VAR(Vars::NoSpread::UseAvgLatency);
+				SAVE_VAR(Vars::NoSpread::ExtremePred);
 			}
 
 			//Hitscan
@@ -322,6 +326,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFire);
 				SAVE_VAR(Vars::Aimbot::Hitscan::TapFireDist);
+				SAVE_VAR(Vars::Aimbot::Hitscan::TapFireCheckForNSS);
 				SAVE_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				SAVE_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
@@ -355,7 +360,6 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				SAVE_VAR(Vars::Aimbot::Projectile::ScanScale);
 				SAVE_VAR(Vars::Aimbot::Projectile::PredictObscured);
-				SAVE_VAR(Vars::Aimbot::Projectile::NoSpread);
 				SAVE_VAR(Vars::Aimbot::Projectile::ChargeLooseCannon);
 				SAVE_VAR(Vars::Aimbot::Projectile::StrafePredictionAir);
 				SAVE_VAR(Vars::Aimbot::Projectile::StrafePredictionGround);
@@ -713,7 +717,11 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 			// NoSpread
 			{
+				LOAD_VAR(Vars::NoSpread::Hitscan);
 				LOAD_VAR(Vars::NoSpread::Projectile);
+				LOAD_VAR(Vars::NoSpread::CorrectPing);
+				LOAD_VAR(Vars::NoSpread::UseAvgLatency);
+				LOAD_VAR(Vars::NoSpread::ExtremePred);
 			}
 
 			//Hitscan
@@ -730,6 +738,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Hitscan::SmoothingAmount);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFire);
 				LOAD_VAR(Vars::Aimbot::Hitscan::TapFireDist);
+				LOAD_VAR(Vars::Aimbot::Hitscan::TapFireCheckForNSS);
 				LOAD_VAR(Vars::Aimbot::Hitscan::ScanHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::MultiHitboxes);
 				LOAD_VAR(Vars::Aimbot::Hitscan::StaticHitboxes);
@@ -762,7 +771,6 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanPoints);
 				LOAD_VAR(Vars::Aimbot::Projectile::ScanScale);
 				LOAD_VAR(Vars::Aimbot::Projectile::PredictObscured);
-				LOAD_VAR(Vars::Aimbot::Projectile::NoSpread);
 				LOAD_VAR(Vars::Aimbot::Projectile::ChargeLooseCannon);
 				LOAD_VAR(Vars::Aimbot::Projectile::StrafePredictionAir);
 				LOAD_VAR(Vars::Aimbot::Projectile::StrafePredictionGround);
@@ -1075,6 +1083,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
 		SAVE_VAR(Vars::CritHack::Indicators);
 		SAVE_OTHER(Vars::CritHack::IndicatorPos);
+		SAVE_VAR(Vars::NoSpread::Indicator);
 		SAVE_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 		SAVE_VAR(Vars::ESP::Main::Active);
 		SAVE_VAR(Vars::ESP::Main::Outlinedbar);
@@ -1455,6 +1464,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 		LOAD_VAR(Vars::CritHack::Indicators);
 		LOAD_OTHER(Vars::CritHack::IndicatorPos);
+		LOAD_VAR(Vars::NoSpread::Indicator);
 		//ESP
 		LOAD_VAR(Vars::ESP::Main::Active);
 		LOAD_VAR(Vars::ESP::Main::Outlinedbar);
