@@ -316,10 +316,9 @@ void CMenu::MenuAimbot()
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
 			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto" }); // this could probably be removed entirely since it actually does nothing.
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
-			if (Vars::Aimbot::Hitscan::TapFire.Value == 1)
-			{
-				WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
+			if (Vars::Aimbot::Hitscan::TapFire.Value == 1) {
 				WSlider("Tap Fire Distance###HitscanTapfireDistance", &Vars::Aimbot::Hitscan::TapFireDist.Value, 64.f, 4096.f, "%.0f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The distance at which tapfire will activate.");
+				WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
 			}
 			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
 			{
