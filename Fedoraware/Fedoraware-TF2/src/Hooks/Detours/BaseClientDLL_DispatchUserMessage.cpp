@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include "../../Features/Visuals/Visuals.h"
+#include "../../Features/NoSpread/NoSpread.h"
 
 static int anti_balance_attempts = 0;
 static std::string previous_name;
@@ -28,6 +29,13 @@ static std::string green({ '\x7', '3', 'A', 'F', 'F', '4', 'D' }); //3AFF4D
 MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL, 36), bool, __fastcall,
 		  void* ecx, void* edx, UserMessageType type, bf_read& msgData)
 {
+	if (Vars::NoSpread::Hitscan.Value) {
+		if (!F::NoSpread.DispatchUserMessage(&msgData, type))
+		{
+			return true;
+		}
+	}
+
 	const auto bufData = reinterpret_cast<const char*>(msgData.m_pData);
 	msgData.SetAssertOnOverflow(false);
 

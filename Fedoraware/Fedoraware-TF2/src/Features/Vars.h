@@ -102,6 +102,7 @@ namespace Vars
 			inline CVar<int> SmoothingAmount{ 4 };
 			inline CVar<int> TapFire{ 0 }; //0 - Off, 1 - Distance, 2 - Always
 			inline CVar<float> TapFireDist { 1000.f };
+			inline CVar<bool> TapFireCheckForNSS { false };
 			inline CVar<bool> ScanBuildings{ false };
 			inline CVar<bool> WaitForHeadshot{ false };
 			inline CVar<bool> WaitForCharge{ false };
@@ -133,7 +134,6 @@ namespace Vars
 			inline Color_t PredictionColor{ 255, 255, 255, 255 };
 			inline CVar<float> PredictionTime{ 2.0f };
 			inline CVar<bool> PredictObscured{ false };
-			inline CVar<bool> NoSpread{ false };
 			inline CVar<bool> ChargeLooseCannon{ false };
 			inline CVar<bool> StrafePredictionGround{ false };
 			inline CVar<bool> StrafePredictionAir{ false };
@@ -159,7 +159,12 @@ namespace Vars
 
 	namespace NoSpread
 	{
+		inline CVar<bool> Hitscan{ false };
 		inline CVar<bool> Projectile{ true };
+		inline CVar<bool> Indicator{ false };
+		inline CVar<bool> ExtremePred{ false };
+		inline CVar<bool> CorrectPing{ false };
+		inline CVar<bool> UseAvgLatency{ false };
 	}
 
 	namespace Triggerbot
@@ -670,7 +675,8 @@ namespace Vars
 		inline CVar<bool> TauntFollowsCamera{ false };
 		inline CVar<bool> BypassPure{ false };
 		inline CVar<bool> NoisemakerSpam{ false };
-		inline CVar<bool> DisableInterpolation{ false };
+		inline CVar<bool> DisableInterpolation{ true };
+		inline CVar<bool> FixInputDelay{ true };
 		inline CVar<bool> MedalFlip{ false };
 		inline CVar<bool> AutoRocketJump{ false };
 		inline CVar<bool> NonLethalRocketJump{ true };

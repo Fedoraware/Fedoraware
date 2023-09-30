@@ -1,6 +1,7 @@
 #include "Visuals.h"
 #include "../Vars.h"
 #include "../ESP/ESP.h"
+#include "../NoSpread/NoSpread.h"
 
 namespace S
 {
@@ -23,6 +24,7 @@ void CVisuals::Draw()
 		DrawOnScreenPing(pLocal);
 	}
 
+	DrawNoSpreadIndicator();
 	DrawServerHitboxes();
 	DrawPredictionLine();
 	PickupTimers();
@@ -136,6 +138,56 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
 	{
 		g_Draw.String(menuFont, x, y, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping real : %.0f", flLatencyReal);
 		g_Draw.String(menuFont, x, y + h - nTextOffset, {255, 255, 255, 255}, ALIGN_DEFAULT, "ping scoreboard : %d", flLatencyScoreBoard);
+	}
+}
+
+void CVisuals::DrawNoSpreadIndicator()
+{
+	if (!Vars::NoSpread::Indicator.Value)
+		return;
+	if (!I::EngineVGui->IsGameUIVisible()) {
+		std::wstring text = L"NoSpread Syncing..";
+		Color_t clr = { 255, 255, 255, 255 };
+		if (!Vars::NoSpread::Hitscan.Value)
+		{
+			text = L"NoSpread Not Active.";
+			clr = { 220, 20, 60, 255 };
+		}
+		else if (G::BadMantissa) {
+			text = L"NoSpread Not Synced, server uptime too low.";
+			clr = { 204, 204, 0, 255 };
+		}
+		else
+		{
+			switch (G::NoSpreadSynced)
+			{
+			case SYNCED:
+				text = L"NoSpread Synced.";
+				clr = { 60, 179, 113, 255 };
+				break;
+			case NOT_SYNCED:
+				text = L"NoSpread Not Synced.";
+				break;
+			case DEAD_SYNC:
+				text = L"NoSpread Dead Sync";
+				clr = { 220, 20, 60, 255 };
+				break;
+			case CORRECTING:
+				text = L"NoSpread Resyncing..";
+				clr = { 204, 204, 0, 255 };
+				break;
+			default:
+				text = L"NoSpread Not Synced.";
+				break;
+			}
+		}
+		int step = (int)F::NoSpread.CalcMantissaStep(G::SentClientFloatTime * 1000.0);
+		Color_t mclr = { 204, 204, 0, 255 };
+
+		const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+
+		g_Draw.String(menuFont, 50, 30, clr, ALIGN_DEFAULT, text.data());
+		g_Draw.String(menuFont, 50, 45, mclr, ALIGN_DEFAULT, "Mantissa step size: %d", step);
 	}
 }
 
@@ -684,11 +736,14 @@ void CVisuals::DrawSightlines()
 {
 	if (Vars::ESP::Players::SniperSightlines.Value)
 	{
-		for (const auto& sightline : m_SightLines)
+		if (!m_SightLines.empty())
 		{
-			if (sightline.m_bDraw)
+			for (const auto& sightline : m_SightLines)
 			{
-				RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+				if (sightline.m_bDraw)
+				{
+					RenderLine(sightline.m_vStart, sightline.m_vEnd, sightline.m_Color, false);
+				}
 			}
 		}
 	}
@@ -704,9 +759,12 @@ void CVisuals::FillSightlines()
 		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
 			const int iEntityIndex = pEnemy->GetIndex();
-			if (pEnemy->IsAlive() && pEnemy->GetClassNum() == CLASS_SNIPER && pEnemy->GetCond() & TFCond_Zoomed && !pEnemy->GetDormant())
+			if (!(pEnemy->IsAlive()) ||
+				!(pEnemy->GetClassNum() == CLASS_SNIPER) ||
+				!(pEnemy->GetCond() & TFCond_Zoomed) ||
+				(pEnemy->GetDormant()))
 			{
-				m_SightLines[iEntityIndex] = {Vec3{0, 0, 0}, Vec3{0, 0, 0}, Color_t{0, 0, 0, 0}, false};
+				m_SightLines[iEntityIndex] = { Vec3{0,0,0}, Vec3{0,0,0}, Color_t{0,0,0,0}, false };
 				continue;
 			}
 			Vec3 vShootPos = pEnemy->GetShootPos();

@@ -22,6 +22,14 @@ enum EStereoEye
 	STEREO_EYE_MAX = 3,
 };
 
+enum NoSpreadSyncState
+{
+	NOT_SYNCED = 0,
+	CORRECTING,
+	SYNCED,
+	DEAD_SYNC,
+};
+
 enum EPreviewImageRetVal
 {
 	MATERIAL_PREVIEW_IMAGE_BAD = 0,

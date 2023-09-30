@@ -178,6 +178,7 @@
     <ClCompile Include="src\SDK\Signatures\Signatures.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFMatchSummary_OnTick.cpp" />
     <ClCompile Include="src\Features\NoSpread\NoSpread.cpp" />
+    <ClCompile Include="src\Hooks\Detours\CL_ReadPackets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
