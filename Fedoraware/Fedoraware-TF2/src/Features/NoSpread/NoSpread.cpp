@@ -219,7 +219,7 @@ void CNoSpread::SendNetMessagePost()
 bool  CNoSpread::DispatchUserMessage(bf_read* buf, int type)
 {
     bool should_call_original = true;
-    if ((!bWaitingPerfData && !bLastWasPlayerPerf) || !Vars::NoSpread::Hitscan.Value)
+    if ((!bWaitingPerfData && !bLastWasPlayerPerf))
         return should_call_original;
 
     // We are looking for TextMsg
@@ -436,6 +436,9 @@ void CNoSpread::ClSendMove()
     float flCurTime = ServerCurTime();
 
     if (!(G::LastUserCmd->buttons & IN_ATTACK))
+        return;
+
+    if (pWeapon && IsPerfectShot(pWeapon, flCurTime))
         return;
 
     if (pWeapon) {
