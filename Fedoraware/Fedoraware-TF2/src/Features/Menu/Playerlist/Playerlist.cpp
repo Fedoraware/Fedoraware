@@ -307,8 +307,11 @@ void CPlayerList::Load()
 {
 	try
 	{
+		static std::string plPath = g_CFG.GetConfigPath() + "\\Core\\Playerlist.json";
+		if (!std::filesystem::exists(plPath)) { return; }
+
 		boost::property_tree::ptree readTree;
-		read_json(g_CFG.GetConfigPath() + "\\Core\\Playerlist.json", readTree);
+		read_json(plPath, readTree);
 		G::PlayerPriority.clear();
 
 		for (auto& it : readTree)
