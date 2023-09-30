@@ -249,7 +249,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active{ false };
 			inline CVar<bool> ShowLocal{ false };
-			inline CVar<int> IgnoreTeammates{ 0 }; //0 - OFF, 1 - All, 2 - Keep Friends
+			inline CVar<int> IgnoreFlags{ 0 }; //0 - OFF, 1 - All, 2 - Keep Friends
 			inline CVar<int> IgnoreCloaked{ 0 }; //0 - OFF, 1 - All, 2 - Enemies Only
 			inline CVar<bool> Name{ false };
 			inline CVar<bool> NameCustom{ false };

@@ -570,7 +570,11 @@ void CMenu::MenuVisuals()
 					WToggle("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.Value); HelpMarker("Will draw a box around players name to make it stand out");
 					WToggle("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.Value); HelpMarker("Will draw ESP on local player (thirdperson)");
 					ColorPickerL("Local colour", Colors::Local);
-					WCombo("Ignore team###IgnoreTeamESPp", &Vars::ESP::Players::IgnoreTeammates.Value, { "Off", "All", "Only friends" }); HelpMarker("Which teammates the ESP will ignore drawing on");
+					MultiFlags({ "Friends", "Teammates", "Enemies"},
+						{ (1 << 0), (1 << 1), (1 << 2) },
+						&Vars::ESP::Players::IgnoreFlags.Value,
+						"Ignore Flags###IgnoreFlagsESP"
+					); HelpMarker("Which groups the ESP will ignore.");
 					ColorPickerL("Friend colour", Colors::Friend);
 					WCombo("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.Value, { "Off", "All", "Only enemies" }); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
 					ColorPickerL("Cloaked colour", Colors::Cloak);

@@ -1095,7 +1095,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_VAR(Vars::ESP::Main::NetworkedDist);
 		SAVE_VAR(Vars::ESP::Players::Active);
 		SAVE_VAR(Vars::ESP::Players::ShowLocal);
-		SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
+		SAVE_VAR(Vars::ESP::Players::IgnoreFlags);
 		SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
 		SAVE_VAR(Vars::ESP::Players::Name);
 		SAVE_VAR(Vars::ESP::Players::NameCustom);
@@ -1478,7 +1478,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 
 		LOAD_VAR(Vars::ESP::Players::Active);
 		LOAD_VAR(Vars::ESP::Players::ShowLocal);
-		LOAD_VAR(Vars::ESP::Players::IgnoreTeammates);
+		LOAD_VAR(Vars::ESP::Players::IgnoreFlags);
 		LOAD_VAR(Vars::ESP::Players::IgnoreCloaked);
 		LOAD_VAR(Vars::ESP::Players::Name);
 		LOAD_VAR(Vars::ESP::Players::NameCustom);
