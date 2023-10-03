@@ -153,8 +153,13 @@ inline bool CAimbotMelee::TargetTeamBuilding(CBaseObject* pBuilding, CBaseCombat
 		return false;
 	}
 
+	//	Building Check
+	if (pBuilding->GetConstructing() && G::CurItemDefIndex != Engi_t_TheJag) {
+		return false;
+	}
+
 	//	Upgrade/Heal Check
-	if (pBuilding->GetLevel() != 3 || pBuilding->GetHealth() < pBuilding->GetMaxHealth()) {
+	if (pBuilding->GetLevel() != pBuilding->GetHighestLevel() || pBuilding->GetHealth() < pBuilding->GetMaxHealth()) {
 		return true;
 	}
 
