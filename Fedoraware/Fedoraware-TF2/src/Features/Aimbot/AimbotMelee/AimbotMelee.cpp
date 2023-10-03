@@ -148,14 +148,19 @@ inline bool CAimbotMelee::TargetTeamBuilding(CBaseObject* pBuilding, CBaseCombat
 		return true;
 	}
 
-	//	Pyro Weps can't go any further
-	if (pWeapon->GetWeaponID() != TF_WEAPON_WRENCH) {
+	//	Pyro can't go any further and we can't help mini buildings any more.
+	if (pWeapon->GetWeaponID() != TF_WEAPON_WRENCH || pBuilding->GetMiniBuilding()) {
 		return false;
 	}
 
 	//	Upgrade/Heal Check
 	if (pBuilding->GetLevel() != 3 || pBuilding->GetHealth() < pBuilding->GetMaxHealth()) {
 		return true;
+	}
+
+	//	cant go further unless it's a sentry
+	if (!pBuilding->IsSentrygun()) {
+		return false;
 	}
 
 	//	Ammo Check
