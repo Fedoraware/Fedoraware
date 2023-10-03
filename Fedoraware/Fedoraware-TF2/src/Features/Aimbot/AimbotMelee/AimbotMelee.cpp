@@ -33,7 +33,7 @@ bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 	//	not gonna movesim enemies this time cause we can just backtrack them.
 	//	check our current tick first
 	if (F::Backtrack.CanHitOriginal(target.m_pEntity)) {
-		const Vec3 vTargetPoint = target.m_pEntity->GetHitboxPos(HITBOX_SPINE_1);
+		const Vec3 vTargetPoint = target.m_pEntity->IsPlayer() ? target.m_pEntity->GetHitboxPos(HITBOX_SPINE_1) : target.m_pEntity->GetWorldSpaceCenter();
 		target.m_vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
 		if (bSapper ? SapperTrace(pLocal, target.m_pEntity, pWeapon) : CanMeleeHit(pLocal, target.m_pEntity, pWeapon, target.m_vAngleTo)) {
 			target.SimTime = target.m_pEntity->GetSimulationTime();	//	technically we will end up backtracking unless we are using doubletap to instant melee, but i see that as a good thing
