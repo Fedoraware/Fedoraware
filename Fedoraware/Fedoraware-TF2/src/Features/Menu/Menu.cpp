@@ -743,6 +743,8 @@ void CMenu::MenuVisuals()
 					SectionTitle("Backtrack chams");
 					WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
 					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);
+					ColorPickerL("Backtrack colour 2", Vars::Backtrack::BtChams::BacktrackColor2, 1);
+					WToggle("Gradient", &Vars::Backtrack::BtChams::Gradient.Value); HelpMarker("Will draw a gradient on the backtrack chams");
 					WToggle("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.Value); HelpMarker("Only draws the last tick (can save FPS)");
 					WToggle("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.Value); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
 

@@ -1080,6 +1080,8 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 		SAVE_VAR(Vars::Backtrack::BtChams::EnemyOnly);
 		SAVE_VAR(Vars::Backtrack::BtChams::IgnoreZ);
 		SAVE_VAR(Vars::Backtrack::BtChams::Material);
+		SAVE_VAR(Vars::Backtrack::BtChams::Gradient);
+		SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor2);
 		SAVE_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
 		SAVE_VAR(Vars::CritHack::Indicators);
 		SAVE_OTHER(Vars::CritHack::IndicatorPos);
@@ -1461,6 +1463,8 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		LOAD_VAR(Vars::Backtrack::BtChams::IgnoreZ);
 		LOAD_VAR(Vars::Backtrack::BtChams::Material);
 		LOAD_OTHER(Vars::Backtrack::BtChams::BacktrackColor);
+		LOAD_VAR(Vars::Backtrack::BtChams::Gradient);
+		LOAD_OTHER(Vars::Backtrack::BtChams::BacktrackColor2);
 		LOAD_OTHER(Vars::Aimbot::Projectile::PredictionColor);
 		LOAD_VAR(Vars::CritHack::Indicators);
 		LOAD_OTHER(Vars::CritHack::IndicatorPos);
