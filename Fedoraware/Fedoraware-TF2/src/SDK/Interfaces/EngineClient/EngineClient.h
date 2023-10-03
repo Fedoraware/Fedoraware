@@ -140,6 +140,12 @@ public:
 		return GetVFunc<FN>(this, 78)(this);
 	}
 
+	bool IsActiveApp()
+	{
+		typedef bool(__thiscall* FN)(PVOID);
+		return GetVFunc<FN>(this, 142)(this);
+	}
+
 	CNetChannel* GetNetChannelInfo()
 	{
 		typedef CNetChannel* (__thiscall *FN)(PVOID);
