@@ -71,7 +71,7 @@ void CBacktrack::CleanRecords()
 
 		if (mRecords[pEntity].empty()) { continue; }
 		if (!IsTracked(mRecords[pEntity].back())) { mRecords[pEntity].pop_back(); }
-		if (mRecords[pEntity].size() > 67) { mRecords[pEntity].pop_back(); }
+		if (mRecords[pEntity].size() > iTickCount) { mRecords[pEntity].pop_back(); }
 	}
 }
 
@@ -172,7 +172,7 @@ void CBacktrack::MakeRecords()
 		}
 		//cleanup
 		mDidShoot[pEntity->GetIndex()] = false;
-		if (mRecords[pEntity].size() > 67)
+		if (mRecords[pEntity].size() > iTickCount)
 		{
 			/*Utils::ConLog("LagCompensation", "Manually removed tick record", {255, 0, 0, 255});*/
 			mRecords[pEntity].pop_back();
@@ -222,6 +222,7 @@ void CBacktrack::Restart()
 	dSequences.clear();
 	flLatencyRampup = 0.f;
 	iLastInSequence = 0;
+	iTickCount = TIME_TO_TICKS(g_ConVars.sv_maxunlag->GetFloat());
 }
 
 void CBacktrack::FrameStageNotify()

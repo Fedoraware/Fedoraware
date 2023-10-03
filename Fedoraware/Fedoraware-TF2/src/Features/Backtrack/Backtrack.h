@@ -62,6 +62,7 @@ class CBacktrack
 	std::unordered_map<CBaseEntity*, std::deque<TickRecord>> mRecords;
 	std::unordered_map<int, bool> mDidShoot;
 	int iLastCreationTick = 0;
+	int iTickCount = 0;
 
 	//	data - fake latency
 	std::deque<CIncomingSequence> dSequences;
@@ -70,7 +71,7 @@ class CBacktrack
 
 public:
 	float GetLatency();
-	inline bool IsTracked(const TickRecord& record, const float flDelay = 0.f);
+	inline bool IsTracked(const TickRecord& record, const float flDelay = I::GlobalVars->interval_per_tick);
 	bool WithinRewind(const TickRecord& record, const float flDelay = I::GlobalVars->interval_per_tick);
 	bool CanHitOriginal(CBaseEntity* pEntity);
 	void PlayerHurt(CGameEvent* pEvent); //	called on player_hurt event
