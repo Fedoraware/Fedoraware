@@ -12,3 +12,4 @@
 #define ADD_FEATURE(cClass, szName) namespace F { inline cClass szName; }
 #define abstract_class class __declspec(novtable)
 #define MAKE_SIGNATURE(name, module, pattern, offset) inline CSignature name{ module, pattern, offset }
+#define CVar(name, value, __VA_ARGS__) inline ConfigVar<decltype(value)> name{ value, (GetNamespace() + GetSubname() + std::string(#name)).c_str(), __VA_ARGS__ };

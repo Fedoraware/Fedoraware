@@ -24,7 +24,7 @@ MAKE_HOOK(CSkyboxView_Enable3dSkyboxFog, S::CSkyboxView_Enable3dSkyboxFog(), voi
 			using namespace Vars::Visuals;
 			pRenderContext->FogMode(MATERIAL_FOG_LINEAR);
 
-			float blend[3] = { Color::TOFLOAT(Fog::FogColorSkybox.r), Color::TOFLOAT(Fog::FogColorSkybox.g), Color::TOFLOAT(Fog::FogColorSkybox.b) };
+			float blend[3] = { Color::TOFLOAT(Fog::FogColorSkybox.Value.r), Color::TOFLOAT(Fog::FogColorSkybox.Value.g), Color::TOFLOAT(Fog::FogColorSkybox.Value.b) };
 			pRenderContext->FogColor3fv(blend);
 			pRenderContext->FogStart(Fog::FogStartSkybox.Value * scale);
 			pRenderContext->FogEnd(Fog::FogEndSkybox.Value * scale);

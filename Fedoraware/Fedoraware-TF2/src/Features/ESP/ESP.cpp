@@ -372,7 +372,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 					if (Vars::ESP::Players::NameCustom.Value)
 					{
-						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor, ALIGN_CENTERHORIZONTAL,
+						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor.Value, ALIGN_CENTERHORIZONTAL,
 									  Utils::ConvertUtf8ToWide(pi.name).data());
 					}
 					else
@@ -826,7 +826,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 				}
 				if (Vars::ESP::Buildings::NameCustom.Value)
 				{
-					g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, Vars::ESP::Buildings::NameColor, ALIGN_CENTERHORIZONTAL,
+					g_Draw.String(FONT_NAME, x + w / 2, y - nTextTopOffset, Vars::ESP::Buildings::NameColor.Value, ALIGN_CENTERHORIZONTAL,
 								  szName);
 				}
 				else
@@ -988,7 +988,7 @@ void CESP::DrawBuildings(CBaseEntity* pLocal) const
 						const std::array<Vec2, 3> Points{ Vec2(ArrowLeftScrn.x, ArrowLeftScrn.y),
 													Vec2(ArrowTopScrn.x, ArrowTopScrn.y),
 													Vec2(ArrowRightScrn.x, ArrowRightScrn.y) };
-						g_Draw.DrawOutlinedTriangle(Points, Vars::ESP::Buildings::TeleExitDirColor);
+						g_Draw.DrawOutlinedTriangle(Points, Vars::ESP::Buildings::TeleExitDirColor.Value);
 					}
 				}
 			}

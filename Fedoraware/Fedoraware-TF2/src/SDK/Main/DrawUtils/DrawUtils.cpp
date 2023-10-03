@@ -18,12 +18,12 @@ void ScreenSize_t::Update()
 
 void CDraw::RemakeFonts()
 {
-	m_Fonts[FONT_ESP] = {0x0, Vars::Fonts::FONT_ESP::szName.c_str(), Vars::Fonts::FONT_ESP::nTall.Value, Vars::Fonts::FONT_ESP::nWeight.Value, Vars::Fonts::FONT_ESP::nFlags.Value};
-	m_Fonts[FONT_ESP_NAME] = {0x0, Vars::Fonts::FONT_ESP_NAME::szName.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.Value, Vars::Fonts::FONT_ESP_NAME::nWeight.Value, Vars::Fonts::FONT_ESP_NAME::nFlags.Value};
-	m_Fonts[FONT_ESP_COND] = {0x0, Vars::Fonts::FONT_ESP_COND::szName.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.Value, Vars::Fonts::FONT_ESP_COND::nWeight.Value, Vars::Fonts::FONT_ESP_COND::nFlags.Value};
-	m_Fonts[FONT_ESP_PICKUPS] = {0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.Value, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.Value, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.Value};
-	m_Fonts[FONT_MENU] = {0x0, Vars::Fonts::FONT_MENU::szName.c_str(), Vars::Fonts::FONT_MENU::nTall.Value, Vars::Fonts::FONT_MENU::nWeight.Value, Vars::Fonts::FONT_MENU::nFlags.Value};
-	m_Fonts[FONT_INDICATORS] = {0x0, Vars::Fonts::FONT_INDICATORS::szName.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.Value, Vars::Fonts::FONT_INDICATORS::nWeight.Value, Vars::Fonts::FONT_INDICATORS::nFlags.Value};
+	m_Fonts[FONT_ESP] = {0x0, Vars::Fonts::FONT_ESP::szName.Value.c_str(), Vars::Fonts::FONT_ESP::nTall.Value, Vars::Fonts::FONT_ESP::nWeight.Value, Vars::Fonts::FONT_ESP::nFlags.Value};
+	m_Fonts[FONT_ESP_NAME] = {0x0, Vars::Fonts::FONT_ESP_NAME::szName.Value.c_str(), Vars::Fonts::FONT_ESP_NAME::nTall.Value, Vars::Fonts::FONT_ESP_NAME::nWeight.Value, Vars::Fonts::FONT_ESP_NAME::nFlags.Value};
+	m_Fonts[FONT_ESP_COND] = {0x0, Vars::Fonts::FONT_ESP_COND::szName.Value.c_str(), Vars::Fonts::FONT_ESP_COND::nTall.Value, Vars::Fonts::FONT_ESP_COND::nWeight.Value, Vars::Fonts::FONT_ESP_COND::nFlags.Value};
+	m_Fonts[FONT_ESP_PICKUPS] = {0x0, Vars::Fonts::FONT_ESP_PICKUPS::szName.Value.c_str(), Vars::Fonts::FONT_ESP_PICKUPS::nTall.Value, Vars::Fonts::FONT_ESP_PICKUPS::nWeight.Value, Vars::Fonts::FONT_ESP_PICKUPS::nFlags.Value};
+	m_Fonts[FONT_MENU] = {0x0, Vars::Fonts::FONT_MENU::szName.Value.c_str(), Vars::Fonts::FONT_MENU::nTall.Value, Vars::Fonts::FONT_MENU::nWeight.Value, Vars::Fonts::FONT_MENU::nFlags.Value};
+	m_Fonts[FONT_INDICATORS] = {0x0, Vars::Fonts::FONT_INDICATORS::szName.Value.c_str(), Vars::Fonts::FONT_INDICATORS::nTall.Value, Vars::Fonts::FONT_INDICATORS::nWeight.Value, Vars::Fonts::FONT_INDICATORS::nFlags.Value};
 	m_Fonts[FONT_IMGUI] = {0x0, "Verdana", 18, 800, FONTFLAG_ANTIALIAS};
 	m_Fonts[FONT_OSRS] = {0x0, "Verdana", 12, 800, FONTFLAG_DROPSHADOW};
 

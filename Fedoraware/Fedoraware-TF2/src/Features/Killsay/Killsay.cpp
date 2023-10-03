@@ -58,7 +58,7 @@ void CKillsay::FireGameEvent(FNV1A_t uNameHash, CGameEvent* pEvent)
                 return;
         }
 
-	if (Vars::Misc::KillsayFile.empty())
+	if (Vars::Misc::KillsayFile.Value.empty())
 	{
 		return;
 	}
@@ -79,7 +79,7 @@ void CKillsay::FireGameEvent(FNV1A_t uNameHash, CGameEvent* pEvent)
 			std::filesystem::create_directory(sCurrentPath + "\\Killsays");
 		}
 
-		std::string sKillsayPath = (sCurrentPath + "\\Killsays\\" + Vars::Misc::KillsayFile);
+		std::string sKillsayPath = (sCurrentPath + "\\Killsays\\" + Vars::Misc::KillsayFile.Value);
 
 		std::ifstream killsayFile(sKillsayPath);
 
@@ -99,7 +99,7 @@ void CKillsay::FireGameEvent(FNV1A_t uNameHash, CGameEvent* pEvent)
 		}
 		else
 		{
-			Vars::Misc::KillsayFile.clear();
+			Vars::Misc::KillsayFile.Value.clear();
 			return;
 		}
 	}

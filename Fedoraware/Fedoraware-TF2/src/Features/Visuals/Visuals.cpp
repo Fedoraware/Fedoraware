@@ -90,8 +90,8 @@ void CVisuals::DrawOnScreenConditions(CBaseEntity* pLocal)
 	if (!Vars::Visuals::DrawOnScreenConditions.Value) { return; }
 	if (!pLocal->IsAlive() || pLocal->IsAGhost()) { return; }
 
-	const int x = Vars::Visuals::OnScreenConditions.c;
-	const int y = Vars::Visuals::OnScreenConditions.y;
+	const int x = Vars::Visuals::OnScreenConditions.Value.c;
+	const int y = Vars::Visuals::OnScreenConditions.Value.y;
 
 	const std::vector<std::wstring> conditionsVec = F::ESP.GetPlayerConds(pLocal);
 
@@ -129,9 +129,9 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
 	const float flLatencyReal = (iNetChan->GetLatency(FLOW_INCOMING) + iNetChan->GetLatency(FLOW_OUTGOING)) * 1000;
 	const int flLatencyScoreBoard = cResource->GetPing(pLocal->GetIndex());
 
-	const int x = Vars::Visuals::OnScreenPing.x;
-	const int y = Vars::Visuals::OnScreenPing.y;
-	const int h = Vars::Visuals::OnScreenPing.h;
+	const int x = Vars::Visuals::OnScreenPing.Value.x;
+	const int y = Vars::Visuals::OnScreenPing.Value.y;
+	const int h = Vars::Visuals::OnScreenPing.Value.h;
 
 	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
 	const int nTextOffset = menuFont.nTall;
@@ -224,11 +224,11 @@ void CVisuals::SkyboxChanger()
 
 	if (Vars::Visuals::SkyboxChanger.Value)
 	{
-		if (Vars::Skybox::SkyboxNum == 0)
+		if (Vars::Skybox::SkyboxNum.Value == 0)
 		{
 			if (Vars::Misc::BypassPure.Value)
 			{
-				fnLoadSkys(Vars::Skybox::SkyboxName.c_str());
+				fnLoadSkys(Vars::Skybox::SkyboxName.Value.c_str());
 			}
 			else
 			{
@@ -237,7 +237,7 @@ void CVisuals::SkyboxChanger()
 		}
 		else
 		{
-			fnLoadSkys(skybNames[Vars::Skybox::SkyboxNum]);
+			fnLoadSkys(skybNames[Vars::Skybox::SkyboxNum.Value]);
 		}
 	}
 	else
@@ -482,7 +482,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 			if (pLocal->GetLifeState() == LIFE_ALIVE)
 			{
 				const int nY = (g_ScreenSize.h / 2) + 20;
-				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator;
+				const DragBox_t DTBox = Vars::Misc::CL_Move::DTIndicator.Value;
 				const float ratioCurrent = std::clamp((static_cast<float>(G::ShiftedTicks) / static_cast<float>(Vars::Misc::CL_Move::DTTicks.Value)), 0.0f, 1.0f);
 				static float ratioInterp = 0.00f;
 				const auto& indFont = g_Draw.GetFont(FONT_INDICATORS);
@@ -520,7 +520,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Colors::DtOutline);
 						if (G::ShiftedTicks && ratioCurrent)
 						{
-							g_Draw.RoundedBoxStatic(DTBox.x + 2, DTBox.y + 2, ratioCurrent * (DTBox.w - 4), DTBox.h - 4, 4, Vars::Menu::Colors::MenuAccent);
+							g_Draw.RoundedBoxStatic(DTBox.x + 2, DTBox.y + 2, ratioCurrent * (DTBox.w - 4), DTBox.h - 4, 4, Vars::Menu::Colors::MenuAccent.Value);
 						}
 						if (G::WaitForShift)
 						{
@@ -687,7 +687,7 @@ void CVisuals::DrawMovesimLine()
 			{
 				for (size_t i = 1; i < G::PredLinesBackup.size(); i++)
 				{
-					RenderLine(G::PredLinesBackup.at(i - 1).first, G::PredLinesBackup.at(i).first, Vars::Aimbot::Projectile::PredictionColor, false);
+					RenderLine(G::PredLinesBackup.at(i - 1).first, G::PredLinesBackup.at(i).first, Vars::Aimbot::Projectile::PredictionColor.Value, false);
 				}
 			}
 			else
@@ -697,8 +697,8 @@ void CVisuals::DrawMovesimLine()
 					const auto& vStart = G::PredLinesBackup[i - 1].first;
 					const auto& vRotate = G::PredLinesBackup[i - 1].second; //	splirp vec
 					const auto& vEnd = G::PredLinesBackup[i].first;
-					if ((i % Vars::Visuals::SeperatorSpacing.Value) == 0) { RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor, false); }
-					RenderLine(vStart, vEnd, Vars::Aimbot::Projectile::PredictionColor, false);
+					if ((i % Vars::Visuals::SeperatorSpacing.Value) == 0) { RenderLine(vStart, vRotate, Vars::Aimbot::Projectile::PredictionColor.Value, false); }
+					RenderLine(vStart, vEnd, Vars::Aimbot::Projectile::PredictionColor.Value, false);
 				}
 			}
 		}

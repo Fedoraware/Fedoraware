@@ -51,11 +51,11 @@ void CRadar::DrawRadar()
 	{
 		g_Draw.GradientRect(RadarX - RadarSize, RadarY - RadarSize - 3,
 							RadarX - RadarSize + RadarSize, RadarY - RadarSize, { 43, 43, 45, 250 },
-							Vars::Menu::Colors::MenuAccent, true);
+							Vars::Menu::Colors::MenuAccent.Value, true);
 
 		g_Draw.GradientRect(RadarX - RadarSize + RadarSize, RadarY - RadarSize - 3,
 							RadarX - RadarSize + (RadarSize * 2), RadarY - RadarSize,
-							Vars::Menu::Colors::MenuAccent, { 43, 43, 45, 250 }, true);
+							Vars::Menu::Colors::MenuAccent.Value, { 43, 43, 45, 250 }, true);
 	}
 
 	//Build the bg color with the wanted alpha.

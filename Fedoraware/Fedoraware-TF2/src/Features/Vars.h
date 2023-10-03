@@ -2,920 +2,928 @@
 
 #include "../SDK/SDK.h"
 
+#include <typeinfo>
+
+// forward declartion of ConfigVar
 template <class T>
-class CVar
+class ConfigVar;
+
+class CVarBase
+{
+public:
+	size_t m_iType;
+	std::string m_sName;
+	bool m_bVisual;
+
+	// getter for ConfigVar
+	template <class T>
+	ConfigVar<T>* GetVar()
+	{
+		if (typeid(T).hash_code() != m_iType)
+			return nullptr;
+
+		return reinterpret_cast<ConfigVar<T>*>(this);
+	}
+};
+
+template <class T>
+class ConfigVar : public CVarBase
 {
 public:
 	T Value;
+	ConfigVar(T value, std::string name, bool visual = false);
 };
 
+inline std::vector<CVarBase*> g_Vars;
+
+template<class T>
+inline ConfigVar<T>::ConfigVar(T value, std::string name, bool visual)
+{
+	Value = value;
+	m_iType = typeid(T).hash_code();
+	m_sName = name;
+	g_Vars.push_back(this);
+	m_bVisual = visual;
+}
+
+// These are dumb workarounds to make this compatible with the old system... Hope this works :)
+#define NAMESPACE_BEGIN(name) \
+	namespace name { \
+		inline std::string GetNamespace() { return "Vars::" + std::string(#name) + "::"; } \
+		inline std::string GetSubname() { return ""; } \
+
+#define SUBNAMESPACE_BEGIN(name) \
+	namespace name { \
+		inline std::string GetSubname() { return std::string(#name) + "::"; } \
+
+// u dont actually have to put the name here, or even use it, but it makes it easier to read
+#define NAMESPACE_END(name) \
+	}
+#define SUBNAMESPACE_END(name) \
+	}
+
+#define CVar(name, value, ...) \
+	inline ConfigVar<decltype(value)> name{ value, GetNamespace() + GetSubname() + std::string(#name), __VA_ARGS__ }; \
+
+#define IS_VISUAL true
+
+// to indent stuff, just dont put a ; at the end of the previous line
 namespace Vars
 {
-	namespace Menu
-	{
-		inline std::string CheatName = "Fedoraware";
-		inline std::string CheatPrefix = "[FeD]";
-
-		inline bool ModernDesign = false;
-		inline bool ShowPlayerlist = false;
-		inline bool ShowKeybinds = false;
-		inline CVar<bool> MenuCelebration{ true }; //used in EngineVGui_Paint
-		inline CVar<bool> Vignette{ false };
-		inline CVar<bool> CloseOnUnfocus{ false };
-
-		inline CVar<int> MenuKey{ 0 };
-
-		namespace Colors
-		{
-			inline Color_t MenuAccent = { 255, 101, 101, 255 };
-		}
-	}
-
-	namespace CritHack
-	{
-		inline CVar<bool> Active{ false };
-		inline CVar<bool> Indicators{ false };
-		inline DragBox_t IndicatorPos{};
-		inline CVar<bool> AvoidRandom{ false };
-		inline CVar<bool> AlwaysMelee{ false };
-		inline CVar<int> CritKey{ VK_SHIFT };
-		inline CVar<bool> AutoMeleeCrit{ false };
-	}
-
-	namespace Backtrack
-	{
-		inline CVar<bool> Enabled{ true };
-		inline CVar<bool> UnchokePrediction{ true };
-		inline CVar<bool> AllowForward{ true };
-		inline CVar<int> Latency{ 0 };
-		
-
-		namespace BtChams
-		{
-			inline CVar<bool> Enabled{ false };
-			inline CVar<bool> LastOnly{ false };
-			inline CVar<bool> EnemyOnly{ false };
-			inline CVar<bool> IgnoreZ{ false };
-			inline CVar<int> Material{ 1 };
-			inline CVar<bool> Gradient{ false};
-			inline Color_t BacktrackColor{ 255, 255, 255, 255 };
-			inline Color_t BacktrackColor2{0, 0, 0, 255};
-		}
-	}
-
-	namespace Aimbot
-	{
-		namespace Global
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> AimKey{ VK_XBUTTON1 };
-			inline CVar<float> AimFOV{ 15.0f };
-			inline CVar<bool> AutoShoot{ false };
-			inline CVar<bool> DontWaitForShot{ false };
-			inline CVar<bool> FlickatEnemies{ false };
-			inline CVar<bool> AimPlayers{ true };
-			inline CVar<bool> AimBuildings{ false };
-			inline CVar<bool> AimStickies{ false };
-			inline CVar<bool> AimNPC{ false };
-			inline CVar<bool> AimBombs{ false };
-			inline CVar<int> IgnoreOptions{ 0b0000000 }; //disguised, fakelagging players, vaccinator, taunting, friends, deadringer,cloaked, invul
-			inline CVar<int> TickTolerance{ 7 };
-			inline CVar<bool> BAimLethal{ false }; // This is in global cause i remmebered hunterman exists
-			inline CVar<bool> showHitboxes{ false }; // original codenz
-			inline CVar<bool> ClearPreviousHitbox{ false };
-			inline CVar<int> HitboxLifetime{ 2 };
-		}
-
-
-		namespace Hitscan
-		{
-			//inline CVar<bool> Active			{ false };
-			inline CVar<int> SortMethod{ 0 }; //0 - FOV,		1 - Distance
-			inline CVar<int> BackTrackMethod{ 0 };
-			inline CVar<bool> RespectFOV{ true };
-			inline CVar<bool> AdaptiveMultiPoint{ true };
-			inline CVar<int> RandomPoints{ 8 };
-			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
-			inline CVar<int> AimHitbox{ 2 }; //0 - Head,		1 - Body,	2 - Auto
-			inline CVar<int> ScanHitboxes{ 0b00111 }; // {legs, arms, body, pelvis, head}
-			inline CVar<int> MultiHitboxes{ 0b00101 }; // {legs, arms, body, pelvis, head}
-			inline CVar<int> StaticHitboxes{ 0b11000 }; // {legs, arms, body, pelvis, head}
-			inline CVar<float> PointScale{ .54f };
-			inline CVar<int> SmoothingAmount{ 4 };
-			inline CVar<int> TapFire{ 0 }; //0 - Off, 1 - Distance, 2 - Always
-			inline CVar<float> TapFireDist { 1000.f };
-			inline CVar<bool> TapFireCheckForNSS { false };
-			inline CVar<bool> ScanBuildings{ false };
-			inline CVar<bool> WaitForHeadshot{ false };
-			inline CVar<bool> WaitForCharge{ false };
-			inline CVar<bool> SpectatedSmooth{ false };
-			inline CVar<bool> ScopedOnly{ false };
-			inline CVar<bool> AutoScope{ false };
-			inline CVar<bool> AutoRev{ false };
-			inline CVar<bool>ExtinguishTeam{ false };
-			inline CVar<bool> PreserveTarget{false};
-			inline CVar<bool> IgnorePreservedFoV{false};
-		}
-
-		namespace Projectile
-		{
-			//inline CVar<bool> Active			{ false };
-			inline CVar<int> SortMethod{ 0 }; //0 - FOV,		1 - Distance
-			inline CVar<bool> RespectFOV{ true };
-			inline CVar<int> AimMethod{ 1 }; //0 - Normal,	1 - Silent
-			inline CVar<int> AimPosition{ 3 }; // 0/head, 1/body, 2/feet, 3/auto
-			inline CVar<int> VisTestPoints{ 15 }; //how many points are we allowed to vis test before we stop scanning.
-			inline CVar<int> ScanPoints{ 15 }; //how many "visible points" need to be reached before we stop searching.
-			inline CVar<float> ScanScale{ 0.95f }; // how to scale the points.
-			inline CVar<int> AllowedHitboxes{ 0b000 }; // 111, Feet, Body, Head.
-			inline CVar<bool> FeetAimIfOnGround{ false };
-			inline CVar<int> BounceKey{ 0x0 };
-			inline CVar<bool> SplashPrediction{ false };
-			inline CVar<int> MinSplashPredictionDistance{ 0 };
-			inline CVar<int> MaxSplashPredictionDistance{ 10000 };
-			inline Color_t PredictionColor{ 255, 255, 255, 255 };
-			inline CVar<float> PredictionTime{ 2.0f };
-			inline CVar<bool> PredictObscured{ false };
-			inline CVar<bool> ChargeLooseCannon{ false };
-			inline CVar<bool> StrafePredictionGround{ false };
-			inline CVar<bool> StrafePredictionAir{ false };
-			inline CVar<int> StrafePredictionSamples{ 10 };
-			inline CVar<int> StrafePredictionMaxDistance{ 1000 };
-			inline CVar<int> StrafePredictionMinDifference{ 10 };
-			inline CVar<bool> WaitForHit{ false };
-		}
-
-		namespace Melee
-		{
-			//inline CVar<bool> Active			{ false };
-			inline CVar<int> SortMethod{ 1 }; //0 - FOV,		1 - Distance
-			inline CVar<bool> RespectFOV{ false };
-			inline CVar<bool> RequireBind{ true };
-			inline CVar<int> AimMethod{ 2 }; //0 - Normal,	1 - Smooth, 2 - Silent
-			inline CVar<int> SmoothingAmount{ 8 };
-			inline CVar<bool> RangeCheck{ false };
-			inline CVar<bool> PredictSwing{ false };
-			inline CVar<bool> WhipTeam{ false };
-		}
-	}
-
-	namespace NoSpread
-	{
-		inline CVar<bool> Hitscan{ false };
-		inline CVar<bool> Projectile{ true };
-		inline CVar<bool> Indicator{ false };
-		inline CVar<bool> ExtremePred{ false };
-		inline CVar<bool> CorrectPing{ false };
-		inline CVar<bool> UseAvgLatency{ false };
-	}
-
-	namespace Triggerbot
-	{
-		namespace Global
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> TriggerKey{ VK_XBUTTON2 };
-			inline CVar<int> IgnoreOptions{ 0b00000 }; //disguised, fakelagging players, taunting, friends, cloaked, invul
-		}
-
-		namespace Shoot
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> TriggerPlayers{ false };
-			inline CVar<bool> TriggerBuildings{ false };
-			inline CVar<bool> HeadOnly{ false };
-			inline CVar<bool> WaitForHeadshot{ false };
-			inline CVar<bool> ScopeOnly{ false };
-			inline CVar<float> HeadScale{ 0.7f };
-		}
-
-		namespace Stab
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> RageMode{ false };
-			inline CVar<bool> Silent{ false };
-			inline CVar<bool> Disguise{ false };
-			inline CVar<bool> IgnRazor{ false };
-			inline CVar<float> Range{ 0.9f };
-		}
-
-		namespace Detonate
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> DetonateTargets{ 0b00001 };
-			inline CVar<bool> Stickies{ false };
-			inline CVar<bool> Flares{ false };
-			inline CVar<float> RadiusScale{ 1.0f };
-		}
-
-		namespace Blast
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Rage{ false };
-			inline CVar<bool> Silent{ false };
-			inline CVar<bool> ExtinguishPlayers{ false };
-			inline CVar<bool> DisableOnAttack{ false };
-			inline CVar<int> Fov{ 55 };
-		}
-
-		namespace Uber
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> OnlyFriends{ false };
-			inline CVar<bool> PopLocal{ false };
-			inline CVar<bool> AutoVacc{ false };
-			inline CVar<float> HealthLeft{ 35.0f };
-			inline CVar<bool> VoiceCommand{ false };
-			inline CVar<int> ReactFoV{25};
-			inline CVar<bool> BulletRes{ true }; inline CVar<bool> BlastRes{ true }; inline CVar<bool> FireRes{ true };
-			inline CVar<int> ReactClasses{0b000000000};	//	this is intuitive
-		}
-	}
-
-	namespace ESP
-	{
-		namespace Main
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Outlinedbar{ false };
-			inline CVar<bool> EnableTeamEnemyColors{ false };
-			inline CVar<bool> DistanceToAlpha{false};
-			inline CVar<bool> DormantSoundESP{ false };
-			inline CVar<float> DormantTime{1.f};
-			inline CVar<int> DormantDist{1000};
-			inline CVar<int> NetworkedDist{2000};
-		}
-
-
-		namespace Players
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> ShowLocal{ false };
-			inline CVar<int> IgnoreFlags{ 0 }; //0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<int> IgnoreCloaked{ 0 }; //0 - OFF, 1 - All, 2 - Enemies Only
-			inline CVar<bool> Name{ false };
-			inline CVar<bool> NameCustom{ false };
-			inline Color_t NameColor{ 255, 255, 255, 255 };
-			inline CVar<bool> NameBox{ false };
-			inline CVar<int> Uber{ 0 }; //0 - Off, 1 - Text, 2 - Bar
-			inline CVar<int> Class{ 0 }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
-			inline CVar<bool> WeaponIcon{ false };
-			inline CVar<bool> WeaponText{ false };
-			inline CVar<int> HealthText{ 0 }; // 0 - Off, 1 - Default, 2 - Bar
-			inline CVar<bool> Cond{ false };
-			inline CVar<bool> FriendCond{ false };
-			inline CVar<bool> Distance{ false };
-			inline CVar<bool> HealthBar{ false };
-			inline CVar<int> HealthBarStyle{ 0 }; // 0 - gradient, 1 - old
-			inline CVar<int> Box{ 0 }; //0 - OFF, 1 - Simple, 2 - Corners
-			inline CVar<int> Bones{ 0 };
-			inline CVar<bool> GUID{ false };
-			inline CVar<bool> Choked{ false };
-			inline CVar<bool> Lines{ false };
-			inline CVar<bool> Dlights{ false };
-			inline CVar<float> DlightRadius{ 200.0f };
-			inline CVar<float> Alpha{ 1.0f };
-			inline CVar<bool> CheaterDetection{ false };
-			inline CVar<bool> SniperSightlines{ false };
-		}
-
-		namespace Buildings
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> IgnoreTeammates{ false };
-			inline CVar<bool> Name{ false };
-			inline CVar<bool> NameCustom{ false };
-			inline Color_t NameColor{ 255, 255, 255, 255 };
-			inline CVar<bool> NameBox{ false };
-			inline CVar<bool> Health{ false };
-			inline CVar<bool> Owner{ false };
-			inline CVar<bool> Level{ false };
-			inline CVar<bool> Cond{ false };
-			inline CVar<bool> Distance{ false };
-			inline CVar<bool> HealthBar{ false };
-			inline CVar<bool> TeleExitDir{ false };
-			inline Color_t TeleExitDirColor{ 255, 255, 255, 255 };
-			inline CVar<bool> Lines{ false };
-			inline CVar<int> Box{ 0 }; //0 - OFF, 1 - Simple, 2 - Corners
-			inline CVar<bool> Dlights{ false };
-			inline CVar<float> DlightRadius{ 200.0f };
-			inline CVar<float> Alpha{ 1.0f };
-		}
-
-		namespace World
-		{
-			inline CVar<bool> Active{ false };
-
-			inline CVar<bool> HealthName{ false };
-			inline CVar<int> HealthBox{ false };
-			inline CVar<bool> HealthLine{ false };
-			inline CVar<bool> HealthDistance{ false };
-	
-			inline CVar<bool> AmmoName{ false };
-			inline CVar<int> AmmoBox{ false };
-			inline CVar<bool> AmmoLine{ false };
-			inline CVar<bool> AmmoDistance{ false };
-
-
-			inline CVar<bool> NPCName{ false };
-			inline CVar<int> NPCBox{ false };
-			inline CVar<bool> NPCLine{ false };
-			inline CVar<bool> NPCDistance{ false };
-
-			inline CVar<bool> BombName{ false };
-			inline CVar<int> BombBox{ false };
-			inline CVar<bool> BombLine{ false };
-			inline CVar<bool> BombDistance{ false };
-
-			inline CVar<float> Alpha{ 1.0f };
-		}
-	}
-
-	namespace Chams
-	{
-		namespace Main
-		{
-			inline CVar<bool> Active{ false };
-		}
-
-		namespace Players
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Wearables{ false };
-			inline CVar<bool> Weapons{ false };
-			inline CVar<bool> FadeoutTeammates{ false };
-
-			// {ignorez, material, overlay type (0 = off), active}
-			inline Chams_t Local{};
-			inline Chams_t FakeAng{};
-			inline Chams_t Friend{};
-			inline Chams_t Enemy{};
-			inline Chams_t Team{};
-			inline Chams_t Target{};
-			inline Chams_t Ragdoll{};
-		}
-
-		namespace Buildings
-		{
-			inline Chams_t Local{};
-			inline Chams_t Friend{};
-			inline Chams_t Enemy{};
-			inline Chams_t Team{};
-			inline Chams_t Target{};
-
-			inline CVar<bool> Active{ false };
-			inline CVar<int> Material{ 3 }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false };
-		}
-
-		namespace World
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> Projectilez{ 2 };
-			inline Chams_t Health{};
-			inline Chams_t Ammo{};
-			inline Chams_t Projectiles{};
-		}
-
-		namespace DME
-		{
-			inline Chams_t Hands{ 1, 0, 0, true };
-			inline Chams_t Weapon{ 1, 0, 0, true };
-
-			inline CVar<int> HandsGlowOverlay{ 0 }; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
-			inline CVar<int> HandsProxySkin{ 0 };
-			inline CVar<float> HandsGlowAmount{ 1 };
-			inline CVar<bool> HandsProxyWF{ false };
-			inline CVar<bool> HandsRainbow{ false };
-			inline CVar<bool> HandsOverlayRainbow{ false };
-			inline CVar<bool> HandsOverlayPulse{ false };
-
-			inline CVar<int> WeaponGlowOverlay{ 0 }; // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
-			inline CVar<int> WeaponsProxySkin{ 0 };
-			inline CVar<float> WeaponGlowAmount{ 1 };
-			inline CVar<bool> WeaponsProxyWF{ false };
-			inline CVar<bool> WeaponRainbow{ false };
-			inline CVar<bool> WeaponOverlayRainbow{ false };
-			inline CVar<bool> WeaponOverlayPulse{ false };
-		}
-	}
-
-	namespace Glow
-	{
-		namespace Main
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> Type{0};	//	blur, stencil, fps stencil, wireframe
-			inline CVar<int> Scale{ 5 };
-		}
-
-		namespace Players
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> ShowLocal{ false };
-			inline CVar<bool> LocalRainbow{ false };
-			inline CVar<int> IgnoreTeammates{ 2 }; //0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<bool> Wearables{ false };
-			inline CVar<bool> Weapons{ false };
-			inline CVar<float> Alpha{ 1.0f };
-			inline CVar<int> Color{ 0 }; //0 - Team, 1 - Health
-		}
-
-		namespace Buildings
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> IgnoreTeammates{ false };
-			inline CVar<float> Alpha{ 1.0f };
-			inline CVar<int> Color{ 0 }; //0 - Team, 1 - Health
-		}
-
-		namespace World
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Health{ false };
-			inline CVar<bool> Ammo{ false };
-			inline CVar<bool> NPCs{ false };
-			inline CVar<bool> Bombs{ false };
-			inline CVar<int> Projectiles{ 1 }; //0 - Off, 1 - All, 2 - Enemy Only
-			inline CVar<float> Alpha{ 1.0f };
-		}
-
-		namespace Misc
-		{
-			inline CVar<bool> MovementSimLine{ false };
-			inline CVar<bool> Sightlines{ false };
-			inline CVar<bool> BulletTracers{ false };
-		}
-	}
-
-	namespace Radar
-	{
-		namespace Main
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> BackAlpha{ 128 };
-			inline CVar<int> LineAlpha{ 255 };
-			inline CVar<int> Range{ 1500 };
-			inline CVar<bool> NoTitleGradient{ false };
-		}
-
-		namespace Players
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> IconType{ 1 }; //0 - Scoreboard, 1 - Portraits, 2 - Avatars
-			inline CVar<int> BackGroundType{ 2 }; //0 - Off, 1 - Rect, 2 - Texture
-			inline CVar<bool> Outline{ false };
-			inline CVar<int> IgnoreTeam{ 2 }; //0 - Off, 1 - All, 2 - Keep Friends
-			inline CVar<int> IgnoreCloaked{ 0 }; //0 - Off, 1 - All, 2 - Enemies Only
-			inline CVar<bool> Health{ false };
-			inline CVar<int> IconSize{ 24 };
-			inline CVar<bool> Height{ false };
-		}
-
-		namespace Buildings
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Outline{ false };
-			inline CVar<bool> IgnoreTeam{ false };
-			inline CVar<bool> Health{ false };
-			inline CVar<int> IconSize{ 18 };
-		}
-
-		namespace World
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Health{ false };
-			inline CVar<bool> Ammo{ false };
-			inline CVar<int> IconSize{ 14 };
-		}
-	}
-
-	namespace Visuals
-	{
-		inline CVar<float> FadeOutFoV{0.f};
-		inline CVar<bool> CleanScreenshots{ true };
-		inline CVar<bool> RemoveDisguises{ false };
-		inline CVar<bool> RemoveTaunts{ false };
-		inline CVar<bool> DrawOnScreenConditions{ false };
-		inline CVar<bool> DrawOnScreenPing{ false };
-		inline DragBox_t OnScreenConditions{ };
-		inline DragBox_t OnScreenPing{ };
-		inline CVar<int> FieldOfView{ 90 };
-		inline CVar<int> AimFOVAlpha{ 10 };
-		inline CVar<bool> RemoveScope{ false };
-		inline CVar<bool> RemoveRagdolls{ false };
-		inline CVar<bool> RemoveMOTD{ false };
-		inline CVar<bool> RemoveScreenEffects{ false };
-		inline CVar<bool> RemoveScreenOverlays{ false };
-		//inline CVar<bool> RemoveForcedConvars{ false };
-		inline CVar<bool> RemoveConvarQueries{ false };
-		inline CVar<bool> RemoveDSP{ false };
-		inline CVar<int> VisualOverlay{ false };
-		inline CVar<bool> PreventForcedAngles{ false };
-		inline CVar<bool> ScopeLines{ false };
-		inline CVar<bool> PickupTimers{ false };
-		inline CVar<bool> RemoveZoom{ false };
-		inline CVar<bool> RemovePunch{ false };
-		inline CVar<bool> CrosshairAimPos{ false };
-		inline CVar<bool> ChatInfoText{ false };
-		inline CVar<bool> ChatInfoChat{ false };
-		inline CVar<bool> ChatInfoGrayScale{ false };
-		inline CVar<bool> OutOfFOVArrowsOutline{ false };
-		inline CVar<float> FovArrowsDist{ 0.15f };
-		inline CVar<int> SpectatorList{ 2 }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
-
-		inline CVar<int> FreecamKey{ 0 };
-		inline CVar<float> FreecamSpeed{ 10.f };
-
-		inline CVar<int> CameraMode{ 0 };
-		inline CVar<float> CameraFOV{ 90.f };
-
-		inline CVar<bool> SpyWarning{ false };
-		inline CVar<bool> SpyWarningAnnounce{ false };
-		inline CVar<int> SpyWarningStyle{ 0 }; //0 - Indicator, 1 - Flash
-		inline CVar<bool> SpyWarningVisibleOnly{ false };
-		inline CVar<bool> SpyWarningIgnoreFriends{ false };
-
-		inline CVar<bool> Snow{ false };
-		inline CVar<bool> ToolTips{ false };
-
-		inline CVar<bool> ThirdPerson{ false };
-		inline CVar<int> ThirdPersonKey{ VK_B };
-		inline CVar<bool> ThirdPersonSilentAngles{ false };
-		inline CVar<bool> ThirdPersonInstantYaw{ false };
-		inline CVar<bool> ThirdPersonServerHitbox{ false };
-		inline CVar<bool> ThirdpersonOffset{ false };
-		inline CVar<float> ThirdpersonDist{ 200.f };
-		inline CVar<float> ThirdpersonRight{ 0.f };
-		inline CVar<float> ThirdpersonUp{ 0.f };
-		inline CVar<bool> ThirdpersonOffsetWithArrows{ false };
-		inline CVar<int> ThirdpersonArrowOffsetKey{ VK_F };
-		inline CVar<bool> ThirdpersonCrosshair{ false };
-
-
-		inline CVar<bool> WorldModulation{ false };
-		inline CVar<bool> PropWireframe{ false };
-		inline CVar<bool> OverrideWorldTextures{ false };
-		inline CVar<bool> SkyboxChanger{ false };
-		inline CVar<bool> SkyModulation{ false };
-		inline CVar<bool> ParticleColors{ false };
-		inline CVar<bool> RGBParticles{ false };
-		inline CVar<float> RainbowSpeed{ 1.f };
-		inline CVar<bool> HalloweenSpellFootsteps{ false };
-		inline CVar<int> ColorType{ 0 }; //0 - color picker 1 - rainbow
-		inline CVar<bool> DashOnly{ false };
-		inline CVar<bool> BulletTracer{ false };
-		inline CVar<bool> AimbotViewmodel{ false };
-		inline CVar<bool> ViewmodelSway{ false };
-		inline CVar<float> ViewmodelSwayScale{ 5.f };
-		inline CVar<float> ViewmodelSwayInterp{ 0.05f };
-		inline CVar<bool> MoveSimLine{ false };
-		inline CVar<bool> MoveSimSeperators{ false };
-		inline CVar<int> SeperatorLength{ 12 };
-		inline CVar<int> SeperatorSpacing{ 6 };
-		
-		inline CVar<int> ParticleTracer{ 2 };
-		inline std::string ParticleName = "merasmus_zap_beam01"; // dont save this as a var its pointless
-		inline CVar<bool> DoPostProcessing{ false };
-
-		namespace Beans
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<bool> Rainbow{ false };
-			inline Color_t BeamColour{ 255, 255, 255, 255 };
-			inline CVar<bool> UseCustomModel{ false };
-			inline std::string Model = "sprites/physbeam.vmt";
-			inline CVar<float> Life{ 2.f };
-			inline CVar<float> Width{ 2.f };
-			inline CVar<float> EndWidth{ 2.f };
-			inline CVar<float> FadeLength{ 10.f };
-			inline CVar<float> Amplitude{ 2.f };
-			inline CVar<float> Brightness{ 255.f };
-			inline CVar<float> Speed{ 0.2f };
-			inline CVar<int> Flags{ 65792 };
-			inline CVar<int> Segments{ 2 };
-		}
-
-		inline CVar<bool> BulletTracerRainbow{ false };
-		inline CVar<bool> AimPosSquare{ false };
-		inline CVar<bool> OutOfFOVArrows{ false };
-		inline CVar<float> ArrowLength{ 21.f };
-		inline CVar<float> ArrowAngle{ 100.f };
-		inline CVar<float> MaxDist{ 1000.f };
-		inline CVar<float> MinDist{ 200.f };
-		inline CVar<int> VMOffX{ 0 };
-		inline CVar<int> VMOffY{ 0 };
-		inline CVar<int> VMOffZ{ 0 };
-		inline Vec3 VMOffsets{};
-		inline CVar<int> VMRoll{ 0 };
-
-		inline CVar<float> NotificationLifetime{ 5.f };
-		inline CVar<bool> DamageLoggerText{ false };
-		inline CVar<bool> DamageLoggerChat{ false };
-		inline CVar<bool> DamageLoggerConsole{ false };
-
-		inline CVar<int> VisionModifier{ false };
-
-		inline CVar<int> Rain{ false };
-		inline CVar<bool> EquipRegionUnlock{ false };
-
-		inline CVar<bool> NoStaticPropFade{ false };
-		inline CVar<bool> ParticlesIgnoreZ{ false };
-
-
-		namespace RagdollEffects
-		{
-			inline CVar<bool> EnemyOnly{ false };
-			inline CVar<bool> Burning{ false };
-			inline CVar<bool> Electrocuted{ false };
-			inline CVar<bool> BecomeAsh{ false };
-			inline CVar<bool> Dissolve{ false };
-			inline CVar<int> RagdollType{ 0 };
-		}
-
-		namespace Skins
-		{
-			inline CVar<bool> Enabled{ false };
-			inline CVar<int> Sheen{ 0 };
-			inline CVar<int> Effect{ 0 };
-			inline CVar<int> Particle{ 0 };
-			inline CVar<bool> Acient{ false };
-			inline CVar<bool> Override{ false };
-			inline CVar<bool> Australium{ false };
-		}
-
-		namespace Fog
-		{
-			inline CVar<bool> DisableFog{ false };
-			inline CVar<bool> CustomFog{ false };
-			inline Color_t FogColor{ 255, 255, 255, 255 };
-			inline Color_t FogColorSkybox{ 255, 255, 255, 255 };
-			inline CVar<float> FogDensity{ 0 };
-			inline CVar<float> FogDensitySkybox{ 0 };
-			inline CVar<float> FogStart{ 0 };
-			inline CVar<float> FogStartSkybox{ 0 };
-			inline CVar<float> FogEnd{ 0 };
-			inline CVar<float> FogEndSkybox{ 0 };
-		}
-	}
-
-	namespace Misc
-	{
-		inline CVar<int> AccurateMovement{ false };
-		inline CVar<int> AltMovement{ 0b0000 };	//	0000 {Fast Strafe, Fast Accel, Fast Crouch, Kart Control}
-		inline CVar<bool> AutoJump{ false };
-		inline CVar<bool> AutoVote{ false };
-		inline CVar<bool> DuckJump{ false };
-		inline CVar<int> AutoStrafe{ 2 };
-		inline CVar<bool> DirectionalOnlyOnMove{ false };
-		inline CVar<bool> Directional{ false };
-		inline CVar<bool> TauntSlide{ false };
-		inline CVar<bool> TauntControl{ false };
-		inline CVar<bool> TauntSpin{ false };
-		inline CVar<int> TauntSpinKey{ false };
-		inline CVar<float> TauntSpinSpeed{ 5.f };
-		inline CVar<bool> TauntFollowsCamera{ false };
-		inline CVar<bool> BypassPure{ false };
-		inline CVar<bool> NoisemakerSpam{ false };
-		inline CVar<bool> DisableInterpolation{ true };
-		inline CVar<bool> FixInputDelay{ false };
-		inline CVar<bool> MedalFlip{ false };
-		inline CVar<bool> AutoRocketJump{ false };
-		inline CVar<bool> NonLethalRocketJump{ true };
-		inline CVar<bool> AutoScoutJump{ false };
-		inline CVar<int> ChatSpam{ 0 };
-		inline CVar<int> VoicechatSpam{ 0 };
-		inline CVar<float> SpamInterval{ 4.f };
-		inline CVar<int> NoPush{ 0 };	//	0 off, 1 on, 2 on while not afk, 3 semi while afk
-		inline CVar<bool> EdgeJump{ false };
-		inline CVar<bool> StoreStatistics{ false };
-		inline CVar<int> StickySpamKey{ 0x0 };
-		inline CVar<int> StickyChargePercent{ 0 };
-		inline CVar<int> InfiniteEatKey{ 0x0 };
-		inline CVar<int> EdgeJumpKey{ VK_MENU };
-		inline CVar<bool> AntiAFK{ false };
-		inline CVar<int> VotingOptions{ 0b000011 }; // 000011 {verbose, autovote, party, chat, console, text}
-		inline CVar<bool> CheatsBypass{ false };
-		inline CVar<bool> AntiAutobal{ false };
-		inline CVar<bool> RageRetry{ false };
-		inline CVar<int> RageRetryHealth{ 20 };
-		inline CVar<bool> MVMRes{ false };
-		inline CVar<bool> PingReducer{ false };
-		inline CVar<int> PingTarget{ 0 };
-		inline CVar<bool> ExtendFreeze{ false };
-		inline CVar<bool> ViewmodelFlip{ false };
-		inline CVar<bool> AntiViewmodelFlip{ false }; // scuffed
-		inline CVar<int> AutoJoin{ false };
-		inline CVar<bool> KillstreakWeapon{ false };
-		inline CVar<bool> PartyNetworking{ false };
-		inline CVar<bool> PartyCrasher{ false };
-		inline CVar<int> PartyMarker{ false };
-		inline CVar<bool> PartyESP{ false };
-		inline CVar<int> SoundBlock{ 0 };
-		inline CVar<bool> ChatFlags{ false };
-		inline CVar<int> MedievalChat{ 0 };
-		inline CVar<bool> AutoAcceptItemDrops{ false };
-		inline CVar<bool> RegionChanger{ false };
-		inline CVar<int> RegionsAllowed{ 0 };
-		inline CVar<int> AutoCasualQueue{ 0 };
-		inline CVar<bool> JoinSpam{ false };
-		inline CVar<bool> AntiVAC{ false };
-		inline CVar<int> InstantAccept{ false };
-		inline CVar<bool> RunescapeChat{ false };
-
-		inline CVar<bool> Killsay{ false };
-		inline std::string KillsayFile = "";
-		namespace Followbot
-		{
-			inline CVar<bool> Enabled{ false };
-			inline CVar<bool> FriendsOnly{ false };
-			inline CVar<float> Distance{ 150.f };
-		}
-
-		namespace CheaterDetection
-		{
-			inline CVar<bool> Enabled{false};
-			inline CVar<int> Methods{0b111111100};			//	Duckspeed, Aimbot, OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
-			inline CVar<int> Protections{0b111};			//	double scans, lagging client, timing out
-			inline CVar<int> SuspicionGate{10};				//	the amount of infractions prior to marking someone as a cheater
-			inline CVar<int> PacketManipGate{14};			//	the avg choke for someone to receive and infraction for packet choking
-			inline CVar<int> BHopMaxDelay{1};				//	max groundticks used when detecting a bunny hop.
-			inline CVar<int> BHopDetectionsRequired{5};		//	how many times must some be seen bunny hopping to receive an infraction
-			inline CVar<float> ScoreMultiplier{2.f};		//	multiply the avg score/s by this to receive the maximum amount
-			inline CVar<float> MinimumFlickDistance{20.f};	//	min mouse flick size to suspect someone of angle cheats.
-			inline CVar<float> MaximumNoise{5.f};			//	max mouse noise prior to a flick to mark somebody
-			inline CVar<float> MinimumAimbotFoV{3.f};		//	scaled with how many ticks a player has choked up to ->
-			inline CVar<float> MaxScaledAimbotFoV{20.f};	//	self explanatory
-		}
-
-		namespace CL_Move
-		{
-			inline CVar<bool> Enabled{ false };
-			inline CVar<bool> Doubletap{ false };
-			inline CVar<bool> SafeTick{ false };
-			inline CVar<bool> SafeTickAirOverride{ false };
-			inline CVar<int> PassiveRecharge{ 0 };
-			inline CVar<bool> SEnabled{ false };
-			inline CVar<int> SFactor{ 1 };
-			inline CVar<bool> NotInAir{ false };
-			inline CVar<int> TeleportKey{ 0x52 }; //R
-			inline CVar<int> TeleportMode{ 0 };
-			inline CVar<int> TeleportFactor{ 2 };
-			inline CVar<int> RechargeKey{ 0x48 }; //H
-			inline CVar<int> DoubletapKey{ 0x56 }; //V
-			inline CVar<bool> AutoRetain{ true };
-			inline CVar<bool> RetainFakelag{ false };
-			inline CVar<bool> RetainBlastJump{ false };
-			inline CVar<bool> UnchokeOnAttack{ true };
-			inline CVar<bool> RechargeWhileDead{ false };
-			inline CVar<bool> AutoRecharge{ false }; //H
-			inline CVar<bool> AntiWarp{ false }; //H
-			inline CVar<int> DTMode{ 0 }; // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
-			inline CVar<int> DTBarStyle{ 3 };
-			inline DragBox_t DTIndicator{g_ScreenSize.c, g_ScreenSize.c};
-			inline CVar<int> DTTicks{ 21 };
-			inline CVar<bool> WaitForDT{ false };
-			inline CVar<bool> Fakelag{ false };
-			inline CVar<int> FakelagMode{ 0 }; // 0 - plain, 1 - random
-			inline CVar<bool> WhileMoving { false };
-			inline CVar<bool> WhileVisible { false };
-			inline CVar<bool> PredictVisibility { false };
-			inline CVar<bool> WhileUnducking { false };
-			inline CVar<bool> WhileInAir { false };
-			inline CVar<int> FakelagMin{ 1 }; //	only show when FakelagMode=2
-			inline CVar<int> FakelagMax{ 22 };
-			inline CVar<bool> FakelagOnKey{ false }; // dont show when fakelagmode=2|3
-			inline CVar<int> FakelagKey{ 0x54 }; //T
-			inline CVar<int> FakelagValue{ 1 }; // dont show when fakelagmode=2
-			inline CVar<int> AutoPeekKey{ false };
-			inline CVar<float> AutoPeekDistance{ 200.f };
-			inline CVar<bool> AutoPeekFree{ false };
-
-			namespace FLGChams
-			{
-				inline CVar<bool> Enabled{ false };
-				inline CVar<int> Material{ 1 };
-				inline Color_t FakelagColor{ 255, 255, 255, 255 };
-			}
-		}
-
-		namespace Discord
-		{
-			inline CVar<bool> EnableRPC{ false };
-			inline CVar<bool> IncludeClass{ false };
-			inline CVar<bool> IncludeMap{ false };
-			inline CVar<bool> IncludeTimestamp{ false };
-			inline CVar<int> WhatImagesShouldBeUsed{ 0 }; // 0 - Big fedora, small TF2 logo; 1 - Big TF2 logo, small fedora
-		}
-
-		namespace Steam
-		{
-			inline CVar<bool> EnableRPC{ false };
-			inline CVar<int> MatchGroup{ 0 }; // 0 - Special Event; 1 - MvM Mann Up; 2 - Competitive; 3 - Casual; 4 - MvM Boot Camp;
-			inline CVar<bool> OverrideMenu{ false }; // Override matchgroup when in main menu
-			inline CVar<int> MapText{ 1 }; // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
-			inline CVar<int> GroupSize{ 1337 };
-			inline CVar<std::string> CustomText = { "M-FeD is gay" };
-		}
-	}
-
-	namespace AntiHack
-	{
-		namespace AntiAim
-		{
-			inline CVar<bool> Active{ false };
-			inline CVar<int> ToggleKey{ 0 };
-			inline CVar<int> InvertKey{ 0 };
-			inline CVar<int> ManualKey{ 0 };
-			inline CVar<int> Pitch{ 0 }; //0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
-			inline CVar<int> YawReal{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
-			inline CVar<int> YawFake{ 0 }; //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
-			inline CVar<int> BaseYawMode{ 0 };
-			inline CVar<float> BaseYawOffset{ 0.f };
-			inline CVar<float> SpinSpeed{ 15.f };
-			inline CVar<float> CustomRealPitch{ 0.f };
-			inline CVar<float> CustomRealYaw{ 0 };
-			inline CVar<float> CustomFakeYaw{ 0 };
-			inline CVar<float> FakeJitter{ 0 };
-			inline CVar<float> RealJitter{ 0 };
-			inline CVar<int> RandInterval{ 25 };
-			inline CVar<bool> RehideAntiAimPostShot{ true };
-			inline CVar<bool> AntiBackstab{ false };
-			inline CVar<bool> LegJitter{ false }; // frick u fourteen
-			inline CVar<bool> AntiOverlap{ false };
-			inline CVar<bool> InvalidShootPitch{ false }; // i dont know what to name this its TRASH
-			// no reason to do this for projectile and melee cause u have psilent lel
-		}
-
-		namespace Resolver
-		{
-			inline CVar<bool> Resolver{ false };
-			inline CVar<bool> AutoResolveCheaters{ false };
-			inline CVar<bool> IgnoreAirborne{ false };
-		}
-	}
-
-	namespace Skybox
-	{
-		inline int SkyboxNum = 0;
-		inline std::string SkyboxName = "mr_04";
-	}
-
-	namespace Fonts
-	{
-		namespace FONT_ESP
-		{
-			inline std::string szName = "Tahoma";
-			inline CVar<int> nTall = { 12 };
-			inline CVar<int> nWeight = { 800 };
-			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS };
-		}
-
-		namespace FONT_ESP_NAME
-		{
-			inline std::string szName = "Tahoma";
-			inline CVar<int> nTall = { 14 };
-			inline CVar<int> nWeight = { 800 };
-			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS };
-		}
-
-		namespace FONT_ESP_COND
-		{
-			inline std::string szName = "Tahoma";
-			inline CVar<int> nTall = { 10 };
-			inline CVar<int> nWeight = { 800 };
-			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS };
-		}
-
-		namespace FONT_ESP_PICKUPS
-		{
-			inline std::string szName = "Tahoma";
-			inline CVar<int> nTall = { 13 };
-			inline CVar<int> nWeight = { 800 };
-			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS };
-		}
-
-		namespace FONT_MENU
-		{
-			inline std::string szName = "DejaVu Sans";
-			inline CVar<int> nTall = { 16 };
-			inline CVar<int> nWeight = { 200 };
-			inline CVar<int> nFlags = { FONTFLAG_ANTIALIAS };
-		}
-
-		namespace FONT_INDICATORS
-		{
-			inline std::string szName = "Verdana";
-			inline CVar<int> nTall = { 12 };
-			inline CVar<int> nWeight = { 0 };
-			inline CVar<int> nFlags = { FONTFLAG_OUTLINE };
-		}
-	}
+	NAMESPACE_BEGIN(Menu);
+
+	CVar(CheatName, std::string("Fedoraware"), IS_VISUAL);
+	CVar(CheatPrefix, std::string("[FeD]"), IS_VISUAL);
+	CVar(ModernDesign, false, IS_VISUAL);
+	CVar(ShowPlayerlist, false);
+	CVar(ShowKeybinds, false);
+	CVar(MenuCelebration, true, IS_VISUAL);
+	CVar(Vignette, false, IS_VISUAL);
+	CVar(CloseOnUnfocus, false, IS_VISUAL);
+	CVar(MenuKey, 0);
+
+	SUBNAMESPACE_BEGIN(Colors)
+		CVar(MenuAccent, Color_t(255, 101, 101, 255), IS_VISUAL);
+	SUBNAMESPACE_END(Colors);
+
+	NAMESPACE_END(Menu);
+
+	NAMESPACE_BEGIN(CritHack);
+
+	CVar(Active, false);
+	CVar(Indicators, false, IS_VISUAL);
+	CVar(IndicatorPos, DragBox_t(), IS_VISUAL);
+	CVar(AvoidRandom, false);
+	CVar(AlwaysMelee, false);
+	CVar(CritKey, VK_SHIFT);
+	CVar(AutoMeleeCrit, false);
+
+	NAMESPACE_END(CritHack);
+
+	NAMESPACE_BEGIN(Backtrack);
+
+	CVar(Enabled, true);
+	CVar(UnchokePrediction, true);
+	CVar(AllowForward, true);
+	CVar(Latency, 0);
+
+	SUBNAMESPACE_BEGIN(BtChams)
+		CVar(Enabled, false, IS_VISUAL)
+		CVar(LastOnly, false, IS_VISUAL)
+		CVar(EnemyOnly, false, IS_VISUAL)
+		CVar(IgnoreZ, false, IS_VISUAL)
+		CVar(Material, 1, IS_VISUAL)
+		CVar(Gradient, false, IS_VISUAL)
+		CVar(BacktrackColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(BacktrackColor2, Color_t(0, 0, 0, 255), IS_VISUAL);
+	SUBNAMESPACE_END(BacktrackChams);
+
+	NAMESPACE_END(Backtrack);
+
+	NAMESPACE_BEGIN(Aimbot);
+
+	SUBNAMESPACE_BEGIN(Global)
+		CVar(Active, false)
+		CVar(AimKey, VK_XBUTTON1)
+		CVar(AimFOV, 15.0f)
+		CVar(AutoShoot, false)
+		CVar(DontWaitForShot, false)
+		CVar(FlickatEnemies, false)
+		CVar(AimPlayers, true)
+		CVar(AimBuildings, false)
+		CVar(AimStickies, false)
+		CVar(AimNPC, false)
+		CVar(AimBombs, false)
+		CVar(IgnoreOptions, 0b0000000) //disguised, fakelagging players, vaccinator, taunting, friends, deadringer,cloaked, invul
+		CVar(TickTolerance, 7)
+		CVar(BAimLethal, false) // This is in global cause i remmebered hunterman exists
+		CVar(showHitboxes, false, IS_VISUAL) // original codenz
+		CVar(ClearPreviousHitbox, false, IS_VISUAL)
+		CVar(HitboxLifetime, 2, IS_VISUAL);
+	SUBNAMESPACE_END(Global);
+
+	SUBNAMESPACE_BEGIN(Hitscan)
+		CVar(SortMethod, 0) //0 - FOV,		1 - Distance
+		CVar(BackTrackMethod, 0)
+		CVar(RespectFOV, true)
+		CVar(AdaptiveMultiPoint, true)
+		CVar(RandomPoints, 8)
+		CVar(AimMethod, 2) //0 - Normal,	1 - Smooth, 2 - Silent
+		CVar(AimHitbox, 2) //0 - Head,		1 - Body,	2 - Auto
+		CVar(ScanHitboxes, 0b00111) // {legs, arms, body, pelvis, head}
+		CVar(MultiHitboxes, 0b00101) // {legs, arms, body, pelvis, head}
+		CVar(StaticHitboxes, 0b11000) // {legs, arms, body, pelvis, head}
+		CVar(PointScale, .54f)
+		CVar(SmoothingAmount, 4)
+		CVar(TapFire, 0) //0 - Off, 1 - Distance, 2 - Always
+		CVar(TapFireDist, 1000.f)
+		CVar(TapFireCheckForNSS, false)
+		CVar(ScanBuildings, false)
+		CVar(WaitForHeadshot, false)
+		CVar(WaitForCharge, false)
+		CVar(SpectatedSmooth, false)
+		CVar(ScopedOnly, false)
+		CVar(AutoScope, false)
+		CVar(AutoRev, false)
+		CVar(ExtinguishTeam, false)
+		CVar(PreserveTarget, false)
+		CVar(IgnorePreservedFoV, false);
+	SUBNAMESPACE_END(Hitscan);
+
+	SUBNAMESPACE_BEGIN(Projectile)
+		CVar(SortMethod, 0) //0 - FOV,		1 - Distance
+		CVar(RespectFOV, true)
+		CVar(AimMethod, 1) //0 - Normal,	1 - Smooth, 2 - Silent
+		CVar(AimPosition, 3) // 0/head, 1/body, 2/feet, 3/auto
+		CVar(VisTestPoints, 15) //how many points are we allowed to vis test before we stop scanning.
+		CVar(ScanPoints, 15) //how many "visible points" need to be reached before we stop searching.
+		CVar(ScanScale, 0.95f) // how to scale the points.
+		CVar(AllowedHitboxes, 0b000) // 111, Feet, Body, Head.
+		CVar(FeetAimIfOnGround, false)
+		CVar(BounceKey, 0x0)
+		CVar(SplashPrediction, false)
+		CVar(MinSplashPredictionDistance, 0)
+		CVar(MaxSplashPredictionDistance, 10000)
+		CVar(PredictionColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(PredictionTime, 2.0f)
+		CVar(PredictObscured, false)
+		CVar(ChargeLooseCannon, false)
+		CVar(StrafePredictionGround, false)
+		CVar(StrafePredictionAir, false)
+		CVar(StrafePredictionSamples, 10)
+		CVar(StrafePredictionMaxDistance, 1000)
+		CVar(StrafePredictionMinDifference, 10)
+		CVar(WaitForHit, false);
+	SUBNAMESPACE_END(Projectile);
+
+	SUBNAMESPACE_BEGIN(Melee)
+		CVar(SortMethod, 1) //0 - FOV,		1 - Distance
+		CVar(RespectFOV, false)
+		CVar(RequireBind, true)
+		CVar(AimMethod, 2) //0 - Normal,	1 - Smooth, 2 - Silent
+		CVar(SmoothingAmount, 8)
+		CVar(RangeCheck, false)
+		CVar(PredictSwing, false)
+		CVar(WhipTeam, false);
+	SUBNAMESPACE_END(Melee);
+
+	NAMESPACE_END(Aimbot);
+
+	NAMESPACE_BEGIN(NoSpread)
+		CVar(Hitscan, false)
+		CVar(Projectile, true)
+		CVar(Indicator, false, IS_VISUAL)
+		CVar(ExtremePred, false)
+		CVar(CorrectPing, false)
+		CVar(UseAvgLatency, false);
+	NAMESPACE_END(NoSpread);
+
+	NAMESPACE_BEGIN(Triggerbot);
+
+	SUBNAMESPACE_BEGIN(Global)
+		CVar(Active, false)
+		CVar(TriggerKey, VK_XBUTTON2)
+		CVar(IgnoreOptions, 0b00000); //disguised, fakelagging players, taunting, friends, cloaked, invul
+	SUBNAMESPACE_END(Global);
+
+	SUBNAMESPACE_BEGIN(Shoot)
+		CVar(Active, false)
+		CVar(TriggerPlayers, false)
+		CVar(TriggerBuildings, false)
+		CVar(HeadOnly, false)
+		CVar(WaitForHeadshot, false)
+		CVar(ScopeOnly, false)
+		CVar(HeadScale, 0.7f);
+	SUBNAMESPACE_END(Shoot);
+
+	SUBNAMESPACE_BEGIN(Stab)
+		CVar(Active, false)
+		CVar(RageMode, false)
+		CVar(Silent, false)
+		CVar(Disguise, false)
+		CVar(IgnRazor, false)
+		CVar(Range, 0.9f);
+	SUBNAMESPACE_END(Stab);
+
+	SUBNAMESPACE_BEGIN(Detonate)
+		CVar(Active, false)
+		CVar(DetonateTargets, 0b00001)
+		CVar(Stickies, false)
+		CVar(Flares, false)
+		CVar(RadiusScale, 1.0f);
+	SUBNAMESPACE_END(Detonate);
+
+	SUBNAMESPACE_BEGIN(Blast)
+		CVar(Active, false)
+		CVar(Rage, false)
+		CVar(Silent, false)
+		CVar(ExtinguishPlayers, false)
+		CVar(DisableOnAttack, false)
+		CVar(Fov, 55);
+	SUBNAMESPACE_END(Blast);
+
+	SUBNAMESPACE_BEGIN(Uber)
+		CVar(Active, false)
+		CVar(OnlyFriends, false)
+		CVar(PopLocal, false)
+		CVar(AutoVacc, false)
+		CVar(HealthLeft, 35.0f)
+		CVar(VoiceCommand, false)
+		CVar(ReactFoV, 25)
+		CVar(BulletRes, true)
+		CVar(BlastRes, true)
+		CVar(FireRes, true)
+		CVar(ReactClasses, 0b000000000); //this is intuitive
+	SUBNAMESPACE_END(Uber);
+
+	NAMESPACE_END(Triggerbot);
+
+	NAMESPACE_BEGIN(ESP);
+
+	SUBNAMESPACE_BEGIN(Main)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Outlinedbar, false, IS_VISUAL)
+		CVar(EnableTeamEnemyColors, false, IS_VISUAL)
+		CVar(DistanceToAlpha, false, IS_VISUAL)
+		CVar(DormantSoundESP, false, IS_VISUAL)
+		CVar(DormantTime, 1.f, IS_VISUAL)
+		CVar(DormantDist, 1000, IS_VISUAL)
+		CVar(NetworkedDist, 2000, IS_VISUAL);
+	SUBNAMESPACE_END(Main);
+
+	SUBNAMESPACE_BEGIN(Players)
+		CVar(Active, false, IS_VISUAL)
+		CVar(ShowLocal, false, IS_VISUAL)
+		CVar(IgnoreFlags, 0, IS_VISUAL)
+		CVar(IgnoreCloaked, 0, IS_VISUAL)
+		CVar(Name, false, IS_VISUAL)
+		CVar(NameColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(NameCustom, false, IS_VISUAL)
+		CVar(NameBox, false, IS_VISUAL)
+		CVar(Uber, 0, IS_VISUAL)
+		CVar(Class, 0, IS_VISUAL)
+		CVar(WeaponIcon, false, IS_VISUAL)
+		CVar(WeaponText, false, IS_VISUAL)
+		CVar(HealthText, 0, IS_VISUAL)
+		CVar(Cond, false, IS_VISUAL)
+		CVar(FriendCond, false, IS_VISUAL)
+		CVar(Distance, false, IS_VISUAL)
+		CVar(HealthBar, false, IS_VISUAL)
+		CVar(HealthBarStyle, 0, IS_VISUAL)
+		CVar(Box, 0, IS_VISUAL)
+		CVar(Bones, 0, IS_VISUAL)
+		CVar(GUID, false, IS_VISUAL)
+		CVar(Choked, false, IS_VISUAL)
+		CVar(Lines, false, IS_VISUAL)
+		CVar(Dlights, false, IS_VISUAL)
+		CVar(DlightRadius, 200.0f, IS_VISUAL)
+		CVar(Alpha, 1.0f, IS_VISUAL)
+		CVar(CheaterDetection, false, IS_VISUAL)
+		CVar(SniperSightlines, false, IS_VISUAL)
+		SUBNAMESPACE_END(Players);
+
+	SUBNAMESPACE_BEGIN(Buildings)
+		CVar(Active, false, IS_VISUAL)
+		CVar(IgnoreTeammates, false, IS_VISUAL)
+		CVar(Name, false, IS_VISUAL)
+		CVar(NameCustom, false, IS_VISUAL)
+		CVar(NameColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(NameBox, false, IS_VISUAL)
+		CVar(Health, false, IS_VISUAL)
+		CVar(Owner, false, IS_VISUAL)
+		CVar(Level, false, IS_VISUAL)
+		CVar(Cond, false, IS_VISUAL)
+		CVar(Distance, false, IS_VISUAL)
+		CVar(HealthBar, false, IS_VISUAL)
+		CVar(TeleExitDir, false, IS_VISUAL)
+		CVar(TeleExitDirColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(Lines, false, IS_VISUAL)
+		CVar(Box, 0) // 0 - OFF, 1 - Simple, 2 - Corner, IS_VISUAL)
+		CVar(Dlights, false, IS_VISUAL)
+		CVar(DlightRadius, 200.0f, IS_VISUAL)
+		CVar(Alpha, 1.0f, IS_VISUAL);
+	SUBNAMESPACE_END(Buildings);
+
+	SUBNAMESPACE_BEGIN(World)
+		CVar(Active, false, IS_VISUAL)
+		CVar(HealthName, false, IS_VISUAL)
+		CVar(HealthBox, 0, IS_VISUAL)
+		CVar(HealthLine, false, IS_VISUAL)
+		CVar(HealthDistance, false, IS_VISUAL)
+		CVar(AmmoName, false, IS_VISUAL)
+		CVar(AmmoBox, 0, IS_VISUAL)
+		CVar(AmmoLine, false, IS_VISUAL)
+		CVar(AmmoDistance, false, IS_VISUAL)
+		CVar(NPCName, false, IS_VISUAL)
+		CVar(NPCBox, 0, IS_VISUAL)
+		CVar(NPCLine, false, IS_VISUAL)
+		CVar(NPCDistance, false, IS_VISUAL)
+		CVar(BombName, false, IS_VISUAL)
+		CVar(BombBox, 0, IS_VISUAL)
+		CVar(BombLine, false, IS_VISUAL)
+		CVar(BombDistance, false, IS_VISUAL)
+		CVar(Alpha, 1.0f, IS_VISUAL);
+	SUBNAMESPACE_END(World);
+
+	NAMESPACE_END(ESP);
+
+	NAMESPACE_BEGIN(Chams);
+
+	SUBNAMESPACE_BEGIN(Main)
+		CVar(Active, false, IS_VISUAL);
+	SUBNAMESPACE_END(Main);
+
+	SUBNAMESPACE_BEGIN(Players)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Wearables, false, IS_VISUAL)
+		CVar(Weapons, false, IS_VISUAL)
+		CVar(FadeoutTeammates, false, IS_VISUAL)
+		CVar(Local, Chams_t(), IS_VISUAL)
+		CVar(FakeAng, Chams_t(), IS_VISUAL)
+		CVar(Friend, Chams_t(), IS_VISUAL)
+		CVar(Enemy, Chams_t(), IS_VISUAL)
+		CVar(Team, Chams_t(), IS_VISUAL)
+		CVar(Target, Chams_t(), IS_VISUAL)
+		CVar(Ragdoll, Chams_t(), IS_VISUAL);
+	SUBNAMESPACE_END(Players);
+
+	SUBNAMESPACE_BEGIN(Buildings)
+		CVar(Local, Chams_t(), IS_VISUAL)
+		CVar(Friend, Chams_t(), IS_VISUAL)
+		CVar(Enemy, Chams_t(), IS_VISUAL)
+		CVar(Team, Chams_t(), IS_VISUAL)
+		CVar(Target, Chams_t(), IS_VISUAL)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Material, 3, IS_VISUAL) //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
+		CVar(IgnoreZ, false, IS_VISUAL);
+	SUBNAMESPACE_END(Buildings);
+
+	SUBNAMESPACE_BEGIN(World)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Projectilez, 2, IS_VISUAL)
+		CVar(Health, Chams_t(), IS_VISUAL)
+		CVar(Ammo, Chams_t(), IS_VISUAL)
+		CVar(Projectiles, Chams_t(), IS_VISUAL);
+	SUBNAMESPACE_END(World);
+
+	SUBNAMESPACE_BEGIN(DME)
+		CVar(Hands, Chams_t(1, 0, 0, true), IS_VISUAL)
+		CVar(Weapon, Chams_t(1, 0, 0, true), IS_VISUAL)
+		CVar(HandsGlowOverlay, 0, IS_VISUAL) // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
+		CVar(HandsProxySkin, 0, IS_VISUAL)
+		CVar(HandsGlowAmount, 1, IS_VISUAL)
+		CVar(HandsProxyWF, false, IS_VISUAL)
+		CVar(HandsRainbow, false, IS_VISUAL)
+		CVar(HandsOverlayRainbow, false, IS_VISUAL)
+		CVar(HandsOverlayPulse, false, IS_VISUAL)
+		CVar(WeaponGlowOverlay, 0, IS_VISUAL) // 0 - Off,  1 - Fresnel Glow, 2 - Wireframe Glow
+		CVar(WeaponsProxySkin, 0, IS_VISUAL)
+		CVar(WeaponGlowAmount, 1, IS_VISUAL)
+		CVar(WeaponsProxyWF, false, IS_VISUAL)
+		CVar(WeaponRainbow, false, IS_VISUAL)
+		CVar(WeaponOverlayRainbow, false, IS_VISUAL)
+		CVar(WeaponOverlayPulse, false, IS_VISUAL)
+	SUBNAMESPACE_END(DME);
+
+	NAMESPACE_END(Chams);
+
+	NAMESPACE_BEGIN(Glow);
+
+	SUBNAMESPACE_BEGIN(Main)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Type, 0, IS_VISUAL)	//	blur, stencil, fps stencil, wireframe
+		CVar(Scale, 5, IS_VISUAL);
+	SUBNAMESPACE_END(Main);
+
+	SUBNAMESPACE_BEGIN(Players)
+		CVar(Active, false, IS_VISUAL)
+		CVar(ShowLocal, false, IS_VISUAL)
+		CVar(LocalRainbow, false, IS_VISUAL)
+		CVar(IgnoreTeammates, 2, IS_VISUAL) //0 - OFF, 1 - All, 2 - Keep Friends
+		CVar(Wearables, false, IS_VISUAL)
+		CVar(Weapons, false, IS_VISUAL)
+		CVar(Alpha, 1.0f, IS_VISUAL)
+		CVar(Color, 0, IS_VISUAL); //0 - Team, 1 - Health
+	SUBNAMESPACE_END(Players);
+
+	SUBNAMESPACE_BEGIN(Buildings)
+		CVar(Active, false, IS_VISUAL)
+		CVar(IgnoreTeammates, false, IS_VISUAL)
+		CVar(Alpha, 1.0f, IS_VISUAL)
+		CVar(Color, 0, IS_VISUAL); //0 - Team, 1 - Health
+	SUBNAMESPACE_END(Buildings);
+
+	SUBNAMESPACE_BEGIN(World)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Health, false, IS_VISUAL)
+		CVar(Ammo, false, IS_VISUAL)
+		CVar(NPCs, false, IS_VISUAL)
+		CVar(Bombs, false, IS_VISUAL)
+		CVar(Projectiles, 1, IS_VISUAL) //0 - Off, 1 - All, 2 - Enemy Only
+		CVar(Alpha, 1.0f, IS_VISUAL);
+	SUBNAMESPACE_END(World);
+
+	SUBNAMESPACE_BEGIN(Misc)
+		CVar(MovementSimLine, false, IS_VISUAL)
+		CVar(Sightlines, false, IS_VISUAL)
+		CVar(BulletTracers, false, IS_VISUAL);
+	SUBNAMESPACE_END(Misc);
+
+	NAMESPACE_END(Glow);
+
+	NAMESPACE_BEGIN(Radar);
+
+	SUBNAMESPACE_BEGIN(Main)
+		CVar(Active, false, IS_VISUAL)
+		CVar(BackAlpha, 128, IS_VISUAL)
+		CVar(LineAlpha, 255, IS_VISUAL)
+		CVar(Range, 1500, IS_VISUAL)
+		CVar(NoTitleGradient, false, IS_VISUAL);
+	SUBNAMESPACE_END(Main);
+
+	SUBNAMESPACE_BEGIN(Players)
+		CVar(Active, false, IS_VISUAL)
+		CVar(IconType, 1, IS_VISUAL)           // 0 - Scoreboard, 1 - Portraits, 2 - Avatars
+		CVar(BackGroundType, 2, IS_VISUAL)    // 0 - Off, 1 - Rect, 2 - Texture
+		CVar(Outline, false, IS_VISUAL)
+		CVar(IgnoreTeam, 2, IS_VISUAL)         // 0 - Off, 1 - All, 2 - Keep Friends
+		CVar(IgnoreCloaked, 0, IS_VISUAL)      // 0 - Off, 1 - All, 2 - Enemies Only
+		CVar(Health, false, IS_VISUAL)
+		CVar(IconSize, 24, IS_VISUAL)
+		CVar(Height, false, IS_VISUAL);
+	SUBNAMESPACE_END(Players);
+
+	SUBNAMESPACE_BEGIN(Buildings)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Outline, false, IS_VISUAL)
+		CVar(IgnoreTeam, false, IS_VISUAL)
+		CVar(Health, false, IS_VISUAL)
+		CVar(IconSize, 18, IS_VISUAL);
+	SUBNAMESPACE_END(Buildings);
+
+	SUBNAMESPACE_BEGIN(World)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Health, false, IS_VISUAL)
+		CVar(Ammo, false, IS_VISUAL)
+		CVar(IconSize, 14, IS_VISUAL);
+	SUBNAMESPACE_END(World);
+
+	NAMESPACE_END(Radar);
+
+	NAMESPACE_BEGIN(Visuals);
+
+	CVar(FadeOutFoV, 0.f, IS_VISUAL);
+	CVar(CleanScreenshots, true, IS_VISUAL);
+	CVar(RemoveDisguises, false, IS_VISUAL);
+	CVar(RemoveTaunts, false, IS_VISUAL);
+	CVar(DrawOnScreenConditions, false, IS_VISUAL);
+	CVar(DrawOnScreenPing, false, IS_VISUAL);
+	CVar(FieldOfView, 90, IS_VISUAL);
+	CVar(AimFOVAlpha, 10, IS_VISUAL);
+	CVar(RemoveScope, false, IS_VISUAL);
+	CVar(RemoveRagdolls, false, IS_VISUAL);
+	CVar(RemoveMOTD, false, IS_VISUAL);
+	CVar(RemoveScreenEffects, false, IS_VISUAL);
+	CVar(RemoveScreenOverlays, false, IS_VISUAL);
+	CVar(RemoveConvarQueries, false, IS_VISUAL);
+	CVar(RemoveDSP, false, IS_VISUAL);
+	CVar(VisualOverlay, 0, IS_VISUAL);
+	CVar(PreventForcedAngles, false, IS_VISUAL);
+	CVar(ScopeLines, false, IS_VISUAL);
+	CVar(PickupTimers, false, IS_VISUAL);
+	CVar(RemoveZoom, false, IS_VISUAL);
+	CVar(RemovePunch, false, IS_VISUAL);
+	CVar(CrosshairAimPos, false, IS_VISUAL);
+	CVar(ChatInfoText, false, IS_VISUAL);
+	CVar(ChatInfoChat, false, IS_VISUAL);
+	CVar(ChatInfoGrayScale, false, IS_VISUAL);
+	CVar(OutOfFOVArrowsOutline, false, IS_VISUAL);
+	CVar(FovArrowsDist, 0.15f, IS_VISUAL);
+	CVar(SpectatorList, 2, IS_VISUAL);//0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avat);
+	CVar(FreecamKey, 0, IS_VISUAL);
+	CVar(FreecamSpeed, 10.f, IS_VISUAL);
+	CVar(CameraMode, 0, IS_VISUAL);
+	CVar(CameraFOV, 90.f, IS_VISUAL);
+	CVar(SpyWarning, false, IS_VISUAL);
+	CVar(SpyWarningAnnounce, false, IS_VISUAL);
+	CVar(SpyWarningStyle, 0, IS_VISUAL); //0 - Indicator, 1 - Fl);
+	CVar(SpyWarningVisibleOnly, false, IS_VISUAL);
+	CVar(SpyWarningIgnoreFriends, false, IS_VISUAL);
+	CVar(Snow, false, IS_VISUAL);
+	CVar(ToolTips, false, IS_VISUAL);
+	CVar(ThirdPerson, false, IS_VISUAL);
+	CVar(ThirdPersonKey, VK_B, IS_VISUAL);
+	CVar(ThirdPersonSilentAngles, false, IS_VISUAL);
+	CVar(ThirdPersonInstantYaw, false, IS_VISUAL);
+	CVar(ThirdPersonServerHitbox, false, IS_VISUAL);
+	CVar(ThirdpersonOffset, false, IS_VISUAL);
+	CVar(ThirdpersonDist, 200.f, IS_VISUAL);
+	CVar(ThirdpersonRight, 0.f, IS_VISUAL);
+	CVar(ThirdpersonUp, 0.f, IS_VISUAL);
+	CVar(ThirdpersonOffsetWithArrows, false, IS_VISUAL);
+	CVar(ThirdpersonArrowOffsetKey, VK_F, IS_VISUAL);
+	CVar(ThirdpersonCrosshair, false, IS_VISUAL);
+	CVar(WorldModulation, false, IS_VISUAL);
+	CVar(PropWireframe, false, IS_VISUAL);
+	CVar(OverrideWorldTextures, false, IS_VISUAL);
+	CVar(SkyboxChanger, false, IS_VISUAL);
+	CVar(SkyModulation, false, IS_VISUAL);
+	CVar(ParticleColors, false, IS_VISUAL);
+	CVar(RGBParticles, false, IS_VISUAL);
+	CVar(RainbowSpeed, 1.f, IS_VISUAL);
+	CVar(HalloweenSpellFootsteps, false, IS_VISUAL);
+	CVar(ColorType, 0, IS_VISUAL); //0 - color picker 1 - rain);
+	CVar(DashOnly, false, IS_VISUAL);
+	CVar(BulletTracer, false, IS_VISUAL);
+	CVar(AimbotViewmodel, false, IS_VISUAL);
+	CVar(ViewmodelSway, false, IS_VISUAL);
+	CVar(ViewmodelSwayScale, 5.f, IS_VISUAL);
+	CVar(ViewmodelSwayInterp, 0.05f, IS_VISUAL);
+	CVar(MoveSimLine, false, IS_VISUAL);
+	CVar(MoveSimSeperators, false, IS_VISUAL);
+	CVar(SeperatorLength, 12, IS_VISUAL);
+	CVar(SeperatorSpacing, 6, IS_VISUAL);
+	CVar(ParticleTracer, 2, IS_VISUAL);
+	CVar(DoPostProcessing, false, IS_VISUAL);
+	CVar(BulletTracerRainbow, false, IS_VISUAL);
+	CVar(AimPosSquare, false, IS_VISUAL);
+	CVar(OutOfFOVArrows, false, IS_VISUAL);
+	CVar(ArrowLength, 21.f, IS_VISUAL);
+	CVar(ArrowAngle, 100.f, IS_VISUAL);
+	CVar(MaxDist, 1000.f, IS_VISUAL);
+	CVar(MinDist, 200.f, IS_VISUAL);
+	CVar(VMOffX, 0, IS_VISUAL);
+	CVar(VMOffY, 0, IS_VISUAL);
+	CVar(VMOffZ, 0, IS_VISUAL);
+	CVar(VMRoll, 0, IS_VISUAL);
+	CVar(NotificationLifetime, 5.f, IS_VISUAL);
+	CVar(DamageLoggerText, false, IS_VISUAL);
+	CVar(DamageLoggerChat, false, IS_VISUAL);
+	CVar(DamageLoggerConsole, false, IS_VISUAL);
+	CVar(VisionModifier, 0, IS_VISUAL);
+	CVar(Rain, 0, IS_VISUAL);
+	CVar(EquipRegionUnlock, false, IS_VISUAL);
+	CVar(NoStaticPropFade, false, IS_VISUAL);
+	CVar(ParticlesIgnoreZ, false, IS_VISUAL);
+	CVar(OnScreenConditions, DragBox_t(), IS_VISUAL);
+	CVar(OnScreenPing, DragBox_t(), IS_VISUAL);
+	CVar(ParticleName, std::string("merasmus_zap_beam01"), IS_VISUAL);
+	CVar(VMOffsets, Vec3(), IS_VISUAL);
+
+	SUBNAMESPACE_BEGIN(Beans)
+		CVar(Active, false, IS_VISUAL)
+		CVar(Rainbow, false, IS_VISUAL)
+		CVar(UseCustomModel, false, IS_VISUAL)
+		CVar(Life, 2.f, IS_VISUAL)
+		CVar(Width, 2.f, IS_VISUAL)
+		CVar(EndWidth, 2.f, IS_VISUAL)
+		CVar(FadeLength, 10.f, IS_VISUAL)
+		CVar(Amplitude, 2.f, IS_VISUAL)
+		CVar(Brightness, 255.f, IS_VISUAL)
+		CVar(Speed, 0.2f, IS_VISUAL)
+		CVar(Flags, 65792, IS_VISUAL)
+		CVar(Segments, 2, IS_VISUAL)
+		CVar(BeamColour, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(Model, std::string("sprites/physbeam.vmt"), IS_VISUAL);
+	SUBNAMESPACE_END(Beans);
+
+	SUBNAMESPACE_BEGIN(RagdollEffects)
+		CVar(EnemyOnly, false, IS_VISUAL)
+		CVar(Burning, false, IS_VISUAL)
+		CVar(Electrocuted, false, IS_VISUAL)
+		CVar(BecomeAsh, false, IS_VISUAL)
+		CVar(Dissolve, false, IS_VISUAL)
+		CVar(RagdollType, 0, IS_VISUAL);
+	SUBNAMESPACE_END(RagdollEffects);
+
+	SUBNAMESPACE_BEGIN(Skins)
+		CVar(Enabled, false, IS_VISUAL)
+		CVar(Sheen, 0, IS_VISUAL)
+		CVar(Effect, 0, IS_VISUAL)
+		CVar(Particle, 0, IS_VISUAL)
+		CVar(Acient, false, IS_VISUAL)
+		CVar(Override, false, IS_VISUAL)
+		CVar(Australium, false, IS_VISUAL);
+	SUBNAMESPACE_END(Skins);
+
+	SUBNAMESPACE_BEGIN(Fog)
+		CVar(DisableFog, false, IS_VISUAL)
+		CVar(CustomFog, false, IS_VISUAL)
+		CVar(FogDensity, 0.f, IS_VISUAL)
+		CVar(FogDensitySkybox, 0.f, IS_VISUAL)
+		CVar(FogStart, 0.f, IS_VISUAL)
+		CVar(FogStartSkybox, 0.f, IS_VISUAL)
+		CVar(FogEnd, 0.f, IS_VISUAL)
+		CVar(FogEndSkybox, 0.f, IS_VISUAL)
+		CVar(FogColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(FogColorSkybox, Color_t(255, 255, 255, 255), IS_VISUAL);
+	SUBNAMESPACE_END(Fog);
+
+	NAMESPACE_END(Visuals);
+
+	NAMESPACE_BEGIN(Misc);
+
+	CVar(AccurateMovement, 0);
+	CVar(AltMovement, 0b0000);	//	0000 {Fast Strafe, Fast Accel, Fast Crouch, Kart Contr);
+	CVar(AutoJump, false);
+	CVar(AutoVote, false);
+	CVar(DuckJump, false);
+	CVar(AutoStrafe, 2);
+	CVar(DirectionalOnlyOnMove, false);
+	CVar(Directional, false);
+	CVar(TauntSlide, false);
+	CVar(TauntControl, false);
+	CVar(TauntSpin, false);
+	CVar(TauntSpinKey, 0);
+	CVar(TauntSpinSpeed, 5.f);
+	CVar(TauntFollowsCamera, false);
+	CVar(BypassPure, false);
+	CVar(NoisemakerSpam, false);
+	CVar(DisableInterpolation, true);
+	CVar(FixInputDelay, false);
+	CVar(MedalFlip, false);
+	CVar(AutoRocketJump, false);
+	CVar(NonLethalRocketJump, true);
+	CVar(AutoScoutJump, false);
+	CVar(ChatSpam, 0);
+	CVar(VoicechatSpam, 0);
+	CVar(SpamInterval, 4.f);
+	CVar(NoPush, 0);	//	0 off, 1 on, 2 on while not afk, 3 semi while );
+	CVar(EdgeJump, false);
+	CVar(StoreStatistics, false);
+	CVar(StickySpamKey, 0x0);
+	CVar(StickyChargePercent, 0);
+	CVar(InfiniteEatKey, 0x0);
+	CVar(EdgeJumpKey, VK_MENU);
+	CVar(AntiAFK, false);
+	CVar(VotingOptions, 0b000011); // 000011 {verbose, autovote, party, chat, console, te);
+	CVar(CheatsBypass, false);
+	CVar(AntiAutobal, false);
+	CVar(RageRetry, false);
+	CVar(RageRetryHealth, 20);
+	CVar(MVMRes, false);
+	CVar(PingReducer, false);
+	CVar(PingTarget, 0);
+	CVar(ExtendFreeze, false);
+	CVar(ViewmodelFlip, false);
+	CVar(AntiViewmodelFlip, false); // scuf);
+	CVar(AutoJoin, 0);
+	CVar(KillstreakWeapon, false);
+	CVar(PartyNetworking, false);
+	CVar(PartyCrasher, false);
+	CVar(PartyMarker, 0);
+	CVar(PartyESP, false);
+	CVar(SoundBlock, 0);
+	CVar(ChatFlags, false);
+	CVar(MedievalChat, 0);
+	CVar(AutoAcceptItemDrops, false);
+	CVar(RegionChanger, false);
+	CVar(RegionsAllowed, 0);
+	CVar(AutoCasualQueue, 0);
+	CVar(JoinSpam, false);
+	CVar(AntiVAC, false);
+	CVar(InstantAccept, 0);
+	CVar(RunescapeChat, false);
+	CVar(Killsay, false);
+	CVar(KillsayFile, std::string(""));
+
+	SUBNAMESPACE_BEGIN(Followbot)
+		CVar(Enabled, false)
+		CVar(FriendsOnly, false)
+		CVar(Distance, 150.f);
+	SUBNAMESPACE_END(Followbot);
+
+	//namespace CheaterDetection
+	//{
+	//	, Aimbot, OOB pitch, angles, bhop, fakelag, simtime, high score, high accuracy
+	//	scans, lagging client, timing out
+	//	amount of infractions prior to marking someone as a cheater
+	//	avg choke for someone to receive and infraction for packet choking
+	//	groundticks used when detecting a bunny hop.
+	//	many times must some be seen bunny hopping to receive an infraction
+	//	//	multiply the avg score/s by this to receive the maximum amount
+	//	//	min mouse flick size to suspect someone of angle cheats.
+	//	//	max mouse noise prior to a flick to mark somebody
+	//	//	scaled with how many ticks a player has choked up to ->
+	//	//	self explanatory
+	//}
+	// couldnt be bothered to put comments back, @Baan u can do it if u want :P
+	SUBNAMESPACE_BEGIN(CheaterDetection)
+		CVar(Enabled, false)
+		CVar(Methods, 0b111111100)
+		CVar(Protections, 0b111)
+		CVar(SuspicionGate, 10)
+		CVar(PacketManipGate, 14)
+		CVar(BHopMaxDelay, 1)
+		CVar(BHopDetectionsRequired, 5)
+		CVar(ScoreMultiplier, 2.f)
+		CVar(MinimumFlickDistance, 20.f)
+		CVar(MaximumNoise, 5.f)
+		CVar(MinimumAimbotFoV, 3.f)
+		CVar(MaxScaledAimbotFoV, 20.f);
+	SUBNAMESPACE_END(CheaterDetection);
+
+	SUBNAMESPACE_BEGIN(CL_Move)
+		CVar(Enabled, false)
+		CVar(Doubletap, false)
+		CVar(SafeTick, false)
+		CVar(SafeTickAirOverride, false)
+		CVar(PassiveRecharge, 0)
+		CVar(SEnabled, false)
+		CVar(SFactor, 1)
+		CVar(NotInAir, false)
+		CVar(TeleportKey, 0x52) //R
+		CVar(TeleportMode, 0)
+		CVar(TeleportFactor, 2)
+		CVar(RechargeKey, 0x48) //H
+		CVar(DoubletapKey, 0x56) //V
+		CVar(AutoRetain, true)
+		CVar(RetainFakelag, false)
+		CVar(RetainBlastJump, false)
+		CVar(UnchokeOnAttack, true)
+		CVar(RechargeWhileDead, false)
+		CVar(AutoRecharge, false) //H
+		CVar(AntiWarp, false) //H
+		CVar(DTMode, 0) // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
+		CVar(DTBarStyle, 3)
+		CVar(DTTicks, 21)
+		CVar(WaitForDT, false)
+		CVar(Fakelag, false)
+		CVar(FakelagMode, 0) // 0 - plain, 1 - random
+		CVar(WhileMoving, false)
+		CVar(WhileVisible, false)
+		CVar(PredictVisibility, false)
+		CVar(WhileUnducking, false)
+		CVar(WhileInAir, false)
+		CVar(FakelagMin, 1) //	only show when FakelagMode=2
+		CVar(FakelagMax, 22)
+		CVar(FakelagOnKey, false) // dont show when fakelagmode=2|3
+		CVar(FakelagKey, 0x54) //T
+		CVar(FakelagValue, 1) // dont show when fakelagmode=2
+		CVar(AutoPeekKey, 0)
+		CVar(AutoPeekDistance, 200.f)
+		CVar(AutoPeekFree, false)
+		CVar(DTIndicator, DragBox_t(g_ScreenSize.c, g_ScreenSize.c));
+	SUBNAMESPACE_END(CL_Move);
+
+	SUBNAMESPACE_BEGIN(FLGChams)
+		CVar(Enabled, false)
+		CVar(Material, 1)
+		CVar(FakelagColor, Color_t(255, 255, 255, 255));
+	SUBNAMESPACE_END(FLGChams);
+
+	SUBNAMESPACE_BEGIN(Discord)
+		CVar(EnableRPC, false)
+		CVar(IncludeClass, false)
+		CVar(IncludeMap, false)
+		CVar(IncludeTimestamp, false)
+		CVar(WhatImagesShouldBeUsed, 0); // 0 - Big fedora, small TF2 logo; 1 - Big TF2 logo, small fedora
+	SUBNAMESPACE_END(Discord);
+
+	SUBNAMESPACE_BEGIN(Steam)
+		CVar(EnableRPC, false)
+		CVar(MatchGroup, 0) // 0 - Special Event; 1 - MvM Mann Up; 2 - Competitive; 3 - Casual; 4 - MvM Boot Camp;
+		CVar(OverrideMenu, false) // Override matchgroup when in main menu
+		CVar(MapText, 1) // 0 - Fedoraware; 1 - CUM.clab; 2 - Meowhook.club; 3 - rathook.cc; 4 - NNitro.tf; 5 - custom;
+		CVar(GroupSize, 1337)
+		CVar(CustomText, std::string("M-FeD is gay"));
+	SUBNAMESPACE_END(Steam);
+
+	NAMESPACE_END(Misc);
+
+	NAMESPACE_BEGIN(AntiHack);
+
+	SUBNAMESPACE_BEGIN(AntiAim)
+		CVar(Active, false)
+		CVar(ToggleKey, 0)
+		CVar(InvertKey, 0)
+		CVar(ManualKey, 0)
+		CVar(Pitch, 0) //0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
+		CVar(YawReal, 0) //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
+		CVar(YawFake, 0) //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
+		CVar(BaseYawMode, 0)
+		CVar(BaseYawOffset, 0.f)
+		CVar(SpinSpeed, 15.f)
+		CVar(CustomRealPitch, 0.f)
+		CVar(CustomRealYaw, 0)
+		CVar(CustomFakeYaw, 0)
+		CVar(FakeJitter, 0)
+		CVar(RealJitter, 0)
+		CVar(RandInterval, 25)
+		CVar(RehideAntiAimPostShot, true)
+		CVar(AntiBackstab, false)
+		CVar(LegJitter, false) // frick u fourteen
+		CVar(AntiOverlap, false)
+		CVar(InvalidShootPitch, false); // i dont know what to name this its TRASH
+	SUBNAMESPACE_END(AntiAim);
+
+	SUBNAMESPACE_BEGIN(Resolver)
+		CVar(Resolver, false)
+		CVar(AutoResolveCheaters, false)
+		CVar(IgnoreAirborne, false);
+	SUBNAMESPACE_END(Resolver);
+
+	NAMESPACE_END(AntiHack);
+
+	NAMESPACE_BEGIN(Skybox);
+
+	CVar(SkyboxNum, 0, IS_VISUAL);
+	CVar(SkyboxName, std::string("mr_04"), IS_VISUAL);
+
+	NAMESPACE_END(Skybox);
+
+	NAMESPACE_BEGIN(Fonts);
+
+	SUBNAMESPACE_BEGIN(FONT_ESP)
+		CVar(szName, std::string("Tahoma"), IS_VISUAL)
+		CVar(nTall, 12, IS_VISUAL)
+		CVar(nWeight, 800, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_ANTIALIAS), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_ESP);
+
+	SUBNAMESPACE_BEGIN(FONT_ESP_NAME)
+		CVar(szName, std::string("Tahoma"), IS_VISUAL)
+		CVar(nTall, 14, IS_VISUAL)
+		CVar(nWeight, 800, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_ANTIALIAS), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_ESP_NAME)
+
+		SUBNAMESPACE_BEGIN(FONT_ESP_COND)
+		CVar(szName, std::string("Tahoma"), IS_VISUAL)
+		CVar(nTall, 10, IS_VISUAL)
+		CVar(nWeight, 800, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_ANTIALIAS), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_ESP_COND);
+
+	SUBNAMESPACE_BEGIN(FONT_ESP_PICKUPS)
+		CVar(szName, std::string("Tahoma"), IS_VISUAL)
+		CVar(nTall, 13, IS_VISUAL)
+		CVar(nWeight, 800, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_ANTIALIAS), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_ESP_PICKUPS);
+
+	SUBNAMESPACE_BEGIN(FONT_MENU)
+		CVar(szName, std::string("DejaVu Sans"), IS_VISUAL)
+		CVar(nTall, 16, IS_VISUAL)
+		CVar(nWeight, 200, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_ANTIALIAS), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_MENU);
+
+	SUBNAMESPACE_BEGIN(FONT_INDICATORS)
+		CVar(szName, std::string("Verdana"), IS_VISUAL)
+		CVar(nTall, 12, IS_VISUAL)
+		CVar(nWeight, 0, IS_VISUAL)
+		CVar(nFlags, int(FONTFLAG_OUTLINE), IS_VISUAL);
+	SUBNAMESPACE_END(FONT_INDICATORS);
+
+	NAMESPACE_END(Fonts);
 
 	// Debug options
-	namespace Debug
-	{
-		inline CVar<bool> DebugInfo{ false };
-		inline CVar<bool> Logging{false};
-	}
+	NAMESPACE_BEGIN(Debug);
+
+	CVar(DebugInfo, false, IS_VISUAL);
+	CVar(Logging, false, IS_VISUAL);
+
+	NAMESPACE_END(Debug);
 }
+
