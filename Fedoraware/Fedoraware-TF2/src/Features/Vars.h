@@ -676,7 +676,7 @@ namespace Vars
 		inline CVar<bool> BypassPure{ false };
 		inline CVar<bool> NoisemakerSpam{ false };
 		inline CVar<bool> DisableInterpolation{ true };
-		inline CVar<bool> FixInputDelay{ true };
+		inline CVar<bool> FixInputDelay{ false };
 		inline CVar<bool> MedalFlip{ false };
 		inline CVar<bool> AutoRocketJump{ false };
 		inline CVar<bool> NonLethalRocketJump{ true };

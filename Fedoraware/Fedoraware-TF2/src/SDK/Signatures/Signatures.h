@@ -43,6 +43,7 @@ namespace S
 	MAKE_SIGNATURE(CBaseAnimating_FrameAdvance, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 57 80 BE ? ? ? ? ? 0F 85", 0x0);
 	MAKE_SIGNATURE(CBaseAnimating_Interpolate, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 83 BE ? ? ? ? ? 0F 85 ? ? ? ? F3 0F 10 86", 0x0);
 	MAKE_SIGNATURE(CBaseAnimating_MaintainSequenceTransitions, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B 75 ? 57 8B F9 8B CE E8 ? ? ? ? 85 C0", 0x0);
+	MAKE_SIGNATURE(CBaseAnimating_UpdateClientSideAnimation, CLIENT_DLL, "55 8B EC 83 EC 0C 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 74 10 8B 17 8B CF 8B 92 ? ? ? ? FF D2", 0x0);
 	MAKE_SIGNATURE(CBaseCombatWeapon_AddToCritBucket, CLIENT_DLL, "55 8B EC A1 ? ? ? ? F3 0F 10 81 ? ? ? ? F3 0F 10 48", 0x0);
 	MAKE_SIGNATURE(CBaseCombatWeapon_IsAllowedToWithdrawFromCritBucket, CLIENT_DLL, "55 8B EC 56 8B F1 0F B7 86", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_FireBullets, CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D", 0x0);

@@ -18,6 +18,7 @@ class CAimbotMelee
 	inline float GetSwingRange(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	inline float GetSwingVec(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	inline bool CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles);
+	inline bool SapperTrace(CBaseEntity* pLocal, CBaseEntity* pObject, CBaseCombatWeapon* pWeapon);
 	bool FillCache(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	std::vector<Target_t> GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon);
 	bool VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target);
