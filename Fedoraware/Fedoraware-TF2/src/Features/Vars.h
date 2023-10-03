@@ -57,7 +57,9 @@ namespace Vars
 			inline CVar<bool> EnemyOnly{ false };
 			inline CVar<bool> IgnoreZ{ false };
 			inline CVar<int> Material{ 1 };
+			inline CVar<bool> Gradient{ false};
 			inline Color_t BacktrackColor{ 255, 255, 255, 255 };
+			inline Color_t BacktrackColor2{0, 0, 0, 255};
 		}
 	}
 
