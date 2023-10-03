@@ -77,6 +77,10 @@ void CBacktrack::CleanRecords()
 
 void CBacktrack::MakeRecords()
 {
+	if (!iTickCount) {
+		iTickCount = TIME_TO_TICKS(1);
+	}
+
 	const float flCurTime = I::GlobalVars->curtime;
 	const int iTickcount = I::GlobalVars->tickcount;
 	if (iLastCreationTick == iTickcount) { return; }
