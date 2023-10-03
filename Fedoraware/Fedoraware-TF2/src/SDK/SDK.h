@@ -590,7 +590,7 @@ namespace Utils
 			return EWeaponType::UNKNOWN;
 		}
 
-		if (pWeapon->GetSlot() == EWeaponSlots::SLOT_MELEE)
+		if (pWeapon->GetSlot() == EWeaponSlots::SLOT_MELEE || pWeapon->GetWeaponID() == TF_WEAPON_BUILDER)
 		{
 			return EWeaponType::MELEE;
 		}

@@ -28,14 +28,14 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle) {
 }
 
 bool CAimbotMelee::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, Target_t& target) {
-	
+	const bool bSapper = pWeapon->GetWeaponID() == TF_WEAPON_BUILDER;
 	const Vec3 vShootPos = vCache + pLocal->GetViewOffset();
 	//	not gonna movesim enemies this time cause we can just backtrack them.
 	//	check our current tick first
 	if (F::Backtrack.CanHitOriginal(target.m_pEntity)) {
 		const Vec3 vTargetPoint = target.m_pEntity->GetHitboxPos(HITBOX_SPINE_1);
 		target.m_vAngleTo = Math::CalcAngle(vShootPos, vTargetPoint);
-		if (CanMeleeHit(pLocal, target.m_pEntity, pWeapon, target.m_vAngleTo)) {
+		if (bSapper ? SapperTrace(pLocal, target.m_pEntity, pWeapon) : CanMeleeHit(pLocal, target.m_pEntity, pWeapon, target.m_vAngleTo)) {
 			target.SimTime = target.m_pEntity->GetSimulationTime();	//	technically we will end up backtracking unless we are using doubletap to instant melee, but i see that as a good thing
 			target.m_vPos = vTargetPoint;
 			return true;
@@ -87,6 +87,13 @@ bool CAimbotMelee::FillCache(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon) {
 	return true;
 }
 
+inline bool CAimbotMelee::SapperTrace(CBaseEntity* pLocal, CBaseEntity* pObject, CBaseCombatWeapon* pWeapon) {
+	const float flRange = 110.f;
+	Vec3 vClosestPoint{};
+	pObject->GetCollision()->CalcNearestPoint(pLocal->GetShootPos(), &vClosestPoint);
+	return vClosestPoint.DistTo(pLocal->GetShootPos()) <= flRange;
+}
+
 inline bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity, CBaseCombatWeapon* pWeapon, const Vec3& vAngles) {
 	const Vec3 vBackupPos = pLocal->GetAbsOrigin();
 	const Vec3 vBackupAng  = I::EngineClient->GetViewAngles();
@@ -94,6 +101,7 @@ inline bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity,
 
 	//	swing pred doesn't seem to work? i genuinely can't tell.
 	pLocal->SetVecOrigin(vCache);
+	pLocal->SetAbsOrigin(vCache);
 	pLocal->SetEyeAngles(vAngles);
 	I::RenderView->SetMainView(vCache + pLocal->m_vecViewOffset(), vAngles);
 
@@ -101,6 +109,7 @@ inline bool CAimbotMelee::CanMeleeHit(CBaseEntity* pLocal, CBaseEntity* pEntity,
 	const bool bSwingTrace = pWeapon->DoSwingTraceInternal(trace);
 
 	pLocal->SetVecOrigin(vBackupPos);
+	pLocal->SetAbsOrigin(vBackupPos);
 	pLocal->SetEyeAngles(vBackupAng);
 	I::RenderView->SetMainView(vBackupPos + pLocal->m_vecViewOffset(), vBackupAng);
 
@@ -176,9 +185,10 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 	const Vec3& vLocalPos = pLocal->GetShootPos();
 	const Vec3& vLocalAngles = I::EngineClient->GetViewAngles();
 	const bool bRespectFOV = (sortMethod == ESortMethod::FOV || Vars::Aimbot::Melee::RespectFOV.Value);
+	const bool bSapper = pWeapon->GetWeaponID() == TF_WEAPON_BUILDER;
 
 	//	Players
-	if (Vars::Aimbot::Global::AimPlayers.Value) {
+	if (Vars::Aimbot::Global::AimPlayers.Value && !bSapper) {
 		for (CBaseEntity* pTarget : g_EntityCache.GetGroup(GetGroupType(pWeapon))) {
 			if (!IsPlayerValid(pTarget)) { continue; }
 			if (F::AimbotGlobal.ShouldIgnore(pTarget, true)) { continue; }
@@ -211,6 +221,10 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 				}
 			}
 
+			if (bSapper && pBuilding->GetSapped()) {	//	dont sap a sapped building u sapaholic
+				continue;
+			}
+
 			const Vec3 vPos = pObject->GetWorldSpaceCenter();
 			const Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			const float flFOVTo = Math::CalcFov(vLocalAngles, vAngleTo);
@@ -223,7 +237,7 @@ std::vector<Target_t> CAimbotMelee::GetTargets(CBaseEntity* pLocal, CBaseCombatW
 			vTargets.push_back({ pObject, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
-	if (Vars::Aimbot::Global::AimNPC.Value)
+	if (Vars::Aimbot::Global::AimNPC.Value && !bSapper)
 	{
 		for (const auto& pNPC : g_EntityCache.GetGroup(EGroupType::WORLD_NPC))
 		{
