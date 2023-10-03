@@ -100,9 +100,9 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 	if (chosenMat)
 	{
 		I::RenderView->SetColorModulation(
-			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r),
-			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g),
-			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b));
+			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.r),
+			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.g),
+			Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.b));
 	}
 
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
@@ -112,7 +112,7 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 		pRenderContext->DepthRange(0.0f, 0.2f);
 	}
 
-	I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.a));
+	I::RenderView->SetBlend(Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.a));
 
 	if (Vars::Backtrack::BtChams::LastOnly.Value)
 	{
@@ -121,9 +121,9 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 		if (vLastRec)
 		{
 			float colour[3] = {
-				vLastRec->bOnShot ? 1.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.r),
-				vLastRec->bOnShot ? 0.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.g),
-				vLastRec->bOnShot ? 0.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.b)
+				vLastRec->bOnShot ? 1.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.r),
+				vLastRec->bOnShot ? 0.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.g),
+				vLastRec->bOnShot ? 0.f : Color::TOFLOAT(Vars::Backtrack::BtChams::BacktrackColor.Value.b)
 			};
 
 			I::RenderView->SetColorModulation(colour);
@@ -139,11 +139,11 @@ void DrawBT(void* ecx, void* edx, CBaseEntity* pEntity, const DrawModelState_t& 
 
 			if (!F::Backtrack.WithinRewind(pRecord)) { continue; }
 
-			Color_t btColour = Vars::Backtrack::BtChams::BacktrackColor;
+			Color_t btColour = Vars::Backtrack::BtChams::BacktrackColor.Value;
 
 			if (Vars::Backtrack::BtChams::Gradient.Value)
 			{
-				btColour = LerpColor(Vars::Backtrack::BtChams::BacktrackColor, Vars::Backtrack::BtChams::BacktrackColor2, (float)i / (float)vRecords->size());
+				btColour = LerpColor(Vars::Backtrack::BtChams::BacktrackColor.Value, Vars::Backtrack::BtChams::BacktrackColor2.Value, (float)i / (float)vRecords->size());
 			}
 
 			if (pRecord.bOnShot)

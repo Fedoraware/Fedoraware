@@ -48,7 +48,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(nIndex, &pi);
 
-				std::string classString = std::format("{} {} is now a {}", Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
+				std::string classString = std::format("{} {} is now a {}", Vars::Menu::CheatPrefix.Value.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
 				auto wclassString = std::wstring(classString.begin(), classString.end());
 
 				if (Vars::Visuals::ChatInfoText.Value)
@@ -58,7 +58,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				if (Vars::Visuals::ChatInfoChat.Value)
 				{
-					const std::string changeClassString = std::format("{} {} {} is now a {}", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
+					const std::string changeClassString = std::format("{} {} {} is now a {}", Vars::Menu::Colors::MenuAccent.Value.to_hex(), Vars::Menu::CheatPrefix.Value.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
 					I::ClientModeShared->m_pChatElement->ChatPrintf(0, changeClassString.c_str());
 				}
 			}
@@ -74,7 +74,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				const int votingOptions = Vars::Misc::VotingOptions.Value;
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &pi);
-				auto voteLine = std::format("{} {} {} voted {}", Vars::Menu::CheatPrefix.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
+				auto voteLine = std::format("{} {} {} voted {}", Vars::Menu::CheatPrefix.Value.c_str(), (pEntity->GetTeamNum() == pLocal->GetTeamNum()) ? "" : "(Enemy)", pi.name, bVotedYes ? "Yes" : "No");
 
 				if (votingOptions & VoteText) // text
 				{
@@ -86,7 +86,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				}
 				if (votingOptions & VoteChat) // chat
 				{
-					I::ClientModeShared->m_pChatElement->ChatPrintf(0, std::format("{} {} \x3{} {}voted {}{}", Vars::Menu::Colors::MenuAccent.to_hex(), Vars::Menu::CheatPrefix.c_str(), pi.name, (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow), bVotedYes ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) : (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red), bVotedYes ? "Yes" : "No").c_str());
+					I::ClientModeShared->m_pChatElement->ChatPrintf(0, std::format("{} {} \x3{} {}voted {}{}", Vars::Menu::Colors::MenuAccent.Value.to_hex(), Vars::Menu::CheatPrefix.Value.c_str(), pi.name, (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow), bVotedYes ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) : (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red), bVotedYes ? "Yes" : "No").c_str());
 				}
 				if (votingOptions & VoteParty) // party
 				{
@@ -127,7 +127,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::VGuiSurface->GetTextSize(g_Draw.GetFont(FONT_ESP_COND).dwFont, wcattackString,
 											attackStringW, attackStringH);
 				const std::string chatAttackString(
-					Vars::Menu::Colors::MenuAccent.to_hex() + Vars::Menu::CheatPrefix + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " You hit \x3" + pi.name + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " for " + (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red) + std::to_string(nDamage) + " damage " + (bCrit ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) + "(crit) " : "") + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + "(" +
+					Vars::Menu::Colors::MenuAccent.Value.to_hex() + Vars::Menu::CheatPrefix.Value + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " You hit \x3" + pi.name + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + " for " + (Vars::Visuals::ChatInfoGrayScale.Value ? gsred : red) + std::to_string(nDamage) + " damage " + (bCrit ? (Vars::Visuals::ChatInfoGrayScale.Value ? gsgreen : green) + "(crit) " : "") + (Vars::Visuals::ChatInfoGrayScale.Value ? gsyellow : yellow) + "(" +
 					std::to_string(nHealth) + "/" + std::to_string(maxHealth) + ")");
 
 				if (Vars::Visuals::DamageLoggerChat.Value)

@@ -63,7 +63,7 @@ void DrawBeam(const Vector& source, const Vector& end)
 {
 	BeamInfo_t beamInfo;
 	beamInfo.m_nType = 0;
-	beamInfo.m_pszModelName = Vars::Visuals::Beans::UseCustomModel.Value ? Vars::Visuals::Beans::Model.c_str() : "sprites/physbeam.vmt";
+	beamInfo.m_pszModelName = Vars::Visuals::Beans::UseCustomModel.Value ? Vars::Visuals::Beans::Model.Value.c_str() : "sprites/physbeam.vmt";
 	beamInfo.m_nModelIndex = -1; // will be set by CreateBeamPoints if its -1
 	beamInfo.m_flHaloScale = 0.0f;
 	beamInfo.m_flLife = Vars::Visuals::Beans::Life.Value;
@@ -75,9 +75,9 @@ void DrawBeam(const Vector& source, const Vector& end)
 	beamInfo.m_flSpeed = Vars::Visuals::Beans::Speed.Value;
 	beamInfo.m_nStartFrame = 0;
 	beamInfo.m_flFrameRate = 0;
-	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.r;
-	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.g;
-	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.b;
+	beamInfo.m_flRed = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 0) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.Value.r;
+	beamInfo.m_flGreen = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 2) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.Value.g;
+	beamInfo.m_flBlue = Vars::Visuals::Beans::Rainbow.Value ? floor(sin(I::GlobalVars->curtime + 4) * 128.0f + 128.0f) : Vars::Visuals::Beans::BeamColour.Value.b;
 	beamInfo.m_nSegments = Vars::Visuals::Beans::Segments.Value;
 	beamInfo.m_bRenderable = true;
 	beamInfo.m_nFlags = Vars::Visuals::Beans::Flags.Value;
@@ -228,7 +228,7 @@ MAKE_HOOK(C_BaseEntity_FireBullets, S::CBaseEntity_FireBullets(), void, __fastca
 
 			case 9:
 				// custom particle tracer, def not pasted from deathpole or anything. list @ dump_particlemanifest or @ https://github.com/tf2cheater2013/particles.txt
-				Particles::ParticleTracer(Vars::Visuals::ParticleName.c_str(), trace.vStartPos, trace.vEndPos, pLocal->GetIndex(),
+				Particles::ParticleTracer(Vars::Visuals::ParticleName.Value.c_str(), trace.vStartPos, trace.vEndPos, pLocal->GetIndex(),
 										  iAttachment, true);
 				break;
 		}

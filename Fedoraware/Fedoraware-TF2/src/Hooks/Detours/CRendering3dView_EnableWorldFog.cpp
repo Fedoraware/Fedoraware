@@ -17,7 +17,7 @@ MAKE_HOOK(CRendering3dView_EnableWorldFog, S::CRendering3dView_EnableWorldFog(),
 	{
 		using namespace Vars::Visuals;
 		pRenderContext->FogMode(MATERIAL_FOG_LINEAR);
-		float blend[3] = { Color::TOFLOAT(Fog::FogColor.r), Color::TOFLOAT(Fog::FogColor.g), Color::TOFLOAT(Fog::FogColor.b) };
+		float blend[3] = { Color::TOFLOAT(Fog::FogColor.Value.r), Color::TOFLOAT(Fog::FogColor.Value.g), Color::TOFLOAT(Fog::FogColor.Value.b) };
 		pRenderContext->FogColor3fv(blend);
 		pRenderContext->FogStart(Fog::FogStart.Value);
 		pRenderContext->FogEnd(Fog::FogEnd.Value);

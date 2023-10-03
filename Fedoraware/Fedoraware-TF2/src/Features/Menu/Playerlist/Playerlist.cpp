@@ -88,11 +88,11 @@ void CPlayerList::Run()
 
 void CPlayerList::Render()
 {
-	if (!Vars::Menu::ShowPlayerlist) { return; }
+	if (!Vars::Menu::ShowPlayerlist.Value) { return; }
 
 	// Draw the playerlist
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 24));
-	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist,
+	if (ImGui::Begin("Playerlist", &Vars::Menu::ShowPlayerlist.Value,
 	                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::PushFont(F::Menu.Verdana);

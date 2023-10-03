@@ -371,25 +371,25 @@ Chams_t GetPlayerChams(CBaseEntity* pEntity)
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (pEntity && pLocal)
 	{
-		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.chamsActive)
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Players::Target.Value.chamsActive)
 		{
-			return Vars::Chams::Players::Target;
+			return Vars::Chams::Players::Target.Value;
 		}
 		if (pEntity == pLocal)
 		{
-			return Vars::Chams::Players::Local;
+			return Vars::Chams::Players::Local.Value;
 		}
-		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.chamsActive)
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Players::Friend.Value.chamsActive)
 		{
-			return Vars::Chams::Players::Friend;
+			return Vars::Chams::Players::Friend.Value;
 		}
 		if (pEntity->GetTeamNum() != pLocal->GetTeamNum())
 		{
-			return Vars::Chams::Players::Enemy;
+			return Vars::Chams::Players::Enemy.Value;
 		}
 		if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
 		{
-			return Vars::Chams::Players::Team;
+			return Vars::Chams::Players::Team.Value;
 		}
 	}
 	return Chams_t();
@@ -400,25 +400,25 @@ Chams_t GetBuildingChams(CBaseEntity* pEntity)
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (pEntity && pLocal)
 	{
-		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.chamsActive)
+		if (pEntity->GetIndex() == G::CurrentTargetIdx && Vars::Chams::Buildings::Target.Value.chamsActive)
 		{
-			return Vars::Chams::Buildings::Target;
+			return Vars::Chams::Buildings::Target.Value;
 		}
 		if (pEntity->GetIndex() == pLocal->GetIndex())
 		{
-			return Vars::Chams::Buildings::Local;
+			return Vars::Chams::Buildings::Local.Value;
 		}
-		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.chamsActive)
+		if (g_EntityCache.IsFriend(pEntity->GetIndex()) && Vars::Chams::Buildings::Friend.Value.chamsActive)
 		{
-			return Vars::Chams::Buildings::Friend;
+			return Vars::Chams::Buildings::Friend.Value;
 		}
 		if (pEntity->GetTeamNum() != pLocal->GetTeamNum())
 		{
-			return Vars::Chams::Buildings::Enemy;
+			return Vars::Chams::Buildings::Enemy.Value;
 		}
 		if (pEntity->GetTeamNum() == pLocal->GetTeamNum())
 		{
-			return Vars::Chams::Buildings::Team;
+			return Vars::Chams::Buildings::Team.Value;
 		}
 	}
 	return Chams_t();
@@ -430,11 +430,11 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 	{
 		case 0:
 		{
-			return Vars::Chams::DME::Weapon;
+			return Vars::Chams::DME::Weapon.Value;
 		}
 		case 1:
 		{
-			return Vars::Chams::DME::Hands;
+			return Vars::Chams::DME::Hands.Value;
 		}
 		case 2:
 		{
@@ -442,7 +442,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 		}
 		case 3:
 		{
-			return Vars::Chams::Players::Ragdoll;
+			return Vars::Chams::Players::Ragdoll.Value;
 		}
 		case 4:
 		{
@@ -466,11 +466,11 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 		}
 		case 6:
 		{
-			return Vars::Chams::World::Ammo;
+			return Vars::Chams::World::Ammo.Value;
 		}
 		case 7:
 		{
-			return Vars::Chams::World::Health;
+			return Vars::Chams::World::Health.Value;
 		}
 		case 8:
 		{
@@ -486,7 +486,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 				CBaseEntity* pLocal = g_EntityCache.GetLocal();
 				if (pLocal)
 				{
-					return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team : Vars::Chams::Buildings::Enemy;
+					return (teamNum = pLocal->GetTeamNum()) ? Vars::Chams::Buildings::Team.Value : Vars::Chams::Buildings::Enemy.Value;
 				}
 			}
 			return Chams_t();
@@ -510,7 +510,7 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
-	Chams_t chams = Vars::Chams::Players::FakeAng;
+	Chams_t chams = Vars::Chams::Players::FakeAng.Value;
 	if (!chams.chamsActive || !F::FakeAng.DrawChams)
 	{
 		return;

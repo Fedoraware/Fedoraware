@@ -50,7 +50,7 @@ void CMenu::DrawMenu()
 			TitleGradient.ClearMarks();
 			TitleGradient.AddMark(0.f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
 			TitleGradient.AddMark(0.25f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
-			TitleGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent));
+			TitleGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
 			TitleGradient.AddMark(0.75f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
 			TitleGradient.AddMark(1.0f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
 		}
@@ -60,8 +60,8 @@ void CMenu::DrawMenu()
 		// Title Text
 		{
 			ImGui::PushFont(TitleFont);
-			const auto titleWidth = ImGui::CalcTextSize(Vars::Menu::CheatName.c_str()).x;
-			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, Vars::Menu::CheatName.c_str());
+			const auto titleWidth = ImGui::CalcTextSize(Vars::Menu::CheatName.Value.c_str()).x;
+			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, Vars::Menu::CheatName.Value.c_str());
 			ImGui::PopFont();
 		}
 
@@ -81,7 +81,7 @@ void CMenu::DrawMenu()
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_PEOPLE))
 			{
-				Vars::Menu::ShowPlayerlist = !Vars::Menu::ShowPlayerlist;
+				Vars::Menu::ShowPlayerlist.Value = !Vars::Menu::ShowPlayerlist.Value;
 			}
 			ImGui::HelpMarker("Playerlist");
 
@@ -89,7 +89,7 @@ void CMenu::DrawMenu()
 			ImGui::SetCursorPos({ currentX -= 25, 0 });
 			if (ImGui::IconButton(ICON_MD_KEYBOARD))
 			{
-				Vars::Menu::ShowKeybinds = !Vars::Menu::ShowKeybinds;
+				Vars::Menu::ShowKeybinds.Value = !Vars::Menu::ShowKeybinds.Value;
 			}
 			ImGui::HelpMarker("Keybinds");
 
@@ -147,7 +147,7 @@ void CMenu::DrawMenu()
 
 		// Footer
 		{
-			if (!Vars::Menu::ModernDesign)
+			if (!Vars::Menu::ModernDesign.Value)
 			{
 				const auto hintHeight = ImGui::CalcTextSize(FeatureHint.c_str()).y;
 				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 10, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
@@ -564,7 +564,7 @@ void CMenu::MenuVisuals()
 					WToggle("Custom Name Color", &Vars::ESP::Players::NameCustom.Value); HelpMarker("Custom color for name esp");
 					if (Vars::ESP::Players::NameCustom.Value)
 					{
-						ColorPickerL("Name ESP Color", Vars::ESP::Players::NameColor);
+						ColorPickerL("Name ESP Color", Vars::ESP::Players::NameColor.Value);
 					}
 					WToggle("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.Value); HelpMarker("Will draw a box around players name to make it stand out");
 					WToggle("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.Value); HelpMarker("Will draw ESP on local player (thirdperson)");
@@ -666,43 +666,43 @@ void CMenu::MenuVisuals()
 												  {
 													  case 0:
 													  {
-														  return Vars::Chams::Players::Local;
+														  return Vars::Chams::Players::Local.Value;
 													  }
 													  case 1:
 													  {
-														  return Vars::Chams::Players::FakeAng;
+														  return Vars::Chams::Players::FakeAng.Value;
 													  }
 													  case 2:
 													  {
-														  return Vars::Chams::Players::Friend;
+														  return Vars::Chams::Players::Friend.Value;
 													  }
 													  case 3:
 													  {
-														  return Vars::Chams::Players::Enemy;
+														  return Vars::Chams::Players::Enemy.Value;
 													  }
 													  case 4:
 													  {
-														  return Vars::Chams::Players::Team;
+														  return Vars::Chams::Players::Team.Value;
 													  }
 													  case 5:
 													  {
-														  return Vars::Chams::Players::Target;
+														  return Vars::Chams::Players::Target.Value;
 													  }
 													  case 6:
 													  {
-														  return Vars::Chams::Players::Ragdoll;
+														  return Vars::Chams::Players::Ragdoll.Value;
 													  }
 													  case 7:
 													  {
-														  return Vars::Chams::DME::Hands;
+														  return Vars::Chams::DME::Hands.Value;
 													  }
 													  case 8:
 													  {
-														  return Vars::Chams::DME::Weapon;
+														  return Vars::Chams::DME::Weapon.Value;
 													  }
 												  }
 
-												  return Vars::Chams::Players::Local;
+												  return Vars::Chams::Players::Local.Value;
 											  }());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
@@ -742,8 +742,8 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Backtrack chams");
 					WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
-					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor);
-					ColorPickerL("Backtrack colour 2", Vars::Backtrack::BtChams::BacktrackColor2, 1);
+					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor.Value);
+					ColorPickerL("Backtrack colour 2", Vars::Backtrack::BtChams::BacktrackColor2.Value, 1);
 					WToggle("Gradient", &Vars::Backtrack::BtChams::Gradient.Value); HelpMarker("Will draw a gradient on the backtrack chams");
 					WToggle("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.Value); HelpMarker("Only draws the last tick (can save FPS)");
 					WToggle("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.Value); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
@@ -807,7 +807,7 @@ void CMenu::MenuVisuals()
 					WToggle("Custom Name Color", &Vars::ESP::Buildings::NameCustom.Value); HelpMarker("Custom color for name esp");
 					if (Vars::ESP::Buildings::NameCustom.Value)
 					{
-						ColorPickerL("Name ESP Color", Vars::ESP::Buildings::NameColor);
+						ColorPickerL("Name ESP Color", Vars::ESP::Buildings::NameColor.Value);
 					}
 					WToggle("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.Value); HelpMarker("Will draw a box around the buildings name to make it stand out");
 					WToggle("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the building has");
@@ -817,7 +817,7 @@ void CMenu::MenuVisuals()
 					WToggle("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.Value); HelpMarker("Will draw what level the building is");
 					WToggle("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.Value); HelpMarker("Will draw what conditions the building is under");
 					WToggle("Teleporter exit direction###Buildingteleexitdir", &Vars::ESP::Buildings::TeleExitDir.Value); HelpMarker("Show teleporter exit direction arrow");
-					ColorPickerL("Teleporter exit direction arrow color", Vars::ESP::Buildings::TeleExitDirColor);
+					ColorPickerL("Teleporter exit direction arrow color", Vars::ESP::Buildings::TeleExitDirColor.Value);
 					WToggle("Lines###buildinglines", &Vars::ESP::Buildings::Lines.Value); HelpMarker("Draws lines from the local players position to the buildings position");
 					WCombo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on buildings");
 					WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.Value); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
@@ -851,27 +851,27 @@ void CMenu::MenuVisuals()
 												  {
 													  case 0:
 													  {
-														  return Vars::Chams::Buildings::Local;
+														  return Vars::Chams::Buildings::Local.Value;
 													  }
 													  case 1:
 													  {
-														  return Vars::Chams::Buildings::Friend;
+														  return Vars::Chams::Buildings::Friend.Value;
 													  }
 													  case 2:
 													  {
-														  return Vars::Chams::Buildings::Enemy;
+														  return Vars::Chams::Buildings::Enemy.Value;
 													  }
 													  case 3:
 													  {
-														  return Vars::Chams::Buildings::Team;
+														  return Vars::Chams::Buildings::Team.Value;
 													  }
 													  case 4:
 													  {
-														  return Vars::Chams::Buildings::Target;
+														  return Vars::Chams::Buildings::Target.Value;
 													  }
 												  }
 
-												  return Vars::Chams::Buildings::Local;
+												  return Vars::Chams::Buildings::Local.Value;
 											  }());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
@@ -979,19 +979,19 @@ void CMenu::MenuVisuals()
 												  {
 													  case 0:
 													  {
-														  return Vars::Chams::World::Health;
+														  return Vars::Chams::World::Health.Value;
 													  }
 													  case 1:
 													  {
-														  return Vars::Chams::World::Ammo;
+														  return Vars::Chams::World::Ammo.Value;
 													  }
 													  case 2:
 													  {
-														  return Vars::Chams::World::Projectiles;
+														  return Vars::Chams::World::Projectiles.Value;
 													  }
 												  }
 
-												  return Vars::Chams::World::Health;
+												  return Vars::Chams::World::Health.Value;
 											  }());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
@@ -1047,13 +1047,13 @@ void CMenu::MenuVisuals()
 				if (TableColumnChild("VisualsFontCol1"))
 				{
 					SectionTitle("ESP Font");
-					WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName);
+					WInputText("Font name###espfontname", &Vars::Fonts::FONT_ESP::szName.Value);
 					WInputInt("Font height###espfontheight", &Vars::Fonts::FONT_ESP::nTall.Value);
 					WInputInt("Font weight###espfontweight", &Vars::Fonts::FONT_ESP::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP::nFlags.Value, "Font flags###FONT_ESP");
 
 					SectionTitle("Name Font");
-					WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName);
+					WInputText("Font name###espfontnamename", &Vars::Fonts::FONT_ESP_NAME::szName.Value);
 					WInputInt("Font height###espfontnameheight", &Vars::Fonts::FONT_ESP_NAME::nTall.Value);
 					WInputInt("Font weight###espfontnameweight", &Vars::Fonts::FONT_ESP_NAME::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_NAME::nFlags.Value, "Font flags###FONT_ESP_NAME");
@@ -1063,13 +1063,13 @@ void CMenu::MenuVisuals()
 				if (TableColumnChild("VisualsFontCol2"))
 				{
 					SectionTitle("Condition Font");
-					WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName);
+					WInputText("Font name###espfontcondname", &Vars::Fonts::FONT_ESP_COND::szName.Value);
 					WInputInt("Font height###espfontcondheight", &Vars::Fonts::FONT_ESP_COND::nTall.Value);
 					WInputInt("Font weight###espfontcondweight", &Vars::Fonts::FONT_ESP_COND::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_COND::nFlags.Value, "Font flags###FONT_ESP_COND");
 
 					SectionTitle("Pickup Font");
-					WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName);
+					WInputText("Font name###espfontpickupsname", &Vars::Fonts::FONT_ESP_PICKUPS::szName.Value);
 					WInputInt("Font height###espfontpickupsheight", &Vars::Fonts::FONT_ESP_PICKUPS::nTall.Value);
 					WInputInt("Font weight###espfontpickupsweight", &Vars::Fonts::FONT_ESP_PICKUPS::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_ESP_PICKUPS::nFlags.Value, "Font flags###FONT_ESP_PICKUPS");
@@ -1079,13 +1079,13 @@ void CMenu::MenuVisuals()
 				if (TableColumnChild("VisualsFontCol3"))
 				{
 					SectionTitle("Menu Font");
-					WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName);
+					WInputText("Font name###espfontnamenameneby", &Vars::Fonts::FONT_MENU::szName.Value);
 					WInputInt("Font height###espfontnameheightafsdfads", &Vars::Fonts::FONT_MENU::nTall.Value);
 					WInputInt("Font weight###espfontnameweightasfdafsd", &Vars::Fonts::FONT_MENU::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_MENU::nFlags.Value, "Font flags###FONT_MENU");
 
 					SectionTitle("Indicator Font");
-					WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName);
+					WInputText("Font name###espfontindicatorname", &Vars::Fonts::FONT_INDICATORS::szName.Value);
 					WInputInt("Font height###espfontindicatorheight", &Vars::Fonts::FONT_INDICATORS::nTall.Value);
 					WInputInt("Font weight###espfontindicatorweight", &Vars::Fonts::FONT_INDICATORS::nWeight.Value);
 					MultiFlags(fontFlagNames, fontFlagValues, &Vars::Fonts::FONT_INDICATORS::nFlags.Value, "Font flags###FONT_INDICATORS");
@@ -1163,7 +1163,7 @@ void CMenu::MenuVisuals()
 						WSlider("Viewmodel Sway Interp", &Vars::Visuals::ViewmodelSwayInterp.Value, 0.01, 1, "%.2f"); HelpMarker("How long until the viewmodel returns to its original position (in seconds)");
 					}
 					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
-					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor);
+					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor.Value);
 					if (Vars::Visuals::MoveSimSeperators.Value)
 					{
 						WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
@@ -1184,7 +1184,7 @@ void CMenu::MenuVisuals()
 					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
 					if (Vars::Visuals::ParticleTracer.Value == 9)
 					{
-						WInputText("Custom Tracer", &Vars::Visuals::ParticleName); HelpMarker("If you want to use a custom particle tracer");
+						WInputText("Custom Tracer", &Vars::Visuals::ParticleName.Value); HelpMarker("If you want to use a custom particle tracer");
 					}
 					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
@@ -1210,11 +1210,11 @@ void CMenu::MenuVisuals()
 
 						WToggle("Enable beams", &Beans::Active.Value); HelpMarker("he loves beans?");
 						WToggle("Rainbow beams", &Beans::Rainbow.Value);
-						ColorPickerL("Beam colour", Beans::BeamColour);
+						ColorPickerL("Beam colour", Beans::BeamColour.Value);
 						WToggle("Custom model", &Beans::UseCustomModel.Value);
 						if (Beans::UseCustomModel.Value)
 						{
-							WInputText("Model", &Beans::Model);
+							WInputText("Model", &Beans::Model.Value);
 						}
 						WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
 						WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
@@ -1234,9 +1234,9 @@ void CMenu::MenuVisuals()
 					}
 
 					SectionTitle("Viewmodel Offset");
-					WSlider("VM Off X", &Vars::Visuals::VMOffsets.x, -45.f, 45.f);
-					WSlider("VM Off Y", &Vars::Visuals::VMOffsets.y, -45.f, 45.f);
-					WSlider("VM Off Z", &Vars::Visuals::VMOffsets.z, -45.f, 45.f);
+					WSlider("VM Off X", &Vars::Visuals::VMOffsets.Value.x, -45.f, 45.f);
+					WSlider("VM Off Y", &Vars::Visuals::VMOffsets.Value.y, -45.f, 45.f);
+					WSlider("VM Off Z", &Vars::Visuals::VMOffsets.Value.z, -45.f, 45.f);
 					WSlider("VM Roll", &Vars::Visuals::VMRoll.Value, -180, 180);
 					WToggle("Anti viewmodel flip", &Vars::Misc::AntiViewmodelFlip.Value); HelpMarker("This is scuffed");
 
@@ -1392,10 +1392,10 @@ void CMenu::MenuVisuals()
 						"sky_rainbow_01"
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
-					WCombo("Skybox", &Vars::Skybox::SkyboxNum, skyNames);
-					if (Vars::Skybox::SkyboxNum == 0)
+					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
+					if (Vars::Skybox::SkyboxNum.Value == 0)
 					{
-						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
 					}
 					WToggle("World Textures Override", &Vars::Visuals::OverrideWorldTextures.Value); HelpMarker("Turn this off when in-game so you don't drop fps :p");
 					WToggle("Bypass sv_pure", &Vars::Misc::BypassPure.Value); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
@@ -1406,11 +1406,11 @@ void CMenu::MenuVisuals()
 					WToggle("Disable fog", &Vars::Visuals::Fog::DisableFog.Value);
 					WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.Value);
 					WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-					ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor);
+					ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor.Value);
 					WSlider("Fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
 					WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
 					WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Skybox fog requires r_3dsky 1");
-					ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox);
+					ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox.Value);
 					WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStartSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
 					WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
 
@@ -1771,15 +1771,15 @@ void CMenu::MenuMisc()
 			if (!vecKillsays.empty())
 			{
 				SetNextItemWidth(F::Menu.ItemWidth);
-				if (ImGui::BeginCombo("Killsay file", Vars::Misc::KillsayFile.c_str()))
+				if (ImGui::BeginCombo("Killsay file", Vars::Misc::KillsayFile.Value.c_str()))
 				{
 					for (const auto& killsay : vecKillsays)
 					{
-						bool bThisKillsayIsValid = (killsay == Vars::Misc::KillsayFile);
+						bool bThisKillsayIsValid = (killsay == Vars::Misc::KillsayFile.Value);
 						if (ImGui::Selectable(killsay.c_str(), &bThisKillsayIsValid))
 						{
 							F::Killsay.m_bFilled = false;
-							Vars::Misc::KillsayFile = killsay;
+							Vars::Misc::KillsayFile.Value = killsay;
 						}
 					}
 					
@@ -1939,16 +1939,16 @@ void CMenu::SettingsWindow()
 		/* General Menu Settings */
 		if (CollapsingHeader("Menu Settings"))
 		{
-			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent)) { LoadStyle(); } SameLine(); Text("Menu accent");
-			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign)) { LoadStyle(); }
+			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Menu accent");
+			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
 			{
 				I::ViewRender->SetScreenOverlayMaterial(nullptr);
 			}
 			Checkbox("Close Menu on Unfocus", &Vars::Menu::CloseOnUnfocus.Value);
 
-			WInputText("Cheat Name", &Vars::Menu::CheatName);
-			WInputText("Chat Prefix", &Vars::Menu::CheatPrefix);
+			WInputText("Cheat Name", &Vars::Menu::CheatName.Value);
+			WInputText("Chat Prefix", &Vars::Menu::CheatPrefix.Value);
 
 			SetNextItemWidth(100);
 			InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);	
@@ -2409,7 +2409,7 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw,
 
 void CMenu::DrawKeybinds()
 {
-	if (!Vars::Menu::ShowKeybinds) { return; }
+	if (!Vars::Menu::ShowKeybinds.Value) { return; }
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.f, 0.f, 0.f, 0.35f));
 	ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.f, 0.f, 0.f, 0.5f));
@@ -2493,10 +2493,10 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 	{
 		DrawMenu();
 		DrawCameraWindow();
-		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions, Vars::Visuals::DrawOnScreenConditions.Value, true);
-		AddDraggable("Ping", Vars::Visuals::OnScreenPing, Vars::Visuals::DrawOnScreenPing.Value, true);
-		AddDraggable("DT Bar", Vars::Misc::CL_Move::DTIndicator, Vars::Misc::CL_Move::DTBarStyle.Value, true);
-		AddDraggable("Crits", Vars::CritHack::IndicatorPos, Vars::CritHack::Indicators.Value, true);
+		AddDraggable("Conditions", Vars::Visuals::OnScreenConditions.Value, Vars::Visuals::DrawOnScreenConditions.Value, true);
+		AddDraggable("Ping", Vars::Visuals::OnScreenPing.Value, Vars::Visuals::DrawOnScreenPing.Value, true);
+		AddDraggable("DT Bar", Vars::Misc::CL_Move::DTIndicator.Value, Vars::Misc::CL_Move::DTBarStyle.Value, true);
+		AddDraggable("Crits", Vars::CritHack::IndicatorPos.Value, Vars::CritHack::Indicators.Value, true);
 
 		SettingsWindow();
 		DebugMenu();
@@ -2520,7 +2520,7 @@ void CMenu::LoadStyle()
 		ItemWidth = 120.f;
 
 		// https://raais.github.io/ImStudio/
-		Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent);
+		Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value);
 		AccentDark = ImColor(Accent.Value.x * 0.8f, Accent.Value.y * 0.8f, Accent.Value.z * 0.8f, Accent.Value.w);
 
 		auto& style = ImGui::GetStyle();
@@ -2564,8 +2564,9 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_HeaderActive] = ImColor(40, 40, 40);
 		colors[ImGuiCol_HeaderHovered] = ImColor(60, 60, 60);
 
+
 		// Alternative Designs
-		if (Vars::Menu::ModernDesign)
+		if (Vars::Menu::ModernDesign.Value)
 		{
 			ItemWidth = 150.f;
 

@@ -32,7 +32,7 @@ void CCore::OnLoaded()
 {
 	LoadDefaultConfig();
 
-	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent, "%s Loaded!\n", Vars::Menu::CheatName.c_str());
+	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent.Value, "%s Loaded!\n", Vars::Menu::CheatName.Value.c_str());
 	I::EngineClient->ClientCmd_Unrestricted("play vo/items/wheatley_sapper/wheatley_sapper_attached14.mp3");
 
 	// Check the DirectX version
@@ -87,7 +87,7 @@ void CCore::Unload()
 	Sleep(100);
 
 	F::Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
-	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent, "%s Unloaded!\n", Vars::Menu::CheatName.c_str());
+	I::Cvar->ConsoleColorPrintf(Vars::Menu::Colors::MenuAccent.Value, "%s Unloaded!\n", Vars::Menu::CheatName.Value.c_str());
 }
 
 bool CCore::ShouldUnload()

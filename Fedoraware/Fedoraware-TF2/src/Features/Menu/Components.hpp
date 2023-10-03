@@ -27,7 +27,7 @@ namespace ImGui
 	{
 		if (IsItemHovered())
 		{
-			if (Vars::Menu::ModernDesign)
+			if (Vars::Menu::ModernDesign.Value)
 			{
 				SetTooltip("%s", desc);
 			}
@@ -64,7 +64,7 @@ namespace ImGui
 	{
 		TableNextColumn();
 		float contentHeight = GetWindowHeight() - (F::Menu.TabHeight + GetStyle().ItemInnerSpacing.y);
-		return BeginChild(str_id, { GetColumnWidth(), contentHeight }, !Vars::Menu::ModernDesign);
+		return BeginChild(str_id, { GetColumnWidth(), contentHeight }, !Vars::Menu::ModernDesign.Value);
 	}
 
 	__inline bool SidebarButton(const char* label, bool active = false)
@@ -90,7 +90,7 @@ namespace ImGui
 		return pressed;
 	}
 
-	__inline bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false)
+	__inline bool InputKeybind(const char* label, ConfigVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false)
 	{
 		// Init the valid keys bitset
 		static std::once_flag initFlag;
@@ -451,7 +451,7 @@ namespace ImGui
 	__inline bool WToggle(const char* label, bool* v)
 	{
 		bool result;
-		if (Vars::Menu::ModernDesign)
+		if (Vars::Menu::ModernDesign.Value)
 		{
 			result = ToggleButton(label, v);
 		}

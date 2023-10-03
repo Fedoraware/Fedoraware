@@ -39,9 +39,9 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, S::CBasePlayer_CalcViewModelView(), vo
 	// viewmodel offsets should probably be locked between 2 values, just like we should clamp our eye angles, however, I don't want to, f*ck you
 
 	Vec3 vNewEyePosition = vEyePosition + (
-		(vRight * Vars::Visuals::VMOffsets.x) +
-		(vForward * Vars::Visuals::VMOffsets.y) +
-		(vUp * Vars::Visuals::VMOffsets.z)
+		(vRight * Vars::Visuals::VMOffsets.Value.x) +
+		(vForward * Vars::Visuals::VMOffsets.Value.y) +
+		(vUp * Vars::Visuals::VMOffsets.Value.z)
 		);
 
 	vEyeAngles.z += Vars::Visuals::VMRoll.Value; //VM Roll
