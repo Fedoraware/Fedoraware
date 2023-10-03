@@ -217,6 +217,7 @@ void CMisc::DetectChoke()
 //	dumb feature made out of spite for fourteen
 void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
+	if (!pLocal->OnSolid() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsAlive()) { return; }
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
 	if (G::IsAttacking || G::ShouldShift || G::AntiAim.second) { return; }
