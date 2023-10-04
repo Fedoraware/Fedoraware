@@ -183,7 +183,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				int nX = -1, nY = -1, nZ = 0;
 				if (GetDrawPosition(nX, nY, nZ, pObject))
 				{
-					Color_t clrDraw = Utils::GetEntityDrawColor(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+					Color_t clrDraw = GetEntityDrawColour(building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 					const int nSize = Vars::Radar::Buildings::IconSize.Value;
 					nX -= (nSize / 2), nY -= (nSize / 2);
@@ -246,7 +246,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 						const float flRatio = (flHealth / flMaxHealth);
 
-						g_Draw.Rect(((nX - nW) - 1), nY, nW, nSize, Colors::OutlineESP);
+						g_Draw.Rect(((nX - nW) - 1), nY, nW, nSize, Vars::Colours::OutlineESP.Value);
 						g_Draw.Rect(((nX - nW) - 1), (nY + nSize - (nSize * flRatio)), nW, (nSize * flRatio),
 									clrHealth);
 					}
@@ -307,7 +307,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 				const int nSize = Vars::Radar::Players::IconSize.Value;
 				nX -= (nSize / 2), nY -= (nSize / 2);
 
-				Color_t clrDraw = Utils::GetEntityDrawColor(player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+				Color_t clrDraw = GetEntityDrawColour(player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 
 				//Background
 				//Just a filled rect or a bit better looking texture RN
@@ -380,7 +380,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 
 					float flRatio = (flHealth / flMaxHealth);
 
-					g_Draw.Rect(((nX - nWidth) - 1), nY, nWidth, nSize, Colors::OutlineESP);
+					g_Draw.Rect(((nX - nWidth) - 1), nY, nWidth, nSize, Vars::Colours::OutlineESP.Value);
 					g_Draw.Rect(((nX - nWidth) - 1), (nY + nSize - (nSize * flRatio)), nWidth, (nSize * flRatio),
 								clrHealth);
 
@@ -388,7 +388,7 @@ void CRadar::DrawPoints(CBaseEntity* pLocal)
 					{
 						flRatio = (flOverHeal / flMaxHealth);
 						g_Draw.Rect(((nX - nWidth) - 1), (nY + (nSize + 1) - (nSize * flRatio)), nWidth,
-									(nSize * flRatio), Colors::Overheal);
+									(nSize * flRatio), Vars::Colours::Overheal.Value);
 					}
 				}
 

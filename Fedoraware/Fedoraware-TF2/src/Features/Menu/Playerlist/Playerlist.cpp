@@ -50,7 +50,7 @@ void CPlayerList::UpdatePlayers()
 			.Name = pr->GetPlayerName(i),
 			.UserID = pr->GetUserID(i),
 			.FriendsID = pr->GetAccountID(i),
-			.Color = Utils::GetTeamColor(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
+			.Color = GetTeamColour(pr->GetTeam(i), Vars::ESP::Main::EnableTeamEnemyColors.Value),
 			.Health = pr->GetHealth(i),
 			.MaxHealth = pr->GetMaxHealth(i),
 			.Class = pr->GetClass(i),

@@ -266,10 +266,10 @@ void CMenu::MenuAimbot()
 		{
 			SectionTitle("Global");
 			WToggle("Aimbot", &Vars::Aimbot::Global::Active.Value); HelpMarker("Aimbot master switch");
-			ColorPickerL("Target", Colors::Target);
+			ColorPickerL("Target", Vars::Colours::Target.Value);
 			InputKeybind("Aimbot key", Vars::Aimbot::Global::AimKey); HelpMarker("The key to enable aimbot");
 			WSlider("Aimbot FoV####AimbotFoV", &Vars::Aimbot::Global::AimFOV.Value, 0.f, 180.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-			ColorPickerL("Aimbot FOV circle", Colors::FOVCircle);
+			ColorPickerL("Aimbot FOV circle", Vars::Colours::FOVCircle.Value);
 			WToggle("Autoshoot###AimbotAutoshoot", &Vars::Aimbot::Global::AutoShoot.Value); HelpMarker("Automatically shoot when a target is found");
 			MultiCombo({ "Players", "Buildings", "Stickies", "NPCs", "Bombs" }, { &Vars::Aimbot::Global::AimPlayers.Value, &Vars::Aimbot::Global::AimBuildings.Value, &Vars::Aimbot::Global::AimStickies.Value, &Vars::Aimbot::Global::AimNPC.Value, &Vars::Aimbot::Global::AimBombs.Value }, "Aim targets");
 			HelpMarker("Choose which targets the Aimbot should aim at");
@@ -279,7 +279,7 @@ void CMenu::MenuAimbot()
 				MultiFlags(flagNames, flagValues, &Vars::Aimbot::Global::IgnoreOptions.Value, "Ignored targets###AimbotIgnoredTargets");
 				HelpMarker("Choose which targets should be ignored");
 			}
-			ColorPickerL("Invulnerable colour", Colors::Invuln);
+			ColorPickerL("Invulnerable colour", Vars::Colours::Invuln.Value);
 
 			if (Vars::Aimbot::Global::IgnoreOptions.Value & (1 << 6))
 			{
@@ -541,13 +541,13 @@ void CMenu::MenuVisuals()
 					WToggle("Relative colours", &Vars::ESP::Main::EnableTeamEnemyColors.Value); HelpMarker("Chooses colors relative to your team (team/enemy)");
 					if (Vars::ESP::Main::EnableTeamEnemyColors.Value)
 					{
-						ColorPickerL("Enemy color", Colors::Enemy);
-						ColorPickerL("Team color", Colors::rTeam, 1);
+						ColorPickerL("Enemy color", Vars::Colours::Enemy.Value);
+						ColorPickerL("Team color", Vars::Colours::Friendly.Value, 1);
 					}
 					else
 					{
-						ColorPickerL("RED Team color", Colors::TeamRed);
-						ColorPickerL("BLU Team color", Colors::TeamBlu, 1);
+						ColorPickerL("RED Team color", Vars::Colours::TeamRed.Value);
+						ColorPickerL("BLU Team color", Vars::Colours::TeamBlu.Value, 1);
 					}
 					WToggle("Distance2Alpha", &Vars::ESP::Main::DistanceToAlpha.Value); HelpMarker("Will fade out ESP elements as the distance between you and the player increases");
 					WToggle("Dormant sound ESP", &Vars::ESP::Main::DormantSoundESP.Value); HelpMarker("Credits: reestart");
@@ -568,50 +568,50 @@ void CMenu::MenuVisuals()
 					}
 					WToggle("Name ESP box###PlayerNameESPBox", &Vars::ESP::Players::NameBox.Value); HelpMarker("Will draw a box around players name to make it stand out");
 					WToggle("Self ESP###SelfESP", &Vars::ESP::Players::ShowLocal.Value); HelpMarker("Will draw ESP on local player (thirdperson)");
-					ColorPickerL("Local colour", Colors::Local);
+					ColorPickerL("Local colour", Vars::Colours::Local.Value);
 					MultiFlags({ "Friends", "Teammates", "Enemies"},
 						{ (1 << 0), (1 << 1), (1 << 2) },
 						&Vars::ESP::Players::IgnoreFlags.Value,
 						"Ignore Flags###IgnoreFlagsESP"
 					); HelpMarker("Which groups the ESP will ignore.");
-					ColorPickerL("Friend colour", Colors::Friend);
+					ColorPickerL("Friend colour", Vars::Colours::Friend.Value);
 					WCombo("Ignore cloaked###IgnoreCloakESPp", &Vars::ESP::Players::IgnoreCloaked.Value, { "Off", "All", "Only enemies" }); HelpMarker("Which cloaked spies the ESP will ignore drawing on");
-					ColorPickerL("Cloaked colour", Colors::Cloak);
+					ColorPickerL("Cloaked colour", Vars::Colours::Cloak.Value);
 					WCombo("Ubercharge###PlayerUber", &Vars::ESP::Players::Uber.Value, { "Off", "Text", "Bar" }); HelpMarker("Will draw how much ubercharge a medic has");
-					ColorPickerL("Ubercharge colour", Colors::UberColor);
+					ColorPickerL("Ubercharge colour", Vars::Colours::UberColor.Value);
 					WCombo("Class###PlayerIconClass", &Vars::ESP::Players::Class.Value, { "Off", "Icon", "Text", "Both" }); HelpMarker("Will draw the class the player is");
 					WToggle("Weapon text", &Vars::ESP::Players::WeaponText.Value);
 					WToggle("Weapon icons", &Vars::ESP::Players::WeaponIcon.Value); HelpMarker("Shows an icon for the weapon that the player has currently equipped");
-					ColorPickerL("Weapon icon/text colour", Colors::WeaponIcon);
+					ColorPickerL("Weapon icon/text colour", Vars::Colours::WeaponIcon.Value);
 					WToggle("Health bar###ESPPlayerHealthBar", &Vars::ESP::Players::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the player has");
 					if (Vars::ESP::Players::HealthBarStyle.Value == 0)
 					{
-						ColorPickerL("Health Bar Top", Colors::GradientHealthBar.startColour);
-						ColorPickerL("Health Bar Bottom", Colors::GradientHealthBar.endColour, 1);
+						ColorPickerL("Health Bar Top", Vars::Colours::GradientHealthBar.Value.startColour);
+						ColorPickerL("Health Bar Bottom", Vars::Colours::GradientHealthBar.Value.endColour, 1);
 					}
 
 					WCombo("Health bar style", &Vars::ESP::Players::HealthBarStyle.Value, { "Gradient", "Old" }); HelpMarker("How to draw the health bar");
 					if (Vars::ESP::Players::HealthBarStyle.Value == 0)
 					{
-						ColorPickerL("Overheal Bar Top", Colors::GradientOverhealBar.startColour);
-						ColorPickerL("Overheal Bar Bottom", Colors::GradientOverhealBar.endColour, 1);
+						ColorPickerL("Overheal Bar Top", Vars::Colours::GradientOverhealBar.Value.startColour);
+						ColorPickerL("Overheal Bar Bottom", Vars::Colours::GradientOverhealBar.Value.endColour, 1);
 					}
 					if (Vars::ESP::Players::HealthBarStyle.Value == 1)
 					{
-						ColorPickerL("Overheal Colour", Colors::Overheal);
+						ColorPickerL("Overheal Colour", Vars::Colours::Overheal.Value);
 					}
 					WCombo("Health Text###ESPPlayerHealthText", &Vars::ESP::Players::HealthText.Value, { "Off", "Default", "Bar" }); HelpMarker("Draws the player health as a text");
 					WToggle("Distance", &Vars::ESP::Players::Distance.Value); HelpMarker("Shows the distance from you to the player in meters");
 					WToggle("Condition", &Vars::ESP::Players::Cond.Value); HelpMarker("Will draw what conditions the player is under");
-					ColorPickerL("Condition colour", Colors::Cond);
+					ColorPickerL("Condition colour", Vars::Colours::Cond.Value);
 					WToggle("GUID", &Vars::ESP::Players::GUID.Value); HelpMarker("Show's the players Steam ID");
 					WToggle("Choked Packets", &Vars::ESP::Players::Choked.Value); HelpMarker("Shows how many packets the player has choked");
-					ColorPickerL("Choked Bar Top", Colors::ChokedBar.startColour);
-					ColorPickerL("Choked Bar Bottom", Colors::ChokedBar.endColour, 1);
+					ColorPickerL("Choked Bar Top", Vars::Colours::ChokedBar.Value.startColour);
+					ColorPickerL("Choked Bar Bottom", Vars::Colours::ChokedBar.Value.endColour, 1);
 					WToggle("Cheater Detection", &Vars::ESP::Players::CheaterDetection.Value); HelpMarker("Attempts to automatically mark cheaters.");
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
-					ColorPickerL("Skellington colour", Colors::Bones);
+					ColorPickerL("Skellington colour", Vars::Colours::Bones.Value);
 					WToggle("Lines###Playerlines", &Vars::ESP::Players::Lines.Value); HelpMarker("Draws lines from the local players position to enemies position");
 					WToggle("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.Value); HelpMarker("Will make players emit a dynamic light around them");
 					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
@@ -930,28 +930,28 @@ void CMenu::MenuVisuals()
 					WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
 					WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
 					WToggle("Health Distance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
-					ColorPickerL("Healthpack colour", Colors::Health); HelpMarker("Color for healthpack ESP");
+					ColorPickerL("Healthpack colour", Vars::Colours::Health.Value); HelpMarker("Color for healthpack ESP");
 
 					SectionTitle("Ammopack");
 					WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
 					WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
 					WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
 					WToggle("Ammo Distance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
-					ColorPickerL("Ammopack colour", Colors::Ammo); HelpMarker("Color for ammopack ESP");
+					ColorPickerL("Ammopack colour", Vars::Colours::Ammo.Value); HelpMarker("Color for ammopack ESP");
 
 					SectionTitle("NPC");
 					WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
 					WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
 					WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
 					WToggle("NPC Distance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
-					ColorPickerL("NPC colour", Colors::NPC); HelpMarker("Color for NPC ESP");
+					ColorPickerL("NPC colour", Vars::Colours::NPC.Value); HelpMarker("Color for NPC ESP");
 
 					SectionTitle("Bombs");
 					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on bombs");
 					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to bombs");
 					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on bombs");
 					WToggle("Bomb Distance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
-					ColorPickerL("Bomb Colour", Colors::Bomb); HelpMarker("Color for bomb ESP");
+					ColorPickerL("Bomb Colour", Vars::Colours::Bomb.Value); HelpMarker("Color for bomb ESP");
 
 				} EndChild();
 
@@ -1114,9 +1114,9 @@ void CMenu::MenuVisuals()
 					WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 					MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
 					HelpMarker("Select which types of modulation you want to enable");
-					if (ColorPickerL("World modulation colour", Colors::WorldModulation) ||
-						ColorPickerL("Sky modulation colour", Colors::SkyModulation, 1) ||
-						ColorPickerL("Prop modulation colour", Colors::StaticPropModulation, 2))
+					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
+						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
+						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
 					{
 						G::ShouldUpdateMaterialCache = true;
 					}
@@ -1136,7 +1136,7 @@ void CMenu::MenuVisuals()
 					{
 						WSlider("Rainbow Speed", &Vars::Visuals::RainbowSpeed.Value, 0.1, 5, "%.2f");
 					}
-					ColorPickerL("Particle Color", Colors::ParticleColor);
+					ColorPickerL("Particle Color", Vars::Colours::ParticleColor.Value);
 					if (Vars::Visuals::HalloweenSpellFootsteps.Value)
 					{
 						if (!Vars::Visuals::ParticleColors.Value) //Particle colors overrides the color picker
@@ -1144,7 +1144,7 @@ void CMenu::MenuVisuals()
 							WCombo("Color Type", &Vars::Visuals::ColorType.Value, { "Color Picker", "Rainbow" });
 							if (Vars::Visuals::ColorType.Value == 0)
 							{
-								ColorPickerL("Footstep Color", Colors::FeetColor);
+								ColorPickerL("Footstep Color", Vars::Colours::FeetColor.Value);
 							}
 						}
 						WToggle("Dash only", &Vars::Visuals::DashOnly.Value);
@@ -1154,7 +1154,7 @@ void CMenu::MenuVisuals()
 					WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
 					WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
 					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
-					ColorPickerL("Bullet tracer colour", Colors::BulletTracer);
+					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
 					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 					WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 					if (Vars::Visuals::ViewmodelSway.Value)
@@ -1177,9 +1177,9 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
 					HelpMarker("What & How should events be logged");
 					WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
-					ColorPickerL("GUI Notif Background", Colors::NotifBG);
-					ColorPickerL("GUI Notif Outline", Colors::NotifOutline, 1);
-					ColorPickerL("GUI Notif Colour", Colors::NotifText, 2);
+					ColorPickerL("GUI Notif Background", Vars::Colours::NotifBG.Value);
+					ColorPickerL("GUI Notif Outline", Vars::Colours::NotifOutline.Value, 1);
+					ColorPickerL("GUI Notif Colour", Vars::Colours::NotifText.Value, 2);
 					WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
 					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
 					if (Vars::Visuals::ParticleTracer.Value == 9)
@@ -1189,12 +1189,12 @@ void CMenu::MenuVisuals()
 					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
 					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
-					ColorPickerL("Inner line color", Colors::NoscopeLines1);
-					ColorPickerL("Outer line color", Colors::NoscopeLines2, 1);
+					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
+					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
 					WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.Value); HelpMarker("Displays the respawn time of health and ammopacks");
 					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
-					ColorPickerL("Hitbox matrix face colour", Colors::HitboxFace);
-					ColorPickerL("Hitbox matrix edge colour", Colors::HitboxEdge, 1);
+					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
+					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
 					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
@@ -1243,11 +1243,11 @@ void CMenu::MenuVisuals()
 					SectionTitle("DT Indicator");
 					WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin", "SEOwned", "Numeric" }); HelpMarker("What style the bar should draw in.");
 					Text("Charging Gradient");
-					ColorPickerL("DT charging right", Colors::DTBarIndicatorsCharging.endColour);
-					ColorPickerL("DT charging left", Colors::DTBarIndicatorsCharging.startColour, 1);
+					ColorPickerL("DT charging right", Vars::Colours::DTBarIndicatorsCharging.Value.endColour);
+					ColorPickerL("DT charging left", Vars::Colours::DTBarIndicatorsCharging.Value.startColour, 1);
 					Text("Charged Gradient");
-					ColorPickerL("DT charged right", Colors::DTBarIndicatorsCharged.endColour);
-					ColorPickerL("DT charged left", Colors::DTBarIndicatorsCharged.startColour, 1);
+					ColorPickerL("DT charged right", Vars::Colours::DTBarIndicatorsCharged.Value.endColour);
+					ColorPickerL("DT charged left", Vars::Colours::DTBarIndicatorsCharged.Value.startColour, 1);
 
 					SectionTitle("Attribute Changer");
 
@@ -1517,7 +1517,7 @@ void CMenu::MenuHvH()
 			/* Section: Tickbase Exploits */
 			SectionTitle("Tickbase Exploits");
 			WToggle("Enable Tickbase Exploits", &Vars::Misc::CL_Move::Enabled.Value); HelpMarker("Allows tickbase shifting");
-			ColorPickerL("DT bar outline colour", Colors::DtOutline);
+			ColorPickerL("DT bar outline colour", Vars::Colours::DtOutline.Value);
 			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
 			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to warp");
 			if (Vars::Misc::CL_Move::DTMode.Value == 0 || Vars::Misc::CL_Move::DTMode.Value == 2)

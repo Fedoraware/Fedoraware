@@ -4,9 +4,9 @@ MAKE_HOOK(StudioRender_SetColorModulation, Utils::GetVFuncPtr(I::StudioRender, 2
 		  void* ecx, void* edx, const float* pColor)
 {
 	const float flCustomBlend[3] = {
-		Color::TOFLOAT(Colors::StaticPropModulation.r),
-		Color::TOFLOAT(Colors::StaticPropModulation.g),
-		Color::TOFLOAT(Colors::StaticPropModulation.b)
+		Color::TOFLOAT(Vars::Colours::StaticPropModulation.Value.r),
+		Color::TOFLOAT(Vars::Colours::StaticPropModulation.Value.g),
+		Color::TOFLOAT(Vars::Colours::StaticPropModulation.Value.b)
 	};
 
 	const bool bShouldUseCustomBlend = Vars::Visuals::WorldModulation.Value && G::DrawingStaticProps;

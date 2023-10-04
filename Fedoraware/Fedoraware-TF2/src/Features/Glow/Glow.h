@@ -1,5 +1,6 @@
 #pragma once
 #include "../Feature.h"
+#include "../Colour.h"
 
 class CGlowEffect
 {

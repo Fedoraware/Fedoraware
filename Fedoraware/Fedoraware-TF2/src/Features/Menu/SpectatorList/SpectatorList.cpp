@@ -186,8 +186,8 @@ void CSpectatorList::DrawClassic()
 				nameFont,
 				nDrawX, nDrawY,
 				Spectator.IsFriend
-				? Colors::Friend
-				: Utils::GetTeamColor(Spectator.Team, Vars::ESP::Main::EnableTeamEnemyColors.Value),
+				? Vars::Colours::Friend.Value
+				: GetTeamColour(Spectator.Team, Vars::ESP::Main::EnableTeamEnemyColors.Value),
 				ALIGN_CENTERHORIZONTAL,
 				L"[%ls] %ls", Spectator.Mode.data(), Spectator.Name.data());
 

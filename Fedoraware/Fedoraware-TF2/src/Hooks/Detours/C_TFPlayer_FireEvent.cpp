@@ -21,7 +21,7 @@ MAKE_HOOK(C_TFPlayer_FireEvent, S::CTFPlayer_FireEvent(), void, __fastcall,
         return Hook.Original<FN>()(ecx, edx, origin, angles, event_, options);
     }
 
-    const auto feetcolor = ColorToInt(Vars::Visuals::ColorType.Value == 0 ? Colors::FeetColor : Utils::Rainbow());
+    const auto feetcolor = ColorToInt(Vars::Visuals::ColorType.Value == 0 ? Vars::Colours::FeetColor.Value : Utils::Rainbow());
 	fnSpawnHalloweenSpellFootsteps(g_EntityCache.GetLocal(), PATTACH_ABSORIGIN, Vars::Visuals::ColorType.Value == 1 ? 2 : feetcolor);
 
     return Hook.Original<FN>()(ecx, edx, origin, angles, event_, options);

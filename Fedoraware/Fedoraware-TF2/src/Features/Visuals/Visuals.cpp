@@ -74,8 +74,8 @@ void CVisuals::ScopeLines(CBaseEntity* pLocal)
 	{
 		const int centerX = g_ScreenSize.w / 2;
 		const int centerY = g_ScreenSize.h / 2;
-		const Color_t line1 = {Colors::NoscopeLines1.r, Colors::NoscopeLines1.g, Colors::NoscopeLines1.b, 255};
-		const Color_t line2 = {Colors::NoscopeLines2.r, Colors::NoscopeLines2.g, Colors::NoscopeLines2.b, 255};
+		const Color_t line1 = {Vars::Colours::NoscopeLines1.Value.r, Vars::Colours::NoscopeLines1.Value.g, Vars::Colours::NoscopeLines1.Value.b, 255};
+		const Color_t line2 = {Vars::Colours::NoscopeLines2.Value.r, Vars::Colours::NoscopeLines2.Value.g, Vars::Colours::NoscopeLines2.Value.b, 255};
 
 		g_Draw.GradientRect(g_ScreenSize.w / 2, centerY - 1, g_ScreenSize.w, centerY + 1, line1, line2, true);
 		g_Draw.GradientRect(0, centerY - 1, centerX, centerY + 1, line2, line1, true);
@@ -494,20 +494,20 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 
 				if (G::WaitForShift)
 				{
-					color1 = Colors::DTBarIndicatorsCharging.startColour;
-					color2 = Colors::DTBarIndicatorsCharging.endColour;
+					color1 = Vars::Colours::DTBarIndicatorsCharging.Value.startColour;
+					color2 = Vars::Colours::DTBarIndicatorsCharging.Value.endColour;
 				}
 				else
 				{
-					color1 = Colors::DTBarIndicatorsCharged.startColour;
-					color2 = Colors::DTBarIndicatorsCharged.endColour;
+					color1 = Vars::Colours::DTBarIndicatorsCharged.Value.startColour;
+					color2 = Vars::Colours::DTBarIndicatorsCharged.Value.endColour;
 				}
 
 				switch (Vars::Misc::CL_Move::DTBarStyle.Value)
 				{
 				case 1:
 					{
-						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline);
+						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Vars::Colours::DtOutline.Value);
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
 						break;
 					}
@@ -517,7 +517,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 						const int drawX = DTBox.x;
 						g_Draw.String(indFont, DTBox.c, DTBox.y - fontHeight - 3, {255, 255, 255, 255}, ALIGN_CENTERHORIZONTAL, L"Ticks %d/%d", G::ShiftedTicks,
 						              Vars::Misc::CL_Move::DTTicks.Value);
-						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Colors::DtOutline);
+						g_Draw.RoundedBoxStatic(DTBox.x, DTBox.y, DTBox.w, DTBox.h, 4, Vars::Colours::DtOutline.Value);
 						if (G::ShiftedTicks && ratioCurrent)
 						{
 							g_Draw.RoundedBoxStatic(DTBox.x + 2, DTBox.y + 2, ratioCurrent * (DTBox.w - 4), DTBox.h - 4, 4, Vars::Menu::Colors::MenuAccent.Value);
@@ -530,7 +530,7 @@ void CVisuals::DrawTickbaseInfo(CBaseEntity* pLocal)
 					}
 				case 3:
 					{
-						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Colors::DtOutline); //	draw the outline
+						g_Draw.OutlinedRect(DTBox.x, DTBox.y, DTBox.w, DTBox.h, Vars::Colours::DtOutline.Value); //	draw the outline
 						g_Draw.Rect(DTBox.x + 1, DTBox.y + 1, DTBox.w - 2, DTBox.h - 2, {28, 29, 38, 255}); //	draw the background
 						g_Draw.GradientRectWH(DTBox.x + 1, DTBox.y + 1, ratioInterp * (DTBox.w - 2), DTBox.h - 2, color1, color2, true);
 						g_Draw.String(indFont, DTBox.x, DTBox.y - 10, {255, 255, 255, 255}, ALIGN_DEFAULT, L"CHARGE");
@@ -774,7 +774,7 @@ void CVisuals::FillSightlines()
 
 			Utils::Trace(vShootPos, vShootEnd, MASK_SHOT, &filter, &trace);
 
-			m_SightLines[pEnemy->GetIndex()] = {vShootPos, trace.vEndPos, Utils::GetEntityDrawColor(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true};
+			m_SightLines[pEnemy->GetIndex()] = {vShootPos, trace.vEndPos, GetEntityDrawColour(pEnemy, Vars::ESP::Main::EnableTeamEnemyColors.Value), true};
 		}
 	}
 }
@@ -848,7 +848,7 @@ void CVisuals::DrawProjectileTracer(CBaseEntity* pLocal, const Vec3& position)
 	}
 
 	const Vec3 vecPos = G::CurWeaponType == EWeaponType::PROJECTILE ? G::PredictedPos : position;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
+	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Vars::Colours::BulletTracer.Value;
 	Vec3 shootPos;
 	const int iAttachment = pLocal->GetActiveWeapon()->LookupAttachment("muzzle");
 	pLocal->GetActiveWeapon()->GetAttachment(iAttachment, shootPos);
@@ -865,7 +865,7 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 			/ tanf(
 				DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
 				2.0f) * g_ScreenSize.w;
-		const Color_t clr = Colors::FOVCircle;
+		const Color_t clr = Vars::Colours::FOVCircle.Value;
 		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
 	}
 }
@@ -936,13 +936,13 @@ void CVisuals::ClearMaterialHandles()
 // this whole section below is for world modulation
 bool ModColChanged() // check if colours have been changed
 {
-	static auto oldW = Colors::WorldModulation;
-	static auto oldS = Colors::SkyModulation;
+	static auto oldW = Vars::Colours::WorldModulation.Value;
+	static auto oldS = Vars::Colours::SkyModulation.Value;
 
-	if (Colors::WorldModulation != oldW || Colors::SkyModulation != oldS)
+	if (Vars::Colours::WorldModulation.Value != oldW || Vars::Colours::SkyModulation.Value != oldS)
 	{
-		oldW = Colors::WorldModulation;
-		oldS = Colors::SkyModulation;
+		oldW = Vars::Colours::WorldModulation.Value;
+		oldS = Vars::Colours::SkyModulation.Value;
 
 		return true;
 	}
@@ -1051,8 +1051,8 @@ void CVisuals::ModulateWorld()
 
 	if (ModColChanged() || ModSetChanged() || !isUnchanged)
 	{
-		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Colors::WorldModulation) : ApplyModulation({255, 255, 255, 255});
-		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Colors::SkyModulation) : ApplySkyboxModulation({255, 255, 255, 255});
+		Vars::Visuals::WorldModulation.Value ? ApplyModulation(Vars::Colours::WorldModulation.Value) : ApplyModulation({255, 255, 255, 255});
+		Vars::Visuals::SkyModulation.Value ? ApplySkyboxModulation(Vars::Colours::SkyModulation.Value) : ApplySkyboxModulation({255, 255, 255, 255});
 		oConnectionState = connectionState;
 		shouldModulate = false;
 	}
@@ -1135,7 +1135,7 @@ void CVisuals::PickupTimers()
 		}
 
 		auto timerText = std::format("{:.1f}", 10.f - timeDiff);
-		auto color = pickupData->Type ? Colors::Health : Colors::Ammo;
+		auto color = pickupData->Type ? Vars::Colours::Health.Value : Vars::Colours::Ammo.Value;
 
 		Vec3 vScreen;
 		if (Utils::W2S(pickupData->Location, vScreen))

@@ -160,7 +160,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 				I::EngineClient->GetPlayerForUserID(pEvent->GetInt("attacker")));
 			if (pEntity == pLocal) { return; }
 			if (pLocal != nAttacker) { return; }
-			F::Visuals.DrawHitboxMatrix(pEntity, Colors::HitboxFace, Colors::HitboxEdge, time);
+			F::Visuals.DrawHitboxMatrix(pEntity, Vars::Colours::HitboxFace.Value, Vars::Colours::HitboxEdge.Value, time);
 		}
 	}
 }

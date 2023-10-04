@@ -159,12 +159,12 @@ MAKE_HOOK(C_BaseEntity_FireBullets, S::CBaseEntity_FireBullets(), void, __fastca
 
 		if (Vars::Visuals::BulletTracer.Value)
 		{
-			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
+			const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Vars::Colours::BulletTracer.Value;
 
 			F::Visuals.AddBulletTracer(trace.vStartPos, trace.vEndPos, tracerColor);
 
 			/*I::DebugOverlay->AddLineOverlayAlpha(trace.vStartPos, trace.vEndPos, tracerColor.r, tracerColor.g, tracerColor.b,
-												 Colors::BulletTracer.a, true, 5);*/
+												 Vars::Colours::BulletTracer.Value.a, true, 5);*/
 		}
 		if (!pLocal->IsInValidTeam())
 		{

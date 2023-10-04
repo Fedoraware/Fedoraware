@@ -403,6 +403,7 @@
     <ClInclude Include="src\SDK\Signatures\Signatures.h" />
     <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
     <ClInclude Include="src\Features\NoSpread\NoSpread.h" />
+    <ClInclude Include="src\Features\Colour.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
