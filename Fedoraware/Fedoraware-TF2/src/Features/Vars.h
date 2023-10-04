@@ -918,6 +918,32 @@ namespace Vars
 
 	NAMESPACE_END(Fonts);
 
+	NAMESPACE_BEGIN(Colours);
+		CVar(DTBarIndicatorsCharged, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(DTBarIndicatorsCharging, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(ChokedBar, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(GradientHealthBar, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(GradientOverhealBar, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(UberchargeBar, Gradient_t({ 106, 255, 131, 180 }, { 106, 255, 250, 180 }), IS_VISUAL);
+		CVar(White, Color_t( 255, 255, 255, 255 ), IS_VISUAL);
+		CVar(OutlineESP, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Cond, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Target, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Invuln, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Cloak, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Friend, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Local, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Ignored, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Overheal, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Health, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Ammo, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(UberColor, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(TeamRed, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(TeamBlu, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Enemy, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+		CVar(Friendly, Color_t( 0, 0, 0, 255 ), IS_VISUAL);
+	NAMESPACE_END(Colours);
+
 	// Debug options
 	NAMESPACE_BEGIN(Debug);
 
