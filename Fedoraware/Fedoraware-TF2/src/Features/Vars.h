@@ -13,7 +13,7 @@ class CVarBase
 public:
 	size_t m_iType;
 	std::string m_sName;
-	bool m_bVisual;
+	bool m_bVisual; // TODO: Use group enum?
 
 	// getter for ConfigVar
 	template <class T>
@@ -320,7 +320,7 @@ namespace Vars
 		CVar(Alpha, 1.0f, IS_VISUAL)
 		CVar(CheaterDetection, false, IS_VISUAL)
 		CVar(SniperSightlines, false, IS_VISUAL)
-		SUBNAMESPACE_END(Players);
+	SUBNAMESPACE_END(Players);
 
 	SUBNAMESPACE_BEGIN(Buildings)
 		CVar(Active, false, IS_VISUAL)
