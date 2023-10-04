@@ -23,11 +23,6 @@ int CBaseCombatWeapon::GetBulletAmount()
 }
 
 bool CBaseCombatWeapon::IsSpreadWeapon() {
-	if ((GetItemDefIndex() != Engi_m_PanicAttack &&
-		GetItemDefIndex() != Pyro_s_PanicAttack &&
-		GetBulletAmount() > 1))
-		return true;
-
 	switch (GetWeaponID()) {
 	case TF_WEAPON_PISTOL:
 	case TF_WEAPON_PISTOL_SCOUT:
