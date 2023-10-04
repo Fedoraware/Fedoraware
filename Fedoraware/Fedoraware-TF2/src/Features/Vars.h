@@ -77,7 +77,6 @@ namespace Vars
 	CVar(ModernDesign, false, IS_VISUAL);
 	CVar(ShowPlayerlist, false);
 	CVar(ShowKeybinds, false);
-	CVar(MenuCelebration, true, IS_VISUAL);
 	CVar(Vignette, false, IS_VISUAL);
 	CVar(CloseOnUnfocus, false, IS_VISUAL);
 	CVar(MenuKey, 0);
