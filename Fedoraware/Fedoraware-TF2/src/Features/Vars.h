@@ -796,7 +796,6 @@ namespace Vars
 		CVar(WhileInAir, false)
 		CVar(FakelagMin, 1) //	only show when FakelagMode=2
 		CVar(FakelagMax, 22)
-		CVar(FakelagOnKey, false) // dont show when fakelagmode=2|3
 		CVar(FakelagKey, 0x54) //T
 		CVar(FakelagValue, 1) // dont show when fakelagmode=2
 		CVar(AutoPeekKey, 0)
