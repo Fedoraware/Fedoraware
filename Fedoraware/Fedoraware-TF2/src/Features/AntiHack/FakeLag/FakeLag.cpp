@@ -73,7 +73,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 		return true;
 	}	//	no other checks, we want this
 
-	// Is a fakelag key set and pressed?
+	// Could put this in a better place but lazy
 	static KeyHelper fakelagKey{ &Vars::Misc::CL_Move::FakelagKey.Value };
 	Vars::Misc::CL_Move::Fakelag.Value = (fakelagKey.Pressed() ? !Vars::Misc::CL_Move::Fakelag.Value : Vars::Misc::CL_Move::Fakelag.Value);
 
