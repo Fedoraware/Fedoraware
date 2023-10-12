@@ -111,8 +111,6 @@ namespace G
 
 	inline int BackpackQuality = 1;
 
-	inline std::vector<int> MedicCallers;
-
 	inline bool ShouldUpdateMaterialCache = true;	//	start at true or this will only be cached on colour change through menu.
 
 	inline bool IsIgnored(uint32_t friendsID)
