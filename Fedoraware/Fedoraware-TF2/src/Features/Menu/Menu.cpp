@@ -2,7 +2,7 @@
 
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
-#include "../AttributeChanger/AttributeChanger.h"
+#include "../Items/AttributeChanger/AttributeChanger.h"
 #include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
 #include "../Chams/DMEChams.h"

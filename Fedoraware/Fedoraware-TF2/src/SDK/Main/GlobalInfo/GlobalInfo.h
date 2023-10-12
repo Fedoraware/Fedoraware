@@ -26,6 +26,12 @@ struct Priority {
 	int Mode = 2; // 0 - Friend, 1 - Ignore, 2 - Default, 3 - Rage, 4 - Cheater
 };
 
+/*
+ *	PLEASE stop addding things here!
+ *	Global state will fuck this cheat over even more and
+ *	can almost always be avoided...
+ */
+
 namespace G
 {
 	inline int CurrentTargetIdx = 0; // Index of the current aimbot target

@@ -1,11 +1,10 @@
 #include "../Hooks.h"
+#include "../../Features/Items/Items.h"
 
-#include "../../SDK/Main/CEconNotification.h"
-
-MAKE_HOOK(CEconNotification_HasNewItems, S::CEconNotification_HasNewItems(), void*, __fastcall,
+MAKE_HOOK(CEconNotification_HasNewItems, S::CEconNotification_HasNewItems(), CEconNotification*, __fastcall,
 		  void* ecx, void* edx)
 {
-	auto* pNotification = static_cast<CEconNotification*>(Hook.Original<FN>()(ecx, edx));
-	G::NotificationVector.push_back(pNotification);
+	auto* pNotification = Hook.Original<FN>()(ecx, edx);
+	F::Items.AddNotifcation(pNotification);
 	return pNotification;
 }

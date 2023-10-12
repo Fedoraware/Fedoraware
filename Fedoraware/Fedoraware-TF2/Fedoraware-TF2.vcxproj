@@ -165,6 +165,7 @@
     <ClCompile Include="src\Features\Camera\CameraWindow.cpp" />
     <ClCompile Include="src\Features\Commands\Commands.cpp" />
     <ClCompile Include="src\Features\CritHack\CritHack.cpp" />
+    <ClCompile Include="src\Features\Items\Items.cpp" />
     <ClCompile Include="src\Features\Killsay\Killsay.cpp" />
     <ClCompile Include="src\Features\Misc\Notifications\Notifications.cpp" />
     <ClCompile Include="src\Features\NoSpread\NoSpread.cpp" />
@@ -207,7 +208,7 @@
     <ClCompile Include="src\Features\NetVarHooks\NetVarHooks.cpp" />
     <ClCompile Include="src\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="src\Features\Prediction\Prediction.cpp" />
-    <ClCompile Include="src\Features\AttributeChanger\AttributeChanger.cpp" />
+    <ClCompile Include="src\Features\Items\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="src\Features\Radar\Radar.cpp" />
     <ClCompile Include="src\Features\Resolver\Resolver.cpp" />
     <ClCompile Include="src\Features\SpyWarning\SpyWarning.cpp" />
@@ -344,6 +345,7 @@
     <ClInclude Include="src\Features\Colour.h" />
     <ClInclude Include="src\Features\Commands\Commands.h" />
     <ClInclude Include="src\Features\Feature.h" />
+    <ClInclude Include="src\Features\Items\Items.h" />
     <ClInclude Include="src\Features\Killsay\Killsay.h" />
     <ClInclude Include="src\Features\Misc\Notifications\Notifications.h" />
     <ClInclude Include="src\Features\NoSpread\NoSpread.h" />
@@ -398,7 +400,7 @@
     <ClInclude Include="src\Features\Chams\Chams.h" />
     <ClInclude Include="src\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="src\Features\Prediction\Prediction.h" />
-    <ClInclude Include="src\Features\AttributeChanger\AttributeChanger.h" />
+    <ClInclude Include="src\Features\Items\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="src\Features\Radar\Radar.h" />
     <ClInclude Include="src\Features\Resolver\Resolver.h" />
     <ClInclude Include="src\Features\SpyWarning\SpyWarning.h" />
