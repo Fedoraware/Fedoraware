@@ -31,7 +31,7 @@ void CHookManager::Init()
 	MH_Initialize();
 	{
 		WndProc::Init();
-		for (const auto& hook : GetMapHooks() | std::views::values)
+		for (const auto hook : GetMapHooks() | std::views::values)
 		{
 			hook->Init();
 		}
