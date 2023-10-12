@@ -174,16 +174,16 @@ void CPlayerArrows::Draw()
 			{
 				if (pLocal->GetTeamNum() == 2)
 				{
-					teamColor = Colors::TeamBlu;
+					teamColor = Vars::Colours::TeamBlu.Value;
 				}
 				else
 				{
-					teamColor = Colors::TeamRed;
+					teamColor = Vars::Colours::TeamRed.Value;
 				}
 			}
 			else
 			{
-				teamColor = Colors::Enemy;
+				teamColor = Vars::Colours::Enemy.Value;
 			}
 
 			DrawArrowTo(vLocalPos, player, teamColor);

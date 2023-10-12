@@ -45,7 +45,7 @@ __inline Color_t Rainbow()
 MAKE_HOOK(C_OP_RenderSprites_RenderSpriteCard, S::COP_RenderSprites_RenderSpriteCard(), void, __fastcall, 
         void* ecx, void* edx, void* meshBuilder, void* pCtx, SpriteRenderInfo_t& info, int hParticle, void* pSortList, void* pCamera)
 {
-    #define colors Colors::ParticleColor
+    #define colors Vars::Colours::ParticleColor.Value
     #define rainbow Vars::Visuals::RGBParticles.Value
 
     if (Vars::Visuals::ParticleColors.Value == true)

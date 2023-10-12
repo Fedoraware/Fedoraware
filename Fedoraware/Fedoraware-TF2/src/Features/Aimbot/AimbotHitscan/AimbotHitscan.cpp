@@ -767,7 +767,7 @@ void BulletTracer(CBaseEntity* pLocal, const Target_t& target)
 
 	Vec3 shootPos = pLocal->GetShootPos();
 	shootPos.z -= 5.0f;
-	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Colors::BulletTracer;
+	const Color_t tracerColor = Vars::Visuals::BulletTracerRainbow.Value ? Utils::Rainbow() : Vars::Colours::BulletTracer.Value;
 	I::DebugOverlay->AddLineOverlayAlpha(shootPos, vecPos, tracerColor.r, tracerColor.g, tracerColor.b, tracerColor.a, true, 5);
 }
 

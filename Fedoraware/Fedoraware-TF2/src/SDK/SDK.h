@@ -157,57 +157,6 @@ inline void ShaderStencilState_t::SetStencilState(IMatRenderContext *pRenderCont
 namespace Colors
 {
 	inline Color_t White =						{ 255, 255, 255, 255 };
-	inline Color_t OutlineESP =					{ 0, 0, 0, 255 };
-	inline Gradient_t DTBarIndicatorsCharged = { {106, 255, 131, 180}, {106, 255, 250, 180} };
-	inline Gradient_t DTBarIndicatorsCharging = { {255, 192, 81, 180}, {255, 134, 81, 180} };
-	inline Gradient_t ChokedBar =				{ { 47, 39, 0, 255 }, { 255, 210, 0, 255 } };
-	inline Gradient_t GradientHealthBar =				{ { 255, 0, 0, 255 }, { 0, 202, 124, 255 } };
-	inline Gradient_t GradientOverhealBar =		{ { 0, 202, 124, 255 }, { 167, 255, 237, 255 } };
-	inline Gradient_t UberchargeBar =			{ { 255, 255, 255, 255 }, { 255, 0, 228, 255 } };
-	inline Color_t Cond =						{ 254, 202, 87, 255 };
-	inline Color_t Target =						{ 240, 147, 43, 255 };
-	inline Color_t Invuln =						{ 120, 111, 166, 255 };
-	inline Color_t Cloak =						{ 165, 177, 194, 255 };
-	inline Color_t Friend =						{ 32, 191, 107, 255 };
-	inline Color_t Local =						{ 168, 255, 211, 255 };
-	inline Color_t Ignored =					{ 32, 191, 107, 255 };
-	inline Color_t Overheal =					{ 84, 160, 255, 255 };
-	inline Color_t Health =						{ 0, 230, 64, 255 };
-	inline Color_t Ammo =						{ 191, 191, 191, 255 };
-	inline Color_t UberColor =					{ 224, 86, 253, 255 };
-	inline Color_t TeamRed =					{ 255, 100, 87, 255 };
-	inline Color_t TeamBlu =					{ 30, 144, 255, 255 };
-	inline Color_t Enemy =						{ 255, 100, 87, 255 };
-	inline Color_t rTeam =						{ 30, 144, 255, 255 };
-	inline Color_t Hands =						{ 30, 144, 255, 255 };
-	inline Color_t HandsOverlay =				{ 255, 127, 0, 255 };
-	inline Color_t Weapon =						{ 30, 144, 255, 255 };
-	inline Color_t WeaponOverlay =				{ 255, 127, 0, 255 };
-	inline Color_t WorldModulation =			{ 255, 255, 255, 255 };
-	inline Color_t SkyModulation =				{ 255, 255, 255, 255 };
-	inline Color_t StaticPropModulation =		{ 255, 255, 255, 255 };
-	inline Color_t ParticleColor				{ 255, 255, 255, 255 };
-	inline Color_t FOVCircle =					{ 255, 255, 255, 10 };
-	inline Color_t Bones =						{ 255, 255, 255, 255 };
-	inline Color_t BulletTracer =				{ 255, 255, 255, 255 };
-	inline Color_t FeetColor =					{ 255, 150, 0, 255 }; //orange-ish color - like fire was my idea
-	inline Color_t FresnelBase =				{ 0,0,0,255 };
-	inline Color_t FresnelBaseHands =			{ 0,0,0,255 };
-	inline Color_t FresnelBaseWeps =			{ 0,0,0,255 };
-	inline Color_t FresnelTop = 				{ 0,255,0,255 };
-	inline Color_t AimSquareCol = 				{ 0,255,0,255 };
-	inline Color_t DtOutline =					{ 30, 30, 30, 180 };
-	inline Color_t NotifBG =					{ 30, 30, 30, 255 };
-	inline Color_t NotifOutline =				{ 255, 101, 101, 255};
-	inline Color_t NotifText =					{ 255, 255, 255, 255 };
-	inline Color_t HitboxFace =					{ 255, 255, 255, 25 };
-	inline Color_t HitboxEdge =					{ 255, 255, 255, 175 };
-	inline Color_t WeaponIcon =					{ 255,255,255,255 };
-	inline Color_t NoscopeLines1 =				{ 0,0,0,255 };
-	inline Color_t NoscopeLines2 =				{ 0,0,0,100 };
-	inline Color_t bonecolor =					{ 231, 95, 255, 10 };
-	inline Color_t NPC =						{ 255, 255, 255, 255 };
-	inline Color_t Bomb =						{ 255, 255, 255, 255 };
 }
 
 namespace Utils
@@ -279,81 +228,6 @@ namespace Utils
 		using FN = PDWORD(__cdecl* )(int);
 		static FN fnInitKeyValue = S::InitKeyValue.As<FN>();
 		return fnInitKeyValue(32);
-	}
-
-	__inline Color_t GetTeamColor(int nTeamNum, bool otherColors)
-	{
-		if (otherColors) {
-			if (const auto& pLocal = g_EntityCache.GetLocal()) {
-				// Enemy/Team based colors
-				const auto lPlayerTeam = pLocal->GetTeamNum();
-
-				if (pLocal->IsInValidTeam() && (nTeamNum == 2 || nTeamNum == 3))
-				{
-					if (lPlayerTeam == nTeamNum)
-					{
-						return Colors::rTeam;
-					}
-
-					return Colors::Enemy;
-				}
-
-				return Colors::White;
-			}
-		}
-		else {
-			switch (nTeamNum)
-			{
-			case 2: return Colors::TeamRed;
-			case 3: return Colors::TeamBlu;
-			default: return Colors::White;
-			}
-		}
-		return Colors::White;
-	}
-
-	__inline Color_t GetEntityDrawColor(CBaseEntity* pEntity, bool enableOtherColors)
-	{
-		Color_t out = GetTeamColor(pEntity->GetTeamNum(), enableOtherColors);
-		PlayerInfo_t info{}; I::EngineClient->GetPlayerInfo(pEntity->GetIndex(), &info);
-
-		if (pEntity->IsNPC()) { out = Colors::NPC; }
-		if (pEntity->IsBomb()) { out = Colors::Bomb; }
-
-		if (pEntity->IsPlayer())
-		{
-			if (g_EntityCache.GetLocal()->GetIndex() == pEntity->GetIndex())
-			{
-				out = Colors::Local;
-			}
-
-			else if (g_EntityCache.IsFriend(pEntity->GetIndex()) || pEntity == g_EntityCache.GetLocal())
-			{
-				out = Colors::Friend;
-			}
-
-			else if (G::IsIgnored(info.friendsID))
-			{
-				out = Colors::Ignored;
-			}
-
-			else if (pEntity->IsCloaked())
-			{
-				out = Colors::Cloak;
-			}
-
-			else if (!pEntity->IsVulnerable())
-			{
-				out = Colors::Invuln;
-			}
-		}
-
-		if (pEntity->GetIndex() == G::CurrentTargetIdx)
-		{
-			out = Colors::Target;
-		}
-
-		return out;
 	}
 
 	__inline bool IsSteamFriend(CBaseEntity* pPlayer)

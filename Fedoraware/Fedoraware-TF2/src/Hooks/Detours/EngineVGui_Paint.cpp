@@ -86,21 +86,15 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 					{
 						const auto& menuFont = g_Draw.GetFont(FONT_MENU);
 						g_Draw.String(menuFont, 5, g_ScreenSize.h - 2  - Vars::Fonts::FONT_MENU::nTall.Value, { 200, 200, 200, 255 }, ALIGN_DEFAULT, L"Build of %hs", __DATE__ " " __TIME__);
-						if (Vars::Menu::MenuCelebration.Value)
+						if (curCalTime->tm_mon == 11 && curCalTime->tm_mday == 25) //this *probably* works
 						{
-							if (curCalTime->tm_mon == 11 && curCalTime->tm_mday == 25) //this *probably* works
-							{
-								g_Draw.String(menuFont, g_ScreenSize.c, 150, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, "MERRY CHRISTMAS!!!!!!!");
-							}
+							g_Draw.String(menuFont, g_ScreenSize.c, 150, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, "MERRY CHRISTMAS!!!!!!!");
 						}
 					}
 
-					if (Vars::Menu::MenuCelebration.Value)
-					{
-						if (curCalTime->tm_mon == 11 || curCalTime->tm_mon == 0 || curCalTime->tm_mon == 1) //december, january, february (winter months)
-						{ //this method also sucks for getting the 3 months and can probably be shortened
-							F::Visuals.DrawMenuSnow();
-						}
+					if (curCalTime->tm_mon == 11 || curCalTime->tm_mon == 0 || curCalTime->tm_mon == 1) //december, january, february (winter months)
+					{ //this method also sucks for getting the 3 months and can probably be shortened
+						F::Visuals.DrawMenuSnow();
 					}
 				}
 			}

@@ -54,12 +54,12 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 
 		if (iPlayerIndex == I::EngineClient->GetLocalPlayer())
 		{
-			chatFlag = { Colors::Local.to_hex_alpha(), "[You]" };
+			chatFlag = { Vars::Colours::Local.Value.to_hex_alpha(), "[You]" };
 			flagSet = true;
 		}
 		else if (g_EntityCache.IsFriend(iPlayerIndex))
 		{
-			chatFlag = { Colors::Friend.to_hex_alpha(), "[Friend]" };
+			chatFlag = { Vars::Colours::Friend.Value.to_hex_alpha(), "[Friend]" };
 			flagSet = true;
 		}
 		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 4)

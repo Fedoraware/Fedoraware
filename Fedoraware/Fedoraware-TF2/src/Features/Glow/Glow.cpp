@@ -243,12 +243,12 @@ void CGlowEffect::Render()
 						}
 						else
 						{
-							DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+							DrawColor = GetEntityDrawColour(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 						}
 					}
 					else
 					{
-						DrawColor = Utils::GetEntityDrawColor(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+						DrawColor = GetEntityDrawColour(Player, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 					}
 				}
 				else
@@ -325,7 +325,7 @@ void CGlowEffect::Render()
 
 				switch (Vars::Glow::Buildings::Color.Value) {
 				case 0: {
-					DrawColor = Utils::GetEntityDrawColor(Building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
+					DrawColor = GetEntityDrawColour(Building, Vars::ESP::Main::EnableTeamEnemyColors.Value);
 					break;
 				}
 				case 1: {
@@ -350,7 +350,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Health))
 						continue;
 
-					m_vecGlowEntities.push_back({Health, Colors::Health, Vars::Glow::World::Alpha.Value});
+					m_vecGlowEntities.push_back({Health, Vars::Colours::Health.Value, Vars::Glow::World::Alpha.Value});
 
 					if (!F::Chams.HasDrawn(Health))
 						DrawModel(Health, STUDIO_RENDER, true);
@@ -364,7 +364,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Ammo))
 						continue;
 
-					m_vecGlowEntities.push_back({Ammo, Colors::Ammo, Vars::Glow::World::Alpha.Value});
+					m_vecGlowEntities.push_back({Ammo, Vars::Colours::Ammo.Value, Vars::Glow::World::Alpha.Value});
 
 					if (!F::Chams.HasDrawn(Ammo))
 						DrawModel(Ammo, STUDIO_RENDER, true);
@@ -387,7 +387,7 @@ void CGlowEffect::Render()
 						continue;
 
 					m_vecGlowEntities.push_back({
-						Projectile, Utils::GetTeamColor(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.Value),
+						Projectile, GetTeamColour(nTeam, Vars::ESP::Main::EnableTeamEnemyColors.Value),
 						Vars::Glow::World::Alpha.Value
 					});
 
@@ -403,7 +403,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, NPC))
 						continue;
 
-					m_vecGlowEntities.push_back({ NPC, Utils::GetEntityDrawColor(NPC, false), Vars::Glow::World::Alpha.Value});
+					m_vecGlowEntities.push_back({ NPC, GetEntityDrawColour(NPC, false), Vars::Glow::World::Alpha.Value});
 
 					if (!F::Chams.HasDrawn(NPC))
 						DrawModel(NPC, STUDIO_RENDER, true);
@@ -417,7 +417,7 @@ void CGlowEffect::Render()
 					if (!Utils::IsOnScreen(pLocal, Bombs))
 						continue;
 
-					m_vecGlowEntities.push_back({ Bombs, Utils::GetEntityDrawColor(Bombs, false), Vars::Glow::World::Alpha.Value });
+					m_vecGlowEntities.push_back({ Bombs, GetEntityDrawColour(Bombs, false), Vars::Glow::World::Alpha.Value });
 
 					if (!F::Chams.HasDrawn(Bombs))
 						DrawModel(Bombs, STUDIO_RENDER, true);

@@ -341,6 +341,7 @@
     <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
+    <ClInclude Include="src\Features\Colour.h" />
     <ClInclude Include="src\Features\Commands\Commands.h" />
     <ClInclude Include="src\Features\Feature.h" />
     <ClInclude Include="src\Features\Killsay\Killsay.h" />
