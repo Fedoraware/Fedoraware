@@ -247,7 +247,7 @@
     <ClCompile Include="src\Hooks\Detours\BaseClientDLL_ShutDown.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPartyClient_BCanRequestToJoinPlayer.cpp" />
     <ClCompile Include="src\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
-    <ClCompile Include="src\Hooks\Detours\CEconNotification_HasNewItems_CEconNotification_HasNewItems.cpp" />
+    <ClCompile Include="src\Hooks\Detours\CEconNotification_HasNewItems.cpp" />
     <ClCompile Include="src\Hooks\Detours\CHudCrosshair_GetDrawPosition.cpp" />
     <ClCompile Include="src\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
     <ClCompile Include="src\Hooks\Detours\ClientModeShared_CreateMove.cpp" />
