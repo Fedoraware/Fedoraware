@@ -1,4 +1,6 @@
 #include "CritHack.h"
+
+#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #define MASK_SIGNED 0x7FFFFFFF
 
 // i hate crithack
@@ -281,7 +283,7 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 	const auto& pWeapon = pLocal->GetActiveWeapon();
 	if (!pWeapon) { return; }
 
-	if (G::IsAttacking || IsAttacking(pCmd, pWeapon)/* || pCmd->buttons & IN_ATTACK*/)
+	if (F::AimbotGlobal.IsAttacking() || IsAttacking(pCmd, pWeapon)/* || pCmd->buttons & IN_ATTACK*/)
 	{
 		return;
 	}

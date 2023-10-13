@@ -71,7 +71,6 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 			F::Backtrack.FrameStageNotify();
 			F::MoveSim.FillVelocities();
 			F::Visuals.FillSightlines();
-			G::BulletTracerFix = true;
 			G::LocalSpectated = false;
 			F::Visuals.PruneBulletTracers();
 			if (const auto& pLocal = g_EntityCache.GetLocal())

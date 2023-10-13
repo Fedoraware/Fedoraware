@@ -1,6 +1,7 @@
 #include "AutoStab.h"
 
 #include "../../Vars.h"
+#include "../../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../../Backtrack/Backtrack.h"
 #include "../../Aimbot/MovementSimulation/MovementSimulation.h"
 #include "../../TickHandler/TickHandler.h"
@@ -173,7 +174,7 @@ void CAutoStab::RunRage(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active.Value || !G::WeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE || G::IsAttacking)
+	if (!Vars::Triggerbot::Stab::Active.Value || !G::WeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE || F::AimbotGlobal.IsAttacking())
 	{
 		return;
 	}
@@ -189,7 +190,7 @@ void CAutoStab::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 
 	if (pCmd->buttons & IN_ATTACK)
 	{
-		G::IsAttacking = true;
+		F::AimbotGlobal.SetAttacking(true);
 	}
 
 	G::AutoBackstabRunning = true;

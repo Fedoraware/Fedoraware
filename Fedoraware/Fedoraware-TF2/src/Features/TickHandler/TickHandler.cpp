@@ -1,6 +1,7 @@
 #include "TickHandler.h"
 #include "../../Hooks/HookManager.h"
 #include "../../Hooks/Hooks.h"
+#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 
 void CTickshiftHandler::Speedhack(CUserCmd* pCmd)
 {
@@ -52,7 +53,7 @@ void CTickshiftHandler::Doubletap(const CUserCmd* pCmd, CBaseEntity* pLocal)
 		case 3: { return; }
 	}
 
-	if (G::IsAttacking || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
+	if (F::AimbotGlobal.IsAttacking() || (G::CurWeaponType == EWeaponType::MELEE && pCmd->buttons & IN_ATTACK))
 	{
 		bDoubletap = G::ShouldShift = Vars::Misc::CL_Move::NotInAir.Value ? pLocal->OnSolid() : true;
 	}

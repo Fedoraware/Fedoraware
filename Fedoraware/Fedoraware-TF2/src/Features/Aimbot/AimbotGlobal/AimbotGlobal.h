@@ -63,12 +63,17 @@ struct AimInfo_t
 
 class CAimbotGlobal
 {
+	bool m_Attacking = false;
+
 public:
 	AimInfo_t GetInfo(CBaseEntity* pTarget, const Vec3 vFrom, const Vec3 vAng, const bool bDist);
 	bool IsKeyDown();
 	void SortTargets(std::vector<Target_t>*, const ESortMethod& method);
 	bool ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun = false);
 	Priority GetPriority(int targetIdx);
+
+	bool IsAttacking() { return m_Attacking; }
+	void SetAttacking(bool bState) { m_Attacking = bState; }
 };
 
 ADD_FEATURE(CAimbotGlobal, AimbotGlobal)

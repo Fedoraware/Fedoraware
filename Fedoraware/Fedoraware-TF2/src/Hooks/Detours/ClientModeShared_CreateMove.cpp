@@ -16,6 +16,7 @@
 #include "../../Features/AntiHack/CheaterDetection/CheaterDetection.h"
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
+#include "../../Features/Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../../Features/Chams/DMEChams.h"
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
@@ -25,7 +26,7 @@
 
 void AttackingUpdate()
 {
-	if (!G::IsAttacking) { return; }
+	if (!F::AimbotGlobal.IsAttacking()) { return; }
 
 	if (const auto& pLocal = g_EntityCache.GetLocal())
 	{
@@ -42,7 +43,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 {
 	G::UpdateView = true;
 	G::SilentTime = false;
-	G::IsAttacking = false;
+	F::AimbotGlobal.SetAttacking(false);
 
 	if (!pCmd || !pCmd->command_number) { return Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd); }
 	if (Hook.Original<FN>()(ecx, edx, input_sample_frametime, pCmd)) { I::Prediction->SetLocalViewAngles(pCmd->viewangles); }
@@ -88,7 +89,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 				G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
 				G::WeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
 				G::CurWeaponType = Utils::GetWeaponType(pWeapon);
-				G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon);
+				F::AimbotGlobal.SetAttacking(Utils::IsAttacking(pCmd, pWeapon));
 
 				if (pWeapon->GetSlot() != SLOT_MELEE)
 				{
@@ -146,7 +147,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
 			G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
-			G::IsAttacking = Utils::IsAttacking(pCmd, pWeapon);
+			F::AimbotGlobal.SetAttacking(Utils::IsAttacking(pCmd, pWeapon));
 		}
 	}	//	we always need this :c 
 

@@ -66,7 +66,6 @@ namespace G
 	inline bool IsChoking = false; // might not actually be useful 
 
 	/* Aimbot */
-	inline bool IsAttacking = false; // this is only used by aimbot, and is also set to false at the start of a lot of functions, this is not reliable
 	inline bool HitscanRunning = false;
 	inline bool SilentTime = false;
 	inline Vec3 AimPos = {};
@@ -101,15 +100,8 @@ namespace G
 	inline std::unordered_map<int, int> ChokeMap; // Choked packets of players <Index, Amount>
 	inline bool DrawingStaticProps = false;
 	inline std::unordered_map<uint32_t, Priority> PlayerPriority; // Playerlist priorities <FriendsID, Priority>
-	inline bool BulletTracerFix = false;
 
 	inline bool UpdateView = false;
-
-	inline DWORD CalcIsAttackCriticalHelperOffset = 0;
-
-	inline bool ShouldAutoQueue = false;
-
-	inline int BackpackQuality = 1;
 
 	inline bool ShouldUpdateMaterialCache = true;	//	start at true or this will only be cached on colour change through menu.
 

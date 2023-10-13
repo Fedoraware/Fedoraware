@@ -2,6 +2,7 @@
 
 #include "../AutoGlobal/AutoGlobal.h"
 #include "../../Vars.h"
+#include "../../Aimbot/AimbotGlobal/AimbotGlobal.h"
 
 void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
@@ -133,7 +134,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 				G::SilentTime = true;
 			}
 
-			G::IsAttacking = true;
+			F::AimbotGlobal.SetAttacking(true);
 			pCmd->buttons |= IN_ATTACK2;
 		}
 	}
