@@ -112,7 +112,7 @@ namespace ImGui
 			VALID_KEYS[VK_BACK] = true;
 		});
 
-		auto VK2STR = [&](const int key) -> const char*
+		auto VK2STR = [](const int key) -> const char*
 		{
 			switch (key)
 			{
@@ -229,7 +229,7 @@ namespace ImGui
 		else
 		{
 			// Inactive
-			const char* keyName = VK2STR(output.Value);
+			const char* keyName = (output.Value == 0 && bAllowNone) ? "Always" : VK2STR(output.Value);
 			if (Button(keyName ? keyName : "Unknown", ImVec2(100, 0)))
 			{
 				SetActiveID(id, GetCurrentWindow());
