@@ -65,12 +65,21 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 
 void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 {
-	if (!G::ShouldStop) { return; }
-	Utils::StopMovement(pCmd);
-	if (G::ShouldStop) { return; }
-	G::UpdateView = false; bMovementStopped = true; bMovementScuffed = true;
-	if (G::Recharging) { return; }
-	*pSendPacket = false;
+	if (!G::ShouldStop || F::AimbotGlobal.IsAttacking()) { return; }
+
+	if (!Utils::StopMovement(pCmd))
+	{
+		return;
+	}
+
+	G::UpdateView = false;
+	bMovementStopped = true;
+	bMovementScuffed = true;
+
+	if (!G::Recharging)
+	{
+		*pSendPacket = false;
+	}
 }
 
 void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal) {
@@ -220,7 +229,7 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (!pLocal->OnSolid() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsAlive()) { return; }
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
-	if (G::IsAttacking || G::ShouldShift || G::AntiAim.second) { return; }
+	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || G::AntiAim.second) { return; }
 	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
@@ -239,7 +248,7 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 		return;
 	}
 
-	if (G::IsAttacking) { return; }
+	if (F::AimbotGlobal.IsAttacking()) { return; }
 
 	const Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
 	CBaseEntity* target = nullptr;
@@ -499,7 +508,7 @@ void CMisc::FastAccel(CUserCmd* pCmd, CBaseEntity* pLocal)
 		return;
 	}
 
-	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsAGhost() || !pLocal->OnSolid() || G::IsAttacking)
+	if (!pLocal->IsAlive() || pLocal->IsSwimming() || pLocal->IsAGhost() || !pLocal->OnSolid() || F::AimbotGlobal.IsAttacking())
 	{
 		return;
 	}
@@ -1221,7 +1230,7 @@ void CMisc::AutoPeek(CUserCmd* pCmd, CBaseEntity* pLocal)
 		}
 
 		// We've just attacked. Let's return!
-		if (G::LastUserCmd->buttons & IN_ATTACK || G::IsAttacking)
+		if (G::LastUserCmd->buttons & IN_ATTACK || F::AimbotGlobal.IsAttacking())
 		{
 			isReturning = true;
 		}

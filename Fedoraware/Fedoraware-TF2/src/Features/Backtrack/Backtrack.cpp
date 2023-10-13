@@ -1,4 +1,6 @@
 #include "Backtrack.h"
+
+#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../Aimbot/MovementSimulation/MovementSimulation.h"
 
 #define ROUND_TO_TICKS(t) (TICKS_TO_TIME(TIME_TO_TICKS(t)))
@@ -275,7 +277,7 @@ std::optional<TickRecord> CBacktrack::Run(CUserCmd* pCmd)
 {
 	if (!Vars::Backtrack::Enabled.Value) { return std::nullopt; }
 	UpdateDatagram();
-	if (G::IsAttacking)
+	if (F::AimbotGlobal.IsAttacking())
 	{
 		CBaseEntity* pLocal = g_EntityCache.GetLocal();
 		if (!pLocal) { return std::nullopt; }

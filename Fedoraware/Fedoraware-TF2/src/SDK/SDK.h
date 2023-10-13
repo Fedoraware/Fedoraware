@@ -636,9 +636,7 @@ namespace Utils
 		pCmd->upmove = result.z * scale;
 	}
 
-	__inline void StopMovement(CUserCmd* pCmd, bool safe = true) {
-		if (safe && G::IsAttacking) { return; }
-
+	__inline bool StopMovement(CUserCmd* pCmd) {
 		if (CBaseEntity* pLocal = g_EntityCache.GetLocal()) {
 			const float direction = Math::VelocityToAngles(pLocal->m_vecVelocity()).y;
 			pCmd->viewangles.x = -90;	//	on projectiles we would be annoyed if we shot the ground.
@@ -646,7 +644,11 @@ namespace Utils
 			pCmd->viewangles.z = 0;
 			pCmd->sidemove = 0; pCmd->forwardmove = 0;
 			G::ShouldStop = false;
+
+			return true;
 		}
+
+		return false;
 	}
 
 	__inline void ConLog(const char* cFunction, const char* cLog, Color_t cColour, const bool bShouldPrint){

@@ -1,4 +1,6 @@
 #include "FakeLag.h"
+
+#include "../../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../../Visuals/FakeAngleManager/FakeAng.h"
 
 bool CFakeLag::IsVisible(CBaseEntity* pLocal)
@@ -47,7 +49,7 @@ bool CFakeLag::IsAllowed(CBaseEntity* pLocal)
 	}
 
 	// Are we attacking? TODO: Add more logic here
-	if (G::IsAttacking)
+	if (F::AimbotGlobal.IsAttacking())
 	{
 		if (Vars::AntiHack::AntiAim::RehideAntiAimPostShot.Value) {
 			bAttacked = true;

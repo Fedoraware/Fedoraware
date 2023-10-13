@@ -10,7 +10,7 @@
 
 #include "../Features/Menu/Menu.h"
 #include "../Features/Menu/ConfigManager/ConfigManager.h"
-#include "../Features/Menu/../AttributeChanger/AttributeChanger.h"
+#include "../Features/Items/AttributeChanger/AttributeChanger.h"
 #include "../Features/Commands/Commands.h"
 #include "../Features/Discord/Discord.h"
 

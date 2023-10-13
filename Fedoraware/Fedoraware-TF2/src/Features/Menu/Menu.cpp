@@ -2,7 +2,7 @@
 
 #include "../Vars.h"
 #include "../Camera/CameraWindow.h"
-#include "../AttributeChanger/AttributeChanger.h"
+#include "../Items/AttributeChanger/AttributeChanger.h"
 #include "../Radar/Radar.h"
 #include "../Misc/Misc.h"
 #include "../Chams/DMEChams.h"
@@ -744,8 +744,11 @@ void CMenu::MenuVisuals()
 					WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
 					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor.Value);
 					ColorPickerL("Backtrack colour 2", Vars::Backtrack::BtChams::BacktrackColor2.Value, 1);
-					WToggle("Gradient", &Vars::Backtrack::BtChams::Gradient.Value); HelpMarker("Will draw a gradient on the backtrack chams");
 					WToggle("Only draw last tick", &Vars::Backtrack::BtChams::LastOnly.Value); HelpMarker("Only draws the last tick (can save FPS)");
+					if (!Vars::Backtrack::BtChams::LastOnly.Value)
+					{
+						WToggle("Gradient###BTChams", &Vars::Backtrack::BtChams::Gradient.Value); HelpMarker("Will draw a gradient on the backtrack chams");
+					}
 					WToggle("Enemy only", &Vars::Backtrack::BtChams::EnemyOnly.Value); HelpMarker("You CAN backtrack your teammates. (Whip, medigun)");
 
 					static std::vector backtrackMaterial{

@@ -4,7 +4,7 @@
 #include "../../Features/Glow/Glow.h"
 #include "../../Features/Chams/Chams.h"
 #include "../../Features/Chams/DMEChams.h"
-#include "../../Features/AttributeChanger/AttributeChanger.h"
+#include "../../Features/Items/AttributeChanger/AttributeChanger.h"
 
 #include <mutex>
 

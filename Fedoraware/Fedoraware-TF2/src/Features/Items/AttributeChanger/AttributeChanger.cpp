@@ -1,7 +1,5 @@
 #include "AttributeChanger.h"
-
-#include "../Menu/ConfigManager/ConfigManager.h"
-#include "../Vars.h"
+#include "../../Menu/ConfigManager/ConfigManager.h"
 
 constexpr int MAX_BUFFER = (MAX_PATH * 3);
 

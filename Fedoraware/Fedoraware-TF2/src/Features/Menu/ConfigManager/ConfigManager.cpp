@@ -267,10 +267,9 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 	{
 		WriteTree.clear();
 
-		for (const auto& var : g_Vars)
+		for (const auto var : g_Vars)
 		{
-			if (var->m_bVisual)
-				continue;
+			if (var->m_bVisual) { continue; }
 
 			SaveT(bool)
 			else SaveT(int)
@@ -280,7 +279,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			else SaveT(Gradient_t)
 			else SaveT(Vec3)
 			else SaveT(Chams_t)
-			else SaveT(DragBox_t);
+			else SaveT(DragBox_t)
 		}
 
 		write_json(ConfigPath + "\\" + configName + ConfigExtension, WriteTree);
@@ -296,7 +295,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 
 bool CConfigManager::LoadConfig(const std::string& configName)
 {
-	// Check if the visual config exists
+	// Check if the config exists
 	if (!std::filesystem::exists(g_CFG.GetConfigPath() + "\\" + configName + ConfigExtension))
 	{
 		return false;
@@ -308,10 +307,9 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 		ReadTree.clear();
 		read_json(ConfigPath + "\\" + configName + ConfigExtension, ReadTree);
 
-		for (auto& var : g_Vars)
+		for (const auto var : g_Vars)
 		{
-			if (var->m_bVisual)
-				continue;
+			if (var->m_bVisual) { continue; }
 
 			LoadT(bool)
 			else LoadT(int)
@@ -321,7 +319,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			else LoadT(Gradient_t)
 			else LoadT(Vec3)
 			else LoadT(Chams_t)
-			else LoadT(DragBox_t);
+			else LoadT(DragBox_t)
 		}
 
 
@@ -342,10 +340,9 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 	{
 		WriteTree.clear();
 
-		for (const auto& var : g_Vars)
+		for (const auto var : g_Vars)
 		{
-			if (!var->m_bVisual)
-				continue;
+			if (!var->m_bVisual) { continue; }
 
 			SaveT(bool)
 			else SaveT(int)
@@ -355,7 +352,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 			else SaveT(Gradient_t)
 			else SaveT(Vec3)
 			else SaveT(Chams_t)
-			else SaveT(DragBox_t);
+			else SaveT(DragBox_t)
 		}
 
 		write_json(ConfigPath + "\\Visuals\\" + configName + ConfigExtension, WriteTree);
@@ -381,10 +378,9 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		ReadTree.clear();
 		read_json(ConfigPath + "\\Visuals\\" + configName + ConfigExtension, ReadTree);
 
-		for (auto& var : g_Vars)
+		for (const auto var : g_Vars)
 		{
-			if (!var->m_bVisual)
-				continue;
+			if (!var->m_bVisual) { continue; }
 
 			LoadT(bool)
 			else LoadT(int)
@@ -394,7 +390,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 			else LoadT(Gradient_t)
 			else LoadT(Vec3)
 			else LoadT(Chams_t)
-			else LoadT(DragBox_t);
+			else LoadT(DragBox_t)
 		}
 
 		g_Draw.RemakeFonts();
