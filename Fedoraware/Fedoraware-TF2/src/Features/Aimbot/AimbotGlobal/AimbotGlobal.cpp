@@ -91,7 +91,7 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	CBaseCombatWeapon* pWeapon = g_EntityCache.GetWeapon();
 
 	PlayerInfo_t pInfo{};
-	if (!pTarget) { return true; }
+	if (!pTarget || !pLocal || !pWeapon) { return true; }
 	if (pTarget == pLocal) { return true; }
 	if (!I::EngineClient->GetPlayerInfo(pTarget->GetIndex(), &pInfo)) { return true; }
 	if (pTarget->GetDormant()) { return true; }
@@ -108,52 +108,32 @@ bool CAimbotGlobal::ShouldIgnore(CBaseEntity* pTarget, bool hasMedigun)
 	}
 
 	// Special conditions for mediguns //
-	if (!hasMedigun || (pLocal && pLocal->GetTeamNum() != pTarget->GetTeamNum()))
+	if (!hasMedigun || pLocal->GetTeamNum() != pTarget->GetTeamNum())
 	{
 		if (G::IsIgnored(pInfo.friendsID)) { return true; }
-		if (Vars::Aimbot::Global::IgnoreOptions.Value & (FRIENDS) && g_EntityCache.IsFriend(pTarget->GetIndex())) { return true; }
+		if (Vars::Aimbot::Global::IgnoreOptions.Value & (FRIENDS) && (g_EntityCache.IsFriend(pTarget->GetIndex()) || G::IsFriend(pInfo.friendsID))) { return true; }
 	}
 
 	if (Vars::Aimbot::Global::IgnoreOptions.Value & (VACCINATOR))
 	{
-		switch (G::CurWeaponType)
-		{
-			case EWeaponType::HITSCAN:
-			{
-				if (G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist())
-				{
-					return true;
-				}
+		switch (pWeapon->GetWeaponID()) {
+		case TF_WEAPON_FLAREGUN:
+		case TF_WEAPON_RAYGUN_REVENGE:	//	manmelter
+		case TF_WEAPON_FLAMETHROWER: {
+			return pTarget->IsFireResist();
+		}
+		case TF_WEAPON_COMPOUND_BOW: {
+			return pTarget->IsBulletResist();
+		}
+		}
 
-				break;
-			}
-			case EWeaponType::PROJECTILE:
-			{
-				if (pWeapon->GetWeaponID() == TF_WEAPON_FLAMETHROWER || pWeapon->GetWeaponID() == TF_WEAPON_FLAREGUN)
-				{
-					if (pTarget->IsFireResist())
-					{
-						return true;
-					}
-				}
-				else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW) //Right?
-				{
-					if (pTarget->IsBulletResist())
-					{
-						return true;
-					}
-				}
-				else
-				{
-					if (pTarget->IsBlastResist())
-					{
-						return true;
-					}
-				}
-
-				break;
-			}
-			default: break;
+		switch (G::CurWeaponType) {
+		case EWeaponType::HITSCAN: {
+			return G::CurItemDefIndex != Spy_m_TheEnforcer && pTarget->IsBulletResist();
+		}
+		case EWeaponType::PROJECTILE: {
+			return pTarget->IsBlastResist();
+		}
 		}
 	}
 

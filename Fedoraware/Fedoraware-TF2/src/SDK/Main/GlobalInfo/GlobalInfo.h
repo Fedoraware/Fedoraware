@@ -111,7 +111,12 @@ namespace G
 
 	inline bool IsIgnored(uint32_t friendsID)
 	{
-		return PlayerPriority[friendsID].Mode < 2;
+		return PlayerPriority[friendsID].Mode == 1;
+	}
+
+	inline bool IsFriend(uint32_t friendsID)
+	{
+		return !PlayerPriority[friendsID].Mode;
 	}
 
 	inline bool IsRage(uint32_t friendsID)
