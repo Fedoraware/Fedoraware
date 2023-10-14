@@ -18,7 +18,7 @@ void CChams::DrawModel(CBaseEntity* pEntity)
 void CChams::Init()
 {
 	{
-		auto kv = new KeyValues("VertexLitGeneric");
+		static auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
 		kv->SetString("$bumpmap", "models/player/shared/shared_normal");
 		kv->SetString("$envmap", "skybox/sky_dustbowl_01");
@@ -34,7 +34,7 @@ void CChams::Init()
 	}
 
 	{
-		auto kv = new KeyValues("VertexLitGeneric");
+		static auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
 		kv->SetString("$bumpmap", "vgui/white_additive");
 		kv->SetString("$selfillum", "1");
@@ -44,7 +44,7 @@ void CChams::Init()
 	}
 
 	{
-		auto kv = new KeyValues("VertexLitGeneric");
+		static auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "brick/brickwall031b");
 		kv->SetString("$additive", "1");
 		kv->SetString("$phong", "1");
@@ -59,7 +59,7 @@ void CChams::Init()
 	}
 
 	{
-		auto kv = new KeyValues("VertexLitGeneric");
+		static auto kv = new KeyValues("VertexLitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
 		kv->SetString("$bumpmap", "vgui/white_additive");
 		kv->SetString("$envmap", "cubemaps/cubemap_sheen001");
@@ -71,13 +71,13 @@ void CChams::Init()
 
 
 	{
-		auto kv = new KeyValues("UnlitGeneric");
+		static auto kv = new KeyValues("UnlitGeneric");
 		kv->SetString("$basetexture", "vgui/white_additive");
 		m_pMatFlat = I::MaterialSystem->Create("m_pMatFlat", kv);
 	}
 
 	{
-		auto kv = new KeyValues("VertexLitGeneric");
+		static auto kv = new KeyValues("VertexLitGeneric");
 		{
 			kv->SetString("$basetexture", "models/player/shared/ice_player");
 			kv->SetString("$bumpmap", "models/player/shared/shared_normal");

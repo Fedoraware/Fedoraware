@@ -7,6 +7,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/NoSpread/NoSpread.h"
+#include "../../Features/Auto/AutoUber/AutoUber.h"
 
 static int anti_balance_attempts = 0;
 static std::string previous_name;
@@ -106,13 +107,13 @@ MAKE_HOOK(BaseClientDLL_DispatchUserMessage, Utils::GetVFuncPtr(I::BaseClientDLL
 
 		case VoiceSubtitle:
 		{
-			int iEntityID = msgData.ReadByte();
-			int iVoiceMenu = msgData.ReadByte();
-			int iCommandID = msgData.ReadByte();
+			const int iEntityID = msgData.ReadByte();
+			const int iVoiceMenu = msgData.ReadByte();
+			const int iCommandID = msgData.ReadByte();
 
 			if (iVoiceMenu == 1 && iCommandID == 6)
 			{
-				G::MedicCallers.push_back(iEntityID);
+				F::AutoUber.AddMedicCaller(iEntityID);
 			}
 
 			break;

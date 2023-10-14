@@ -2,7 +2,7 @@
 
 #include "../../Features/Resolver/Resolver.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/AttributeChanger/AttributeChanger.h"
+#include "../../Features/Items/AttributeChanger/AttributeChanger.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Aimbot/MovementSimulation/MovementSimulation.h"
@@ -71,7 +71,6 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 			F::Backtrack.FrameStageNotify();
 			F::MoveSim.FillVelocities();
 			F::Visuals.FillSightlines();
-			G::BulletTracerFix = true;
 			G::LocalSpectated = false;
 			F::Visuals.PruneBulletTracers();
 			if (const auto& pLocal = g_EntityCache.GetLocal())

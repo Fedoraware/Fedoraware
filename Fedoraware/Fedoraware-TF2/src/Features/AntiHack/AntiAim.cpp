@@ -1,6 +1,7 @@
 #include "AntiAim.h"
 #include "../Vars.h"
 #include "../../Utils/Timer/Timer.hpp"
+#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../Misc/Misc.h"
 
 void CAntiAim::FixMovement(CUserCmd* pCmd, const Vec3& vOldAngles, float fOldSideMove, float fOldForwardMove)
@@ -61,7 +62,7 @@ void CAntiAim::ManualMouseEvent(CUserCmd* pCmd)
 }
 
 void CAntiAim::FakeShotAngles(CUserCmd* pCmd){
-	if (!G::IsAttacking || G::CurWeaponType != EWeaponType::HITSCAN || !Vars::AntiHack::AntiAim::InvalidShootPitch.Value){ return; }
+	if (!F::AimbotGlobal.IsAttacking() || G::CurWeaponType != EWeaponType::HITSCAN || !Vars::AntiHack::AntiAim::InvalidShootPitch.Value){ return; }
 
 	const Vec3 vOldAngles = pCmd->viewangles;
 	const float fOldSideMove = pCmd->sidemove;
@@ -91,7 +92,7 @@ bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal)
 		return false;
 	}
 
-	if (G::IsAttacking) { return false; }
+	if (F::AimbotGlobal.IsAttacking()) { return false; }
 
 	return true;
 }

@@ -5,6 +5,9 @@ using RenderViewFN = void(__fastcall*)(void* ecx, void* edx, const CViewSetup& v
 
 class CCameraWindow
 {
+	void SpyCamera(CBaseEntity* pLocal);
+	void TeleCamera(CBaseEntity* pLocal);
+
 public:
 	IMaterial* CameraMat;
 	ITexture* CameraTex;
@@ -12,6 +15,7 @@ public:
 	Vec3 CameraAngles;
 	bool CanDraw = false;
 	Rect_t ViewRect = { 50, 50, 800, 400 };
+
 	void Init();
 	void Draw();
 	void Update();

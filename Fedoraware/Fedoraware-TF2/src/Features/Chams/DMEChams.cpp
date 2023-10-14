@@ -507,7 +507,7 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 
 void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	const auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+	static auto dmeHook = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
 	Chams_t chams = Vars::Chams::Players::FakeAng.Value;
@@ -618,7 +618,7 @@ void CDMEChams::RenderFakeAng(const DrawModelState_t& pState, const ModelRenderI
 
 bool CDMEChams::Render(const DrawModelState_t& pState, const ModelRenderInfo_t& pInfo, matrix3x4* pBoneToWorld)
 {
-	const auto ModelRender_DrawModelExecute = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
+	static auto ModelRender_DrawModelExecute = g_HookManager.GetMapHooks()["ModelRender_DrawModelExecute"];
 	const auto& pRenderContext = I::MaterialSystem->GetRenderContext();
 
 	if (!ModelRender_DrawModelExecute || !pRenderContext) { return false; }

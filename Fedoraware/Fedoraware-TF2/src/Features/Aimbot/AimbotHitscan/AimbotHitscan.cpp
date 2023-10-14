@@ -576,7 +576,7 @@ void CAimbotHitscan::Aim(CUserCmd* pCmd, Vec3& vAngle)
 		{
 			if (Vars::Aimbot::Global::FlickatEnemies.Value && !G::ShouldShift)
 			{
-				if (G::IsAttacking)
+				if (F::AimbotGlobal.IsAttacking())
 				{
 					Utils::FixMovement(pCmd, vAngle);
 					pCmd->viewangles = vAngle;
@@ -907,7 +907,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		{
 			F::Resolver.Aimbot(target.m_pEntity, target.m_nAimedHitbox == 0);
 
-			G::IsAttacking = true;
+			F::AimbotGlobal.SetAttacking(true);
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{
 				//bulletTracer(pLocal, Target);

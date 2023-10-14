@@ -1324,7 +1324,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 		if (bIsAttacking)
 		{
-			G::IsAttacking = true;
+			F::AimbotGlobal.SetAttacking(true);
 			m_flTravelTimeStart = I::GlobalVars->curtime + m_flTravelTime;
 			if (Vars::Visuals::BulletTracer.Value && abs(pCmd->tick_count - nLastTracerTick) > 1)
 			{

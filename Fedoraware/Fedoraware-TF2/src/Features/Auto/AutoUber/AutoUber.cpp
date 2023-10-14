@@ -439,7 +439,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 		if (Vars::Triggerbot::Uber::VoiceCommand.Value)
 		{
 			const int iTargetIndex = pTarget->GetIndex();
-			for (const auto& iEntity : G::MedicCallers)
+			for (const auto& iEntity : m_MedicCallers)
 			{
 				if (iEntity == iTargetIndex)
 				{
@@ -448,8 +448,7 @@ void CAutoUber::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* p
 				}
 			}
 		}
-		G::MedicCallers.clear();
-
+		m_MedicCallers.clear();
 
 		if (Vars::Triggerbot::Uber::AutoVacc.Value && G::CurItemDefIndex == Medic_s_TheVaccinator)
 		{

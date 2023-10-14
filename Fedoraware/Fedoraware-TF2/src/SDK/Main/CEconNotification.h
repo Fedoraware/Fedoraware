@@ -47,8 +47,3 @@ private:
 	int m_iID;
 	bool m_bInUse;
 };
-
-namespace G
-{
-	inline std::vector<CEconNotification*> NotificationVector;
-}

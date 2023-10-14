@@ -14,7 +14,7 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle) {
 		return;
 	}
 	case 2: {
-		if (!G::IsAttacking) { return; }
+		if (!F::AimbotGlobal.IsAttacking()) { return; }
 		G::SilentTime = true;
 		Utils::FixMovement(pCmd, vAngle);
 		pCmd->viewangles = vAngle;
@@ -309,9 +309,9 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 			G::AimPos = tTarget.m_vPos;
 		}
 
-		G::IsAttacking = G::IsAttacking || IsAttacking(pCmd, pWeapon);
+		F::AimbotGlobal.SetAttacking(F::AimbotGlobal.IsAttacking() || IsAttacking(pCmd, pWeapon));
 
-		if (G::IsAttacking && tTarget.m_TargetType == ETargetType::PLAYER) {
+		if (F::AimbotGlobal.IsAttacking() && tTarget.m_TargetType == ETargetType::PLAYER) {
 			pCmd->tick_count = TIME_TO_TICKS(tTarget.SimTime + G::LerpTime);
 		}
 
