@@ -7,15 +7,15 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 {
 	Spectators.clear();
 
-	for (const auto& pTeammate : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES))
+	for (const auto& pPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 	{
 		CBaseEntity* pObservedPlayer = I::ClientEntityList->GetClientEntityFromHandle(
-			pTeammate->GetObserverTarget());
+			pPlayer->GetObserverTarget());
 
-		if (pTeammate && !pTeammate->IsAlive() && pObservedPlayer == pLocal)
+		if (pPlayer && !pPlayer->IsAlive() && pObservedPlayer == pLocal)
 		{
 			std::wstring szMode;
-			switch (pTeammate->GetObserverMode())
+			switch (pPlayer->GetObserverMode())
 			{
 				case OBS_MODE_FIRSTPERSON:
 				{
@@ -27,15 +27,25 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 					szMode = L"3rd";
 					break;
 				}
+				case OBS_MODE_DEATHCAM:
+				{
+					szMode = L"Deathcam";
+					break;
+				}
+				case OBS_MODE_FREEZECAM:
+				{
+					szMode = L"Freezecam";
+					break;
+				}
 				default: continue;
 			}
 
 			PlayerInfo_t playerInfo{ };
-			if (I::EngineClient->GetPlayerInfo(pTeammate->GetIndex(), &playerInfo))
+			if (I::EngineClient->GetPlayerInfo(pPlayer->GetIndex(), &playerInfo))
 			{
 				Spectators.push_back({
-					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.IsFriend(pTeammate->GetIndex()),
-					pTeammate->GetTeamNum(), pTeammate->GetIndex()
+					Utils::ConvertUtf8ToWide(playerInfo.name), szMode, g_EntityCache.IsFriend(pPlayer->GetIndex()),
+					pPlayer->GetTeamNum(), pPlayer->GetIndex()
 									 });
 			}
 		}
