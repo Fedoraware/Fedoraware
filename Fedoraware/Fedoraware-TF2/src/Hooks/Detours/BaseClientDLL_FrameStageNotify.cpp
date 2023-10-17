@@ -19,9 +19,20 @@ MAKE_HOOK(BaseClientDLL_FrameStageNotify, Utils::GetVFuncPtr(I::BaseClientDLL, 3
 
 			if (const auto& pLocal = g_EntityCache.GetLocal())
 			{
+				//	Projectile Camera (:vomit:)
+				if (Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty()) {
+					CBaseEntity* pFurthest = nullptr;
+					for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES)) {
+						if (!pFurthest || pEntity->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin()) > pFurthest->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin())) {
+							pFurthest = pEntity;
+							continue;
+						}
+					}
+					pLocal->SetVecOrigin(pFurthest->GetAbsOrigin());
+					pLocal->SetAbsOrigin(pFurthest->GetAbsOrigin());
+				}
 				// Handle freecam position
-				if (G::FreecamActive && Vars::Visuals::FreecamKey.Value && GetAsyncKeyState(Vars::Visuals::FreecamKey.Value) & 0x8000)
-				{
+				else if (G::FreecamActive && Vars::Visuals::FreecamKey.Value && GetAsyncKeyState(Vars::Visuals::FreecamKey.Value) & 0x8000) {
 					pLocal->SetVecOrigin(G::FreecamPos);
 					pLocal->SetAbsOrigin(G::FreecamPos);
 				}

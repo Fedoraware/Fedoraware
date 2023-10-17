@@ -138,33 +138,26 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFBall_Ornament:
 			{
 				m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
+				if (I::ClientEntityList->GetClientEntityFromHandle((int)pEntity->GetThrower()) == m_pLocal) {
+					m_vecGroups[EGroupType::LOCAL_PROJECTILES].push_back(pEntity);
 
-				if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && (pEntity->GetPipebombType() == TYPE_STICKY || pEntity->GetPipebombPulsed()))
-				{
-					if (I::ClientEntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
-					{
-						m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
-					}
-
-					break;
-				}
-
-				if (nClassID == ETFClassID::CTFProjectile_Flare)
-				{
-					if (const auto& pSecondary = m_pLocal->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
-					{
-						if (pSecondary->GetItemDefIndex() == ETFWeapons::Pyro_s_TheDetonator)
-						{
-							if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GethOwner()) == m_pLocal)
-							{
-								m_vecGroups[EGroupType::LOCAL_FLARES].push_back(pEntity);
-							}
+					switch (nClassID) {
+					case ETFClassID::CTFGrenadePipebombProjectile: {
+						if (pEntity->GetPipebombType() == TYPE_STICKY || pEntity->GetPipebombPulsed()) {
+							m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
 						}
+						break;
+					}
+					case ETFClassID::CTFProjectile_Flare: {
+						if (G::CurItemDefIndex == ETFWeapons::Pyro_s_TheDetonator) {
+							m_vecGroups[EGroupType::LOCAL_FLARES].push_back(pEntity);
+						}
+						break;
 					}
 
-					break;
+					}
 				}
-
+				
 				break;
 			}
 

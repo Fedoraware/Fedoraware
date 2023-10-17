@@ -1355,6 +1355,9 @@ void CMenu::MenuVisuals()
 					WCombo("Ragdoll model", &Vars::Visuals::RagdollEffects::RagdollType.Value, { "None", "Gold", "Ice" }); HelpMarker("Which ragdoll model should be used");
 					HelpMarker("Will make their ragdoll ice");
 
+					SectionTitle("Projectile Camera");
+					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
+
 					SectionTitle("Freecam");
 					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");

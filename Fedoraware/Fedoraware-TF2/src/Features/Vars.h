@@ -539,6 +539,7 @@ namespace Vars
 	CVar(OutOfFOVArrowsOutline, false, IS_VISUAL);
 	CVar(FovArrowsDist, 0.15f, IS_VISUAL);
 	CVar(SpectatorList, 2, IS_VISUAL);//0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avat);
+	CVar(ProjectileCameraKey, 0, IS_VISUAL);
 	CVar(FreecamKey, 0, IS_VISUAL);
 	CVar(FreecamSpeed, 10.f, IS_VISUAL);
 	CVar(CameraMode, 0, IS_VISUAL);
