@@ -16,7 +16,7 @@ inline bool CFakelag::IsAllowed(CBaseEntity* pLocal) {
 		return true;
 	}
 
-	const bool bMoving = !Vars::Misc::CL_Move::WhileMoving.Value || pLocal->GetVecVelocity().Length2D() < 10.f;
+	const bool bMoving = !Vars::Misc::CL_Move::WhileMoving.Value || pLocal->GetVecVelocity().Length2D() > 10.f;
 	if (!bMoving) {
 		return false;
 	}

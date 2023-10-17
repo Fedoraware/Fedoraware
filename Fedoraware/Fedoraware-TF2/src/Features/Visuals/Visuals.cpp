@@ -318,12 +318,13 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Thirdperson angles
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.Value)
 		{
-			I::Prediction->SetLocalViewAngles(G::RealViewAngles);
+			Vec3 vAngles = { F::AntiAim.vRealAngles.x, F::AntiAim.vRealAngles.y, 0 };
+			I::Prediction->SetLocalViewAngles(vAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.Value)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 				{
-					pAnimState->m_flCurrentFeetYaw = G::RealViewAngles.y;
+					pAnimState->m_flCurrentFeetYaw = vAngles.y;
 				}
 			}
 		}
@@ -458,12 +459,12 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 		if (Utils::W2S(vOrigin, vScreen1))
 		{
 			constexpr auto distance = 50.f;
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, F::AntiAim.vRealAngles.y, distance), vScreen2))
 			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, REAL_COLOUR);
 			}
 
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, F::AntiAim.vFakeAngles.y, distance), vScreen2))
 			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, FAKE_COLOUR);
 			}

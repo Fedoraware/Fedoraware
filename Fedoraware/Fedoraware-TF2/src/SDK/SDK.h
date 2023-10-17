@@ -332,6 +332,20 @@ namespace Utils
 		pCmd->sidemove = (sin(fYaw) * fSpeed);
 	}
 
+	__inline void FixMovementComp(CUserCmd* pCmd, const Vec3& vecOldMoves, const Vec3& vecTargetAngle)
+	{
+		const Vec3 vecMove(vecOldMoves.x, vecOldMoves.y, vecOldMoves.z);
+		Vec3 vecMoveAng = Vec3();
+
+		Math::VectorAngles(vecMove, vecMoveAng);
+
+		const float fSpeed = Math::FastSqrt(vecMove.x * vecMove.x + vecMove.y * vecMove.y);
+		const float fYaw = DEG2RAD(vecTargetAngle.y - vecOldMoves.y + vecMoveAng.y);
+
+		pCmd->forwardmove = (cos(fYaw) * fSpeed);
+		pCmd->sidemove = (sin(fYaw) * fSpeed);
+	}
+
 	__inline int UnicodeToUTF8(const wchar_t* unicode, char* ansi, int ansiBufferSize)
 	{
 		const int result = WideCharToMultiByte(CP_UTF8, 0, unicode, -1, ansi, ansiBufferSize, nullptr, nullptr);

@@ -15,7 +15,7 @@ void CFakeAng::Run(CUserCmd* pCmd)
 
 			if (const auto& pAnimState = pLocal->GetAnimState())
 			{
-				Math::Clamp(G::FakeViewAngles.x, -89.f, 89.f);
+				Math::Clamp(F::AntiAim.vFakeAngles.x, -89.f, 89.f);
 
 				float flOldFrameTime = I::GlobalVars->frametime;
 				int nOldSequence = pLocal->m_nSequence();
@@ -36,9 +36,9 @@ void CFakeAng::Run(CUserCmd* pCmd)
 
 				I::GlobalVars->frametime = 0.0f;
 
-				pAnimState->m_flCurrentFeetYaw = G::FakeViewAngles.y;
-				pAnimState->m_flGoalFeetYaw = G::FakeViewAngles.y;
-				pAnimState->Update(G::FakeViewAngles.y, G::FakeViewAngles.x);
+				pAnimState->m_flCurrentFeetYaw = F::AntiAim.vFakeAngles.y;
+				pAnimState->m_flGoalFeetYaw = F::AntiAim.vFakeAngles.y;
+				pAnimState->Update(F::AntiAim.vFakeAngles.y, F::AntiAim.vFakeAngles.x);
 
 				matrix3x4 bones[128];
 				if (pLocal->SetupBones(bones, 128, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime))

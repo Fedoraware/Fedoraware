@@ -70,8 +70,6 @@ namespace G
 
 	/* Angles */
 	inline Vec3 ViewAngles = {};
-	inline Vec3 RealViewAngles = {}; // Real view angles (AA)
-	inline Vec3 FakeViewAngles = {}; // Fake view angles (AA)
 	inline std::pair<bool, bool> AntiAim = {};	//	fakeset, realset
 	inline Vec3 PunchAngles = {};
 

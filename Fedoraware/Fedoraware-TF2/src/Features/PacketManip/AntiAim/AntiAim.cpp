@@ -57,7 +57,7 @@ bool CCAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngl
 inline bool CCAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
 	const bool bPlayerReady = pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsInBumperKart() && !pLocal->IsAGhost() && !F::AimbotGlobal.IsAttacking();
 	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !bMovement && !pLocal->IsCharging();
-	const bool bNotBusy = G::AvoidingBackstab;
+	const bool bNotBusy = !G::AvoidingBackstab;
 	const bool bEnabled = Vars::AntiHack::AntiAim::Active.Value;
 
 	return bPlayerReady && bMovementReady && bNotBusy && bEnabled;
@@ -165,26 +165,32 @@ void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	if (!iNetChan || !pLocal || !ShouldAntiAim(pLocal)) {
+	if (!iNetChan || !pLocal) {
 		return;
 	}
-
-	flRealOffset = (int)flRealOffset % 360; flFakeOffset = (int)flFakeOffset % 360;
 
 	bSendingReal = !iNetChan->m_nChokedPackets;
-	bSendingReal ? vRealAngles = {} : vFakeAngles = {};	//	reset appropriate angles.
+	bSendingReal ? vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y } : vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y };	//	reset appropriate angles.
 
+	if (!ShouldAntiAim(pLocal)) {
+		return;
+	}
+
+	G::UpdateView = false;
+
+	const Vec3 vOldMove = { pCmd->forwardmove, pCmd->sidemove, pCmd->upmove };
+
+	flRealOffset = (int)flRealOffset % 360; flFakeOffset = (int)flFakeOffset % 360;
 	pCmd->viewangles.x = GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x);
-
 	if (bSendingReal) {	//	we need our real tick for this one.
 		flBaseYaw = GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd);	//	only do this on real so our fake yaw is reliant on the base yaw from this.
-		pCmd->viewangles.y = GetYawOffset(Vars::AntiHack::AntiAim::YawReal.Value, false);
+		pCmd->viewangles.y = flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawReal.Value, false);
 		vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
-		return;
 	}
 	else {
-		pCmd->viewangles.y = GetYawOffset(Vars::AntiHack::AntiAim::YawFake.Value, true);
+		pCmd->viewangles.y = flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawFake.Value, true);
 		vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
-		return;
 	}
+	Utils::FixMovementComp(pCmd, vOldMove, pCmd->viewangles);
+	return;
 }
