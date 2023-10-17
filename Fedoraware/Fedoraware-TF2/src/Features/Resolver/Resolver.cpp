@@ -1,5 +1,5 @@
 #include "Resolver.h"
-#include "../AntiHack/AntiAim.h"
+#include "../PacketManip/AntiAim/AntiAim.h"
 #include "../Backtrack/Backtrack.h"
 
 static std::vector<float> vYawRotations{ 0.0f, 180.0f, 90.0f, -90.0f};
@@ -209,7 +209,7 @@ void PResolver::FrameStageNotify(){
 			case 4: vAdjustedAngle.y = flBaseYaw + 90.f; break;		//side2
 			case 5: vAdjustedAngle.y += 180.f; break;				//invert
 			case 6:{												//edge
-				const bool bEdge = vAdjustedAngle.x == 89 ? F::AntiAim.FindEdge(flBaseYaw, pEntity) : !F::AntiAim.FindEdge(flBaseYaw, pEntity);
+				const bool bEdge = vAdjustedAngle.x == 89 ? F::AntiAim.GetEdge(flBaseYaw, pEntity) : !F::AntiAim.GetEdge(flBaseYaw, pEntity);
 				vAdjustedAngle.y = flBaseYaw + (bEdge ? 90.f : -90.f);
 				break;
 			}

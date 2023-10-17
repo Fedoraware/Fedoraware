@@ -837,23 +837,17 @@ namespace Vars
 		CVar(Active, false)
 		CVar(ToggleKey, 0)
 		CVar(InvertKey, 0)
-		CVar(ManualKey, 0)
-		CVar(Pitch, 0) //0 - None, 1 - Zero, 2 - Up, 3 - Down, 4 - Fake Up, 5 - Fake Down
-		CVar(YawReal, 0) //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
-		CVar(YawFake, 0) //0 - None, 1 - Forward, 2 - Left, 3 - Right, 4 - Backwards
+		CVar(PitchFake, 0)	//	0.none, 1.up, 2.down
+		CVar(PitchReal, 0)	//	0.none, 1.up, 2.down, 3.zero, 4.custom
+		CVar(YawFake, 0)	//	0.none, 1.left, 2.right, 3.forward, 4.backward, 5.spin, 6.edge, 7.invert
+		CVar(YawReal, 0)	//	0.none, 1.left, 2.right, 3.forward, 4.backward, 5.spin, 6.edge, 7.invert
 		CVar(BaseYawMode, 0)
 		CVar(BaseYawOffset, 0.f)
 		CVar(SpinSpeed, 15.f)
 		CVar(CustomRealPitch, 0.f)
-		CVar(CustomRealYaw, 0)
-		CVar(CustomFakeYaw, 0)
-		CVar(FakeJitter, 0)
-		CVar(RealJitter, 0)
-		CVar(RandInterval, 25)
 		CVar(RehideAntiAimPostShot, true)
 		CVar(AntiBackstab, false)
 		CVar(LegJitter, false) // frick u fourteen
-		CVar(AntiOverlap, false)
 		CVar(InvalidShootPitch, false); // i dont know what to name this its TRASH
 	SUBNAMESPACE_END(AntiAim);
 
