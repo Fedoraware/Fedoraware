@@ -67,60 +67,41 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			nOldFlags = pLocal->GetFlags();
 			nOldGroundEnt = pLocal->m_hGroundEntity();
 
-			if (const int MaxSpeed = pLocal->GetMaxSpeed())
-			{
+			if (const int MaxSpeed = pLocal->GetMaxSpeed()) {
 				G::Frozen = MaxSpeed == 1;
 			}
 
 			// Update Global Info
-			if (const auto& pWeapon = g_EntityCache.GetWeapon())
-			{
+			if (const auto& pWeapon = g_EntityCache.GetWeapon()) {
 				const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
-				if (G::CurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1() || (!pLocal->IsAlive() || pLocal->IsTaunting() || pLocal->IsBonked() || pLocal->IsAGhost() || pLocal->IsInBumperKart()))
-				{
+				G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
+
+				if (pWeapon->GetSlot() != SLOT_MELEE) {
+					if (pWeapon->IsInReload()) {
+						G::WeaponCanAttack = true;
+					}
+
+					if (G::CurItemDefIndex != Soldier_m_TheBeggarsBazooka) {
+						if (pWeapon->GetClip1() == 0) {
+							G::WeaponCanAttack = false;
+						}
+					}
+				}
+
+				if (G::CurItemDefIndex != nItemDefIndex || !G::WeaponCanAttack) {
 					G::WaitForShift = DT_WAIT_CALLS;
 				}
 
 				G::CurItemDefIndex = nItemDefIndex;
 				G::WeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
-				G::WeaponCanAttack = pWeapon->CanShoot(pLocal);
 				G::WeaponCanSecondaryAttack = pWeapon->CanSecondaryAttack(pLocal);
 				G::CurWeaponType = Utils::GetWeaponType(pWeapon);
 				F::AimbotGlobal.SetAttacking(Utils::IsAttacking(pCmd, pWeapon));
-
-				if (pWeapon->GetSlot() != SLOT_MELEE)
-				{
-					if (pWeapon->IsInReload())
-					{
-						G::WeaponCanAttack = true;
-					}
-
-					if (G::CurItemDefIndex != Soldier_m_TheBeggarsBazooka)
-					{
-						if (pWeapon->GetClip1() == 0)
-						{
-							G::WeaponCanAttack = false;
-						}
-					}
-				}
 			}
 
-			if (Vars::Misc::CL_Move::RechargeWhileDead.Value)
-			{
-				if (!pLocal->IsAlive() && G::ShiftedTicks)
-				{
-					G::RechargeQueued = true;
-				}
-			}
-
-
-			if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::Recharging && !G::ShiftedTicks)
-			{
-				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))
-				{
-					G::RechargeQueued = true;
-				}
+			if (!G::ShiftedTicks) {
+				G::RechargeQueued = (Vars::Misc::CL_Move::RechargeWhileDead.Value && !pLocal->IsAlive()) || (Vars::Misc::CL_Move::AutoRecharge.Value && pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons));
 			}
 		}
 	}

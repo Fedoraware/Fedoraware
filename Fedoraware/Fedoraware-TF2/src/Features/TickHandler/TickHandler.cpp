@@ -85,8 +85,7 @@ bool CTickshiftHandler::MeleeDoubletapCheck(CBaseEntity* pLocal)
 void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalTick)
 {
 	static auto CL_Move = g_HookManager.GetMapHooks()["CL_Move"];
-	if (!CL_Move)
-	{
+	if (!CL_Move) {
 		CL_Move = g_HookManager.GetMapHooks()["CL_Move"];
 		return;
 	}
@@ -94,7 +93,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	iAvailableTicks--;
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
-	if (G::WaitForShift > 0) { G::WaitForShift--; }
+	G::WaitForShift = std::clamp(G::WaitForShift - 1, 0, 26);
 
 	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
