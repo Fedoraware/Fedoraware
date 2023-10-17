@@ -180,10 +180,10 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 			}
 
-			if (Vars::ESP::Players::IgnoreFlags.Value & (1 << 0) && g_EntityCache.IsFriend(nIndex)) { 
+			if (Vars::ESP::Players::IgnoreFlags.Value & (1 << 0) && g_EntityCache.IsFriend(nIndex) && player->GetTeamNum() == pLocal->GetTeamNum()) {
 				continue; 
 			}
-			if (Vars::ESP::Players::IgnoreFlags.Value & (1 << 1) && player->GetTeamNum() == pLocal->GetTeamNum()) {
+			if (Vars::ESP::Players::IgnoreFlags.Value & (1 << 1) && player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.IsFriend(nIndex)) {
 				continue;
 			}
 			if (Vars::ESP::Players::IgnoreFlags.Value & (1 << 2) && player->GetTeamNum() != pLocal->GetTeamNum()) {
