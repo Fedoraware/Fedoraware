@@ -50,8 +50,7 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 			 (pTarget = sphere.GetCurrentEntity()) != nullptr;
 			 sphere.NextEntity())
 		{
-			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->
-				GetTeamNum())
+			if (!pTarget || pTarget == pLocal || !pTarget->IsAlive() || pTarget->GetTeamNum() == pLocal->GetTeamNum())
 			{
 				continue;
 			}
@@ -65,9 +64,9 @@ bool CAutoDetonate::CheckDetonation(CBaseEntity* pLocal, const std::vector<CBase
 			const bool isBuilding = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BUILDING) && pTarget->IsBuilding();
 			const bool isNPC = Vars::Triggerbot::Detonate::DetonateTargets.Value & (NPC) && pTarget->IsNPC();
 			const bool isBomb = Vars::Triggerbot::Detonate::DetonateTargets.Value & (BOMB) && pTarget->IsBomb();
-			const bool isSticky = Vars::Triggerbot::Detonate::DetonateTargets.Value & (STICKY) && (G::CurItemDefIndex == Demoman_s_TheQuickiebombLauncher || G::CurItemDefIndex == Demoman_s_TheScottishResistance);
+			const bool isSticky = Vars::Triggerbot::Detonate::DetonateTargets.Value & (STICKY) && pTarget->GetClassID() == ETFClassID::CTFGrenadePipebombProjectile && pTarget->GetPipebombType() == TYPE_STICKY &&(G::CurItemDefIndex == Demoman_s_TheQuickiebombLauncher || G::CurItemDefIndex == Demoman_s_TheScottishResistance);
 
-			if (isPlayer || isBuilding || isNPC || isBomb || pTarget->GetPipebombType() == TYPE_STICKY && isSticky)
+			if (isPlayer || isBuilding || isNPC || isBomb || isSticky)
 			{
 				if (isPlayer && F::AutoGlobal.ShouldIgnore(pTarget))
 				{
