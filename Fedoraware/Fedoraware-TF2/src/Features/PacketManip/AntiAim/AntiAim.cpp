@@ -56,7 +56,7 @@ bool CCAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngl
 
 inline bool CCAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
 	const bool bPlayerReady = pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsInBumperKart() && !pLocal->IsAGhost() && !F::AimbotGlobal.IsAttacking();
-	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !pLocal->IsCharging() && !F::Misc.bMovementStopped && F::Misc.bFastAccel;
+	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !pLocal->IsCharging() && !F::Misc.bMovementStopped && !F::Misc.bFastAccel;
 	const bool bNotBusy = !G::AvoidingBackstab;
 	const bool bEnabled = Vars::AntiHack::AntiAim::Active.Value;
 
