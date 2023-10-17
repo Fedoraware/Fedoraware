@@ -19,6 +19,7 @@
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/NoSpread/NoSpread.h"
+#include "../../Features/PacketManip/PacketManip.h"
 
 void AttackingUpdate()
 {
@@ -129,6 +130,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		{
 			F::Aimbot.Run(pCmd);
 			F::Auto.Run(pCmd);
+			F::PacketManip.CreateMove(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
 			F::Misc.RunMid(pCmd, nOldGroundEnt);
 		}
 		F::EnginePrediction.End(pCmd);

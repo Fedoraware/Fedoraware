@@ -15,12 +15,12 @@ inline bool CPacketManip::RunAntiAim(CUserCmd* pCmd, bool* pSendPacket) {
 		return false;
 	}
 
-	//F::AntiAim.Run();
+	F::AntiAim.Run(pCmd, pSendPacket);
 	return !iNetChan->m_nChokedPackets;
 }
 
 inline void CPacketManip::RunFakeLag(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags) {
-	//F::FakeLag.Run();
+	F::FakeLag.Run(pCmd, pSendPacket, nOldGroundInt, nOldFlags);
 }
 
 void CPacketManip::CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags) {

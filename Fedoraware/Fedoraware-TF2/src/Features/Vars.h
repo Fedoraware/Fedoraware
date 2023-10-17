@@ -791,14 +791,9 @@ namespace Vars
 		CVar(Fakelag, false)
 		CVar(FakelagMode, 0) // 0 - plain, 1 - random
 		CVar(WhileMoving, false)
-		CVar(WhileVisible, false)
-		CVar(PredictVisibility, false)
-		CVar(WhileUnducking, false)
-		CVar(WhileInAir, false)
 		CVar(FakelagMin, 1) //	only show when FakelagMode=2
 		CVar(FakelagMax, 22)
 		CVar(FakelagOnKey, false) // dont show when fakelagmode=2|3
-		CVar(FakelagKey, 0x54) //T
 		CVar(FakelagValue, 1) // dont show when fakelagmode=2
 		CVar(AutoPeekKey, 0)
 		CVar(AutoPeekDistance, 200.f)
