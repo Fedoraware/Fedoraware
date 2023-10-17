@@ -21,6 +21,26 @@ MAKE_HOOK(ViewRender_RenderView, Utils::GetVFuncPtr(I::ViewRender, 6), void, __f
 					   F::AttributeChanger.Init();
 				   });
 
-	Hook.Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, view, nClearFlags, whatToDraw);
+	CViewSetup tCustomView{};
+	memcpy(&tCustomView, &view, sizeof(CViewSetup));
+
+	//	Projectile Camera (:vomit:)
+	if (Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty()) {
+		CBaseEntity* pLocal = g_EntityCache.GetLocal();
+		CBaseEntity* pFurthest = nullptr;
+		for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES)) {
+			if (!pFurthest || pEntity->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin()) > pFurthest->GetAbsOrigin().DistTo(pLocal->GetAbsOrigin())) {
+				pFurthest = pEntity;
+				continue;
+			}
+		}
+		tCustomView.origin = pFurthest->GetAbsOrigin();
+	}
+	// Handle freecam position
+	else if (G::FreecamActive && Vars::Visuals::FreecamKey.Value && GetAsyncKeyState(Vars::Visuals::FreecamKey.Value) & 0x8000) {
+		tCustomView.origin = G::FreecamPos;
+	}
+
+	Hook.Original<void(__thiscall*)(void*, const CViewSetup&, int, int)>()(ecx, tCustomView, nClearFlags, whatToDraw);
 	if (!(I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value)) { F::CameraWindow.RenderView(ecx, view); }
 }

@@ -295,14 +295,15 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 				}
 			}
 		}
-
+		const bool bScoped = (Vars::Visuals::RemoveScope.Value || Vars::Visuals::RemoveZoom.Value) && pLocal->IsScoped();
+		const bool bThirdPersonVar = Vars::Visuals::ThirdPerson.Value;
+		const bool bFollowingProjectile = Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty();
+		const bool bFreecam = G::FreecamActive;
+		const bool bShouldThirdPerson = (bThirdPersonVar || bFollowingProjectile || bFreecam) && (!bScoped || bFreecam);
 		const bool bIsInThirdPerson = I::Input->CAM_IsThirdPerson();
 
-		if (!Vars::Visuals::ThirdPerson.Value
-			|| ((!Vars::Visuals::RemoveScope.Value || !Vars::Visuals::RemoveZoom.Value) && pLocal->IsScoped()))
-		{
-			if (bIsInThirdPerson)
-			{
+		if (!bShouldThirdPerson) {
+			if (bIsInThirdPerson) {
 				pLocal->ForceTauntCam(0);
 			}
 
