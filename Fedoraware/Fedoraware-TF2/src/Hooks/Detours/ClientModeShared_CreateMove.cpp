@@ -174,19 +174,6 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 				bWasSet = false;
 			}
 		}
-
-		G::EyeAngDelay++; // Used for the return delay in the viewmodel aimbot
-
-		if (G::ForceSendPacket)
-		{
-			*pSendPacket = true;
-			G::ForceSendPacket = false;
-		} // if we are trying to force update do this lol
-		else if (G::ForceChokePacket)
-		{
-			*pSendPacket = false;
-			G::ForceChokePacket = false;
-		} // check after force send to prevent timing out possibly
 	}
 	else { AttackingUpdate(); }
 

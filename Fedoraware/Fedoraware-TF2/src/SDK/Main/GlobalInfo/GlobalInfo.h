@@ -37,7 +37,6 @@ namespace G
 	inline int CurrentTargetIdx = 0; // Index of the current aimbot target
 	inline int CurItemDefIndex = 0; // DefIndex of the current weapon
 	inline int NotifyCounter = 0;
-	inline int EyeAngDelay = 25;
 	inline int NextSafeTick = 0;	//	I::GlobalVars->tickcount + sv_maxusrcmdprocessticks_holdaim + 1 (when attacking)
 	inline float LerpTime = 0.f;	//	current lerp time
 	inline bool WeaponCanHeadShot = false; // Can the current weapon headshot?
@@ -61,8 +60,6 @@ namespace G
 	inline bool RechargeQueued = false; // Queues a recharge
 
 	/* Choking / Packets */
-	inline bool ForceSendPacket = false; // might not actually be useful 
-	inline bool ForceChokePacket = false; // might not actually be useful 
 	inline bool IsChoking = false; // might not actually be useful 
 
 	/* Aimbot */

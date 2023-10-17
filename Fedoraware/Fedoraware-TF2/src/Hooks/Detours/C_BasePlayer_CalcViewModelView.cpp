@@ -6,6 +6,7 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, S::CBasePlayer_CalcViewModelView(), vo
 	if (I::EngineClient->IsTakingScreenshot() && Vars::Visuals::CleanScreenshots.Value) { return Hook.Original<FN>()(ecx, edx, pOwner, vEyePosition, vEyeAngles); }
 	if (Vars::Visuals::AimbotViewmodel.Value)
 	{
+		static int iLastEyeTick = 0;
 		static Vec3 m_vEyeAngDelayed;
 		if (const auto& pLocal = g_EntityCache.GetLocal())
 		{
@@ -20,11 +21,11 @@ MAKE_HOOK(C_BasePlayer_CalcViewModelView, S::CBasePlayer_CalcViewModelView(), vo
 					vEyeAngles = Math::CalcAngle(vEyePosition, G::AimPos);
 				}
 				m_vEyeAngDelayed = vEyeAngles;
-				G::EyeAngDelay = 0;
+				iLastEyeTick = I::GlobalVars->tickcount;
 			}
 			else if (pLocal->IsAlive())
 			{
-				if (G::EyeAngDelay < 32) { vEyeAngles = m_vEyeAngDelayed; }
+				if (abs(iLastEyeTick - I::GlobalVars->tickcount) < 32) { vEyeAngles = m_vEyeAngDelayed; }
 				// looks hot ty senator for the idea
 				else { vEyeAngles = I::EngineClient->GetViewAngles(); }
 			}
