@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Feature.h"
 #include "../../Aimbot/AimbotGlobal/AimbotGlobal.h"
+#include "../../Misc/Misc.h"
 
 class CCAntiAim {
 private:
@@ -25,7 +26,6 @@ private:
 public:
 	Vec2 vFakeAngles{};
 	Vec2 vRealAngles{};
-	bool bMovement = false;
 	bool bSendingReal = false;	//	for leg jitter
 
 	bool GetEdge(const float flEdgeOrigYaw, CBaseEntity* pEntity);

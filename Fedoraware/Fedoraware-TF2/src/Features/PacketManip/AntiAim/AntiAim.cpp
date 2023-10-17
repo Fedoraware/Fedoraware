@@ -56,7 +56,7 @@ bool CCAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngl
 
 inline bool CCAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
 	const bool bPlayerReady = pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsInBumperKart() && !pLocal->IsAGhost() && !F::AimbotGlobal.IsAttacking();
-	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !bMovement && !pLocal->IsCharging();
+	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !pLocal->IsCharging() && !F::Misc.bMovementStopped && F::Misc.bFastAccel;
 	const bool bNotBusy = !G::AvoidingBackstab;
 	const bool bEnabled = Vars::AntiHack::AntiAim::Active.Value;
 
@@ -160,7 +160,7 @@ float CCAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
 void CCAntiAim::RunReal(CUserCmd* pCmd) {
 	Keybinds();
 	FakeShotAngles(pCmd);
-
+	G::AAActive = false;
 	bSendingReal = true;
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
@@ -174,7 +174,7 @@ void CCAntiAim::RunReal(CUserCmd* pCmd) {
 	if (!ShouldAntiAim(pLocal)) {
 		return;
 	}
-
+	G::AAActive = true;
 	G::UpdateView = false;
 
 	flRealOffset = (int)flRealOffset % 360;
@@ -189,7 +189,7 @@ void CCAntiAim::RunReal(CUserCmd* pCmd) {
 void CCAntiAim::RunFake(CUserCmd* pCmd) {
 	Keybinds();
 	FakeShotAngles(pCmd);
-
+	G::AAActive = false;
 	bSendingReal = false;
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
@@ -203,7 +203,7 @@ void CCAntiAim::RunFake(CUserCmd* pCmd) {
 	if (!ShouldAntiAim(pLocal)) {
 		return;
 	}
-
+	G::AAActive = true;
 	G::UpdateView = false;
 
 	flFakeOffset = (int)flFakeOffset % 360;

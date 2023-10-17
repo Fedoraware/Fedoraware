@@ -74,11 +74,6 @@ void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 	G::UpdateView = false;
 	bMovementStopped = true;
 	bMovementScuffed = true;
-
-	if (!G::Recharging)
-	{
-		*pSendPacket = false;
-	}
 }
 
 void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal) {
