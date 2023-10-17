@@ -116,13 +116,13 @@ inline float CCAntiAim::GetYawOffset(const int iIndex, const bool bFake) {
 		return 180.f;
 	}
 	case 5: {
-		return (bFake ? flFakeOffset : flRealOffset) + Vars::AntiHack::AntiAim::SpinSpeed.Value;
+		return (bFake ? flFakeOffset : flRealOffset) += (Vars::AntiHack::AntiAim::SpinSpeed.Value * bFake ? 1 : -1);
 	}
 	case 6: {
 		return (GetEdge() ? 1.f : -1.f) * (bFake ? -90.f : 90.f);
 	}
 	case 7: {
-		return bFake ? -90.f : 90.f;
+		return (bFake ? -90.f : 90.f) * (bInvert ? -1.f : 1.f);
 	}
 	}
 	return 0.f;
@@ -151,13 +151,42 @@ float CCAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
 
 			if (flFOVTo < flSmallestFovTo) { flSmallestAngleTo = vAngleTo.y; flSmallestFovTo = flFOVTo; }
 		}
-		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestFovTo + (iMode == 2 ? flBaseOffset : 0));
+		return (flSmallestFovTo == 360.f ? pCmd->viewangles.y + (iMode == 2 ? flBaseOffset : 0) : flSmallestAngleTo + (iMode == 2 ? flBaseOffset : 0));
 	}
 	}
 	return pCmd->viewangles.y;
 }
 
-void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
+void CCAntiAim::RunReal(CUserCmd* pCmd) {
+	Keybinds();
+	FakeShotAngles(pCmd);
+
+	bSendingReal = true;
+
+	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (!iNetChan || !pLocal) {
+		return;
+	}
+
+	vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y }; //	reset angles
+
+	if (!ShouldAntiAim(pLocal)) {
+		return;
+	}
+
+	G::UpdateView = false;
+
+	flRealOffset = (int)flRealOffset % 360;
+	flBaseYaw = GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd);	//	only do this on real so our fake yaw is reliant on the base yaw from this.
+	vRealAngles = { GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x), flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawReal.Value, false) };
+	Utils::FixMovement(pCmd, vRealAngles);
+	pCmd->viewangles.x = vRealAngles.x;
+	pCmd->viewangles.y = vRealAngles.y;
+	return;
+}
+
+void CCAntiAim::RunFake(CUserCmd* pCmd) {
 	Keybinds();
 	FakeShotAngles(pCmd);
 
@@ -169,8 +198,7 @@ void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 		return;
 	}
 
-	bSendingReal = !iNetChan->m_nChokedPackets;
-	bSendingReal ? vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y } : vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y };	//	reset appropriate angles.
+	vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y }; //	reset angles
 
 	if (!ShouldAntiAim(pLocal)) {
 		return;
@@ -178,19 +206,10 @@ void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 	G::UpdateView = false;
 
-	const Vec3 vOldMove = { pCmd->forwardmove, pCmd->sidemove, pCmd->upmove };
-
-	flRealOffset = (int)flRealOffset % 360; flFakeOffset = (int)flFakeOffset % 360;
-	pCmd->viewangles.x = GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x);
-	if (bSendingReal) {	//	we need our real tick for this one.
-		flBaseYaw = GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd);	//	only do this on real so our fake yaw is reliant on the base yaw from this.
-		pCmd->viewangles.y = flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawReal.Value, false);
-		vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
-	}
-	else {
-		pCmd->viewangles.y = flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawFake.Value, true);
-		vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
-	}
-	Utils::FixMovementComp(pCmd, vOldMove, pCmd->viewangles);
+	flFakeOffset = (int)flFakeOffset % 360;
+	vFakeAngles = { GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x), flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawFake.Value, true) };
+	Utils::FixMovement(pCmd, vFakeAngles);
+	pCmd->viewangles.x = vFakeAngles.x;
+	pCmd->viewangles.y = vFakeAngles.y;
 	return;
 }

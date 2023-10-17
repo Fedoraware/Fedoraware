@@ -70,7 +70,6 @@ namespace G
 
 	/* Angles */
 	inline Vec3 ViewAngles = {};
-	inline std::pair<bool, bool> AntiAim = {};	//	fakeset, realset
 	inline Vec3 PunchAngles = {};
 
 	/* Projectile prediction */

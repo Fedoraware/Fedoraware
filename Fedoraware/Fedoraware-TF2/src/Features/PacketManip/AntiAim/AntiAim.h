@@ -10,7 +10,6 @@ private:
 
 	//	logic
 	float EdgeDistance(const float flEdgeRayYaw, CBaseEntity* pEntity);
-	inline bool ShouldAntiAim(CBaseEntity* pLocal);
 
 	// angles
 	inline float CalculateCustomRealPitch(const float flWishPitch, const bool bFakeDown);
@@ -30,7 +29,9 @@ public:
 	bool bSendingReal = false;	//	for leg jitter
 
 	bool GetEdge(const float flEdgeOrigYaw, CBaseEntity* pEntity);
-	void Run(CUserCmd* pCmd, bool* pSendPacket);
+	void RunReal(CUserCmd* pCmd);
+	void RunFake(CUserCmd* pCmd);
+	inline bool ShouldAntiAim(CBaseEntity* pLocal);
 };
 
 ADD_FEATURE(CCAntiAim, AntiAim)

@@ -295,7 +295,7 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 				}
 			}
 		}
-		const bool bScoped = (Vars::Visuals::RemoveScope.Value || Vars::Visuals::RemoveZoom.Value) && pLocal->IsScoped();
+		const bool bScoped = pLocal->IsScoped() && !(Vars::Visuals::RemoveScope.Value || Vars::Visuals::RemoveZoom.Value);
 		const bool bThirdPersonVar = Vars::Visuals::ThirdPerson.Value;
 		const bool bFollowingProjectile = Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty();
 		const bool bFreecam = G::FreecamActive;

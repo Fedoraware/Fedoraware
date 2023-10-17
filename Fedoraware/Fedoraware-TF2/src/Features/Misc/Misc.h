@@ -1,5 +1,6 @@
 #pragma once
 #include "../Feature.h"
+#include "../PacketManip/AntiAim/AntiAim.h"
 
 class CMisc
 {

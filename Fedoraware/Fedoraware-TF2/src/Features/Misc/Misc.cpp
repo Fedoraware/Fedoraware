@@ -220,7 +220,7 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (!pLocal->OnSolid() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsAlive()) { return; }
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
-	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || G::AntiAim.second) { return; }
+	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || !F::AntiAim.bSendingReal) { return; }
 	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
