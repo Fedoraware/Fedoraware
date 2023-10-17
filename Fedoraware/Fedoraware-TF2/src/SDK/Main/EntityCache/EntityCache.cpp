@@ -138,7 +138,8 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFBall_Ornament:
 			{
 				m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
-				if (I::ClientEntityList->GetClientEntityFromHandle((int)pEntity->GetThrower()) == m_pLocal) {
+				if (I::ClientEntityList->GetClientEntityFromHandle((int)pEntity->GetThrower()) == m_pLocal ||
+					I::ClientEntityList->GetClientEntityFromHandle((int)pEntity->GethOwner()) == m_pLocal) {
 					m_vecGroups[EGroupType::LOCAL_PROJECTILES].push_back(pEntity);
 
 					switch (nClassID) {
