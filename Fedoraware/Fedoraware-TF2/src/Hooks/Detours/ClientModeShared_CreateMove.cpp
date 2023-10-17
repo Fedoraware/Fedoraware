@@ -17,8 +17,6 @@
 #include "../../Features/Followbot/Followbot.h"
 #include "../../Features/Vars.h"
 #include "../../Features/Aimbot/AimbotGlobal/AimbotGlobal.h"
-#include "../../Features/Chams/DMEChams.h"
-#include "../../Features/Glow/Glow.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
@@ -117,28 +115,12 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 			}
 
 
-			if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::ShouldShift && !G::Recharging && !G::ShiftedTicks)
+			if (Vars::Misc::CL_Move::AutoRecharge.Value && !G::Recharging && !G::ShiftedTicks)
 			{
 				if (pLocal->GetVecVelocity().Length2D() < 5.0f && !(pCmd->buttons))
 				{
 					G::RechargeQueued = true;
 				}
-			}
-		}
-
-		//	is there somewhere better for this?
-		if (const auto& netChan = I::EngineClient->GetNetChannelInfo())
-		{
-			static uint32_t oldMap = FNV1A::HashConst(I::EngineClient->GetLevelName());
-			static uint32_t oldAddress = FNV1A::HashConst(netChan->GetAddress());
-			const uint32_t curMap = FNV1A::HashConst(I::EngineClient->GetLevelName());
-			const uint32_t curAddress = FNV1A::HashConst(netChan->GetAddress());
-
-			if (curMap != oldMap || curAddress != oldAddress)
-			{
-				F::DMEChams.CreateMaterials();
-				F::Glow.CreateMaterials();
-				oldMap = curMap; oldAddress = curAddress;
 			}
 		}
 	}
