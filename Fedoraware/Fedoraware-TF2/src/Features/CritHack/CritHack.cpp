@@ -130,7 +130,7 @@ bool CCritHack::ShouldCrit()
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return false; }	//	will never hit
 	static KeyHelper critKey{ &Vars::CritHack::CritKey.Value };
-	if (critKey.Down()) { return true; }
+	if (critKey.Down() || !Vars::CritHack::CritKey.Value) { return true; }
 	if (G::CurWeaponType == EWeaponType::MELEE && Vars::CritHack::AlwaysMelee.Value) { return true; }
 
 	//Check if auto melee crit is enabled and player is using melee

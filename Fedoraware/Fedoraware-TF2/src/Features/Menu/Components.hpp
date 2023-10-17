@@ -90,7 +90,7 @@ namespace ImGui
 		return pressed;
 	}
 
-	__inline bool InputKeybind(const char* label, ConfigVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false)
+	__inline bool InputKeybind(const char* label, ConfigVar<int>& output, bool bAllowNone = true, bool bAllowSpecial = false, const char* pNoInputText = "Always")
 	{
 		// Init the valid keys bitset
 		static std::once_flag initFlag;
@@ -229,7 +229,7 @@ namespace ImGui
 		else
 		{
 			// Inactive
-			const char* keyName = (output.Value == 0 && bAllowNone) ? "Always" : VK2STR(output.Value);
+			const char* keyName = (output.Value == 0 && bAllowNone) ? pNoInputText : VK2STR(output.Value);
 			if (Button(keyName ? keyName : "Unknown", ImVec2(100, 0)))
 			{
 				SetActiveID(id, GetCurrentWindow());

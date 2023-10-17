@@ -398,7 +398,7 @@ void CMenu::MenuAimbot()
 				SectionTitle("Preferences");
 				WToggle("Predict Obscured Enemies", &Vars::Aimbot::Projectile::PredictObscured.Value); HelpMarker("Will predict enemies that cannot yet be targetted because of a wall etc and shoot if they are predicted to peek (FPS)");
 				WToggle("Feet aim on ground", &Vars::Aimbot::Projectile::FeetAimIfOnGround.Value); HelpMarker("Will aim at targets feet if they're on the ground in order to launch them into the air");
-				InputKeybind("Bounce Target", Vars::Aimbot::Projectile::BounceKey); HelpMarker("Forces feet aim to bounce target on keypress");
+				InputKeybind("Bounce Target", Vars::Aimbot::Projectile::BounceKey, true, false, "None"); HelpMarker("Forces feet aim to bounce target on keypress");
 				WToggle("Viewmodel flipper", &Vars::Misc::ViewmodelFlip.Value); HelpMarker("Will flip your viewmodel if it can hit from that side");
 				WToggle("Charge loose cannon", &Vars::Aimbot::Projectile::ChargeLooseCannon.Value); HelpMarker("Will charge your loose cannon in order to double donk");
 
@@ -1356,7 +1356,7 @@ void CMenu::MenuVisuals()
 					HelpMarker("Will make their ragdoll ice");
 
 					SectionTitle("Freecam");
-					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey);  HelpMarker("Allows you to freely move your camera when holding the key");
+					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 
 					SectionTitle("Camera");
@@ -1418,7 +1418,7 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Thirdperson");
 					WToggle("Thirdperson", &Vars::Visuals::ThirdPerson.Value); HelpMarker("Will move your camera to be in a thirdperson view");
-					InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
+					InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey, true, false, "None"); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
 					WToggle("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.Value); HelpMarker("Will show your real angles on thirdperson (not what others see)");
 					WToggle("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.Value); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
 					WToggle("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.Value); HelpMarker("Will show the server angles in thirdperson");
@@ -1520,11 +1520,11 @@ void CMenu::MenuHvH()
 			SectionTitle("Tickbase Exploits");
 			WToggle("Enable Tickbase Exploits", &Vars::Misc::CL_Move::Enabled.Value); HelpMarker("Allows tickbase shifting");
 			ColorPickerL("DT bar outline colour", Vars::Colours::DtOutline.Value);
-			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey); HelpMarker("Recharges ticks for shifting");
-			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey); HelpMarker("Shifts ticks to warp");
+			InputKeybind("Recharge key", Vars::Misc::CL_Move::RechargeKey, true, false, "None"); HelpMarker("Recharges ticks for shifting");
+			InputKeybind("Teleport key", Vars::Misc::CL_Move::TeleportKey, true, false, "None"); HelpMarker("Shifts ticks to warp");
 			if (Vars::Misc::CL_Move::DTMode.Value == 0 || Vars::Misc::CL_Move::DTMode.Value == 2)
 			{
-				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
+				InputKeybind("Doubletap key", Vars::Misc::CL_Move::DoubletapKey, true, false, "None"); HelpMarker("Only doubletap when the key is pressed. Leave as (None) for always active.");
 			}
 
 			WCombo("Teleport Mode", &Vars::Misc::CL_Move::TeleportMode.Value, { "Plain", "Smooth", "Streamed Smooth"}); HelpMarker("How the teleport should be done");
@@ -1551,7 +1551,7 @@ void CMenu::MenuHvH()
 			MultiCombo({ "While Moving", "On Key", "While Visible", "Predict Visibility", "While Unducking", "While Airborne" }, { &Vars::Misc::CL_Move::WhileMoving.Value, &Vars::Misc::CL_Move::FakelagOnKey.Value, &Vars::Misc::CL_Move::WhileVisible.Value, &Vars::Misc::CL_Move::PredictVisibility.Value, &Vars::Misc::CL_Move::WhileUnducking.Value, &Vars::Misc::CL_Move::WhileInAir.Value }, "Flags###FakeLagFlags");
 			if (Vars::Misc::CL_Move::FakelagOnKey.Value)
 			{
-				InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey); HelpMarker("The key to activate fakelag as long as it's held");
+				InputKeybind("Fakelag key", Vars::Misc::CL_Move::FakelagKey, true, false, "None"); HelpMarker("The key to activate fakelag as long as it's held");
 			}
 			WCombo("Fakelag Mode###FLmode", &Vars::Misc::CL_Move::FakelagMode.Value, { "Plain", "Random", "Adaptive" }); HelpMarker("Controls how fakelag will be controlled.");
 
@@ -1632,7 +1632,7 @@ void CMenu::MenuHvH()
 			/* Section: Anti Aim */
 			SectionTitle("Anti Aim");
 			WToggle("Enable Anti-aim", &Vars::AntiHack::AntiAim::Active.Value);
-			InputKeybind("Anti-aim Key", Vars::AntiHack::AntiAim::ToggleKey); HelpMarker("The key to toggle anti aim");
+			InputKeybind("Anti-aim Key", Vars::AntiHack::AntiAim::ToggleKey, true, false, "None"); HelpMarker("The key to toggle anti aim");
 			WCombo("Pitch", &Vars::AntiHack::AntiAim::Pitch.Value, { "None", "Zero", "Up", "Down", "Fake up", "Fake down", "Random", "Half Up", "Jitter", "Fake Up Custom", "Fake Down Custom" }); HelpMarker("Which way to look up/down");
 			WCombo("Base Yaw", &Vars::AntiHack::AntiAim::BaseYawMode.Value, { "Offset", "FOV Player", "FOV Player + Offset" });
 			WCombo("Real yaw", &Vars::AntiHack::AntiAim::YawReal.Value, { "None", "Forward", "Left", "Right", "Backwards", "Random", "Spin", "Edge", "On Hurt", "Custom", "Invert", "Jitter", "Jitter Random", "Jitter Flip", "Manual" }); HelpMarker("Which way to look horizontally");
@@ -1655,11 +1655,11 @@ void CMenu::MenuHvH()
 			}
 			if (Vars::AntiHack::AntiAim::YawFake.Value == 10 || Vars::AntiHack::AntiAim::YawReal.Value == 10)
 			{
-				InputKeybind("Invert Key", Vars::AntiHack::AntiAim::InvertKey);
+				InputKeybind("Invert Key", Vars::AntiHack::AntiAim::InvertKey, true, false, "None");
 			}
 			if (Vars::AntiHack::AntiAim::YawFake.Value == 14 || Vars::AntiHack::AntiAim::YawReal.Value == 14)
 			{
-				InputKeybind("Manual Key", Vars::AntiHack::AntiAim::ManualKey);
+				InputKeybind("Manual Key", Vars::AntiHack::AntiAim::ManualKey, true, false, "None");
 			}
 			switch (Vars::AntiHack::AntiAim::YawFake.Value)
 			{
@@ -1679,7 +1679,7 @@ void CMenu::MenuHvH()
 
 			/* Section: Auto Peek */
 			SectionTitle("Auto Peek");
-			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
+			InputKeybind("Autopeek Key", Vars::Misc::CL_Move::AutoPeekKey, true, false, "None"); HelpMarker("Hold this key while peeking and use A/D to set the peek direction");
 			WSlider("Max Distance", &Vars::Misc::CL_Move::AutoPeekDistance.Value, 50.f, 400.f, "%.0f"); HelpMarker("Maximum distance that auto peek can walk");
 			WToggle("Free move", &Vars::Misc::CL_Move::AutoPeekFree.Value); HelpMarker("Allows you to move freely while peeking");
 		} EndChild();
@@ -1717,8 +1717,8 @@ void CMenu::MenuMisc()
 
 
 			SectionTitle("Automation");
-			InputKeybind("Infinite Sandwich key", Vars::Misc::InfiniteEatKey, true);  HelpMarker("Glutton bind, none for off.");
-			InputKeybind("Sticky Spam key", Vars::Misc::StickySpamKey, true);  HelpMarker("Sticky Spam Bind, none for off.");
+			InputKeybind("Infinite Sandwich key", Vars::Misc::InfiniteEatKey, true, false, "None");  HelpMarker("Glutton bind, none for off.");
+			InputKeybind("Sticky Spam key", Vars::Misc::StickySpamKey, true, false, "None");  HelpMarker("Sticky Spam Bind, none for off.");
 			if (Vars::Misc::StickySpamKey.Value) {
 				WSlider("Sticky Charge Percent", &Vars::Misc::StickyChargePercent.Value, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
 			}
@@ -1734,7 +1734,7 @@ void CMenu::MenuMisc()
 			WToggle("Taunt control", &Vars::Misc::TauntControl.Value); HelpMarker("Gives full control if enabled with taunt slide");
 			WToggle("Taunt follows camera", &Vars::Misc::TauntFollowsCamera.Value);
 			WToggle("Taunt spin", &Vars::Misc::TauntSpin.Value);
-			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, false);
+			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, true, false, "None");	//	why was this set to disallow none?
 			WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
 			WCombo("Pick Class", &Vars::Misc::AutoJoin.Value, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
@@ -1818,7 +1818,7 @@ void CMenu::MenuMisc()
 			SectionTitle("Party Networking");
 			WToggle("Enable###PartyNetEnable", &Vars::Misc::PartyNetworking.Value); HelpMarker("Enables party networking between Fedoraware users");
 			WToggle("Party crasher###PartyNetCrash", &Vars::Misc::PartyCrasher.Value); HelpMarker("Annoy your friends by crashing their game");
-			InputKeybind("Party marker", Vars::Misc::PartyMarker, true);  HelpMarker("Sends a marker to other Fedoraware users in your party");
+			InputKeybind("Party marker", Vars::Misc::PartyMarker, true, false, "None");  HelpMarker("Sends a marker to other Fedoraware users in your party");
 			WToggle("Party ESP###PartyNetESP", &Vars::Misc::PartyESP.Value); HelpMarker("Sends player locations to your party members");
 
 			SectionTitle("Followbot");
@@ -1953,7 +1953,7 @@ void CMenu::SettingsWindow()
 			WInputText("Chat Prefix", &Vars::Menu::CheatPrefix.Value);
 
 			SetNextItemWidth(100);
-			InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true);	
+			InputKeybind("Extra Menu key", Vars::Menu::MenuKey, true, true, "None");
 		}
 
 		Dummy({ 0, 5 });
