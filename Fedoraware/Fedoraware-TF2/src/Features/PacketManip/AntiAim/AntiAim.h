@@ -8,6 +8,7 @@ private:
 	// utils
 	inline void FakeShotAngles(CUserCmd* pCmd);
 	inline void Keybinds();
+	inline void SpinAngles();
 
 	//	logic
 	float EdgeDistance(const float flEdgeRayYaw, CBaseEntity* pEntity);
@@ -29,8 +30,7 @@ public:
 	bool bSendingReal = false;	//	for leg jitter
 
 	bool GetEdge(const float flEdgeOrigYaw, CBaseEntity* pEntity);
-	void RunReal(CUserCmd* pCmd);
-	void RunFake(CUserCmd* pCmd);
+	void Run(CUserCmd* pCmd, bool* pSendPacket);
 	inline bool ShouldAntiAim(CBaseEntity* pLocal);
 };
 

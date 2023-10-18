@@ -18,6 +18,13 @@ inline void CCAntiAim::Keybinds() {
 	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 }
 
+inline void CCAntiAim::SpinAngles() {
+	flFakeOffset -= Vars::AntiHack::AntiAim::SpinSpeed.Value;
+	flRealOffset += Vars::AntiHack::AntiAim::SpinSpeed.Value;
+	flFakeOffset = (int)flFakeOffset % 360;
+	flRealOffset = (int)flRealOffset % 360;
+}
+
 float CCAntiAim::EdgeDistance(float flEdgeRayYaw, CBaseEntity* pEntity) {
 	// Main ray tracing area
 	CGameTrace trace;
@@ -116,7 +123,7 @@ inline float CCAntiAim::GetYawOffset(const int iIndex, const bool bFake) {
 		return 180.f;
 	}
 	case 5: {
-		return (bFake ? flFakeOffset : flRealOffset) += (Vars::AntiHack::AntiAim::SpinSpeed.Value * bFake ? 1 : -1);
+		return (bFake ? flFakeOffset : flRealOffset);
 	}
 	case 6: {
 		return (GetEdge() ? 1.f : -1.f) * (bFake ? -90.f : 90.f);
@@ -157,11 +164,12 @@ float CCAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
 	return pCmd->viewangles.y;
 }
 
-void CCAntiAim::RunReal(CUserCmd* pCmd) {
+void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	Keybinds();
 	FakeShotAngles(pCmd);
+	SpinAngles();
 	G::AAActive = false;
-	bSendingReal = true;
+	bSendingReal = !*pSendPacket;
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
@@ -169,47 +177,25 @@ void CCAntiAim::RunReal(CUserCmd* pCmd) {
 		return;
 	}
 
-	vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y }; //	reset angles
+	Vec2& vAngles = bSendingReal ? vRealAngles : vFakeAngles;
+
+	vAngles = { pCmd->viewangles.x, pCmd->viewangles.y };	//	reset angles
 
 	if (!ShouldAntiAim(pLocal)) {
+		vRealAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
+		vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y };
 		return;
 	}
+
 	G::AAActive = true;
 	G::UpdateView = false;
 
-	flRealOffset = (int)flRealOffset % 360;
-	flBaseYaw = GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd);	//	only do this on real so our fake yaw is reliant on the base yaw from this.
-	vRealAngles = { GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x), flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawReal.Value, false) };
-	Utils::FixMovement(pCmd, vRealAngles);
-	pCmd->viewangles.x = vRealAngles.x;
-	pCmd->viewangles.y = vRealAngles.y;
-	return;
-}
-
-void CCAntiAim::RunFake(CUserCmd* pCmd) {
-	Keybinds();
-	FakeShotAngles(pCmd);
-	G::AAActive = false;
-	bSendingReal = false;
-
-	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
-	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	if (!iNetChan || !pLocal) {
-		return;
-	}
-
-	vFakeAngles = { pCmd->viewangles.x, pCmd->viewangles.y }; //	reset angles
-
-	if (!ShouldAntiAim(pLocal)) {
-		return;
-	}
-	G::AAActive = true;
-	G::UpdateView = false;
-
-	flFakeOffset = (int)flFakeOffset % 360;
-	vFakeAngles = { GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x), flBaseYaw + GetYawOffset(Vars::AntiHack::AntiAim::YawFake.Value, true) };
-	Utils::FixMovement(pCmd, vFakeAngles);
-	pCmd->viewangles.x = vFakeAngles.x;
-	pCmd->viewangles.y = vFakeAngles.y;
-	return;
+	flBaseYaw = !iNetChan->m_nChokedPackets ? GetBaseYaw(Vars::AntiHack::AntiAim::BaseYawMode.Value, pLocal, pCmd) : flBaseYaw;	//	get base yaw on the first choked tick.
+	vAngles = {
+		GetPitch(Vars::AntiHack::AntiAim::PitchFake.Value, Vars::AntiHack::AntiAim::PitchReal.Value, pCmd->viewangles.x), 
+		flBaseYaw + GetYawOffset(bSendingReal ? Vars::AntiHack::AntiAim::YawReal.Value : Vars::AntiHack::AntiAim::YawFake.Value, !bSendingReal)
+	};
+	Utils::FixMovement(pCmd, vAngles);
+	pCmd->viewangles.x = vAngles.x;
+	pCmd->viewangles.y = vAngles.y;
 }

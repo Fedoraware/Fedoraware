@@ -36,18 +36,19 @@ void CPacketManip::CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldG
 	//prevent overchoking by just not running anything below if we believe it will cause us to time out
 	if (!WillTimeOut()) {
 		//anti aim will no longer set pSendPacket to false/true
-		F::AntiAim.RunReal(pCmd);
 		if (AACheck(pCmd) || G::SilentTime) {
 			*pSendPacket = false;
+			F::AntiAim.Run(pCmd, pSendPacket);
 			return;
 		}
+		F::AntiAim.Run(pCmd, pSendPacket);
 		RunFakeLag(pCmd, pSendPacket, nOldGroundInt, nOldFlags);
 	}
 	if (G::ShouldShift) {
 		*pSendPacket = G::ShiftedTicks == 1;
 	}
-	if (*pSendPacket) {
-		F::AntiAim.RunFake(pCmd);
+	if (*pSendPacket) {	//	if we are now sending we need to run antiaim again for our fake angle.
+		F::AntiAim.Run(pCmd, pSendPacket);
 	}
 
 	return;
