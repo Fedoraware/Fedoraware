@@ -41,15 +41,15 @@ void CPacketManip::CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldG
 			F::AntiAim.Run(pCmd, pSendPacket);
 			return;
 		}
-		F::AntiAim.Run(pCmd, pSendPacket);
+		//F::AntiAim.Run(pCmd, pSendPacket);
 		RunFakeLag(pCmd, pSendPacket, nOldGroundInt, nOldFlags);
 	}
 	if (G::ShouldShift) {
 		*pSendPacket = G::ShiftedTicks == 1;
 	}
-	if (*pSendPacket) {	//	if we are now sending we need to run antiaim again for our fake angle.
-		F::AntiAim.Run(pCmd, pSendPacket);
-	}
+	//if (*pSendPacket) {	//	if we are now sending we need to run antiaim again for our fake angle.
+	//	F::AntiAim.Run(pCmd, pSendPacket);
+	//}
 
-	return;
+	return F::AntiAim.Run(pCmd, pSendPacket);;
 }
