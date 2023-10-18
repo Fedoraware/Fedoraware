@@ -216,7 +216,7 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
 	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || !F::AntiAim.bSendingReal) { return; }
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && (Vars::AntiHack::AntiAim::LegJitter.Value || F::AntiAim.bSendingReal))	//	force leg jitter if we are sending our real.
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
 		pos ? pCmd->sidemove = scale : pCmd->sidemove = -scale;
