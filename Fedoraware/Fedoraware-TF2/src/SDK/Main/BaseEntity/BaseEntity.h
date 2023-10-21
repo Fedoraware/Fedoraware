@@ -9,14 +9,11 @@
 	return GetVFunc<fn>(pBase, index)(pBase); \
 }
 
-#define HAS_CONDITION(ent, cond) (ent->InCond(cond))
-
 namespace S
 {
 	MAKE_SIGNATURE(TeamFortress_CalculateMaxSpeed, CLIENT_DLL, "55 8B EC 83 EC ? 83 3D ? ? ? ? ? 56 8B F1 75", 0x0);
 
 	MAKE_SIGNATURE(CBaseEntity_GetAmmoCount, CLIENT_DLL, "55 8B EC 56 8B 75 ? 57 8B F9 83 FE ? 75 ? 5F", 0x0);
-	MAKE_SIGNATURE(CBaseEntity_InCond, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 83 FF ? 7D", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_GetVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 3B F0", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_SetAbsOrigin, CLIENT_DLL, "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B 7D ? F3 0F 10 07", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_PostDataUpdate, CLIENT_DLL, "55 8B EC 83 EC ? 53 8B 5D ? 56 57 8B F9 85 DB 75 ? 8B 0D", 0x0);
