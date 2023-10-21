@@ -609,7 +609,7 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Choked Bar Top", Vars::Colours::ChokedBar.Value.startColour);
 					ColorPickerL("Choked Bar Bottom", Vars::Colours::ChokedBar.Value.endColour, 1);
 					WToggle("Priorities", &Vars::ESP::Players::Priority.Value); HelpMarker("Displays a player's priority.");
-					if (Vars::ESP::Players::Priority.Value);
+					if (Vars::ESP::Players::Priority.Value)
 					{
 						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 						ColorPickerL("Rage Color", Vars::Colours::Rage.Value);
