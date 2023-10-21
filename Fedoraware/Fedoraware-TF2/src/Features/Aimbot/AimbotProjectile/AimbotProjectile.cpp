@@ -971,7 +971,7 @@ bool CAimbotProjectile::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWe
 		case ETargetType::PLAYER:
 		{
 			vVelocity = target.m_pEntity->GetVelocity();
-			vAcceleration = Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat() * ((target.m_pEntity->GetCondEx2() & TFCondEx2_Parachute) ? 0.224f : 1.0f));
+			vAcceleration = Vec3(0.0f, 0.0f, g_ConVars.sv_gravity->GetFloat() * ((target.m_pEntity->InCond(TF_COND_PARACHUTE_ACTIVE)) ? 0.224f : 1.0f));
 			break;
 		}
 
@@ -1154,7 +1154,7 @@ bool CAimbotProjectile::GetSplashTarget(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	float splashRadiusModified = splashRadius.value() * 0.8; //this value will only be used if you are blast jumping with the air strike
 
 	//check if you are rocket jumping, and change the value appropriately, because the air strike blast radius changes if you are rocket jumping.
-	if (pLocal->GetCondEx2() & TFCondEx2_BlastJumping && G::CurItemDefIndex == Soldier_m_TheAirStrike)
+	if (pLocal->InCond(TF_COND_BLASTJUMPING) && G::CurItemDefIndex == Soldier_m_TheAirStrike)
 		splashRadius = splashRadiusModified;
 
 	// Don't do it with the direct hit or if the splash radius is unknown

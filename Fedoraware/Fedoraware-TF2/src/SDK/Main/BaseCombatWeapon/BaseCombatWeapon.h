@@ -44,6 +44,7 @@ public: //Netvars
 		M_DYNVARGET(ChargeResistType, int, this, "DT_WeaponMedigun", "m_nChargeResistType")
 		M_DYNVARGET(ReloadMode, int, this, "DT_TFWeaponBase", "m_iReloadMode")
 		M_DYNVARGET(DetonateTime, float, this, "DT_WeaponGrenadeLauncher", "m_flDetonateTime")
+		M_DYNVARGET(WeaponState, int, this, "DT_WeaponMinigun", "m_iWeaponState")
 		//M_DYNVARGET(ObservedCritChance, float, this, "DT_LocalTFWeaponData", "m_flObservedCritChance")
 		//M_DYNVARGET(LastCritCheckTime, float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flLastCritCheckTime")
 		M_DYNVARGET(ObservedCritChance, float, this, "DT_TFWeaponBase", "LocalActiveTFWeaponData", "m_flObservedCritChance")

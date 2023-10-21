@@ -1383,148 +1383,14 @@ void CESP::DrawWorld() const
 	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 }
 
-using ETFCond = int;
-
-template <typename tIntType>
-class CConditionVars
-{
-public:
-	CConditionVars(tIntType& nPlayerCond, tIntType& nPlayerCondEx, tIntType& nPlayerCondEx2, tIntType& nPlayerCondEx3, ETFCond eCond)
-	{
-		if (eCond >= 96)
-		{
-			if (eCond < 96 + 32)
-			{
-				m_pnCondVar = &nPlayerCondEx3;
-				m_nCondBit = eCond - 96;
-			}
-		}
-		else if (eCond >= 64)
-		{
-			if (eCond < (64 + 32))
-			{
-				m_pnCondVar = &nPlayerCondEx2;
-				m_nCondBit = eCond - 64;
-			}
-		}
-		else if (eCond >= 32)
-		{
-			if (eCond < (32 + 32))
-			{
-				m_pnCondVar = &nPlayerCondEx;
-				m_nCondBit = eCond - 32;
-			}
-		}
-		else
-		{
-			m_pnCondVar = &nPlayerCond;
-			m_nCondBit = eCond;
-		}
-	}
-
-	tIntType& CondVar() const
-	{
-		return *m_pnCondVar;
-	}
-
-	int CondBit() const
-	{
-		return 1 << m_nCondBit;
-	}
-
-private:
-	tIntType* m_pnCondVar;
-	int m_nCondBit;
-};
-
-class CTFCondition;
-
-
-class CTFConditionList
-{
-public:
-	CTFConditionList();
-
-	bool InCond(ETFCond type) const;
-
-	CUtlVector<CTFCondition*> _conditions;
-
-	int _condition_bits;
-	int _old_condition_bits;
-};
-
-bool CTFConditionList::InCond(ETFCond type) const
-{
-	return ((_condition_bits & (1 << type)) != 0);
-}
-
-class CTFCondition
-{
-public:
-	CTFCondition(ETFCond type, float duration, CBaseEntity* outer, CBaseEntity* provider = nullptr);
-	virtual ~CTFCondition();
-
-	virtual void Add(float duration);
-
-	virtual void OnAdded() = 0;
-	virtual void OnRemoved() = 0;
-	virtual void OnThink() = 0;
-	virtual void OnServerThink() = 0;
-
-	// Condition Traits
-	virtual bool IsHealable() { return false; }
-	virtual bool UsesMinDuration() { return false; }
-
-	ETFCond GetType() { return _type; }
-	float GetMaxDuration() { return _max_duration; }
-	void SetMaxDuration(float val) { _max_duration = val; }
-	float GetMinDuration() { return _min_duration; }
-	void SetMinDuration(float val) { if (UsesMinDuration()) { _min_duration = val; } }
-	CBaseEntity* GetOuter() { return _outer; }
-	void SetProvider(CBaseEntity* provider) { _provider = provider; }
-	CBaseEntity* GetProvider() { return _provider; }
-
-private:
-	float _min_duration;
-	float _max_duration;
-	const ETFCond _type;
-	CBaseEntity* _outer;
-	CBaseEntity* _provider;
-};
-
-bool InCond(CBaseEntity* pEntity, int eCond)
-{
-	if (eCond >= 0 && eCond < 122)
-	{
-		void* condList = pEntity->m_ConditionList();
-		const auto& conditionList = *reinterpret_cast<CTFConditionList*>(condList);
-
-		if (conditionList._conditions.Count() > 0)
-		{
-			// Old condition system, only used for the first 32 conditions
-			if (eCond < 32 && conditionList.InCond(eCond))
-			{
-				return true;
-			}
-
-			CConditionVars<const int> cPlayerCond(pEntity->GetCond(), pEntity->GetCondEx(), pEntity->GetCondEx2(), pEntity->GetCondEx3(), eCond);
-			return (cPlayerCond.CondVar() & cPlayerCond.CondBit()) != 0;
-		}
-	}
-	return false;
-}
-
 std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 {
 	std::vector<std::wstring> szCond{};
-	const int& nCond = pEntity->GetCond();
-	const int& nCondEx = pEntity->GetCondEx();
-	const int& nCondEx2 = pEntity->GetCondEx2();
 	const int& nFlag = pEntity->GetFlags();
 
 	{
 		const float flTickVelSqr = pow(pEntity->TickVelocity2D(), 2);
-		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"Can't Hit"); }
+		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"No Lag Comp"); }
 	}
 
 	if (const wchar_t* rune = pEntity->GetRune())
@@ -1532,218 +1398,160 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(rune);
 	}
 
-	if (InCond(pEntity, 129))
-	{
-		szCond.emplace_back(L"Dominant");
-	}
-
-	if (InCond(pEntity, 58))
-	{
-		szCond.emplace_back(L"Bullet Charge");
-	}
-
-	if (InCond(pEntity, 59))
-	{
-		szCond.emplace_back(L"Blast Charge");
-	}
-
-	if (InCond(pEntity, 60))
-	{
-		szCond.emplace_back(L"Fire Charge");
-	}
-
-	if (InCond(pEntity, 61))
-	{
-		szCond.emplace_back(L"Bullet resistance");
-	}
-
-	if (InCond(pEntity, 62))
-	{
-		szCond.emplace_back(L"Blast resistance");
-	}
-
-	if (InCond(pEntity, 63))
-	{
-		szCond.emplace_back(L"Fire resistance");
-	}
-
-	if (nCond & TFCond_Slowed) // This is scuffed
+	if (pEntity->InCond(TF_COND_AIMING))
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
-			if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
-			{
-				szCond.emplace_back(L"Revved");
-			}
-			else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW)
-			{
-				bool charged = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime()) >= 1.0f;
-				if (charged)
-				{
-					szCond.emplace_back(L"Charged");
-				}
-				else
-				{
-					szCond.emplace_back(L"Charging");
-				}
-			}
-			else if(pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON)
-			{
-				szCond.emplace_back(L"Charging");
-			}
-			else
-			{
-				szCond.emplace_back(L"Slowed");
-			}
+			if (pWeapon->GetWeaponID() == ETFWeaponType::TF_WEAPON_MINIGUN && pWeapon->GetWeaponState() != 0)
+				szCond.emplace_back(L"Rev");
+
+			if (pWeapon->GetWeaponID() == ETFWeaponType::TF_WEAPON_COMPOUND_BOW)
+				szCond.emplace_back(L"Drawn");
 		}
 	}
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_BULLET_RESIST))
+		szCond.emplace_back(L"Bullet Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_BULLET_RESIST))
+		szCond.emplace_back(L"Bullet Resist");
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_BLAST_RESIST))
+		szCond.emplace_back(L"Blast Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_BLAST_RESIST))
+		szCond.emplace_back(L"Blast Resist");
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_FIRE_RESIST))
+		szCond.emplace_back(L"Fire Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_FIRE_RESIST))
+		szCond.emplace_back(L"Fire Resist");
+
+	if (pEntity->InCond(TF_COND_BLAST_IMMUNE))
+		szCond.emplace_back(L"Blast Immune");
+
+	if (pEntity->InCond(TF_COND_BULLET_IMMUNE))
+		szCond.emplace_back(L"Bullet Immune");
+
+	if (pEntity->InCond(TF_COND_FIRE_IMMUNE))
+		szCond.emplace_back(L"Fire Immune");
+
+	if (pEntity->InCond(TF_COND_INVULNERABLE)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_CARD_EFFECT)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_USER_BUFF)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_WEARINGOFF))
+		szCond.emplace_back(L"Uber");
+
+	if (pEntity->InCond(TF_COND_MEGAHEAL) || pEntity->InCond(TF_COND_HEALTH_OVERHEALED))
+		szCond.emplace_back(L"Overheal");
+
+	if (pEntity->InCond(TF_COND_PHASE))
+		szCond.emplace_back(L"Bonk");
+
+	if (pEntity->IsCloaked() || pEntity->InCond(TF_COND_STEALTHED_USER_BUFF))
+		szCond.emplace_back(L"Cloaked");
+
+	if (pEntity->InCond(TF_COND_ZOOMED))
+		szCond.emplace_back(L"Zoomed");
+
+	if (pEntity->InCond(TF_COND_TAUNTING))
+		szCond.emplace_back(L"Taunting");
+
+	if (pEntity->InCond(TF_COND_DISGUISED))
+		szCond.emplace_back(L"Disguised");
+
+	if (pEntity->InCond(TF_COND_MAD_MILK))
+		szCond.emplace_back(L"Milked");
+
+	if (pEntity->InCond(TF_COND_URINE))
+		szCond.emplace_back(L"Jarated");
+
+	if (pEntity->InCond(TF_COND_GAS))
+		szCond.emplace_back(L"Gas");
+
+	if (pEntity->InCond(TF_COND_BLEEDING))
+		szCond.emplace_back(L"Bleeding");
+
+	if (pEntity->InCond(TF_COND_BURNING))
+		szCond.emplace_back(L"Burning");
 
 	if (nFlag & FL_DUCKING)
 	{
 		szCond.emplace_back(L"Ducking");
 	}
 
-	if (pEntity->GetHealth() > pEntity->GetMaxHealth())
-	{
-		szCond.emplace_back(L"Overhealed");
-	}
-
-	if (nCondEx2 & TFCondEx2_BlastJumping || InCond(pEntity, 125))
+	if (pEntity->InCond(TF_COND_BLASTJUMPING) || pEntity->InCond(TF_COND_ROCKETPACK))
 	{
 		szCond.emplace_back(L"Blast Jumping");
 	}
 
-	if (nCond & TFCond_OnFire)
-	{
-		szCond.emplace_back(L"Burning");
-	}
-
-	if (pEntity->IsUbered())
-	{
-		szCond.emplace_back(L"Ubered");
-	}
-
-	if (nCond & TFCond_MegaHeal)
-	{
-		szCond.emplace_back(L"Megahealed");
-	}
-
-	if (nCond & TFCond_Bonked)
-	{
-		szCond.emplace_back(L"Bonked");
-	}
-
-	if (nCond & TFCond_Kritzkrieged || 
-		nCondEx & TFCondEx_CritCanteen || nCondEx & TFCondEx_CritOnFirstBlood || nCondEx & TFCondEx_CritOnWin ||
-		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
-		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
+	if (pEntity->IsCritBoosted())
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON)
 			{
-				szCond.emplace_back(L"Mini-Crits");
+				szCond.emplace_back(L"Mini-Crit Boosted");
 			}
 			else
 			{
-				szCond.emplace_back(L"Crit boosted");
+				szCond.emplace_back(L"Crit Boosted");
 			}
 		}
 	}
 
-	if (nCond & TFCond_MiniCrits)
+	if (pEntity->IsMiniCritBoosted())
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
 			if (pWeapon->GetItemDefIndex() == Sniper_t_TheBushwacka)
 			{
-				szCond.emplace_back(L"Crit boosted");
+				szCond.emplace_back(L"Crit Boosted");
 			}
 			else
 			{
-				szCond.emplace_back(L"Mini-Crits");
+				szCond.emplace_back(L"Mini-Crit Boosted");
 			}
 		}
 	}
 
-	if (nCond & TFCond_Cloaked || nCondEx2 & TFCondEx2_Stealthed)
-	{
-		szCond.emplace_back(L"Cloaked");
-	}
-
-	if (nCond & TFCond_Zoomed)
-	{
-		szCond.emplace_back(L"Scoped");
-	}
-
-	if (nCond & TFCond_Taunting)
-	{
-		szCond.emplace_back(L"Taunting");
-	}
-
-	if (nCond & TFCond_Disguised)
-	{
-		szCond.emplace_back(L"Disguised");
-	}
-
-	if (nCond & TFCond_Milked)
-	{
-		szCond.emplace_back(L"Milked");
-	}
-
-	if (nCond & TFCond_Jarated)
-	{
-		szCond.emplace_back(L"Jarated");
-	}
-
-	if (nCond & TFCond_MarkedForDeath || nCondEx & TFCondEx_MarkedForDeathSilent || InCond(pEntity, 119))
+	if (pEntity->InCond(TF_COND_MARKEDFORDEATH) || pEntity->InCond(TF_COND_MARKEDFORDEATH_SILENT) || pEntity->InCond(TF_COND_PASSTIME_PENALTY_DEBUFF))
 	{
 		szCond.emplace_back(L"Marked for Death");
 	}
 
-	if (nCond & TFCond_DefenseBuffed)
+	if (pEntity->InCond(TF_COND_DEFENSEBUFF))
 	{
-		szCond.emplace_back(L"Batallion's");
+		szCond.emplace_back(L"Defense Buff");
 	}
 
-	if (nCond & TFCond_RegenBuffed)
+	if (pEntity->InCond(TF_COND_REGENONDAMAGEBUFF))
 	{
-		szCond.emplace_back(L"Concheror");
+		szCond.emplace_back(L"Speed/Heal Buff");
 	}
 
-	if (nCond & TFCond_Stunned)
+	if (pEntity->InCond(TF_COND_STUNNED))
 	{
 		szCond.emplace_back(L"Stunned");
 	}
 
-	if (nCondEx2 & TFCondEx2_Parachute || InCond(pEntity, 122))
+	if (pEntity->InCond(TF_COND_PARACHUTE_ACTIVE) || pEntity->InCond(TF_COND_PARACHUTE_DEPLOYED))
 	{
 		szCond.emplace_back(L"Parachuting");
 	}
 
-	if (InCond(pEntity, 123))
-	{
-		szCond.emplace_back(L"Gassed");
-	}
-
-	if (InCond(pEntity, 17))
+	if (pEntity->InCond(TF_COND_SHIELD_CHARGE))
 	{
 		szCond.emplace_back(L"Charging");
 	}
 
-	if (InCond(pEntity, 36))
+	if (pEntity->InCond(TF_COND_SODAPOPPER_HYPE))
 	{
 		szCond.emplace_back(L"Hype");
 	}
 
-	if (nCondEx2 & TFCondEx_FocusBuff)
+	if (pEntity->InCond(TF_COND_SNIPERCHARGE_RAGE_BUFF))
 	{
 		szCond.emplace_back(L"Focus");
-	}
-
-	if (nCond & TFCond_Bleeding)
-	{
-		szCond.emplace_back(L"Bleeding");
 	}
 
 	if (pEntity->GetFeignDeathReady())
@@ -1753,10 +1561,10 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 
 	if (pEntity->IsBuffedByKing())
 	{
-		szCond.emplace_back(L"Buffed by King");
+		szCond.emplace_back(L"King Buff");
 	}
 
-	if (InCond(pEntity, 32))
+	if (pEntity->InCond(TF_COND_SPEED_BOOST))
 	{
 		szCond.emplace_back(L"Speed Boosted");
 	}

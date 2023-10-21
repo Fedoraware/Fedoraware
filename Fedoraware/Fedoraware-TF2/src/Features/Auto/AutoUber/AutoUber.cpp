@@ -49,7 +49,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			default: { continue; }
 		}
 
-		if (HAS_CONDITION(player, TFCond_Bonked))
+		if (player->InCond(TF_COND_PHASE))
 		{
 			return false;
 		}
@@ -82,7 +82,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 			if ((flFOVTo - (3.f * G::ChokeMap[player->GetIndex()])) > static_cast<float>(Vars::Triggerbot::Uber::ReactFoV.Value)) { continue; } //	account for choking :D
 		}
 
-		if (HAS_CONDITION(player, TFCond_Zoomed))
+		if (player->InCond(TF_COND_ZOOMED))
 		{
 			anyZoomedSnipers = true;
 			if (Utils::VisPos(pPatient, player, pPatient->GetHitboxPos(HITBOX_HEAD), player->GetEyePosition()))
@@ -206,13 +206,13 @@ int FireDangerValue(CBaseEntity* pPatient)
 
 		if (pPlayerWeapon->GetClassID() == ETFClassID::CTFFlameThrower)
 		{
-			if (HAS_CONDITION(pPatient, TFCond_OnFire) && pPatient->GetHealth() < 250)
+			if (pPatient->InCond(TF_COND_BURNING) && pPatient->GetHealth() < 250)
 			{
 				if (pPatient->GetClassNum() == CLASS_PYRO) { return 1; }
 				return 2;
 			}
 
-			if (HAS_CONDITION(player, TFCondEx_PhlogUber)) { return 2; }
+			if (player->InCond(TF_COND_CRITBOOSTED_RAGE_BUFF)) { return 2; }
 			shouldSwitch = 1;
 		}
 	}
