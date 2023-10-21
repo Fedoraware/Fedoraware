@@ -288,7 +288,7 @@ std::optional<TickRecord> CBacktrack::Run(CUserCmd* pCmd)
 		std::optional<TickRecord> cReturnTick;
 		for (const auto& pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 		{
-			if (!pEnemy || !pEnemy->IsAlive()) { continue; } //	dont scan
+			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->IsAGhost()) { continue; } //	dont scan
 
 			PlayerInfo_t pInfo{}; //	dont care about ignored players
 			if (!I::EngineClient->GetPlayerInfo(pEnemy->GetIndex(), &pInfo))

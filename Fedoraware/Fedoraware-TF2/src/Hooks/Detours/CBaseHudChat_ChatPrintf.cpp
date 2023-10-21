@@ -57,15 +57,24 @@ MAKE_HOOK(CBaseHudChat_ChatPrintf, Utils::GetVFuncPtr(I::ClientModeShared->m_pCh
 			chatFlag = { Vars::Colours::Local.Value.to_hex_alpha(), "[You]" };
 			flagSet = true;
 		}
-		else if (g_EntityCache.IsFriend(iPlayerIndex))
+		else if (g_EntityCache.IsFriend(iPlayerIndex) || I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 0)
 		{
 			chatFlag = { Vars::Colours::Friend.Value.to_hex_alpha(), "[Friend]" };
 			flagSet = true;
 		}
+		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 1)
+		{
+			chatFlag = { Vars::Colours::Ignored.Value.to_hex_alpha(), "[Ignored]" };
+			flagSet = true;
+		}
+		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 3)
+		{
+			chatFlag = { Vars::Colours::Rage.Value.to_hex_alpha(), "[Rage]" };
+			flagSet = true;
+		}
 		else if (I::EngineClient->GetPlayerInfo(iPlayerIndex, &info) && G::PlayerPriority[info.friendsID].Mode == 4)
 		{
-			static constexpr auto RED = Color_t{ 255, 0, 0, 255 };
-			chatFlag = { RED.to_hex_alpha(), "[Cheater]" };
+			chatFlag = { Vars::Colours::Cheater.Value.to_hex_alpha(), "[Cheater]" };
 			flagSet = true;
 		}
 

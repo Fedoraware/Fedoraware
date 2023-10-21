@@ -172,7 +172,7 @@ void CSpectatorList::DrawClassic()
 			centerr, nDrawY - addyy,
 			{ 255, 255, 255, 255 },
 			ALIGN_CENTERHORIZONTAL,
-			L"Spectating you");
+			L"Spectating You:");
 
 		for (const auto& Spectator : Spectators)
 		{
