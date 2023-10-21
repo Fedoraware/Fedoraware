@@ -762,7 +762,7 @@ void CVisuals::FillSightlines()
 			const int iEntityIndex = pEnemy->GetIndex();
 			if (!(pEnemy->IsAlive()) ||
 				!(pEnemy->GetClassNum() == CLASS_SNIPER) ||
-				!(pEnemy->GetCond() & TFCond_Zoomed) ||
+				!(pEnemy->InCond(TF_COND_ZOOMED)) ||
 				(pEnemy->GetDormant()))
 			{
 				m_SightLines[iEntityIndex] = { Vec3{0,0,0}, Vec3{0,0,0}, Color_t{0,0,0,0}, false };

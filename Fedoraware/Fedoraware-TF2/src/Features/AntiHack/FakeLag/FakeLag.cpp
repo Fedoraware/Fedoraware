@@ -116,7 +116,7 @@ void CFakeLag::PreserveBlastJump(const int nOldGround, const int nOldFlags) {
 	if (!pLocal || !pLocal->IsAlive() || !pLocal->IsPlayer()) { return; }
 	if (!pLocal->OnSolid() && nOldGround < 0 && !(nOldFlags & FL_ONGROUND)) { return; }
 	if (pLocal->GetClassNum() != ETFClass::CLASS_SOLDIER) { return; }
-	if (pLocal->GetCondEx2() & TFCondEx2_BlastJumping) {
+	if (pLocal->InCond(TF_COND_BLASTJUMPING)) {
 		bPreservingBlast = true;
 	}
 }

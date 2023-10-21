@@ -9,7 +9,7 @@
 	return GetVFunc<fn>(pBase, index)(pBase); \
 }
 
-#define HAS_CONDITION(ent, cond) (ent->GetCond() & cond)
+#define HAS_CONDITION(ent, cond) (ent->InCond(cond))
 
 namespace S
 {
@@ -99,19 +99,21 @@ public: //Netvars & conditions
 		M_DYNVARGET(TickBase, int, this, "DT_BasePlayer", "localdata", "m_nTickBase")
 		M_DYNVARGET(SimulationTime, float, this, "DT_BaseEntity", "m_flSimulationTime")
 		M_DYNVARGET(OldSimulationTime, float, (this + 0x4), "DT_BaseEntity", "m_flSimulationTime");
-	M_DYNVARGET(hOwner, int, this, "DT_BaseEntity", "m_hOwnerEntity")
+		M_DYNVARGET(hOwner, int, this, "DT_BaseEntity", "m_hOwnerEntity")
 		M_DYNVARGET(Health, int, this, "DT_BasePlayer", "m_iHealth")
 		M_DYNVARGET(TeamNum, int, this, "DT_BaseEntity", "m_iTeamNum")
 		M_DYNVARGET(Flags, int, this, "DT_BasePlayer", "m_fFlags")
 		M_DYNVARGET(LifeState, BYTE, this, "DT_BasePlayer", "m_lifeState")
 		M_DYNVARGET(ClassNum, int, this, "DT_TFPlayer", "m_PlayerClass", "m_iClass")
 		M_DYNVARGET(Cond, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCond")
-		M_DYNVARGET(ViewingCYOAPDA, bool, this, "DT_TFPlayer", "m_bViewingCYOAPDA")
-		M_DYNVARGET(UsingActionSlot, bool, this, "DT_TFPlayer", "m_bUsingActionSlot")
-		M_DYNVARGET(LoadoutUnavailable, bool, this, "DT_TFPlayer", "m_Shared", "m_bLoadoutUnavailable")
 		M_DYNVARGET(CondEx, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx")
 		M_DYNVARGET(CondEx2, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx2")
 		M_DYNVARGET(CondEx3, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx3")
+		M_DYNVARGET(CondEx4, int, this, "DT_TFPlayer", "m_Shared", "m_nPlayerCondEx4")
+		M_DYNVARGET(CondBits, int, this, "DT_TFPlayer", "m_Shared", "m_ConditionList", "_condition_bits")
+		M_DYNVARGET(ViewingCYOAPDA, bool, this, "DT_TFPlayer", "m_bViewingCYOAPDA")
+		M_DYNVARGET(UsingActionSlot, bool, this, "DT_TFPlayer", "m_bUsingActionSlot")
+		M_DYNVARGET(LoadoutUnavailable, bool, this, "DT_TFPlayer", "m_Shared", "m_bLoadoutUnavailable")
 		M_DYNVARGET(CollideableMins, Vec3, this, "DT_BaseEntity", "m_Collision", "m_vecMins")
 		M_DYNVARGET(CollideableMaxs, Vec3, this, "DT_BaseEntity", "m_Collision", "m_vecMaxs")
 		M_DYNVARGET(EyeAngles, Vec3, this, "DT_TFPlayer", "tfnonlocaldata", "m_angEyeAngles[0]")
@@ -135,47 +137,47 @@ public: //Netvars & conditions
 		M_OFFSETGET(SurfaceFriction, float, 0x12D4)
 		M_OFFSETGET(MoveType, MoveType_t, 0x1A4)
 
-		M_CONDGET(OnGround, GetFlags(), FL_ONGROUND)
-		M_CONDGET(InWater, GetFlags(), FL_INWATER)
-		M_CONDGET(Ducking, GetFlags(), FL_DUCKING)
-		M_CONDGET(Charging, GetCond(), TFCond_Charging)
-		M_CONDGET(Scoped, GetCond(), TFCond_Zoomed)
-		M_CONDGET(Ubered, GetCond(), TFCond_Ubercharged)
-		M_CONDGET(Bonked, GetCond(), TFCond_Bonked)
-		M_CONDGET(InMilk, GetCond(), TFCond_Milked)
-		M_CONDGET(InJarate, GetCond(), TFCond_Jarated)
-		M_CONDGET(Bleeding, GetCond(), TFCond_Bleeding)
-		M_CONDGET(Disguised, GetCond(), TFCond_Disguised)
-		M_CONDGET(Cloaked, GetCond(), TFCond_Cloaked)
-		M_CONDGET(Taunting, GetCond(), TFCond_Taunting)
-		M_CONDGET(OnFire, GetCond(), TFCond_OnFire)
-		M_CONDGET(Stunned, GetCond(), TFCond_Stunned)
-		M_CONDGET(Slowed, GetCond(), TFCond_Slowed)
-		M_CONDGET(MegaHealed, GetCond(), TFCond_MegaHeal)
-		M_CONDGET(AGhost, GetCondEx2(), TFCondEx2_HalloweenGhostMode)
-		M_CONDGET(InBumperKart, GetCondEx2(), TFCondEx_InKart)
-		M_CONDGET(PhlogUbered, GetCondEx(), TFCondEx_PhlogUber)
-		M_CONDGET(BlastImmune, GetCondEx2(), TFCondEx2_BlastImmune)
-		M_CONDGET(BulletImmune, GetCondEx2(), TFCondEx2_BulletImmune)
-		M_CONDGET(FireImmune, GetCondEx2(), TFCondEx2_FireImmune)
-		M_CONDGET(StrengthRune, GetCondEx2(), TFCondEx2_StrengthRune)
-		M_CONDGET(HasteRune, GetCondEx2(), TFCondEx2_HasteRune)
-		M_CONDGET(RegenRune, GetCondEx2(), TFCondEx2_RegenRune)
-		M_CONDGET(ResistRune, GetCondEx2(), TFCondEx2_ResistRune)
-		M_CONDGET(VampireRune, GetCondEx2(), TFCondEx2_VampireRune)
-		M_CONDGET(ReflectRune, GetCondEx2(), TFCondEx2_ReflectRune)
-		M_CONDGET(PrecisionRune, GetCondEx3(), TFCondEx3_PrecisionRune)
-		M_CONDGET(AgilityRune, GetCondEx3(), TFCondEx3_AgilityRune)
-		M_CONDGET(KnockoutRune, GetCondEx3(), TFCondEx3_KnockoutRune)
-		M_CONDGET(ImbalanceRune, GetCondEx3(), TFCondEx3_ImbalanceRune)
-		M_CONDGET(CritTempRune, GetCondEx3(), TFCondEx3_CritboostedTempRune)
-		M_CONDGET(KingRune, GetCondEx3(), TFCondEx3_KingRune)
-		M_CONDGET(PlagueRune, GetCondEx3(), TFCondEx3_PlagueRune)
-		M_CONDGET(SupernovaRune, GetCondEx3(), TFCondEx3_SupernovaRune)
-		M_CONDGET(BuffedByKing, GetCondEx3(), TFCondEx3_KingBuff)
-		M_CONDGET(BlastResist, GetCondEx(), TFCondEx_ExplosiveCharge)
-		M_CONDGET(BulletResist, GetCondEx(), TFCondEx_BulletCharge)
-		M_CONDGET(FireResist, GetCondEx(), TFCondEx_FireCharge)
+		M_FLAGGET(OnGround, GetFlags(), FL_ONGROUND)
+		M_FLAGGET(InWater, GetFlags(), FL_INWATER)
+		M_FLAGGET(Ducking, GetFlags(), FL_DUCKING)
+		M_CONDGET(Charging, InCond, TF_COND_SHIELD_CHARGE)
+		M_CONDGET(Scoped, InCond, TF_COND_ZOOMED)
+		M_CONDGET(Ubered, InCond, TF_COND_INVULNERABLE)
+		M_CONDGET(Bonked, InCond, TF_COND_PHASE)
+		M_CONDGET(InMilk, InCond, TF_COND_MAD_MILK)
+		M_CONDGET(InJarate, InCond, TF_COND_URINE)
+		M_CONDGET(Bleeding, InCond, TF_COND_BLEEDING)
+		M_CONDGET(Disguised, InCond, TF_COND_DISGUISED)
+		M_CONDGET(Cloaked, InCond, TF_COND_STEALTHED)
+		M_CONDGET(Taunting, InCond, TF_COND_TAUNTING)
+		M_CONDGET(OnFire, InCond, TF_COND_BURNING)
+		M_CONDGET(Stunned, InCond, TF_COND_STUNNED)
+		M_CONDGET(Slowed, InCond, TF_COND_AIMING)
+		M_CONDGET(MegaHealed, InCond, TF_COND_MEGAHEAL)
+		M_CONDGET(AGhost, InCond, TF_COND_HALLOWEEN_GHOST_MODE)
+		M_CONDGET(InBumperKart, InCond, TF_COND_HALLOWEEN_KART)
+		M_CONDGET(PhlogUbered, InCond, TF_COND_CRITBOOSTED_RAGE_BUFF)
+		M_CONDGET(BlastImmune, InCond, TF_COND_BLAST_IMMUNE)
+		M_CONDGET(BulletImmune, InCond, TF_COND_BULLET_IMMUNE)
+		M_CONDGET(FireImmune, InCond, TF_COND_FIRE_IMMUNE)
+		M_CONDGET(StrengthRune, InCond, TF_COND_RUNE_STRENGTH)
+		M_CONDGET(HasteRune, InCond, TF_COND_RUNE_HASTE)
+		M_CONDGET(RegenRune, InCond, TF_COND_RUNE_REGEN)
+		M_CONDGET(ResistRune, InCond, TF_COND_RUNE_RESIST)
+		M_CONDGET(VampireRune, InCond, TF_COND_RUNE_VAMPIRE)
+		M_CONDGET(ReflectRune, InCond, TF_COND_RUNE_REFLECT)
+		M_CONDGET(PrecisionRune, InCond, TF_COND_RUNE_PRECISION)
+		M_CONDGET(AgilityRune, InCond, TF_COND_RUNE_AGILITY)
+		M_CONDGET(KnockoutRune, InCond, TF_COND_RUNE_KNOCKOUT)
+		M_CONDGET(ImbalanceRune, InCond, TF_COND_RUNE_IMBALANCE)
+		M_CONDGET(CritTempRune, InCond, TF_COND_CRITBOOSTED_RUNE_TEMP)
+		M_CONDGET(KingRune, InCond, TF_COND_RUNE_KING)
+		M_CONDGET(PlagueRune, InCond, TF_COND_RUNE_PLAGUE)
+		M_CONDGET(SupernovaRune, InCond, TF_COND_RUNE_SUPERNOVA)
+		M_CONDGET(BuffedByKing, InCond, TF_COND_KING_BUFFED)
+		M_CONDGET(BlastResist, InCond, TF_COND_MEDIGUN_UBER_BLAST_RESIST)
+		M_CONDGET(BulletResist, InCond, TF_COND_MEDIGUN_UBER_BULLET_RESIST)
+		M_CONDGET(FireResist, InCond, TF_COND_MEDIGUN_UBER_FIRE_RESIST)
 
 		// thanks litebase this is just better ngl
 		NETVAR(m_vecOrigin, Vec3, "CBaseEntity", "m_vecOrigin")
@@ -291,6 +293,75 @@ public: //Virtuals from networkable
 		M_VIRTUALGET(Index, int, Networkable(), int(__thiscall*)(void*), 9)
 
 public: //Everything else, lol.
+	//Credits to KGB
+	__inline bool InCond(const ETFCond cond)
+	{
+		const int iCond = static_cast<int>(cond);
+
+		switch (iCond / 32)
+		{
+		case 0:
+		{
+			const int bit = (1 << iCond);
+			if ((GetCond() & bit) == bit)
+			{
+				return true;
+			}
+
+			if ((GetCondBits() & bit) == bit)
+			{
+				return true;
+			}
+
+			break;
+		}
+		case 1:
+		{
+			const int bit = 1 << (iCond - 32);
+			if ((GetCondEx() & bit) == bit)
+			{
+				return true;
+			}
+
+			break;
+		}
+		case 2:
+		{
+			const int bit = 1 << (iCond - 64);
+			if ((GetCondEx2() & bit) == bit)
+			{
+				return true;
+			}
+
+			break;
+		}
+		case 3:
+		{
+			const int bit = 1 << (iCond - 96);
+			if ((GetCondEx3() & bit) == bit)
+			{
+				return true;
+			}
+
+			break;
+		}
+		case 4:
+		{
+			const int bit = 1 << (iCond - 128);
+			if ((GetCondEx4() & bit) == bit)
+			{
+				return true;
+			}
+
+			break;
+		}
+		default:
+			break;
+		}
+
+		return false;
+	}
+
 	__inline size_t* GetMyWeapons()
 	{
 		static auto dwOff = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
@@ -361,13 +432,6 @@ public: //Everything else, lol.
 		static DWORD dwMyWeapons = g_NetVars.get_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
 		const int hWeapon = *reinterpret_cast<int*>(this + (dwMyWeapons + (nSlot * 0x4)));
 		return reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(hWeapon));
-	}
-
-	__inline bool InCond(int eCond)
-	{
-		using FN = bool(__thiscall*)(CBaseEntity*, int);
-		static FN fnInCond = S::CBaseEntity_InCond.As<FN>();
-		return fnInCond(this, eCond);
 	}
 
 	__inline ETFClassID GetClassID()
@@ -512,55 +576,57 @@ public: //Everything else, lol.
 
 	__inline bool IsVulnerable()
 	{
-		int nCond = GetCond();
-		int nCondEx = GetCondEx();
-		return !(nCond & TFCond_Ubercharged || nCond & TFCond_Bonked || nCondEx & TFCondEx_UberchargedHidden || nCondEx & TFCondEx_UberchargedCanteen);
+		return !(InCond(TF_COND_INVULNERABLE)
+			|| InCond(TF_COND_INVULNERABLE_CARD_EFFECT)
+			|| InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED)
+			|| InCond(TF_COND_INVULNERABLE_USER_BUFF)
+			|| InCond(TF_COND_PHASE));
 	}
 
 	__inline bool IsVisible()
 	{
-		int nCond = GetCond();
-		int nCondEx = GetCondEx();
-
-		if (nCond & (TFCond_Milked | TFCond_Jarated | TFCond_OnFire | TFCond_CloakFlicker | TFCond_Bleeding))
-		{
+		if (InCond(TF_COND_MAD_MILK) || InCond(TF_COND_URINE) || InCond(TF_COND_BURNING) || InCond(TF_COND_STEALTHED_BLINK) || InCond(TF_COND_BLEEDING))
 			return false;
-		}
 
-		return (nCond & TFCond_Cloaked);
+		return InCond(TF_COND_STEALTHED);
 	}
 
 	__inline bool IsCritBoosted()
 	{
-		int nCond = GetCond(), nCondEx = GetCondEx();
-
-		return (nCond & TFCond_Kritzkrieged ||
-				nCond & TFCond_MiniCrits ||
-				nCondEx & TFCondEx_CritCanteen ||
-				nCondEx & TFCondEx_CritOnFirstBlood ||
-				nCondEx & TFCondEx_CritOnWin ||
-				nCondEx & TFCondEx_CritOnKill ||
-				nCondEx & TFCondEx_CritDemoCharge ||
-				nCondEx & TFCondEx_CritOnFlagCapture ||
-				nCondEx & TFCondEx_HalloweenCritCandy ||
-				nCondEx & TFCondEx_PyroCrits ||
-				IsCritTempRune());
+		return InCond(TF_COND_CRITBOOSTED)
+			|| InCond(TF_COND_CRITBOOSTED_BONUS_TIME)
+			|| InCond(TF_COND_CRITBOOSTED_CARD_EFFECT)
+			|| InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+			|| InCond(TF_COND_CRITBOOSTED_FIRST_BLOOD)
+			|| InCond(TF_COND_CRITBOOSTED_ON_KILL)
+			|| InCond(TF_COND_CRITBOOSTED_PUMPKIN)
+			|| InCond(TF_COND_CRITBOOSTED_RAGE_BUFF)
+			|| InCond(TF_COND_CRITBOOSTED_RUNE_TEMP)
+			|| InCond(TF_COND_CRITBOOSTED_USER_BUFF)
+			|| InCond(TF_COND_MINICRITBOOSTED_ON_KILL)
+			|| InCond(TF_COND_NOHEALINGDAMAGEBUFF)
+			|| InCond(TF_COND_ENERGY_BUFF);
 	}
 
 	__inline bool IsCritBoostedNoMini()
 	{
-		int nCond = GetCond(), nCondEx = GetCondEx();
+		return InCond(TF_COND_CRITBOOSTED)
+			|| InCond(TF_COND_CRITBOOSTED_BONUS_TIME)
+			|| InCond(TF_COND_CRITBOOSTED_CARD_EFFECT)
+			|| InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+			|| InCond(TF_COND_CRITBOOSTED_FIRST_BLOOD)
+			|| InCond(TF_COND_CRITBOOSTED_ON_KILL)
+			|| InCond(TF_COND_CRITBOOSTED_PUMPKIN)
+			|| InCond(TF_COND_CRITBOOSTED_RAGE_BUFF)
+			|| InCond(TF_COND_CRITBOOSTED_RUNE_TEMP)
+			|| InCond(TF_COND_CRITBOOSTED_USER_BUFF);
+	}
 
-		return (nCond & TFCond_Kritzkrieged ||
-				nCondEx & TFCondEx_CritCanteen ||
-				nCondEx & TFCondEx_CritOnFirstBlood ||
-				nCondEx & TFCondEx_CritOnWin ||
-				nCondEx & TFCondEx_CritOnKill ||
-				nCondEx & TFCondEx_CritDemoCharge ||
-				nCondEx & TFCondEx_CritOnFlagCapture ||
-				nCondEx & TFCondEx_HalloweenCritCandy ||
-				nCondEx & TFCondEx_PyroCrits ||
-				IsCritTempRune());
+	__inline bool IsMiniCritBoosted()
+	{
+		return InCond(TF_COND_MINICRITBOOSTED_ON_KILL)
+			|| InCond(TF_COND_NOHEALINGDAMAGEBUFF)
+			|| InCond(TF_COND_ENERGY_BUFF);
 	}
 
 	__inline const wchar_t* GetRune()
