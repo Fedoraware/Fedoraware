@@ -46,7 +46,6 @@
     <ClCompile Include="src\Features\Chams\Chams.cpp" />
     <ClCompile Include="src\Features\PlayerArrows\PlayerArrows.cpp" />
     <ClCompile Include="src\Features\Prediction\Prediction.cpp" />
-    <ClCompile Include="src\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="src\Features\Radar\Radar.cpp" />
     <ClCompile Include="src\Features\Resolver\Resolver.cpp" />
     <ClCompile Include="src\Features\SpyWarning\SpyWarning.cpp" />
@@ -73,7 +72,6 @@
     <ClCompile Include="src\Hooks\Detours\BaseClientDLL_ShutDown.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPartyClient_BCanRequestToJoinPlayer.cpp" />
     <ClCompile Include="src\Hooks\Detours\ClientState_ProcessFixAngle.cpp" />
-    <ClCompile Include="src\Hooks\Detours\CEconNotification_HasNewItems_CEconNotification_HasNewItems.cpp" />
     <ClCompile Include="src\Hooks\Detours\CHudCrosshair_GetDrawPosition.cpp" />
     <ClCompile Include="src\Hooks\Detours\CInventoryManager_ShowItemsPickedUp.cpp" />
     <ClCompile Include="src\Hooks\Detours\ClientModeShared_CreateMove.cpp" />
@@ -180,6 +178,10 @@
     <ClCompile Include="src\Features\NoSpread\NoSpread.cpp" />
     <ClCompile Include="src\Hooks\Detours\CL_ReadPackets.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseAnimating_UpdateClientSideAnimation.cpp" />
+    <ClCompile Include="src\Features\Items\Items.cpp" />
+    <ClCompile Include="src\Features\Items\AttributeChanger\AttributeChanger.cpp" />
+    <ClCompile Include="src\Hooks\Detours\CEconNotification_HasNewItems.cpp" />
+    <ClCompile Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
@@ -231,7 +233,6 @@
     <ClInclude Include="src\Features\Chams\Chams.h" />
     <ClInclude Include="src\Features\PlayerArrows\PlayerArrows.h" />
     <ClInclude Include="src\Features\Prediction\Prediction.h" />
-    <ClInclude Include="src\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="src\Features\Radar\Radar.h" />
     <ClInclude Include="src\Features\Resolver\Resolver.h" />
     <ClInclude Include="src\Features\SpyWarning\SpyWarning.h" />
@@ -404,6 +405,11 @@
     <ClInclude Include="src\SDK\Interfaces\CTFGameMovement\CTFGameMovement.h" />
     <ClInclude Include="src\Features\NoSpread\NoSpread.h" />
     <ClInclude Include="src\Features\Colour.h" />
+    <ClInclude Include="src\Features\Items\Items.h" />
+    <ClInclude Include="src\Features\Items\AttributeChanger\AttributeChanger.h" />
+    <ClInclude Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.h" />
+    <ClInclude Include="src\SDK\Interfaces\VPhysics\VPhysics.h" />
+    <ClInclude Include="src\SDK\Interfaces\IAppSystem\IAppSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -648,14 +648,15 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				if (Vars::ESP::Players::HealthText.Value == 2)
 				{
+					int TextOffset = 6;
 					if (Vars::ESP::Players::Choked.Value) {					
-						nTextOffset = 10; 
+						TextOffset = 10; 
 					}
 					if (nHealth > nMaxHealth) {
-						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Vars::Colours::Overheal.Value, ALIGN_CENTERHORIZONTAL, "+%d", nHealth - nMaxHealth);
+						g_Draw.String(FONT, x - TextOffset, (y + h) - (ratio * h) - 4, Vars::Colours::Overheal.Value, ALIGN_REVERSE, "+%d", nHealth - nMaxHealth);
 					} 
 					else {
-						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Colors::White, ALIGN_CENTERHORIZONTAL, "%d", nHealth); 
+						g_Draw.String(FONT, x - TextOffset, (y + h) - (ratio * h) - 4, Colors::White, ALIGN_REVERSE, "%d", nHealth); 
 					}
 				}
 

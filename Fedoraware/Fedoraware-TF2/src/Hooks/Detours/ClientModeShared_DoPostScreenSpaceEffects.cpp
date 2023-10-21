@@ -12,6 +12,11 @@ MAKE_HOOK(ClientModeShared_DoPostScreenSpaceEffects, Utils::GetVFuncPtr(I::Clien
 	F::Chams.Render();
 	F::Glow.Render();
 
+	if (Vars::Visuals::ProjectileTrajectory.Value)
+	{
+		F::Visuals.ProjectileTrace();
+	}
+
 	if (!Vars::Glow::Misc::MovementSimLine.Value)
 	{
 		F::Visuals.DrawMovesimLine();

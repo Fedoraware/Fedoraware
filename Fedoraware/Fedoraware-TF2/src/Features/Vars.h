@@ -183,7 +183,8 @@ namespace Vars
 		CVar(SplashPrediction, false)
 		CVar(MinSplashPredictionDistance, 0)
 		CVar(MaxSplashPredictionDistance, 10000)
-		CVar(PredictionColor, Color_t(255, 255, 255, 255), IS_VISUAL)
+		CVar(PredictionColor, Color_t(255, 255, 255, 255), IS_VISUAL) // Why is this not in colours??? 
+		CVar(ProjectileColor, Color_t(255, 255, 255, 255), IS_VISUAL)
 		CVar(PredictionTime, 2.0f)
 		CVar(PredictObscured, false)
 		CVar(ChargeLooseCannon, false)
@@ -583,6 +584,7 @@ namespace Vars
 	CVar(MoveSimSeperators, false, IS_VISUAL);
 	CVar(SeperatorLength, 12, IS_VISUAL);
 	CVar(SeperatorSpacing, 6, IS_VISUAL);
+	CVar(ProjectileTrajectory, false, IS_VISUAL);
 	CVar(ParticleTracer, 2, IS_VISUAL);
 	CVar(DoPostProcessing, false, IS_VISUAL);
 	CVar(BulletTracerRainbow, false, IS_VISUAL);
