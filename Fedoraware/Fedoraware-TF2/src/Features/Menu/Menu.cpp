@@ -608,7 +608,12 @@ void CMenu::MenuVisuals()
 					WToggle("Choked Packets", &Vars::ESP::Players::Choked.Value); HelpMarker("Shows how many packets the player has choked");
 					ColorPickerL("Choked Bar Top", Vars::Colours::ChokedBar.Value.startColour);
 					ColorPickerL("Choked Bar Bottom", Vars::Colours::ChokedBar.Value.endColour, 1);
-					WToggle("Cheater Detection", &Vars::ESP::Players::CheaterDetection.Value); HelpMarker("Attempts to automatically mark cheaters.");
+					WToggle("Priorities", &Vars::ESP::Players::Priority.Value); HelpMarker("Displays a player's priority.");
+					if (Vars::ESP::Players::Priority.Value);
+					{
+						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
+						ColorPickerL("Rage Color", Vars::Colours::Rage.Value);
+					}
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
 					ColorPickerL("Skellington colour", Vars::Colours::Bones.Value);
@@ -1151,10 +1156,10 @@ void CMenu::MenuVisuals()
 						}
 						WToggle("Dash only", &Vars::Visuals::DashOnly.Value);
 					}
-					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value);
-					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value);
+					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value); HelpMarker("Attempt to remove all visuals in screenshots");
+					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value); HelpMarker("Moves the crosshair to the current aim position");
 					WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
-					WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value);
+					WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value); HelpMarker("Moves the viewmodel to the current aim position");
 					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
 					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
 					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
@@ -1577,6 +1582,7 @@ void CMenu::MenuHvH()
 		{
 			SectionTitle("Cheater Detection");
 			WToggle("Enable Cheater Detection", &Vars::Misc::CheaterDetection::Enabled.Value);
+			ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 			if (Vars::Misc::CheaterDetection::Enabled.Value)
 			{
 				{

@@ -317,7 +317,7 @@ namespace Vars
 		CVar(Dlights, false, IS_VISUAL)
 		CVar(DlightRadius, 200.0f, IS_VISUAL)
 		CVar(Alpha, 1.0f, IS_VISUAL)
-		CVar(CheaterDetection, false, IS_VISUAL)
+		CVar(Priority, false, IS_VISUAL)
 		CVar(SniperSightlines, false, IS_VISUAL)
 	SUBNAMESPACE_END(Players);
 
@@ -933,6 +933,8 @@ namespace Vars
 		CVar(Friend, Color_t(32, 191, 107, 255), IS_VISUAL);
 		CVar(Local, Color_t(168, 255, 211, 255), IS_VISUAL);
 		CVar(Ignored, Color_t(32, 191, 107, 255), IS_VISUAL);
+		CVar(Rage, Color_t(255, 255, 0, 255), IS_VISUAL);
+		CVar(Cheater, Color_t(255, 0, 0, 255), IS_VISUAL);
 		CVar(Overheal, Color_t(84, 160, 255, 255), IS_VISUAL);
 		CVar(Health, Color_t(0, 230, 64, 255), IS_VISUAL);
 		CVar(Ammo, Color_t(191, 191, 191, 255), IS_VISUAL);

@@ -382,11 +382,29 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 
-				// Cheater detection ESP
-				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
+				// Priority ESP
+				if (Vars::ESP::Players::Priority.Value)
 				{
-					g_Draw.String(FONT, middle, y - 28, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, "CHEATER");
-					nTextOffset += FONT.nTall;
+					if (G::PlayerPriority[pi.friendsID].Mode == 0 || g_EntityCache.IsFriend(nIndex))
+					{
+						g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
+						nTextOffset += FONT.nTall;
+					}
+					if (G::PlayerPriority[pi.friendsID].Mode == 1)
+					{
+						g_Draw.String(FONT, middle, y, Vars::Colours::Ignored.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
+						nTextOffset += FONT.nTall;
+					}
+					if (G::PlayerPriority[pi.friendsID].Mode == 3)
+					{
+						g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
+						nTextOffset += FONT.nTall;
+					}
+					if (G::PlayerPriority[pi.friendsID].Mode == 4)
+					{
+						g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
+						nTextOffset += FONT.nTall;
+					}
 				}
 
 				// GUID ESP
@@ -412,7 +430,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					if (Vars::ESP::Players::CheaterDetection.Value && G::PlayerPriority[pi.friendsID].Mode == 4)
+					if (Vars::ESP::Players::Priority.Value)
 					{
 						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 30 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
 									   nClassNum);
@@ -585,13 +603,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 			}
-			if (g_EntityCache.IsFriend(nIndex))
-			{
-				const wchar_t* friendLabel = L"FRIEND";
-				g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Vars::Colours::Cond.Value, ALIGN_DEFAULT, friendLabel);
-				nTextOffset += FONT_COND.nTall;
-			}
-
 
 			// Health bar
 			if (Vars::ESP::Players::HealthBar.Value)
@@ -1513,6 +1524,26 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(rune);
 	}
 
+	if (InCond(pEntity, 129))
+	{
+		szCond.emplace_back(L"Dominant");
+	}
+
+	if (InCond(pEntity, 58))
+	{
+		szCond.emplace_back(L"Bullet Charge");
+	}
+
+	if (InCond(pEntity, 59))
+	{
+		szCond.emplace_back(L"Blast Charge");
+	}
+
+	if (InCond(pEntity, 60))
+	{
+		szCond.emplace_back(L"Fire Charge");
+	}
+
 	if (InCond(pEntity, 61))
 	{
 		szCond.emplace_back(L"Bullet resistance");
@@ -1528,14 +1559,33 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Fire resistance");
 	}
 
-
-	if (nCond & TFCond_Slowed)
+	if (nCond & TFCond_Slowed) // This is scuffed
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
 			if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
 			{
 				szCond.emplace_back(L"Revved");
+			}
+			else if (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW)
+			{
+				bool charged = (I::GlobalVars->curtime - pWeapon->GetChargeBeginTime()) >= 1.0f;
+				if (charged)
+				{
+					szCond.emplace_back(L"Charged");
+				}
+				else
+				{
+					szCond.emplace_back(L"Charging");
+				}
+			}
+			else if(pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON)
+			{
+				szCond.emplace_back(L"Charging");
+			}
+			else
+			{
+				szCond.emplace_back(L"Slowed");
 			}
 		}
 	}
@@ -1550,7 +1600,7 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Overhealed");
 	}
 
-	if (nCondEx2 & TFCondEx2_BlastJumping)
+	if (nCondEx2 & TFCondEx2_BlastJumping || InCond(pEntity, 125))
 	{
 		szCond.emplace_back(L"Blast Jumping");
 	}
@@ -1580,14 +1630,35 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
 		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
 	{
-		szCond.emplace_back(L"Crit boosted");
-	}
-	if (nCond & TFCond_MiniCrits)
-	{
-	 szCond.emplace_back(L"Mini-Crits");
+		if (const auto& pWeapon = pEntity->GetActiveWeapon())
+		{
+			if (pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON)
+			{
+				szCond.emplace_back(L"Mini-Crits");
+			}
+			else
+			{
+				szCond.emplace_back(L"Crit boosted");
+			}
+		}
 	}
 
-	if (nCond & TFCond_Cloaked)
+	if (nCond & TFCond_MiniCrits)
+	{
+		if (const auto& pWeapon = pEntity->GetActiveWeapon())
+		{
+			if (pWeapon->GetItemDefIndex() == Sniper_t_TheBushwacka)
+			{
+				szCond.emplace_back(L"Crit boosted");
+			}
+			else
+			{
+				szCond.emplace_back(L"Mini-Crits");
+			}
+		}
+	}
+
+	if (nCond & TFCond_Cloaked || nCondEx2 & TFCondEx2_Stealthed)
 	{
 		szCond.emplace_back(L"Cloaked");
 	}
@@ -1617,6 +1688,51 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Jarated");
 	}
 
+	if (nCond & TFCond_MarkedForDeath || nCondEx & TFCondEx_MarkedForDeathSilent || InCond(pEntity, 119))
+	{
+		szCond.emplace_back(L"Marked for Death");
+	}
+
+	if (nCond & TFCond_DefenseBuffed)
+	{
+		szCond.emplace_back(L"Batallion's");
+	}
+
+	if (nCond & TFCond_RegenBuffed)
+	{
+		szCond.emplace_back(L"Concheror");
+	}
+
+	if (nCond & TFCond_Stunned)
+	{
+		szCond.emplace_back(L"Stunned");
+	}
+
+	if (nCondEx2 & TFCondEx2_Parachute || InCond(pEntity, 122))
+	{
+		szCond.emplace_back(L"Parachuting");
+	}
+
+	if (InCond(pEntity, 123))
+	{
+		szCond.emplace_back(L"Gassed");
+	}
+
+	if (InCond(pEntity, 17))
+	{
+		szCond.emplace_back(L"Charging");
+	}
+
+	if (InCond(pEntity, 36))
+	{
+		szCond.emplace_back(L"Hype");
+	}
+
+	if (nCondEx2 & TFCondEx_FocusBuff)
+	{
+		szCond.emplace_back(L"Focus");
+	}
+
 	if (nCond & TFCond_Bleeding)
 	{
 		szCond.emplace_back(L"Bleeding");
@@ -1630,6 +1746,21 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	if (pEntity->IsBuffedByKing())
 	{
 		szCond.emplace_back(L"Buffed by King");
+	}
+
+	if (InCond(pEntity, 32))
+	{
+		szCond.emplace_back(L"Speed Boosted");
+	}
+
+	if (pEntity->GetDormant())
+	{
+		szCond.emplace_back(L"Dormant");
+	}
+
+	if (pEntity->IsAGhost())
+	{
+		szCond.emplace_back(L"Ghost");
 	}
 
 	return szCond;
