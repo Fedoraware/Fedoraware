@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Core.cpp" />
     <ClCompile Include="src\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
+    <ClCompile Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.cpp" />
     <ClCompile Include="src\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
     <ClCompile Include="src\Features\AntiHack\FakeLag\FakeLag.cpp" />
     <ClCompile Include="src\Features\AutoQueue\AutoQueue.cpp" />
@@ -341,6 +342,7 @@
     <ClInclude Include="include\Discord\discord_register.h" />
     <ClInclude Include="include\Discord\discord_rpc.h" />
     <ClInclude Include="src\Core\Core.h" />
+    <ClInclude Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.h" />
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
     <ClInclude Include="src\Features\Colour.h" />
     <ClInclude Include="src\Features\Commands\Commands.h" />
@@ -456,6 +458,7 @@
     <ClInclude Include="src\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="src\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="src\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
+    <ClInclude Include="src\SDK\Interfaces\IAppSystem\IAppSystem.h" />
     <ClInclude Include="src\SDK\Interfaces\ICenterPrint\ICenterPrint.h" />
     <ClInclude Include="src\SDK\Interfaces\InputSystem\InputSystem.h" />
     <ClInclude Include="src\SDK\Interfaces\Input\Input.h" />
@@ -477,6 +480,7 @@
     <ClInclude Include="src\SDK\Interfaces\UniformRandomStream\UniformRandomStream.h" />
     <ClInclude Include="src\SDK\Interfaces\ViewRenderBeams\ViewRenderBeams.h" />
     <ClInclude Include="src\SDK\Interfaces\ViewRender\ViewRender.h" />
+    <ClInclude Include="src\SDK\Interfaces\VPhysics\VPhysics.h" />
     <ClInclude Include="src\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.h" />
     <ClInclude Include="src\SDK\Main\BaseEntity\AnimState\Activity.h" />
     <ClInclude Include="src\SDK\Main\BaseEntity\AnimState\BaseAnimatingOverlay.h" />

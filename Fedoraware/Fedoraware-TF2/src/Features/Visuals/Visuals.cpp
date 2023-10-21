@@ -2,6 +2,7 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 #include "../NoSpread/NoSpread.h"
+#include "../Aimbot/ProjectileSimulation/ProjectileSimulation.h"
 
 namespace S
 {
@@ -9,6 +10,8 @@ namespace S
 	MAKE_SIGNATURE(GetServerAnimating, SERVER_DLL, "55 8B EC 8B 55 ? 85 D2 7E ? A1", 0x0);
 	MAKE_SIGNATURE(DrawServerHitboxes, SERVER_DLL, "55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97", 0x0);
 	MAKE_SIGNATURE(RenderLine, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6", 0x0);
+	MAKE_SIGNATURE(RenderBoxFace, ENGINE_DLL, "55 8B EC 51 8B 45 ? 8B C8 FF 75", 0x0);
+	MAKE_SIGNATURE(RenderBoxEdge, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 89 75 ? 85 F6 74 ? 8B 06 8B CE FF 50 ? A1", 0x0);
 }
 
 void CVisuals::Draw()
@@ -401,6 +404,48 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
+void CVisuals::ProjectileTrace() // make it ignore other projectiles
+{
+	const auto& pLocal = g_EntityCache.GetLocal();
+	const auto& pWeapon = g_EntityCache.GetWeapon();
+	if (!pWeapon || !pLocal)
+		return;
+
+	ProjectileInfo projInfo = {};
+	if (!F::ProjSim.GetInfo(pLocal, pWeapon, I::EngineClient->GetViewAngles(), projInfo, true))
+		return;
+
+	if (!F::ProjSim.Initialize(projInfo))
+		return;
+
+	for (int n = 0; n < TIME_TO_TICKS(projInfo.m_lifetime); n++)
+	{
+		Vec3 Old = F::ProjSim.GetOrigin();
+		F::ProjSim.RunTick(projInfo);
+		Vec3 New = F::ProjSim.GetOrigin();
+
+		CGameTrace trace = {};
+		CTraceFilterHitscan filter = {};
+		filter.pSkip = pLocal;
+		Utils::TraceHull(Old, New, projInfo.m_hull * -1.f, projInfo.m_hull, MASK_SOLID, &filter, &trace);
+		if (trace.DidHit())
+		{
+			Vec3 angles;
+			Math::VectorAngles(trace.Plane.normal, angles);
+
+			const Vec3 size = { projInfo.m_hull.x * 2.f, 16.f, 16.f };
+			RenderBox(trace.vEndPos, size / -2, size / 2, angles, Vars::Aimbot::Projectile::ProjectileColor.Value, { 0, 0, 0, 0 });
+
+			projInfo.PredictionLines.push_back({ trace.vEndPos, Math::GetRotatedPosition(trace.vEndPos, Math::VelocityToAngles(F::ProjSim.GetVelocity() * Vec3(1, 1, 0)).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) });
+
+			break;
+		}
+	}
+
+	for (size_t i = 1; i < projInfo.PredictionLines.size(); i++)
+		RenderLine(projInfo.PredictionLines.at(i - 1).first, projInfo.PredictionLines.at(i).first, Vars::Aimbot::Projectile::ProjectileColor.Value, false);
+}
+
 void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = {255, 255, 255, 255})
 {
 	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
@@ -731,6 +776,20 @@ void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZ
 	using FN = void(__cdecl*)(const Vector&, const Vector&, Color_t, bool);
 	static auto fnRenderLine = S::RenderLine.As<FN>();
 	fnRenderLine(v1, v2, c, bZBuffer);
+}
+
+void CVisuals::RenderBox(const Vec3& vPos, const Vec3& vMins, const Vec3& vMaxs, const Vec3& vOrientation, Color_t cEdge, Color_t cFace)
+{
+	{
+		using FN = void(__cdecl*)(const Vec3&, const Vec3&, const Vec3&, const Vec3&, Color_t, bool, bool);
+		static auto fnRenderLine = S::RenderBoxFace.As<FN>();
+		fnRenderLine(vPos, vOrientation, vMins, vMaxs, cFace, false, false);
+	}
+	{
+		using FN = void(__cdecl*)(const Vec3&, const Vec3&, const Vec3&, const Vec3&, Color_t, bool);
+		static auto fnRenderLine = S::RenderBoxEdge.As<FN>();
+		fnRenderLine(vPos, vOrientation, vMins, vMaxs, cEdge, false);
+	}
 }
 
 void CVisuals::DrawSightlines()

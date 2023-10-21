@@ -54,10 +54,12 @@ public:
 
 	void SkyboxChanger();
 	void BulletTrace(CBaseEntity* pEntity, Color_t color);
+	void ProjectileTrace();
 	void DrawMenuSnow();
 	void DrawMovesimLine();
 	void ManualNetwork(const StartSoundParams_t& params); // Credits: reestart
 	void RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZBuffer);
+	void RenderBox(const Vec3& vPos, const Vec3& vMins, const Vec3& vMaxs, const Vec3& vOrientation, Color_t cEdge, Color_t cFace);
 	void DrawSightlines();
 	void FillSightlines();
 	void AddBulletTracer(const Vec3& vFrom, const Vec3& vTo, const Color_t& clr);

@@ -1176,6 +1176,8 @@ void CMenu::MenuVisuals()
 						WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
 						WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
 					}
+					WToggle("Projectile trajectory", &Vars::Visuals::ProjectileTrajectory.Value);
+					ColorPickerL("Projectile Line Color", Vars::Aimbot::Projectile::ProjectileColor.Value);
 					{
 						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
 						static std::vector flagValues{ 1, 2, 4, 8, 32 };
