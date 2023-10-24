@@ -319,13 +319,15 @@ void CMenu::MenuAimbot()
 				WToggle("Respect FOV", &Vars::Aimbot::Hitscan::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
 			}
 			WCombo("Aim method###HitscanAimMethod", &Vars::Aimbot::Hitscan::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
+			if (Vars::Aimbot::Hitscan::AimMethod.Value == 1) {
+				WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
+			}
 			WCombo("Preferred Hitbox###HitscanHitbox", &Vars::Aimbot::Hitscan::AimHitbox.Value, { "Head", "Body", "Auto" }); // this could probably be removed entirely since it actually does nothing.
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			if (Vars::Aimbot::Hitscan::TapFire.Value == 1) {
 				WSlider("Tap Fire Distance###HitscanTapfireDistance", &Vars::Aimbot::Hitscan::TapFireDist.Value, 64.f, 4096.f, "%.0f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The distance at which tapfire will activate.");
 				WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
 			}
-			WSlider("Smooth factor###HitscanSmoothing", &Vars::Aimbot::Hitscan::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Changes how smooth the aimbot will aim at the target");
 			{
 				static std::vector flagNames{ "Head", "Body", "Pelvis", "Arms", "Legs" };
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
@@ -369,8 +371,11 @@ void CMenu::MenuAimbot()
 					WToggle("Respect FOV", &Vars::Aimbot::Melee::RespectFOV.Value); HelpMarker("Respect the Aim FOV set when using distance sorting.");
 				}
 				WCombo("Aim method###MeleeAimMethod", &Vars::Aimbot::Melee::AimMethod.Value, { "Plain", "Smooth", "Silent" }); HelpMarker("Which method the aimbot uses to aim at the target");
+				if (Vars::Aimbot::Melee::AimMethod.Value == 1)
+				{
+					WSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
+				}
 			}
-			WSlider("Smooth factor###MeleeSmoothing", &Vars::Aimbot::Melee::SmoothingAmount.Value, 0, 20, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How smooth the aimbot should be");
 			WToggle("Range check", &Vars::Aimbot::Melee::RangeCheck.Value); HelpMarker("Only aim at target if within melee range");
 			WToggle("Swing prediction", &Vars::Aimbot::Melee::PredictSwing.Value); HelpMarker("Aimbot will attack preemptively, predicting you will be in range of the target");
 			WToggle("Whip teammates", &Vars::Aimbot::Melee::WhipTeam.Value); HelpMarker("Aimbot will target teammates if holding the Disciplinary Action");
@@ -419,7 +424,7 @@ void CMenu::MenuAimbot()
 				WSlider("Minimum deviation", &Vars::Aimbot::Projectile::StrafePredictionMinDifference.Value, 0, 180); HelpMarker("How big the angle difference of the predicted strafe has to be to apply");
 				WSlider("Maximum distance", &Vars::Aimbot::Projectile::StrafePredictionMaxDistance.Value, 100.f, 10000.f); HelpMarker("Max distance to apply strafe prediction (lower is better)");
 			}
-			
+
 			SectionTitle("NoSpread");
 			{
 				WToggle("Hitscan", &Vars::NoSpread::Hitscan.Value); HelpMarker("Enables NoSpread for hitscan weapons");
@@ -616,8 +621,12 @@ void CMenu::MenuVisuals()
 					WToggle("Priorities", &Vars::ESP::Players::Priority.Value); HelpMarker("Displays a player's priority.");
 					if (Vars::ESP::Players::Priority.Value)
 					{
-						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
+						Text("Friend/Ignore Color");
+						ColorPickerL("Frignore Color", Vars::Colours::Friend.Value);
+						Text("Rage Color");
 						ColorPickerL("Rage Color", Vars::Colours::Rage.Value);
+						Text("Cheater Color");
+						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 					}
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
@@ -1598,7 +1607,6 @@ void CMenu::MenuHvH()
 		{
 			SectionTitle("Cheater Detection");
 			WToggle("Enable Cheater Detection", &Vars::Misc::CheaterDetection::Enabled.Value);
-			ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 			if (Vars::Misc::CheaterDetection::Enabled.Value)
 			{
 				{
