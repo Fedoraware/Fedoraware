@@ -488,6 +488,9 @@ namespace Utils
 			case TF_WEAPON_FLAMETHROWER:
 			case TF_WEAPON_CLEAVER:
 			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_JAR:
+			case TF_WEAPON_JAR_MILK:
+			case TF_WEAPON_JAR_GAS:
 			{
 				return EWeaponType::PROJECTILE;
 			}
@@ -511,7 +514,7 @@ namespace Utils
 			G::CurItemDefIndex == Heavy_s_Fishcake ||
 			G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
 			G::CurItemDefIndex == Heavy_s_SecondBanana) {
-			return EWeaponType::HITSCAN;
+			return EWeaponType::PROJECTILE;
 		}
 
 		return EWeaponType::UNKNOWN;

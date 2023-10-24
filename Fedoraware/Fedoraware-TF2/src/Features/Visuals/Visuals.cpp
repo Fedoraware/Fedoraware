@@ -404,11 +404,11 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
-void CVisuals::ProjectileTrace() // make it ignore other projectiles
+void CVisuals::ProjectileTrace()
 {
 	const auto& pLocal = g_EntityCache.GetLocal();
 	const auto& pWeapon = g_EntityCache.GetWeapon();
-	if (!pWeapon || !pLocal)
+	if (!pLocal || !pWeapon)
 		return;
 
 	ProjectileInfo projInfo = {};
@@ -425,7 +425,7 @@ void CVisuals::ProjectileTrace() // make it ignore other projectiles
 		Vec3 New = F::ProjSim.GetOrigin();
 
 		CGameTrace trace = {};
-		CTraceFilterHitscan filter = {};
+		CTraceFilterProjectile filter = {};
 		filter.pSkip = pLocal;
 		Utils::TraceHull(Old, New, projInfo.m_hull * -1.f, projInfo.m_hull, MASK_SOLID, &filter, &trace);
 		if (trace.DidHit())
