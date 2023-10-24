@@ -206,18 +206,23 @@ void CMenu::DrawTabbar()
 	{
 		SubTabHeight = 30.f;
 
-		if (ImGui::BeginTable("SubbarTable", 6))
+		if (ImGui::BeginTable("SubbarTable", 7))
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
 			ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
-			if (ImGui::TabButton("Players", CurrentVisualsTab == VisualsTab::Players))
+			if (ImGui::TabButton("ESP", CurrentVisualsTab == VisualsTab::ESP))
 			{
-				CurrentVisualsTab = VisualsTab::Players;
+				CurrentVisualsTab = VisualsTab::ESP;
 			}
 
-			if (ImGui::TabButton("Buildings", CurrentVisualsTab == VisualsTab::Buildings))
+			if (ImGui::TabButton("Chams", CurrentVisualsTab == VisualsTab::Chams))
 			{
-				CurrentVisualsTab = VisualsTab::Buildings;
+				CurrentVisualsTab = VisualsTab::Chams;
+			}
+
+			if (ImGui::TabButton("Glow", CurrentVisualsTab == VisualsTab::Glow))
+			{
+				CurrentVisualsTab = VisualsTab::Glow;
 			}
 
 			if (ImGui::TabButton("World", CurrentVisualsTab == VisualsTab::World))
@@ -225,19 +230,19 @@ void CMenu::DrawTabbar()
 				CurrentVisualsTab = VisualsTab::World;
 			}
 
-			if (ImGui::TabButton("Fonts", CurrentVisualsTab == VisualsTab::Font))
+			if (ImGui::TabButton("Indicators", CurrentVisualsTab == VisualsTab::Indicators))
 			{
-				CurrentVisualsTab = VisualsTab::Font;
-			}
-
-			if (ImGui::TabButton("Misc", CurrentVisualsTab == VisualsTab::Misc))
-			{
-				CurrentVisualsTab = VisualsTab::Misc;
+				CurrentVisualsTab = VisualsTab::Indicators;
 			}
 
 			if (ImGui::TabButton("Radar", CurrentVisualsTab == VisualsTab::Radar))
 			{
 				CurrentVisualsTab = VisualsTab::Radar;
+			}
+
+			if (ImGui::TabButton("Fonts", CurrentVisualsTab == VisualsTab::Font))
+			{
+				CurrentVisualsTab = VisualsTab::Font;
 			}
 
 			ImGui::PopStyleColor(2);
@@ -527,13 +532,13 @@ void CMenu::MenuVisuals()
 
 	switch (CurrentVisualsTab)
 	{
-	// Visuals: Players
-		case VisualsTab::Players:
+	// Visuals: ESP
+		case VisualsTab::ESP:
 		{
-			if (BeginTable("VisualsPlayersTable", 3))
+			if (BeginTable("VisualsESPTable", 3))
 			{
 				/* Column 1 */
-				if (TableColumnChild("VisualsPlayersCol1"))
+				if (TableColumnChild("VisualsESPCol1"))
 				{
 					SectionTitle("ESP Main");
 					WToggle("ESP###EnableESP", &Vars::ESP::Main::Active.Value); HelpMarker("Global ESP master switch");
@@ -625,90 +630,167 @@ void CMenu::MenuVisuals()
 				} EndChild();
 
 				/* Column 2 */
-				if (TableColumnChild("VisualsPlayersCol2"))
+				if (TableColumnChild("VisualsESPCol2"))
+				{
+					SectionTitle("Building ESP");
+					WToggle("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.Value); HelpMarker("Will draw useful information/indicators on buildings");
+					WToggle("Ignore team buildings###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.Value); HelpMarker("Whether or not to draw ESP on your teams buildings");
+					WToggle("Name ESP###BuildingNameESP", &Vars::ESP::Buildings::Name.Value); HelpMarker("Will draw the players name");
+					WToggle("Custom Name Color", &Vars::ESP::Buildings::NameCustom.Value); HelpMarker("Custom color for name esp");
+					if (Vars::ESP::Buildings::NameCustom.Value)
+					{
+						ColorPickerL("Name ESP Color", Vars::ESP::Buildings::NameColor.Value);
+					}
+					WToggle("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.Value); HelpMarker("Will draw a box around the buildings name to make it stand out");
+					WToggle("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the building has");
+					WToggle("Health text###buildinghealth", &Vars::ESP::Buildings::Health.Value); HelpMarker("Will draw the building's health, as well as its max health");
+					WToggle("Distance", &Vars::ESP::Buildings::Distance.Value); HelpMarker("Shows the distance from you to the building in meters");
+					WToggle("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.Value); HelpMarker("Shows who built the building");
+					WToggle("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.Value); HelpMarker("Will draw what level the building is");
+					WToggle("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.Value); HelpMarker("Will draw what conditions the building is under");
+					WToggle("Teleporter exit direction###Buildingteleexitdir", &Vars::ESP::Buildings::TeleExitDir.Value); HelpMarker("Show teleporter exit direction arrow");
+					ColorPickerL("Teleporter exit direction arrow color", Vars::ESP::Buildings::TeleExitDirColor.Value);
+					WToggle("Lines###buildinglines", &Vars::ESP::Buildings::Lines.Value); HelpMarker("Draws lines from the local players position to the buildings position");
+					WCombo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on buildings");
+					WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.Value); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
+					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					WSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the ESP should be");
+				} EndChild();
+
+				/* Column 3 */
+				if (TableColumnChild("VisualsESPCol3"))
+				{
+					SectionTitle("World ESP");
+
+					WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.Value); HelpMarker("World ESP master switch");
+					WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.Value); HelpMarker("Displays the respawn time of health and ammopacks");
+					WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
+
+					SectionTitle("Healthpack");
+					WToggle("Name###WorldESPHealthpackName", &Vars::ESP::World::HealthName.Value); HelpMarker("Will draw ESP on healthpacks");
+					WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
+					WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
+					WToggle("Health Distance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
+					ColorPickerL("Healthpack colour", Vars::Colours::Health.Value); HelpMarker("Color for healthpack ESP");
+
+					SectionTitle("Ammopack");
+					WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
+					WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
+					WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
+					WToggle("Ammo Distance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
+					ColorPickerL("Ammopack colour", Vars::Colours::Ammo.Value); HelpMarker("Color for ammopack ESP");
+
+					SectionTitle("NPC");
+					WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
+					WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
+					WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
+					WToggle("NPC Distance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
+					ColorPickerL("NPC colour", Vars::Colours::NPC.Value); HelpMarker("Color for NPC ESP");
+
+					SectionTitle("Bombs");
+					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on bombs");
+					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to bombs");
+					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on bombs");
+					WToggle("Bomb Distance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
+					ColorPickerL("Bomb Colour", Vars::Colours::Bomb.Value); HelpMarker("Color for bomb ESP");
+
+				} EndChild();
+
+				EndTable();
+			}
+			break;
+		}
+
+		// Visuals: Chams
+		case VisualsTab::Chams:
+		{
+			if (BeginTable("VisualsChamsTable", 2))
+			{
+				/* Column 1 */
+				if (TableColumnChild("VisualsChamsCol1"))
 				{
 					SectionTitle("Chams Main");
 					WToggle("Chams###ChamsMasterSwitch", &Vars::Chams::Main::Active.Value); HelpMarker("Chams master switch");
 
 					static std::vector chamOptions{
 						"Local",
-						"FakeAngles",
-						"Friends",
-						"Enemies",
-						"Teammates",
-						"Target",
-						"Ragdolls",
-						"ViewModel",
-						"VM Weapon"
+							"FakeAngles",
+							"Friends",
+							"Enemies",
+							"Teammates",
+							"Target",
+							"Ragdolls",
+							"ViewModel",
+							"VM Weapon"
 					};
 					static std::vector DMEProxyMaterials{
 						"None",
-						"Spectrum Splattered",
-						"Electro Skulls",
-						"Jazzy",
-						"Frozen Aurora",
-						"Hana",
-						"IDK",
-						"Ghost Thing",
-						"Flames",
-						"Spook Wood",
-						"Edgy",
-						"Starlight Serenity",
-						"Fade",
-						"Bad to the Bone",
-						"Skulls and Roses"
+							"Spectrum Splattered",
+							"Electro Skulls",
+							"Jazzy",
+							"Frozen Aurora",
+							"Hana",
+							"IDK",
+							"Ghost Thing",
+							"Flames",
+							"Spook Wood",
+							"Edgy",
+							"Starlight Serenity",
+							"Fade",
+							"Bad to the Bone",
+							"Skulls and Roses"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
-						"Fresnel Glow",
-						"Wireframe Glow"
+							"Fresnel Glow",
+							"Wireframe Glow"
 					};
 
 					static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.ragdolls 6.hands 7.weapon
 					Chams_t& currentStruct = ([&]() -> Chams_t&
-											  {
-												  switch (currentSelected)
-												  {
-													  case 0:
-													  {
-														  return Vars::Chams::Players::Local.Value;
-													  }
-													  case 1:
-													  {
-														  return Vars::Chams::Players::FakeAng.Value;
-													  }
-													  case 2:
-													  {
-														  return Vars::Chams::Players::Friend.Value;
-													  }
-													  case 3:
-													  {
-														  return Vars::Chams::Players::Enemy.Value;
-													  }
-													  case 4:
-													  {
-														  return Vars::Chams::Players::Team.Value;
-													  }
-													  case 5:
-													  {
-														  return Vars::Chams::Players::Target.Value;
-													  }
-													  case 6:
-													  {
-														  return Vars::Chams::Players::Ragdoll.Value;
-													  }
-													  case 7:
-													  {
-														  return Vars::Chams::DME::Hands.Value;
-													  }
-													  case 8:
-													  {
-														  return Vars::Chams::DME::Weapon.Value;
-													  }
-												  }
+						{
+							switch (currentSelected)
+							{
+							case 0:
+							{
+								return Vars::Chams::Players::Local.Value;
+							}
+							case 1:
+							{
+								return Vars::Chams::Players::FakeAng.Value;
+							}
+							case 2:
+							{
+								return Vars::Chams::Players::Friend.Value;
+							}
+							case 3:
+							{
+								return Vars::Chams::Players::Enemy.Value;
+							}
+							case 4:
+							{
+								return Vars::Chams::Players::Team.Value;
+							}
+							case 5:
+							{
+								return Vars::Chams::Players::Target.Value;
+							}
+							case 6:
+							{
+								return Vars::Chams::Players::Ragdoll.Value;
+							}
+							case 7:
+							{
+								return Vars::Chams::DME::Hands.Value;
+							}
+							case 8:
+							{
+								return Vars::Chams::DME::Weapon.Value;
+							}
+							}
 
-												  return Vars::Chams::Players::Local.Value;
-											  }());
+							return Vars::Chams::Players::Local.Value;
+						}());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
 					//WToggle("Player chams###PlayerChamsBox", &Vars::Chams::Players::Active.Value); HelpMarker("Player chams master switch");
@@ -743,8 +825,6 @@ void CMenu::MenuVisuals()
 						}
 					}
 
-					SectionTitle("Chams Misc");
-
 					SectionTitle("Backtrack chams");
 					WToggle("Backtrack chams", &Vars::Backtrack::BtChams::Enabled.Value); HelpMarker("Draws chams to show where a player is");
 					ColorPickerL("Backtrack colour", Vars::Backtrack::BtChams::BacktrackColor.Value);
@@ -758,83 +838,22 @@ void CMenu::MenuVisuals()
 
 					static std::vector backtrackMaterial{
 						"Original",
-						"Shaded",
-						"Shiny",
-						"Flat",
-						"Wireframe shaded",
-						"Wireframe shiny",
-						"Wireframe flat",
-						"Fresnel",
-						"Brick"
+							"Shaded",
+							"Shiny",
+							"Flat",
+							"Wireframe shaded",
+							"Wireframe shiny",
+							"Wireframe flat",
+							"Fresnel",
+							"Brick"
 					};
 					WCombo("Backtrack material", &Vars::Backtrack::BtChams::Material.Value, backtrackMaterial);
 					WToggle("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.Value); HelpMarker("Draws them through walls");
 				} EndChild();
 
-				/* Column 3 */
-				if (TableColumnChild("VisualsPlayersCol3"))
-				{
-					SectionTitle("Glow Main");
-					WToggle("Glow", &Vars::Glow::Main::Active.Value);
-					WCombo("Glow Type###GlowTypeSelect", &Vars::Glow::Main::Type.Value, { "Blur", "Stencil", "FPStencil", "Wireframe" }); HelpMarker("Method in which glow will be rendered");
-					if (Vars::Glow::Main::Type.Value != 1) { WSlider("Glow scale", &Vars::Glow::Main::Scale.Value, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); }
-
-					SectionTitle("Player Glow");
-					WToggle("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.Value); HelpMarker("Player glow master switch");
-					WToggle("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.Value); HelpMarker("Draw glow on the local player");
-					WToggle("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.Value); HelpMarker("Homosapien");
-					WCombo("Ignore team###IgnoreTeamGlowp", &Vars::Glow::Players::IgnoreTeammates.Value, { "Off", "All", "Only friends" }); HelpMarker("Which teammates the glow will ignore drawing on");
-					WToggle("Wearable glow###PlayerWearableGlow", &Vars::Glow::Players::Wearables.Value); HelpMarker("Will draw glow on player cosmetics");
-					WToggle("Weapon glow###PlayerWeaponGlow", &Vars::Glow::Players::Weapons.Value); HelpMarker("Will draw glow on player weapons");
-					WSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-					WCombo("Glow colour###GlowColour", &Vars::Glow::Players::Color.Value, { "Team", "Health" }); HelpMarker("Which colour the glow will draw");
-
-					SectionTitle("Misc Glow");
-					WToggle("Prediction glow", &Vars::Glow::Misc::MovementSimLine.Value);
-					WToggle("Sightline glow", &Vars::Glow::Misc::Sightlines.Value);
-					WToggle("Bullet tracer glow", &Vars::Glow::Misc::BulletTracers.Value);
-				} EndChild();
-
-				EndTable();
-			}
-			break;
-		}
-
-		// Visuals: Building
-		case VisualsTab::Buildings:
-		{
-			if (BeginTable("VisualsBuildingsTable", 3))
-			{
-				/* Column 1 */
-				if (TableColumnChild("VisualsBuildingsCol1"))
-				{
-					SectionTitle("Building ESP");
-					WToggle("Building ESP###BuildinGESPSwioifas", &Vars::ESP::Buildings::Active.Value); HelpMarker("Will draw useful information/indicators on buildings");
-					WToggle("Ignore team buildings###BuildingESPIgnoreTeammates", &Vars::ESP::Buildings::IgnoreTeammates.Value); HelpMarker("Whether or not to draw ESP on your teams buildings");
-					WToggle("Name ESP###BuildingNameESP", &Vars::ESP::Buildings::Name.Value); HelpMarker("Will draw the players name");
-					WToggle("Custom Name Color", &Vars::ESP::Buildings::NameCustom.Value); HelpMarker("Custom color for name esp");
-					if (Vars::ESP::Buildings::NameCustom.Value)
-					{
-						ColorPickerL("Name ESP Color", Vars::ESP::Buildings::NameColor.Value);
-					}
-					WToggle("Name ESP box###BuildingNameESPBox", &Vars::ESP::Buildings::NameBox.Value); HelpMarker("Will draw a box around the buildings name to make it stand out");
-					WToggle("Health bar###Buildinghelathbar", &Vars::ESP::Buildings::HealthBar.Value); HelpMarker("Will draw a bar visualizing how much health the building has");
-					WToggle("Health text###buildinghealth", &Vars::ESP::Buildings::Health.Value); HelpMarker("Will draw the building's health, as well as its max health");
-					WToggle("Distance", &Vars::ESP::Buildings::Distance.Value); HelpMarker("Shows the distance from you to the building in meters");
-					WToggle("Building owner###Buildingowner", &Vars::ESP::Buildings::Owner.Value); HelpMarker("Shows who built the building");
-					WToggle("Building level###Buildinglevel", &Vars::ESP::Buildings::Level.Value); HelpMarker("Will draw what level the building is");
-					WToggle("Building condition###Buildingconditions", &Vars::ESP::Buildings::Cond.Value); HelpMarker("Will draw what conditions the building is under");
-					WToggle("Teleporter exit direction###Buildingteleexitdir", &Vars::ESP::Buildings::TeleExitDir.Value); HelpMarker("Show teleporter exit direction arrow");
-					ColorPickerL("Teleporter exit direction arrow color", Vars::ESP::Buildings::TeleExitDirColor.Value);
-					WToggle("Lines###buildinglines", &Vars::ESP::Buildings::Lines.Value); HelpMarker("Draws lines from the local players position to the buildings position");
-					WCombo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on buildings");
-					WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.Value); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
-					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
-					WSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the ESP should be");
-				} EndChild();
 
 				/* Column 2 */
-				if (TableColumnChild("VisualsBuildingsCol2"))
+				if (TableColumnChild("VisualsChamsCol2"))
 				{
 					SectionTitle("Building Chams");
 					WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.Value); HelpMarker("Building chams master switch");
@@ -902,17 +921,65 @@ void CMenu::MenuVisuals()
 						WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
 						WToggle("Pulse Glow", &currentStruct.overlayPulse);
 						WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-					}
-				} EndChild();
 
-				/* Column 3 */
-				if (TableColumnChild("VisualsBuildingsCol3"))
-				{
-					SectionTitle("Building Glow");
-					WToggle("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.Value);
-					WToggle("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.Value);
-					WSlider("Glow alpha###BuildingGlowAlpha", &Vars::Glow::Buildings::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-					WCombo("Glow colour###GlowColourBuildings", &Vars::Glow::Buildings::Color.Value, { "Team", "Health" });
+						SectionTitle("World Chams");
+						WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
+
+						static std::vector chamOptions{
+							"Healthpacks",
+								"Ammopacks",
+								"Projectiles"
+						};
+						static std::vector dmeGlowMaterial{
+							"None",
+								"Fresnel Glow",
+								"Wireframe Glow"
+						};
+
+						static int currentSelected = 0; //
+						Chams_t& currentStruct = ([&]() -> Chams_t&
+							{
+								switch (currentSelected)
+								{
+								case 0:
+								{
+									return Vars::Chams::World::Health.Value;
+								}
+								case 1:
+								{
+									return Vars::Chams::World::Ammo.Value;
+								}
+								case 2:
+								{
+									return Vars::Chams::World::Projectiles.Value;
+								}
+								}
+
+								return Vars::Chams::World::Health.Value;
+							}());
+						static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
+
+						WCombo("Config", &currentSelected, chamOptions);
+						{
+							ColorPickerL("Colour", currentStruct.colour, 1);
+							MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
+
+							WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
+							if (currentStruct.drawMaterial == 7)
+							{
+								ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+							}
+							if (currentStruct.drawMaterial == 9)
+							{
+								MaterialCombo("Custom Material", &currentStruct.customMaterial);
+							}
+							WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
+							ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
+							WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
+							WToggle("Pulse Glow", &currentStruct.overlayPulse);
+							WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						}
+					}
 				} EndChild();
 
 				EndTable();
@@ -920,114 +987,45 @@ void CMenu::MenuVisuals()
 			break;
 		}
 
-		// Visuals: World
-		case VisualsTab::World:
+		// Visuals: Glow
+		case VisualsTab::Glow:
 		{
-			if (BeginTable("VisualsWorldTable", 3))
+			if (BeginTable("VisualsGlowTable", 2))
 			{
 				/* Column 1 */
-				if (TableColumnChild("VisualsWorldCol1"))
+				if (TableColumnChild("VisualsGlowCol1"))
 				{
-					SectionTitle("World ESP");
+					SectionTitle("Glow Main");
+					WToggle("Glow", &Vars::Glow::Main::Active.Value);
+					WCombo("Glow Type###GlowTypeSelect", &Vars::Glow::Main::Type.Value, { "Blur", "Stencil", "FPStencil", "Wireframe" }); HelpMarker("Method in which glow will be rendered");
+					if (Vars::Glow::Main::Type.Value != 1) { WSlider("Glow scale", &Vars::Glow::Main::Scale.Value, 1, 10, "%d", ImGuiSliderFlags_AlwaysClamp); }
 
-					WToggle("World ESP###WorldESPActive", &Vars::ESP::World::Active.Value); HelpMarker("World ESP master switch");
-					WSlider("ESP alpha###WordlESPAlpha", &Vars::ESP::World::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the world ESP should be");
+					SectionTitle("Player Glow");
+					WToggle("Player glow###PlayerGlowButton", &Vars::Glow::Players::Active.Value); HelpMarker("Player glow master switch");
+					WToggle("Self glow###SelfGlow", &Vars::Glow::Players::ShowLocal.Value); HelpMarker("Draw glow on the local player");
+					WToggle("Self rainbow glow###SelfGlowRainbow", &Vars::Glow::Players::LocalRainbow.Value); HelpMarker("Homosapien");
+					WCombo("Ignore team###IgnoreTeamGlowp", &Vars::Glow::Players::IgnoreTeammates.Value, { "Off", "All", "Only friends" }); HelpMarker("Which teammates the glow will ignore drawing on");
+					WToggle("Wearable glow###PlayerWearableGlow", &Vars::Glow::Players::Wearables.Value); HelpMarker("Will draw glow on player cosmetics");
+					WToggle("Weapon glow###PlayerWeaponGlow", &Vars::Glow::Players::Weapons.Value); HelpMarker("Will draw glow on player weapons");
+					WSlider("Glow alpha###PlayerGlowAlpha", &Vars::Glow::Players::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+					WCombo("Glow colour###GlowColour", &Vars::Glow::Players::Color.Value, { "Team", "Health" }); HelpMarker("Which colour the glow will draw");
 
-					SectionTitle("Healthpack");
-					WToggle("Name###WorldESPHealthpackName", &Vars::ESP::World::HealthName.Value); HelpMarker("Will draw ESP on healthpacks");
-					WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
-					WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
-					WToggle("Health Distance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
-					ColorPickerL("Healthpack colour", Vars::Colours::Health.Value); HelpMarker("Color for healthpack ESP");
-
-					SectionTitle("Ammopack");
-					WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
-					WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
-					WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
-					WToggle("Ammo Distance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
-					ColorPickerL("Ammopack colour", Vars::Colours::Ammo.Value); HelpMarker("Color for ammopack ESP");
-
-					SectionTitle("NPC");
-					WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
-					WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
-					WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
-					WToggle("NPC Distance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
-					ColorPickerL("NPC colour", Vars::Colours::NPC.Value); HelpMarker("Color for NPC ESP");
-
-					SectionTitle("Bombs");
-					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on bombs");
-					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to bombs");
-					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on bombs");
-					WToggle("Bomb Distance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
-					ColorPickerL("Bomb Colour", Vars::Colours::Bomb.Value); HelpMarker("Color for bomb ESP");
-
+					SectionTitle("Misc Glow");
+					WToggle("Prediction glow", &Vars::Glow::Misc::MovementSimLine.Value);
+					WToggle("Sightline glow", &Vars::Glow::Misc::Sightlines.Value);
+					WToggle("Bullet tracer glow", &Vars::Glow::Misc::BulletTracers.Value);
 				} EndChild();
+
 
 				/* Column 2 */
-				if (TableColumnChild("VisualsWorldCol2"))
+				if (TableColumnChild("VisualsGlowCol2"))
 				{
-					SectionTitle("World Chams");
-					WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
+					SectionTitle("Building Glow");
+					WToggle("Building glow###BuildiongGlowButton", &Vars::Glow::Buildings::Active.Value);
+					WToggle("Ignore team buildings###buildingglowignoreteams", &Vars::Glow::Buildings::IgnoreTeammates.Value);
+					WSlider("Glow alpha###BuildingGlowAlpha", &Vars::Glow::Buildings::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+					WCombo("Glow colour###GlowColourBuildings", &Vars::Glow::Buildings::Color.Value, { "Team", "Health" });
 
-					static std::vector chamOptions{
-						"Healthpacks",
-						"Ammopacks",
-						"Projectiles"
-					};
-					static std::vector dmeGlowMaterial{
-						"None",
-						"Fresnel Glow",
-						"Wireframe Glow"
-					};
-
-					static int currentSelected = 0; //
-					Chams_t& currentStruct = ([&]() -> Chams_t&
-											  {
-												  switch (currentSelected)
-												  {
-													  case 0:
-													  {
-														  return Vars::Chams::World::Health.Value;
-													  }
-													  case 1:
-													  {
-														  return Vars::Chams::World::Ammo.Value;
-													  }
-													  case 2:
-													  {
-														  return Vars::Chams::World::Projectiles.Value;
-													  }
-												  }
-
-												  return Vars::Chams::World::Health.Value;
-											  }());
-					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
-
-					WCombo("Config", &currentSelected, chamOptions);
-					{
-						ColorPickerL("Colour", currentStruct.colour, 1);
-						MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
-
-						WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
-						if (currentStruct.drawMaterial == 7)
-						{
-							ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
-						}
-						if (currentStruct.drawMaterial == 9)
-						{
-							MaterialCombo("Custom Material", &currentStruct.customMaterial);
-						}
-						WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
-						ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
-						WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
-						WToggle("Pulse Glow", &currentStruct.overlayPulse);
-						WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-					}
-				} EndChild();
-
-				/* Column 3 */
-				if (TableColumnChild("VisualsWorldCol3"))
-				{
 					SectionTitle("World Glow");
 					WToggle("World glow###Worldglowbutton", &Vars::Glow::World::Active.Value);
 					WToggle("Healthpacks###worldhealthpackglow", &Vars::Glow::World::Health.Value);
@@ -1110,18 +1108,22 @@ void CMenu::MenuVisuals()
 		}
 
 			// Visuals: Misc
-		case VisualsTab::Misc:
+		case VisualsTab::World:
 		{
-			if (BeginTable("VisualsMiscTable", 2))
+			if (BeginTable("VisualsWorldTable", 2))
 			{
 				/* Column 1 */
-				if (TableColumnChild("VisualsMiscCol1"))
+				if (TableColumnChild("VisualsWorldCol1"))
 				{
-					SectionTitle("World & UI");
+					SectionTitle("World");
 					WSlider("Field of view", &Vars::Visuals::FieldOfView.Value, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
 					WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 					MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
 					HelpMarker("Select which types of modulation you want to enable");
+					if (WCombo("Screen Overlay", &Vars::Visuals::VisualOverlay.Value, { "None", "Fire", "Jarate", "Bleed", "Stealth", "Dodge" }))
+					{
+						I::ViewRender->SetScreenOverlayMaterial(nullptr);
+					}
 					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
 						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
 						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
@@ -1130,10 +1132,6 @@ void CMenu::MenuVisuals()
 					}
 					MultiCombo({ "Scope", "Zoom", "Disguises", "Taunts", "Interpolation", "Input Delay", "View Punch", "MOTD", "Screen Effects", "Angle Forcing", "Ragdolls", "Screen Overlays", "DSP", "Convar Queries"}, {&Vars::Visuals::RemoveScope.Value, &Vars::Visuals::RemoveZoom.Value, &Vars::Visuals::RemoveDisguises.Value, &Vars::Visuals::RemoveTaunts.Value, &Vars::Misc::DisableInterpolation.Value, &Vars::Misc::FixInputDelay.Value, &Vars::Visuals::RemovePunch.Value, &Vars::Visuals::RemoveMOTD.Value, &Vars::Visuals::RemoveScreenEffects.Value, &Vars::Visuals::PreventForcedAngles.Value, &Vars::Visuals::RemoveRagdolls.Value, &Vars::Visuals::RemoveScreenOverlays.Value, &Vars::Visuals::RemoveDSP.Value, &Vars::Visuals::RemoveConvarQueries.Value}, "Removals");
 					HelpMarker("Select what you want to remove");
-					if (WCombo("Screen Overlay", &Vars::Visuals::VisualOverlay.Value, { "None", "Fire", "Jarate", "Bleed", "Stealth", "Dodge" }))
-					{
-						I::ViewRender->SetScreenOverlayMaterial(nullptr);
-					}
 					WToggle("Particle Colors", &Vars::Visuals::ParticleColors.Value);
 					if (Vars::Visuals::ParticleColors.Value)
 					{
@@ -1156,107 +1154,31 @@ void CMenu::MenuVisuals()
 						}
 						WToggle("Dash only", &Vars::Visuals::DashOnly.Value);
 					}
+					WToggle("Particles IgnoreZ", &Vars::Visuals::ParticlesIgnoreZ.Value); HelpMarker("All particles will draw through walls");
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value); HelpMarker("Attempt to remove all visuals in screenshots");
+					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
+					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
+					WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
+					WToggle("No prop fade", &Vars::Visuals::NoStaticPropFade.Value); HelpMarker("Make props not fade");
+					WSlider("Fade Out Team FoV", &Vars::Visuals::FadeOutFoV.Value, 0.f, 60.f); HelpMarker("Fades teammates within FoV (0 means disabled)");
+
+					SectionTitle("AimPos");
 					WToggle("Crosshair aim position", &Vars::Visuals::CrosshairAimPos.Value); HelpMarker("Moves the crosshair to the current aim position");
 					WToggle("Box aim position", &Vars::Visuals::AimPosSquare.Value);
 					WToggle("Viewmodel aim position", &Vars::Visuals::AimbotViewmodel.Value); HelpMarker("Moves the viewmodel to the current aim position");
-					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
-					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
-					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
+
+					SectionTitle("ViewModel");
 					WToggle("Viewmodel sway", &Vars::Visuals::ViewmodelSway.Value);
 					if (Vars::Visuals::ViewmodelSway.Value)
 					{
 						WSlider("Viewmodel Sway Scale", &Vars::Visuals::ViewmodelSwayScale.Value, 0.01, 5, "%.2f");
 						WSlider("Viewmodel Sway Interp", &Vars::Visuals::ViewmodelSwayInterp.Value, 0.01, 1, "%.2f"); HelpMarker("How long until the viewmodel returns to its original position (in seconds)");
 					}
-					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
-					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor.Value);
-					if (Vars::Visuals::MoveSimSeperators.Value)
-					{
-						WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
-						WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
-					}
-					WToggle("Projectile trajectory", &Vars::Visuals::ProjectileTrajectory.Value);
-					ColorPickerL("Projectile Line Color", Vars::Aimbot::Projectile::ProjectileColor.Value);
-					{
-						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
-						static std::vector flagValues{ 1, 2, 4, 8, 32 };
-						MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
-					}
-					MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
-					HelpMarker("What & How should events be logged");
-					WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
-					ColorPickerL("GUI Notif Background", Vars::Colours::NotifBG.Value);
-					ColorPickerL("GUI Notif Outline", Vars::Colours::NotifOutline.Value, 1);
-					ColorPickerL("GUI Notif Colour", Vars::Colours::NotifText.Value, 2);
-					WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
-					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
-					if (Vars::Visuals::ParticleTracer.Value == 9)
-					{
-						WInputText("Custom Tracer", &Vars::Visuals::ParticleName.Value); HelpMarker("If you want to use a custom particle tracer");
-					}
-					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
-					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
-					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
-					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
-					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
-					WToggle("Pickup Timers", &Vars::Visuals::PickupTimers.Value); HelpMarker("Displays the respawn time of health and ammopacks");
-					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
-					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
-					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
-					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
-					WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.Value); HelpMarker("Enables the killstreak counter on any weapon");
-					WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
-					WToggle("No prop fade", &Vars::Visuals::NoStaticPropFade.Value); HelpMarker("Make props not fade");
-					WToggle("Particles IgnoreZ", &Vars::Visuals::ParticlesIgnoreZ.Value); HelpMarker("All particles will draw through walls");
-					WSlider("Fade Out Team FoV", &Vars::Visuals::FadeOutFoV.Value, 0.f, 60.f); HelpMarker("Fades teammates within FoV (0 means disabled)");
-
-					SectionTitle("Beams");
-					{
-						using namespace Vars::Visuals;
-
-						WToggle("Enable beams", &Beans::Active.Value); HelpMarker("he loves beans?");
-						WToggle("Rainbow beams", &Beans::Rainbow.Value);
-						ColorPickerL("Beam colour", Beans::BeamColour.Value);
-						WToggle("Custom model", &Beans::UseCustomModel.Value);
-						if (Beans::UseCustomModel.Value)
-						{
-							WInputText("Model", &Beans::Model.Value);
-						}
-						WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
-						WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
-						WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
-						WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
-						WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
-						WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
-						WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
-						WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
-
-						// TODO: Reward this ugly code
-						{
-							static std::vector flagNames{ "STARTENTITY", "ENDENTITY","FADEIN","FADEOUT","SINENOISE","SOLID","SHADEIN","SHADEOUT","ONLYNOISEONCE","NOTILE","USE_HITBOXES","STARTVISIBLE","ENDVISIBLE","ISACTIVE","FOREVER","HALOBEAM","REVERSED", };
-							static std::vector flagValues{ 0x00000001, 0x00000002,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,0x00000100,0x00000200,0x00000400,0x00000800,0x00001000,0x00002000,0x00004000,0x00008000,0x00010000 };
-							MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
-						}
-					}
-
-					SectionTitle("Viewmodel Offset");
 					WSlider("VM Off X", &Vars::Visuals::VMOffsets.Value.x, -45.f, 45.f);
 					WSlider("VM Off Y", &Vars::Visuals::VMOffsets.Value.y, -45.f, 45.f);
 					WSlider("VM Off Z", &Vars::Visuals::VMOffsets.Value.z, -45.f, 45.f);
 					WSlider("VM Roll", &Vars::Visuals::VMRoll.Value, -180, 180);
 					WToggle("Anti viewmodel flip", &Vars::Misc::AntiViewmodelFlip.Value); HelpMarker("This is scuffed");
-
-					SectionTitle("DT Indicator");
-					WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin", "SEOwned", "Numeric" }); HelpMarker("What style the bar should draw in.");
-					Text("Charging Gradient");
-					ColorPickerL("DT charging right", Vars::Colours::DTBarIndicatorsCharging.Value.endColour);
-					ColorPickerL("DT charging left", Vars::Colours::DTBarIndicatorsCharging.Value.startColour, 1);
-					Text("Charged Gradient");
-					ColorPickerL("DT charged right", Vars::Colours::DTBarIndicatorsCharged.Value.endColour);
-					ColorPickerL("DT charged left", Vars::Colours::DTBarIndicatorsCharged.Value.startColour, 1);
 
 					SectionTitle("Attribute Changer");
 
@@ -1361,21 +1283,10 @@ void CMenu::MenuVisuals()
 					HelpMarker("Ragdoll particle effects");
 					WCombo("Ragdoll model", &Vars::Visuals::RagdollEffects::RagdollType.Value, { "None", "Gold", "Ice" }); HelpMarker("Which ragdoll model should be used");
 					HelpMarker("Will make their ragdoll ice");
-
-					SectionTitle("Projectile Camera");
-					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
-
-					SectionTitle("Freecam");
-					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
-					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
-
-					SectionTitle("Camera");
-					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
-					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
 				} EndChild();
 
 				/* Column 2 */
-				if (TableColumnChild("VisualsMiscCol2"))
+				if (TableColumnChild("VisualsWorldCol2"))
 				{
 					SectionTitle("Skybox & Textures");
 					static std::vector skyNames{
@@ -1409,10 +1320,10 @@ void CMenu::MenuVisuals()
 					{
 						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
 					}
+					WCombo("Precipitation", &Vars::Visuals::Rain.Value, { "Off", "Rain", "Snow" });
 					WToggle("World Textures Override", &Vars::Visuals::OverrideWorldTextures.Value); HelpMarker("Turn this off when in-game so you don't drop fps :p");
 					WToggle("Bypass sv_pure", &Vars::Misc::BypassPure.Value); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
 					WToggle("Medal flip", &Vars::Misc::MedalFlip.Value); HelpMarker("Medal go spinny spinny weeeeeee");
-					WCombo("Precipitation", &Vars::Visuals::Rain.Value, { "Off", "Rain", "Snow" });
 
 					SectionTitle("Custom fog");
 					WToggle("Disable fog", &Vars::Visuals::Fog::DisableFog.Value);
@@ -1440,22 +1351,6 @@ void CMenu::MenuVisuals()
 					WToggle("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.Value);
 					WToggle("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.Value);
 					InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
-
-					SectionTitle("Out of FOV arrows");
-					WToggle("Active###fovar", &Vars::Visuals::OutOfFOVArrows.Value); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
-					WToggle("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.Value); HelpMarker("16 missed calls");
-					WSlider("Arrow length", &Vars::Visuals::ArrowLength.Value, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
-					WSlider("Arrow angle", &Vars::Visuals::ArrowAngle.Value, 5.f, 180.f, "%.2f"); HelpMarker("The angle of the arrow");
-					WSlider("Distance from center", &Vars::Visuals::FovArrowsDist.Value, 0.01f, 0.2f, "%.3f"); HelpMarker("How far from the center of the screen the arrows will draw");
-					WSlider("Max distance", &Vars::Visuals::MaxDist.Value, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
-					WSlider("Min distance", &Vars::Visuals::MinDist.Value, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
-
-					SectionTitle("Spy Warning");
-					WToggle("Active###spywarn", &Vars::Visuals::SpyWarning.Value); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
-					WToggle("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.Value); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
-					WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.Value); HelpMarker("Will only alert you to visible spies");
-					WToggle("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.Value); HelpMarker("Will ignore spies who are on your friends list");
-					WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.Value, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
 				} EndChild();
 
 				EndTable();
@@ -1465,7 +1360,7 @@ void CMenu::MenuVisuals()
 
 		case VisualsTab::Radar:
 		{
-			if (BeginTable("VisualsRadarTable", 3))
+			if (BeginTable("VisualsRadarTable", 2))
 			{
 				/* Column 1 */
 				if (TableColumnChild("VisualsRadarCol1"))
@@ -1498,16 +1393,135 @@ void CMenu::MenuVisuals()
 					WToggle("Ignore team###radarbuildingsb", &Vars::Radar::Buildings::IgnoreTeam.Value);
 					WToggle("Health bar###radarbuildingsc", &Vars::Radar::Buildings::Health.Value);
 					WSlider("Icon size###buildingsizeiconradar", &Vars::Radar::Buildings::IconSize.Value, 12, 30, "%d");
-				} EndChild();
 
-				/* Column 3 */
-				if (TableColumnChild("VisualsRadarCol3"))
-				{
 					SectionTitle("World");
 					WToggle("Active###radarworldd", &Vars::Radar::World::Active.Value);
 					WToggle("Healthpack###radarworldda", &Vars::Radar::World::Health.Value);
 					WToggle("Ammopack###radarworlddb", &Vars::Radar::World::Ammo.Value);
 					WSlider("Icon size###worldsizeiconradar", &Vars::Radar::World::IconSize.Value, 12, 30, "%d");
+				} EndChild();
+
+				EndTable();
+			}
+			break;
+		}
+
+		case VisualsTab::Indicators:
+		{
+			if (BeginTable("VisualsIndicatorsTable", 2))
+			{
+				/* Column 1 */
+				if (TableColumnChild("VisualsIndicatorsCol1"))
+				{
+					SectionTitle("DT Indicator");
+					WCombo("DT indicator style", &Vars::Misc::CL_Move::DTBarStyle.Value, { "Off", "Default", "Nitro", "Rijin", "SEOwned", "Numeric" }); HelpMarker("What style the bar should draw in.");
+					Text("Charging Gradient");
+					ColorPickerL("DT charging right", Vars::Colours::DTBarIndicatorsCharging.Value.endColour);
+					ColorPickerL("DT charging left", Vars::Colours::DTBarIndicatorsCharging.Value.startColour, 1);
+					Text("Charged Gradient");
+					ColorPickerL("DT charged right", Vars::Colours::DTBarIndicatorsCharged.Value.endColour);
+					ColorPickerL("DT charged left", Vars::Colours::DTBarIndicatorsCharged.Value.startColour, 1);
+
+					SectionTitle("Spy Warning");
+					WToggle("Active###spywarn", &Vars::Visuals::SpyWarning.Value); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
+					WToggle("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.Value); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
+					WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.Value); HelpMarker("Will only alert you to visible spies");
+					WToggle("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.Value); HelpMarker("Will ignore spies who are on your friends list");
+					WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.Value, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
+
+					SectionTitle("Out of FOV arrows");
+					WToggle("Active###fovar", &Vars::Visuals::OutOfFOVArrows.Value); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
+					WToggle("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.Value); HelpMarker("16 missed calls");
+					WSlider("Arrow length", &Vars::Visuals::ArrowLength.Value, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
+					WSlider("Arrow angle", &Vars::Visuals::ArrowAngle.Value, 5.f, 180.f, "%.2f"); HelpMarker("The angle of the arrow");
+					WSlider("Distance from center", &Vars::Visuals::FovArrowsDist.Value, 0.01f, 0.2f, "%.3f"); HelpMarker("How far from the center of the screen the arrows will draw");
+					WSlider("Max distance", &Vars::Visuals::MaxDist.Value, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
+					WSlider("Min distance", &Vars::Visuals::MinDist.Value, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
+				} EndChild();
+
+				/* Column 2 */
+				if (TableColumnChild("VisualsIndicatorsCol2"))
+				{	
+					SectionTitle("Beams & Tracers");
+					{
+						using namespace Vars::Visuals;
+
+						WToggle("Enable beams", &Beans::Active.Value); HelpMarker("he loves beans?");
+						WToggle("Rainbow beams", &Beans::Rainbow.Value);
+						ColorPickerL("Beam colour", Beans::BeamColour.Value);
+						WToggle("Custom model", &Beans::UseCustomModel.Value);
+						if (Beans::UseCustomModel.Value)
+						{
+							WInputText("Model", &Beans::Model.Value);
+						}
+						WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
+						WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
+						WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
+						WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
+						WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
+						WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
+						WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
+						WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
+
+						// TODO: Reward this ugly code
+						{
+							static std::vector flagNames{ "STARTENTITY", "ENDENTITY", "FADEIN", "FADEOUT", "SINENOISE", "SOLID", "SHADEIN", "SHADEOUT", "ONLYNOISEONCE", "NOTILE", "USE_HITBOXES", "STARTVISIBLE", "ENDVISIBLE", "ISACTIVE", "FOREVER", "HALOBEAM", "REVERSED", };
+							static std::vector flagValues{ 0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080, 0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000, 0x00010000 };
+							MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
+						}
+					}
+					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
+					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
+					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
+					if (Vars::Visuals::ParticleTracer.Value == 9)
+					{
+						WInputText("Custom Tracer", &Vars::Visuals::ParticleName.Value); HelpMarker("If you want to use a custom particle tracer");
+					}
+
+					SectionTitle("Visualisation");
+					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
+					ColorPickerL("Prediction Line Color", Vars::Aimbot::Projectile::PredictionColor.Value);
+					if (Vars::Visuals::MoveSimSeperators.Value)
+					{
+						WSlider("Seperator Length", &Vars::Visuals::SeperatorLength.Value, 2, 16, "%d", ImGuiSliderFlags_Logarithmic);
+						WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
+					}
+					WToggle("Projectile trajectory", &Vars::Visuals::ProjectileTrajectory.Value);
+					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
+					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
+					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
+					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+					ColorPickerL("Projectile Line Color", Vars::Aimbot::Projectile::ProjectileColor.Value);
+					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
+					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
+					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
+					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
+					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
+		
+					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
+			
+
+					SectionTitle("Logging");
+					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
+					{
+						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
+						static std::vector flagValues{ 1, 2, 4, 8, 32 };
+						MultiFlags(flagNames, flagValues, &Vars::Misc::VotingOptions.Value, "Vote Logger###VoteLoggingOptions");
+					}
+					MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
+					HelpMarker("What & How should events be logged");
+					WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
+					ColorPickerL("GUI Notif Background", Vars::Colours::NotifBG.Value);
+					ColorPickerL("GUI Notif Outline", Vars::Colours::NotifOutline.Value, 1);
+					ColorPickerL("GUI Notif Colour", Vars::Colours::NotifText.Value, 2);
+					WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
+
+					SectionTitle("On-Screen");
+					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
+					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
+					WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.Value); HelpMarker("Enables the killstreak counter on any weapon");
+					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
 				} EndChild();
 
 				EndTable();
