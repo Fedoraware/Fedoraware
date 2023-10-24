@@ -40,7 +40,6 @@ class CMenu
 		Font,
 		World,
 		Indicators,
-		Misc,
 		Radar
 	};
 
