@@ -389,25 +389,25 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					{
 						case 0:
 						{
-							g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 1:
 						{
-							g_Draw.String(FONT, middle, y, Vars::Colours::Ignored.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 3:
 						{
-							g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 4:
 						{
-							g_Draw.String(FONT, middle, y, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
 							nTextOffset += FONT.nTall;
 							break;
 						}
@@ -438,7 +438,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					if (Vars::ESP::Players::Priority.Value)
+					if (Vars::ESP::Players::Priority.Value && G::PlayerPriority[pi.friendsID].Mode != 2)
 					{
 						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 30 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
 									   nClassNum);
