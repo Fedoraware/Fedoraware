@@ -34,11 +34,12 @@ class CMenu
 
 	enum class VisualsTab
 	{
-		Players,
-		Buildings,
-		World,
+		ESP,
+		Glow,
+		Chams,
 		Font,
-		Misc,
+		World,
+		Indicators,
 		Radar
 	};
 
@@ -49,7 +50,7 @@ class CMenu
 	};
 
 	MenuTab CurrentTab = MenuTab::Aimbot;
-	VisualsTab CurrentVisualsTab = VisualsTab::Players;
+	VisualsTab CurrentVisualsTab = VisualsTab::ESP;
 	ConfigTab CurrentConfigTab = ConfigTab::General;
 
 	bool ShowSettings = false;
