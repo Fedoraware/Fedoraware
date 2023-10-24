@@ -285,8 +285,8 @@ bool CProjectileSimulation::Initialize(const ProjectileInfo& info)
 
 			break;
 		}
-		case TF_PROJECTILE_JAR
-		case TF_PROJECTILE_JAR_GAS
+		case TF_PROJECTILE_JAR:
+		case TF_PROJECTILE_JAR_GAS:
 		{
 			vel += up * 200.f;
 			ang_vel = { 300.f, 0.f, 0.f };
@@ -354,7 +354,7 @@ bool CProjectileSimulation::Initialize(const ProjectileInfo& info)
 
 			break;
 		}
-		case TF_PROJECTILE_JAR
+		case TF_PROJECTILE_JAR:
 		{
 			// guesstimate (there are different drags for different models, though shouldn't matter here)
 			drag = 1.f;
@@ -362,7 +362,7 @@ bool CProjectileSimulation::Initialize(const ProjectileInfo& info)
 
 			break;
 		}
-		case TF_PROJECTILE_JAR_GAS
+		case TF_PROJECTILE_JAR_GAS:
 		{
 			// who
 			drag = 1.f;
