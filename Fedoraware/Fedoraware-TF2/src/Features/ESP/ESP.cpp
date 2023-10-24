@@ -389,25 +389,25 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					{
 						case 0:
 						{
-							g_Draw.String(FONT, middle, y - 28, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 1:
 						{
-							g_Draw.String(FONT, middle, y - 28, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 3:
 						{
-							g_Draw.String(FONT, middle, y - 28, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 4:
 						{
-							g_Draw.String(FONT, middle, y - 28, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
 							nTextOffset += FONT.nTall;
 							break;
 						}
