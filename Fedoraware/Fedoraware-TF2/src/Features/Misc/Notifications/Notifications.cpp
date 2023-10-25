@@ -67,12 +67,18 @@ void CNotifications::Draw()
 
 		delete[] wc; // Memory leak
 
-		g_Draw.Line(x, y, x, y + 19, { Vars::Colours::NotifOutline.Value.r, Vars::Colours::NotifOutline.Value.g, Vars::Colours::NotifOutline.Value.b, color.a });
-		g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
-							 { Vars::Colours::NotifBG.Value.r, Vars::Colours::NotifBG.Value.g, Vars::Colours::NotifBG.Value.b, color.a },
+		if (Vars::Visuals::DrawNotifLine.Value)
+		{
+			g_Draw.Line(x, y, x, y + 19, { Vars::Colours::NotifOutline.Value.r, Vars::Colours::NotifOutline.Value.g, Vars::Colours::NotifOutline.Value.b, color.a });
+		}
+		if (Vars::Visuals::DrawNotifGradient.Value)
+		{
+			g_Draw.GradientRectA(x + 1, y, w / 3 + 9, y + 19,
+				{ Vars::Colours::NotifBG.Value.r, Vars::Colours::NotifBG.Value.g, Vars::Colours::NotifBG.Value.b, color.a },
 							 {
 								 Vars::Colours::NotifBG.Value.r, Vars::Colours::NotifBG.Value.g, Vars::Colours::NotifBG.Value.b, 1
 							 }, true);
+		}
 		g_Draw.String(font, x + 6, y + 2,
 					  { Vars::Colours::NotifText.Value.r, Vars::Colours::NotifText.Value.g, Vars::Colours::NotifText.Value.b, color.a },
 					  ALIGN_DEFAULT, notify->Text.c_str());

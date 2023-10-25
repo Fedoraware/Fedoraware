@@ -599,6 +599,8 @@ namespace Vars
 	CVar(VMOffZ, 0, IS_VISUAL);
 	CVar(VMRoll, 0, IS_VISUAL);
 	CVar(NotificationLifetime, 5.f, IS_VISUAL);
+	CVar(DrawNotifLine, true, IS_VISUAL);
+	CVar(DrawNotifGradient, true, IS_VISUAL);
 	CVar(DamageLoggerText, false, IS_VISUAL);
 	CVar(DamageLoggerChat, false, IS_VISUAL);
 	CVar(DamageLoggerConsole, false, IS_VISUAL);
