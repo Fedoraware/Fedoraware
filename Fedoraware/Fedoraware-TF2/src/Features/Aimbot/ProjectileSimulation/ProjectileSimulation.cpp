@@ -73,7 +73,7 @@ bool CProjectileSimulation::GetInfo(CBaseEntity* player, CBaseCombatWeapon* pWea
 	case TF_WEAPON_GRENADELAUNCHER:
 	{
 		GetProjectileFireSetup(player, vAngles, { 16.f, 8.f, -6.f }, pos, ang, true, bQuick);
-		bool is_lochnload = G::CurItemDefIndex == Demoman_m_TheLochnLoad;
+		const bool is_lochnload = G::CurItemDefIndex == Demoman_m_TheLochnLoad;
 		float speed = is_lochnload ? 1490.f : 1200.f;
 		if (player->IsPrecisionRune())
 			speed *= 2.5f;
