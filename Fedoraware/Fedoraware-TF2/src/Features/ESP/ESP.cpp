@@ -438,7 +438,7 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					if (Vars::ESP::Players::Priority.Value && G::PlayerPriority[pi.friendsID].Mode != 2)
+					if (Vars::ESP::Players::Priority.Value)
 					{
 						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 30 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
 									   nClassNum);
