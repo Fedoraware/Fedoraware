@@ -1497,11 +1497,11 @@ void CMenu::MenuVisuals()
 						WSlider("Seperator Spacing", &Vars::Visuals::SeperatorSpacing.Value, 1, 64, "%d", ImGuiSliderFlags_Logarithmic);
 					}
 					WToggle("Projectile trajectory", &Vars::Visuals::ProjectileTrajectory.Value);
+					ColorPickerL("Projectile Line Color", Vars::Aimbot::Projectile::ProjectileColor.Value);
 					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
 					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
 					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
-					ColorPickerL("Projectile Line Color", Vars::Aimbot::Projectile::ProjectileColor.Value);
 					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
 					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
