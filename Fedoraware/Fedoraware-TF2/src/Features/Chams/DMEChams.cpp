@@ -330,6 +330,11 @@ int GetType(int EntIndex)
 				return 7;
 			}
 
+			if (Hash::IsSpell(szName))
+			{
+				return 11;
+			}
+
 			break;
 		}
 		case ETFClassID::CObjectSentrygun:
@@ -356,6 +361,18 @@ int GetType(int EntIndex)
 		case ETFClassID::CBaseDoor:
 		{
 			return 10;
+		}
+		case ETFClassID::CHalloweenGiftPickup:
+		{
+			return 12;
+		}
+		case ETFClassID::CHeadlessHatman:
+		case ETFClassID::CTFTankBoss:
+		case ETFClassID::CMerasmus:
+		case ETFClassID::CZombie:
+		case ETFClassID::CEyeballBoss:
+		{
+			return 13;
 		}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
@@ -499,6 +516,18 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 				return GetPlayerChams(pOwner);
 			}
 			return Chams_t();
+		}
+		case 11:
+		{
+			return Vars::Chams::World::Spellbooks.Value;
+		}
+		case 12:
+		{
+			return Vars::Chams::World::Gargoyles.Value;
+		}
+		case 13:
+		{
+			return Vars::Chams::World::NPCs.Value;
 		}
 		default:
 			return Chams_t();

@@ -414,9 +414,12 @@ void CMenu::MenuAimbot()
 
 				SectionTitle("Splash");
 				WToggle("Splash prediction", &Vars::Aimbot::Projectile::SplashPrediction.Value); HelpMarker("Will shoot the area near the target to hit them with splash damage");
-				WSlider("Minimum splash distance", &Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 0.f, Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value); HelpMarker("The minimum distance to try going for splash damage");
-				WSlider("Maximum splash distance", &Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value, Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 10000.f); HelpMarker("The maximum distance to try going for splash damage");
-				WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.Value); HelpMarker("lol");
+				if (Vars::Aimbot::Projectile::SplashPrediction.Value)
+				{
+					WSlider("Minimum splash distance", &Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 0.f, Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value); HelpMarker("The minimum distance to try going for splash damage");
+					WSlider("Maximum splash distance", &Vars::Aimbot::Projectile::MaxSplashPredictionDistance.Value, Vars::Aimbot::Projectile::MinSplashPredictionDistance.Value, 10000.f); HelpMarker("The maximum distance to try going for splash damage");
+					WToggle("Wait for hit", &Vars::Aimbot::Projectile::WaitForHit.Value); HelpMarker("lol");
+				}
 
 				SectionTitle("Strafe Prediction");
 				MultiCombo({ "Air", "Ground" }, { &Vars::Aimbot::Projectile::StrafePredictionAir.Value, &Vars::Aimbot::Projectile::StrafePredictionGround.Value }, "Strafe Prediction");
@@ -679,29 +682,43 @@ void CMenu::MenuVisuals()
 					WToggle("Name###WorldESPHealthpackName", &Vars::ESP::World::HealthName.Value); HelpMarker("Will draw ESP on healthpacks");
 					WToggle("Line###WorldESPHealthpackLine", &Vars::ESP::World::HealthLine.Value); HelpMarker("Will draw a line to healthpacks");
 					WCombo("Box###WorldESPHealthpackBox", &Vars::ESP::World::HealthBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on healthpacks");
-					WToggle("Health Distance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
+					WToggle("Distance###WorldESPHealthpackDistance", &Vars::ESP::World::HealthDistance.Value); HelpMarker("Shows the distance from you to the health pack in meters");
 					ColorPickerL("Healthpack colour", Vars::Colours::Health.Value); HelpMarker("Color for healthpack ESP");
 
 					SectionTitle("Ammopack");
 					WToggle("Name###WorldESPAmmopackName", &Vars::ESP::World::AmmoName.Value); HelpMarker("Will draw ESP on ammopacks");
 					WToggle("Line###WorldESPAmmopackLine", &Vars::ESP::World::AmmoLine.Value); HelpMarker("Will draw a line to ammopacks");
 					WCombo("Box###WorldESPAmmopackBox", &Vars::ESP::World::AmmoBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on ammopacks");
-					WToggle("Ammo Distance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
+					WToggle("Distance###WorldESPAmmopackDistance", &Vars::ESP::World::AmmoDistance.Value); HelpMarker("Shows the distance from you to the ammo box in meters");
 					ColorPickerL("Ammopack colour", Vars::Colours::Ammo.Value); HelpMarker("Color for ammopack ESP");
 
 					SectionTitle("NPC");
 					WToggle("Name###WorldESPNPCName", &Vars::ESP::World::NPCName.Value); HelpMarker("Will draw ESP on NPCs");
 					WToggle("Line###WorldESPNPCLine", &Vars::ESP::World::NPCLine.Value); HelpMarker("Will draw a line to NPCs");
 					WCombo("Box###WorldESPNPCBox", &Vars::ESP::World::NPCBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on NPCs");
-					WToggle("NPC Distance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
+					WToggle("Distance###WorldESPNPCDistance", &Vars::ESP::World::NPCDistance.Value); HelpMarker("Shows the distance from you to the NPC in meters");
 					ColorPickerL("NPC colour", Vars::Colours::NPC.Value); HelpMarker("Color for NPC ESP");
 
 					SectionTitle("Bombs");
 					WToggle("Name###WorldESPBombName", &Vars::ESP::World::BombName.Value); HelpMarker("Will draw ESP on bombs");
 					WToggle("Line###WorldESPBombLine", &Vars::ESP::World::BombLine.Value); HelpMarker("Will draw a line to bombs");
 					WCombo("Box###WorldESPBombBox", &Vars::ESP::World::BombBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on bombs");
-					WToggle("Bomb Distance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
+					WToggle("Distance###WorldESPBombDistance", &Vars::ESP::World::BombDistance.Value); HelpMarker("Shows the distance from you to the bomb in meters");
 					ColorPickerL("Bomb Colour", Vars::Colours::Bomb.Value); HelpMarker("Color for bomb ESP");
+
+					SectionTitle("Spellbooks");
+					WToggle("Name###WorldESPSpellbookName", &Vars::ESP::World::SpellbookName.Value); HelpMarker("Will draw ESP on Spellbooks");
+					WToggle("Line###WorldESPSpellbookLine", &Vars::ESP::World::SpellbookLine.Value); HelpMarker("Will draw a line to Spellbooks");
+					WCombo("Box###WorldESPSpellbookBox", &Vars::ESP::World::SpellbookBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on Spellbooks");
+					WToggle("Distance###WorldESPSpellbookDistance", &Vars::ESP::World::SpellbookDistance.Value); HelpMarker("Shows the distance from you to the Spellbook in meters");
+					ColorPickerL("Spellbook Colour", Vars::Colours::Spellbook.Value); HelpMarker("Color for Spellbook ESP");
+
+					SectionTitle("Gargoyles");
+					WToggle("Name###WorldESPGargoyleName", &Vars::ESP::World::GargoyleName.Value); HelpMarker("Will draw ESP on Gargoyles");
+					WToggle("Line###WorldESPGargoyleLine", &Vars::ESP::World::GargoyleLine.Value); HelpMarker("Will draw a line to Gargoyles");
+					WCombo("Box###WorldESPGargoyleBox", &Vars::ESP::World::GargoyleBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on Gargoyles");
+					WToggle("Distance###WorldESPGargoyleDistance", &Vars::ESP::World::GargoyleDistance.Value); HelpMarker("Shows the distance from you to the Gargoyle in meters");
+					ColorPickerL("Gargoyle Colour", Vars::Colours::Gargoyle.Value); HelpMarker("Color for Gargoyle ESP");
 
 				} EndChild();
 
@@ -937,7 +954,10 @@ void CMenu::MenuVisuals()
 						static std::vector chamOptions{
 							"Healthpacks",
 								"Ammopacks",
-								"Projectiles"
+								"Projectiles",
+								"Spellbooks",
+								"Gargoyles",
+								"NPCs"
 						};
 						static std::vector dmeGlowMaterial{
 							"None",
@@ -961,6 +981,18 @@ void CMenu::MenuVisuals()
 								case 2:
 								{
 									return Vars::Chams::World::Projectiles.Value;
+								}
+								case 3:
+								{
+									return Vars::Chams::World::Spellbooks.Value;
+								}
+								case 4:
+								{
+									return Vars::Chams::World::Gargoyles.Value;
+								}
+								case 5:
+								{
+									return Vars::Chams::World::NPCs.Value;
 								}
 								}
 
@@ -1021,6 +1053,7 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Misc Glow");
 					WToggle("Prediction glow", &Vars::Glow::Misc::MovementSimLine.Value);
+					WToggle("Projectile Trajectory Glow", &Vars::Glow::Misc::ProjectileTrajectory.Value);
 					WToggle("Sightline glow", &Vars::Glow::Misc::Sightlines.Value);
 					WToggle("Bullet tracer glow", &Vars::Glow::Misc::BulletTracers.Value);
 				} EndChild();
@@ -1041,6 +1074,8 @@ void CMenu::MenuVisuals()
 					WToggle("Ammopacks###worldammopackglow", &Vars::Glow::World::Ammo.Value);
 					WToggle("NPCs###worldnpcs", &Vars::Glow::World::NPCs.Value);
 					WToggle("Bombs###worldbombglow", &Vars::Glow::World::Bombs.Value);
+					WToggle("Spellbooks###worldspellbookglow", &Vars::Glow::World::Spellbooks.Value);
+					WToggle("Gargoyles###worldgargoyleglow", &Vars::Glow::World::Gargoyles.Value);
 					WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.Value, { "Off", "All", "Only enemies" });
 					WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 				} EndChild();
@@ -1325,26 +1360,33 @@ void CMenu::MenuVisuals()
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
-					if (Vars::Skybox::SkyboxNum.Value == 0)
+					if (Vars::Visuals::SkyboxChanger.Value)
 					{
-						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+						WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
+						if (Vars::Skybox::SkyboxNum.Value == 0)
+						{
+							WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+						}
 					}
 					WCombo("Precipitation", &Vars::Visuals::Rain.Value, { "Off", "Rain", "Snow" });
 					WToggle("World Textures Override", &Vars::Visuals::OverrideWorldTextures.Value); HelpMarker("Turn this off when in-game so you don't drop fps :p");
 					WToggle("Bypass sv_pure", &Vars::Misc::BypassPure.Value); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
 					WToggle("Medal flip", &Vars::Misc::MedalFlip.Value); HelpMarker("Medal go spinny spinny weeeeeee");
 
-					SectionTitle("Custom fog");
+					SectionTitle("Fog");
 					WToggle("Disable fog", &Vars::Visuals::Fog::DisableFog.Value);
 					WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.Value);
-					WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-					ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor.Value);
-					WSlider("Fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
-					WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
-					WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Skybox fog requires r_3dsky 1");
-					ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox.Value);
-					WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStartSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
-					WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+					if (Vars::Visuals::Fog::CustomFog.Value)
+					{
+						WSlider("Fog density", &Vars::Visuals::Fog::FogDensity.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+						ColorPickerL("Fog colour", Vars::Visuals::Fog::FogColor.Value);
+						WSlider("Fog start", &Vars::Visuals::Fog::FogStart.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+						WSlider("Fog end", &Vars::Visuals::Fog::FogEnd.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+						WSlider("Skybox fog density", &Vars::Visuals::Fog::FogDensitySkybox.Value, 0.f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Skybox fog requires r_3dsky 1");
+						ColorPickerL("Skybox fog colour", Vars::Visuals::Fog::FogColorSkybox.Value);
+						WSlider("Skybox fog start", &Vars::Visuals::Fog::FogStartSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+						WSlider("Skybox fog end", &Vars::Visuals::Fog::FogEndSkybox.Value, -10000.f, 10000.f, "%f", ImGuiSliderFlags_None);
+					}
 
 					SectionTitle("Thirdperson");
 					WToggle("Thirdperson", &Vars::Visuals::ThirdPerson.Value); HelpMarker("Will move your camera to be in a thirdperson view");
@@ -1354,12 +1396,15 @@ void CMenu::MenuVisuals()
 					WToggle("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.Value); HelpMarker("Will show the server angles in thirdperson");
 
 					WToggle("Thirdperson offsets", &Vars::Visuals::ThirdpersonOffset.Value); HelpMarker("These will mess you up if you use a small FoV");
-					WSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
-					WSlider("Thirdperson right", &Vars::Visuals::ThirdpersonRight.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
-					WSlider("Thirdperson up", &Vars::Visuals::ThirdpersonUp.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
-					WToggle("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.Value);
-					WToggle("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.Value);
-					InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
+					if (Vars::Visuals::ThirdpersonOffset.Value)
+					{
+						WSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						WSlider("Thirdperson right", &Vars::Visuals::ThirdpersonRight.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						WSlider("Thirdperson up", &Vars::Visuals::ThirdpersonUp.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
+						WToggle("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.Value);
+						WToggle("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.Value);
+						InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
+					}
 				} EndChild();
 
 				EndTable();
@@ -1433,19 +1478,25 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Spy Warning");
 					WToggle("Active###spywarn", &Vars::Visuals::SpyWarning.Value); HelpMarker("Will alert you when spies with their knife out may attempt to backstab you");
-					WToggle("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.Value); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
-					WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.Value); HelpMarker("Will only alert you to visible spies");
-					WToggle("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.Value); HelpMarker("Will ignore spies who are on your friends list");
-					WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.Value, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
+					if (Vars::Visuals::SpyWarning.Value)
+					{
+						WToggle("Voice command###spywarn1", &Vars::Visuals::SpyWarningAnnounce.Value); HelpMarker("Will make your character say \"Spy!\" when a spy is detected");
+						WToggle("Visible only###spywarn2", &Vars::Visuals::SpyWarningVisibleOnly.Value); HelpMarker("Will only alert you to visible spies");
+						WToggle("Ignore friends###spywarn3", &Vars::Visuals::SpyWarningIgnoreFriends.Value); HelpMarker("Will ignore spies who are on your friends list");
+						WCombo("Warning style", &Vars::Visuals::SpyWarningStyle.Value, { "Arrow", "Flash" }); HelpMarker("Choose the style of the spy indicator");
+					}
 
 					SectionTitle("Out of FOV arrows");
 					WToggle("Active###fovar", &Vars::Visuals::OutOfFOVArrows.Value); HelpMarker("Will draw arrows to players who are outside of the range of your FoV");
-					WToggle("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.Value); HelpMarker("16 missed calls");
-					WSlider("Arrow length", &Vars::Visuals::ArrowLength.Value, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
-					WSlider("Arrow angle", &Vars::Visuals::ArrowAngle.Value, 5.f, 180.f, "%.2f"); HelpMarker("The angle of the arrow");
-					WSlider("Distance from center", &Vars::Visuals::FovArrowsDist.Value, 0.01f, 0.2f, "%.3f"); HelpMarker("How far from the center of the screen the arrows will draw");
-					WSlider("Max distance", &Vars::Visuals::MaxDist.Value, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
-					WSlider("Min distance", &Vars::Visuals::MinDist.Value, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
+					if (Vars::Visuals::OutOfFOVArrows.Value)
+					{
+						WToggle("Outline arrows###OutlinedArrows", &Vars::Visuals::OutOfFOVArrowsOutline.Value); HelpMarker("16 missed calls");
+						WSlider("Arrow length", &Vars::Visuals::ArrowLength.Value, 5.f, 50.f, "%.2f"); HelpMarker("How long the arrows are");
+						WSlider("Arrow angle", &Vars::Visuals::ArrowAngle.Value, 5.f, 180.f, "%.2f"); HelpMarker("The angle of the arrow");
+						WSlider("Distance from center", &Vars::Visuals::FovArrowsDist.Value, 0.01f, 0.2f, "%.3f"); HelpMarker("How far from the center of the screen the arrows will draw");
+						WSlider("Max distance", &Vars::Visuals::MaxDist.Value, 0.f, 4000.f, "%.2f"); HelpMarker("How far until the arrows will not show");
+						WSlider("Min distance", &Vars::Visuals::MinDist.Value, 0.f, 1000.f, "%.2f"); HelpMarker("How close until the arrows will be fully opaque");
+					}
 				} EndChild();
 
 				/* Column 2 */
@@ -1456,37 +1507,40 @@ void CMenu::MenuVisuals()
 						using namespace Vars::Visuals;
 
 						WToggle("Enable beams", &Beans::Active.Value); HelpMarker("he loves beans?");
-						WToggle("Rainbow beams", &Beans::Rainbow.Value);
-						ColorPickerL("Beam colour", Beans::BeamColour.Value);
-						WToggle("Custom model", &Beans::UseCustomModel.Value);
-						if (Beans::UseCustomModel.Value)
+						if (&Beans::Active.Value)
 						{
-							WInputText("Model", &Beans::Model.Value);
-						}
-						WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
-						WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
-						WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
-						WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
-						WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
-						WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
-						WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
-						WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
+							WToggle("Rainbow beams", &Beans::Rainbow.Value);
+							ColorPickerL("Beam colour", Beans::BeamColour.Value);
+							WToggle("Custom model", &Beans::UseCustomModel.Value);
+							if (Beans::UseCustomModel.Value)
+							{
+								WInputText("Model", &Beans::Model.Value);
+							}
+							WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
+							WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
+							WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
+							WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
+							WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
+							WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
+							WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
+							WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
 
-						// TODO: Reward this ugly code
-						{
-							static std::vector flagNames{ "STARTENTITY", "ENDENTITY", "FADEIN", "FADEOUT", "SINENOISE", "SOLID", "SHADEIN", "SHADEOUT", "ONLYNOISEONCE", "NOTILE", "USE_HITBOXES", "STARTVISIBLE", "ENDVISIBLE", "ISACTIVE", "FOREVER", "HALOBEAM", "REVERSED", };
-							static std::vector flagValues{ 0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080, 0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000, 0x00010000 };
-							MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
+							// TODO: Reward this ugly code
+							{
+								static std::vector flagNames{ "STARTENTITY", "ENDENTITY", "FADEIN", "FADEOUT", "SINENOISE", "SOLID", "SHADEIN", "SHADEOUT", "ONLYNOISEONCE", "NOTILE", "USE_HITBOXES", "STARTVISIBLE", "ENDVISIBLE", "ISACTIVE", "FOREVER", "HALOBEAM", "REVERSED", };
+								static std::vector flagValues{ 0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080, 0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000, 0x00010000 };
+								MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
+							}
 						}
 					}
 					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
-					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
-					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
-					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 					if (Vars::Visuals::ParticleTracer.Value == 9)
 					{
 						WInputText("Custom Tracer", &Vars::Visuals::ParticleName.Value); HelpMarker("If you want to use a custom particle tracer");
 					}
+					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
+					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 
 					SectionTitle("Visualisation");
 					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
@@ -1501,15 +1555,13 @@ void CMenu::MenuVisuals()
 					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
 					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
+					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
 					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
-					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
-		
-					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
-			
+					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");			
 
 					SectionTitle("Logging");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
@@ -1570,7 +1622,7 @@ void CMenu::MenuHvH()
 			WCombo("Doubletap Mode", &Vars::Misc::CL_Move::DTMode.Value, { "On key", "Always", "Disable on key", "Disabled" }); HelpMarker("How should DT behave");
 			const int ticksMax = g_ConVars.sv_maxusrcmdprocessticks->GetInt() - 3;	// remove the 2 backup cmd's and the cmd that we will send when we dt.
 			WSlider("Ticks to shift", &Vars::Misc::CL_Move::DTTicks.Value, 1, ticksMax ? ticksMax : 21, "%d"); HelpMarker("How many ticks to shift");
-			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d");
+			WSlider("Passive Recharge Factor", &Vars::Misc::CL_Move::PassiveRecharge.Value, 0, 21, "%d"); HelpMarker("How fast your ticks should charge passively");
 			WToggle("SpeedHack", &Vars::Misc::CL_Move::SEnabled.Value); HelpMarker("Speedhack Master Switch");
 			if (Vars::Misc::CL_Move::SEnabled.Value)
 			{
@@ -1767,8 +1819,11 @@ void CMenu::MenuMisc()
 			WToggle("Taunt control", &Vars::Misc::TauntControl.Value); HelpMarker("Gives full control if enabled with taunt slide");
 			WToggle("Taunt follows camera", &Vars::Misc::TauntFollowsCamera.Value);
 			WToggle("Taunt spin", &Vars::Misc::TauntSpin.Value);
-			InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, true, false, "None");	//	why was this set to disallow none?
-			WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+			if (Vars::Misc::TauntSpin.Value)
+			{
+				InputKeybind("Taunt spin key", Vars::Misc::TauntSpinKey, true, false, "None");	//	why was this set to disallow none?
+				WSlider("Taunt spin speed", &Vars::Misc::TauntSpinSpeed.Value, 0.1f, 100.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+			}
 
 			WCombo("Pick Class", &Vars::Misc::AutoJoin.Value, { "Off", "Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy" }); HelpMarker("Automatically joins the given class");
 			WToggle("Rage retry", &Vars::Misc::RageRetry.Value); HelpMarker("Will automatically reconnect when your health is low");
@@ -1835,7 +1890,7 @@ void CMenu::MenuMisc()
 			WCombo("Chat spam", &Vars::Misc::ChatSpam.Value, { "Off", "Fedoraware", "Lmaobox", "Cathook" });
 			WCombo("Voicechat spam", &Vars::Misc::VoicechatSpam.Value, { "Off", "Medic!", "Help!", "Nice Shot", "Random" });
 			WSlider("Spam interval", &Vars::Misc::SpamInterval.Value, 0.1f, 10.f, "%.1f"); HelpMarker("How often chat/voice spam should run");
-			WCombo("Mediaval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
+			WCombo("Medieval Mode", &Vars::Misc::MedievalChat.Value, { "Default", "Never", "Always" }); HelpMarker("By the Immeasurable Nether Regions of Enlightened Dionysus, this enableth medieval chattery. Anon!");
 
 			SectionTitle("Exploits");
 			WToggle("Anti Autobalance", &Vars::Misc::AntiAutobal.Value); HelpMarker("Prevents auto balance by reconnecting to the server");
@@ -1856,8 +1911,11 @@ void CMenu::MenuMisc()
 
 			SectionTitle("Followbot");
 			WToggle("Enable Followbot###FollowbotEnable", &Vars::Misc::Followbot::Enabled.Value); HelpMarker("Follows a player around.");
-			WToggle("Friends only###FollowbotFriends", &Vars::Misc::Followbot::FriendsOnly.Value); HelpMarker("Only follow friends");
-			WSlider("Follow Distance###FollowbotDistance", &Vars::Misc::Followbot::Distance.Value, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
+			if (Vars::Misc::Followbot::Enabled.Value)
+			{
+				WToggle("Friends only###FollowbotFriends", &Vars::Misc::Followbot::FriendsOnly.Value); HelpMarker("Only follow friends");
+				WSlider("Follow Distance###FollowbotDistance", &Vars::Misc::Followbot::Distance.Value, 50.f, 400.f, "%.0f"); HelpMarker("How close we should follow the target");
+			}
 
 			/*SectionTitle("Leaderboard");
 			WToggle("Send statistics", &Vars::Misc::StoreStatistics.Value); HelpMarker("Will send your steamid/kills/deaths/highest killstreak whenever you leave the server");
@@ -1875,10 +1933,13 @@ void CMenu::MenuMisc()
 			if (F::DiscordRPC.IsLoaded())
 			{
 				WToggle("Discord RPC", &Vars::Misc::Discord::EnableRPC.Value); HelpMarker("Enable Discord Rich Presence");
-				WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
-				WToggle("Include class", &Vars::Misc::Discord::IncludeClass.Value); HelpMarker("Should Discord Rich Presence contain current class?");
-				WToggle("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.Value); HelpMarker("Should time since you started playing TF2 be included?");
-				WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.Value, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });	
+				if (Vars::Misc::Discord::EnableRPC.Value)
+				{
+					WToggle("Include map", &Vars::Misc::Discord::IncludeMap.Value); HelpMarker("Should Discord Rich Presence contain current map name?");
+					WToggle("Include class", &Vars::Misc::Discord::IncludeClass.Value); HelpMarker("Should Discord Rich Presence contain current class?");
+					WToggle("Include timestamp", &Vars::Misc::Discord::IncludeTimestamp.Value); HelpMarker("Should time since you started playing TF2 be included?");
+					WCombo("Image Options", &Vars::Misc::Discord::WhatImagesShouldBeUsed.Value, { "Big fedora + Small TF2", "Big TF2 + Small fedora" });	
+				}
 			}
 			else
 			{
@@ -1887,14 +1948,17 @@ void CMenu::MenuMisc()
 
 			SectionTitle("Steam RPC");
 			WToggle("Steam RPC", &Vars::Misc::Steam::EnableRPC.Value); HelpMarker("Enable Steam Rich Presence"); HelpMarker("Enable Steam Rich Presence");
-			WCombo("Match group", &Vars::Misc::Steam::MatchGroup.Value, { "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }); HelpMarker("Which match group should be used?");
-			WToggle("Override in menu", &Vars::Misc::Steam::OverrideMenu.Value); HelpMarker("Override match group to \"Main Menu\" when in main menu");
-			WCombo("Map text", &Vars::Misc::Steam::MapText.Value, { "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }); HelpMarker("Which map text should be used?");
-			if (Vars::Misc::Steam::MapText.Value == 0)
+			if (Vars::Misc::Steam::EnableRPC.Value)
 			{
-				WInputText("Custom map text", &Vars::Misc::Steam::CustomText.Value); HelpMarker(R"(For when "Custom" is selcted in "Map text". Sets custom map text.)");
+				WCombo("Match group", &Vars::Misc::Steam::MatchGroup.Value, { "Special Event", "MvM Mann Up", "Competitive", "Casual", "MvM Boot Camp" }); HelpMarker("Which match group should be used?");
+				WToggle("Override in menu", &Vars::Misc::Steam::OverrideMenu.Value); HelpMarker("Override match group to \"Main Menu\" when in main menu");
+				WCombo("Map text", &Vars::Misc::Steam::MapText.Value, { "Custom", "Fedoraware", "Figoraware", "Meowhook.club", "Rathook.cc", "Nitro.tf" }); HelpMarker("Which map text should be used?");
+				if (Vars::Misc::Steam::MapText.Value == 0)
+				{
+					WInputText("Custom map text", &Vars::Misc::Steam::CustomText.Value); HelpMarker(R"(For when "Custom" is selcted in "Map text". Sets custom map text.)");
+				}
+				WInputInt("Group size", &Vars::Misc::Steam::GroupSize.Value); HelpMarker("Sets party size");
 			}
-			WInputInt("Group size", &Vars::Misc::Steam::GroupSize.Value); HelpMarker("Sets party size");
 
 			SectionTitle("Utilities");
 			if (Button("Full update", SIZE_FULL_WIDTH))
