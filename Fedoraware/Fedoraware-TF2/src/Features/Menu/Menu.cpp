@@ -1524,8 +1524,11 @@ void CMenu::MenuVisuals()
 
 					SectionTitle("Logging");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
-					WSlider("Static SpecList height", &Vars::Visuals::SpectatorListHeight.Value, 1, 1000); HelpMarker("Try raising or lowering the height if it doesn't show up");
-					WToggle("Show Freeze and Deathcam", &Vars::Visuals::SLShowOthers.Value); HelpMarker("Will hide the Death and Freezecam");
+					if (Vars::Visuals::SpectatorList.Value != 1)
+					{
+						WSlider("Static SpecList height", &Vars::Visuals::SpectatorListHeight.Value, 1, 1000); HelpMarker("Try raising or lowering the height if it doesn't show up");
+						WToggle("Show Freeze and Deathcam", &Vars::Visuals::SLShowOthers.Value); HelpMarker("Will hide the Death and Freezecam");
+					}
 					{
 						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
 						static std::vector flagValues{ 1, 2, 4, 8, 32 };

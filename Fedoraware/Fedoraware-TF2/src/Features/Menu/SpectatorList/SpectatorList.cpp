@@ -29,7 +29,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 				}
 				case OBS_MODE_DEATHCAM: //thanks barn you are the best
 				case OBS_MODE_FREEZECAM: {
-					if (Vars::Visuals::SLShowOthers.Value) {
+					if (Vars::Visuals::SLShowOthers.Value && Vars::Visuals::SpectatorList.Value != 1) {
 						szMode = (pPlayer->GetObserverMode()) == OBS_MODE_DEATHCAM ? L"Death" : L"Freeze";
 						break;
 					}
