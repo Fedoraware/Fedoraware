@@ -1519,12 +1519,13 @@ void CMenu::MenuVisuals()
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
-		
 					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 			
 
 					SectionTitle("Logging");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
+					WSlider("Static SpecList height", &Vars::Visuals::SpectatorListHeight.Value, 1, 1000); HelpMarker("Try raising or lowering the height if it doesn't show up");
+					WToggle("Show Freeze and Deathcam", &Vars::Visuals::SLShowOthers.Value); HelpMarker("Will hide the Death and Freezecam");
 					{
 						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
 						static std::vector flagValues{ 1, 2, 4, 8, 32 };
@@ -1533,11 +1534,11 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
 					HelpMarker("What & How should events be logged");
 					WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
+					MultiCombo({ "Line", "Gradient" }, { &Vars::Visuals::DrawNotifLine.Value, &Vars::Visuals::DrawNotifGradient.Value }, "Draw Notification");
 					ColorPickerL("GUI Notif Background", Vars::Colours::NotifBG.Value);
 					ColorPickerL("GUI Notif Outline", Vars::Colours::NotifOutline.Value, 1);
 					ColorPickerL("GUI Notif Colour", Vars::Colours::NotifText.Value, 2);
 					WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
-					MultiCombo({ "Line", "Gradient" }, { &Vars::Visuals::DrawNotifLine.Value, &Vars::Visuals::DrawNotifGradient.Value }, "Draw Notification");
 					SectionTitle("On-Screen");
 					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
