@@ -1306,41 +1306,45 @@ void CMenu::MenuVisuals()
 					SectionTitle("Skybox & Textures");
 					static std::vector skyNames{
 						"Custom",
-						"sky_tf2_04",
-						"sky_upward",
-						"sky_dustbowl_01",
-						"sky_goldrush_01",
-						"sky_granary_01",
-						"sky_well_01",
-						"sky_gravel_01",
-						"sky_badlands_01",
-						"sky_hydro_01",
-						"sky_night_01",
-						"sky_nightfall_01",
-						"sky_trainyard_01",
-						"sky_stormfront_01",
-						"sky_morningsnow_01",
-						"sky_alpinestorm_01",
-						"sky_harvest_01",
-						"sky_harvest_night_01",
-						"sky_halloween",
-						"sky_halloween_night_01",
-						"sky_halloween_night2014_01",
-						"sky_island_01",
-						"sky_rainbow_01"
+							"sky_tf2_04",
+							"sky_upward",
+							"sky_dustbowl_01",
+							"sky_goldrush_01",
+							"sky_granary_01",
+							"sky_well_01",
+							"sky_gravel_01",
+							"sky_badlands_01",
+							"sky_hydro_01",
+							"sky_night_01",
+							"sky_nightfall_01",
+							"sky_trainyard_01",
+							"sky_stormfront_01",
+							"sky_morningsnow_01",
+							"sky_alpinestorm_01",
+							"sky_harvest_01",
+							"sky_harvest_night_01",
+							"sky_halloween",
+							"sky_halloween_night_01",
+							"sky_halloween_night2014_01",
+							"sky_island_01",
+							"sky_rainbow_01"
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
-					if (Vars::Skybox::SkyboxNum.Value == 0)
+					if (Vars::Visuals::SkyboxChanger.Value)
 					{
-						WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+						WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
+						if (Vars::Skybox::SkyboxNum.Value == 0)
+						{
+							WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
+						}
 					}
 					WCombo("Precipitation", &Vars::Visuals::Rain.Value, { "Off", "Rain", "Snow" });
 					WToggle("World Textures Override", &Vars::Visuals::OverrideWorldTextures.Value); HelpMarker("Turn this off when in-game so you don't drop fps :p");
 					WToggle("Bypass sv_pure", &Vars::Misc::BypassPure.Value); HelpMarker("Allows you to load any custom files, even if disallowed by the sv_pure setting");
 					WToggle("Medal flip", &Vars::Misc::MedalFlip.Value); HelpMarker("Medal go spinny spinny weeeeeee");
 
-					SectionTitle("Custom fog");
+					SectionTitle("Fog");
 					WToggle("Disable fog", &Vars::Visuals::Fog::DisableFog.Value);
 					WToggle("Custom fog", &Vars::Visuals::Fog::CustomFog.Value);
 					if (Vars::Visuals::Fog::CustomFog.Value)
@@ -1359,16 +1363,16 @@ void CMenu::MenuVisuals()
 					WToggle("Thirdperson", &Vars::Visuals::ThirdPerson.Value); HelpMarker("Will move your camera to be in a thirdperson view");
 					InputKeybind("Thirdperson key", Vars::Visuals::ThirdPersonKey, true, false, "None"); HelpMarker("What key to toggle thirdperson, press ESC if no bind is desired");
 					WToggle("Show real angles###tpRealAngles", &Vars::Visuals::ThirdPersonSilentAngles.Value); HelpMarker("Will show your real angles on thirdperson (not what others see)");
-					WToggle("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.Value); HelpMarker("Will show the server angles in thirdperson");
 					WToggle("Instant yaw###tpInstantYaw", &Vars::Visuals::ThirdPersonInstantYaw.Value); HelpMarker("Will set your yaw instantly in thirdperson, showing your actual angle, instead of what others see");
-					WToggle("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.Value);
+					WToggle("Show server hitboxes (localhost only)###tpShowServer", &Vars::Visuals::ThirdPersonServerHitbox.Value); HelpMarker("Will show the server angles in thirdperson");
+
 					WToggle("Thirdperson offsets", &Vars::Visuals::ThirdpersonOffset.Value); HelpMarker("These will mess you up if you use a small FoV");
 					if (Vars::Visuals::ThirdpersonOffset.Value)
 					{
 						WSlider("Thirdperson distance", &Vars::Visuals::ThirdpersonDist.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
 						WSlider("Thirdperson right", &Vars::Visuals::ThirdpersonRight.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
 						WSlider("Thirdperson up", &Vars::Visuals::ThirdpersonUp.Value, -500.f, 500.f, "%.1f", ImGuiSliderFlags_None);
-
+						WToggle("Thirdperson crosshair", &Vars::Visuals::ThirdpersonCrosshair.Value);
 						WToggle("Offset with arrow keys", &Vars::Visuals::ThirdpersonOffsetWithArrows.Value);
 						InputKeybind("Move offset key", Vars::Visuals::ThirdpersonArrowOffsetKey, false);
 					}
@@ -1513,13 +1517,13 @@ void CMenu::MenuVisuals()
 					WToggle("Draw Hitboxes", &Vars::Aimbot::Global::showHitboxes.Value); HelpMarker("Shows client hitboxes for enemies once they are attacked (not bbox)");
 					ColorPickerL("Hitbox matrix face colour", Vars::Colours::HitboxFace.Value);
 					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
+					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
 					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
 					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
-					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 			
 
 					SectionTitle("Logging");
