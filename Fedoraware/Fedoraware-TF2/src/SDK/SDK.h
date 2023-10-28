@@ -801,7 +801,8 @@ namespace Utils
 			case TF_WEAPON_STICKBOMB:
 			case TF_WEAPON_STICKY_BALL_LAUNCHER:
 			{
-				// TODO: Implement this
+				const Vec3 vecOffset(16.f, 8.f, -6.f);
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
 				break;
 			}
 			default: break;

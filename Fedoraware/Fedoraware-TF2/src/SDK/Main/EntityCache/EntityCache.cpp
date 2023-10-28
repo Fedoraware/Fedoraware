@@ -111,6 +111,11 @@ void CEntityCache::Fill()
 					break;
 				}
 
+				if (Hash::IsSpell(szName))
+				{
+					m_vecGroups[EGroupType::WORLD_SPELLBOOK].push_back(pEntity);
+				}
+
 				break;
 			}
 
@@ -181,6 +186,13 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFGenericBomb:
 			{
 				m_vecGroups[EGroupType::WORLD_BOMBS].push_back(pEntity);
+
+				break;
+			}
+			case ETFClassID::CHalloweenGiftPickup:
+			{
+				if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GetTargetPlayer()) == m_pLocal)
+					m_vecGroups[EGroupType::WORLD_GARGOYLE].push_back(pEntity);
 
 				break;
 			}

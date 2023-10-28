@@ -1378,6 +1378,156 @@ void CESP::DrawWorld() const
 		}
 	}
 
+	for (const auto& Spellbooks : g_EntityCache.GetGroup(EGroupType::WORLD_SPELLBOOK))
+	{
+		// distance things
+		const Vec3 vDelta = Spellbooks->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Spellbooks, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::SpellbookName.Value)
+			{
+				const wchar_t* szName = L"Spellbook";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Spellbooks, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::SpellbookLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Spellbooks->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Spellbooks, true));
+			}
+
+			switch (Vars::ESP::World::SpellbookBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Spellbooks, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Spellbooks, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Spellbooks, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::SpellbookDistance.Value)
+			{
+				const Vec3 vDelta = Spellbooks->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
+	for (const auto& Gargoyles : g_EntityCache.GetGroup(EGroupType::WORLD_SPELLBOOK))
+	{
+		// distance things
+		const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Gargoyles, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::GargoyleName.Value)
+			{
+				const wchar_t* szName = L"Soul Gargoyle";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Gargoyles, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::GargoyleLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Gargoyles->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Gargoyles, true));
+			}
+
+			switch (Vars::ESP::World::GargoyleBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Gargoyles, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Gargoyles, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Gargoyles, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::GargoyleDistance.Value)
+			{
+				const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
 	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
 }
 
@@ -1391,10 +1541,8 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"No Lag Comp"); }
 	}
 
-	if (const wchar_t* rune = pEntity->GetRune())
-	{	// I want to see if they are the king before anything else.
+	if (const wchar_t* rune = pEntity->GetRune()) // I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
-	}
 
 	if (pEntity->InCond(TF_COND_AIMING))
 	{
@@ -1473,14 +1621,10 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 		szCond.emplace_back(L"Burning");
 
 	if (nFlag & FL_DUCKING)
-	{
 		szCond.emplace_back(L"Ducking");
-	}
 
 	if (pEntity->InCond(TF_COND_BLASTJUMPING) || pEntity->InCond(TF_COND_ROCKETPACK))
-	{
 		szCond.emplace_back(L"Blast Jumping");
-	}
 
 	if (pEntity->IsCritBoosted())
 	{
@@ -1513,69 +1657,43 @@ std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 	}
 
 	if (pEntity->InCond(TF_COND_MARKEDFORDEATH) || pEntity->InCond(TF_COND_MARKEDFORDEATH_SILENT) || pEntity->InCond(TF_COND_PASSTIME_PENALTY_DEBUFF))
-	{
 		szCond.emplace_back(L"Marked for Death");
-	}
 
 	if (pEntity->InCond(TF_COND_DEFENSEBUFF))
-	{
 		szCond.emplace_back(L"Defense Buff");
-	}
 
 	if (pEntity->InCond(TF_COND_REGENONDAMAGEBUFF))
-	{
 		szCond.emplace_back(L"Speed/Heal Buff");
-	}
 
 	if (pEntity->InCond(TF_COND_STUNNED))
-	{
 		szCond.emplace_back(L"Stunned");
-	}
 
 	if (pEntity->InCond(TF_COND_PARACHUTE_ACTIVE) || pEntity->InCond(TF_COND_PARACHUTE_DEPLOYED))
-	{
 		szCond.emplace_back(L"Parachuting");
-	}
 
 	if (pEntity->InCond(TF_COND_SHIELD_CHARGE))
-	{
 		szCond.emplace_back(L"Charging");
-	}
 
 	if (pEntity->InCond(TF_COND_SODAPOPPER_HYPE))
-	{
 		szCond.emplace_back(L"Hype");
-	}
 
 	if (pEntity->InCond(TF_COND_SNIPERCHARGE_RAGE_BUFF))
-	{
 		szCond.emplace_back(L"Focus");
-	}
 
 	if (pEntity->GetFeignDeathReady())
-	{
 		szCond.emplace_back(L"Dead Ringer");
-	}
 
 	if (pEntity->IsBuffedByKing())
-	{
 		szCond.emplace_back(L"King Buff");
-	}
 
 	if (pEntity->InCond(TF_COND_SPEED_BOOST))
-	{
 		szCond.emplace_back(L"Speed Boosted");
-	}
 
 	if (pEntity->GetDormant())
-	{
 		szCond.emplace_back(L"Dormant");
-	}
 
 	if (pEntity->IsAGhost())
-	{
 		szCond.emplace_back(L"Ghost");
-	}
 
 	return szCond;
 }
