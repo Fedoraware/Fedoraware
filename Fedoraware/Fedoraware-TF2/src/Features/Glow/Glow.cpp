@@ -299,6 +299,10 @@ void CGlowEffect::Render()
 		{
 			F::Visuals.DrawMovesimLine();
 		}
+		if (Vars::Glow::Misc::ProjectileTrajectory.Value)
+		{
+			F::Visuals.ProjectileTrace();
+		}
 		if (Vars::Glow::Misc::Sightlines.Value)
 		{
 			F::Visuals.DrawSightlines();
@@ -423,6 +427,34 @@ void CGlowEffect::Render()
 						DrawModel(Bombs, STUDIO_RENDER, true);
 				}
 			}
+
+			if (Vars::Glow::World::Spellbooks.Value)
+			{
+				for (const auto& Spellbooks : g_EntityCache.GetGroup(EGroupType::WORLD_SPELLBOOK))
+				{
+					if (!Utils::IsOnScreen(pLocal, Spellbooks))
+						continue;
+
+					m_vecGlowEntities.push_back({ Spellbooks, GetEntityDrawColour(Spellbooks, false), Vars::Glow::World::Alpha.Value });
+
+					if (!F::Chams.HasDrawn(Spellbooks))
+						DrawModel(Spellbooks, STUDIO_RENDER, true);
+				}
+			}
+
+			if (Vars::Glow::World::Gargoyles.Value)
+			{
+				for (const auto& Gargoyles : g_EntityCache.GetGroup(EGroupType::WORLD_GARGOYLE))
+				{
+					if (!Utils::IsOnScreen(pLocal, Gargoyles))
+						continue;
+
+					m_vecGlowEntities.push_back({ Gargoyles, GetEntityDrawColour(Gargoyles, false), Vars::Glow::World::Alpha.Value });
+
+					if (!F::Chams.HasDrawn(Gargoyles))
+						DrawModel(Gargoyles, STUDIO_RENDER, true);
+				}
+			}
 		}
 
 		StencilStateDisable.SetStencilState(pRenderContext);
@@ -451,6 +483,10 @@ void CGlowEffect::Render()
 			if (Vars::Glow::Misc::MovementSimLine.Value)
 			{
 				F::Visuals.DrawMovesimLine();
+			}
+			if (Vars::Glow::Misc::ProjectileTrajectory.Value)
+			{
+				F::Visuals.ProjectileTrace();
 			}
 			if (Vars::Glow::Misc::Sightlines.Value)
 			{
