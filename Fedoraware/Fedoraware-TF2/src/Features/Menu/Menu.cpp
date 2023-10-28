@@ -1466,43 +1466,46 @@ void CMenu::MenuVisuals()
 
 				/* Column 2 */
 				if (TableColumnChild("VisualsIndicatorsCol2"))
-				{	
+				{
 					SectionTitle("Beams & Tracers");
 					{
 						using namespace Vars::Visuals;
 
 						WToggle("Enable beams", &Beans::Active.Value); HelpMarker("he loves beans?");
-						WToggle("Rainbow beams", &Beans::Rainbow.Value);
-						ColorPickerL("Beam colour", Beans::BeamColour.Value);
-						WToggle("Custom model", &Beans::UseCustomModel.Value);
-						if (Beans::UseCustomModel.Value)
+						if (&Beans::Active.Value)
 						{
-							WInputText("Model", &Beans::Model.Value);
-						}
-						WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
-						WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
-						WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
-						WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
-						WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
-						WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
-						WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
-						WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
+							WToggle("Rainbow beams", &Beans::Rainbow.Value);
+							ColorPickerL("Beam colour", Beans::BeamColour.Value);
+							WToggle("Custom model", &Beans::UseCustomModel.Value);
+							if (Beans::UseCustomModel.Value)
+							{
+								WInputText("Model", &Beans::Model.Value);
+							}
+							WSlider("Beam lifespan", &Beans::Life.Value, 0.0f, 10.f);
+							WSlider("Beam width", &Beans::Width.Value, 0.0f, 10.f);
+							WSlider("Beam end width", &Beans::EndWidth.Value, 0.0f, 10.f);
+							WSlider("Beam fade length", &Beans::FadeLength.Value, 0.0f, 30.f);
+							WSlider("Beam amplitude", &Beans::Amplitude.Value, 0.0f, 10.f);
+							WSlider("Beam brightness", &Beans::Brightness.Value, 0.0f, 255.f);
+							WSlider("Beam speed", &Beans::Speed.Value, 0.0f, 5.f);
+							WSlider("Segments", &Beans::Segments.Value, 1, 10); //what are good values for this
 
-						// TODO: Reward this ugly code
-						{
-							static std::vector flagNames{ "STARTENTITY", "ENDENTITY", "FADEIN", "FADEOUT", "SINENOISE", "SOLID", "SHADEIN", "SHADEOUT", "ONLYNOISEONCE", "NOTILE", "USE_HITBOXES", "STARTVISIBLE", "ENDVISIBLE", "ISACTIVE", "FOREVER", "HALOBEAM", "REVERSED", };
-							static std::vector flagValues{ 0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080, 0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000, 0x00010000 };
-							MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
+							// TODO: Reward this ugly code
+							{
+								static std::vector flagNames{ "STARTENTITY", "ENDENTITY", "FADEIN", "FADEOUT", "SINENOISE", "SOLID", "SHADEIN", "SHADEOUT", "ONLYNOISEONCE", "NOTILE", "USE_HITBOXES", "STARTVISIBLE", "ENDVISIBLE", "ISACTIVE", "FOREVER", "HALOBEAM", "REVERSED", };
+								static std::vector flagValues{ 0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00000080, 0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000, 0x00010000 };
+								MultiFlags(flagNames, flagValues, &Beans::Flags.Value, "Beam Flags###BeamFlags");
+							}
 						}
 					}
 					WCombo("Particle tracer", &Vars::Visuals::ParticleTracer.Value, { "Off", "Machina", "C.A.P.P.E.R", "Short Circuit", "Merasmus ZAP", "Merasmus ZAP Beam 2", "Big Nasty", "Distortion Trail", "Black Ink", "Custom" });
-					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
-					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
-					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 					if (Vars::Visuals::ParticleTracer.Value == 9)
 					{
 						WInputText("Custom Tracer", &Vars::Visuals::ParticleName.Value); HelpMarker("If you want to use a custom particle tracer");
 					}
+					WToggle("Bullet tracers", &Vars::Visuals::BulletTracer.Value);
+					ColorPickerL("Bullet tracer colour", Vars::Colours::BulletTracer.Value);
+					WToggle("Rainbow tracers", &Vars::Visuals::BulletTracerRainbow.Value); HelpMarker("Bullet tracer color will be dictated by a changing color");
 
 					SectionTitle("Visualisation");
 					MultiCombo({ "Line", "Seperators" }, { &Vars::Visuals::MoveSimLine.Value, &Vars::Visuals::MoveSimSeperators.Value }, "Proj Aim Lines");
@@ -1524,7 +1527,6 @@ void CMenu::MenuVisuals()
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
 					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
-			
 
 					SectionTitle("Logging");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
