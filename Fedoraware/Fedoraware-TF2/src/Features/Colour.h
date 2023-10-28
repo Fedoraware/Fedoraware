@@ -58,6 +58,16 @@ __inline Color_t GetEntityDrawColour(CBaseEntity* pEntity, bool enableOtherColor
 			out = Vars::Colours::Ignored.Value;
 		}
 
+		else if (G::PlayerPriority[info.friendsID].Mode == 3)
+		{
+			out = Vars::Colours::Rage.Value;
+		}
+
+		else if (G::PlayerPriority[info.friendsID].Mode == 4)
+		{
+			out = Vars::Colours::Cheater.Value;
+		}
+
 		else if (pEntity->IsCloaked())
 		{
 			out = Vars::Colours::Cloak.Value;

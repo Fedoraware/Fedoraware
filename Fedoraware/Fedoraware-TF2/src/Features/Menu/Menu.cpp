@@ -636,7 +636,10 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Skellington colour", Vars::Colours::Bones.Value);
 					WToggle("Lines###Playerlines", &Vars::ESP::Players::Lines.Value); HelpMarker("Draws lines from the local players position to enemies position");
 					WToggle("Dlights###PlayerDlights", &Vars::ESP::Players::Dlights.Value); HelpMarker("Will make players emit a dynamic light around them");
-					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					if (Vars::ESP::Players::Dlights.Value)
+					{
+						WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Players::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					}
 					WSlider("ESP alpha###PlayerESPAlpha", &Vars::ESP::Players::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 					WToggle("Sniper sightlines", &Vars::ESP::Players::SniperSightlines.Value);
 				} EndChild();
@@ -665,7 +668,10 @@ void CMenu::MenuVisuals()
 					WToggle("Lines###buildinglines", &Vars::ESP::Buildings::Lines.Value); HelpMarker("Draws lines from the local players position to the buildings position");
 					WCombo("Box###PBuildingBoxESP", &Vars::ESP::Buildings::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on buildings");
 					WToggle("Dlights###PlayerDlights", &Vars::ESP::Buildings::Dlights.Value); HelpMarker("Will make buildings emit a dynamic light around them, although buildings can't move some I'm not sure that the lights are actually dynamic here...");
-					WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					if (Vars::ESP::Buildings::Dlights.Value)
+					{
+						WSlider("Dlight radius###PlayerDlightRadius", &Vars::ESP::Buildings::DlightRadius.Value, 0.f, 500.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How far the Dlight will illuminate");
+					}
 					WSlider("ESP alpha###BuildingESPAlpha", &Vars::ESP::Buildings::Alpha.Value, 0.01f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("How transparent the ESP should be");
 				} EndChild();
 
@@ -1335,28 +1341,28 @@ void CMenu::MenuVisuals()
 					SectionTitle("Skybox & Textures");
 					static std::vector skyNames{
 						"Custom",
-						"sky_tf2_04",
-						"sky_upward",
-						"sky_dustbowl_01",
-						"sky_goldrush_01",
-						"sky_granary_01",
-						"sky_well_01",
-						"sky_gravel_01",
-						"sky_badlands_01",
-						"sky_hydro_01",
-						"sky_night_01",
-						"sky_nightfall_01",
-						"sky_trainyard_01",
-						"sky_stormfront_01",
-						"sky_morningsnow_01",
-						"sky_alpinestorm_01",
-						"sky_harvest_01",
-						"sky_harvest_night_01",
-						"sky_halloween",
-						"sky_halloween_night_01",
-						"sky_halloween_night2014_01",
-						"sky_island_01",
-						"sky_rainbow_01"
+							"sky_tf2_04",
+							"sky_upward",
+							"sky_dustbowl_01",
+							"sky_goldrush_01",
+							"sky_granary_01",
+							"sky_well_01",
+							"sky_gravel_01",
+							"sky_badlands_01",
+							"sky_hydro_01",
+							"sky_night_01",
+							"sky_nightfall_01",
+							"sky_trainyard_01",
+							"sky_stormfront_01",
+							"sky_morningsnow_01",
+							"sky_alpinestorm_01",
+							"sky_harvest_01",
+							"sky_harvest_night_01",
+							"sky_halloween",
+							"sky_halloween_night_01",
+							"sky_halloween_night2014_01",
+							"sky_island_01",
+							"sky_rainbow_01"
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
@@ -1501,7 +1507,7 @@ void CMenu::MenuVisuals()
 
 				/* Column 2 */
 				if (TableColumnChild("VisualsIndicatorsCol2"))
-				{	
+				{
 					SectionTitle("Beams & Tracers");
 					{
 						using namespace Vars::Visuals;
@@ -1557,14 +1563,24 @@ void CMenu::MenuVisuals()
 					ColorPickerL("Hitbox matrix edge colour", Vars::Colours::HitboxEdge.Value, 1);
 					WSlider("Hitbox Draw Time", &Vars::Aimbot::Global::HitboxLifetime.Value, 1, 5); HelpMarker("Removes previous drawn hitboxes after n seconds");
 					WToggle("Clear Hitboxes", &Vars::Aimbot::Global::ClearPreviousHitbox.Value); HelpMarker("Removes previous drawn hitboxes to mitigate clutter");
+
+					SectionTitle("Camera");
 					InputKeybind("Proj Cam Key", Vars::Visuals::ProjectileCameraKey, true, false, "None");  HelpMarker("Makes your camera snap to the projectile you most recently fired.");
 					InputKeybind("Freecam Key", Vars::Visuals::FreecamKey, true, false, "None");  HelpMarker("Allows you to freely move your camera when holding the key");
 					WCombo("Camera mode", &Vars::Visuals::CameraMode.Value, { "Off", "Mirror", "Spy", "Teleporter", "Teleporter (Portal)" }); HelpMarker("What the camera should display");
+					if (Vars::Visuals::CameraMode.Value != 0)
+					{
+						WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");
+					}
 					WSlider("Freecam Speed", &Vars::Visuals::FreecamSpeed.Value, 1.f, 20.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("Movement speed of freecam");
-					WSlider("Camera FOV", &Vars::Visuals::CameraFOV.Value, 40.f, 130.f, "%.f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("FOV of the camera window");			
 
 					SectionTitle("Logging");
 					WCombo("Spectator list", &Vars::Visuals::SpectatorList.Value, { "Off", "Draggable", "Static", "Static + Avatars" });
+					if (Vars::Visuals::SpectatorList.Value != 1)
+					{
+						WSlider("Static SpecList height", &Vars::Visuals::SpectatorListHeight.Value, 1, 1000); HelpMarker("Try raising or lowering the height if it doesn't show up");
+						WToggle("Show Freeze and Deathcam", &Vars::Visuals::SLShowOthers.Value); HelpMarker("Will hide the Death and Freezecam");
+					}
 					{
 						static std::vector flagNames{ "Text", "Console", "Chat", "Party", "Verbose" };
 						static std::vector flagValues{ 1, 2, 4, 8, 32 };
@@ -1573,11 +1589,11 @@ void CMenu::MenuVisuals()
 					MultiCombo({ "Damage Logs (Console)", "Damage Logs (Text)", "Damage Logs (Chat)", "Class Changes (Text)", "Class Changes (Chat)" }, { &Vars::Visuals::DamageLoggerConsole.Value, &Vars::Visuals::DamageLoggerText.Value, &Vars::Visuals::DamageLoggerChat.Value, &Vars::Visuals::ChatInfoText.Value, &Vars::Visuals::ChatInfoChat.Value }, "Event Logging");
 					HelpMarker("What & How should events be logged");
 					WToggle("ChatInfo Grayscale", &Vars::Visuals::ChatInfoGrayScale.Value);
+					MultiCombo({ "Line", "Gradient" }, { &Vars::Visuals::DrawNotifLine.Value, &Vars::Visuals::DrawNotifGradient.Value }, "Draw Notification");
 					ColorPickerL("GUI Notif Background", Vars::Colours::NotifBG.Value);
 					ColorPickerL("GUI Notif Outline", Vars::Colours::NotifOutline.Value, 1);
 					ColorPickerL("GUI Notif Colour", Vars::Colours::NotifText.Value, 2);
 					WSlider("GUI Notif Time", &Vars::Visuals::NotificationLifetime.Value, 0.5f, 3.f, "%.1f");
-
 					SectionTitle("On-Screen");
 					WToggle("On Screen Local Conditions", &Vars::Visuals::DrawOnScreenConditions.Value); HelpMarker("Render your local conditions on your screen");
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
