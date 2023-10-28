@@ -75,8 +75,8 @@ namespace Vars
 	CVar(CheatName, std::string("Fedoraware"), IS_VISUAL);
 	CVar(CheatPrefix, std::string("[FeD]"), IS_VISUAL);
 	CVar(ModernDesign, false, IS_VISUAL);
-	CVar(ShowPlayerlist, false);
-	CVar(ShowKeybinds, false);
+	CVar(ShowPlayerlist, false, IS_VISUAL);
+	CVar(ShowKeybinds, false, IS_VISUAL);
 	CVar(Vignette, false, IS_VISUAL);
 	CVar(CloseOnUnfocus, false, IS_VISUAL);
 	CVar(MenuKey, 0);
@@ -362,6 +362,14 @@ namespace Vars
 		CVar(BombBox, 0, IS_VISUAL)
 		CVar(BombLine, false, IS_VISUAL)
 		CVar(BombDistance, false, IS_VISUAL)
+		CVar(SpellbookName, false, IS_VISUAL)
+		CVar(SpellbookBox, 0, IS_VISUAL)
+		CVar(SpellbookLine, false, IS_VISUAL)
+		CVar(SpellbookDistance, false, IS_VISUAL)
+		CVar(GargoyleName, false, IS_VISUAL)
+		CVar(GargoyleBox, 0, IS_VISUAL)
+		CVar(GargoyleLine, false, IS_VISUAL)
+		CVar(GargoyleDistance, false, IS_VISUAL)
 		CVar(Alpha, 1.0f, IS_VISUAL);
 	SUBNAMESPACE_END(World);
 
@@ -403,6 +411,9 @@ namespace Vars
 		CVar(Projectilez, 2, IS_VISUAL)
 		CVar(Health, Chams_t(), IS_VISUAL)
 		CVar(Ammo, Chams_t(), IS_VISUAL)
+		CVar(NPCs, Chams_t(), IS_VISUAL)
+		CVar(Spellbooks, Chams_t(), IS_VISUAL)
+		CVar(Gargoyles, Chams_t(), IS_VISUAL)
 		CVar(Projectiles, Chams_t(), IS_VISUAL);
 	SUBNAMESPACE_END(World);
 
@@ -459,12 +470,15 @@ namespace Vars
 		CVar(Ammo, false, IS_VISUAL)
 		CVar(NPCs, false, IS_VISUAL)
 		CVar(Bombs, false, IS_VISUAL)
+		CVar(Spellbooks, false, IS_VISUAL)
+		CVar(Gargoyles, false, IS_VISUAL)
 		CVar(Projectiles, 1, IS_VISUAL) //0 - Off, 1 - All, 2 - Enemy Only
 		CVar(Alpha, 1.0f, IS_VISUAL);
 	SUBNAMESPACE_END(World);
 
 	SUBNAMESPACE_BEGIN(Misc)
 		CVar(MovementSimLine, false, IS_VISUAL)
+		CVar(ProjectileTrajectory, false, IS_VISUAL)
 		CVar(Sightlines, false, IS_VISUAL)
 		CVar(BulletTracers, false, IS_VISUAL);
 	SUBNAMESPACE_END(Misc);
@@ -716,8 +730,8 @@ namespace Vars
 	CVar(PartyMarker, 0);
 	CVar(PartyESP, false);
 	CVar(SoundBlock, 0);
-	CVar(ChatFlags, false);
-	CVar(MedievalChat, 0);
+	CVar(ChatFlags, false, IS_VISUAL);
+	CVar(MedievalChat, 0, IS_VISUAL);
 	CVar(AutoAcceptItemDrops, false);
 	CVar(RegionChanger, false);
 	CVar(RegionsAllowed, 0);
@@ -725,7 +739,7 @@ namespace Vars
 	CVar(JoinSpam, false);
 	CVar(AntiVAC, false);
 	CVar(InstantAccept, 0);
-	CVar(RunescapeChat, false);
+	CVar(RunescapeChat, false, IS_VISUAL);
 	CVar(Killsay, false);
 	CVar(KillsayFile, std::string(""));
 
@@ -787,7 +801,7 @@ namespace Vars
 		CVar(AutoRecharge, false) //H
 		CVar(AntiWarp, false) //H
 		CVar(DTMode, 0) // 0 - On Key, 1 - Always DT, 2 - Disable on key, 3 - Disabled
-		CVar(DTBarStyle, 3)
+		CVar(DTBarStyle, 3, IS_VISUAL)
 		CVar(DTTicks, 21)
 		CVar(WaitForDT, false)
 		CVar(Fakelag, false)
@@ -805,13 +819,13 @@ namespace Vars
 		CVar(AutoPeekKey, 0)
 		CVar(AutoPeekDistance, 200.f)
 		CVar(AutoPeekFree, false)
-		CVar(DTIndicator, DragBox_t(g_ScreenSize.c, g_ScreenSize.c));
+		CVar(DTIndicator, DragBox_t(g_ScreenSize.c, g_ScreenSize.c), IS_VISUAL);
 	SUBNAMESPACE_END(CL_Move);
 
 	SUBNAMESPACE_BEGIN(FLGChams)
-		CVar(Enabled, false)
-		CVar(Material, 1)
-		CVar(FakelagColor, Color_t(255, 255, 255, 255));
+		CVar(Enabled, false, IS_VISUAL)
+		CVar(Material, 1, IS_VISUAL)
+		CVar(FakelagColor, Color_t(255, 255, 255, 255), IS_VISUAL);
 	SUBNAMESPACE_END(FLGChams);
 
 	SUBNAMESPACE_BEGIN(Discord)
@@ -963,7 +977,9 @@ namespace Vars
 		CVar(NoscopeLines1, Color_t(0, 0, 0, 255), IS_VISUAL);
 		CVar(NoscopeLines2, Color_t( 0, 0, 0, 100 ), IS_VISUAL);
 		CVar(NPC, Color_t(255, 255, 255, 255), IS_VISUAL);
-		CVar(Bomb, Color_t(255, 255, 255, 255), IS_VISUAL);
+		CVar(Bomb, Color_t(255, 75, 0, 255), IS_VISUAL);
+		CVar(Spellbook, Color_t(100, 0, 255, 255), IS_VISUAL);
+		CVar(Gargoyle, Color_t(0, 150, 75, 255), IS_VISUAL);
 	NAMESPACE_END(Colours);
 
 	// Debug options

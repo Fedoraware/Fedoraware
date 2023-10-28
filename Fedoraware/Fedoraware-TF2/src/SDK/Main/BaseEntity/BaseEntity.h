@@ -124,6 +124,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(DamageRadius, float, this, "DT_BaseGrenade", "m_DmgRadius")
 		M_DYNVARGET(Streaks, int*, this, "DT_TFPlayer", "m_Shared", "m_nStreaks")
 		M_DYNVARGET(Crits, int, this, "DT_TFPlayer", "m_Shared", "tfsharedlocaldata", "m_ScoreData", "m_iCrits")
+		M_DYNVARGET(TargetPlayer, int, this, "DT_CHalloweenGiftPickup", "m_hTargetPlayer")
 
 		M_OFFSETGET(PipebombType, int, 0x8F8)												
 		M_OFFSETGET(PipebombPulsed, bool, 0x908)	//	this is incredibly fucking lazy.
