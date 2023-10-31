@@ -733,10 +733,11 @@ void CMenu::MenuVisuals()
 			break;
 		}
 
+
 		// Visuals: Chams
 		case VisualsTab::Chams:
 		{
-			if (BeginTable("VisualsChamsTable", 2))
+			if (BeginTable("VisualsChamsTable", 3))
 			{
 				/* Column 1 */
 				if (TableColumnChild("VisualsChamsCol1"))
@@ -892,68 +893,74 @@ void CMenu::MenuVisuals()
 
 					static std::vector chamOptions{
 						"Local",
-						"Friends",
-						"Enemies",
-						"Teammates",
-						"Target"
+							"Friends",
+							"Enemies",
+							"Teammates",
+							"Target"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
-						"Fresnel Glow",
-						"Wireframe Glow"
+							"Fresnel Glow",
+							"Wireframe Glow"
 					};
 
 					static int currentSelected = 0; //
 					Chams_t& currentStruct = ([&]() -> Chams_t&
-											  {
-												  switch (currentSelected)
-												  {
-													  case 0:
-													  {
-														  return Vars::Chams::Buildings::Local.Value;
-													  }
-													  case 1:
-													  {
-														  return Vars::Chams::Buildings::Friend.Value;
-													  }
-													  case 2:
-													  {
-														  return Vars::Chams::Buildings::Enemy.Value;
-													  }
-													  case 3:
-													  {
-														  return Vars::Chams::Buildings::Team.Value;
-													  }
-													  case 4:
-													  {
-														  return Vars::Chams::Buildings::Target.Value;
-													  }
-												  }
+						{
+							switch (currentSelected)
+							{
+							case 0:
+							{
+								return Vars::Chams::Buildings::Local.Value;
+							}
+							case 1:
+							{
+								return Vars::Chams::Buildings::Friend.Value;
+							}
+							case 2:
+							{
+								return Vars::Chams::Buildings::Enemy.Value;
+							}
+							case 3:
+							{
+								return Vars::Chams::Buildings::Team.Value;
+							}
+							case 4:
+							{
+								return Vars::Chams::Buildings::Target.Value;
+							}
+							}
 
-												  return Vars::Chams::Buildings::Local.Value;
-											  }());
+							return Vars::Chams::Buildings::Local.Value;
+						}());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
 					WCombo("Config", &currentSelected, chamOptions);
+						{
+							ColorPickerL("Colour", currentStruct.colour, 1);
+							MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
+
+							WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
+								if (currentStruct.drawMaterial == 7)
+							{
+								ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
+							}
+							if (currentStruct.drawMaterial == 9)
+							{
+								MaterialCombo("Custom Material", &currentStruct.customMaterial);
+							}
+							WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
+							ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
+							WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
+							WToggle("Pulse Glow", &currentStruct.overlayPulse);
+							WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						}
+				} EndChild();
+
+				/* Column 3 */
+				if (TableColumnChild("VisualsChamsCol3"))
+				{
 					{
-						ColorPickerL("Colour", currentStruct.colour, 1);
-						MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
-
-						WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
-						if (currentStruct.drawMaterial == 7)
-						{
-							ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
-						}
-						if (currentStruct.drawMaterial == 9)
-						{
-							MaterialCombo("Custom Material", &currentStruct.customMaterial);
-						}
-						WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
-						ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
-						WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
-						WToggle("Pulse Glow", &currentStruct.overlayPulse);
-						WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-
 						SectionTitle("World Chams");
 						WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
 
