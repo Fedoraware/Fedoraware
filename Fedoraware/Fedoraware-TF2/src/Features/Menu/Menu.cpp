@@ -1169,14 +1169,14 @@ void CMenu::MenuVisuals()
 					WSlider("Field of view", &Vars::Visuals::FieldOfView.Value, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
 					WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 					MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
+					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
+						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
+						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
 					HelpMarker("Select which types of modulation you want to enable");
 					if (WCombo("Screen Overlay", &Vars::Visuals::VisualOverlay.Value, { "None", "Fire", "Jarate", "Bleed", "Stealth", "Dodge" }))
 					{
 						I::ViewRender->SetScreenOverlayMaterial(nullptr);
 					}
-					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
-						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
-						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
 					{
 						G::ShouldUpdateMaterialCache = true;
 					}
@@ -1206,8 +1206,6 @@ void CMenu::MenuVisuals()
 					}
 					WToggle("Particles IgnoreZ", &Vars::Visuals::ParticlesIgnoreZ.Value); HelpMarker("All particles will draw through walls");
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value); HelpMarker("Attempt to remove all visuals in screenshots");
-					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
-					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
 					WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
 					WToggle("No prop fade", &Vars::Visuals::NoStaticPropFade.Value); HelpMarker("Make props not fade");
 					WSlider("Fade Out Team FoV", &Vars::Visuals::FadeOutFoV.Value, 0.f, 60.f); HelpMarker("Fades teammates within FoV (0 means disabled)");
@@ -1599,6 +1597,8 @@ void CMenu::MenuVisuals()
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
 					WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.Value); HelpMarker("Enables the killstreak counter on any weapon");
 					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
+					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
+					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
 				} EndChild();
 
 				EndTable();
