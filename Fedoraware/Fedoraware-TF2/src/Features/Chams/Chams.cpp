@@ -162,6 +162,10 @@ void CChams::RenderEnts(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 	{
 		Entities.push_back(Entity);
 	}
+	for (const auto& Entity : g_EntityCache.GetGroup(EGroupType::WORLD_CREDITS))
+	{
+		Entities.push_back(Entity);
+	}
 
 	if (Entities.empty())
 		return;

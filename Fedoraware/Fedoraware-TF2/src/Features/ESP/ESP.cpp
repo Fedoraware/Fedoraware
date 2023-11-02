@@ -1453,7 +1453,7 @@ void CESP::DrawWorld() const
 		}
 	}
 
-	for (const auto& Gargoyles : g_EntityCache.GetGroup(EGroupType::WORLD_SPELLBOOK))
+	for (const auto& Gargoyles : g_EntityCache.GetGroup(EGroupType::WORLD_GARGOYLE))
 	{
 		// distance things
 		const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
@@ -1520,6 +1520,81 @@ void CESP::DrawWorld() const
 			if (Vars::ESP::World::GargoyleDistance.Value)
 			{
 				const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
+	for (const auto& Credits : g_EntityCache.GetGroup(EGroupType::WORLD_CREDITS))
+	{
+		// distance things
+		const Vec3 vDelta = Credits->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Credits, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::CreditName.Value)
+			{
+				const wchar_t* szName = L"Credits";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Credits, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::CreditLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Credits->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Credits, true));
+			}
+
+			switch (Vars::ESP::World::CreditBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Credits, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Credits, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Credits, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::CreditDistance.Value)
+			{
+				const Vec3 vDelta = Credits->GetAbsOrigin() - pLocal->GetAbsOrigin();
 				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
 				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
 

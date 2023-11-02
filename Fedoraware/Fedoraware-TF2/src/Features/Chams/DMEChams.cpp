@@ -374,6 +374,10 @@ int GetType(int EntIndex)
 		{
 			return 13;
 		}
+		case ETFClassID::CCurrencyPack:
+		{
+			return 14;
+		}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
 	if (pWeapon)
@@ -528,6 +532,10 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 		case 13:
 		{
 			return Vars::Chams::World::NPCs.Value;
+		}
+		case 14:
+		{
+			return Vars::Chams::World::Credits.Value;
 		}
 		default:
 			return Chams_t();

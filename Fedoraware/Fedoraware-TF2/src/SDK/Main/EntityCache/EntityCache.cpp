@@ -196,6 +196,12 @@ void CEntityCache::Fill()
 
 				break;
 			}
+			case ETFClassID::CCurrencyPack:
+			{
+				m_vecGroups[EGroupType::WORLD_CREDITS].push_back(pEntity);
+
+				break;
+			}
 
 			default: break;
 		}
