@@ -737,7 +737,7 @@ void CMenu::MenuVisuals()
 		// Visuals: Chams
 		case VisualsTab::Chams:
 		{
-			if (BeginTable("VisualsChamsTable", 3))
+			if (BeginTable("VisualsChamsTable",2))
 			{
 				/* Column 1 */
 				if (TableColumnChild("VisualsChamsCol1"))
@@ -891,7 +891,7 @@ void CMenu::MenuVisuals()
 					SectionTitle("Building Chams");
 					WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.Value); HelpMarker("Building chams master switch");
 
-					static std::vector chamOptions{
+					static std::vector chamOptionsBuildings{
 						"Local",
 						"Friends",
 						"Enemies",
@@ -935,7 +935,7 @@ void CMenu::MenuVisuals()
 						}());
 					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
-					WCombo("Config", &currentSelected, chamOptions);
+					WCombo("Config", &currentSelected, chamOptionsBuildings);
 						{
 							ColorPickerL("Colour", currentStruct.colour, 1);
 							MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
@@ -964,7 +964,7 @@ void CMenu::MenuVisuals()
 						SectionTitle("World Chams");
 						WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
 
-						static std::vector chamOptions{
+						static std::vector chamOptionsWorld{
 							"Healthpacks",
 							"Ammopacks",
 							"Projectiles",
@@ -1013,7 +1013,7 @@ void CMenu::MenuVisuals()
 							}());
 						static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
 
-						WCombo("Config", &currentSelected, chamOptions);
+						WCombo("Config", &currentSelected, chamOptionsWorld);
 						{
 							ColorPickerL("Colour", currentStruct.colour, 1);
 							MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
