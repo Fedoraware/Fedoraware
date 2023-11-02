@@ -45,4 +45,4 @@ A free and open-source training software for Team Fortress 2, based on [SE-Owned
 - [JAGNEmk](https://github.com/JAGNEmk)
 - [r00t](https://github.com/l-r00t-l)
 - [lykanfox](https://github.com/lykanfox)
-- ...and all other [contibutors](/../../graphs/contributors)!
+- ...and all other [contributors](/../../graphs/contributors)!
