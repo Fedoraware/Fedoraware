@@ -733,6 +733,7 @@ void CMenu::MenuVisuals()
 			break;
 		}
 
+
 		// Visuals: Chams
 		case VisualsTab::Chams:
 		{
@@ -746,36 +747,36 @@ void CMenu::MenuVisuals()
 
 					static std::vector chamOptions{
 						"Local",
-							"FakeAngles",
-							"Friends",
-							"Enemies",
-							"Teammates",
-							"Target",
-							"Ragdolls",
-							"ViewModel",
-							"VM Weapon"
+						"FakeAngles",
+						"Friends",
+						"Enemies",
+						"Teammates",
+						"Target",
+						"Ragdolls",
+						"ViewModel",
+						"VM Weapon"
 					};
 					static std::vector DMEProxyMaterials{
 						"None",
-							"Spectrum Splattered",
-							"Electro Skulls",
-							"Jazzy",
-							"Frozen Aurora",
-							"Hana",
-							"IDK",
-							"Ghost Thing",
-							"Flames",
-							"Spook Wood",
-							"Edgy",
-							"Starlight Serenity",
-							"Fade",
-							"Bad to the Bone",
-							"Skulls and Roses"
+						"Spectrum Splattered",
+						"Electro Skulls",
+						"Jazzy",
+						"Frozen Aurora",
+						"Hana",
+						"IDK",
+						"Ghost Thing",
+						"Flames",
+						"Spook Wood",
+						"Edgy",
+						"Starlight Serenity",
+						"Fade",
+						"Bad to the Bone",
+						"Skulls and Roses"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
-							"Fresnel Glow",
-							"Wireframe Glow"
+						"Fresnel Glow",
+						"Wireframe Glow"
 					};
 
 					static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.ragdolls 6.hands 7.weapon
@@ -870,14 +871,14 @@ void CMenu::MenuVisuals()
 
 					static std::vector backtrackMaterial{
 						"Original",
-							"Shaded",
-							"Shiny",
-							"Flat",
-							"Wireframe shaded",
-							"Wireframe shiny",
-							"Wireframe flat",
-							"Fresnel",
-							"Brick"
+						"Shaded",
+						"Shiny",
+						"Flat",
+						"Wireframe shaded",
+						"Wireframe shiny",
+						"Wireframe flat",
+						"Fresnel",
+						"Brick"
 					};
 					WCombo("Backtrack material", &Vars::Backtrack::BtChams::Material.Value, backtrackMaterial);
 					WToggle("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.Value); HelpMarker("Draws them through walls");
@@ -890,145 +891,144 @@ void CMenu::MenuVisuals()
 					SectionTitle("Building Chams");
 					WToggle("Building chams###BuildingChamsBox", &Vars::Chams::Buildings::Active.Value); HelpMarker("Building chams master switch");
 
-					static std::vector chamOptions{
+					static std::vector chamOptionsBuilds{
 						"Local",
 						"Friends",
 						"Enemies",
 						"Teammates",
 						"Target"
 					};
-					static std::vector dmeGlowMaterial{
+					static std::vector dmeGlowMaterialBuilds{
 						"None",
 						"Fresnel Glow",
 						"Wireframe Glow"
 					};
 
-					static int currentSelected = 0; //
-					Chams_t& currentStruct = ([&]() -> Chams_t&
-											  {
-												  switch (currentSelected)
-												  {
-													  case 0:
-													  {
-														  return Vars::Chams::Buildings::Local.Value;
-													  }
-													  case 1:
-													  {
-														  return Vars::Chams::Buildings::Friend.Value;
-													  }
-													  case 2:
-													  {
-														  return Vars::Chams::Buildings::Enemy.Value;
-													  }
-													  case 3:
-													  {
-														  return Vars::Chams::Buildings::Team.Value;
-													  }
-													  case 4:
-													  {
-														  return Vars::Chams::Buildings::Target.Value;
-													  }
-												  }
-
-												  return Vars::Chams::Buildings::Local.Value;
-											  }());
-					static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
-
-					WCombo("Config", &currentSelected, chamOptions);
-					{
-						ColorPickerL("Colour", currentStruct.colour, 1);
-						MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
-
-						WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
-						if (currentStruct.drawMaterial == 7)
+					static int currentSelectedBuilds = 0; //
+					Chams_t& currentStructBuilds = ([&]() -> Chams_t&
 						{
-							ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
-						}
-						if (currentStruct.drawMaterial == 9)
-						{
-							MaterialCombo("Custom Material", &currentStruct.customMaterial);
-						}
-						WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
-						ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
-						WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
-						WToggle("Pulse Glow", &currentStruct.overlayPulse);
-						WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-
-						SectionTitle("World Chams");
-						WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
-
-						static std::vector chamOptions{
-							"Healthpacks",
-								"Ammopacks",
-								"Projectiles",
-								"Spellbooks",
-								"Gargoyles",
-								"NPCs"
-						};
-						static std::vector dmeGlowMaterial{
-							"None",
-								"Fresnel Glow",
-								"Wireframe Glow"
-						};
-
-						static int currentSelected = 0; //
-						Chams_t& currentStruct = ([&]() -> Chams_t&
+							switch (currentSelectedBuilds)
 							{
-								switch (currentSelected)
-								{
-								case 0:
-								{
-									return Vars::Chams::World::Health.Value;
-								}
-								case 1:
-								{
-									return Vars::Chams::World::Ammo.Value;
-								}
-								case 2:
-								{
-									return Vars::Chams::World::Projectiles.Value;
-								}
-								case 3:
-								{
-									return Vars::Chams::World::Spellbooks.Value;
-								}
-								case 4:
-								{
-									return Vars::Chams::World::Gargoyles.Value;
-								}
-								case 5:
-								{
-									return Vars::Chams::World::NPCs.Value;
-								}
-								}
+							case 0:
+							{
+								return Vars::Chams::Buildings::Local.Value;
+							}
+							case 1:
+							{
+								return Vars::Chams::Buildings::Friend.Value;
+							}
+							case 2:
+							{
+								return Vars::Chams::Buildings::Enemy.Value;
+							}
+							case 3:
+							{
+								return Vars::Chams::Buildings::Team.Value;
+							}
+							case 4:
+							{
+								return Vars::Chams::Buildings::Target.Value;
+							}
+							}
 
+							return Vars::Chams::Buildings::Local.Value;
+						}());
+					static std::vector DMEChamMaterialsBuilds{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
+
+					WCombo("Config###ChamsConfBuilds", &currentSelectedBuilds, chamOptionsBuilds);
+						{
+							ColorPickerL("Colour", currentStructBuilds.colour, 1);
+							MultiCombo({ "Active", "Obstructed" }, { &currentStructBuilds.chamsActive, &currentStructBuilds.showObstructed }, "Options");
+
+							WCombo("Material", &currentStructBuilds.drawMaterial, DMEChamMaterialsBuilds); HelpMarker("Which material the chams will apply to the player");
+								if (currentStructBuilds.drawMaterial == 7)
+							{
+								ColorPickerL("Fresnel base colour", currentStructBuilds.fresnelBase, 1);
+							}
+							if (currentStructBuilds.drawMaterial == 9)
+							{
+								MaterialCombo("Custom Material", &currentStructBuilds.customMaterial);
+							}
+							WCombo("Glow Overlay", &currentStructBuilds.overlayType, dmeGlowMaterialBuilds);
+							ColorPickerL("Glow Colour", currentStructBuilds.overlayColour, 1);
+							WToggle("Rainbow Glow", &currentStructBuilds.overlayRainbow);
+							WToggle("Pulse Glow", &currentStructBuilds.overlayPulse);
+							WSlider("Glow Reduction", &currentStructBuilds.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						}
+
+					SectionTitle("World Chams");
+					WToggle("World chams###woldchamsbut", &Vars::Chams::World::Active.Value);
+
+					static std::vector chamOptionsWorld{
+						"Healthpacks",
+						"Ammopacks",
+						"Projectiles",
+						"Spellbooks",
+						"Gargoyles",
+						"NPCs"
+					};
+					static std::vector dmeGlowMaterialWorld{
+						"None",
+						"Fresnel Glow",
+						"Wireframe Glow"
+					};
+
+					static int currentSelectedWorld = 0; //
+					Chams_t& currentStructWorld = ([&]() -> Chams_t&
+						{
+							switch (currentSelectedWorld)
+							{
+							case 0:
+							{
 								return Vars::Chams::World::Health.Value;
-							}());
-						static std::vector DMEChamMaterials{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
+							}
+							case 1:
+							{
+								return Vars::Chams::World::Ammo.Value;
+							}
+							case 2:
+							{
+								return Vars::Chams::World::Projectiles.Value;
+							}
+							case 3:
+							{
+								return Vars::Chams::World::Spellbooks.Value;
+							}
+							case 4:
+							{
+								return Vars::Chams::World::Gargoyles.Value;
+							}
+							case 5:
+							{
+								return Vars::Chams::World::NPCs.Value;
+							}
+							}
 
-						WCombo("Config", &currentSelected, chamOptions);
+							return Vars::Chams::World::Health.Value;
+						}());
+					static std::vector DMEChamMaterialsWorld{ "Original", "Shaded", "Shiny", "Flat", "Wireframe shaded", "Wireframe shiny", "Wireframe flat", "Fresnel", "Brick", "Custom" };
+
+					WCombo("Config###ChamsConfWorld", &currentSelectedWorld, chamOptionsWorld);
+					{
+						ColorPickerL("Colour", currentStructWorld.colour, 1);
+						MultiCombo({ "Active", "Obstructed" }, { &currentStructWorld.chamsActive, &currentStructWorld.showObstructed }, "Options");
+
+						WCombo("Material", &currentStructWorld.drawMaterial, DMEChamMaterialsWorld); HelpMarker("Which material the chams will apply to the player");
+						if (currentStructWorld.drawMaterial == 7)
 						{
-							ColorPickerL("Colour", currentStruct.colour, 1);
-							MultiCombo({ "Active", "Obstructed" }, { &currentStruct.chamsActive, &currentStruct.showObstructed }, "Options");
-
-							WCombo("Material", &currentStruct.drawMaterial, DMEChamMaterials); HelpMarker("Which material the chams will apply to the player");
-							if (currentStruct.drawMaterial == 7)
-							{
-								ColorPickerL("Fresnel base colour", currentStruct.fresnelBase, 1);
-							}
-							if (currentStruct.drawMaterial == 9)
-							{
-								MaterialCombo("Custom Material", &currentStruct.customMaterial);
-							}
-							WCombo("Glow Overlay", &currentStruct.overlayType, dmeGlowMaterial);
-							ColorPickerL("Glow Colour", currentStruct.overlayColour, 1);
-							WToggle("Rainbow Glow", &currentStruct.overlayRainbow);
-							WToggle("Pulse Glow", &currentStruct.overlayPulse);
-							WSlider("Glow Reduction", &currentStruct.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							ColorPickerL("Fresnel base colour", currentStructWorld.fresnelBase, 1);
 						}
+						if (currentStructWorld.drawMaterial == 9)
+						{
+							MaterialCombo("Custom Material", &currentStructWorld.customMaterial);
+						}
+						WCombo("Glow Overlay", &currentStructWorld.overlayType, dmeGlowMaterialWorld);
+						ColorPickerL("Glow Colour", currentStructWorld.overlayColour, 1);
+						WToggle("Rainbow Glow", &currentStructWorld.overlayRainbow);
+						WToggle("Pulse Glow", &currentStructWorld.overlayPulse);
+						WSlider("Glow Reduction", &currentStructWorld.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 					}
 				} EndChild();
-
 				EndTable();
 			}
 			break;
@@ -1169,14 +1169,14 @@ void CMenu::MenuVisuals()
 					WSlider("Field of view", &Vars::Visuals::FieldOfView.Value, 70, 150, "%d"); HelpMarker("How many degrees of field of vision you would like");
 					WCombo("Vision modifiers", &Vars::Visuals::VisionModifier.Value, { "Off", "Pyrovision", "Halloween", "Romevision" }); HelpMarker("Vision modifiers");
 					MultiCombo({ "World", "Sky", "Prop Wireframe" }, { &Vars::Visuals::WorldModulation.Value, &Vars::Visuals::SkyModulation.Value, &Vars::Visuals::PropWireframe.Value }, "Modulations");
+					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
+						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
+						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
 					HelpMarker("Select which types of modulation you want to enable");
 					if (WCombo("Screen Overlay", &Vars::Visuals::VisualOverlay.Value, { "None", "Fire", "Jarate", "Bleed", "Stealth", "Dodge" }))
 					{
 						I::ViewRender->SetScreenOverlayMaterial(nullptr);
 					}
-					if (ColorPickerL("World modulation colour", Vars::Colours::WorldModulation.Value) ||
-						ColorPickerL("Sky modulation colour", Vars::Colours::SkyModulation.Value, 1) ||
-						ColorPickerL("Prop modulation colour", Vars::Colours::StaticPropModulation.Value, 2))
 					{
 						G::ShouldUpdateMaterialCache = true;
 					}
@@ -1206,8 +1206,6 @@ void CMenu::MenuVisuals()
 					}
 					WToggle("Particles IgnoreZ", &Vars::Visuals::ParticlesIgnoreZ.Value); HelpMarker("All particles will draw through walls");
 					WToggle("Clean Screenshots", &Vars::Visuals::CleanScreenshots.Value); HelpMarker("Attempt to remove all visuals in screenshots");
-					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
-					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
 					WToggle("Post processing", &Vars::Visuals::DoPostProcessing.Value); HelpMarker("Toggle post processing effects");
 					WToggle("No prop fade", &Vars::Visuals::NoStaticPropFade.Value); HelpMarker("Make props not fade");
 					WSlider("Fade Out Team FoV", &Vars::Visuals::FadeOutFoV.Value, 0.f, 60.f); HelpMarker("Fades teammates within FoV (0 means disabled)");
@@ -1341,28 +1339,28 @@ void CMenu::MenuVisuals()
 					SectionTitle("Skybox & Textures");
 					static std::vector skyNames{
 						"Custom",
-							"sky_tf2_04",
-							"sky_upward",
-							"sky_dustbowl_01",
-							"sky_goldrush_01",
-							"sky_granary_01",
-							"sky_well_01",
-							"sky_gravel_01",
-							"sky_badlands_01",
-							"sky_hydro_01",
-							"sky_night_01",
-							"sky_nightfall_01",
-							"sky_trainyard_01",
-							"sky_stormfront_01",
-							"sky_morningsnow_01",
-							"sky_alpinestorm_01",
-							"sky_harvest_01",
-							"sky_harvest_night_01",
-							"sky_halloween",
-							"sky_halloween_night_01",
-							"sky_halloween_night2014_01",
-							"sky_island_01",
-							"sky_rainbow_01"
+						"sky_tf2_04",
+						"sky_upward",
+						"sky_dustbowl_01",
+						"sky_goldrush_01",
+						"sky_granary_01",
+						"sky_well_01",
+						"sky_gravel_01",
+						"sky_badlands_01",
+						"sky_hydro_01",
+						"sky_night_01",
+						"sky_nightfall_01",
+						"sky_trainyard_01",
+						"sky_stormfront_01",
+						"sky_morningsnow_01",
+						"sky_alpinestorm_01",
+						"sky_harvest_01",
+						"sky_harvest_night_01",
+						"sky_halloween",
+						"sky_halloween_night_01",
+						"sky_halloween_night2014_01",
+						"sky_island_01",
+						"sky_rainbow_01"
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
@@ -1599,6 +1597,8 @@ void CMenu::MenuVisuals()
 					WToggle("On Screen Ping", &Vars::Visuals::DrawOnScreenPing.Value); HelpMarker("Render your ping and your scoreboard ping on the screen");
 					WToggle("Killstreak weapon", &Vars::Misc::KillstreakWeapon.Value); HelpMarker("Enables the killstreak counter on any weapon");
 					WToggle("Noscope lines", &Vars::Visuals::ScopeLines.Value); HelpMarker("Will draw a custom overlay");
+					ColorPickerL("Inner line color", Vars::Colours::NoscopeLines1.Value);
+					ColorPickerL("Outer line color", Vars::Colours::NoscopeLines2.Value, 1);
 				} EndChild();
 
 				EndTable();
