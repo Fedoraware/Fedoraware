@@ -747,36 +747,36 @@ void CMenu::MenuVisuals()
 
 					static std::vector chamOptions{
 						"Local",
-							"FakeAngles",
-							"Friends",
-							"Enemies",
-							"Teammates",
-							"Target",
-							"Ragdolls",
-							"ViewModel",
-							"VM Weapon"
+						"FakeAngles",
+						"Friends",
+						"Enemies",
+						"Teammates",
+						"Target",
+						"Ragdolls",
+						"ViewModel",
+						"VM Weapon"
 					};
 					static std::vector DMEProxyMaterials{
 						"None",
-							"Spectrum Splattered",
-							"Electro Skulls",
-							"Jazzy",
-							"Frozen Aurora",
-							"Hana",
-							"IDK",
-							"Ghost Thing",
-							"Flames",
-							"Spook Wood",
-							"Edgy",
-							"Starlight Serenity",
-							"Fade",
-							"Bad to the Bone",
-							"Skulls and Roses"
+						"Spectrum Splattered",
+						"Electro Skulls",
+						"Jazzy",
+						"Frozen Aurora",
+						"Hana",
+						"IDK",
+						"Ghost Thing",
+						"Flames",
+						"Spook Wood",
+						"Edgy",
+						"Starlight Serenity",
+						"Fade",
+						"Bad to the Bone",
+						"Skulls and Roses"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
-							"Fresnel Glow",
-							"Wireframe Glow"
+						"Fresnel Glow",
+						"Wireframe Glow"
 					};
 
 					static int currentSelected = 0; // 0.local 1.friends 2.enemies 3.team 4.target 5.ragdolls 6.hands 7.weapon
@@ -871,14 +871,14 @@ void CMenu::MenuVisuals()
 
 					static std::vector backtrackMaterial{
 						"Original",
-							"Shaded",
-							"Shiny",
-							"Flat",
-							"Wireframe shaded",
-							"Wireframe shiny",
-							"Wireframe flat",
-							"Fresnel",
-							"Brick"
+						"Shaded",
+						"Shiny",
+						"Flat",
+						"Wireframe shaded",
+						"Wireframe shiny",
+						"Wireframe flat",
+						"Fresnel",
+						"Brick"
 					};
 					WCombo("Backtrack material", &Vars::Backtrack::BtChams::Material.Value, backtrackMaterial);
 					WToggle("Ignore Z###BtIgnoreZ", &Vars::Backtrack::BtChams::IgnoreZ.Value); HelpMarker("Draws them through walls");
@@ -893,15 +893,15 @@ void CMenu::MenuVisuals()
 
 					static std::vector chamOptions{
 						"Local",
-							"Friends",
-							"Enemies",
-							"Teammates",
-							"Target"
+						"Friends",
+						"Enemies",
+						"Teammates",
+						"Target"
 					};
 					static std::vector dmeGlowMaterial{
 						"None",
-							"Fresnel Glow",
-							"Wireframe Glow"
+						"Fresnel Glow",
+						"Wireframe Glow"
 					};
 
 					static int currentSelected = 0; //
@@ -966,16 +966,16 @@ void CMenu::MenuVisuals()
 
 						static std::vector chamOptions{
 							"Healthpacks",
-								"Ammopacks",
-								"Projectiles",
-								"Spellbooks",
-								"Gargoyles",
-								"NPCs"
+							"Ammopacks",
+							"Projectiles",
+							"Spellbooks",
+							"Gargoyles",
+							"NPCs"
 						};
 						static std::vector dmeGlowMaterial{
 							"None",
-								"Fresnel Glow",
-								"Wireframe Glow"
+							"Fresnel Glow",
+							"Wireframe Glow"
 						};
 
 						static int currentSelected = 0; //
@@ -1348,28 +1348,28 @@ void CMenu::MenuVisuals()
 					SectionTitle("Skybox & Textures");
 					static std::vector skyNames{
 						"Custom",
-							"sky_tf2_04",
-							"sky_upward",
-							"sky_dustbowl_01",
-							"sky_goldrush_01",
-							"sky_granary_01",
-							"sky_well_01",
-							"sky_gravel_01",
-							"sky_badlands_01",
-							"sky_hydro_01",
-							"sky_night_01",
-							"sky_nightfall_01",
-							"sky_trainyard_01",
-							"sky_stormfront_01",
-							"sky_morningsnow_01",
-							"sky_alpinestorm_01",
-							"sky_harvest_01",
-							"sky_harvest_night_01",
-							"sky_halloween",
-							"sky_halloween_night_01",
-							"sky_halloween_night2014_01",
-							"sky_island_01",
-							"sky_rainbow_01"
+						"sky_tf2_04",
+						"sky_upward",
+						"sky_dustbowl_01",
+						"sky_goldrush_01",
+						"sky_granary_01",
+						"sky_well_01",
+						"sky_gravel_01",
+						"sky_badlands_01",
+						"sky_hydro_01",
+						"sky_night_01",
+						"sky_nightfall_01",
+						"sky_trainyard_01",
+						"sky_stormfront_01",
+						"sky_morningsnow_01",
+						"sky_alpinestorm_01",
+						"sky_harvest_01",
+						"sky_harvest_night_01",
+						"sky_halloween",
+						"sky_halloween_night_01",
+						"sky_halloween_night2014_01",
+						"sky_island_01",
+						"sky_rainbow_01"
 					};
 					WToggle("Skybox changer", &Vars::Visuals::SkyboxChanger.Value); HelpMarker("Will change the skybox, either to a base TF2 one or a custom one");
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
