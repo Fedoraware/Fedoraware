@@ -729,21 +729,27 @@ void CVisuals::DrawMenuRain() //brought to you by chatgpt
 	{
 		// Do gravity
 		constexpr int drift = 1.5;
-//		drop.X += Utils::RandIntSimple(-drift, drift);
+		//drop.X += Utils::RandIntSimple(-drift, drift);
 		drop.Y += drift;
 
-		// Calculate alpha
-		const float alpha = Math::MapFloat(drop.Y, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
 		// Recreate raindrops that are gone
-		if (alpha <= 0.f || drop.Y >= g_ScreenSize.h || drop.X >= g_ScreenSize.w || drop.X <= 0)
+		if (drop.Y >= g_ScreenSize.h / 2.f || drop.X >= g_ScreenSize.w || drop.X <= 0)
 		{
 			drop.X = Utils::RandIntSimple(0, g_ScreenSize.w);
 			drop.Y = Utils::RandIntSimple(0, 100);
 			drop.length = Utils::RandFloatSimple(10.f, 20.f);
 		}
+		// Calculate alpha and apply fading effect
+		float midleft = Math::MapFloat(drop.Y, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
 
-		Color_t dropColor = { 135, 206, 250, static_cast<byte>(alpha * 255.0f) }; // Light blue color for rain
-		g_Draw.Line(drop.X, drop.Y, drop.X, drop.Y + drop.length, dropColor);
+		for (int i = 0; i < drop.length; i++)
+		{
+			float alpha = midleft - static_cast<float>(i) / drop.length;
+			alpha = std::max(0.0f, alpha); // Ensure alpha is not negative
+
+			Color_t dropColor = { 135, 206, 250, static_cast<byte>(alpha * 255.0f) }; // Light blue color for rain
+			g_Draw.Line(drop.X, drop.Y - i, drop.X, drop.Y - i + 1, dropColor);
+		}
 	}
 }
 
