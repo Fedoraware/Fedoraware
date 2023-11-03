@@ -937,23 +937,23 @@ void CMenu::MenuVisuals()
 
 					WCombo("Config###ChamsConfBuilds", &currentSelectedBuilds, chamOptionsBuilds);
 						{
-							ColorPickerL("Colour", currentStructBuilds.colour, 1);
-							MultiCombo({ "Active", "Obstructed" }, { &currentStructBuilds.chamsActive, &currentStructBuilds.showObstructed }, "Options");
+							ColorPickerL("Colour###ChamsClrBuilds", currentStructBuilds.colour, 1);
+							MultiCombo({ "Active", "Obstructed" }, { &currentStructBuilds.chamsActive, &currentStructBuilds.showObstructed }, "Options###ChamsViewOptionsBuilds");
 
-							WCombo("Material", &currentStructBuilds.drawMaterial, DMEChamMaterialsBuilds); HelpMarker("Which material the chams will apply to the player");
+							WCombo("Material###ChamsMaterialsBuilds", &currentStructBuilds.drawMaterial, DMEChamMaterialsBuilds); HelpMarker("Which material the chams will apply to the player");
 								if (currentStructBuilds.drawMaterial == 7)
 							{
-								ColorPickerL("Fresnel base colour", currentStructBuilds.fresnelBase, 1);
+								ColorPickerL("Fresnel base colour###ChamsFrsBaseClrBuilds", currentStructBuilds.fresnelBase, 1);
 							}
 							if (currentStructBuilds.drawMaterial == 9)
 							{
-								MaterialCombo("Custom Material", &currentStructBuilds.customMaterial);
+								MaterialCombo("Custom Material###ChamsCustomMaterialBuilds", &currentStructBuilds.customMaterial);
 							}
-							WCombo("Glow Overlay", &currentStructBuilds.overlayType, dmeGlowMaterialBuilds);
-							ColorPickerL("Glow Colour", currentStructBuilds.overlayColour, 1);
-							WToggle("Rainbow Glow", &currentStructBuilds.overlayRainbow);
-							WToggle("Pulse Glow", &currentStructBuilds.overlayPulse);
-							WSlider("Glow Reduction", &currentStructBuilds.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							WCombo("Glow Overlay###ChamsGlowOverlayBuilds", &currentStructBuilds.overlayType, dmeGlowMaterialBuilds);
+							ColorPickerL("Glow Colour###ChamsGlowClrBuilds", currentStructBuilds.overlayColour, 1);
+							WToggle("Rainbow Glow###ChamsRnbwGlowBuilds", &currentStructBuilds.overlayRainbow);
+							WToggle("Pulse Glow###ChamsPulseGlowBuilds", &currentStructBuilds.overlayPulse);
+							WSlider("Glow Reduction###ChamsGlowRedBuilds", &currentStructBuilds.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						}
 
 					SectionTitle("World Chams");
@@ -1010,23 +1010,23 @@ void CMenu::MenuVisuals()
 
 					WCombo("Config###ChamsConfWorld", &currentSelectedWorld, chamOptionsWorld);
 					{
-						ColorPickerL("Colour", currentStructWorld.colour, 1);
-						MultiCombo({ "Active", "Obstructed" }, { &currentStructWorld.chamsActive, &currentStructWorld.showObstructed }, "Options");
+						ColorPickerL("Colour###ChamsClrWorld", currentStructWorld.colour, 1);
+						MultiCombo({ "Active", "Obstructed" }, { &currentStructWorld.chamsActive, &currentStructWorld.showObstructed }, "Options###ChamsViewOptionsWorld");
 
-						WCombo("Material", &currentStructWorld.drawMaterial, DMEChamMaterialsWorld); HelpMarker("Which material the chams will apply to the player");
+						WCombo("Material###ChamsMaterialsWorld", &currentStructWorld.drawMaterial, DMEChamMaterialsWorld); HelpMarker("Which material the chams will apply to the player");
 						if (currentStructWorld.drawMaterial == 7)
 						{
-							ColorPickerL("Fresnel base colour", currentStructWorld.fresnelBase, 1);
+							ColorPickerL("Fresnel base colour###ChamsFrsBaseClrWorld", currentStructWorld.fresnelBase, 1);
 						}
 						if (currentStructWorld.drawMaterial == 9)
 						{
-							MaterialCombo("Custom Material", &currentStructWorld.customMaterial);
+							MaterialCombo("Custom Material###ChamsCustomMaterialWorld", &currentStructWorld.customMaterial);
 						}
-						WCombo("Glow Overlay", &currentStructWorld.overlayType, dmeGlowMaterialWorld);
-						ColorPickerL("Glow Colour", currentStructWorld.overlayColour, 1);
-						WToggle("Rainbow Glow", &currentStructWorld.overlayRainbow);
-						WToggle("Pulse Glow", &currentStructWorld.overlayPulse);
-						WSlider("Glow Reduction", &currentStructWorld.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						WCombo("Glow Overlay###ChamsOverlayWorld", &currentStructWorld.overlayType, dmeGlowMaterialWorld);
+						ColorPickerL("Glow Colour###ChamsGlowClrWorld", currentStructWorld.overlayColour, 1);
+						WToggle("Rainbow Glow###ChamsRnbwGlowWorld", &currentStructWorld.overlayRainbow);
+						WToggle("Pulse Glow###ChamsPulseGlowWorld", &currentStructWorld.overlayPulse);
+						WSlider("Glow Reduction###ChamsGlowRedWorld", &currentStructWorld.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 					}
 				} EndChild();
 				EndTable();
