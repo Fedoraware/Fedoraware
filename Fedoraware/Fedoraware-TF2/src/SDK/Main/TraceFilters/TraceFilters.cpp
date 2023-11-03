@@ -48,26 +48,25 @@ bool CTraceFilterProjectile::ShouldHitEntity(void* pEntityHandle, int nContentsM
 		case ETFClassID::CFuncRespawnRoomVisualizer:
 		case ETFClassID::CSniperDot:
 		case ETFClassID::CTFReviveMarker:
-		case ETFClassID::CTFProjectile_ThrowableBreadMonster:
-		case ETFClassID::CTFProjectile_ThrowableBrick:
-		case ETFClassID::CTFProjectile_ThrowableRepel:
-		case ETFClassID::CTFProjectile_Throwable:
-		case ETFClassID::CTFThrowable:
-		case ETFClassID::CTFProjectile_MechanicalArmOrb:
-		case ETFClassID::CTFProjectile_JarGas:
-		case ETFClassID::CTFProjectile_Cleaver:
-		case ETFClassID::CTFProjectile_JarMilk:
-		case ETFClassID::CTFProjectile_Jar:
-		case ETFClassID::CTFGrenadePipebombProjectile:
-		case ETFClassID::CTFBall_Ornament:
-		case ETFClassID::CTFStunBall:
-		case ETFClassID::CTFProjectile_EnergyRing:
 		case ETFClassID::CTFProjectile_Rocket:
-		case ETFClassID::CTFProjectile_Flare:
-		case ETFClassID::CTFProjectile_EnergyBall:
-		case ETFClassID::CTFProjectile_GrapplingHook:
-		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_SentryRocket:
+		case ETFClassID::CTFGrenadePipebombProjectile:
+		case ETFClassID::CTFProjectile_Jar:
+		case ETFClassID::CTFProjectile_JarGas:
+		case ETFClassID::CTFProjectile_JarMilk:
+		case ETFClassID::CTFProjectile_Throwable:
+		case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+		case ETFClassID::CTFStunBall:
+		case ETFClassID::CTFBall_Ornament:
+		case ETFClassID::CTFProjectile_Cleaver:
 		case ETFClassID::CTFProjectile_Arrow:
+		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_Flare:
+		case ETFClassID::CTFProjectile_BallOfFire:
+		case ETFClassID::CTFProjectile_GrapplingHook:
+		case ETFClassID::CTFProjectile_EnergyBall:
+		case ETFClassID::CTFProjectile_EnergyRing:
+		case ETFClassID::CTFProjectile_MechanicalArmOrb:
 		case ETFClassID::CTFProjectile_SpellKartBats:
 		case ETFClassID::CTFProjectile_SpellKartOrb:
 		case ETFClassID::CTFProjectile_SpellLightningOrb:
@@ -80,8 +79,6 @@ bool CTraceFilterProjectile::ShouldHitEntity(void* pEntityHandle, int nContentsM
 		case ETFClassID::CTFProjectile_SpellSpawnZombie:
 		case ETFClassID::CTFProjectile_SpellBats:
 		case ETFClassID::CTFProjectile_SpellFireball:
-		case ETFClassID::CTFProjectile_BallOfFire:
-		case ETFClassID::CTFProjectile_SentryRocket:
 			return false;
 	}
 
