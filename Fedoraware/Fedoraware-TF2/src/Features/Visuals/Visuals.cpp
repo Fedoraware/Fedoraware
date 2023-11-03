@@ -701,6 +701,52 @@ void CVisuals::DrawMenuSnow()
 	}
 }
 
+void CVisuals::DrawMenuRain() //brought to you by chatgpt
+{
+	// Rain
+	struct RainDropT
+	{
+		int X;
+		int Y;
+		float length;
+	};
+
+	static std::vector<RainDropT> vRainDrops;
+	constexpr int rainCount = 200;
+
+	static bool bInit = false;
+	if (!bInit)
+	{
+		for (int i = 0; i < rainCount; i++)
+		{
+			vRainDrops.emplace_back(Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f), Utils::RandFloatSimple(10.f, 20.f));
+		}
+		bInit = true;
+	}
+
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+	for (auto& drop : vRainDrops)
+	{
+		// Do gravity
+		constexpr int drift = 1.5;
+//		drop.X += Utils::RandIntSimple(-drift, drift);
+		drop.Y += drift;
+
+		// Calculate alpha
+		const float alpha = Math::MapFloat(drop.Y, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
+		// Recreate raindrops that are gone
+		if (alpha <= 0.f || drop.Y >= g_ScreenSize.h || drop.X >= g_ScreenSize.w || drop.X <= 0)
+		{
+			drop.X = Utils::RandIntSimple(0, g_ScreenSize.w);
+			drop.Y = Utils::RandIntSimple(0, 100);
+			drop.length = Utils::RandFloatSimple(10.f, 20.f);
+		}
+
+		Color_t dropColor = { 135, 206, 250, static_cast<byte>(alpha * 255.0f) }; // Light blue color for rain
+		g_Draw.Line(drop.X, drop.Y, drop.X, drop.Y + drop.length, dropColor);
+	}
+}
+
 void CVisuals::DrawPredictionLine()
 {
 	if (!G::PredictedPos.IsZero())

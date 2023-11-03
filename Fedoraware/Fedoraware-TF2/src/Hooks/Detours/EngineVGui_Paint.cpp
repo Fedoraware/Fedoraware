@@ -96,6 +96,11 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 					{
 						F::Visuals.DrawMenuSnow();
 					}
+
+					if (Vars::Menu::DrawRain.Value)
+					{
+						F::Visuals.DrawMenuRain();
+					}
 				}
 			}
 
