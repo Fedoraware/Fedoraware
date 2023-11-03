@@ -148,9 +148,7 @@ int BulletDangerValue(CBaseEntity* pPatient)
 		}
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Arrow &&
-			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyRing &&
-			pProjectile->GetClassID() != ETFClassID::CTFProjectile_Cleaver &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_HealingBolt &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_Flare)
 		{
@@ -232,6 +230,7 @@ int FireDangerValue(CBaseEntity* pPatient)
 		}
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_BallOfFire &&
+			pProjectile->GetClassID() != ETFClassID::CTFProjectile_Flare &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_SpellFireball)
 		{
 			continue;
@@ -277,6 +276,7 @@ int BlastDangerValue(CBaseEntity* pPatient)
 		}
 
 		if (pProjectile->GetClassID() != ETFClassID::CTFProjectile_Rocket &&
+			pProjectile->GetClassID() != ETFClassID::CTFProjectile_EnergyBall &&
 			pProjectile->GetClassID() != ETFClassID::CTFProjectile_SentryRocket &&
 			pProjectile->GetClassID() != ETFClassID::CTFGrenadePipebombProjectile)
 		{
