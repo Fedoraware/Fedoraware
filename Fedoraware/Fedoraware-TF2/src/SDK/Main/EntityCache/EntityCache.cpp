@@ -89,6 +89,7 @@ void CEntityCache::Fill()
 			case ETFClassID::CObjectSentrygun:
 			case ETFClassID::CObjectDispenser:
 			case ETFClassID::CObjectTeleporter:
+			case ETFClassID::CObjectSapper:
 			{
 				m_vecGroups[EGroupType::BUILDINGS_ALL].push_back(pEntity);
 				m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_TEAMMATES].push_back(pEntity);

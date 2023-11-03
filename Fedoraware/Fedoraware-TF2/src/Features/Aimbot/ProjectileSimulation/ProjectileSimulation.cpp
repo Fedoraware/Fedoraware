@@ -66,7 +66,7 @@ bool CProjectileSimulation::GetInfo(CBaseEntity* player, CBaseCombatWeapon* pWea
 			GetProjectileFireSetup(player, vAngles, { 23.5f, 0.f, bDucking ? 8.f : -3.f }, pos, ang, false, bQuick);
 		else
 			GetProjectileFireSetup(player, vAngles, Vec3(23.5f, 12.f, bDucking ? 8.f : -3.f), pos, ang, false, bQuick);
-		float speed = Utils::ATTRIB_HOOK_FLOAT(1100.f, "mult_projectile_speed", pWeapon);
+		float speed = Utils::ATTRIB_HOOK_FLOAT(1100.f, "mult_projectile_speed", pWeapon, 0, true);
 		if (pPlayer->IsPrecisionRune())
 			speed = 2750.f;
 		out = { TF_PROJECTILE_ROCKET, pos, ang, { 0.f, 0.f, 0.f }, bQuick ? 1081344.f : speed, 0.f, true };
@@ -87,7 +87,7 @@ bool CProjectileSimulation::GetInfo(CBaseEntity* player, CBaseCombatWeapon* pWea
 	{
 		GetProjectileFireSetup(player, vAngles, { 16.f, 8.f, -6.f }, pos, ang, true, bQuick);
 		const bool is_lochnload = G::CurItemDefIndex == Demoman_m_TheLochnLoad;
-		float speed = Utils::ATTRIB_HOOK_FLOAT(1200.f, "mult_projectile_speed", pWeapon);
+		float speed = Utils::ATTRIB_HOOK_FLOAT(1200.f, "mult_projectile_speed", pWeapon, 0, true);
 		if (player->IsPrecisionRune())
 			speed = 3000.f;
 		float lifetime = 2.2f; // estimates
@@ -121,7 +121,7 @@ bool CProjectileSimulation::GetInfo(CBaseEntity* player, CBaseCombatWeapon* pWea
 	case TF_WEAPON_FLAREGUN:
 	{
 		GetProjectileFireSetup(player, vAngles, { 23.5f, 12.f, bDucking ? 8.f : -3.f }, pos, ang, false, bQuick);
-		out = { TF_PROJECTILE_FLARE, pos, ang, { 1.f, 1.f, 1.f }, Utils::ATTRIB_HOOK_FLOAT(2000.f, "mult_projectile_speed", pWeapon), 0.3f, true };
+		out = { TF_PROJECTILE_FLARE, pos, ang, { 1.f, 1.f, 1.f }, Utils::ATTRIB_HOOK_FLOAT(2000.f, "mult_projectile_speed", pWeapon, 0, true), 0.3f, true };
 		return true;
 	}
 	case TF_WEAPON_RAYGUN_REVENGE:
