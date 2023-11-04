@@ -1371,7 +1371,7 @@ void CMenu::MenuVisuals()
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
 					if (Vars::Visuals::SkyboxChanger.Value)
 					{
-						WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
+						WCombo("Skybox##SkyboxCombo", &Vars::Skybox::SkyboxNum.Value, skyNames);
 						if (Vars::Skybox::SkyboxNum.Value == 0)
 						{
 							WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
