@@ -75,6 +75,7 @@ namespace Vars
 	CVar(CheatName, std::string("Fedoraware"), IS_VISUAL);
 	CVar(CheatPrefix, std::string("[FeD]"), IS_VISUAL);
 	CVar(ModernDesign, false, IS_VISUAL);
+	CVar(DrawWeather, true, IS_VISUAL);
 	CVar(ShowPlayerlist, false, IS_VISUAL);
 	CVar(ShowKeybinds, false, IS_VISUAL);
 	CVar(Vignette, false, IS_VISUAL);
@@ -283,6 +284,8 @@ namespace Vars
 	SUBNAMESPACE_BEGIN(Main)
 		CVar(Active, false, IS_VISUAL)
 		CVar(Outlinedbar, false, IS_VISUAL)
+		CVar(CornerHorizLength, 3, IS_VISUAL)
+		CVar(CornerVertLength, 5, IS_VISUAL)
 		CVar(EnableTeamEnemyColors, false, IS_VISUAL)
 		CVar(DistanceToAlpha, false, IS_VISUAL)
 		CVar(DormantSoundESP, false, IS_VISUAL)

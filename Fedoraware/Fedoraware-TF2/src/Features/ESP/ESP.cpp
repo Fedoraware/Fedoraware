@@ -255,10 +255,19 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 				case 2:
 				{
-					g_Draw.CornerRect(x, y, w, h, 3, 5, drawColor);
+					int horizlength = Vars::ESP::Main::CornerHorizLength.Value;
+					int vertlength = Vars::ESP::Main::CornerVertLength.Value;
+					// Ensuring that o1 and o2 are not 0 or lower. Why? 0 = 1/0 = crash.
+					if (horizlength <= 0) {
+						horizlength = 1; // Set a minimum value for o1
+					}
+					if (vertlength <= 0) {
+						vertlength = 1; // Set a minimum value for o2
+					}
+					g_Draw.CornerRect(x, y, w, h, horizlength, vertlength, drawColor);
 					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
-						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, horizlength, vertlength, Vars::Colours::OutlineESP.Value);
 					}
 
 					break;
