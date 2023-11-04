@@ -285,6 +285,8 @@ namespace Vars
 	SUBNAMESPACE_BEGIN(Main)
 		CVar(Active, false, IS_VISUAL)
 		CVar(Outlinedbar, false, IS_VISUAL)
+		CVar(CornerHorizLength, 3, IS_VISUAL)
+		CVar(CornerVertLength, 5, IS_VISUAL)
 		CVar(EnableTeamEnemyColors, false, IS_VISUAL)
 		CVar(DistanceToAlpha, false, IS_VISUAL)
 		CVar(DormantSoundESP, false, IS_VISUAL)

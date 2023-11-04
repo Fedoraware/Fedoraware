@@ -632,6 +632,11 @@ void CMenu::MenuVisuals()
 						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 					}
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
+					if (Vars::ESP::Players::Box.Value == 2)
+					{
+						WSlider("Horizontal Length", &Vars::ESP::Main::CornerHorizLength.Value, 1, 10, "%d"); HelpMarker("Show 1/x of the horizontal box line");
+						WSlider("Vertical Length", &Vars::ESP::Main::CornerVertLength.Value, 1, 10, "%d"); HelpMarker("Show 1/x of the vertical box line");
+					}
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
 					ColorPickerL("Skellington colour", Vars::Colours::Bones.Value);
 					WToggle("Lines###Playerlines", &Vars::ESP::Players::Lines.Value); HelpMarker("Draws lines from the local players position to enemies position");
