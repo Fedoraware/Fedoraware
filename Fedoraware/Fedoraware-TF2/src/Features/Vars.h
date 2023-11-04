@@ -76,7 +76,7 @@ namespace Vars
 	CVar(CheatPrefix, std::string("[FeD]"), IS_VISUAL);
 	CVar(ModernDesign, false, IS_VISUAL);
 	CVar(DrawSnow, false, IS_VISUAL);
-	CVar(DrawRain, false, IS_VISUAL);
+	CVar(DrawRain, true, IS_VISUAL);
 	CVar(ShowPlayerlist, false, IS_VISUAL);
 	CVar(ShowKeybinds, false, IS_VISUAL);
 	CVar(Vignette, false, IS_VISUAL);
