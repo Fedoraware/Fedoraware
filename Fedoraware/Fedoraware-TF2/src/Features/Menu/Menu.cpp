@@ -2061,8 +2061,7 @@ void CMenu::SettingsWindow()
 		{
 			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Menu accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
-			if (Checkbox("Draw Snow", &Vars::Menu::DrawSnow.Value)) { LoadStyle(); }
-			if (Checkbox("Draw Rain", &Vars::Menu::DrawRain.Value)) { LoadStyle(); }
+			if (Checkbox("Draw Weather", &Vars::Menu::DrawWeather.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
 			{
 				I::ViewRender->SetScreenOverlayMaterial(nullptr);

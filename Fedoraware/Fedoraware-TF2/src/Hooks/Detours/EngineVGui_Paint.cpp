@@ -91,15 +91,17 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 							g_Draw.String(menuFont, g_ScreenSize.c, 150, Utils::Rainbow(), ALIGN_CENTERHORIZONTAL, "MERRY CHRISTMAS!!!!!!!");
 						}
 					}
+					if(Vars::Menu::DrawWeather.Value)
+					{ 
+						if (curCalTime->tm_mon == 11 || curCalTime->tm_mon == 0 || curCalTime->tm_mon == 1) //december, january, february (winter months)
+						{ //this method also sucks for getting the 3 months and can probably be shortened
+							F::Visuals.DrawMenuSnow();
+						}
 
-					if (Vars::Menu::DrawSnow.Value)
-					{
-						F::Visuals.DrawMenuSnow();
-					}
-
-					if (Vars::Menu::DrawRain.Value)
-					{
-						F::Visuals.DrawMenuRain();
+						if (curCalTime->tm_mon == 8 || curCalTime->tm_mon == 9 || curCalTime->tm_mon == 10)
+						{
+							F::Visuals.DrawMenuRain();
+						}
 					}
 				}
 			}
