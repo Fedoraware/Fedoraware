@@ -317,6 +317,14 @@ namespace Utils
 		std::random_device rd; std::mt19937 gen(rd()); std::uniform_int_distribution<> distr(min, max);
 		return distr(gen);
 	}
+	
+	__inline float RandFloatSimple(float min, float max)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<float> distr(min, max);
+		return distr(gen);
+	}
 
 	__inline void FixMovement(CUserCmd *pCmd, const Vec3 &vecTargetAngle)
 	{

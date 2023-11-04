@@ -632,6 +632,11 @@ void CMenu::MenuVisuals()
 						ColorPickerL("Cheater Color", Vars::Colours::Cheater.Value);
 					}
 					WCombo("Box###PlayerBoxESP", &Vars::ESP::Players::Box.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on players");
+					if (Vars::ESP::Players::Box.Value == 2)
+					{
+						WSlider("Horizontal Length", &Vars::ESP::Main::CornerHorizLength.Value, 1, 10, "%d"); HelpMarker("Show 1/x of the horizontal box line");
+						WSlider("Vertical Length", &Vars::ESP::Main::CornerVertLength.Value, 1, 10, "%d"); HelpMarker("Show 1/x of the vertical box line");
+					}
 					WCombo("Skeleton###PlayerSkellington", &Vars::ESP::Players::Bones.Value, { "Off", "Custom colour", "Health" }); HelpMarker("Will draw the bone structure of the player");
 					ColorPickerL("Skellington colour", Vars::Colours::Bones.Value);
 					WToggle("Lines###Playerlines", &Vars::ESP::Players::Lines.Value); HelpMarker("Draws lines from the local players position to enemies position");
@@ -937,23 +942,23 @@ void CMenu::MenuVisuals()
 
 					WCombo("Config###ChamsConfBuilds", &currentSelectedBuilds, chamOptionsBuilds);
 						{
-							ColorPickerL("Colour", currentStructBuilds.colour, 1);
-							MultiCombo({ "Active", "Obstructed" }, { &currentStructBuilds.chamsActive, &currentStructBuilds.showObstructed }, "Options");
+							ColorPickerL("Colour###ChamsClrBuilds", currentStructBuilds.colour, 1);
+							MultiCombo({ "Active", "Obstructed" }, { &currentStructBuilds.chamsActive, &currentStructBuilds.showObstructed }, "Options###ChamsViewOptionsBuilds");
 
-							WCombo("Material", &currentStructBuilds.drawMaterial, DMEChamMaterialsBuilds); HelpMarker("Which material the chams will apply to the player");
+							WCombo("Material###ChamsMaterialsBuilds", &currentStructBuilds.drawMaterial, DMEChamMaterialsBuilds); HelpMarker("Which material the chams will apply to the player");
 								if (currentStructBuilds.drawMaterial == 7)
 							{
-								ColorPickerL("Fresnel base colour", currentStructBuilds.fresnelBase, 1);
+								ColorPickerL("Fresnel base colour###ChamsFrsBaseClrBuilds", currentStructBuilds.fresnelBase, 1);
 							}
 							if (currentStructBuilds.drawMaterial == 9)
 							{
-								MaterialCombo("Custom Material", &currentStructBuilds.customMaterial);
+								MaterialCombo("Custom Material###ChamsCustomMaterialBuilds", &currentStructBuilds.customMaterial);
 							}
-							WCombo("Glow Overlay", &currentStructBuilds.overlayType, dmeGlowMaterialBuilds);
-							ColorPickerL("Glow Colour", currentStructBuilds.overlayColour, 1);
-							WToggle("Rainbow Glow", &currentStructBuilds.overlayRainbow);
-							WToggle("Pulse Glow", &currentStructBuilds.overlayPulse);
-							WSlider("Glow Reduction", &currentStructBuilds.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+							WCombo("Glow Overlay###ChamsGlowOverlayBuilds", &currentStructBuilds.overlayType, dmeGlowMaterialBuilds);
+							ColorPickerL("Glow Colour###ChamsGlowClrBuilds", currentStructBuilds.overlayColour, 1);
+							WToggle("Rainbow Glow###ChamsRnbwGlowBuilds", &currentStructBuilds.overlayRainbow);
+							WToggle("Pulse Glow###ChamsPulseGlowBuilds", &currentStructBuilds.overlayPulse);
+							WSlider("Glow Reduction###ChamsGlowRedBuilds", &currentStructBuilds.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 						}
 
 					SectionTitle("World Chams");
@@ -1010,23 +1015,23 @@ void CMenu::MenuVisuals()
 
 					WCombo("Config###ChamsConfWorld", &currentSelectedWorld, chamOptionsWorld);
 					{
-						ColorPickerL("Colour", currentStructWorld.colour, 1);
-						MultiCombo({ "Active", "Obstructed" }, { &currentStructWorld.chamsActive, &currentStructWorld.showObstructed }, "Options");
+						ColorPickerL("Colour###ChamsClrWorld", currentStructWorld.colour, 1);
+						MultiCombo({ "Active", "Obstructed" }, { &currentStructWorld.chamsActive, &currentStructWorld.showObstructed }, "Options###ChamsViewOptionsWorld");
 
-						WCombo("Material", &currentStructWorld.drawMaterial, DMEChamMaterialsWorld); HelpMarker("Which material the chams will apply to the player");
+						WCombo("Material###ChamsMaterialsWorld", &currentStructWorld.drawMaterial, DMEChamMaterialsWorld); HelpMarker("Which material the chams will apply to the player");
 						if (currentStructWorld.drawMaterial == 7)
 						{
-							ColorPickerL("Fresnel base colour", currentStructWorld.fresnelBase, 1);
+							ColorPickerL("Fresnel base colour###ChamsFrsBaseClrWorld", currentStructWorld.fresnelBase, 1);
 						}
 						if (currentStructWorld.drawMaterial == 9)
 						{
-							MaterialCombo("Custom Material", &currentStructWorld.customMaterial);
+							MaterialCombo("Custom Material###ChamsCustomMaterialWorld", &currentStructWorld.customMaterial);
 						}
-						WCombo("Glow Overlay", &currentStructWorld.overlayType, dmeGlowMaterialWorld);
-						ColorPickerL("Glow Colour", currentStructWorld.overlayColour, 1);
-						WToggle("Rainbow Glow", &currentStructWorld.overlayRainbow);
-						WToggle("Pulse Glow", &currentStructWorld.overlayPulse);
-						WSlider("Glow Reduction", &currentStructWorld.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+						WCombo("Glow Overlay###ChamsOverlayWorld", &currentStructWorld.overlayType, dmeGlowMaterialWorld);
+						ColorPickerL("Glow Colour###ChamsGlowClrWorld", currentStructWorld.overlayColour, 1);
+						WToggle("Rainbow Glow###ChamsRnbwGlowWorld", &currentStructWorld.overlayRainbow);
+						WToggle("Pulse Glow###ChamsPulseGlowWorld", &currentStructWorld.overlayPulse);
+						WSlider("Glow Reduction###ChamsGlowRedWorld", &currentStructWorld.overlayIntensity, 150.f, 0.1f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 					}
 				} EndChild();
 				EndTable();
@@ -1366,7 +1371,7 @@ void CMenu::MenuVisuals()
 					WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
 					if (Vars::Visuals::SkyboxChanger.Value)
 					{
-						WCombo("Skybox", &Vars::Skybox::SkyboxNum.Value, skyNames);
+						WCombo("Skybox##SkyboxCombo", &Vars::Skybox::SkyboxNum.Value, skyNames);
 						if (Vars::Skybox::SkyboxNum.Value == 0)
 						{
 							WInputText("Custom skybox name", &Vars::Skybox::SkyboxName.Value); HelpMarker("Name of the skybox you want to you (tf/materials/skybox)");
@@ -2056,6 +2061,7 @@ void CMenu::SettingsWindow()
 		{
 			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Menu accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
+			if (Checkbox("Draw Weather", &Vars::Menu::DrawWeather.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
 			{
 				I::ViewRender->SetScreenOverlayMaterial(nullptr);
