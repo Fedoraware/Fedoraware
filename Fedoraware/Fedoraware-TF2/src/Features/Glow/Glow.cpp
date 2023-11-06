@@ -455,6 +455,20 @@ void CGlowEffect::Render()
 						DrawModel(Gargoyles, STUDIO_RENDER, true);
 				}
 			}
+
+			if (Vars::Glow::World::Credits.Value)
+			{
+				for (const auto& Credits : g_EntityCache.GetGroup(EGroupType::WORLD_CREDITS))
+				{
+					if (!Utils::IsOnScreen(pLocal, Credits))
+						continue;
+
+					m_vecGlowEntities.push_back({ Credits, GetEntityDrawColour(Credits, false), Vars::Glow::World::Alpha.Value });
+
+					if (!F::Chams.HasDrawn(Credits))
+						DrawModel(Credits, STUDIO_RENDER, true);
+				}
+			}
 		}
 
 		StencilStateDisable.SetStencilState(pRenderContext);

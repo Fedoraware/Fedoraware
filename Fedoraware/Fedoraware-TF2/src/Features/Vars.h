@@ -374,6 +374,10 @@ namespace Vars
 		CVar(GargoyleBox, 0, IS_VISUAL)
 		CVar(GargoyleLine, false, IS_VISUAL)
 		CVar(GargoyleDistance, false, IS_VISUAL)
+		CVar(CreditName, false, IS_VISUAL)
+		CVar(CreditBox, 0, IS_VISUAL)
+		CVar(CreditLine, false, IS_VISUAL)
+		CVar(CreditDistance, false, IS_VISUAL)
 		CVar(Alpha, 1.0f, IS_VISUAL);
 	SUBNAMESPACE_END(World);
 
@@ -418,6 +422,7 @@ namespace Vars
 		CVar(NPCs, Chams_t(), IS_VISUAL)
 		CVar(Spellbooks, Chams_t(), IS_VISUAL)
 		CVar(Gargoyles, Chams_t(), IS_VISUAL)
+		CVar(Credits, Chams_t(), IS_VISUAL)
 		CVar(Projectiles, Chams_t(), IS_VISUAL);
 	SUBNAMESPACE_END(World);
 
@@ -476,6 +481,7 @@ namespace Vars
 		CVar(Bombs, false, IS_VISUAL)
 		CVar(Spellbooks, false, IS_VISUAL)
 		CVar(Gargoyles, false, IS_VISUAL)
+		CVar(Credits, false, IS_VISUAL)
 		CVar(Projectiles, 1, IS_VISUAL) //0 - Off, 1 - All, 2 - Enemy Only
 		CVar(Alpha, 1.0f, IS_VISUAL);
 	SUBNAMESPACE_END(World);
@@ -988,6 +994,7 @@ namespace Vars
 		CVar(Bomb, Color_t(255, 75, 0, 255), IS_VISUAL);
 		CVar(Spellbook, Color_t(100, 0, 255, 255), IS_VISUAL);
 		CVar(Gargoyle, Color_t(0, 150, 75, 255), IS_VISUAL);
+		CVar(Credits, Color_t(0, 150, 75, 255), IS_VISUAL);
 	NAMESPACE_END(Colours);
 
 	// Debug options

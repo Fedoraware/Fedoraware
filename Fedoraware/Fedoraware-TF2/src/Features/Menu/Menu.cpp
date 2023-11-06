@@ -732,6 +732,13 @@ void CMenu::MenuVisuals()
 					WToggle("Distance###WorldESPGargoyleDistance", &Vars::ESP::World::GargoyleDistance.Value); HelpMarker("Shows the distance from you to the Gargoyle in meters");
 					ColorPickerL("Gargoyle Colour", Vars::Colours::Gargoyle.Value); HelpMarker("Color for Gargoyle ESP");
 
+					SectionTitle("Credits");
+					WToggle("Name###WorldESPCreditName", &Vars::ESP::World::CreditName.Value); HelpMarker("Will draw ESP on Credits");
+					WToggle("Line###WorldESPCreditLine", &Vars::ESP::World::CreditLine.Value); HelpMarker("Will draw a line to Credits");
+					WCombo("Box###WorldESPCreditBox", &Vars::ESP::World::CreditBox.Value, { "Off", "Bounding", "Cornered", "3D" }); HelpMarker("What sort of box to draw on Credits");
+					WToggle("Distance###WorldESPCreditDistance", &Vars::ESP::World::CreditDistance.Value); HelpMarker("Shows the distance from you to the Credits in meters");
+					ColorPickerL("Credits Colour", Vars::Colours::Credits.Value); HelpMarker("Color for Credit ESP");
+
 				} EndChild();
 
 				EndTable();
@@ -971,7 +978,8 @@ void CMenu::MenuVisuals()
 						"Projectiles",
 						"Spellbooks",
 						"Gargoyles",
-						"NPCs"
+						"NPCs",
+						"Credits"
 					};
 					static std::vector dmeGlowMaterialWorld{
 						"None",
@@ -1007,6 +1015,10 @@ void CMenu::MenuVisuals()
 							case 5:
 							{
 								return Vars::Chams::World::NPCs.Value;
+							}
+							case 6:
+							{
+								return Vars::Chams::World::Credits.Value;
 							}
 							}
 
@@ -1088,6 +1100,7 @@ void CMenu::MenuVisuals()
 					WToggle("Bombs###worldbombglow", &Vars::Glow::World::Bombs.Value);
 					WToggle("Spellbooks###worldspellbookglow", &Vars::Glow::World::Spellbooks.Value);
 					WToggle("Gargoyles###worldgargoyleglow", &Vars::Glow::World::Gargoyles.Value);
+					WToggle("Credits###worldcreditglow", &Vars::Glow::World::Credits.Value);
 					WCombo("Projectile glow###teamprojectileglow", &Vars::Glow::World::Projectiles.Value, { "Off", "All", "Only enemies" });
 					WSlider("Glow alpha###WorldGlowAlpha", &Vars::Glow::World::Alpha.Value, 0.f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 				} EndChild();

@@ -344,17 +344,36 @@ int GetType(int EntIndex)
 			return 8;
 		}
 		case ETFClassID::CTFProjectile_Rocket:
+		case ETFClassID::CTFProjectile_SentryRocket:
 		case ETFClassID::CTFGrenadePipebombProjectile:
 		case ETFClassID::CTFProjectile_Jar:
 		case ETFClassID::CTFProjectile_JarGas:
 		case ETFClassID::CTFProjectile_JarMilk:
-		case ETFClassID::CTFProjectile_Arrow:
-		case ETFClassID::CTFProjectile_SentryRocket:
-		case ETFClassID::CTFProjectile_Flare:
-		case ETFClassID::CTFProjectile_Cleaver:
-		case ETFClassID::CTFProjectile_EnergyBall:
-		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_Throwable:
 		case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+		case ETFClassID::CTFStunBall:
+		case ETFClassID::CTFBall_Ornament:
+		case ETFClassID::CTFProjectile_Cleaver:
+		case ETFClassID::CTFProjectile_Arrow:
+		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_Flare:
+		case ETFClassID::CTFProjectile_BallOfFire:
+		case ETFClassID::CTFProjectile_GrapplingHook:
+		case ETFClassID::CTFProjectile_EnergyBall:
+		case ETFClassID::CTFProjectile_EnergyRing:
+		case ETFClassID::CTFProjectile_MechanicalArmOrb:
+		case ETFClassID::CTFProjectile_SpellKartBats:
+		case ETFClassID::CTFProjectile_SpellKartOrb:
+		case ETFClassID::CTFProjectile_SpellLightningOrb:
+		case ETFClassID::CTFProjectile_SpellTransposeTeleport:
+		case ETFClassID::CTFProjectile_SpellMeteorShower:
+		case ETFClassID::CTFProjectile_SpellSpawnBoss:
+		case ETFClassID::CTFProjectile_SpellMirv:
+		case ETFClassID::CTFProjectile_SpellPumpkin:
+		case ETFClassID::CTFProjectile_SpellSpawnHorde:
+		case ETFClassID::CTFProjectile_SpellSpawnZombie:
+		case ETFClassID::CTFProjectile_SpellBats:
+		case ETFClassID::CTFProjectile_SpellFireball:
 		{
 			return 9;
 		}
@@ -373,6 +392,10 @@ int GetType(int EntIndex)
 		case ETFClassID::CEyeballBoss:
 		{
 			return 13;
+		}
+		case ETFClassID::CCurrencyPack:
+		{
+			return 14;
 		}
 	}
 	CBaseCombatWeapon* pWeapon = reinterpret_cast<CBaseCombatWeapon*>(pEntity);
@@ -528,6 +551,10 @@ Chams_t getChamsType(int nIndex, CBaseEntity* pEntity = nullptr)
 		case 13:
 		{
 			return Vars::Chams::World::NPCs.Value;
+		}
+		case 14:
+		{
+			return Vars::Chams::World::Credits.Value;
 		}
 		default:
 			return Chams_t();

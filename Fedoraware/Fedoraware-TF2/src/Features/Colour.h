@@ -40,6 +40,8 @@ __inline Color_t GetEntityDrawColour(CBaseEntity* pEntity, bool enableOtherColor
 
 	if (pEntity->IsNPC()) { out = Vars::Colours::NPC.Value; }
 	if (pEntity->IsBomb()) { out = Vars::Colours::Bomb.Value; }
+	if (pEntity->IsCredits()) { out = Vars::Colours::Credits.Value; }
+	if (pEntity->IsGargoyle()) { out = Vars::Colours::Gargoyle.Value; }
 
 	if (pEntity->IsPlayer())
 	{
