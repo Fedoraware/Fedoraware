@@ -975,9 +975,7 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 				DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
 				2.0f) * g_ScreenSize.w;
 		const Color_t clr = Vars::Colours::FOVCircle.Value;
-		if (clr.r > 10 || clr.g > 10 || clr.b > 10) {
-			g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
-		}
+		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);	
 	}
 }
 
