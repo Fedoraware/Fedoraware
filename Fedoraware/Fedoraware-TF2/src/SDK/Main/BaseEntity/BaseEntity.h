@@ -703,22 +703,12 @@ public: //Everything else, lol.
 
 	__inline bool IsCredits()
 	{
-		switch (GetClassID())
-		{
-			case ETFClassID::CCurrencyPack:
-				return true;
-			default: return false;
-		}
+		return GetClassID() == ETFClassID::CCurrencyPack;
 	}
 
 	__inline bool IsGargoyle()
 	{
-		switch (GetClassID())
-		{
-			case ETFClassID::CHalloweenGiftPickup:
-				return true;
-			default: return false;
-		}
+		return GetClassID() == ETFClassID::CHalloweenGiftPickup;
 	}
 
 	__inline Vec3 GetHitboxPos(const int nHitbox)

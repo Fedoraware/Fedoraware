@@ -794,6 +794,7 @@ namespace Utils
 			{
 				const Vec3 vecOffset(23.5f, -8.f, -3.f); //tf_weaponbase_gun.cpp @L798
 				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
 			}
 			case TF_WEAPON_RAYGUN:
 			case TF_WEAPON_PARTICLE_CANNON:
@@ -824,6 +825,7 @@ namespace Utils
 			{
 				const Vec3 vecOffset(70.f, 7.f, 9.f);
 				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
 			}
 			case TF_WEAPON_CLEAVER:
 			case TF_WEAPON_BAT_WOOD:
@@ -831,11 +833,13 @@ namespace Utils
 			{
 				const Vec3 vecOffset(32.f, 0.f, -15.f);
 				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
 			}
 			case TF_WEAPON_LUNCHBOX:
 			{
 				const Vec3 vecOffset(0.f, 0.f, -8.f);
 				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
 			}
 			default: break;
 			}
