@@ -283,6 +283,7 @@ namespace Vars
 
 	SUBNAMESPACE_BEGIN(Main)
 		CVar(Active, false, IS_VISUAL)
+		CVar(ESPKey, 0)
 		CVar(Outlinedbar, false, IS_VISUAL)
 		CVar(CornerHorizLength, 3, IS_VISUAL)
 		CVar(CornerVertLength, 5, IS_VISUAL)

@@ -15,6 +15,11 @@ bool CESP::ShouldRun()
 		return false;
 	}
 
+	// ESP toggle key
+	static KeyHelper kESP{ &Vars::ESP::Main::ESPKey.Value };
+	Vars::ESP::Main::Active.Value = (kESP.Pressed() ? !Vars::ESP::Main::Active.Value : Vars::ESP::Main::Active.Value);
+
+
 	return true;
 }
 
