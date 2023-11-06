@@ -324,7 +324,9 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 
 
 		CurrentConfig = configName;
-		F::Notifications.Add("Config " + configName + " loaded");
+		if (configName != "default") { //just so it won't show 'Config default loaded' on game startup if you downloaded it from fed visuals vault or from the discord cfg channel
+			F::Notifications.Add("Config " + configName + " loaded");
+		}
 	}
 	catch (...)
 	{
@@ -396,6 +398,9 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 		g_Draw.RemakeFonts();
 
 		CurrentVisuals = configName;
+		if (configName != "default") { //just so it won't show 'Visual config default loaded' on game startup if you downloaded it from fed visuals vault or from the discord cfg channel
+			F::Notifications.Add("Visual config " + configName + " loaded");
+		}
 	}
 	catch (...)
 	{
