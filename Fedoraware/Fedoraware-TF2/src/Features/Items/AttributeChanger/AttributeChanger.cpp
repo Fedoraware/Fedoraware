@@ -35,11 +35,7 @@ void CAttributeChanger::Run()
 			if (const auto& pWeapon = reinterpret_cast<CBaseCombatWeapon*>(I::ClientEntityList->GetClientEntityFromHandle(myWeapons[n])))
 			{
 				const auto pList = reinterpret_cast<CAttributeList*>(pWeapon + 0x9C4);
-				if (!pList || pList->m_Attributes.Count() > 0)
-				{
-					continue;
-				}
-
+	
 				const auto nIndex = pWeapon->GetItemDefIndex();
 				if (AttributeMap.find(nIndex) != AttributeMap.end())
 				{
