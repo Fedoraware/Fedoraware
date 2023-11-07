@@ -291,29 +291,26 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		{
 			if (!I::EngineVGui->IsGameUIVisible() && !I::VGuiSurface->IsCursorVisible())
 			{
-				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.Value};
+				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.Value };
 				if (tpKey.Pressed())
 				{
 					Vars::Visuals::ThirdPerson.Value = !Vars::Visuals::ThirdPerson.Value;
 				}
 			}
 		}
-		const bool bScoped = (Vars::Visuals::RemoveScope.Value || Vars::Visuals::RemoveZoom.Value) && pLocal->IsScoped();
 		const bool bThirdPersonVar = Vars::Visuals::ThirdPerson.Value;
 		const bool bFollowingProjectile = Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty();
 		const bool bFreecam = G::FreecamActive;
-		const bool bShouldThirdPerson = (bThirdPersonVar || bFollowingProjectile || bFreecam) && (!bScoped || bFreecam);
+		const bool bShouldThirdPerson = Vars::Visuals::ThirdPerson.Value || bFreecam;
 		const bool bIsInThirdPerson = I::Input->CAM_IsThirdPerson();
 
 		if (!bShouldThirdPerson) {
 			if (bIsInThirdPerson) {
 				pLocal->ForceTauntCam(0);
 			}
-
-			return;
 		}
 
-		if (!bIsInThirdPerson)
+		else if (!bIsInThirdPerson)
 		{
 			pLocal->ForceTauntCam(1);
 		}
@@ -978,7 +975,7 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 				DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
 				2.0f) * g_ScreenSize.w;
 		const Color_t clr = Vars::Colours::FOVCircle.Value;
-		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
+		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);	
 	}
 }
 
