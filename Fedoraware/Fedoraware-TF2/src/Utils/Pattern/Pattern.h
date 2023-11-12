@@ -3,7 +3,7 @@
 
 class CPattern
 {
-	DWORD FindPattern(const DWORD& dwAddress, const DWORD& dwLength, LPCSTR szPattern);
+	DWORD FindPattern(DWORD dwAddress, DWORD dwLength, LPCSTR szPattern);
 	HMODULE GetModuleHandleSafe(LPCSTR szModuleName);
 
 public:
