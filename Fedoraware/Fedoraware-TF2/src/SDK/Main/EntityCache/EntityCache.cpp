@@ -89,6 +89,7 @@ void CEntityCache::Fill()
 			case ETFClassID::CObjectSentrygun:
 			case ETFClassID::CObjectDispenser:
 			case ETFClassID::CObjectTeleporter:
+			case ETFClassID::CObjectSapper:
 			{
 				m_vecGroups[EGroupType::BUILDINGS_ALL].push_back(pEntity);
 				m_vecGroups[pEntity->GetTeamNum() != m_pLocal->GetTeamNum() ? EGroupType::BUILDINGS_ENEMIES : EGroupType::BUILDINGS_TEAMMATES].push_back(pEntity);
@@ -111,6 +112,11 @@ void CEntityCache::Fill()
 					break;
 				}
 
+				if (Hash::IsSpell(szName))
+				{
+					m_vecGroups[EGroupType::WORLD_SPELLBOOK].push_back(pEntity);
+				}
+
 				break;
 			}
 
@@ -120,22 +126,37 @@ void CEntityCache::Fill()
 				break;
 			}
 
-			case ETFClassID::CTFProjectile_Rocket:
-			case ETFClassID::CTFGrenadePipebombProjectile:
-			case ETFClassID::CTFProjectile_Jar:
-			case ETFClassID::CTFProjectile_JarGas:
-			case ETFClassID::CTFProjectile_JarMilk:
-			case ETFClassID::CTFProjectile_Arrow:
-			case ETFClassID::CTFProjectile_SentryRocket:
-			case ETFClassID::CTFProjectile_Flare:
-			case ETFClassID::CTFProjectile_GrapplingHook:
-			case ETFClassID::CTFProjectile_Cleaver:
-			case ETFClassID::CTFProjectile_EnergyBall:
-			case ETFClassID::CTFProjectile_EnergyRing:
-			case ETFClassID::CTFProjectile_HealingBolt:
-			case ETFClassID::CTFProjectile_ThrowableBreadMonster:
-			case ETFClassID::CTFStunBall:
-			case ETFClassID::CTFBall_Ornament:
+		case ETFClassID::CTFProjectile_Rocket:
+		case ETFClassID::CTFProjectile_SentryRocket:
+		case ETFClassID::CTFGrenadePipebombProjectile:
+		case ETFClassID::CTFProjectile_Jar:
+		case ETFClassID::CTFProjectile_JarGas:
+		case ETFClassID::CTFProjectile_JarMilk:
+		case ETFClassID::CTFProjectile_Throwable:
+		case ETFClassID::CTFProjectile_ThrowableBreadMonster:
+		case ETFClassID::CTFStunBall:
+		case ETFClassID::CTFBall_Ornament:
+		case ETFClassID::CTFProjectile_Cleaver:
+		case ETFClassID::CTFProjectile_Arrow:
+		case ETFClassID::CTFProjectile_HealingBolt:
+		case ETFClassID::CTFProjectile_Flare:
+		case ETFClassID::CTFProjectile_BallOfFire:
+		case ETFClassID::CTFProjectile_GrapplingHook:
+		case ETFClassID::CTFProjectile_EnergyBall:
+		case ETFClassID::CTFProjectile_EnergyRing:
+		case ETFClassID::CTFProjectile_MechanicalArmOrb:
+		case ETFClassID::CTFProjectile_SpellKartBats:
+		case ETFClassID::CTFProjectile_SpellKartOrb:
+		case ETFClassID::CTFProjectile_SpellLightningOrb:
+		case ETFClassID::CTFProjectile_SpellTransposeTeleport:
+		case ETFClassID::CTFProjectile_SpellMeteorShower:
+		case ETFClassID::CTFProjectile_SpellSpawnBoss:
+		case ETFClassID::CTFProjectile_SpellMirv:
+		case ETFClassID::CTFProjectile_SpellPumpkin:
+		case ETFClassID::CTFProjectile_SpellSpawnHorde:
+		case ETFClassID::CTFProjectile_SpellSpawnZombie:
+		case ETFClassID::CTFProjectile_SpellBats:
+		case ETFClassID::CTFProjectile_SpellFireball:
 			{
 				m_vecGroups[EGroupType::WORLD_PROJECTILES].push_back(pEntity);
 				if (I::ClientEntityList->GetClientEntityFromHandle((int)pEntity->GetThrower()) == m_pLocal ||
@@ -181,6 +202,19 @@ void CEntityCache::Fill()
 			case ETFClassID::CTFGenericBomb:
 			{
 				m_vecGroups[EGroupType::WORLD_BOMBS].push_back(pEntity);
+
+				break;
+			}
+			case ETFClassID::CHalloweenGiftPickup:
+			{
+				if (I::ClientEntityList->GetClientEntityFromHandle(pEntity->GetTargetPlayer()) == m_pLocal)
+					m_vecGroups[EGroupType::WORLD_GARGOYLE].push_back(pEntity);
+
+				break;
+			}
+			case ETFClassID::CCurrencyPack:
+			{
+				m_vecGroups[EGroupType::WORLD_CREDITS].push_back(pEntity);
 
 				break;
 			}

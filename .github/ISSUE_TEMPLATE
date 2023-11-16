@@ -5,20 +5,20 @@ title: A quick Description of Bug
 labels: bug
 assignees: ''
 ---
-<!-- The template provide below is specifically for bug reports, if you intend to ask a question or recommend a feature/improvement, please head to the discussions tab instead. -->
+<!-- The template provided below is specifically for bug reports, if you intend to ask a question or recommend a feature/improvement, please head to the discussions tab instead. -->
 **Fedoraware Version Date:**  
 **Windows Version:**    <!-- https://learn.microsoft.com/en-us/windows/client-management/client-tools/windows-version-search -->
 
 ## Configs used:
-<!-- Upload both your normal and visual configs found in Team Fortress 2/FedFigs and Team Fortress 2/FedFigs respectively. You can upload the contents of these files to any text based hosting server. -->
+<!-- Upload both your normal and visual configs found in Team Fortress 2/FedFigs and Team Fortress 2/FedFigs respectively. You can upload the contents of these files to any text-based hosting server. -->
 
 ## Description:
-<!-- Provide a description of what the issue is. -->
+<!-- Describe what the issue is. -->
 <!-- If possible, also provide a video of the issue occurring. -->
 
 ## Steps to reproduce:
-- [ ] With the steps below I am able to consistently reproduce this issue.
-<!-- If you are unable to consistently reproduce this issue, you must provide all other info in this template, or your report will be removed. -->
+- [ ] With the steps below I can consistently reproduce this issue.
+<!-- If you are unable to consistently reproduce this issue, you must provide all other info in this template or your report will be removed. -->
 
 Steps to reproduce the behavior:  
 <!-- Example only, please delete these steps and enter your own. -->

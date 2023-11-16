@@ -40,6 +40,8 @@ __inline Color_t GetEntityDrawColour(CBaseEntity* pEntity, bool enableOtherColor
 
 	if (pEntity->IsNPC()) { out = Vars::Colours::NPC.Value; }
 	if (pEntity->IsBomb()) { out = Vars::Colours::Bomb.Value; }
+	if (pEntity->IsCredits()) { out = Vars::Colours::Credits.Value; }
+	if (pEntity->IsGargoyle()) { out = Vars::Colours::Gargoyle.Value; }
 
 	if (pEntity->IsPlayer())
 	{
@@ -56,6 +58,16 @@ __inline Color_t GetEntityDrawColour(CBaseEntity* pEntity, bool enableOtherColor
 		else if (G::IsIgnored(info.friendsID))
 		{
 			out = Vars::Colours::Ignored.Value;
+		}
+
+		else if (G::PlayerPriority[info.friendsID].Mode == 3)
+		{
+			out = Vars::Colours::Rage.Value;
+		}
+
+		else if (G::PlayerPriority[info.friendsID].Mode == 4)
+		{
+			out = Vars::Colours::Cheater.Value;
 		}
 
 		else if (pEntity->IsCloaked())

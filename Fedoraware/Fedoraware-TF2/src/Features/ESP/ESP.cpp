@@ -15,6 +15,11 @@ bool CESP::ShouldRun()
 		return false;
 	}
 
+	// ESP toggle key
+	static KeyHelper kESP{ &Vars::ESP::Main::ESPKey.Value };
+	Vars::ESP::Main::Active.Value = (kESP.Pressed() ? !Vars::ESP::Main::Active.Value : Vars::ESP::Main::Active.Value);
+
+
 	return true;
 }
 
@@ -255,10 +260,19 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 				}
 				case 2:
 				{
-					g_Draw.CornerRect(x, y, w, h, 3, 5, drawColor);
+					int horizlength = Vars::ESP::Main::CornerHorizLength.Value;
+					int vertlength = Vars::ESP::Main::CornerVertLength.Value;
+					// Ensuring that o1 and o2 are not 0 or lower. Why? 0 = 1/0 = crash.
+					if (horizlength <= 0) {
+						horizlength = 1; // Set a minimum value for o1
+					}
+					if (vertlength <= 0) {
+						vertlength = 1; // Set a minimum value for o2
+					}
+					g_Draw.CornerRect(x, y, w, h, horizlength, vertlength, drawColor);
 					if (Vars::ESP::Main::Outlinedbar.Value)
 					{
-						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, horizlength, vertlength, Vars::Colours::OutlineESP.Value);
 					}
 
 					break;
@@ -382,11 +396,37 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 
-				// Cheater detection ESP
-				if (G::PlayerPriority[pi.friendsID].Mode == 4 && Vars::ESP::Players::CheaterDetection.Value)
+				// Priority ESP
+				if (Vars::ESP::Players::Priority.Value)
 				{
-					g_Draw.String(FONT, middle, y - 28, { 255, 0, 0, 255 }, ALIGN_CENTERHORIZONTAL, "CHEATER");
-					nTextOffset += FONT.nTall;
+					switch (G::PlayerPriority[pi.friendsID].Mode)
+					{
+						case 0:
+						{
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
+							nTextOffset += FONT.nTall;
+							break;
+						}
+						case 1:
+						{
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
+							nTextOffset += FONT.nTall;
+							break;
+						}
+						case 3:
+						{
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
+							nTextOffset += FONT.nTall;
+							break;
+						}
+						case 4:
+						{
+							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
+							nTextOffset += FONT.nTall;
+							break;
+						}
+						default: break;
+					}
 				}
 
 				// GUID ESP
@@ -412,14 +452,11 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					if (Vars::ESP::Players::CheaterDetection.Value && G::PlayerPriority[pi.friendsID].Mode == 4)
+					if (Vars::ESP::Players::Priority.Value)
 					{
-						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 30 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
-									   nClassNum);
-					}
-					else
 						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - offset - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
-									   nClassNum);
+							nClassNum);
+					}
 				}
 
 				if (Vars::ESP::Players::Class.Value >= 2)
@@ -585,13 +622,6 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 				}
 			}
-			if (g_EntityCache.IsFriend(nIndex))
-			{
-				const wchar_t* friendLabel = L"FRIEND";
-				g_Draw.String(FONT_COND, nTextX, y + nTextOffset, Vars::Colours::Cond.Value, ALIGN_DEFAULT, friendLabel);
-				nTextOffset += FONT_COND.nTall;
-			}
-
 
 			// Health bar
 			if (Vars::ESP::Players::HealthBar.Value)
@@ -629,14 +659,15 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 
 				if (Vars::ESP::Players::HealthText.Value == 2)
 				{
+					int TextOffset = 6;
 					if (Vars::ESP::Players::Choked.Value) {					
-						nTextOffset = 10; 
+						TextOffset = 10; 
 					}
 					if (nHealth > nMaxHealth) {
-						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Vars::Colours::Overheal.Value, ALIGN_CENTERHORIZONTAL, "+%d", nHealth - nMaxHealth);
+						g_Draw.String(FONT, x - TextOffset, (y + h) - (ratio * h) - 4, Vars::Colours::Overheal.Value, ALIGN_REVERSE, "+%d", nHealth - nMaxHealth);
 					} 
 					else {
-						g_Draw.String(FONT, x - (15 + nTextOffset), (y + h) - (ratio * h) - 2, Colors::White, ALIGN_CENTERHORIZONTAL, "%d", nHealth); 
+						g_Draw.String(FONT, x - TextOffset, (y + h) - (ratio * h) - 4, Colors::White, ALIGN_REVERSE, "%d", nHealth); 
 					}
 				}
 
@@ -1361,276 +1392,397 @@ void CESP::DrawWorld() const
 		}
 	}
 
+	for (const auto& Spellbooks : g_EntityCache.GetGroup(EGroupType::WORLD_SPELLBOOK))
+	{
+		// distance things
+		const Vec3 vDelta = Spellbooks->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Spellbooks, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::SpellbookName.Value)
+			{
+				const wchar_t* szName = L"Spellbook";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Spellbooks, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::SpellbookLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Spellbooks->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Spellbooks, true));
+			}
+
+			switch (Vars::ESP::World::SpellbookBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Spellbooks, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Spellbooks, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Spellbooks, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::SpellbookDistance.Value)
+			{
+				const Vec3 vDelta = Spellbooks->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
+	for (const auto& Gargoyles : g_EntityCache.GetGroup(EGroupType::WORLD_GARGOYLE))
+	{
+		// distance things
+		const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Gargoyles, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::GargoyleName.Value)
+			{
+				const wchar_t* szName = L"Soul Gargoyle";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Gargoyles, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::GargoyleLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Gargoyles->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Gargoyles, true));
+			}
+
+			switch (Vars::ESP::World::GargoyleBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Gargoyles, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Gargoyles, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Gargoyles, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::GargoyleDistance.Value)
+			{
+				const Vec3 vDelta = Gargoyles->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
+	for (const auto& Credits : g_EntityCache.GetGroup(EGroupType::WORLD_CREDITS))
+	{
+		// distance things
+		const Vec3 vDelta = Credits->GetAbsOrigin() - pLocal->GetAbsOrigin();
+		const float flDistance = vDelta.Length2D();
+		if (flDistance >= Vars::ESP::Main::NetworkedDist.Value) { continue; }
+		I::VGuiSurface->DrawSetAlphaMultiplier(Vars::ESP::Main::DistanceToAlpha.Value ? Math::RemapValClamped(flDistance, Vars::ESP::Main::NetworkedDist.Value - 256.f, Vars::ESP::Main::NetworkedDist.Value, Vars::ESP::World::Alpha.Value, 0.f) : Vars::ESP::World::Alpha.Value);
+
+		int x = 0, y = 0, w = 0, h = 0;
+		Vec3 vTrans[8];
+		if (GetDrawBounds(Credits, vTrans, x, y, w, h))
+		{
+			int nTextTopOffset = 0;
+
+			if (Vars::ESP::World::CreditName.Value)
+			{
+				const wchar_t* szName = L"Credits";
+
+				nTextTopOffset += FONT_PICKUPS.nTall + FONT_PICKUPS.nTall / 4;
+				g_Draw.String(FONT_PICKUPS, x + w / 2, y - nTextTopOffset, GetEntityDrawColour(Credits, true), ALIGN_CENTERHORIZONTAL, szName);
+			}
+
+			if (Vars::ESP::World::CreditLine.Value)
+			{
+				Vec3 vScreen, vOrigin = Vec3(g_ScreenSize.c, g_ScreenSize.h, 0.0f);
+
+				if (I::Input->CAM_IsThirdPerson())
+					Utils::W2S(pLocal->GetAbsOrigin(), vOrigin);
+
+				if (Utils::W2S(Credits->GetAbsOrigin(), vScreen))
+					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, GetEntityDrawColour(Credits, true));
+			}
+
+			switch (Vars::ESP::World::CreditBox.Value)
+			{
+				case 1:
+				{
+					h += 1;
+
+					g_Draw.OutlinedRect(x, y, w, h, GetEntityDrawColour(Credits, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, Vars::Colours::OutlineESP.Value);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, Vars::Colours::OutlineESP.Value);
+					h -= 1;
+					break;
+				}
+				case 2:
+				{
+					g_Draw.CornerRect(x, y, w, h, 3, 5, GetEntityDrawColour(Credits, true));
+
+					if (Vars::ESP::Main::Outlinedbar.Value)
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Vars::Colours::OutlineESP.Value);
+
+					break;
+				}
+				case 3:
+				{
+					Draw3DBox(vTrans, GetEntityDrawColour(Credits, true));
+					break;
+				}
+				default: break;
+			}
+
+			if (Vars::ESP::World::CreditDistance.Value)
+			{
+				const Vec3 vDelta = Credits->GetAbsOrigin() - pLocal->GetAbsOrigin();
+				const float flDistance = vDelta.Length2D() * 0.01905; // 1 m = 52.49 hu, so this is accurate *enough*
+				const int Distance = std::round(flDistance); //I think this method is better than doing it the normal way
+
+				g_Draw.String(FONT, x + (w / 2), y + h, Colors::White, ALIGN_CENTERHORIZONTAL, L"[%d M]", Distance);
+			}
+		}
+	}
+
 	I::VGuiSurface->DrawSetAlphaMultiplier(1.0f);
-}
-
-using ETFCond = int;
-
-template <typename tIntType>
-class CConditionVars
-{
-public:
-	CConditionVars(tIntType& nPlayerCond, tIntType& nPlayerCondEx, tIntType& nPlayerCondEx2, tIntType& nPlayerCondEx3, ETFCond eCond)
-	{
-		if (eCond >= 96)
-		{
-			if (eCond < 96 + 32)
-			{
-				m_pnCondVar = &nPlayerCondEx3;
-				m_nCondBit = eCond - 96;
-			}
-		}
-		else if (eCond >= 64)
-		{
-			if (eCond < (64 + 32))
-			{
-				m_pnCondVar = &nPlayerCondEx2;
-				m_nCondBit = eCond - 64;
-			}
-		}
-		else if (eCond >= 32)
-		{
-			if (eCond < (32 + 32))
-			{
-				m_pnCondVar = &nPlayerCondEx;
-				m_nCondBit = eCond - 32;
-			}
-		}
-		else
-		{
-			m_pnCondVar = &nPlayerCond;
-			m_nCondBit = eCond;
-		}
-	}
-
-	tIntType& CondVar() const
-	{
-		return *m_pnCondVar;
-	}
-
-	int CondBit() const
-	{
-		return 1 << m_nCondBit;
-	}
-
-private:
-	tIntType* m_pnCondVar;
-	int m_nCondBit;
-};
-
-class CTFCondition;
-
-
-class CTFConditionList
-{
-public:
-	CTFConditionList();
-
-	bool InCond(ETFCond type) const;
-
-	CUtlVector<CTFCondition*> _conditions;
-
-	int _condition_bits;
-	int _old_condition_bits;
-};
-
-bool CTFConditionList::InCond(ETFCond type) const
-{
-	return ((_condition_bits & (1 << type)) != 0);
-}
-
-class CTFCondition
-{
-public:
-	CTFCondition(ETFCond type, float duration, CBaseEntity* outer, CBaseEntity* provider = nullptr);
-	virtual ~CTFCondition();
-
-	virtual void Add(float duration);
-
-	virtual void OnAdded() = 0;
-	virtual void OnRemoved() = 0;
-	virtual void OnThink() = 0;
-	virtual void OnServerThink() = 0;
-
-	// Condition Traits
-	virtual bool IsHealable() { return false; }
-	virtual bool UsesMinDuration() { return false; }
-
-	ETFCond GetType() { return _type; }
-	float GetMaxDuration() { return _max_duration; }
-	void SetMaxDuration(float val) { _max_duration = val; }
-	float GetMinDuration() { return _min_duration; }
-	void SetMinDuration(float val) { if (UsesMinDuration()) { _min_duration = val; } }
-	CBaseEntity* GetOuter() { return _outer; }
-	void SetProvider(CBaseEntity* provider) { _provider = provider; }
-	CBaseEntity* GetProvider() { return _provider; }
-
-private:
-	float _min_duration;
-	float _max_duration;
-	const ETFCond _type;
-	CBaseEntity* _outer;
-	CBaseEntity* _provider;
-};
-
-bool InCond(CBaseEntity* pEntity, int eCond)
-{
-	if (eCond >= 0 && eCond < 122)
-	{
-		void* condList = pEntity->m_ConditionList();
-		const auto& conditionList = *reinterpret_cast<CTFConditionList*>(condList);
-
-		if (conditionList._conditions.Count() > 0)
-		{
-			// Old condition system, only used for the first 32 conditions
-			if (eCond < 32 && conditionList.InCond(eCond))
-			{
-				return true;
-			}
-
-			CConditionVars<const int> cPlayerCond(pEntity->GetCond(), pEntity->GetCondEx(), pEntity->GetCondEx2(), pEntity->GetCondEx3(), eCond);
-			return (cPlayerCond.CondVar() & cPlayerCond.CondBit()) != 0;
-		}
-	}
-	return false;
 }
 
 std::vector<std::wstring> CESP::GetPlayerConds(CBaseEntity* pEntity) const
 {
 	std::vector<std::wstring> szCond{};
-	const int& nCond = pEntity->GetCond();
-	const int& nCondEx = pEntity->GetCondEx();
-	const int& nCondEx2 = pEntity->GetCondEx2();
 	const int& nFlag = pEntity->GetFlags();
 
 	{
 		const float flTickVelSqr = pow(pEntity->TickVelocity2D(), 2);
-		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"Can't Hit"); }
+		if (flTickVelSqr > 4096.f) { szCond.emplace_back(L"No Lag Comp"); }
 	}
 
-	if (const wchar_t* rune = pEntity->GetRune())
-	{	// I want to see if they are the king before anything else.
+	if (const wchar_t* rune = pEntity->GetRune()) // I want to see if they are the king before anything else.
 		szCond.emplace_back(rune);
-	}
 
-	if (InCond(pEntity, 61))
-	{
-		szCond.emplace_back(L"Bullet resistance");
-	}
-
-	if (InCond(pEntity, 62))
-	{
-		szCond.emplace_back(L"Blast resistance");
-	}
-
-	if (InCond(pEntity, 63))
-	{
-		szCond.emplace_back(L"Fire resistance");
-	}
-
-
-	if (nCond & TFCond_Slowed)
+	if (pEntity->InCond(TF_COND_AIMING))
 	{
 		if (const auto& pWeapon = pEntity->GetActiveWeapon())
 		{
-			if (pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN)
+			if (pWeapon->GetWeaponID() == ETFWeaponType::TF_WEAPON_MINIGUN && pWeapon->GetWeaponState() != 0)
+				szCond.emplace_back(L"Rev");
+
+			if (pWeapon->GetWeaponID() == ETFWeaponType::TF_WEAPON_COMPOUND_BOW)
+				szCond.emplace_back(L"Drawn");
+		}
+	}
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_BULLET_RESIST))
+		szCond.emplace_back(L"Bullet Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_BULLET_RESIST))
+		szCond.emplace_back(L"Bullet Resist");
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_BLAST_RESIST))
+		szCond.emplace_back(L"Blast Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_BLAST_RESIST))
+		szCond.emplace_back(L"Blast Resist");
+
+	if (pEntity->InCond(TF_COND_MEDIGUN_UBER_FIRE_RESIST))
+		szCond.emplace_back(L"Fire Resist Charge");
+	else if (pEntity->InCond(TF_COND_MEDIGUN_SMALL_FIRE_RESIST))
+		szCond.emplace_back(L"Fire Resist");
+
+	if (pEntity->InCond(TF_COND_BLAST_IMMUNE))
+		szCond.emplace_back(L"Blast Immune");
+
+	if (pEntity->InCond(TF_COND_BULLET_IMMUNE))
+		szCond.emplace_back(L"Bullet Immune");
+
+	if (pEntity->InCond(TF_COND_FIRE_IMMUNE))
+		szCond.emplace_back(L"Fire Immune");
+
+	if (pEntity->InCond(TF_COND_INVULNERABLE)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_CARD_EFFECT)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_USER_BUFF)
+		|| pEntity->InCond(TF_COND_INVULNERABLE_WEARINGOFF))
+		szCond.emplace_back(L"Uber");
+
+	if (pEntity->InCond(TF_COND_MEGAHEAL) || pEntity->InCond(TF_COND_HEALTH_OVERHEALED))
+		szCond.emplace_back(L"Overheal");
+
+	if (pEntity->InCond(TF_COND_PHASE))
+		szCond.emplace_back(L"Bonk");
+
+	if (pEntity->IsCloaked() || pEntity->InCond(TF_COND_STEALTHED_USER_BUFF))
+		szCond.emplace_back(L"Cloaked");
+
+	if (pEntity->InCond(TF_COND_ZOOMED))
+		szCond.emplace_back(L"Zoomed");
+
+	if (pEntity->InCond(TF_COND_TAUNTING))
+		szCond.emplace_back(L"Taunting");
+
+	if (pEntity->InCond(TF_COND_DISGUISED))
+		szCond.emplace_back(L"Disguised");
+
+	if (pEntity->InCond(TF_COND_MAD_MILK))
+		szCond.emplace_back(L"Milked");
+
+	if (pEntity->InCond(TF_COND_URINE))
+		szCond.emplace_back(L"Jarated");
+
+	if (pEntity->InCond(TF_COND_GAS))
+		szCond.emplace_back(L"Gas");
+
+	if (pEntity->InCond(TF_COND_BLEEDING))
+		szCond.emplace_back(L"Bleeding");
+
+	if (pEntity->InCond(TF_COND_BURNING))
+		szCond.emplace_back(L"Burning");
+
+	if (nFlag & FL_DUCKING)
+		szCond.emplace_back(L"Ducking");
+
+	if (pEntity->InCond(TF_COND_BLASTJUMPING) || pEntity->InCond(TF_COND_ROCKETPACK))
+		szCond.emplace_back(L"Blast Jumping");
+
+	if (pEntity->IsCritBoosted())
+	{
+		if (const auto& pWeapon = pEntity->GetActiveWeapon())
+		{
+			if (pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON)
 			{
-				szCond.emplace_back(L"Revved");
+				szCond.emplace_back(L"Mini-Crit Boosted");
+			}
+			else
+			{
+				szCond.emplace_back(L"Crit Boosted");
 			}
 		}
 	}
 
-	if (nFlag & FL_DUCKING)
+	if (pEntity->IsMiniCritBoosted())
 	{
-		szCond.emplace_back(L"Ducking");
+		if (const auto& pWeapon = pEntity->GetActiveWeapon())
+		{
+			if (pWeapon->GetItemDefIndex() == Sniper_t_TheBushwacka)
+			{
+				szCond.emplace_back(L"Crit Boosted");
+			}
+			else
+			{
+				szCond.emplace_back(L"Mini-Crit Boosted");
+			}
+		}
 	}
 
-	if (pEntity->GetHealth() > pEntity->GetMaxHealth())
-	{
-		szCond.emplace_back(L"Overhealed");
-	}
+	if (pEntity->InCond(TF_COND_MARKEDFORDEATH) || pEntity->InCond(TF_COND_MARKEDFORDEATH_SILENT) || pEntity->InCond(TF_COND_PASSTIME_PENALTY_DEBUFF))
+		szCond.emplace_back(L"Marked for Death");
 
-	if (nCondEx2 & TFCondEx2_BlastJumping)
-	{
-		szCond.emplace_back(L"Blast Jumping");
-	}
+	if (pEntity->InCond(TF_COND_DEFENSEBUFF))
+		szCond.emplace_back(L"Defense Buff");
 
-	if (nCond & TFCond_OnFire)
-	{
-		szCond.emplace_back(L"Burning");
-	}
+	if (pEntity->InCond(TF_COND_REGENONDAMAGEBUFF))
+		szCond.emplace_back(L"Speed/Heal Buff");
 
-	if (pEntity->IsUbered())
-	{
-		szCond.emplace_back(L"Ubered");
-	}
+	if (pEntity->InCond(TF_COND_STUNNED))
+		szCond.emplace_back(L"Stunned");
 
-	if (nCond & TFCond_MegaHeal)
-	{
-		szCond.emplace_back(L"Megahealed");
-	}
+	if (pEntity->InCond(TF_COND_PARACHUTE_ACTIVE) || pEntity->InCond(TF_COND_PARACHUTE_DEPLOYED))
+		szCond.emplace_back(L"Parachuting");
 
-	if (nCond & TFCond_Bonked)
-	{
-		szCond.emplace_back(L"Bonked");
-	}
+	if (pEntity->InCond(TF_COND_SHIELD_CHARGE))
+		szCond.emplace_back(L"Charging");
 
-	if (nCond & TFCond_Kritzkrieged || 
-		nCondEx & TFCondEx_CritCanteen || nCondEx & TFCondEx_CritOnFirstBlood || nCondEx & TFCondEx_CritOnWin ||
-		nCondEx & TFCondEx_CritOnKill || nCondEx & TFCondEx_CritDemoCharge || nCondEx & TFCondEx_CritOnFlagCapture ||
-		nCondEx & TFCondEx_HalloweenCritCandy || nCondEx & TFCondEx_PyroCrits)
-	{
-		szCond.emplace_back(L"Crit boosted");
-	}
-	if (nCond & TFCond_MiniCrits)
-	{
-	 szCond.emplace_back(L"Mini-Crits");
-	}
+	if (pEntity->InCond(TF_COND_SODAPOPPER_HYPE))
+		szCond.emplace_back(L"Hype");
 
-	if (nCond & TFCond_Cloaked)
-	{
-		szCond.emplace_back(L"Cloaked");
-	}
-
-	if (nCond & TFCond_Zoomed)
-	{
-		szCond.emplace_back(L"Scoped");
-	}
-
-	if (nCond & TFCond_Taunting)
-	{
-		szCond.emplace_back(L"Taunting");
-	}
-
-	if (nCond & TFCond_Disguised)
-	{
-		szCond.emplace_back(L"Disguised");
-	}
-
-	if (nCond & TFCond_Milked)
-	{
-		szCond.emplace_back(L"Milked");
-	}
-
-	if (nCond & TFCond_Jarated)
-	{
-		szCond.emplace_back(L"Jarated");
-	}
-
-	if (nCond & TFCond_Bleeding)
-	{
-		szCond.emplace_back(L"Bleeding");
-	}
+	if (pEntity->InCond(TF_COND_SNIPERCHARGE_RAGE_BUFF))
+		szCond.emplace_back(L"Focus");
 
 	if (pEntity->GetFeignDeathReady())
-	{
 		szCond.emplace_back(L"Dead Ringer");
-	}
 
 	if (pEntity->IsBuffedByKing())
-	{
-		szCond.emplace_back(L"Buffed by King");
-	}
+		szCond.emplace_back(L"King Buff");
+
+	if (pEntity->InCond(TF_COND_SPEED_BOOST))
+		szCond.emplace_back(L"Speed Boosted");
+
+	if (pEntity->GetDormant())
+		szCond.emplace_back(L"Dormant");
+
+	if (pEntity->IsAGhost())
+		szCond.emplace_back(L"Ghost");
 
 	return szCond;
 }

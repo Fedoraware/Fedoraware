@@ -89,9 +89,14 @@ public:
 	return *reinterpret_cast<type*>(this + offset); \
 }
 
+#define M_FLAGGET(name, flags, flag) __inline bool Is##name() \
+{ \
+	return (flags & flag); \
+}
+
 #define M_CONDGET(name, conditions, cond) __inline bool Is##name() \
 { \
-	return (conditions & cond); \
+	return (conditions(cond)); \
 }
 
 // lol

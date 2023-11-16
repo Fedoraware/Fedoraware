@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Includes/Includes.h"
+#include "../IAppSystem/IAppSystem.h"
 //big mess
 
 //-----------------------------------------------------------------------------
@@ -236,16 +237,6 @@ public:
 	__int32 bHasMax; //0x003C 
 	float fMaxVal; //0x0040 
 	void* fnChangeCallback; //0x0044 
-};
-
-class IAppSystem
-{
-public:
-	virtual bool Connect(void* factory) = 0;
-	virtual void Disconnect() = 0;
-	virtual void* QueryInterface(const char* pInterfaceName) = 0;
-	virtual int Init() = 0;
-	virtual void Shutdown(char* reason) = 0;
 };
 
 class ICvar : public IAppSystem

@@ -47,6 +47,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash)
 
 				PlayerInfo_t pi{};
 				I::EngineClient->GetPlayerInfo(nIndex, &pi);
+				if (pi.fakeplayer) { return; } // dont spam chat by giving class changes for mvm bots (this also makes it not show on normal bots)
 
 				std::string classString = std::format("{} {} is now a {}", Vars::Menu::CheatPrefix.Value.c_str(), pi.name, Utils::GetClassByIndex(pEvent->GetInt("class")));
 				auto wclassString = std::wstring(classString.begin(), classString.end());

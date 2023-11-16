@@ -136,7 +136,12 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 	if (bTeleport)
 	{
 		bIgnoreSendNetMsg = true;
-		const int iWishTicks = (Vars::Misc::CL_Move::TeleportMode.Value ? std::clamp(Vars::Misc::CL_Move::TeleportFactor.Value, 2, iAvailableTicks) : iAvailableTicks);
+		int iWishTicks = iAvailableTicks;
+		if (Vars::Misc::CL_Move::TeleportMode.Value > 0 && iAvailableTicks > 2)
+		{
+			iWishTicks = std::clamp(Vars::Misc::CL_Move::TeleportFactor.Value, 2, iAvailableTicks);
+		}
+
 		for (int i = 0; i < iWishTicks; i++) { CLMoveFunc(accumulated_extra_samples, i == iWishTicks); }
 		return;
 	}

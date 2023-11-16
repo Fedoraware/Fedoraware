@@ -188,20 +188,17 @@ void CNoSpread::SendNetMessagePost()
 
     bWaitingForPostSNM = false;
 
-    // Create playerperf
-    NET_StringCmd sCmd("playerperf");
+    // Required for the playerperf command to work
+    ConVar* playerperf_debug = I::Cvar->FindVar("cl_debug_player_perf");
+    playerperf_debug->SetValue(1);
 
-    // And send it along with our clc_move. Yes, we are calling SendNetMsg from inside SendNetMsg
-   I::EngineClient->GetNetChannelInfo()->SendNetMsg(sCmd, true);
+    I::EngineClient->ClientCmd_Unrestricted("playerperf");
 
     // remember client float time
     bShouldUpdateTime = false;
     // Only set when not syncing
     if (G::NoSpreadSynced == NOT_SYNCED)
         G::SentClientFloatTime = Utils::PlatFloatTime();
-
-    // force transmit now
-     I::EngineClient->GetNetChannelInfo()->Transmit();
 
     if (Vars::NoSpread::UseAvgLatency.Value)
         dPingAtSend = I::EngineClient->GetNetChannelInfo()->GetAvgLatency(FLOW_OUTGOING);

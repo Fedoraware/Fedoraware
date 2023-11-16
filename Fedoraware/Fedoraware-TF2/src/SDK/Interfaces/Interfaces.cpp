@@ -44,6 +44,12 @@ void CInterfaces::Init()
 	GameMovement = g_Interface.Get<CGameMovement*>(CLIENT_DLL, CLIENT_GAMEMOVEMENT_INTERFACE_VERSION);
 	VALIDATE(GameMovement);
 
+	Physics = g_Interface.Get<IPhysics*>(VPHYSICS_DLL, VPHYSICS_INTERFACE_VERSION);
+	VALIDATE(Physics);
+
+	PhysicsCollision = g_Interface.Get<IPhysicsCollision*>(VPHYSICS_DLL, VPHYSICS_COLLISION_INTERFACE_VERSION);
+	VALIDATE(PhysicsCollision);
+
 	CenterPrint = g_Interface.Get<ICenterPrint*>(CLIENT_DLL, VCENTERPRINT_INTERFACE_VERSION);
 	VALIDATE(CenterPrint);
 

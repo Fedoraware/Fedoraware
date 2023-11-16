@@ -15,6 +15,7 @@
 #include "DebugOverlay/DebugOverlay.h"
 #include "EngineTrace/EngineTrace.h"
 #include "GameMovement/GameMovement.h"
+#include "VPhysics/VPhysics.h"
 #include "MoveHelper/MoveHelper.h"
 #include "ConVar/ConVar.h"
 #include "Prediction/Prediction.h"
@@ -205,6 +206,8 @@ namespace I
 	inline CEngineTrace* EngineTrace = nullptr;
 	inline CPrediction* Prediction = nullptr;
 	inline CGameMovement* GameMovement = nullptr;
+	inline IPhysics* Physics = nullptr;
+	inline IPhysicsCollision* PhysicsCollision = nullptr;
 	inline CMoveHelper* MoveHelper = nullptr;
 	inline ICvar* Cvar = nullptr;
 	inline CGlobalVarsBase* GlobalVars = nullptr;

@@ -27,15 +27,12 @@ bool CSpectatorList::GetSpectators(CBaseEntity* pLocal)
 					szMode = L"3rd";
 					break;
 				}
-				case OBS_MODE_DEATHCAM:
-				{
-					szMode = L"Deathcam";
-					break;
-				}
-				case OBS_MODE_FREEZECAM:
-				{
-					szMode = L"Freezecam";
-					break;
+				case OBS_MODE_DEATHCAM: //thanks barn you are the best
+				case OBS_MODE_FREEZECAM: {
+					if (Vars::Visuals::SLShowOthers.Value && Vars::Visuals::SpectatorList.Value != 1) {
+						szMode = (pPlayer->GetObserverMode()) == OBS_MODE_DEATHCAM ? L"Death" : L"Freeze";
+						break;
+					}
 				}
 				default: continue;
 			}
@@ -162,7 +159,8 @@ void CSpectatorList::DrawClassic()
 	{
 		if (!pLocal->IsAlive() || !GetSpectators(pLocal)) { return; }
 
-		int nDrawY = (g_ScreenSize.h / 2) - 300;
+//		int nDrawY = (g_ScreenSize.h / 2) - 300;
+		int nDrawY = (g_ScreenSize.h / 2) - Vars::Visuals::SpectatorListHeight.Value;
 		const int centerr = g_ScreenSize.c;
 		const auto& nameFont = g_Draw.GetFont(FONT_ESP_NAME);
 		const int addyy = nameFont.nTall;
@@ -172,7 +170,7 @@ void CSpectatorList::DrawClassic()
 			centerr, nDrawY - addyy,
 			{ 255, 255, 255, 255 },
 			ALIGN_CENTERHORIZONTAL,
-			L"Spectating you");
+			L"Spectating You:");
 
 		for (const auto& Spectator : Spectators)
 		{

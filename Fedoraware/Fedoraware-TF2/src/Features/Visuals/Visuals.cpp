@@ -2,6 +2,7 @@
 #include "../Vars.h"
 #include "../ESP/ESP.h"
 #include "../NoSpread/NoSpread.h"
+#include "../Aimbot/ProjectileSimulation/ProjectileSimulation.h"
 
 namespace S
 {
@@ -9,6 +10,8 @@ namespace S
 	MAKE_SIGNATURE(GetServerAnimating, SERVER_DLL, "55 8B EC 8B 55 ? 85 D2 7E ? A1", 0x0);
 	MAKE_SIGNATURE(DrawServerHitboxes, SERVER_DLL, "55 8B EC 83 EC ? 57 8B F9 80 BF ? ? ? ? ? 0F 85 ? ? ? ? 83 BF ? ? ? ? ? 75 ? E8 ? ? ? ? 85 C0 74 ? 8B CF E8 ? ? ? ? 8B 97", 0x0);
 	MAKE_SIGNATURE(RenderLine, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 85 F6", 0x0);
+	MAKE_SIGNATURE(RenderBoxFace, ENGINE_DLL, "55 8B EC 51 8B 45 ? 8B C8 FF 75", 0x0);
+	MAKE_SIGNATURE(RenderBoxEdge, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 56 E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 8B F0 89 75 ? 85 F6 74 ? 8B 06 8B CE FF 50 ? A1", 0x0);
 }
 
 void CVisuals::Draw()
@@ -288,29 +291,26 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		{
 			if (!I::EngineVGui->IsGameUIVisible() && !I::VGuiSurface->IsCursorVisible())
 			{
-				static KeyHelper tpKey{&Vars::Visuals::ThirdPersonKey.Value};
+				static KeyHelper tpKey{ &Vars::Visuals::ThirdPersonKey.Value };
 				if (tpKey.Pressed())
 				{
 					Vars::Visuals::ThirdPerson.Value = !Vars::Visuals::ThirdPerson.Value;
 				}
 			}
 		}
-		const bool bScoped = pLocal->IsScoped() && !(Vars::Visuals::RemoveScope.Value || Vars::Visuals::RemoveZoom.Value);
 		const bool bThirdPersonVar = Vars::Visuals::ThirdPerson.Value;
 		const bool bFollowingProjectile = Vars::Visuals::ProjectileCameraKey.Value && GetAsyncKeyState(Vars::Visuals::ProjectileCameraKey.Value) & 0x8000 && !g_EntityCache.GetGroup(EGroupType::LOCAL_PROJECTILES).empty();
 		const bool bFreecam = G::FreecamActive;
-		const bool bShouldThirdPerson = (bThirdPersonVar || bFollowingProjectile || bFreecam) && (!bScoped || bFreecam);
+		const bool bShouldThirdPerson = Vars::Visuals::ThirdPerson.Value || bFreecam;
 		const bool bIsInThirdPerson = I::Input->CAM_IsThirdPerson();
 
 		if (!bShouldThirdPerson) {
 			if (bIsInThirdPerson) {
 				pLocal->ForceTauntCam(0);
 			}
-
-			return;
 		}
 
-		if (!bIsInThirdPerson)
+		else if (!bIsInThirdPerson)
 		{
 			pLocal->ForceTauntCam(1);
 		}
@@ -318,13 +318,12 @@ void CVisuals::ThirdPerson(CViewSetup* pView)
 		// Thirdperson angles
 		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.Value)
 		{
-			Vec3 vAngles = { F::AntiAim.vRealAngles.x, F::AntiAim.vRealAngles.y, 0 };
-			I::Prediction->SetLocalViewAngles(vAngles);
+			I::Prediction->SetLocalViewAngles(G::RealViewAngles);
 			if (Vars::Visuals::ThirdPersonInstantYaw.Value)
 			{
 				if (const auto& pAnimState = pLocal->GetAnimState())
 				{
-					pAnimState->m_flCurrentFeetYaw = vAngles.y;
+					pAnimState->m_flCurrentFeetYaw = G::RealViewAngles.y;
 				}
 			}
 		}
@@ -402,6 +401,48 @@ void CVisuals::BulletTrace(CBaseEntity* pEntity, Color_t color)
 	g_Draw.Line(src.x, src.y, dst.x, dst.y, color);
 }
 
+void CVisuals::ProjectileTrace()
+{
+	const auto& pLocal = g_EntityCache.GetLocal();
+	const auto& pWeapon = g_EntityCache.GetWeapon();
+	if (!pLocal || !pWeapon)
+		return;
+
+	ProjectileInfo projInfo = {};
+	if (!F::ProjSim.GetInfo(pLocal, pWeapon, I::EngineClient->GetViewAngles(), projInfo, true))
+		return;
+
+	if (!F::ProjSim.Initialize(projInfo))
+		return;
+
+	for (int n = 0; n < TIME_TO_TICKS(projInfo.m_lifetime); n++)
+	{
+		Vec3 Old = F::ProjSim.GetOrigin();
+		F::ProjSim.RunTick(projInfo);
+		Vec3 New = F::ProjSim.GetOrigin();
+
+		CGameTrace trace = {};
+		CTraceFilterProjectile filter = {};
+		filter.pSkip = pLocal;
+		Utils::TraceHull(Old, New, projInfo.m_hull * -1.f, projInfo.m_hull, MASK_SOLID, &filter, &trace);
+		if (trace.DidHit())
+		{
+			Vec3 angles;
+			Math::VectorAngles(trace.Plane.normal, angles);
+
+			const Vec3 size = { projInfo.m_hull.x * 2.f, 16.f, 16.f };
+			RenderBox(trace.vEndPos, size / -2, size / 2, angles, Vars::Aimbot::Projectile::ProjectileColor.Value, { 0, 0, 0, 0 });
+
+			projInfo.PredictionLines.push_back({ trace.vEndPos, Math::GetRotatedPosition(trace.vEndPos, Math::VelocityToAngles(F::ProjSim.GetVelocity() * Vec3(1, 1, 0)).Length2D() + 90, Vars::Visuals::SeperatorLength.Value) });
+
+			break;
+		}
+	}
+
+	for (size_t i = 1; i < projInfo.PredictionLines.size(); i++)
+		RenderLine(projInfo.PredictionLines.at(i - 1).first, projInfo.PredictionLines.at(i).first, Vars::Aimbot::Projectile::ProjectileColor.Value, false);
+}
+
 void DebugLine(const char* title, const char* value, std::pair<int, int> offsets, Color_t clr = {255, 255, 255, 255})
 {
 	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
@@ -459,12 +500,12 @@ void CVisuals::DrawAntiAim(CBaseEntity* pLocal)
 		if (Utils::W2S(vOrigin, vScreen1))
 		{
 			constexpr auto distance = 50.f;
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, F::AntiAim.vRealAngles.y, distance), vScreen2))
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::RealViewAngles.y, distance), vScreen2))
 			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, REAL_COLOUR);
 			}
 
-			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, F::AntiAim.vFakeAngles.y, distance), vScreen2))
+			if (Utils::W2S(Utils::GetRotatedPosition(vOrigin, G::FakeViewAngles.y, distance), vScreen2))
 			{
 				g_Draw.Line(vScreen1.x, vScreen1.y, vScreen2.x, vScreen2.y, FAKE_COLOUR);
 			}
@@ -657,6 +698,58 @@ void CVisuals::DrawMenuSnow()
 	}
 }
 
+void CVisuals::DrawMenuRain() //brought to you by chatgpt
+{
+	// Rain
+	struct RainDropT
+	{
+		int X;
+		int Y;
+		float length;
+	};
+
+	static std::vector<RainDropT> vRainDrops;
+	constexpr int rainCount = 200;
+
+	static bool bInit = false;
+	if (!bInit)
+	{
+		for (int i = 0; i < rainCount; i++)
+		{
+			vRainDrops.emplace_back(Utils::RandIntSimple(0, g_ScreenSize.w), Utils::RandIntSimple(0, g_ScreenSize.h / 2.f), Utils::RandFloatSimple(10.f, 20.f));
+		}
+		bInit = true;
+	}
+
+	const auto& menuFont = g_Draw.GetFont(FONT_MENU);
+	for (auto& drop : vRainDrops)
+	{
+		// Do gravity
+		constexpr int drift = 1.5;
+		//drop.X += Utils::RandIntSimple(-drift, drift);
+		drop.Y += drift;
+
+		// Recreate raindrops that are gone
+		if (drop.Y >= g_ScreenSize.h / 2.f || drop.X >= g_ScreenSize.w || drop.X <= 0)
+		{
+			drop.X = Utils::RandIntSimple(0, g_ScreenSize.w);
+			drop.Y = Utils::RandIntSimple(0, 100);
+			drop.length = Utils::RandFloatSimple(10.f, 20.f);
+		}
+		// Calculate alpha and apply fading effect
+		float midleft = Math::MapFloat(drop.Y, 0.0f, g_ScreenSize.h / 2.f, 1.0f, 0.0f);
+
+		for (int i = 0; i < drop.length; i++)
+		{
+			float alpha = midleft - static_cast<float>(i) / drop.length;
+			alpha = std::max(0.0f, alpha); // Ensure alpha is not negative
+
+			Color_t dropColor = { 135, 206, 250, static_cast<byte>(alpha * 255.0f) }; // Light blue color for rain
+			g_Draw.Line(drop.X, drop.Y - i, drop.X, drop.Y - i + 1, dropColor);
+		}
+	}
+}
+
 void CVisuals::DrawPredictionLine()
 {
 	if (!G::PredictedPos.IsZero())
@@ -734,6 +827,20 @@ void CVisuals::RenderLine(const Vector& v1, const Vector& v2, Color_t c, bool bZ
 	fnRenderLine(v1, v2, c, bZBuffer);
 }
 
+void CVisuals::RenderBox(const Vec3& vPos, const Vec3& vMins, const Vec3& vMaxs, const Vec3& vOrientation, Color_t cEdge, Color_t cFace)
+{
+	{
+		using FN = void(__cdecl*)(const Vec3&, const Vec3&, const Vec3&, const Vec3&, Color_t, bool, bool);
+		static auto fnRenderLine = S::RenderBoxFace.As<FN>();
+		fnRenderLine(vPos, vOrientation, vMins, vMaxs, cFace, false, false);
+	}
+	{
+		using FN = void(__cdecl*)(const Vec3&, const Vec3&, const Vec3&, const Vec3&, Color_t, bool);
+		static auto fnRenderLine = S::RenderBoxEdge.As<FN>();
+		fnRenderLine(vPos, vOrientation, vMins, vMaxs, cEdge, false);
+	}
+}
+
 void CVisuals::DrawSightlines()
 {
 	if (Vars::ESP::Players::SniperSightlines.Value)
@@ -763,7 +870,7 @@ void CVisuals::FillSightlines()
 			const int iEntityIndex = pEnemy->GetIndex();
 			if (!(pEnemy->IsAlive()) ||
 				!(pEnemy->GetClassNum() == CLASS_SNIPER) ||
-				!(pEnemy->GetCond() & TFCond_Zoomed) ||
+				!(pEnemy->InCond(TF_COND_ZOOMED)) ||
 				(pEnemy->GetDormant()))
 			{
 				m_SightLines[iEntityIndex] = { Vec3{0,0,0}, Vec3{0,0,0}, Color_t{0,0,0,0}, false };
@@ -868,7 +975,7 @@ void CVisuals::DrawAimbotFOV(CBaseEntity* pLocal)
 				DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.Value) ? 30.0f : flFOV) /
 				2.0f) * g_ScreenSize.w;
 		const Color_t clr = Vars::Colours::FOVCircle.Value;
-		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
+		g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);	
 	}
 }
 

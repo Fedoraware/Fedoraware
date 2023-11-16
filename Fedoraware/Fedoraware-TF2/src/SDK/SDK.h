@@ -317,6 +317,14 @@ namespace Utils
 		std::random_device rd; std::mt19937 gen(rd()); std::uniform_int_distribution<> distr(min, max);
 		return distr(gen);
 	}
+	
+	__inline float RandFloatSimple(float min, float max)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<float> distr(min, max);
+		return distr(gen);
+	}
 
 	__inline void FixMovement(CUserCmd *pCmd, const Vec3 &vecTargetAngle)
 	{
@@ -502,6 +510,9 @@ namespace Utils
 			case TF_WEAPON_FLAMETHROWER:
 			case TF_WEAPON_CLEAVER:
 			case TF_WEAPON_PIPEBOMBLAUNCHER:
+			case TF_WEAPON_JAR:
+			case TF_WEAPON_JAR_MILK:
+			case TF_WEAPON_JAR_GAS:
 			{
 				return EWeaponType::PROJECTILE;
 			}
@@ -525,7 +536,7 @@ namespace Utils
 			G::CurItemDefIndex == Heavy_s_Fishcake ||
 			G::CurItemDefIndex == Heavy_s_TheDalokohsBar ||
 			G::CurItemDefIndex == Heavy_s_SecondBanana) {
-			return EWeaponType::HITSCAN;
+			return EWeaponType::PROJECTILE;
 		}
 
 		return EWeaponType::UNKNOWN;
@@ -770,6 +781,7 @@ namespace Utils
 			case TF_WEAPON_RAYGUN_REVENGE:
 			case TF_WEAPON_ROCKETLAUNCHER:
 			case TF_WEAPON_DIRECTHIT:
+			case TF_WEAPON_FLAREGUN:
 			{
 				Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weaponbase_gun.cpp @L529 & @L760
 				if (G::CurItemDefIndex == Soldier_m_TheOriginal)
@@ -790,8 +802,11 @@ namespace Utils
 				break;
 			}
 			case TF_WEAPON_COMPOUND_BOW:
+			case TF_WEAPON_CROSSBOW:
+			case TF_WEAPON_SHOTGUN_BUILDING_RESCUE:
+			case TF_WEAPON_GRAPPLINGHOOK:
 			{
-				const Vec3 vecOffset(23.5f, 12.0f, -3.0f); //tf_weapon_grapplinghook.cpp @L355 ??
+				const Vec3 vecOffset(23.5f, -8.f, -3.f); //tf_weaponbase_gun.cpp @L798
 				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
 				break;
 			}
@@ -799,7 +814,7 @@ namespace Utils
 			case TF_WEAPON_PARTICLE_CANNON:
 			case TF_WEAPON_DRG_POMSON:
 			{
-				Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L568
+				Vec3 vecOffset(23.5f, -8.0f, -3.0f); //tf_weaponbase_gun.cpp @L565
 				if (pLocal->IsDucking())
 				{
 					vecOffset.z = 8.0f;
@@ -811,8 +826,33 @@ namespace Utils
 			case TF_WEAPON_PIPEBOMBLAUNCHER:
 			case TF_WEAPON_STICKBOMB:
 			case TF_WEAPON_STICKY_BALL_LAUNCHER:
+			case TF_WEAPON_CANNON:
+			case TF_WEAPON_JAR:
+			case TF_WEAPON_JAR_GAS:
+			case TF_WEAPON_JAR_MILK:
 			{
-				// TODO: Implement this
+				const Vec3 vecOffset(16.f, 8.f, -6.f);
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_FLAME_BALL:
+			{
+				const Vec3 vecOffset(70.f, 7.f, 9.f);
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_CLEAVER:
+			case TF_WEAPON_BAT_WOOD:
+			case TF_WEAPON_BAT_GIFTWRAP: // Close Enough
+			{
+				const Vec3 vecOffset(32.f, 0.f, -15.f);
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
+				break;
+			}
+			case TF_WEAPON_LUNCHBOX:
+			{
+				const Vec3 vecOffset(0.f, 0.f, -8.f);
+				GetProjectileFireSetup(pLocal, aimAngles, vecOffset, &shootPos);
 				break;
 			}
 			default: break;
