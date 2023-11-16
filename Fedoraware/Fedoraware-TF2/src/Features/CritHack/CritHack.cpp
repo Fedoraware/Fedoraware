@@ -27,10 +27,6 @@ bool CCritHack::IsEnabled()
 
 bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 {
-	if (!pCmd) {
-		return false;
-	}
-
 	if (G::CurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 	{
 		static bool bLoading = false;
