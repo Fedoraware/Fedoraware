@@ -110,8 +110,8 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 				F::RSChat.Draw();
 			}
 
-			F::Visuals.Draw();
 			F::ESP.Draw();
+			F::Visuals.Draw();
 			F::PlayerArrows.Draw();
 			F::Followbot.Draw();
 			F::SpectatorList.Draw();
