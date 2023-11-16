@@ -180,6 +180,8 @@ void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 		return;
 	}
 
+	G::ShouldShift = false;
+
 	return CLMoveFunc(accumulated_extra_samples, true);
 }
 
