@@ -43,7 +43,7 @@ inline void CFakelag::PreserveBlastJump(const int nOldGroundInt, const int nOldF
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	const bool bVar = Vars::Misc::CL_Move::RetainBlastJump.Value;
 	const bool bPlayerReady = pLocal->IsAlive() && pLocal->IsPlayer() && pLocal->OnSolid() && nOldGroundInt > 0 && nOldFlags & FL_ONGROUND;
-	const bool bCanPreserve = pLocal->GetClassNum() == ETFClass::CLASS_SOLDIER && pLocal->GetCondEx2() & TFCondEx2_BlastJumping;
+	const bool bCanPreserve = pLocal->GetClassNum() == ETFClass::CLASS_SOLDIER && pLocal->GetCondEx2() & TF_COND_BLASTJUMPING;
 	bPreservingBlast = bVar && bPlayerReady && bCanPreserve;
 }
 
