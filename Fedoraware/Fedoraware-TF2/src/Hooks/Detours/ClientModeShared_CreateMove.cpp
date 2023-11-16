@@ -128,10 +128,12 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 		F::EnginePrediction.Start(pCmd);
 		{
-			F::Aimbot.Run(pCmd);
-			F::Auto.Run(pCmd);
-			F::PacketManip.CreateMove(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
-			F::Misc.RunMid(pCmd, nOldGroundEnt);
+			if (pCmd) {
+				F::Aimbot.Run(pCmd);
+				F::Auto.Run(pCmd);
+				F::PacketManip.CreateMove(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
+				F::Misc.RunMid(pCmd, nOldGroundEnt);
+			}
 		}
 		F::EnginePrediction.End(pCmd);
 
