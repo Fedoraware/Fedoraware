@@ -173,7 +173,7 @@ void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 
 	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
-	if (!iNetChan || !pLocal) {
+	if (!iNetChan || !pLocal || !pCmd) {
 		return;
 	}
 
