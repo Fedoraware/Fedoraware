@@ -5,8 +5,6 @@
 #include "../../Features/Auto/Auto.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/AntiHack/AntiAim.h"
-#include "../../Features/AntiHack/FakeLag/FakeLag.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/Visuals/FakeAngleManager/FakeAng.h"
 #include "../../Features/Camera/CameraWindow.h"
@@ -21,6 +19,7 @@
 #include "../../Features/TickHandler/TickHandler.h"
 #include "../../Features/Backtrack/Backtrack.h"
 #include "../../Features/NoSpread/NoSpread.h"
+#include "../../Features/PacketManip/PacketManip.h"
 
 void AttackingUpdate()
 {
@@ -129,11 +128,12 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 
 		F::EnginePrediction.Start(pCmd);
 		{
-			F::Aimbot.Run(pCmd);
-			F::Auto.Run(pCmd);
-			F::AntiAim.Run(pCmd, pSendPacket);
-			F::Misc.RunMid(pCmd, nOldGroundEnt);
-			F::FakeLag.OnTick(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
+			if (pCmd) {
+				F::Aimbot.Run(pCmd);
+				F::Auto.Run(pCmd);
+				F::PacketManip.CreateMove(pCmd, pSendPacket, nOldGroundEnt, nOldFlags);
+				F::Misc.RunMid(pCmd, nOldGroundEnt);
+			}
 		}
 		F::EnginePrediction.End(pCmd);
 
@@ -158,24 +158,7 @@ MAKE_HOOK(ClientModeShared_CreateMove, Utils::GetVFuncPtr(I::ClientModeShared, 2
 		I::EngineClient->ClientCmd_Unrestricted("tf_party_chat \"FED@MA==\"");
 	}
 
-	if (!G::ShouldShift)
-	{
-		static bool bWasSet = false;
-		if (G::SilentTime && !bWasSet)
-		{
-			*pSendPacket = false;
-			bWasSet = true;
-		}
-		else
-		{
-			if (bWasSet)
-			{
-				*pSendPacket = true;
-				bWasSet = false;
-			}
-		}
-	}
-	else { AttackingUpdate(); }
+	AttackingUpdate();
 
 	// do this at the end just in case aimbot / triggerbot fired.
 	if (const auto& pWeapon = g_EntityCache.GetWeapon(); const auto & pLocal = g_EntityCache.GetLocal())

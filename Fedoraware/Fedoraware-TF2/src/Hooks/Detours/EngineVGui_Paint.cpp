@@ -14,7 +14,6 @@
 #include "../../Features/AutoQueue/AutoQueue.h"
 #include "../../Features/Menu/MaterialEditor/MaterialEditor.h"
 #include "../../Features/Menu/Playerlist/Playerlist.h"
-#include "../../Features/AntiHack/AntiAim.h"
 
 namespace S
 {
@@ -109,12 +108,6 @@ MAKE_HOOK(EngineVGui_Paint, Utils::GetVFuncPtr(I::EngineVGui, 14), void, __fastc
 			if (I::EngineClient->IsInGame())
 			{
 				F::RSChat.Draw();
-			}
-
-			if (const auto pLocal = g_EntityCache.GetLocal())
-			{
-				F::AntiAim.Draw(pLocal);
-				//F::Ticks.DrawDebug();
 			}
 
 			F::Visuals.Draw();

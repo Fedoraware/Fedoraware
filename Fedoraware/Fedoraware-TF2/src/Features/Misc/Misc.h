@@ -1,5 +1,6 @@
 #pragma once
 #include "../Feature.h"
+#include "../PacketManip/AntiAim/AntiAim.h"
 
 class CMisc
 {
@@ -25,7 +26,6 @@ class CMisc
 	void PingReducer();
 	void WeaponSway();
 	void DetectChoke();
-	void ChokeCheck(bool* pSendPacket);
 	void DoubletapPacket(bool* pSendPacket);
 	void EdgeJump(CBaseEntity* pLocal, CUserCmd* pCmd, const int nOldGroundEnt);
 	void DuckJump(CBaseEntity* pLocal, CUserCmd* pCmd);

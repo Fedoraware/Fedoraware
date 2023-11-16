@@ -59,7 +59,6 @@ void CMisc::RunPost(CUserCmd* pCmd, bool* pSendPacket)
 		LegJitter(pCmd, pLocal);
 		AutoRocketJump(pCmd, pLocal);
 		AutoScoutJump(pCmd, pLocal);
-		ChokeCheck(pSendPacket);
 	}
 }
 
@@ -75,11 +74,6 @@ void CMisc::StopMovement(CUserCmd* pCmd, bool* pSendPacket)
 	G::UpdateView = false;
 	bMovementStopped = true;
 	bMovementScuffed = true;
-
-	if (!G::Recharging)
-	{
-		*pSendPacket = false;
-	}
 }
 
 void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal) {
@@ -130,14 +124,6 @@ void CMisc::FastDeltaMove(CUserCmd* pCmd, bool* pSendPacket, CBaseEntity* pLocal
 
 		if (bChanged) { return; }
 	}
-}
-
-void CMisc::ChokeCheck(bool* pSendPacket)
-{
-	static int iChokedPackets = 0;
-	if (!*pSendPacket) { iChokedPackets++; }
-	else { iChokedPackets = 0; }
-	if (iChokedPackets > 22) { *pSendPacket = true; iChokedPackets = 0; }
 }
 
 void CMisc::DoubletapPacket(bool* pSendPacket)
@@ -229,8 +215,8 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (!pLocal->OnSolid() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsAlive()) { return; }
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
-	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || G::AntiAim.second) { return; }
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && Vars::AntiHack::AntiAim::LegJitter.Value/* && I::GlobalVars->tickcount % 2*/)
+	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || !F::AntiAim.bSendingReal) { return; }
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && (Vars::AntiHack::AntiAim::LegJitter.Value || F::AntiAim.bSendingReal))	//	force leg jitter if we are sending our real.
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
 		pos ? pCmd->sidemove = scale : pCmd->sidemove = -scale;
