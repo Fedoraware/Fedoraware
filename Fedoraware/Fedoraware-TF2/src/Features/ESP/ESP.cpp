@@ -363,60 +363,77 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 			{
 				// Name ESP
 				int middle = x + w / 2;
+				std::string lowercaseName = pi.name;
+				std::transform(lowercaseName.begin(), lowercaseName.end(), lowercaseName.begin(), ::tolower);
 				if (Vars::ESP::Players::Name.Value)
 				{
 					int offset = FONT_NAME.nTall + FONT_NAME.nTall / 4;
 					if (Vars::ESP::Players::NameBox.Value)
 					{
 						int wideth, heighth;
-						I::VGuiSurface->GetTextSize(FONT_NAME.dwFont,
-													Utils::ConvertUtf8ToWide(pi.name).data(), wideth, heighth);
 						Color_t LineColor = drawColor;
 						LineColor.a = 180;
-						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 5, wideth + 10, heighth + 10, { 0,0,0,180 });
+
+						I::VGuiSurface->GetTextSize(FONT_NAME.dwFont, Utils::ConvertUtf8ToWide(lowercaseName).data(), wideth, heighth);
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset, wideth + 10, heighth + 2, { 0, 0, 0, 180 });
-						//g_Draw.Rect((x + (w / 2) - (wideth / 2)) - 5, y - offset - 7, wideth + 10, 2, LineColor);
 						g_Draw.Rect(middle - wideth / 2 - 5, y - offset - 2, wideth + 10, 2, LineColor);
 						offset -= 1;
 					}
-					if (Vars::ESP::Players::NameCustom.Value)
-					{
-						g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor.Value, ALIGN_CENTERHORIZONTAL,
-									  Utils::ConvertUtf8ToWide(pi.name).data());
-					}
+					if (Vars::ESP::Players::MoneybotMode.Value) {
+						if (Vars::ESP::Players::NameCustom.Value)
+							{
+								g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor.Value, ALIGN_CENTERHORIZONTAL,
+									Utils::ConvertUtf8ToWide(lowercaseName).data());
+							}
+							else
+							{
+								g_Draw.String(FONT_NAME, middle, y - offset, drawColor, ALIGN_CENTERHORIZONTAL,
+									Utils::ConvertUtf8ToWide(lowercaseName).data());
+							}
+						}
 					else
 					{
-						g_Draw.String(FONT_NAME, middle, y - offset, drawColor, ALIGN_CENTERHORIZONTAL,
-									  Utils::ConvertUtf8ToWide(pi.name).data());
+						if (Vars::ESP::Players::NameCustom.Value)
+						{
+							g_Draw.String(FONT_NAME, middle, y - offset, Vars::ESP::Players::NameColor.Value, ALIGN_CENTERHORIZONTAL,
+								Utils::ConvertUtf8ToWide(pi.name).data());
+						}
+						else
+						{
+							g_Draw.String(FONT_NAME, middle, y - offset, drawColor, ALIGN_CENTERHORIZONTAL,
+								Utils::ConvertUtf8ToWide(pi.name).data());
+						}
 					}
 				}
+
 
 				// Priority ESP
 				if (Vars::ESP::Players::Priority.Value)
 				{
+					int yOffset = y - nTextOffset;
 					switch (G::PlayerPriority[pi.friendsID].Mode)
 					{
 						case 0:
 						{
-							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
+							g_Draw.String(FONT, middle, yOffset - 26, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "FRIEND");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 1:
 						{
-							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
+							g_Draw.String(FONT, middle, yOffset - 26, Vars::Colours::Friend.Value, ALIGN_CENTERHORIZONTAL, "IGNORED");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 3:
 						{
-							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
+							g_Draw.String(FONT, middle, yOffset - 26, Vars::Colours::Rage.Value, ALIGN_CENTERHORIZONTAL, "RAGE");
 							nTextOffset += FONT.nTall;
 							break;
 						}
 						case 4:
 						{
-							g_Draw.String(FONT, middle, y - nTextOffset, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
+							g_Draw.String(FONT, middle, yOffset - 26, Vars::Colours::Cheater.Value, ALIGN_CENTERHORIZONTAL, "CHEATER");
 							nTextOffset += FONT.nTall;
 							break;
 						}
@@ -447,11 +464,14 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 					}
 
 					static constexpr int TEXTURE_SIZE = 18;
-					if (Vars::ESP::Players::Priority.Value)
+					if (Vars::ESP::Players::Priority.Value && G::PlayerPriority[pi.friendsID].Mode != 2)
 					{
-						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - offset - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
+						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - 29 - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
 							nClassNum);
 					}
+					else
+						g_Draw.Texture(x + w / 2 - TEXTURE_SIZE / 2, y - offset - TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE, Colors::White,
+							nClassNum);
 				}
 
 				if (Vars::ESP::Players::Class.Value >= 2)
