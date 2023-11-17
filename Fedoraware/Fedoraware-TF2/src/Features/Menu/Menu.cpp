@@ -574,6 +574,7 @@ void CMenu::MenuVisuals()
 					SectionTitle("Player ESP");
 					WToggle("Player ESP###EnablePlayerESP", &Vars::ESP::Players::Active.Value); HelpMarker("Will draw useful information/indicators on players");
 					WToggle("Name ESP###PlayerNameESP", &Vars::ESP::Players::Name.Value); HelpMarker("Will draw the players name");
+					WToggle("Lowercase Name", &Vars::ESP::Players::MoneybotMode.Value); HelpMarker("bot.cash");
 					WToggle("Custom Name Color", &Vars::ESP::Players::NameCustom.Value); HelpMarker("Custom color for name esp");
 					if (Vars::ESP::Players::NameCustom.Value)
 					{

@@ -303,6 +303,7 @@ namespace Vars
 		CVar(NameColor, Color_t(255, 255, 255, 255), IS_VISUAL)
 		CVar(NameCustom, false, IS_VISUAL)
 		CVar(NameBox, false, IS_VISUAL)
+		CVar(MoneybotMode, false, IS_VISUAL)
 		CVar(Uber, 0, IS_VISUAL)
 		CVar(Class, 0, IS_VISUAL)
 		CVar(WeaponIcon, false, IS_VISUAL)
