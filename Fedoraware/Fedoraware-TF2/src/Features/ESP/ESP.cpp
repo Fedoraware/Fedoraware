@@ -404,7 +404,8 @@ void CESP::DrawPlayers(CBaseEntity* pLocal)
 								Utils::ConvertUtf8ToWide(pi.name).data());
 						}
 					}
-				}
+					}
+
 
 
 				// Priority ESP
