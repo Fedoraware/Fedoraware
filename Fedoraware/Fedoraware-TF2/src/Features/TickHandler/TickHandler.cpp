@@ -92,7 +92,6 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
 	G::WaitForShift = std::clamp(G::WaitForShift - 1, 0, 26);
-	F::NetworkFix.FixInputDelay(bFinalTick);
 
 	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
@@ -100,7 +99,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 {
 	//	input delay stuff #pasted
-	
+	F::NetworkFix.FixInputDelay(bFinalTick);
 
 	bIgnoreSendNetMsg = false;
 	iAvailableTicks = G::ShiftedTicks;
