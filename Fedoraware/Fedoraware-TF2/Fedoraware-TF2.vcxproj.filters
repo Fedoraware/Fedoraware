@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="src\Features\Aimbot\MovementSimulation\MovementSimulation.cpp" />
     <ClCompile Include="src\Features\AntiHack\CheaterDetection\CheaterDetection.cpp" />
-    <ClCompile Include="src\Features\AntiHack\FakeLag\FakeLag.cpp" />
     <ClCompile Include="src\Features\AutoQueue\AutoQueue.cpp" />
     <ClCompile Include="src\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="src\Features\Camera\CameraWindow.cpp" />
@@ -18,7 +17,6 @@
     <ClCompile Include="src\Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
     <ClCompile Include="src\Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
     <ClCompile Include="src\Features\Aimbot\AimbotProjectile\AimbotProjectile.cpp" />
-    <ClCompile Include="src\Features\AntiHack\AntiAim.cpp" />
     <ClCompile Include="src\Features\Auto\AutoBlast\AutoBlast.cpp" />
     <ClCompile Include="src\Features\Auto\AutoDetonate\AutoDetonate.cpp" />
     <ClCompile Include="src\Features\Auto\AutoUber\AutoUber.cpp" />
@@ -182,6 +180,10 @@
     <ClCompile Include="src\Features\Items\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="src\Hooks\Detours\CEconNotification_HasNewItems.cpp" />
     <ClCompile Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.cpp" />
+    <ClCompile Include="src\Features\PacketManip\FakeLag\FakeLag.cpp" />
+    <ClCompile Include="src\Features\PacketManip\PacketManip.cpp" />
+    <ClCompile Include="src\Features\PacketManip\AntiAim\AntiAim.cpp" />
+    <ClCompile Include="src\Features\TickHandler\NetworkFix\NetworkFix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
@@ -189,7 +191,6 @@
     <ClInclude Include="src\Features\Menu\Pong\Pong.h" />
     <ClInclude Include="src\Features\Aimbot\MovementSimulation\MovementSimulation.h" />
     <ClInclude Include="src\Features\AntiHack\CheaterDetection\CheaterDetection.h" />
-    <ClInclude Include="src\Features\AntiHack\FakeLag\FakeLag.h" />
     <ClInclude Include="src\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="src\Features\Camera\CameraWindow.h" />
     <ClInclude Include="src\Features\CritHack\CritHack.h" />
@@ -201,7 +202,6 @@
     <ClInclude Include="src\Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="src\Features\Aimbot\AimbotMelee\AimbotMelee.h" />
     <ClInclude Include="src\Features\Aimbot\AimbotProjectile\AimbotProjectile.h" />
-    <ClInclude Include="src\Features\AntiHack\AntiAim.h" />
     <ClInclude Include="src\Features\Auto\AutoBlast\AutoBlast.h" />
     <ClInclude Include="src\Features\Auto\AutoDetonate\AutoDetonate.h" />
     <ClInclude Include="src\Features\Auto\AutoUber\AutoUber.h" />
@@ -410,6 +410,10 @@
     <ClInclude Include="src\Features\Aimbot\ProjectileSimulation\ProjectileSimulation.h" />
     <ClInclude Include="src\SDK\Interfaces\VPhysics\VPhysics.h" />
     <ClInclude Include="src\SDK\Interfaces\IAppSystem\IAppSystem.h" />
+    <ClInclude Include="src\Features\PacketManip\PacketManip.h" />
+    <ClInclude Include="src\Features\PacketManip\FakeLag\FakeLag.h" />
+    <ClInclude Include="src\Features\PacketManip\AntiAim\AntiAim.h" />
+    <ClInclude Include="src\Features\TickHandler\NetworkFix\NetworkFix.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

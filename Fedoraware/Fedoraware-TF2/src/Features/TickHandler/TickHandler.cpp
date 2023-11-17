@@ -1,7 +1,5 @@
 #include "TickHandler.h"
-#include "../../Hooks/HookManager.h"
-#include "../../Hooks/Hooks.h"
-#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
+
 
 void CTickshiftHandler::Speedhack(CUserCmd* pCmd)
 {
@@ -94,6 +92,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 	if (iAvailableTicks < 0) { return; }
 	G::ShiftedTicks = iAvailableTicks;
 	G::WaitForShift = std::clamp(G::WaitForShift - 1, 0, 26);
+	F::NetworkFix.FixInputDelay(bFinalTick);
 
 	return CL_Move->Original<void(__cdecl*)(float, bool)>()(accumulated_extra_samples, bFinalTick);
 }
@@ -101,16 +100,7 @@ void CTickshiftHandler::CLMoveFunc(float accumulated_extra_samples, bool bFinalT
 void CTickshiftHandler::CLMove(float accumulated_extra_samples, bool bFinalTick)
 {
 	//	input delay stuff #pasted
-	static auto fnCLReadPackets = g_HookManager.GetMapHooks()["CL_ReadPackets"];
-	INetChannel* iNetChan = I::EngineClient->GetNetChannelInfo();
-	if (!(iNetChan && iNetChan->IsLoopback()) && I::EngineClient->IsInGame() && Vars::Misc::FixInputDelay.Value) { 
-		if (fnCLReadPackets && Vars::Misc::FixInputDelay.Value)
-		{
-			const float flBackupCurTime = I::GlobalVars->curtime;
-			fnCLReadPackets->Original<void(__cdecl*)(bool)>()(bFinalTick);
-			I::GlobalVars->curtime = flBackupCurTime;
-		}
-	}
+	
 
 	bIgnoreSendNetMsg = false;
 	iAvailableTicks = G::ShiftedTicks;

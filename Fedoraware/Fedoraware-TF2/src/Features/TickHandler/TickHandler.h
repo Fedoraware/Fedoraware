@@ -1,5 +1,9 @@
 #pragma once
 #include "../Feature.h"
+#include "../../Hooks/HookManager.h"
+#include "../../Hooks/Hooks.h"
+#include "../Aimbot/AimbotGlobal/AimbotGlobal.h"
+#include "NetworkFix/NetworkFix.h"
 
 class CTickshiftHandler
 {
