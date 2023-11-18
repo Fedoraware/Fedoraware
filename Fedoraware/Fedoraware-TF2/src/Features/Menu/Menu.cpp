@@ -2465,13 +2465,13 @@ void CMenu::DrawCameraWindow()
 	}
 }
 
-void CMenu::DrawCritDrag()
-{
-	if (Vars::CritHack::Indicators.Value)
-	{
-
-	}
-}
+//void CMenu::DrawCritDrag()
+//{
+//	if (Vars::CritHack::Indicators.Value)
+//	{
+//
+//	}
+//}
 
 void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw, bool setSize)
 {
@@ -2496,7 +2496,7 @@ void CMenu::AddDraggable(const char* szTitle, DragBox_t& info, bool bShouldDraw,
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 50.f, 21.f });
 
 		const auto bResize = setSize ? 0 : ImGuiWindowFlags_NoResize;
-		if (ImGui::Begin(szTitle, nullptr, bResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
+		if (ImGui::Begin(szTitle, nullptr, bResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing))
 		{
 			const ImVec2 winPos = ImGui::GetWindowPos();
 			const ImVec2 winSize = ImGui::GetWindowSize();

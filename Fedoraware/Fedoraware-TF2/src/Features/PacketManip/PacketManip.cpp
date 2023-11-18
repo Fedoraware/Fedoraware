@@ -6,7 +6,7 @@ inline bool CPacketManip::WillTimeOut() {
 		return false;
 	}
 
-	return iNetChan->m_nChokedPackets >= 22;
+	return iNetChan->m_nChokedPackets >= 21;
 }
 
 inline bool CPacketManip::AACheck(CUserCmd* pCmd) {
