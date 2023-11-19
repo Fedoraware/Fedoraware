@@ -3,7 +3,7 @@
 #include "../../Aimbot/AimbotGlobal/AimbotGlobal.h"
 #include "../../Misc/Misc.h"
 
-class CCAntiAim {
+class CAntiAim {
 private:
 	// utils
 	inline void FakeShotAngles(CUserCmd* pCmd);
@@ -34,4 +34,4 @@ public:
 	inline bool ShouldAntiAim(CBaseEntity* pLocal);
 };
 
-ADD_FEATURE(CCAntiAim, AntiAim)
+ADD_FEATURE(CAntiAim, AntiAim)

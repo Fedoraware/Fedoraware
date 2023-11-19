@@ -1,6 +1,6 @@
 #include "AntiAim.h"
 
-inline void CCAntiAim::FakeShotAngles(CUserCmd* pCmd) {
+inline void CAntiAim::FakeShotAngles(CUserCmd* pCmd) {
 	if (!F::AimbotGlobal.IsAttacking() || G::CurWeaponType != EWeaponType::HITSCAN || !Vars::AntiHack::AntiAim::InvalidShootPitch.Value) { return; }
 
 	G::UpdateView = false;
@@ -8,7 +8,7 @@ inline void CCAntiAim::FakeShotAngles(CUserCmd* pCmd) {
 	pCmd->viewangles.y += 180;
 }
 
-inline void CCAntiAim::Keybinds() {
+inline void CAntiAim::Keybinds() {
 	// AA toggle key
 	static KeyHelper kAA{ &Vars::AntiHack::AntiAim::ToggleKey.Value };
 	Vars::AntiHack::AntiAim::Active.Value = (kAA.Pressed() ? !Vars::AntiHack::AntiAim::Active.Value : Vars::AntiHack::AntiAim::Active.Value);
@@ -18,14 +18,14 @@ inline void CCAntiAim::Keybinds() {
 	bInvert = (kInvert.Pressed() ? !bInvert : bInvert);
 }
 
-inline void CCAntiAim::SpinAngles() {
+inline void CAntiAim::SpinAngles() {
 	flFakeOffset -= Vars::AntiHack::AntiAim::SpinSpeed.Value;
 	flRealOffset += Vars::AntiHack::AntiAim::SpinSpeed.Value;
 	flFakeOffset = (int)flFakeOffset % 360;
 	flRealOffset = (int)flRealOffset % 360;
 }
 
-float CCAntiAim::EdgeDistance(float flEdgeRayYaw, CBaseEntity* pEntity) {
+float CAntiAim::EdgeDistance(float flEdgeRayYaw, CBaseEntity* pEntity) {
 	// Main ray tracing area
 	CGameTrace trace;
 	Ray_t ray;
@@ -47,7 +47,7 @@ float CCAntiAim::EdgeDistance(float flEdgeRayYaw, CBaseEntity* pEntity) {
 	return edgeDistance;
 }
 
-bool CCAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngles().y, CBaseEntity* pEntity = g_EntityCache.GetLocal()) {
+bool CAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngles().y, CBaseEntity* pEntity = g_EntityCache.GetLocal()) {
 	// distance two vectors and report their combined distances
 	float flEdgeLeftDist = EdgeDistance(flEdgeOrigYaw - 21, pEntity) + EdgeDistance(flEdgeOrigYaw - 27, pEntity);
 	float flEdgeRightDist = EdgeDistance(flEdgeOrigYaw + 21, pEntity) + EdgeDistance(flEdgeOrigYaw + 27, pEntity);
@@ -61,7 +61,7 @@ bool CCAntiAim::GetEdge(const float flEdgeOrigYaw = I::EngineClient->GetViewAngl
 	return flEdgeRightDist < flEdgeLeftDist;
 }
 
-inline bool CCAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
+inline bool CAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
 	const bool bPlayerReady = pLocal->IsAlive() && !pLocal->IsTaunting() && !pLocal->IsInBumperKart() && !pLocal->IsAGhost() && !F::AimbotGlobal.IsAttacking();
 	const bool bMovementReady = pLocal->GetMoveType() <= 5 && !pLocal->IsCharging() && !F::Misc.bMovementStopped && !F::Misc.bFastAccel;
 	const bool bNotBusy = !G::AvoidingBackstab;
@@ -70,7 +70,7 @@ inline bool CCAntiAim::ShouldAntiAim(CBaseEntity* pLocal) {
 	return bPlayerReady && bMovementReady && bNotBusy && bEnabled;
 }
 
-inline float CCAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown) {
+inline float CAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown) {
 	return FakeDown ? 720 + WishPitch : -720 + WishPitch;
 }
 
@@ -82,7 +82,7 @@ inline float CCAntiAim::CalculateCustomRealPitch(float WishPitch, bool FakeDown)
 //	3 - Zero
 //	4 - Custom
 //	3 and 4 not available for iFake
-inline float CCAntiAim::GetPitch(const int iFake, const int iReal, const float flCurPitch) {
+inline float CAntiAim::GetPitch(const int iFake, const int iReal, const float flCurPitch) {
 	switch (iReal) {
 	case 1: {
 		return iFake ? CalculateCustomRealPitch(-89.f, iFake - 1) : -89.f;
@@ -111,7 +111,7 @@ inline float CCAntiAim::GetPitch(const int iFake, const int iReal, const float f
 //	5 - Spin
 //	6 - Edge
 //	7 - Invert
-inline float CCAntiAim::GetYawOffset(const int iIndex, const bool bFake) {
+inline float CAntiAim::GetYawOffset(const int iIndex, const bool bFake) {
 	switch (iIndex) {
 	case 1: {
 		return 90.f;
@@ -135,7 +135,7 @@ inline float CCAntiAim::GetYawOffset(const int iIndex, const bool bFake) {
 	return 0.f;
 }
 
-float CCAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
+float CAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
 	//	0 offset, 1 at player, 2 at player + offset
 	const float flBaseOffset = Vars::AntiHack::AntiAim::BaseYawOffset.Value;
 	switch (iMode)
@@ -164,7 +164,7 @@ float CCAntiAim::GetBaseYaw(int iMode, CBaseEntity* pLocal, CUserCmd* pCmd) {
 	return pCmd->viewangles.y;
 }
 
-void CCAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
+void CAntiAim::Run(CUserCmd* pCmd, bool* pSendPacket) {
 	Keybinds();
 	FakeShotAngles(pCmd);
 	SpinAngles();

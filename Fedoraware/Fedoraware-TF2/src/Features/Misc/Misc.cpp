@@ -215,8 +215,10 @@ void CMisc::LegJitter(CUserCmd* pCmd, CBaseEntity* pLocal)
 	if (!pLocal->OnSolid() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !pLocal->IsAlive()) { return; }
 	static bool pos = true;
 	const float scale = pLocal->IsDucking() ? 14.f : 1.0f;
-	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift || !F::AntiAim.bSendingReal) { return; }
-	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f && (Vars::AntiHack::AntiAim::LegJitter.Value || F::AntiAim.bSendingReal))	//	force leg jitter if we are sending our real.
+	if (F::AimbotGlobal.IsAttacking() || G::ShouldShift) { return; }
+	if (F::AntiAim.ShouldAntiAim(pLocal)) { if (!F::AntiAim.bSendingReal) { return; } }
+	else if (!Vars::AntiHack::AntiAim::LegJitter.Value) { return; }
+	if (pCmd->forwardmove == 0.f && pCmd->sidemove == 0.f && pLocal->GetVecVelocity().Length2D() < 10.f)	//	force leg jitter if we are sending our real.
 	{
 		pos ? pCmd->forwardmove = scale : pCmd->forwardmove = -scale;
 		pos ? pCmd->sidemove = scale : pCmd->sidemove = -scale;
@@ -229,12 +231,9 @@ void CMisc::AntiBackstab(CBaseEntity* pLocal, CUserCmd* pCmd)
 	G::AvoidingBackstab = false;
 	Vec3 vTargetPos;
 
-	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.Value)
-	{
+	if (!pLocal->IsAlive() || pLocal->IsStunned() || pLocal->IsInBumperKart() || pLocal->IsAGhost() || !Vars::AntiHack::AntiAim::AntiBackstab.Value) {
 		return;
 	}
-
-	if (F::AimbotGlobal.IsAttacking()) { return; }
 
 	const Vec3 vLocalPos = pLocal->GetWorldSpaceCenter();
 	CBaseEntity* target = nullptr;
