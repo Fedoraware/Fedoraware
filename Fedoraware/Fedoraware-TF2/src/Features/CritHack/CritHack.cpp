@@ -81,7 +81,7 @@ bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 
 bool CCritHack::NoRandomCrits(CBaseCombatWeapon* pWeapon)
 {
-	float CritChance = Utils::ATTRIB_HOOK_FLOAT(1, "mult_crit_chance", pWeapon, 0, 1);
+	float CritChance = Utils::ATTRIB_HOOK_FLOAT(1, "mult_crit_chance", pWeapon, 0, true);
 	if (CritChance == 0)
 	{
 		return true;

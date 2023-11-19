@@ -3,49 +3,23 @@
 
 class CNoSpread {
 private:
-	float ServerCurTime(CBaseEntity* pLocal);
-	bool IsPerfectShot(CBaseCombatWeapon* weapon, CBaseEntity* pLocal, float flProvidedTime = 0.0f);
-
-	bool bWaitingPerfData = false;
-	bool bWaitingForPostSNM = false;
-	bool bResyncNeeded = false;
-	bool bLastWasPlayerPerf = false;
-	bool bShouldUpdateTime = true;
-	bool bIsSyncing = false;
-	bool bFirstUserCmd = false;
-	bool bShouldUpdateUserCmdCorrection = false;
-	bool bResyncedThisDeath = false;
-
-	float flPredictionSeed = 0.0f;
-	float flMantissaStep = 0.0f;
-	float flCurrentWeaponSpread = 0.0f;
-
-	double dFloatTimeDelta = 0.0;
-	double dLastSyncDeltaTime = 0.0;
-	double dServerTime = 0.0;
-	double dTimeStart = 0.0;
-	double dWriteUserCmdCorrection = 0.0;
-	double dPingAtSend = 0.0;
-	double dLastCorrection = 0.0;
-	double dLastPingAtSend = 0.0;
-
-	int iNewPackets = 0;
-
-	CUserCmd UserCmdBackup = {};
+	float PrevServerTime = 0.0f;
+	float AskTime = 0.0f;
+	float GuessTime = 0.0f;
+	bool WaitingForPP = false;
+	float GuessDelta = 0.0f;
+	float ResponseTime = 0.0f;
 
 public:
-	float CalcMantissaStep(float flValue);
-	void Reset();
-
-	bool SendNetMessage(INetMessage* data);
-	void SendNetMessagePost();
-	bool DispatchUserMessage(bf_read* buf, int iType);
+	bool Synced = false;
+	float ServerTime = 0.0f;
+	float SyncOffset = 0.0f;
 
 	void CreateMoveProjectile(CUserCmd* pCmd);
-	void ClSendMove();
-	void ClSendMovePost();
-	void CreateMoveHitscan(CUserCmd* pCmd);
-
-	void ApplySpreadCorrection(Vec3& vAngles, int iSeed, float flSpread);
+	void AskForPlayerPerf();
+	bool ParsePlayerPerf(bf_read& msg_data);
+	int GetSeed();
+	void Reset();
+	void CreateMoveHitscan(CUserCmd* cmd);
 };
 ADD_FEATURE(CNoSpread, NoSpread)

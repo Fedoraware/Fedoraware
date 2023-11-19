@@ -214,9 +214,6 @@ namespace Vars
 		CVar(Hitscan, false)
 		CVar(Projectile, true)
 		CVar(Indicator, false, IS_VISUAL)
-		CVar(ExtremePred, false)
-		CVar(CorrectPing, false)
-		CVar(UseAvgLatency, false);
 	NAMESPACE_END(NoSpread);
 
 	NAMESPACE_BEGIN(Triggerbot);
