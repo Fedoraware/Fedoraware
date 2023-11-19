@@ -326,8 +326,9 @@ void CMenu::MenuAimbot()
 			WCombo("Tapfire###HitscanTapfire", &Vars::Aimbot::Hitscan::TapFire.Value, { "Off", "Distance", "Always" }); HelpMarker("How/If the aimbot chooses to tapfire enemies.");
 			if (Vars::Aimbot::Hitscan::TapFire.Value == 1) {
 				WSlider("Tap Fire Distance###HitscanTapfireDistance", &Vars::Aimbot::Hitscan::TapFireDist.Value, 64.f, 4096.f, "%.0f", ImGuiSliderFlags_AlwaysClamp); HelpMarker("The distance at which tapfire will activate.");
-				WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
 			}
+			// Leave it out of the brackets since the check runs even if TapFire mode is "Always" 
+			WToggle("Check for NoSpread state", &Vars::Aimbot::Hitscan::TapFireCheckForNSS.Value); HelpMarker("Turns off Tapfire if NoSpread is synced");
 			{
 				static std::vector flagNames{ "Head", "Body", "Pelvis", "Arms", "Legs" };
 				static std::vector flagValues{ 0x00000001, 0x00000004, 0x00000002, 0x00000008, 0x00000010 }; // 1<<1 and 1<<2 are swapped because the enum for hitboxes is weird.
@@ -430,12 +431,9 @@ void CMenu::MenuAimbot()
 
 			SectionTitle("NoSpread");
 			{
-				WToggle("Hitscan", &Vars::NoSpread::Hitscan.Value); HelpMarker("Enables NoSpread for hitscan weapons");
+				WToggle("Hitscan", &Vars::NoSpread::Hitscan.Value); HelpMarker("Enables NoSpread for hitscan weapons, works better on servers with high uptime (100+ hrs)");
 				WToggle("Projectile", &Vars::NoSpread::Projectile.Value); HelpMarker("Enables NoSpread for projectile weapons (works independent of the sync state)");
-				WToggle("Indicator", &Vars::NoSpread::Indicator.Value); HelpMarker("Shows sync state and mantissa step size");
-				WToggle("Correct Ping", &Vars::NoSpread::CorrectPing.Value); HelpMarker("Attempt to compensate for ping. Disable if you miss a lot on low jitter.");
-				WToggle("Use Average Latency", &Vars::NoSpread::UseAvgLatency.Value);
-				WToggle("Precision Mode", &Vars::NoSpread::ExtremePred.Value); HelpMarker("Makes nospread sync slower, but also more accurate and ping resistant");
+				WToggle("Indicator", &Vars::NoSpread::Indicator.Value); HelpMarker("Shows server uptime, mantissa step size and sync state");
 			}
 		} EndChild();
 

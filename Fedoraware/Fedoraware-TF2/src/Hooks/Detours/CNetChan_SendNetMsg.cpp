@@ -1,20 +1,11 @@
 #include "../Hooks.h"
 #include "../../Features/TickHandler/TickHandler.h"
-#include "../../Features/NoSpread/NoSpread.h"
 
 //	"NetMsg"
 //	@net_chan.cpp L2524
 MAKE_HOOK(CNetChan_SendNetMsg, S::CNetChan_SendNetMsg(), bool, __fastcall,
 		  CNetChannel* netChannel, void* edi, INetMessage& msg, bool bForceReliable, bool bVoice)
 {
-	bool retn = false, runfurther = false;
-	if (Vars::NoSpread::Hitscan.Value) {
-		if (F::NoSpread.SendNetMessage(&msg)) {
-			bForceReliable = true;
-			runfurther = true;
-		}
-	}
-
 	switch (msg.GetType())
 	{
 		case clc_VoiceData:
@@ -79,10 +70,5 @@ MAKE_HOOK(CNetChan_SendNetMsg, S::CNetChan_SendNetMsg(), bool, __fastcall,
 		}
 	}
 
-	retn = Hook.Original<FN>()(netChannel, edi, msg, bForceReliable, bVoice);
-
-	if (runfurther)
-		F::NoSpread.SendNetMessagePost();
-
-	return retn;
+	return Hook.Original<FN>()(netChannel, edi, msg, bForceReliable, bVoice);
 }

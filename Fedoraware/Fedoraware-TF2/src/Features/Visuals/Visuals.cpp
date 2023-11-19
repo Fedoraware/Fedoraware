@@ -144,54 +144,82 @@ void CVisuals::DrawOnScreenPing(CBaseEntity* pLocal)
 	}
 }
 
-void CVisuals::DrawNoSpreadIndicator()
+void CVisuals::DrawNoSpreadIndicator() 
 {
-	if (!Vars::NoSpread::Indicator.Value)
+	// Idk how to make good looking indicators so im just gonna paste it from SEOwnedDE
+
+	if (!Vars::NoSpread::Indicator.Value || !Vars::NoSpread::Hitscan.Value || I::EngineVGui->IsGameUIVisible() || F::NoSpread.ServerTime <= 0.0f)
+	{
 		return;
-	if (!I::EngineVGui->IsGameUIVisible()) {
-		std::wstring text = L"NoSpread Syncing..";
-		Color_t clr = { 255, 255, 255, 255 };
-		if (!Vars::NoSpread::Hitscan.Value)
-		{
-			text = L"NoSpread Not Active.";
-			clr = { 220, 20, 60, 255 };
-		}
-		else if (G::BadMantissa) {
-			text = L"NoSpread Not Synced, server uptime too low.";
-			clr = { 204, 204, 0, 255 };
-		}
-		else
-		{
-			switch (G::NoSpreadSynced)
-			{
-			case SYNCED:
-				text = L"NoSpread Synced.";
-				clr = { 60, 179, 113, 255 };
-				break;
-			case NOT_SYNCED:
-				text = L"NoSpread Not Synced.";
-				break;
-			case DEAD_SYNC:
-				text = L"NoSpread Dead Sync";
-				clr = { 220, 20, 60, 255 };
-				break;
-			case CORRECTING:
-				text = L"NoSpread Resyncing..";
-				clr = { 204, 204, 0, 255 };
-				break;
-			default:
-				text = L"NoSpread Not Synced.";
-				break;
-			}
-		}
-		int step = (int)F::NoSpread.CalcMantissaStep(G::SentClientFloatTime * 1000.0);
-		Color_t mclr = { 204, 204, 0, 255 };
-
-		const auto& menuFont = g_Draw.GetFont(FONT_MENU);
-
-		g_Draw.String(menuFont, 50, 30, clr, ALIGN_DEFAULT, text.data());
-		g_Draw.String(menuFont, 50, 45, mclr, ALIGN_DEFAULT, "Mantissa step size: %d", step);
 	}
+
+	if (Vars::Visuals::CleanScreenshots.Value && I::EngineClient->IsTakingScreenshot())
+	{
+		return;
+	}
+
+	auto calcMantissaStep = [](float val)
+		{
+			auto raw_val{ reinterpret_cast<int&>(val) };
+			auto exponent{ (raw_val >> 23) & 0xFF };
+
+			auto result{ powf(2.0f, static_cast<float>(exponent - (127 + 23))) * 1000.0f };
+
+			static std::vector<float> mantissas{};
+
+			if (mantissas.empty())
+			{
+				auto mantissa{ 1.0f };
+
+				for (auto n{ 0 }; n < 16; n++)
+				{
+					mantissas.push_back(mantissa);
+
+					mantissa *= 2.0f;
+				}
+			}
+
+			auto closest = [](const std::vector<float>& vec, float value)
+				{
+					auto it{ std::lower_bound(vec.begin(), vec.end(), value) };
+
+					if (it == vec.end())
+					{
+						return value;
+					}
+
+					return *it;
+				};
+
+			return closest(mantissas, result);
+		};
+
+	std::chrono::hh_mm_ss time{ std::chrono::seconds(static_cast<int>(F::NoSpread.ServerTime)) };
+
+	int x{ 2 };
+	int y{ 2 };
+	const auto& indFont = g_Draw.GetFont(FONT_INDICATORS);
+	g_Draw.String
+	(
+		indFont,
+		x, y,
+		Color_t{ 200, 200, 200, 255 }, ALIGN_DEFAULT,
+		std::format("{}h {}m {}s (step {:.0f})",
+			time.hours().count(),
+			time.minutes().count(),
+			time.seconds().count(),
+			calcMantissaStep(F::NoSpread.ServerTime)).c_str()
+	);
+
+	y += 10;
+
+	g_Draw.String
+	(
+		indFont,
+		x, y,
+		!F::NoSpread.Synced ? Color_t{ 250, 130, 49, 255 } : Color_t{ 32, 191, 107, 255 }, ALIGN_DEFAULT,
+		!F::NoSpread.Synced ? "syncing.." : std::format("synced ({})", F::NoSpread.SyncOffset).c_str()
+	);
 }
 
 void CVisuals::SkyboxChanger()
