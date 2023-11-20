@@ -251,7 +251,10 @@ void CNoSpread::CreateMoveHitscan(CUserCmd* cmd)
 		return;
 	}
 
-	auto bullets_per_shot = weapon->GetTFWeaponInfo()->GetWeaponData(0).m_nBulletsPerShot;
+	auto weaponInfo = weapon->GetTFWeaponInfo();
+	if (!weaponInfo) { return; }
+
+	auto bullets_per_shot = weaponInfo->GetWeaponData(0).m_nBulletsPerShot;
 
 	bullets_per_shot = static_cast<int>(Utils::ATTRIB_HOOK_FLOAT(static_cast<float>(bullets_per_shot), "mult_bullets_per_shot", weapon, 0, true));
 
