@@ -251,9 +251,9 @@ void CNoSpread::CreateMoveHitscan(CUserCmd* cmd)
 		return;
 	}
 
-	auto bullets_per_shot = weapon->GetWeaponData().m_nBulletsPerShot;
+	auto bullets_per_shot = weapon->GetTFWeaponInfo()->GetWeaponData(0).m_nBulletsPerShot;
 
-	bullets_per_shot = static_cast<int>(Utils::ATTRIB_HOOK_FLOAT(bullets_per_shot, "mult_bullets_per_shot", weapon, 0, true));
+	bullets_per_shot = static_cast<int>(Utils::ATTRIB_HOOK_FLOAT(static_cast<float>(bullets_per_shot), "mult_bullets_per_shot", weapon, 0, true));
 
 	// credits to cathook for average spread stuff
 

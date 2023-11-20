@@ -25,7 +25,7 @@ MAKE_HOOK(FX_FireBullets, S::FX_FireBullets(), void, __cdecl,
 		return;
 	}
 
-	if (Vars::NoSpread::Hitscan.Value && F::NoSpread.Synced)
+	if (Vars::NoSpread::Hitscan.Value)
 	{
 		iSeed = F::NoSpread.GetSeed();
 	}
