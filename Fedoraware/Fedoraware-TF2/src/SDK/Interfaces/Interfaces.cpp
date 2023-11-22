@@ -22,7 +22,7 @@ namespace S
 	MAKE_SIGNATURE(MoveHelper_Interface, CLIENT_DLL, "8B 0D ? ? ? ? 8B 01 FF 50 ? 56 8B C8 8B 10 FF 52 ? 8B 13", 0x2);
 
 	MAKE_SIGNATURE(Get_TFPartyClient, CLIENT_DLL, "A1 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 EC ? 53", 0x0);
-	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C", 0x1);
+	MAKE_SIGNATURE(DirectXDevice, "shaderapidx9.dll", "75 22 A1 ? ? ? ?", 0x3);
 }
 
 void CInterfaces::Init()
