@@ -13,6 +13,7 @@ class CMenu
 	void MenuHvH();
 	void MenuMisc();
 	void SettingsWindow();
+	void MenuColorWindow();
 	void DebugMenu();
 	void DrawCameraWindow();
 	void DrawCritDrag();
@@ -54,6 +55,7 @@ class CMenu
 	ConfigTab CurrentConfigTab = ConfigTab::General;
 
 	bool ShowSettings = false;
+	bool ShowColorWindow = false;
 	bool ShowDebugMenu = false;
 
 public:
@@ -71,14 +73,6 @@ public:
 	float ItemWidth = 130.f;
 
 	std::string FeatureHint;
-
-	// Colors
-	ImColor Accent = { 255, 101, 101 };
-	ImColor AccentDark = { 217, 87, 87 };
-	ImColor Background = { 23, 23, 23, 250 };	// Title bar
-	ImColor BackgroundLight = { 51, 51, 56 };		// Tab bar
-	ImColor BackgroundDark = { 31, 31, 31 };		// Background
-	ImColor TextLight = { 240, 240, 240 };
 
 	// Fonts
 	ImFont* VerdanaSmall = nullptr;	// 12px

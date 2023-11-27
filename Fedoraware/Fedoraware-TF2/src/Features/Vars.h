@@ -83,7 +83,36 @@ namespace Vars
 	CVar(MenuKey, 0);
 
 	SUBNAMESPACE_BEGIN(Colors)
-		CVar(MenuAccent, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(MenuAccent, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(TabBar, Color_t(51, 51, 56, 255), IS_VISUAL);
+
+
+	CVar(Border, Color_t(110, 110, 128, 255), IS_VISUAL);
+	CVar(WindowBg, Color_t(23, 23, 23, 250), IS_VISUAL);
+	CVar(TitleBg, Color_t(23, 23, 23, 255), IS_VISUAL);
+	CVar(TitleBgActive, Color_t(51, 51, 56, 255), IS_VISUAL);
+	CVar(ModalWindowDimBg, Color_t(26, 26, 38, 102), IS_VISUAL); // Assuming the ImVec4 values are in the range [0, 255]
+	CVar(Button, Color_t(51, 51, 56, 255), IS_VISUAL);
+	CVar(ButtonHovered, Color_t(69, 69, 77, 255), IS_VISUAL);
+	CVar(ButtonActive, Color_t(82, 79, 87, 255), IS_VISUAL);
+	CVar(PopupBg, Color_t(31, 31, 31, 255), IS_VISUAL);
+	CVar(FrameBg, Color_t(50, 50, 50, 255), IS_VISUAL);
+	CVar(FrameBgHovered, Color_t(60, 60, 60, 255), IS_VISUAL);
+	CVar(FrameBgActive, Color_t(70, 70, 70, 255), IS_VISUAL);
+	CVar(CheckMark, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(Text, Color_t(240, 240, 240, 255), IS_VISUAL);
+
+	CVar(SliderGrab, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(SliderGrabActive, Color_t(20, 81, 81, 255), IS_VISUAL);
+	CVar(ResizeGrip, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(ResizeGripActive, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(ResizeGripHovered, Color_t(255, 101, 101, 255), IS_VISUAL);
+	CVar(Header, Color_t(70, 70, 70, 255), IS_VISUAL);
+	CVar(HeaderActive, Color_t(40, 40, 40, 255), IS_VISUAL);
+	CVar(HeaderHovered, Color_t(60, 60, 60, 255), IS_VISUAL);
+
+
+
 	SUBNAMESPACE_END(Colors);
 
 	NAMESPACE_END(Menu);

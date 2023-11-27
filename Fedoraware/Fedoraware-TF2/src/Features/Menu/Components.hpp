@@ -12,6 +12,11 @@ namespace ImGui
 		return { Color::TOFLOAT(color.r), Color::TOFLOAT(color.g), Color::TOFLOAT(color.b), Color::TOFLOAT(color.a) };
 	}
 
+	inline ImColor ColorToImGui(Color_t color)
+	{
+		return { color.r, color.g, color.b, color.a };
+	}
+
 	/* ImVec4 to Color_t */
 	inline Color_t VecToColor(const ImVec4& color)
 	{
@@ -402,7 +407,7 @@ namespace ImGui
 		}
 
 		const ImU32 colBg = IsItemHovered() ? ImColor(60, 60, 60) : ImColor(50, 50, 50);
-		const ImU32 colCircle = (*v) ? F::Menu.Accent : ImColor(180, 180, 180);
+		const ImU32 colCircle = (*v) ? ImGui::ColorToImGui(Vars::Menu::Colors::MenuAccent.Value) : ImColor(180, 180, 180);
 
 		drawList->AddRectFilled(p, ImVec2(p.x + width, p.y + height), colBg, height * 0.5f);
 		drawList->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, colCircle);
