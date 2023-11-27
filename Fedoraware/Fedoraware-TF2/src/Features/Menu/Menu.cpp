@@ -2039,9 +2039,10 @@ void CMenu::MenuColorWindow() {
 		if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Main accent");
 		if (ColorPicker("Tab Bar", Vars::Menu::Colors::TabBar.Value)) { LoadStyle(); } SameLine(); Text("Tab Bar");
 
-
-		if (ColorPicker("Border", Vars::Menu::Colors::Border.Value)) { LoadStyle(); } SameLine(); Text("Border");
 		if (ColorPicker("Window Background", Vars::Menu::Colors::WindowBg.Value)) { LoadStyle(); } SameLine(); Text("Window Background");
+		if (ColorPicker("Popup Background", Vars::Menu::Colors::PopupBg.Value)) { LoadStyle(); } SameLine(); Text("Popup Background");
+
+		Dummy({ 0, 5 });
 		if (ColorPicker("Title Background", Vars::Menu::Colors::TitleBg.Value)) { LoadStyle(); } SameLine(); Text("Title Background");
 		if (ColorPicker("Active Title Background", Vars::Menu::Colors::TitleBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Title Background");
 		Dummy({ 0, 5 });
@@ -2054,9 +2055,9 @@ void CMenu::MenuColorWindow() {
 		if (ColorPicker("Hovered Button", Vars::Menu::Colors::ButtonHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Button");
 		if (ColorPicker("Active Button", Vars::Menu::Colors::ButtonActive.Value)) { LoadStyle(); } SameLine(); Text("Active Button");
 		Dummy({ 0, 5 });
-		if (ColorPicker("Popup Background", Vars::Menu::Colors::PopupBg.Value)) { LoadStyle(); } SameLine(); Text("Popup Background");
 		if (ColorPicker("Checkmark", Vars::Menu::Colors::CheckMark.Value)) { LoadStyle(); } SameLine(); Text("CheckmarkCheckmark");
 		if (ColorPicker("Text", Vars::Menu::Colors::Text.Value)) { LoadStyle(); } SameLine(); Text("Text");
+		if (ColorPicker("Border", Vars::Menu::Colors::Border.Value)) { LoadStyle(); } SameLine(); Text("Border");
 		Dummy({ 0, 5 });
 		if (ColorPicker("Slider Grab", Vars::Menu::Colors::SliderGrab.Value)) { LoadStyle(); } SameLine(); Text("Slider Grab");
 		if (ColorPicker("Active Slider Grab", Vars::Menu::Colors::SliderGrabActive.Value)) { LoadStyle(); } SameLine(); Text("Active Slider Grab");
@@ -2090,7 +2091,6 @@ void CMenu::SettingsWindow()
 		if (CollapsingHeader("Menu Settings"))
 		{
 			if (Button("Open Color Configurator")) { ShowColorWindow = !ShowColorWindow; }
-			if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Main accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
 			if (Checkbox("Draw Weather", &Vars::Menu::DrawWeather.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
