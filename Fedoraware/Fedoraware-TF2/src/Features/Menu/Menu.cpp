@@ -38,13 +38,13 @@ void CMenu::DrawMenu()
 	ImGui::SetNextWindowSize(ImVec2(700, 700), ImGuiCond_FirstUseEver);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 700, 500 });
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::ColorToVec(Vars::Menu::Colors::TitleBg.Value));
 	if (ImGui::Begin("MainWindow", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
 		const auto drawList = ImGui::GetWindowDrawList();
 		const auto windowSize = ImGui::GetWindowSize();
 		const auto windowPos = ImGui::GetWindowPos();
-
+		
 		// Title gradient setup
 		{
 			TitleGradient.ClearMarks();
@@ -61,7 +61,7 @@ void CMenu::DrawMenu()
 		{
 			ImGui::PushFont(TitleFont);
 			const auto titleWidth = ImGui::CalcTextSize(Vars::Menu::CheatName.Value.c_str()).x;
-			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, Accent, Vars::Menu::CheatName.Value.c_str());
+			drawList->AddText(TitleFont, TitleFont->FontSize, { windowPos.x + (windowSize.x / 2) - (titleWidth / 2), windowPos.y }, ImGui::ColorToImGui(Vars::Menu::Colors::MenuAccent.Value), Vars::Menu::CheatName.Value.c_str());
 			ImGui::PopFont();
 		}
 
@@ -112,7 +112,7 @@ void CMenu::DrawMenu()
 
 		// Tabbar
 		ImGui::SetCursorPos({ 0, TitleHeight });
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundLight.Value);
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::ColorToVec(Vars::Menu::Colors::TabBar.Value));
 		if (ImGui::BeginChild("Tabbar", { windowSize.x + 5, TabHeight + SubTabHeight }, false, ImGuiWindowFlags_NoScrollWithMouse))
 		{
 			DrawTabbar();
@@ -123,7 +123,7 @@ void CMenu::DrawMenu()
 		// Main content
 		ImGui::SetCursorPos({ 0, TitleHeight + TabHeight + SubTabHeight });
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8.f, 10.f });
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, BackgroundDark.Value);
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::ColorToVec(Vars::Menu::Colors::WindowBg.Value));
 		if (ImGui::BeginChild("Content", { windowSize.x, windowSize.y - (TitleHeight + TabHeight + SubTabHeight) }, false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar))
 		{
 			ImGui::PushFont(Verdana);
@@ -150,7 +150,7 @@ void CMenu::DrawMenu()
 			if (!Vars::Menu::ModernDesign.Value)
 			{
 				const auto hintHeight = ImGui::CalcTextSize(FeatureHint.c_str()).y;
-				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 10, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, TextLight, FeatureHint.c_str());
+				drawList->AddText(Verdana, Verdana->FontSize, { windowPos.x + 10, windowPos.y + windowSize.y - (hintHeight + ImGui::GetStyle().ItemInnerSpacing.y) }, ImGui::ColorToImGui(Vars::Menu::Colors::Text.Value), FeatureHint.c_str());
 			}
 		}
 
@@ -159,6 +159,7 @@ void CMenu::DrawMenu()
 	}
 
 	ImGui::PopStyleVar(2);
+	ImGui::PopStyleColor();
 }
 
 void CMenu::DrawTabbar()
@@ -170,8 +171,8 @@ void CMenu::DrawTabbar()
 
 	if (ImGui::BeginTable("TabbarTable", 5))
 	{
-		ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
-		ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
+		ImGui::PushStyleColor(ImGuiCol_Button, ImGui::ColorToVec(Vars::Menu::Colors::TabBar.Value));
+		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorToImGui(Vars::Menu::Colors::Text.Value).Value);
 		if (ImGui::TabButton("Aimbot", CurrentTab == MenuTab::Aimbot))
 		{
 			CurrentTab = MenuTab::Aimbot;
@@ -208,8 +209,8 @@ void CMenu::DrawTabbar()
 
 		if (ImGui::BeginTable("SubbarTable", 7))
 		{
-			ImGui::PushStyleColor(ImGuiCol_Button, BackgroundLight.Value);
-			ImGui::PushStyleColor(ImGuiCol_Text, TextLight.Value);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGui::ColorToVec(Vars::Menu::Colors::TabBar.Value));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorToImGui(Vars::Menu::Colors::Text.Value).Value);
 			if (ImGui::TabButton("ESP", CurrentVisualsTab == VisualsTab::ESP))
 			{
 				CurrentVisualsTab = VisualsTab::ESP;
@@ -2029,6 +2030,48 @@ void CMenu::MenuMisc()
 }
 #pragma endregion
 
+void CMenu::MenuColorWindow() {
+	using namespace ImGui;
+	if (!ShowColorWindow) return;
+	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	if (Begin("Menu Colors", &ShowColorWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
+
+		if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Main accent");
+		if (ColorPicker("Tab Bar", Vars::Menu::Colors::TabBar.Value)) { LoadStyle(); } SameLine(); Text("Tab Bar");
+
+
+		if (ColorPicker("Border", Vars::Menu::Colors::Border.Value)) { LoadStyle(); } SameLine(); Text("Border");
+		if (ColorPicker("Window Background", Vars::Menu::Colors::WindowBg.Value)) { LoadStyle(); } SameLine(); Text("Window Background");
+		if (ColorPicker("Title Background", Vars::Menu::Colors::TitleBg.Value)) { LoadStyle(); } SameLine(); Text("Title Background");
+		if (ColorPicker("Active Title Background", Vars::Menu::Colors::TitleBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Title Background");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Frame Background", Vars::Menu::Colors::FrameBg.Value)) { LoadStyle(); } SameLine(); Text("Frame Background");
+		if (ColorPicker("Hovered Frame Background", Vars::Menu::Colors::FrameBgHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Frame Background");
+		if (ColorPicker("Active Frame Background", Vars::Menu::Colors::FrameBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Frame Background");
+		if (ColorPicker("Modal Background Dim", Vars::Menu::Colors::ModalWindowDimBg.Value)) { LoadStyle(); } SameLine(); Text("Modal Background Dim");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Button", Vars::Menu::Colors::Button.Value)) { LoadStyle(); } SameLine(); Text("Button");
+		if (ColorPicker("Hovered Button", Vars::Menu::Colors::ButtonHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Button");
+		if (ColorPicker("Active Button", Vars::Menu::Colors::ButtonActive.Value)) { LoadStyle(); } SameLine(); Text("Active Button");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Popup Background", Vars::Menu::Colors::PopupBg.Value)) { LoadStyle(); } SameLine(); Text("Popup Background");
+		if (ColorPicker("Checkmark", Vars::Menu::Colors::CheckMark.Value)) { LoadStyle(); } SameLine(); Text("CheckmarkCheckmark");
+		if (ColorPicker("Text", Vars::Menu::Colors::Text.Value)) { LoadStyle(); } SameLine(); Text("Text");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Slider Grab", Vars::Menu::Colors::SliderGrab.Value)) { LoadStyle(); } SameLine(); Text("Slider Grab");
+		if (ColorPicker("Active Slider Grab", Vars::Menu::Colors::SliderGrabActive.Value)) { LoadStyle(); } SameLine(); Text("Active Slider Grab");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Resize Grip", Vars::Menu::Colors::ResizeGrip.Value)) { LoadStyle(); } SameLine(); Text("Resize Grip");
+		if (ColorPicker("Active Resize Grip", Vars::Menu::Colors::ResizeGripActive.Value)) { LoadStyle(); } SameLine(); Text("Active Resize Grip");
+		Dummy({ 0, 5 });
+		if (ColorPicker("Header", Vars::Menu::Colors::Header.Value)) { LoadStyle(); } SameLine(); Text("Header");
+		if (ColorPicker("Hovered Header", Vars::Menu::Colors::HeaderHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Header");
+		if (ColorPicker("Active Header", Vars::Menu::Colors::HeaderActive.Value)) { LoadStyle(); } SameLine(); Text("Active Header");
+		End();
+	}
+	PopStyleVar();
+}
+
 /* Settings Window */
 void CMenu::SettingsWindow()
 {
@@ -2046,7 +2089,8 @@ void CMenu::SettingsWindow()
 		/* General Menu Settings */
 		if (CollapsingHeader("Menu Settings"))
 		{
-			if (ColorPicker("Menu accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Menu accent");
+			if (Button("Open Color Configurator")) { ShowColorWindow = !ShowColorWindow; }
+			if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Main accent");
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
 			if (Checkbox("Draw Weather", &Vars::Menu::DrawWeather.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
@@ -2082,7 +2126,7 @@ void CMenu::SettingsWindow()
 		PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 		if (BeginTable("ConfigTable", 2))
 		{
-			PushStyleColor(ImGuiCol_Text, TextLight.Value);
+			PushStyleColor(ImGuiCol_Text, ImGui::ColorToVec(Vars::Menu::Colors::Text.Value));
 			if (TabButton("General", CurrentConfigTab == ConfigTab::General))
 			{
 				CurrentConfigTab = ConfigTab::General;
@@ -2606,6 +2650,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		AddDraggable("Crits", Vars::CritHack::IndicatorPos.Value, Vars::CritHack::Indicators.Value, true);
 
 		SettingsWindow();
+		MenuColorWindow();
 		DebugMenu();
 		F::MaterialEditor.Render();
 		F::PlayerList.Render();
@@ -2627,8 +2672,6 @@ void CMenu::LoadStyle()
 		ItemWidth = 120.f;
 
 		// https://raais.github.io/ImStudio/
-		Accent = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value);
-		AccentDark = ImColor(Accent.Value.x * 0.8f, Accent.Value.y * 0.8f, Accent.Value.z * 0.8f, Accent.Value.w);
 
 		auto& style = ImGui::GetStyle();
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f); // Center window title
@@ -2647,29 +2690,30 @@ void CMenu::LoadStyle()
 		style.ItemSpacing = ImVec2(8.f, 5.f);
 
 		ImVec4* colors = style.Colors;
-		colors[ImGuiCol_Border] = ImColor(110, 110, 128);
-		colors[ImGuiCol_WindowBg] = Background;
-		colors[ImGuiCol_TitleBg] = BackgroundDark;
-		colors[ImGuiCol_TitleBgActive] = BackgroundLight;
-		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.10f, 0.10f, 0.15f, 0.4f);
-		colors[ImGuiCol_Button] = BackgroundLight;
-		colors[ImGuiCol_ButtonHovered] = ImColor(69, 69, 77);
-		colors[ImGuiCol_ButtonActive] = ImColor(82, 79, 87);
-		colors[ImGuiCol_PopupBg] = BackgroundDark;
-		colors[ImGuiCol_FrameBg] = ImColor(50, 50, 50);
-		colors[ImGuiCol_FrameBgHovered] = ImColor(60, 60, 60);
-		colors[ImGuiCol_FrameBgActive] = ImColor(70, 70, 70);
-		colors[ImGuiCol_CheckMark] = Accent;
-		colors[ImGuiCol_Text] = TextLight;
+		colors[ImGuiCol_Border] = ImGui::ColorToVec(Vars::Menu::Colors::Border.Value);
+		colors[ImGuiCol_WindowBg] = ImGui::ColorToVec(Vars::Menu::Colors::WindowBg.Value);
+		colors[ImGuiCol_TitleBg] = ImGui::ColorToVec(Vars::Menu::Colors::TitleBg.Value);
+		colors[ImGuiCol_TitleBgActive] = ImGui::ColorToVec(Vars::Menu::Colors::TitleBgActive.Value);
+		colors[ImGuiCol_ModalWindowDimBg] = ImGui::ColorToVec(Vars::Menu::Colors::ModalWindowDimBg.Value);
+		colors[ImGuiCol_Button] = ImGui::ColorToVec(Vars::Menu::Colors::Button.Value);
+		colors[ImGuiCol_ButtonHovered] = ImGui::ColorToVec(Vars::Menu::Colors::ButtonHovered.Value);
+		colors[ImGuiCol_ButtonActive] = ImGui::ColorToVec(Vars::Menu::Colors::ButtonActive.Value);
+		colors[ImGuiCol_PopupBg] = ImGui::ColorToVec(Vars::Menu::Colors::PopupBg.Value);
+		colors[ImGuiCol_FrameBg] = ImGui::ColorToVec(Vars::Menu::Colors::FrameBg.Value);
+		colors[ImGuiCol_FrameBgHovered] = ImGui::ColorToVec(Vars::Menu::Colors::FrameBgHovered.Value);
+		colors[ImGuiCol_FrameBgActive] = ImGui::ColorToVec(Vars::Menu::Colors::FrameBgActive.Value);
+		colors[ImGuiCol_CheckMark] = ImGui::ColorToVec(Vars::Menu::Colors::CheckMark.Value);
+		colors[ImGuiCol_Text] = ImGui::ColorToVec(Vars::Menu::Colors::Text.Value);
 
-		colors[ImGuiCol_SliderGrab] = Accent;
-		colors[ImGuiCol_SliderGrabActive] = AccentDark;
-		colors[ImGuiCol_ResizeGrip] = Accent;
-		colors[ImGuiCol_ResizeGripActive] = Accent;
-		colors[ImGuiCol_ResizeGripHovered] = Accent;
-		colors[ImGuiCol_Header] = ImColor(70, 70, 70);
-		colors[ImGuiCol_HeaderActive] = ImColor(40, 40, 40);
-		colors[ImGuiCol_HeaderHovered] = ImColor(60, 60, 60);
+		colors[ImGuiCol_SliderGrab] = ImGui::ColorToVec(Vars::Menu::Colors::SliderGrab.Value);
+		colors[ImGuiCol_SliderGrabActive] = ImGui::ColorToVec(Vars::Menu::Colors::SliderGrabActive.Value);
+		colors[ImGuiCol_ResizeGrip] = ImGui::ColorToVec(Vars::Menu::Colors::ResizeGrip.Value);
+		colors[ImGuiCol_ResizeGripActive] = ImGui::ColorToVec(Vars::Menu::Colors::ResizeGripActive.Value);
+		colors[ImGuiCol_ResizeGripHovered] = ImGui::ColorToVec(Vars::Menu::Colors::ResizeGripHovered.Value);
+		colors[ImGuiCol_Header] = ImGui::ColorToVec(Vars::Menu::Colors::Header.Value);
+		colors[ImGuiCol_HeaderActive] = ImGui::ColorToVec(Vars::Menu::Colors::HeaderActive.Value);
+		colors[ImGuiCol_HeaderHovered] = ImGui::ColorToVec(Vars::Menu::Colors::HeaderHovered.Value);
+
 
 
 		// Alternative Designs
@@ -2697,7 +2741,7 @@ void CMenu::LoadStyle()
 		MainGradient.ClearMarks();
 		MainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
 		MainGradient.AddMark(0.2f, ImColor(0, 0, 0, 0));
-		MainGradient.AddMark(0.5f, Accent);
+		MainGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
 		MainGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
 		MainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
 	}
