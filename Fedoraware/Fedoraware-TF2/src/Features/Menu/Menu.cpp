@@ -2081,14 +2081,14 @@ void CMenu::MenuColorWindow() {
 			if (WSlider("Disabled Alpha", &Vars::Menu::Style::DisabledAlpha.Value, 0.0f, 1.0f)) LoadStyle();
 			if (WSlider2("Window Padding", &Vars::Menu::Style::WindowPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
 			if (WSlider("Window Rounding", &Vars::Menu::Style::WindowRounding.Value, 0.0f, 20.0f)) LoadStyle();
-			if (WSlider("Window Border Size", &Vars::Menu::Style::WindowBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider("Window Border Size", &Vars::Menu::Style::WindowBorderSize.Value, 0.0f, 5.0f)) LoadStyle();
 			if (WSlider2("Window Min Size", &Vars::Menu::Style::WindowMinSize.Value.x, 1.0f, 100.0f)) LoadStyle();
-			if (WSlider2("Window Title Align", &Vars::Menu::Style::WindowTitleAlign.Value.x, -1.0f, 1.0f)) LoadStyle();
+			if (WSlider2("Window Title Align", &Vars::Menu::Style::WindowTitleAlign.Value.x, 0.f, 1.0f)) LoadStyle();
 			if (WCombo("Window Menu Button Position", &Vars::Menu::Style::WindowMenuButtonPosition.Value, {"None", "Left", "Right"})) LoadStyle();
 			if (WSlider("Child Rounding", &Vars::Menu::Style::ChildRounding.Value, 0.0f, 20.0f)) LoadStyle();
-			if (WSlider("Child Border Size", &Vars::Menu::Style::ChildBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider("Child Border Size", &Vars::Menu::Style::ChildBorderSize.Value, 0.0f, 5.0f)) LoadStyle();
 			if (WSlider("Popup Rounding", &Vars::Menu::Style::PopupRounding.Value, 0.0f, 20.0f)) LoadStyle();
-			if (WSlider("Popup Border Size", &Vars::Menu::Style::PopupBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider("Popup Border Size", &Vars::Menu::Style::PopupBorderSize.Value, 0.0f, 5.0f)) LoadStyle();
 			if (WSlider2("Frame Padding", &Vars::Menu::Style::FramePadding.Value.x, 0.0f, 20.0f)) LoadStyle();
 			if (WSlider("Frame Rounding", &Vars::Menu::Style::FrameRounding.Value, 0.0f, 20.0f)) LoadStyle();
 			if (WSlider("Frame Border Size", &Vars::Menu::Style::FrameBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
