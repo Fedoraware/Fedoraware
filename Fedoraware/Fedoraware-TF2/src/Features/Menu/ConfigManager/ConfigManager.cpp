@@ -308,6 +308,7 @@ bool CConfigManager::SaveConfig(const std::string& configName)
 			else SaveT(Vec3)
 			else SaveT(Chams_t)
 			else SaveT(DragBox_t)
+			else LoadT(Vec2)
 		}
 
 		write_json(ConfigPath + "\\" + configName + ConfigExtension, WriteTree);
@@ -348,6 +349,7 @@ bool CConfigManager::LoadConfig(const std::string& configName)
 			else LoadT(Vec3)
 			else LoadT(Chams_t)
 			else LoadT(DragBox_t)
+			else LoadT(Vec2)
 		}
 
 
@@ -381,6 +383,7 @@ bool CConfigManager::SaveVisual(const std::string& configName)
 			else SaveT(Vec3)
 			else SaveT(Chams_t)
 			else SaveT(DragBox_t)
+			else LoadT(Vec2)
 		}
 
 		write_json(ConfigPath + "\\Visuals\\" + configName + ConfigExtension, WriteTree);
@@ -419,6 +422,7 @@ bool CConfigManager::LoadVisual(const std::string& configName)
 			else LoadT(Vec3)
 			else LoadT(Chams_t)
 			else LoadT(DragBox_t)
+			else LoadT(Vec2)
 		}
 
 		g_Draw.RemakeFonts();
