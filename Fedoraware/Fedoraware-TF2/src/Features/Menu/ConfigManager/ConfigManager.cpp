@@ -39,6 +39,15 @@ void TreeToColor(const boost::property_tree::ptree& tree, Color_t& out)
 	if (auto v = tree.get_optional<byte>("a")) { out.a = *v; }
 }
 
+boost::property_tree::ptree Vec2ToTree(const Vec2& vec)
+{
+	boost::property_tree::ptree vecTree;
+	vecTree.put("x", vec.x);
+	vecTree.put("y", vec.y);
+
+	return vecTree;
+}
+
 boost::property_tree::ptree VecToTree(const Vec3& vec)
 {
 	boost::property_tree::ptree vecTree;
@@ -54,6 +63,12 @@ void TreeToVec(const boost::property_tree::ptree& tree, Vec3& out)
 	if (auto v = tree.get_optional<float>("x")) { out.x = *v; }
 	if (auto v = tree.get_optional<float>("y")) { out.y = *v; }
 	if (auto v = tree.get_optional<float>("z")) { out.z = *v; }
+}
+
+void TreeToVec2(const boost::property_tree::ptree& tree, Vec2& out)
+{
+	if (auto v = tree.get_optional<float>("x")) { out.x = *v; }
+	if (auto v = tree.get_optional<float>("y")) { out.y = *v; }
 }
 
 void CConfigManager::SaveJson(const char* name, bool val)
@@ -93,6 +108,11 @@ void CConfigManager::SaveJson(const char* name, const Gradient_t& val)
 void CConfigManager::SaveJson(const char* name, const Vec3& val)
 {
 	WriteTree.put_child(name, VecToTree(val));
+}
+
+void CConfigManager::SaveJson(const char* name, const Vec2& val)
+{
+	WriteTree.put_child(name, Vec2ToTree(val));
 }
 
 void CConfigManager::SaveJson(const char* name, const Chams_t& val)
@@ -186,6 +206,14 @@ void CConfigManager::LoadJson(const char* name, Vec3& val)
 	if (const auto getChild = ReadTree.get_child_optional(name))
 	{
 		TreeToVec(*getChild, val);
+	}
+}
+
+void CConfigManager::LoadJson(const char* name, Vec2& val)
+{
+	if (const auto getChild = ReadTree.get_child_optional(name))
+	{
+		TreeToVec2(*getChild, val);
 	}
 }
 

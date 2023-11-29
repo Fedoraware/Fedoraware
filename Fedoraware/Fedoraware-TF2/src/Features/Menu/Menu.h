@@ -13,7 +13,7 @@ class CMenu
 	void MenuHvH();
 	void MenuMisc();
 	void SettingsWindow();
-	void MenuColorWindow();
+	void MenuDesignWindow();
 	void DebugMenu();
 	void DrawCameraWindow();
 	void DrawCritDrag();
@@ -55,7 +55,7 @@ class CMenu
 	ConfigTab CurrentConfigTab = ConfigTab::General;
 
 	bool ShowSettings = false;
-	bool ShowColorWindow = false;
+	bool ShowDesignerWindow = false;
 	bool ShowDebugMenu = false;
 
 public:
