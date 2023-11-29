@@ -82,6 +82,53 @@ namespace Vars
 	CVar(CloseOnUnfocus, false, IS_VISUAL);
 	CVar(MenuKey, 0);
 
+	SUBNAMESPACE_BEGIN(Style) // all of these are default values i apart from stuff specifically changed (i did not type all of this i gave chatgpt the imgui style struct and made this)
+	CVar(ItemWidth, 150.f, IS_VISUAL);
+	CVar(Alpha, 1.0f, IS_VISUAL);
+	CVar(DisabledAlpha, 1.0f, IS_VISUAL);
+	CVar(WindowPadding, Vec2(0, 0), IS_VISUAL);
+	CVar(WindowRounding, 0.0f, IS_VISUAL);
+	CVar(WindowBorderSize, 1.0f, IS_VISUAL);
+	CVar(WindowMinSize, Vec2(100, 100), IS_VISUAL);
+	CVar(WindowTitleAlign, Vec2(0.5f, 0.5f), IS_VISUAL);
+	CVar(WindowMenuButtonPosition, 0, IS_VISUAL);
+	CVar(ChildRounding, 0.0f, IS_VISUAL);
+	CVar(ChildBorderSize, 1.0f, IS_VISUAL);
+	CVar(PopupRounding, 0.0f, IS_VISUAL);
+	CVar(PopupBorderSize, 1.0f, IS_VISUAL);
+	CVar(FramePadding, Vec2(4, 3), IS_VISUAL);
+	CVar(FrameRounding, 0.0f, IS_VISUAL);
+	CVar(FrameBorderSize, 1.0f, IS_VISUAL);
+	CVar(ItemSpacing, Vec2(8, 5), IS_VISUAL);
+	CVar(ItemInnerSpacing, Vec2(4, 4), IS_VISUAL);
+	CVar(CellPadding, Vec2(4, 2), IS_VISUAL);
+	CVar(TouchExtraPadding, Vec2(0, 0), IS_VISUAL);
+	CVar(IndentSpacing, 21.0f, IS_VISUAL);
+	CVar(ColumnsMinSpacing, 1.0f, IS_VISUAL);
+	CVar(ScrollbarSize, 4.0f, IS_VISUAL);
+	CVar(ScrollbarRounding, 6.0f, IS_VISUAL);
+	CVar(GrabMinSize, 15.0f, IS_VISUAL);
+	CVar(GrabRounding, 0.0f, IS_VISUAL);
+	CVar(LogSliderDeadzone, 4.0f, IS_VISUAL);
+	CVar(TabRounding, 0.0f, IS_VISUAL);
+	CVar(TabBorderSize, 0.0f, IS_VISUAL);
+	CVar(TabMinWidthForCloseButton, 10000.f, IS_VISUAL);
+	CVar(ColorButtonPosition, 1, IS_VISUAL);
+	CVar(ButtonTextAlign, Vec2(0.5f, 0.5f), IS_VISUAL);
+	CVar(SelectableTextAlign, Vec2(0.0f, 0.0f), IS_VISUAL);
+	CVar(SeparatorTextBorderSize, 1.0f, IS_VISUAL);
+	CVar(SeparatorTextAlign, Vec2(0.0f, 0.5f), IS_VISUAL);
+	CVar(SeparatorTextPadding, Vec2(0, 4), IS_VISUAL);
+	CVar(DisplayWindowPadding, Vec2(19, 19), IS_VISUAL);
+	CVar(DisplaySafeAreaPadding, Vec2(3, 3), IS_VISUAL);
+	CVar(MouseCursorScale, 1.0f, IS_VISUAL);
+	CVar(AntiAliasedLines, true, IS_VISUAL);
+	CVar(AntiAliasedLinesUseTex, true, IS_VISUAL);
+	CVar(AntiAliasedFill, true, IS_VISUAL);
+	CVar(CurveTessellationTol, 1.25f, IS_VISUAL);
+	CVar(CircleTessellationMaxError, 0.30f, IS_VISUAL);
+	SUBNAMESPACE_END(Style);
+
 	SUBNAMESPACE_BEGIN(Colors)
 	CVar(MenuAccent, Color_t(255, 101, 101, 255), IS_VISUAL);
 	CVar(TabBar, Color_t(51, 51, 56, 255), IS_VISUAL);
@@ -102,6 +149,11 @@ namespace Vars
 	CVar(CheckMark, Color_t(255, 101, 101, 255), IS_VISUAL);
 	CVar(Text, Color_t(240, 240, 240, 255), IS_VISUAL);
 
+	CVar(ScrollbarBG, Color_t(30, 30, 30, 255), IS_VISUAL);
+	CVar(ScrollbarGrab, Color_t(51, 51, 51, 255), IS_VISUAL);
+	CVar(ScrollbarGrabHovered, Color_t(69, 69, 77, 255), IS_VISUAL);
+	CVar(ScrollbarGrabActive, Color_t(82, 79, 87, 255), IS_VISUAL);
+
 	CVar(SliderGrab, Color_t(255, 101, 101, 255), IS_VISUAL);
 	CVar(SliderGrabActive, Color_t(20, 81, 81, 255), IS_VISUAL);
 	CVar(ResizeGrip, Color_t(255, 101, 101, 255), IS_VISUAL);
@@ -114,6 +166,7 @@ namespace Vars
 
 
 	SUBNAMESPACE_END(Colors);
+
 
 	NAMESPACE_END(Menu);
 

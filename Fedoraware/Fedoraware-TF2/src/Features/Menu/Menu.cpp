@@ -46,14 +46,7 @@ void CMenu::DrawMenu()
 		const auto windowPos = ImGui::GetWindowPos();
 		
 		// Title gradient setup
-		{
-			TitleGradient.ClearMarks();
-			TitleGradient.AddMark(0.f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
-			TitleGradient.AddMark(0.25f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
-			TitleGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
-			TitleGradient.AddMark(0.75f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
-			TitleGradient.AddMark(1.0f, ImGui::ColorToVec(Color_t{ 0,0,0,0 }));
-		}
+		
 		ImGui::GradientRect(&TitleGradient, { windowPos.x, windowPos.y }, windowSize.x, 3.f);
 		ImGui::Dummy({ 0, 2 });
 
@@ -1869,7 +1862,7 @@ void CMenu::MenuMisc()
 
 			if (!vecKillsays.empty())
 			{
-				SetNextItemWidth(F::Menu.ItemWidth);
+				SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 				if (ImGui::BeginCombo("Killsay file", Vars::Misc::KillsayFile.Value.c_str()))
 				{
 					for (const auto& killsay : vecKillsays)
@@ -2033,41 +2026,101 @@ void CMenu::MenuMisc()
 void CMenu::MenuColorWindow() {
 	using namespace ImGui;
 	if (!ShowColorWindow) return;
+	static int currentTab = 0;
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
+	SetNextWindowSize(ImVec2(350, 700));
 	if (Begin("Menu Colors", &ShowColorWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
 
-		if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) { LoadStyle(); } SameLine(); Text("Main accent");
-		if (ColorPicker("Tab Bar", Vars::Menu::Colors::TabBar.Value)) { LoadStyle(); } SameLine(); Text("Tab Bar");
+		if (BeginTable("menuTabs", 2)) {
+			if (TabButton("Colours", currentTab == 0)) currentTab = 0;
+			if (TabButton("Style", currentTab == 1)) currentTab = 1;
+			EndTable();
+		}
 
-		if (ColorPicker("Window Background", Vars::Menu::Colors::WindowBg.Value)) { LoadStyle(); } SameLine(); Text("Window Background");
-		if (ColorPicker("Popup Background", Vars::Menu::Colors::PopupBg.Value)) { LoadStyle(); } SameLine(); Text("Popup Background");
-
-		Dummy({ 0, 5 });
-		if (ColorPicker("Title Background", Vars::Menu::Colors::TitleBg.Value)) { LoadStyle(); } SameLine(); Text("Title Background");
-		if (ColorPicker("Active Title Background", Vars::Menu::Colors::TitleBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Title Background");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Frame Background", Vars::Menu::Colors::FrameBg.Value)) { LoadStyle(); } SameLine(); Text("Frame Background");
-		if (ColorPicker("Hovered Frame Background", Vars::Menu::Colors::FrameBgHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Frame Background");
-		if (ColorPicker("Active Frame Background", Vars::Menu::Colors::FrameBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Frame Background");
-		if (ColorPicker("Modal Background Dim", Vars::Menu::Colors::ModalWindowDimBg.Value)) { LoadStyle(); } SameLine(); Text("Modal Background Dim");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Button", Vars::Menu::Colors::Button.Value)) { LoadStyle(); } SameLine(); Text("Button");
-		if (ColorPicker("Hovered Button", Vars::Menu::Colors::ButtonHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Button");
-		if (ColorPicker("Active Button", Vars::Menu::Colors::ButtonActive.Value)) { LoadStyle(); } SameLine(); Text("Active Button");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Checkmark", Vars::Menu::Colors::CheckMark.Value)) { LoadStyle(); } SameLine(); Text("CheckmarkCheckmark");
-		if (ColorPicker("Text", Vars::Menu::Colors::Text.Value)) { LoadStyle(); } SameLine(); Text("Text");
-		if (ColorPicker("Border", Vars::Menu::Colors::Border.Value)) { LoadStyle(); } SameLine(); Text("Border");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Slider Grab", Vars::Menu::Colors::SliderGrab.Value)) { LoadStyle(); } SameLine(); Text("Slider Grab");
-		if (ColorPicker("Active Slider Grab", Vars::Menu::Colors::SliderGrabActive.Value)) { LoadStyle(); } SameLine(); Text("Active Slider Grab");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Resize Grip", Vars::Menu::Colors::ResizeGrip.Value)) { LoadStyle(); } SameLine(); Text("Resize Grip");
-		if (ColorPicker("Active Resize Grip", Vars::Menu::Colors::ResizeGripActive.Value)) { LoadStyle(); } SameLine(); Text("Active Resize Grip");
-		Dummy({ 0, 5 });
-		if (ColorPicker("Header", Vars::Menu::Colors::Header.Value)) { LoadStyle(); } SameLine(); Text("Header");
-		if (ColorPicker("Hovered Header", Vars::Menu::Colors::HeaderHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Header");
-		if (ColorPicker("Active Header", Vars::Menu::Colors::HeaderActive.Value)) { LoadStyle(); } SameLine(); Text("Active Header");
+		if (!currentTab) {
+			if (ColorPicker("Main accent", Vars::Menu::Colors::MenuAccent.Value)) {LoadStyle(); } SameLine(); Text("Main accent");
+			if (ColorPicker("Tab Bar", Vars::Menu::Colors::TabBar.Value)) { LoadStyle(); } SameLine(); Text("Tab Bar");
+			if (ColorPicker("Window Background", Vars::Menu::Colors::WindowBg.Value)) { LoadStyle(); } SameLine(); Text("Window Background");
+			if (ColorPicker("Popup Background", Vars::Menu::Colors::PopupBg.Value)) { LoadStyle(); } SameLine(); Text("Popup Background");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Title Background", Vars::Menu::Colors::TitleBg.Value)) { LoadStyle(); }  SameLine(); Text("Title Background");
+			if (ColorPicker("Active Title Background", Vars::Menu::Colors::TitleBgActive.Value)) { LoadStyle(); }  SameLine(); Text("Active Title Background");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Frame Background", Vars::Menu::Colors::FrameBg.Value)) { LoadStyle(); } SameLine(); Text("Frame Background");
+			if (ColorPicker("Hovered Frame Background", Vars::Menu::Colors::FrameBgHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Frame Background");
+			if (ColorPicker("Active Frame Background", Vars::Menu::Colors::FrameBgActive.Value)) { LoadStyle(); } SameLine(); Text("Active Frame Background");
+			if (ColorPicker("Modal Background Dim", Vars::Menu::Colors::ModalWindowDimBg.Value)) { LoadStyle(); } SameLine(); Text("Modal Background Dim");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Button", Vars::Menu::Colors::Button.Value)) { LoadStyle(); } SameLine(); Text("Button");
+			if (ColorPicker("Hovered Button", Vars::Menu::Colors::ButtonHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Button");
+			if (ColorPicker("Active Button", Vars::Menu::Colors::ButtonActive.Value)) { LoadStyle(); } SameLine(); Text("Active Button");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Checkmark", Vars::Menu::Colors::CheckMark.Value)) { LoadStyle(); } SameLine(); Text("CheckmarkCheckmark");
+			if (ColorPicker("Text", Vars::Menu::Colors::Text.Value)) { LoadStyle(); } SameLine(); Text("Text");
+			if (ColorPicker("Border", Vars::Menu::Colors::Border.Value)) { LoadStyle(); } SameLine(); Text("Border");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Slider Grab", Vars::Menu::Colors::SliderGrab.Value)) { LoadStyle(); } SameLine(); Text("Slider Grab");
+			if (ColorPicker("Active Slider Grab", Vars::Menu::Colors::SliderGrabActive.Value)) { LoadStyle(); } SameLine(); Text("Active Slider Grab");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Resize Grip", Vars::Menu::Colors::ResizeGrip.Value)) { LoadStyle(); } SameLine(); Text("Resize Grip");
+			if (ColorPicker("Active Resize Grip", Vars::Menu::Colors::ResizeGripActive.Value)) { LoadStyle(); } SameLine(); Text("Active Resize Grip");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Scroll Bar Background", Vars::Menu::Colors::ScrollbarBG.Value)) { LoadStyle(); } SameLine(); Text("Scroll Bar Background");
+			if (ColorPicker("Scroll Bar Grap", Vars::Menu::Colors::ScrollbarGrab.Value)) { LoadStyle(); }; SameLine(); Text("Scroll Bar Grap");
+			if (ColorPicker("Hovered Scroll Bar Grap", Vars::Menu::Colors::ScrollbarGrabHovered.Value)) { LoadStyle(); }; SameLine(); Text("Hovered Scroll Bar Grap");
+			if (ColorPicker("Active Scroll Bar Grap", Vars::Menu::Colors::ScrollbarGrabActive.Value)) { LoadStyle(); }; SameLine(); Text("Active Scroll Bar Grap");
+			Dummy({ 0, 5 });
+			if (ColorPicker("Header", Vars::Menu::Colors::Header.Value)) { LoadStyle(); } SameLine(); Text("Header");
+			if (ColorPicker("Hovered Header", Vars::Menu::Colors::HeaderHovered.Value)) { LoadStyle(); } SameLine(); Text("Hovered Header");
+			if (ColorPicker("Active Header", Vars::Menu::Colors::HeaderActive.Value)) { LoadStyle();  } SameLine(); Text("Active Header");
+		}
+		else {
+			Text("Be careful you can make your visuals very wacky!");
+			if (ImGui::SliderFloat("Item Width", &Vars::Menu::Style::ItemWidth.Value, 1.f, 250.f)) LoadStyle(); // a bit above readable but eh
+			if (WSlider("Alpha", &Vars::Menu::Style::Alpha.Value, 0.01f, 1.0f)) LoadStyle();
+			if (WSlider("Disabled Alpha", &Vars::Menu::Style::DisabledAlpha.Value, 0.0f, 1.0f)) LoadStyle();
+			if (WSlider2("Window Padding", &Vars::Menu::Style::WindowPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Window Rounding", &Vars::Menu::Style::WindowRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Window Border Size", &Vars::Menu::Style::WindowBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider2("Window Min Size", &Vars::Menu::Style::WindowMinSize.Value.x, 1.0f, 100.0f)) LoadStyle();
+			if (WSlider2("Window Title Align", &Vars::Menu::Style::WindowTitleAlign.Value.x, -1.0f, 1.0f)) LoadStyle();
+			if (WCombo("Window Menu Button Position", &Vars::Menu::Style::WindowMenuButtonPosition.Value, {"None", "Left", "Right"})) LoadStyle();
+			if (WSlider("Child Rounding", &Vars::Menu::Style::ChildRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Child Border Size", &Vars::Menu::Style::ChildBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider("Popup Rounding", &Vars::Menu::Style::PopupRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Popup Border Size", &Vars::Menu::Style::PopupBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider2("Frame Padding", &Vars::Menu::Style::FramePadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Frame Rounding", &Vars::Menu::Style::FrameRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Frame Border Size", &Vars::Menu::Style::FrameBorderSize.Value, 0.0f, 2.0f)) LoadStyle();
+			if (WSlider2("Item Spacing", &Vars::Menu::Style::ItemSpacing.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider2("Item Inner Spacing", &Vars::Menu::Style::ItemInnerSpacing.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider2("Cell Padding", &Vars::Menu::Style::CellPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider2("Touch Extra Padding", &Vars::Menu::Style::TouchExtraPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Indent Spacing", &Vars::Menu::Style::IndentSpacing.Value, 0.0f, 40.0f)) LoadStyle();
+			if (WSlider("Columns Min Spacing", &Vars::Menu::Style::ColumnsMinSpacing.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Scrollbar Size", &Vars::Menu::Style::ScrollbarSize.Value, 0.01, 40.0f)) LoadStyle();
+			if (WSlider("Scrollbar Rounding", &Vars::Menu::Style::ScrollbarRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Grab Min Size", &Vars::Menu::Style::GrabMinSize.Value, 0.01f, 20.0f)) LoadStyle();
+			if (WSlider("Grab Rounding", &Vars::Menu::Style::GrabRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Log Slider Deadzone", &Vars::Menu::Style::LogSliderDeadzone.Value, 0.0f, 10.0f)) LoadStyle();
+			if (WSlider("Tab Rounding", &Vars::Menu::Style::TabRounding.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Tab Border Size", &Vars::Menu::Style::TabBorderSize.Value, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Tab Min Width For Close Button", &Vars::Menu::Style::TabMinWidthForCloseButton.Value, 0.0f, 20000.0f)) LoadStyle();
+			if (WCombo("Color Button Position", &Vars::Menu::Style::ColorButtonPosition.Value, {"Left", "Right"})) LoadStyle();
+			if (WSlider2("Button Text Align", &Vars::Menu::Style::ButtonTextAlign.Value.x, 0.f, 1.0f)) LoadStyle();
+			if (WSlider2("Selectable Text Align", &Vars::Menu::Style::SelectableTextAlign.Value.x, 0.f, 1.0f)) LoadStyle();
+			if (WSlider("Separator Text Border Size", &Vars::Menu::Style::SeparatorTextBorderSize.Value, 0.0f, 5.0f)) LoadStyle();
+			if (WSlider2("Separator Text Align", &Vars::Menu::Style::SeparatorTextAlign.Value.x, 0.f, 1.0f)) LoadStyle();
+			if (WSlider2("Separator Text Padding", &Vars::Menu::Style::SeparatorTextPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider2("Display Window Padding", &Vars::Menu::Style::DisplayWindowPadding.Value.x, 0.0f, 40.0f)) LoadStyle();
+			if (WSlider2("Display Safe Area Padding", &Vars::Menu::Style::DisplaySafeAreaPadding.Value.x, 0.0f, 20.0f)) LoadStyle();
+			if (WSlider("Mouse Cursor Scale", &Vars::Menu::Style::MouseCursorScale.Value, 0.0f, 5.0f)) LoadStyle();
+			if (ImGui::Checkbox("Enable Anti-Aliased Lines", &Vars::Menu::Style::AntiAliasedLines.Value)) LoadStyle();
+			if (ImGui::Checkbox("Enable Anti-Aliased Lines Using Texture", &Vars::Menu::Style::AntiAliasedLinesUseTex.Value)) LoadStyle();
+			if (ImGui::Checkbox("Enable Anti-Aliased Fill", &Vars::Menu::Style::AntiAliasedFill.Value)) LoadStyle();
+			if (WSlider("Curve Tessellation Tolerance", &Vars::Menu::Style::CurveTessellationTol.Value, 0.01f, 5.0f)) LoadStyle();
+			if (WSlider("Circle Tessellation Max Error", &Vars::Menu::Style::CircleTessellationMaxError.Value, 0.01f, 5.0f)) LoadStyle();
+		}
 		End();
 	}
 	PopStyleVar();
@@ -2674,20 +2727,50 @@ void CMenu::LoadStyle()
 		// https://raais.github.io/ImStudio/
 
 		auto& style = ImGui::GetStyle();
-		style.WindowTitleAlign = ImVec2(0.5f, 0.5f); // Center window title
-		style.WindowMinSize = ImVec2(100, 100);
-		style.WindowPadding = ImVec2(0, 0);
-		style.WindowBorderSize = 1.f;
-		style.ButtonTextAlign = ImVec2(0.5f, 0.4f); // Center button text
-		style.FrameBorderSize = 1.f; // Old menu feeling
-		style.FrameRounding = 0.f;
-		style.ChildBorderSize = 1.f;
-		style.ChildRounding = 0.f;
-		style.GrabMinSize = 15.f;
-		style.GrabRounding = 0.f;
-		style.ScrollbarSize = 4.f;
-		style.ScrollbarRounding = 6.f;
-		style.ItemSpacing = ImVec2(8.f, 5.f);
+		style.Alpha = Vars::Menu::Style::Alpha.Value;
+		style.DisabledAlpha = Vars::Menu::Style::DisabledAlpha.Value;
+		style.WindowPadding = ImGui::Vec2ToIm(Vars::Menu::Style::WindowPadding.Value);
+		style.WindowRounding = Vars::Menu::Style::WindowRounding.Value;
+		style.WindowBorderSize = Vars::Menu::Style::WindowBorderSize.Value;
+		style.WindowMinSize = ImGui::Vec2ToIm(Vars::Menu::Style::WindowMinSize.Value);
+		style.WindowTitleAlign = ImGui::Vec2ToIm(Vars::Menu::Style::WindowTitleAlign.Value);
+		style.WindowMenuButtonPosition = static_cast<ImGuiDir>(Vars::Menu::Style::WindowMenuButtonPosition.Value - 1);
+		style.ChildRounding = Vars::Menu::Style::ChildRounding.Value;
+		style.ChildBorderSize = Vars::Menu::Style::ChildBorderSize.Value;
+		style.PopupRounding = Vars::Menu::Style::PopupRounding.Value;
+		style.PopupBorderSize = Vars::Menu::Style::PopupBorderSize.Value;
+		style.FramePadding = ImGui::Vec2ToIm(Vars::Menu::Style::FramePadding.Value);
+		style.FrameRounding = Vars::Menu::Style::FrameRounding.Value;
+		style.FrameBorderSize = Vars::Menu::Style::FrameBorderSize.Value;
+		style.ItemSpacing = ImGui::Vec2ToIm(Vars::Menu::Style::ItemSpacing.Value);
+		style.ItemInnerSpacing = ImGui::Vec2ToIm(Vars::Menu::Style::ItemInnerSpacing.Value);
+		style.CellPadding = ImGui::Vec2ToIm(Vars::Menu::Style::CellPadding.Value);
+		style.TouchExtraPadding = ImGui::Vec2ToIm(Vars::Menu::Style::TouchExtraPadding.Value);
+		style.IndentSpacing = Vars::Menu::Style::IndentSpacing.Value;
+		style.ColumnsMinSpacing = Vars::Menu::Style::ColumnsMinSpacing.Value;
+		style.ScrollbarSize = Vars::Menu::Style::ScrollbarSize.Value;
+		style.ScrollbarRounding = Vars::Menu::Style::ScrollbarRounding.Value;
+		style.GrabMinSize = Vars::Menu::Style::GrabMinSize.Value;
+		style.GrabRounding = Vars::Menu::Style::GrabRounding.Value;
+		style.LogSliderDeadzone = Vars::Menu::Style::LogSliderDeadzone.Value;
+		style.TabRounding = Vars::Menu::Style::TabRounding.Value;
+		style.TabBorderSize = Vars::Menu::Style::TabBorderSize.Value;
+		style.TabMinWidthForCloseButton = Vars::Menu::Style::TabMinWidthForCloseButton.Value;
+		style.ColorButtonPosition = static_cast<ImGuiDir>(Vars::Menu::Style::ColorButtonPosition.Value);
+		style.ButtonTextAlign = ImGui::Vec2ToIm(Vars::Menu::Style::ButtonTextAlign.Value);
+		style.SelectableTextAlign = ImGui::Vec2ToIm(Vars::Menu::Style::SelectableTextAlign.Value);
+		style.SeparatorTextBorderSize = Vars::Menu::Style::SeparatorTextBorderSize.Value;
+		style.SeparatorTextAlign = ImGui::Vec2ToIm(Vars::Menu::Style::SeparatorTextAlign.Value);
+		style.SeparatorTextPadding = ImGui::Vec2ToIm(Vars::Menu::Style::SeparatorTextPadding.Value);
+		style.DisplayWindowPadding = ImGui::Vec2ToIm(Vars::Menu::Style::DisplayWindowPadding.Value);
+		style.DisplaySafeAreaPadding = ImGui::Vec2ToIm(Vars::Menu::Style::DisplaySafeAreaPadding.Value);
+		style.MouseCursorScale = Vars::Menu::Style::MouseCursorScale.Value;
+		style.AntiAliasedLines = Vars::Menu::Style::AntiAliasedLines.Value;
+		style.AntiAliasedLinesUseTex = Vars::Menu::Style::AntiAliasedLinesUseTex.Value;
+		style.AntiAliasedFill = Vars::Menu::Style::AntiAliasedFill.Value;
+		style.CurveTessellationTol = Vars::Menu::Style::CurveTessellationTol.Value;
+		style.CircleTessellationMaxError = Vars::Menu::Style::CircleTessellationMaxError.Value;
+
 
 		ImVec4* colors = style.Colors;
 		colors[ImGuiCol_Border] = ImGui::ColorToVec(Vars::Menu::Colors::Border.Value);
@@ -2705,6 +2788,10 @@ void CMenu::LoadStyle()
 		colors[ImGuiCol_CheckMark] = ImGui::ColorToVec(Vars::Menu::Colors::CheckMark.Value);
 		colors[ImGuiCol_Text] = ImGui::ColorToVec(Vars::Menu::Colors::Text.Value);
 
+		colors[ImGuiCol_ScrollbarBg] = ImGui::ColorToVec(Vars::Menu::Colors::ScrollbarBG.Value);
+		colors[ImGuiCol_ScrollbarGrab] = ImGui::ColorToVec(Vars::Menu::Colors::ScrollbarGrab.Value);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImGui::ColorToVec(Vars::Menu::Colors::ScrollbarGrabActive.Value);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImGui::ColorToVec(Vars::Menu::Colors::ScrollbarGrabHovered.Value);
 		colors[ImGuiCol_SliderGrab] = ImGui::ColorToVec(Vars::Menu::Colors::SliderGrab.Value);
 		colors[ImGuiCol_SliderGrabActive] = ImGui::ColorToVec(Vars::Menu::Colors::SliderGrabActive.Value);
 		colors[ImGuiCol_ResizeGrip] = ImGui::ColorToVec(Vars::Menu::Colors::ResizeGrip.Value);
@@ -2728,31 +2815,33 @@ void CMenu::LoadStyle()
 	}
 
 	// Misc
-	{
-		//TitleGradient.ClearMarks();
-		/*TitleGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		TitleGradient.AddMark(0.3f, ImColor(0, 0, 0, 0));
-		TitleGradient.AddMark(0.5f, Accent);
-		TitleGradient.AddMark(0.7f, ImColor(0, 0, 0, 0));
-		TitleGradient.AddMark(1.f, ImColor(0, 0, 0, 0));*/
-	}
+	ImColor trans = ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value);
+	trans.Value.w = 0;
 
 	{
+		TitleGradient.ClearMarks();
+		TitleGradient.AddMark(0.f, trans);
+		TitleGradient.AddMark(0.25f, trans);
+		TitleGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
+		TitleGradient.AddMark(0.75f, trans);
+		TitleGradient.AddMark(1.f, trans);
+	}
+	{
 		MainGradient.ClearMarks();
-		MainGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		MainGradient.AddMark(0.2f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.f, trans);
+		MainGradient.AddMark(0.2f, trans);
 		MainGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
-		MainGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
-		MainGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		MainGradient.AddMark(0.8f, trans);
+		MainGradient.AddMark(1.f, trans);
 	}
 
 	{
 		TabGradient.ClearMarks();
-		TabGradient.AddMark(0.f, ImColor(0, 0, 0, 0));
-		TabGradient.AddMark(0.2f, ImColor(0, 0, 0, 0));
-		TabGradient.AddMark(0.5f, ImColor(255, 255, 255));
-		TabGradient.AddMark(0.8f, ImColor(0, 0, 0, 0));
-		TabGradient.AddMark(1.f, ImColor(0, 0, 0, 0));
+		TabGradient.AddMark(0.f, trans);
+		TabGradient.AddMark(0.2f, trans);
+		TabGradient.AddMark(0.5f, ImGui::ColorToVec(Vars::Menu::Colors::MenuAccent.Value));
+		TabGradient.AddMark(0.8f, trans);
+		TabGradient.AddMark(1.f, trans);
 	}
 }
 

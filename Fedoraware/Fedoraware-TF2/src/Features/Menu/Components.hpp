@@ -17,6 +17,10 @@ namespace ImGui
 		return { color.r, color.g, color.b, color.a };
 	}
 
+	inline ImVec2 Vec2ToIm(Vec2 v) {
+		return { v.x, v.y };
+	}
+
 	/* ImVec4 to Color_t */
 	inline Color_t VecToColor(const ImVec4& color)
 	{
@@ -63,6 +67,10 @@ namespace ImGui
 
 		const auto widgetPos = GetCursorScreenPos();
 		GradientRect(&F::Menu.MainGradient, { widgetPos.x, widgetPos.y - 2 }, GetColumnWidth(), 3);
+	}
+	__inline void SliderVec2(const char* label, Vec2* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
+	{
+		SliderScalarN(label, ImGuiDataType_Float, &v, 2, &v_min, &v_max, format, flags);
 	}
 
 	__inline bool TableColumnChild(const char* str_id)
@@ -252,7 +260,7 @@ namespace ImGui
 	__inline bool MaterialCombo(const char* label, std::string* current_mat, ImGuiComboFlags flags = 0)
 	{
 		bool active = false;
-		PushItemWidth(F::Menu.ItemWidth);
+		PushItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		if (BeginCombo(label, current_mat->c_str(), flags))
 		{
 			for (const auto& name : F::MaterialEditor.MaterialMap | std::views::keys)
@@ -289,7 +297,7 @@ namespace ImGui
 		}
 		preview.pop_back(); preview.pop_back(); // This is a stupid but easy way to remove the last comma
 
-		PushItemWidth(F::Menu.ItemWidth);
+		PushItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		if (BeginCombo(comboName.c_str(), preview.c_str()))
 		{
 			for (size_t i = 0; i < titles.size(); i++)
@@ -325,7 +333,7 @@ namespace ImGui
 			preview.pop_back(); preview.pop_back();
 		}
 
-		PushItemWidth(F::Menu.ItemWidth);
+		PushItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		if (BeginCombo(comboName.c_str(), preview.c_str()))
 		{
 			for (size_t i = 0; i < flagNames.size(); i++)
@@ -353,7 +361,7 @@ namespace ImGui
 	{
 		bool open = false;
 		ImVec4 tempColor = ColorToVec(color);
-		PushItemWidth(F::Menu.ItemWidth);
+		PushItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		if (ColorEdit4(label, &tempColor.x, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel))
 		{
 			color = VecToColor(tempColor);
@@ -419,37 +427,43 @@ namespace ImGui
 #pragma region Width Components
 	__inline bool WCombo(const char* label, int* current_item, std::vector<const char*> items)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return Combo(label, current_item, items.data(), items.size(), -1);
 	}
 
 	__inline bool WSlider(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return SliderFloat(label, v, v_min, v_max, format, flags);
+	}
+
+	__inline bool WSlider2(const char* label, float* v, float v_min, float v_max, const char* format = "%.2f", ImGuiSliderFlags flags = 0)
+	{
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
+		return SliderFloat2(label, v, v_min, v_max, format, flags);
 	}
 
 	__inline bool WSlider(const char* label, int* v, int v_min, int v_max, const char* format = "%d", ImGuiSliderFlags flags = 0)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return SliderInt(label, v, v_min, v_max, format, flags);
 	}
 
 	__inline bool WInputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return InputText(label, str, flags, callback, user_data);
 	}
 
 	__inline bool WInputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return InputTextWithHint(label, hint, str, flags, callback, user_data);
 	}
 
 	__inline bool WInputInt(const char* label, int* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0)
 	{
-		SetNextItemWidth(F::Menu.ItemWidth);
+		SetNextItemWidth(Vars::Menu::Style::ItemWidth.Value);
 		return InputInt(label, v, step, step_fast, flags);
 	}
 
