@@ -2023,13 +2023,13 @@ void CMenu::MenuMisc()
 }
 #pragma endregion
 
-void CMenu::MenuColorWindow() {
+void CMenu::MenuDesignWindow() {
 	using namespace ImGui;
-	if (!ShowColorWindow) return;
+	if (!ShowDesignerWindow) return;
 	static int currentTab = 0;
 	PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12, 12));
 	SetNextWindowSize(ImVec2(350, 700));
-	if (Begin("Menu Colors", &ShowColorWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
+	if (Begin("Menu Design", &ShowDesignerWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
 
 		if (BeginTable("menuTabs", 2)) {
 			if (TabButton("Colours", currentTab == 0)) currentTab = 0;
@@ -2143,7 +2143,7 @@ void CMenu::SettingsWindow()
 		/* General Menu Settings */
 		if (CollapsingHeader("Menu Settings"))
 		{
-			if (Button("Open Color Configurator")) { ShowColorWindow = !ShowColorWindow; }
+			if (Button("Open Menu Designer")) { ShowDesignerWindow = !ShowDesignerWindow; }
 			if (Checkbox("Alternative Design", &Vars::Menu::ModernDesign.Value)) { LoadStyle(); }
 			if (Checkbox("Draw Weather", &Vars::Menu::DrawWeather.Value)) { LoadStyle(); }
 			if (Checkbox("Menu Vignette", &Vars::Menu::Vignette.Value))
@@ -2703,7 +2703,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice)
 		AddDraggable("Crits", Vars::CritHack::IndicatorPos.Value, Vars::CritHack::Indicators.Value, true);
 
 		SettingsWindow();
-		MenuColorWindow();
+		MenuDesignWindow();
 		DebugMenu();
 		F::MaterialEditor.Render();
 		F::PlayerList.Render();
