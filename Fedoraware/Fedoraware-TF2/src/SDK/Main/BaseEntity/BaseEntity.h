@@ -1020,6 +1020,16 @@ public: //Everything else, lol.
 		return fnPhysicsRunThink(this, thinkMethod);
 	}
 
+	__inline void UpdateClientSideAnimation() {
+		static auto fnUpdateClientSideAnimation = S::CBaseAnimating_UpdateClientSideAnimation.As<void(__thiscall*)(CBaseEntity*)>();
+		return fnUpdateClientSideAnimation(this);
+	}
+
+	__inline float FrameAdvance(float flInterval) {
+		static auto fnFrameAdvance = S::CBaseAnimating_FrameAdvance.As<float(__thiscall*)(CBaseEntity*, float)>();
+		return fnFrameAdvance(this, flInterval);
+	}
+
 	__inline void SelectItem(const char* pstr, int iSubType) {
 		typedef bool(__thiscall* FN)(PVOID, const char*, int);
 		GetVFunc<FN>(this, 270)(this, pstr, iSubType);

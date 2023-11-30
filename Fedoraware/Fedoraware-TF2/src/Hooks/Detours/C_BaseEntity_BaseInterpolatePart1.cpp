@@ -1,10 +1,18 @@
 #include "../Hooks.h"
 
 //	xref C_BaseEntity_MoveToLastReceivedPosition
-MAKE_HOOK(C_BaseEntity_BaseInterpolatePart1, g_Pattern.Find(L"client.dll", L"55 8B EC 53 8B 5D 18 56 8B F1 C7 03"), int, __fastcall,
+MAKE_HOOK(C_BaseEntity_BaseInterpolatePart1, S::C_BaseEntity_BaseInterpolatePart1(), int, __fastcall,
 	void* ecx, void* edx, float &currentTime, Vec3 &oldOrigin, Vec3 &oldAngles, Vec3 &oldVel, int &bNoMoreChanges)
 {
-	// 1;INTERPOLATE_CONTINUE
-	// 0;INTERPOLATE_STOP
-	return Hook.Original<FN>()(ecx, edx, currentTime, oldOrigin, oldAngles, oldVel, bNoMoreChanges);
+	if (Vars::Misc::DisableInterpolation.Value) {
+		CBaseEntity* pLocal = g_EntityCache.GetLocal();
+		CBaseEntity* pEntity = reinterpret_cast<CBaseEntity*>(ecx);
+		if ((!pEntity || !pLocal) ||
+			(pEntity == pLocal && !G::Recharging) ||
+			(pEntity->GetClassID() != ETFClassID::CTFPlayer && pEntity->GetClassID() != ETFClassID::CBaseDoor)){
+			return Hook.Original<FN>()(ecx, edx, currentTime, oldOrigin, oldAngles, oldVel, bNoMoreChanges);
+		}
+	}
+	bNoMoreChanges = 1;
+	return 0;
 }

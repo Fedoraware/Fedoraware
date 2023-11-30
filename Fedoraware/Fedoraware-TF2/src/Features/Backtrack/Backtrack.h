@@ -54,6 +54,7 @@ class CBacktrack
 	//	utils
 	void CleanRecords();
 	void MakeRecords();
+	void UpdateAnimations();
 	std::optional<TickRecord> GetHitRecord(CUserCmd* pCmd, CBaseEntity* pEntity, Vec3 vAngles, Vec3 vPos);
 	//	utils - fake latency
 	void UpdateDatagram();
@@ -86,6 +87,7 @@ public:
 	std::optional<TickRecord> Run(CUserCmd* pCmd); //	returns a valid record
 	void AdjustPing(INetChannel* netChannel); //	blurgh
 	bool bFakeLatency = false;
+	bool bUpdatingAnims = false;
 };
 
 ADD_FEATURE(CBacktrack, Backtrack)

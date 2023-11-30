@@ -389,6 +389,12 @@ public: //Everything else, lol
 		return fnCalcIsAttackCriticalHelper(this);
 	}
 
+	__inline void UpdateAllViewmodelAddons() {
+		using FN = void(__thiscall*)(CBaseCombatWeapon*);
+		static FN fnUpdateAllViewmodelAddons = S::CTFWeaponBase_UpdateAllViewmodelAddons.As<FN>();
+		return fnUpdateAllViewmodelAddons(this);
+	}
+
 	__inline bool CalcIsAttackCriticalHelperNoCrits(CBaseEntity* pWeapon)
 	{
 		typedef bool (*fn_t)(CBaseEntity*);

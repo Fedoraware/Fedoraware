@@ -186,6 +186,28 @@ void CBacktrack::MakeRecords()
 	}
 }
 
+void CBacktrack::UpdateAnimations() {
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	const float flOldFrameTime = I::GlobalVars->frametime;
+	for (CBaseEntity* pEntity : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL)) {
+		if (!pEntity || pLocal == pEntity) {
+			continue;
+		}
+
+		const int iDelta = std::clamp(TIME_TO_TICKS(pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime()), 0, 22);
+
+		I::GlobalVars->frametime = I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL;
+
+		bUpdatingAnims = true;
+		for (int n = 0; n < iDelta; n++) {
+			pEntity->UpdateClientSideAnimation();
+		}
+		bUpdatingAnims = false;
+
+		I::GlobalVars->frametime = flOldFrameTime;
+	}
+}
+
 // Store the last 2048 sequences
 void CBacktrack::UpdateDatagram()
 {
@@ -238,6 +260,7 @@ void CBacktrack::FrameStageNotify()
 	if (!pLocal || !iNetChan) { return Restart(); }
 
 	flLatencyRampup = std::min(1.f, flLatencyRampup += I::GlobalVars->interval_per_tick);
+	UpdateAnimations();
 	MakeRecords();
 	CleanRecords();
 }
