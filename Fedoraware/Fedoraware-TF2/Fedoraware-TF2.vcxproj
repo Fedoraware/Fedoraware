@@ -270,6 +270,7 @@
     <ClCompile Include="src\Hooks\Detours\CTFPlayerInventory_GetMaxItemCount.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="src\Hooks\Detours\CTFPlayerShared_IsPlayerDominated.cpp" />
+    <ClCompile Include="src\Hooks\Detours\C_BaseEntity_AddVar.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_FireBullets.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_Interpolate.cpp" />
