@@ -50,6 +50,8 @@ namespace S
 	MAKE_SIGNATURE(CBaseEntity_FireBullets, CLIENT_DLL, "55 8B EC 81 EC ? ? ? ? 53 56 57 8B F9 8B 5D", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_Interpolate, CLIENT_DLL, "55 8B EC 83 EC ? 53 57 8D 45", 0x0);
 	MAKE_SIGNATURE(CBaseEntity_SetAbsVelocity, CLIENT_DLL, "55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 F3 0F", 0x0);
+	MAKE_SIGNATURE(C_BaseEntity_BaseInterpolatePart1, CLIENT_DLL, "55 8B EC 53 8B 5D 18 56 8B F1 C7 03", 0x0);
+	MAKE_SIGNATURE(C_BaseEntity_InterpolateServerEntities, CLIENT_DLL, "55 8B EC 83 EC 30 8B 0D ? ? ? ? 53", 0x0);
 	MAKE_SIGNATURE(CBasePlayer_CalcViewModelView, CLIENT_DLL, "55 8B EC 83 EC ? 8B 55 ? 53 8B 5D ? 89 4D ? 8B 02", 0x0);
 	MAKE_SIGNATURE(CBaseViewModel_ShouldFlipViewModel, CLIENT_DLL, "8B 89 ? ? ? ? 85 C9 74 ? BA ? ? ? ? 83 F9 ? 74 ? 0F B7 D1 A1 ? ? ? ? C1 E2 ? 83 C0 ? 03 C2 74 ? C1 E9 ? 39 48 ? 75 ? 8B 08 85 C9 74 ? A1", 0x0);
 	MAKE_SIGNATURE(COP_RenderSprites_RenderSpriteCard, CLIENT_DLL, "55 8B EC 83 EC ? 56 8B 75 ? 57 8B 7D ? 8B C7", 0x0);
