@@ -59,6 +59,7 @@ namespace S
 	MAKE_SIGNATURE(CTFPlayer_FireEvent, CLIENT_DLL, "55 8B EC 8B 45 ? 81 EC ? ? ? ? 53 56 57 8B F9 3D", 0x0);
 	MAKE_SIGNATURE(CTFRagdoll_CreateTFRagdoll, CLIENT_DLL, "55 8B EC B8 ? ? ? ? E8 ? ? ? ? 53 56 57 8B F9 8B 8F", 0x0);
 	MAKE_SIGNATURE(CTFWeaponBase_CalcIsAttackCritical, CLIENT_DLL, "53 57 6A ? 68 ? ? ? ? 68 ? ? ? ? 6A ? 8B F9 E8 ? ? ? ? 50 E8 ? ? ? ? 8B D8 83 C4 ? 85 DB 0F 84", 0x0);
+	MAKE_SIGNATURE(CTFWeaponBase_UpdateAllViewmodelAddons, CLIENT_DLL, "55 8B EC 83 EC 08 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 8B 17", 0x0);
 	MAKE_SIGNATURE(CAchievementMgr_CheckAchievementsEnabled, CLIENT_DLL, "55 8B EC A1 ? ? ? ? 83 EC ? 56 8B F1 8B 48", 0x0);
 	MAKE_SIGNATURE(CBaseClient_Connect, ENGINE_DLL, "55 8B EC 53 56 57 68 ? ? ? ? 8B F1", 0x0);
 	MAKE_SIGNATURE(CBaseClient_Disconnect, ENGINE_DLL, "55 8B EC 81 EC ? ? ? ? 57 8B 7D ? 83 BF ? ? ? ? ? 0F 84 ? ? ? ? 56", 0x0);

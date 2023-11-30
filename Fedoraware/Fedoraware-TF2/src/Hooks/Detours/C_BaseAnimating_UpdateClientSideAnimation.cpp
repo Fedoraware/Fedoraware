@@ -1,14 +1,24 @@
 #include "../Hooks.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 MAKE_HOOK(CBaseAnimating_UpdateClientSideAnimation, S::CBaseAnimating_UpdateClientSideAnimation(), void, __fastcall, void* ecx, void* edx)
 {
-	CBaseEntity* pEntity = reinterpret_cast<CBaseEntity*>(ecx);
-	if (!pEntity || Vars::Misc::DisableInterpolation.Value) {
-		return Hook.Original<FN>()(ecx, edx);
+	CBaseEntity* pLocal = g_EntityCache.GetLocal();
+	if (ecx == pLocal){
+		if (!pLocal->InCond(TF_COND_HALLOWEEN_KART)) {
+			if (CBaseCombatWeapon* pWeapon = g_EntityCache.GetWeapon()) {
+				pWeapon->UpdateAllViewmodelAddons(); //credits: KGB
+			}
+			return;
+		}
+		else {
+			return Hook.Original<FN>()(ecx, edx);
+		}
+	}
+	
+	if (!F::Backtrack.bUpdatingAnims) {
+		return;
 	}
 
-	const int iDelta = std::clamp(TIME_TO_TICKS(pEntity->GetSimulationTime() - pEntity->GetOldSimulationTime()), 0, 22);
-	for (int i = 0; i < iDelta; i++) {
-		Hook.Original<FN>()(ecx, edx);
-	}
+	return Hook.Original<FN>()(ecx, edx);
 }
