@@ -39,11 +39,11 @@ inline void CFakelag::Prediction(const int nOldGroundInt, const int nOldFlags) {
 }
 
 inline void CFakelag::PreserveBlastJump(const int nOldGroundInt, const int nOldFlags) {
-	bPreservingBlast = false;
+	if (bPreservingBlast) { return; }
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	const bool bVar = Vars::Misc::CL_Move::RetainBlastJump.Value;
-	const bool bPlayerReady = pLocal->IsAlive() && pLocal->IsPlayer() && pLocal->OnSolid() && nOldGroundInt > 0 && nOldFlags & FL_ONGROUND;
-	const bool bCanPreserve = pLocal->GetClassNum() == ETFClass::CLASS_SOLDIER && pLocal->GetCondEx2() & TF_COND_BLASTJUMPING;
+	const bool bPlayerReady = pLocal->IsAlive() && pLocal->IsPlayer() && pLocal->OnSolid() && (nOldGroundInt < 0 || !(nOldFlags & FL_ONGROUND));
+	const bool bCanPreserve = pLocal->GetClassNum() == ETFClass::CLASS_SOLDIER && pLocal->InCond(TF_COND_BLASTJUMPING);
 	bPreservingBlast = bVar && bPlayerReady && bCanPreserve;
 }
 
@@ -69,6 +69,7 @@ void CFakelag::Run(CUserCmd* pCmd, bool* pSendPacket, const int nOldGround, cons
 	*pSendPacket = false;
 
 	if (!pLocal->OnSolid()) {
+		bPreservingBlast = false;
 		iAirTicks++;
 	}
 }
