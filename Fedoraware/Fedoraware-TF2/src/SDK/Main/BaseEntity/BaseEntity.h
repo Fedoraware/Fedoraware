@@ -1036,17 +1036,17 @@ public: //Everything else, lol.
 	}
 
 	__inline void PreThink() {
-		typedef bool(__thiscall* FN)(PVOID);
+		typedef void(__thiscall* FN)(PVOID);
 		GetVFunc<FN>(this, 260)(this);
 	}
 
 	__inline void Think() {
-		typedef bool(__thiscall* FN)(PVOID);
+		typedef void(__thiscall* FN)(PVOID);
 		GetVFunc<FN>(this, 174)(this);
 	}
 
 	__inline void PostThink() {
-		typedef bool(__thiscall* FN)(PVOID);
+		typedef void(__thiscall* FN)(PVOID);
 		GetVFunc<FN>(this, 261)(this);
 	}
 };
