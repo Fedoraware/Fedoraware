@@ -60,6 +60,21 @@ bool CCritHack::IsAttacking(const CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
 				return true;
 			}
 		}
+		else if (pWeapon->GetWeaponID() == TF_WEAPON_CANNON)
+		{
+			static bool Charging = false;
+
+			if (pWeapon->GetDetonateTime() > 0.0f)
+			{
+				Charging = true;
+			}
+
+			if (!(pCmd->buttons & IN_ATTACK) && Charging)
+			{
+				Charging = false;
+				return true;
+			}
+		}	
 
 		//pssst..
 		//Dragon's Fury has a gauge (seen on the weapon model) maybe it would help for pSilent hmm..
