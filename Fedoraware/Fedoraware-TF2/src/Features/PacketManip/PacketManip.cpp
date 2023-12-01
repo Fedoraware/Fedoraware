@@ -23,13 +23,6 @@ inline void CPacketManip::RunFakeLag(CUserCmd* pCmd, bool* pSendPacket, const in
 	F::FakeLag.Run(pCmd, pSendPacket, nOldGroundInt, nOldFlags);
 }
 
-inline void CPacketManip::Run(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags) {
-	
-
-	//fakelag will ONLY be able to disable pSendPacket, if anyone adds code in here that enables it they should be sorely ashamed.
-	
-}
-
 void CPacketManip::CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags) {
 	*pSendPacket = true;
 
@@ -44,12 +37,10 @@ void CPacketManip::CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldG
 		//F::AntiAim.Run(pCmd, pSendPacket);
 		RunFakeLag(pCmd, pSendPacket, nOldGroundInt, nOldFlags);
 	}
+	
 	if (G::ShouldShift) {
 		*pSendPacket = G::ShiftedTicks == 1;
 	}
-	//if (*pSendPacket) {	//	if we are now sending we need to run antiaim again for our fake angle.
-	//	F::AntiAim.Run(pCmd, pSendPacket);
-	//}
 
 	return F::AntiAim.Run(pCmd, pSendPacket);;
 }

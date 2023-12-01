@@ -8,7 +8,6 @@ private:
 	inline bool WillTimeOut();
 	inline bool AACheck(CUserCmd* pCmd);
 	inline void RunFakeLag(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags);
-	inline void Run(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags);
 public:
 	void CreateMove(CUserCmd* pCmd, bool* pSendPacket, const int nOldGroundInt, const int nOldFlags);
 };

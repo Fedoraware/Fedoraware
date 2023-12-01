@@ -187,6 +187,7 @@
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_BaseInterpolatePart1.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_InterpolateServerEntities.cpp" />
     <ClCompile Include="src\Hooks\Detours\C_BaseEntity_AddVar.cpp" />
+    <ClCompile Include="src\Hooks\Detours\C_BaseEntity_ResetLatched.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Features\AutoQueue\AutoQueue.h" />
