@@ -275,23 +275,20 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 {
 	static int previousWeapon = 0;
 	static int previousCrit = 0;
-	static int startingNum = pCmd->command_number;
 
 	const auto& pLocal = g_EntityCache.GetLocal();
-	if (!pLocal) { return; }
-
 	const auto& pWeapon = pLocal->GetActiveWeapon();
-	if (!pWeapon) { return; }
+	if (!pLocal || !pWeapon) { return; }
+
+	const int seedBackup = *I::RandomSeed;
 
 	if (F::AimbotGlobal.IsAttacking() || IsAttacking(pCmd, pWeapon)/* || pCmd->buttons & IN_ATTACK*/)
 	{
 		return;
 	}
 
-	const bool bRescanRequired = previousWeapon != pWeapon->GetIndex();
-	if (bRescanRequired)
+	if (previousWeapon != pWeapon->GetIndex())
 	{
-		startingNum = pCmd->command_number;
 		previousWeapon = pWeapon->GetIndex();
 		CritTicks.clear();
 	}
@@ -303,26 +300,22 @@ void CCritHack::ScanForCrits(const CUserCmd* pCmd, int loops)
 
 	//CritBucketBP = *reinterpret_cast<float*>(pWeapon + 0xA54);
 	ProtectData = true; //	stop shit that interferes with our crit bucket because it will BREAK it
-	const int seedBackup = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
 	for (int i = 0; i < loops; i++)
 	{
-		const int cmdNum = startingNum + i;
-		*I::RandomSeed = MD5_PseudoRandom(cmdNum) & MASK_SIGNED;
+		*I::RandomSeed = MD5_PseudoRandom(pCmd->command_number + i) & MASK_SIGNED;
 		if (pWeapon->WillCrit())
 		{
-			CritTicks.push_back(cmdNum); //	store our wish command number for later reference
+			CritTicks.push_back(pCmd->command_number + i); //	store our wish command number for later reference
+			*I::RandomSeed = seedBackup;
+			ProtectData = false;
 		}
 	}
-	startingNum += loops;
+	*I::RandomSeed = seedBackup;
 	ProtectData = false; //	we no longer need to be protecting important crit data
-
-	//*reinterpret_cast<float*>(pWeapon + 0xA54) = CritBucketBP;
 	*reinterpret_cast<int*>(pWeapon + 0xA5C) = 0; //	dont comment this out, makes sure our crit mult stays as low as possible
 	//	crit mult can reach a maximum value of 3!! which means we expend 3 crits WORTH from our bucket
 	//	by forcing crit mult to be its minimum value of 1, we can crit more without directly fucking our bucket
 	//	yes ProtectData stops this value from changing artificially, but it still changes when you fire and this is worth it imo.
-
-	*I::RandomSeed = seedBackup;
 }
 
 void CCritHack::Run(CUserCmd* pCmd)
@@ -332,7 +325,9 @@ void CCritHack::Run(CUserCmd* pCmd)
 	const auto& pWeapon = g_EntityCache.GetWeapon();
 	if (!pWeapon || !pWeapon->CanFireCriticalShot(false)) { return; }
 
-	ScanForCrits(pCmd, 50); //	fill our vector slowly.
+	ScanForCrits(pCmd, 100); //	fill our vector slowly.
+
+	auto OldSeed = *I::RandomSeed;
 
 	const int closestGoodTick = LastGoodCritTick(pCmd); //	retrieve our wish
 	if (IsAttacking(pCmd, pWeapon)) //	is it valid & should we even use it
@@ -345,16 +340,16 @@ void CCritHack::Run(CUserCmd* pCmd)
 		}
 		else if (Vars::CritHack::AvoidRandom.Value) //	we don't want to crit
 		{
-			for (int tries = 1; tries < 25; tries++)
+			for (int tries = 1; tries < 10; tries++)
 			{
-				if (std::find(CritTicks.begin(), CritTicks.end(), pCmd->command_number + tries) != CritTicks.end())
+				*I::RandomSeed = MD5_PseudoRandom(pCmd->command_number + tries) & MASK_SIGNED;
+				if (!pWeapon->WillCrit())
 				{
-					continue; //	what a useless attempt
+					pCmd->command_number += tries;
+					break;
 				}
-				pCmd->command_number += tries;
-				pCmd->random_seed = MD5_PseudoRandom(pCmd->command_number) & MASK_SIGNED;
-				break; //	we found a seed that we can use to avoid a crit and have skipped to it, woohoo
 			}
+			*I::RandomSeed = OldSeed;
 		}
 	}
 }
