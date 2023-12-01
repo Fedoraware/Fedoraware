@@ -1,22 +1,20 @@
 #include "../Hooks.h"
 
-int CalculateTick(int simTicks, CBaseEntity* player)
-{
-	const int clockcorrect = TIME_TO_TICKS(0.06f); //sv_clockcorrectmsecs
+/*
+	https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/server/player.cpp#L3380
+	- bradley wuzz here fr fr on goh
+*/
+inline void TickCorrection(const int iSimTicks, CBaseEntity* pLocal) {
+	const int iClockCorrect = TIME_TO_TICKS(I::Cvar->FindVar("sv_clockcorrection_msecs")->GetFloat());
 
-	const int nIdealFinalTick = I::GlobalVars->tickcount + TIME_TO_TICKS(I::EngineClient->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
+	const int iIdealEnd = I::GlobalVars->tickcount + TIME_TO_TICKS(I::EngineClient->GetNetChannelInfo()->GetLatency(FLOW_OUTGOING)) + iClockCorrect;
+	const int iActualEnd = pLocal->GetTickBase() + iSimTicks;
 
-	const int estimatedFinal = player->GetTickBase() + simTicks;
-
-	const int fast = nIdealFinalTick + clockcorrect;
-	const int slow = nIdealFinalTick - clockcorrect;
-
-	if (estimatedFinal > fast || estimatedFinal < slow) { 
-		return nIdealFinalTick - simTicks; 
+	if (iActualEnd > iIdealEnd + iClockCorrect ||
+		iActualEnd < iIdealEnd - iClockCorrect) {
+		pLocal->SetTickBase(iIdealEnd - iSimTicks + 1);
+		I::GlobalVars->curtime = TICKS_TO_TIME(pLocal->GetTickBase());
 	}
-
-	// this is useless
-	return estimatedFinal;
 }
 
 MAKE_HOOK(Prediction_RunCommand, Utils::GetVFuncPtr(I::Prediction, 17), void, __fastcall,
@@ -24,23 +22,20 @@ MAKE_HOOK(Prediction_RunCommand, Utils::GetVFuncPtr(I::Prediction, 17), void, __
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 
-	if (pLocal == pEntity && pLocal->IsAlive() && pCmd && pCmd->command_number) {
+	if (pLocal && pLocal == pEntity && pCmd) {
 		if (G::Recharging) {
 			return;
 		}
 
-		if ((Vars::Misc::CL_Move::Doubletap.Value && G::ShouldShift) &&
-			(pCmd->command_number == G::LastUserCmd->command_number)) {
+		if (G::ShouldShift) {
 			const int iTickbaseBackup = pLocal->GetTickBase();
-			const float iCurtimeBackup = I::GlobalVars->curtime;
+			const float flCurtimeBackup = I::GlobalVars->curtime;
 
-			pLocal->SetTickBase(CalculateTick(I::ClientState->chokedcommands + G::ShiftedTicks + 1, pLocal));
-			I::GlobalVars->curtime = TICKS_TO_TIME(pLocal->GetTickBase());
-
+			TickCorrection(I::ClientState->chokedcommands + G::ShiftedTicks, pLocal);
 			Hook.Original<FN>()(ecx, edx, pEntity, pCmd, pMoveHelper);
 
 			pLocal->SetTickBase(iTickbaseBackup);
-			I::GlobalVars->curtime = iCurtimeBackup;
+			I::GlobalVars->curtime = flCurtimeBackup;
 		}
 		else {
 			Hook.Original<FN>()(ecx, edx, pEntity, pCmd, pMoveHelper);
