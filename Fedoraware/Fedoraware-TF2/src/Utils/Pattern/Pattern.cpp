@@ -8,8 +8,9 @@ DWORD CPattern::FindPattern(DWORD dwAddress, DWORD dwSize, LPCSTR szPattern)
 {
 	auto szPat = szPattern;
 	DWORD dwFirstMatch = 0x0;
+	const DWORD dwEnd = dwAddress + dwSize - strlen(szPattern);
 
-	for (auto pCur = dwAddress; pCur < dwAddress + dwSize; pCur++)
+	for (auto pCur = dwAddress; pCur < dwEnd; pCur++)
 	{
 		if (!*szPat)
 		{
