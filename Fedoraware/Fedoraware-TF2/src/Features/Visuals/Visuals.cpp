@@ -762,7 +762,7 @@ void CVisuals::DrawMenuRain() //brought to you by chatgpt
 		if (drop.Y >= g_ScreenSize.h / 2.f || drop.X >= g_ScreenSize.w || drop.X <= 0)
 		{
 			drop.X = Utils::RandIntSimple(0, g_ScreenSize.w);
-			drop.Y = Utils::RandIntSimple(0, 100);
+			drop.Y = Utils::RandIntSimple(-100, 0);
 			drop.length = Utils::RandFloatSimple(10.f, 20.f);
 		}
 		// Calculate alpha and apply fading effect
