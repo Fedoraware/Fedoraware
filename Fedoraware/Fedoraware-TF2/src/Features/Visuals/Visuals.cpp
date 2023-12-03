@@ -719,7 +719,7 @@ void CVisuals::DrawMenuSnow()
 		if (alpha <= 0.f || flake.X >= g_ScreenSize.w || flake.X <= 0)
 		{
 			flake.X = Utils::RandIntSimple(0, g_ScreenSize.w);
-			flake.Y = Utils::RandIntSimple(0, 100);
+			flake.Y = Utils::RandIntSimple(-100, 0);
 		} //
 
 		Color_t flakeColour = {255, 255, 255, static_cast<byte>(alpha * 255.0f)};
