@@ -71,6 +71,7 @@ bool PResolver::ShouldRun(){
 bool PResolver::ShouldRunEntity(CBaseEntity* pEntity){
 	if (!pEntity->OnSolid() && Vars::AntiHack::Resolver::IgnoreAirborne.Value) { return false; }
 	if (!pEntity->IsAlive() || pEntity->IsAGhost() || pEntity->IsTaunting()) { return false; }
+	if (pEntity == g_EntityCache.GetLocal()) { return false; }
 
 	//if (pEntity->GetSimulationTime() == pEntity->GetOldSimulationTime()) { return false; }				//	last networked angles are the same as these, no need to change them
 	return true;
