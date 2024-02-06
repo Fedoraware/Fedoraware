@@ -209,7 +209,6 @@ namespace Vars
 		CVar(AimKey, VK_XBUTTON1)
 		CVar(AimFOV, 15.0f)
 		CVar(AutoShoot, false)
-		CVar(DontWaitForShot, false)
 		CVar(FlickatEnemies, false)
 		CVar(AimPlayers, true)
 		CVar(AimBuildings, false)

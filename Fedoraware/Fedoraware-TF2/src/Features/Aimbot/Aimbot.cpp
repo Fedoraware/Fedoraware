@@ -20,11 +20,6 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	// Don't run if we are frozen in place.
 	if (G::Frozen) { return false; }
 
-	if (!Vars::Aimbot::Global::DontWaitForShot.Value && (!F::AimbotGlobal.IsAttacking() && !G::WeaponCanAttack) && G::CurWeaponType != EWeaponType::MELEE)
-	{
-		return false;
-	}	//	don't run if we can't shoot (should stop unbearable dt lag)
-
 	if (!pLocal->IsAlive()
 		|| pLocal->IsTaunting()
 		|| pLocal->IsBonked()

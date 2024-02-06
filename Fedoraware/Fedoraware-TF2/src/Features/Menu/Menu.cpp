@@ -285,7 +285,6 @@ void CMenu::MenuAimbot()
 				WSlider("Tick Tolerance###AimbotUnsimulatedTolerance", &Vars::Aimbot::Global::TickTolerance.Value, 0, 21, "%d", ImGuiSliderFlags_AlwaysClamp);
 			}
 
-			WToggle("Dont wait for shot###AimbotWaitForValidShot", &Vars::Aimbot::Global::DontWaitForShot.Value); HelpMarker("Prevents fps drops by only running aimbot while we are able to shoot");
 			WToggle("Flick at Enemies", &Vars::Aimbot::Global::FlickatEnemies.Value); HelpMarker("Keep this disabled if you have low fps");
 
 
