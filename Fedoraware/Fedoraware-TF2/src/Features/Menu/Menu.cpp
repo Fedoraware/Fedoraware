@@ -298,7 +298,7 @@ void CMenu::MenuAimbot()
 			WToggle("Active", &Vars::Backtrack::Enabled.Value); HelpMarker("If you shoot at the backtrack manually it will attempt to hit it");
 			WToggle("Unchoke Prediction", &Vars::Backtrack::UnchokePrediction.Value);
 			WToggle("Allow Forward Tracking", &Vars::Backtrack::AllowForward.Value);
-			WCombo("Backtrack Method###HitscanBacktrackMethod", &Vars::Aimbot::Hitscan::BackTrackMethod.Value, { "All", "Last", "Prefer OnShot" });
+			WCombo("Backtrack Method###HitscanBacktrackMethod", &Vars::Aimbot::Hitscan::BackTrackMethod.Value, { "All", "Prefer OnShot", "Force OnShot"});
 			WSlider("Amount of latency###BTLatency", &Vars::Backtrack::Latency.Value, 0, 800, "%d", ImGuiSliderFlags_AlwaysClamp); HelpMarker("This won't work on local servers");
 		} EndChild();
 

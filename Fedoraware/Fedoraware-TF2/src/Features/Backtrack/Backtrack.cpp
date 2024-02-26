@@ -334,48 +334,54 @@ std::optional<TickRecord> CBacktrack::Run(CUserCmd* pCmd)
 	return std::nullopt;
 }
 
+inline std::optional<TickRecord> CBacktrack::GetFirstRecord(CBaseEntity* pEntity, CBaseEntity* pLocal, const int nHitbox) {
+	for (const auto& rCurQuery : mRecords[pEntity])
+	{
+		if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
+		const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+		if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
+	}
+	return std::nullopt;
+}
+
 std::optional<TickRecord> CBacktrack::Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox)
 {
 	CBaseEntity* pLocal = g_EntityCache.GetLocal();
 	if (!pLocal) { return std::nullopt; }
 	if (mRecords[pEntity].empty()) { return std::nullopt; }
+	
+	//	if a player is using a melee or projectile weapon they cannot be onshot, so don't do that.
+	if (Utils::GetWeaponType(pEntity->GetActiveWeapon()) != EWeaponType::HITSCAN) {
+		return GetFirstRecord(pEntity, pLocal, nHitbox);
+	}
+
 	switch (iMode)
 	{
-		case BacktrackMode::ALL:
+		case BacktrackMode::ALL: { 
+			return GetFirstRecord(pEntity, pLocal, nHitbox); 
+		}
+	
+		case BacktrackMode::PREFERONSHOT:	//	it may be twice as much work as the other two options but by god is it beautiful.
 		{
 			for (const auto& rCurQuery : mRecords[pEntity])
 			{
-				if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
+				if (!WithinRewind(rCurQuery) || IsEarly(pEntity) || !rCurQuery.bOnShot) { continue; }
+				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
+				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
+			}
+			return GetFirstRecord(pEntity, pLocal, nHitbox);
+		}
+		
+		//TODO: better onshot codenz. esp for fakelagging players
+		case BacktrackMode::FORCEONSHOT:
+		{
+			for (const auto& rCurQuery : mRecords[pEntity])
+			{
+				if (!WithinRewind(rCurQuery) || IsEarly(pEntity) || !rCurQuery.bOnShot) { continue; }
 				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
 				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return rCurQuery; }
 			}
 			return std::nullopt;
-		}
-
-		case BacktrackMode::LAST:
-		{
-			if (std::optional<TickRecord> LastRecord = GetLastRecord(pEntity))
-			{
-				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&LastRecord->BoneMatrix.BoneMatrix));
-				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { return LastRecord; }
-			}
-			return std::nullopt;
-		}
-
-		case BacktrackMode::PREFERONSHOT:
-		{
-			std::optional<TickRecord> ReturnTick{};
-			for (const auto& rCurQuery : mRecords[pEntity])
-			{
-				if (!WithinRewind(rCurQuery) || IsEarly(pEntity)) { continue; }
-				const Vec3 vHitboxPos = pEntity->GetHitboxPosMatrix(nHitbox, (matrix3x4*)(&rCurQuery.BoneMatrix.BoneMatrix));
-				if (Utils::VisPos(pLocal, pEntity, pLocal->GetShootPos(), vHitboxPos)) { ReturnTick = rCurQuery; }
-				if (ReturnTick.has_value())
-				{
-					if (ReturnTick->bOnShot) { break; }
-				}
-			}
-			return ReturnTick;
 		}
 	}
 	return std::nullopt;

@@ -454,14 +454,18 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, Target_t& target)
 	{
 		case ETargetType::PLAYER:
 		{
-			const bool scanHitbox = ScanHitboxes(pLocal, target);
-			const bool canHitOriginal = F::Backtrack.CanHitOriginal(target.m_pEntity);
-			const bool isChoking = G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value;
-			const bool ignoreUnsimulated = Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED);
-			const bool shouldIgnore = isChoking && ignoreUnsimulated && !G::ShouldShift;	//	do not ignore unsimulated while we are shifting (maybe do in the future though idk up to u)
+			const bool bForceOnShot = Vars::Backtrack::Enabled.Value && (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value == BacktrackMode::FORCEONSHOT && Utils::GetWeaponType(target.m_pEntity->GetActiveWeapon()) == EWeaponType::HITSCAN;
 
-			if (scanHitbox && canHitOriginal && !shouldIgnore) {
-				return true;
+			if (!bForceOnShot) {
+				const bool scanHitbox = ScanHitboxes(pLocal, target);
+				const bool canHitOriginal = F::Backtrack.CanHitOriginal(target.m_pEntity);
+				const bool isChoking = G::ChokeMap[target.m_pEntity->GetIndex()] > Vars::Aimbot::Global::TickTolerance.Value;
+				const bool ignoreUnsimulated = Vars::Aimbot::Global::IgnoreOptions.Value & (UNSIMULATED);
+				const bool shouldIgnore = isChoking && ignoreUnsimulated && !G::ShouldShift;	//	do not ignore unsimulated while we are shifting (maybe do in the future though idk up to u)
+
+				if (scanHitbox && canHitOriginal && !shouldIgnore && !bForceOnShot) {
+					return true;
+				}
 			}
 
 			if (Vars::Backtrack::Enabled.Value)

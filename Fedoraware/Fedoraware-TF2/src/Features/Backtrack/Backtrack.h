@@ -37,8 +37,8 @@ struct TickRecord
 enum class BacktrackMode
 {
 	ALL, //	iterates through every tick (slow probably)
-	LAST, // last
-	PREFERONSHOT, // prefers on shot records, last
+	PREFERONSHOT, // prefers on shot records.
+	FORCEONSHOT,	//	forces on shot records.
 };
 
 class CBacktrack
@@ -50,6 +50,9 @@ class CBacktrack
 	inline bool IsEarly(CBaseEntity* pEntity);
 	bool WithinRewindEx(const TickRecord& record, const float flCompTime);
 	//bool IsBackLagComped(CBaseEntity* pEntity);
+
+	//	records
+	inline std::optional<TickRecord> GetFirstRecord(CBaseEntity* pEntity, CBaseEntity* pLocal, const int nHitbox);
 
 	//	utils
 	void CleanRecords();
