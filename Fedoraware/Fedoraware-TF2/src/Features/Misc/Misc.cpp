@@ -1116,11 +1116,13 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 			if (!target->IsAlive()) { continue; }
 			if (F::AimbotGlobal.ShouldIgnore(target)) { continue; }
 
+			const bool bForceOnShot = Vars::Backtrack::Enabled.Value && (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value == BacktrackMode::FORCEONSHOT && Utils::GetWeaponType(target->GetActiveWeapon()) == EWeaponType::HITSCAN;
+
 			// Get the hitbox position (Backtrack if possible)
 			Vec3 targetPos = target->GetHitboxPos(HITBOX_HEAD);
 			
 			const auto& btRecord = Vars::Backtrack::Enabled.Value ? F::Backtrack.Aimbot(target, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, HITBOX_HEAD) : std::nullopt;	//	if backtrack is enabled, see if any records will be targetted by us
-			return (Utils::VisPos(pLocal, target, pPos, targetPos) || btRecord.has_value());
+			return Vars::Backtrack::Enabled.Value && bForceOnShot ? btRecord.has_value() : (Utils::VisPos(pLocal, target, pPos, targetPos) || btRecord.has_value());
 		}
 	}
 
