@@ -86,7 +86,6 @@ public:
 	std::deque<TickRecord>* GetRecords(CBaseEntity* pEntity);
 	std::optional<TickRecord> Aimbot(CBaseEntity* pEntity, BacktrackMode iMode, int nHitbox);
 	std::optional<TickRecord> GetLastRecord(CBaseEntity* pEntity);
-	std::optional<TickRecord> GetFirstRecord(CBaseEntity* pEntity);
 	std::optional<TickRecord> Run(CUserCmd* pCmd); //	returns a valid record
 	void AdjustPing(INetChannel* netChannel); //	blurgh
 	bool bFakeLatency = false;

@@ -1119,8 +1119,8 @@ bool CanAttack(CBaseEntity* pLocal, const Vec3& pPos)
 			// Get the hitbox position (Backtrack if possible)
 			Vec3 targetPos = target->GetHitboxPos(HITBOX_HEAD);
 			
-			const auto& btRecord = Vars::Backtrack::Enabled.Value ? F::Backtrack.GetLastRecord(target) : std::nullopt;	//	if backtrack is enabled, see if the last record is viable
-			return (Utils::VisPos(pLocal, target, pPos, targetPos) || (btRecord && Utils::VisPos(pLocal, target, pPos, target->GetHitboxPosMatrix(HITBOX_HEAD, (matrix3x4*)(&btRecord->BoneMatrix.BoneMatrix)))));
+			const auto& btRecord = Vars::Backtrack::Enabled.Value ? F::Backtrack.Aimbot(target, (BacktrackMode)Vars::Aimbot::Hitscan::BackTrackMethod.Value, HITBOX_HEAD) : std::nullopt;	//	if backtrack is enabled, see if any records will be targetted by us
+			return (Utils::VisPos(pLocal, target, pPos, targetPos) || btRecord.has_value());
 		}
 	}
 

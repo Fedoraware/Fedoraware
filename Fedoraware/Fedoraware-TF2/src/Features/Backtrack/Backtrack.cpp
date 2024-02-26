@@ -409,19 +409,6 @@ std::optional<TickRecord> CBacktrack::GetLastRecord(CBaseEntity* pEntity)
 	return rReturnRecord;
 }
 
-std::optional<TickRecord> CBacktrack::GetFirstRecord(CBaseEntity* pEntity)
-{
-	//	UNUSED AND TRASH! UPDATE B4 USE
-	//if (mRecords[pEntity].empty()) { return std::nullopt; }
-	//std::optional<TickRecord> rReturnRecord = std::nullopt;
-	//for (int nIndex = 2; nIndex < mRecords[pEntity].size(); nIndex++)
-	//{
-	//	if (!IsTracked(mRecords[pEntity][nIndex]) || !WithinRewind(mRecords[pEntity][nIndex])) { continue; }
-	//	return mRecords[pEntity][nIndex];
-	//}
-	return std::nullopt;
-}
-
 // Adjusts the fake latency ping
 void CBacktrack::AdjustPing(INetChannel* netChannel)
 {
